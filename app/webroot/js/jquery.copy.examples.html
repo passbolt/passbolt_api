@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd"
+      xml:lang="en" >
+    <head>
+        <title>jQuery Clipboard Copy Examples</title>
+
+        <script src="jquery-1.2.5.min.js"></script>
+        <script src="jquery.copy.js"></script>
+
+        <style type="text/css">
+            h1 {
+                font-size: 12px;
+                font-family: Arial;
+                margin-top: 30px;
+            }
+            div.test-box {
+                margin: 8px;
+                padding: 8px;
+                border: 2px solid #ddd;
+            }
+            textarea {
+                width: 300px;
+                height: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <textarea>test paste area</textarea>
+        <!-- TEST-ONE:START -->
+        <h1>TEST-ONE</h1>
+        <div class="test-box">
+            <input id="my-button-id" type="button" value="$('div#TEST-ONE').copy();" />
+            <div id="TEST-ONE">
+                This text will get copied.
+            </div>
+            <script type="application/x-javascript">
+                // TEST-ONE
+                $(document).ready(function() {
+                    // Copy all text inside "div#my-div-element-id" div.
+                    $("input#my-button-id").bind( 'click', function() {
+                        $("div#TEST-ONE").copy();
+                    });
+                });
+            </script>
+        </div>
+        <!-- TEST-ONE:END -->
+
+        <!-- TEST-TWO:START -->
+        <h1>TEST-TWO</h1>
+        <div class="test-box">
+            <input id="my-button-id-again"
+                   type="button"
+                   value="$('div#TEST-TWO input').copy();"
+            />
+            <div id="TEST-TWO">
+                This text wont get copied.
+                <div><input type="text" value="This text will get copied. " /></div>
+                <div><input type="text" value="This text as well. " /></div>
+                <div><input type="text" value="This one too. " /></div>
+            </div>
+            <script type="application/x-javascript">
+                // TEST-TWO
+                $(document).ready(function() {
+                    // Copy all text inside each input.
+                    $("input#my-button-id-again").bind( 'click', function() {
+                        $("div#TEST-TWO input").copy();
+                    });
+                });
+            </script>
+        </div>
+        <!-- TEST-TWO:END -->
+
+        <!-- TEST-THREE:START -->
+        <h1>TEST-THREE</h1>
+        <div class="test-box">
+            <input id="my-button-id-too"
+                   type="button"
+                   value="$('div#TEST-THREE *').copy('\n');"
+            />
+            <div id="TEST-THREE">
+                Copy all and delimit with newline &quot;\n&quot;.
+                <div>Copy this smile :)</div>
+                <input type="text" value="This text will get copied." />
+                <input type="text" value="This one too." />
+            </div>
+            <script type="application/x-javascript">
+                // TEST-THREE
+                $(document).ready(function() {
+                    // Copy all text inside "div#my-button-id-too" div.
+                    // and delimit with a newline character "\n".
+                    $("input#my-button-id-too").bind( 'click', function() {
+                        $("div#TEST-THREE *").copy("\n");
+                    });
+                });
+            </script>
+        </div>
+        <!-- TEST-THREE:END -->
+
+        <!-- TEST-FOUR:START -->
+        <h1>TEST-FOUR</h1>
+        <div class="test-box">
+            <input id="my-button-id-finally"
+                   type="button"
+                   value="$('div#TEST-FOUR').copy().css({backgroundColor:'red'});"
+            />
+            <div id="TEST-FOUR">
+                Chain up some fun!
+            </div>
+            <script type="application/x-javascript">
+                // TEST-FOUR
+                $(document).ready(function() {
+                    // Copy all text and chain up some cool jQuery dots.
+                    $("input#my-button-id-finally").bind( 'click', function() {
+                        $("div#TEST-FOUR").copy("\n").css({backgroundColor:'red'});
+                    });
+                });
+            </script>
+        </div>
+        <!-- TEST-FOUR:END -->
+
+        <!-- TEST-FIVE:START -->
+        <h1>TEST-FIVE</h1>
+        <div class="test-box">
+            <input id="my-button-id-five"
+                   type="button"
+                   value="$('div#TEST-FIVE').html('Text will be copied.').copy();"
+            />
+            <div id="TEST-FIVE">
+                Set text then copy it.
+            </div>
+            <script type="application/x-javascript">
+                // TEST-FIVE
+                $(document).ready(function() {
+                    // Set text then copy.
+                    $("input#my-button-id-five").bind( 'click', function() {
+                        $("div#TEST-FIVE").html("Text will be copied.").copy();
+                    });
+                });
+            </script>
+        </div>
+        <!-- TEST-FIVE:END -->
+
+        <!-- TEST-SIX:START -->
+        <h1>TEST-SIX</h1>
+        <div class="test-box">
+            <input id="my-button-id-six"
+                   type="button"
+                   value="$.copy(my_text_var);"
+            />
+            <div id="TEST-SIX">
+                Copy the text from a JS Var.
+            </div>
+            <script type="application/x-javascript">
+                // TEST-SIX
+                $(document).ready(function() {
+                    // Copy the text from a JS Var.
+                    $("input#my-button-id-six").bind( 'click', function() {
+                        var my_text_var = "Strait Text Copy From Code";
+                        $.copy(my_text_var);
+                    });
+                });
+            </script>
+        </div>
+        <!-- TEST-SIX:END -->
+    </body>
+</html> 

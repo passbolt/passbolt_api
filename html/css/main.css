@@ -1,0 +1,216 @@
+/**
+* Colors :
+* font : #222222
+* background : #ffe085
+**/
+
+
+body{
+	background-color:#dfdfde;
+	font-family:Verdana, "Helvetica Neue",Arial,Helvetica,sans-serif;
+}
+
+.container{
+	background-color:#dfdfde;
+	color:#222222;
+}
+
+#header{
+	background-color:#f3b71b;
+	height:130px;
+	float:none;
+	margin:0 0 20px 0;
+}
+
+#header .header-container{
+	margin:auto;
+	float:none;
+}
+
+#header ul.account_context{
+	margin:0;
+	padding:0;
+	float:right;
+	margin-right:5%;
+}
+
+#header ul.account_context li{
+	float:left;
+	list-style-type:none;
+	padding:0px 10px;
+	margin-top:5px;
+	border-left:1px solid #fff;
+	line-height:12px;
+	color:#fff;
+}
+#header ul.account_context li a{ color:#fff; }
+#header ul.account_context li a:hover{ background-color: #fedb66; }
+#header ul.account_context li.first{ border:0; }
+
+#header h1{ color:white; }
+
+#header ul.menu{
+	height:38px;
+	margin:38px 0 0 0;
+	padding:0px;
+}
+#header ul.menu li{
+	float:left;
+	height:42px;
+	margin:0 2px 0 0;
+	list-style-type:none;
+	background-color:#fedb66;
+	font-size:16px;
+}
+#header ul.menu li.active a,
+#header ul.menu li.active a:hover
+{
+	background:transparent url('img/menu_active.png');
+}
+#header ul.menu li a{
+	color:#222222;
+	text-decoration:none;
+	font-weight:bold;
+	display:block;
+	padding:8px 20px 10px 20px;
+}
+#header ul.menu li a:hover{
+	background-color:#ccc;
+}
+
+#header #database_select{
+	margin-top:27px;
+	float:right;
+	margin-right:5%;
+	font-size:1.5em;
+}
+#header #database_select select{
+	font-size:1.1em;
+}
+	
+
+#body{
+	margin:auto;
+	float:none;	
+}
+
+.window{
+	background-color:#fff;
+	margin-top:20px;
+}
+
+.window .window-header{
+	display:block;
+	background-color:#ffe085;
+	margin-right:0px;
+}
+
+.window .window-header h2,
+.window .window-header a.action
+{
+	float:left;
+	margin:0 0 0 10px;
+}
+.window .window-header a.action{ float:right; margin:10px; }
+
+.window .window-container{
+	padding:0;
+	margin:0;
+}
+
+.window .categories{
+	border-right:0.8em solid #ffe085;
+	min-height:500px;
+	margin-right:0;
+}
+.window .passwords{
+	width:78%;
+	float:left;
+}
+
+.window .column_head{
+	background-color:#f2f1f1;
+	margin:0;
+	padding-left:0.8em;
+}
+.window thead td{
+	padding:0px;
+	background-color:#f2f1f1;
+}
+.window .jstree{
+	margin:0;
+}
+.window table{
+	padding:0;
+}
+.window td{
+	height:20px;
+}
+.window tr.even td{
+	background-color:#fff;
+}
+.window tr.odd td{
+	background-color:#f5f6f6;
+}
+
+
+
+/**********************
+****** SIDEBAR ********
+************************/
+
+.sidebar .box{
+	background-color:transparent;
+	padding:0;
+	margin:0;
+}
+.sidebar .box h2{
+	background-color:#ffe085;
+	font-size:14px;
+	font-weight:bold;
+	padding:0.2em 0.2em 0.2em 0.8em;
+	margin-bottom:0.3em;
+}
+
+.sidebar .box .box-content{
+	padding:0.2em 0.2em 0.2em 0.8em;
+}
+
+/****** information *****/
+.sidebar .pwstrength{
+	width:100%;
+}
+
+.sidebar .pwstrength_container{
+	border:1px solid #ccc;
+	height:20px;
+	float:left;
+	background-color:#fff;
+	width:80%
+}
+.sidebar .pwstrength_level{
+	background-color:green;
+	height:20px;
+}
+.sidebar .score{
+	font-size:1.6em;
+	float:left;
+}
+
+/***** people ******/
+.box ul.people{
+	margin:0 0 10px 0;
+	padding:0;
+}
+
+.box ul.people li{
+	background:none;
+	list-style-type:none;
+}
+
+.box.people h3{
+	font-size:1.2em;
+	border-bottom:1px solid #ccc;
+	margin-bottom:0;
+	font-weight:bold;
+}

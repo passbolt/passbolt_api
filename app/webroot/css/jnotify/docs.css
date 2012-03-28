@@ -1,0 +1,87 @@
+/*
+ * this style is used for the Giva documentation only
+ */
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: .85em;
+}
+
+h1, h2, h3 {
+	color: #000099;
+}
+
+h4, h5, h6 {
+	color: #08084d;
+}
+
+h3 {
+	border-bottom: 1px solid #66cc33;
+	margin-bottom: 0;
+}
+
+h5 {
+	font-size: 1.0em;
+	font-style: italic;
+	color: #a64311;
+}
+
+h1.secttl {
+	margin: 0;
+}
+
+h2.sectag {
+	margin-top: 0;
+	font-size: 1.2em;
+	font-style: italic;
+}
+
+code, .code, samp, dl.methods dt {
+	font-size: 1.2em;
+	color: #a64311;
+	font-family: monospace;
+}
+
+samp {
+	color: #808080;
+}
+
+dl {
+	margin-left: 10px;
+}
+
+dl dt {
+	font-style: italic;
+	margin: 0;
+}
+
+dl dd {
+	margin: 0;
+}
+
+dl dd p, dl dd ul {
+	margin-top: 0;
+	margin-bottom: 13px;
+}
+
+
+dl.revisions dt {
+	color: #08084d;
+	margin-top: 10px;
+	font-style: normal;
+	font-weight: bold;
+}
+
+blockquote, .codeblock {
+	border: 1px solid #08084d;
+	background-color: #f2f2ff;
+	margin: 20px;
+	padding: 10px;
+}
+
+blockquote strong {
+	color: #08084d;
+}
+
+.codeblock h4 {
+	margin: 0;
+}

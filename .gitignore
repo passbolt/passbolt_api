@@ -1,0 +1,8 @@
+/app/config
+/app/tmp
+/plugins
+/vendors*.class
+*.pyc
+*.pyo
+.svn
+_svn

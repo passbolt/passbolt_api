@@ -1,0 +1,88 @@
+.modalboxContent {
+	display:none;
+}
+.modalgallery {
+	display:block;
+}
+div#modalBoxFaderLayer,
+div#modalBoxAjaxLoader,
+div#modalBox,
+div#modalBox div#modalBoxBody,
+div#modalBox div#modalBoxBody div.modalBoxBodyContent,
+div#modalBox div#modalBoxBody div.modalboxStyleContainerContent,
+div#modalBox div#modalBoxBody div#modalBoxCloseButton,
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox,
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox span,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topRight,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomRight,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_left,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_right,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top div.modalboxStyleContainer_surface_body,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom div.modalboxStyleContainer_surface_body {/* default reset */
+	margin:0;
+	padding:0;
+}
+div#modalBoxFaderLayer {
+	display:none; 
+	position:fixed; 
+	top:0; 
+	left:0; 
+	width:100%; 
+	height:100%; 
+	z-index:9999;
+}
+div#modalBoxAjaxLoader {
+	background:transparent url(../img/ajax-loader.gif) 50% 40% no-repeat; 
+	height:100px; 
+	padding:130px 0 0 0; 
+	text-align:center; 
+	overflow:hidden;
+}
+div#modalBox {
+	display:none; 
+	position:fixed; 
+	z-index:10000;
+	text-align:left; 
+	background-color:transparent;
+}
+div#modalBox {
+	width:600px; /* default wide */
+}
+div#modalBox.small {
+	width:400px;
+}
+div#modalBox.medium {
+	width:500px;
+}
+div#modalBox.large {
+	width:700px;
+}
+div#modalBox.auto {/* for image content only */
+	width:auto;
+}
+div#modalBox div#modalBoxBody {
+	position:relative;
+}
+/* clearfix */
+.modalboxStyleContainerContent:after, 
+.modalBoxBodyContent:after {
+	content:"."; 
+	display:block; 
+	height:0; 
+	line-height:0; 
+	clear:both; 
+	visibility:hidden;
+}
+* html .modalboxStyleContainerContent, 
+* html .modalBoxBodyContent {/*IE6*/
+	zoom:1; display:block;
+}
+*+html .modalboxStyleContainerContent, 
+*+html .modalBoxBodyContent {/*IE7*/
+	zoom:1; 
+	display:block;
+}

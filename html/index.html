@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Blueprint Sample Page</title>
+
+    <!-- Framework CSS -->
+    <link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">
+
+    <!--[if lt IE 8]><link rel="stylesheet" href="css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+
+    <!-- Import fancy-type plugin for the sample page. -->
+    <link rel="stylesheet" href="css/blueprint/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="css/blueprint/liquid.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="css/main.css" type="text/css" media="screen, projection">
+    
+    <script type="text/javascript" src="lib/jquery.js"></script>
+	<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/jquery.hotkeys.js"></script>
+
+	<script type="text/javascript" src="lib/jstree/jquery.jstree.js"></script>
+    
+    
+    <script type="text/javascript">
+		$(function () {
+			$(".jstree").jstree({ 
+				"plugins" : [ "themes", "html_data" ]
+			});
+		});
+	</script>
+  </head>
+  <body>
+	<div class="container">
+		<div id="header" class="span-24">
+			<div class="header-container span-23">
+				<ul class="account_context">
+					<li class="first">Kevin Muller</li>
+					<li><a href="">My Account</a></li>
+					<li><a href="">Sign Out</a></li>
+				</ul>
+				<h1>PASSKEEPER</h1>
+				<ul class="menu span-15">
+					<li class="active"><a href="">Passwords</a></li>
+					<li><a href="">People</a></li>
+					<li><a href="">Activity</a></li>
+				</ul>
+				<div id="database_select">
+					Database :
+					<select name="database">
+						<option value="test 1">test 1</option>
+						<option value="test 1">test 2</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div id="body" class="span-23">
+			<div class="window span-18">
+				<div class="window-header">
+					<h2>Welcome to your passwords</h2>
+					<a href="" class="action">Add password</a>
+				</div>
+				<div class="window-container">
+					<div class="categories span-5">
+						<div class="column_head">Categories</div>
+						<div class="jstree">
+							<ul>
+								<li id="phtml_1">
+									<a href="#">Root node 1</a>
+									<ul>
+						
+										<li id="phtml_2">
+											<a href="#">Child node 1</a>
+										</li>
+										<li id="phtml_3">
+											<a href="#">Child node 2</a>
+										</li>
+									</ul>
+								</li>
+						
+								<li id="phtml_4">
+									<a href="#">Root node 2</a>
+								</li>
+							</ul>
+						</div>
+						
+					</div>
+					<div class="passwords">
+						<table>
+							<thead>
+								<tr>
+									<td>title</td>
+									<td>username</td>
+									<td>password</td>
+									<td>IP/url</td>
+							</thead>
+							<tbody>
+								<tr class="even">
+									<td>administrator</td>
+									<td>*****</td>
+									<td>*****</td>
+									<td>91.121.93.82</td>
+								</tr>
+								<tr class="odd">
+									<td>administrator</td>
+									<td>*****</td>
+									<td>*****</td>
+									<td>91.121.93.82</td>
+								</tr>
+								<tr class="even">
+									<td>administrator</td>
+									<td>*****</td>
+									<td>*****</td>
+									<td>91.121.93.82</td>
+								</tr>
+								<tr class="odd">
+									<td>administrator</td>
+									<td>*****</td>
+									<td>*****</td>
+									<td>91.121.93.82</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sidebar span-5">
+				<div class="box">
+					<h2>Information</h2>
+					<div class="box-content">
+						Created on 13/03/2010<br/>
+						By Kevin Muller<br/>
+						Passwords strength<br/>
+						<div class="pwstrength">
+							<div class="pwstrength_container">
+								<div class="pwstrength_level" style="width:80%;">&nbsp;</div>
+							</div>	
+							<span class="score">80%</span>
+						</div>
+					</div>
+				</div>
+				
+				<div class="box people">
+					<h2>People in this category</h2>
+					<div class="box-content">
+						<h3>Administrators</h3>
+						<ul class="people">
+							<li>Marcin Caban</li>
+							<li>Kevin Muller</li>
+							<li>George Washington</li>
+						</ul>
+						
+						<h3>Programmers</h3>
+						<ul class="people">
+							<li>Marcin Caban</li>
+							<li>Kevin Muller</li>
+							<li>George Washington</li>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="box activity">
+					<h2>Activity</h2>
+					<div class="box-content">
+						<h3>Administrators</h3>
+						<ul class="people">
+							<li>Marcin Caban</li>
+							<li>Kevin Muller</li>
+							<li>George Washington</li>
+						</ul>
+						
+						<h3>Programmers</h3>
+						<ul class="people">
+							<li>Marcin Caban</li>
+							<li>Kevin Muller</li>
+							<li>George Washington</li>
+						</ul>
+					</div>
+				</div>
+				
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

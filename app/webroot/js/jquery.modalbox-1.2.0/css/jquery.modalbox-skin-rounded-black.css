@@ -1,0 +1,121 @@
+/* skin rounded-black - BEGIN */
+
+
+/* modalBoxBodyContent */
+div#modalBox div#modalBoxBody div.modalBoxBodyContent {
+	background-color:white;
+}
+div#modalBox.emphasis div#modalBoxBody div.modalBoxBodyContent {
+	border:1px dotted red;
+}
+
+
+/* modalBoxCloseButton */
+div#modalBox div#modalBoxBody div#modalBoxCloseButton {
+	position:absolute; 
+	top:8px; 
+	right:26px; 
+	width:29px;
+}
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox,
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox span {
+	text-decoration:none;
+	color:#f4f4f4;
+	cursor:pointer;
+}
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox {
+	display:block;
+	height:20px;
+	background:transparent url(../img/skins/rounded_black/closebutton_29x20.png) right center no-repeat;
+}
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox span {
+	display:none;
+}
+
+
+div#modalBox div#modalBoxBody {
+	padding:46px 0 28px 0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainerContent {
+	padding:0;
+}
+
+/* set image sprite */
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top div.modalboxStyleContainer_surface_body,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom div.modalboxStyleContainer_surface_body,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topRight,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomRight {
+	background-color:transparent;
+	background-image:url(../img/skins/rounded_black/bg_shadows_sprite.png);
+}
+/* modalboxStyleContainer_corner */
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topRight,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomRight {
+	background-repeat:no-repeat;
+	position:absolute;
+	width:26px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topLeft{
+	background-position:0 -74px;
+	left:0;
+	top:0;
+	height:46px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topRight{
+	background-position:-26px -74px;
+	right:0;
+	top:0;
+	height:46px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomLeft{
+	background-position:0 -120px;
+	left:0;
+	bottom:0;
+	height:28px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomRight{
+	background-position:-26px -120px;
+	right:0;
+	bottom:0;
+	height:28px;
+}
+/* modalboxStyleContainer_surface */
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom {
+	position:absolute;
+	width:100%;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top div.modalboxStyleContainer_surface_body,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom div.modalboxStyleContainer_surface_body {
+	background-color:transparent;
+	background-repeat:repeat-x;
+	margin:0 26px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top {
+	left:0;
+	top:0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top div.modalboxStyleContainer_surface_body {
+	height:46px;
+	background-position:0 0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom {
+	left:0;
+	bottom:0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom div.modalboxStyleContainer_surface_body {
+	height:28px;
+	background-position:0 -46px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_left {
+	background:transparent url(../img/skins/rounded_black/bg_shadows_left.png) left top repeat-y;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_right {
+	background:transparent url(../img/skins/rounded_black/bg_shadows_right.png) right top repeat-y;
+	padding:0 26px;
+}
+/* skin rounded-black - END */

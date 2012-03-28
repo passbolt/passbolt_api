@@ -1,0 +1,122 @@
+/* skin default - BEGIN */
+
+
+/* modalBoxBodyContent */
+div#modalBox div#modalBoxBody div.modalBoxBodyContent {
+	background-color:white;
+	padding:34px 0 0 0;
+}
+div#modalBox.emphasis div#modalBoxBody div.modalBoxBodyContent {
+	border:1px dotted red;
+}
+
+
+/* modalBoxCloseButton */
+div#modalBox div#modalBoxBody div#modalBoxCloseButton {
+	position:absolute; 
+	top:19px; 
+	left:0; 
+	text-align:right; 
+	width:100%;
+}
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox,
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox span {
+	display:block;
+	text-decoration:none;
+	color:#000;
+	cursor:pointer;
+}
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox {
+	background:#efefef url(../img/skins/default/closebutton_21x21.png) 99% 50% no-repeat;
+	border-bottom:1px solid #E5E5E5;
+	margin:0 19px;
+	padding:5px 0;
+}
+div#modalBox div#modalBoxBody div#modalBoxCloseButton a.closeModalBox span {
+	padding:3px 34px 3px 0;
+}
+
+
+div#modalBox div#modalBoxBody {
+	padding:39px 0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainerContent {
+	padding:0;
+}
+
+/* set image sprite */
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top div.modalboxStyleContainer_surface_body,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom div.modalboxStyleContainer_surface_body,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topRight,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomRight {
+	background-color:transparent;
+	background-image:url(../img/skins/default/bg_shadows_sprite.png);
+}
+/* modalboxStyleContainer_corner */
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topRight,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomLeft,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomRight {
+	background-repeat:no-repeat;
+	position:absolute;
+	width:39px;
+	height:39px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topLeft{
+	background-position:0 -78px;
+	left:0;
+	top:0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_topRight{
+	background-position:-39px -78px;
+	right:0;
+	top:0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomLeft{
+	background-position:0 -117px;
+	left:0;
+	bottom:0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_corner_bottomRight{
+	background-position:-39px -117px;
+	right:0;
+	bottom:0;
+}
+/* modalboxStyleContainer_surface */
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom {
+	position:absolute;
+	width:100%;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top div.modalboxStyleContainer_surface_body,
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom div.modalboxStyleContainer_surface_body {
+	background-color:transparent;
+	background-repeat:repeat-x;
+	margin:0 39px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top {
+	left:0;
+	top:0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_top div.modalboxStyleContainer_surface_body {
+	background-position:0 0;
+	height:39px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom {
+	left:0;
+	bottom:0;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_bottom div.modalboxStyleContainer_surface_body {
+	background-position:0 -39px;
+	height:39px;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_left {
+	background:transparent url(../img/skins/default/bg_shadows_left.png) left top repeat-y;
+}
+div#modalBox div#modalBoxBody div.modalboxStyleContainer_surface_right {
+	background:transparent url(../img/skins/default/bg_shadows_right.png) right top repeat-y;
+	padding:0 39px;
+}
+/* skin default - END */
