@@ -1,4 +1,5 @@
 /app/config
+/app/config/database.php
 /app/tmp
 /plugins
 /vendors*.class
