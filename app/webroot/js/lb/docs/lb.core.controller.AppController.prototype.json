@@ -1,0 +1,1 @@
+c({"name": "lb.core.controller.AppController.prototype", "type": "prototype", "parents": ["lb.core.controller.AppController"], "comment": "", "src": "lb/core/controller/appController.js", "line": 27, "children": ["lb.core.controller.AppController.prototype.getEventBus"]})

@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Synthetic Typing Test</title>
+        <style type='text/css'>
+			
+        </style>
+    </head>
+    <body>
+	<div class='baz'>
+		<div id='foo'>
+			<a href="javascript://">Holler!</a>
+			<div class='combo'>combo</div>
+		</div>
+		<div class='combo'>combo</div>
+		<div class='another'>another</div>
+	</div>
+<script type='text/javascript' src='../../steal/steal.js'></script>
+<script type='text/javascript'>
+	steal('funcunit/browser/resources/jquery.js').then( function(){
+		$(document.documentElement).click(function(ev){
+			$(ev.target).addClass("iWasClicked")
+		})
+		
+	})
+</script>
+    </body>
+</html>

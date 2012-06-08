@@ -1,0 +1,1 @@
+c({"name": "steal.File.prototype.load", "params": {"returnScript": {"description": "", "type": "", "optional": false, "order": 0, "name": "returnScript"}}, "ret": {"type": "undefined", "description": ""}, "type": "function", "parents": ["steal.File.prototype"], "comment": "<p>Loads this steal</p>", "src": "steal/steal.js", "line": 860, "children": []})

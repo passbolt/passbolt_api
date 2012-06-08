@@ -1,0 +1,39 @@
+<html>
+	<head></head>
+	<body>
+		<script type='text/javascript' src='../../steal/steal.js'></script>
+		<script type='text/javascript'>
+		steal('funcunit/browser/resources/jquery.js', function(){
+			$(function(){
+				
+				window.confirm = function(string){
+					return true;
+				};
+				
+				window.alert = function(string){
+					return true;
+				};
+				
+				$('#confirm').click(function(){
+					if(confirm("are you sure?")){
+						$("#confirm").html("I was confirmed")
+					} else {
+						$("#confirm").html("I was not confirmed")
+					}
+				});
+				
+				$('#alert').click(function(){
+					if(alert("That just happened")){
+						$("#alert").html("I was alert")
+					} else {
+						$("#alert").html("I was alert")
+					}
+				});
+			});
+		})
+		</script>
+		
+		<a href="#" id="confirm">Confirm!</a>
+		<a href="#" id="alert">Alert!</a>
+	</body>
+</html>

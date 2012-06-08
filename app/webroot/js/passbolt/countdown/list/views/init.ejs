@@ -1,0 +1,5 @@
+<%for(var i = 0; i < this.length ; i++){%>
+	<li <%= this[i]%>>
+		<%== $.View('//lb/countdown/list/views/countdown.ejs', this[i] )%>
+	</li>
+<%}%>

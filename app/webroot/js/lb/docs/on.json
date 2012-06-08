@@ -1,0 +1,1 @@
+c({"name": "on", "type": "attribute", "comment": "<p>On lets you programatically turn off fixtures.  This is mostly used for testing.</p>\n\n<pre><code>$.fixture.on = false\nTask.findAll({}, function(){\n  $.fixture.on = true;\n})\n</code></pre>", "src": "jquery/dom/fixture/fixture.js", "line": 795, "children": []})

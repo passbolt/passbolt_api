@@ -1,0 +1,28 @@
+#!/bin/sh
+# This file is a batch script that invokes loader
+# ex: documentjs/doc cookbook/cookbook.html
+
+# Absolute path to this script. /home/user/bin/foo.sh
+
+TARGET_FILE=$0
+
+cd `dirname $TARGET_FILE`
+TARGET_FILE=`basename $TARGET_FILE`
+
+PHYS_DIR=`pwd -P`
+SCRIPT=$PHYS_DIR/$TARGET_FILE
+
+# Absolute path this script is in. /home/user/bin
+BASE=`dirname $SCRIPT`/
+
+# Keeps the executing directory as the JMVC root.
+cd $BASE..
+
+# classpath
+CP=$BASE../steal/rhino/js.jar
+
+# load the run.js file
+LOADPATH=${BASE}scripts/run.js
+
+# call js.bat
+. $BASE../steal/rhino/loader $1 $2 $3 $4 $5 $6

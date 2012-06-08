@@ -1,0 +1,1 @@
+c({"name": "lb.core.model.AppBootstrap.prototype.initApplication", "params": {}, "ret": {"description": "", "type": "void"}, "type": "function", "parents": ["lb.core.model.AppBootstrap.prototype"], "comment": "<p>Init application</p>", "src": "lb/core/model/appBootstrap.js", "line": 121, "children": []})

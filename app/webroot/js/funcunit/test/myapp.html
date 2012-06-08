@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Untitled Document</title>
+		<style>
+			#drag, #drop {
+				width:20px;
+				height:20px;
+				position:relative;
+			}
+			#drag {
+				border:1px solid green;
+				background-color:green;
+				left:0px;
+				top:0px;
+			}
+			#drop {
+				border:1px solid yellow;
+				background-color:yellow;
+				left:40px;
+				top:40px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Hello World</h1>
+		<input id="typehere"/><input type='submit' value="Copy" id='copy'/>
+		<p id='seewhatyoutyped'></p>
+		<iframe src='myotherapp.html'></iframe>
+		<div id='clickToChange'>Change Thist Text</div>
+        <a href="javascript:changeText()" id='changelink'>Change</a>
+		<div id='drag'></div>
+		<div id='drop'></div>
+		<h3>hasClass</h3>
+		<div id='hasClass'>Click Me</div>
+		<h3>Exists</h3>
+		<div id='exists'>Click Me</div>
+		<h3>Trigger Custom Event</h3>
+		<div id='trigger'>Trigger Me</div>
+		<div id='confirm'>Confirm Me
+		<div class='result'></div>
+		</div>
+		<div id='rightclick'>Right Click Me</div>
+		<div class='rightclickResult'></div>
+		<div class='hidden' style='display:none;'></div>
+		
+		<div id="testData"></div>
+		<script type='text/javascript' src='../../steal/steal.js'></script>
+		<script type='text/javascript'>
+		steal('funcunit/browser/resources/jquery.js')
+			.then('funcunit/test/jquery.event.drag.js')
+			.then( 'funcunit/test/jquery.event.drop.js', function(){
+				$('#testData').data('idval', 1000);
+				
+				$("#rightclick").bind("contextmenu", function(){
+					$(".rightclickResult").text("Right Clicked")
+				})
+				
+				// on key up, write the value
+				$("#typehere").keyup(function(){
+					$("#seewhatyoutyped").html("typed "+this.value)
+				})
+				
+				//when copy is clicked, change the text
+				$("#copy").click(function(){
+					//run slowwwww
+					var sum = 0, date = new Date();
+					for(var i =0; i< 10; i++){
+						$("*").each(function(){
+							$(this).width()
+							$(this).height()
+						})
+					}
+					$("#seewhatyoutyped").html("copied "+$("#typehere").val())
+				})
+				
+				$('#clickToChange').click(function(){
+					setTimeout(function(){
+						$('#clickToChange').html("changed")
+					},300)
+				})
+				//has class
+				$("#hasClass").click(function(){
+					setTimeout(function(){
+						$("#hasClass").addClass('someClass')
+					},200)
+				})
+				
+				//exists
+				$("#exists").click(function(){
+					setTimeout(function(){
+						$("#exists").append("<p>I exist</p>")
+					},200)
+				})
+				$('#trigger').bind('myCustomEvent', function(){
+					$("#trigger").append("<p>I was triggered</p>")
+				})
+				
+				//confirm
+				$('#confirm').bind('click', function(){
+					if(confirm("are you sure?")){
+						$("#confirm .result").html("<p>I was confirmed</p>")
+					} else {
+						$("#confirm .result").html("<p>I was not confirmed</p>")
+					}
+				})
+				window.changeText = function(){
+	                $('#changelink').text('Changed')
+	            }
+				
+				$('#drag').live("draginit", function(){})
+					.live("dragover", function(){
+						$(this).css('background-color', 'black').addClass("dragover")
+					})
+				$('#drop').live("dropover", function(){ 
+					$(this).css('background-color', 'blue').addClass("dropover")
+				})
+				$('#drop').live("dropout", function(){ 
+					$(this).css('background-color', 'green').addClass("dropout")
+				})
+			})
+			
+			
+		</script>
+	</body>
+</html>

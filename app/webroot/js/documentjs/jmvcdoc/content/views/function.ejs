@@ -1,0 +1,25 @@
+<%== view("//documentjs/jmvcdoc/content/views/top.ejs",this)%>
+ <div class='comment'><%== link(this.comment)%></div>
+ <h2>API</h2>
+ <pre class='signiture'><code><%= signiture()%></code></pre>
+  
+  <div class='params'>
+  
+  <% for(var n in this.params){   
+       var param = this.params[n]; %>  
+      <div class='param <%= param.optional ? "optional" : ""%>'>
+          <label><%= param.name%></label>
+          <code>{<%=(param.optional ? 'optional:' : '') +""+(param.type) %>}<%= param["default"] ? " defaults to "+param["default"] :""%></code> 
+		   <%== link(param.description) %>
+      </div>
+ <% } %>
+
+ <% if(this.ret && this.ret.type) {%>
+     <div class='return'>
+         <label>returns</label> 
+         <code>{<%=(this.ret.type)%>}</code> 
+		 <%== link(this.ret.description)%>
+     </div>
+ <% } %>   
+ 
+ </div>

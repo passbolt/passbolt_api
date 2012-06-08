@@ -1,0 +1,1 @@
+c({"name": "steal.static.add", "params": {"stel": {"description": "", "type": "Object", "optional": false, "order": 0, "name": "stel"}}, "ret": {"type": "undefined", "description": ""}, "type": "function", "parents": ["steal.static"], "comment": "<p>when a 'unique' steal gets added ...</p>", "hide": true, "src": "steal/steal.js", "line": 991, "children": []})

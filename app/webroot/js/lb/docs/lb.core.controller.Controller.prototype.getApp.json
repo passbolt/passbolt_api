@@ -1,0 +1,1 @@
+c({"name": "lb.core.controller.Controller.prototype.getApp", "params": {}, "ret": {"description": "", "type": "lb.core.controller.AppController"}, "type": "function", "parents": ["lb.core.controller.Controller.prototype"], "comment": "<p>Get the application controller</p>", "src": "lb/core/controller/controller.js", "line": 41, "children": []})

@@ -1,0 +1,1 @@
+c({"name": "type", "type": "attribute", "comment": "<p>If the input elements of the form are loosing focus, add the default\nvalue if the element's value is empty</p>", "src": "passbolt/countdown/controller/createCountdownComponent.js", "line": 41, "children": []})

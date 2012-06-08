@@ -1,0 +1,38 @@
+15:56:01.971 INFO - Java: Sun Microsystems Inc. 20.0-b11
+15:56:01.973 INFO - OS: Linux 3.0.0-17-generi15:56:03.684 WARN - Caution: '/usr/bin/firefox': file is a script file, not a real executable.  The browser environment is no longer fully under RC control
+15:56:03.687 WARN - It looks like your baseUrl (file:///home/cedric/Workspace/getacountdown/app/webroot/js/lb/funcunit.html?steal[browser]=selenium&steal[startFiles]=funcunit/selenium/client.js) is pointing to a file, not a directory (it doesn't end with a /).  We're going to have to strip off the last part of the pathname.
+ServletHandler@16ba8602
+15:56:02.229 INFO - Started HttpContext[/wd,/wd]
+15:56:02.248 INFO - Started SocketListener on 0.0.0.0:4444
+15:56:02.248 INFO - Started org.openqa.jetty.jetty.Server@3716ab4e
+15:56:03.448 INFO - Checking Resource aliases
+15:56:03.465 INFO - Checking Resource aliases
+15:56:03.474 INFO - Command request: getNewBrowserSession[*firefox, file:///home/cedric/Workspace/getacountdown/app/webroot/js/lb/funcunit.html?steal[browser]=selenium&steal[startFiles]=funcunit/selenium/client.js, ] on session null
+15:56:03.482 INFO - creating new remote session
+15:56:03.686 INFO - Allocated session 5cdc97713db14349bb7497c1c4d2d3f5 for file:///home/cedric/Workspace/getacountdown/app/webroot/js/lb/funcunit.html?steal[browser]=selenium&steal[startFiles]=funcunit/selenium/client.js, launching...
+15:56:04.348 INFO - Preparing Firefox profile...
+15:56:12.403 INFO - Launching Firefox...
+15:56:17.268 INFO - Got result: OK,5cdc97713db14349bb7497c1c4d2d3f5 on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:17.312 INFO - Command request: open[file:///home/cedric/Workspace/getacountdown/app/webroot/js/lb/funcunit.html?steal[browser]=selenium&steal[startFiles]=funcunit/selenium/client.js, ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:17.840 INFO - Got result: OK on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:17.844 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:17.859 INFO - Got result: OK,[{"type":"begin","data":{}},{"type":"moduleStart","data":{"name":"lb.Countdown.Create"}},{"type":"testStart","data":{"name":"create countdowns","module":"lb.Countdown.Create"}}] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:18.218 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:18.234 INFO - Got result: OK,[] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:18.590 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:18.601 INFO - Got result: OK,[] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:18.957 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:20.690 INFO - Got result: OK,[] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:21.047 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:21.098 INFO - Got result: OK,[{"type":"log","data":{"result":true,"message":"Ice Water added"}},{"type":"log","data":{"result":true,"message":"form reset","actual":"","expected":""}},{"type":"log","data":{"result":true,"message":"form reset","actual":"","expected":""}},{"type":"testDone","data":{"name":"create countdowns","module":"lb.Countdown.Create","failed":0,"passed":0,"total":0}},{"type":"moduleDone","data":{"name":"lb.Countdown.Create","failed":0,"passed":3,"total":3}},{"type":"moduleStart","data":{"name":"lb.Countdown.List"}},{"type":"testStart","data":{"name":"delete countdowns","module":"lb.Countdown.List"}}] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:21.463 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:21.472 INFO - Got result: OK,[] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:21.829 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:21.844 INFO - Got result: OK,[{"type":"log","data":{"result":true,"message":"Grilled Cheese Removed"}},{"type":"testDone","data":{"name":"delete countdowns","module":"lb.Countdown.List","failed":0,"passed":0,"total":0}},{"type":"moduleDone","data":{"name":"lb.Countdown.List","failed":0,"passed":1,"total":1}},{"type":"moduleStart","data":{"name":"gacd test"}},{"type":"testStart","data":{"name":"Copy Test","module":"gacd test"}}] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:22.204 INFO - Command request: getEval[Selenium.getResult(), ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:22.216 INFO - Got result: OK,[{"type":"log","data":{"result":true,"message":"welcome text","actual":"Welcome to JavaScriptMVC 3.2!","expected":"Welcome to JavaScriptMVC 3.2!"}},{"type":"testDone","data":{"name":"Copy Test","module":"gacd test","failed":0,"passed":0,"total":0}},{"type":"moduleDone","data":{"name":"gacd test","failed":0,"passed":1,"total":1}},{"type":"done","data":{"failed":0,"passed":5,"total":5,"runtime":4367}}] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:22.223 INFO - Command request: close[, ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:22.252 INFO - Got result: OK on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:22.255 INFO - Command request: testComplete[, ] on session 5cdc97713db14349bb7497c1c4d2d3f5
+15:56:22.442 INFO - Killing Firefox...
+15:56:22.620 INFO - Got result: OK on session 5cdc97713db14349bb7497c1c4d2d3f5

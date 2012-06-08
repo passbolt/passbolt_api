@@ -1,0 +1,1 @@
+c({"name": "lb.core.model.AppBootstrap.prototype.dispatch", "params": {}, "ret": {"description": "", "type": "void"}, "type": "function", "parents": ["lb.core.model.AppBootstrap.prototype"], "comment": "<p>Dispatch to the right action following the hash url\n@use core.controller::getDispatcher()</p>", "src": "lb/core/model/appBootstrap.js", "line": 169, "children": []})

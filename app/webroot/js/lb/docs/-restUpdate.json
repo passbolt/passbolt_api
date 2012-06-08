@@ -1,0 +1,1 @@
+c({"name": "-restUpdate", "params": {"settings": {"description": "", "type": "", "optional": false, "order": 0, "name": "settings"}}, "ret": {"type": "undefined", "description": ""}, "type": "function", "comment": "<p>Provides a rest update fixture function</p>", "hide": true, "src": "jquery/dom/fixture/fixture.js", "line": 447, "children": []})

@@ -1,0 +1,1 @@
+c({"name": "init", "params": {}, "ret": {"type": "undefined", "description": ""}, "type": "function", "comment": "<p>There is no constructor\n@throw {lb.core.NoConstructor}</p>", "src": "lb/core/helper/routeHelper.js", "line": 77, "children": []})

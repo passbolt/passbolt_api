@@ -1,0 +1,25 @@
+<html>
+	<body>
+		<div>
+			<iframe id='myframe' name='myframe' src="iframe.html"></iframe>
+		</div>
+
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<script type='text/javascript'>
+		steal('funcunit/browser/resources/jquery.js', function(){
+			$('div').click(function() {
+				var div = $(this),
+						iframe = $('<iframe/>');
+
+				iframe.attr({
+					id: 'myframe',
+					name: 'myframe',
+					src: 'iframe2.html'
+				});
+
+				div.html(iframe);
+			});
+		})
+		</script>
+	</body>
+</html>

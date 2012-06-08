@@ -1,0 +1,1 @@
+c({"name": "bus", "type": "attribute", "parents": ["index"], "comment": "<p>the event bus of the application, each business events should pass\nthrough this component</p>", "attribute_type": "@type lb.core.controller.EventBusController", "src": "passbolt/passbolt.js", "line": 24, "children": []})

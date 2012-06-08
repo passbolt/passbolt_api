@@ -1,0 +1,1 @@
+c({"name": "lb.core.model.Bootstrap.prototype.ready", "params": {}, "ret": {"type": "undefined", "description": ""}, "type": "function", "parents": ["lb.core.model.Bootstrap.prototype"], "comment": "<p>The bootstrap process execute this function when the process\nis finished</p>", "src": "lb/core/model/bootstrapInterface.js", "line": 33, "children": []})
