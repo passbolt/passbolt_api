@@ -1,0 +1,42 @@
+<%  
+   var previous = "", res, current, title;
+%>
+
+<% if(selected && selected.length) { %>
+	<div id='selected'>
+		    <% for(var i =0; i < selected.length; i++){%>
+				<%  current = selected[i];
+		 			title = (current.title ? current.title: current.name);
+					res = calculateDisplay(previous, title);
+					name = normalizeName(current.name) %>
+		<div class="content">
+			    <a href="#&who=<%=name%>" class='selected choice <%=current.type%>' style="padding-left: <%= res.length * 20%>px">
+			    	<span class='remove' title="close"></span>
+					<%=res.name.replace("jQuery.","$.")%>
+					
+				</a>
+				<% previous = title%>
+		</div>
+			<% if(i<(selected.length-1)){ %>
+		<div class="spacer"><div>&nbsp;</div></div>
+			<%}%>
+			<%}%>
+	</div>
+<%}%>
+<div id='results' style="display: <%= hide? 'none' : 'block'%>">
+	<div class="content">
+	    <% for(var i =0; i < list.length; i++){%>
+			<% current = list[i];
+			   if(current.hide){ continue; }
+			   title = (current.title ? current.title: current.name);
+	           res = calculateDisplay(previous, title);
+			   name = normalizeName(current.name) %>
+		    <a href="<%=current.type == 'prototype' || current.type == 'static' ? 'javascript://': '#&who='+name%>" class='result choice <%=current.type%>' style="padding-left: <%= res.length * 20%>px">
+		    	<%=res.name.replace("jQuery.","$.")%>
+			</a>
+			<% previous = title%>
+		<%}%>
+	</div>
+</div>
+
+

@@ -1,0 +1,1 @@
+c({"name": "event", "type": "attribute", "comment": "<p>Helper functions for managing events -- not part of the public interface.\nProps to Dean Edwards' addEvent library for many of the ideas.</p>", "src": "jquery/jquery.js", "line": 2835, "children": []})

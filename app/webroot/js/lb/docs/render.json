@@ -1,0 +1,1 @@
+c({"name": "render", "params": {}, "ret": {"type": "undefined", "description": ""}, "type": "function", "comment": "<p>Render the component based on its template\n@see {getTemplate}</p>", "src": "lb/core/controller/componentController.js", "line": 61, "children": []})

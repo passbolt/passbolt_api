@@ -1,0 +1,35 @@
+<div class='top'>
+	<div class="content">
+	    <h1><%=this.title || name.replace(/~/g,".") %>&nbsp;
+	    	<span class='<%= type%> type'><span class="typeEnd"><%= type %></span></span>&nbsp;
+	    	<span class="favorite favorite<%= isFavorite? 'on' : 'off'%>">&nbsp;&nbsp;&nbsp;</span></h1>
+	    <% if(this.inherits){ %>
+	    <div class='inherits'>
+	        inherits: <%== linkOpen(this.inherits) %>
+	    </div>
+	    <%} %>
+	    <% if(this.tags){ %>
+	    <div class='tags'>
+	        tags: <%== linkTags(this.tags) %>
+	    </div>
+	    <%} %>
+	    <% if(this.plugin){ %>
+	    <div class='plugin'>
+	        plugin: <%= this.plugin %>
+	    </div>
+	    <% } %>
+		<% if(this.download){ %>
+	    <div class='download'>
+	        download: <a href='<%= this.download%>'> <%== this.title || name.replace(/~/g,".") %></a>
+	    </div>
+	    <% } %>
+		<% if(this.test){ %>
+	    <div class='test'>
+	        test: <a href='<%= steal.root? steal.root.join(this.test): this.test %>'><%=this.test.match(/[^\/]*$/)[0]%></a>
+	    </div>
+	    <% } %>
+		<% if(this.line !== undefined && window.DOCS_SRC_MAP){ %>
+			<a href='<%== source(this) %>'>Source</a>
+		<%}%>
+	</div>	
+</div>

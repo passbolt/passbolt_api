@@ -1,0 +1,1 @@
+c({"name": "id", "type": "attribute", "comment": "<p>Check for id in params(if query string)\nIf this is just a string representation of an id, parse\nif(id === undefined &amp;&amp; typeof settings.data === \"string\") {\n    id = settings.data;\n}\n//</p>", "src": "jquery/dom/fixture/fixture.js", "line": 152, "children": []})

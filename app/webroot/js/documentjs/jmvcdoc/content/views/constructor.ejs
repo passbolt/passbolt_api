@@ -1,0 +1,25 @@
+<%== view("//documentjs/jmvcdoc/content/views/top.ejs",this)%>
+
+<%== link(comment)%>
+<h2>Constructor</h2>
+<%==this.init%>
+<pre class='signiture'><code><%= signiture()%></code></pre>
+
+  <div class='params'>
+  
+  <% for(var name in this.params){   
+       var param = this.params[name]; %>  
+      <div class='param <%= param.optional ? "optional" : ""%>'>
+          <label><%= param.name%></label>
+          <code>{<%=(param.optional ? 'optional:' : '') +""+(param.type) %>}</code> - <%= link(param.description) %>
+      </div>
+ <% } %>
+
+ <% if(this.ret && this.ret.type != "undefined") {%>
+     <div class='return'>
+         <label>returns</label> 
+         <code>{<%=(this.ret.type)%>}</code> - <%== link(this.ret.description)%>
+     </div>
+ <% } %>   
+ 
+ </div>

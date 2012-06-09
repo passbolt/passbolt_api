@@ -1,0 +1,56 @@
+<%  
+   var previous = "", res, current, title, titleCleaned, resName;
+%>
+
+<% if(selected && selected.length) { %>
+	<div id='selected'>
+		    <% for(var i =0; i < selected.length; i++){%>
+				<%  current = selected[i];
+		 			title = (current.title ? current.title: current.name);
+					res = calculateDisplay(previous, title);
+					name = normalizeName(current.name) %>
+		<div class="content">
+			    <a href="<%=$.route.url({who: name})%>" 
+				   class='selected choice <%=current.type%>' 
+				   style="padding-left: <%= res.length * 20%>px">
+			    	<%if(name != "index") { %>
+						<span class='remove' title="close"></span>
+					<%}%>
+					<%=res.name.replace("jQuery.","$.")%>
+					
+				</a>
+				<% previous = title%>
+		</div>
+			<% if(i<(selected.length-1)){ %>
+				<div class="spacer"><div>&nbsp;</div></div>
+			<%}%>
+			<%}%>
+	</div>
+<%}%>
+<div id='results' style="display: <%= hide? 'none' : 'block'%>">
+	<div class="content">
+	    <% for(var i =0; i < list.length; i++){%>
+			<% current = list[i];
+			   if(current.hide){ continue; }
+			   title = (current.title ? current.title: current.name);
+	           res = calculateDisplay(previous, title);
+			   name = normalizeName(current.name) ;
+				resName = res.name.replace("jQuery.","$.")
+				titleCleaned = title.replace("jQuery.","$."); 
+			%>
+		    <a href="<%=current.type == 'prototype' || current.type == 'static' ? 'javascript://': $.route.url({who: name}) %>" 
+			   class='result choice <%=current.type%>' 
+			   style="padding-left: <%= hasStaticOrPrototype ? res.length * 20 : 20%>px"
+			   data-name="<%= current.name %>">
+		    	<%if(hasStaticOrPrototype) {%>
+					<%= resName %>
+				<% } else  { %>
+					<span class='faded'><%= titleCleaned.replace(resName, "") %></span><%=  resName %>
+				<% } %>
+			</a>
+			<% previous = title %>
+		<%}%>
+	</div>
+</div>
+
+

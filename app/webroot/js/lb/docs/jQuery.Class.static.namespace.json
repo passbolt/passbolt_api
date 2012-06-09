@@ -1,0 +1,1 @@
+c({"name": "jQuery.Class.static.namespace", "type": "attribute", "parents": ["jQuery.Class.static"], "comment": "<p>The namespaces object</p>\n\n<pre><code>$.Class(\"MyOrg.MyClass\",{},{})\nMyOrg.MyClass.namespace //-&gt; MyOrg\n</code></pre>", "src": "jquery/class/class.js", "line": 628, "children": []})

@@ -1,0 +1,1 @@
+c({"name": "steal.static.root", "type": "attribute", "parents": ["steal.static"], "comment": "<p>The location of the steal folder.</p>", "src": "steal/steal.js", "line": 891, "children": []})

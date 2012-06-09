@@ -1,0 +1,1 @@
+c({"name": "lb.Countdown.Create", "type": "class", "comment": "<p>Creates countdowns</p>", "parents": ["index"], "inherits": "jQuery.Controller", "src": "passbolt/countdown/create/create.js", "line": 7, "children": ["lb.Countdown.Create.prototype"]})

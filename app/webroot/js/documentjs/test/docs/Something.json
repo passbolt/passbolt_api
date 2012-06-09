@@ -1,0 +1,1 @@
+C({"name": "Something", "type": "class", "parent": "something.js", "comment": "<h2>boom</h2>\n\n<p>[Bar]</p>\n\n<p>goes\nblah</p>", "construct": "  foo bar\nman\n\n", "tags": ["home"], "children": ["Something.prototype", "Something.prototype.myMethod", "Something.prototype.foo", "Something.static", "Something.static.staticSomething", "Something.static.foobar"]})

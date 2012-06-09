@@ -1,0 +1,17 @@
+<html>
+	<body>
+		<a href='javascript://' class='show-confirm'>Show confirm</a>
+		<div class='results'></div>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+
+		<script type='text/javascript'>
+			steal('funcunit/browser/resources/jquery.js', function() {
+				$('.show-confirm').click(function() {
+					if(window.confirm('confirm?')) {
+						$('.results').text('confirmed!');
+					}
+				})
+			});
+		</script>
+	</body>
+</html>

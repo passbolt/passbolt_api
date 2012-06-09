@@ -1,0 +1,1 @@
+c({"name": "lb.core.model.Bootstrap.prototype", "type": "prototype", "parents": ["lb.core.model.Bootstrap"], "comment": "", "src": "lb/core/model/bootstrapInterface.js", "line": 21, "children": ["lb.core.model.Bootstrap.prototype.init", "lb.core.model.Bootstrap.prototype.ready"]})

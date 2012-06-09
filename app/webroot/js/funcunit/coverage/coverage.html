@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Coverage</title>
+    </head>
+    <body>
+		<script type='text/javascript' src='../../steal/steal.js'></script>
+		<script type='text/javascript'>
+			var data = {
+				"files": {
+					"funcunit/browser/core.js": {
+		                  "linesUsed": {
+		                        "0": 1
+		                  }, 
+		                  "src": "(function() {", 
+		                  "lineCoverage": 0.7368421052631579, 
+		                  "blockCoverage": 0.56, 
+		                  "lines": 1, 
+		                  "blocks": 25
+			        }
+			      }, 
+			      "total": {
+			            "lineCoverage": 0.4253306472803714, 
+			            "blockCoverage": 0.22422010398613518, 
+			            "lines": 11417, 
+			            "blocks": 4616
+			      }
+			};
+
+			QUnit = {};
+			steal('funcunit/coverage', function(){
+				QUnit.coverage(data);
+			})
+		</script>
+    </body>
+</html>

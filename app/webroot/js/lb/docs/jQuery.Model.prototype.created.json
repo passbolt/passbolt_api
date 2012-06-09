@@ -1,0 +1,1 @@
+c({"name": "jQuery.Model.prototype.created", "type": "function", "parents": ["jQuery.Model.prototype"], "comment": "<p>Called by save after a new instance is created.  Publishes 'created'.</p>", "hide": true, "params": {"attrs": {"order": 0, "description": "", "name": "attrs", "type": "Object", "optional": false}}, "src": "jquery/model/model.js", "line": 1711, "children": []})

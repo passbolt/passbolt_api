@@ -1,0 +1,1 @@
+c({"name": "steal.static.cur", "params": {"file": {"description": "", "type": "", "optional": false, "order": 0, "name": "file"}}, "ret": {"description": "<p>String</p>", "type": undefined}, "type": "function", "parents": ["steal.static"], "comment": "<p>Gets the currently running script location.</p>", "src": "steal/steal.js", "line": 968, "children": []})

@@ -1,0 +1,1 @@
+steal("funcunit/qunit", "./lb_test.js");
