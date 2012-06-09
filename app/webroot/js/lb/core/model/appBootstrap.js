@@ -6,6 +6,7 @@ steal(
     , 'lb/core/controller/appController.js'
     , 'lb/core/model/dispatcherInterface.js'
     , 'lb/core/controller/eventBusController.js'
+    , 'lb/core/error/includeAll.js'
     
     , 'passbolt/activity/model/bootstrap.js'                // Extension bootstrap, should be enabled by the php script
 )
@@ -33,7 +34,8 @@ steal(
         */
         {
             'defaults' : {
-                'appControllerId' : 'app-controller'
+                'appRootUrl' : ''
+                , 'appControllerId' : 'app-controller'
                 , 'appNamespaceId' : 'app'
                 , 'appControllerClass' : lb.core.controller.AppController
                 , 'dispatchOptions' : { }
@@ -62,6 +64,12 @@ steal(
                 
                 // extend default options with args options
                 this.options = $.extend(true, {},  lb.core.model.AppBootstrap.defaults, options);
+                
+                // check compulsory options (an option compulsory lol)
+                if($.trim(this.options.appRootUrl) === ''){
+                    throw new lb.core.error.MissingOption('appRootUrl', 'lb.core.model.AppBootstrap');
+                }
+                
                 
                 // find the controller with the given appControllerId passed by args
                 this.$appController = $('#'+this.options.appControllerId);
@@ -126,6 +134,7 @@ steal(
              */
             'initConstants' : function()
             {
+                lb.APP_ROOT_URL = this.options.appRootUrl;
                 lb.APP_NAMESPACE_ID = this.options.appNamespaceId;
                 lb.APP_CONTROLLER_ID = this.options.appControllerId;
                 lb.EVENTBUS_CONTROLLER_ID = this.options.eventBusControllerId;

@@ -26,7 +26,8 @@ steal(
 
             //load the bootstrap of the application
             var boot = new passbolt.password.model.AppBootstrap({
-                'appNamespaceId' : 'passbolt'                                               // Application namespace
+                'appRootUrl' : 'http://passbolt.local'                                         // Application root url
+                , 'appNamespaceId' : 'passbolt'                                             // Application namespace
                 , 'appControllerId' : 'passbolt_app_controller'                             // Application controller DOM node id
                 , 'appControllerClass' : passbolt.password.controller.AppController         // Application controller class
                 , 'eventBusControllerId' : 'passbolt_event_bus_controller'                  // Event bus controller DOM node id

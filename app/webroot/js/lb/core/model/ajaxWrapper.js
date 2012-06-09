@@ -108,7 +108,7 @@ steal(
             , '_generateTransactionId' : function()
             {
                 this.transactionId = uuid();
-            }  
+            }
             
             /**
              * Get the current transaction id, generate a new one if null
@@ -161,7 +161,7 @@ steal(
                         // execute the bundled request
                         self._executeRequest({
                             type:       'POST',
-                            url:        'http://getacountdown.local/ajax/requests',
+                            url:        lb.APP_ROOT_URL+'/ajax/requests',
                             data:       {
                                 'requests':         bundleRequests,
                                 'transactionId':    transaction.transactionId
