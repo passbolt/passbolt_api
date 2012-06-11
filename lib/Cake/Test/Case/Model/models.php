@@ -3119,7 +3119,7 @@ class TranslatedItem2 extends CakeTestModel {
 /**
  * translateModel property
  *
- * @var string 'TranslateTestModel'
+ * @var string
  */
 	public $translateModel = 'TranslateWithPrefix';
 
@@ -3163,7 +3163,7 @@ class TranslatedItemWithTable extends CakeTestModel {
 /**
  * translateModel property
  *
- * @var string 'TranslateTestModel'
+ * @var string
  */
 	public $translateModel = 'TranslateTestModel';
 
@@ -3247,6 +3247,13 @@ class TranslatedArticle extends CakeTestModel {
  * @var array
  */
 	public $belongsTo = array('User');
+
+/**
+ * belongsTo property
+ *
+ * @var array
+ */
+	public $hasMany = array('TranslatedItem');
 
 }
 
@@ -4942,6 +4949,13 @@ class CustomArticle extends AppModel {
 	public $findMethods = array('unPublished' => true);
 
 /**
+ * belongsTo property
+ *
+ * @var array
+ */
+	public $belongsTo = array('User');
+
+/**
  * _findUnPublished custom find
  *
  * @return array
@@ -4952,6 +4966,20 @@ class CustomArticle extends AppModel {
 			return $query;
 		}
 		return $results;
+	}
+
+/**
+ * Alters title data
+ *
+ * @return void
+ **/
+	public function beforeValidate($options = array()) {
+		$this->data[$this->alias]['title'] = 'foo';
+		if ($this->findMethods['unPublished'] === true) {
+			$this->findMethods['unPublished'] = false;
+		} else {
+			$this->findMethods['unPublished'] = 'true again';
+		}
 	}
 
 }

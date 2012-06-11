@@ -1129,9 +1129,7 @@ class Model extends Object implements CakeEventListener {
 		if (is_array($one)) {
 			$data = $one;
 			if (empty($one[$this->alias])) {
-				if ($this->getAssociated(key($one)) === null) {
-					$data = array($this->alias => $one);
-				}
+				$data = $this->_setAliasData($one);
 			}
 		} else {
 			$data = array($this->alias => array($one => $two));
@@ -1155,6 +1153,24 @@ class Model extends Object implements CakeEventListener {
 					}
 					$this->data[$modelName][$fieldName] = $fieldValue;
 				}
+			}
+		}
+		return $data;
+	}
+
+/**
+ * Move values to alias
+ *
+ * @param array $data
+ * @return array
+ */
+	protected function _setAliasData($data) {
+		$models = array_keys($this->getAssociated());
+		$schema = array_keys($this->schema());
+		foreach ($data as $field => $value) {
+			if (in_array($field, $schema) || !in_array($field, $models)) {
+				$data[$this->alias][$field] = $value;
+				unset($data[$field]);
 			}
 		}
 		return $data;
@@ -2100,6 +2116,10 @@ class Model extends Object implements CakeEventListener {
  * - fieldList: Equivalent to the $fieldList parameter in Model::save()
  * - deep: If set to true, all associated data will be validated as well.
  *
+ * Warning: This method could potentially change the passed argument `$data`,
+ * If you do not want this to happen, make a copy of `$data` before passing it
+ * to this method
+ *
  * @param array $data Record data to validate. This should be a numerically-indexed array
  * @param array $options Options to use when validating record data (see above), See also $options of validates().
  * @return boolean True on success, or false on failure.
@@ -2107,14 +2127,16 @@ class Model extends Object implements CakeEventListener {
  *    Otherwise: array similar to the $data array passed, but values are set to true/false
  *    depending on whether each record validated successfully.
  */
-	public function validateMany($data, $options = array()) {
+	public function validateMany(&$data, $options = array()) {
 		$options = array_merge(array('atomic' => true, 'deep' => false), $options);
 		$this->validationErrors = $validationErrors = $return = array();
-		foreach ($data as $key => $record) {
+		foreach ($data as $key => &$record) {
 			if ($options['deep']) {
 				$validates = $this->validateAssociated($record, $options);
 			} else {
-				$validates = $this->create($record) && $this->validates($options);
+				$this->create(null);
+				$validates = $this->set($record) && $this->validates($options);
+				$data[$key] = $this->data;
 			}
 			if ($validates === false || (is_array($validates) && in_array(false, $validates, true))) {
 				$validationErrors[$key] = $this->validationErrors;
@@ -2187,6 +2209,7 @@ class Model extends Object implements CakeEventListener {
 			$db = $this->getDataSource();
 			$transactionBegun = $db->begin();
 		}
+
 		$associations = $this->getAssociated();
 		$return = array();
 		$validates = true;
@@ -2299,23 +2322,35 @@ class Model extends Object implements CakeEventListener {
  * - fieldList: Equivalent to the $fieldList parameter in Model::save()
  * - deep: If set to true, not only directly associated data , but deeper nested associated data is validated as well.
  *
+ * Warning: This method could potentially change the passed argument `$data`,
+ * If you do not want this to happen, make a copy of `$data` before passing it
+ * to this method
+ *
  * @param array $data Record data to validate. This should be an array indexed by association name.
  * @param array $options Options to use when validating record data (see above), See also $options of validates().
  * @return array|boolean If atomic: True on success, or false on failure.
  *    Otherwise: array similar to the $data array passed, but values are set to true/false
  *    depending on whether each record validated successfully.
  */
-	public function validateAssociated($data, $options = array()) {
+	public function validateAssociated(&$data, $options = array()) {
 		$options = array_merge(array('atomic' => true, 'deep' => false), $options);
 		$this->validationErrors = $validationErrors = $return = array();
-		if (!($this->create($data) && $this->validates($options))) {
+		$this->create(null);
+		if (!($this->set($data) && $this->validates($options))) {
 			$validationErrors[$this->alias] = $this->validationErrors;
 			$return[$this->alias] = false;
 		} else {
 			$return[$this->alias] = true;
 		}
+		$data = $this->data;
+		if (!empty($options['deep']) && isset($data[$this->alias])) {
+			$recordData = $data[$this->alias];
+			unset($data[$this->alias]);
+			$data = array_merge($data, $recordData);
+		}
+
 		$associations = $this->getAssociated();
-		foreach ($data as $association => $values) {
+		foreach ($data as $association => &$values) {
 			$validates = true;
 			if (isset($associations[$association])) {
 				if (in_array($associations[$association], array('belongsTo', 'hasOne'))) {
