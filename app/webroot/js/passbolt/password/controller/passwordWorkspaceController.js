@@ -6,7 +6,7 @@ steal(
     'passbolt/password/controller/accessRightController.js'
 )
 .then(
-    'lb/core/view/container/three-column.ejs',
+    'lb/core/view/template/container/three-column.ejs',
     function($){
         
         /*
