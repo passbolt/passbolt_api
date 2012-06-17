@@ -24,6 +24,11 @@
  */
 
 /**
+ * Additional App Configuration
+ */
+  Configure::load('app');         // Application
+
+/**
  * Cache Engine Configuration
  * Default settings provided below
  *
