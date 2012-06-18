@@ -41,6 +41,7 @@
 <!-- footer -->
 <footer>
 <?php echo $this->fetch('footer'); ?>
+<small><?php echo 'v.'.Configure::read('App.version.number'); ?></small>
 </footer>
 <?php echo $this->element('script'); ?>
 <?php echo $this->element('sql_dump'); ?>

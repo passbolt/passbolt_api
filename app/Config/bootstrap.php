@@ -26,7 +26,7 @@
 /**
  * Additional App Configuration
  */
- // Configure::load('app');         // Application
+  Configure::load('app');         // Application
 
 /**
  * Cache Engine Configuration
