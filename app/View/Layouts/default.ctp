@@ -30,44 +30,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		echo $this->Html->meta('icon');
 
 		echo $this->Html->css('cake.generic');
-                echo $this->Html->css('jquery/ui-lightness/jquery-ui-1.8.20.custom');
-		echo $this->Html->css('style');
-
-		echo $this->fetch('meta');
-		echo $this->fetch('css');
-		echo $this->fetch('script');
-                
-		echo $scripts_for_layout;
-    
-                echo $this->Html->script('steal/steal.js?passbolt'); // Include the software
-	?>
-</head>
-<body>
-    <div id="passbolt_app_controller">
-        <div id="passbolt-page-controller">
-        </div>
-    </div>
-
-    <?php echo $this->element('sql_dump'); ?>
-    <?php //echo $this->Js->writeBuffer(); // Write cached scripts ?>
-    
-</body>
-</html>
-
-<?php exit(0); ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<?php echo $this->Html->charset(); ?>
-	<title>
-		<?php echo $cakeDescription ?>:
-		<?php echo $title_for_layout; ?>
-	</title>
-	<?php
-		echo $this->Html->meta('icon');
-
-		echo $this->Html->css('cake.generic');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
