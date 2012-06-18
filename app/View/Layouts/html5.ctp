@@ -25,7 +25,8 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/jquery/ui-lightness/jquery-ui-1.8.20.custom.css" />
 <?php echo $this->fetch('css'); ?>
   <script src="js/compat/modernizr-2.5.3.min.js"></script>
 </head>
