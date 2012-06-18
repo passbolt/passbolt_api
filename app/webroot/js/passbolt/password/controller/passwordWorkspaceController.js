@@ -1,5 +1,7 @@
 steal( 
     'lb/core/controller/workspaceController.js',
+    'lb/core/helper/component/boxDecorator.js',
+    
     'passbolt/password/controller/passwordBrowserController.js',
     'passbolt/password/controller/categoryChooserController.js',
     'passbolt/password/controller/passwordInformationController.js',
@@ -37,9 +39,11 @@ steal(
                 // *************************************************************
                 
                 // Add the Password browser component
-                this.addComponent(passbolt.password.controller.PasswordBrowserController, {
+                var passwordBrowserController = this.addComponent(passbolt.password.controller.PasswordBrowserController, {
                     'id':'passbolt_password_password_browser'
-                }); 
+                });
+                //passwordBrowserController = passwordBrowserController.decorate(lb.core.helper.BoxDecorator, 'lb.core.helper.BoxDecorator');
+                passwordBrowserController.render();
                 
                 // *************************************************************
                 // Main area
