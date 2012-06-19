@@ -6,12 +6,20 @@ steal(
 .then( 
     function($){
         
+        /*
+         * @class lb.core.controller.ComponentController
+         * The component controller represents a graphical component controller 
+         * in the application. 
+         * @parent index
+         * @constructor
+         * Creates a new Component Controller
+         * @return {lb.core.controller.ComponentController}
+        */
         lb.core.controller.Controller.extend('lb.core.controller.ComponentController', {
             'defaults' : {
-                'label': 'ContainerComponentController'
-                , 'icon': null          // @notUsedYet
-                , 'decorate': null      // decorate the component with a box system or wathever @notUsedYet
-//                , 'template': null      // the default template, the last default override other defaults !!! check about that clearly
+                'label': 'ContainerComponentController'     // Label of the component
+                , 'icon': null                              // @notUsedYet
+//                , 'template': null                          // the default template, the last default override other defaults !!! check about that clearly
             }
         }
         , {    
@@ -24,6 +32,14 @@ steal(
              */
             'viewData': [],
             
+            /**
+             * The rendered view, if not displayed will be stored in this variable
+             * @type {string}
+             * @private
+             * @hide
+             */
+            'renderedView': '',
+            
             // Class Constructor
             'init': function(el, options)
             {
@@ -33,9 +49,9 @@ steal(
                 
                 this._super();
                 // add the controller to the data to pass to the view
-                this.set('controller', this);
+                this.setViewData('controller', this);
                 // set the template variable, this variable will be used by the function render
-                this.template = this.options.template
+                this.template = this.options.template;
                 
                 // stop the feedback loading
                 this.loading(false);
@@ -45,9 +61,9 @@ steal(
             },
             
             /**
-             * Get the assosciated template. If the options.template has been defined use this one.
-             * Else construct the template name function of the class name
-             * @return {String} The associated template
+             * Get the component's template. If the options.template has been defined 
+             * use this one. Else build the template uri functions of the component name.
+             * @return {String} The component template uri
              */
             'getTemplate': function()
             {
@@ -66,8 +82,9 @@ steal(
             },
             
             /** 
-            * Display a loading feedback to the user
-            * @param {Boolean} enable show If true show the feedback else hide it 
+             * Display a loading feedback to the user
+             * @param {Boolean} enable show If true show the feedback else hide it 
+             * @return {void}
             */
             'loading': function(enable)
             {
@@ -80,36 +97,46 @@ steal(
             
             /**
              * The set method allows developper to set data to the view
-             * @param {string} name the variable name
-             * @param {mixed} value the variable value
+             * @param {string} name the variable's name
+             * @param {mixed} value the variable's value
              * @return {void}
              */
-            'set': function(name, value)
+            'setViewData': function(name, value)
             {
                 this.viewData[name] = value;
             },
             
             /**
-             * Render the component based on its template
+             * The render method renders the component based on its template.
+             * Either the template url is passed during the component instanciation either
+             * the template url is defined by the Class' function getTemplate
              * @see {getTemplate}
+             * @param {array} options Associative array of options
+             * @param {boolean} options.display Display the rendered component. If true
+             * the rendered component will be push in the DOM else the rendered component
+             * will be stored in the instance's variable renderedView
+             * @param {boolean} Return true if the method does not encountered troubles else
+             * return false
              */
-                'render': function()
-                {
-                    this.element.html($.View(this.getTemplate(), this.viewData));
-                    return;
-                    // how to decorate properly the component
-
-                    // Subtemplate decoration test
-    //                if(this instanceof lb.core.controller.ContainerController){
-    //                }
-    //                else{
-                        var content = $.View(this.getTemplate(), this.viewData);
-                        this.element.html($.View("//lb/core/view/decorator/box.ejs"));
-                        //tout pas beau, mais les sub tpl ne marchent pas , il semble meme que le passage de variable contenant du html est escape qq part
-                        this.element.find('.lb-box-content').html(content);
-    //                }
-
+            'render': function(options)
+            {
+                var returnValue = false;
+                var options = typeof options == 'undefined' ? {} : options;
+                // display the rendering if true and return a boolean, else return the rendering code
+                var display = typeof options.display == 'undefined' ? true : options.display;
+                
+                var renderingTemplate = $.View(this.getTemplate(), this.viewData);
+                if(display){
+                    this.element.html(renderingTemplate);
+                    returnValue = true;
                 }
+                else{
+                    this.renderedView = renderingTemplate;
+                    returnValue = true;
+                }
+                
+                return returnValue;
+            }
             
         });
         

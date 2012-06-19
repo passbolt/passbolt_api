@@ -153,6 +153,7 @@ steal(
             /**
              * Init application
              * @return {void}
+             * @todo make this operation automatic
              */
             'initModules': function()
             {

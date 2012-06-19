@@ -1,7 +1,6 @@
 steal( 
     'jquery/controller'
     , 'lb/core/controller/componentController.js'
-    , 'passbolt/password/controller/boxDecorator.js'
 )
 .then( 
     function($){
@@ -42,9 +41,6 @@ steal(
                 
                 var $component = $('<div id="'+componentOptions.id+'"/>').appendTo($area);
                 var component = new componentClass($component, componentOptions);
-                // Decorate the component here!
-                // @todo we will need a factory
-                component.decorate(passbolt.password.controller.BoxDecorator);
                 
                 // reference the component
 //                this.referenceComponent({

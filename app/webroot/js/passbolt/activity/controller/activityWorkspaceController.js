@@ -33,9 +33,10 @@ steal(
                 // *************************************************************
                 
                 // Add the Password browser component
-                this.addComponent(passbolt.password.controller.PasswordBrowserController, {
-                    'id':'passbolt_password_password_browser'
+                var passwordBrowserController = this.addComponent(passbolt.password.controller.PasswordBrowserController, {
+                    'id':'passbolt_activity_password_browser'
                 }); 
+                passwordBrowserController.render();
                 
                 // *************************************************************
                 // Main area
@@ -53,19 +54,19 @@ steal(
                 
                 // Add vertical container to the second side area
                 var secondSideContainer = this.addComponent(lb.core.controller.ContainerController, {
-                    'id':'passbolt_password_second_side_container'
+                    'id':'passbolt_activity_second_side_container'
                     , 'template' : '//lb/core/view/template/container/vertical.ejs'
                 }, 'lb-container-second_side');
                 secondSideContainer.render();
                 
                 // Add the Password Information component
                 secondSideContainer.addComponent(passbolt.password.controller.PasswordInformationController, {
-                    'id':'passbolt_password_password_information'
+                    'id':'passbolt_activity_password_information'
                 });
                 
                 // Add the Password Information component
                 secondSideContainer.addComponent(passbolt.password.controller.AccessRightController, {
-                    'id':'passbolt_password_access_right'
+                    'id':'passbolt_activity_access_right'
                 });
                 
                 this._super();

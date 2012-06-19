@@ -68,7 +68,6 @@ steal(
                     $controller[pluginNameController]();
                 }
                 
-                console.log(route);
                 // extract parameters
                 for(var i=1; true; i++){
                     if(typeof route['p'+i] === 'undefined') break; // For you Remy the future PIO

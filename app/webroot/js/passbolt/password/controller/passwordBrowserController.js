@@ -25,7 +25,6 @@ steal(
             'init' : function(el, options)
             {
                 this._super();
-                this.render();
             }
             
             , 'selectPassword': function(passwordId)
@@ -64,6 +63,9 @@ steal(
                 this.getEventBus().trigger('passbolt_password_selected', {'password_id':element.html()})
             }
             
+            , 'render' : function(options){
+                this._super(options);
+            }
         });
         
     }

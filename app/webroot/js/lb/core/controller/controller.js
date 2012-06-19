@@ -7,12 +7,14 @@ steal(
 
         /*
         * @class lb.core.controller.Controller
-        * The core class Controller is an extension of the JavascriptMVC controller. This
-        * class provides to developpers specific common tools to create application's controllers.
+        * The core class Controller is an extension of the JavascriptMVC Controller. This
+        * class provides to developpers specific common tools to create application's 
+        * controllers.
+        * 
         * @parent index
         * @constructor
         * Creates a new controller
-        * @return {lb.core.controller.EventBusController}
+        * @return {lb.core.controller.Controller}
         */
         $.Controller('lb.core.controller.Controller',
         
@@ -21,7 +23,9 @@ steal(
             /**
              * Get the controller dispatcher. The Dispatcher explain how the routes have to
              * be dispatch for this controller.
-             * @return {lb.core.model.Dispatcher}
+             * 
+             * @return {lb.core.model.Dispatcher} By default return the common module -> controller -> action
+             * dispatcher.
              */
             'getDispatcher': function()
             {
@@ -43,27 +47,9 @@ steal(
                 this.getEventBus().trigger('lb_controller_released', {'component':this});
             },
             
-//            '.*' : function()
-//            {
-//                console.log('super');
-//            },
-            
-            'decorate' : function(instance, Class)
-            {
-                for(var i in Class){
-                    
-                }
-                console.dir(this);
-                // constructor with a parameter of the instance to decorate
-                // const(instance, DecoratorClass):decoratedInstance
-                // override existing functions, with the support of _super
-                // add new functions to the existing instance
-                // offer the possibility to undecorate
-                // __older__ older functions to keep a references to the older functions
-            },
-            
             /**
              * Destroy the component and unreference it
+             * @return {void}
              */
             'destroy': function()
             {

@@ -11,6 +11,10 @@
 
 steal(
     './passbolt.css'                                    // application CSS file
+    
+    , 'lb/core/controller/class.js'                     // the application's class
+    , 'lb/core/controller/controller.js'                // the application's controller
+    
     , 'lb/core/controller/eventBusController.js'        // the event bus controller
     , 'passbolt/password/model/appBootstrap.js'         // passbolt application bootstrap
     , 'passbolt/password/controller/appController.js'   // passbolt main application controller
@@ -20,7 +24,7 @@ steal(
 )
 .then(function(){
 
-        steal.options.logLevel = 0;
+        steal.options.logLevel = 1;
             
         $(document).ready(function(){
 

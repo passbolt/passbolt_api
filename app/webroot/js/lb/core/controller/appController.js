@@ -31,6 +31,8 @@ steal(
             /**
              * Reference to application's components
              * @type lb.core.controller.ComponentController
+             * @private
+             * @hide
              */
             '_components': {},
             

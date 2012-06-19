@@ -22,7 +22,7 @@ steal(
             'init' : function(el, options)
             {
                 this._super();
-                this.render();
+                //this.render();
             },
             
             /**

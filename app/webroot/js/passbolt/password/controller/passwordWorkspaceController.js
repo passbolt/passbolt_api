@@ -1,6 +1,7 @@
 steal( 
     'lb/core/controller/workspaceController.js',
     'lb/core/helper/component/boxDecorator.js',
+    'lb/core/helper/component/loadingDecorator.js',
     
     'passbolt/password/controller/passwordBrowserController.js',
     'passbolt/password/controller/categoryChooserController.js',
@@ -31,6 +32,7 @@ steal(
                 this.options = $.extend(true, {}, this.options, options);
                 // Use the templateType to define the template
                 this.options.template = '//lb/core/view/template/container/'+this.options.templateType+'.ejs';
+                
                 // Render
                 this.render();
                 
@@ -42,7 +44,8 @@ steal(
                 var passwordBrowserController = this.addComponent(passbolt.password.controller.PasswordBrowserController, {
                     'id':'passbolt_password_password_browser'
                 });
-                //passwordBrowserController = passwordBrowserController.decorate(lb.core.helper.BoxDecorator, 'lb.core.helper.BoxDecorator');
+                passwordBrowserController = passwordBrowserController.decorate('lb.core.helper.BoxDecorator');
+                passwordBrowserController = passwordBrowserController.decorate('lb.core.helper.LoadingDecorator');
                 passwordBrowserController.render();
                 
                 // *************************************************************
@@ -81,8 +84,8 @@ steal(
             
             ,'index': function(a, b, c)
             {
-                console.log(a, b, c);
-                console.log('Execute function index of the password workspace controller');
+                console.log('Execute function index of the password workspace controller, with the following arguments');
+                console.dir(arguments);
             }
             
         });
