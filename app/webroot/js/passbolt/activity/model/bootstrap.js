@@ -19,8 +19,8 @@ steal(
                 });
                 
                 // Add the Activity workspace component to the application
-                appWorkspacesContainer.addComponent(passbolt.activity.controller.ActivityWorkspaceController, {
-                    'id':'activity-actitvityWorkspace-controller',
+                var activityWorkspaceController = appWorkspacesContainer.addComponent(passbolt.activity.controller.ActivityWorkspaceController, {
+                    'id':'activity-activityWorkspace-controller',
                     'label':'Activity'
                 });
             }

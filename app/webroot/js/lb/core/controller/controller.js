@@ -69,7 +69,7 @@ steal(
             'getApp' : function()
             {
                 var returnValue = null;
-                var appController = $('#'+lb.APP_CONTROLLER_ID); 
+                var appController = $('#'+lb.APP_CONTROLLER_ID);
 //                var appController = lb.app; // not initialized for the appController, maybe override this function in the app controller class
                 if(appController.length){
                     returnValue = appController.controller();

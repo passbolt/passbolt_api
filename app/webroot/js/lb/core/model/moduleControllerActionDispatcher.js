@@ -53,7 +53,7 @@ steal(
                     // if the controller has not a representative DOM node, check if a default controller id has been given to locate the controller DOM node
                     $controller = $('#'+defaultControllerId);
                     if(!$controller.length){
-                        throw new Error('No element found on the page for the id ('+controllerId+') neither ('+defaultControllerId+')');
+                        throw new Error('No element found on the page for the id ('+controllerId+') neither with the default id ('+defaultControllerId+')');
                     }
                 }
                 

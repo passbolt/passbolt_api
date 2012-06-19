@@ -1,7 +1,9 @@
 steal( 
     'jquery/class'
+    , 'jquery/view/ejs'
 )
 .then( 
+    'lb/core/view/template/decorator/box.ejs',
     function($){
         
         $.String.getObject('lb.core.helper', window, true);

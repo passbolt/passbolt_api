@@ -1,4 +1,5 @@
 steal( 
+    'jquery/view/ejs',
     'lb/core/controller/containerController.js'
 )
 .then(

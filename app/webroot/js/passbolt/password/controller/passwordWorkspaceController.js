@@ -1,4 +1,6 @@
 steal( 
+    'jquery/view/ejs',
+    
     'lb/core/controller/workspaceController.js',
     'lb/core/helper/component/boxDecorator.js',
     'lb/core/helper/component/loadingDecorator.js',
@@ -10,6 +12,7 @@ steal(
 )
 .then(
     'lb/core/view/template/container/three-column.ejs',
+    'lb/core/view/template/container/vertical.ejs',
     function($){
         
         /*

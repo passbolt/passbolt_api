@@ -1,8 +1,10 @@
 steal( 
+    'jquery/view/ejs',
     'lb/core/controller/workspaceController.js'
 )
 .then(
     'lb/core/view/template/container/three-column.ejs',
+    'lb/core/view/template/container/vertical.ejs',
     function($){
         
         /*
@@ -70,6 +72,12 @@ steal(
                 });
                 
                 this._super();
+            }
+            
+            , index:function()
+            {
+                console.log('Execute function index of the activity workspace controller, with the following arguments');
+                console.dir(arguments);
             }
             
         });
