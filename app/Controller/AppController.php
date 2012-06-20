@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Application level Controller
  *
@@ -19,7 +20,6 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
 App::uses('Controller', 'Controller');
 
 /**
@@ -32,7 +32,16 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-  function beforeFilter() {
-    $this->layout = 'html5';
-  }
+
+    function beforeFilter()
+    {
+        $this->layout = 'html5';
+        
+        if($this->Session->read('Config.language') != null){
+            Configure::write('Config.language', $this->Session->read('Config.language'));
+        }
+        else{
+            $this->Session->write('Config.language', Configure::read('Config.language'));
+        }
+    }
 }

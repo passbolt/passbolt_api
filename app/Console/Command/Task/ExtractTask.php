@@ -315,6 +315,11 @@ class ExtractTask extends AppShell {
 			$this->out(__d('cake_console', 'Processing %s...', $file));
 
 			$code = file_get_contents($file);
+                        //quick to add the support of javascript
+                        if($extension = pathinfo($file, PATHINFO_EXTENSION) == 'js'){
+                            $code = '<?php '.$code.' ?>';
+                        }
+                        
 			$allTokens = token_get_all($code);
 
 			$this->_tokens = array();
@@ -691,7 +696,7 @@ class ExtractTask extends AppShell {
 		}
 		foreach ($this->_paths as $path) {
 			$Folder = new Folder($path);
-			$files = $Folder->findRecursive('.*\.(php|ctp|thtml|inc|tpl)', true);
+			$files = $Folder->findRecursive('.*\.(php|ctp|thtml|inc|tpl|js|ejs)', true);
 			if (!empty($pattern)) {
 				foreach ($files as $i => $file) {
 					if (preg_match($pattern, $file)) {

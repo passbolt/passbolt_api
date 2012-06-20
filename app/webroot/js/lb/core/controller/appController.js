@@ -6,8 +6,7 @@ steal(
     , 'lb/core/controller/workspaceController.js'
 )
 .then(
-    'passbolt/countdown/view/layout.ejs'
-    , function($){
+    function($){
         
         /*
         * @class lb.core.controller.AppController
@@ -88,22 +87,22 @@ steal(
             
             '{lb.eventBus} lb_controller_released' : function(element, evt, data)
             {
-                steal.dev.log('new controller ('+data.component.element[0].id+') has been released');
+                steal.dev.log(__('new controller (%s) has been released', data.component.element[0].id));
             },
             
             '{lb.eventBus} lb_component_released' : function(element, evt, data)
             {
-                steal.dev.log('new component ('+data.component.element[0].id+') has been released');
+                steal.dev.log(__('new component (%s) has been released', data.component.element[0].id));
             },
             
             '{lb.eventBus} lb_container_released' : function(element, evt, data)
             {
-                steal.dev.log('new container ('+data.component.element[0].id+') has been released');
+                steal.dev.log(__('new container (%s) has been released', data.component.element[0].id));
             },
             
             '{lb.eventBus} lb_app_ready' : function(element, evt, data)
             {
-                steal.dev.log('application is ready');
+                steal.dev.log(__('application is ready'));
             }
             
         });

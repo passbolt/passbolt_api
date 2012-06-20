@@ -34,9 +34,10 @@ steal(
         */
         {
             'defaults' : {
-                'appRootUrl' : ''
+                'appRootUrl'        : ''
+                , 'lang'            : 'en-EN'
                 , 'appControllerId' : 'app-controller'
-                , 'appNamespaceId' : 'app'
+                , 'appNamespaceId'  : 'app'
                 , 'appControllerClass' : lb.core.controller.AppController
                 , 'dispatchOptions' : { }
                 , 'defaultRoute' : {
@@ -70,7 +71,6 @@ steal(
                     throw new lb.core.error.MissingOption('appRootUrl', 'lb.core.model.AppBootstrap');
                 }
                 
-                
                 // find the controller with the given appControllerId passed by args
                 this.$appController = $('#'+this.options.appControllerId);
                 // if the DOM does not contain a reference to an element with the given appControllerId
@@ -84,13 +84,15 @@ steal(
                 // 
                 
                 // @todo load the authentication service
-                // @todo load the internationalization service
                 
                 // Initialize app globals
                 this.initGlobals();
                 
                 // Initialize app constante
                 this.initConstants();
+                
+                // Initialize internationalization
+                this.initInternationalization();
                 
                 // Initialize the event bus controller
                 this.initEventBus();
@@ -135,9 +137,27 @@ steal(
             'initConstants' : function()
             {
                 lb.APP_ROOT_URL = this.options.appRootUrl;
+                lb.LG = this.options.lg;
                 lb.APP_NAMESPACE_ID = this.options.appNamespaceId;
                 lb.APP_CONTROLLER_ID = this.options.appControllerId;
                 lb.EVENTBUS_CONTROLLER_ID = this.options.eventBusControllerId;
+            },
+            
+            /** 
+             * Initialize the internationalization service
+             * @return {void}
+             */
+            'initInternationalization' : function()
+            {
+                // Load the javascript dictionnary
+                lb.ajaxWrapper.request({
+                    'url':          lb.APP_ROOT_URL+'/lg/jsDictionnary',
+                    'async':        false,
+                    'dataType':     'json',
+                    'success':      function(DATA){
+                        __.loadDico(DATA);
+                    }
+                });
             },
             
             /**

@@ -18,5 +18,6 @@ $config = array(
     'number' => '2.12.7',       //see #PASSBOLT-20
     'name'   => 'The hardest',
     'song'   => 'http://youtu.be/wVLcByj3ik8'
-  )
+  ),
+  'Config.language' => 'en-EN'
 );
