@@ -11,8 +11,10 @@
 
 steal(
     './passbolt.css'                                    // application CSS file
+    , 'lib/mad/core/singleton.js'
+    , 'lib/mad/core/singletonTest.js'
     
-    , 'lib/i18n/i18n.js'
+    //, 'lib/i18n/i18n.js'
     , 'lb/core/controller/class.js'                     // the application's class
     , 'lb/core/controller/controller.js'                // the application's controller
     
@@ -25,6 +27,10 @@ steal(
 )
 .then(function(){
 
+        new mad.core.Singleton();
+        new mad.core.Singleton();
+        new mad.core.Singleton();
+        new mad.core.Singleton();
         steal.options.logLevel = 0;
             
         $(document).ready(function(){
