@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project default="passbolt_build.xml" xmlns:antcontrib="antlib:net.sf.antcontrib" basedir=".">
+
+    <property name="config" location="${env.WORSPACE}/jenkins"/>
+    <property name="src" location="${env.WORSPACE}"/>
+    <property name="build" location="${src}/build"/>
+
+    <target name="main" depends="clean, install, jsunit, phpunit" />
+
+    <target name="clean" description="Cleanup build artifacts">
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="install" description="Passbolt installer ;)">
+        <untar src="${config}/app_Config.tgz" compression="gzip" dest="${src}" />
+    </target>
+
+    <target name="jsunit" description="Run unit tests with funcunit and phantomjs">
+        <exec dir="${src}/app/webroot/js/" executable="./js" output="testresults.xml">
+            <arg line=" funcunit/run phantomjs mad/test/funcunit.html"/>
+        </exec>
+        <copy file="${src}/app/webroot/js/testresults.xml" tofile="${build}/jsunit/madsquirrel.xml"/>
+    </target>
+
+    <target name="phpunit" description="Run unit tests with PHPUnit">
+        <exec dir="${src}" executable="${src}/app/Console/cake" failonerror="true">
+            <arg line=" test --configuration ${config}/phpunit.xml 
+			--coverage-html ${build}/coverage/html
+			--coverage-clover ${build}/coverage/coverage.xml
+			--log-junit ${build}/phpunit/passbolt.xml
+			-v
+			${src}/app/Test/Case/AllTest.php"/>
+        </exec>
+    </target>
+
+</project>
