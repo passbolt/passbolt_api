@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project default="passbolt_build.xml" xmlns:antcontrib="antlib:net.sf.antcontrib" basedir=".">
 
-    <property name="config" value="${WORKSPACE}/jenkins"/>
-    <property name="src" value="${WORKSPACE}"/>
+    <property environment="env"/>
+    <property name="config" value="${env.WORKSPACE}/jenkins"/>
+    <property name="src" value="${env.WORKSPACE}"/>
     <property name="build" value="${src}/build"/>
 
     <target name="main" depends="clean, install, jsunit, phpunit" />
