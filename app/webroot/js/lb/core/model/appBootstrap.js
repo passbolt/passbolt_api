@@ -1,6 +1,5 @@
 steal( 
     'jquery/dom/route'
-    , 'jquery/plugin/jquery.uuid.js'
     , 'lb/core/model/bootstrapInterface.js'
     , 'lb/core/model/ajaxWrapper.js'
     , 'lb/core/controller/appController.js'
@@ -104,8 +103,8 @@ steal(
                 // Initialize the application
                 this.initApplication();
                 
-                // Initialize modules
-                this.initModules();
+                // Initialize extensions
+                this.initExtensions();
                 
                 // Dispatch the route to the convenient action
                 this.dispatch();
@@ -125,6 +124,7 @@ steal(
              */
             'initGlobals' : function()
             {
+                // @todo Use the given namespace to store these global variables
                 lb.eventBus = null;
                 lb.app = null;
                 lb.ajaxWrapper = lb.core.model.AjaxWrapper.getInstance();
@@ -155,7 +155,7 @@ steal(
                     'async':        false,
                     'dataType':     'json',
                     'success':      function(DATA){
-                        __.loadDico(DATA);
+                        mad.lang.I18n.singleton().loadDico(DATA);
                     }
                 });
             },
@@ -171,11 +171,11 @@ steal(
             },
             
             /**
-             * Init application
+             * Init application's extensions
              * @return {void}
              * @todo make this operation automatic
              */
-            'initModules': function()
+            'initExtensions': function()
             {
                 new passbolt.activity.model.Bootstrap();
             },
@@ -211,7 +211,7 @@ steal(
                 $.route(":module/:controller/:action/:p1/:p2");
                 $.route(":module/:controller/:action/:p1");
                 $.route(":module/:controller/:action");
-                $.route(":module/:controller");
+                $.route(":module/:controller");        
                 $.route(":module");
                 $.route("");
                 $.route.ready();
