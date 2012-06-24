@@ -5,12 +5,12 @@ steal(
     function($){
         
         /*
-        * @class madsquirrel.core.Singleton
+        * @class mad.core.Singleton
         * The Singleton class
         * @parent index
         * @constructor
         * Create a new singleton
-        * @return {madsquirrel.core.Singleton}
+        * @return {mad.core.Singleton}
         */
         $.Class('mad.core.Singleton', 
                 
@@ -27,7 +27,12 @@ steal(
              */
             'singleton' : function()
             {
-                return new this(arguments);
+                if(this.instance != null){
+                    return this.instance;
+                }else{
+                    this.instance = 'CALL_FROM_SINGLETON';
+                    return new this(arguments);
+                }
             }
         },
         
@@ -36,12 +41,17 @@ steal(
             
             /**
              * Class Constructor. Singleton
+             * @private
              */
             'init': function(options)
             {
-                if(this.Class.instance != null){
-                   return this.Class.instance;
+                if(this.Class.fullName == 'mad.core.Singleton'){
+                    throw new mad.error.CallAbstractFunction();
                 }
+                else if(this.Class.instance != 'CALL_FROM_SINGLETON'){
+                    throw new mad.error.CallPrivateFunction();
+                }
+                
                 this.Class.instance = this;
             }
             

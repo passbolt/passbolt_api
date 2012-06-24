@@ -9,12 +9,11 @@
  * * passbolt.passbolt.controller.PasswordWorkspaceController
  */
 
+MAD_ROOT = 'lib/mad';
 steal(
     './passbolt.css'                                    // application CSS file
-    , 'lib/mad/core/singleton.js'
-    , 'lib/mad/core/singletonTest.js'
+    , MAD_ROOT+'/mad.js'
     
-    //, 'lib/i18n/i18n.js'
     , 'lb/core/controller/class.js'                     // the application's class
     , 'lb/core/controller/controller.js'                // the application's controller
     
@@ -26,11 +25,6 @@ steal(
     'jquery/plugin/jquery-ui-1.8.20.custom.min.js'      // load jquery ui lib
 )
 .then(function(){
-
-        new mad.core.Singleton();
-        new mad.core.Singleton();
-        new mad.core.Singleton();
-        new mad.core.Singleton();
         steal.options.logLevel = 0;
             
         $(document).ready(function(){
