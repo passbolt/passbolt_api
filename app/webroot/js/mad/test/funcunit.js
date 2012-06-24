@@ -6,8 +6,8 @@ steal(
     MAD_ROOT+'/mad.js'
 )
 .then(
-//    "./error/error.js",
-//    "./core/singleton.js",
-//    "./lang/i18n.js",
-    "./net/ajax.js"
+    "./error/error.js",
+    "./core/singleton.js",
+    "./lang/i18n.js"
+//    "./net/ajax.js"
 );
