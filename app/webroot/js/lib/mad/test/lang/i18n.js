@@ -20,7 +20,7 @@ var dico = {
 // not required but good to know how to use it
 $.fixture({
     type: 'post',  
-    url: '/lg/jsDictionnary'
+    url: APP_URL+'/lg/jsDictionnary'
 },
 function(settings){
     return dico;
@@ -30,7 +30,7 @@ test('I18n : Load dictionnary', function(){
     stop();
     mad.net.Ajax.singleton().request({
         'type':         'post',
-        'url':          '/lg/jsDictionnary',
+        'url':          APP_URL+'/lg/jsDictionnary',
         'async':        false,
         'dataType':     'json',
         'success':      function(DATA){
@@ -48,14 +48,13 @@ test('I18n : translate', function(){
     stop();
     mad.net.Ajax.singleton().request({
         'type':         'post',
-        'url':          '/lg/jsDictionnary',
+        'url':          APP_URL+'/lg/jsDictionnary',
         'async':        false,
         'dataType':     'json',
         'success':      function(DATA){
             var i18n = mad.lang.I18n.singleton();
             i18n.loadDico(DATA);
             
-            //            equal(__('my sentence without hook'), 'ma phrase sans hook');
             equal(i18n.translate('my sentence without hook'), 'ma phrase sans hook');
             equal(__('my sentence without hook'), 'ma phrase sans hook');
             equal(i18n.translate('my sentence with a final hook %s', ['HOOK_FINAL']), 'ma phrase avec un hook final HOOK_FINAL');
@@ -72,12 +71,12 @@ test('I18n : translate', function(){
         }
     });
 });
-    
+
 test('I18n : Not as many variables as they are hooks', function(){
     stop();
     mad.net.Ajax.singleton().request({
         'type':         'post',
-        'url':          '/lg/jsDictionnary',
+        'url':          APP_URL+'/lg/jsDictionnary',
         'async':        false,
         'dataType':     'json',
         'success':      function(DATA){
@@ -130,7 +129,7 @@ test('I18n : Allowed scalar variables', function(){
     stop();
     mad.net.Ajax.singleton().request({
         'type':         'post',
-        'url':          '/lg/jsDictionnary',
+        'url':          APP_URL+'/lg/jsDictionnary',
         'async':        false,
         'dataType':     'json',
         'success':      function(DATA){
@@ -156,7 +155,7 @@ test('I18n : Wrong variables type', function(){
     stop();
     mad.net.Ajax.singleton().request({
         'type':         'post',
-        'url':          '/lg/jsDictionnary',
+        'url':          APP_URL+'/lg/jsDictionnary',
         'async':        false,
         'dataType':     'json',
         'success':      function(DATA){

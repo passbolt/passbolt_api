@@ -22,8 +22,11 @@ steal(
                 translation = '';
 
             // extract variables from arguments  
-            for(var i in arguments){
-                variables.push(arguments[i]);
+            var args = Array.prototype.slice.call(arguments);
+            delete args.callee;
+            delete args.caller;
+            for(var i in args){
+                variables.push(args[i]);
             }
             
             var i18n = mad.lang.I18n.singleton();
