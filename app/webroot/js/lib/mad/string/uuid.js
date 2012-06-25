@@ -4,21 +4,11 @@ Usage 2: call the function uuid() with a string parameter p to be used as a pref
 Usage 3: call the function uuid() with no parameters to generate a uuid with the default prefix; defaul prefix: '' (empty string)
 */
 
-/*
-Generate fragment of random numbers
-*/
-_uuid_default_prefix = '';
+/* Generate fragment of random numbers */
 _uuidlet = function () {
-	return(((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    return(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 };
-/*
-Generates random uuid
-*/
-uuid = function (p) {
-	if (typeof(p) == 'object' && typeof(p.prefix) == 'string') {
-		_uuid_default_prefix = p.prefix;
-	} else {
-		p = p || _uuid_default_prefix || '';
-		return(p+_uuidlet()+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+_uuidlet()+_uuidlet());
-	};
+/* Generates random uuid */
+uuid = function() {
+    return(_uuidlet()+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+_uuidlet()+_uuidlet());
 };

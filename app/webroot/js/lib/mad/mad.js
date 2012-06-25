@@ -1,5 +1,8 @@
 steal(
     MAD_ROOT+'/error/error.js',
+    MAD_ROOT+'/controller/controller.js',
+    MAD_ROOT+'/controller/appController.js',
+    MAD_ROOT+'/core/class.js',
     MAD_ROOT+'/core/singleton.js',
     MAD_ROOT+'/lang/i18n.js',
     MAD_ROOT+'/string/uuid.js',

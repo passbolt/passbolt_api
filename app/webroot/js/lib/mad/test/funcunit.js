@@ -6,8 +6,12 @@ steal(
     MAD_ROOT+'/mad.js'
 )
 .then(
-    "./error/error.js",
+    "./core/class.js",
+//    "./controller/controller.js",
+//    "./controller/appController.js"
     "./core/singleton.js",
-    "./lang/i18n.js"
-//    "./net/ajax.js"
+    "./error/error.js",
+    "./lang/i18n.js",
+    "./net/ajax.js",
+    "./string/uuid.js"
 );

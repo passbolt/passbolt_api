@@ -14,7 +14,6 @@ steal(
     './passbolt.css'                                    // application CSS file
     , MAD_ROOT+'/mad.js'
     
-    , 'lb/core/controller/class.js'                     // the application's class
     , 'lb/core/controller/controller.js'                // the application's controller
     
     , 'lb/core/controller/eventBusController.js'        // the event bus controller

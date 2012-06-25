@@ -60,13 +60,13 @@ steal(
              * Translate the string
              * @public
              * @param {string} str The string to translate
-             * @param {array} variables The array of variables to inject in the string
+             * @param {array} vars The array of variables to inject in the string
              * @return {string} The translated string
              */
-            'translate': function(str, variables)
+            'translate': function(str, vars)
             {
-                variables = typeof variables != 'undefined' ? variables : [];
-                return this.replaceHooks(this.getEntry(str), variables);
+                var vars = typeof vars != 'undefined' ? vars : [];
+                return this.replaceHooks(this.getEntry(str), vars);
             },
             
             /**
@@ -86,10 +86,10 @@ steal(
             * Replace the variables' hooks in the translated string
             * @private
             * @param {string} str The translated string
-            * @param {array} variables The variables to inject in the string
+            * @param {array} vars The variables to inject in the string
             * @return {string}
             */
-            'replaceHooks': function(str, variables)
+            'replaceHooks': function(str, vars)
             {
                 var returnValue = ''
                     split = [];
@@ -98,7 +98,7 @@ steal(
                 split = str.split('%s');
 
                 // if the string does not contain the proper number of variables throw an exception
-                if(split.length != variables.length+1){
+                if(split.length != vars.length+1){
                     throw new mad.error.WrongParameters('I18n Error : The sentence to translate does not contain as many hooks as they are variables');
                 }
                 // no hook found in the string
@@ -107,12 +107,12 @@ steal(
                 }
                 // replace string's hooks with the given variables
                 var j;
-                for(var i in variables){
+                for(var i in vars){
                     j = parseInt(i);
-                    if(typeof variables[j] != 'string' && typeof variables[j] != 'number' && typeof variables[j] != 'boolean'){
+                    if(typeof vars[j] != 'string' && typeof vars[j] != 'number' && typeof vars[j] != 'boolean'){
                         throw new mad.error.WrongParameters('I18n Error : Variables has to be a scalar');
                     }
-                    returnValue += split[i]+variables[j];
+                    returnValue += split[i]+vars[j];
                 }
                 returnValue += (typeof split[j+1] != 'undefined' ? split[j+1] : '');
 

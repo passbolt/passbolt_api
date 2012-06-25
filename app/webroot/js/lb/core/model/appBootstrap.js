@@ -2,7 +2,6 @@ steal(
     'jquery/dom/route'
     , 'lb/core/model/bootstrapInterface.js'
     , 'lb/core/model/ajaxWrapper.js'
-    , 'lb/core/controller/appController.js'
     , 'lb/core/model/dispatcherInterface.js'
     , 'lb/core/controller/eventBusController.js'
     , 'lb/core/error/includeAll.js'
@@ -167,7 +166,8 @@ steal(
             'initApplication': function()
             {
                 var appControllerClass = this.options.appControllerClass;
-                lb.app = new appControllerClass(this.$appController);
+                lb.app = appControllerClass.singleton(this.$appController, 'TEST');
+//                lb.app = new appControllerClass(this.$appController);
             },
             
             /**

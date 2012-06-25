@@ -108,8 +108,6 @@ steal(
             '_getTransaction': function(id)
             {
                 var transactionId = typeof id != 'undefined' ? id : this._getTransactionId();
-                console.log('transaction id : '+transactionId);
-                console.dir(this.transactions[transactionId]);
                 return this.transactions[transactionId];
             },
             
@@ -131,12 +129,14 @@ steal(
                     transaction.waitFor--;
                     // @debug
                     steal.dev.log('pending requests : '+transaction.waitFor);
+                    
                     // if no more pending request, launche the transaction
                     if(transaction.waitFor == 0){
                         // reset transaction id to allow new transaction
                         self._generateTransactionId();
                         // build the bundled request
                         var bundleRequests = self._bundleRequests(transaction.requests);
+                        
                         // execute the bundled request
                         self._executeRequest({
                             type:       'POST',
@@ -148,9 +148,11 @@ steal(
                             dataType:   'json',
                             success:    function(srvData)
                             {
+//                                srvData = $.extend(true,{},srvData);
                                 var transactionId = srvData.transactionId;
                                 var transaction = self._getTransaction(transactionId);
                                 for(var requestId in transaction.requests){
+                                    var resultRequest = srvData.requests[requestId];                                    
                                     // execute success function of the stored request
                                     if(typeof transaction.requests[requestId].success != 'undefined'){
                                         transaction.requests[requestId].success(srvData.requests[requestId].data);

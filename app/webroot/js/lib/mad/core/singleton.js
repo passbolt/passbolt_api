@@ -18,20 +18,22 @@ steal(
         
         {
             /**
-             * Ajax wrapper instance.
+             * Singleton instance
+             * @type {jQuery.Class}
              */
             'instance': null,
             
             /**
-             * Get instance of the Ajax Wrapper singleton
+             * Get instance of the singleton
+             * @return {jQuery.Class}
              */
-            'singleton' : function()
+            'singleton': function()
             {
                 if(this.instance != null){
                     return this.instance;
                 }else{
                     this.instance = 'CALL_FROM_SINGLETON';
-                    return new this(arguments);
+                    return this.newInstance.apply(this, arguments);
                 }
             }
         },
@@ -40,10 +42,10 @@ steal(
         {
             
             /**
-             * Class Constructor. Singleton
+             * Class Constructor
              * @private
              */
-            'init': function(options)
+            'init': function()
             {
                 if(this.Class.fullName == 'mad.core.Singleton'){
                     throw new mad.error.CallAbstractFunction();

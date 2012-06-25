@@ -1,12 +1,12 @@
 steal( 
-    'lb/core/controller/appController.js'
-    , 'lb/core/controller/tabController.js'
+    'lb/core/controller/tabController.js'
+    , 'lb/core/controller/appController.js'
     , 'passbolt/password/controller/passwordWorkspaceController.js'
 )
 .then( 
     function($){
         
-        lb.core.controller.AppController.extend('passbolt.password.controller.AppController', {    
+        mad.controller.AppController.extend('passbolt.password.controller.AppController', {    
             
             // constructor of the Class
             'init': function(el, options)
