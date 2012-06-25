@@ -1,4 +1,5 @@
 <?php
+//require_once(dirname(__FILE__).'/../../webroot/test.php');
 class AllTest extends PHPUnit_Framework_TestSuite {
 
 /**
@@ -9,7 +10,7 @@ class AllTest extends PHPUnit_Framework_TestSuite {
     public static function suite() {
         $suite = new PHPUnit_Framework_TestSuite('All Passbolt test cases');
 
-        $path = dirname(__FILE__) . DS;
+        $path = dirname(__FILE__) . '/';
         $suite->addTestFile($path . 'FakeTestCase.php');
         return $suite;
     }
