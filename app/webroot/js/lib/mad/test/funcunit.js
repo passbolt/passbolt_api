@@ -7,8 +7,8 @@ steal(
 )
 .then(
     "./core/class.js",
-//    "./controller/controller.js",
-//    "./controller/appController.js"
+    "./controller/controller.js",
+    "./controller/appController.js",
     "./core/singleton.js",
     "./error/error.js",
     "./lang/i18n.js",

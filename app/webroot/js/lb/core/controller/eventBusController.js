@@ -1,6 +1,5 @@
 steal( 
-    'jquery/controller'
-    , 'lb/core/controller/controller.js'
+    MAD_ROOT
 )
 .then( 
     function($){
@@ -15,7 +14,7 @@ steal(
         * Creates a new event bus controller
         * @return {lb.core.controller.EventBusController}
         */
-        lb.core.controller.Controller.extend('lb.core.controller.EventBusController', 
+        mad.controller.Controller.extend('lb.core.controller.EventBusController', 
         
         /** @Static */
         {

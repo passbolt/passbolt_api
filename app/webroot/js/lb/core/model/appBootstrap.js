@@ -1,12 +1,10 @@
 steal( 
     'jquery/dom/route'
     , 'lb/core/model/bootstrapInterface.js'
-    , 'lb/core/model/ajaxWrapper.js'
     , 'lb/core/model/dispatcherInterface.js'
     , 'lb/core/controller/eventBusController.js'
-    , 'lb/core/error/includeAll.js'
     
-    , 'passbolt/activity/model/bootstrap.js'                // Extension bootstrap, should be enabled by the php script
+    , 'plugin/activity/bootstrap/bootstrap.js'                // Extension bootstrap, should be enabled by the php script
 )
 .then( 
     function($){
@@ -105,11 +103,11 @@ steal(
                 // Initialize extensions
                 this.initExtensions();
                 
-                // Dispatch the route to the convenient action
-                this.dispatch();
-                
-                // Application is ready
-                this.ready();
+//                // Dispatch the route to the convenient action
+//                this.dispatch();
+//                
+//                // Application is ready
+//                this.ready();
                 
                 // 
                 // END OF THE APPLICATION BOOTSTRAP PROCESS
@@ -126,7 +124,8 @@ steal(
                 // @todo Use the given namespace to store these global variables
                 lb.eventBus = null;
                 lb.app = null;
-                lb.ajaxWrapper = lb.core.model.AjaxWrapper.getInstance();
+                // @todo Qu'est ce qu'on fait de ca, et des autres variables globales ou outils
+                lb.ajaxWrapper = mad.net.Ajax.singleton();
             },
             
             /**
@@ -140,6 +139,7 @@ steal(
                 lb.APP_NAMESPACE_ID = this.options.appNamespaceId;
                 lb.APP_CONTROLLER_ID = this.options.appControllerId;
                 lb.EVENTBUS_CONTROLLER_ID = this.options.eventBusControllerId;
+                lb.APP_CONTROLLER_CLASS = this.options.appControllerClass;
             },
             
             /** 
@@ -177,7 +177,7 @@ steal(
              */
             'initExtensions': function()
             {
-                new passbolt.activity.model.Bootstrap();
+                new passbolt.activity.bootstrap.Bootstrap();
             },
             
             /**

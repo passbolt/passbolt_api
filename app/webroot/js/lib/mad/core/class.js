@@ -97,9 +97,15 @@ steal(
                             // replace the init function, with a function which will execute all the init function
                             this.prototype[i] = (function(clazz, fn){
                                 return function(el, options, test){
+//                                    var returnValue = null;
                                     for(var i in this.__inits){
-                                        this.__inits[i].apply(this, arguments);
+                                        var initResult = this.__inits[i].apply(this, arguments);
+//                                        console.log(initResult);
+//                                        if(returnValue == null){
+//                                            returnValue = initResult;
+//                                        }
                                     }
+//                                    return returnValue;
                                 }
                             })(this, 'init');
                         }

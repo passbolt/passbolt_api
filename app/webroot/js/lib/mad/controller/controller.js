@@ -43,7 +43,7 @@ steal(
             {
                 // send to the event bus the information about the component creation
                 this.options = $.extend(true, {}, this.options, options);
-                // reference the application to the app
+                // reference the controller to the application
                 this.getApp().referenceComponent(this);
                 
                 this.getEventBus().trigger('mad_controller_released', {'component':this});
@@ -76,8 +76,16 @@ steal(
                 if(this instanceof mad.controller.AppController){
                     returnValue = this;
                 } 
-                else if(mad.controller.AppController.instance != null){
-                    returnValue = mad.controller.AppController.singleton();
+                else {
+                    if(lb.APP_CONTROLLER_CLASS.instance != null){
+                        returnValue = lb.APP_CONTROLLER_CLASS.singleton();
+                    }
+//                    else{
+//                        console.log('c');
+//                        var $app = $('#'+lb.APP_CONTROLLER_ID);
+//                        console.log($app);
+//                        returnValue = $app.controllers();
+//                    }
                 }
                 
                 return returnValue;

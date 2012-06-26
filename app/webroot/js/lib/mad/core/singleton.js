@@ -29,12 +29,16 @@ steal(
              */
             'singleton': function()
             {
+                var returnValue = null;
+                
                 if(this.instance != null){
-                    return this.instance;
+                    returnValue = this.instance;
                 }else{
                     this.instance = 'CALL_FROM_SINGLETON';
-                    return this.newInstance.apply(this, arguments);
+                    returnValue = this.newInstance.apply(this, arguments);
                 }
+                
+                return returnValue;
             }
         },
         

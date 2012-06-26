@@ -23,14 +23,14 @@ steal(
              */
             'dispatch' : function(route, options)
             {
-                throw new lb.core.error.CallInterfaceFunction();
+                throw new mad.error.CallInterfaceFunction();
             }
         }, 
         
         /** @prototype */
         {
             'init' : function(){
-                throw new lb.core.error.CallInterfaceConstructor();
+                throw new mad.error.CallInterfaceConstructor();
             }
         });
         
