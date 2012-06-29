@@ -2,8 +2,6 @@ steal(
     'jquery/view/ejs',
     
     MAD_ROOT+'/controller/component/workspaceController.js',
-    'lb/core/helper/component/boxDecorator.js',
-    'lb/core/helper/component/loadingDecorator.js',
     
     'plugin/password/controller/component/passwordBrowserController.js',
     'plugin/password/controller/component/categoryChooserController.js',
@@ -11,8 +9,8 @@ steal(
     'plugin/password/controller/component/accessRightController.js'
 )
 .then(
-    'lb/core/view/template/container/three-column.ejs',
-    'lb/core/view/template/container/vertical.ejs',
+//    MAD_ROOT+'/view/template/component/container/three-column.ejs',
+//    MAD_ROOT+'/view/template/component/container/vertical.ejs',
     function($){
         
         /*
@@ -34,7 +32,7 @@ steal(
             {
                 this.options = $.extend(true, {}, this.options, options);
                 // Use the templateType to define the template
-                this.options.template = '//lb/core/view/template/container/'+this.options.templateType+'.ejs';
+                this.options.template = '//'+MAD_ROOT+'/view/template/component/container/'+this.options.templateType+'.ejs';
                 
                 // Render
                 this.render();
@@ -47,8 +45,7 @@ steal(
                 var passwordBrowserController = this.addComponent(passbolt.password.controller.component.PasswordBrowserController, {
                     'id':'passbolt_password_password_browser'
                 });
-                passwordBrowserController = passwordBrowserController.decorate('lb.core.helper.BoxDecorator');
-                passwordBrowserController = passwordBrowserController.decorate('lb.core.helper.LoadingDecorator');
+                passwordBrowserController = passwordBrowserController.decorate('mad.helper.component.BoxDecorator'); // decorator sample, oh yeah
                 passwordBrowserController.render();
                 
                 // *************************************************************
@@ -58,7 +55,7 @@ steal(
                 // Add the Category Chooser component
                 this.addComponent(passbolt.password.controller.component.CategoryChooserController, {
                     'id':'passbolt_password_category_chooser'
-                }, 'lb-container-first_side');
+                }, 'mad-container-first_side');
                 
                 
                 // *************************************************************
@@ -68,8 +65,8 @@ steal(
                 // Add vertical container to the second side area
                 var secondSideContainer = this.addComponent(mad.controller.component.ContainerController, {
                     'id':'passbolt_password_second_side_container'
-                    , 'template' : '//lb/core/view/template/container/vertical.ejs'
-                }, 'lb-container-second_side');
+                    , 'template' : '//'+MAD_ROOT+'/view/template/component/container/vertical.ejs'
+                }, 'mad-container-second_side');
                 secondSideContainer.render();
                 
                 // Add the Password Information component

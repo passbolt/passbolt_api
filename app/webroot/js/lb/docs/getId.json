@@ -1,1 +1,0 @@
-c({"name": "getId", "params": {"settings": {"description": "", "type": "Object", "optional": false, "order": 0, "name": "settings"}}, "ret": {"type": "undefined", "description": ""}, "type": "function", "comment": "<p>Makes an attempt to guess where the id is at in the url and returns it.</p>", "src": "jquery/dom/fixture/fixture.js", "line": 141, "children": []})

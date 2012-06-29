@@ -2,8 +2,8 @@ steal(
     MAD_ROOT
 )
 .then(
-    'plugin/password/view/template/component/passwordInformation.ejs'
-    , function($){
+//    'plugin/password/view/template/component/passwordInformation.ejs',
+    function($){
         
         /*
         * @class passbolt.password.controller.component.PasswordInformationController
@@ -33,9 +33,9 @@ steal(
                 console.log('PasswordInformationController : password selected '+passwordId);
             }
             
-            , '{lb.eventBus} passbolt_password_selected': function(element, evt, data)
+            , '{mad.eventBus} passbolt_password_selected': function(element, evt, data)
             {
-                lb.ajaxWrapper.request({
+                mad.net.Ajax.singleton().request({
                     'url':'http://getacountdown.local/ajax/action1'
                     , 'data': {
                         'key1': 'value1',

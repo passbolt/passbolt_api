@@ -1,1 +1,0 @@
-c({"name": "Bootstrap.prototype", "type": "prototype", "parents": ["Bootstrap"], "comment": "", "src": "lb/core/model/bootstrap.js", "line": 18, "children": ["Bootstrap.prototype.init", "Bootstrap.prototype.ready"]})

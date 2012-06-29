@@ -1,1 +1,0 @@
-c({"name": "lb.core.model.DispatcherInterface.static", "type": "static", "parents": ["lb.core.model.DispatcherInterface"], "comment": "", "src": "lb/core/model/dispatcherInterface.js", "line": 15, "children": ["lb.core.model.DispatcherInterface.static.dispatch"]})

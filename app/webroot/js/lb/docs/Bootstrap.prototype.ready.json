@@ -1,1 +1,0 @@
-c({"name": "Bootstrap.prototype.ready", "params": {}, "ret": {"type": "undefined", "description": ""}, "type": "function", "parents": ["Bootstrap.prototype"], "comment": "<p>The bootstrap process execute this function when the process\nis finished</p>", "src": "lb/core/model/bootstrap.js", "line": 28, "children": []})

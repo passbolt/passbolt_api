@@ -1,1 +1,0 @@
-c({"name": "lb.core.model.AppBootstrap.prototype.initConstants", "params": {}, "ret": {"description": "", "type": "void"}, "type": "function", "parents": ["lb.core.model.AppBootstrap.prototype"], "comment": "<p>Init application constants</p>", "src": "lb/core/model/appBootstrap.js", "line": 110, "children": []})

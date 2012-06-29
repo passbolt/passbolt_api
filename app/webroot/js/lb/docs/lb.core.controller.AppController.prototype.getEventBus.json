@@ -1,1 +1,0 @@
-c({"name": "lb.core.controller.AppController.prototype.getEventBus", "params": {}, "ret": {"description": "", "type": "lb.core.controller.EventBusController"}, "type": "function", "parents": ["lb.core.controller.AppController.prototype"], "comment": "<p>Get the event bus controller of the application</p>", "src": "lb/core/controller/appController.js", "line": 35, "children": []})

@@ -3,7 +3,7 @@ steal(
     MAD_ROOT+'/controller/component/containerController.js'
 )
 .then(
-    MAD_ROOT+'/view/template/component/tab.ejs',
+//    MAD_ROOT+'/view/template/component/tab.ejs',
     function($){
         
         /*
@@ -30,7 +30,7 @@ steal(
              * Add a component to the container
              * @param {String} componentClass The component class to use to instantiate the component
              * @param {Array} componentOptions The optional data to pass to the component constructor
-             * @param {String} area The area to add the component. Default : lb-container-main
+             * @param {String} area The area to add the component. Default : mad-container-main
              */
             'addComponent': function(componentClass, componentOptions, area)
             {

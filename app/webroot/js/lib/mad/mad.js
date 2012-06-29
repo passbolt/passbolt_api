@@ -3,7 +3,11 @@ steal(
     'jquery/class',
     'jquery/controller',
     'jquery/model',
-    
+    'jquery/view/ejs',
+    MAD_ROOT+'/core/class.js'
+)
+.then(
+    MAD_ROOT+'/bootstrap/appBootstrap.js',
     MAD_ROOT+'/error/error.js',
     MAD_ROOT+'/controller/appController.js',
     MAD_ROOT+'/controller/controller.js',
@@ -11,9 +15,11 @@ steal(
     MAD_ROOT+'/controller/component/containerController.js',
     MAD_ROOT+'/controller/component/tabController.js',
     MAD_ROOT+'/controller/component/workspaceController.js',
-    MAD_ROOT+'/core/class.js',
     MAD_ROOT+'/core/singleton.js',
+    MAD_ROOT+'/event/eventBus.js',
     MAD_ROOT+'/helper/controllerHelper.js',
+    MAD_ROOT+'/helper/routeHelper.js',
+    MAD_ROOT+'/helper/component/boxDecorator.js',
     MAD_ROOT+'/lang/i18n.js',
     MAD_ROOT+'/string/uuid.js',
     MAD_ROOT+'/net/ajax.js'

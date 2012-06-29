@@ -22,20 +22,20 @@ steal(
             {
                 this._super();
                 // send to the event bus the information about the component creation
-                this.getEventBus().trigger('lb_container_released', {'component':this});
+                mad.eventBus.trigger(mad.appNamespaceId+'_container_released', {'component':this});
             }
             
             /**
              * Add a component to the container
              * @param {String} componentClass The component class to use to instantiate the component
              * @param {Array} componentOptions The optional data to pass to the component constructor
-             * @param {String} area The area to add the component. Default : lb-container-main
+             * @param {String} area The area to add the component. Default : mad-container-main
              */
             , 'addComponent': function(componentClass, componentOptions, area)
             {
                 var returnValue = null;
                 
-                var area = typeof area != 'undefined' ? area : 'lb-container-main';
+                var area = typeof area != 'undefined' ? area : 'mad-container-main';
                 var $area = this.element.find('.'+area);
                 
                 var $component = $('<div id="'+componentOptions.id+'"/>').appendTo($area);

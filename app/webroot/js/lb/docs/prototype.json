@@ -1,1 +1,0 @@
-c({"name": "prototype", "type": "prototype", "comment": "", "src": "lb/core/controller/appController.js", "line": 33, "children": ["prototype.init", "prototype.getEventBus", "prototype.{lb&#46;eventBus} lb_controller_released"]})

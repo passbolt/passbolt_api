@@ -1,5 +1,5 @@
 steal( 
-    'lb/core/model/moduleBootstrap.js'
+    MAD_ROOT+'/bootstrap/extensionBootstrap.js'
     , 'plugin/activity/controller/activityWorkspaceController.js'
     , 'plugin/activity/controller/component/passwordActivityController.js'
 )
@@ -13,12 +13,12 @@ steal(
         * @constructor
         * Init the plugin activity bootstrap
         */
-        lb.core.model.BootstrapInterface.extend('passbolt.activity.bootstrap.Bootstrap', {},
+        mad.bootstrap.BootstrapInterface.extend('passbolt.activity.bootstrap.Bootstrap', {},
         {
             'init': function()
             {
-                var passwordWorkspaceSecondSideContainer = lb.app.getComponent('passbolt_password_second_side_container');
-                var appWorkspacesContainer = lb.app.getComponent('app_workspaces_container');
+                var passwordWorkspaceSecondSideContainer = passbolt.app.getComponent('passbolt_password_second_side_container');
+                var appWorkspacesContainer = passbolt.app.getComponent('app_workspaces_container');
                 
                 // Add the Password Information component
                 passwordWorkspaceSecondSideContainer.addComponent(passbolt.activity.controller.PasswordActivityController, {

@@ -4,8 +4,15 @@ steal(
 .then( 
     function($){
         
+        /**
+         * The controller class helper offers to the developper tools arround controllers
+         */
         $.Class('mad.helper.controllerHelper', {
             
+            /**
+             * Get controller path
+             * @deprecated
+             */
             'getControllerPath': function(clazz)
             {
                 var returnValue = '';
@@ -61,7 +68,7 @@ steal(
                     returnValue = MAD_ROOT;
                     split = split.splice(1);
                 }
-                else if(split[0] == lb.APP_NAMESPACE_ID){
+                else if(split[0] == mad.getGlobal('APP_NAMESPACE_ID')){
                     //we are in a plugin
                     if(split[1]!='controller'){
                         returnValue = 'plugin/'+split[1];
@@ -88,17 +95,18 @@ steal(
                 // add the view name (et voila batard)
                 returnValue += viewName + '.ejs';
                 
-                return returnValue;
+                return '//'+returnValue;
             }
             
         }
         , {
-            /**
+            /** 
              * There is no constructor
-             * @throw {lb.core.NoConstructor}
+             * @throw {mad.error.NoConstructor} 
              */
-            'init' : function(){
-                throw new lb.core.NoConstructor();
+            'init' : function()
+            {
+                throw new mad.NoConstructor();
             }
         });
     

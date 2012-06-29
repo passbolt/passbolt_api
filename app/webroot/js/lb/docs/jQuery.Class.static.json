@@ -1,1 +1,0 @@
-c({"name": "jQuery.Class.static", "type": "static", "parents": ["jQuery.Class"], "comment": "", "src": "jquery/class/class.js", "line": 355, "children": ["jQuery.Class.static.proxy", "jQuery.Class.static.newInstance", "jQuery.Class.static.setup", "jQuery.Class.static.extend", "jQuery.Class.static.namespace", "jQuery.Class.static.shortName", "jQuery.Class.static.fullName"]})

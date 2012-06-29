@@ -5,11 +5,6 @@ steal(
     function($){
 
         /**
-        * Our implementation of the I18n system.
-        * Alias to the I18n Object
-        */
-
-        /**
         * Translate the given string.
         * @param {string} str The string to translate
         * @param {...} arguments Add as many variable as they are hooks in the variable
@@ -35,14 +30,12 @@ steal(
         };
 
         /*
-        * @class lb.core.model.Bootstrap
-        * The ajax wrapper allows developper to make their ajax request, moreover
-        * it allows them to make ajax transaction to minimize server calls by 
-        * aggregating ajax requests 
+        * @class mad.lang.I18n
+        * Our implementation of the I18n system.
         * @parent index
         * @constructor
-        * Creates a new ajax transaction builder
-        * @return {lb.core.controller.AjaxWrapper}
+        * Create a I18n object to manage translation
+        * @return {mad.lang.I18n}
         */
         mad.core.Singleton.extend('mad.lang.I18n',
         

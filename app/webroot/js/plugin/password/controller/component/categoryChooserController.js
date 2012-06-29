@@ -2,8 +2,8 @@ steal(
     MAD_ROOT
 )
 .then(
-    'plugin/password/view/template/component/categoryChooser.ejs'
-    , function($){
+//    'plugin/password/view/template/component/categoryChooser.ejs',
+    function($){
         
         /*
         * @class passbolt.passbolt.controller.CategoryChooserController
@@ -28,7 +28,7 @@ steal(
             
             , 'selectCategory': function(categoryId)
             {
-                this.getEventBus().trigger('passbolt_category_selected', {'category_id':categoryId})
+                passbolt.eventBus.trigger('passbolt_category_selected', {'category_id':categoryId})
             }
             
             , 'li click': function(element, evt, data)

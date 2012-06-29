@@ -2,8 +2,8 @@ steal(
     MAD_ROOT
 )
 .then(
-    'plugin/password/view/template/component/accessRight.ejs'
-    , function($){
+//    'plugin/password/view/template/component/accessRight.ejs',
+    function($){
         
         /*
         * @class passbolt.password.controller.component.AccessRightController
@@ -31,7 +31,7 @@ steal(
                 console.log('AccessRightController : password selected '+passwordId);
             }
             
-            , '{lb.eventBus} passbolt_password_selected': function(element, evt, data)
+            , '{mad.eventBus} passbolt_password_selected': function(element, evt, data)
             {
                 this.selectPassword(data.password_id);
             }

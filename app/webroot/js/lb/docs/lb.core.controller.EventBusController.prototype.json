@@ -1,1 +1,0 @@
-c({"name": "lb.core.controller.EventBusController.prototype", "type": "prototype", "parents": ["lb.core.controller.EventBusController"], "comment": "", "src": "lb/core/controller/eventBusController.js", "line": 22, "children": ["lb.core.controller.EventBusController.prototype.trigger"]})

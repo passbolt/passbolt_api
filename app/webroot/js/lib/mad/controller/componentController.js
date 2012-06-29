@@ -56,7 +56,7 @@ steal(
                 this.loading(false);
                 
                 // Notice the system than a new component has been released
-                this.getEventBus().trigger('lb_component_released', {'component':this});
+                mad.eventBus.trigger(mad.appNamespaceId+'_component_released', {'component':this});
             },
             
             /**

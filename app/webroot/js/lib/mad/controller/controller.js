@@ -1,8 +1,8 @@
 steal( 
-    'jquery/view/ejs'
-    , 'jquery/controller'
-    , 'jquery/controller/view'
-    , 'lb/core/model/moduleControllerActionDispatcher.js'
+    'jquery/view/ejs',
+    'jquery/controller',
+    'jquery/controller/view',
+    MAD_ROOT+'/route/moduleControllerActionDispatcher.js'
 )
 .then( 
     function($){
@@ -26,12 +26,12 @@ steal(
              * Get the controller dispatcher. The Dispatcher explain how the routes have to
              * be dispatch for this controller.
              * 
-             * @return {lb.core.model.Dispatcher} By default return the common module -> controller -> action
+             * @return {mad.route.Dispatcher} By default return the common module -> controller -> action
              * dispatcher.
              */
             'getDispatcher': function()
             {
-                return lb.core.model.ModuleControllerActionDispatcher;
+                return mad.route.ModuleControllerActionDispatcher;
             }
         },
         
@@ -46,7 +46,7 @@ steal(
                 // reference the controller to the application
                 this.getApp().referenceComponent(this);
                 
-                this.getEventBus().trigger('mad_controller_released', {'component':this});
+                mad.eventBus.trigger('mad_controller_released', {'component':this});
             },
             
             /**
@@ -67,7 +67,6 @@ steal(
             /**
              * Get the application controller
              * @return {mad.controller.AppController} The application controller
-             * @deprecated you should use mad.controller.AppController.singleton();
              */
             'getApp' : function()
             {
@@ -77,30 +76,24 @@ steal(
                     returnValue = this;
                 } 
                 else {
-                    if(lb.APP_CONTROLLER_CLASS.instance != null){
-                        returnValue = lb.APP_CONTROLLER_CLASS.singleton();
+                    if(mad.controller.AppController.getGlobal('APP_CONTROLLER_CLASS').instance != null){
+                        returnValue = mad.controller.AppController.getGlobal('APP_CONTROLLER_CLASS').singleton();
                     }
-//                    else{
-//                        console.log('c');
-//                        var $app = $('#'+lb.APP_CONTROLLER_ID);
-//                        console.log($app);
-//                        returnValue = $app.controllers();
-//                    }
                 }
                 
                 return returnValue;
             },
             
-            /**
-             * Get the application event bus controller
-             * @return {mad.controller.EventBusController} Get the application event bus
-             */
-            'getEventBus' : function()
-            {
-                var returnValue = null;
-                if(this.getApp()) returnValue = this.getApp().getEventBus();
-                return returnValue;
-            },
+//            /**
+//             * Get the application event bus controller
+//             * @return {mad.controller.EventBusController} Get the application event bus
+//             */
+//            'getEventBus' : function()
+//            {
+//                var returnValue = null;
+//                if(this.getApp()) returnValue = this.getApp().getEventBus();
+//                return returnValue;
+//            },
             
             /**
              * Get id of the controller

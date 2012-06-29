@@ -14,7 +14,7 @@ steal(
             'init': function() 
             {
                 // send to the event bus the information about the component creation
-                this.getEventBus().trigger('lb_workspace_released', {'component':this});
+                mad.eventBus.trigger(mad.appNamespaceId+'_workspace_released', {'component':this});
                 this._super();
             }
             

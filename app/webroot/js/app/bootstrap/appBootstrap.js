@@ -1,11 +1,10 @@
-steal( 
-    'lb/core/model/appBootstrap.js'
-    , 'app/controller/appController.js'
+steal(
+    MAD_ROOT
 )
 .then( 
     function($){
         
-        lb.core.model.AppBootstrap.extend('passbolt.bootstrap.AppBootstrap', {    
+        mad.bootstrap.AppBootstrap.extend('passbolt.bootstrap.AppBootstrap', {    
             
             'init': function(options)
             {

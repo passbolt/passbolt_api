@@ -4,8 +4,8 @@ steal(
     MAD_ROOT+'/controller/component/workspaceController.js'
 )
 .then(
-    'lb/core/view/template/container/three-column.ejs',
-    'lb/core/view/template/container/vertical.ejs',
+//    MAD_ROOT+'/view/template/component/container/three-column.ejs',
+//    MAD_ROOT+'/view/template/component/container/vertical.ejs',
     function($){
         
         /*
@@ -27,7 +27,7 @@ steal(
             {
                 this.options = $.extend(true, {}, this.options, options);
                 // Use the templateType to define the template
-                this.options.template = '//lb/core/view/template/container/'+this.options.templateType+'.ejs';
+                this.options.template = MAD_ROOT+'/view/template/component/container/'+this.options.templateType+'.ejs';
                 // Render
                 this.render();
                 
@@ -48,7 +48,7 @@ steal(
                 // Add the Category Chooser component
                 this.addComponent(passbolt.password.controller.component.CategoryChooserController, {
                     'id':'passbolt_password_category_chooser'
-                }, 'lb-container-first_side');
+                }, 'mad-container-first_side');
                 
                 
                 // *************************************************************
@@ -58,8 +58,8 @@ steal(
                 // Add vertical container to the second side area
                 var secondSideContainer = this.addComponent(mad.controller.component.ContainerController, {
                     'id':'passbolt_activity_second_side_container'
-                    , 'template' : '//lb/core/view/template/container/vertical.ejs'
-                }, 'lb-container-second_side');
+                    , 'template' : MAD_ROOT+'/view/template/component/container/vertical.ejs'
+                }, 'mad-container-second_side');
                 secondSideContainer.render();
                 
                 // Add the Password Information component

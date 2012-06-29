@@ -1,9 +1,9 @@
 steal( 
-    MAD_ROOT
+    MAD_ROOT+'/controller/componentController.js'
 )
 .then(
-    'plugin/password/view/template/component/passwordBrowser.ejs'
-    , function($){
+//    'plugin/password/view/template/component/passwordBrowser.ejs',
+    function($){
         
         /*
         * @class passbolt.password.controller.component.PasswordBrowserController
@@ -37,9 +37,9 @@ steal(
                 console.log('refresh the password browser with the password of the selected category '+categoryId);
             }
             
-            , '{lb.eventBus} passbolt_password_selected': function(element, evt, data)
+            , '{mad.eventBus} passbolt_password_selected': function(element, evt, data)
             {
-                lb.ajaxWrapper.request({
+                mad.net.Ajax.singleton().request({
                     'url':'http://getacountdown.local/ajax/action3'
                     , 'data': {
                         'key1': 'value1',
@@ -53,18 +53,14 @@ steal(
                 this.selectPassword(data.password_id);
             }
             
-            , '{lb.eventBus} passbolt_category_selected': function(element, evt, data)
+            , '{mad.eventBus} passbolt_category_selected': function(element, evt, data)
             {
                 this.refresh(data.category_id);
             }
             
             , 'li click': function(element, evt, data)
             {
-                this.getEventBus().trigger('passbolt_password_selected', {'password_id':element.html()})
-            }
-            
-            , 'render' : function(options){
-                this._super(options);
+                mad.eventBus.trigger('passbolt_password_selected', {'password_id':element.html()})
             }
         });
         

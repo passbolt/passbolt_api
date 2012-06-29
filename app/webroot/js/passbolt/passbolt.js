@@ -9,23 +9,21 @@
  * * passbolt.passbolt.controller.PasswordWorkspaceController
  */
 
+APP_URL = 'http://passbolt.local    ';
 MAD_ROOT = 'lib/mad';
 steal(
-    './passbolt.css'                                    // application CSS file
-    , MAD_ROOT+'/mad.js'
+    './passbolt.css'                                        // application CSS file
     
-//    , 'lb/core/controller/controller.js'                // the application's controller
-//    
-//    , 'lb/core/controller/eventBusController.js'        // the event bus controller
+    , MAD_ROOT+'/mad.js'                                    // the mad framework
+    
     , 'app/bootstrap/appBootstrap.js'                       // passbolt application bootstrap
     , 'app/controller/appController.js'                     // passbolt main application controller
 )
 .then(
-    'jquery/plugin/jquery-ui-1.8.20.custom.min.js'      // load jquery ui lib
+    'jquery/plugin/jquery-ui-1.8.20.custom.min.js'          // load jquery ui lib
 )
 .then(function(){
         steal.options.logLevel = 0;
-            
         $(document).ready(function(){
 
             //load the bootstrap of the application
@@ -34,7 +32,7 @@ steal(
                 , 'lg' : 'en-EN'                                                            // The langue of the application
                 , 'appNamespaceId' : 'passbolt'                                             // Application namespace
                 , 'appControllerId' : 'passbolt_app_controller'                             // Application controller DOM node id
-                , 'appControllerClass' : passbolt.controller.AppController         // Application controller class
+                , 'appControllerClass' : passbolt.controller.AppController                  // Application controller class
                 , 'eventBusControllerId' : 'passbolt_event_bus_controller'                  // Event bus controller DOM node id
                 , 'dispatchOptions' : {                                                     // Dispatcher options (not used here, but in case of page to page application, the DOM node id of the page controller)
                     'pageControllerId'  : 'passbolt-page-controller'

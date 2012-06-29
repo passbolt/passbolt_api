@@ -1268,6 +1268,14 @@
 		} else  {
 			converters = [options.type]
 		}
+//                
+//                // DIRTY HACK CED STYLE NINJA
+//                if(options.type == 'ejs'){
+//                    console.dir(types, converters, types[converters.shift()]);
+////                    console.log($.ajax({url:options.src, async:false}));
+////                    success.apply(this, [options, converters, success, error]);
+////                    return;
+//                }
 		require(options, converters, success, error)
 	};
 	function require(options, converters, success, error){

@@ -1,1 +1,0 @@
-c({"name": "Sizzle.getText", "params": {"elem": {"description": "", "type": "Array|Element", "optional": false, "order": 0, "name": "elem"}}, "ret": {"type": "undefined", "description": ""}, "type": "function", "comment": "<p>Utility function for retreiving the text value of an array of DOM nodes</p>", "src": "jquery/jquery.js", "line": 4181, "children": []})

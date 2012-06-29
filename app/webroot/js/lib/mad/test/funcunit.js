@@ -1,5 +1,6 @@
 MAD_ROOT = 'lib/mad';
 APP_URL = 'http://passbolt.local';
+
 steal(
     'funcunit',
     'jquery/dom/fixture',
@@ -12,6 +13,6 @@ steal(
     "./core/singleton.js",
     "./error/error.js",
     "./lang/i18n.js",
-    "./net/ajax.js",
-    "./string/uuid.js"
+    "./net/ajax.js"
+//    "./string/uuid.js"
 );

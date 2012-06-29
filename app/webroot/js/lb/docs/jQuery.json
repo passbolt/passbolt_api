@@ -1,1 +1,0 @@
-c({"name": "jQuery", "type": "class", "comment": "", "construct": "<p>blah</p>", "ret": {"type": "jquery", "description": ""}, "src": "steal/dev/dev.js", "line": 92, "children": []})

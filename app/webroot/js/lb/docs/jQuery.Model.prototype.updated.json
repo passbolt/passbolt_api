@@ -1,1 +1,0 @@
-c({"name": "jQuery.Model.prototype.updated", "type": "function", "parents": ["jQuery.Model.prototype"], "comment": "<p>Called by save after an instance is updated.  Publishes 'updated'.</p>", "hide": true, "params": {"attrs": {"order": 0, "description": "", "name": "attrs", "type": "Object", "optional": false}}, "src": "jquery/model/model.js", "line": 1718, "children": []})
