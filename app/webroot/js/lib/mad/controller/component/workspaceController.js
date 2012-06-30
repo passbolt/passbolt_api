@@ -14,7 +14,7 @@ steal(
             'init': function() 
             {
                 // send to the event bus the information about the component creation
-                mad.eventBus.trigger(mad.appNamespaceId+'_workspace_released', {'component':this});
+                mad.eventBus.trigger(mad.APP_NS_ID+'_workspace_released', {'component':this});
                 this._super();
             }
             

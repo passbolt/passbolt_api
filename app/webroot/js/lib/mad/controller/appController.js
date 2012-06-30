@@ -21,29 +21,123 @@ steal(
              * The application namespace
              * @static
              */
-            'APP_NAMESPACE_ID': null,
+            'APP_NS_ID': null,
             
             /**
+             * @static
+             * Reference global variables
+             * @type {array}
+             */
+            'globals': [],
+            
+            /**
+             * @static
              * get global
              * @param {string} name Name of the variable 
              * @return {mixed} Value of the variable 
-             * @static
              */
             'getGlobal': function(name)
             {
-                return window[mad.controller.Controller.APP_NAMESPACE_ID][name];
+                if(mad.controller.AppController.APP_NS_ID == null){
+                    throw new mad.error('The application namespace is not initialized');
+                }
+                return window[mad.controller.AppController.APP_NS_ID][name];
             },
             
             /**
+             * @static
+             * delete global
+             * @param {string} name Name of the variable 
+             * @return {void}
+             */
+            'deleteGlobal': function(name)
+            {
+                if(mad.controller.AppController.APP_NS_ID == null){
+                    throw new mad.error('The application namespace is not initialized');
+                }
+                
+                delete window[mad.controller.AppController.APP_NS_ID][name];                // delete the global variable
+                var position = $.inArray(name, mad.controller.AppController.globals);       // delete the reference of the global
+                if(position == -1){
+                    throw new Error('The global variable ('+name+') has not well been referenced');
+                }
+                delete mad.controller.AppController.globals[position];
+            },
+            
+            /**
+             * @static
              * set global
              * @param {string} name Name of the variable 
              * @param {mixed} value Value of the variable 
-             * @static
+             * @return {void}
              */
             'setGlobal': function(name, value)
             {
-                window[mad.controller.Controller.APP_NAMESPACE_ID][name] = value;
-                return window[mad.controller.Controller.APP_NAMESPACE_ID][name];
+                if(mad.controller.AppController.APP_NS_ID == null){
+                    throw new mad.error('The application namespace is not initialized');
+                }
+                mad.controller.AppController.globals.push(name);                // reference the name of the variable
+                window[mad.controller.AppController.APP_NS_ID][name] = value;   // store the variable
+                return window[mad.controller.AppController.APP_NS_ID][name];    // return the variable to allow chaining
+            },
+            
+            /**
+             * @static
+             * Init the application namespace by :
+             * <br/>
+             * <ul>
+             *   <li>by creating the namespace if this one does not exist</li>
+             *   <li>by populating the variable mad.controller.AppController.APP_NS_ID</li>
+             *   <li>by making alias of APP_NS_ID and APP_NS on the namespace mad</li>
+             *   <li>by making alias of getGlobal and setGlobal on the application namespace</li>
+             * </ul>
+             * @param {string} appNsId The ns id
+             * @return {void}
+             */
+            'setNs': function(appNsId)
+            {
+                mad.controller.AppController.APP_NS_ID = appNsId;
+                
+                //If the application namespace does not exist yet create it
+                if(typeof window[mad.controller.AppController.APP_NS_ID] == 'undefined'){
+                    window[mad.controller.AppController.APP_NS_ID] = {};
+                }
+                //If the application namespace has yet been populated, something is wrong ... throw an error
+                if(typeof window[mad.controller.AppController.APP_NS_ID].APP_NS_ID != 'undefined'){
+                    throw new Error('The application namespace ('+mad.controller.AppController.APP_NS_ID+') has yet been populated.');
+                }
+                //make global variables with the ns variables
+                mad.controller.AppController.setGlobal('APP_NS_ID', mad.controller.AppController.APP_NS_ID);
+                mad.controller.AppController.setGlobal('APP_NS', window[mad.controller.AppController.APP_NS_ID]);
+                //make aliases
+                mad.APP_NS_ID = mad.controller.AppController.getGlobal('APP_NS_ID');
+                mad.APP_NS = mad.controller.AppController.getGlobal('APP_NS');
+                // make aliases on the app namespace with the functions set and get globals
+                mad.controller.AppController.getGlobal('APP_NS').getGlobal = mad.controller.AppController.getGlobal;
+                mad.controller.AppController.getGlobal('APP_NS').setGlobal = mad.controller.AppController.setGlobal;
+            },
+            
+            /**
+             * Reset the application controller
+             * @return {void}
+             */
+            'destroy': function()
+            {    
+                // delete globals
+                for(var i in mad.controller.AppController.globals){
+                    var name = mad.controller.AppController.globals[i];
+                    if(name == 'APP_NS') continue;                              // This is a reference to itselef, delete it after
+                    mad.controller.AppController.deleteGlobal(name)
+                }
+                
+                mad.controller.AppController.deleteGlobal('APP_NS');
+                delete window[mad.controller.AppController.APP_NS_ID];
+                
+                //delete aliases
+                delete mad.APP_NS_ID;
+                delete mad.APP_NS;
+
+                mad.controller.AppController.APP_NS_ID = null;
             }
         
         },
@@ -55,7 +149,17 @@ steal(
              * @private
              */
             '_components': {},
-            
+  
+            /**
+             * App Controller constructor
+             */
+            'init': function()
+            {
+                this._super();
+                mad.setGlobal('app', this);
+                mad.app = mad.getGlobal('app');
+            },
+  
 //            /**
 //             * Get the event bus controller of the application
 //             * @return {mad.event.EventBus}
@@ -105,22 +209,22 @@ steal(
             // Event Bus Observers
             // **********************************************************************************/
             
-            '{mad.eventBus} {mad.appNamespaceId}_controller_released' : function(element, evt, data)
+            '{mad.eventBus} {mad.APP_NS_ID}_controller_released' : function(element, evt, data)
             {
                 steal.dev.log(__('new controller (%s) has been released', data.component.element[0].id));
             },
             
-            '{mad.eventBus} {mad.appNamespaceId}_component_released' : function(element, evt, data)
+            '{mad.eventBus} {mad.APP_NS_ID}_component_released' : function(element, evt, data)
             {
                 steal.dev.log(__('new component (%s) has been released', data.component.element[0].id));
             },
             
-            '{mad.eventBus} {mad.appNamespaceId}_container_released' : function(element, evt, data)
+            '{mad.eventBus} {mad.APP_NS_ID}_container_released' : function(element, evt, data)
             {
                 steal.dev.log(__('new container (%s) has been released', data.component.element[0].id));
             },
             
-            '{mad.eventBus} {mad.appNamespaceId}_app_ready' : function(element, evt, data)
+            '{mad.eventBus} {mad.APP_NS_ID}_app_ready' : function(element, evt, data)
             {
                 steal.dev.log(__('application is ready'));
             }

@@ -22,7 +22,7 @@ steal(
             {
                 this._super();
                 // send to the event bus the information about the component creation
-                mad.eventBus.trigger(mad.appNamespaceId+'_container_released', {'component':this});
+                if(mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID+'_container_released', {'component':this});
             }
             
             /**

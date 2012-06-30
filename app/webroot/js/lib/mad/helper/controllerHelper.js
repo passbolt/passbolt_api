@@ -7,25 +7,11 @@ steal(
         /**
          * The controller class helper offers to the developper tools arround controllers
          */
-        $.Class('mad.helper.controllerHelper', {
-            
-            /**
-             * Get controller path
-             * @deprecated
-             */
-            'getControllerPath': function(clazz)
-            {
-                var returnValue = '';
-                
-                var clazzName = clazz.fullName;
-                var split = clazzName.split('.');
-                var controllerName = split.pop();
-                returnValue = split.join('/');
-                returnValue += '/' + controllerName.substr(0,1).toLowerCase() + controllerName.slice(1) + '.js';
-                
-                return returnValue;
-            },
-            
+        $.Class('mad.helper.controllerHelper', 
+        
+        /** @static */
+        {
+                        
             /**
              * Get view path of a controller.
              * <br/>
@@ -43,11 +29,11 @@ steal(
              * <br/><br/>
              * For controllers from the application (passbolt.controller.PasswordWorkspaceController):
              * <br/>
-             * passbolt/view/template/passwordWorkspaceController.ejs
+             * app/view/template/passwordWorkspaceController.ejs
              * <br/><br/>
              * For controllers from the plugins of the application (passbolt.activity.controller.activityWorkspaceController):
              * <br/>
-             * passbolt/plugin/activity/view/template/activityWorkspaceController.ejs
+             * plugin/activity/view/template/activityWorkspaceController.ejs
              * 
              * @param {jQuery.Controller} clazz Controller to determine the view path
              * @return {string}
@@ -68,7 +54,7 @@ steal(
                     returnValue = MAD_ROOT;
                     split = split.splice(1);
                 }
-                else if(split[0] == mad.getGlobal('APP_NAMESPACE_ID')){
+                else if(split[0] == mad.controller.AppController.getGlobal('APP_NS_ID')){
                     //we are in a plugin
                     if(split[1]!='controller'){
                         returnValue = 'plugin/'+split[1];
@@ -83,7 +69,7 @@ steal(
                 
                 //the next in the split has to be the controller, else there is an error in the controller name
                 if(split[0] != 'controller'){
-                    throw new Error('Controller name mal formed');
+                    throw new mad.Error('Controller name mal formed');
                 }
                 split = split.splice(1);
                 
@@ -98,17 +84,10 @@ steal(
                 return '//'+returnValue;
             }
             
-        }
-        , {
-            /** 
-             * There is no constructor
-             * @throw {mad.error.NoConstructor} 
-             */
-            'init' : function()
-            {
-                throw new mad.NoConstructor();
-            }
-        });
+        }, 
+        
+        /** @prototype */
+        {}
+    );
     
-    }
-);
+});

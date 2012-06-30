@@ -68,9 +68,7 @@ steal(
                 }
                 
                 // Reference the application namespace
-                mad.controller.Controller.APP_NAMESPACE_ID = this.options.appNamespaceId;
-                // Make an alias
-                mad.appNamespaceId = mad.controller.Controller.APP_NAMESPACE_ID;
+                mad.controller.AppController.setNs(this.options.appNamespaceId);
                 
                 // find the controller with the given appControllerId passed by args
                 var $appController = mad.setGlobal('$appController', $('#'+this.options.appControllerId));
@@ -125,22 +123,14 @@ steal(
              */
             'initConstants' : function()
             {
-                // init the application namespace
-                if(typeof window[this.options.appNamespaceId].APP_NAMESPACE_ID != 'undefined'){
-                    throw new Error('The application namespace ('+this.options.appNamespaceId+') is yet existing.');
-                }
-                
-                // make alias with the functionsx set and get globals
-                window[this.options.appNamespaceId].getGlobal = mad.controller.AppController.getGlobal;
-                window[this.options.appNamespaceId].setGlobal = mad.controller.AppController.setGlobal;
-                
                 // init globals
-                mad.setGlobal('APP_ROOT_URL',              this.options.appRootUrl);
-                mad.setGlobal('LG',                        this.options.lg);
-                mad.setGlobal('APP_NAMESPACE_ID',          this.options.appNamespaceId);
-                mad.setGlobal('APP_CONTROLLER_ID',         this.options.appControllerId);
-                mad.setGlobal('EVENTBUS_CONTROLLER_ID',    this.options.eventBusControllerId);
-                mad.setGlobal('APP_CONTROLLER_CLASS',      this.options.appControllerClass);
+                mad.setGlobal('APP_ROOT_URL',               this.options.appRootUrl);           // Reference the application url
+                mad.setGlobal('LG',                         this.options.lg);                   // Reference the application language
+                mad.setGlobal('APP_NS_ID',                  this.options.appNamespaceId);       // The application NS Id
+                mad.setGlobal('APP_NS',                     window[mad.controller.AppController.getGlobal('APP_NS_ID')]);   // The application NS
+                mad.setGlobal('APP_CONTROLLER_ID',          this.options.appControllerId);      // The application controller Id
+                mad.setGlobal('EVENTBUS_CONTROLLER_ID',     this.options.eventBusControllerId); // The event bus controller id
+                mad.setGlobal('APP_CONTROLLER_CLASS',       this.options.appControllerClass);   // The application controller class
             },
             
             
@@ -285,12 +275,12 @@ steal(
             /**
              * Execute this function at the end of the bootstrap process.
              * You can override this function, this one release an event app_Ready
-             * @event {APP_NAMESPACE_ID'}_app_ready
+             * @event {APP_NS_ID'}_app_ready
              * @return {void}
              */
             'ready': function()
             {
-                mad.eventBus.trigger(mad.getGlobal('APP_NAMESPACE_ID')+'_app_ready');
+                mad.eventBus.trigger(mad.getGlobal('APP_NS_ID')+'_app_ready');
             }
         });
     }

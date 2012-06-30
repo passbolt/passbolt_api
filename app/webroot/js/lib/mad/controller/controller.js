@@ -46,7 +46,7 @@ steal(
                 // reference the controller to the application
                 this.getApp().referenceComponent(this);
                 
-                mad.eventBus.trigger('mad_controller_released', {'component':this});
+                if(mad.eventBus) mad.eventBus.trigger('mad_controller_released', {'component':this});
             },
             
             /**
@@ -76,8 +76,8 @@ steal(
                     returnValue = this;
                 } 
                 else {
-                    if(mad.controller.AppController.getGlobal('APP_CONTROLLER_CLASS').instance != null){
-                        returnValue = mad.controller.AppController.getGlobal('APP_CONTROLLER_CLASS').singleton();
+                    if(mad.app != null){
+                        returnValue = mad.app;
                     }
                 }
                 
