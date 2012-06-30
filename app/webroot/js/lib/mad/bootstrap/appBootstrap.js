@@ -169,8 +169,6 @@ steal(
             {
                 var appControllerClass = this.options.appControllerClass;
                 mad.setGlobal('app', appControllerClass.singleton(mad.getGlobal('$appController')));
-                //make an alias with this global variable
-                mad.app = mad.getGlobal('app');
             },
             
             /**
