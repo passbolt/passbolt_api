@@ -25,5 +25,12 @@ steal(
     "./helper/controller.js",
     "./lang/i18n.js",
     "./net/ajax.js",
-    "./string/uuid.js"
+    "./string/uuid.js",
+    function(){
+        test('Initialize an application', function(){
+            $app = $('body').append('<div id="mad-test-app_controller"/>');
+            mad.controller.AppController.singleton($app);  
+        });
+    },
+    "./helper/component/boxDecorator.js"
 );

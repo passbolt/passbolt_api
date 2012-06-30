@@ -13,14 +13,27 @@ steal(
                 // Impossible to get the return value of the decorated function
                 // the only way to get it is to pass through an internal variable
                 // I would like to understand ...
-                this._super({'display':false});
-                html = this.renderedView;
+//                this._super({'display':false});
+//                html = this.renderedView;
+
                 // Render the decorator template
                 var template = '//'+MAD_ROOT+'/view/template/component/decorator/box.ejs';
-                this.element.html($.View(template));
-                // Add the component to the decorator
-                // It is crap, but there is trouble with embedded view & the other way to pass the html of the component as a view data is also buggy (the html is not interpreted by the browser)
-                this.element.find('.lb-decorator-box-content').html(html);
+                // Wrap the existing component with the decorator box
+                this.element.wrap('<div id="mad-helper-component-box_decorator" />');
+                // The box is now the parent of the element
+                var $box = this.element.parent();
+                // Detache the existing content, to re-add it later
+                var existingContent = $box.children().detach();
+                // Render the box template
+                $box.html($.View(template));
+                // Add the element to the decorator. at the defined place
+                $box.find('.mad-helper-component-box_decorator-content').append(existingContent);
+                // Render the component
+                this._super();
+            },
+            'boxElement': function()
+            {
+                return this.element.parents('#mad-helper-component-box_decorator');
             }
         };
         
