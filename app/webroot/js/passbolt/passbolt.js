@@ -9,7 +9,7 @@
  * * passbolt.passbolt.controller.PasswordWorkspaceController
  */
 
-APP_URL = 'http://passbolt.local    ';
+APP_URL = 'http://passbolt.local';
 MAD_ROOT = 'lib/mad';
 steal(
     './passbolt.css'                                        // application CSS file
@@ -38,7 +38,7 @@ steal(
                     'pageControllerId'  : 'passbolt-page-controller'
                 }
                 , 'defaultRoute' : {                                                        // The default route
-                    'module' : 'password'
+                    'extension' : 'password'
                     , 'controller' : 'passwordWorkspace'
                     , 'action' : 'index'
                 }

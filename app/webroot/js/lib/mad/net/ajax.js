@@ -6,9 +6,10 @@ steal(
         
         /*
         * @class mad.net.Ajax
-        * The ajax wrapper allows developper to make their ajax request, moreover
-        * it allows them to make ajax transaction to minimize server calls by 
-        * aggregating ajax requests 
+        * The ajax wrapper is an interface to the jQuery ajax function. It allows 
+        * developpers to make their ajax request, moreover it allows them to make 
+        * ajax transactions to minimize server calls by aggregating ajax requests 
+        * 
         * @parent index
         * @constructor
         * Creates a new ajax wrapper

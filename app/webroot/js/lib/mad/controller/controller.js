@@ -2,20 +2,24 @@ steal(
     'jquery/view/ejs',
     'jquery/controller',
     'jquery/controller/view',
-    MAD_ROOT+'/route/moduleControllerActionDispatcher.js'
+    MAD_ROOT+'/route/extensionControllerActionDispatcher.js'
 )
 .then( 
     function($){
 
         /*
         * @class mad.controller.Controller
+        * @inherits $.Controller
+        * @parent index
+        * 
         * The core class Controller is an extension of the JavascriptMVC Controller. This
         * class provides to developpers specific common tools to create application's 
         * controllers.
         * 
-        * @parent index
         * @constructor
-        * Creates a new controller
+        * Creates a new application controller.
+        * <br/>
+        * References it to the application controller.
         * @return {mad.controller.Controller}
         */
         $.Controller('mad.controller.Controller',
@@ -26,12 +30,12 @@ steal(
              * Get the controller dispatcher. The Dispatcher explain how the routes have to
              * be dispatch for this controller.
              * 
-             * @return {mad.route.Dispatcher} By default return the common module -> controller -> action
+             * @return {mad.route.Dispatcher} By default return the common extension -> controller -> action
              * dispatcher.
              */
             'getDispatcher': function()
             {
-                return mad.route.ModuleControllerActionDispatcher;
+                return mad.route.ExtensionControllerActionDispatcher;
             }
         },
         
@@ -46,7 +50,7 @@ steal(
                 // reference the controller to the application
                 this.getApp().referenceComponent(this);
                 
-                if(mad.eventBus) mad.eventBus.trigger('mad_controller_released', {'component':this});
+                if(mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID+'_controller_released', {'component':this});
             },
             
             /**

@@ -6,10 +6,27 @@ steal(
         
         /*
         * @class mad.core.Singleton
-        * The Singleton class
+        * Implementation of the pattern singleton in javascript on top of the
+        * JMVC framework.
+        * <br/>
+        * There are two ways to use the singleton class :
+        * <ul><li> 
+        * Either by <b>extending</b> directly the class
+        * @codestart
+        * mad.core.Singleton.extend('myNewSingleton',{},{});
+        * @codeend
+        * </li><li>
+        * Or by <b>augmenting</b> an existing class with the Singleton class
+        * @codestart
+        * MyExistingClass.augment('mad.core.Singleton');
+        * @codeend
+        * </li></ul>
+        * 
         * @parent index
         * @constructor
-        * Create a new singleton
+        * @inherits mad.core.Class
+        * Instanciate the Singleton class.
+        * <br/> <b>private</b>
         * @return {mad.core.Singleton}
         */
         $.Class('mad.core.Singleton', 

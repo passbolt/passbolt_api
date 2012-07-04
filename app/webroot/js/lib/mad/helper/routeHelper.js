@@ -47,13 +47,13 @@ steal(
                 
                 //route is route :)
                 if(typeof route == 'object'){
-                    returnValue = route.module+'_'+route.controller;
+                    returnValue = route.extension+'_'+route.controller;
                 }
                 //is a string which represent de class
                 else{
                     var arr = route.split('.');
                     //returnValue = arr[0] + '_' + arr[1] + '_' + arr[3].substr(0,1).toLowerCase() + arr[3].substr(1, arr[3].length-11);
-                    //myAppName.myModuleName.controller.myCtlNameController -> myAppName_myModuleName_myCtlName
+                    //myAppName.myExtensionName.controller.myCtlNameController -> myAppName_myExtensionName_myCtlName
                     returnValue = arr[0] + '_' + arr[1] + '_' + arr[3].substr(0, arr[3].length-10).toLowerCase();
                 }
                 
@@ -70,7 +70,7 @@ steal(
             {
                 var prefix = typeof(options)!='undefined' && typeof(options.prefix)!='undefined' ? options.prefix : '';
                 var controllerName = route.controller.charAt(0).toUpperCase() + route.controller.slice(1)+'Controller';
-                return prefix+route.module+'.controller.'+controllerName;
+                return prefix+route.extension+'.controller.'+controllerName;
             }
         }
         , {

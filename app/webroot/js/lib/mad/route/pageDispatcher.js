@@ -1,5 +1,5 @@
 steal( 
-    MAD_ROOT+'/route/moduleControllerActionDispatcher.js'
+    MAD_ROOT+'/route/extensionControllerActionDispatcher.js'
 )
 .then( 
     function($){
@@ -13,7 +13,7 @@ steal(
         *   
         * @parent index
         */
-        mad.route.ModuleControllerActionDispatcher.extend('mad.route.PageDispatcher', {
+        mad.route.ExtionsControllerActionDispatcher.extend('mad.route.PageDispatcher', {
             
             /**
              * Dispatch the route to the convenient actions
@@ -26,7 +26,7 @@ steal(
                 
                 // The controllerId is given
                 if(typeof(options.ControllerClass) == 'undefined'){
-                    throw new Error("mad.error.ModuleControllerActionDispatcher error : The options.ControllerClass has to be defined");
+                    throw new Error("mad.error.ExtensionControllerActionDispatcher error : The options.ControllerClass has to be defined");
                 }
                 
                 var $pageController = $('#gacd-page-controller');

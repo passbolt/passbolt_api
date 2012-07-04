@@ -5,18 +5,57 @@ steal(
     function($){
         
         /*
-         * @class jQuery.Class
-         * Override the Javascript MVC class with our needed features :
-         * <br/>
-         * - Allow developpers to decorate an instance with a subset of function (prototype function right now)
-         * - Allow developpers to augment an class with properties of another one (prototype and static vars and functions, test the controller)
-         */
+        * @class mad.core.Class
+        * @parent index
+        * Our layer up on the JMVC Class with some features :
+        * <ul><li>
+        * Allow developpers to <b>decorate</b> an instance with a subset of function (prototype function right now)
+        * </li><li>
+        * Allow developpers to <b>augment</b> a class with properties of another one (prototype and static vars and functions)
+        * </li></ul>
+        */
         
-        /* @function decorate
-         * Decorate an instance with a subset of functions
-         * @param  {String} decoratorName The name of the object to use as decorator
-         * @return  {Object} Returns the decorated instance
-        */  
+        /* @prototype */
+        
+        /* 
+         * @function decorate
+         * 
+         * Decorate an instance with the functions of another object.
+         * <br/> 
+         * <b>todo</b> Accept JMVC Class object
+         * <br/><br/>
+         * <b>Example</b>
+         * <br/>
+         * @codestart
+         * $.Class('MyClass',{
+         *    'funcToDecorate': function() {
+         *        return 'I am the function to decorate';
+         *    },
+         * });
+         * 
+         * var MyDecorator = {
+         *    'funcToDecorate': function() {
+         *        return this._super()+' which has been decorated, oh yeah!';
+         *    },
+         *    'moreFunc': function() {
+         *        return 'I am an additional function';
+         *    }
+         * };
+         * 
+         * var myInstance = new MyClass();
+         * myInstance.funcToDecorate();     
+         * // will return 'I am the function to decorate'
+         * myInstance.decorate('MyDecorator');
+         * myInstance.funcToDecorate();     
+         * // will return 'I am the function to decorate which has been decorated, oh yeah!'
+         * myInstance.moreFunc();     
+         * // will return 'I am an additional function'
+         * 
+         * @codeend
+         * 
+         * @param {String} decoratorName The name of the object to use as decorator
+         * @return {Object} Returns the decorated instance
+         */ 
         $.Class.prototype.decorate = function(decoratorName)
         {
             var Decorator = $.String.getObject(decoratorName)
@@ -65,11 +104,44 @@ steal(
             return this;
         }
         
-        /* @function augment
-         * Augment a class with properties of anoter
+       /* 
+         * @function augment
+         * 
+         * Augment a class with the properties of another.
+         * <br/>
+         * Allow a kind of multiple inheritance. If you have multiple init function, each function
+         * will be called once after other (LIFO).
+         * <br/><br/>
+         * <b>Example</b>
+         * <br/>
+         * @codestart
+         * $.Class('MyClass',{
+         *    'myVar':0,
+         *    'init':function(){
+         *        this.myVar++;
+         *    },
+         * });
+         * 
+         * $.Class('MyAugmentator',{
+         *    'init':function(){
+         *        this.myVar++;
+         *    },
+         *    'moreFunc': function() {
+         *        return 'I am an additional function';
+         *    }
+         * });
+         * 
+         * MyClass.augment(MyAugmentator);
+         * var myInstance = new MyClass();
+         * // myInstance.myVar == 2
+         * myInstance.moreFunc();
+         * // will return 'I am an additional function'
+         * 
+         * @codeend
+         * 
          * @param  {String} objectName The name of the object to use to augment the class
          * @return  {void}
-        */  
+         */
         $.Class.augment = function(objectName)
         {
             var Augmentator = $.String.getObject(objectName);

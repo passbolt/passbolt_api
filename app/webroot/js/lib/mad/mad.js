@@ -1,3 +1,14 @@
+/*
+ * @page index mad
+ * @tag home
+ *
+ * ###MadSquirrel Fw
+ *  
+ * Our Mad Squirrel Framework:
+ *  
+ * * mad.controller.Controller
+ */
+
 steal(
     'jquery',
     'jquery/class',
@@ -22,5 +33,9 @@ steal(
     MAD_ROOT+'/helper/component/boxDecorator.js',
     MAD_ROOT+'/lang/i18n.js',
     MAD_ROOT+'/string/uuid.js',
+    MAD_ROOT+'/route/routeListener.js',
+    MAD_ROOT+'/route/dispatcherInterface.js',
+    MAD_ROOT+'/route/extensionControllerActionDispatcher.js',
+//    MAD_ROOT+'/route/pageDispatcher.js',
     MAD_ROOT+'/net/ajax.js'
 );
