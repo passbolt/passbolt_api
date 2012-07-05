@@ -6,19 +6,20 @@ steal(
     function($){
         
         /*
-        * @class mad.route.ModuleControllerActionDispatcher
-        * The ModuleControllerAction dispatcher is the common way to dispatch a route. Based
-        * on the module name, the controller name and the action name it is dispatching the route
-        * to the target action of the target controller of the target module.
+        * @class mad.route.ExtensionControllerActionDispatcher
         * 
-        * <br/> For the url <b>http://mydomain/myModule/myController/myAction</b>, the bootstrap extracts a route :
+        * The ExteionsControllerAction dispatcher is the common way to dispatch a route. Based
+        * on the extension name, the controller name and the action name it will dispatch the route
+        * to the target action of the target controller of the target extension.
         * 
-        * <u>module</u> : myModule
+        * <br/> For the url <b>http://mydomain/myExtension/myController/myAction</b>, the bootstrap extracts a route :
+        * 
+        * <u>extension</u> : myExtension
         * <br/> <u>controller</u> : myController
         * <br/> <u>action</u> : myAction
         * 
         * First of all the route is used to find the controller in the DOM page. If the <b>options.controllerId</b>
-        * is empty the dispatcher uses the standard <b>myModule-myController-controller</b> to identify the controller
+        * is empty the dispatcher uses the standard <b>myExtension-myController-controller</b> to identify the controller
         * DOM element.
         * 
         * Once the controller is identified, the dispatcher calls the action on this controller. The
@@ -26,7 +27,7 @@ steal(
         *   
         * @parent index
         */
-        mad.route.DispatcherInterface.extend('mad.route.ModuleControllerActionDispatcher', {
+        mad.route.DispatcherInterface.extend('mad.route.ExtensionControllerActionDispatcher', {
             
             'dispatch' : function(route, options)
             {
@@ -41,7 +42,7 @@ steal(
                 }
                 // Find him following the route
                 else{
-                    controllerId = route.module+'-'+route.controller+'-controller';
+                    controllerId = route.extension+'-'+route.controller+'-controller';
                 }
                 
                 var pluginNameController = mad.helper.routeHelper.pluginNameController(route, {'prefix':'passbolt_'});

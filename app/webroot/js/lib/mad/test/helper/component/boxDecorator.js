@@ -47,6 +47,6 @@ test('helper.component.BoxDecorator : Decorate a component with this box decorat
     component.boxElement().remove();
     
     // the component is not existing anymore
-    ok(mad.app.getComponent(componentId)==null, 'The component has well been unreferenced when it was deleterd');
+    ok(mad.app.getComponent(componentId)==null, 'The component has well been unreferenced when it was deleted');
     
 });

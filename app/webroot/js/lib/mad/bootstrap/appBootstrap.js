@@ -1,15 +1,15 @@
 steal( 
     'jquery/dom/route'
-    , MAD_ROOT+'/bootstrap/bootstrapInterface.js'
-    , MAD_ROOT+'/route/dispatcherInterface.js'
-    
-    , 'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
+    , MAD_ROOT+'/bootstrap/bootstrapInterface.js'    
+//    , 'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
 )
 .then( 
     function($){
         
         /*
         * @class mad.bootstrap.AppBootstrap
+        * BLABLA sur la classe
+        * 
         * @parent index
         * @constructor
         * Creates a Application Bootstrap
@@ -18,7 +18,7 @@ steal(
         * exist on your page. Default : app-controller
         * @param {Array} options.dispatchOptions Array of options for the dispatcher. See the Class mad.bootstrap.DispatcherInterface
         * @param {Array} defaultRoute The default route used by the dispatcher
-        * @param {String} defaultRoute.module The default module
+        * @param {String} defaultRoute.extension The default extension
         * @param {String} defaultRoute.controller The default controller
         * @param {String} defaultRoute.action The default action
         * @return {mad.bootstrap.AppBootstrap}
@@ -37,7 +37,7 @@ steal(
                 , 'appControllerClass' : mad.controller.AppController
                 , 'dispatchOptions' : { }
                 , 'defaultRoute' : {
-                    'module'        : ''
+                    'extension'        : ''
                     , 'controller'  : ''
                     , 'action'      : ''
                 }
@@ -107,7 +107,7 @@ steal(
                 this.initExtensions();
                 
                 // Dispatch the route to the convenient action
-                this.dispatch();
+//                this.dispatch();
                 
                 // Application is ready
                 this.ready();
@@ -169,8 +169,6 @@ steal(
             {
                 var appControllerClass = this.options.appControllerClass;
                 mad.setGlobal('app', appControllerClass.singleton(mad.getGlobal('$appController')));
-                //make an alias with this global variable
-                mad.app = mad.getGlobal('app');
             },
             
             /**
@@ -180,13 +178,14 @@ steal(
              */
             'initExtensions': function()
             {
-                new passbolt.activity.bootstrap.Bootstrap();
+//                new passbolt.activity.bootstrap.Bootstrap();
             },
             
             /**
              * Initialize the event bus controller of the application. It will be in charge to centralize
              * all events which occur
              * @return {void}
+             * @todo change the use to mad.eventBus in mad.$eventBus (because it is a jQuery element)
              */
             'initEventBus': function()
             {
@@ -195,7 +194,8 @@ steal(
                 // add the dom element which will be behind the controller
                 mad.getGlobal('$appController').before('<div id="'+mad.getGlobal('EVENTBUS_CONTROLLER_ID')+'"></div>');
                 // instantiate the event bus controller
-                mad.setGlobal('eventBus', $('#'+mad.getGlobal('EVENTBUS_CONTROLLER_ID'))[pluginNameController]());
+                var eventBus = new mad.event.EventBus('#'+mad.getGlobal('EVENTBUS_CONTROLLER_ID'));
+                mad.setGlobal('eventBus', eventBus.element);
                 // Make an alias with the eventBus
                 mad.eventBus = mad.getGlobal('eventBus');
             },
@@ -208,22 +208,8 @@ steal(
             'initRouteListener' : function(routes)
             {
                 var self = this;
-                
-                // load the routes
-                $.route(":module/:controller/:action/:p1/:p2/:p3/:p4/:p5");
-                $.route(":module/:controller/:action/:p1/:p2/:p3/:p4");
-                $.route(":module/:controller/:action/:p1/:p2/:p3");
-                $.route(":module/:controller/:action/:p1/:p2");
-                $.route(":module/:controller/:action/:p1");
-                $.route(":module/:controller/:action");
-                $.route(":module/:controller");        
-                $.route(":module");
-                $.route("");
-                $.route.ready();
-                
-                // listen the special haschange event, disptatch when a new route is comming
-                // @note : Using the $.route.bind('change', function(){ ... }) is maybe the proper method, but it seems impossible to listen the whole change (module+controler+action)
-                $(window).bind('hashchange', function(){
+                mad.route.RouteListener.singleton();
+                mad.eventBus.bind(mad.APP_NS_ID+'_route_change', function(){
                     self.dispatch();
                 });
             },
@@ -250,8 +236,8 @@ steal(
                 
                     
                 // check all required parameters are here
-                if(typeof this.currentRoute.module == 'undefined'){
-                    throw new Error('Bootstrap error : the url is not valid, module missing');
+                if(typeof this.currentRoute.extension == 'undefined'){
+                    throw new Error('Bootstrap error : the url is not valid, extension missing');
                 }
                 else if(typeof this.currentRoute.controller == 'undefined'){
                     throw new Error('Bootstrap error : the url is not valid, controller missing');
@@ -264,8 +250,8 @@ steal(
                 // the controller name
                 // @todo application name parameter
                 var controllerName = this.currentRoute.controller.charAt(0).toUpperCase()+this.currentRoute.controller.slice(1)+'Controller';
-                steal.dev.log('dispatch to module:'+this.currentRoute.module+' controller:'+controllerName+' action:'+this.currentRoute.action);
-                var controllerClass = passbolt[this.currentRoute.module].controller[controllerName];
+                steal.dev.log('dispatch to extension:'+this.currentRoute.extension+' controller:'+controllerName+' action:'+this.currentRoute.action);
+                var controllerClass = passbolt[this.currentRoute.extension].controller[controllerName];
                 
                 // dispatch to the convenient action
                 this.options.dispatchOptions.ControllerClass = controllerClass;
