@@ -1,7 +1,7 @@
 steal( 
     'jquery/dom/route'
     , MAD_ROOT+'/bootstrap/bootstrapInterface.js'    
-    , 'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
+//    , 'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
 )
 .then( 
     function($){
@@ -107,7 +107,7 @@ steal(
                 this.initExtensions();
                 
                 // Dispatch the route to the convenient action
-                this.dispatch();
+//                this.dispatch();
                 
                 // Application is ready
                 this.ready();
@@ -178,7 +178,7 @@ steal(
              */
             'initExtensions': function()
             {
-                new passbolt.activity.bootstrap.Bootstrap();
+//                new passbolt.activity.bootstrap.Bootstrap();
             },
             
             /**
