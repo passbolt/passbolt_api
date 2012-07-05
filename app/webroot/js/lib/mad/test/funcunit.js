@@ -10,6 +10,10 @@ steal(
     MAD_ROOT+'/mad.js'
 )
 .then(
+
+	// Tools
+//	"./object/object.js"
+
     // Test the function setNs, this function is a stone reference for the whole program
     // and it has to be called before the other unit test
     "./controller/appController.js",
@@ -55,5 +59,21 @@ steal(
     "./route/extensionControllerActionDispatcher.js",
     
     // Test application components
-    "./helper/component/boxDecorator.js"
+    "./helper/component/boxDecorator.js",
+    
+//    // Deploy an empty application environnement to test our components
+//    // @deprecated The environnement is now launched in each test which needs it
+//    function(){
+//        test('Deploy popup test environnement', function(){
+//			stop();
+//            S.open('./testEnv.html', function(data1, d2){
+//                // store the env windows in a global var for the following unit tests
+//				testEnv = S.win;
+//				console.log(S.win);
+//				start();                
+//            });
+//        });
+//    },
+    
+    "./controller/component/treeController.js"
 );
