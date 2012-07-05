@@ -12,7 +12,7 @@ steal(
 .then(
 
 	// Tools
-//	"./object/object.js"
+	"./object/object.js",
 
     // Test the function setNs, this function is a stone reference for the whole program
     // and it has to be called before the other unit test
