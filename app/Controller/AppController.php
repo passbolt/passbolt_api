@@ -35,7 +35,7 @@ class AppController extends Controller {
 
     function beforeFilter()
     {
-        $this->layout = 'html5';
+        $this->layout = 'json';
         
         if($this->Session->read('Config.language') != null){
             Configure::write('Config.language', $this->Session->read('Config.language'));
