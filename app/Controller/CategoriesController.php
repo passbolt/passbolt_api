@@ -25,7 +25,7 @@ class CategoriesController extends AppController {
 
     public function index() {
         //$data = $this->Category->generateTreeList(null, null, null, '-');
-        $data = $this->Category->children('1');
+        $data = $this->Category->children('4ff6111b-efb8-4a26-aab4-2184cbdd56cb');
         debug($data); die;
     }
 	
@@ -41,7 +41,7 @@ class CategoriesController extends AppController {
 	 * @param $children, whether or not we want the children returned
 	 * @return : either the category or the whole tree in a transformed object {id, name, position, type}
 	 */
-	public function get($id=1, $children=false){
+	public function get($id='4ff6111b-efb8-4a26-aab4-2184cbdd56cb', $children=false){
 		$children = true;
 		
 		$category = $this->Category->findById($id);
@@ -116,5 +116,52 @@ class CategoriesController extends AppController {
 	 */
 	public function setType($id, $type){
 		
+	}
+	
+	public function populate(){
+		/*	
+		Goa
+		-Hippies places
+		--Anjuna
+		---UV Bar
+		---Curlie's
+		----Dance on the beach
+		----Play pool table
+		---The Hippies
+		--Palolem
+		-drug places
+		--Calangute
+		---Le Nepalais
+		-Disco places
+		--Baga
+		--Mapusa
+		 */
+		$goa = $this->Category->save(array('Category'=>array('name'=>'Goa')));
+		$this->Category->create();
+		$hippies = $this->Category->save(array('Category'=>array('name'=>'Hippies places', 'parent_id'=>$goa['Category']['id'])));
+		$this->Category->create();
+		$anjuna = $this->Category->save(array('Category'=>array('name'=>'Anjuna', 'parent_id'=>$hippies['Category']['id'])));
+		$this->Category->create();
+		$uvbar = $this->Category->save(array('Category'=>array('name'=>'UV Bar', 'parent_id'=>$anjuna['Category']['id'])));
+		$this->Category->create();
+		$curlies = $this->Category->save(array('Category'=>array('name'=>'Curlie\'s', 'parent_id'=>$anjuna['Category']['id'])));
+		$this->Category->create();
+		$thehippies = $this->Category->save(array('Category'=>array('name'=>'The Hippies', 'parent_id'=>$anjuna['Category']['id'])));
+		$this->Category->create();
+		$beach = $this->Category->save(array('Category'=>array('name'=>'Dance on the beach', 'parent_id'=>$curlies['Category']['id'])));
+		$this->Category->create();
+		$pool = $this->Category->save(array('Category'=>array('name'=>'Play pool table', 'parent_id'=>$curlies['Category']['id'])));
+		$this->Category->create();
+		$drug = $this->Category->save(array('Category'=>array('name'=>'Drug places', 'parent_id'=>$goa['Category']['id'])));
+		$this->Category->create();
+		$disco = $this->Category->save(array('Category'=>array('name'=>'Disco places', 'parent_id'=>$goa['Category']['id'])));
+		$this->Category->create();
+		$calangute = $this->Category->save(array('Category'=>array('name'=>'Calangute', 'parent_id'=>$drug['Category']['id'])));
+		$this->Category->create();
+		$nepalais = $this->Category->save(array('Category'=>array('name'=>'Le Nepalais', 'parent_id'=>$calangute['Category']['id'])));
+		$this->Category->create();
+		$baga = $this->Category->save(array('Category'=>array('name'=>'Baga', 'parent_id'=>$disco['Category']['id'])));
+		$this->Category->create();
+		$mapusa = $this->Category->save(array('Category'=>array('name'=>'Mapusa', 'parent_id'=>$disco['Category']['id'])));
 	}
 }
