@@ -6,7 +6,10 @@ steal(
     'plugin/password/controller/component/passwordBrowserController.js',
     'plugin/password/controller/component/categoryChooserController.js',
     'plugin/password/controller/component/passwordInformationController.js',
-    'plugin/password/controller/component/accessRightController.js'
+    'plugin/password/controller/component/accessRightController.js',
+    
+    'plugin/password/model/category.js',
+    'plugin/password/model/database.js'
 )
 .then(
 //    MAD_ROOT+'/view/template/component/container/three-column.ejs',
@@ -36,9 +39,19 @@ steal(
                 
                 // Render
                 this.render();
-                
+				
                 // *************************************************************
                 // First side area
+                // *************************************************************
+                
+                // Add the Category Chooser component
+                var categoryChooser = this.addComponent(passbolt.password.controller.component.CategoryChooserController, {
+                    'id':'passbolt_password_category_chooser'
+                }, 'mad-container-first_side');
+                categoryChooser.render();
+                
+                // *************************************************************
+                // Main area
                 // *************************************************************
                 
                 // Add the Password browser component
@@ -47,16 +60,7 @@ steal(
                 });
                 passwordBrowserController = passwordBrowserController.decorate('mad.helper.component.BoxDecorator'); // decorator sample, oh yeah
                 passwordBrowserController.render();
-                
-                // *************************************************************
-                // Main area
-                // *************************************************************
-                
-                // Add the Category Chooser component
-                this.addComponent(passbolt.password.controller.component.CategoryChooserController, {
-                    'id':'passbolt_password_category_chooser'
-                }, 'mad-container-first_side');
-                
+				
                 
                 // *************************************************************
                 // Second side area
@@ -80,9 +84,9 @@ steal(
                 });
                 
                 this._super();
-            }
+            },
             
-            ,'index': function(a, b, c)
+            'index': function(a, b, c)
             {
                 console.log('Execute function index of the password workspace controller, with the following arguments');
                 console.dir(arguments);
