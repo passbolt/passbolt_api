@@ -23,7 +23,7 @@ class DictionariesController extends AppController {
     $l = ($l != 'default') ? $l : User::get('i18n.locale');
     $data = $this->Dictionary->get($l);
     if($data) {
-      $this->set(compact($data));
+      $this->set('data', $data);
     } else {
       //@todo 404 dictionary not found?
     }

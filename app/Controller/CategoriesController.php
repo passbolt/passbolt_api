@@ -19,16 +19,16 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
  
-
 class CategoriesController extends AppController {
-    public $name = 'Categories';
 
-    public function index() {
-        //$data = $this->Category->generateTreeList(null, null, null, '-');
-        $data = $this->Category->children('4ff6111b-efb8-4a26-aab4-2184cbdd56cb');
-        debug($data); die;
-    }
-	
+  /* this should move to a test case */
+  public function index() {
+    //$data = $this->Category->generateTreeList(null, null, null, '-');
+    $data = $this->Category->children('4ff6111b-efb8-4a26-aab4-2184cbdd56cb');
+    debug($data); die;
+  }
+
+  /* this should move to a test case */
 	public function newroot(){
 		$data['Category']['parent_id'] = null;
 		$data['Category']['name'] = 'root3';
@@ -49,9 +49,8 @@ class CategoriesController extends AppController {
 			$children = $this->Category->children($id);
 			$tree = array_merge(array(0=>$category), $children);
 			$tree = $this->Category->list2Tree($tree);
-			$this->set('json', $tree);
+			$this->set('data', $tree);
 		}
-		$this->render('/json/json');
 	}
 	
 	public function a2Tree($array){
@@ -78,7 +77,7 @@ class CategoriesController extends AppController {
 	public function add($parent_id, $name, $position, $type=null){
 	
 	}
-	
+
 	/**
 	 * Delete a category in the tree
 	 * @param $id, the Category id
@@ -87,7 +86,7 @@ class CategoriesController extends AppController {
 	public function delete($id){
 		
 	}
-	
+
 	/**
 	 * Rename a category
 	 * @param $id, the id of the category
