@@ -1,47 +1,29 @@
 <?php
-
-/**
- * Application level Controller
- *
- * This file is application-wide controller file. You can put all
- * application-wide controller-related methods here.
- *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.Controller
- * @since         CakePHP(tm) v 0.2.9
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
-App::uses('Controller', 'Controller');
-
 /**
  * Application Controller
  *
- * Add your application-wide methods in the class below, your controllers
- * will inherit them.
+ * Application-wide methods, all controllers inherit them.
  *
- * @package       app.Controller
- * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
+ * @package     app.Controller.AppController
+ * @link        http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
+App::uses('Controller', 'Controller');
 class AppController extends Controller {
 
-    function beforeFilter()
-    {
-        $this->layout = 'json';
-        
-        if($this->Session->read('Config.language') != null){
-            Configure::write('Config.language', $this->Session->read('Config.language'));
-        }
-        else{
-            $this->Session->write('Config.language', Configure::read('Config.language'));
-        }
+  function beforeFilter() {
+    // Set default json layout for the ajax request
+    // @todo add is_json callback
+    //if ($this->request->is('json')) {
+      $this->layout = 'json';
+      $this->view = '/Json/default';
+    //}
+
+    // @todo this will be remove via the initial auth check 
+    // User::set() will load default config
+    if ($this->Session->read('Config.language') != null) {
+      Configure::write('Config.language', $this->Session->read('Config.language'));
+    } else {
+      $this->Session->write('Config.language', Configure::read('Config.language'));
     }
+  }
 }

@@ -20,16 +20,31 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
+/**
+ * Will automatically switch view classes when a request is done with the .json extension,
+ * or the Accept header is application/json.
+ * @see http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
+ */
+ Router::parseExtensions('json');
+
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
  * its action called 'display', and we pass a param to select the view file
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
+
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+
+/**
+ * Dictionary shortcuts
+ */
+	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'get'));
+	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'get'));
 
 /**
  * Load all plugin routes.  See the CakePlugin documentation on 
