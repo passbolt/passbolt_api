@@ -30,7 +30,7 @@ class Category extends AppModel {
 				array_pop($stack); // we remove previous stack from the array
 			}
 			
-			if($i >0){
+			if(!$this->isTopLevelElement($cat, $categories)){
 				$stack[count($stack) - 1]['Category']['copyref']['children'][] = &$clones[$i];
 			}
 			$stack[] = $categories[$i];
@@ -39,7 +39,15 @@ class Category extends AppModel {
 		if (empty($clones[0])) {
 			return array();
 		}
-		return $clones[0];
+		// Put the final result in $res
+		$res = array();
+		// Place only the top level elements, and ignore the 
+		foreach($clones as $k=>$r){
+			if($this->isTopLevelElement($r, $clones, 'json')){
+				$res[]=$r;
+			}
+		}
+		return $res;
 	}
 	
 	/**
@@ -63,5 +71,20 @@ class Category extends AppModel {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Check if an element is at the top level of the given branch
+	 * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
+	 */
+	public function isTopLevelElement($category, $categories, $objectType='default'){
+		$parent_id = ($objectType=='default' ? $category['Category']['parent_id'] : $category['parent_id']);
+		foreach($categories as $c){
+			$eltId = ($objectType=='default' ? $c['Category']['id'] : $c['id']);
+			if($eltId == $parent_id){
+				return false;
+			}
+		}
+		return true;
 	}
 }

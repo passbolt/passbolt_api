@@ -41,22 +41,27 @@ class CategoriesController extends AppController {
 	 * @param $children, whether or not we want the children returned
 	 * @return : either the category or the whole tree in a transformed object {id, name, position, type}
 	 */
-	public function get($id='4ff6111b-efb8-4a26-aab4-2184cbdd56cb', $children=false){
-		$children = true;
-		
-		$category = $this->Category->findById($id);
-		if($children == true){
-			$children = $this->Category->children($id);
-			$tree = array_merge(array(0=>$category), $children);
-			$tree = $this->Category->list2Tree($tree);
-			$this->set('json', $tree);
+	public function get($id, $children=false){
+		if(!isset($id)){
+			// Do something - Exception ?
+		}
+		else{
+			$category = $this->Category->findById($id);
+			if($category){
+				if($children == true){
+					$children = $this->Category->children($id);
+					$tree = array_merge(array(0=>$category), $children);
+					$tree = $this->Category->list2Tree($tree);
+					$this->set('json', $tree);
+				}
+				else{
+					$this->set('json', $category);
+				}
+			}
 		}
 		$this->render('/json/json');
 	}
 	
-	public function a2Tree($array){
-		
-	}
 	
 	/**
 	 * get the children for a corresponding category
@@ -64,7 +69,20 @@ class CategoriesController extends AppController {
 	 * @return all the children in json objects
 	 */
 	public function getChildren($id){
-		
+		if(!isset($id)){
+			// Do something - Exception ?
+		}
+		else{
+			$category = $this->Category->findById($id);
+			if($category){
+				$children = $this->Category->children($id);
+				$childrenres = array();
+				$childrenres[0] = array();
+				$childrenres[0][] = $this->Category->list2Tree($children);
+				$this->set('json', $childrenres);
+			}
+		}
+		$this->render('/json/json');
 	}
 	
 	/**
