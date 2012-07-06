@@ -3,6 +3,50 @@ class Category extends AppModel {
     public $name = 'Category';
     public $actsAs = array('Tree');
 	
+	public $validate = array(
+        'id' => array(
+            'uuid' => array(
+                'rule'     => 'uuid',
+                'message'  => 'UUID must be in correct format'
+            )
+        ),
+        'name' => array(
+            'alphaNumeric' => array(
+                'rule'     => '/^[a-z0-9-_]{3,}$/i',
+                'required' => true,
+                'message'  => 'Alphabets, numbers, - and _ only'
+            )
+        ),
+        'parent_id' => array(
+        	'exist' => array(
+	            'rule'    => array('parentExists', null),
+	            'allowEmpty' => true,
+	            'message' => 'The parent provided doesnt exist'
+	        ),
+	        'uuid' => array(
+                'rule'     => 'uuid',
+                'message'  => 'UUID must be in correct format'
+            )
+		),
+		'position' => array(
+        	'number' => array(
+	            'rule'    => 'numeric',
+	            'message' => 'The position must be a number'
+	        )
+		)
+    );
+	
+	/**
+	 * Check if a category with same id exists
+	 */
+	public function parentExists($check) {
+        $exists = $this->find('count', array(
+            'conditions' => array('Category.id'=>$check['parent_id']),
+      		'recursive' => -1
+        ));
+        return $exists > 0;
+    }
+	
 	/**
 	 * Converts listed elements into a proper nested tree
 	 * @param : $list, the list as it is returned by find() or children()
