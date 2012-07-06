@@ -21,8 +21,6 @@ steal(
             'init' : function() 
             {
                 this._super();
-                // send to the event bus the information about the component creation
-                if(mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID+'_container_released', {'component':this});
             }
             
             /**
