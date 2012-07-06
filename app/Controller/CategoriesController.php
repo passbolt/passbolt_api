@@ -98,11 +98,12 @@ class CategoriesController extends AppController {
 		
 		$this->Category->create();
 		if($category = $this->Category->save($category)){
+			//TODO : manage the position
 			$this->set('data', array('status'=>1));
 		}
 		else{
-			$errors = $this->Category->invalidFields();
-			pr($errors);
+			/*$errors = $this->Category->invalidFields();
+			pr($errors);*/
 			$this->set('data', array('status'=>0, 'data'=>array('error'=>'error in saving the data')));
 		}
 	}
