@@ -91,8 +91,20 @@ class CategoriesController extends AppController {
 	 * @param $type, the type of the category (default is set is missing)
 	 * @return the added category object is success, 0 if failure
 	 */
-	public function add($parent_id, $name, $position, $type=null){
-	
+	public function add(){
+		//$cat = array("name"=>'testchildrengoa', "parent_id"=>'4ff6111b-efb8-4a26-aab4-2184cbdd56cb', "position"=>'1', "type"=>'default');
+		$cat = $this->params['post'];
+		$category = array('Category'=>$cat);
+		
+		$this->Category->create();
+		if($category = $this->Category->save($category)){
+			$this->set('data', array('status'=>1));
+		}
+		else{
+			$errors = $this->Category->invalidFields();
+			pr($errors);
+			$this->set('data', array('status'=>0, 'data'=>array('error'=>'error in saving the data')));
+		}
 	}
 
 	/**
