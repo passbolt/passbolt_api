@@ -36,11 +36,7 @@ steal(
                 , 'appNamespaceId'  : 'app'
                 , 'appControllerClass' : mad.controller.AppController
                 , 'dispatchOptions' : { }
-                , 'defaultRoute' : {
-                    'extension'        : ''
-                    , 'controller'  : ''
-                    , 'action'      : ''
-                }
+                , 'defaultRoute' : null
             }
         }, 
         
@@ -50,8 +46,6 @@ steal(
         {   
             'init': function(options)
             {
-                // the last route used
-                this.lastRoute = null;
                 // the current route
                 this.currentRoute = null;
                 // the event bus controller
@@ -82,8 +76,6 @@ steal(
                 // BEGINING OF THE APPLICATION BOOTSTRAP PROCESS
                 // 
                 
-                // @todo load the authentication service
-                
                 // Initialize app globals variables
                 this.initConstants();
                 
@@ -104,10 +96,14 @@ steal(
                 this.initApplication();
                 
                 // Initialize extensions
-                this.initExtensions();
+//                this.initExtensions();
                 
-                // Dispatch the route to the convenient action
-//                this.dispatch();
+                // Dispatch to the right action
+				var route = mad.route.RouteListener.singleton().getRoute();
+				if(route==null) route = this.options.defaultRoute;
+				if(route!=null){
+					this.dispatch(route);
+				}
                 
                 // Application is ready
                 this.ready();
@@ -174,11 +170,11 @@ steal(
             /**
              * Init application's extensions
              * @return {void}
-             * @todo make this operation automatic
+             * @todo make the subscription to the application for the extensions more clear
              */
             'initExtensions': function()
             {
-//                new passbolt.activity.bootstrap.Bootstrap();
+                new passbolt.activity.bootstrap.Bootstrap();
             },
             
             /**
@@ -208,65 +204,49 @@ steal(
             'initRouteListener' : function(routes)
             {
                 var self = this;
-                mad.route.RouteListener.singleton();
-                mad.eventBus.bind(mad.APP_NS_ID+'_route_change', function(){
-                    self.dispatch();
+				mad.eventBus.bind(mad.APP_NS_ID+'_route_change', function(event, route){
+                    self.dispatch(route);
                 });
+                mad.route.RouteListener.singleton();
             },
             
             /**
              * Dispatch to the right action following the hash url
+			 * @param {mad.route.Route} route The route to dispatch to
              * @use core.controller::getDispatcher()
              * @return {void}
              */
-            'dispatch' : function()
-            {               
-                var hash = new String(location.hash);
-                // extract the hash parameters
-                // a hash has been defined
-                if(hash != '' && hash != '#' && hash != '#!'){
-                    hash = hash.substr(0, 2) == '#!' ? hash.substr(2) : hash;
-                    this.currentRoute = $.route.deparam(hash);
-                }
-                //use de default option hash
-                else{
-                    this.currentRoute = this.options.defaultRoute;
-                }
-                this.lastRoute = this.currentRoute;
-                
-                    
+            'dispatch' : function(route)
+            {   
                 // check all required parameters are here
-                if(typeof this.currentRoute.extension == 'undefined'){
+                if(typeof route.extension == 'undefined'){
                     throw new Error('Bootstrap error : the url is not valid, extension missing');
                 }
-                else if(typeof this.currentRoute.controller == 'undefined'){
+                else if(typeof route.controller == 'undefined'){
                     throw new Error('Bootstrap error : the url is not valid, controller missing');
                 }
-                else if(typeof this.currentRoute.action == 'undefined'){
+                else if(typeof route.action == 'undefined'){
                     throw new Error('Bootstrap error : the url is not valid, action missing');
                 }
                 
                 // get the target controller
-                // the controller name
-                // @todo application name parameter
-                var controllerName = this.currentRoute.controller.charAt(0).toUpperCase()+this.currentRoute.controller.slice(1)+'Controller';
-                steal.dev.log('dispatch to extension:'+this.currentRoute.extension+' controller:'+controllerName+' action:'+this.currentRoute.action);
-                var controllerClass = passbolt[this.currentRoute.extension].controller[controllerName];
+                var controllerName = route.controller.charAt(0).toUpperCase()+route.controller.slice(1)+'Controller';
+				var appNs = mad.getGlobal('APP_NS');
+                var controllerClass = appNs[route.extension].controller[controllerName];
                 
                 // dispatch to the convenient action
+                steal.dev.log('dispatch to extension:'+route.extension+' controller:'+controllerName+' action:'+route.action);
                 this.options.dispatchOptions.ControllerClass = controllerClass;
-                controllerClass.getDispatcher().dispatch(this.currentRoute, this.options.dispatchOptions);
+                controllerClass.getDispatcher().dispatch(route, this.options.dispatchOptions);
             },
             
             /**
              * Execute this function at the end of the bootstrap process.
-             * You can override this function, this one release an event app_Ready
-             * @event {APP_NS_ID'}_app_ready
              * @return {void}
              */
             'ready': function()
             {
-                mad.eventBus.trigger(mad.getGlobal('APP_NS_ID')+'_app_ready');
+				mad.app.ready();
             }
         });
     }
