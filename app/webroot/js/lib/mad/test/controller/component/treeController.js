@@ -5,7 +5,7 @@ var treeController = null;
 module("MadSquirrel", {
     // runs before each test
     setup: function(){
-		S.open('./testEnv.html', function(data1, d2){
+		S.open('./testEnv.html', function(){
 		// store the env windows in a global var for the following unit tests
 		testEnv = S.win;
 		
@@ -15,7 +15,7 @@ module("MadSquirrel", {
 		// instantiate a tree
 		S('body').append('<div id="tree"/>');
 		var $tree = S("#tree");
-		treeController = new testEnv.mad.controller.component.TreeController($tree);
+		treeController = new testEnv.mad.controller.component.TreeController($tree, {map:map});
 		treeController.render();
 	});
     },
@@ -84,19 +84,21 @@ test('TreeController: Check the instanciated tree is well the desired component'
 });
 
 test('TreeController: Load data', function(){
-	var mappedObjects = mapObjects(data, map);
 	
 	// check if a node is existing in the DOM
 	var checkExistingNode = function(object){
-		ok(S('#tree #'+object.attr.id), 'the node with the id #'+object.attr.id+' exists in the DOM');
+		ok(S('#tree #'+object.id), 'the node with the id #'+object.id+' exists in the DOM');
 		for(var j in object.children){
 			checkExistingNode(object.children[j]);
 		}
 	}
 	
+	//map the objects to be understable by the tree
+	//@todo use the mapObject in the function load directly
+	var mappedObjects = mapObjects(data, map);
 	//load the nodes in the jstree and test they are existing in the DOM
 	for(var i in mappedObjects){
-		treeController.load(mappedObjects[i]);
-		checkExistingNode(mappedObjects[i]);
+		treeController.load(data[i]);
+		checkExistingNode(data[i]);
 	}
 });
