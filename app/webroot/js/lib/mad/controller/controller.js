@@ -49,7 +49,7 @@ steal(
                 this.options = $.extend(true, {}, this.options, options);
                 // reference the controller to the application
                 this.getApp().referenceComponent(this);
-                
+                // notice all a new controller has been released
                 if(mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID+'_controller_released', {'component':this});
             },
             
@@ -60,11 +60,7 @@ steal(
             'destroy': function()
             {
                 // unreference the application to the app
-                var app = this.getApp();
-                if(app){
-                    app.unreferenceComponent(this);
-                }
-                
+                this.getApp().unreferenceComponent(this);                
                 this._super();
             },
             

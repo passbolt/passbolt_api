@@ -1,6 +1,9 @@
 steal( 
-    MAD_ROOT
-    , 'plugin/password/controller/passwordWorkspaceController.js'
+    MAD_ROOT,
+    'plugin/password/controller/passwordWorkspaceController.js',
+	
+	// @dev till database is not implemented, for the test the appcontroller will release an event to select a database
+    'plugin/password/model/database.js'
 )
 .then( 
     function($){
@@ -23,6 +26,18 @@ steal(
                     'label':'Password'
                 });
             }
+			
+			/**
+			 * Called when the passbolt application is ready
+			 * @return {void}
+			 */
+			, 'ready': function()
+			{
+				this._super();
+				// @todo Used for the developpement
+				var database = new password.model.Database({id: '4ff6eb28-e200-4e3f-8251-0a9acbdd56cb'});
+				mad.eventBus.trigger('passbolt_database_selected', [database]);
+			}
             
         });
     }

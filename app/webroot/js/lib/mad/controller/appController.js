@@ -159,20 +159,11 @@ steal(
             'init': function()
             {
                 this._super();
+				// make the application global var
                 mad.setGlobal('app', this);
+				// make an alias in the mad lib
                 mad.app = mad.getGlobal('app');
             },
-  
-//            /**
-//             * Get the event bus controller of the application
-//             * @return {mad.event.EventBus}
-//             * @deprecated
-//             */
-//            'getEventBus' : function()
-//            {
-//                throw new Error ('the function getEventBus is deprecated');
-//                return mad.eventBus;
-//            },
             
             /**
              * Reference a component to the application.
@@ -208,28 +199,24 @@ steal(
                 return returnValue;
             },            
             
+			/**
+			 * Called when the application is ready            
+			 * @event {APP_NS_ID'}_app_ready
+			 * @return {void}
+			 */
+			'ready': function()
+			{
+				mad.eventBus.trigger(mad.APP_NS_ID+'_application_ready');
+			},
+			
             // **********************************************************************************
             // Event Bus Observers
             // **********************************************************************************/
             
+			// @debug
             '{mad.eventBus} {mad.APP_NS_ID}_controller_released' : function(element, evt, data)
             {
-                steal.dev.log(__('new controller (%s) has been released', data.component.element[0].id));
-            },
-            
-            '{mad.eventBus} {mad.APP_NS_ID}_component_released' : function(element, evt, data)
-            {
-                steal.dev.log(__('new component (%s) has been released', data.component.element[0].id));
-            },
-            
-            '{mad.eventBus} {mad.APP_NS_ID}_container_released' : function(element, evt, data)
-            {
-                steal.dev.log(__('new container (%s) has been released', data.component.element[0].id));
-            },
-            
-            '{mad.eventBus} {mad.APP_NS_ID}_app_ready' : function(element, evt, data)
-            {
-                steal.dev.log(__('application is ready'));
+                steal.dev.log(__('new controller (%s) instance of (%s) has been released', data.component.getId(), data.component.Class.fullName));
             }
             
         });

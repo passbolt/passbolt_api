@@ -54,9 +54,6 @@ steal(
                 
                 // stop the feedback loading
                 this.loading(false);
-                
-                // Notice the system than a new component has been released
-                if(mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID+'_component_released', {'component':this});
             },
             
             /**
@@ -87,11 +84,11 @@ steal(
             */
             'loading': function(enable)
             {
-                if(enable){
-                    steal.dev.log('the component ('+this.element[0].id+') is loading');
-                } else {
-                    steal.dev.log('the component ('+this.element[0].id+') is ready');
-                }
+//                if(enable){
+//                    steal.dev.log('the component ('+this.element[0].id+') is loading');
+//                } else {
+//                    steal.dev.log('the component ('+this.element[0].id+') is finish loading');
+//                }
             },
             
             /**
