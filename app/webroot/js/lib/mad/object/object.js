@@ -19,10 +19,16 @@ mapObject = function(object, map)
 					if(typeof map[key] == 'object'){
 						var func = map[key].func;
 						var keyToMap = map[key].key;
-						current[mapKeyElt] = func(object[keyToMap], map);
+						// @todo what to do if the key to map does not exist
+						if(typeof object[keyToMap] != 'undefined'){
+							current[mapKeyElt] = func(object[keyToMap], map);
+						}
 					}
 					else{
-						current[mapKeyElt] = object[map[key]];
+						// @todo what to do if the key to map does not exist
+						if(typeof object[map[key]] != 'undefined'){
+							current[mapKeyElt] = object[map[key]];
+						}
 					}
 					
 				}
@@ -41,7 +47,10 @@ mapObject = function(object, map)
 	}
 	
 mapObjects = function(arr, map)
-{
+{	
+	if(!($.isArray(arr))){
+		throw new mad.error.WrongParameters('The function mapObjects is expecting an array as first parameter');
+	}
 	var returnValue = [];
 	for(var i in arr){
 		returnValue[i] = mapObject(arr[i], map);
