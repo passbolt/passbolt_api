@@ -58,9 +58,9 @@ steal(
 			{
 				var self = this;
 				//load categories function of the selected database
-				password.model.Category.get({id:database.id}, function(categories){
-					// load the tree with the 
-					self.load(categories);
+				password.model.Category.get({id:database.id, children:true}, function(category){
+					// load the tree with the categories
+					self.load(category);
 				});
 			}
             
