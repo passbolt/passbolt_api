@@ -1,6 +1,12 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
+steal('funcunit', function(){
+	
+	module("controller", {
+		// runs before each test
+		setup: function(){
+		},
+		// runs after each test
+		teardown: function(){
+		}
+	});
+	
+});
