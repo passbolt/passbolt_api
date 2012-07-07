@@ -19,16 +19,16 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
  
-
 class CategoriesController extends AppController {
-    public $name = 'Categories';
 
-    public function index() {
-        //$data = $this->Category->generateTreeList(null, null, null, '-');
-        $data = $this->Category->children('4ff6111b-efb8-4a26-aab4-2184cbdd56cb');
-        debug($data); die;
-    }
-	
+  /* this should move to a test case */
+  public function index() {
+    //$data = $this->Category->generateTreeList(null, null, null, '-');
+    $data = $this->Category->children('4ff6111b-efb8-4a26-aab4-2184cbdd56cb');
+    debug($data); die;
+  }
+
+  /* this should move to a test case */
 	public function newroot(){
 		$data['Category']['parent_id'] = null;
 		$data['Category']['name'] = 'root3';
@@ -41,22 +41,26 @@ class CategoriesController extends AppController {
 	 * @param $children, whether or not we want the children returned
 	 * @return : either the category or the whole tree in a transformed object {id, name, position, type}
 	 */
-	public function get($id='4ff6111b-efb8-4a26-aab4-2184cbdd56cb', $children=false){
-		$children = true;
-		
-		$category = $this->Category->findById($id);
-		if($children == true){
-			$children = $this->Category->children($id);
-			$tree = array_merge(array(0=>$category), $children);
-			$tree = $this->Category->list2Tree($tree);
-			$this->set('json', $tree);
+	public function get($id, $children=false){
+		if(!isset($id)){
+			// Do something - Exception ?
 		}
-		$this->render('/json/json');
+		else{
+			$category = $this->Category->findById($id);
+			if($category){
+				if($children == true){
+					$children = $this->Category->children($id);
+					$tree = array_merge(array(0=>$category), $children);
+					$tree = $this->Category->list2Tree($tree);
+					$this->set('data', $tree);
+				}
+				else{
+					$this->set('data', $category);
+				}
+			}
+		}
 	}
 	
-	public function a2Tree($array){
-		
-	}
 	
 	/**
 	 * get the children for a corresponding category
@@ -64,7 +68,19 @@ class CategoriesController extends AppController {
 	 * @return all the children in json objects
 	 */
 	public function getChildren($id){
-		
+		if(!isset($id)){
+			// Do something - Exception ?
+		}
+		else{
+			$category = $this->Category->findById($id);
+			if($category){
+				$children = $this->Category->children($id);
+				$childrenres = array();
+				$childrenres[0] = array();
+				$childrenres[0][] = $this->Category->list2Tree($children);
+				$this->set('data', $childrenres);
+			}
+		}
 	}
 	
 	/**
@@ -75,10 +91,23 @@ class CategoriesController extends AppController {
 	 * @param $type, the type of the category (default is set is missing)
 	 * @return the added category object is success, 0 if failure
 	 */
-	public function add($parent_id, $name, $position, $type=null){
-	
+	public function add(){
+		//$cat = array("name"=>'testchildrengoa', "parent_id"=>'4ff6111b-efb8-4a26-aab4-2184cbdd56cb', "position"=>'1', "type"=>'default');
+		$cat = $this->params['post'];
+		$category = array('Category'=>$cat);
+		
+		$this->Category->create();
+		if($category = $this->Category->save($category)){
+			//TODO : manage the position
+			$this->set('data', array('status'=>1));
+		}
+		else{
+			/*$errors = $this->Category->invalidFields();
+			pr($errors);*/
+			$this->set('data', array('status'=>0, 'data'=>array('error'=>'error in saving the data')));
+		}
 	}
-	
+
 	/**
 	 * Delete a category in the tree
 	 * @param $id, the Category id
@@ -87,7 +116,7 @@ class CategoriesController extends AppController {
 	public function delete($id){
 		
 	}
-	
+
 	/**
 	 * Rename a category
 	 * @param $id, the id of the category

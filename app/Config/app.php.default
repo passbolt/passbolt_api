@@ -2,11 +2,14 @@
 /**
  * Main application configuration file
  *
- * @package     app.Config.app
- * @copyright   Copyright 2012, ActionAid Association India 
- * @link        http://actionaid.org/india
- * @author      Remy Bertot / Kevin Muller
- * @license     MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * Copyright 2012, Passbolt
+ * Passbolt(tm), the simple password management solution
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2012, Passbolt.com 
+ * @package       app.Config.app
+ * @since         version 2.12.7
+ * @license       http://www.passbolt.com/license
  */
 $config = array(
   // General App Details
@@ -19,5 +22,11 @@ $config = array(
     'name'   => 'The hardest',
     'song'   => 'http://youtu.be/wVLcByj3ik8'
   ),
-  'Config.language' => 'en-EN'
+  // Internationalization
+  'i18n' => array(
+    'locale'   => 'fr-FR',
+    'language' => 'en',
+    'timezone' => 'GTM+1',
+    'dictionary' => 'jsDictionary' // default dictionary file name
+  )
 );

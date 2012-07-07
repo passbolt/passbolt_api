@@ -3,6 +3,50 @@ class Category extends AppModel {
     public $name = 'Category';
     public $actsAs = array('Tree');
 	
+	public $validate = array(
+        'id' => array(
+            'uuid' => array(
+                'rule'     => 'uuid',
+                'message'  => 'UUID must be in correct format'
+            )
+        ),
+        'name' => array(
+            'alphaNumeric' => array(
+                'rule'     => '/^[a-z0-9-_]{3,}$/i',
+                'required' => true,
+                'message'  => 'Alphabets, numbers, - and _ only'
+            )
+        ),
+        'parent_id' => array(
+        	'exist' => array(
+	            'rule'    => array('parentExists', null),
+	            'allowEmpty' => true,
+	            'message' => 'The parent provided doesnt exist'
+	        ),
+	        'uuid' => array(
+                'rule'     => 'uuid',
+                'message'  => 'UUID must be in correct format'
+            )
+		),
+		'position' => array(
+        	'number' => array(
+	            'rule'    => 'numeric',
+	            'message' => 'The position must be a number'
+	        )
+		)
+    );
+	
+	/**
+	 * Check if a category with same id exists
+	 */
+	public function parentExists($check) {
+        $exists = $this->find('count', array(
+            'conditions' => array('Category.id'=>$check['parent_id']),
+      		'recursive' => -1
+        ));
+        return $exists > 0;
+    }
+	
 	/**
 	 * Converts listed elements into a proper nested tree
 	 * @param : $list, the list as it is returned by find() or children()
@@ -30,7 +74,7 @@ class Category extends AppModel {
 				array_pop($stack); // we remove previous stack from the array
 			}
 			
-			if($i >0){
+			if(!$this->isTopLevelElement($cat, $categories)){
 				$stack[count($stack) - 1]['Category']['copyref']['children'][] = &$clones[$i];
 			}
 			$stack[] = $categories[$i];
@@ -39,7 +83,15 @@ class Category extends AppModel {
 		if (empty($clones[0])) {
 			return array();
 		}
-		return $clones[0];
+		// Put the final result in $res
+		$res = array();
+		// Place only the top level elements, and ignore the 
+		foreach($clones as $k=>$r){
+			if($this->isTopLevelElement($r, $clones, 'json')){
+				$res[]=$r;
+			}
+		}
+		return $res;
 	}
 	
 	/**
@@ -63,5 +115,20 @@ class Category extends AppModel {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Check if an element is at the top level of the given branch
+	 * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
+	 */
+	public function isTopLevelElement($category, $categories, $objectType='default'){
+		$parent_id = ($objectType=='default' ? $category['Category']['parent_id'] : $category['parent_id']);
+		foreach($categories as $c){
+			$eltId = ($objectType=='default' ? $c['Category']['id'] : $c['id']);
+			if($eltId == $parent_id){
+				return false;
+			}
+		}
+		return true;
 	}
 }
