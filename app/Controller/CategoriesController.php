@@ -52,7 +52,7 @@ class CategoriesController extends AppController {
 					$children = $this->Category->children($id);
 					$tree = array_merge(array(0=>$category), $children);
 					$tree = $this->Category->list2Tree($tree);
-					$this->set('data', $tree);
+					$this->set('data', $tree[0]);
 				}
 				else{
 					$this->set('data', $category);
@@ -87,8 +87,8 @@ class CategoriesController extends AppController {
 	 * add a category inside the tree
 	 * @param $parent_id, the parent id of the category
 	 * @param $name, the name of the category
-	 * @param $position, the position of the category
-	 * @param $type, the type of the category (default is set is missing)
+	 * @param $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
+	 * @param $type (optional), the type of the category (default is set is missing)
 	 * @return the added category object is success, 0 if failure
 	 */
 	public function add(){
@@ -98,7 +98,13 @@ class CategoriesController extends AppController {
 		
 		$this->Category->create();
 		if($category = $this->Category->save($category)){
-			//TODO : manage the position
+			// Manage the position
+			if(isset($category['Category']['position']) && $category['Category']['position'] > 0){
+				$nbChildren = $this->Category->childCount($category['Category']['parent_id']);
+				if($category['Category']['position'] < $nbChildren){
+					$this->Category->moveUp($category['Category']['id'], $nbChildren - $category['Category']['position']);
+				}
+			}
 			$this->set('data', array('status'=>1));
 		}
 		else{
@@ -114,7 +120,17 @@ class CategoriesController extends AppController {
 	 * @return, 1 if success, 0 otherwise
 	 */
 	public function delete($id){
-		
+		if(!isset($id)){
+			// Do something - Exception ?
+		}
+		else{
+			if(!$this->Category->delete($id)){
+				$this->set('data', array('status'=>0, 'data'=>array('error'=>'error in deleting the category')));
+			}
+			else{
+				$this->set('data', array('status'=>1));
+			}
+		}
 	}
 
 	/**
@@ -124,17 +140,59 @@ class CategoriesController extends AppController {
 	 * @return 1 if success, 0 otherwise
 	 */
 	public function rename($id, $name){
-		
+		if(!isset($id)){
+			$this->set('data', array('status'=>0, 'data'=>array('error'=>'ID not provided')));
+		}
+		else{
+			$category = $this->Category->findById($id);
+			if($category){
+				$category['Category']['name'] = $name;
+				if($this->Category->save($category)){
+					$this->set('data', array('status'=>1));
+				}
+				else{
+					$this->set('data', array('status'=>0, 'data'=>array('error'=>'database error')));
+				}
+			}
+			else{
+				$this->set('data', array('status'=>0, 'data'=>array('error'=>'the category doesnt exist')));
+			}
+		}
 	}
 	
 	/**
 	 * Move a category in the tree
 	 * @param $id, the id of the category to move
-	 * @param $parent_id, the new parent
 	 * @param $position, the position among the sieblings
+	 * @param $parent_id, the new parent
 	 */
-	public function move($id, $parent_id, $position){
-		
+	public function move($id, $position, $parent_id=null){
+		if(!isset($id)){
+			$this->set('data', array('status'=>0, 'data'=>array('error'=>'ID not provided')));
+		}
+		else{
+			$category = $this->Category->findById($id);
+			if($category){
+				// First, manage the parent
+				if($parent_id != null && $category['Category']['parent_id'] != $parent_id){
+					$category['Category']['parent_id'] = $parent_id;
+					$category = $this->Category->save($category);
+					if(!$category){
+						$this->set('data', array('status'=>0, 'data'=>array('error'=>'database error')));
+						$this->render('/Json/default');
+					}
+				}
+				// then, manage the position
+				if($position > 0){
+					$nbChildren = $this->Category->childCount($parent_id);
+					if($position < $nbChildren){
+						if($this->Category->moveUp($id, $nbChildren - $position)){
+							$this->set('data', array('status'=>1));
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**
