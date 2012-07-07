@@ -33,23 +33,41 @@ steal(
 			/**
 			 * Load the tree with an additionnal node at the specific position (ref + position)
 			 * @param {object} data The data which represent the node
-			 * @param {string} position The position of the newly created node. This can be a zero based index to position the element at a specific point among the current children. You can also pass in one of those strings: "before", "after", "inside", "first", "last". The default value is last
-			 * @param {mixed} ref This can be a DOM node, jQuery node or selector pointing to the element you want to create in (or next to). The default value is the root node element
 			 * @return {void}
 			 */
-			'load': function(data, position, ref)
+			'load': function(data)
 			{
-				var position = typeof position == 'undefined' ? 'last' : position;
-				var ref = typeof ref == 'undefined' ? this.element : ref;
-				var mappedData = mapObject(data, this.map);
-				
-				var inst = jQuery.jstree._reference(this.getId());
-				var node = inst.create_node(ref, position, mappedData);
-				
-				for(var i in data.children){
-					this.load(data.children[i], 'last', node);
+				if($.isArray(data)){
+					var mappedData = mapObjects(data, this.map);
+					for(var i in mappedData){
+						this.create(mappedData[i], 'last', this.element);
+					}
 				}
+				else{
+					var mappedData = mapObject(data, this.map);
+					this.create(mappedData, 'last', this.element);
+				}
+				
 			},
+			
+			/**
+			 * Create node
+			 * @param {jstreeNode} jsonNode The node to insert
+			 * @param {string} position The position of the newly created node. This can be a zero based index to position the element at a specific point among the current children. You can also pass in one of those strings: "before", "after", "inside", "first", "last". The default value is last
+			 * @param {mixed} ref This can be a DOM node, jQuery node or selector pointing to the element you want to create in (or next to). The default value is the root node element
+			 * @return {JQuery} The created node
+			 */
+			'create': function(jsonNode, position, ref)
+			{
+				var inst = jQuery.jstree._reference(this.getId());
+				var node = inst.create_node(ref, position, jsonNode);
+				
+				for(var i in jsonNode.children){
+					this.create(jsonNode.children[i], 'last', node);
+				}
+				
+				return node;
+			},			
 			
 			/*
              * Render the tree component
