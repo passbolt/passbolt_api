@@ -45,7 +45,7 @@ steal(
             // Class constructor
             'init' : function(el, options)
             {
-                // send to the event bus the information about the component creation
+                // set the options
                 this.options = $.extend(true, {}, this.options, options);
                 // reference the controller to the application
                 this.getApp().referenceComponent(this);

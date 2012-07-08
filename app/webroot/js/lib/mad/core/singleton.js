@@ -6,6 +6,9 @@ steal(
         
         /*
         * @class mad.core.Singleton
+        * @inherits mad.core.Class
+        * @parent index
+		* 
         * Implementation of the pattern singleton in javascript on top of the
         * JMVC framework.
         * <br/>
@@ -22,9 +25,7 @@ steal(
         * @codeend
         * </li></ul>
         * 
-        * @parent index
         * @constructor
-        * @inherits mad.core.Class
         * Instanciate the Singleton class.
         * <br/> <b>private</b>
         * @return {mad.core.Singleton}

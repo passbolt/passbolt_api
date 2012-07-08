@@ -7,18 +7,21 @@ steal(
         
         /*
          * @class mad.controller.ComponentController
+		 * @inherits mad.controller.Controller
+         * @parent index
+		 * 
          * The component controller represents a graphical component controller 
          * in the application. 
-         * @parent index
+		 * 
          * @constructor
          * Creates a new Component Controller
          * @return {mad.controller.ComponentController}
         */
         mad.controller.Controller.extend('mad.controller.ComponentController', {
             'defaults' : {
-                'label': 'ContainerComponentController'     // Label of the component
+                'label': 'ComponentController'				// Label of the component
                 , 'icon': null                              // @notUsedYet
-//                , 'template': null                          // the default template, the last default override other defaults !!! check about that clearly
+//                , 'template': null                        // the default template, the last default override other defaults !!! check about that clearly
             }
         }
         , {    
