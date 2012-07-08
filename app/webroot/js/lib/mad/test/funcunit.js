@@ -26,21 +26,21 @@ steal(
 		});	
 	},
 	
-//    "./controller/appController.js",
-//    "./controller/controller.js",
-//    "./controller/containerController.js",
-	"./controller/component/treeController.js"
-//    "./core/class.js",
-//    "./core/singleton.js",
-//    "./error/error.js",
-//	"./event/eventBus.js",
-//	"./helper/component/boxDecorator.js",
-//    "./helper/controller.js",
-//    "./lang/i18n.js",
-//    "./net/ajax.js",
-//	"./object/map.js",
-//	"./route/extensionControllerActionDispatcher.js",
-//	"./route/routeListener.js",	
-//    "./string/uuid.js"
+    "./controller/appController.js",
+    "./controller/controller.js",
+    "./controller/containerController.js",
+	"./controller/component/treeController.js",
+    "./core/class.js",
+    "./core/singleton.js",
+    "./error/error.js",
+	"./event/eventBus.js",
+	"./helper/component/boxDecorator.js",
+    "./helper/controller.js",
+    "./lang/i18n.js",
+    "./net/ajax.js",
+	"./object/map.js",
+	"./route/extensionControllerActionDispatcher.js",
+	"./route/routeListener.js",	
+    "./string/uuid.js"
 
 );
