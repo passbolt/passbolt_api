@@ -14,41 +14,27 @@
  *
  * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.Controller
- * @since         CakePHP(tm) v 0.2.9
+ * @package       app.Controller.CategoriesController
+ * @since         Passbolt v2.12.7
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
  
-class CategoriesController extends AppController {
-
-  /* this should move to a test case */
-  public function index() {
-    //$data = $this->Category->generateTreeList(null, null, null, '-');
-    $data = $this->Category->children('4ff6111b-efb8-4a26-aab4-2184cbdd56cb');
-    debug($data); die;
-  }
-
-  /* this should move to a test case */
-	public function newroot(){
-		$data['Category']['parent_id'] = null;
-		$data['Category']['name'] = 'root3';
-		$this->Category->save($data);
-	}
-	
+class CategoriesController extends AppController {	
 	/**
 	 * get a category
-	 * @param $id, the id of the category
-	 * @param $children, whether or not we want the children returned
-	 * @return : either the category or the whole tree in a transformed object {id, name, position, type}
+	 * Renders a json object with the nested categories
+	 * @param uuid $id the id of the category
+	 * @param bool $children whether or not we want the children returned
+	 * @return void
 	 */
-	public function get($id, $children=false){
-		if(!isset($id)){
+	public function get($id, $children=false) {
+		if(!isset($id)) {
 			// Do something - Exception ?
 		}
 		else{
 			$category = $this->Category->findById($id);
-			if($category){
-				if($children == true){
+			if($category) {
+				if($children == true) {
 					$children = $this->Category->children($id);
 					$tree = array_merge(array(0=>$category), $children);
 					$tree = $this->Category->list2Tree($tree);
@@ -93,7 +79,7 @@ class CategoriesController extends AppController {
 	 */
 	public function add(){
 		//$cat = array("name"=>'testchildrengoa', "parent_id"=>'4ff6111b-efb8-4a26-aab4-2184cbdd56cb', "position"=>'1', "type"=>'default');
-		$cat = $this->params['post'];
+		$cat = $this->request->data['Post'];
 		$category = array('Category'=>$cat);
 		
 		$this->Category->create();
@@ -179,7 +165,7 @@ class CategoriesController extends AppController {
 					$category = $this->Category->save($category);
 					if(!$category){
 						$this->set('data', array('status'=>0, 'data'=>array('error'=>'database error')));
-						$this->render('/Json/default');
+						return;
 					}
 				}
 				// then, manage the position
