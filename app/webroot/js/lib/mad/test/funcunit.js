@@ -10,7 +10,6 @@ steal(
     MAD_ROOT+'/mad.js'
 )
 .then(
-
 	function(){
 		// The default testing module
 		// It is just an example to show how it will work
@@ -40,7 +39,7 @@ steal(
     "./net/ajax.js",
 	"./object/map.js",
 	"./route/extensionControllerActionDispatcher.js",
-	"./route/routeListener.js",	
+	"./route/routeListener.js",
     "./string/uuid.js"
 
 );
