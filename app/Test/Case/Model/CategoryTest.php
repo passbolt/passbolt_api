@@ -119,6 +119,32 @@ class CategoryTest extends CakeTestCase {
 	}
 
 	public function testAdd(){
+		// Test that a category cannot be added if the parent id doesn't exist
+		$category = array('Category'=>array('name'=>'testAdd', 'parent_id'=>'doesntexist'));
+		$this->Category->create(); 
+        $this->assertFalse($this->Category->save($category)); 
 		
+		// Test that a category cannot be added if the name is not valid
+		$category = array('Category'=>array('name'=>'a'));
+		$this->Category->create(); 
+        $this->assertFalse($this->Category->save($category));
+		
+		// Test that a category cannot be added if the name is empty
+		$category = array('Category'=>array('name'=>''));
+		$this->Category->create(); 
+        $this->assertFalse($this->Category->save($category));  
+		
+		// Test that a category is added properly if parameters are correct
+		$parent = $this->Category->findByName('Anjuna');
+		$category = array('Category'=>array('name'=>'testAdd', 'parent_id'=>$parent['Category']['id']));
+		$this->Category->create(); 
+		$result = $this->Category->save($category);
+        $this->assertTrue($result['Category']['lft'] == '14');  
+		
+		// Test that a category is added properly if parameters are correct and without parent_id
+		$category = array('Category'=>array('name'=>'testAdd1'));
+		$this->Category->create(); 
+		$result = $this->Category->save($category);
+        $this->assertTrue($result['Category']['lft'] == '31');  
 	}
 }
