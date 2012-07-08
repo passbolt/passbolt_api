@@ -1,6 +1,6 @@
 steal('funcunit', function(){
 	
-	module("controller", {
+	module("mad.controller", {
 		// runs before each test
 		setup: function(){
 		},

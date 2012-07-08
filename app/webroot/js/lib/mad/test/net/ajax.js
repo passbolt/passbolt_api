@@ -3,7 +3,7 @@
 
 steal('funcunit', function(){
 
-	module("net", {
+	module("mad.net", {
 		// runs before each test
 		setup: function(){
 		},

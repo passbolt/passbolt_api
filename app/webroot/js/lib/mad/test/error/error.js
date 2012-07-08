@@ -1,6 +1,6 @@
 steal('funcunit', function(){
 
-	module("error", {
+	module("mad.error", {
 		// runs before each test
 		setup: function(){
 		},

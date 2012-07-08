@@ -1,5 +1,5 @@
 steal('funcunit', function(){
-	module("route", {
+	module("mad.route", {
 		// runs before each test
 		setup: function(){
 		},
