@@ -7,8 +7,8 @@ steal(
 			children: 'password.model.Category.models'
 		},
         'get' : function(params, success, error){
-//			params['id'] = typeof(params['id'])!='undefined'?params['id']:'';
-            var url = 'categories/get/{id}';
+			params['children'] = typeof(params['children'])!='undefined'?params['children']:false;
+            var url = 'categories/get/{id}/{children}';
             url = $.String.sub(url, params, true);
             return mad.net.Ajax.singleton().request({
                 url:        url,

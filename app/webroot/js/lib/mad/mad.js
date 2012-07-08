@@ -33,7 +33,7 @@ steal(
     MAD_ROOT+'/helper/routeHelper.js',
     MAD_ROOT+'/helper/component/boxDecorator.js',
     MAD_ROOT+'/lang/i18n.js',
-    MAD_ROOT+'/object/object.js',
+    MAD_ROOT+'/object/map.js',
     MAD_ROOT+'/string/uuid.js',
     MAD_ROOT+'/route/routeListener.js',
     MAD_ROOT+'/route/dispatcherInterface.js',

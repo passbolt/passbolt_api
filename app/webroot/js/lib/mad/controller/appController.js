@@ -126,6 +126,11 @@ steal(
              */
             'destroy': function()
             {    
+				// if the namespace has not been populated
+				if(mad.controller.AppController.APP_NS_ID==null){
+					return;
+				}
+				
                 // delete globals
                 for(var i in mad.controller.AppController.globals){
                     var name = mad.controller.AppController.globals[i];

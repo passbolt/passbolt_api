@@ -24,7 +24,7 @@ steal(
             
             'init' : function(el, options)
             {
-				options.map = {
+				options.map = new mad.object.Map({
 					'attr.id':{
 						'key':	'id',
 						'func':	function(value, map){
@@ -35,9 +35,9 @@ steal(
 					'data':		'name',
 					'children': {
 						'key':	'children',
-						'func':	mapObjects
+						'func':	mad.object.Map.mapObjects
 					}
-				};
+				});
                 this._super(el, options);
             },
             
@@ -58,9 +58,9 @@ steal(
 			{
 				var self = this;
 				//load categories function of the selected database
-				password.model.Category.get({id:database.id}, function(categories){
-					// load the tree with the 
-					self.load(categories);
+				password.model.Category.get({id:database.id, children:true}, function(category){
+					// load the tree with the categories
+					self.load(category);
 				});
 			}
             

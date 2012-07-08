@@ -40,7 +40,7 @@ steal(
                 $.route(":extension");
                 $.route("");
                 $.route.ready();
-                console.log(1);
+                
                 // listen the special haschange event, disptatch when a new route is comming
                 // @note : Using the $.route.bind('change', function(){ ... }) is maybe the proper method, but it seems impossible to listen the whole change (extension+controler+action)
                 $(window).bind('hashchange', function(){

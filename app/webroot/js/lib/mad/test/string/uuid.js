@@ -1,19 +1,27 @@
-module("MadSquirrel", {
-    // runs before each test
-    setup: function(){
-    },
-    // runs after each test
-    teardown: function(){
-    }
-});
+steal('funcunit', function(){
+	
+	module("string", {
+		// runs before each test
+		setup: function(){
+		},
+		// runs after each test
+		teardown: function(){
+		}
+	});
+	
+	test('mad.string.uuid : The function generates unique id for 1,000.000 of tests', function(){
 
-test('Uuid : unicity of the stuff with 1,000.000 items', function(){
-    
-    var uuids = [];
-    for(var i=0; i<1000000; i++){
-        var id = uuid();
-        if(uuids[id]) ok(false);
-        uuids[id] = true;
-    }
-    ok(true);
+		var uuids = []
+		assertResult = true;
+		for(var i=0; i<1000000; i++){
+			var id = uuid();
+			if(uuids[id]){
+				assertResult = false;
+				break;
+			}
+			uuids[id] = true;
+		}
+		ok(assertResult, 'uuid generates unique id for 1.000.000 of tests');
+	});
+	
 });
