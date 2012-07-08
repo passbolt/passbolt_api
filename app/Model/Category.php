@@ -1,20 +1,20 @@
 <?php
 class Category extends AppModel {
-    public $name = 'Category';
-    public $actsAs = array('Tree');
+  public $name = 'Category';
+  public $actsAs = array('Tree');
 	
-	public $validate = array(
-        'id' => array(
-            'uuid' => array(
-                'rule'     => 'uuid',
-                'message'  => 'UUID must be in correct format'
-            )
+  public $validate = array(
+    'id' => array(
+      'uuid' => array(
+        'rule'     => 'uuid',
+        'message'  => 'UUID must be in correct format'
+          )
         ),
         'name' => array(
             'alphaNumeric' => array(
                 'rule'     => '/^.{2,50}$/i',
                 'required' => true,
-                'message'  => 'Alphabets, numbers, - and _ only'
+                'message'  => 'Alphanumeric only'
             )
         ),
         'parent_id' => array(
@@ -41,10 +41,10 @@ class Category extends AppModel {
 	/**
 	 * Check if a category with same id exists
 	 */
-	public function parentExists($check) {
-		if($check['parent_id'] == null){
-			 return true;
-		}
+  public function parentExists($check) {
+    if($check['parent_id'] == null){
+      return true;
+    }
 		else{
 	        $exists = $this->find('count', array(
 	            'conditions' => array('Category.id'=>$check['parent_id']),
