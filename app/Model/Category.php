@@ -12,7 +12,7 @@ class Category extends AppModel {
         ),
         'name' => array(
             'alphaNumeric' => array(
-                'rule'     => '/^[a-z0-9-_]{3,}$/i',
+                'rule'     => '/^.{2,50}$/i',
                 'required' => true,
                 'message'  => 'Alphabets, numbers, - and _ only'
             )
@@ -25,6 +25,8 @@ class Category extends AppModel {
 	        ),
 	        'uuid' => array(
                 'rule'     => 'uuid',
+                'allowEmpty' => true,
+                'required' => false,
                 'message'  => 'UUID must be in correct format'
             )
 		),
@@ -40,11 +42,16 @@ class Category extends AppModel {
 	 * Check if a category with same id exists
 	 */
 	public function parentExists($check) {
-        $exists = $this->find('count', array(
-            'conditions' => array('Category.id'=>$check['parent_id']),
-      		'recursive' => -1
-        ));
-        return $exists > 0;
+		if($check['parent_id'] == null){
+			 return true;
+		}
+		else{
+	        $exists = $this->find('count', array(
+	            'conditions' => array('Category.id'=>$check['parent_id']),
+	      		'recursive' => -1
+	        ));
+	        return $exists > 0;
+		}
     }
 	
 	/**
@@ -95,7 +102,7 @@ class Category extends AppModel {
 	}
 	
 	/**
-	 * Check if an element is a child of a parent
+	 * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
 	 * Useful when parsing an array of results
 	 * @param $elt, the element to check
 	 * @param $parent, the parent
