@@ -5,7 +5,7 @@ steal('funcunit', function(){
 		treeController = null,
 		map = null;
 
-	module("controller.component", {
+	module("mad.controller.component", {
 		// runs before each test
 		setup: function(){
 			S.open('./testEnv/app.html', function(){

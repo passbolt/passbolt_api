@@ -1,7 +1,7 @@
 steal('funcunit', function(){
 
 	var testEnv = null;
-	module("event", {
+	module("mad.event", {
 		// runs before each test
 		setup: function(){
 			S.open('./testEnv/mad.html', function(){

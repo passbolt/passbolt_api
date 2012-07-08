@@ -1,6 +1,6 @@
 steal('funcunit', function(){
 
-	module("lang", {
+	module("mad.lang", {
 		// runs before each test
 		setup: function(){
 		},
