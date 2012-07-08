@@ -206,6 +206,8 @@ class CategoriesController extends AppController {
 	}
 	
 	public function populate(){
+		$this->layout = 'html5';
+		 
 		/*	
 		Goa
 		-Hippies places
