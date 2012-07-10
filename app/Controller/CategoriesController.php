@@ -137,7 +137,7 @@ class CategoriesController extends AppController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Move a category in the tree
 	 * @param $id, the id of the category to move

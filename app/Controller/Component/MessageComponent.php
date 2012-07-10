@@ -74,7 +74,7 @@ class MessageComponent extends Component {
   function notice($message, $options=array()) {
     $this->__add('notice', $message, $options);
   }
-  function success($message, $options=array()) {
+  function success($message='', $options=array()) {
     $this->__add('success',$message,$options);
   }
 
@@ -108,10 +108,13 @@ class MessageComponent extends Component {
     }
     // message object for the view
     $this->messages[] = array(
-      'id' => 'ctl'.Common::uuid(), // @todo make it predictable UUID using hashOf(ctrl.name + action)
-      'type' => ((empty($code)) ? $type : $type.' '.$code ),
+      // UUID is predictable
+      'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type), 
+      'status' => ((empty($code)) ? $type : $type.' '.$code ),
       'title' => $title,
-      'text' => $message
+      'message' => $message,
+      'controller' => $this->Controller->name,
+      'action' => $this->Controller->action
     );
 
     // Get the point or die trying
@@ -125,7 +128,7 @@ class MessageComponent extends Component {
       if (is_bool($options['redirect'])) {
         $options['redirect'] = $this->Controller->referer();
       } elseif (is_string($options['redirect']) || is_array($options['redirect'])) {
-        //TODO use history if no referrer
+        //TODO use history component if no referrer
         $this->Controller->redirect($options['redirect']);
         exit;
       }
