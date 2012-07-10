@@ -11,13 +11,25 @@ class DictionariesController extends AppController {
 
   /**
    * Get the text dictionnary
-   * @todo cache the json dictionnary
    * @param $dicoName
    */
   function get($l = 'default') {
-    $l = ($l != 'default') ? Configure::read('i18n.locale') : User::get('i18n.locale');
-    $data = $this->Dictionary->get($l);
-    if($data) {
+    // get user locale or application default one
+    $l = ($l != 'default') ? $l : Configure::read('i18n.locale'); //@todo User::get('i18n.locale');
+    
+    // find it in cache or read from model
+    $cache  = Cache::read('Dictionary' . DS . $l, '_cake_model_');
+    if ($cache === false) {
+      $data = $this->Dictionary->get($l);
+      if ($data) {
+        Cache::write('Dictionary' . DS . $l, $data, '_cake_model_');
+      }
+    } else {
+      $data = $cache;
+    }
+
+    // are you happy now?
+    if ($data) {
       $this->set('data', $data);
       $this->Message->success();
     } else {
