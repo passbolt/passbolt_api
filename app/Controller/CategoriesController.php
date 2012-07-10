@@ -181,7 +181,8 @@ class CategoriesController extends AppController {
 	public function setType($id, $type) {
 		
 	}
-	
+
+  /* @todo this should be moved to fixture */
 	public function populate() {
 		$this->layout = 'html5';
 		 
