@@ -18,11 +18,11 @@ class DictionariesController extends AppController {
     $l = ($l != 'default') ? $l : Configure::read('i18n.locale'); //@todo User::get('i18n.locale');
     
     // find it in cache or read from model
-    $cache  = Cache::read('Dictionary' . DS . $l, '_cake_model_');
+    $cache  = Cache::read('dictionary_'.$l, '_cake_model_');
     if ($cache === false) {
       $data = $this->Dictionary->get($l);
       if ($data) {
-        Cache::write('Dictionary' . DS . $l, $data, '_cake_model_');
+        Cache::write('dictionary_'.$l, $data, '_cake_model_');
       }
     } else {
       $data = $cache;
