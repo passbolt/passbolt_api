@@ -2,5 +2,10 @@
 if(!isset($data)){
 	$data = array();
 }
-echo json_encode($data);
+foreach ($flashMessages as $message) {
+  $json = $message;
+  break;
+}
+$json['data'] = $data;
+echo json_encode($json);
 ?>

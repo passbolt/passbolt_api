@@ -2,30 +2,38 @@
 /**
  * Text Dictionary Controller
  *
- * Copyright 2012, Passbolt
- * Passbolt(tm), the simple password management solution 
- * Redistributions of files must retain the above copyright notice.
- *
  * @copyright     Copyright 2012, Passbolt.com
+ * @license       http://www.passbolt.com/license
  * @package       app.Controller.Dictionary
  * @since         version 2.12.7
- * @license       http://www.passbolt.com/license
- * @package       app.Controller
  */
 class DictionariesController extends AppController {
 
   /**
    * Get the text dictionnary
-   * @todo cache the json dictionnary
    * @param $dicoName
    */
   function get($l = 'default') {
-    $l = ($l != 'default') ? $l : User::get('i18n.locale');
-    $data = $this->Dictionary->get($l);
-    if($data) {
-      $this->set('data', $data);
+    // get user locale or application default one
+    $l = ($l != 'default') ? $l : Configure::read('i18n.locale'); //@todo User::get('i18n.locale');
+    
+    // find it in cache or read from model
+    $cache  = Cache::read('dictionary_'.$l, '_cake_model_');
+    if ($cache === false) {
+      $data = $this->Dictionary->get($l);
+      if ($data) {
+        Cache::write('dictionary_'.$l, $data, '_cake_model_');
+      }
     } else {
-      //@todo 404 dictionary not found?
+      $data = $cache;
+    }
+
+    // are you happy now?
+    if ($data) {
+      $this->set('data', $data);
+      $this->Message->success();
+    } else {
+      $this->Message->error(__('Sorry the dictory could not be found'));
     }
   }
 }

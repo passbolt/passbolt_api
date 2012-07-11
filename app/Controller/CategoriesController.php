@@ -28,19 +28,18 @@ class CategoriesController extends AppController {
 	 * @return void
 	 */
 	public function get($id, $children=false) {
-		if(!isset($id)) {
+		if (!isset($id)) {
 			// Do something - Exception ?
-		}
-		else{
+		} else {
 			$category = $this->Category->findById($id);
-			if($category) {
-				if($children == true) {
+			if ($category) {
+				if ($children == true) {
 					$children = $this->Category->children($id);
 					$tree = array_merge(array(0=>$category), $children);
 					$tree = $this->Category->list2Tree($tree);
 					$this->set('data', $tree[0]);
 				}
-				else{
+				else {
 					$this->set('data', $category);
 				}
 			}
@@ -53,13 +52,12 @@ class CategoriesController extends AppController {
 	 * @param $id, the id of the parent category
 	 * @return all the children in json objects
 	 */
-	public function getChildren($id){
-		if(!isset($id)){
+	public function getChildren($id) {
+		if (!isset($id)) {
 			// Do something - Exception ?
-		}
-		else{
+		} else {
 			$category = $this->Category->findById($id);
-			if($category){
+			if ($category) {
 				$children = $this->Category->children($id);
 				$childrenres = array();
 				$childrenres[0] = array();
@@ -77,23 +75,22 @@ class CategoriesController extends AppController {
 	 * @param $type (optional), the type of the category (default is set is missing)
 	 * @return the added category object is success, 0 if failure
 	 */
-	public function add(){
+	public function add() {
 		//$cat = array("name"=>'testchildrengoa', "parent_id"=>'4ff6111b-efb8-4a26-aab4-2184cbdd56cb', "position"=>'1', "type"=>'default');
 		$cat = $this->request->data['Post'];
 		$category = array('Category'=>$cat);
 		
 		$this->Category->create();
-		if($category = $this->Category->save($category)){
+		if ($category = $this->Category->save($category)) {
 			// Manage the position
-			if(isset($category['Category']['position']) && $category['Category']['position'] > 0){
+			if (isset($category['Category']['position']) && $category['Category']['position'] > 0) {
 				$nbChildren = $this->Category->childCount($category['Category']['parent_id']);
-				if($category['Category']['position'] < $nbChildren){
+				if ($category['Category']['position'] < $nbChildren) {
 					$this->Category->moveUp($category['Category']['id'], $nbChildren - $category['Category']['position']);
 				}
 			}
 			$this->set('data', array('status'=>1));
-		}
-		else{
+		} else {
 			/*$errors = $this->Category->invalidFields();
 			pr($errors);*/
 			$this->set('data', array('status'=>0, 'data'=>array('error'=>'error in saving the data')));
@@ -105,15 +102,13 @@ class CategoriesController extends AppController {
 	 * @param $id, the Category id
 	 * @return, 1 if success, 0 otherwise
 	 */
-	public function delete($id){
-		if(!isset($id)){
+	public function delete($id) {
+		if (!isset($id)) {
 			// Do something - Exception ?
-		}
-		else{
-			if(!$this->Category->delete($id)){
+		} else {
+			if (!$this->Category->delete($id)) {
 				$this->set('data', array('status'=>0, 'data'=>array('error'=>'error in deleting the category')));
-			}
-			else{
+			} else {
 				$this->set('data', array('status'=>1));
 			}
 		}
@@ -125,54 +120,50 @@ class CategoriesController extends AppController {
 	 * @param $name, the name of the category
 	 * @return 1 if success, 0 otherwise
 	 */
-	public function rename($id, $name){
-		if(!isset($id)){
+	public function rename($id, $name) {
+		if (!isset($id)) {
 			$this->set('data', array('status'=>0, 'data'=>array('error'=>'ID not provided')));
-		}
-		else{
+		} else {
 			$category = $this->Category->findById($id);
-			if($category){
+			if ($category) {
 				$category['Category']['name'] = $name;
-				if($this->Category->save($category)){
+				if ($this->Category->save($category)) {
 					$this->set('data', array('status'=>1));
-				}
-				else{
+				} else {
 					$this->set('data', array('status'=>0, 'data'=>array('error'=>'database error')));
 				}
-			}
-			else{
+			} else {
 				$this->set('data', array('status'=>0, 'data'=>array('error'=>'the category doesnt exist')));
 			}
 		}
 	}
-	
+
 	/**
 	 * Move a category in the tree
 	 * @param $id, the id of the category to move
 	 * @param $position, the position among the sieblings
 	 * @param $parent_id, the new parent
 	 */
-	public function move($id, $position, $parent_id=null){
-		if(!isset($id)){
+	public function move($id, $position, $parent_id=null) {
+		if (!isset($id)) {
 			$this->set('data', array('status'=>0, 'data'=>array('error'=>'ID not provided')));
-		}
-		else{
+		} else {
 			$category = $this->Category->findById($id);
-			if($category){
+			if ($category) {
 				// First, manage the parent
-				if($parent_id != null && $category['Category']['parent_id'] != $parent_id){
+				if ($parent_id != null && $category['Category']['parent_id'] != $parent_id) {
 					$category['Category']['parent_id'] = $parent_id;
 					$category = $this->Category->save($category);
-					if(!$category){
+					if (!$category) {
 						$this->set('data', array('status'=>0, 'data'=>array('error'=>'database error')));
 						return;
 					}
 				}
 				// then, manage the position
-				if($position > 0){
+				if ($position > 0) {
 					$nbChildren = $this->Category->childCount($parent_id);
-					if($position < $nbChildren){
-						if($this->Category->moveUp($id, $nbChildren - $position)){
+					if ($position < $nbChildren) {
+						if ($this->Category->moveUp($id, $nbChildren - $position)) {
 							$this->set('data', array('status'=>1));
 						}
 					}
@@ -187,11 +178,12 @@ class CategoriesController extends AppController {
 	 * @param $type, the type
 	 * @return 1 if success, 0 if failure
 	 */
-	public function setType($id, $type){
+	public function setType($id, $type) {
 		
 	}
-	
-	public function populate(){
+
+  /* @todo this should be moved to fixture */
+	public function populate() {
 		$this->layout = 'html5';
 		 
 		/*	

@@ -4,6 +4,10 @@
  * This class serves as a space for functions (mostly static) 
  * that need to be globally available within this application.
  *
+ * @copyright     copyright 2012 Passbolt.com
+ * @package       app.Controller.Common
+ * @since         version 2.12.7
+ * @license       http://www.passbolt.com/license
  */
 class Common extends Object {
 
