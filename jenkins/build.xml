@@ -19,7 +19,7 @@
     <target name="jsunit" description="Run unit tests with funcunit and phantomjs">
         <symlink link="${src}/app/webroot/js/mad" resource="${src}/app/webroot/js/lib/mad" failonerror="false"/>
         <exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="testresults.xml">
-            <arg line=" -a ./js funcunit/run selenium mad/test/funcunit.html"/>
+            <arg line=" -a ./js funcunit/run selenium mad/funcunit.html"/>
         </exec>
         <move file="${src}/app/webroot/js/testresults.xml" tofile="${build}/jsunit/madsquirrel.xml"/>
     </target>
