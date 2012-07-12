@@ -138,4 +138,45 @@ class Category extends AppModel {
 		}
 		return true;
 	}
+  
+  /**
+   * Return the list of field to fetch for given context
+   * @param string $case context ex: login, activation
+   * @return $condition array
+   */
+  static function getFindFields($case="get"){
+    switch($case){
+      case 'resetPassword':
+      case 'forgotPassword':
+      case 'guestActivation':
+        $fields = array(
+          'fields' => array(
+            'User.id', 'User.username', 'User.role'
+            //, 'User.active'
+          )
+        );
+      break;
+      case 'login':
+      case 'userActivation':
+        $fields = array(
+          'contain' => array(
+            //'Role(id,permissions,name)',
+            //'Timezone(id,name)',
+            //'Language(id,name,ISO_639-2-alpha2,ISO_639-2-alpha1)',
+            //'Preference(*)',
+            //'Person(id,firstname,lastname)'
+            //'Office(name,acronym,region,type)',
+          ),
+          'fields' => array(
+            'User.id', 'User.username', 'User.role'
+            //'User.active','User.permissions',
+          )
+        );
+      break;
+      default:
+        throw new exception('ERROR: User::GetFindFields case undefined');
+      break;
+    }
+    return $fields;
+  }
 }
