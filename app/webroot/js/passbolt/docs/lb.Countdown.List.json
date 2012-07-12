@@ -1,1 +1,0 @@
-c({"name": "lb.Countdown.List", "type": "class", "comment": "<p>Lists countdowns and lets you destroy them.</p>", "parents": ["index"], "inherits": "jQuery.Controller", "src": "passbolt/countdown/list/list.js", "line": 8, "children": ["lb.Countdown.List.static", "lb.Countdown.List.prototype"]})

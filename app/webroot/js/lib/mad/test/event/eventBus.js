@@ -4,9 +4,11 @@ steal('funcunit', function(){
 	module("mad.event", {
 		// runs before each test
 		setup: function(){
-			S.open('./testEnv/mad.html', function(){
+			stop();
+			S.open('//'+MAD_ROOT+'/test/testEnv/mad.html', function(){
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
+				start();
 			});
 		},
 		// runs after each test
