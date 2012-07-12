@@ -1,6 +1,8 @@
 steal( 
+    'jquery/view/ejs',
     MAD_ROOT+'/controller/controller.js',
-    MAD_ROOT+'/helper/controllerHelper.js'
+    MAD_ROOT+'/helper/controllerHelper.js',
+	'//'+MAD_ROOT+'/view/template/component/decorator/box.ejs'
 )
 .then( 
     function($){
@@ -47,16 +49,20 @@ steal(
             {
                 // feedback the user about the component loading
                 // bon, est ce que c'est bien sa place ?
-                this.loading(true);
+//                this.loading(true);
                 
                 this._super();
+				
+                // set the template variable, this variable will be used by the function render
+                if(typeof this.options.template != 'undefined'){
+					this.setTemplate(this.options.template);
+				}
+				
                 // add the controller to the data to pass to the view
                 this.setViewData('controller', this);
-                // set the template variable, this variable will be used by the function render
-                this.template = this.options.template;
                 
                 // stop the feedback loading
-                this.loading(false);
+//                this.loading(false);
             },
             
             /**
@@ -68,9 +74,9 @@ steal(
             {
                 var returnValue = '';
                 
-                // template is defined as a default option
-                if(typeof this.options.template != 'undefined'){
-                    returnValue = this.options.template;
+                // template has been defined
+                if(typeof this.template != null){
+                    returnValue = this.template;
                 }
                 // define the template functions of the class name
                 else{
@@ -80,6 +86,15 @@ steal(
                 return returnValue;
             },
             
+			/**
+             * Set the component's template.
+             * @return {void}
+             */
+			'setTemplate': function(template)
+			{
+				this.template = template;
+			},
+			
             /** 
              * Display a loading feedback to the user
              * @param {Boolean} enable show If true show the feedback else hide it 
@@ -124,7 +139,8 @@ steal(
                 // display the rendering if true and return a boolean, else return the rendering code
                 var display = typeof options.display == 'undefined' ? true : options.display;
                 
-                var renderingTemplate = $.View(this.getTemplate(), this.viewData);
+				// render the template
+                var renderingTemplate = $.View(this.getTemplate(), {});
                 if(display){
                     this.element.html(renderingTemplate);
                     returnValue = true;

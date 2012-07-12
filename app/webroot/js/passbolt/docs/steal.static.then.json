@@ -1,1 +1,0 @@
-c({"name": "steal.static.then", "params": {}, "ret": {"type": "undefined", "description": ""}, "type": "function", "parents": ["steal.static"], "comment": "<p>Calls steal, but waits until all previous steals\nhave completed loading until loading the \nfiles passed to the arguments.</p>", "src": "steal/steal.js", "line": 1036, "children": []})

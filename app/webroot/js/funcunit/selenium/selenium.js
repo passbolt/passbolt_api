@@ -135,7 +135,7 @@ steal('steal/browser', function(){
 				browser: browser
 			});
 			selThreads.pausePolling();
-			this.selenium.close();
+//			this.selenium.close();
 			this.selenium.stop();
 			//print(">>>>>>>>>>   STOPPED")
 			this._currentBrowserIndex++;

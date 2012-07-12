@@ -1,9 +1,10 @@
 steal( 
-    'jquery/class'
-    , 'jquery/view/ejs'
+    'jquery/class',
+    'jquery/view/ejs',
+    MAD_ROOT+'/controller/controller.js',
+	'//'+MAD_ROOT+'/view/template/component/decorator/box.ejs'
 )
 .then( 
-//    MAD_ROOT+'/view/template/component/decorator/box.ejs',
     function($){
         
         $.String.getObject('mad.helper.component', window, true);
@@ -15,25 +16,23 @@ steal(
                 // I would like to understand ...
 //                this._super({'display':false});
 //                html = this.renderedView;
-
-                // Render the decorator template
-                var template = '//'+MAD_ROOT+'/view/template/component/decorator/box.ejs';
-                // Wrap the existing component with the decorator box
-                this.element.wrap('<div id="mad-helper-component-box_decorator" />');
-                // The box is now the parent of the element
-                var $box = this.element.parent();
-                // Detache the existing content, to re-add it later
-                var existingContent = $box.children().detach();
-                // Render the box template
-                $box.html($.View(template));
-                // Add the element to the decorator. at the defined place
-                $box.find('.mad-helper-component-box_decorator-content').append(existingContent);
+                
+                // The box template
+                var boxTemplate = '//'+MAD_ROOT+'/view/template/component/decorator/box.ejs';
+                // Insert the box before the component element
+                var $box = $($.View(boxTemplate)).insertBefore(this.element);
+                // Detach the component element and add it to the box element
+				var $element = this.element.detach();
+                $box.find('.mad_helper_component_boxDecorator_content').append($element);
                 // Render the component
                 this._super();
             },
-            'boxElement': function()
+            'getBoxElement': function()
             {
-                return this.element.parents('#mad-helper-component-box_decorator');
+				if(typeof this.element == 'undefined'){
+					throw new Error ('The component has to be rendered yet');
+				}
+                return $(this.element.parents('.mad_helper_component_boxDecorator').get(0));
             }
         };
         

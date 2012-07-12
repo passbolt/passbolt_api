@@ -1,1 +1,0 @@
-c({"name": "steal.File.prototype.isCrossDomain", "params": {}, "ret": {"type": "undefined", "description": ""}, "type": "function", "parents": ["steal.File.prototype"], "comment": "<p>Is the file on the same domain as our page.</p>", "src": "steal/steal.js", "line": 589, "children": []})
