@@ -17,7 +17,7 @@
 	</target>
 	
 	<target name="install_db" description="Create db schema">
-		<exec executable="bash">
+		<exec dir="${src}" executable="bash">
 			<arg value="-c"/>
 			<arg value="echo y | ${src}/app/Console/cake schema create --path ${src}/app/Config/Schema"/>
 		</exec>
