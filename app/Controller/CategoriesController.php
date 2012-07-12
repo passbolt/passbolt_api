@@ -19,7 +19,8 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
  
-class CategoriesController extends AppController {	
+class CategoriesController extends AppController {
+  	
 	/**
 	 * get a category
 	 * Renders a json object with the nested categories
@@ -29,7 +30,7 @@ class CategoriesController extends AppController {
 	 */
 	public function get($id, $children=false) {
 		if (!isset($id)) {
-			// Do something - Exception ?
+			$this->Message->error("Id is not provided");
 		} else {
 			$category = $this->Category->findById($id);
 			if ($category) {
@@ -38,11 +39,16 @@ class CategoriesController extends AppController {
 					$tree = array_merge(array(0=>$category), $children);
 					$tree = $this->Category->list2Tree($tree);
 					$this->set('data', $tree[0]);
+          $this->Message->success($tree[0]);
 				}
 				else {
-					$this->set('data', $category);
+				  $this->set("data", $category['Category']);
+          $this->Message->success("");
 				}
 			}
+      else {
+        $this->Message->error("Category doesn't exist");
+      }
 		}
 	}
 	
@@ -54,7 +60,7 @@ class CategoriesController extends AppController {
 	 */
 	public function getChildren($id) {
 		if (!isset($id)) {
-			// Do something - Exception ?
+			$this->Message->error("Id is not provided");
 		} else {
 			$category = $this->Category->findById($id);
 			if ($category) {
@@ -63,7 +69,11 @@ class CategoriesController extends AppController {
 				$childrenres[0] = array();
 				$childrenres[0][] = $this->Category->list2Tree($children);
 				$this->set('data', $childrenres);
+        $this->Message->success("");
 			}
+      else {
+        $this->Message->error("Category doesn't exist");
+      } 
 		}
 	}
 	
