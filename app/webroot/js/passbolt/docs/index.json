@@ -1,1 +1,0 @@
-c({"name": "index", "type": "page", "comment": "<h3>Passbolt</h3>\n\n<p>Our Passbolt</p>\n\n<ul>\n<li>passbolt.passbolt.controller.PasswordWorkspaceController</li>\n</ul>", "title": "Passbolt", "tags": ["home"], "src": "passbolt/passbolt.js", "line": 0, "children": ["bus", "lb.Countdown.Create", "lb.Countdown.List"]})

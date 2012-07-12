@@ -8,13 +8,14 @@ steal('funcunit', function(){
 	module("mad.controller.component", {
 		// runs before each test
 		setup: function(){
-			S.open('./testEnv/app.html', function(){
+			
+			stop();
+			
+			S.open('//'+MAD_ROOT+'/test/testEnv/app.html', function(){
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
-
 				// In test environnement some configuration variables have to be updated
 				testEnv.$.jstree._themes = APP_URL+'/js/lib/jstree/themes/';
-
 				// set the map
 				map = new testEnv.mad.object.Map({
 					'attr.id':{
@@ -31,14 +32,17 @@ steal('funcunit', function(){
 					}
 				});
 				
-				// instantiate a tree
-				S('body').append('<div id="tree"/>');
-				var $tree = S("#tree");
-				treeController = new testEnv.mad.controller.component.TreeController($tree, {
-					map:map,
-					strategy:'jstree'
+				// when the app is ready continue the tests
+				S('body').hasClass('mad_test_app_ready', true, function(){
+					// instantiate a tree
+					var $tree = testEnv.$('<div id="tree"/>').appendTo(testEnv.$('body'));
+					treeController = new testEnv.mad.controller.component.TreeController($tree, {
+						map:map,
+						strategy:'jstree'
+					});
+					treeController.render();
+					start();
 				});
-				treeController.render();
 			});
 		},
 		// runs after each test

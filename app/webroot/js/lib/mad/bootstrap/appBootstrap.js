@@ -37,6 +37,7 @@ steal(
                 , 'appControllerClass' : mad.controller.AppController
                 , 'dispatchOptions' : { }
                 , 'defaultRoute' : null
+				, 'ready': null
             }
         }, 
         
@@ -52,7 +53,6 @@ steal(
                 this.bus = null;
                 // array of options passed by args
                 this.options = {};
-                
                 // extend default options with args options
                 this.options = $.extend(true, {},  mad.bootstrap.AppBootstrap.defaults, options);
                 
@@ -164,7 +164,9 @@ steal(
             'initApplication': function()
             {
                 var appControllerClass = this.options.appControllerClass;
-                mad.setGlobal('app', appControllerClass.singleton(mad.getGlobal('$appController')));
+				var app = appControllerClass.singleton(mad.getGlobal('$appController'));
+                mad.setGlobal('app', app);
+				mad.app = mad.getGlobal('app');
             },
             
             /**
@@ -246,6 +248,9 @@ steal(
              */
             'ready': function()
             {
+				if(typeof this.options.ready != 'undefined'){
+					this.options.ready();
+				}
 				mad.app.ready();
             }
         });

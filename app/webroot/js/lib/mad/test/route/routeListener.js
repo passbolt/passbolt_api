@@ -4,13 +4,16 @@ steal('funcunit', function(){
 	module("mad.route", {
 		// runs before each test
 		setup: function(){
-			S.open('./testEnv/mad.html', function(){
+			stop();
+			S.open('//'+MAD_ROOT+'/test/testEnv/mad.html', function(){
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
+				
 				testEnv.mad.controller.AppController.destroy();
-				testEnv.mad.controller.AppController.setNs(APP_NS_ID); // Create the div element which will embedd the event bus controller
+				testEnv.mad.controller.AppController.setNs(APP_NS_ID); // Create the div element which will embed the event bus controller
 				testEnv.$('body').append('<div id="mad_test_EventBus" />');
 				testEnv.mad.eventBus = new testEnv.mad.event.EventBus(testEnv.$('#mad_test_EventBus'));
+				start();
 			});
 		},
 		// runs after each test

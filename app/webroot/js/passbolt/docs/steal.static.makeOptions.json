@@ -1,1 +1,0 @@
-c({"name": "steal.static.makeOptions", "params": {"options": {"description": "", "type": "Object", "optional": false, "order": 0, "name": "options"}}, "ret": {"type": "undefined", "description": ""}, "type": "function", "parents": ["steal.static"], "comment": "<p>Makes options</p>", "hide": true, "src": "steal/steal.js", "line": 999, "children": []})
