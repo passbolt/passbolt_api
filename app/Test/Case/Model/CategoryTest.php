@@ -58,13 +58,13 @@ class CategoryTest extends CakeTestCase {
 		$this->assertEquals(false, $this->Category->isTopLevelElement($elt, $tree));
 	}
 	
-	public function testList2Tree(){
+	public function testResults2Tree(){
 		// Test in normal condition if the tree is returned properly
 		// 1) with only one root
 		$category = $this->Category->findByName('Anjuna');
 		$children = $this->Category->children($category['Category']['id']);
 		$tree = array_merge(array(0=>$category), $children);
-		$tree = $this->Category->list2Tree($tree);
+		$tree = $this->Category->results2Tree($tree);
 		$expected = array(
 			'0' => array(
             	'id' => '4ff6111c-8534-4d17-869c-2184cbdd56cb',
@@ -109,12 +109,12 @@ class CategoryTest extends CakeTestCase {
 		$this->assertEquals($expected, $tree);
 		
 		//2) Test with several root
-		$treechildren = $this->Category->list2Tree($children);
+		$treechildren = $this->Category->results2Tree($children);
 		$expected = $expected['0']['children'];
 		$this->assertEquals($expected, $treechildren);
 		
 		//3) test if empty parameter is given
-		$treechildren = $this->Category->list2Tree(array());
+		$treechildren = $this->Category->results2Tree(array());
 		$this->assertEquals(array(), $treechildren);
 	}
 
