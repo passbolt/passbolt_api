@@ -5,7 +5,7 @@ App::uses('Category', 'Model');
 
 class CategoriesControllerTest extends ControllerTestCase {
 	public $fixtures = array('app.category');
-	
+
 	public function setUp() {
     parent::setUp();
     $cat = new CategoriesController();
@@ -19,7 +19,7 @@ class CategoriesControllerTest extends ControllerTestCase {
         array('return'=>'vars')
        )
     ));
-    $this->assertEquals('1', $this->vars['data']['status']);
+    $this->assertEquals(MessageComponent::success, $this->controller->Message->messages[0]['status']);
     
     // check that the category has been added
     $category = new Category();
