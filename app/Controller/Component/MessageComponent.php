@@ -18,6 +18,13 @@ class MessageComponent extends Component {
   var $messages;                        // message queue
   var $autoRedirect = false;
 
+  const error = 'error';
+  const notice = 'notice';
+  const success = 'success';
+  const warning = 'warning';
+  const debug = 'debug';
+  const fatal = 'fatal';
+
  /**
   * Initialize
   * @param object $controller Controller using this component
@@ -35,7 +42,7 @@ class MessageComponent extends Component {
       }
       return true;
    } else {
-      throw new exception('Session component not found (Message::initilize)');
+      throw new exception('Session component not found (MessageComponent::initilize)');
     }
   }
 
@@ -50,10 +57,10 @@ class MessageComponent extends Component {
    */
   function error($message, $options=array()) {
     $default_options = array(
-      'fatal' => false
+      MessageComponent::fatal => false
     );
     $options = array_merge($default_options, $options);
-    $type = $options['fatal'] ? 'fatal' : 'error';
+    $type = $options[MessageComponent::fatal] ? MessageComponent::fatal : MessageComponent::error;
     $this->__add($type,$message,$options);
   }
 
@@ -63,19 +70,16 @@ class MessageComponent extends Component {
    * @param mixed $options['redirect'] url, string or array
    */
   function warning($message, $options=array()) {
-    $this->__add('warning', $message, $options);
-  }
-  function info($message, $options=array()) {
-    $this->__add('info', $message, $options);
+    $this->__add(MessageComponent::warning, $message, $options);
   }
   function debug($message, $options=array()) {
-    $this->__add('debug', $message, $options);
+    $this->__add(MessageComponent::debug, $message, $options);
   }
   function notice($message, $options=array()) {
-    $this->__add('notice', $message, $options);
+    $this->__add(MessageComponent::notice, $message, $options);
   }
   function success($message='', $options=array()) {
-    $this->__add('success',$message,$options);
+    $this->__add(MessageComponent::success,$message,$options);
   }
 
   /**
@@ -86,22 +90,21 @@ class MessageComponent extends Component {
    * @param bollean die
    * @access private
    */
-  function __add($type='error', $message=null, $options=null) {
+  function __add($type=MessageComponent::error, $message=null, $options=null) {
     $die = false;
     $title = '';
     $type = strtolower($type);
     // Cosmetics
     switch ($type) {
-      case 'fatal' :
+      case MessageComponent::fatal :
         $title = __('Fatal',true);
         $die = true;
       break;
-      case 'error'  : $title = __('Error',true); break;
-      case 'info'   : case 'hint' :
-      case 'notice' : $title = __('Notice',true); break;
-      case 'warning': $title = __('Warning',true); break;
-      case 'success': $title = __('Success',true); break;
-      case 'debug'  : $title = __('Debug',true); break;
+      case MessageComponent::error   : $title = __('Error',true); break;
+      case MessageComponent::notice  : $title = __('Notice',true); break;
+      case MessageComponent::warning : $title = __('Warning',true); break;
+      case MessageComponent::success : $title = __('Success',true); break;
+      case MessageComponent::debug   : $title = __('Debug',true); break;
     }
     if (!isset($options['code'])) {
       $options['code'] = String::uuid($message);
