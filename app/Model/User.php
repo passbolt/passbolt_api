@@ -2,7 +2,14 @@
 /**
  * User Model
  *
- * @package     app.Model.User
+ * Copyright 2012, Passbolt
+ * Passbolt(tm), the simple password management solution 
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2012, Passbolt.com
+ * @package       app.Model.user
+ * @since         version 2.12.7
+ * @license       http://www.passbolt.com/license
  */
 App::uses('AuthComponent', 'Controller/Component');
 class User extends AppModel {
@@ -17,10 +24,18 @@ class User extends AppModel {
     $this->setValidationRules();
   }
 
+  /**
+   * Set the validation rules upon context
+   * @param string context
+   */
   function setValidationRules($context='default') {
     $this->validate = User::getValidationRules($context);
   }
 
+  /**
+   * Get the validation rules upon context
+   * @param string context
+   */
   static function getValidationRules($context='default') {
     $default = array(
       'username' => array(
@@ -47,7 +62,7 @@ class User extends AppModel {
           'message' => __('Your password should be at least composed of 5 characters')
         ),
         'confirmed' => array(
-          'rule' => array('isConfirmed','User.password_again'),
+          'rule' => array('isConfirmed','User.password_confirm'),
           'message' => __('Your passwords should match')
         )
       ),
