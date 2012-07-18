@@ -1,58 +1,97 @@
 <?php
+/**
+ * 
+ * 
+ * @package     app.Controller.UsersController
+ * @copyright   Copyright 2012, ActionAid Association India 
+ * @link        http://actionaid.org/india
+ * @author      Remy Bertot / Kevin Muller
+ * @license     MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 class Category extends AppModel {
-  public $name = 'Category';
   public $actsAs = array('Tree');
-	
-  public $validate = array(
-    'id' => array(
-      'uuid' => array(
-        'rule'     => 'uuid',
-        'message'  => 'UUID must be in correct format'
-          )
+
+  /**
+   * Constructor
+   * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
+   */
+  public function __construct($id = false, $table = null, $ds = null) {
+    parent::__construct($id, $table, $ds);
+    $this->setValidationRules();
+  }
+
+  /**
+   * Set the validation rules upon context
+   * @param 
+   */
+  function setValidationRules($context='default') {
+    $this->validate = Category::getValidationRules($context);
+    return true;
+  }
+
+  static function getValidationRules($context='default') {
+    $rules = array(
+      'id' => array(
+        'uuid' => array(
+          'rule'     => 'uuid',
+          'message'  => __('UUID must be in correct format')
+        )
+      ),
+      'name' => array(
+        'alphaNumeric' => array(
+          'rule'     => '/^.{2,64}$/i',
+          'required' => true,
+          'message'  => __('Alphanumeric only')
+        )
+      ),
+      'parent_id' => array(
+        'exist' => array(
+          'rule'    => array('parentExists', null),
+          'allowEmpty' => true,
+          'message' => __('The parent provided does not exist')
         ),
-        'name' => array(
-            'alphaNumeric' => array(
-                'rule'     => '/^.{2,50}$/i',
-                'required' => true,
-                'message'  => 'Alphanumeric only'
-            )
-        ),
-        'parent_id' => array(
-        	'exist' => array(
-	            'rule'    => array('parentExists', null),
-	            'allowEmpty' => true,
-	            'message' => 'The parent provided doesnt exist'
-	        ),
-	        'uuid' => array(
-                'rule'     => 'uuid',
-                'allowEmpty' => true,
-                'required' => false,
-                'message'  => 'UUID must be in correct format'
-            )
-		),
-		'position' => array(
-        	'number' => array(
-	            'rule'    => 'numeric',
-	            'message' => 'The position must be a number'
-	        )
-		)
+        'uuid' => array(
+          'rule'     => 'uuid',
+          'allowEmpty' => true,
+          'required' => false,
+          'message'  => __('UUID must be in correct format')
+        )
+      ),
+      'position' => array(
+        'number' => array(
+          'rule'    => 'numeric',
+          'message' => __('The position must be a number')
+        )
+      )
     );
-	
-	/**
-	 * Check if a category with same id exists
-	 */
+
+    /*
+     * @todo a context switch if needed
+     *
+    switch ($context) {
+      default:
+        unset($rules['rule']);
+      break;
+    }
+    */
+
+    return $rules;
+  }
+
+  /**
+   * Check if a category with same id exists
+   */
   public function parentExists($check) {
-    if($check['parent_id'] == null){
+    if ($check['parent_id'] == null) {
       return true;
+    } else {
+      $exists = $this->find('count', array(
+        'conditions' => array('Category.id' => $check['parent_id']),
+         'recursive' => -1
+      ));
+      return $exists > 0;
     }
-		else{
-	        $exists = $this->find('count', array(
-	            'conditions' => array('Category.id'=>$check['parent_id']),
-	      		'recursive' => -1
-	        ));
-	        return $exists > 0;
-		}
-    }
+  }
 	
 	/**
 	 * Converts an array of categories into a proper nested tree
@@ -116,60 +155,80 @@ class Category extends AppModel {
 		return $res;
 	}
 	
-	/**
-	 * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
-	 * Useful when parsing an array of results
-	 * @param $elt, the element to check
-	 * @param $parent, the parent
-	 * @return true if element is a child, false otherwise
-	 */
-	public function isChild($elt, $parent){
-		return ($elt['Category']['rght'] < $parent['Category']['rght']);
-	}
-	
-	/**
-	 * Check if an element is a leaf (no more children)
-	 * @param $category, the category
-	 * @return true if the category is a leaf. false otherwise.
-	 */
-	public function isLeaf($category){
-		if($category['Category']['lft'] + 1 == $category['Category']['rght']){
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Check if an element is at the top level of the given branch
-	 */
-	public function isTopLevelElement($category, $categories){
-		$parent_id = $category['Category']['parent_id'];
-		foreach($categories as $c){
-			$eltId = $c['Category']['id'];
-			if($eltId == $parent_id){
-				return false;
-			}
-		}
-		return true;
-	}
+	  /**
+   * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
+   * Useful when parsing an array of results
+   * @param $elt, the element to check
+   * @param $parent, the parent
+   * @return true if element is a child, false otherwise
+   */
+  public function isChild($elt, $parent) {
+    return ($elt['Category']['rght'] < $parent['Category']['rght']);
+  }
+
+  /**
+   * Check if an element is a leaf (no more children)
+   * @param $category, the category
+   * @return true if the category is a leaf. false otherwise.
+   */
+  public function isLeaf($category){
+    if ($category['Category']['lft'] + 1 == $category['Category']['rght']) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if an element is at the top level of the given branch
+   * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
+   */
+  public function isTopLevelElement($category, $categories, $objectType='default'){
+    $parent_id = ($objectType=='default' ? $category['Category']['parent_id'] : $category['parent_id']);
+    foreach ($categories as $c) {
+      $eltId = ($objectType=='default' ? $c['Category']['id'] : $c['id']);
+      if ($eltId == $parent_id) {
+        return false;
+      }
+    }
+    return true;
+  }
   
   /**
    * Return the list of field to fetch for given context
    * @param string $case context ex: login, activation
    * @return $condition array
    */
-  static function getFindFields($case="get"){
-    switch($case){
-      case 'get':
-      case 'getChildren':
+  static function getFindFields($case="get") {
+    switch ($case) {
+      case 'resetPassword':
+      case 'forgotPassword':
+      case 'guestActivation':
         $fields = array(
           'fields' => array(
-            'Category.id', 'Category.name', 'Category.parent_id'
+            'User.id', 'User.username', 'User.role'
+            //, 'User.active'
+          )
+        );
+      break;
+      case 'login':
+      case 'userActivation':
+        $fields = array(
+          'contain' => array(
+            //'Role(id,permissions,name)',
+            //'Timezone(id,name)',
+            //'Language(id,name,ISO_639-2-alpha2,ISO_639-2-alpha1)',
+            //'Preference(*)',
+            //'Person(id,firstname,lastname)'
+            //'Office(name,acronym,region,type)',
+          ),
+          'fields' => array(
+            'User.id', 'User.username', 'User.role'
+            //'User.active','User.permissions',
           )
         );
       break;
       default:
-        throw new exception('ERROR: Category::GetFindFields case undefined');
+        throw new exception('ERROR: User::GetFindFields case undefined');
       break;
     }
     return $fields;
