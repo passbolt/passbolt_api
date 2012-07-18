@@ -1,12 +1,11 @@
 <?php
 /**
- * 
- * 
- * @package     app.Controller.UsersController
- * @copyright   Copyright 2012, ActionAid Association India 
- * @link        http://actionaid.org/india
- * @author      Remy Bertot / Kevin Muller
- * @license     MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * Category Controller
+ *
+ * @copyright     Copyright 2012, Passbolt.com
+ * @package       app.Model.Category
+ * @since         version 2.12.7
+ * @license       http://www.passbolt.com/license
  */
 class Category extends AppModel {
   public $actsAs = array('Tree');
@@ -22,13 +21,19 @@ class Category extends AppModel {
 
   /**
    * Set the validation rules upon context
-   * @param 
+   * @param string context
+   * @return bool true on success
    */
   function setValidationRules($context='default') {
     $this->validate = Category::getValidationRules($context);
     return true;
   }
 
+  /**
+   * Get the validation rules upon context
+   * @param string context
+   * @return array cakephp validation rules
+   */
   static function getValidationRules($context='default') {
     $rules = array(
       'id' => array(
@@ -80,6 +85,7 @@ class Category extends AppModel {
 
   /**
    * Check if a category with same id exists
+   * @param check
    */
   public function parentExists($check) {
     if ($check['parent_id'] == null) {
