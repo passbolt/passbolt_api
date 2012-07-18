@@ -1,24 +1,13 @@
 <?php
 /**
- * Categories controller.
- *
+ * Categories controller
  * This file will define how categories are managed
  *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright 2012, Passbolt.com
+ * @license       http://www.passbolt.com/license
  * @package       app.Controller.CategoriesController
- * @since         Passbolt v2.12.7
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @since         version 2.12.7
  */
- 
 class CategoriesController extends AppController {
 
   /**
@@ -55,8 +44,7 @@ class CategoriesController extends AppController {
       }
     }
   }
-  
-  
+
   /**
    * get the children for a corresponding category
    * @param $id, the id of the parent category

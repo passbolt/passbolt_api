@@ -1,10 +1,10 @@
 <?php
 /**
- * Text Dictionary Controller
+ * Gettext Dictionary Controller
  *
  * @copyright     Copyright 2012, Passbolt.com
  * @license       http://www.passbolt.com/license
- * @package       app.Controller.Dictionary
+ * @package       app.Controller.DictionaryController
  * @since         version 2.12.7
  */
 class DictionariesController extends AppController {
