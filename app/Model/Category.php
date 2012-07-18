@@ -148,7 +148,7 @@ class Category extends AppModel {
 		$res = array();
 		// Place only the top level elements, and ignore the 
 		foreach($clones as $k=>$r){
-			if($this->isTopLevelElement($r, $clones, 'json')){
+			if($this->isTopLevelElement($r, $clones)){
 				$res[]=$r;
 			}
 		}
@@ -182,11 +182,10 @@ class Category extends AppModel {
    * Check if an element is at the top level of the given branch
    * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
    */
-  public function isTopLevelElement($category, $categories, $objectType='default'){
-    $parent_id = ($objectType=='default' ? $category['Category']['parent_id'] : $category['parent_id']);
+  public function isTopLevelElement($category, $categories){
+    $parent_id = $category['Category']['parent_id'];
     foreach ($categories as $c) {
-      $eltId = ($objectType=='default' ? $c['Category']['id'] : $c['id']);
-      if ($eltId == $parent_id) {
+      if ($c['Category']['id'] == $parent_id) {
         return false;
       }
     }
@@ -198,37 +197,18 @@ class Category extends AppModel {
    * @param string $case context ex: login, activation
    * @return $condition array
    */
-  static function getFindFields($case="get") {
-    switch ($case) {
-      case 'resetPassword':
-      case 'forgotPassword':
-      case 'guestActivation':
+  static function getFindFields($case="get"){
+    switch($case){
+      case 'get':
+      case 'getChildren':
         $fields = array(
           'fields' => array(
-            'User.id', 'User.username', 'User.role'
-            //, 'User.active'
-          )
-        );
-      break;
-      case 'login':
-      case 'userActivation':
-        $fields = array(
-          'contain' => array(
-            //'Role(id,permissions,name)',
-            //'Timezone(id,name)',
-            //'Language(id,name,ISO_639-2-alpha2,ISO_639-2-alpha1)',
-            //'Preference(*)',
-            //'Person(id,firstname,lastname)'
-            //'Office(name,acronym,region,type)',
-          ),
-          'fields' => array(
-            'User.id', 'User.username', 'User.role'
-            //'User.active','User.permissions',
+            'Category.id', 'Category.name', 'Category.parent_id'
           )
         );
       break;
       default:
-        throw new exception('ERROR: User::GetFindFields case undefined');
+        throw new exception('ERROR: Category::GetFindFields case undefined');
       break;
     }
     return $fields;
