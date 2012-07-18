@@ -55,8 +55,11 @@ class Category extends AppModel {
     }
 	
 	/**
-	 * Converts listed elements into a proper nested tree
-	 * @param : $list, the list as it is returned by find() or children()
+	 * Converts an array of categories into a proper nested tree
+	 * @param array $categories, the list as it is returned by find() or children()
+   * @param array $options the options.
+   *        - array fields , the required fields (will remove unnecessary fields at the output)
+   *        - bool position, whether or not to add a position field to specify the position of the categories among the sieblings
 	 * @return : Nested objects representing the category :
 	 * category{
 	 *    id : char[36]
@@ -66,15 +69,27 @@ class Category extends AppModel {
 	 * 	  children:categories array
 	 * }
 	 */
-	public function list2Tree($categories){
+	public function results2Tree($categories, $options=null){
 		$stack = array();
 		$clones = $categories;
+    
+    // define which keys are extra to remove them later
+    $extraFields = array();
+    foreach($categories[0]['Category'] as $key=>$V){
+      if(!in_array("Category.$key", $options['fields']['fields'])){
+        $extraFields[] = $key;
+      }
+    }
 		
 		foreach ($categories as $i => $cat) {
-			$clones[$i] = $clones[$i]['Category']; // remove the 'Category' level
-			unset($clones[$i]['Category']); 
-			$clones[$i]['children'] = array(); // add the children row
-			unset($clones[$i]['lft'], $clones[$i]['rght']);
+			//$clones[$i] = $clones[$i]['Category']; // remove the 'Category' level
+			//unset($clones[$i]['Category']); 
+			$clones[$i]['Category']['children'] = array(); // add the children row
+      // process here the format of the element so we keep only the required fields
+      foreach($extraFields as $extraF){
+        unset($clones[$i]['Category'][$extraF]);
+      }
+      
 			$categories[$i]['Category']['copyref'] = & $clones[$i];
 			
 			while ($stack && !$this->isChild($cat, $stack[count($stack) - 1])) { // if element is not a child of the stack
@@ -82,7 +97,7 @@ class Category extends AppModel {
 			}
 			
 			if(!$this->isTopLevelElement($cat, $categories)){
-				$stack[count($stack) - 1]['Category']['copyref']['children'][] = &$clones[$i];
+				$stack[count($stack) - 1]['Category']['copyref']['Category']['children'][] = &$clones[$i];
 			}
 			$stack[] = $categories[$i];
 		} 
@@ -126,12 +141,11 @@ class Category extends AppModel {
 	
 	/**
 	 * Check if an element is at the top level of the given branch
-	 * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
 	 */
-	public function isTopLevelElement($category, $categories, $objectType='default'){
-		$parent_id = ($objectType=='default' ? $category['Category']['parent_id'] : $category['parent_id']);
+	public function isTopLevelElement($category, $categories){
+		$parent_id = $category['Category']['parent_id'];
 		foreach($categories as $c){
-			$eltId = ($objectType=='default' ? $c['Category']['id'] : $c['id']);
+			$eltId = $c['Category']['id'];
 			if($eltId == $parent_id){
 				return false;
 			}
@@ -146,35 +160,16 @@ class Category extends AppModel {
    */
   static function getFindFields($case="get"){
     switch($case){
-      case 'resetPassword':
-      case 'forgotPassword':
-      case 'guestActivation':
+      case 'get':
+      case 'getChildren':
         $fields = array(
           'fields' => array(
-            'User.id', 'User.username', 'User.role'
-            //, 'User.active'
-          )
-        );
-      break;
-      case 'login':
-      case 'userActivation':
-        $fields = array(
-          'contain' => array(
-            //'Role(id,permissions,name)',
-            //'Timezone(id,name)',
-            //'Language(id,name,ISO_639-2-alpha2,ISO_639-2-alpha1)',
-            //'Preference(*)',
-            //'Person(id,firstname,lastname)'
-            //'Office(name,acronym,region,type)',
-          ),
-          'fields' => array(
-            'User.id', 'User.username', 'User.role'
-            //'User.active','User.permissions',
+            'Category.id', 'Category.name', 'Category.parent_id'
           )
         );
       break;
       default:
-        throw new exception('ERROR: User::GetFindFields case undefined');
+        throw new exception('ERROR: Category::GetFindFields case undefined');
       break;
     }
     return $fields;

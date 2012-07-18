@@ -37,12 +37,13 @@ class CategoriesController extends AppController {
 				if ($children == true) {
 					$children = $this->Category->children($id);
 					$tree = array_merge(array(0=>$category), $children);
-					$tree = $this->Category->list2Tree($tree);
+					$tree = $this->Category->results2Tree($tree, array('fields'=>Category::getFindFields('get'), 'position'=>true));
+					pr($tree[0]);
 					$this->set('data', $tree[0]);
-          $this->Message->success($tree[0]);
+          $this->Message->success("");
 				}
 				else {
-				  $this->set("data", $category['Category']);
+				  $this->set("data", $category);
           $this->Message->success("");
 				}
 			}
@@ -67,7 +68,7 @@ class CategoriesController extends AppController {
 				$children = $this->Category->children($id);
 				$childrenres = array();
 				$childrenres[0] = array();
-				$childrenres[0][] = $this->Category->list2Tree($children);
+				$childrenres[0][] = $this->Category->results2Tree($children, array('fields'=>Category::getFindFields('getChildren'), 'position'=>true));
 				$this->set('data', $childrenres);
         $this->Message->success("");
 			}
