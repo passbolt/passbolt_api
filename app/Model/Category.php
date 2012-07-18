@@ -114,9 +114,11 @@ class Category extends AppModel {
     
     // define which keys are extra to remove them later
     $extraFields = array();
-    foreach($categories[0]['Category'] as $key=>$V){
-      if(!in_array("Category.$key", $options['fields']['fields'])){
-        $extraFields[] = $key;
+    if(!empty($options) && isset($options['fields']['fields'])) {
+      foreach($categories[0]['Category'] as $key=>$V){
+        if(!in_array("Category.$key", $options['fields']['fields'])){
+          $extraFields[] = $key;
+        }
       }
     }
 		
