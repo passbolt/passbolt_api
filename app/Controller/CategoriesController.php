@@ -20,7 +20,7 @@
  */
  
 class CategoriesController extends AppController {
-    
+
   /**
    * get a category
    * Renders a json object with the nested categories
@@ -29,22 +29,27 @@ class CategoriesController extends AppController {
    * @return void
    */
   public function get($id, $children=false) {
+    $this->layout = 'html5';
     if (!isset($id)) {
       $this->Message->error(__('The category id is missing'));
     } else {
+      $categoryModel = Common::getModel('Category');
+      $fields = $categoryModel::getFindFields('get');
       $category = $this->Category->findById($id);
       if ($category) {
         if ($children == true) {
-          $children = $this->Category->children($id);
-          $tree = array_merge(array(0=>$category), $children);
-          $tree = $this->Category->list2Tree($tree);
-          $this->set('data', $tree[0]);
-          $this->Message->success($tree[0]);
+          $category = $this->Category->findById($id);
+          $conditions = array('conditions'=>array( 
+            'Category.lft >='=>$category['Category']['lft'] , 
+            'Category.rght <='=>$category['Category']['rght']
+            )
+          );
+          $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
         }
         else {
-          $this->set('data', $category['Category']);
-          $this->Message->success();
+          $this->set('data', $this->Category->findById($id, $fields['fields']));
         }
+        $this->Message->success();
       }
       else {
         $this->Message->error(__('The category doesn\'t exist'));
@@ -64,15 +69,18 @@ class CategoriesController extends AppController {
     } else {
       $category = $this->Category->findById($id);
       if ($category) {
-        $children = $this->Category->children($id);
-        $childrenres = array();
-        $childrenres[0] = array();
-        $childrenres[0][] = $this->Category->list2Tree($children);
-        $this->set('data', $childrenres);
+        $categoryModel = Common::getModel('Category');
+        $fields = $categoryModel::getFindFields('getChildren');
+        $conditions = array('conditions'=>array( 
+            'Category.lft >'=>$category['Category']['lft'] , 
+            'Category.rght <'=>$category['Category']['rght']
+            )
+          );
+        $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
         $this->Message->success();
       }
       else {
-        $this->Message->error(__('Category doesn\'t exist'));
+        $this->Message->error(__('The category doesn\'t exist'));
       } 
     }
   }
