@@ -63,54 +63,66 @@ class CategoryTest extends CakeTestCase {
 		// 1) with only one root
 		$category = $this->Category->findByName('Anjuna');
 		$children = $this->Category->children($category['Category']['id']);
+    $fields = array('fields'=>array('fields'=>array('Category.id', 'Category.parent_id', 'Category.name')));
 		$tree = array_merge(array(0=>$category), $children);
-		$tree = $this->Category->results2Tree($tree);
+		$tree = $this->Category->results2Tree($tree, $fields);
 		$expected = array(
 			'0' => array(
+			     'Category' => array(
             	'id' => '4ff6111c-8534-4d17-869c-2184cbdd56cb',
             	'parent_id' => '4ff6111b-9090-44d2-ba5a-2184cbdd56cb',
             	'name' => 'Anjuna',
             	'children' => array(
                     '0' => array(
+                         'Category' => array(
                             'id' => '4ff6111c-dac0-4b39-81b7-2184cbdd56cb',
                             'parent_id' => '4ff6111c-8534-4d17-869c-2184cbdd56cb',
                             'name' => 'UV Bar',
                             'children' => array()
-
+                            )
                         ),
                     '1' => Array(
+                          'Category'=> array(
                             'id' => '4ff6111c-4ea0-4232-ae8d-2184cbdd56cb',
                             'parent_id' => '4ff6111c-8534-4d17-869c-2184cbdd56cb',
                             'name' => 'Curlie\'s',
                             'children' => array(
                                     '0' => array(
+                                        'Category' => array (
                                             'id' => '4ff6111e-c81c-43cc-b848-2184cbdd56cb',
                                             'parent_id' => '4ff6111c-4ea0-4232-ae8d-2184cbdd56cb',
                                             'name' => 'Dance on the beach',
                                             'children' => array()
+                                            )
                                         ),
                                     '1' => array (
+                                          'Category' => array (
                                             'id' => '4ff6111e-47c8-45f3-8f5c-2184cbdd56cb',
                                             'parent_id' => '4ff6111c-4ea0-4232-ae8d-2184cbdd56cb',
                                             'name' => 'Play pool table',
                                             'children' => array()
+                                            )
                                         )
                                 )
+                            )
                         ),
                     '2' => Array(
+                          'Category' => array (
                             'id' => '4ff6111d-9e6c-4d71-80ee-2184cbdd56cb',
                             'parent_id' => '4ff6111c-8534-4d17-869c-2184cbdd56cb',
                             'name' => 'The Hippies',
                             'children' => Array()
+                            )
                         )
                 	)
         		)
+         )
 			);
 		$this->assertEquals($expected, $tree);
 		
 		//2) Test with several root
-		$treechildren = $this->Category->results2Tree($children);
-		$expected = $expected['0']['children'];
+		$treechildren = $this->Category->results2Tree($children, $fields);
+		$expected = $expected['0']['Category']['children'];
 		$this->assertEquals($expected, $treechildren);
 		
 		//3) test if empty parameter is given
