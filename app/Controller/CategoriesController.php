@@ -29,7 +29,6 @@ class CategoriesController extends AppController {
    * @return void
    */
   public function get($id, $children=false) {
-    $this->layout = 'html5';
     if (!isset($id)) {
       $this->Message->error(__('The category id is missing'));
     } else {
