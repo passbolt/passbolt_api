@@ -145,7 +145,7 @@ class CategoriesController extends AppController {
       if (!$this->Category->delete($id)) {
         $this->Message->error(__('The category could not be deleted.'));
       } else {
-        $this->Message->sucess();
+        $this->Message->success(__('The category was succesfully deleted'));
       }
     }
   }
