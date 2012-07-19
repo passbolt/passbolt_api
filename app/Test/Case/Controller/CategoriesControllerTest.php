@@ -154,7 +154,60 @@ class CategoriesControllerTest extends ControllerTestCase {
        'return'=>'contents'
     )), true);
     $this->assertEquals(MessageComponent::error, $result['status']);
+    
+    // Error : no data provided
+    $result = json_decode($this->testAction('/categories/add', array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']);
 
+  }
+
+  public function testDelete() {
+    // Error : no data provided
+    $category = new Category();
+    $category->useDbConfig = 'test';
+    $cat = $category->findByName('Drug places');
+    $id = $cat['Category']['id'];
+    
+    $result = json_decode($this->testAction("/categories/delete/$id", array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::success, $result['status']);
+    
+    // check that the category was properly deleted
+    $cat = $category->findByName('Drug places');
+    $this->assertTrue(empty($cat));
+    
+    
+    /*$id = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb'; // Goa
+    // test if the object returned is a success one
+    $result = json_decode($this->testAction("/categories/get/$id/1", array('return'=>'contents')), true);
+    
+    pr($result); die();*/
+  }
+  
+  public function testRename() {
+    // Error : no data provided
+    $category = new Category();
+    $category->useDbConfig = 'test';
+    $cat = $category->findByName('Drug places');
+    $id = $cat['Category']['id'];
+    $newName = "Booze Places";
+    
+    $result = json_decode($this->testAction("/categories/rename/$id/$newName", array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::success, $result['status']);
+    
+    // check that the previous name doesn't exist anymore
+    $cat = $category->findByName('Drug places');
+    $this->assertTrue(empty($cat));
+    
+     // check that the new name is there
+    $cat = $category->findByName('Booze places');
+    $this->assertFalse(empty($cat));
+    
+    
+    /*$id = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb'; // Goa
+    // test if the object returned is a success one
+    $result = json_decode($this->testAction("/categories/get/$id/1", array('return'=>'contents')), true);
+    
+    pr($result); die();*/
   }
   
 }
