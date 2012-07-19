@@ -209,6 +209,7 @@ class Category extends AppModel {
     switch($case){
       case 'get':
       case 'getChildren':
+      case 'add':
         $fields = array(
           'fields' => array(
             'Category.id', 'Category.name', 'Category.parent_id'
