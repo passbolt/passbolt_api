@@ -30,7 +30,8 @@ class CategoriesController extends AppController {
           $conditions = array('conditions'=>array( 
             'Category.lft >='=>$category['Category']['lft'] , 
             'Category.rght <='=>$category['Category']['rght']
-            )
+            ),
+            'order' => 'lft ASC'
           );
           $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
         }
@@ -61,7 +62,8 @@ class CategoriesController extends AppController {
         $conditions = array('conditions'=>array( 
             'Category.lft >'=>$category['Category']['lft'] , 
             'Category.rght <'=>$category['Category']['rght']
-            )
+            ),
+            'order' => 'lft ASC'
           );
         $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
         $this->Message->success();
@@ -73,10 +75,12 @@ class CategoriesController extends AppController {
   }
 
   /**
-   * Add a category inside the tree
+   * Add a category inside the tree, and return a success object with the added category
    * @param $parent_id, the parent id of the category
    * @param $name, the name of the category
    * @param $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
+   * if position is not available (example : position 2 when there are no children, the category will be inserted in last)
+   * if position is 0, it will not be handled. Count starts from 1.
    * @param $type (optional), the type of the category (default is set is missing)
    * @return void
    */
@@ -97,8 +101,8 @@ class CategoriesController extends AppController {
     }
 
     // set the data for validation and save
-    $category = $this->request->data;
-    $this->Category->set($category);
+    $catpost = $this->request->data;
+    $this->Category->set($catpost);
 
     // check if the data is valid
     if (!$this->Category->validates()) {
@@ -107,20 +111,24 @@ class CategoriesController extends AppController {
     }
 
     // trye to save
-    $category = $this->Category->save($category);
+    $this->Category->create();
+    $category = $this->Category->save($catpost);
     if ($category === false) {
       $this->Message->error(__('The category could not be saved'));
       return;
     }
 
     // Manage the position
-    if (isset($category['Category']['position']) && $category['Category']['position'] > 0) {
-      $nbChildren = $this->Category->childCount($category['Category']['parent_id']);
-      if ($category['Category']['position'] < $nbChildren) {
-        $this->Category->moveUp($category['Category']['id'], $nbChildren - $category['Category']['position']);
+    if (isset($catpost['Category']['position']) && $catpost['Category']['position'] > 0) {
+      $nbChildren = $this->Category->childCount($catpost['Category']['parent_id'], true);
+      if ($catpost['Category']['position'] < $nbChildren) {
+        $steps = ($catpost['Category']['position'] == 1 ? true : $nbChildren - $catpost['Category']['position']);
+        $this->Category->moveUp($category['Category']['id'], $steps);
       }
     }
-
+    $categoryModel = Common::getModel('Category');
+    $fields = $categoryModel::getFindFields('add');
+    $this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
     $this->Message->success(__('The category was sucessfully added'));
 
   }
