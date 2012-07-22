@@ -17,7 +17,7 @@ class CategoriesController extends AppController {
    * @param bool $children whether or not we want the children returned
    * @return void
    */
-  public function get($id, $children=false) {
+  public function get($id=null, $children=false) {
     if (!isset($id)) {
       $this->Message->error(__('The category id is missing'));
     } else {
@@ -51,7 +51,7 @@ class CategoriesController extends AppController {
    * @param $id, the id of the parent category
    * @return void
    */
-  public function getChildren($id) {
+  public function getChildren($id=null) {
     if (!isset($id)) {
       $this->Message->error(__('The category id is missing'));
     } else {
@@ -138,7 +138,7 @@ class CategoriesController extends AppController {
    * @param $id, the Category id
    * @return void
    */
-  public function delete($id) {
+  public function delete($id=null) {
     if (!isset($id)) {
       $this->Message->error(__('The category id is missing'));
     } else {
@@ -156,7 +156,7 @@ class CategoriesController extends AppController {
    * @param $name, the name of the category
    * @return void
    */
-  public function rename($id, $name) {
+  public function rename($id=null, $name="") {
     if (!isset($id)) {
       $this->Message->error(__('The category id is not provided'));
     } else {
@@ -181,14 +181,15 @@ class CategoriesController extends AppController {
    * @param $parent_id, the new parent
    * @return void
    */
-  public function move($id, $position, $parent_id=null) {
+  public function move($id=null, $position=null, $parent_id=null) {
     if (!isset($id)) {
       $this->Message->error(__('The category id is not provided'));
     } else {
       $category = $this->Category->findById($id);
       if ($category) {
         // First, manage the parent
-        if ($parent_id != null && $category['Category']['parent_id'] != $parent_id) {
+        $parent_id = ($parent_id == null ? $category['Category']['parent_id'] : $parent_id);
+        if ($category['Category']['parent_id'] != $parent_id) {
           $category['Category']['parent_id'] = $parent_id;
           $category = $this->Category->save($category);
           if (!$category) {
@@ -197,14 +198,40 @@ class CategoriesController extends AppController {
           }
         }
         // then, manage the position
-        if ($position > 0) {
-          $nbChildren = $this->Category->childCount($parent_id);
-          if ($position < $nbChildren) {
-            if ($this->Category->moveUp($id, $nbChildren - $position)) {
-              $this->Message->sucess(__('The category was sucessfully moved'));
+        if ($position >= 0) {
+          $nbChildren = $this->Category->childCount($parent_id, true);
+          // if the position is first one or last one
+          if($position == 1) {
+            $result = $this->Category->moveUp($id, true);
+          }
+          elseif($position >= $nbChildren) {
+            $result = $this->Category->moveDown($id, true);
+          }
+          else {
+            $currentPosition = $this->Category->getPosition($id);
+            $steps = $currentPosition - $position;
+            echo "position = $currentPosition, steps = $steps";
+            if($steps > 0) {
+              $result = $this->Category->moveUp($id, $steps);
+            }
+            else {
+              $result = $this->Category->moveDown($id, -($steps));
             }
           }
+          if($result)
+            $this->Message->success(__('The category was sucessfully moved'));
+          else
+            $this->Message->error(__('The category could not be moved'));
+          return;
         }
+        else{
+          $this->Message->error(__('Wrong position. Must be greated than 0'));
+          return;
+        }
+      }
+      else{
+        $this->Message->error(__('The category doesnt exist'));
+        return;
       }
     }
   }
@@ -215,57 +242,7 @@ class CategoriesController extends AppController {
    * @param $type, the type
    * @return 1 if success, 0 if failure
    */
-  public function setType($id, $type) {
+  public function setType($id=null, $type=null) {
     
-  }
-
-  /* @todo this should be moved to fixture */
-  public function populate() {
-    $this->layout = 'html5';
-     
-    /*  
-    Goa
-    -Hippies places
-    --Anjuna
-    ---UV Bar
-    ---Curlie's
-    ----Dance on the beach
-    ----Play pool table
-    ---The Hippies
-    --Palolem
-    -drug places
-    --Calangute
-    ---Le Nepalais
-    -Disco places
-    --Baga
-    --Mapusa
-     */
-    $goa = $this->Category->save(array('Category'=>array('name'=>'Goa')));
-    $this->Category->create();
-    $hippies = $this->Category->save(array('Category'=>array('name'=>'Hippies places', 'parent_id'=>$goa['Category']['id'])));
-    $this->Category->create();
-    $anjuna = $this->Category->save(array('Category'=>array('name'=>'Anjuna', 'parent_id'=>$hippies['Category']['id'])));
-    $this->Category->create();
-    $uvbar = $this->Category->save(array('Category'=>array('name'=>'UV Bar', 'parent_id'=>$anjuna['Category']['id'])));
-    $this->Category->create();
-    $curlies = $this->Category->save(array('Category'=>array('name'=>'Curlie\'s', 'parent_id'=>$anjuna['Category']['id'])));
-    $this->Category->create();
-    $thehippies = $this->Category->save(array('Category'=>array('name'=>'The Hippies', 'parent_id'=>$anjuna['Category']['id'])));
-    $this->Category->create();
-    $beach = $this->Category->save(array('Category'=>array('name'=>'Dance on the beach', 'parent_id'=>$curlies['Category']['id'])));
-    $this->Category->create();
-    $pool = $this->Category->save(array('Category'=>array('name'=>'Play pool table', 'parent_id'=>$curlies['Category']['id'])));
-    $this->Category->create();
-    $drug = $this->Category->save(array('Category'=>array('name'=>'Drug places', 'parent_id'=>$goa['Category']['id'])));
-    $this->Category->create();
-    $disco = $this->Category->save(array('Category'=>array('name'=>'Disco places', 'parent_id'=>$goa['Category']['id'])));
-    $this->Category->create();
-    $calangute = $this->Category->save(array('Category'=>array('name'=>'Calangute', 'parent_id'=>$drug['Category']['id'])));
-    $this->Category->create();
-    $nepalais = $this->Category->save(array('Category'=>array('name'=>'Le Nepalais', 'parent_id'=>$calangute['Category']['id'])));
-    $this->Category->create();
-    $baga = $this->Category->save(array('Category'=>array('name'=>'Baga', 'parent_id'=>$disco['Category']['id'])));
-    $this->Category->create();
-    $mapusa = $this->Category->save(array('Category'=>array('name'=>'Mapusa', 'parent_id'=>$disco['Category']['id'])));
   }
 }
