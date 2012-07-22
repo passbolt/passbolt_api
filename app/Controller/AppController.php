@@ -15,7 +15,7 @@ class AppController extends Controller {
    * @var $component application wide components 
    */
   public $components = array(
-    'Session', 'Paginator', 'Cookie', 'Auth',  // default
+    'Session', 'Paginator', 'Cookie', //'Auth',  // default
     'Message', 'Mailer'                        // custom
   );
 
@@ -37,11 +37,11 @@ class AppController extends Controller {
     //}
 
     // Auth component initilization
-    $this->Auth->loginAction = Configure::read('App.auth.loginAction');
-    $this->Auth->loginRedirect = Configure::read('App.auth.loginRedirect');
-    $this->Auth->logoutRedirect = Configure::read('App.auth.logoutRedirect');
-    $this->Auth->authenticate = array('Form');
-    $this->Auth->authorize = array('Controller'); //@see AppController::isAuthorized
+    //$this->Auth->loginAction = Configure::read('App.auth.loginAction');
+    //$this->Auth->loginRedirect = Configure::read('App.auth.loginRedirect');
+    //$this->Auth->logoutRedirect = Configure::read('App.auth.logoutRedirect');
+    //$this->Auth->authenticate = array('Form');
+    //$this->Auth->authorize = array('Controller'); //@see AppController::isAuthorized
 
     // @todo this will be remove via the initial auth check 
     // User::set() will load default config
@@ -58,7 +58,7 @@ class AppController extends Controller {
    * @param mixed $user The user to check the authorization of. If empty the user in the session will be used.
    * @return boolean True if $user is authorized, otherwise false
    * @access public
-   */
+   
   function isAuthorized($user) {
     if($this->isWhitelisted()) {
       return true;
@@ -66,14 +66,14 @@ class AppController extends Controller {
       // @todo authorization
       return true;
     }
-  }
+  }*/
 
   /**
    * Is the controller:action pair whitelisted in config? (see. App.auth.whitelist) 
    * @param string $controller, current is used if null
    * @param string $action, current is used if null
    * @return bool true if the controller action pair is whitelisted
-   */
+  
   function isWhitelisted($controller=null, $action=null) {
     if ($controller == null) {
       $controller = strtolower($this->name);
@@ -83,5 +83,5 @@ class AppController extends Controller {
     }
     $whitelist = Configure::read('App.auth.whitelist');
     return (isset($whitelist[$controller][$action]));
-  }
+  } */
 }
