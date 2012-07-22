@@ -40,4 +40,13 @@ class Common extends Object {
     return String::uuid();
   }
 
+  /**
+   * Indicates if a given string is a UUID
+   * @param string $str
+   * @return boolean
+   */
+  static function isUuid($str) {
+    return is_string($str) && preg_match('/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/', $str);
+  }
+
 }

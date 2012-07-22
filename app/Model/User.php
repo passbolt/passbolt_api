@@ -12,8 +12,15 @@
  * @license       http://www.passbolt.com/license
  */
 App::uses('AuthComponent', 'Controller/Component');
+App::uses('Role', 'Model');
 class User extends AppModel {
   public $name = 'User';
+  public $belongsTo = array('Role');
+
+  /**
+   * They are legions
+   */
+  const Anonymous = 'Anonymous';
 
   /**
    * Constructor
@@ -60,29 +67,10 @@ class User extends AppModel {
         'minLength' => array(
           'rule' => array('minLength',5),
           'message' => __('Your password should be at least composed of 5 characters')
-        ),
-        'confirmed' => array(
-          'rule' => array('isConfirmed','User.password_confirm'),
-          'message' => __('Your passwords should match')
-        )
-      ),
-      'role' => array(
-        'inlist' => array(
-          'required' => true,
-          'allowEmpty' => false,
-          'rule' => array('inList', array('admin')),
-          'message' => __('Please enter a valid role')
         )
       )
     );
     switch ($context) {
-      case 'forgot_password' : 
-        $rules['username'] = $default['username'];
-      break;
-      default:
-      case 'resetPassword':
-        $rules['password'] = $default['password'];
-      break;
       case 'default' :
         $rules = $default; 
       break;
@@ -105,65 +93,74 @@ class User extends AppModel {
   }
 
   /**
-   * Set the user as current
+   * Get the current user
+   * @return array the current user or an anonymous user, false if error
    */
   public static function get() {
+    Common::getModel('Role');
     $user = AuthComponent::user();
-    // if the user is not in Session use a guest
+    // if the user is not in Session use a anonymous
     if($user == null) {
-      $user = User::setActive(User::guest);
+      $user = User::setActive(User::Anonymous);
     }
     return $user;
   }
 
   /**
-   * Set the user as current
-   * @param array $user
-   * @param bool $updateSession
-   * @param bool $generateAuthCookie
+   * Set the user as currentm
+   * It always perform a search on id to avoid abuse (such as using a crafted/fake user)
+   * @param mixed UUID, User::Anonymous, or user array with id specified
+   * @return array the desired user or an anonymous user, false if error in find
    */
-  static function setActive($user = null, $find=true) {
+  static function setActive($user = null) {
+    // Instantiate the mode are we are in a static/singleton context
     $_this = Common::getModel('User');
-    //@TODO only fetch if $user is incomplete compared to find conditions
-    if($find) {
-      if ($user != User::guest && isset($user['User']['id']) && Common::isUuid($user['User']['id'])) {
-        $user = $_this->find('first',
-          User::getFindOptions('userActivation',$user)
-        );
+    $u = array();
+  
+    // If user is unspecified or anonymous is requested
+    if ($user == null || $user == User::Anonymous) {
+      $u = $_this->find('first', User::getFindOptions(User::Anonymous));
+    } else {
+      // if the user is specified and have a valid ID find it
+      if (is_string($user) && Common::isUuid($user)) { 
+        $user = array('User' => array('id' => $user));
       }
-      if (is_null($user) || empty($user) || $user == User::guest) {
-        $user = $_this->find('first',
-          User::getFindOptions('guestActivation')
-        );
-      }
+      $u = $_this->find('first', User::getFindOptions('userActivation',$user) );
     }
-    // just to make sure no password is around
-    if (isset($user['User']['password'])) {
-      unset($user['User']['password']);
+
+    if (empty($u)) {
+      return false;
     }
+
     // Store current user data in session
     App::import('Model', 'CakeSession'); 
     $Session = new CakeSession(); 
-	  $Session->renew();
-		$Session->write(AuthComponent::$sessionKey, $user);
+    $Session->renew();
+    $Session->write(AuthComponent::$sessionKey, $u);
 
-    return $user;
+    return $u;
   }
 
+  /**
+   * Check if user is admin role - Shortcut Method
+   * @return bool true if role is admin
+   * @access public
+   */ 
   public static function isAdmin() {
+    Common::getModel('Role');
     $user = User::get();
-    if (isset($user['role'])) {
-      return $user['role'] == User::admin;
-    } 
-    return false;
+    return $user['Role']['name'] == Role::Admin;
   }
 
+  /**
+   * Check if user is a guest - Shortcut Method
+   * @return bool true if role is guest
+   * @access public
+   */ 
   public static function isGuest() {
+    Common::getModel('Role');
     $user = User::get();
-    if (isset($user['role'])) {
-      return $user['role'] == User::guest;
-    }
-    return false;
+    return $user['Role']['name'] == Role::Guest;
   }
 
   /**
@@ -185,36 +182,38 @@ class User extends AppModel {
    * @param $data used in find conditions (such as User.id)
    * @return $condition array
    */
-  static function getFindConditions($case='guestActivation',&$data=null) {
-    switch($case) {
+  static function getFindConditions($case = 'guestActivation', &$data = null) {
+    $conditions = array();
+    switch ($case) { /*
       case 'login':
         $conditions = array(
          'conditions' => array(
            'User.password' => $data['User']['password'],
-           'User.username' => $data['User']['username'],
+           'User.username' => $data['User']['username']
          )
        );
       break;
       case 'forgotPassword':
         $conditions = array(
          'conditions' => array(
-           'User.username' => $data['User']['username'],
+           'User.username' => $data['User']['username']
          )
         );
       break;
-      case 'resetPassword':
+      case 'resetPassword': */
       case 'userActivation':
         $conditions = array(
           'conditions' => array(
-            'User.id' => $data['User']['id'],
+            'User.id' => $data['User']['id']
             //'User.active' => 1,
           )
         );
       break;
-      case 'guestActivation': default:
+      case User::Anonymous:
+      default:
         $conditions = array(
           'conditions' => array(
-            'User.username' => 'guest',
+            'User.username' => User::Anonymous
           )
         );
       break;
@@ -231,19 +230,22 @@ class User extends AppModel {
    * @param string $case context ex: login, activation
    * @return $condition array
    */
-  static function getFindFields($case="guestActivation"){
-    switch($case){
+  static function getFindFields($case = 'guestActivation'){
+    switch($case){ /*
       case 'resetPassword':
-      case 'forgotPassword':
-      case 'guestActivation':
+      case 'forgotPassword':*/
+      case User::Anonymous:
         $fields = array(
           'fields' => array(
-            'User.id', 'User.username', 'User.role'
+            'User.id', 'User.username', 'User.role_id'
             //, 'User.active'
+          ),
+          'contain' => array(
+            'Role(id,name)'
           )
         );
       break;
-      case 'login':
+      /* case 'login': */
       case 'userActivation':
         $fields = array(
           'contain' => array(
