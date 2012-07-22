@@ -14,6 +14,10 @@ class CategoriesControllerTest extends ControllerTestCase {
   public function testGet() {
     $id = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb'; // Goa
 
+    // test when no parameters are provided
+    $result = json_decode($this->testAction("/categories/get", array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']);
+    
     // test if the object returned is a success one
     $result = json_decode($this->testAction("/categories/get/$id/1", array('return'=>'contents')), true);
     $this->assertEquals(MessageComponent::success, $result['status']);
@@ -40,6 +44,10 @@ class CategoriesControllerTest extends ControllerTestCase {
 
   public function testGetChildren() {
     $id = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb'; // Goa
+    
+    // test when no parameters are provided
+    $result = json_decode($this->testAction("/categories/getChildren", array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']);
 
     // test if the object returned is a success one
     $result = json_decode($this->testAction("/categories/getChildren/$id", array('return'=>'contents')), true);
@@ -168,6 +176,10 @@ class CategoriesControllerTest extends ControllerTestCase {
     $cat = $category->findByName('Drug places');
     $id = $cat['Category']['id'];
     
+    // without paramters
+    $result = json_decode($this->testAction("/categories/delete", array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']);
+    
     $result = json_decode($this->testAction("/categories/delete/$id", array('return'=>'contents')), true);
     $this->assertEquals(MessageComponent::success, $result['status']);
     
@@ -191,6 +203,9 @@ class CategoriesControllerTest extends ControllerTestCase {
     $id = $cat['Category']['id'];
     $newName = "Booze Places";
     
+    $result = json_decode($this->testAction("/categories/rename", array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']);
+    
     $result = json_decode($this->testAction("/categories/rename/$id/$newName", array('return'=>'contents')), true);
     $this->assertEquals(MessageComponent::success, $result['status']);
     
@@ -208,6 +223,78 @@ class CategoriesControllerTest extends ControllerTestCase {
     $result = json_decode($this->testAction("/categories/get/$id/1", array('return'=>'contents')), true);
     
     pr($result); die();*/
+  }
+  
+  public function testMove(){
+    $categoryModel = new Category();
+    $categoryModel->useDbConfig = 'test';
+    
+    $mapusa = $categoryModel->findByName('Mapusa');
+    $discoplaces = $categoryModel->findByName('Disco places');
+    $drugplaces = $categoryModel->findByName('Drug places');
+    
+    $testCases = array(
+      'firstPosition' => array('id' => $mapusa['Category']['id'], 'position' => '1'),
+      'lastPosition' => array('id' => $mapusa['Category']['id'], 'position' => '4'),
+      'positionMiddle' => array('id' => $mapusa['Category']['id'], 'position' => '3'),
+      'minusPosition' => array('id' => $mapusa['Category']['id'], 'position' => '-1'),
+      'differentParent' => array('id' => $mapusa['Category']['id'], 'position' => '1', 'parent_id' => $drugplaces['Category']['id']),
+      'wrongId'=>array('id'=>'badid', 'position' => '1')
+    );
+    
+    // insert 2 more categories for this specific test
+    $categoryModel->create();
+    $categoryModel->save(array('Category'=>array('name'=>'Panjim', 'parent_id'=>$discoplaces['Category']['id'])));
+    $categoryModel->create();
+    $categoryModel->save(array('Category'=>array('name'=>'Vaga', 'parent_id'=>$discoplaces['Category']['id'])));
+    
+    // test without parameters
+    // test firstPosition
+    $url = "/categories/move";
+    $result = json_decode($this->testAction($url, array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']); // test if response is a success
+    
+    // test firstPosition
+    $url = "/categories/move/{$testCases['firstPosition']['id']}/{$testCases['firstPosition']['position']}";
+    $result = json_decode($this->testAction($url, array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::success, $result['status']); // test if response is a success
+    // test if the category is at the right place at present
+    $afterSave = $categoryModel->findById($mapusa['Category']['id']);
+    $this->assertEquals($afterSave['Category']['lft'], $discoplaces['Category']['lft'] + 1);
+    
+    // test lastPosition
+    $url = "/categories/move/{$testCases['lastPosition']['id']}/{$testCases['lastPosition']['position']}";
+    $result = json_decode($this->testAction($url, array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::success, $result['status']); // test if response is a success
+    // test if the category is at the right place at present
+    $afterSave = $categoryModel->findById($mapusa['Category']['id']);
+    $this->assertEquals($afterSave['Category']['lft'], $discoplaces['Category']['lft'] + 7);
+    
+    // test positionMiddle
+    $url = "/categories/move/{$testCases['positionMiddle']['id']}/{$testCases['positionMiddle']['position']}";
+    $result = json_decode($this->testAction($url, array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::success, $result['status']); // test if response is a success
+    // test if the category is at the right place at present
+    $afterSave = $categoryModel->findById($mapusa['Category']['id']);
+    $this->assertEquals($afterSave['Category']['lft'], $discoplaces['Category']['lft'] + 5);
+    
+    // test minusPosition
+    $url = "/categories/move/{$testCases['minusPosition']['id']}/{$testCases['minusPosition']['position']}";
+    $result = json_decode($this->testAction($url, array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']); // test if response is an error
+
+    // test differentParent
+    $url = "/categories/move/{$testCases['differentParent']['id']}/{$testCases['differentParent']['position']}/{$testCases['differentParent']['parent_id']}";
+    $result = json_decode($this->testAction($url, array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::success, $result['status']); // test if response is a success
+    // test if the category is at the right place at present
+    $afterSave = $categoryModel->findById($mapusa['Category']['id']);
+    $this->assertEquals($afterSave['Category']['lft'], $drugplaces['Category']['lft'] + 1);
+    
+    // test minusPosition
+    $url = "/categories/move/{$testCases['wrongId']['id']}/{$testCases['wrongId']['position']}";
+    $result = json_decode($this->testAction($url, array('return'=>'contents')), true);
+    $this->assertEquals(MessageComponent::error, $result['status']); // test if response is an error    
   }
   
 }
