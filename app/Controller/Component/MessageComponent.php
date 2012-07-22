@@ -9,6 +9,15 @@
  * @package       app.Controller.MessageComponent
  * @since         version 2.12.7
  */
+class Message {
+  const notice = 'notice';
+  const debug = 'debug';
+  const error = 'error';
+  const success = 'success';
+  const fatal = 'fatal';
+  const warning = 'warning';
+  const info = 'info';
+}
 class MessageComponent extends Component {
   var $name = 'Message';
   var $controllerVar = 'flashMessages'; // key used to store messages in controller/view data
@@ -50,10 +59,10 @@ class MessageComponent extends Component {
    */
   function error($message, $options=array()) {
     $default_options = array(
-      'fatal' => false
+      Message::fatal => false
     );
     $options = array_merge($default_options, $options);
-    $type = $options['fatal'] ? 'fatal' : 'error';
+    $type = $options[Message::fatal] ? Message::fatal : Message::error;
     $this->__add($type,$message,$options);
   }
 
@@ -63,19 +72,19 @@ class MessageComponent extends Component {
    * @param mixed $options['redirect'] url, string or array
    */
   function warning($message, $options=array()) {
-    $this->__add('warning', $message, $options);
+    $this->__add(Message::warning, $message, $options);
   }
   function info($message, $options=array()) {
-    $this->__add('info', $message, $options);
+    $this->__add(Message::info, $message, $options);
   }
   function debug($message, $options=array()) {
-    $this->__add('debug', $message, $options);
+    $this->__add(Message::debug, $message, $options);
   }
   function notice($message, $options=array()) {
-    $this->__add('notice', $message, $options);
+    $this->__add(Message::notice, $message, $options);
   }
   function success($message='', $options=array()) {
-    $this->__add('success',$message,$options);
+    $this->__add(Message::success,$message,$options);
   }
 
   /**
@@ -86,22 +95,22 @@ class MessageComponent extends Component {
    * @param bollean die
    * @access private
    */
-  function __add($type='error', $message=null, $options=null) {
+  function __add($type=Message::error, $message=null, $options=null) {
     $die = false;
     $title = '';
     $type = strtolower($type);
     // Cosmetics
     switch ($type) {
-      case 'fatal' :
+      case Message::fatal :
         $title = __('Fatal',true);
         $die = true;
       break;
-      case 'error'  : $title = __('Error',true); break;
-      case 'info'   : case 'hint' :
-      case 'notice' : $title = __('Notice',true); break;
-      case 'warning': $title = __('Warning',true); break;
-      case 'success': $title = __('Success',true); break;
-      case 'debug'  : $title = __('Debug',true); break;
+      case Message::error  : $title = __('Error',true); break;
+      case Message::info   : case 'hint' :
+      case Message::notice : $title = __('Notice',true); break;
+      case Message::warning: $title = __('Warning',true); break;
+      case Message::success: $title = __('Success',true); break;
+      case Message::debug  : $title = __('Debug',true); break;
     }
     if (!isset($options['code'])) {
       $options['code'] = String::uuid($message);
