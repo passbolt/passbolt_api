@@ -201,6 +201,26 @@ class Category extends AppModel {
   }
   
   /**
+   * get the current position of a category among its sieblings, starting from 1
+   * @param uuid $id the id of the category
+   * @return the current position starting from 1, false if category doesnt exist
+   */
+  public function getPosition($id){
+    $category = $this->findById($id);
+    if(!$category)
+      return false;
+    $parent = $this->findById($category['Category']['parent_id']);
+    // calculate the current position
+    $children = $this->children($parent['Category']['id'], true, null, array('Category.lft'=>'ASC'));
+    $currentPosition = 0;
+    foreach($children as $child){
+      $currentPosition++;
+      if($child['Category']['id'] == $id) break;
+    }
+    return $currentPosition;
+  }
+  
+  /**
    * Return the list of field to fetch for given context
    * @param string $case context ex: login, activation
    * @return $condition array
