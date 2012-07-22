@@ -9,6 +9,15 @@
  * @package       app.Controller.MessageComponent
  * @since         version 2.12.7
  */
+class Message {
+  const notice = 'notice';
+  const debug = 'debug';
+  const error = 'error';
+  const success = 'success';
+  const fatal = 'fatal';
+  const warning = 'warning';
+  const info = 'info';
+}
 class MessageComponent extends Component {
   var $name = 'Message';
   var $controllerVar = 'flashMessages'; // key used to store messages in controller/view data
@@ -17,13 +26,6 @@ class MessageComponent extends Component {
   var $Session;                         // session component shortcut
   var $messages;                        // message queue
   var $autoRedirect = false;
-
-  const error = 'error';
-  const notice = 'notice';
-  const success = 'success';
-  const warning = 'warning';
-  const debug = 'debug';
-  const fatal = 'fatal';
 
  /**
   * Initialize
@@ -42,7 +44,7 @@ class MessageComponent extends Component {
       }
       return true;
    } else {
-      throw new exception('Session component not found (MessageComponent::initilize)');
+      throw new exception('Session component not found (Message::initilize)');
     }
   }
 
@@ -57,10 +59,10 @@ class MessageComponent extends Component {
    */
   function error($message, $options=array()) {
     $default_options = array(
-      MessageComponent::fatal => false
+      Message::fatal => false
     );
     $options = array_merge($default_options, $options);
-    $type = $options[MessageComponent::fatal] ? MessageComponent::fatal : MessageComponent::error;
+    $type = $options[Message::fatal] ? Message::fatal : Message::error;
     $this->__add($type,$message,$options);
   }
 
@@ -70,16 +72,19 @@ class MessageComponent extends Component {
    * @param mixed $options['redirect'] url, string or array
    */
   function warning($message, $options=array()) {
-    $this->__add(MessageComponent::warning, $message, $options);
+    $this->__add(Message::warning, $message, $options);
+  }
+  function info($message, $options=array()) {
+    $this->__add(Message::info, $message, $options);
   }
   function debug($message, $options=array()) {
-    $this->__add(MessageComponent::debug, $message, $options);
+    $this->__add(Message::debug, $message, $options);
   }
   function notice($message, $options=array()) {
-    $this->__add(MessageComponent::notice, $message, $options);
+    $this->__add(Message::notice, $message, $options);
   }
   function success($message='', $options=array()) {
-    $this->__add(MessageComponent::success,$message,$options);
+    $this->__add(Message::success,$message,$options);
   }
 
   /**
@@ -90,21 +95,22 @@ class MessageComponent extends Component {
    * @param bollean die
    * @access private
    */
-  function __add($type=MessageComponent::error, $message=null, $options=null) {
+  function __add($type=Message::error, $message=null, $options=null) {
     $die = false;
     $title = '';
     $type = strtolower($type);
     // Cosmetics
     switch ($type) {
-      case MessageComponent::fatal :
+      case Message::fatal :
         $title = __('Fatal',true);
         $die = true;
       break;
-      case MessageComponent::error   : $title = __('Error',true); break;
-      case MessageComponent::notice  : $title = __('Notice',true); break;
-      case MessageComponent::warning : $title = __('Warning',true); break;
-      case MessageComponent::success : $title = __('Success',true); break;
-      case MessageComponent::debug   : $title = __('Debug',true); break;
+      case Message::error  : $title = __('Error',true); break;
+      case Message::info   : case 'hint' :
+      case Message::notice : $title = __('Notice',true); break;
+      case Message::warning: $title = __('Warning',true); break;
+      case Message::success: $title = __('Success',true); break;
+      case Message::debug  : $title = __('Debug',true); break;
     }
     if (!isset($options['code'])) {
       $options['code'] = String::uuid($message);
