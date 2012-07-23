@@ -6,6 +6,6 @@ foreach ($flashMessages as $message) {
   $json = $message;
   break;
 }
-$json['data'] = $data;
+$json['content'] = $data;
 echo json_encode($json);
 ?>
