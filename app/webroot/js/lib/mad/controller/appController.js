@@ -1,5 +1,6 @@
 steal(
-    MAD_ROOT+'/controller/controller.js'
+    MAD_ROOT+'/controller/componentController.js',
+	'app/view/template/app.ejs'
 )
 .then(
     function($){
@@ -17,7 +18,7 @@ steal(
         * Creates the application controller
         * @return {mad.controller.AppController}
         */
-        mad.controller.Controller.extend('mad.controller.AppController', 
+        mad.controller.ComponentController.extend('mad.controller.AppController', 
         /** @static */
         { 
             /**

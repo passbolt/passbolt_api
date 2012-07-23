@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "CallAbstractFunction";
             this.message = (message || "This function is abstract");
         }
-        mad.error.CallAbstractFunction.prototype = Error.prototype;
+        mad.error.CallAbstractFunction.prototype = new Error();
     }
 );

@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "TemplateMissing";
             this.message = (message || "Template missing");
         }
-        mad.error.TemplateMissing.prototype = Error.prototype;
+        mad.error.TemplateMissing.prototype = new Error();
     }
 );

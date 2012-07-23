@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "CallPrivateFunction";
             this.message = (message || "This function is private");
         }
-        mad.error.CallPrivateFunction.prototype = Error.prototype;
+        mad.error.CallPrivateFunction.prototype = new Error();
     }
 );

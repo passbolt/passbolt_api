@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "CallInterfaceConstructor";
             this.message = (message || "This constructor is an interface constructor");
         }
-        mad.error.CallInterfaceConstructor.prototype = Error.prototype;
+        mad.error.CallInterfaceConstructor.prototype = new Error();
     }
 );

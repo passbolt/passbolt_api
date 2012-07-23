@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "NoConstructor";
             this.message = (message || "This class has no constructor");
         }
-        mad.error.NoConstructor.prototype = Error.prototype;
+        mad.error.NoConstructor.prototype = new Error();
     }
 );

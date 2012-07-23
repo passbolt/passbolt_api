@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "CallInterfaceFunction";
             this.message = (message || "This function is an interface function");
         }
-        mad.error.CallInterfaceFunction.prototype = Error.prototype;
+        mad.error.CallInterfaceFunction.prototype = new Error();
     }
 );

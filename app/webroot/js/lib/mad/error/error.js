@@ -15,6 +15,6 @@ steal(
             this.name = "Error";
             this.message = (message || "An error occured");
         }
-        mad.error.Error.prototype = Error.prototype;
+        mad.error.Error.prototype = new Error();
     }
 );

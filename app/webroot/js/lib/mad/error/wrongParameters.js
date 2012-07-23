@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "WrongParameters";
             this.message = (message || "Wrong parameters");
         }
-        mad.error.WrongParameters.prototype = Error.prototype;
+        mad.error.WrongParameters.prototype = new Error();
     }
 );

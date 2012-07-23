@@ -6,6 +6,6 @@ steal('jquery/lang/string')
             this.name = "MissingOption";
             this.message = (message || "The option ("+optionName+") is missing when the class ("+className+") is instantiated");
         }
-        mad.error.MissingOption.prototype = Error.prototype;
+        mad.error.MissingOption.prototype = new Error();
     }
 );
