@@ -60,6 +60,7 @@ class PagesController extends AppController {
  */
 	public function display() {
 		$path = func_get_args();
+		$this->layout = "html5";
 
 		$count = count($path);
 		if (!$count) {
