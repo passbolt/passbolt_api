@@ -1,9 +1,9 @@
 steal( 
     'jquery/view/ejs',
-    MAD_ROOT+'/controller/component/containerController.js'
+    MAD_ROOT+'/controller/component/containerController.js',
+	MAD_ROOT+'/view/template/component/tab.ejs'
 )
 .then(
-//    MAD_ROOT+'/view/template/component/tab.ejs',
     function($){
         
         /*
@@ -23,7 +23,6 @@ steal(
             'init' : function(el, options)
             {
                 this._super();
-                //this.render();
             },
             
             /**

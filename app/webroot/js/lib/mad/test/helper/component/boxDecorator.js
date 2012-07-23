@@ -44,7 +44,7 @@ function()
 		ok(typeof component.render != 'undefined', 'The component has well been decorated');
 		ok(typeof component.getBoxElement != 'undefined', 'The component has well been decorated');
 		
-		component.setTemplate('//'+MAD_ROOT+'/test/view/template/componentController.ejs');
+		component.setTemplateUri('//'+MAD_ROOT+'/test/view/template/componentController.ejs');
 		component.render();
 
 		// the component has well been rendered

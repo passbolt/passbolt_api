@@ -1,5 +1,6 @@
 steal(
-    MAD_ROOT
+    MAD_ROOT,
+	'app/helper/errorHandler.js'
 )
 .then( 
     function($){

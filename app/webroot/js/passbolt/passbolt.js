@@ -13,14 +13,12 @@ APP_URL = 'http://passbolt.local';
 MAD_ROOT = 'lib/mad';
 steal(
     './passbolt.css'                                        // application CSS file
-    
     , MAD_ROOT+'/mad.js'                                    // the mad framework
-    
-    , 'app/bootstrap/appBootstrap.js'                       // passbolt application bootstrap
-    , 'app/controller/appController.js'                     // passbolt main application controller
 )
 .then(
-    'jquery/plugin/jquery-ui-1.8.20.custom.min.js'          // load jquery ui lib
+    'jquery/plugin/jquery-ui-1.8.20.custom.min.js'          // load jquery ui lib    
+    , 'app/bootstrap/appBootstrap.js'                       // passbolt application bootstrap
+    , 'app/controller/appController.js'                     // passbolt main application controller
 )
 .then(function(){
         steal.options.logLevel = 0;
@@ -33,6 +31,8 @@ steal(
                 , 'appNamespaceId' : 'passbolt'                                             // Application namespace
                 , 'appControllerId' : 'passbolt_app_controller'                             // Application controller DOM node id
                 , 'appControllerClass' : passbolt.controller.AppController                  // Application controller class
+				, 'errorHandlerClass': passbolt.helper.ErrorHandler							// Set the Error handler class
+				, 'responseHandlerClass': passbolt.helper.ResponseHandler					// Set the Response handler class
                 , 'eventBusControllerId' : 'passbolt_event_bus_controller'                  // Event bus controller DOM node id
                 , 'dispatchOptions' : {                                                     // Dispatcher options (not used here, but in case of page to page application, the DOM node id of the page controller)
                     'pageControllerId'  : 'passbolt-page-controller'

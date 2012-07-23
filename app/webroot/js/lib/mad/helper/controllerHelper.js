@@ -36,11 +36,14 @@ steal(
              * plugin/activity/view/template/activityWorkspaceController.ejs
              * 
              * @param {jQuery.Controller} clazz Controller to determine the view path
-             * @return {string}
+			 * @param {array} options 
+			 * @param {boolean} options.check @deprecated Check if the path exists
+             * @return {string} Return the view path of the given controller. If the options.check is set to 
+			 * true and the view template does not exist return an empty string
              */
-            'getViewPath': function(clazz)
+            'getViewPath': function(clazz, options)
             {
-                var returnValue = '';
+                var returnValue = '//';
                 
                 var clazzName = clazz.fullName;
                 var split = clazzName.split('.');
@@ -51,18 +54,18 @@ steal(
                 
                 // extract namespace
                 if(split[0]=='mad'){
-                    returnValue = MAD_ROOT;
+                    returnValue += MAD_ROOT;
                     split = split.splice(1);
                 }
                 else if(split[0] == mad.controller.AppController.getGlobal('APP_NS_ID')){
                     //we are in a plugin
                     if(split[1]!='controller'){
-                        returnValue = 'plugin/'+split[1];
+                        returnValue += 'plugin/'+split[1];
                         split = split.splice(2);
                     }
                     //else we are in the application
                     else {
-                        returnValue = 'app';
+                        returnValue += 'app';
                         split = split.splice(1);
                     }
                 }
@@ -81,7 +84,12 @@ steal(
                 // add the view name (et voila batard)
                 returnValue += viewName + '.ejs';
                 
-                return '//'+returnValue;
+//				// check if the view template exists
+//				if(check){
+//					
+//				}
+				
+				return returnValue;
             }
             
         }, 

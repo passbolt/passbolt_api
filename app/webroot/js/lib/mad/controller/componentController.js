@@ -1,12 +1,10 @@
 steal( 
-    'jquery/view/ejs',
     MAD_ROOT+'/controller/controller.js',
-    MAD_ROOT+'/helper/controllerHelper.js',
-	'//'+MAD_ROOT+'/view/template/component/decorator/box.ejs'
+    MAD_ROOT+'/helper/controllerHelper.js'
 )
 .then( 
     function($){
-        
+        		
         /*
          * @class mad.controller.ComponentController
 		 * @inherits mad.controller.Controller
@@ -19,13 +17,16 @@ steal(
          * Creates a new Component Controller
          * @return {mad.controller.ComponentController}
         */
-        mad.controller.Controller.extend('mad.controller.ComponentController', {
+        mad.controller.Controller.extend('mad.controller.ComponentController', 
+		/** @static */
+		{
             'defaults' : {
                 'label': 'ComponentController'				// Label of the component
                 , 'icon': null                              // @notUsedYet
 //                , 'template': null                        // the default template, the last default override other defaults !!! check about that clearly
             }
         }
+		/** @prototype */
         , {    
             
             /**
@@ -44,6 +45,24 @@ steal(
              */
             'renderedView': '',
             
+            /**
+             * The associated template uri. If null, the templateUri will be defined on the Class name
+             * @type {string}
+             * @private
+             * @hide
+             */
+            'templateUri': null,
+			
+			/**
+			 * The reference class to user to find the template. The template class reference is used to
+			 * define the template uri if this one is null.
+			 * the template.
+			 * @type {string}
+			 * @private
+			 * @hide
+			 */
+			'TemplateClassReference': null,
+            
             // Class Constructor
             'init': function(el, options)
             {
@@ -53,9 +72,13 @@ steal(
                 
                 this._super();
 				
-                // set the template variable, this variable will be used by the function render
-                if(typeof this.options.template != 'undefined'){
-					this.setTemplate(this.options.template);
+                // set the component's template if a specific template is given, else the template will be defined based on the Class name
+                if(typeof this.options.templateUri != 'undefined'){
+					this.setTemplateUri(this.options.templateUri);
+				}
+				// set the template class reference
+				if(typeof this.options.templateClassReference != 'undefined'){
+					this.setTemplateClassReference(this.options.templateClassReference);
 				}
 				
                 // add the controller to the data to pass to the view
@@ -70,14 +93,18 @@ steal(
              * use this one. Else build the template uri functions of the component name.
              * @return {String} The component template uri
              */
-            'getTemplate': function()
+            'getTemplate': function(options)
             {
                 var returnValue = '';
                 
-                // template has been defined
-                if(typeof this.template != null){
-                    returnValue = this.template;
-                }
+                // the template uri defined
+                if(this.templateUri != null){
+                    returnValue = this.templateUri;
+				}
+				// the template class reference defined
+				else if(this.templateClassReference){
+					returnValue = mad.helper.controllerHelper.getViewPath(window[this.templateClassReference]);
+				}
                 // define the template functions of the class name
                 else{
                     returnValue = mad.helper.controllerHelper.getViewPath(this.Class);
@@ -87,12 +114,23 @@ steal(
             },
             
 			/**
-             * Set the component's template.
+             * Set the component's template uri
+			 * @param {string} templateUri The template uri
              * @return {void}
              */
-			'setTemplate': function(template)
+			'setTemplateUri': function(templateUri)
 			{
-				this.template = template;
+				this.templateUri = templateUri;
+			},
+            
+			/**
+             * Set the component's template class reference
+			 * @param {string} templateUri The template template class reference
+             * @return {void}
+             */
+			'setTemplateClassReference': function(templateClassReference)
+			{
+				this.templateClassReference = templateClassReference;
 			},
 			
             /** 
@@ -111,13 +149,21 @@ steal(
             
             /**
              * The set method allows developper to set data to the view
-             * @param {string} name the variable's name
-             * @param {mixed} value the variable's value
+             * @param {mixed} name the variable's name or the array of data to add to the view
+             * @param {mixed} value the variable's value or null if the name is an array
              * @return {void}
              */
             'setViewData': function(name, value)
             {
-                this.viewData[name] = value;
+				if(typeof name == 'object'){
+					var viewDataZ = name;
+					for (var i in viewDataZ){
+						this.setViewData(i, viewDataZ[i]);
+					}
+				}
+				else{
+					this.viewData[name] = value;
+				}
             },
             
             /**
@@ -129,18 +175,17 @@ steal(
              * @param {boolean} options.display Display the rendered component. If true
              * the rendered component will be push in the DOM else the rendered component
              * will be stored in the instance's variable renderedView
-             * @param {boolean} Return true if the method does not encountered troubles else
+             * @return {boolean} Return true if the method does not encountered troubles else
              * return false
              */
             'render': function(options)
             {
-                var returnValue = false;
-                var options = typeof options == 'undefined' ? {} : options;
-                // display the rendering if true and return a boolean, else return the rendering code
-                var display = typeof options.display == 'undefined' ? true : options.display;
+                var returnValue = false,
+					options = options || {},
+					display = options.display || true;
                 
 				// render the template
-                var renderingTemplate = $.View(this.getTemplate(), {});
+                var renderingTemplate = $.View(this.getTemplate(), this.viewData);
                 if(display){
                     this.element.html(renderingTemplate);
                     returnValue = true;

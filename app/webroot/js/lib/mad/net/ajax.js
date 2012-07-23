@@ -19,7 +19,7 @@ steal(
                 
         /** @static */
         
-        {},
+        { },
         
         /** @prototype */
         {
@@ -48,10 +48,10 @@ steal(
                     this._addRequest(request);
                     this._executeTransaction();
                 }
-                else{   
+                else{
+					request = mad.net.Request.setupRequest(request);
                     this._executeRequest(request);
                 }
-                
             },
             
             /**
@@ -153,7 +153,7 @@ steal(
                                 var transactionId = srvData.transactionId;
                                 var transaction = self._getTransaction(transactionId);
                                 for(var requestId in transaction.requests){
-                                    var resultRequest = srvData.requests[requestId];                                    
+                                    var resultRequest = new mad.net.Response(srvData.requests[requestId]);
                                     // execute success function of the stored request
                                     if(typeof transaction.requests[requestId].success != 'undefined'){
                                         transaction.requests[requestId].success(srvData.requests[requestId].data);
@@ -178,9 +178,7 @@ steal(
              */
             '_executeRequest': function(request)
             {
-                request.type = typeof request.type == 'undefined' ? 'POST' : request.type ;
-                steal.dev.log('request : '+request.url);
-                return $.ajax(request);
+                $.ajax(request);
             },
             
             /**

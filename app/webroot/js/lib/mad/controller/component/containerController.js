@@ -37,7 +37,13 @@ steal(
                 var $area = this.element.find('.'+area);
                 
                 var $component = $('<div id="'+componentOptions.id+'"/>').appendTo($area);
-                var component = new componentClass($component, componentOptions);
+				// if the component is a singleton
+				// @todo do not forget to check about the instanceof
+				if(typeof componentClass.singleton != 'undefined'){
+					var component = componentClass.singleton($component, componentOptions);
+				}else{
+					var component = new componentClass($component, componentOptions);
+				}
                 
                 // reference the component
 //                this.referenceComponent({

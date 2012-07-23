@@ -79,6 +79,7 @@ steal(
 					returnValue = [];
 					// map the jmvc model objects into the desired format
 					var mappedData = this.map.mapObjects(data);
+					console.log(mappedData);
 					for(var i in mappedData){
 						returnValue.push(this.insertNode(mappedData[i], position, ref));
 					}

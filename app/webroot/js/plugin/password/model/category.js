@@ -13,7 +13,7 @@ steal(
             return mad.net.Ajax.singleton().request({
                 url:        url,
                 type:       'get',
-                dataType:   'json category.model',
+                dataType:   'password.model.Category.models',
                 data:       null,
                 success:    success,
                 error:      error

@@ -41,6 +41,15 @@ steal(
 				{
 					var returnValue = {};
 
+					getObjFieldPointer = function(object, key){
+						var returnValue = object;
+						var split = key.split('.');
+						for(var i in split){
+							returnValue = returnValue[split[i]];
+						}
+						return returnValue;
+					}
+
 					for(var key in this.map){
 						var mapKeyElts = key.split('.'),			// the map keys (targetKey || targetKeyLvl1.targetKeyLvl2)
 							current = returnValue,					// the current position in the final object
@@ -58,15 +67,17 @@ steal(
 								if(typeof this.map[key] == 'object'){
 									var func = this.map[key].func;
 									var keyToMap = this.map[key].key;
+									var objectFieldToMap = getObjFieldPointer(object, keyToMap);
 									// @todo what to do if the key to map does not exist
-									if(typeof object[keyToMap] != 'undefined'){
-										current[mapKeyElt] = func(object[keyToMap], this);
+									if(objectFieldToMap != null){
+										current[mapKeyElt] = func(objectFieldToMap, this);
 									}
 								}
 								else{
+									var objectFieldToMap = getObjFieldPointer(object, this.map[key]);
 									// @todo what to do if the key to map does not exist
-									if(typeof object[this.map[key]] != 'undefined'){
-										current[mapKeyElt] = object[this.map[key]];
+									if(objectFieldToMap != null){
+										current[mapKeyElt] = objectFieldToMap;
 									}
 								}
 

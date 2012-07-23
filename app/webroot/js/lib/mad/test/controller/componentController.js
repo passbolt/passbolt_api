@@ -32,7 +32,7 @@ steal(
 		var componentController = new testEnv.mad.test.controller.ComponentController($componentController);
 		ok(componentController instanceof testEnv.mad.test.controller.ComponentController, 'The instanciated component is an instance of the right type');
 		
-		componentController.setTemplate('//'+MAD_ROOT+'/test/view/template/componentController.ejs');
+		componentController.setTemplateUri('//'+MAD_ROOT+'/test/view/template/componentController.ejs');
 		componentController.render();
 		S('#componentControllerContent').exists(1000, null, 'The component template has well been rendered');
 		S('#componentControllerContent').text('A Simple Component Controller Content', 1000, null, 'The component template has well been rendered, double check');

@@ -20,6 +20,7 @@ steal(
 .then(
     MAD_ROOT+'/bootstrap/appBootstrap.js',
     MAD_ROOT+'/error/error.js',
+    MAD_ROOT+'/error/errorHandler.js',
     MAD_ROOT+'/controller/appController.js',
     MAD_ROOT+'/controller/controller.js',
     MAD_ROOT+'/controller/componentController.js',
@@ -33,6 +34,9 @@ steal(
     MAD_ROOT+'/helper/routeHelper.js',
     MAD_ROOT+'/helper/component/boxDecorator.js',
     MAD_ROOT+'/lang/i18n.js',
+    MAD_ROOT+'/net/request.js',
+    MAD_ROOT+'/net/responseHandler.js',
+    MAD_ROOT+'/net/response.js',
     MAD_ROOT+'/object/map.js',
     MAD_ROOT+'/string/uuid.js',
     MAD_ROOT+'/route/routeListener.js',

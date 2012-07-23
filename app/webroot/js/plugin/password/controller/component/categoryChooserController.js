@@ -26,13 +26,13 @@ steal(
             {
 				options.map = new mad.object.Map({
 					'attr.id':{
-						'key':	'id',
+						'key':	'Category.id',
 						'func':	function(value, map){
 							return value;
 						}
 					},
 //					'type':		'icon',
-					'data':		'name',
+					'data':		'Category.name',
 					'children': {
 						'key':	'children',
 						'func':	mad.object.Map.mapObjects

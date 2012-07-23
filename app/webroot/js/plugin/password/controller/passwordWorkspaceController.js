@@ -12,8 +12,6 @@ steal(
     'plugin/password/model/database.js'
 )
 .then(
-//    MAD_ROOT+'/view/template/component/container/three-column.ejs',
-//    MAD_ROOT+'/view/template/component/container/vertical.ejs',
     function($){
         
         /*
@@ -35,7 +33,9 @@ steal(
             {
                 this.options = $.extend(true, {}, this.options, options);
                 // Use the templateType to define the template
-                this.options.template = '//'+MAD_ROOT+'/view/template/component/container/'+this.options.templateType+'.ejs';
+                this.options.templateUri = '//'+MAD_ROOT+'/view/template/component/container/'+this.options.templateType+'.ejs';
+                // Init the controller
+                this._super();
                 
                 // Render
                 this.render();
@@ -69,7 +69,7 @@ steal(
                 // Add vertical container to the second side area
                 var secondSideContainer = this.addComponent(mad.controller.component.ContainerController, {
                     'id':'passbolt_password_second_side_container'
-                    , 'template' : '//'+MAD_ROOT+'/view/template/component/container/vertical.ejs'
+                    , 'templateUri' : '//'+MAD_ROOT+'/view/template/component/container/vertical.ejs'
                 }, 'mad-container-second_side');
                 secondSideContainer.render();
                 
@@ -82,8 +82,6 @@ steal(
                 secondSideContainer.addComponent(passbolt.password.controller.component.AccessRightController, {
                     'id':'passbolt_password_access_right'
                 });
-                
-                this._super();
             },
             
             'index': function(a, b, c)

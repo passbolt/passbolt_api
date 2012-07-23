@@ -1,17 +1,19 @@
 steal( 
-    'jquery/controller'
-    , MAD_ROOT+'/controller/component/containerController.js'
+    MAD_ROOT+'/controller/component/containerController.js'
 )
 .then(
     function($){
         
-        mad.controller.component.ContainerController.extend('mad.controller.component.WorkspaceController', {
-            'default': {
+        mad.controller.component.ContainerController.extend('mad.controller.component.WorkspaceController', 
+		/** @static */
+		{
+            'defaults': {
                 'label': 'WorkspaceController'
             }
         }
+		/** @prototype */
         ,{
-            'init': function() 
+            'init': function(elt, options) 
             {
                 this._super();
             }

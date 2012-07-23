@@ -60,7 +60,7 @@ steal(
             'destroy': function()
             {
                 // unreference the application to the app
-                this.getApp().unreferenceComponent(this);                
+                this.getApp().unreferenceComponent(this);
                 this._super();
             },
             

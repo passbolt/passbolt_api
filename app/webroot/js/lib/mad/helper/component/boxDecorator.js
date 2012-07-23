@@ -2,7 +2,7 @@ steal(
     'jquery/class',
     'jquery/view/ejs',
     MAD_ROOT+'/controller/controller.js',
-	'//'+MAD_ROOT+'/view/template/component/decorator/box.ejs'
+	MAD_ROOT+'/view/template/component/decorator/box.ejs'
 )
 .then( 
     function($){
