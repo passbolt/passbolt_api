@@ -33,12 +33,13 @@ class CategoriesController extends AppController {
             ),
             'order' => 'lft ASC'
           );
-          $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
+          $body = $this->Category->find('threaded', array_merge($conditions, $fields));
         }
         else {
-          $this->set('data', $this->Category->findById($id, $fields['fields']));
+          $body = $this->Category->findById($id, $fields['fields']);
         }
         $this->Message->success();
+        $this->Message->appendBody($body);
       }
       else {
         $this->Message->error(__('The category doesn\'t exist'));
@@ -65,8 +66,8 @@ class CategoriesController extends AppController {
             ),
             'order' => 'lft ASC'
           );
-        $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
         $this->Message->success();
+        $this->Message->appendBody($this->Category->find('threaded', array_merge($conditions, $fields)));
       }
       else {
         $this->Message->error(__('The category doesn\'t exist'));
@@ -128,8 +129,8 @@ class CategoriesController extends AppController {
     }
     $categoryModel = Common::getModel('Category');
     $fields = $categoryModel::getFindFields('add');
-    $this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
     $this->Message->success(__('The category was sucessfully added'));
+    $this->Message->appendBody($this->Category->findById($category['Category']['id'], $fields['fields']));
 
   }
 
