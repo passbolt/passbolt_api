@@ -117,13 +117,17 @@ class MessageComponent extends Component {
     }
     // message object for the view
     $this->messages[] = array(
-      // UUID is predictable
-      'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type), 
-      'status' => ((empty($code)) ? $type : $type.' '.$code ),
-      'title' => $title,
-      'message' => $message,
-      'controller' => $this->Controller->name,
-      'action' => $this->Controller->action
+      'header' => array(
+        // UUID is predictable
+        'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type), 
+        'status' => ((empty($code)) ? $type : $type.' '.$code ),
+        'title' => $title,
+        'message' => $message,
+        'controller' => $this->Controller->name,
+        'action' => $this->Controller->action
+      ),
+      'body' => array(
+      )
     );
 
     // Get the point or die trying
@@ -142,6 +146,18 @@ class MessageComponent extends Component {
         exit;
       }
     }
+  }
+
+  /**
+   * Append a body to the last message set
+   * @param text/json $body the content to append. Usually in json format
+   * @access public
+   */
+  public function appendBody($body = null){
+      $nbMessages = sizeof($this->messages);
+      if($body == null || $nbMessages == 0)
+        return;
+      $this->messages[sizeof($this->messages) - 1]['body'] = $body;
   }
 
   /**
