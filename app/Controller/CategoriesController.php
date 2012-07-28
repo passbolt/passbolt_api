@@ -168,11 +168,11 @@ class CategoriesController extends AppController {
 			'id'   => $id;
 			'name' => $name;
 		);
-		if (!$this->Category->save($c)) {
+		if ($this->Category->save($c)) {
+			$this->Message->success(__('The category have been renamed'));
+		} else {
 			$this->Message->error(__('The category could not be saved'));
-			return;
 		}
-		$this->Message->success(__('The category have been renamed'));
 	}
 
 /**
