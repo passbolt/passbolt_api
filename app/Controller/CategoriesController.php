@@ -29,6 +29,7 @@ class CategoriesController extends AppController {
 		$category = $this->Category->findById($id);
 		if (empty($category)) {
 			$this->Message->error(__('The category doesn\'t exist'));
+			return;
 		}
 
 		// get the thread of children
