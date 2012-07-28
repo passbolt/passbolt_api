@@ -8,33 +8,18 @@
  * @license			 http://www.passbolt.com/license
  */
 class Category extends AppModel {
+
+/**
+ * Model behave as a tree with left, right, parent_id
+ */
 	public $actsAs = array('Tree');
 
-	/**
-	 * Constructor
-	 * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
-	 */
-	public function __construct($id = false, $table = null, $ds = null) {
-		parent::__construct($id, $table, $ds);
-		$this->setValidationRules();
-	}
-
-	/**
-	 * Set the validation rules upon context
-	 * @param string context
-	 * @return bool true on success
-	 */
-	function setValidationRules($context='default') {
-		$this->validate = Category::getValidationRules($context);
-		return true;
-	}
-
-	/**
-	 * Get the validation rules upon context
-	 * @param string context
-	 * @return array cakephp validation rules
-	 */
-	static function getValidationRules($context='default') {
+/**
+ * Get the validation rules upon context
+ * @param string context
+ * @return array cakephp validation rules
+ */
+	public static function getValidationRules($context='default') {
 		$rules = array(
 			'id' => array(
 				'uuid' => array(
@@ -70,23 +55,20 @@ class Category extends AppModel {
 			)
 		);
 
-		/*
-		 * @todo a context switch if needed
-		 *
+		/* a context switch if needed
 		switch ($context) {
 			default:
 				unset($rules['rule']);
 			break;
-		}
-		*/
+		}*/
 
 		return $rules;
 	}
 
-	/**
-	 * Check if a category with same id exists
-	 * @param check
-	 */
+/**
+ * Check if a category with same id exists
+ * @param check
+ */
 	public function parentExists($check) {
 		if ($check['parent_id'] == null) {
 			return true;
@@ -98,134 +80,142 @@ class Category extends AppModel {
 			return $exists > 0;
 		}
 	}
-	
-	/**
-	 * Converts an array of categories into a proper nested tree
-	 * @param array $categories, the list as it is returned by find() or children()
-	 * @param array $options the options.
-	 *				- array fields , the required fields (will remove unnecessary fields at the output)
-	 *				- bool position, whether or not to add a position field to specify the position of the categories among the sieblings
-	 * @return : Nested objects representing the category :
-	 * category{
-	 *		id : char[36]
-	 * 		name:string
-	 *		parent_id:int
-	 *		position:int
-	 * 		children:categories array
-	 * }
-	 */
-	public function results2Tree($categories, $options=null){
+
+/**
+ * Converts an array of categories into a proper nested tree
+ * @param array $categories, the list as it is returned by find() or children()
+ * @param array $options the options.
+ *				- array fields , the required fields (will remove unnecessary fields at the output)
+ *				- bool position, whether or not to add a position field to specify the position of the categories among the sieblings
+ * @return : Nested objects representing the category :
+ * category{
+ *		id : char[36]
+ * 		name:string
+ *		parent_id:int
+ *		position:int
+ * 		children:categories array
+ * }
+ */
+	public function results2Tree($categories, $options=null) {
 		$stack = array();
 		$clones = $categories;
-		
+
 		// define which keys are extra to remove them later
 		$extraFields = array();
-		if(!empty($options) && isset($options['fields']['fields'])) {
-			foreach($categories[0]['Category'] as $key=>$V){
-				if(!in_array("Category.$key", $options['fields']['fields'])){
+		if (!empty($options) && isset($options['fields']['fields'])) {
+			foreach ($categories[0]['Category'] as $key => $V) {
+				if (!in_array("Category.$key", $options['fields']['fields'])) {
 					$extraFields[] = $key;
 				}
 			}
 		}
-		
+
 		foreach ($categories as $i => $cat) {
 			//$clones[$i] = $clones[$i]['Category']; // remove the 'Category' level
-			//unset($clones[$i]['Category']); 
+			//unset($clones[$i]['Category']);
 			$clones[$i]['Category']['children'] = array(); // add the children row
 			// process here the format of the element so we keep only the required fields
-			foreach($extraFields as $extraF){
+			foreach ($extraFields as $extraF) {
 				unset($clones[$i]['Category'][$extraF]);
 			}
-			
+
 			$categories[$i]['Category']['copyref'] = & $clones[$i];
-			
-			while ($stack && !$this->isChild($cat, $stack[count($stack) - 1])) { // if element is not a child of the stack
-				array_pop($stack); // we remove previous stack from the array
+			$i = count($stack) - 1;
+			while ($stack && !$this->isChild($cat, $stack[$i])) {
+				// if element is not a child of the stack
+				// we remove previous stack from the array
+				array_pop($stack);
+				$i = count($stack) - 1;
 			}
-			
-			if(!$this->isTopLevelElement($cat, $categories)){
+
+			if (!$this->isTopLevelElement($cat, $categories)) {
 				$stack[count($stack) - 1]['Category']['copyref']['Category']['children'][] = &$clones[$i];
 			}
 			$stack[] = $categories[$i];
-		} 
+		}
 
 		if (empty($clones[0])) {
 			return array();
 		}
 		// Put the final result in $res
 		$res = array();
-		// Place only the top level elements, and ignore the 
-		foreach($clones as $k=>$r){
-			if($this->isTopLevelElement($r, $clones)){
-				$res[]=$r;
+		// Place only the top level elements, and ignore the
+		foreach ($clones as $k => $r) {
+			if ($this->isTopLevelElement($r, $clones)) {
+				$res[] = $r;
 			}
 		}
 		return $res;
 	}
-	
-		/**
-	 * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
-	 * Useful when parsing an array of results
-	 * @param $elt, the element to check
-	 * @param $parent, the parent
-	 * @return true if element is a child, false otherwise
-	 */
+
+/**
+ * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
+ * Useful when parsing an array of results
+ * @param $elt, the element to check
+ * @param $parent, the parent
+ * @return true if element is a child, false otherwise
+ */
 	public function isChild($elt, $parent) {
 		return ($elt['Category']['rght'] < $parent['Category']['rght']);
 	}
 
-	/**
-	 * Check if an element is a leaf (no more children)
-	 * @param $category, the category
-	 * @return true if the category is a leaf. false otherwise.
-	 */
-	public function isLeaf($category){
+/**
+ * Check if an element is a leaf (no more children)
+ * @param $category, the category
+ * @return true if the category is a leaf. false otherwise.
+ */
+	public function isLeaf($category) {
 		if ($category['Category']['lft'] + 1 == $category['Category']['rght']) {
 			return true;
 		}
 		return false;
 	}
 
-	/**
-	 * Check if an element is at the top level of the given branch
-	 * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
-	 */
-	public function isTopLevelElement($category, $categories){
-		$parent_id = $category['Category']['parent_id'];
+/**
+ * Check if an element is at the top level of the given branch
+ * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
+ */
+	public function isTopLevelElement($category, $categories) {
+		$parentId = $category['Category']['parent_id'];
 		foreach ($categories as $c) {
-			if ($c['Category']['id'] == $parent_id) {
+			if ($c['Category']['id'] == $parentId) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
-	/**
-	 * get the current position of a category among its sieblings, starting from 1
-	 * @param uuid $id the id of the category
-	 * @return the current position starting from 1, false if category doesnt exist
-	 */
-	public function getPosition($id){
+
+/**
+ * get the current position of a category among its sieblings, starting from 1
+ * @param uuid $id the id of the category
+ * @return the current position starting from 1, false if category doesnt exist
+ */
+	public function getPosition($id) {
+		// check if the category exist
 		$category = $this->findById($id);
-		if(!$category)
+		if (!$category) {
 			return false;
+		}
 		$parent = $this->findById($category['Category']['parent_id']);
 		// calculate the current position
-		$children = $this->children($parent['Category']['id'], true, null, array('Category.lft'=>'ASC'));
+		$children = $this->children(
+			$parent['Category']['id'], true, null,
+			array('Category.lft' => 'ASC')
+		);
 		$currentPosition = 0;
-		foreach($children as $child){
+		foreach ($children as $child) {
 			$currentPosition++;
-			if($child['Category']['id'] == $id) break;
+			if ($child['Category']['id'] == $id) break;
 		}
 		return $currentPosition;
 	}
-	
-	/**
-	 * Return the list of field to fetch for given context
-	 * @param string $case context ex: login, activation
-	 * @return $condition array
-	 */
-	static function getFindFields($case = 'get') {
+
+/**
+ * Return the list of field to fetch for given context
+ * @param string $case context ex: login, activation
+ * @return $condition array
+ */
+	public static function getFindFields($case = 'get') {
 		switch($case){
 			case 'get':
 			case 'getChildren':
@@ -237,7 +227,7 @@ class Category extends AppModel {
 				);
 			break;
 			default:
-				throw new exception('ERROR: Category::GetFindFields case undefined');
+				$fields = array('fields' => array());
 			break;
 		}
 		return $fields;
@@ -251,20 +241,20 @@ class Category extends AppModel {
  * @return $condition array
  * @access public
  */
-	static function getFindConditions($case = 'get', &$data = null) {
+	public static function getFindConditions($case = 'get', &$data = null) {
 		switch ($case) {
 			case 'get':
 				$c = array(
-					'conditions' => array( 
-						'Category.lft >=' => $data['Category']['lft'], 
+					'conditions' => array(
+						'Category.lft >=' => $data['Category']['lft'],
 						'Category.rght <=' => $data['Category']['rght']
 					),
 					'order' => 'lft ASC'
 				);
-		  case 'getChildren':
+			case 'getChildren':
 				$c = array(
 					'conditions' => array(
-						'Category.lft >' => $data['Category']['lft'], 
+						'Category.lft >' => $data['Category']['lft'],
 						'Category.rght <' => $data['Category']['rght']
 					),
 					'order' => 'lft ASC'

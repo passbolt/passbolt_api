@@ -63,7 +63,7 @@ class CategoriesController extends AppController {
 		}
 
 		// find children thread and return
-		$o = Category::getFindOptions('getChildren', $category);
+		$o = $this->Category->getFindOptions('getChildren', $category);
 		$this->set('data', $this->Category->find('threaded', $o));
 		$this->Message->success();
 	}
@@ -121,7 +121,7 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-		$fields = Category::getFindFields('add');
+		$fields = $this->Category->getFindFields('add');
 		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
 		$this->Message->success(__('The category was sucessfully added'));
 	}
@@ -245,5 +245,6 @@ class CategoriesController extends AppController {
  * @return 1 if success, 0 if failure
  */
 	public function setType($id=null, $type=null) {
+		return false;
 	}
 }
