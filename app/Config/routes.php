@@ -25,8 +25,11 @@
  * Will automatically switch view classes when a request is done with the .json extension,
  * or the Accept header is application/json.
  * @see http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
+ * @see http://book.cakephp.org/2.0/en/development/rest.html
  */
- Router::parseExtensions('json');
+	Router::parseExtensions('json');
+	Router::mapResources('dictionaries');
+	Router::mapResources('users');
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
@@ -43,8 +46,8 @@
 /**
  * Dictionary shortcuts
  */
-	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'get'));
-	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'get'));
+	//Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'get'));
+	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
 
 /**
  * Load all plugin routes.	See the CakePlugin documentation on 

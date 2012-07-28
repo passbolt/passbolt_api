@@ -21,18 +21,12 @@ class CategoriesController extends AppController {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
 		} else {
-			$categoryModel = Common::getModel('Category');
-			$fields = $categoryModel::getFindFields('get');
+			$fields = $this->Category->getFindFields('get');
 			$category = $this->Category->findById($id);
 			if ($category) {
 				if ($children == true) {
-					$category = $this->Category->findById($id);
-					$conditions = array('conditions'=>array( 
-						'Category.lft >='=>$category['Category']['lft'] , 
-						'Category.rght <='=>$category['Category']['rght']
-						),
-						'order' => 'lft ASC'
-					);
+					//$category = $this->Category->findById($id);
+					$conditions = $this->Category->getFindConditions('get', $category);
 					$this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
 				}
 				else {
@@ -57,15 +51,8 @@ class CategoriesController extends AppController {
 		} else {
 			$category = $this->Category->findById($id);
 			if ($category) {
-				$categoryModel = Common::getModel('Category');
-				$fields = $categoryModel::getFindFields('getChildren');
-				$conditions = array('conditions'=>array( 
-						'Category.lft >'=>$category['Category']['lft'] , 
-						'Category.rght <'=>$category['Category']['rght']
-						),
-						'order' => 'lft ASC'
-					);
-				$this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
+				$o = Category::getFindOptions('getChildren', $category);
+				$this->set('data', $this->Category->find('threaded', $o));
 				$this->Message->success();
 			}
 			else {
@@ -126,8 +113,7 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-		$categoryModel = Common::getModel('Category');
-		$fields = $categoryModel::getFindFields('add');
+		$fields = Category::getFindFields('add');
 		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
 		$this->Message->success(__('The category was sucessfully added'));
 

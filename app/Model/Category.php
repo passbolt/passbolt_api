@@ -225,7 +225,7 @@ class Category extends AppModel {
 	 * @param string $case context ex: login, activation
 	 * @return $condition array
 	 */
-	static function getFindFields($case="get"){
+	static function getFindFields($case = 'get') {
 		switch($case){
 			case 'get':
 			case 'getChildren':
@@ -241,5 +241,37 @@ class Category extends AppModel {
 			break;
 		}
 		return $fields;
+	}
+
+/**
+ * Return the find conditions to be used for a given context
+ *
+ * @param $context string
+ * @param $data that will be used in find conditions
+ * @return $condition array
+ * @access public
+ */
+	static function getFindConditions($case = 'get', &$data = null) {
+		switch ($case) {
+			case 'get':
+				$c = array(
+					'conditions' => array( 
+						'Category.lft >=' => $data['Category']['lft'], 
+						'Category.rght <=' => $data['Category']['rght']
+					),
+					'order' => 'lft ASC'
+				);
+		  case 'getChildren':
+				$c = array(
+					'conditions' => array(
+						'Category.lft >' => $data['Category']['lft'], 
+						'Category.rght <' => $data['Category']['rght']
+					),
+					'order' => 'lft ASC'
+				);
+			break;
+			default:
+				$c = array('conditions' => array());
+		}
 	}
 }

@@ -95,7 +95,7 @@ class MessageComponent extends Component {
  * @param bollean die
  * @access private
  */
-	function __add($type=Message::error, $message=null, $options=null) {
+	function __add($type = Message::error, $message=null, $options=null) {
 		$die = false;
 		$title = '';
 		$type = strtolower($type);
@@ -105,26 +105,34 @@ class MessageComponent extends Component {
 				$title = __('Fatal',true);
 				$die = true;
 			break;
-			case Message::error	: $title = __('Error',true); break;
-			case Message::info	 : case 'hint' :
-			case Message::notice : $title = __('Notice',true); break;
-			case Message::warning: $title = __('Warning',true); break;
-			case Message::success: $title = __('Success',true); break;
-			case Message::debug	: $title = __('Debug',true); break;
+			case Message::error	  : $title = __('Error',true); break;
+			case Message::info    : 
+			case Message::notice  : $title = __('Notice',true); break;
+			case Message::warning : $title = __('Warning',true); break;
+			case Message::success : $title = __('Success',true); break;
+			case Message::debug	  : $title = __('Debug',true); break;
 		}
 		if (!isset($options['code'])) {
 			$options['code'] = String::uuid($message);
 		}
 		// message object for the view
-		$this->messages[] = array(
-			// UUID is predictable
-			'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type), 
-			'status' => ((empty($code)) ? $type : $type.' '.$code ),
-			'title' => $title,
-			'message' => $message,
-			'controller' => $this->Controller->name,
-			'action' => $this->Controller->action
+		// header
+		$m = array(
+			'header' => array(
+				// UUID is predictable
+				'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type), 
+				'status' => ((empty($code)) ? $type : $type.' '.$code ),
+				'title' => $title,
+				'message' => $message,
+				'controller' => $this->Controller->name,
+				'action' => $this->Controller->action
+			)
 		);
+		// optional body (see also beforeRender)
+		if (isset($options['body'])) {
+			$m['body'] = $options['body'];
+		}
+		$this->messages[] = $m;
 
 		// Get the point or die trying
 		if ($die) {
@@ -137,24 +145,25 @@ class MessageComponent extends Component {
 			if (is_bool($options['redirect'])) {
 				$options['redirect'] = $this->Controller->referer();
 			} elseif (is_string($options['redirect']) || is_array($options['redirect'])) {
-				//TODO use history component if no referrer
 				$this->Controller->redirect($options['redirect']);
 				exit;
 			}
 		}
 	}
 
-
 /**
- * Append a body to the last message set
+ * Set body to the last message set
  * @param text/json $body the content to append. Usually in json format
+ * @return bool true if success
  * @access public
  */
-	public function appendBody($body = null){
-			$nbMessages = sizeof($this->messages);
-			if($body == null || $nbMessages == 0)
-				return;
-			$this->messages[sizeof($this->messages) - 1]['body'] = $body;
+	public function setBody(&$body = null){
+		$nbMessages = sizeof($this->messages);
+		if ($body == null || $nbMessages == 0) {
+			return false;
+		}
+		$this->messages[sizeof($this->messages) - 1]['body'] = &$body;
+		return true;
 	}
 
 /**
@@ -165,7 +174,7 @@ class MessageComponent extends Component {
  * @param bool $exit
  * @return void
  */
-	function beforeRedirect (&$controller, $url, $status=null, $exit=true) {
+	function beforeRedirect(&$controller, $url, $status=null, $exit=true) {
 		// save pending messages in session to display next
 		if (isset($this->messages) && !empty($this->messages)) {
 			$this->Session->write($this->sessionKey, $this->messages);
@@ -177,7 +186,10 @@ class MessageComponent extends Component {
  * @param object $controller
  * @return void
  */
-	function beforeRender (&$controller) {
+	function beforeRender(&$controller) {
+		if (isset($this->Controller->viewVars['data'])) {
+			$this->setBody($this->Controller->viewVars['data']);
+		}
 		$this->Controller->set($this->controllerVar, $this->messages);
 	}
 

@@ -63,6 +63,19 @@ class AppModel extends Model {
 	}
 
 /**
+ * Return the find options (felds and conditions) for a given context
+ * @param string context
+ * @param array data
+ * @return array
+ */
+	static function getFindOptions($case, &$data = null) {
+		return array_merge(
+			static::getFindConditions($case, &$data),
+			static::getFindFields($case)
+		);
+	}
+
+/**
  * Return the list of field to use for a find for given context
  *
  * @param string $case context ex: login, activation

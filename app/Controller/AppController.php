@@ -52,6 +52,16 @@ class AppController extends Controller {
 		}
 	}
 
+/**
+ * Called after the controller action is run, but before the view is rendered. You can use this method
+ * to perform logic or set view variables that are required on every request.
+ *
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
+ */
+	function beforeRender() {
+	}
+
 	/**
 	 * Authorization check main callback
 	 * @link http://api20.cakephp.org/class/auth-component#method-AuthComponentisAuthorized

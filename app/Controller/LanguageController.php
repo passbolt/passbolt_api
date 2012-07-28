@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Languages Controller
  *
@@ -14,17 +14,4 @@
  */
 App::uses('Controller', 'Controller');
 class LanguagesController extends AppController {
-
-	/**
-	 * Change the application language
-	 * @access public
-	 * @return void
-	 */
-	function set($locale) {
-		// @todo move this to test
-		$locale = 'fr-FR';
-		// @todo ? User::get('settings.language') instead of:
-		Configure::write('Config.language', $locale); 
-		$this->Session->write('Config.language', $locale);
-	}
 }
