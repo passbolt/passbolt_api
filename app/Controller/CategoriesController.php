@@ -134,12 +134,12 @@ class CategoriesController extends AppController {
 	public function delete($id=null) {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
+			return;
+		}
+		if ($this->Category->delete($id)) {
+			$this->Message->success(__('The category was succesfully deleted'));
 		} else {
-			if (!$this->Category->delete($id)) {
-				$this->Message->error(__('The category could not be deleted.'));
-			} else {
-				$this->Message->success(__('The category was succesfully deleted'));
-			}
+			$this->Message->error(__('The category could not be deleted.'));
 		}
 	}
 
