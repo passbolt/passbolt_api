@@ -27,7 +27,11 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is missing'));
 			return;
 		}
-
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
 		// check if it exists
 		$category = $this->Category->findById($id);
 		if (empty($category)) {
@@ -59,14 +63,17 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is missing'));
 			return;
 		}
-
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
 		// check if the category exist
 		$category = $this->Category->findById($id);
 		if ($category) {
 			$this->Message->error(__('The category does not exist'));
 			return;
 		}
-
 		// find children thread and return
 		$o = $this->Category->getFindOptions('getChildren', $category);
 		$this->set('data', $this->Category->find('threaded', $o));
@@ -93,7 +100,6 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('Invalid request method, should be POST'));
 			return;
 		}
-
 		// check if data was provided
 		if (!isset($this->request->data)) {
 			$this->Message->error(__('No data were provided'));
@@ -110,7 +116,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// trye to save
+		// try to save
 		$this->Category->create();
 		$category = $this->Category->save($catpost);
 		if ($category === false) {
@@ -137,10 +143,18 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function delete($id=null) {
+		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
 			return;
 		}
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+
+		// delete
 		if ($this->Category->delete($id)) {
 			$this->Message->success(__('The category was succesfully deleted'));
 		} else {
@@ -158,6 +172,11 @@ class CategoriesController extends AppController {
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
+			return;
+		}
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
 			return;
 		}
 
@@ -191,6 +210,12 @@ class CategoriesController extends AppController {
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
+			return;
+		}
+
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
 			return;
 		}
 
