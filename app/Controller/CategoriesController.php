@@ -27,7 +27,7 @@ class CategoriesController extends AppController {
 		// check if it exists
 		$fields = $this->Category->getFindFields('get');
 		$category = $this->Category->findById($id);
-		if(empty($category)) {
+		if (empty($category)) {
 			$this->Message->error(__('The category doesn\'t exist'));
 		}
 
@@ -177,7 +177,7 @@ class CategoriesController extends AppController {
 		// check if it exist
 		$category = $this->Category->findById($id);
 		if (empty($category)) {
-		$this->Message->error(__('The category does not exist'));
+			$this->Message->error(__('The category does not exist'));
 			return;
 		}			
 		
