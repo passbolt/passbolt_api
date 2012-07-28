@@ -121,6 +121,7 @@ class CategoriesController extends AppController {
 		// @todo Security::sanitize
 
 		// try to save
+		// @todo #PASSBOLT-162 split validation from save
 		$this->Category->create();
 		$category = $this->Category->save($catpost);
 		if ($category === false) {
@@ -196,6 +197,7 @@ class CategoriesController extends AppController {
 			'id'   => $id,
 			'name' => $name
 		);
+		// @todo #PASSBOLT-162 split validation from save
 		if ($this->Category->save($c)) {
 			$this->Message->success(__('The category have been renamed'));
 		} else {
