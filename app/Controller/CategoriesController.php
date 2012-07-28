@@ -116,7 +116,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// @todo #PASSBOLT-162
+		// @todo #PASSBOLT-161
 		// filter out given fields that are not supposed to be there
 		// + Security::sanitize paranoid mode
 
