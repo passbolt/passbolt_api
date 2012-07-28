@@ -198,7 +198,7 @@ class CategoriesController extends AppController {
 
 		// check if the position is ok
 		if ($position < 0) {
-			$this->Message->error(__('Wrong position. Must be greater than 0'));
+			$this->Message->error(__('It is not possible to move the category at this position'));
 			return;
 		}
 
