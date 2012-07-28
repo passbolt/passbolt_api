@@ -49,18 +49,24 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function getChildren($id=null) {
+		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
-		} else {
-			$category = $this->Category->findById($id);
-			if ($category) {
-				$o = Category::getFindOptions('getChildren', $category);
-				$this->set('data', $this->Category->find('threaded', $o));
-				$this->Message->success();
-			} else {
-				$this->Message->error(__('The category doesn\'t exist'));
-			}
+			return;
 		}
+
+		// check if the category exist
+		$category = $this->Category->findById($id);
+		if ($category) {
+			$this->Message->error(__('The category doesn\'t exist'));
+			return;
+		}
+
+		// find children thread and return
+		$o = Category::getFindOptions('getChildren', $category);
+		$this->set('data', $this->Category->find('threaded', $o));
+		$this->Message->success();
+
 	}
 
 /**
