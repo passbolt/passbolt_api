@@ -172,7 +172,7 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category could not be saved'));
 			return;
 		}
-		$this->Message->success();
+		$this->Message->success(__('The category have been renamed'));
 	}
 
 /**
@@ -188,6 +188,7 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is not provided'));
 			return;
 		}
+
 		// check if it exist
 		$category = $this->Category->findById($id);
 		if (empty($category)) {
