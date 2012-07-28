@@ -165,8 +165,8 @@ class CategoriesController extends AppController {
 
 		// save the new name only
 		$c['Category'] = array(
-			'id'   => $id;
-			'name' => $name;
+			'id'   => $id,
+			'name' => $name
 		);
 		if ($this->Category->save($c)) {
 			$this->Message->success(__('The category have been renamed'));
