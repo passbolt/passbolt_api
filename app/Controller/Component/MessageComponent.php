@@ -27,11 +27,11 @@ class MessageComponent extends Component {
 	var $messages;												// message queue
 	var $autoRedirect = false;
 
- /**
-	* Initialize
-	* @param object $controller Controller using this component
-	* @return boolean Proceed with component usage (true), or fail (false)
-	*/
+/**
+ * Initialize
+ * @param object $controller Controller using this component
+ * @return boolean Proceed with component usage (true), or fail (false)
+ */
 	function initialize(&$controller, $settings=array()) {
 		$this->Controller = &$controller;
 		if (isset($this->Controller->Session)) {
@@ -48,15 +48,15 @@ class MessageComponent extends Component {
 		}
 	}
 
-	/**
-	 * Add an error message in the message queue
-	 * @param string $code error code
-	 * @param string $message
-	 * @param mixed $options['redirect'] url, string or array
-	 * @param boolean $fatal
-	 * @return void
-	 * @access public
-	 */
+/**
+ * Add an error message in the message queue
+ * @param string $code error code
+ * @param string $message
+ * @param mixed $options['redirect'] url, string or array
+ * @param boolean $fatal
+ * @return void
+ * @access public
+ */
 	function error($message, $options=array()) {
 		$default_options = array(
 			Message::fatal => false
@@ -66,11 +66,11 @@ class MessageComponent extends Component {
 		$this->__add($type,$message,$options);
 	}
 
-	/**
-	 * Add a notice message to the queue
-	 * @param string $message
-	 * @param mixed $options['redirect'] url, string or array
-	 */
+/**
+ * Add a notice message to the queue
+ * @param string $message
+ * @param mixed $options['redirect'] url, string or array
+ */
 	function warning($message, $options=array()) {
 		$this->__add(Message::warning, $message, $options);
 	}
@@ -87,14 +87,14 @@ class MessageComponent extends Component {
 		$this->__add(Message::success,$message,$options);
 	}
 
-	/**
-	 * Add a message to the queue
-	 * @param mixed $message
-	 * @param string $type {error, notice, etc.}
-	 * @param mixed $options['redirect'] array, or string, or bollean
-	 * @param bollean die
-	 * @access private
-	 */
+/**
+ * Add a message to the queue
+ * @param mixed $message
+ * @param string $type {error, notice, etc.}
+ * @param mixed $options['redirect'] array, or string, or bollean
+ * @param bollean die
+ * @access private
+ */
 	function __add($type=Message::error, $message=null, $options=null) {
 		$die = false;
 		$title = '';
@@ -145,11 +145,11 @@ class MessageComponent extends Component {
 	}
 
 
-	/**
-	 * Append a body to the last message set
-	 * @param text/json $body the content to append. Usually in json format
-	 * @access public
-	 */
+/**
+ * Append a body to the last message set
+ * @param text/json $body the content to append. Usually in json format
+ * @access public
+ */
 	public function appendBody($body = null){
 			$nbMessages = sizeof($this->messages);
 			if($body == null || $nbMessages == 0)
@@ -157,14 +157,14 @@ class MessageComponent extends Component {
 			$this->messages[sizeof($this->messages) - 1]['body'] = $body;
 	}
 
-	/**
-	 * Before redirect callback
-	 * @param object $controller
-	 * @param mixed $url
-	 * @param string $status
-	 * @param bool $exit
-	 * @return void
-	 */
+/**
+ * Before redirect callback
+ * @param object $controller
+ * @param mixed $url
+ * @param string $status
+ * @param bool $exit
+ * @return void
+ */
 	function beforeRedirect (&$controller, $url, $status=null, $exit=true) {
 		// save pending messages in session to display next
 		if (isset($this->messages) && !empty($this->messages)) {
@@ -172,11 +172,11 @@ class MessageComponent extends Component {
 		}
 	}
 
-	/**
-	 * Before render callback
-	 * @param object $controller
-	 * @return void
-	 */
+/**
+ * Before render callback
+ * @param object $controller
+ * @return void
+ */
 	function beforeRender (&$controller) {
 		$this->Controller->set($this->controllerVar, $this->messages);
 	}
