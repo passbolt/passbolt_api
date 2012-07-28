@@ -10,7 +10,7 @@
  */
 class CategoriesController extends AppController {
 
-/**	
+/**
  * get a category
  * Renders a json object with the nested categories
  * @param uuid $id the id of the category
@@ -27,7 +27,8 @@ class CategoriesController extends AppController {
 				if ($children == true) {
 					//$category = $this->Category->findById($id);
 					$conditions = $this->Category->getFindConditions('get', $category);
-					$this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
+					$data = $this->Category->find('threaded', array_merge($conditions, $fields));
+					$this->set('data', $data);
 				}
 				else {
 					$this->set('data', $this->Category->findById($id, $fields['fields']));
@@ -61,7 +62,7 @@ class CategoriesController extends AppController {
 		}
 	}
 
-/**	
+/**
  * Add a category inside the tree, and return a success object with the added category
  * @param $parent_id, the parent id of the category
  * @param $name, the name of the category
@@ -136,7 +137,7 @@ class CategoriesController extends AppController {
 		}
 	}
 
-/**	
+/**
  * Rename a category
  * @param $id, the id of the category
  * @param $name, the name of the category
@@ -160,7 +161,7 @@ class CategoriesController extends AppController {
 		}
 	}
 
-/**	
+/**
  * Move a category in the tree
  * @param $id, the id of the category to move
  * @param $position, the position among the sieblings
@@ -222,7 +223,7 @@ class CategoriesController extends AppController {
 		}
 	}
 	
-/**	
+/**
  * Set the type of a category
  * @param $id, the id of the category
  * @param $type, the type
