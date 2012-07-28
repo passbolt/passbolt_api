@@ -116,9 +116,9 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// sanitize
-    // @todo remove fields that are not supposed to be there
-		// @todo Security::sanitize
+		// @todo #PASSBOLT-162
+		// filter out given fields that are not supposed to be there
+		// + Security::sanitize paranoid mode
 
 		// try to save
 		// @todo #PASSBOLT-162 split validation from save
