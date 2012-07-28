@@ -11,11 +11,15 @@
 class CategoriesController extends AppController {
 
 /**
- * get a category
+ * Get a category
  * Renders a json object with the nested categories
+ *
  * @param uuid $id the id of the category
  * @param bool $children whether or not we want the children returned
  * @return void
+ *
+ * @todo should be renamed to 'view' otherwise we need Rest mapping in routes
+ * see http://book.cakephp.org/2.0/en/development/rest.html
  */
 	public function get($id=null, $children=false) {
 		// check if the category id is provided
@@ -47,6 +51,7 @@ class CategoriesController extends AppController {
  * get the children for a corresponding category
  * @param $id, the id of the parent category
  * @return void
+ * @todo Rest mapping in routes
  */
 	public function getChildren($id=null) {
 		// check if the id is provided
