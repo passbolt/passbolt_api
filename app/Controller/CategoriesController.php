@@ -66,7 +66,6 @@ class CategoriesController extends AppController {
 		$o = Category::getFindOptions('getChildren', $category);
 		$this->set('data', $this->Category->find('threaded', $o));
 		$this->Message->success();
-
 	}
 
 /**
@@ -151,21 +150,29 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function rename($id=null, $name="") {
+		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
-		} else {
-			$category = $this->Category->findById($id);
-			if ($category) {
-				$category['Category']['name'] = $name;
-				if ($this->Category->save($category)) {
-					$this->Message->success();
-				} else {
-					$this->Message->error(__('The category could not be saved'));
-				}
-			} else {
-				$this->Message->error(__('The category could not be found'));
-			}
+			return;
 		}
+
+		// check if the category exist
+		$category = $this->Category->findById($id);
+		if (empty($category)) {
+			$this->Message->error(__('The category could not be found'));
+			return;
+		}
+
+		// save the new name only
+		$c['Category'] = array(
+			'id'   => $id;
+			'name' => $name;
+		);
+		if (!$this->Category->save($c)) {
+			$this->Message->error(__('The category could not be saved'));
+			return;
+		}
+		$this->Message->success();
 	}
 
 /**
@@ -186,8 +193,8 @@ class CategoriesController extends AppController {
 		if (empty($category)) {
 			$this->Message->error(__('The category does not exist'));
 			return;
-		}			
-		
+		}
+
 		// check if the position is ok
 		if ($position < 0) {
 			$this->Message->error(__('Wrong position. Must be greater than 0'));
