@@ -116,6 +116,10 @@ class CategoriesController extends AppController {
 			return;
 		}
 
+		// sanitize
+    // @todo remove fields that are not supposed to be there
+		// @todo Security::sanitize
+
 		// try to save
 		$this->Category->create();
 		$category = $this->Category->save($catpost);
