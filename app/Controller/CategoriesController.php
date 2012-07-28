@@ -25,20 +25,20 @@ class CategoriesController extends AppController {
 		}
 
 		// check if it exists
-		$fields = $this->Category->getFindFields('get');
 		$category = $this->Category->findById($id);
 		if (empty($category)) {
-			$this->Message->error(__('The category doesn\'t exist'));
+			$this->Message->error(__('The category does not exist'));
 			return;
 		}
 
 		// get the thread of children
 		if ($children == true) {
-			$conditions = $this->Category->getFindConditions('get', $category);
-			$data = $this->Category->find('threaded', array_merge($conditions, $fields));
+			$o = $this->Category->getFindOptions('getWithChildren', $category);
+			$data = $this->Category->find('threaded', $o);
 			$this->set('data', $data);
 		} else {
-			$this->set('data', $this->Category->findById($id, $fields['fields']));
+			$o = $this->Category->getFindOptions('get');
+			$this->set('data', $this->Category->find('first', $o));
 		}
 		$this->Message->success();
 	}
@@ -58,7 +58,7 @@ class CategoriesController extends AppController {
 		// check if the category exist
 		$category = $this->Category->findById($id);
 		if ($category) {
-			$this->Message->error(__('The category doesn\'t exist'));
+			$this->Message->error(__('The category does not exist'));
 			return;
 		}
 

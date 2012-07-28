@@ -243,7 +243,7 @@ class Category extends AppModel {
  */
 	public static function getFindConditions($case = 'get', &$data = null) {
 		switch ($case) {
-			case 'get':
+			case 'getWithChildren':
 				$c = array(
 					'conditions' => array(
 						'Category.lft >=' => $data['Category']['lft'],
@@ -260,6 +260,7 @@ class Category extends AppModel {
 					'order' => 'lft ASC'
 				);
 			break;
+			case 'get':
 			default:
 				$c = array('conditions' => array());
 		}
