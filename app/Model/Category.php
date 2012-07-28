@@ -273,5 +273,6 @@ class Category extends AppModel {
 			default:
 				$c = array('conditions' => array());
 		}
+		return $c;
 	}
 }
