@@ -3,10 +3,10 @@
  * Categories controller
  * This file will define how categories are managed
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.Controller.CategoriesController
- * @since				 version 2.12.7
+ * @copyright    Copyright 2012, Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Controller.CategoriesController
+ * @since        version 2.12.7
  */
 class CategoriesController extends AppController {
 
@@ -29,13 +29,11 @@ class CategoriesController extends AppController {
 					$conditions = $this->Category->getFindConditions('get', $category);
 					$data = $this->Category->find('threaded', array_merge($conditions, $fields));
 					$this->set('data', $data);
-				}
-				else {
+				} else {
 					$this->set('data', $this->Category->findById($id, $fields['fields']));
 				}
 				$this->Message->success();
-			}
-			else {
+			} else {
 				$this->Message->error(__('The category doesn\'t exist'));
 			}
 		}
@@ -55,27 +53,27 @@ class CategoriesController extends AppController {
 				$o = Category::getFindOptions('getChildren', $category);
 				$this->set('data', $this->Category->find('threaded', $o));
 				$this->Message->success();
-			}
-			else {
+			} else {
 				$this->Message->error(__('The category doesn\'t exist'));
-			} 
+			}
 		}
 	}
 
 /**
  * Add a category inside the tree, and return a success object with the added category
- * @param $parent_id, the parent id of the category
- * @param $name, the name of the category
- * @param $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
- * if position is not available (example : position 2 when there are no children, the category will be inserted in last)
- * if position is 0, it will not be handled. Count starts from 1.
- * @param $type (optional), the type of the category (default is set is missing)
+ * 
+ * Post Variables
+ *   $parentId, the parent id of the category
+ *   $name, the name of the category
+ *   $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
+ *     if position is not available (example : position 2 when there are no children, 
+ *			the category will be inserted in last)
+ *     if position is 0, it will not be handled. Count starts from 1.
+ *   $type (optional), the type of the category (default is set is missing)
+ *
  * @return void
  */
 	public function add() {
-		// @todo should be moved to test/fixtures
-		// $cat = array("name"=>'testchildrengoa', "parent_id"=>'4ff6111b-efb8-4a26-aab4-2184cbdd56cb', "position"=>'1', "type"=>'default');
-		
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
@@ -117,7 +115,6 @@ class CategoriesController extends AppController {
 		$fields = Category::getFindFields('add');
 		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
 		$this->Message->success(__('The category was sucessfully added'));
-
 	}
 
 /**	
@@ -165,19 +162,19 @@ class CategoriesController extends AppController {
  * Move a category in the tree
  * @param $id, the id of the category to move
  * @param $position, the position among the sieblings
- * @param $parent_id, the new parent
+ * @param $parentId, the new parent
  * @return void
  */
-	public function move($id=null, $position=null, $parent_id=null) {
+	public function move($id=null, $position=null, $parentId=null) {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
 		} else {
 			$category = $this->Category->findById($id);
 			if ($category) {
 				// First, manage the parent
-				$parent_id = ($parent_id == null ? $category['Category']['parent_id'] : $parent_id);
-				if ($category['Category']['parent_id'] != $parent_id) {
-					$category['Category']['parent_id'] = $parent_id;
+				$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
+				if ($category['Category']['parent_id'] != $parentId) {
+					$category['Category']['parent_id'] = $parentId;
 					$category = $this->Category->save($category);
 					if (!$category) {
 						$this->Message->error(__('The category could not be moved'));
@@ -186,43 +183,39 @@ class CategoriesController extends AppController {
 				}
 				// then, manage the position
 				if ($position >= 0) {
-					$nbChildren = $this->Category->childCount($parent_id, true);
+					$nbChildren = $this->Category->childCount($parentId, true);
 					// if the position is first one or last one
-					if($position == 1) {
+					if ($position == 1) {
 						$result = $this->Category->moveUp($id, true);
-					}
-					elseif($position >= $nbChildren) {
+					} elseif ($position >= $nbChildren) {
 						$result = $this->Category->moveDown($id, true);
-					}
-					else {
+					} else {
 						$currentPosition = $this->Category->getPosition($id);
 						$steps = $currentPosition - $position;
 						echo "position = $currentPosition, steps = $steps";
-						if($steps > 0) {
+						if ($steps > 0) {
 							$result = $this->Category->moveUp($id, $steps);
-						}
-						else {
+						} else {
 							$result = $this->Category->moveDown($id, -($steps));
 						}
 					}
-					if($result)
+					if ($result) {
 						$this->Message->success(__('The category was sucessfully moved'));
-					else
+					} else {
 						$this->Message->error(__('The category could not be moved'));
+					}
 					return;
-				}
-				else{
+				} else {
 					$this->Message->error(__('Wrong position. Must be greated than 0'));
 					return;
 				}
-			}
-			else{
+			} else {
 				$this->Message->error(__('The category doesnt exist'));
 				return;
 			}
 		}
 	}
-	
+
 /**
  * Set the type of a category
  * @param $id, the id of the category
@@ -230,6 +223,5 @@ class CategoriesController extends AppController {
  * @return 1 if success, 0 if failure
  */
 	public function setType($id=null, $type=null) {
-		
 	}
 }
