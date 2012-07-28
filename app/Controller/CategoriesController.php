@@ -10,13 +10,13 @@
  */
 class CategoriesController extends AppController {
 
-	/**
-	 * get a category
-	 * Renders a json object with the nested categories
-	 * @param uuid $id the id of the category
-	 * @param bool $children whether or not we want the children returned
-	 * @return void
-	 */
+/**	
+ * get a category
+ * Renders a json object with the nested categories
+ * @param uuid $id the id of the category
+ * @param bool $children whether or not we want the children returned
+ * @return void
+ */
 	public function get($id=null, $children=false) {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -46,11 +46,11 @@ class CategoriesController extends AppController {
 		}
 	}
 
-	/**
-	 * get the children for a corresponding category
-	 * @param $id, the id of the parent category
-	 * @return void
-	 */
+/**	
+ * get the children for a corresponding category
+ * @param $id, the id of the parent category
+ * @return void
+ */
 	public function getChildren($id=null) {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -74,16 +74,16 @@ class CategoriesController extends AppController {
 		}
 	}
 
-	/**
-	 * Add a category inside the tree, and return a success object with the added category
-	 * @param $parent_id, the parent id of the category
-	 * @param $name, the name of the category
-	 * @param $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
-	 * if position is not available (example : position 2 when there are no children, the category will be inserted in last)
-	 * if position is 0, it will not be handled. Count starts from 1.
-	 * @param $type (optional), the type of the category (default is set is missing)
-	 * @return void
-	 */
+/**	
+ * Add a category inside the tree, and return a success object with the added category
+ * @param $parent_id, the parent id of the category
+ * @param $name, the name of the category
+ * @param $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
+ * if position is not available (example : position 2 when there are no children, the category will be inserted in last)
+ * if position is 0, it will not be handled. Count starts from 1.
+ * @param $type (optional), the type of the category (default is set is missing)
+ * @return void
+ */
 	public function add() {
 		// @todo should be moved to test/fixtures
 		// $cat = array("name"=>'testchildrengoa', "parent_id"=>'4ff6111b-efb8-4a26-aab4-2184cbdd56cb', "position"=>'1', "type"=>'default');
@@ -133,11 +133,11 @@ class CategoriesController extends AppController {
 
 	}
 
-	/**
-	 * Delete a category in the tree
-	 * @param $id, the Category id
-	 * @return void
-	 */
+/**	
+ * Delete a category in the tree
+ * @param $id, the Category id
+ * @return void
+ */
 	public function delete($id=null) {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -150,12 +150,12 @@ class CategoriesController extends AppController {
 		}
 	}
 
-	/**
-	 * Rename a category
-	 * @param $id, the id of the category
-	 * @param $name, the name of the category
-	 * @return void
-	 */
+/**	
+ * Rename a category
+ * @param $id, the id of the category
+ * @param $name, the name of the category
+ * @return void
+ */
 	public function rename($id=null, $name="") {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
@@ -174,13 +174,13 @@ class CategoriesController extends AppController {
 		}
 	}
 
-	/**
-	 * Move a category in the tree
-	 * @param $id, the id of the category to move
-	 * @param $position, the position among the sieblings
-	 * @param $parent_id, the new parent
-	 * @return void
-	 */
+/**	
+ * Move a category in the tree
+ * @param $id, the id of the category to move
+ * @param $position, the position among the sieblings
+ * @param $parent_id, the new parent
+ * @return void
+ */
 	public function move($id=null, $position=null, $parent_id=null) {
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
@@ -236,12 +236,12 @@ class CategoriesController extends AppController {
 		}
 	}
 	
-	/**
-	 * Set the type of a category
-	 * @param $id, the id of the category
-	 * @param $type, the type
-	 * @return 1 if success, 0 if failure
-	 */
+/**	
+ * Set the type of a category
+ * @param $id, the id of the category
+ * @param $type, the type
+ * @return 1 if success, 0 if failure
+ */
 	public function setType($id=null, $type=null) {
 		
 	}

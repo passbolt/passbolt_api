@@ -87,6 +87,7 @@ class MessageComponent extends Component {
 		$this->__add(Message::success,$message,$options);
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Add a message to the queue
 	 * @param mixed $message
@@ -125,6 +126,50 @@ class MessageComponent extends Component {
 			'controller' => $this->Controller->name,
 			'action' => $this->Controller->action
 		);
+=======
+  /**
+   * Add a message to the queue
+   * @param mixed $message
+   * @param string $type {error, notice, etc.}
+   * @param mixed $options['redirect'] array, or string, or bollean
+   * @param bollean die
+   * @access private
+   */
+  function __add($type=Message::error, $message=null, $options=null) {
+    $die = false;
+    $title = '';
+    $type = strtolower($type);
+    // Cosmetics
+    switch ($type) {
+      case Message::fatal :
+        $title = __('Fatal',true);
+        $die = true;
+      break;
+      case Message::error  : $title = __('Error',true); break;
+      case Message::info   : case 'hint' :
+      case Message::notice : $title = __('Notice',true); break;
+      case Message::warning: $title = __('Warning',true); break;
+      case Message::success: $title = __('Success',true); break;
+      case Message::debug  : $title = __('Debug',true); break;
+    }
+    if (!isset($options['code'])) {
+      $options['code'] = String::uuid($message);
+    }
+    // message object for the view
+    $this->messages[] = array(
+      'header' => array(
+        // UUID is predictable
+        'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type), 
+        'status' => ((empty($code)) ? $type : $type.' '.$code ),
+        'title' => $title,
+        'message' => $message,
+        'controller' => $this->Controller->name,
+        'action' => $this->Controller->action
+      ),
+      'body' => array(
+      )
+    );
+>>>>>>> f35ec48e3a2a131be6af388e5e08dffd9e6c8a7c
 
 		// Get the point or die trying
 		if ($die) {
@@ -144,6 +189,7 @@ class MessageComponent extends Component {
 		}
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Before redirect callback
 	 * @param object $controller
@@ -158,6 +204,34 @@ class MessageComponent extends Component {
 			$this->Session->write($this->sessionKey, $this->messages);
 		}
 	}
+=======
+  /**
+   * Append a body to the last message set
+   * @param text/json $body the content to append. Usually in json format
+   * @access public
+   */
+  public function appendBody($body = null){
+      $nbMessages = sizeof($this->messages);
+      if($body == null || $nbMessages == 0)
+        return;
+      $this->messages[sizeof($this->messages) - 1]['body'] = $body;
+  }
+
+  /**
+   * Before redirect callback
+   * @param object $controller
+   * @param mixed $url
+   * @param string $status
+   * @param bool $exit
+   * @return void
+   */
+  function beforeRedirect (&$controller, $url, $status=null, $exit=true) {
+    // save pending messages in session to display next
+    if (isset($this->messages) && !empty($this->messages)) {
+      $this->Session->write($this->sessionKey, $this->messages);
+    }
+  }
+>>>>>>> f35ec48e3a2a131be6af388e5e08dffd9e6c8a7c
 
 	/**
 	 * Before render callback
