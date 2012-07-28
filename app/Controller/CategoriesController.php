@@ -18,25 +18,28 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function get($id=null, $children=false) {
+		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
-		} else {
-			$fields = $this->Category->getFindFields('get');
-			$category = $this->Category->findById($id);
-			if ($category) {
-				if ($children == true) {
-					//$category = $this->Category->findById($id);
-					$conditions = $this->Category->getFindConditions('get', $category);
-					$data = $this->Category->find('threaded', array_merge($conditions, $fields));
-					$this->set('data', $data);
-				} else {
-					$this->set('data', $this->Category->findById($id, $fields['fields']));
-				}
-				$this->Message->success();
-			} else {
-				$this->Message->error(__('The category doesn\'t exist'));
-			}
+			return;
 		}
+
+		// check if it exists
+		$fields = $this->Category->getFindFields('get');
+		$category = $this->Category->findById($id);
+		if(empty($category)) {
+			$this->Message->error(__('The category doesn\'t exist'));
+		}
+
+		// get the thread of children
+		if ($children == true) {
+			$conditions = $this->Category->getFindConditions('get', $category);
+			$data = $this->Category->find('threaded', array_merge($conditions, $fields));
+			$this->set('data', $data);
+		} else {
+			$this->set('data', $this->Category->findById($id, $fields['fields']));
+		}
+		$this->Message->success();
 	}
 
 /**	
@@ -166,53 +169,57 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function move($id=null, $position=null, $parentId=null) {
+		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
-		} else {
-			$category = $this->Category->findById($id);
-			if ($category) {
-				// First, manage the parent
-				$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
-				if ($category['Category']['parent_id'] != $parentId) {
-					$category['Category']['parent_id'] = $parentId;
-					$category = $this->Category->save($category);
-					if (!$category) {
-						$this->Message->error(__('The category could not be moved'));
-						return;
-					}
-				}
-				// then, manage the position
-				if ($position >= 0) {
-					$nbChildren = $this->Category->childCount($parentId, true);
-					// if the position is first one or last one
-					if ($position == 1) {
-						$result = $this->Category->moveUp($id, true);
-					} elseif ($position >= $nbChildren) {
-						$result = $this->Category->moveDown($id, true);
-					} else {
-						$currentPosition = $this->Category->getPosition($id);
-						$steps = $currentPosition - $position;
-						echo "position = $currentPosition, steps = $steps";
-						if ($steps > 0) {
-							$result = $this->Category->moveUp($id, $steps);
-						} else {
-							$result = $this->Category->moveDown($id, -($steps));
-						}
-					}
-					if ($result) {
-						$this->Message->success(__('The category was sucessfully moved'));
-					} else {
-						$this->Message->error(__('The category could not be moved'));
-					}
-					return;
-				} else {
-					$this->Message->error(__('Wrong position. Must be greated than 0'));
-					return;
-				}
-			} else {
-				$this->Message->error(__('The category doesnt exist'));
+			return;
+		}
+		// check if it exist
+		$category = $this->Category->findById($id);
+		if (empty($category)) {
+		$this->Message->error(__('The category does not exist'));
+			return;
+		}			
+		
+		// check if the position is ok
+		if ($position < 0) {
+			$this->Message->error(__('Wrong position. Must be greater than 0'));
+			return;
+		}
+
+		// @todo remy: can some of this be moved to the model intead?
+		// First, manage the parent
+		$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
+		if ($category['Category']['parent_id'] != $parentId) {
+			$category['Category']['parent_id'] = $parentId;
+			$category = $this->Category->save($category);
+			if (!$category) {
+				$this->Message->error(__('The category could not be moved'));
 				return;
 			}
+		}
+		// then, manage the position
+		$nbChildren = $this->Category->childCount($parentId, true);
+		// if the position is first one or last one
+		if ($position == 1) {
+			$result = $this->Category->moveUp($id, true);
+		} elseif ($position >= $nbChildren) {
+			$result = $this->Category->moveDown($id, true);
+		} else {
+			$currentPosition = $this->Category->getPosition($id);
+			$steps = $currentPosition - $position;
+			echo "position = $currentPosition, steps = $steps";
+			if ($steps > 0) {
+				$result = $this->Category->moveUp($id, $steps);
+			} else {
+				$result = $this->Category->moveDown($id, -($steps));
+			}
+		}
+		// deliver some results
+		if ($result) {
+			$this->Message->success(__('The category was sucessfully moved'));
+		} else {
+			$this->Message->error(__('The category could not be moved'));
 		}
 	}
 
