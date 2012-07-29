@@ -8,6 +8,9 @@
  * @package      app.Controller.CategoriesController
  * @since        version 2.12.7
  */
+ 
+App::uses('CategoryType', 'Model');
+
 class CategoriesController extends AppController {
 
 /**
@@ -227,7 +230,7 @@ class CategoriesController extends AppController {
 
 		// check if it exist
 		$category = $this->Category->findById($id);
-		if (empty($category)) {
+		if (!$category) {
 			$this->Message->error(__('The category does not exist'));
 			return;
 		}
@@ -276,11 +279,42 @@ class CategoriesController extends AppController {
 
 /**
  * Set the type of a category
- * @param $id, the id of the category
- * @param $type, the type
+ * @param uuid $id the id of the category
+ * @param varchar $typeName, the name of the type
  * @return 1 if success, 0 if failure
  */
-	public function setType($id=null, $type=null) {
-		return false;
+	public function setType($id=null, $typeName=null) {
+		// check if the category is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is not provided'));
+			return;
+		}
+
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+		
+		$categoryType = new CategoryType();
+		$type = $categoryType->findByName($typeName);
+		if (!$type) {
+			$this->Message->error(__('The type does not exist'));
+			return;
+		}
+		
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'));
+			return;
+		}
+		
+		$category['Category']['category_type_id'] = $type['CategoryType']['id'];
+		$category = $this->Category->save($category);
+		if(!$category){
+			 $this->Message->error(__('The type could not be changed'));
+				return;
+		}
+		$this->Message->success(__('The type was succesfully set'));
 	}
 }
