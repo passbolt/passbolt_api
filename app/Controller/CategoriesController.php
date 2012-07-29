@@ -34,7 +34,7 @@ class CategoriesController extends AppController {
 		}
 		// check if it exists
 		$category = $this->Category->findById($id);
-		if (empty($category)) {
+		if (!$category) {
 			$this->Message->error(__('The category does not exist'));
 			return;
 		}
@@ -70,7 +70,7 @@ class CategoriesController extends AppController {
 		}
 		// check if the category exist
 		$category = $this->Category->findById($id);
-		if ($category) {
+		if (!$category) {
 			$this->Message->error(__('The category does not exist'));
 			return;
 		}
@@ -101,7 +101,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 		// check if data was provided
-		if (!isset($this->request->data)) {
+		if (!isset($this->request->data['Category'])) {
 			$this->Message->error(__('No data were provided'));
 			return;
 		}
