@@ -7,6 +7,8 @@
  * @since				 version 2.12.7
  * @license			 http://www.passbolt.com/license
  */
+App::uses('CategoryType', 'Model');
+	
 class Category extends AppModel {
 
 /**
@@ -52,8 +54,22 @@ class Category extends AppModel {
 					'rule'		=> 'numeric',
 					'message' => __('The position must be a number')
 				)
-			)
+			),
+			'category_type_id' => array(
+				'exist' => array(
+					'rule'		=> array('categoryTypeExists', null),
+					'allowEmpty' => true,
+					'message' => __('The category type provided does not exist')
+					),
+				'uuid' => array(
+					'rule'		 => 'uuid',
+					'allowEmpty' => true,
+					'required' => false,
+					'message'	=> __('UUID must be in correct format')
+				)
+				)
 		);
+		
 
 		/* a context switch if needed
 		switch ($context) {
@@ -75,6 +91,23 @@ class Category extends AppModel {
 		} else {
 			$exists = $this->find('count', array(
 				'conditions' => array('Category.id' => $check['parent_id']),
+				 'recursive' => -1
+			));
+			return $exists > 0;
+		}
+	}
+
+/**
+ * Check if a category type with same id exists
+ * @param check
+ */
+	public function categoryTypeExists($check) {
+		if ($check['category_type_id'] == null) {
+			return true;
+		} else {
+			$categoryTypeModel = new CategoryType();
+			$exists = $categoryTypeModel->find('count', array(
+				'conditions' => array('CategoryType.id' => $check['category_type_id']),
 				 'recursive' => -1
 			));
 			return $exists > 0;
