@@ -9,14 +9,13 @@
  */
 App::uses('CategoriesController', 'Controller');
 App::uses('Category', 'Model');
+App::uses('CategoryType', 'Model');
 
 class CategoriesControllerTest extends ControllerTestCase {
-
-	public $fixtures = array('app.category');
+	public $fixtures = array('app.category', 'app.category_type');
 
 	public function setUp() {
 		parent::setUp();
-		$cat = new CategoriesController();
 	}
 	
 	public function testGet() {
@@ -341,5 +340,33 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$result = json_decode($this->testAction($url, array('return'=>'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "The test should return error but is returning {$result['header']['status']}"); // test if response is an error		
 	}
+
+ public function testSetType(){
+ 	$categoryModel = new Category();
+		$categoryModel->useDbConfig = 'test';
+		$categoryTypeModel = new CategoryType();
+		$categoryTypeModel->useDbConfig = 'test';
+		
+		$goa = $categoryModel->findByName('Goa');
+		$id = $goa['Category']['id'];
+		
+		$result = json_decode($this->testAction("/categories/setType/$id/default", array('return'=>'contents')), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but returned {$result['header']['status']}");
+		
+		$goa = $categoryModel->findByName('Goa');
+		$this->assertEquals("50152793-9efc-4a7f-b79e-1358b4e000c3", $goa['Category']['category_type_id'], "The category type id should be 50152793-9efc-4a7f-b79e-1358b4e000c3 but it is {$goa['Category']['category_type_id']}");
+		
+		$result = json_decode($this->testAction("/categories/setType/$id/namedoesntexist", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/setType/$id/namedoesntexist : The test should return error but has returned {$result['header']['status']}");
+		
+		$result = json_decode($this->testAction("/categories/setType/50152793-9efc-4a7f-b79e-1358b4e000c3/default", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/setType/50152793-9efc-4a7f-b79e-1358b4e000c3/default : The test should return error but has returned {$result['header']['status']}");
+		
+		$result = json_decode($this->testAction("/categories/setType/badid/default", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/setType/badid/default : The test should return error but has returned {$result['header']['status']}");
+		
+		$result = json_decode($this->testAction("/categories/setType", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/setType : The test should return error but has returned {$result['header']['status']}");
+ }
 	
 }
