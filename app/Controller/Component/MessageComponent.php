@@ -4,48 +4,60 @@
  * This class replace $session->flash and offers more functionalities to qualify 
  * the messages that will be displayed to the user or returned as part of the JSON response
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.Controller.MessageComponent
- * @since				 version 2.12.7
+ * @copyright    Copyright 2012, Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Controller.MessageComponent
+ * @since        version 2.12.7
  */
 class Message {
-	const notice = 'notice';
-	const debug = 'debug';
-	const error = 'error';
-	const success = 'success';
-	const fatal = 'fatal';
-	const warning = 'warning';
-	const info = 'info';
+	const ERROR = 'error';
+	const SUCCESS = 'success';
+	const WARNING = 'warning';
+	const NOTICE = 'notice';
+	const DEBUG = 'debug';
 }
 class MessageComponent extends Component {
-	var $name = 'Message';
-	var $controllerVar = 'flashMessages'; // key used to store messages in controller/view data
-	var $sessionKey = 'Messages';				 // key used to store message in sessions
-	var $Controller;											// controller shortcut
-	var $Session;												 // session component shortcut
-	var $messages;												// message queue
-	var $autoRedirect = false;
+
+	// key used to store messages in controller/view data
+	public $controllerVar = 'flashMessages';
+
+	// key used to store message in sessions
+	public $sessionKey = 'Messages';
+
+	// controller shortcut
+	public $Controller;
+
+	// session component shortcut
+	public $Session;
+
+	// message queue
+	public $messages;
+
+	// redirect to referer? (for actions without views)
+	public $autoRedirect = false;
 
 /**
  * Initialize
  * @param object $controller Controller using this component
  * @return boolean Proceed with component usage (true), or fail (false)
+ * @throws exception is Session component is missing
+ * @access public
  */
-	function initialize(&$controller, $settings=array()) {
+	public function initialize(&$controller, $settings=array()) {
 		$this->Controller = &$controller;
-		if (isset($this->Controller->Session)) {
-			$this->Session = &$controller->Session;
-			if($this->Session->check($this->sessionKey)) {
-				$this->messages = $this->Session->read($this->sessionKey);
-				$this->Session->delete($this->sessionKey);
-			} else {
-				$this->messages = array();
-			}
-			return true;
-	 } else {
+		if (!isset($this->Controller->Session)) {
 			throw new exception('Session component not found (Message::initilize)');
 		}
+		// get an existing message from the session if any
+		// this is used to display messages after a redirection
+		$this->Session = &$controller->Session;
+		if ($this->Session->check($this->sessionKey)) {
+			$this->messages = $this->Session->read($this->sessionKey);
+			$this->Session->delete($this->sessionKey);
+		} else {
+			$this->messages = array();
+		}
+		return true;
 	}
 
 /**
@@ -57,34 +69,48 @@ class MessageComponent extends Component {
  * @return void
  * @access public
  */
-	function error($message, $options=array()) {
-		$default_options = array(
-			Message::fatal => false
-		);
-		$options = array_merge($default_options, $options);
-		$type = $options[Message::fatal] ? Message::fatal : Message::error;
-		$this->__add($type,$message,$options);
+	public function error($message, $options=array()) {
+		$this->__add(Message::ERROR,$message,$options);
 	}
 
 /**
- * Add a notice message to the queue
+ * Add a warning message to the queue
  * @param string $message
  * @param mixed $options['redirect'] url, string or array
+ * @access public
  */
-	function warning($message, $options=array()) {
-		$this->__add(Message::warning, $message, $options);
+	public function warning($message, $options=array()) {
+		$this->__add(Message::WARNING, $message, $options);
 	}
-	function info($message, $options=array()) {
-		$this->__add(Message::info, $message, $options);
+
+/**
+ * Add a debug message to the queue
+ * @param string $message
+ * @param mixed $options['redirect'] url, string or array
+ * @access public
+ */
+	public function debug($message, $options=array()) {
+		$this->__add(Message::DEBUG, $message, $options);
 	}
-	function debug($message, $options=array()) {
-		$this->__add(Message::debug, $message, $options);
+
+/**
+ * Add a notice/info message to the queue
+ * @param string $message
+ * @param mixed $options['redirect'] url, string or array
+ * @access public
+ */
+	public function notice($message, $options=array()) {
+		$this->__add(Message::NOTICE, $message, $options);
 	}
-	function notice($message, $options=array()) {
-		$this->__add(Message::notice, $message, $options);
-	}
-	function success($message='', $options=array()) {
-		$this->__add(Message::success,$message,$options);
+
+/**
+ * Add a success message to the queue
+ * @param string $message
+ * @param mixed $options['redirect'] url, string or array
+ * @access public
+ */
+	public function success($message='', $options=array()) {
+		$this->__add(Message::SUCCESS,$message,$options);
 	}
 
 /**
@@ -95,22 +121,27 @@ class MessageComponent extends Component {
  * @param bollean die
  * @access private
  */
-	function __add($type = Message::error, $message=null, $options=null) {
+	private function __add($type = Message::ERROR, $message=null, $options=null) {
 		$die = false;
 		$title = '';
 		$type = strtolower($type);
 		// Cosmetics
 		switch ($type) {
-			case Message::fatal :
-				$title = __('Fatal',true);
-				$die = true;
+			case Message::ERROR :
+				$title = __('Error',true);
 			break;
-			case Message::error	  : $title = __('Error',true); break;
-			case Message::info    : 
-			case Message::notice  : $title = __('Notice',true); break;
-			case Message::warning : $title = __('Warning',true); break;
-			case Message::success : $title = __('Success',true); break;
-			case Message::debug	  : $title = __('Debug',true); break;
+			case Message::NOTICE :
+				$title = __('Notice',true);
+			break;
+			case Message::WARNING :
+				$title = __('Warning',true);
+			break;
+			case Message::SUCCESS :
+				$title = __('Success',true);
+			break;
+			case Message::DEBUG :
+				$title = __('Debug',true);
+			break;
 		}
 		if (!isset($options['code'])) {
 			$options['code'] = String::uuid($message);
@@ -120,8 +151,8 @@ class MessageComponent extends Component {
 		$m = array(
 			'header' => array(
 				// UUID is predictable
-				'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type), 
-				'status' => ((empty($code)) ? $type : $type.' '.$code ),
+				'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
+				'status' => ((empty($code)) ? $type : $type . ' ' . $code ),
 				'title' => $title,
 				'message' => $message,
 				'controller' => $this->Controller->name,
@@ -133,12 +164,6 @@ class MessageComponent extends Component {
 			$m['body'] = $options['body'];
 		}
 		$this->messages[] = $m;
-
-		// Get the point or die trying
-		if ($die) {
-			trigger_error($title.': '.$message);
-			exit;
-		}
 
 		// Need some directions?
 		if (isset($options['redirect'])) {
@@ -157,12 +182,12 @@ class MessageComponent extends Component {
  * @return bool true if success
  * @access public
  */
-	public function setBody(&$body = null){
-		$nbMessages = sizeof($this->messages);
+	public function setBody(&$body = null) {
+		$nbMessages = count($this->messages);
 		if ($body == null || $nbMessages == 0) {
 			return false;
 		}
-		$this->messages[sizeof($this->messages) - 1]['body'] = &$body;
+		$this->messages[count($this->messages) - 1]['body'] = &$body;
 		return true;
 	}
 
@@ -173,8 +198,9 @@ class MessageComponent extends Component {
  * @param string $status
  * @param bool $exit
  * @return void
+ * @access public
  */
-	function beforeRedirect(&$controller, $url, $status=null, $exit=true) {
+	public function beforeRedirect(&$controller, $url, $status=null, $exit=true) {
 		// save pending messages in session to display next
 		if (isset($this->messages) && !empty($this->messages)) {
 			$this->Session->write($this->sessionKey, $this->messages);
@@ -185,8 +211,9 @@ class MessageComponent extends Component {
  * Before render callback
  * @param object $controller
  * @return void
+ * @access public
  */
-	function beforeRender(&$controller) {
+	public function beforeRender(&$controller) {
 		if (isset($this->Controller->viewVars['data'])) {
 			$this->setBody($this->Controller->viewVars['data']);
 		}
