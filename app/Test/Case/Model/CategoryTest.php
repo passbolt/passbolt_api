@@ -17,6 +17,60 @@ class CategoryTest extends CakeTestCase {
 		$this->Category = ClassRegistry::init('Category');
 	}
 
+ /**
+   * Test Name Validation
+   * @return void
+   */
+	public function testNameValidation() {
+	  $testcases = array(
+	    '' => false, '?!#' => true, 'test' => true,
+	    'test@test.com' => true, '1test' => true
+	  );
+	  foreach($testcases as $testcase => $result) {      
+	    $category = array('Category' => array('name' => $testcase));
+	    $this->Category->set($category);
+	    if($result) $msg = 'validation of the category name with '.$testcase.' should validate';
+	    else $msg = 'validation of the category name with '.$testcase.' should not validate';
+	    $this->assertEqual($this->Category->validates(array('fieldList' => array('name'))), $result, $msg);
+	  }
+	}
+	
+	/**
+   * Test Parent Validation
+   * @return void
+   */
+	public function testParentValidation() {
+	  $testcases = array(
+	    '' => true, 'wrongid' => false, '4ff6111b-efb8-4a26-aab4-2184cbdd56cb' => true,
+	    '4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
+	  );
+	  foreach($testcases as $testcase => $result) {      
+	    $category = array('Category' => array('parent_id' => $testcase));
+	    $this->Category->set($category);
+	    if($result) $msg = 'validation of the category parent with '.$testcase.' should validate';
+	    else $msg = 'validation of the category parent with '.$testcase.' should not validate';
+	    $this->assertEqual($this->Category->validates(array('fieldList' => array('parent_id'))), $result, $msg);
+	  }
+	}
+
+/**
+   * Test Categiry type Validation
+   * @return void
+   */
+	public function testCategoryTypeValidation() {
+	  $testcases = array(
+	    '' => true, 'wrongid' => false, '50152793-52b4-47aa-940d-1358b4e000c3' => true,
+	    '4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
+	  );
+	  foreach($testcases as $testcase => $result) {      
+	    $category = array('Category' => array('category_type_id' => $testcase));
+	    $this->Category->set($category);
+	    if($result) $msg = 'validation of the category type with '.$testcase.' should validate';
+	    else $msg = 'validation of the category type with '.$testcase.' should not validate';
+	    $this->assertEqual($this->Category->validates(array('fieldList' => array('category_type_id'))), $result, $msg);
+	  }
+	}
+
 	public function testParentExists() {
 		// Test in a normal condition if the id is correct	
 		$category = $this->Category->findByName('Anjuna');
@@ -167,4 +221,22 @@ class CategoryTest extends CakeTestCase {
 		$result = $this->Category->save($category);
 		$this->assertTrue($result['Category']['lft'] == '31');  
 	}
+
+	public function testGetPosition(){
+		$uvbar = $this->Category->findByName('Curlie\'s');
+		$position = $this->Category->getPosition($uvbar['Category']['id']);
+		$this->assertEquals(2, $position);
+		
+		$this->assertFalse($this->Category->getPosition('badid'));
+	}
+	
+	public function testGetFindConditions() {
+  	$f = $this->Category->getFindConditions('testoqwidoqdhwqohdowqhid');
+  	$this->assertEquals($f, array('conditions' => array()), 'testGetFindCondition should return an empty array');
+  }
+
+  public function testGetFindFields() {
+  	$f = $this->Category->getFindFields('testdqwodjqodqodwjqidqjdow');
+  	$this->assertEquals($f, array('fields' => array()), 'testGetFindFields return an empty array');
+  }
 }
