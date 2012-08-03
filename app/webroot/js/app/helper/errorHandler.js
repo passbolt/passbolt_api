@@ -24,7 +24,7 @@ steal(
 				// send a notification on the events' bus
 				if(mad.eventBus) mad.eventBus.trigger('passbolt_notify', {
 					'status':	'error',
-					'title':	exception.name,
+					'title':	exception.title,
 					'message':	exception.message
 				});
 				// call the parent which is displaying in the console

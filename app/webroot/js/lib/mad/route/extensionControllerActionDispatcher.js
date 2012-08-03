@@ -45,7 +45,7 @@ steal(
                     controllerId = route.extension+'-'+route.controller+'-controller';
                 }
                 
-                var pluginNameController = mad.helper.routeHelper.pluginNameController(route, {'prefix':'passbolt_'});
+                var pluginNameController = mad.helper.routeHelper.pluginNameController(route, {'prefix':route.extension != 'passbolt' ? 'passbolt_': ''});
                 // Find the controller element on the page
                 $controller = $('#'+controllerId);
                 
@@ -60,7 +60,7 @@ steal(
                 
                 // check the controller element has a reference to the plugin controller
                 if(typeof $controller[pluginNameController] == 'undefined'){
-                    throw new Error('The DOM element ('+controllerId+') has not an attached controller defined by the class ('+lb.core.helper.routeHelper.classNameController(route)+')');
+                    throw new Error('The DOM element ('+controllerId+') has not an attached controller defined by the class ('+mad.helper.routeHelper.classNameController(route)+')');
                 }
                 
                 // if the controller has not yet been instantiated, instantiate it

@@ -11,9 +11,10 @@ steal(
 .then(
     function($){
         $.String.getObject('mad.error', null, true);
-        mad.error.Error = function(message) {
-            this.name = "Error";
-            this.message = (message || "An error occured");
+        mad.error.Error = function(message, title) {
+            this.name = "mad.error.Error";
+			this.title = (title || "A "+this.name+" exception occured");
+            this.message = (message || this.title);
         }
         mad.error.Error.prototype = new Error();
     }

@@ -12,7 +12,7 @@
 APP_URL = 'http://passbolt.local';
 MAD_ROOT = 'lib/mad';
 steal(
-    './passbolt.css'                                        // application CSS file
+    '/css/passbolt.css'                                        // application CSS file
     , MAD_ROOT+'/mad.js'                                    // the mad framework
 )
 .then(
@@ -38,7 +38,7 @@ steal(
                     'pageControllerId'  : 'passbolt-page-controller'
                 }
                 , 'defaultRoute' : {                                                        // The default route
-                    'extension' : 'password'
+                    'extension' : 'passbolt'
                     , 'controller' : 'passwordWorkspace'
                     , 'action' : 'index'
                 }

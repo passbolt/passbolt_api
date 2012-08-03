@@ -1,5 +1,6 @@
 steal( 
-    MAD_ROOT+'/controller/controller.js'
+    MAD_ROOT+'/controller/controller.js',
+    MAD_ROOT+'/event/eventable.js'
 )
 .then( 
     function($){
@@ -21,31 +22,10 @@ steal(
             'init': function(){
                 // the parent use the event bus controller, not the best way, but for the moment
                 // do not call the parent init function
-            },
-            
-            /**
-             * Trigger an element on the event bus
-             * @param {String} eventName Event name
-             * @param {Array} eventData (Optional) Parameters to send with the event 
-             * @return {void}
-             */
-            'trigger': function(eventName, eventData)
-            {
-                var data = typeof eventData != 'undefined' ? eventData : {};
-                this.element.trigger(eventName, data);
-            },
-            
-            /**
-             * Bind an event on the event bus
-             * @param {String} eventName Event name
-             * @param {function} func The function to execute when the event is fired
-             * @return {void}
-             */
-            'bind': function(eventName, func)
-            {
-                this.element.bind(eventName, func)
             }
         });
+		
+		mad.event.EventBus.augment('mad.event.Eventable');
         
     }
 );

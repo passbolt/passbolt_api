@@ -48,8 +48,8 @@ steal(
                 // set the options
                 this.options = $.extend(true, {}, this.options, options);
                 // reference the controller to the application
-                this.getApp().referenceComponent(this);
-                // notice all a new controller has been released
+				this.getApp().referenceComponent(this);
+                // propagate : a new controller has been released
                 if(mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID+'_controller_released', {'component':this});
             },
             
@@ -83,6 +83,14 @@ steal(
                 
                 return returnValue;
             },
+			
+			/**
+			 * Get
+			 */
+			'getChildController': function(id)
+			{
+				return this.element.find(id).controller();
+			},
             
 //            /**
 //             * Get the application event bus controller

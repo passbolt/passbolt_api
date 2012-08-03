@@ -1,7 +1,7 @@
 steal( 
     'jquery/dom/route',
-    MAD_ROOT+'/bootstrap/bootstrapInterface.js'
-//    , 'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
+    MAD_ROOT+'/bootstrap/bootstrapInterface.js',
+    'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
 )
 .then( 
     function($){
@@ -62,6 +62,7 @@ steal(
                 // extend default options with args options
                 this.options = $.extend(true, {},  mad.bootstrap.AppBootstrap.defaults, options);
                 
+				// @todo check resource of this kind of big try catch
 				try{
 					
 					// check compulsory options (an option compulsory lol)
@@ -104,7 +105,7 @@ steal(
 					this.initApplication();
 
 					// Initialize extensions
-	//                this.initExtensions();
+//	                this.initExtensions();
 
 					// Dispatch to the right action
 					var route = mad.route.RouteListener.singleton().getRoute();
@@ -255,7 +256,12 @@ steal(
                 // get the target controller
                 var controllerName = route.controller.charAt(0).toUpperCase()+route.controller.slice(1)+'Controller';
 				var appNs = mad.getGlobal('APP_NS');
-                var controllerClass = appNs[route.extension].controller[controllerName];
+				if(route.extension == 'passbolt'){
+					var controllerClass = appNs.controller[controllerName];
+				} else {
+					var controllerClass = appNs[route.extension].controller[controllerName];
+				}
+                
                 
                 // dispatch to the convenient action
                 steal.dev.log('dispatch to extension:'+route.extension+' controller:'+controllerName+' action:'+route.action);

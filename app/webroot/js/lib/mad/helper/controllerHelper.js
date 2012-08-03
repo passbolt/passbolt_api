@@ -90,6 +90,61 @@ steal(
 //				}
 				
 				return returnValue;
+            },
+			
+			 // @todo copy/page of getViewPath, make something more proper
+			'getView': function(clazz, options)
+            {
+                var returnValue = '';
+                
+                var clazzName = clazz.fullName;
+                var split = clazzName.split('.');
+                
+                // extract the controller name, and treat it to find its view name
+                var controllerName = split.pop();
+                var viewName = $.String.camelize(controllerName.substr(0, controllerName.indexOf('Controller')));
+                
+                // extract namespace
+                if(split[0]=='mad'){
+                    returnValue += 'mad';
+                    split = split.splice(1);
+                }
+                else if(split[0] == mad.controller.AppController.getGlobal('APP_NS_ID')){
+                    //we are in a plugin
+                    if(split[1]!='controller'){
+                        returnValue += 'plugin.'+split[1];
+                        split = split.splice(2);
+                    }
+                    //else we are in the application
+                    else {
+                        returnValue += mad.controller.AppController.getGlobal('APP_NS_ID');
+                        split = split.splice(1);
+                    }
+                }
+                
+                //the next in the split has to be the controller, else there is an error in the controller name
+                if(split[0] != 'controller'){
+                    throw new mad.Error('Controller name mal formed');
+                }
+                split = split.splice(1);
+                
+                // target the view folder
+                returnValue += '.view.';
+                if(split.length)
+                    returnValue += split.join('.') + '.';
+                
+                // add the view name (et voila batard)
+                returnValue += $.String.capitalize(viewName);
+				
+				console.log(returnValue);
+				var view = $.String.getObject(returnValue, null);
+                return view;
+//				// check if the view template exists
+//				if(check){
+//					
+//				}
+				
+				return returnValue;
             }
             
         }, 

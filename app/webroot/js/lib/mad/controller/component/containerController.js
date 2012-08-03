@@ -62,14 +62,14 @@ steal(
                 return returnValue;
             }
             
-            /**
-             * Get a container's component
-             * @param {String} componentId The id of the target component
-             */
-            , 'getComponent': function()
-            {
-                
-            }
+//            /**
+//             * Get a container's component
+//             * @param {String} componentId The id of the target component
+//             */
+//            , 'getComponent': function()
+//            {
+//                this._super()
+//            }
         });
         
     }

@@ -9,7 +9,17 @@ steal(
         
         $.String.getObject('mad.helper.component', window, true);
         mad.helper.component.BoxDecorator = {
+			'init':function(){
+				console.log('YEAH');
+				this.options.loading = true;
+				this._super();
+			},
             'render': function(){
+				if(this.getBoxElement().length){
+					this._super();
+					return;
+				}
+				
                 var html = null;
                 // Impossible to get the return value of the decorated function
                 // the only way to get it is to pass through an internal variable
