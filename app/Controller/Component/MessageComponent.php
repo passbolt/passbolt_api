@@ -170,8 +170,7 @@ class MessageComponent extends Component {
 			if (is_bool($options['redirect'])) {
 				$options['redirect'] = $this->Controller->referer();
 			} elseif (is_string($options['redirect']) || is_array($options['redirect'])) {
-				$this->Controller->redirect($options['redirect']);
-				exit;
+				return $this->Controller->redirect($options['redirect']);
 			}
 		}
 	}
