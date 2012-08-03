@@ -1,0 +1,9 @@
+<table id="list"><tr><td/></tr></table>
+
+<ul>
+<% for(var i in items){ %>
+	<li <%= items[i] %>>
+		<%= items[i].Resource.title %>
+	</li>
+<% } %>
+</ul>
