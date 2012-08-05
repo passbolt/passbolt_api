@@ -12,7 +12,7 @@ App::uses('Category', 'Model');
 App::uses('CategoryType', 'Model');
 
 class CategoriesControllerTest extends ControllerTestCase {
-	public $fixtures = array('app.category', 'app.category_type');
+	public $fixtures = array('app.category', 'app.category_type', 'app.category_resource');
 
 	public function setUp() {
 		parent::setUp();
@@ -51,8 +51,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 		// test without children
 		$result = json_decode($this->testAction("/categories/get/$id", array('return'=>'contents')), true);
-		$this->assertFalse(isset($result['body'][0]));
-		$this->assertEquals('Goa', $result['body']['Category']['name']);
+		$this->assertFalse(empty($result['body']));
+		$this->assertEquals('Goa', $result['body']['Category']['name'], "Faileds testing that first child is Goa. It returned '{$result['body']['Category']['name']}'");
 
 		// test an error bad id
 		$result = json_decode($this->testAction("/categories/get/badid/1", array('return'=>'contents')), true);
@@ -350,8 +350,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$goa = $categoryModel->findByName('Goa');
 		$id = $goa['Category']['id'];
 		
+
 		$result = json_decode($this->testAction("/categories/setType/$id/default", array('return'=>'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but returned {$result['header']['status']}");
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/setType/$id/default : The test should return success but returned {$result['header']['status']}");
 		
 		$goa = $categoryModel->findByName('Goa');
 		$this->assertEquals("50152793-9efc-4a7f-b79e-1358b4e000c3", $goa['Category']['category_type_id'], "The category type id should be 50152793-9efc-4a7f-b79e-1358b4e000c3 but it is {$goa['Category']['category_type_id']}");
