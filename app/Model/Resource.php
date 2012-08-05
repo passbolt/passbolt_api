@@ -8,6 +8,26 @@
  * @since         version 2.12.7
  */
 class Resource extends AppModel {
+	public $actsAs = array('Containable');
+	
+	public $hasAndBelongsToMany = array(
+  'Category' =>
+   	array(
+     'className'              => 'Category',
+     'joinTable'              => 'categories_resources',
+     'foreignKey'             => 'resource_id',
+     'associationForeignKey'  => 'category_id',
+     'unique'                 => false,
+     'conditions'             => '',
+     'fields'                 => '',
+     'order'                  => '',
+     'limit'                  => '',
+     'offset'                 => '',
+     'finderQuery'            => '',
+     'deleteQuery'            => '',
+     'insertQuery'            => ''
+    )
+  );
   /**
  * Get the validation rules upon context
  * @param string context
@@ -106,10 +126,10 @@ class Resource extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'get', &$data = null) {
+	public static function getFindConditions($case = 'view', &$data = null) {
 		$conditions = array();
 		switch ($case) {
-			case 'get':
+			case 'view':
 			default:
 				$conditions = array(
 					'conditions' => array()
@@ -125,12 +145,12 @@ class Resource extends AppModel {
  */
 	public static function getFindFields($case = 'get') {
 		switch($case){
-			case 'get':
-			case 'getByCategory':
+			case 'view':
+			case 'viewByCategory':
 			case 'add':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.title', 'Resource.username', 'Resource.expiry_date', 'Resource.ip', 'Resource.description'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description'
 					)
 				);
 			break;

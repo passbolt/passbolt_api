@@ -14,7 +14,26 @@ class Category extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree');
+	public $actsAs = array('Tree', 'Containable');
+	
+	public $hasAndBelongsToMany = array(
+  'Resource' =>
+   	array(
+     'className'              => 'Resource',
+     'joinTable'              => 'categories_resources',
+     'foreignKey'             => 'category_id',
+     'associationForeignKey'  => 'resource_id',
+     'unique'                 => true,
+     'conditions'             => '',
+     'fields'                 => '',
+     'order'                  => '',
+     'limit'                  => '',
+     'offset'                 => '',
+     'finderQuery'            => '',
+     'deleteQuery'            => '',
+     'insertQuery'            => ''
+    )
+  );
 
 /**
  * Get the validation rules upon context
