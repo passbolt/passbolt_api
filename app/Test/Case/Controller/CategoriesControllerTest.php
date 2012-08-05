@@ -10,10 +10,17 @@
 App::uses('CategoriesController', 'Controller');
 App::uses('Category', 'Model');
 App::uses('CategoryType', 'Model');
+App::uses('User', 'Model');
+App::uses('Role', 'Model');
+// Uses sessions
+// App::uses('CakeSession', 'Model/Datasource'); // doesn't work here
+if (!class_exists('CakeSession')) { 
+  require CAKE . 'Model/Datasource/CakeSession.php'; 
+}
 
 class CategoriesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.category', 'app.category_type', 'app.user');
+	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
@@ -21,10 +28,16 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testGet() {
 		$category = new Category();
+		$user = new User();
+		
+		$user->useDbConfig = 'test';
+		$kk = $user->findByUsername('kevin@passbolt.com');
+		$user->setActive($kk);
+		
 		$category->useDbConfig = 'test';
 		$goa = $category->findByName('Goa');
 		$id = $goa['Category']['id'];
-
+			
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/categories/get", array('return'=>'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/get : The test should return an error but is returning {$result['header']['status']}");

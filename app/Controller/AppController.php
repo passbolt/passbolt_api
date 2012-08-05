@@ -82,7 +82,6 @@ class AppController extends Controller {
  * @access public
  */ 
 	function isAuthorized($user) {
-		pr(User::get()); die;
 		if ($this->isWhitelisted()) {
 		  return true;
 		}
