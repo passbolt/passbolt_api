@@ -12,7 +12,7 @@ class CategoryTypesController extends AppController {
 	function populate(){
 		$type['name'] = "default";
 		$this->CategoryType->create();
-		$this->CategoryType->save($type);
+		$cat = $this->CategoryType->save($type);
 		$type['name'] = "database";
 		$this->CategoryType->create();
 		$this->CategoryType->save($type);
