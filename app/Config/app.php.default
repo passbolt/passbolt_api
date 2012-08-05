@@ -28,17 +28,19 @@ $config = array(
 	// Authentication & Authorisation
 	'Auth' => array(
     'authenticate' => array(
-			'BcryptForm'
+			'BcryptForm', // good encryption
+		  //'Form' // bad encryption
 		),
-		'loginRedirect' => '/home',
+		'loginRedirect' => '/login',
 		'logoutRedirect' => '/login',
-		'loginAction' => array('controller' => 'users', 'action' => 'login'),
+		'loginAction' => array('controller' => 'Users', 'action' => 'login'),
 		'whitelist' => array(
-			'users' => array('login')
+			'users' => array('login' => true, 'logout' => true)
 		),
 		'bcrypt' => array(
-			'round' => 31,
-			'salt' => 'jdwmlckzlfw;l123;l,cac'
+			'cost' => '04',
+			'salt' => 'jdwmlckzlfwsl123wldcaxss',
+			'hmac' => 'odqw1AEN9fskDeWDqwodiqwd213109icjalkdnasdjjqd'
 		)
 	)
 );
