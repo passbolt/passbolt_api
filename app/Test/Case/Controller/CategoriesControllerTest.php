@@ -20,7 +20,7 @@ if (!class_exists('CakeSession')) {
 
 class CategoriesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.category_type', 'app.category_resource', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
