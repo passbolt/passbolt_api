@@ -12,6 +12,7 @@
 App::uses('Controller', 'Controller');
 App::uses('CakeRequest', 'Network');
 App::uses('CakeResponse', 'Network');
+App::uses('Router', 'Routing');
 App::uses('ComponentCollection', 'Controller');
 App::uses('MessageComponent', 'Controller/Component');
 
@@ -76,28 +77,66 @@ class MessageComponentTest extends CakeTestCase {
 	}
 
 	public function testError() {
-		$this->MessageComponent->error('error test');
+		$this->setup();
+		$this->MessageComponent->error('error test1');
+		$this->assertEqual(count($this->MessageComponent->messages), true, 'there should be one message present');
+		$this->MessageComponent->error('error test2');
+		$this->assertEqual(count($this->MessageComponent->messages), 2, 'there should be two messages present');
+		$this->MessageComponent->error('error test3',array('body' => 'body test'));
+		$this->assertEqual($this->MessageComponent->messages[2]['body'], 'body test', 'body should be allowed to set using __add() $options parameter');
+		
+		//$this->MessageComponent->Controller->redirect('http://cakephp.org', 301, false);
+		$this->MessageComponent->error('error test4',array('redirect' => true));
+		$this->MessageComponent->Controller->response = $this->getMock('CakeResponse', array('header', 'statusCode'));
+		$this->MessageComponent->Controller->response
+			->expects($this->any())
+			->method('header')
+			->with('Location', 'http://cakephp.org');
+		$this->MessageComponent->error('error test4',array('redirect' => 'http://cakephp.org'));
+		//$this->assertEqual($this->MessageComponent->messages[1]['body'], 'body test', 'body should be allowed to set usi  		
+		//$this->MessageComponent->error('error test4',array('redirect' => '/ss'));
+		
 	}
 
 	public function testWarning() {
+		$this->setup();
 		$this->MessageComponent->warning('warning test');
+		$this->assertEqual(count($this->MessageComponent->messages), true, 'there should be one message present');
 	}
 
 	public function testNotice() {
+		$this->setup();
 		$this->MessageComponent->notice('notice test');
-	}
-
-	public function testFatal() {
-		//$this->MessageComponent->error('fatal test',array(Message::FATAL => true));
+		$this->assertEqual(count($this->MessageComponent->messages), true, 'there should be one message present');
 	}
 
 	public function testSuccess() {
+		$this->setup();
 		$this->MessageComponent->success('success test');
+		$this->assertEqual(count($this->MessageComponent->messages), true, 'there should be one message present');
 	}
 
 	public function testDebug() {
+		$this->setup();
 		//@todo should only show when in debug mode
 		$this->MessageComponent->debug('debug test');
+		$this->assertEqual(count($this->MessageComponent->messages), true, 'there should be one message present');
+	}
+
+	public function testSetBody() {
+		$this->setup();
+		$this->assertEqual($this->MessageComponent->setBody(), false, 'set body should fail with no messages');
+		$this->MessageComponent->error('error test1');
+		$this->MessageComponent->setBody();
+		$this->assertEqual($this->MessageComponent->setBody(), false, 'set body should fail when empty');
+	}
+
+	public function testBeforeRender() {
+		$this->setup();
+		$this->MessageComponent->error('error test1');
+		$this->Controller->set('data', array('additional data'));
+		$this->MessageComponent->beforeRender($this->Controller);
+		$this->assertEqual(count($this->Controller->viewVars[$this->MessageComponent->controllerVar]), 1, 'there should be one message present in the controller viewvars');
 	}
 
 	public function tearDown() {

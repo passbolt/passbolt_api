@@ -2,14 +2,10 @@
 /**
  * Main application configuration file
  *
- * Copyright 2012, Passbolt
- * Passbolt(tm), the simple password management solution
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright		 Copyright 2012, Passbolt.com 
- * @package			 app.Config.app
- * @since				 version 2.12.7
- * @license			 http://www.passbolt.com/license
+ * @copyright    Copyright 2012, Passbolt.com 
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.app
+ * @since        version 2.12.7
  */
 $config = array(
 	// General App Details
@@ -18,24 +14,31 @@ $config = array(
 	'App.copyright' => '2012 &copy; Passbolt.com',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.version'	 => array(
-		'number' => '2.12.7',
-		'name' => 'The hardest',
-		'song' => 'http://youtu.be/wVLcByj3ik8'
+		'number' => '2.12.9',
+		'name' => 'What\'s hapenin\'',
+		'song' => 'http://youtu.be/DaRG0ukxYqQ'
 	),
 	// Internationalization
 	'i18n' => array(
-		'locale' => 'fr-FR',
+		'locale' => 'en-EN',
 		'language' => 'en',
 		'timezone' => 'GTM+1',
 		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
 	// Authentication & Authorisation
 	'Auth' => array(
+    'authenticate' => array(
+			'BcryptForm'
+		),
 		'loginRedirect' => '/home',
 		'logoutRedirect' => '/login',
 		'loginAction' => array('controller' => 'users', 'action' => 'login'),
 		'whitelist' => array(
-			'users' => array('login', 'forgot_password')
+			'users' => array('login')
+		),
+		'bcrypt' => array(
+			'round' => 31,
+			'salt' => 'jdwmlckzlfw;l123;l,cac'
 		)
 	)
 );

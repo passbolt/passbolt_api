@@ -2,16 +2,13 @@
 /**
  * User Model
  *
- * Copyright 2012, Passbolt
- * Passbolt(tm), the simple password management solution 
- * Redistributions of files must retain the above copyright notice.
- *
  * @copyright		 Copyright 2012, Passbolt.com
+ * @license			 http://www.passbolt.com/license
  * @package			 app.Model.user
  * @since				 version 2.12.7
- * @license			 http://www.passbolt.com/license
  */
 App::uses('AuthComponent', 'Controller/Component');
+App::uses('BcryptFormAuthenticate', 'Controller/Component/Auth');
 App::uses('Role', 'Model');
 class User extends AppModel {
 
@@ -81,8 +78,9 @@ class User extends AppModel {
 	public function beforeSave() {
 		// encrypt the password
 		// @todo use bcrypt instead #PASSBOLT-157
-		if (isset($this->data[$this->alias]['password'])) {
-			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
+		if (isset($this->data['User']['password'])) {
+			//$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
+    	$this->data['User']['password'] = BcryptFormAuthenticate::hash($this->data['User']['password']);
 		}
 		return true;
 	}
