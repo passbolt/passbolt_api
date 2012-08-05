@@ -34,6 +34,10 @@ class Category extends AppModel {
      'insertQuery'            => ''
     )
   );
+		
+		public $belongsTo = array('CategoryType' => array(
+			'className' => 'CategoryType'
+		));
 
 /**
  * Get the validation rules upon context
@@ -124,8 +128,7 @@ class Category extends AppModel {
 		if ($check['category_type_id'] == null) {
 			return true;
 		} else {
-			$categoryTypeModel = new CategoryType();
-			$exists = $categoryTypeModel->find('count', array(
+			$exists = $this->CategoryType->find('count', array(
 				'conditions' => array('CategoryType.id' => $check['category_type_id']),
 				 'recursive' => -1
 			));
