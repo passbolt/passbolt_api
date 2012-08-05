@@ -23,7 +23,7 @@ class User extends AppModel {
 /**
  * They are legions
  */
-	const ANONYMOUS = 'Anonymous';
+	const ANONYMOUS = 'anonymous@passbolt.com';
 
 /**
  * Get the validation rules upon context

@@ -12,7 +12,7 @@ App::uses('Category', 'Model');
 App::uses('CategoryType', 'Model');
 
 class CategoriesControllerTest extends ControllerTestCase {
-	public $fixtures = array('app.category', 'app.category_type');
+	public $fixtures = array('app.category', 'app.category_type', 'app.user');
 
 	public function setUp() {
 		parent::setUp();
@@ -24,10 +24,20 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$goa = $category->findByName('Goa');
 		$id = $goa['Category']['id'];
 
+		$Categories = $this->generate('Categories', array(
+			'methods' => array(
+				'isAuthorized'
+			),
+			'components' => array(
+				'RequestHandler' => array('isPost'),
+				'Session'
+			)
+		));
+
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/categories/get", array('return'=>'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/get : The test should return an error but is returning {$result['header']['status']}");
-		
+
 		// test when a wrong id is provided
 		$result = json_decode($this->testAction("/categories/get/4ff6111b-efb8-4a26-aab4-2184cbdd56ca", array('return'=>'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/get/4ff6111b-efb8-4a26-aab4-2184cbdd56ca : The test should return an error but is returning {$result['header']['status']}");

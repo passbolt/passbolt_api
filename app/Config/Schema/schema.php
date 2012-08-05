@@ -1,5 +1,15 @@
 <?php 
+/**
+ * Schema
+ * $ ./Console/cake schema create
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.Schema.schema
+ * @since        version 2.12.7
+ */
 App::uses('Category', 'Model');
+App::uses('CategoryType', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 
@@ -35,20 +45,20 @@ class AppSchema extends CakeSchema {
 				break;
 				case 'users':
 					$user = ClassRegistry::init('User');
-					$user->create();
-					$user->save(array('User'=>array('id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'username' => 'Anonymous', 'password' => NULL, 'active' => 1, 'created' => '2012-07-04 13:45:11', 'modified' => '2012-07-04 13:45:14', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
+					$us = $this->_getDefaultUsers();
+					foreach ($us as $u) {
+						$user->create();
+						$user->save($u);
+					}
 				break;
 				case 'roles':
 					$role = ClassRegistry::init('Role');
-					$role->create();
-					$role->save(array('Role'=>array('id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'name' => 'guest', 'description' => 'Non logged-in user', 'created' => '2012-07-04 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
-					$role->create();
-					$role->save(array('Role'=>array('id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c', 'name' => 'user', 'description' => 'Logged in default user', 'created' => '2012-07-04 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
-					$role->create();
-					$role->save(array('Role'=>array('id' => '142c1188-c5cd-11e1-a0c5-080027796c4c', 'name' => 'admin', 'description' => 'Organization administrator', 'created' => '2012-07-04 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
-					$role->create();
-					$role->save(array('Role'=>array('id' => '142c1340-c5cd-11e1-a0c5-080027796c4c', 'name' => 'root', 'description' => 'Super Administrator', 'created' => '2012-07-04 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
-				break;
+					$rs = $this->_getDefaultRoles();
+					foreach ($rs as $r) {
+						$role->create();
+						$role->save($r);
+					}
+					break;
 			}	
 		}
 	}
@@ -98,7 +108,7 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'role_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'username' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 50, 'key' => 'unique', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'password' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 50, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'password' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 60, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'active' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
@@ -107,4 +117,71 @@ class AppSchema extends CakeSchema {
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'username' => array('column' => 'username', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
+
+  protected function _getDefaultUsers() {
+		$us[] = array('User' => array(
+			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'username' => 'anonymous@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'we are legions',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25', 
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e',
+			'username' => 'test@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25', 
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		return $us;
+	}
+
+	function _getDefaultRoles() {
+		$rs[] = array('Role' => array(
+			'id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'guest',
+			'description' => 'Non logged-in user',
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$rs[] = array('Role' => array(
+			'id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'user',
+			'description' => 'Logged in default user',
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$rs[] = array('Role' => array(
+			'id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'admin',
+			'description' => 'Organization administrator',
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$rs[] = array('Role' => array(
+			'id' => '142c1340-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'root',
+			'description' => 'Super Administrator',
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		return $rs;
+	}
+
 }
