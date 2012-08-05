@@ -296,8 +296,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 		
-		$categoryType = new CategoryType();
-		$type = $categoryType->findByName($typeName);
+		$type = $this->Category->CategoryType->findByName($typeName);
 		if (!$type) {
 			$this->Message->error(__('The type does not exist'));
 			return;
@@ -311,6 +310,7 @@ class CategoriesController extends AppController {
 		
 		$category['Category']['category_type_id'] = $type['CategoryType']['id'];
 		$category = $this->Category->save($category);
+		
 		if(!$category){
 			 $this->Message->error(__('The type could not be changed'));
 				return;
