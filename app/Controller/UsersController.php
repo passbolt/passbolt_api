@@ -2,10 +2,10 @@
 /**
  * Users Controller
  * 
- * @copyright		 Copyright 2012, Passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.Controller.UsersController
- * @since				 version 2.12.9
+ * @copyright    Copyright 2012, Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Controller.UsersController
+ * @since        version 2.12.9
  */
 class UsersController extends AppController {
 
