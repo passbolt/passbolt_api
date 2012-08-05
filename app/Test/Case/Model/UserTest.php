@@ -16,7 +16,7 @@ if (!class_exists('CakeSession')) {
 }
 
 class UserTest extends CakeTestCase {
-  public $fixtures = array('app.user'); //, 'app.role');
+  public $fixtures = array('app.user', 'app.role');
   public $autoFixtures = true;
 
   /**

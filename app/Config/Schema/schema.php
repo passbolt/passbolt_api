@@ -7,7 +7,7 @@ class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
 		$db = ConnectionManager::getDataSource($this->connection);
-  $db->cacheSources = false;
+		$db->cacheSources = false;
 		return true;
 	}
 
@@ -15,13 +15,13 @@ class AppSchema extends CakeSchema {
 		if (isset($event['create'])) {
 			switch ($event['create']) {
 				case 'categories':
-				 $category = ClassRegistry::init('Category');
-				 $category->create();
-				 $projects = $category->save(array('Category' =>array('name' => 'Projects')));
+					$category = ClassRegistry::init('Category');
 					$category->create();
-				 $category->save(array('Category' =>array('name' => 'Administration')));
+					$projects = $category->save(array('Category' =>array('name' => 'Projects')));
 					$category->create();
-				 $category->save(array('Category' =>array('name' => 'Management')));
+					$category->save(array('Category' =>array('name' => 'Administration')));
+					$category->create();
+					$category->save(array('Category' =>array('name' => 'Management')));
 					$category->create();
 					$cakephp = $category->save(array('Category' =>array('name' => 'CakePHP', 'parent_id' => $projects['Category']['id'])));
 					$category->create();
@@ -32,14 +32,14 @@ class AppSchema extends CakeSchema {
 					$category->save(array('Category' =>array('name' => 'cakephp-project1', 'parent_id' => $cakephp['Category']['id'])));
 					$category->create();
 					$category->save(array('Category' =>array('name' => 'cakephp-project2', 'parent_id' => $cakephp['Category']['id'])));
-				 break;
+				break;
 				case 'users':
-				 $user = ClassRegistry::init('User');
+					$user = ClassRegistry::init('User');
 					$user->create();
-					$user->save(array('User'=>array('id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'username' => 'Anonymous', 'password' => NULL, 'active' => 1, 'created' => '2012-07-04 13:45:11', 'modified' => '2012-07-04 13:45:14')));
-					break;
+					$user->save(array('User'=>array('id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'username' => 'Anonymous', 'password' => NULL, 'active' => 1, 'created' => '2012-07-04 13:45:11', 'modified' => '2012-07-04 13:45:14', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
+				break;
 				case 'roles':
-				 $role = ClassRegistry::init('Role');
+					$role = ClassRegistry::init('Role');
 					$role->create();
 					$role->save(array('Role'=>array('id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'name' => 'guest', 'description' => 'Non logged-in user', 'created' => '2012-07-04 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
 					$role->create();
@@ -48,9 +48,9 @@ class AppSchema extends CakeSchema {
 					$role->save(array('Role'=>array('id' => '142c1188-c5cd-11e1-a0c5-080027796c4c', 'name' => 'admin', 'description' => 'Organization administrator', 'created' => '2012-07-04 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
 					$role->create();
 					$role->save(array('Role'=>array('id' => '142c1340-c5cd-11e1-a0c5-080027796c4c', 'name' => 'root', 'description' => 'Super Administrator', 'created' => '2012-07-04 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')));
-					break;
-   }	
-  }
+				break;
+			}	
+		}
 	}
 
 	public $categories = array(
@@ -99,7 +99,7 @@ class AppSchema extends CakeSchema {
 		'role_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'username' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 50, 'key' => 'unique', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'password' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 50, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'active' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 4),
+		'active' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),

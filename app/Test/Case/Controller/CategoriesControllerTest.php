@@ -17,7 +17,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
-	
+
 	public function testGet() {
 		$category = new Category();
 		$category->useDbConfig = 'test';
