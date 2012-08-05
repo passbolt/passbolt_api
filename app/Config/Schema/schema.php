@@ -7,7 +7,7 @@ class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
 		$db = ConnectionManager::getDataSource($this->connection);
-  $db->cacheSources = false;
+		$db->cacheSources = false;
 		return true;
 	}
 
