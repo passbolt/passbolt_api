@@ -14,7 +14,30 @@ class Category extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree');
+	public $actsAs = array('Tree', 'Containable');
+	
+	public $hasAndBelongsToMany = array(
+  'Resource' =>
+   	array(
+     'className'              => 'Resource',
+     'joinTable'              => 'categories_resources',
+     'foreignKey'             => 'category_id',
+     'associationForeignKey'  => 'resource_id',
+     'unique'                 => true,
+     'conditions'             => '',
+     'fields'                 => '',
+     'order'                  => '',
+     'limit'                  => '',
+     'offset'                 => '',
+     'finderQuery'            => '',
+     'deleteQuery'            => '',
+     'insertQuery'            => ''
+    )
+  );
+		
+		public $belongsTo = array('CategoryType' => array(
+			'className' => 'CategoryType'
+		));
 
 /**
  * Get the validation rules upon context
@@ -105,8 +128,7 @@ class Category extends AppModel {
 		if ($check['category_type_id'] == null) {
 			return true;
 		} else {
-			$categoryTypeModel = new CategoryType();
-			$exists = $categoryTypeModel->find('count', array(
+			$exists = $this->CategoryType->find('count', array(
 				'conditions' => array('CategoryType.id' => $check['category_type_id']),
 				 'recursive' => -1
 			));
@@ -114,72 +136,6 @@ class Category extends AppModel {
 		}
 	}
 
-/**
- * Converts an array of categories into a proper nested tree
- * @param array $categories, the list as it is returned by find() or children()
- * @param array $options the options.
- *				- array fields , the required fields (will remove unnecessary fields at the output)
- *				- bool position, whether or not to add a position field to specify the position of the categories among the sieblings
- * @return : Nested objects representing the category :
- * category{
- *		id : char[36]
- * 		name:string
- *		parent_id:int
- *		position:int
- * 		children:categories array
- * }
- */
-	public function results2Tree($categories, $options=null) {
-		$stack = array();
-		$clones = $categories;
-
-		// define which keys are extra to remove them later
-		$extraFields = array();
-		if (!empty($options) && isset($options['fields']['fields'])) {
-			foreach ($categories[0]['Category'] as $key => $V) {
-				if (!in_array("Category.$key", $options['fields']['fields'])) {
-					$extraFields[] = $key;
-				}
-			}
-		}
-
-		foreach ($categories as $i => $cat) {
-			//$clones[$i] = $clones[$i]['Category']; // remove the 'Category' level
-			//unset($clones[$i]['Category']);
-			$clones[$i]['Category']['children'] = array(); // add the children row
-			// process here the format of the element so we keep only the required fields
-			foreach ($extraFields as $extraF) {
-				unset($clones[$i]['Category'][$extraF]);
-			}
-
-			$categories[$i]['Category']['copyref'] = & $clones[$i];
-			$i = count($stack) - 1;
-			while ($stack && !$this->isChild($cat, $stack[$i])) {
-				// if element is not a child of the stack
-				// we remove previous stack from the array
-				array_pop($stack);
-				$i = count($stack) - 1;
-			}
-
-			if (!$this->isTopLevelElement($cat, $categories)) {
-				$stack[count($stack) - 1]['Category']['copyref']['Category']['children'][] = &$clones[$i];
-			}
-			$stack[] = $categories[$i];
-		}
-
-		if (empty($clones[0])) {
-			return array();
-		}
-		// Put the final result in $res
-		$res = array();
-		// Place only the top level elements, and ignore the
-		foreach ($clones as $k => $r) {
-			if ($this->isTopLevelElement($r, $clones)) {
-				$res[] = $r;
-			}
-		}
-		return $res;
-	}
 
 /**
  * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
