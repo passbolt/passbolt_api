@@ -26,7 +26,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		parent::setUp();
 	}
 
-	public function testGet() {
+	public function testView() {
 		$category = new Category();
 		$user = new User();
 		
@@ -39,70 +39,70 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$id = $goa['Category']['id'];
 			
 		// test when no parameters are provided
-		$result = json_decode($this->testAction("/categories/get", array('return'=>'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/get : The test should return an error but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/categories/view", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/view : The test should return an error but is returning {$result['header']['status']}");
 
 		// test when a wrong id is provided
-		$result = json_decode($this->testAction("/categories/get/4ff6111b-efb8-4a26-aab4-2184cbdd56ca", array('return'=>'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/get/4ff6111b-efb8-4a26-aab4-2184cbdd56ca : The test should return an error but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/categories/view/4ff6111b-efb8-4a26-aab4-2184cbdd56ca", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/view/4ff6111b-efb8-4a26-aab4-2184cbdd56ca : The test should return an error but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
-		$result = json_decode($this->testAction("/categories/get/$id/1", array('return'=>'contents')), true);
+		$result = json_decode($this->testAction("/categories/view/$id/1", array('return'=>'contents')), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], 
-			'categories/get/' . $id . '/1 should return success'
+			'categories/view/' . $id . '/1 should return success'
 		);
 
 		// test it is the expected format
-		$result = json_decode($this->testAction("/categories/get/$id/1", array('return'=>'contents')), true);
-		$this->assertInternalType('array', $result['body'], 'The url categories/get/' . $id . '/1 should return a json object');
+		$result = json_decode($this->testAction("/categories/view/$id/1", array('return'=>'contents')), true);
+		$this->assertInternalType('array', $result['body'], 'The url categories/view/' . $id . '/1 should return a json object');
 
 		// test that content returned are correct 
-		$result = json_decode($this->testAction("/categories/get/$id/1", array('return'=>'contents')), true);
+		$result = json_decode($this->testAction("/categories/view/$id/1", array('return'=>'contents')), true);
 		// test Anjuna id
 		$this->assertEquals('UV Bar', $result['body'][0]['children'][0]['children'][0]['Category']['name'],
 			'The test should return UVBar but is returning ' . $result['body'][0]['children'][0]['children'][0]['Category']['name']
 		);
 
 		// test without children
-		$result = json_decode($this->testAction("/categories/get/$id", array('return'=>'contents')), true);
+		$result = json_decode($this->testAction("/categories/view/$id", array('return'=>'contents')), true);
 		$this->assertFalse(empty($result['body']));
 		$this->assertEquals('Goa', $result['body']['Category']['name'], "Faileds testing that first child is Goa. It returned '{$result['body']['Category']['name']}'");
 
 		// test an error bad id
-		$result = json_decode($this->testAction("/categories/get/badid/1", array('return'=>'contents')), true);
+		$result = json_decode($this->testAction("/categories/view/badid/1", array('return'=>'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status']);
 
 	}
 
-	public function testGetChildren() {
+	public function testViewChildren() {
 		$category = new Category();
 		$category->useDbConfig = 'test';
 		$goa = $category->findByName('Goa');
 		$id = $goa['Category']['id'];
 
 		// test when no parameters are provided
-		$result = json_decode($this->testAction("/categories/getChildren", array('return'=>'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/getChildren : The test should return error but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/categories/viewChildren", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/viewChildren : The test should return error but is returning {$result['header']['status']}");
 		
 		// test when a wrong id is provided
-		$result = json_decode($this->testAction("/categories/getChildren/4ff6111b-efb8-4a26-aab4-2184cbdd56ca", array('return'=>'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/getChildren/4ff6111b-efb8-4a26-aab4-2184cbdd56ca : The test should return error but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/categories/viewChildren/4ff6111b-efb8-4a26-aab4-2184cbdd56ca", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/viewChildren/4ff6111b-efb8-4a26-aab4-2184cbdd56ca : The test should return error but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
-		$result = json_decode($this->testAction("/categories/getChildren/$id", array('return'=>'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/getChildren/$id : The test should return success but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/categories/viewChildren/$id", array('return'=>'contents')), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/viewChildren/$id : The test should return success but is returning {$result['header']['status']}");
 
 		// test it is the expected format
-		$result = json_decode($this->testAction("/categories/getChildren/$id", array('return'=>'contents')), true);
-		$this->assertInternalType('array', $result['body'], "/categories/getChildren/$id : The value returned should be an array but is ". var_dump($result['body']));
+		$result = json_decode($this->testAction("/categories/viewChildren/$id", array('return'=>'contents')), true);
+		$this->assertInternalType('array', $result['body'], "/categories/viewChildren/$id : The value returned should be an array but is ". var_dump($result['body']));
 
 		// test that content returned are correct 
-		$result = json_decode($this->testAction("/categories/getChildren/$id", array('return'=>'contents')), true);
-		$this->assertEquals('Anjuna', $result['body'][0]['children'][0]['Category']['name'], "/categories/getChildren/$id : The test should return Anjuna but is returning {$result['body'][0]['children'][0]['Category']['name']}");
+		$result = json_decode($this->testAction("/categories/viewChildren/$id", array('return'=>'contents')), true);
+		$this->assertEquals('Anjuna', $result['body'][0]['children'][0]['Category']['name'], "/categories/viewChildren/$id : The test should return Anjuna but is returning {$result['body'][0]['children'][0]['Category']['name']}");
 
 		// test an error
-		$result = json_decode($this->testAction("/categories/getChildren/badid", array('return'=>'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/getChildren/badid : The test should return error but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/categories/viewChildren/badid", array('return'=>'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/viewChildren/badid : The test should return error but is returning {$result['header']['status']}");
 	}
 
 	public function testAdd() {
