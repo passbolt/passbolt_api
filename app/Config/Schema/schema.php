@@ -10,6 +10,7 @@
  */
 App::uses('Category', 'Model');
 App::uses('CategoryType', 'Model');
+App::uses('Resource', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 
@@ -63,6 +64,17 @@ class AppSchema extends CakeSchema {
 						$user->save($u);
 					}
 				break;
+				case 'resources':
+					$category = ClassRegistry::init('Category');
+					$resource = ClassRegistry::init('Resource');
+					$cat = $category->findByName("Drupal");
+					$resource->saveAll(
+						array(0 => array(  
+						'Category' => array( 'id' => $cat['Category']['id'] ),
+						'Resource' => array('name' => 'drupal resource', 'username' => 'drupal', 'expiry_date' => null, 'uri' => 'http://www.enova-tech.net', 'description' => 'this is a description test')
+						))
+					);
+					break;
 				case 'roles':
 					$role = ClassRegistry::init('Role');
 					$rs = $this->_getDefaultRoles();
