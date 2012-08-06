@@ -2,12 +2,12 @@
 /**
  * Login Form View (Guest)
  *
- * @copyright    Copyright 2012, Passbolt.com
+ * @copyright    copyright 2012 passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.View.Users.login
  * @since        version 2.12.9
  */
-  $this->set('title_for_layout', __('Login'));
+	$this->assign('title',  __('Login'));
 ?>
     <div class="users admin_login form">
     <?php echo $this->MyForm->create('User');?>

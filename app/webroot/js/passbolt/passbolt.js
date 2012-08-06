@@ -12,7 +12,6 @@
 APP_URL = 'http://passbolt.local';
 MAD_ROOT = 'lib/mad';
 steal(
-    './passbolt.css'                                        // application CSS file
     , MAD_ROOT+'/mad.js'                                    // the mad framework
 )
 .then(
