@@ -164,8 +164,7 @@ class BcryptFormAuthenticateTest extends CakeTestCase {
 		$result = $this->auth->authenticate($request, $this->response);
 		$this->User = ClassRegistry::init('User');
 		//pr($this->User->find('all'));// die;
-		//pr($result); die;
-		$expected = array(
+		$expected = array( 'User' => array(
     	'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4a',
     	'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
     	'username' => 'remy@passbolt.com',
@@ -174,7 +173,7 @@ class BcryptFormAuthenticateTest extends CakeTestCase {
     	'modified' => '2012-07-04 13:45:14',
     	'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
     	'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
-		);
+		));
 		$this->assertEquals($expected, $result);
 	}
 }
