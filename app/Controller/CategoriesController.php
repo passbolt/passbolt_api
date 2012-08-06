@@ -24,7 +24,7 @@ class CategoriesController extends AppController {
  * @todo should be renamed to 'view' otherwise we need Rest mapping in routes
  * see http://book.cakephp.org/2.0/en/development/rest.html
  */
-	public function get($id=null, $children=false) {
+	public function view($id=null, $children=false) {
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -60,7 +60,7 @@ class CategoriesController extends AppController {
  * @return void
  * @todo Rest mapping in routes
  */
-	public function getChildren($id=null) {
+	public function viewChildren($id=null) {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
