@@ -161,7 +161,6 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id invalid'));
 			return;
 		}
-
 		// delete
 		if ($this->Category->delete($id)) {
 			$this->Message->success(__('The category was succesfully deleted'));
