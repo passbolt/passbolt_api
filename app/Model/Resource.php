@@ -130,9 +130,18 @@ class Resource extends AppModel {
 		$conditions = array();
 		switch ($case) {
 			case 'view':
+				$conditions = array(
+					'conditions' => array('Resource.deleted'=>0)
+				);
+			break;
+			case 'viewByCategory':
+				$conditions = array(
+					'conditions' => array('CategoryResource.category_id'=>$data['CategoryResource.category_id'], 'Resource.deleted'=>0)
+				);
+			break;
 			default:
 				$conditions = array(
-					'conditions' => array()
+					'conditions' => array('CategoryResource.category_id'=>$data['CategoryResource.category_id'])
 				);
 		}
 		return $conditions;
@@ -143,14 +152,14 @@ class Resource extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'get') {
+	public static function getFindFields($case = 'view') {
 		switch($case){
 			case 'view':
 			case 'viewByCategory':
 			case 'add':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'CategoryResource.category_id'
 					)
 				);
 			break;
