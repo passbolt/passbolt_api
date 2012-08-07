@@ -29,11 +29,11 @@ class CategoriesControllerTest extends ControllerTestCase {
 	public function testView() {
 		$category = new Category();
 		$user = new User();
-		
+
 		$user->useDbConfig = 'test';
 		$kk = $user->findByUsername('kevin@passbolt.com');
 		$user->setActive($kk);
-		
+
 		$category->useDbConfig = 'test';
 		$goa = $category->findByName('Goa');
 		$id = $goa['Category']['id'];
