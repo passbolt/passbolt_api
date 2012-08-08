@@ -1,18 +1,16 @@
 <?php
 /**
- * All Passbolt Model Test
+ * All Passbolt Components Tests
  *
  * @copyright     Copyright 2012, Passbolt.com
- * @package       app.Test.Case.AllTest
+ * @package       app.Test.Case.AllControllerTest
  * @since         version 2.12.7
  * @license       http://www.passbolt.com/license
  */
-class AllTest extends CakeTestSuite {
+class AllComponentTest extends CakeTestSuite {
 	public static function suite() {
-		$suite = new CakeTestSuite('All tests');
-		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller');
+		$suite = new CakeTestSuite('All components tests');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Component');
-		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Model');
 		return $suite;
 	}
 }

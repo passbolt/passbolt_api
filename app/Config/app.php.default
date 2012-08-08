@@ -6,36 +6,36 @@
  * Passbolt(tm), the simple password management solution
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2012, Passbolt.com 
- * @package       app.Config.app
- * @since         version 2.12.7
- * @license       http://www.passbolt.com/license
+ * @copyright		 Copyright 2012, Passbolt.com 
+ * @package			 app.Config.app
+ * @since				 version 2.12.7
+ * @license			 http://www.passbolt.com/license
  */
 $config = array(
-  // General App Details
-  'App.name' => 'Passbolt',
-  'App.punchline' => 'The simple password management system',
-  'App.copyright' => '2012 &copy; Passbolt.com',
-  'App.title' => '%s | Passbolt', // %s = title_for_layout
-  'App.version'   => array(
-    'number' => '2.12.7',
-    'name' => 'The hardest',
-    'song' => 'http://youtu.be/wVLcByj3ik8'
-  ),
-  // Internationalization
-  'i18n' => array(
-    'locale' => 'fr-FR',
-    'language' => 'en',
-    'timezone' => 'GTM+1',
-    'dictionary' => 'jsDictionary' // default dictionary file name
-  ),
-  // Authentication & Authorisation
-  'Auth' => array(
-    'loginRedirect' => '/home',
-    'logoutRedirect' => '/login',
-    'loginAction' => array('controller' => 'users', 'action' => 'login'),
-    'whitelist' => array(
-      'users' => array('login', 'forgot_password')
-    )
-  )
+	// General App Details
+	'App.name' => 'Passbolt',
+	'App.punchline' => 'The simple password management system',
+	'App.copyright' => '2012 &copy; Passbolt.com',
+	'App.title' => '%s | Passbolt', // %s = title_for_layout
+	'App.version'	 => array(
+		'number' => '2.12.7',
+		'name' => 'The hardest',
+		'song' => 'http://youtu.be/wVLcByj3ik8'
+	),
+	// Internationalization
+	'i18n' => array(
+		'locale' => 'fr-FR',
+		'language' => 'en',
+		'timezone' => 'GTM+1',
+		'dictionary' => 'jsDictionary' // default dictionary file name
+	),
+	// Authentication & Authorisation
+	'Auth' => array(
+		'loginRedirect' => '/home',
+		'logoutRedirect' => '/login',
+		'loginAction' => array('controller' => 'users', 'action' => 'login'),
+		'whitelist' => array(
+			'users' => array('login', 'forgot_password')
+		)
+	)
 );

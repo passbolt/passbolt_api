@@ -14,19 +14,22 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.Config
- * @since         CakePHP(tm) v 0.2.9
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @copyright		 Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link					http://cakephp.org CakePHP(tm) Project
+ * @package			 app.Config
+ * @since				 CakePHP(tm) v 0.2.9
+ * @license			 MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 /**
  * Will automatically switch view classes when a request is done with the .json extension,
  * or the Accept header is application/json.
  * @see http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
+ * @see http://book.cakephp.org/2.0/en/development/rest.html
  */
- Router::parseExtensions('json');
+	Router::parseExtensions('json');
+	Router::mapResources('dictionaries');
+	Router::mapResources('users');
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
@@ -43,11 +46,11 @@
 /**
  * Dictionary shortcuts
  */
-	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'get'));
-	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'get'));
+	//Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'get'));
+	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
 
 /**
- * Load all plugin routes.  See the CakePlugin documentation on 
+ * Load all plugin routes.	See the CakePlugin documentation on 
  * how to customize the loading of plugin routes.
  */
 	CakePlugin::routes();

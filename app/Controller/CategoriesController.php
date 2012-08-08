@@ -3,246 +3,318 @@
  * Categories controller
  * This file will define how categories are managed
  *
- * @copyright     Copyright 2012, Passbolt.com
- * @license       http://www.passbolt.com/license
- * @package       app.Controller.CategoriesController
- * @since         version 2.12.7
+ * @copyright    Copyright 2012, Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Controller.CategoriesController
+ * @since        version 2.12.7
  */
+ 
+App::uses('CategoryType', 'Model');
+
 class CategoriesController extends AppController {
 
-  /**
-   * get a category
-   * Renders a json object with the nested categories
-   * @param uuid $id the id of the category
-   * @param bool $children whether or not we want the children returned
-   * @return void
-   */
-  public function get($id=null, $children=false) {
-    if (!isset($id)) {
-      $this->Message->error(__('The category id is missing'));
-    } else {
-      $categoryModel = Common::getModel('Category');
-      $fields = $categoryModel::getFindFields('get');
-      $category = $this->Category->findById($id);
-      if ($category) {
-        if ($children == true) {
-          $category = $this->Category->findById($id);
-          $conditions = array('conditions'=>array( 
-            'Category.lft >='=>$category['Category']['lft'] , 
-            'Category.rght <='=>$category['Category']['rght']
-            ),
-            'order' => 'lft ASC'
-          );
-          $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
-        }
-        else {
-          $this->set('data', $this->Category->findById($id, $fields['fields']));
-        }
-        $this->Message->success();
-      }
-      else {
-        $this->Message->error(__('The category doesn\'t exist'));
-      }
-    }
-  }
+/**
+ * Get a category
+ * Renders a json object with the nested categories
+ *
+ * @param uuid $id the id of the category
+ * @param bool $children whether or not we want the children returned
+ * @return void
+ *
+ * @todo should be renamed to 'view' otherwise we need Rest mapping in routes
+ * see http://book.cakephp.org/2.0/en/development/rest.html
+ */
+	public function get($id=null, $children=false) {
+		// check if the category id is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is missing'));
+			return;
+		}
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+		// check if it exists
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'));
+			return;
+		}
 
-  /**
-   * get the children for a corresponding category
-   * @param $id, the id of the parent category
-   * @return void
-   */
-  public function getChildren($id=null) {
-    if (!isset($id)) {
-      $this->Message->error(__('The category id is missing'));
-    } else {
-      $category = $this->Category->findById($id);
-      if ($category) {
-        $categoryModel = Common::getModel('Category');
-        $fields = $categoryModel::getFindFields('getChildren');
-        $conditions = array('conditions'=>array( 
-            'Category.lft >'=>$category['Category']['lft'] , 
-            'Category.rght <'=>$category['Category']['rght']
-            ),
-            'order' => 'lft ASC'
-          );
-        $this->set('data', $this->Category->find('threaded', array_merge($conditions, $fields)));
-        $this->Message->success();
-      }
-      else {
-        $this->Message->error(__('The category doesn\'t exist'));
-      } 
-    }
-  }
+		// get the thread of children
+		if ($children == true) {
+			$o = $this->Category->getFindOptions('getWithChildren', $category);
+			$data = $this->Category->find('threaded', $o);
+			$this->set('data', $data);
+		} else {
+			$o = $this->Category->getFindOptions('get');
+			$this->set('data', $this->Category->find('first', $o));
+		}
+		$this->Message->success();
+	}
 
-  /**
-   * Add a category inside the tree, and return a success object with the added category
-   * @param $parent_id, the parent id of the category
-   * @param $name, the name of the category
-   * @param $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
-   * if position is not available (example : position 2 when there are no children, the category will be inserted in last)
-   * if position is 0, it will not be handled. Count starts from 1.
-   * @param $type (optional), the type of the category (default is set is missing)
-   * @return void
-   */
-  public function add() {
-    // @todo should be moved to test/fixtures
-    // $cat = array("name"=>'testchildrengoa', "parent_id"=>'4ff6111b-efb8-4a26-aab4-2184cbdd56cb', "position"=>'1', "type"=>'default');
-    
-    // check the HTTP request method
-    if (!$this->request->is('post')) {
-      $this->Message->error(__('Invalid request method, should be POST'));
-      return;
-    }
+/**	
+ * get the children for a corresponding category
+ * @param $id, the id of the parent category
+ * @return void
+ * @todo Rest mapping in routes
+ */
+	public function getChildren($id=null) {
+		// check if the id is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is missing'));
+			return;
+		}
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+		// check if the category exist
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'));
+			return;
+		}
+		// find children thread and return
+		$o = $this->Category->getFindOptions('getChildren', $category);
+		$this->set('data', $this->Category->find('threaded', $o));
+		$this->Message->success();
+	}
 
-    // check if data was provided
-    if (!isset($this->request->data)) {
-      $this->Message->error(__('No data were provided'));
-      return;
-    }
+/**
+ * Add a category inside the tree, and return a success object with the added category
+ * 
+ * Post Variables
+ *   $parentId, the parent id of the category
+ *   $name, the name of the category
+ *   $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
+ *     if position is not available (example : position 2 when there are no children, 
+ *			the category will be inserted in last)
+ *     if position is 0, it will not be handled. Count starts from 1.
+ *   $type (optional), the type of the category (default is set is missing)
+ *
+ * @return void
+ */
+	public function add() {
+		// check the HTTP request method
+		if (!$this->request->is('post')) {
+			$this->Message->error(__('Invalid request method, should be POST'));
+			return;
+		}
+		// check if data was provided
+		if (!isset($this->request->data['Category'])) {
+			$this->Message->error(__('No data were provided'));
+			return;
+		}
 
-    // set the data for validation and save
-    $catpost = $this->request->data;
-    $this->Category->set($catpost);
+		// set the data for validation and save
+		$catpost = $this->request->data;
+		$this->Category->set($catpost);
 
-    // check if the data is valid
-    if (!$this->Category->validates()) {
-      $this->Message->error(__('Could not validate category data'));
-      return;
-    }
+		// check if the data is valid
+		if (!$this->Category->validates()) {
+			$this->Message->error(__('Could not validate category data'));
+			return;
+		}
 
-    // trye to save
-    $this->Category->create();
-    $category = $this->Category->save($catpost);
-    if ($category === false) {
-      $this->Message->error(__('The category could not be saved'));
-      return;
-    }
+		// @todo #PASSBOLT-161
+		// filter out given fields that are not supposed to be there
+		// + Security::sanitize paranoid mode
 
-    // Manage the position
-    if (isset($catpost['Category']['position']) && $catpost['Category']['position'] > 0) {
-      $nbChildren = $this->Category->childCount($catpost['Category']['parent_id'], true);
-      if ($catpost['Category']['position'] < $nbChildren) {
-        $steps = ($catpost['Category']['position'] == 1 ? true : $nbChildren - $catpost['Category']['position']);
-        $this->Category->moveUp($category['Category']['id'], $steps);
-      }
-    }
-    $categoryModel = Common::getModel('Category');
-    $fields = $categoryModel::getFindFields('add');
-    $this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
-    $this->Message->success(__('The category was sucessfully added'));
+		// try to save
+		// @todo #PASSBOLT-162 split validation from save
+		$this->Category->create();
+		$category = $this->Category->save($catpost);
+		if ($category === false) {
+			$this->Message->error(__('The category could not be saved'));
+			return;
+		}
 
-  }
+		// Manage the position
+		if (isset($catpost['Category']['position']) && $catpost['Category']['position'] > 0) {
+			$nbChildren = $this->Category->childCount($catpost['Category']['parent_id'], true);
+			if ($catpost['Category']['position'] < $nbChildren) {
+				$steps = ($catpost['Category']['position'] == 1 ? true : $nbChildren - $catpost['Category']['position']);
+				$this->Category->moveUp($category['Category']['id'], $steps);
+			}
+		}
+		$fields = $this->Category->getFindFields('add');
+		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
+		$this->Message->success(__('The category was sucessfully added'));
+	}
 
-  /**
-   * Delete a category in the tree
-   * @param $id, the Category id
-   * @return void
-   */
-  public function delete($id=null) {
-    if (!isset($id)) {
-      $this->Message->error(__('The category id is missing'));
-    } else {
-      if (!$this->Category->delete($id)) {
-        $this->Message->error(__('The category could not be deleted.'));
-      } else {
-        $this->Message->success(__('The category was succesfully deleted'));
-      }
-    }
-  }
+/**	
+ * Delete a category in the tree
+ * @param $id, the Category id
+ * @return void
+ */
+	public function delete($id=null) {
+		// check if the id is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is missing'));
+			return;
+		}
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
 
-  /**
-   * Rename a category
-   * @param $id, the id of the category
-   * @param $name, the name of the category
-   * @return void
-   */
-  public function rename($id=null, $name="") {
-    if (!isset($id)) {
-      $this->Message->error(__('The category id is not provided'));
-    } else {
-      $category = $this->Category->findById($id);
-      if ($category) {
-        $category['Category']['name'] = $name;
-        if ($this->Category->save($category)) {
-          $this->Message->success();
-        } else {
-          $this->Message->error(__('The category could not be saved'));
-        }
-      } else {
-        $this->Message->error(__('The category could not be found'));
-      }
-    }
-  }
+		// delete
+		if ($this->Category->delete($id)) {
+			$this->Message->success(__('The category was succesfully deleted'));
+		} else {
+			$this->Message->error(__('The category could not be deleted.'));
+		}
+	}
 
-  /**
-   * Move a category in the tree
-   * @param $id, the id of the category to move
-   * @param $position, the position among the sieblings
-   * @param $parent_id, the new parent
-   * @return void
-   */
-  public function move($id=null, $position=null, $parent_id=null) {
-    if (!isset($id)) {
-      $this->Message->error(__('The category id is not provided'));
-    } else {
-      $category = $this->Category->findById($id);
-      if ($category) {
-        // First, manage the parent
-        $parent_id = ($parent_id == null ? $category['Category']['parent_id'] : $parent_id);
-        if ($category['Category']['parent_id'] != $parent_id) {
-          $category['Category']['parent_id'] = $parent_id;
-          $category = $this->Category->save($category);
-          if (!$category) {
-            $this->Message->error(__('The category could not be moved'));
-            return;
-          }
-        }
-        // then, manage the position
-        if ($position >= 0) {
-          $nbChildren = $this->Category->childCount($parent_id, true);
-          // if the position is first one or last one
-          if($position == 1) {
-            $result = $this->Category->moveUp($id, true);
-          }
-          elseif($position >= $nbChildren) {
-            $result = $this->Category->moveDown($id, true);
-          }
-          else {
-            $currentPosition = $this->Category->getPosition($id);
-            $steps = $currentPosition - $position;
-            echo "position = $currentPosition, steps = $steps";
-            if($steps > 0) {
-              $result = $this->Category->moveUp($id, $steps);
-            }
-            else {
-              $result = $this->Category->moveDown($id, -($steps));
-            }
-          }
-          if($result)
-            $this->Message->success(__('The category was sucessfully moved'));
-          else
-            $this->Message->error(__('The category could not be moved'));
-          return;
-        }
-        else{
-          $this->Message->error(__('Wrong position. Must be greated than 0'));
-          return;
-        }
-      }
-      else{
-        $this->Message->error(__('The category doesnt exist'));
-        return;
-      }
-    }
-  }
-  
-  /**
-   * Set the type of a category
-   * @param $id, the id of the category
-   * @param $type, the type
-   * @return 1 if success, 0 if failure
-   */
-  public function setType($id=null, $type=null) {
-    
-  }
+/**
+ * Rename a category
+ * @param $id, the id of the category
+ * @param $name, the name of the category
+ * @return void
+ */
+	public function rename($id=null, $name="") {
+		// check if the category id is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is not provided'));
+			return;
+		}
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+
+		// check if the category exist
+		$category = $this->Category->findById($id);
+		if (empty($category)) {
+			$this->Message->error(__('The category could not be found'));
+			return;
+		}
+
+		// save the new name only
+		$c['Category'] = array(
+			'id'   => $id,
+			'name' => $name
+		);
+		// @todo #PASSBOLT-162 split validation from save
+		if ($this->Category->save($c)) {
+			$this->Message->success(__('The category have been renamed'));
+		} else {
+			$this->Message->error(__('The category could not be saved'));
+		}
+	}
+
+/**
+ * Move a category in the tree
+ * @param $id, the id of the category to move
+ * @param $position, the position among the sieblings
+ * @param $parentId, the new parent
+ * @return void
+ */
+	public function move($id=null, $position=null, $parentId=null) {
+		// check if the category is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is not provided'));
+			return;
+		}
+
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+
+		// check if it exist
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'));
+			return;
+		}
+
+		// check if the position is ok
+		if ($position < 0) {
+			$this->Message->error(__('It is not possible to move the category at this position'));
+			return;
+		}
+
+		// @todo remy: can some of this be moved to the model intead?
+		// First, manage the parent
+		$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
+		if ($category['Category']['parent_id'] != $parentId) {
+			$category['Category']['parent_id'] = $parentId;
+			$category = $this->Category->save($category);
+			if (!$category) {
+				$this->Message->error(__('The category could not be moved'));
+				return;
+			}
+		}
+		// then, manage the position
+		$nbChildren = $this->Category->childCount($parentId, true);
+		// if the position is first one or last one
+		if ($position == 1) {
+			$result = $this->Category->moveUp($id, true);
+		} elseif ($position >= $nbChildren) {
+			$result = $this->Category->moveDown($id, true);
+		} else {
+			$currentPosition = $this->Category->getPosition($id);
+			$steps = $currentPosition - $position;
+			echo "position = $currentPosition, steps = $steps";
+			if ($steps > 0) {
+				$result = $this->Category->moveUp($id, $steps);
+			} else {
+				$result = $this->Category->moveDown($id, -($steps));
+			}
+		}
+		// deliver some results
+		if ($result) {
+			$this->Message->success(__('The category was sucessfully moved'));
+		} else {
+			$this->Message->error(__('The category could not be moved'));
+		}
+	}
+
+/**
+ * Set the type of a category
+ * @param uuid $id the id of the category
+ * @param varchar $typeName, the name of the type
+ * @return 1 if success, 0 if failure
+ */
+	public function setType($id=null, $typeName=null) {
+		// check if the category is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is not provided'));
+			return;
+		}
+
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+		
+		$categoryType = new CategoryType();
+		$type = $categoryType->findByName($typeName);
+		if (!$type) {
+			$this->Message->error(__('The type does not exist'));
+			return;
+		}
+		
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'));
+			return;
+		}
+		
+		$category['Category']['category_type_id'] = $type['CategoryType']['id'];
+		$category = $this->Category->save($category);
+		if(!$category){
+			 $this->Message->error(__('The type could not be changed'));
+				return;
+		}
+		$this->Message->success(__('The type was succesfully set'));
+	}
 }

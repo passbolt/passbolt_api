@@ -164,12 +164,12 @@ steal(
             {
                 // Load the javascript dictionnary
                 mad.net.Ajax.singleton().request({
-					'type':			mad.net.Request.METHOD_GET,
+					          'type':		    	mad.net.Request.METHOD_GET,
                     'url':          mad.getGlobal('APP_ROOT_URL')+'/dictionaries/get.json',
                     'async':        false,
                     'dataType':     'json',
                     'success':      function(responseData, response){
-						// load the client dictionnary
+						        // load the client dictionnary
                         mad.lang.I18n.singleton().loadDico(responseData);
                     },
 					'error':function(ajaxResponse){
@@ -186,9 +186,9 @@ steal(
             'initApplication': function()
             {
                 var appControllerClass = this.options.appControllerClass;
-				var app = appControllerClass.singleton(mad.getGlobal('$appController'));
+		        		var app = appControllerClass.singleton(mad.getGlobal('$appController'));
                 mad.setGlobal('app', app);
-				mad.app = mad.getGlobal('app');
+			        	mad.app = mad.getGlobal('app');
             },
             
             /**
@@ -228,7 +228,7 @@ steal(
             'initRouteListener' : function(routes)
             {
                 var self = this;
-				mad.eventBus.bind(mad.APP_NS_ID+'_route_change', function(event, route){
+				        mad.eventBus.bind(mad.APP_NS_ID+'_route_change', function(event, route){
                     self.dispatch(route);
                 });
                 mad.route.RouteListener.singleton();
@@ -236,7 +236,7 @@ steal(
             
             /**
              * Dispatch to the right action following the hash url
-			 * @param {mad.route.Route} route The route to dispatch to
+			       * @param {mad.route.Route} route The route to dispatch to
              * @use core.controller::getDispatcher()
              * @return {void}
              */
@@ -275,13 +275,13 @@ steal(
              */
             'ready': function()
             {
-				// @todo used by the unit test
-				// The app controller should release this event ?
-				// The app is ready before or after dispatch ?
-				if(this.options.callbacks.ready != null){
-					this.options.callbacks.ready();
-				}
-				mad.app.ready();
+				      // @todo used by the unit test
+				      // The app controller should release this event ?
+				      // The app is ready before or after dispatch ?
+				      if(this.options.callbacks.ready != null){
+					      this.options.callbacks.ready();
+				      }
+				      mad.app.ready();
             }
         });
     }
