@@ -9,15 +9,5 @@
  * @since        version 2.12.7
  */
 class CategoryTypesController extends AppController {
-	function populate(){
-		$type['name'] = "default";
-		$this->CategoryType->create();
-		$this->CategoryType->save($type);
-		$type['name'] = "database";
-		$this->CategoryType->create();
-		$this->CategoryType->save($type);
-		$type['name'] = "ssh";
-		$this->CategoryType->create();
-		$this->CategoryType->save($type);
-	}
+
 }

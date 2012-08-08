@@ -129,6 +129,7 @@ class MessageComponent extends Component {
 		switch ($type) {
 			case Message::ERROR :
 				$title = __('Error',true);
+				//$this->controller->statusCode(400); // bad request
 			break;
 			case Message::NOTICE :
 				$title = __('Notice',true);
@@ -138,6 +139,7 @@ class MessageComponent extends Component {
 			break;
 			case Message::SUCCESS :
 				$title = __('Success',true);
+				//$this->controller->statusCode(200); // OK
 			break;
 			case Message::DEBUG :
 				$title = __('Debug',true);

@@ -16,7 +16,7 @@ if (!class_exists('CakeSession')) {
 }
 
 class UserTest extends CakeTestCase {
-  public $fixtures = array('app.user'); //, 'app.role');
+  public $fixtures = array('app.user', 'app.role');
   public $autoFixtures = true;
 
   /**
@@ -114,12 +114,11 @@ class UserTest extends CakeTestCase {
 
     // Get admin user
     $param = array(
-      'conditions' => array('username' => 'Admin')
+      'conditions' => array('username' => 'kevin@passbolt.com')
     );
     $user = $this->User->find('first',$param);
     $this->User->setActive($user);
-    $this->assertEqual(User::isGuest(), false, 'User::isGuest should return true');
-    
+    $this->assertEqual(User::isGuest(), false, 'User::isGuest should return false, kevin is an admin');
   }
 
   public function testIsAdmin() {    
@@ -130,11 +129,11 @@ class UserTest extends CakeTestCase {
 
     // Get admin user
     $param = array(
-      'conditions' => array('username' => 'Admin')
+      'conditions' => array('username' => 'kevin@passbolt.com')
     );
     $user = $this->User->find('first',$param);
     $this->User->setActive($user);
-    $this->assertEqual(User::isAdmin(), true, 'User::Admin should return true');
+    $this->assertEqual(User::isAdmin(), true, 'User::Admin should return true, kevin is an admin');
   }
 
   public function testGetFindConditions() {

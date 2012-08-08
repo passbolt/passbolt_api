@@ -24,7 +24,7 @@ class CategoriesController extends AppController {
  * @todo should be renamed to 'view' otherwise we need Rest mapping in routes
  * see http://book.cakephp.org/2.0/en/development/rest.html
  */
-	public function get($id=null, $children=false) {
+	public function view($id=null, $children=false) {
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -87,7 +87,7 @@ class CategoriesController extends AppController {
  * @return void
  * @todo Rest mapping in routes
  */
-	public function getChildren($id=null) {
+	public function viewChildren($id=null) {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -188,7 +188,6 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id invalid'));
 			return;
 		}
-
 		// delete
 		if ($this->Category->delete($id)) {
 			$this->Message->success(__('The category was succesfully deleted'));
@@ -323,8 +322,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 		
-		$categoryType = new CategoryType();
-		$type = $categoryType->findByName($typeName);
+		$type = $this->Category->CategoryType->findByName($typeName);
 		if (!$type) {
 			$this->Message->error(__('The type does not exist'));
 			return;
@@ -338,6 +336,7 @@ class CategoriesController extends AppController {
 		
 		$category['Category']['category_type_id'] = $type['CategoryType']['id'];
 		$category = $this->Category->save($category);
+		
 		if(!$category){
 			 $this->Message->error(__('The type could not be changed'));
 				return;
