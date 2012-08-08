@@ -13,6 +13,18 @@ App::uses('Role', 'Model');
 class User extends AppModel {
 
 /**
+ * Model Name
+ * @access public
+ */
+	public $name   = 'User';
+
+/**
+ * Model behaviors
+ * @access public
+ */
+	public $actsAs = array('Trackable');
+
+/**
  * Details of belongs to relationships
  *
  * @var array
@@ -89,16 +101,32 @@ class User extends AppModel {
  * Get the current user
  *
  * @return array the current user or an anonymous user, false if error
+ * @param string field
  * @access public
  */
-	public static function get() {
+	public static function get($path = null) {
+		// Get the user from the session
 		Common::getModel('Role');
-		$user = AuthComponent::user();
-		// if the user is not in Session use a anonymous
-		if ($user == null) {
-			$user = User::setActive(User::ANONYMOUS);
+		$u = &AuthComponent::user();
+		// otherwise use a anonymous / guest one
+		if ($u == null) {
+			$u = &User::setActive(User::ANONYMOUS);
 		}
-		return $user;
+		// truth is a land without path
+		if (!isset($path)) {
+			return $u;
+		}
+		// trying to find the path in u
+		$path = str_replace('.', '/', $path);
+		if (strpos($path, '/') === false) {
+			$path = sprintf('User/%s', $path);
+		}
+		$path = '/' . $path;
+		$value = Set::extract($path, $u);
+		if (!$value) {
+			return false;
+		}
+		return $value[0];
 	}
 
 /**

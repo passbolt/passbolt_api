@@ -95,6 +95,12 @@ class UserTest extends CakeTestCase {
     $this->assertEqual($user['Role']['name'], Role::GUEST, 'User::get in default context should return a user with guest role');
     $this->assertEqual($user, $Session->read(AuthComponent::$sessionKey), 'User::get should set user in session');
 
+		$this->assertEqual(User::get('id'), $user['User']['id'], 'User::get(id) in default context should return a user with guest role');
+    $this->assertEqual(User::get('User.id'), $user['User']['id'], 'User::get(user.id) in default context should return a user with guest role');
+    $this->assertEqual(User::get('Role.name'), Role::GUEST, 'User::get(role.name) in default context should return a user with guest role');
+    $this->assertEqual(User::get('whatever'), false, 'User::get(whaterver) should return false');
+		$this->assertEqual(User::get('Whatever.stuff'), false, 'User::get(whaterver.stuff) should return false');
+	
   }
 
   public function testSetActive() {
@@ -145,4 +151,53 @@ class UserTest extends CakeTestCase {
   	$f = $this->User->getFindFields('testdqwodjqodqodwjqidqjdow');
   	$this->assertEquals($f, array('fields' => array()), 'testGetFindFields return an empty array');
   }
+
+  public function testCreatedBy() {
+		// get an anon
+		$anon = User::get();
+
+		// insert a user
+		$this->User->create();
+		$this->User->set(array(
+	    'username' => 'testSave@passbolt.com',
+	    'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+	    'password' => 'this will be replaced at runtime',
+	    'active' => 1
+		));
+		$this->User->save();
+		$user = $this->User->find('all');
+
+		// find the previously inserted user
+    $param = array(
+      'conditions' => array('username' => 'testSave@passbolt.com')
+    );
+    $user = $this->User->find('first',$param);
+		$this->assertEqual($anon['User']['id'], $user['User']['created_by'], 
+			'The user should be marked as being created by anonymous'
+		);
+	}
+
+  public function testModifiedBy() {
+		// get kevin and set it as current user
+    $param = array(
+      'conditions' => array('username' => 'kevin@passbolt.com')
+    );
+    $kevin = $this->User->find('first',$param);
+    $this->User->setActive($kevin);
+
+		// change username and save
+		$kevin['User']['username'] = 'kk@passbolt.com';
+		$this->User->save($kevin);
+
+		// find it again
+    $param = array(
+      'conditions' => array('username' => 'kk@passbolt.com')
+    );
+    $kk = $this->User->find('first',$param);
+
+		$this->assertEqual($kevin['User']['id'], $kk['User']['modified_by'], 
+			'Kevin should be mark as the one who updated his record'
+		);
+	}
+
 }
