@@ -17,7 +17,7 @@ steal(
         * controllers.
         * 
         * @constructor
-        * Creates a new application controller.
+        * Creates a new controller
         * <br/>
         * References it to the application controller.
         * @return {mad.controller.Controller}
@@ -47,6 +47,11 @@ steal(
             {
                 // set the options
                 this.options = $.extend(true, {}, this.options, options);
+				// if the element does not carry the id, use the id given in options or generate a new one
+				if(this.getId() == ''){
+					var id = this.options.id || uuid();
+					this.element.attr('id', id);
+				}
                 // reference the controller to the application
 				this.getApp().referenceComponent(this);
                 // propagate : a new controller has been released

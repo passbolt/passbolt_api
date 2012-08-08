@@ -284,11 +284,20 @@ class Category extends AppModel {
 					),
 					'order' => 'lft ASC'
 				);
+			break;
 			case 'getChildren':
 				$c = array(
 					'conditions' => array(
 						'Category.lft >' => $data['Category']['lft'],
 						'Category.rght <' => $data['Category']['rght']
+					),
+					'order' => 'lft ASC'
+				);
+			break;
+			case 'getRoots':
+				$c = array(
+					'conditions' => array(
+						'parent_id' => null
 					),
 					'order' => 'lft ASC'
 				);

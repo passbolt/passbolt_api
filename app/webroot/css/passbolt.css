@@ -9,6 +9,10 @@
 #userbar #search-button input { margin-top:5px; width:100%; }
 #userbar #login-container { padding-top:5px; }
 
+.js_popup { position:absolute; top:0; left:0; width:100%; height:100%; background: #FFF;}
+.js_popup_content { border:1px solid #B0B0B0; }
+.js_popup_close { width:16px; height:16px; float:right; }
+
 #js-notif-controller { z-index:2; position:absolute; top:39px; left:20px; height:20px; width:400px; background-color: #F9EDBE; border:1px solid transparent; border-radius:2px; box-shadow:0 2px 4px rgba(0, 0, 0, 0.2); }
 .notif-status { font-weight:bold; }
 .notif-see-details { font-weight:bold; }
@@ -20,8 +24,12 @@
 .workspace-actions-container li,
 	.workspace-view-actions-container li { display:inline-block; list-style:none; font:13px/27px Arial,sans-serif; font-weight:bold; padding:0 4px; }
 
-.loading { position:absolute; width:100%; height:100%; background: transparent url(/img/loader.gif) no-repeat ; }
-	
+.loading { position:absolute; width:100%; height:100%; background: #FF0000 url(/img/loader.gif) no-repeat center center; }
+.js_component { position:relative; }
+.js_component_error { border:2px solid #FF0000; }
+.js_hidden { position:absolute; left:-10000px; }
+
+
 .ui-tabs { position: relative; padding: .2em; zoom: 1; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
 .ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; }
 .ui-tabs .ui-tabs-nav li { list-style: none; float: left; position: relative; top: 1px; margin: 0 .2em 1px 0; border-bottom: 0 !important; padding: 0; white-space: nowrap; }

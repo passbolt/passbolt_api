@@ -54,6 +54,16 @@ steal(
 				this.controller = controller;
 				this.element = controller.element;
 				this.templateUri = options.templateUri;
+				this.templateBased = options.templateBased;
+				
+				// add the classes to the top element
+				// @todo Hmmmmmmm. Ou pas ici
+				for(var i in options.cssClasses){
+					if(!this.element.hasClass(options.cssClasses[i])){
+						this.element.addClass(options.cssClasses[i]);
+					}
+				}
+				
 			},
 			
             /**
@@ -77,6 +87,19 @@ steal(
                 return returnValue;
             },
 			
+			/**
+			 * The component is loading
+			 * @param {boolean} loading Display or not the loading
+			 * @return {void}
+			 */
+			'loading':function(loading){
+				if(loading){
+					this.element.prepend('<div class="loading" />');
+				}else{
+					$('.loading', this.element).remove();
+				}
+			},
+			
             /**
              * The render method renders the view based on its template.
              * @see {getTemplate}
@@ -89,6 +112,11 @@ steal(
              */
 			'render': function(options)
 			{
+				// if the view does is not template based leave
+				if(!this.templateBased){
+					return true;
+				}
+				
 //				console.log('RENDER TEMPLATE '+this.getTemplate());
 				var options = options || {};
 				var display = options.display || true;

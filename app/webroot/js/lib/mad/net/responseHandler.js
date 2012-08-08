@@ -25,7 +25,7 @@ steal(
 			
 			/** @prototype */
 			{ 
-				// The constructor
+				// Constructor like
 				'init': function(response, callbacks, request)
 				{
 					this.response = response;
@@ -39,9 +39,32 @@ steal(
 				 */
 				'notifyErrorHandler': function()
 				{
-					var message = 'request : '+this.request.url+' / method :'+this.request.type+' / server message  :'+this.response.message;
-					var data = this.response.content && this.response.content.response ? this.response.content.response : {};
-					mad.getGlobal('ERROR_HANDLER_CLASS').handleError(this.response.status, this.response.title, message, data);
+					var message = 'request : '+this.request.url+' / method :'+this.request.type+' / server message  :'+this.response.header.message;
+					var data = this.response.content && this.response.body.content.response ? this.response.body.content.response : {};
+					mad.getGlobal('ERROR_HANDLER_CLASS').handleError(this.response.header.status, this.response.header.title, message, data);
+				},
+				
+				/**
+				 * Handle the response
+				 * @return {void}
+				 */
+				'handle': function()
+				{					
+					// Dispatch the response function of the response status
+					switch(this.response.header.status){
+						case mad.net.Header.STATUS_ERROR:
+							this.error();
+							break;
+						case mad.net.Header.STATUS_NOTICE:
+							this.notice();
+							break;
+						case mad.net.Header.STATUS_SUCCESS:
+							this.success();
+							break;
+						case mad.net.Header.STATUS_WARNING:
+							this.warning();
+							break;
+					}	
 				},
 				
 				/**
@@ -51,11 +74,11 @@ steal(
 				'success': function()
 				{
 					// Log the request result into the console
-					var message = 'status : '+this.response.status+' / request : '+this.request.url+' / method :'+this.request.type+' / server message  :'+this.response.message;
+					var message = 'status : '+this.response.header.status+' / request : '+this.request.url+' / method :'+this.request.type+' / server message  :'+this.response.header.message;
 					steal.dev.log(message);
 					// callback if defined
 					if(this.callbacks.success){
-						this.callbacks.success(this.response.content, this);
+						this.callbacks.success(this.response.body, this.response);
 					}
 				},
 				

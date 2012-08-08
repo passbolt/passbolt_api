@@ -9,7 +9,7 @@ steal(
         
 		/*
         * @class mad.controller.component.TreeController
-        * @inherits $.Controller
+        * @inherits {mad.controller.ComponentController}
         * @parent index
 		* @see {mad.view.component.Tree}
         * 

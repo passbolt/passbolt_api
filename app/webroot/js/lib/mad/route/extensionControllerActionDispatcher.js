@@ -42,7 +42,7 @@ steal(
                 }
                 // Find him following the route
                 else{
-                    controllerId = route.extension+'-'+route.controller+'-controller';
+                    controllerId = 'js_'+route.extension+'_'+route.controller+'_controller';
                 }
                 
                 var pluginNameController = mad.helper.routeHelper.pluginNameController(route, {'prefix':route.extension != 'passbolt' ? 'passbolt_': ''});

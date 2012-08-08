@@ -10,7 +10,6 @@ steal(
         $.String.getObject('mad.helper.component', window, true);
         mad.helper.component.BoxDecorator = {
 			'init':function(){
-				console.log('YEAH');
 				this.options.loading = true;
 				this._super();
 			},

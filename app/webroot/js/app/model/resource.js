@@ -2,10 +2,36 @@ steal(
     'jquery/model'
 )
 .then(function(){
-	
-    $.Model('passbolt.model.Resource',{
-		attributes : {},
+	/*
+	* @class passbolt.model.Resource
+	* @inherits {$.Model}
+	* @parent index
+	* 
+	* The resource model
+	* 
+	* @constructor
+	* Creates a resource
+	* @param {array} options
+	* @return {passbolt.model.Resource}
+	*/
+    $.Model('passbolt.model.Resource',
+	/** @static */
+	{
+		attributes : {
+			'id':				'string',
+			'name':				'string',
+			'username':			'string',
+			'expiry_date':		'string',
+			'uri':				'string',
+			'description':		'string',
+			'deleted':			'string',
+			'created':			'string',
+			'modified':			'string'
+		},
 		
+		/**
+		 * Get resources for a given category
+		 */
         'getCategoryResources' : function(params, success, error){
             var url = APP_URL+'/resources/getCategoryResources/{category_id}';
             url = $.String.sub(url, params, true);
@@ -19,10 +45,6 @@ steal(
             });
         }
     },
-    {
-        test: function(){
-            alert (this.name);
-        }
-    }
-    );
+	/** @prototype */
+    {  });
 })

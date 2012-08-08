@@ -1,7 +1,7 @@
 steal( 
     'jquery/dom/route',
-    MAD_ROOT+'/bootstrap/bootstrapInterface.js',
-    'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
+    MAD_ROOT+'/bootstrap/bootstrapInterface.js'
+//    'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
 )
 .then( 
     function($){
@@ -92,7 +92,7 @@ steal(
 					this.initGlobals();
 
 					// Initialize internationalization
-					this.initInternationalization();
+//					this.initInternationalization();
 
 					// Initialize the event bus controller
 					this.initEventBus();

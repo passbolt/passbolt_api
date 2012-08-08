@@ -6,11 +6,14 @@ steal(
         
 		/*
         * @class passbolt.helper.ResponseHandler
-		* 
 		* @inherits {mad.net.ResponseHandler}
         * @parent index
 		* 
-        * The passbolt ajax response
+        * Our ajax response handler. It will handle each ajax response on passbolt.
+		* 
+		* @constructor
+		* Create a new response handler
+		* @return {passbolt.helper.ResponseHandler}
         */
 		mad.net.ResponseHandler.extend('passbolt.helper.ResponseHandler', 
 			/** @static */

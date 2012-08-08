@@ -10,7 +10,8 @@ steal(
 		* @inherits {mad.error.ErrorHandler}
         * @parent index
 		* 
-        * Passbolt error handler
+        * Our implementation of the error handler for passbolt.
+		* It will manage all errors and exceptions which occure on Passbolt
         */
 		mad.error.ErrorHandler.extend('passbolt.helper.ErrorHandler', 
 		/** @static */

@@ -1,4 +1,4 @@
-<script type='text/javascript' src='js/steal/steal.js?passbolt'></script>
+<script type='text/javascript' src='js/steal/steal.js?app/passbolt.js'></script>
 
 <?php if(!Configure::read('debug')){ ?>
 <script>

@@ -1,6 +1,7 @@
 steal(
     MAD_ROOT+'/controller/controller.js',
     MAD_ROOT+'/helper/controllerHelper.js',
+//    MAD_ROOT+'/helper/component/state.js',
     MAD_ROOT+'/view/view.js'
 )
 .then(
@@ -11,8 +12,11 @@ steal(
 		 * @inherits mad.controller.Controller
          * @parent index
 		 * 
-         * The component controller represents a graphical component controller 
-         * in the application. 
+         * The class Component controller is our representation of controllers which take
+		 * care of UI Components.
+		 * <br/>
+		 * The class Component controller is associated to its own view which takes to
+		 * display data to users.
 		 * 
          * @constructor
          * Creates a new Component Controller
@@ -32,63 +36,88 @@ steal(
                 , 'icon':			null                            // @todo
 				, 'loading':		false							// auto loading prompt
 				, 'templateUri':	null							// the template which will used by the view to render the component
+				, 'templateBased':	true							// based on template, by default true
 				, 'viewClass':		mad.view.View					// associated view will be an instance of this viewClass
-            }
+				, 'readyState':		'ready'							// the state to put the component when the rendering is finished
+				, 'cssClasses':		['js_component']
+            },
+			/**
+			 * The component will listen to the following array of events.
+			 * The class has to implement a function for each event. Prefere 
+			 * the lowercase/underscore writting to be able to see easily what
+			 * kind of function it is.
+			 * @type array
+			 */
+			'listensTo':[]
+			
         }
 		/** @prototype */
         , {    
-            
             /**
-             * Data to pass to the view
+			 * The component state.
+			 * @type {mad.model.ComponentState}
+			 */
+			'state': null,
+			
+            /** Data to pass to the view
              * @type {array}
              * @private
-             * @hide
-             */
+             * @hide */
             'viewData': [],
             
-            /**
-             * The rendered view, if not displayed will be stored in this variable
+            /** The rendered view, if not displayed it will be stored in it
              * @type {string}
              * @private
-             * @hide
-             */
+             * @hide */
             'renderedView': '',
 			
-			/**
-			 * 
-			 * @type {string}
+			/** The associated view class, by default {mad.view.View}
+			 * @type {mad.view.View}
 			 * @private
-			 * @hide
-			 */
+			 * @hide */
 			'viewClass': null,
 			
             // Class Constructor
             'init': function(el, options)
-            {
-                // feedback the user about the component loading
-                // bon, est ce que c'est bien sa place ?
-                this.loading(true);
-				
+            {			
+				var self = this;
                 this._super(el, options);
-				
+								
 				// initialize the view
 				this.view = new this.options.viewClass(this, {
-					'templateUri': this.options.templateUri
+					'templateUri': this.options.templateUri,
+					'cssClasses': this.options.cssClasses,
+					'templateBased': this.options.templateBased
 				});
 				
-                // add the controller to the data to pass to the view when it will render
+				// bind state changes
+				this.state = new mad.model.ComponentState();
+				this.state.bind('label', function(event, newStateName) {
+					self.go(newStateName);
+				});
+				
+				// set the state of the component with the given default state
+				this.setState('loading');
+				
+                // Pass common Component Controller data to the view
                 this.setViewData('controller', this);
-                
-                // stop the feedback loading
-                this.loading(false);
+				this.setViewData('icon', this.options.icon);
+				this.setViewData('label', this.options.label);
             },
 			
+			// destructor like
+			'destroy' : function(){
+				this.state.unbind('label');
+				this._super();
+			},
+			
 			/**
-			 * 
+			 * The component is loading
+			 * @return {void}
 			 */
 			'loading': function(loading)
 			{
-				
+				this.view.loading(loading);
 			},
             
 			/**
@@ -100,6 +129,16 @@ steal(
 			{
 				this.view.setTemplateUri(templateUri);
 			},
+            
+            /**
+             * Set the current element state
+             * @param {string} name the state name to switch on
+             * @return {void}
+             */
+            'setState': function(stateName)
+            {
+				this.state.setState(stateName);
+            },
             
             /**
              * The set method allows developper to set data to the view
@@ -118,6 +157,7 @@ steal(
 				else{
 					this.viewData[name] = value;
 				}
+				return this;
             },
             
             /**
@@ -137,9 +177,85 @@ steal(
 					display = options.display || true;
 					
 				returnValue = this.view.render(options);
-                return returnValue;
-            }
+				
+				this.setState(this.options.readyState);
+                return returnValue === true ? this : returnValue;
+            },
             
+			/* ************************************************************** */
+			/* LISTEN TO THE STATE CHANGES */
+			/* ************************************************************** */
+			
+			/**
+			 * Listen to any state change and dispatch to the dedicated state 
+			 * listener.
+			 * <br/>
+			 * A state listener is represented as a function in your controller.
+			 * This function should respect the following writing : Listen[Statename].
+			 * <br/>
+			 * The listener will get in parameter a boolean "go" which indicate to the function
+			 * if the controller is entering or leaving the state.
+			 * <br/>
+			 * Of course with the inheritance concept you can call the parent listener state
+			 * if this one is declared with the function "_super"
+			 * 
+			 * @param {mad.model.ComponentState} State The component state class
+			 * @param {event} event The jQuery event
+			 * @param {string} stateName The new state name
+			 */
+			'go': function(newState){
+				var previousState = this.state.attr('previous');
+				if(previousState){
+					var previousStateListener = this['listen'+$.String.capitalize(previousState)];
+					if(previousStateListener){
+						previousStateListener.call(this, false);
+					}
+				}
+				var newStateListener = this['listen'+$.String.capitalize(newState)];
+				if(newStateListener){
+					newStateListener.call(this, true);
+				}
+			},
+			
+			/**
+			 * Listen to the change relative to the state Loading
+			 * The loading state is fired automatically when the component is instanciated
+			 * @param {boolean} go Enter or leave the state
+			 * @return {void}
+			 */
+			'listenLoading': function(go){
+				if(go){
+					this.loading(true);
+				}
+				else{
+					this.loading(false);
+				}
+			},
+			
+			/**
+			 * Listen to the change relative to the state Ready.
+			 * The ready state is fired automatically after the Component is rendered
+			 * @param {boolean} go Enter or leave the state
+			 * @return {void}
+			 */
+			'listenReady': function(go){
+				// override this function to implement your own behavior
+			},
+			
+			/**
+			 * Listen to the change relative to the state Hidden.
+			 * @param {boolean} go Enter or leave the state
+			 * @return {void}
+			 */
+			'listenHidden': function(go){
+				if(go){
+					this.element.hide()
+				}
+				else{
+					this.element.show()
+				}
+			}
+			
         });
         
     }

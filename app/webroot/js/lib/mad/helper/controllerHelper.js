@@ -33,7 +33,7 @@ steal(
              * <br/><br/>
              * For controllers from the plugins of the application (passbolt.activity.controller.activityWorkspaceController):
              * <br/>
-             * plugin/activity/view/template/activityWorkspaceController.ejs
+             * app/plugin/activity/view/template/activityWorkspaceController.ejs
              * 
              * @param {jQuery.Controller} clazz Controller to determine the view path
 			 * @param {array} options 
@@ -60,7 +60,7 @@ steal(
                 else if(split[0] == mad.controller.AppController.getGlobal('APP_NS_ID')){
                     //we are in a plugin
                     if(split[1]!='controller'){
-                        returnValue += 'plugin/'+split[1];
+                        returnValue += 'app/plugin/'+split[1];
                         split = split.splice(2);
                     }
                     //else we are in the application
@@ -83,16 +83,12 @@ steal(
                 
                 // add the view name (et voila batard)
                 returnValue += viewName + '.ejs';
-                
-//				// check if the view template exists
-//				if(check){
-//					
-//				}
 				
 				return returnValue;
             },
 			
 			 // @todo copy/page of getViewPath, make something more proper
+			 // @deprecated or not
 			'getView': function(clazz, options)
             {
                 var returnValue = '';
@@ -136,7 +132,6 @@ steal(
                 // add the view name (et voila batard)
                 returnValue += $.String.capitalize(viewName);
 				
-				console.log(returnValue);
 				var view = $.String.getObject(returnValue, null);
                 return view;
 //				// check if the view template exists

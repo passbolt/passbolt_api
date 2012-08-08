@@ -9,12 +9,11 @@ steal(
         
 		/*
         * @class mad.controller.component.GridController
-        * @inherits mad.controller.ComponentController
+        * @inherits {mad.controller.ComponentController}
         * @parent index
 		* @see {mad.view.component.Grid}
         * 
         * The Grid class Controller is our implementation of the UI component grid.
-		* The common view works upon the jQgrid plugin.
 		* 
         * @constructor
         * Creates a new Grid Controller Component
@@ -39,7 +38,7 @@ steal(
              */
 			'map': null,
 			
-			// Construcor
+			// Construcor like
 			'init': function(el, options)
 			{
 				this._super(el, options);
@@ -48,15 +47,106 @@ steal(
 			},
 			
 			/**
-			 * 
+			 * Empty the grid
+			 * @return {void}
+			 */
+			'empty': function() {
+				// @todo Check after this operation if the widget are well destroyed.
+				// The hypothesis let's believe me than the remove function will deeply removed
+				// each element and launch the destroy function of each component controller
+				this.view.empty();
+			},
+			
+			/**
+			 * Hide Column
+			 * @param {string} columnName The column name to hide
+			 * @return {void}
+			 */
+			'hideColumn': function(columnName) {
+				this.view.hideColumn(columnName);
+			},
+			
+			/**
+			 * Show Column
+			 * @param {string} columnName The column name to show
+			 * @return {void}
+			 */
+			'showColumn': function(columnName) {
+				this.view.showColumn(columnName);
+			},
+			
+			/**
+			 * Insert items in the grid
+			 * @param {$.Model[]} items The array of items to insert in the grid
+			 * @param {string} position The position to insert the new items.
+			 * Allowed inside_replace, first, last, before, after
+			 * @param {string} refId The reference item id to position the new ones
+			 * @return {void}
+			 */
+			'insertItems': function(items, position, refId){
+				var mappedData = this.map.mapObjects(items),				// map items to the view format
+					self = this;
+					
+				// insert items in the view
+				this.view.insertItems(mappedData);
+				
+				// apply a widget to cells following the columns model
+				for(var j in this.options.columnModel){
+					var columnModel = this.options.columnModel[j];
+					
+					if(columnModel.cellAdapter){
+						for(var i in mappedData){
+							var itemId = mappedData[i].id;
+							var $cell = $('#'+itemId+' .'+columnModel.name+' span');
+							var cellValue = mappedData[i][columnModel.name];
+							columnModel.cellAdapter($cell, cellValue);
+						}
+					}
+					// @todo Cell adapter replace widget, remove this part if not usefull
+					if(columnModel.widget){
+						var widgetClass = columnModel.widget.clazz,
+							widgetJQueryPlugin = widgetClass._fullName,
+							widgetOptions = columnModel.widget.options;
+						
+						// Ok it is costing : + z*n (z #columWidget; n #items) with this 
+						// part to insert the items and render widget if there is
+						for(var i in mappedData){
+							var itemId = mappedData[i].id;
+							var $cell = $('#'+itemId+' .'+columnModel.name+' span');
+							widgetOptions.value = mappedData[i][columnModel.name];
+							$cell[widgetJQueryPlugin](widgetOptions);
+							$cell[widgetJQueryPlugin]('render');
+						}
+					}
+				}
+			},
+			
+			/**
+			 * Load items in the grid. If the grid contain items, empty it
+			 * @param {$.Model[]} items The array of items to insert in the grid
+			 * @return {void}
 			 */
 			'load': function(items)
 			{
-				this.setViewData('items', items);
-				// map the jmvc model objects into the desired format
-				var mappedData = this.map.mapObjects(items);				
-				this.view.load(mappedData);
-			}
+				this.empty();
+				this.insertItems(items);
+			},			
+			
+			/* ************************************************************** */
+			/* LISTEN TO THE VIEW EVENTS */
+			/* ************************************************************** */
+			
+			/**
+			 * An item has been selected
+			 * @return {void}
+			 */
+			'item_selected': function(row, event) {  },
+			
+			/**
+			 * An item has been hovered
+			 * @return {void}
+			 */
+			'item_hovered': function(row, event) {  }
 		});
         
 	}

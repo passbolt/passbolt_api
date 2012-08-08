@@ -73,13 +73,14 @@ steal(
 			 * @param {string} itemId The item identifier
 			 * @return {void}
 			 */
-			'{mad.eventBus} passbolt_database_selected': function(ui, event, database)
+			'{mad.eventBus} app_ready': function(ui, event, database)
 			{
 				var self = this;
 				//load categories function of the selected database
-				passbolt.controller.CategoryController.get({id:database.id, children:true}, function(category){
+				passbolt.model.Category.getRoots({children:false}, function(categories){
 					// load the tree with the categories
-					self.load(category);
+					console.dir(categories);
+					self.load(categories);
 				});
 			}
             

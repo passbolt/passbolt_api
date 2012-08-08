@@ -7,16 +7,11 @@ steal(
         
         /*
         * @class mad.controller.AppController
-        * @inherits mad.core.Singleton
         * @inherits [mad.controller.Controller,mad.core.Singleton]
         * @parent index
         * 
         * The main application controller.
         * This class is by definition a singleton.
-        * 
-        * @constructor
-        * Creates the application controller
-        * @return {mad.controller.AppController}
         */
         mad.controller.ComponentController.extend('mad.controller.AppController', 
         /** @static */
