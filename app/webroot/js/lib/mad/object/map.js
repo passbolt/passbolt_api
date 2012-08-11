@@ -1,113 +1,106 @@
-steal( 
-	MAD_ROOT+'/core/singleton.js'
-	)
-.then( 
-	function($){
-        
-		/*
-        * @class mad.object.Map
-        * @parent index
-		* @inherits $.Class
-		* 
-        * The ajax wrapper is an interface to the jQuery ajax function. It allows 
-        * developpers to make their ajax request, moreover it allows them to make 
-        * ajax transactions to minimize server calls by aggregating ajax requests 
-        * 
-        * @constructor
-        * Creates a new ajax wrapper
-        * @return {mad.object.Map}
-        */
-		$.Class('mad.object.Map', 
-                
-		/** @static */
-        
-		{
-				'mapObject': function(object, map){
-					return map.mapObject(object);
-				},
-				'mapObjects': function(arr, map){
-					return map.mapObjects(arr);
+steal(MAD_ROOT + '/core/singleton.js')
+.then( function ($) {
+
+	/*
+	 * @class mad.object.Map
+	 * @parent index
+	 * @inherits $.Class
+	 * 
+	 * The ajax wrapper is an interface to the jQuery ajax function. It allows 
+	 * developpers to make their ajax request, moreover it allows them to make 
+	 * ajax transactions to minimize server calls by aggregating ajax requests 
+	 * 
+	 * @constructor
+	 * Creates a new ajax wrapper
+	 * @return {mad.object.Map}
+	 */
+	$.Class('mad.object.Map',
+
+	/** @static */
+
+	{
+		'mapObject': function (object, map) {
+			return map.mapObject(object);
+		},
+		'mapObjects': function (arr, map) {
+			return map.mapObjects(arr);
+		}
+	},
+
+	/** @prototype */
+	{
+		'init': function (map) {
+			this.map = map;
+		},
+
+		'mapObject': function (object) {
+			var returnValue = {};
+
+			getObjFieldPointer = function (object, key) {
+				var returnValue = object;
+				var split = key.split('.');
+				for (var i in split) {
+					returnValue = returnValue[split[i]];
 				}
-			},
-        
-			/** @prototype */
-			{
-				'init': function(map)
-				{
-					this.map = map;
-				},
-			
-				'mapObject': function(object)
-				{
-					var returnValue = {};
+				return returnValue;
+			}
 
-					getObjFieldPointer = function(object, key){
-						var returnValue = object;
-						var split = key.split('.');
-						for(var i in split){
-							returnValue = returnValue[split[i]];
-						}
-						return returnValue;
-					}
+			for (var key in this.map) {
+				var mapKeyElts = key.split('.'),
+					// the map keys (targetKey || targetKeyLvl1.targetKeyLvl2)
+					current = returnValue,
+					// the current position in the final object
+					position = 0; // position of the cursors in the mapKeyElts
 
-					for(var key in this.map){
-						var mapKeyElts = key.split('.'),			// the map keys (targetKey || targetKeyLvl1.targetKeyLvl2)
-							current = returnValue,					// the current position in the final object
-							position = 0;							// position of the cursors in the mapKeyElts
+				// foreach mapKeyElts we add add a level in the final object
+				// at the leaf we insert the value
+				for (var i in mapKeyElts) {
+					var mapKeyElt = mapKeyElts[i];
 
-						// foreach mapKeyElts we add add a level in the final object
-						// at the leaf we insert the value
-						for(var i in mapKeyElts){
-							var mapKeyElt = mapKeyElts[i];
+					// if the leaf is reached
+					if (position == mapKeyElts.length - 1) {
 
-							// if the leaf is reached
-							if(position == mapKeyElts.length-1){
-
-								// if a transformation func is given
-								if(typeof this.map[key] == 'object'){
-									var func = this.map[key].func;
-									var keyToMap = this.map[key].key;
-									var objectFieldToMap = getObjFieldPointer(object, keyToMap);
-									// @todo what to do if the key to map does not exist
-									if(objectFieldToMap != null){
-										current[mapKeyElt] = func(objectFieldToMap, this);
-									}
-								}
-								else{
-									var objectFieldToMap = getObjFieldPointer(object, this.map[key]);
-									// @todo what to do if the key to map does not exist
-									if(objectFieldToMap != null){
-										current[mapKeyElt] = objectFieldToMap;
-									}
-								}
-
+						// if a transformation func is given
+						if (typeof this.map[key] == 'object') {
+							var func = this.map[key].func;
+							var keyToMap = this.map[key].key;
+							var objectFieldToMap = getObjFieldPointer(object, keyToMap);
+							// @todo what to do if the key to map does not exist
+							if (objectFieldToMap != null) {
+								current[mapKeyElt] = func(objectFieldToMap, this);
 							}
-							// else we move the cursor in the mapKeyElts
-							else{
-								if(typeof current[mapKeyElt] == 'undefined')
-									current[mapKeyElt] = [];
-								current = current[mapKeyElt];
+						} else {
+							var objectFieldToMap = getObjFieldPointer(object, this.map[key]);
+							// @todo what to do if the key to map does not exist
+							if (objectFieldToMap != null) {
+								current[mapKeyElt] = objectFieldToMap;
 							}
-
-							position++;
 						}
+
+					}
+					// else we move the cursor in the mapKeyElts
+					else {
+						if (typeof current[mapKeyElt] == 'undefined') current[mapKeyElt] = [];
+						current = current[mapKeyElt];
 					}
 
-					return returnValue;
-				},
-			
-				'mapObjects': function(arr)
-				{	
-					if(!($.isArray(arr))){
-						throw new mad.error.WrongParameters('The function mapObjects is expecting an array as first parameter');
-					}
-					var returnValue = [];
-					for(var i in arr){
-						returnValue[i] = this.mapObject(arr[i]);
-					}
-					return returnValue;
+					position++;
 				}
-			});
-        
-	}
-	);
+			}
+
+			return returnValue;
+		},
+
+		'mapObjects': function (arr) {
+			if (!($.isArray(arr))) {
+				throw new mad.error.WrongParameters('The function mapObjects is expecting an array as first parameter');
+			}
+			var returnValue = [];
+			for (var i in arr) {
+				returnValue[i] = this.mapObject(arr[i]);
+			}
+			return returnValue;
+		}
+	});
+
+});

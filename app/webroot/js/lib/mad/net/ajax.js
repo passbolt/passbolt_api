@@ -178,9 +178,9 @@ steal(
              */
             '_executeRequest': function(request)
             {
-//				setTimeout(function(){
+				setTimeout(function(){
 					$.ajax(request);
-//				}, 2000);
+				}, 2000);
             },
             
             /**

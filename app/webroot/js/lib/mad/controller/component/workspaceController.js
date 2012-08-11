@@ -1,5 +1,6 @@
 steal( 
-    MAD_ROOT+'/controller/component/containerController.js'
+    MAD_ROOT + '/controller/component/containerController.js',
+	MAD_ROOT + '/view/template/component/workspace.ejs'
 )
 .then(
     function($){
@@ -23,7 +24,7 @@ steal(
 		{
             'defaults': {
                 'label': 'WorkspaceController',
-				'templateUri' : '//app/view/template/workspace.ejs'
+				'templateUri' : MAD_ROOT + '/view/template/component/workspace.ejs'
             }
         }
 		/** @prototype */

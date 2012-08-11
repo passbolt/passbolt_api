@@ -78,7 +78,7 @@ steal(
 					steal.dev.log(message);
 					// callback if defined
 					if(this.callbacks.success){
-						this.callbacks.success(this.response.body, this.response);
+						this.callbacks.success(this.request, this.response, this.response.body);
 					}
 				},
 				

@@ -10,7 +10,7 @@ steal(
 		var resourcesFixturedData = {};
 		$.fixture({
 			type: 'GET',  
-			url: APP_URL+'/resources/getCategoryResources/{category_id}'
+			url: APP_URL+'/resources/viewByCategory/{category_id}/{recursive}'
 		},
 		function(original, settings, headers){
 			var content = resourcesFixturedData[original.data.category_id];
@@ -20,6 +20,33 @@ steal(
 					'status':		mad.net.Header.STATUS_SUCCESS,
 					'title':		'Resource fixture',
 					'message':		'Resource fixture for the category '+original.data.category_id,
+					'controller':	'resources',
+					'action':		'getCategoryResources'
+				}),
+				'body':content
+			};
+			return returnValue;
+		});
+		$.fixture({
+			type: 'GET',  
+			url: APP_URL+'/resources/view/{id}'
+		},
+		function(original, settings, headers){
+			var content = null;
+			for(var i in resourcesFixturedData){
+				for(var j in resourcesFixturedData[i]){
+					if(resourcesFixturedData[i][j].Resource.id == original.data.id){
+						content = resourcesFixturedData[i][j];
+						break;
+					}
+				}
+			}
+			var returnValue = {
+				 'header': new mad.net.Header({
+					'id':			uuid(),
+					'status':		mad.net.Header.STATUS_SUCCESS,
+					'title':		'Resource fixture',
+					'message':		'Resource fixture for the id '+original.data.id,
 					'controller':	'resources',
 					'action':		'getCategoryResources'
 				}),
@@ -78,9 +105,13 @@ steal(
 						'Resource':{
 							'id':uuid(),
 							'category_id':catId,
-							'title':titles[getRandomInt(0,2)],
-							'login':logins[getRandomInt(0,4)],
-							'url':urls[getRandomInt(0,2)]
+							'name':titles[getRandomInt(0,2)],
+							'username':logins[getRandomInt(0,4)],
+							'uri':urls[getRandomInt(0,2)],
+							'modified':new Date(),
+							'created':new Date(),
+							'expiry_date':new Date(),
+							'description':'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nulla turpis, gravida vitae auctor quis, pretium vitae purus. Aliquam tempor tincidunt porttitor. Suspendisse potenti. '
 						}
 					});
 					

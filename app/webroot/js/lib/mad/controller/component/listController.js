@@ -1,10 +1,10 @@
 steal(MAD_ROOT + '/controller/componentController.js', 
-	MAD_ROOT + '/view/template/component/button.ejs')
+	MAD_ROOT + '/view/template/component/list.ejs')
 	
 .then( function ($) {
 
 	/*
-	 * @class mad.controller.component.ButtonController
+	 * @class mad.controller.component.ListController
 	 * @inherits {mad.controller.ComponentController}
 	 * @parent index
 	 * 
@@ -13,9 +13,9 @@ steal(MAD_ROOT + '/controller/componentController.js',
 	 * @constructor
 	 * Creates a new Button Controller Component
 	 * @param {array} options Optional parameters
-	 * @return {mad.controller.component.ButtonController}
+	 * @return {mad.controller.component.ListController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.ButtonController',
+	mad.controller.ComponentController.extend('mad.controller.component.ListController',
 	/** @static */
 	{
 		'defaults': {

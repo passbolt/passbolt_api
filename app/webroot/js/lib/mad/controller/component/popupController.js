@@ -17,10 +17,15 @@ steal(
 			 * @param {array} options Options to pass to the popup constructor
 			 * @return {mad.controller.component.PopupController}
 			 */
-			'get': function(options){
+			'get': function(popupOptions, ComponentClass, componentOptions){
 				var popupId = uuid();
 				var $popup = $('<div id="'+popupId+'" class="js_popup"/>').appendTo(mad.app.element);
-				return new mad.controller.component.PopupController($popup, options);
+				var popup = new mad.controller.component.PopupController($popup, popupOptions).render();
+				// If a component class is given add it to the popup
+				if(ComponentClass){
+					popup.addComponent(ComponentClass, componentOptions, 'js_popup_content');
+				}
+				return popup;
 			}
         }
 		/** @prototype */

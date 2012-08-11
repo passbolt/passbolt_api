@@ -12,9 +12,16 @@ steal(
         /** @static */
         {
 			'create': function(refElement, position, clazz, options) {
-				var viewOptions = $.extend(true, {}, clazz.defaults, options);
+				var viewOptions = $.extend(true, {}, clazz.defaults, options),
+					templateUri = null;
+				
 				// Render the component
-				var componentRender = $.View(clazz.defaults.templateUri, viewOptions);
+				if (viewOptions.templateUri != null)
+					templateUri = viewOptions.templateUri;
+				else 
+					templateUri = mad.helper.controllerHelper.getViewPath(clazz);
+				
+				var componentRender = $.View(templateUri, viewOptions);
 				
 				// insert the component functions of the reference element and the given position
 				switch(position){
@@ -41,7 +48,7 @@ steal(
 				}
 				
 				// init the component
-				return new clazz($component, options).render();
+				return new clazz($component, options);
 			}
 		},
 		

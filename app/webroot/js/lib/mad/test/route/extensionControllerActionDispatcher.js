@@ -1,10 +1,8 @@
-steal('funcunit', function(){
+steal('funcunit', function () {
 	module("mad.route", {
 		// runs before each test
-		setup: function(){
-		},
+		setup: function () {},
 		// runs after each test
-		teardown: function(){
-		}
-	});	
+		teardown: function () {}
+	});
 });
