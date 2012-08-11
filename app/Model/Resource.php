@@ -71,7 +71,8 @@ class Resource extends AppModel {
 				'uri' => array(
 						'alphaNumeric' => array(
 						'rule'		 => '/^.{2,64}$/i',
-						'required' => true,
+						'required' => false,
+						'allowEmpty' => true, 
 						'message'	=> __('Alphanumeric only')
 					)
 				),
@@ -141,7 +142,7 @@ class Resource extends AppModel {
 			break;
 			default:
 				$conditions = array(
-					'conditions' => array('CategoryResource.category_id'=>$data['CategoryResource.category_id'])
+					'conditions' => array()
 				);
 		}
 		return $conditions;
