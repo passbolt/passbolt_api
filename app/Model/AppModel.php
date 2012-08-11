@@ -5,10 +5,10 @@
  * This file is application-wide model file. You can put all
  * application-wide model-related methods here.
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @package			 app.Model.AppModel
- * @since				 version 2.12.7
- * @license			 http://www.passbolt.com/license
+ * @copyright    Copyright 2012, Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Model.AppModel
+ * @since        version 2.12.7
  */
 App::uses('Model', 'Model');
 class AppModel extends Model {
