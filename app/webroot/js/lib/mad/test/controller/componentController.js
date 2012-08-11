@@ -1,41 +1,37 @@
-steal(
-	'funcunit'
-)
-.then(function(){
-	
+steal('funcunit').then(function () {
+
 	var testEnv = null;
 	module("mad.controller", {
 		// runs before each test
-		setup: function(){
+		setup: function () {
 			stop();
-			
-			S.open('//'+MAD_ROOT+'/test/testEnv/app.html', function(){
+
+			S.open('//' + MAD_ROOT + '/test/testEnv/app.html', function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
 				// when the app is ready continue the tests
-				S('body').hasClass('mad_test_app_ready', true, function(){
+				S('body').hasClass('mad_test_app_ready', true, function () {
 					start();
 				});
 			});
 		},
 		// runs after each test
-		teardown: function(){
-		}
+		teardown: function () {}
 	});
-	
-	test('ComponentController : Instanciation', function(){
+
+	test('ComponentController : Instanciation', function () {
 		testEnv.mad.controller.ComponentController.extend('mad.test.controller.ComponentController', {}, {});
-		
+
 		var $componentController = testEnv.$('<div id="componentController"/>').appendTo('body');
 		S('#componentController').exists(1000, null, 'The container div has well been rendered');
-		
+
 		var componentController = new testEnv.mad.test.controller.ComponentController($componentController);
 		ok(componentController instanceof testEnv.mad.test.controller.ComponentController, 'The instanciated component is an instance of the right type');
-		
-		componentController.setTemplateUri('//'+MAD_ROOT+'/test/view/template/componentController.ejs');
+
+		componentController.setTemplateUri('//' + MAD_ROOT + '/test/view/template/componentController.ejs');
 		componentController.render();
 		S('#componentControllerContent').exists(1000, null, 'The component template has well been rendered');
 		S('#componentControllerContent').text('A Simple Component Controller Content', 1000, null, 'The component template has well been rendered, double check');
 	});
-	
+
 });

@@ -1,44 +1,41 @@
-steal('funcunit', function(){
+steal('funcunit', function () {
 
 	module("mad.lang", {
 		// runs before each test
-		setup: function(){
-		},
+		setup: function () {},
 		// runs after each test
-		teardown: function(){
-		}
-	});	
-	
+		teardown: function () {}
+	});
+
 	// Sample of dictionnary
 	var dico = {
-		'my sentence without hook':'ma phrase sans hook',
-		'my sentence with a final hook %s':'ma phrase avec un hook final %s',
-		'%s my sentence with a start hook':'%s ma phrase avec un hook en debut',
-		'%s my sentence with a start and a final hooks %s':'%s ma phrase avec un hook en debut et en fin %s',
-		'%s':'%s'
+		'my sentence without hook': 'ma phrase sans hook',
+		'my sentence with a final hook %s': 'ma phrase avec un hook final %s',
+		'%s my sentence with a start hook': '%s ma phrase avec un hook en debut',
+		'%s my sentence with a start and a final hooks %s': '%s ma phrase avec un hook en debut et en fin %s',
+		'%s': '%s'
 	};
 
 	// Fixture to access to the dictionnary
 	// not required but good to know how to use it
 	$.fixture({
-		type: 'post',  
-		url: APP_URL+'/lg/jsDictionnary'
-	},
-	function(settings){
+		type: 'post',
+		url: APP_URL + '/lg/jsDictionnary'
+	}, function (settings) {
 		return dico;
 	});
 
-	test('I18n : Load dictionnary', function(){
+	test('I18n : Load dictionnary', function () {
 		stop();
 		mad.net.Ajax.singleton().request({
-			'type':         'post',
-			'url':          APP_URL+'/lg/jsDictionnary',
-			'async':        false,
-			'dataType':     'json',
-			'success':      function(DATA){
+			'type': 'post',
+			'url': APP_URL + '/lg/jsDictionnary',
+			'async': false,
+			'dataType': 'json',
+			'success': function (DATA) {
 				var i18n = mad.lang.I18n.singleton();
 				i18n.loadDico(DATA);
-				for(var key in i18n.dico){
+				for (var key in i18n.dico) {
 					equal(dico[key], i18n.dico[key]);
 					start();
 				}
@@ -46,14 +43,14 @@ steal('funcunit', function(){
 		});
 	});
 
-	test('I18n : translate', function(){
+	test('I18n : translate', function () {
 		stop();
 		mad.net.Ajax.singleton().request({
-			'type':         'post',
-			'url':          APP_URL+'/lg/jsDictionnary',
-			'async':        false,
-			'dataType':     'json',
-			'success':      function(DATA){
+			'type': 'post',
+			'url': APP_URL + '/lg/jsDictionnary',
+			'async': false,
+			'dataType': 'json',
+			'success': function (DATA) {
 				var i18n = mad.lang.I18n.singleton();
 				i18n.loadDico(DATA);
 
@@ -63,8 +60,8 @@ steal('funcunit', function(){
 				equal(__('my sentence with a final hook %s', 'HOOK_FINAL'), 'ma phrase avec un hook final HOOK_FINAL');
 				equal(i18n.translate('%s my sentence with a start hook', ['HOOK_START']), 'HOOK_START ma phrase avec un hook en debut');
 				equal(__('%s my sentence with a start hook', 'HOOK_START'), 'HOOK_START ma phrase avec un hook en debut');
-				equal(i18n.translate('%s my sentence with a start and a final hooks %s', ['HOOK_START', 'HOOK_FINAL']),'HOOK_START ma phrase avec un hook en debut et en fin HOOK_FINAL');
-				equal(__('%s my sentence with a start and a final hooks %s', 'HOOK_START', 'HOOK_FINAL'),'HOOK_START ma phrase avec un hook en debut et en fin HOOK_FINAL');
+				equal(i18n.translate('%s my sentence with a start and a final hooks %s', ['HOOK_START', 'HOOK_FINAL']), 'HOOK_START ma phrase avec un hook en debut et en fin HOOK_FINAL');
+				equal(__('%s my sentence with a start and a final hooks %s', 'HOOK_START', 'HOOK_FINAL'), 'HOOK_START ma phrase avec un hook en debut et en fin HOOK_FINAL');
 				equal(i18n.translate('%s', ['HOOK']), 'HOOK');
 				equal(__('%s', 'HOOK'), 'HOOK');
 				equal(i18n.translate('%s%s%s%s', ['HOOK1', 'HOOK2', 'HOOK3', 'HOOK4']), 'HOOK1HOOK2HOOK3HOOK4');
@@ -74,50 +71,50 @@ steal('funcunit', function(){
 		});
 	});
 
-	test('I18n : Not as many variables as they are hooks', function(){
+	test('I18n : Not as many variables as they are hooks', function () {
 		stop();
 		mad.net.Ajax.singleton().request({
-			'type':         'post',
-			'url':          APP_URL+'/lg/jsDictionnary',
-			'async':        false,
-			'dataType':     'json',
-			'success':      function(DATA){
+			'type': 'post',
+			'url': APP_URL + '/lg/jsDictionnary',
+			'async': false,
+			'dataType': 'json',
+			'success': function (DATA) {
 				var i18n = mad.lang.I18n.singleton();
 				i18n.loadDico(DATA);
 
 				//no hook, variables given
-				raises(function() {
+				raises(function () {
 					i18n.translate('my sentence without hook', ['HOOK']);
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
-				raises(function() {
+				raises(function () {
 					__('my sentence without hook', 'HOOK');
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
 				//hook, no variables given
-				raises(function() {
+				raises(function () {
 					i18n.translate('my sentence with a final hook %s', []);
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
-				raises(function() {
+				raises(function () {
 					__('my sentence with a final hook %s');
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
 				//hook, not enough variables
-				raises(function() {
+				raises(function () {
 					i18n.translate('%s my sentence with a final hook %s', ['HOOK_START']);
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
-				raises(function() {
+				raises(function () {
 					__('%s my sentence with a final hook %s', 'HOOK_START');
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
 				//hook, too much variables
-				raises(function() {
+				raises(function () {
 					i18n.translate('%s my sentence with a final hook %s', ['HOOK_START', 'HOOK_END', 'BILOUTE']);
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
-				raises(function() {
+				raises(function () {
 					__('%s my sentence with a final hook %s', 'HOOK_START', 'HOOK_END', 'BILOUTE');
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
@@ -127,14 +124,14 @@ steal('funcunit', function(){
 
 	});
 
-	test('I18n : Allowed scalar variables', function(){
+	test('I18n : Allowed scalar variables', function () {
 		stop();
 		mad.net.Ajax.singleton().request({
-			'type':         'post',
-			'url':          APP_URL+'/lg/jsDictionnary',
-			'async':        false,
-			'dataType':     'json',
-			'success':      function(DATA){
+			'type': 'post',
+			'url': APP_URL + '/lg/jsDictionnary',
+			'async': false,
+			'dataType': 'json',
+			'success': function (DATA) {
 				var i18n = mad.lang.I18n.singleton();
 				i18n.loadDico(DATA);
 
@@ -153,33 +150,35 @@ steal('funcunit', function(){
 
 	});
 
-	test('I18n : Wrong variables type', function(){
+	test('I18n : Wrong variables type', function () {
 		stop();
 		mad.net.Ajax.singleton().request({
-			'type':         'post',
-			'url':          APP_URL+'/lg/jsDictionnary',
-			'async':        false,
-			'dataType':     'json',
-			'success':      function(DATA){
+			'type': 'post',
+			'url': APP_URL + '/lg/jsDictionnary',
+			'async': false,
+			'dataType': 'json',
+			'success': function (DATA) {
 				var i18n = mad.lang.I18n.singleton();
 				i18n.loadDico(DATA);
 
 				//object not allowed
-				raises(function() {
+				raises(function () {
 					i18n.translate('%s', [new Object()]);
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
-				raises(function() {
+				raises(function () {
 					__('%s', new Object());
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
 				//array not allowed
-				raises(function() {
-					i18n.translate('%s', [['A','B']]);
+				raises(function () {
+					i18n.translate('%s', [
+						['A', 'B']
+					]);
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
-				raises(function() {
-					__('%s', ['A','B']);
+				raises(function () {
+					__('%s', ['A', 'B']);
 				}, mad.error.WrongParameters, mad.error.WrongParameters.message);
 
 				start();
@@ -187,5 +186,5 @@ steal('funcunit', function(){
 		});
 
 	});
-	
+
 });

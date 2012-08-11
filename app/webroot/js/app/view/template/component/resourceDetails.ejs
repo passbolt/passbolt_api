@@ -1,0 +1,40 @@
+<h1><%= __('Linked In') %></h1>
+
+<div>
+	<span class=""><%= __('Modified') %></span> : 
+	<span class=""><%= moment(resource.Resource.modified).fromNow() %></span>
+</div>
+
+<div>
+	<span class=""><%= __('Expire') %></span> : 
+	<span class=""><%= moment().add('hours', 1).fromNow() %></span>
+</div>
+
+<div>
+	<span class=""><%= __('Strength') %></span> : 
+	<span class=""><%= resource.Resource.strength %></span>
+</div>
+
+<div>
+	<button id="js_details_one_click_login_button">One click login</button>
+	<button id="js_details_share_button">Share</button>
+</div>
+
+<h2><%= __('Description') %></h2>
+<p><%= resource.Resource.description %></p>
+
+<h2><%= __('Copy to clipboard') %></h2>
+<p>
+	<button id="js_details_copy_login_button">login</button>
+	<button id="js_details_copy_secret_button">password</button>
+</p>
+
+<h2><%= __('Tags') %></h2>
+<p>
+	<span class="">Social</span>
+	<span class="">biloute</span>
+</p>
+
+
+<h2><%= __('Comments') %></h2>
+<p style="display:none">comment</p>

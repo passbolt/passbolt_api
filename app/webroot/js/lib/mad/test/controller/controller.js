@@ -1,12 +1,10 @@
-steal('funcunit', function(){
-	
+steal('funcunit', function () {
+
 	module("mad.controller", {
 		// runs before each test
-		setup: function(){
-		},
+		setup: function () {},
 		// runs after each test
-		teardown: function(){
-		}
+		teardown: function () {}
 	});
-	
+
 });

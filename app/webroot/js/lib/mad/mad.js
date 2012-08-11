@@ -24,7 +24,11 @@ steal(
     MAD_ROOT+'/controller/appController.js',
     MAD_ROOT+'/controller/controller.js',
     MAD_ROOT+'/controller/componentController.js',
+    MAD_ROOT+'/controller/component/buttonController.js',
     MAD_ROOT+'/controller/component/containerController.js',
+    MAD_ROOT+'/controller/component/gridController.js',
+    MAD_ROOT+'/controller/component/inputController.js',
+    MAD_ROOT+'/controller/component/popupController.js',
     MAD_ROOT+'/controller/component/tabController.js',
     MAD_ROOT+'/controller/component/workspaceController.js',
     MAD_ROOT+'/controller/component/treeController.js',
@@ -32,8 +36,11 @@ steal(
     MAD_ROOT+'/event/eventBus.js',
     MAD_ROOT+'/helper/controllerHelper.js',
     MAD_ROOT+'/helper/routeHelper.js',
+	MAD_ROOT+'/helper/componentHelper.js',
     MAD_ROOT+'/helper/component/boxDecorator.js',
     MAD_ROOT+'/lang/i18n.js',
+    MAD_ROOT+'/model/componentState.js',
+    MAD_ROOT+'/net/ajax.js',
     MAD_ROOT+'/net/request.js',
     MAD_ROOT+'/net/responseHandler.js',
     MAD_ROOT+'/net/response.js',
@@ -42,6 +49,6 @@ steal(
     MAD_ROOT+'/route/routeListener.js',
     MAD_ROOT+'/route/dispatcherInterface.js',
     MAD_ROOT+'/route/extensionControllerActionDispatcher.js',
+    MAD_ROOT+'/view/view.js'
 //    MAD_ROOT+'/route/pageDispatcher.js',
-    MAD_ROOT+'/net/ajax.js'
 );

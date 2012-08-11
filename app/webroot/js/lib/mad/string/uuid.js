@@ -6,9 +6,9 @@ Usage 3: call the function uuid() with no parameters to generate a uuid with the
 
 /* Generate fragment of random numbers */
 _uuidlet = function () {
-    return(((1+Math.random())*0x10000)|0).toString(16).substring(1);
+	return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 };
 /* Generates random uuid */
-uuid = function() {
-    return(_uuidlet()+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+"-"+_uuidlet()+_uuidlet()+_uuidlet());
+uuid = function () {
+	return (_uuidlet() + _uuidlet() + "-" + _uuidlet() + "-" + _uuidlet() + "-" + _uuidlet() + "-" + _uuidlet() + _uuidlet() + _uuidlet());
 };

@@ -10,7 +10,7 @@
 App::uses('ResourcesController', 'Controller');
 App::uses('Resource', 'Model');
 App::uses('User', 'Model');
-App::uses('Role', 'Model');
+App::uses('Role', 'Model'); 
 
 // uses sessions
 if (!class_exists('CakeSession')) { 

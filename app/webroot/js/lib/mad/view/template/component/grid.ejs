@@ -1,0 +1,17 @@
+<table border="2">
+	<thead>
+		<tr>
+			<% for (var i in columnModel) { %>
+				<th 
+					id="<%= columnModel[i].name %>" 
+					style="width:<%= columnModel[i].width %>px">
+
+					<%= columnNames[i] %>
+
+				</th>
+			<% } %>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>

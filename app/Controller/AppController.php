@@ -37,16 +37,20 @@ class AppController extends Controller {
 
 		// Add a callback detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
-			return (preg_match('/(.json){1,}$/', Router::url(null,true)));
+			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
 		}));
 
 		// Set default layout 
-		//if ($this->request->is('ajax') || $this->request->is('json')) {
+		//if ( || $this->request->is('json')) {
 			$this->layout = 'json';
 			$this->view = '/Json/default';
 		//} else {
 		//	$this->layout = 'html5';
 		//}
+
+		// Set active user Anonymous 
+		// or use what is in the session
+		User::get();
 
 		// Auth component initilization
 		$this->Auth->authenticate = Configure::read('Auth.authenticate');
@@ -87,8 +91,10 @@ class AppController extends Controller {
 		}
 		if (User::isAnonymous()) {
 			if ($this->request->is('Json')) {
-				$this->Message->error(__('You are not authorized to access that location.'));
-				return true;
+				$this->Message->error(__('You are not authorized to access that location.'), array(
+					'statusCode' => '403' // forbidden				
+				));
+				return true; // no need to redirect to login
 			}
 			return false;
 		}

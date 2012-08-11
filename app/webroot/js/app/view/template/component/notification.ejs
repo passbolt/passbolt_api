@@ -1,6 +1,11 @@
 <div>
-	<div>status : <%= status %></div>
-	<div>title : <%= title %></div>
-	<div>message : <%= message %></div>
-	<div>data : <%= data %></div>
+	<span class="notif_status"><%= status %></span>&nbsp;&nbsp;
+	<span class="notif_title"><%= title %></span>&nbsp;&nbsp;
+	<span id="js_notif_see_details">see details</span>
+</div>
+<div id="notif_details_container">
+	<div id="js_notif_details">
+		<div><%= message %></div>
+		<div><%= data %></div>
+	</div>
 </div>

@@ -41,7 +41,7 @@ class UsersController extends AppController {
  * @access public
  */
 	public function index() {
-		$data = $this->paginate();
+		$data = $this->User->find('all');	
 		if (!empty($data)) {
 			$this->Message->success();
 			$this->set('data', $data);
@@ -49,4 +49,12 @@ class UsersController extends AppController {
 			$this->Message->notice(__('There is no user to display'));
 		}
 	}
+
+/**
+ * Add a user (admin)
+ * @access public
+ */
+  public function add() {
+	}
+
 }

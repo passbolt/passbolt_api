@@ -55,6 +55,33 @@ class CategoriesController extends AppController {
 	}
 
 /**	
+ * get the roots categories
+ * @param  bool $children whether or not we want the children returned
+ * @return void
+ */
+	public function getRoots($children=false){
+		$data = array();
+		
+		$o = $this->Category->getFindOptions('getRoots');
+		$categories = $this->Category->find('threaded', $o);
+		
+		if(!$children) {
+			$data = $categories;
+		}
+		else {
+			foreach($categories as $category){
+				// @todo Think about category parameter, it should be categories ... or this is out of concept ?
+				$o = $this->Category->getFindOptions('getWithChildren', $category);
+				$result = $this->Category->find('threaded', $o);
+				$data[] = $result[0];
+			}	
+		}
+		
+		$this->set('data', $data);
+		$this->Message->success();
+	}
+	
+/**	
  * get the children for a corresponding category
  * @param $id, the id of the parent category
  * @return void
@@ -71,7 +98,7 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id invalid'));
 			return;
 		}
-		// check if the category exist
+		// check if the category exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
 			$this->Message->error(__('The category does not exist'));
