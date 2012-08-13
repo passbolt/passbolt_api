@@ -137,7 +137,7 @@ class Resource extends AppModel {
 			break;
 			case 'viewByCategory':
 				$conditions = array(
-					'conditions' => array('CategoryResource.category_id'=>$data['CategoryResource.category_id'], 'Resource.deleted'=>0)
+					'conditions' => array('Category.id'=>$data['Category.id'], 'Resource.deleted'=>0)
 				);
 			break;
 			default:
@@ -156,11 +156,10 @@ class Resource extends AppModel {
 	public static function getFindFields($case = 'view') {
 		switch($case){
 			case 'view':
-			case 'viewByCategory':
 			case 'add':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'CategoryResource.category_id'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description'
 					)
 				);
 			break;
