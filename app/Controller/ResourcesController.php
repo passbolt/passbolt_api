@@ -63,8 +63,7 @@ class ResourcesController extends AppController {
 		}
 		
 		// check if the category exists
-		$categoryModel = new Category();
-		$category = $categoryModel->findById($category_id);
+		$category = $this->Resource->Category->findById($category_id);
 		if(!$category){
 			$this->Message->error(__('The category doesn\t exist'));
 			return;
@@ -74,7 +73,7 @@ class ResourcesController extends AppController {
 			$data = array('Category.id' => $category_id);
 		}
 		else{
-			$cats = $categoryModel->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
+			$cats = $this->Resource->Category->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
 			foreach($cats as $cat){
 				$data['Category.id'][] = $cat['Category']['id'];
 			}
