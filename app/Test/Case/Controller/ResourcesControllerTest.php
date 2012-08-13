@@ -49,6 +49,10 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], 
 			'resources/view/' . $id . '.json should return success'
 		);
+		
+		$this->assertEquals('festival du cinema', $result['body']['Resource']['name'], 
+			'resources/view/' . $id . ".json should a resource named 'festival du cinema' but returned {$result['body']['Resource']['name']} instead"
+		);
 	}
 
  public function testViewByCategory(){
