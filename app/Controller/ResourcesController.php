@@ -70,23 +70,24 @@ class ResourcesController extends AppController {
 			return;
 		}
 	
-		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
-		$this->Resource->contain(array('CategoryResource'));
 		if($recursive == false) {
-			$data = array('CategoryResource.category_id' => $category_id);
+			$data = array('Category.id' => $category_id);
 		}
 		else{
 			$cats = $categoryModel->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
 			foreach($cats as $cat){
-				$data['CategoryResource.category_id'][] = $cat['Category']['id'];
+				$data['Category.id'][] = $cat['Category']['id'];
 			}
 		}
-		$options = $this->Resource->getFindOptions('viewByCategory', $data);
-		$resources = $this->Resource->find('all', $options);
+		
+		$options = $this->Resource->Category->getFindOptions('Resource.viewByCategory', $data);
+		$resources = $this->Resource->Category->find('all', $options);
+		
 		if(!$resources){
 			$this->Message->error(__('Something wrong happened'));
 			return;
 		}
+
 		$this->set('data', $resources);
 		$this->Message->success();
 	}
@@ -94,7 +95,7 @@ class ResourcesController extends AppController {
 	public function populate(){
 		$this -> layout = 'html5';
 		$this->Resource->create();
-			$catGoaId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
+			$catDrupalId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
 		$catAnjunaId = '4ff6111c-8534-4d17-869c-2184cbdd56cb';
 		$catHippiesId = '4ff6111d-9e6c-4d71-80ee-2184cbdd56cb';
 		$this->Resource->saveAll(
