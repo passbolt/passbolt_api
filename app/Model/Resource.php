@@ -10,23 +10,8 @@
 class Resource extends AppModel {
 	public $actsAs = array('Containable');
 	
-	public $hasAndBelongsToMany = array(
-  'Category' =>
-   	array(
-     'className'              => 'Category',
-     'joinTable'              => 'categories_resources',
-     'foreignKey'             => 'resource_id',
-     'associationForeignKey'  => 'category_id',
-     'unique'                 => false,
-     'conditions'             => '',
-     'fields'                 => '',
-     'order'                  => '',
-     'limit'                  => '',
-     'offset'                 => '',
-     'finderQuery'            => '',
-     'deleteQuery'            => '',
-     'insertQuery'            => ''
-    )
+	public $hasMany = array(
+  	'CategoryResource'
   );
   /**
  * Get the validation rules upon context
@@ -137,7 +122,7 @@ class Resource extends AppModel {
 			break;
 			case 'viewByCategory':
 				$conditions = array(
-					'conditions' => array('Category.id'=>$data['Category.id'], 'Resource.deleted'=>0)
+					'conditions' => array('CategoryResource.category_id'=>$data['CategoryResource.category_id'], 'Resource.deleted'=>0)
 				);
 			break;
 			default:
@@ -157,9 +142,13 @@ class Resource extends AppModel {
 		switch($case){
 			case 'view':
 			case 'add':
+			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
 						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description'
+					),
+					'contain' => array(
+						'CategoryResource'
 					)
 				);
 			break;

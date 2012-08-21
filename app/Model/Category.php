@@ -17,14 +17,8 @@ class Category extends AppModel {
  */
 	public $actsAs = array('Tree', 'Containable');
 	
-	public $hasAndBelongsToMany = array(
-  'Resource' =>
-   	array(
-     'className'              => 'Resource',
-     'joinTable'              => 'categories_resources',
-     'foreignKey'             => 'category_id',
-     'associationForeignKey'  => 'resource_id'
-    )
+	public $hasMany = array(
+  'CategoryResource'
   );
 		
 		public $belongsTo = array('CategoryType' => array(
