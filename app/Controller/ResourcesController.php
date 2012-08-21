@@ -9,6 +9,7 @@
  */
 
 App::uses('Category', 'Model');
+App::uses('CategoryResource', 'Model');
  
 class ResourcesController extends AppController {
 	/**
@@ -63,24 +64,25 @@ class ResourcesController extends AppController {
 		}
 		
 		// check if the category exists
-		$category = $this->Resource->Category->findById($category_id);
+		$category = $this->Resource->CategoryResource->Category->findById($category_id);
 		if(!$category){
 			$this->Message->error(__('The category doesn\t exist'));
 			return;
 		}
 	
 		if($recursive == false) {
-			$data = array('Category.id' => $category_id);
+			$data = array('CategoryResource.category_id' => $category_id);
 		}
 		else{
-			$cats = $this->Resource->Category->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
+			$cats = $this->Resource->CategoryResource->Category->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
 			foreach($cats as $cat){
-				$data['Category.id'][] = $cat['Category']['id'];
+				$data['CategoryResource.category_id'][] = $cat['Category']['id'];
 			}
 		}
-		
-		$options = $this->Resource->Category->getFindOptions('Resource.viewByCategory', $data);
-		$resources = $this->Resource->Category->find('all', $options);
+		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
+		$options = $this->Resource->getFindOptions('viewByCategory', $data);
+		$resources = $this->Resource->find('all', $options);
+		//pr($resources); die();
 		
 		if(!$resources){
 			$this->Message->error(__('Something wrong happened'));
@@ -166,6 +168,7 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('No data were provided'));
 			return;
 		}
+					
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;
@@ -176,12 +179,33 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('Could not validate resource data'));
 			return;
 		}
-		
-		$this->Resource->create();
-		$resource = $this->Category->save($resourcepost);
+
+		$resource = $this->Resource->save($resourcepost);
 		if ($resource === false) {
 			$this->Message->error(__('The resource could not be saved'));
 			return;
+		}
+		
+		// Save the relations
+		foreach($resourcepost['Category'] as $cat){
+				$crdata = array(
+					'CategoryResource' => array(
+						'category_id' => $cat['id'],
+						'resource_id' => $resource['Resource']['id'],
+					)
+				);
+			// check if the data is valid
+			$this->Resource->CategoryResource->set($crdata);
+			if (!$this->Resource->CategoryResource->validates()) {
+				$this->Message->error(__('Could not validate CategoryResource'));
+				return;
+			}
+			// if validation passes, then save the data
+			$res = $this->Resource->CategoryResource->save();
+			if(!$res){
+				$this->Message->error(__('Could not save the association'));
+				return;
+			}
 		}
 		$this->Message->success(__('The resource was sucessfully saved'));
 	}
