@@ -76,22 +76,47 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], 
 			$url . " should return success but returned {$result['header']['status']}"
 		);
-		$this->assertEquals('festival du cinema', $result['body'][0]['Resource'][1]['name'], 
-			$url ." test should read 'festival du cinema' but is reading {$result['body'][0]['Resource'][1]['name']}"
+		$this->assertEquals('festival du cinema', $result['body'][1]['Resource']['name'], 
+			$url ." test should read 'festival du cinema' but is reading {$result['body'][1]['Resource']['name']}"
 		);
-		$this->assertEquals(2, sizeof($result['body'][0]['Resource']), 
-			$url ." counting the number of elements should return '2' but is reading ". sizeof($result['body'][0]['Resource'])
+		$this->assertEquals(2, sizeof($result['body']), 
+			$url ." counting the number of elements should return '2' but is reading ". sizeof($result['body'])
 		);
 		
 		$url = "/resources/viewByCategory/". $id ."/1.json";
 		$result = json_decode($this->testAction($url, array('return'=>'contents')), true);
-		$this->assertEquals('washroom', $result['body'][5]['Resource'][0]['name'], 
-			$url ." test should read 'washroom' but is reading {$result['body'][5]['Resource'][0]['name']}"
+		$this->assertEquals('washroom', $result['body'][3]['Resource']['name'], 
+			$url ." test should read 'washroom' but is reading {$result['body'][3]['Resource']['name']}"
 		);
-		$this->assertEquals(14, sizeof($result['body']), 
-			$url ." counting the number of elements should return '14' but is reading ". sizeof($result['body'])
+		$this->assertEquals(2, sizeof($result['body'][1]['CategoryResource']), 
+			$url ." counting the number of elements should return '2' but is reading ". sizeof($result['body'][1]['CategoryResource'])
 		);
  } 
+
+ public function testAdd(){
+ 	$categoryModel = new Category();
+		$categoryModel->useDbConfig = 'test';
+		$goaCat = $categoryModel->findByName('Goa');
+		
+			// test insertion with parameter parent_id, and position 50 (doesnt exist)
+		$result = json_decode($this->testAction('/resources/add.json', array(
+			'data' => array(
+				'Resource'=>array(
+					'name' => 'test1', 
+					'username' => 'test1', 
+					'uri' => 'http://www.google.com', 
+					'description' => 'this is a description'
+					),
+					'Category' => array(
+						 0 => array(
+					 		'id'=>$goaCat['Category']['id']
+						 )
+					)
+			 ),
+			 'method' => 'post',
+			 'return'=>'contents'
+		)), true);
+ }
 
 
 }
