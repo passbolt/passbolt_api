@@ -37,7 +37,7 @@ steal(
     "./test/error/error.js",
 	"./test/event/eventBus.js",
 //	"./test/helper/component/boxDecorator.js",
-    "./test/helper/controller.js",
+//    "./test/helper/controller.js",
 //    "./test/lang/i18n.js",
 //    "./test/net/ajax.js",
 	"./test/object/map.js",
