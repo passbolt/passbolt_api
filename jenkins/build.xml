@@ -6,14 +6,17 @@
 	<property name="src" value="${env.WORKSPACE}"/>
 	<property name="build" value="${src}/build"/>
 
-	<target name="main" depends="clean, install, jsunit, phpunit, phpcs-ci" />
+	<target name="main" depends="clean, install, jsunit, phpunit" />
 
 	<target name="clean" description="Cleanup build artifacts">
 		<delete dir="${build}"/>
 	</target>
 
-	<target name="install" description="Passbolt installer ;)">
+	<target name="install" description="Passbolt installer : copy config files, deploy db">
 		<untar src="${config}/app_Config.tgz" compression="gzip" dest="${src}" />
+		<exec dir="${src}" executable="printf" output="/dev/null">
+			<arg line=' "y\ny\n" | app/Console/cake schema create'/>
+		</exec>
 	</target>
 
 	<target name="jsunit" description="Run unit tests with funcunit and phantomjs">
