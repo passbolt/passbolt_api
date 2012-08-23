@@ -7,7 +7,9 @@ steal(
     'app/controller/component/notificationController.js',
 	
     'app/model/category.js',
-    'app/model/resource.js'
+    'app/model/resource.js',
+	
+	'app/view/template/app.ejs'
 )
 .then( 
     function ($) {

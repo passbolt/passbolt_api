@@ -1,6 +1,6 @@
 steal(
     MAD_ROOT+'/controller/componentController.js',
-	'app/view/template/app.ejs'
+	MAD_ROOT+'/view/template/app.ejs'
 )
 
 .then(function ($) {
