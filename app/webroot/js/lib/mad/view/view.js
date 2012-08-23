@@ -78,7 +78,7 @@ steal(
 			}
 			// define the template functions of the class name
 			else {
-				returnValue = mad.helper.controllerHelper.getViewPath(this.controller.Class);
+				returnValue = mad.helper.ControllerHelper.getViewPath(this.controller.Class);
 			}
 
 			return returnValue;

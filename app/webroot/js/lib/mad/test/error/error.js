@@ -8,7 +8,9 @@ steal('funcunit', function () {
 	});
 
 	test('error.* : Check mad common errors', function () {
+		var blackListClasses = ['ErrorHandler'];
 		for (var type in mad.error) {
+			if($.inArray(type, blackListClasses) != -1) continue;
 			try {
 				throw new mad.error[type]();
 			} catch (e) {

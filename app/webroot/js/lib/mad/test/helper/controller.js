@@ -23,20 +23,18 @@ steal('funcunit', function () {
 		mad.controller.Controller.extend('mad.controller.component.UnitTestComponentController', {}, {});
 		mad.controller.Controller.extend('mad.controler.component.UnitTestComponentController', {}, {}); // Controller class name mal formed
 		mad.controller.Controller.extend('mad.controller.component.UnitTestComponentControler', {}, {}); // Controller class name mal formed
-		equal(mad.helper.controllerHelper.getViewPath(mad.controller.UnitTestController), '//' + MAD_ROOT + '/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the mad lib');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.controller.UnitTestController), '//' + MAD_ROOT + '/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the mad lib');
 
-		equal(mad.helper.controllerHelper.getViewPath(mad.controller.component.UnitTestComponentController), '//' + MAD_ROOT + '/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the mad lib');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.controller.component.UnitTestComponentController), '//' + MAD_ROOT + '/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the mad lib');
+
+		// Try to get a view path of an undefined class
+		raises(function () {
+			mad.helper.ControllerHelper.getViewPath(mad.controler.UnitTestController);
+		}, Error);
+
 
 		raises(function () {
-			mad.helper.controllerHelper.getViewPath(mad.controler.UnitTestController);
-		}, mad.error.Error, mad.error.Error.message);
-
-		raises(function () {
-			mad.helper.controllerHelper.getViewPath('mad.controler.component.UnitTestComponentController');
-		}, mad.error.Error, mad.error.Error.message);
-
-		raises(function () {
-			mad.helper.controllerHelper.getViewPath('mad.controller.component.UnitTestComponentControler');
+			mad.helper.ControllerHelper.getViewPath(mad.controller.component.UnitTestComponentControler);
 		}, mad.error.Error, mad.error.Error.message);
 	});
 
@@ -44,17 +42,17 @@ steal('funcunit', function () {
 		mad.controller.Controller.extend(mad.APP_NS_ID + '.controller.UnitTestController', {}, {});
 		mad.controller.Controller.extend(mad.APP_NS_ID + '.controller.component.UnitTestComponentController', {}, {});
 
-		equal(mad.helper.controllerHelper.getViewPath(mad.APP_NS.controller.UnitTestController), '//app/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the app');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.APP_NS.controller.UnitTestController), '//app/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the app');
 
-		equal(mad.helper.controllerHelper.getViewPath(mad.APP_NS.controller.component.UnitTestComponentController), '//app/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the app');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.APP_NS.controller.component.UnitTestComponentController), '//app/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the app');
 	});
 
 	test('ControllerHelper.getViewPath : get view path of plugin controllers', function () {
 		mad.controller.Controller.extend(mad.APP_NS_ID + '.plugin1.controller.UnitTestController', {}, {});
 		mad.controller.Controller.extend(mad.APP_NS_ID + '.plugin1.controller.component.UnitTestComponentController', {}, {});
 
-		equal(mad.helper.controllerHelper.getViewPath(mad.APP_NS.plugin1.controller.UnitTestController), '//plugin/plugin1/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the plugin1');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.APP_NS.plugin1.controller.UnitTestController), '//plugin/plugin1/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the plugin1');
 
-		equal(mad.helper.controllerHelper.getViewPath(mad.APP_NS.plugin1.controller.component.UnitTestComponentController), '//plugin/plugin1/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the plugin1');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.APP_NS.plugin1.controller.component.UnitTestComponentController), '//plugin/plugin1/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the plugin1');
 	});
 });

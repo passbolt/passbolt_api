@@ -19,7 +19,7 @@ steal(
 				if (viewOptions.templateUri != null)
 					templateUri = viewOptions.templateUri;
 				else 
-					templateUri = mad.helper.controllerHelper.getViewPath(clazz);
+					templateUri = mad.helper.ControllerHelper.getViewPath(clazz);
 				
 				var componentRender = $.View(templateUri, viewOptions);
 				
