@@ -14,8 +14,9 @@
 
 	<target name="install" description="Passbolt installer : copy config files, deploy db">
 		<untar src="${config}/app_Config.tgz" compression="gzip" dest="${src}" />
-		<exec dir="${src}" executable="printf" output="/dev/null">
-			<arg line=' "y\ny\n" | app/Console/cake schema create'/>
+		<exec dir="${src}" executable="bash">
+			<arg value="-c"/>
+			<arg value='printf "y\ny\n" | app/Console/cake schema create'/>
 		</exec>
 	</target>
 
