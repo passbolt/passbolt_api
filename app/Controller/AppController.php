@@ -29,7 +29,7 @@ class AppController extends Controller {
  * Called before the controller action.	You can use this method to configure and customize components
  * or perform logic that needs to happen before each controller action.
  * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
- * @return void
+ * @return void 
  */
 	function beforeFilter() {
 		// Paranoia - Hidding PHP version number

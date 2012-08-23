@@ -8,6 +8,7 @@
  * @license			 http://www.passbolt.com/license
  */
 App::uses('CategoryType', 'Model');
+App::uses('Resource', 'Model');
 	
 class Category extends AppModel {
 
@@ -16,23 +17,8 @@ class Category extends AppModel {
  */
 	public $actsAs = array('Tree', 'Containable');
 	
-	public $hasAndBelongsToMany = array(
-  'Resource' =>
-   	array(
-     'className'              => 'Resource',
-     'joinTable'              => 'categories_resources',
-     'foreignKey'             => 'category_id',
-     'associationForeignKey'  => 'resource_id',
-     'unique'                 => true,
-     'conditions'             => '',
-     'fields'                 => '',
-     'order'                  => '',
-     'limit'                  => '',
-     'offset'                 => '',
-     'finderQuery'            => '',
-     'deleteQuery'            => '',
-     'insertQuery'            => ''
-    )
+	public $hasMany = array(
+  'CategoryResource'
   );
 		
 		public $belongsTo = array('CategoryType' => array(
@@ -215,6 +201,16 @@ class Category extends AppModel {
 					)
 				);
 			break;
+			case 'Resource.viewByCategory':
+				$fields = array(
+					'fields' => array(
+						'Category.id', 'Category.name', 'Category.parent_id'
+					),
+					'contain' => array(
+						'Resource' => Resource::getFindFields('view')
+					)
+				);
+			break;
 			default:
 				$fields = array('fields' => array());
 			break;
@@ -248,6 +244,13 @@ class Category extends AppModel {
 						'Category.rght <' => $data['Category']['rght']
 					),
 					'order' => 'lft ASC'
+				);
+			break;
+			case 'Resource.viewByCategory':
+				$c = array(
+					'conditions' => array(
+						'Category.id' => $data['Category.id']
+					)
 				);
 			break;
 			case 'getRoots':

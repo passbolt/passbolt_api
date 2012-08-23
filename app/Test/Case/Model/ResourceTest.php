@@ -59,7 +59,7 @@ class ResourceTest extends CakeTestCase {
    */
 	public function testUriValidation() {
 	  $testcases = array(
-	    '' => false, '?!#' => true, 'test' => true,
+	    '' => true, '?!#' => true, 'test' => true,
 	    'test@test.com' => true, 'http://www.passbolt.com' => true, '192.168.10.3' => true
 	  );
 	  foreach($testcases as $testcase => $result) {      
