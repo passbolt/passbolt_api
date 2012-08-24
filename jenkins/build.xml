@@ -40,6 +40,7 @@
 	</target>
 
 	<target name="phpcs-ci" description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
+		<mkdir dir="${build}/phpcs"/>
 		<exec executable="phpcs" output="/dev/null">
 			<arg value="--report=checkstyle" />
 			<arg value="--report-file=${build}/phpcs/checkstyle.xml" />
