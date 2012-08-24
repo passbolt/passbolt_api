@@ -6,7 +6,7 @@
 	<property name="src" value="${env.WORKSPACE}"/>
 	<property name="build" value="${src}/build"/>
 
-	<target name="main" depends="clean, install, jsunit, phpcs-ci" />
+	<target name="main" depends="clean, install, jsunit, phpcs-ci, phpunit" />
 
 	<target name="clean" description="Cleanup build artifacts">
 		<delete dir="${build}"/>
@@ -46,6 +46,17 @@
 			<arg value="--report-file=${build}/phpcs/checkstyle.xml" />
 			<arg value="--standard=cakePHP" />
 			<arg value="--extensions=php,ctp" />
+			<arg path="${src}/app" />
+		</exec>
+	</target>
+	
+	<target name="phploc" description="Measure project size using PHPLOC">
+		<mkdir dir="${build}/phploc"/>
+		<exec executable="phploc">
+			<arg value="--log-csv" />
+			<arg value="${build}/phploc/phploc.csv" />
+			<arg value="--exclude" />
+			<arg value="${src}/app/webroot/js" />
 			<arg path="${src}/app" />
 		</exec>
 	</target>
