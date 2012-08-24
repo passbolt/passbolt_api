@@ -44,7 +44,8 @@
 			<arg value="--report=checkstyle" />
 			<arg value="--report-file=${build}/phpcs/checkstyle.xml" />
 			<arg value="--standard=cakePHP" />
-			<arg path="${src}" />
+			<arg value="--extensions=php,ctp" />
+			<arg path="${src}/app" />
 		</exec>
 	</target>
 	
