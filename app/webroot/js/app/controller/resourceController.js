@@ -7,53 +7,53 @@ steal(
         
 		// @dev BEGIN
 		// create fixtures data for developpement
-		var resourcesFixturedData = {};
-		$.fixture({
-			type: 'GET',  
-			url: APP_URL+'/resources/viewByCategory/{category_id}/{recursive}'
-		},
-		function(original, settings, headers){
-			var content = resourcesFixturedData[original.data.category_id];
-			var returnValue = {
-				 'header': new mad.net.Header({
-					'id':			uuid(),
-					'status':		mad.net.Header.STATUS_SUCCESS,
-					'title':		'Resource fixture',
-					'message':		'Resource fixture for the category '+original.data.category_id,
-					'controller':	'resources',
-					'action':		'getCategoryResources'
-				}),
-				'body':content
-			};
-			return returnValue;
-		});
-		$.fixture({
-			type: 'GET',  
-			url: APP_URL+'/resources/view/{id}'
-		},
-		function(original, settings, headers){
-			var content = null;
-			for(var i in resourcesFixturedData){
-				for(var j in resourcesFixturedData[i]){
-					if(resourcesFixturedData[i][j].Resource.id == original.data.id){
-						content = resourcesFixturedData[i][j];
-						break;
-					}
-				}
-			}
-			var returnValue = {
-				 'header': new mad.net.Header({
-					'id':			uuid(),
-					'status':		mad.net.Header.STATUS_SUCCESS,
-					'title':		'Resource fixture',
-					'message':		'Resource fixture for the id '+original.data.id,
-					'controller':	'resources',
-					'action':		'getCategoryResources'
-				}),
-				'body':content
-			};
-			return returnValue;
-		});
+//		var resourcesFixturedData = {};
+//		$.fixture({
+//			type: 'GET',  
+//			url: APP_URL+'/resources/viewByCategory/{category_id}/{recursive}'
+//		},
+//		function(original, settings, headers){
+//			var content = resourcesFixturedData[original.data.category_id];
+//			var returnValue = {
+//				 'header': new mad.net.Header({
+//					'id':			uuid(),
+//					'status':		mad.net.Header.STATUS_SUCCESS,
+//					'title':		'Resource fixture',
+//					'message':		'Resource fixture for the category '+original.data.category_id,
+//					'controller':	'resources',
+//					'action':		'getCategoryResources'
+//				}),
+//				'body':content
+//			};
+//			return returnValue;
+//		});
+//		$.fixture({
+//			type: 'GET',  
+//			url: APP_URL+'/resources/view/{id}'
+//		},
+//		function(original, settings, headers){
+//			var content = null;
+//			for(var i in resourcesFixturedData){
+//				for(var j in resourcesFixturedData[i]){
+//					if(resourcesFixturedData[i][j].Resource.id == original.data.id){
+//						content = resourcesFixturedData[i][j];
+//						break;
+//					}
+//				}
+//			}
+//			var returnValue = {
+//				 'header': new mad.net.Header({
+//					'id':			uuid(),
+//					'status':		mad.net.Header.STATUS_SUCCESS,
+//					'title':		'Resource fixture',
+//					'message':		'Resource fixture for the id '+original.data.id,
+//					'controller':	'resources',
+//					'action':		'getCategoryResources'
+//				}),
+//				'body':content
+//			};
+//			return returnValue;
+//		});
 		// @dev END
 		
         /*

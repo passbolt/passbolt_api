@@ -9,6 +9,7 @@
  */
 
 App::uses('Category', 'Model');
+App::uses('CategoryResource', 'Model');
  
 class ResourcesController extends AppController {
 	/**
@@ -63,30 +64,31 @@ class ResourcesController extends AppController {
 		}
 		
 		// check if the category exists
-		$categoryModel = new Category();
-		$category = $categoryModel->findById($category_id);
+		$category = $this->Resource->CategoryResource->Category->findById($category_id);
 		if(!$category){
 			$this->Message->error(__('The category doesn\t exist'));
 			return;
 		}
 	
-		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
-		$this->Resource->contain(array('CategoryResource'));
 		if($recursive == false) {
 			$data = array('CategoryResource.category_id' => $category_id);
 		}
 		else{
-			$cats = $categoryModel->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
+			$cats = $this->Resource->CategoryResource->Category->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
 			foreach($cats as $cat){
 				$data['CategoryResource.category_id'][] = $cat['Category']['id'];
 			}
 		}
+		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
 		$options = $this->Resource->getFindOptions('viewByCategory', $data);
 		$resources = $this->Resource->find('all', $options);
+		//pr($resources); die();
+		
 		if(!$resources){
 			$this->Message->error(__('Something wrong happened'));
 			return;
 		}
+
 		$this->set('data', $resources);
 		$this->Message->success();
 	}
@@ -94,7 +96,7 @@ class ResourcesController extends AppController {
 	public function populate(){
 		$this -> layout = 'html5';
 		$this->Resource->create();
-			$catGoaId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
+			$catDrupalId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
 		$catAnjunaId = '4ff6111c-8534-4d17-869c-2184cbdd56cb';
 		$catHippiesId = '4ff6111d-9e6c-4d71-80ee-2184cbdd56cb';
 		$this->Resource->saveAll(
@@ -166,6 +168,7 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('No data were provided'));
 			return;
 		}
+					
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;
@@ -176,12 +179,33 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('Could not validate resource data'));
 			return;
 		}
-		
-		$this->Resource->create();
-		$resource = $this->Category->save($resourcepost);
+
+		$resource = $this->Resource->save($resourcepost);
 		if ($resource === false) {
 			$this->Message->error(__('The resource could not be saved'));
 			return;
+		}
+		
+		// Save the relations
+		foreach($resourcepost['Category'] as $cat){
+				$crdata = array(
+					'CategoryResource' => array(
+						'category_id' => $cat['id'],
+						'resource_id' => $resource['Resource']['id'],
+					)
+				);
+			// check if the data is valid
+			$this->Resource->CategoryResource->set($crdata);
+			if (!$this->Resource->CategoryResource->validates()) {
+				$this->Message->error(__('Could not validate CategoryResource'));
+				return;
+			}
+			// if validation passes, then save the data
+			$res = $this->Resource->CategoryResource->save();
+			if(!$res){
+				$this->Message->error(__('Could not save the association'));
+				return;
+			}
 		}
 		$this->Message->success(__('The resource was sucessfully saved'));
 	}

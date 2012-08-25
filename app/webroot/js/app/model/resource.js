@@ -33,14 +33,15 @@ steal(
 		 * Get resources for a given category
 		 */
 		'getByCategory': function (params, success, error) {
-			var url = APP_URL + '/resources/viewByCategory/{category_id}/{recursive}';
-			url = $.String.sub(url, params, true);
+			var urlTpl = APP_URL + '/resources/viewByCategory/{category_id}/{recursive}',
+				url = $.String.sub(urlTpl, $.extend(true, {}, params), true);
+				
 			return mad.net.Ajax.singleton().request({
 				url: url,
 				type: 'get',
 				dataType: 'passbolt.model.Resource.models',
 				data: {
-					id: params['category_id'],
+					category_id: params['category_id'],
 					recursive: params['recursive']
 				},
 				success: success,

@@ -59,8 +59,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 		// test that content returned are correct 
 		$result = json_decode($this->testAction("/categories/view/$id/1.json", array('return'=>'contents')), true);
 		// test Anjuna id
-		$this->assertEquals('UV Bar', $result['body'][0]['children'][0]['children'][0]['Category']['name'],
-			'The test should return UVBar but is returning ' . $result['body'][0]['children'][0]['children'][0]['Category']['name']
+		$this->assertEquals('UV Bar', $result['body'][0]['children'][0]['children'][0]['children'][0]['Category']['name'],
+			'The test should return UVBar but is returning ' . $result['body'][0]['children'][0]['children'][0]['children'][0]['Category']['name']
 		);
 
 		// test without children

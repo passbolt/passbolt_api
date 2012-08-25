@@ -6,7 +6,7 @@ steal(
 	/**
 	 * The controller class helper offers to the developper tools arround controllers
 	 */
-	$.Class('mad.helper.controllerHelper',
+	$.Class('mad.helper.ControllerHelper',
 
 	/** @static */
 	{
@@ -42,7 +42,7 @@ steal(
 		 */
 		'getViewPath': function (clazz, options) {
 			var returnValue = '//';
-
+			
 			var clazzName = clazz.fullName;
 			var split = clazzName.split('.');
 
@@ -67,10 +67,12 @@ steal(
 				}
 			}
 
+console.log(1);
 			//the next in the split has to be the controller, else there is an error in the controller name
 			if (split[0] != 'controller') {
 				throw new mad.Error('Controller name mal formed');
 			}
+console.log(2);
 			split = split.splice(1);
 
 			// target the view folder

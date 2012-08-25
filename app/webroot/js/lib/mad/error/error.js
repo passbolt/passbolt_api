@@ -11,7 +11,7 @@ steal(
 .then( function ($) {
 	$.String.getObject('mad.error', null, true);
 	mad.error.Error = function (message, title) {
-		this.name = "mad.error.Error";
+		this.name = "Error";
 		this.title = (title || "A " + this.name + " exception occured");
 		this.message = (message || this.title);
 	}

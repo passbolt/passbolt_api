@@ -1,38 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project default="passbolt_build.xml" xmlns:antcontrib="antlib:net.sf.antcontrib" basedir=".">
 
-    <property environment="env"/>
-    <property name="config" value="${env.WORKSPACE}/jenkins"/>
-    <property name="src" value="${env.WORKSPACE}"/>
-    <property name="build" value="${src}/build"/>
+	<property environment="env"/>
+	<property name="config" value="${env.WORKSPACE}/jenkins"/>
+	<property name="src" value="${env.WORKSPACE}"/>
+	<property name="build" value="${src}/build"/>
 
-    <target name="main" depends="clean, install, jsunit, phpunit" />
+	<target name="main" depends="clean, install, jsunit, phpcs-ci, phploc, phpunit" />
 
-    <target name="clean" description="Cleanup build artifacts">
-        <delete dir="${build}"/>
-    </target>
+	<target name="clean" description="Cleanup build artifacts">
+		<delete dir="${build}"/>
+	</target>
 
-    <target name="install" description="Passbolt installer ;)">
-        <untar src="${config}/app_Config.tgz" compression="gzip" dest="${src}" />
-    </target>
+	<target name="install" description="Passbolt installer : copy config files, deploy db">
+		<untar src="${config}/app_Config.tgz" compression="gzip" dest="${src}" />
+		<exec dir="${src}" executable="bash">
+			<arg value="-c"/>
+			<arg value='printf "y\ny\n" | app/Console/cake schema create'/>
+		</exec>
+	</target>
 
-    <target name="jsunit" description="Run unit tests with funcunit and phantomjs">
-        <symlink link="${src}/app/webroot/js/mad" resource="${src}/app/webroot/js/lib/mad" failonerror="false"/>
-        <exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="testresults.xml">
-            <arg line=" -a ./js funcunit/run selenium mad/test/funcunit.html"/>
-        </exec>
-        <move file="${src}/app/webroot/js/testresults.xml" tofile="${build}/jsunit/madsquirrel.xml"/>
-    </target>
+	<target name="jsunit" description="Run unit tests with funcunit and phantomjs">
+		<symlink link="${src}/app/webroot/js/mad" resource="${src}/app/webroot/js/lib/mad" failonerror="false"/>
+		<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="testresults.xml">
+			<arg line=" -a ./js funcunit/run selenium mad/funcunit.html"/>
+		</exec>
+		<move file="${src}/app/webroot/js/testresults.xml" tofile="${build}/jsunit/madsquirrel.xml"/>
+	</target>
 
-    <target name="phpunit" description="Run unit tests with PHPUnit">
-        <exec dir="${src}" executable="${src}/app/Console/cake" failonerror="true">
-            <arg line=" test --configuration ${config}/phpunit.xml 
+	<target name="phpunit" description="Run unit tests with PHPUnit">
+		<exec dir="${src}" executable="${src}/app/Console/cake" failonerror="true">
+			<arg line=" test --configuration ${config}/phpunit.xml 
 			--coverage-html ${build}/coverage/html
 			--coverage-clover ${build}/coverage/coverage.xml
 			--log-junit ${build}/phpunit/passbolt.xml
 			-v
-			${src}/app/Test/Case/"/>
-        </exec>
-    </target>
+			${src}/app/Test/Case/AllTest.php"/>
+		</exec>
+	</target>
 
+	<target name="phpcs-ci" description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
+		<mkdir dir="${build}/phpcs"/>
+		<exec executable="phpcs" output="/dev/null">
+			<arg value="--report=checkstyle" />
+			<arg value="--report-file=${build}/phpcs/checkstyle.xml" />
+			<arg value="--standard=cakePHP" />
+			<arg value="--extensions=php,ctp" />
+			<arg path="${src}/app" />
+		</exec>
+	</target>
+	
+	<target name="phploc" description="Measure project size using PHPLOC">
+		<mkdir dir="${build}/phploc"/>
+		<exec executable="phploc">
+			<arg value="--log-csv" />
+			<arg value="${build}/phploc/phploc.csv" />
+			<arg value="--exclude" />
+			<arg value="${src}/app/webroot/js" />
+			<arg path="${src}/app" />
+		</exec>
+	</target>
+	
 </project>

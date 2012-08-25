@@ -10,23 +10,8 @@
 class Resource extends AppModel {
 	public $actsAs = array('Containable');
 	
-	public $hasAndBelongsToMany = array(
-  'Category' =>
-   	array(
-     'className'              => 'Category',
-     'joinTable'              => 'categories_resources',
-     'foreignKey'             => 'resource_id',
-     'associationForeignKey'  => 'category_id',
-     'unique'                 => false,
-     'conditions'             => '',
-     'fields'                 => '',
-     'order'                  => '',
-     'limit'                  => '',
-     'offset'                 => '',
-     'finderQuery'            => '',
-     'deleteQuery'            => '',
-     'insertQuery'            => ''
-    )
+	public $hasMany = array(
+  	'CategoryResource'
   );
   /**
  * Get the validation rules upon context
@@ -156,11 +141,14 @@ class Resource extends AppModel {
 	public static function getFindFields($case = 'view') {
 		switch($case){
 			case 'view':
-			case 'viewByCategory':
 			case 'add':
+			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'CategoryResource.category_id'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description'
+					),
+					'contain' => array(
+						'CategoryResource'
 					)
 				);
 			break;

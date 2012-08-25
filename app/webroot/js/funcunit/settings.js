@@ -1,6 +1,6 @@
 FuncUnit = {
 	// the list of browsers that selenium runs tests on
-	// browsers: ["*firefox", "*googlechrome"],
+//	browsers: ["*firefox", "*googlechrome"],
 	
 	// the root where funcunit folder lives, used when running from commandline
 //	jmvcRoot: "http://passbolt.local/js/",
@@ -10,7 +10,7 @@ FuncUnit = {
 	// speed: "slow",
 	
 	// turn on if you want to exit hard with the -e flag
-	// failOnError: true,
+//	failOnError: true,
 	
 	// any files or directories that coverage calculations should ignore
 //	coverageIgnore: ['*/test', "*_test.js", "*jquery.js", "*qunit.js"]
