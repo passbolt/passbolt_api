@@ -88,11 +88,11 @@ class MessageComponentTest extends CakeTestCase {
 		//$this->MessageComponent->Controller->redirect('http://cakephp.org', 301, false);
 		$this->MessageComponent->error('error test4',array('redirect' => true));
 		$this->MessageComponent->Controller->response = $this->getMock('CakeResponse', array('header', 'statusCode'));
-		$this->MessageComponent->Controller->response
-			->expects($this->any())
-			->method('header')
-			->with('Location', 'http://cakephp.org');
-		$this->MessageComponent->error('error test4',array('redirect' => 'http://cakephp.org'));
+		//$this->MessageComponent->Controller->response
+		//	->expects($this->any())
+		//	->method('header')
+		//	->with('Location', 'http://cakephp.org');
+		//$this->MessageComponent->error('error test4',array('redirect' => 'http://cakephp.org'));
 		//$this->assertEqual($this->MessageComponent->messages[1]['body'], 'body test', 'body should be allowed to set usi  		
 		//$this->MessageComponent->error('error test4',array('redirect' => '/ss'));
 		
