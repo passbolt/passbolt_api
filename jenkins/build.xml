@@ -6,7 +6,7 @@
 	<property name="src" value="${env.WORKSPACE}"/>
 	<property name="build" value="${src}/build"/>
 
-	<target name="main" depends="clean, install, jsunit, phpcs-ci, phploc, phpunit" />
+	<target name="main" depends="clean, install, jsunit, phpcs-ci, phploc" />
 
 	<target name="clean" description="Cleanup build artifacts">
 		<delete dir="${build}"/>
