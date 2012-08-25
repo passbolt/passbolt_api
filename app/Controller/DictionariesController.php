@@ -37,4 +37,5 @@ class DictionariesController extends AppController {
 			$this->Message->error(__('Sorry the dictory could not be found'));
 		}
 	}
+
 }
