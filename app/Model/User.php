@@ -249,15 +249,17 @@ class User extends AppModel {
 				$conditions = array(
 					'conditions' => array(
 						'User.id' => $data['User']['id']
-						//'User.active' => 1,
+						//,'User.active' => 1
 					)
 				);
 			break;
 			case User::ANONYMOUS:
+			case 'userView':
 			default:
 				$conditions = array(
 					'conditions' => array(
-						'User.username' => User::ANONYMOUS
+						'User.username' => User::ANONYMOUS,
+						'User.active' => 1
 					)
 				);
 			break;
@@ -281,6 +283,9 @@ class User extends AppModel {
 			//case 'resetPassword':
 			//case 'forgotPassword':
 			case User::ANONYMOUS:
+			case 'userView':
+			case 'userIndex':
+			default:
 				$fields = array(
 					'fields' => array(
 						'User.id', 'User.username', 'User.role_id'
@@ -308,8 +313,6 @@ class User extends AppModel {
 					)
 				);
 			break;
-			default:
-				$fields = array('fields' => array());
 		}
 		return $fields;
 	}

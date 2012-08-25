@@ -48,8 +48,8 @@
 /**
  * Dictionary shortcuts
  */
-	//Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'get'));
 	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
+	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'view'));
 
 /**
  * Load all plugin routes.	See the CakePlugin documentation on 
