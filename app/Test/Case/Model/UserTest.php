@@ -143,13 +143,25 @@ class UserTest extends CakeTestCase {
   }
 
   public function testGetFindConditions() {
+  	$f = $this->User->getFindConditions('userView');
+  	$this->assertEquals(count($f), true, 'testGetFindCondition userView should return something');
+  	$f = $this->User->getFindConditions('userIndex');
+  	$this->assertEquals(count($f), true, 'testGetFindCondition userIndex should return something');
+  	$f = $this->User->getFindConditions('userActivation');
+  	$this->assertEquals(count($f), true, 'testGetFindCondition userActivation should return something');
   	$f = $this->User->getFindConditions('testoqwidoqdhwqohdowqhid');
-  	$this->assertEquals($f, array('conditions' => array()), 'testGetFindCondition should return an empty array');
+  	$this->assertEquals(count($f), true, 'testGetFindCondition bogus should return something');
   }
 
   public function testGetFindFields() {
+  	$f = $this->User->getFindFields('userView');
+  	$this->assertEquals(count($f), true, 'testGetFindFields userView return something');
+  	$f = $this->User->getFindFields('userIndex');
+  	$this->assertEquals(count($f), true, 'testGetFindFields userIndex return something');
+  	$f = $this->User->getFindFields('userActivation');
+  	$this->assertEquals(count($f), true, 'testGetFindFields userActivation return something');
   	$f = $this->User->getFindFields('testdqwodjqodqodwjqidqjdow');
-  	$this->assertEquals($f, array('fields' => array()), 'testGetFindFields return an empty array');
+  	$this->assertEquals(count($f), true, 'testGetFindFields bogus return something');
   }
 
   public function testCreatedBy() {
