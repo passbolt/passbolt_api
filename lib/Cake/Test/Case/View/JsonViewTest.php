@@ -43,8 +43,8 @@ class JsonViewTest extends CakeTestCase {
 		$View = new JsonView($Controller);
 		$output = $View->render(false);
 
-		$this->assertIdentical(json_encode($data), $output);
-		$this->assertIdentical('application/json', $Response->type());
+		$this->assertSame(json_encode($data), $output);
+		$this->assertSame('application/json', $Response->type());
 	}
 
 /**
@@ -62,8 +62,8 @@ class JsonViewTest extends CakeTestCase {
 		$View = new JsonView($Controller);
 		$output = $View->render(false);
 
-		$this->assertIdentical(json_encode(array('no' => $data['no'], 'user' => $data['user'])), $output);
-		$this->assertIdentical('application/json', $Response->type());
+		$this->assertSame(json_encode(array('no' => $data['no'], 'user' => $data['user'])), $output);
+		$this->assertSame('application/json', $Response->type());
 	}
 
 /**
@@ -76,6 +76,7 @@ class JsonViewTest extends CakeTestCase {
 			'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
 		));
 		$Request = new CakeRequest();
+		$Request->params['named'] = array('page' => 2);
 		$Response = new CakeResponse();
 		$Controller = new Controller($Request, $Response);
 		$Controller->name = $Controller->viewPath = 'Posts';
@@ -91,11 +92,12 @@ class JsonViewTest extends CakeTestCase {
 		);
 		$Controller->set('user', $data);
 		$View = new JsonView($Controller);
+		$View->helpers = array('Paginator');
 		$output = $View->render('index');
 
-		$expected = json_encode(array('user' => 'fake', 'list' => array('item1', 'item2')));
-		$this->assertIdentical($expected, $output);
-		$this->assertIdentical('application/json', $Response->type());
+		$expected = json_encode(array('user' => 'fake', 'list' => array('item1', 'item2'), 'paging' => array('page' => 2)));
+		$this->assertSame($expected, $output);
+		$this->assertSame('application/json', $Response->type());
 	}
 
 }

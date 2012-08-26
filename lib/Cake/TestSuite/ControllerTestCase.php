@@ -23,6 +23,7 @@ App::uses('Router', 'Routing');
 App::uses('CakeRequest', 'Network');
 App::uses('CakeResponse', 'Network');
 App::uses('Helper', 'View');
+App::uses('CakeEvent', 'Event');
 
 /**
  * ControllerTestDispatcher class
@@ -180,12 +181,14 @@ abstract class ControllerTestCase extends CakeTestCase {
  *
  * @param string $name The name of the function
  * @param array $arguments Array of arguments
- * @return Function
+ * @return the return of _testAction
+ * @throws BadMethodCallException when you call methods that don't exist.
  */
 	public function __call($name, $arguments) {
 		if ($name == 'testAction') {
 			return call_user_func_array(array($this, '_testAction'), $arguments);
 		}
+		throw new BadMethodCallException("Method '{$name}' does not exist.");
 	}
 
 /**
@@ -244,8 +247,8 @@ abstract class ControllerTestCase extends CakeTestCase {
 			}
 		}
 		$Dispatch->loadRoutes = $this->loadRoutes;
-		$request = $Dispatch->parseParams($request);
-		if (!isset($request->params['controller'])) {
+		$Dispatch->parseParams(new CakeEvent('ControllerTestCase', $Dispatch, array('request' => $request)));
+		if (!isset($request->params['controller']) && Router::currentRoute()) {
 			$this->headers = Router::currentRoute()->response->header();
 			return;
 		}

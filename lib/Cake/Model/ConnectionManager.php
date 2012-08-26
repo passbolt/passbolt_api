@@ -24,7 +24,7 @@ App::uses('DataSource', 'Model/Datasource');
 /**
  * Manages loaded instances of DataSource objects
  *
- * Provides an interface for loading and enumerating connections defined in 
+ * Provides an interface for loading and enumerating connections defined in
  * app/Config/database.php
  *
  * @package       Cake.Model
@@ -140,7 +140,7 @@ class ConnectionManager {
 /**
  * Loads the DataSource class for the given connection name
  *
- * @param mixed $connName A string name of the connection, as defined in app/Config/database.php,
+ * @param string|array $connName A string name of the connection, as defined in app/Config/database.php,
  *                        or an array containing the filename (without extension) and class name of the object,
  *                        to be found in app/Model/Datasource/ or lib/Cake/Model/Datasource/.
  * @return boolean True on success, null on failure or false if the class is already loaded

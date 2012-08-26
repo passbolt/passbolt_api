@@ -41,7 +41,7 @@
  *
  * Options:
  *
- * - `handler` - callback - The callback to handle errors. You can set this to any callback type,
+ * - `handler` - callback - The callback to handle errors. You can set this to any callable type,
  *    including anonymous functions.
  * - `level` - int - The level of errors you are interested in capturing.
  * - `trace` - boolean - Include stack traces for errors in log files.
@@ -133,7 +133,7 @@
  * Defines the default error type when using the log() function. Used for
  * differentiating error logging and debugging. Currently PHP supports LOG_DEBUG.
  */
-	define('LOG_ERROR', 2);
+	define('LOG_ERROR', LOG_ERR);
 
 /**
  * Session configuration.
@@ -226,7 +226,7 @@
 	Configure::write('Acl.database', 'default');
 
 /**
- * Uncomment this line and correct your server timezone to fix 
+ * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
 	//date_default_timezone_set('UTC');
@@ -293,14 +293,16 @@
  */
 
 /**
- * Pick the caching engine to use.  If APC is enabled use it.
- * If running via cli - apc is disabled by default. ensure it's available and enabled in this case
+ * Configure the cache handlers that CakePHP will use for internal
+ * metadata like class maps, and model schema.
  *
+ * By default File is used, but for improved performance you should use APC.
+ *
+ * Note: 'default' and other application caches should be configured in app/Config/bootstrap.php.
+ *       Please check the comments in boostrap.php for more info on the cache engines available
+ *       and their setttings.
  */
 $engine = 'File';
-if (extension_loaded('apc') && function_exists('apc_dec') && (php_sapi_name() !== 'cli' || ini_get('apc.enable_cli'))) {
-	$engine = 'Apc';
-}
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';

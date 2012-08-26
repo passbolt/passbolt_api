@@ -103,8 +103,11 @@ class ValidationTest extends CakeTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->_appEncoding = Configure::read('App.encoding');
-		$this->_appLocale = setlocale(LC_ALL, "0");
-		setlocale(LC_ALL, 'en_US');
+		$this->_appLocale = array();
+		foreach (array(LC_MONETARY, LC_NUMERIC, LC_TIME) as $category) {
+			$this->_appLocale[$category] = setlocale($category, 0);
+			setlocale($category, 'en_US');
+		}
 	}
 
 /**
@@ -115,7 +118,9 @@ class ValidationTest extends CakeTestCase {
 	public function tearDown() {
 		parent::tearDown();
 		Configure::write('App.encoding', $this->_appEncoding);
-		setlocale(LC_ALL, $this->_appLocale);
+		foreach ($this->_appLocale as $category => $locale) {
+			setlocale($category, $locale);
+		}
 	}
 
 /**
@@ -1493,16 +1498,20 @@ class ValidationTest extends CakeTestCase {
 		$this->assertTrue(Validation::decimal('+0123.45e6'));
 		$this->assertTrue(Validation::decimal('-0123.45e6'));
 		$this->assertTrue(Validation::decimal('0123.45e6'));
-		$this->assertTrue(Validation::decimal('1234'));
-		$this->assertTrue(Validation::decimal('-1234'));
-		$this->assertTrue(Validation::decimal('+1234'));
 		$this->assertTrue(Validation::decimal(1234.56));
 		$this->assertTrue(Validation::decimal(1234.00));
+		$this->assertTrue(Validation::decimal('1234.00'));
 		$this->assertTrue(Validation::decimal(.0));
 		$this->assertTrue(Validation::decimal(.00));
+		$this->assertTrue(Validation::decimal('.00'));
 		$this->assertTrue(Validation::decimal(.01));
+		$this->assertTrue(Validation::decimal('.01'));
 
+		$this->assertFalse(Validation::decimal(''));
 		$this->assertFalse(Validation::decimal('string'));
+		$this->assertFalse(Validation::decimal('1234'));
+		$this->assertFalse(Validation::decimal('-1234'));
+		$this->assertFalse(Validation::decimal('+1234'));
 	}
 
 /**
@@ -1657,12 +1666,13 @@ class ValidationTest extends CakeTestCase {
  * @return void
  */
 	public function testIpV4() {
-		$this->assertTrue(Validation::ip('0.0.0.0'));
+		$this->assertTrue(Validation::ip('0.0.0.0', 'ipv4'));
 		$this->assertTrue(Validation::ip('192.168.1.156'));
 		$this->assertTrue(Validation::ip('255.255.255.255'));
 		$this->assertFalse(Validation::ip('127.0.0'));
 		$this->assertFalse(Validation::ip('127.0.0.a'));
 		$this->assertFalse(Validation::ip('127.0.0.256'));
+		$this->assertFalse(Validation::ip('2001:0db8:85a3:0000:0000:8a2e:0370:7334', 'ipv4'), 'IPv6 is not valid IPv4');
 	}
 
 /**
@@ -1702,6 +1712,7 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::ip('1:2:3::4:5:6:7:8:9', 'IPv6'));
 		$this->assertFalse(Validation::ip('::ffff:2.3.4', 'IPv6'));
 		$this->assertFalse(Validation::ip('::ffff:257.1.2.3', 'IPv6'));
+		$this->assertFalse(Validation::ip('255.255.255.255', 'ipv6'), 'IPv4 is not valid IPv6');
 	}
 
 /**
@@ -1775,6 +1786,10 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::url('www.cakephp.org', true));
 		$this->assertTrue(Validation::url('http://www.cakephp.org', true));
 		$this->assertTrue(Validation::url('http://example.com/~userdir/'));
+		$this->assertTrue(Validation::url('http://underscore_subdomain.example.org'));
+		$this->assertTrue(Validation::url('http://_jabber._tcp.gmail.com'));
+		$this->assertFalse(Validation::url('http://www.underscore_domain.org'));
+		$this->assertFalse(Validation::url('http://_jabber._tcp.g_mail.com'));
 
 		$this->assertTrue(Validation::url('http://example.com/~userdir/subdir/index.html'));
 		$this->assertTrue(Validation::url('http://www.zwischenraume.de'));
@@ -1822,6 +1837,8 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::inList('three', array('one', 'two')));
 		$this->assertFalse(Validation::inList('1one', array(0, 1, 2, 3)));
 		$this->assertFalse(Validation::inList('one', array(0, 1, 2, 3)));
+		$this->assertFalse(Validation::inList('2', array(1, 2, 3)));
+		$this->assertTrue(Validation::inList('2', array(1, 2, 3), false));
 	}
 
 /**
@@ -1932,6 +1949,8 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz', 'squirrel'), array('min' => 10)));
 
 		$this->assertTrue(Validation::multiple(array(0, 5, 9), array('in' => range(0, 10), 'max' => 5)));
+		$this->assertFalse(Validation::multiple(array('0', '5', '9'), array('in' => range(0, 10), 'max' => 5)));
+		$this->assertTrue(Validation::multiple(array('0', '5', '9'), array('in' => range(0, 10), 'max' => 5), false));
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5)));
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 11), array('in' => range(0, 10), 'max' => 5)));
 
@@ -1954,6 +1973,27 @@ class ValidationTest extends CakeTestCase {
 		$this->assertTrue(Validation::numeric(2));
 		$this->assertTrue(Validation::numeric(2.2));
 		$this->assertTrue(Validation::numeric('2.2'));
+	}
+
+/**
+ * testNaturalNumber method
+ *
+ * @return void
+ */
+	public function testNaturalNumber() {
+		$this->assertFalse(Validation::naturalNumber('teststring'));
+		$this->assertFalse(Validation::naturalNumber('5.4'));
+		$this->assertFalse(Validation::naturalNumber(99.004));
+		$this->assertFalse(Validation::naturalNumber('0,05'));
+		$this->assertFalse(Validation::naturalNumber('-2'));
+		$this->assertFalse(Validation::naturalNumber(-2));
+		$this->assertFalse(Validation::naturalNumber('0'));
+		$this->assertFalse(Validation::naturalNumber('050'));
+
+		$this->assertTrue(Validation::naturalNumber('2'));
+		$this->assertTrue(Validation::naturalNumber(49));
+		$this->assertTrue(Validation::naturalNumber('0', true));
+		$this->assertTrue(Validation::naturalNumber(0, true));
 	}
 
 /**
@@ -2141,4 +2181,45 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::datetime('31 11 2006 1:00pm', 'dmy'));
 	}
 
+/**
+ * testMimeType method
+ *
+ * @return void
+ */
+	public function testMimeType() {
+		$image = CORE_PATH . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'webroot' . DS . 'img' . DS . 'cake.power.gif';
+		$File = new File($image, false);
+		$this->skipIf(!$File->mime(), 'Cannot determine mimeType');
+		$this->assertTrue(Validation::mimeType($image, array('image/gif')));
+		$this->assertTrue(Validation::mimeType(array('tmp_name' => $image), array('image/gif')));
+
+		$this->assertFalse(Validation::mimeType($image, array('image/png')));
+		$this->assertFalse(Validation::mimeType(array('tmp_name' => $image), array('image/png')));
+	}
+
+/**
+ * testMimeTypeFalse method
+ *
+ * @expectedException CakeException
+ * @return void
+ */
+	public function testMimeTypeFalse() {
+		$image = CORE_PATH . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'webroot' . DS . 'img' . DS . 'cake.power.gif';
+		$File = new File($image, false);
+		$this->skipIf($File->mime(), 'mimeType can be determined, no Exception will be thrown');
+		Validation::mimeType($image, array('image/gif'));
+	}
+
+/**
+ * testMimeType method
+ *
+ * @return void
+ */
+	public function testUploadError() {
+		$this->assertTrue(Validation::uploadError(0));
+		$this->assertTrue(Validation::uploadError(array('error' => 0)));
+
+		$this->assertFalse(Validation::uploadError(2));
+		$this->assertFalse(Validation::uploadError(array('error' => 2)));
+	}
 }

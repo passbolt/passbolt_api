@@ -174,10 +174,10 @@ class ExceptionRendererTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
+		parent::tearDown();
 		if ($this->_restoreError) {
 			restore_error_handler();
 		}
-		parent::tearDown();
 	}
 
 /**
@@ -275,6 +275,36 @@ class ExceptionRendererTest extends CakeTestCase {
 		$this->assertInstanceOf('CakeErrorController', $ExceptionRenderer->controller);
 		$this->assertEquals('error400', $ExceptionRenderer->method);
 		$this->assertEquals($exception, $ExceptionRenderer->error);
+	}
+
+/**
+ * test that helpers in custom CakeErrorController are not lost
+ */
+	public function testCakeErrorHelpersNotLost() {
+		$testApp = CAKE . 'Test' . DS . 'test_app' . DS;
+		App::build(array(
+			'Controller' => array(
+				$testApp . 'Controller' . DS
+			),
+			'View/Helper' => array(
+				$testApp . 'View' . DS . 'Helper' . DS
+			),
+			'View/Layouts' => array(
+				$testApp . 'View' . DS . 'Layouts' . DS
+			),
+			'Error' => array(
+				$testApp . 'Error' . DS
+			),
+		), App::RESET);
+
+		App::uses('TestAppsExceptionRenderer', 'Error');
+		$exception = new SocketException('socket exception');
+		$renderer = new TestAppsExceptionRenderer($exception);
+
+		ob_start();
+		$renderer->render();
+		$result = ob_get_clean();
+		$this->assertContains('<b>peeled</b>', $result);
 	}
 
 /**
@@ -451,6 +481,27 @@ class ExceptionRendererTest extends CakeTestCase {
 	}
 
 /**
+ * testExceptionResponseHeader method
+ *
+ * @return void
+ */
+	public function testExceptionResponseHeader() {
+		$exception = new MethodNotAllowedException('Only allowing POST and DELETE');
+		$exception->responseHeader(array('Allow: POST, DELETE'));
+		$ExceptionRenderer = new ExceptionRenderer($exception);
+
+		//Replace response object with mocked object add back the original headers which had been set in ExceptionRenderer constructor
+		$headers = $ExceptionRenderer->controller->response->header();
+		$ExceptionRenderer->controller->response = $this->getMock('CakeResponse', array('_sendHeader'));
+		$ExceptionRenderer->controller->response->header($headers);
+
+		$ExceptionRenderer->controller->response->expects($this->at(1))->method('_sendHeader')->with('Allow', 'POST, DELETE');
+		ob_start();
+		$ExceptionRenderer->render();
+		$result = ob_get_clean();
+	}
+
+/**
  * testMissingController method
  *
  * @return void
@@ -526,6 +577,15 @@ class ExceptionRendererTest extends CakeTestCase {
 				array(
 					'/<h2>Missing Database Connection<\/h2>/',
 					'/Article requires a database connection/'
+				),
+				500
+			),
+			array(
+				new MissingConnectionException(array('class' => 'Mysql', 'enabled' => false)),
+				array(
+					'/<h2>Missing Database Connection<\/h2>/',
+					'/Mysql requires a database connection/',
+					'/Mysql driver is NOT enabled/'
 				),
 				500
 			),
@@ -731,7 +791,7 @@ class ExceptionRendererTest extends CakeTestCase {
 
 		$this->assertContains('<h2>Database Error</h2>', $result);
 		$this->assertContains('There was an error in the SQL query', $result);
-		$this->assertContains('SELECT * from poo_query < 5 and :seven', $result);
+		$this->assertContains(h('SELECT * from poo_query < 5 and :seven'), $result);
 		$this->assertContains("'seven' => (int) 7", $result);
 	}
 }

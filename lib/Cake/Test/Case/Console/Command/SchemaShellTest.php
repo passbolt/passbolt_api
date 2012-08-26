@@ -135,7 +135,7 @@ class SchemaShellTest extends CakeTestCase {
 		$this->Shell->startup();
 		$this->assertTrue(isset($this->Shell->Schema));
 		$this->assertTrue(is_a($this->Shell->Schema, 'CakeSchema'));
-		$this->assertEquals(strtolower(APP_DIR), strtolower($this->Shell->Schema->name));
+		$this->assertEquals(Inflector::camelize(Inflector::slug(APP_DIR)), $this->Shell->Schema->name);
 		$this->assertEquals('schema.php', $this->Shell->Schema->file);
 
 		$this->Shell->Schema = null;
@@ -155,7 +155,7 @@ class SchemaShellTest extends CakeTestCase {
 			'path' => '/test/path'
 		);
 		$this->Shell->startup();
-		$this->assertEquals(strtolower(APP_DIR), strtolower($this->Shell->Schema->name));
+		$this->assertEquals(Inflector::camelize(Inflector::slug(APP_DIR)), $this->Shell->Schema->name);
 		$this->assertEquals('other_file.php', $this->Shell->Schema->file);
 		$this->assertEquals('test', $this->Shell->Schema->connection);
 		$this->assertEquals('/test/path', $this->Shell->Schema->path);
@@ -363,6 +363,40 @@ class SchemaShellTest extends CakeTestCase {
 	}
 
 /**
+ * test generate with specific models
+ *
+ * @return void
+ */
+	public function testGenerateModels() {
+		App::build(array(
+			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
+		), App::RESET);
+		CakePlugin::load('TestPlugin');
+
+		$this->db->cacheSources = false;
+		$this->Shell->params = array(
+			'plugin' => 'TestPlugin',
+			'connection' => 'test',
+			'models' => 'TestPluginComment',
+			'force' => false,
+			'overwrite' => true
+		);
+		$this->Shell->startup();
+		$this->Shell->Schema->path = TMP . 'tests' . DS;
+
+		$this->Shell->generate();
+		$this->file = new File(TMP . 'tests' . DS . 'schema.php');
+		$contents = $this->file->read();
+
+		$this->assertRegExp('/class TestPluginSchema/', $contents);
+		$this->assertRegExp('/public \$test_plugin_comments/', $contents);
+		$this->assertNotRegExp('/public \$authors/', $contents);
+		$this->assertNotRegExp('/public \$auth_users/', $contents);
+		$this->assertNotRegExp('/public \$posts/', $contents);
+		CakePlugin::unload();
+	}
+
+/**
  * Test schema run create with no table args.
  *
  * @return void
@@ -460,6 +494,35 @@ class SchemaShellTest extends CakeTestCase {
 		$this->Shell->startup();
 		$expected = CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS . 'TestPlugin' . DS . 'Config' . DS . 'Schema';
 		$this->assertEquals($expected, $this->Shell->Schema->path);
+		CakePlugin::unload();
+	}
+
+/**
+ * test that underscored names also result in CamelCased class names
+ *
+ * @return void
+ */
+	public function testName() {
+		App::build(array(
+			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
+		));
+		CakePlugin::load('TestPlugin');
+		$this->Shell->params = array(
+			'plugin' => 'TestPlugin',
+			'connection' => 'test',
+			'name' => 'custom_name',
+			'force' => false,
+			'overwrite' => true,
+		);
+		$this->Shell->startup();
+		if (file_exists($this->Shell->Schema->path . DS . 'custom_name.php')) {
+			unlink($this->Shell->Schema->path . DS . 'custom_name.php');
+		}
+		$this->Shell->generate();
+
+		$contents = file_get_contents($this->Shell->Schema->path . DS . 'custom_name.php');
+		$this->assertRegExp('/class CustomNameSchema/', $contents);
+		unlink($this->Shell->Schema->path . DS . 'custom_name.php');
 		CakePlugin::unload();
 	}
 

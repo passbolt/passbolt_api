@@ -19,6 +19,43 @@
  */
 
 /**
+ * Base class that all Exceptions extend.
+ *
+ * @package       Cake.Error
+ */
+class CakeBaseException extends RuntimeException {
+
+/**
+ * Array of headers to be passed to CakeResponse::header()
+ *
+ * @var array
+ */
+	protected $_responseHeaders = null;
+
+/**
+ * Get/set the response header to be used
+ *
+ * See also CakeResponse::header()
+ *
+ * @param string|array $header. An array of header strings or a single header string
+ *	- an associative array of "header name" => "header value"
+ *	- an array of string headers is also accepted
+ * @param string $value. The header value.
+ * @return array
+ */
+	public function responseHeader($header = null, $value = null) {
+		if ($header) {
+			if (is_array($header)) {
+				return $this->_responseHeaders = $header;
+			}
+			$this->_responseHeaders = array($header => $value);
+		}
+		return $this->_responseHeaders;
+	}
+
+}
+
+/**
  * Parent class for all of the HTTP related exceptions in CakePHP.
  * All HTTP status/error related exceptions should extend this class so
  * catch blocks can be specifically typed.
@@ -26,7 +63,7 @@
  * @package       Cake.Error
  */
 if (!class_exists('HttpException')) {
-	class HttpException extends RuntimeException {
+	class HttpException extends CakeBaseException {
 	}
 }
 
@@ -168,7 +205,7 @@ class InternalErrorException extends HttpException {
  *
  * @package       Cake.Error
  */
-class CakeException extends RuntimeException {
+class CakeException extends CakeBaseException {
 
 /**
  * Array of attributes that are passed in from the constructor, and
@@ -191,7 +228,7 @@ class CakeException extends RuntimeException {
  * Allows you to create exceptions that are treated as framework errors and disabled
  * when debug = 0.
  *
- * @param mixed $message Either the string of the error message, or an array of attributes
+ * @param string|array $message Either the string of the error message, or an array of attributes
  *   that are made available in the view, and sprintf()'d into CakeException::$_messageTemplate
  * @param string $code The code of the error, is also the HTTP status code for the error.
  */
@@ -337,6 +374,13 @@ class MissingConnectionException extends CakeException {
 
 	protected $_messageTemplate = 'Database connection "%s" is missing, or could not be created.';
 
+	public function __construct($message, $code = 500) {
+		if (is_array($message)) {
+			$message += array('enabled' => true);
+		}
+		parent::__construct($message, $code);
+	}
+
 }
 
 /**
@@ -439,7 +483,18 @@ class MissingPluginException extends CakeException {
 }
 
 /**
- * Exception class for AclComponent and Interface implementations. 
+ * Exception raised when a Dispatcher filter could not be found
+ *
+ * @package       Cake.Error
+ */
+class MissingDispatcherFilterException extends CakeException {
+
+	protected $_messageTemplate = 'Dispatcher filter %s could not be found.';
+
+}
+
+/**
+ * Exception class for AclComponent and Interface implementations.
  *
  * @package       Cake.Error
  */
@@ -516,4 +571,46 @@ class XmlException extends CakeException {
  * @package       Cake.Error
  */
 class ConsoleException extends CakeException {
+}
+
+/**
+ * Represents a fatal error
+ *
+ * @package       Cake.Error
+ */
+class FatalErrorException extends CakeException {
+
+/**
+ * Constructor
+ *
+ * @param string $message
+ * @param integer $code
+ * @param string $file
+ * @param integer $line
+ */
+	public function __construct($message, $code = 500, $file = null, $line = null) {
+		parent::__construct($message, $code);
+		if ($file) {
+			$this->file = $file;
+		}
+		if ($line) {
+			$this->line = $line;
+		}
+	}
+
+}
+
+/**
+ * Not Implemented Exception - used when an API method is not implemented
+ *
+ * @package       Cake.Error
+ */
+class NotImplementedException extends CakeException {
+
+	protected $_messageTemplate = '%s is not implemented.';
+
+	public function __construct($message, $code = 501) {
+		parent::__construct($message, $code);
+	}
+
 }

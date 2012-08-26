@@ -19,6 +19,7 @@
 App::uses('AppShell', 'Console/Command');
 App::uses('File', 'Utility');
 App::uses('Folder', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * Language string extractor
@@ -105,6 +106,13 @@ class ExtractTask extends AppShell {
 	protected $_validationDomain = 'default';
 
 /**
+ * Holds whether this call should extract the CakePHP Lib messages
+ *
+ * @var boolean
+ */
+	protected $_extractCore = false;
+
+/**
  * Method to interact with the User and get path selections.
  *
  * @return void
@@ -136,6 +144,7 @@ class ExtractTask extends AppShell {
 			$this->out();
 		}
 	}
+
 /**
  * Execution method always used for tasks
  *
@@ -159,6 +168,21 @@ class ExtractTask extends AppShell {
 			$this->params['plugin'] = $plugin;
 		} else {
 			$this->_getPaths();
+		}
+
+		if (isset($this->params['extract-core'])) {
+			$this->_extractCore = !(strtolower($this->params['extract-core']) === 'no');
+		} else {
+			$response = $this->in(__d('cake_console', 'Would you like to extract the messages from the CakePHP core?'), array('y', 'n'), 'n');
+			$this->_extractCore = strtolower($response) === 'y';
+		}
+
+		if ($this->_extractCore) {
+			$this->_paths[] = CAKE;
+			$this->_exclude = array_merge($this->_exclude, array(
+				CAKE . 'Test',
+				CAKE . 'Console' . DS . 'Templates'
+			));
 		}
 
 		if (!empty($this->params['exclude-plugins']) && $this->_isExtractingApp()) {
@@ -301,6 +325,15 @@ class ExtractTask extends AppShell {
 			->addOption('exclude', array(
 				'help' => __d('cake_console', 'Comma separated list of directories to exclude.' .
 					' Any path containing a path segment with the provided values will be skipped. E.g. test,vendors')
+			))
+			->addOption('overwrite', array(
+				'boolean' => true,
+				'default' => false,
+				'help' => __d('cake_console', 'Always overwrite existing .pot files.')
+			))
+			->addOption('extract-core', array(
+				'help' => __d('cake_console', 'Extract messages from the CakePHP core libs.'),
+				'choices' => array('yes', 'no')
 			));
 	}
 
@@ -446,7 +479,7 @@ class ExtractTask extends AppShell {
 			return;
 		}
 
-		$dims = Set::countDim($rules);
+		$dims = Hash::dimensions($rules);
 		if ($dims == 1 || ($dims == 2 && isset($rules['message']))) {
 			$rules = array($rules);
 		}
@@ -536,6 +569,10 @@ class ExtractTask extends AppShell {
  */
 	protected function _writeFiles() {
 		$overwriteAll = false;
+		if (!empty($this->params['overwrite'])) {
+			$overwriteAll = true;
+		}
+
 		foreach ($this->_storage as $domain => $sentences) {
 			$output = $this->_writeHeader();
 			foreach ($sentences as $sentence => $header) {

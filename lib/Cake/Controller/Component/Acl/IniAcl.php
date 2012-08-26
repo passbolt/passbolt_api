@@ -30,7 +30,7 @@ class IniAcl extends Object implements AclInterface {
 	public $config = null;
 
 /**
- * The Set::classicExtract() path to the user/aro identifier in the
+ * The Hash::extract() path to the user/aro identifier in the
  * acl.ini file.  This path will be used to extract the string
  * representation of a user used in the ini file.
  *
@@ -97,7 +97,7 @@ class IniAcl extends Object implements AclInterface {
 		$aclConfig = $this->config;
 
 		if (is_array($aro)) {
-			$aro = Set::classicExtract($aro, $this->userPath);
+			$aro = Hash::get($aro, $this->userPath);
 		}
 
 		if (isset($aclConfig[$aro]['deny'])) {
@@ -143,7 +143,7 @@ class IniAcl extends Object implements AclInterface {
 	}
 
 /**
- * Parses an INI file and returns an array that reflects the 
+ * Parses an INI file and returns an array that reflects the
  * INI file's section structure. Double-quote friendly.
  *
  * @param string $filename File

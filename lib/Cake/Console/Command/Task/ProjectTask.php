@@ -47,11 +47,18 @@ class ProjectTask extends AppShell {
 		$project = null;
 		if (isset($this->args[0])) {
 			$project = $this->args[0];
+		} else {
+			$appContents = array_diff(scandir(APP), array('.', '..'));
+			if (empty($appContents)) {
+				$suggestedPath = rtrim(APP, DS);
+			} else {
+				$suggestedPath = APP . 'myapp';
+			}
 		}
 
 		while (!$project) {
 			$prompt = __d('cake_console', "What is the path to the project you want to bake?");
-			$project = $this->in($prompt, null, APP . 'myapp');
+			$project = $this->in($prompt, null, $suggestedPath);
 		}
 
 		if ($project && !Folder::isAbsolute($project) && isset($_SERVER['PWD'])) {
@@ -70,12 +77,6 @@ class ProjectTask extends AppShell {
 		$success = true;
 		if ($this->bake($project)) {
 			$path = Folder::slashTerm($project);
-			if ($this->createHome($path)) {
-				$this->out(__d('cake_console', ' * Welcome page created'));
-			} else {
-				$this->err(__d('cake_console', 'The Welcome page was <error>NOT</error> created'));
-				$success = false;
-			}
 
 			if ($this->securitySalt($path) === true) {
 				$this->out(__d('cake_console', ' * Random hash key created for \'Security.salt\''));
@@ -88,6 +89,13 @@ class ProjectTask extends AppShell {
 				$this->out(__d('cake_console', ' * Random seed created for \'Security.cipherSeed\''));
 			} else {
 				$this->err(__d('cake_console', 'Unable to generate random seed for \'Security.cipherSeed\', you should change it in %s', APP . 'Config' . DS . 'core.php'));
+				$success = false;
+			}
+
+			if ($this->cachePrefix($path)) {
+				$this->out(__d('cake_console', ' * Cache prefix set'));
+			} else {
+				$this->err(__d('cake_console', 'The cache prefix was <error>NOT</error> set'));
 				$success = false;
 			}
 
@@ -221,20 +229,6 @@ class ProjectTask extends AppShell {
 	}
 
 /**
- * Writes a file with a default home page to the project.
- *
- * @param string $dir Path to project
- * @return boolean Success
- */
-	public function createHome($dir) {
-		$app = basename($dir);
-		$path = $dir . 'View' . DS . 'Pages' . DS;
-		$source = CAKE . 'Console' . DS . 'Templates' . DS . 'default' . DS . 'views' . DS . 'home.ctp';
-		include $source;
-		return $this->createFile($path . 'home.ctp', $output);
-	}
-
-/**
  * Generates the correct path to the CakePHP libs that are generating the project
  * and points app/console/cake.php to the right place
  *
@@ -293,6 +287,23 @@ class ProjectTask extends AppShell {
 				return true;
 			}
 			return false;
+		}
+		return false;
+	}
+
+/**
+ * Writes cache prefix using app's name
+ *
+ * @param string $dir Path to project
+ * @return boolean Success
+ */
+	public function cachePrefix($dir) {
+		$app = basename($dir);
+		$File = new File($dir . 'Config' . DS . 'core.php');
+		$contents = $File->read();
+		if (preg_match('/(\$prefix = \'myapp_\';)/', $contents, $match)) {
+			$result = str_replace($match[0], '$prefix = \'' . $app . '_\';', $contents);
+			return $File->write($result);
 		}
 		return false;
 	}

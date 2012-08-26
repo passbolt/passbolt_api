@@ -330,7 +330,7 @@ class String {
  * - `indentAt` 0 based index to start indenting at. Defaults to 0.
  *
  * @param string $text Text the text to format.
- * @param mixed $options Array of options to use, or an integer to wrap the text to.
+ * @param array|integer $options Array of options to use, or an integer to wrap the text to.
  * @return string Formatted text.
  */
 	public static function wrap($text, $options = array()) {
@@ -361,6 +361,7 @@ class String {
  *
  * - `format` The piece of html with that the phrase will be highlighted
  * - `html` If true, will ignore any HTML tags, ensuring that only the correct text is highlighted
+ * - `regex` a custom regex rule that is ued to match words, default is '|$tag|iu'
  *
  * @param string $text Text to search the phrase in
  * @param string $phrase The phrase that will be searched
@@ -375,7 +376,8 @@ class String {
 
 		$default = array(
 			'format' => '<span class="highlight">\1</span>',
-			'html' => false
+			'html' => false,
+			'regex' => "|%s|iu"
 		);
 		$options = array_merge($default, $options);
 		extract($options);
@@ -391,7 +393,7 @@ class String {
 				}
 
 				$with[] = (is_array($format)) ? $format[$key] : $format;
-				$replace[] = "|$segment|iu";
+				$replace[] = sprintf($options['regex'], $segment);
 			}
 
 			return preg_replace($replace, $with, $text);
@@ -401,7 +403,7 @@ class String {
 				$phrase = "(?![^<]+>)$phrase(?![^<]+>)";
 			}
 
-			return preg_replace("|$phrase|iu", $format, $text);
+			return preg_replace(sprintf($options['regex'], $phrase), $format, $text);
 		}
 	}
 
@@ -417,14 +419,54 @@ class String {
 	}
 
 /**
- * Truncates text.
+ * Truncates text starting from the end.
  *
- * Cuts a string to the length of $length and replaces the last characters
- * with the ending if the text is longer than length.
+ * Cuts a string to the length of $length and replaces the first characters
+ * with the ellipsis if the text is longer than length.
  *
  * ### Options:
  *
- * - `ending` Will be used as Ending and appended to the trimmed string
+ * - `ellipsis` Will be used as Beginning and prepended to the trimmed string
+ * - `exact` If false, $text will not be cut mid-word
+ *
+ * @param string $text String to truncate.
+ * @param integer $length Length of returned string, including ellipsis.
+ * @param array $options An array of options.
+ * @return string Trimmed string.
+ */
+	public static function tail($text, $length = 100, $options = array()) {
+		$default = array(
+			'ellipsis' => '...', 'exact' => true
+		);
+		$options = array_merge($default, $options);
+		extract($options);
+
+		if (!function_exists('mb_strlen')) {
+			class_exists('Multibyte');
+		}
+
+		if (mb_strlen($text) <= $length) {
+			return $text;
+		} else {
+			$truncate = mb_substr($text, mb_strlen($text) - $length + mb_strlen($ellipsis));
+		}
+		if (!$exact) {
+			$spacepos = mb_strpos($truncate, ' ');
+			$truncate = $spacepos === false ? '' : trim(mb_substr($truncate, $spacepos));
+		}
+
+		return $ellipsis . $truncate;
+	}
+
+/**
+ * Truncates text.
+ *
+ * Cuts a string to the length of $length and replaces the last characters
+ * with the ellipsis if the text is longer than length.
+ *
+ * ### Options:
+ *
+ * - `ellipsis` Will be used as Ending and appended to the trimmed string (`ending` is deprecated)
  * - `exact` If false, $text will not be cut mid-word
  * - `html` If true, HTML tags would be handled correctly
  *
@@ -436,8 +478,13 @@ class String {
  */
 	public static function truncate($text, $length = 100, $options = array()) {
 		$default = array(
-			'ending' => '...', 'exact' => true, 'html' => false
+			'ellipsis' => '...', 'exact' => true, 'html' => false
 		);
+		if (isset($options['ending'])) {
+			$default['ellipsis'] = $options['ending'];
+		} elseif (!empty($options['html']) && Configure::read('App.encoding') == 'UTF-8') {
+			$default['ellipsis'] = chr(226);
+		}
 		$options = array_merge($default, $options);
 		extract($options);
 
@@ -449,7 +496,7 @@ class String {
 			if (mb_strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
 				return $text;
 			}
-			$totalLength = mb_strlen(strip_tags($ending));
+			$totalLength = mb_strlen(strip_tags($ellipsis));
 			$openTags = array();
 			$truncate = '';
 
@@ -496,7 +543,7 @@ class String {
 			if (mb_strlen($text) <= $length) {
 				return $text;
 			} else {
-				$truncate = mb_substr($text, 0, $length - mb_strlen($ending));
+				$truncate = mb_substr($text, 0, $length - mb_strlen($ellipsis));
 			}
 		}
 		if (!$exact) {
@@ -528,7 +575,7 @@ class String {
 			}
 			$truncate = mb_substr($truncate, 0, $spacepos);
 		}
-		$truncate .= $ending;
+		$truncate .= $ellipsis;
 
 		if ($html) {
 			foreach ($openTags as $tag) {
@@ -546,23 +593,23 @@ class String {
  * @param string $text String to search the phrase in
  * @param string $phrase Phrase that will be searched for
  * @param integer $radius The amount of characters that will be returned on each side of the founded phrase
- * @param string $ending Ending that will be appended
+ * @param string $ellipsis Ending that will be appended
  * @return string Modified string
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::excerpt
  */
-	public static function excerpt($text, $phrase, $radius = 100, $ending = '...') {
+	public static function excerpt($text, $phrase, $radius = 100, $ellipsis = '...') {
 		if (empty($text) || empty($phrase)) {
-			return self::truncate($text, $radius * 2, array('ending' => $ending));
+			return self::truncate($text, $radius * 2, array('ellipsis' => $ellipsis));
 		}
 
-		$append = $prepend = $ending;
+		$append = $prepend = $ellipsis;
 
 		$phraseLen = mb_strlen($phrase);
 		$textLen = mb_strlen($text);
 
 		$pos = mb_strpos(mb_strtolower($text), mb_strtolower($phrase));
 		if ($pos === false) {
-			return mb_substr($text, 0, $radius) . $ending;
+			return mb_substr($text, 0, $radius) . $ellipsis;
 		}
 
 		$startPos = $pos - $radius;

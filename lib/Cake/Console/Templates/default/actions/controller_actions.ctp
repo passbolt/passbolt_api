@@ -31,6 +31,7 @@
 /**
  * <?php echo $admin ?>view method
  *
+ * @throws NotFoundException
  * @param string $id
  * @return void
  */
@@ -85,6 +86,7 @@
 /**
  * <?php echo $admin ?>edit method
  *
+ * @throws NotFoundException
  * @param string $id
  * @return void
  */
@@ -129,17 +131,17 @@
 /**
  * <?php echo $admin ?>delete method
  *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
  * @param string $id
  * @return void
  */
 	public function <?php echo $admin; ?>delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
 		$this-><?php echo $currentModelName; ?>->id = $id;
 		if (!$this-><?php echo $currentModelName; ?>->exists()) {
 			throw new NotFoundException(__('Invalid <?php echo strtolower($singularHumanName); ?>'));
 		}
+		$this->request->onlyAllow('post', 'delete');
 		if ($this-><?php echo $currentModelName; ?>->delete()) {
 <?php if ($wannaUseSession): ?>
 			$this->Session->setFlash(__('<?php echo ucfirst(strtolower($singularHumanName)); ?> deleted'));

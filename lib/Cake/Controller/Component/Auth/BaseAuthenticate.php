@@ -12,8 +12,8 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
 App::uses('Security', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * Base Authentication class with common methods and properties.
@@ -30,6 +30,7 @@ abstract class BaseAuthenticate {
  * - `scope` Additional conditions to use when looking up and authenticating users,
  *    i.e. `array('User.is_active' => 1).`
  * - `recursive` The value of the recursive key passed to find(). Defaults to 0.
+ * - `contain` Extra models to contain and store in session.
  *
  * @var array
  */
@@ -40,7 +41,8 @@ abstract class BaseAuthenticate {
 		),
 		'userModel' => 'User',
 		'scope' => array(),
-		'recursive' => 0
+		'recursive' => 0,
+		'contain' => null,
 	);
 
 /**
@@ -58,37 +60,54 @@ abstract class BaseAuthenticate {
  */
 	public function __construct(ComponentCollection $collection, $settings) {
 		$this->_Collection = $collection;
-		$this->settings = Set::merge($this->settings, $settings);
+		$this->settings = Hash::merge($this->settings, $settings);
 	}
 
 /**
  * Find a user record using the standard options.
  *
- * @param string $username The username/identifier.
- * @param string $password The unhashed password.
+ * The $conditions parameter can be a (string)username or an array containing conditions for Model::find('first'). If
+ * the password field is not included in the conditions the password will be returned.
+ *
+ * @param Mixed $conditions The username/identifier, or an array of find conditions.
+ * @param Mixed $password The password, only use if passing as $conditions = 'username'.
  * @return Mixed Either false on failure, or an array of user data.
  */
-	protected function _findUser($username, $password) {
+	protected function _findUser($conditions, $password = null) {
 		$userModel = $this->settings['userModel'];
 		list($plugin, $model) = pluginSplit($userModel);
 		$fields = $this->settings['fields'];
 
-		$conditions = array(
-			$model . '.' . $fields['username'] => $username,
-			$model . '.' . $fields['password'] => $this->_password($password),
-		);
+		if (!is_array($conditions)) {
+			if (!$password) {
+				return false;
+			}
+			$username = $conditions;
+			$conditions = array(
+				$model . '.' . $fields['username'] => $username,
+				$model . '.' . $fields['password'] => $this->_password($password),
+			);
+		}
 		if (!empty($this->settings['scope'])) {
 			$conditions = array_merge($conditions, $this->settings['scope']);
 		}
 		$result = ClassRegistry::init($userModel)->find('first', array(
 			'conditions' => $conditions,
-			'recursive' => (int)$this->settings['recursive']
+			'recursive' => (int)$this->settings['recursive'],
+			'contain' => $this->settings['contain'],
 		));
 		if (empty($result) || empty($result[$model])) {
 			return false;
 		}
-		unset($result[$model][$fields['password']]);
-		return $result[$model];
+		$user = $result[$model];
+		if (
+			isset($conditions[$model . '.' . $fields['password']]) ||
+			isset($conditions[$fields['password']])
+		) {
+			unset($user[$fields['password']]);
+		}
+		unset($result[$model]);
+		return array_merge($user, $result);
 	}
 
 /**

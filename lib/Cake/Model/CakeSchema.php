@@ -254,44 +254,50 @@ class CakeSchema extends Object {
 					continue;
 				}
 
+				if (!is_object($Object) || $Object->useTable === false) {
+					continue;
+				}
 				$db = $Object->getDataSource();
-				if (is_object($Object) && $Object->useTable !== false) {
-					$fulltable = $table = $db->fullTableName($Object, false, false);
-					if ($prefix && strpos($table, $prefix) !== 0) {
+
+				$fulltable = $table = $db->fullTableName($Object, false, false);
+				if ($prefix && strpos($table, $prefix) !== 0) {
+					continue;
+				}
+				if (!in_array($fulltable, $currentTables)) {
+					continue;
+				}
+
+				$table = $this->_noPrefixTable($prefix, $table);
+
+				$key = array_search($fulltable, $currentTables);
+				if (empty($tables[$table])) {
+					$tables[$table] = $this->_columns($Object);
+					$tables[$table]['indexes'] = $db->index($Object);
+					$tables[$table]['tableParameters'] = $db->readTableParameters($fulltable);
+					unset($currentTables[$key]);
+				}
+				if (empty($Object->hasAndBelongsToMany)) {
+					continue;
+				}
+				foreach ($Object->hasAndBelongsToMany as $Assoc => $assocData) {
+					if (isset($assocData['with'])) {
+						$class = $assocData['with'];
+					}
+					if (!is_object($Object->$class)) {
 						continue;
 					}
-					$table = $this->_noPrefixTable($prefix, $table);
+					$withTable = $db->fullTableName($Object->$class, false, false);
+					if ($prefix && strpos($withTable, $prefix) !== 0) {
+						continue;
+					}
+					if (in_array($withTable, $currentTables)) {
+						$key = array_search($withTable, $currentTables);
+						$noPrefixWith = $this->_noPrefixTable($prefix, $withTable);
 
-					if (in_array($fulltable, $currentTables)) {
-						$key = array_search($fulltable, $currentTables);
-						if (empty($tables[$table])) {
-							$tables[$table] = $this->_columns($Object);
-							$tables[$table]['indexes'] = $db->index($Object);
-							$tables[$table]['tableParameters'] = $db->readTableParameters($fulltable);
-							unset($currentTables[$key]);
-						}
-						if (!empty($Object->hasAndBelongsToMany)) {
-							foreach ($Object->hasAndBelongsToMany as $Assoc => $assocData) {
-								if (isset($assocData['with'])) {
-									$class = $assocData['with'];
-								}
-								if (is_object($Object->$class)) {
-									$withTable = $db->fullTableName($Object->$class, false, false);
-									if ($prefix && strpos($withTable, $prefix) !== 0) {
-										continue;
-									}
-									if (in_array($withTable, $currentTables)) {
-										$key = array_search($withTable, $currentTables);
-										$noPrefixWith = $this->_noPrefixTable($prefix, $withTable);
-
-										$tables[$noPrefixWith] = $this->_columns($Object->$class);
-										$tables[$noPrefixWith]['indexes'] = $db->index($Object->$class);
-										$tables[$noPrefixWith]['tableParameters'] = $db->readTableParameters($withTable);
-										unset($currentTables[$key]);
-									}
-								}
-							}
-						}
+						$tables[$noPrefixWith] = $this->_columns($Object->$class);
+						$tables[$noPrefixWith]['indexes'] = $db->index($Object->$class);
+						$tables[$noPrefixWith]['tableParameters'] = $db->readTableParameters($withTable);
+						unset($currentTables[$key]);
 					}
 				}
 			}
@@ -338,7 +344,7 @@ class CakeSchema extends Object {
 /**
  * Writes schema file from object or options
  *
- * @param mixed $object schema object or options array
+ * @param array|object $object schema object or options array
  * @param array $options schema object properties to override object
  * @return mixed false or string written to file
  */
@@ -414,12 +420,12 @@ class CakeSchema extends Object {
 					unset($value['type']);
 					$col .= join(', ',  $this->_values($value));
 				} elseif ($field == 'indexes') {
-					$col = "\t\t'indexes' => array(";
+					$col = "\t\t'indexes' => array(\n\t\t\t";
 					$props = array();
 					foreach ((array)$value as $key => $index) {
 						$props[] = "'{$key}' => array(" . join(', ',  $this->_values($index)) . ")";
 					}
-					$col .= join(', ', $props);
+					$col .= join(",\n\t\t\t", $props) . "\n\t\t";
 				} elseif ($field == 'tableParameters') {
 					$col = "\t\t'tableParameters' => array(";
 					$props = array();
@@ -440,8 +446,8 @@ class CakeSchema extends Object {
 /**
  * Compares two sets of schemas
  *
- * @param mixed $old Schema object or array
- * @param mixed $new Schema object or array
+ * @param array|object $old Schema object or array
+ * @param array|object $new Schema object or array
  * @return array Tables (that are added, dropped, or changed)
  */
 	public function compare($old, $new = null) {
@@ -577,6 +583,9 @@ class CakeSchema extends Object {
 					$vals[] = "'{$key}' => array('" . implode("', '",  $val) . "')";
 				} elseif (!is_numeric($key)) {
 					$val = var_export($val, true);
+					if ($val === 'NULL') {
+						$val = 'null';
+					}
 					$vals[] = "'{$key}' => {$val}";
 				}
 			}

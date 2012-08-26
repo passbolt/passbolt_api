@@ -79,7 +79,8 @@ class SmtpTransport extends AbstractTransport {
 			'timeout' => 30,
 			'username' => null,
 			'password' => null,
-			'client' => null
+			'client' => null,
+			'tls' => false
 		);
 		$this->_config = $config + $default;
 	}
@@ -107,7 +108,15 @@ class SmtpTransport extends AbstractTransport {
 
 		try {
 			$this->_smtpSend("EHLO {$host}", '250');
+			if ($this->_config['tls']) {
+				$this->_smtpSend("STARTTLS", '220');
+				$this->_socket->enableCrypto('tls');
+				$this->_smtpSend("EHLO {$host}", '250');
+			}
 		} catch (SocketException $e) {
+			if ($this->_config['tls']) {
+				throw new SocketException(__d('cake_dev', 'SMTP server did not accept the connection or trying to connect to non TLS SMTP server using TLS.'));
+			}
 			try {
 				$this->_smtpSend("HELO {$host}", '250');
 			} catch (SocketException $e2) {
@@ -132,6 +141,8 @@ class SmtpTransport extends AbstractTransport {
 				if (!$this->_smtpSend(base64_encode($this->_config['password']), '235')) {
 					throw new SocketException(__d('cake_dev', 'SMTP server did not accept the password.'));
 				}
+			} elseif ($authRequired == '504') {
+				throw new SocketException(__d('cake_dev', 'SMTP authentication method not allowed, check if SMTP server requires TLS'));
 			} elseif ($authRequired != '503') {
 				throw new SocketException(__d('cake_dev', 'SMTP does not require authentication.'));
 			}
@@ -168,7 +179,16 @@ class SmtpTransport extends AbstractTransport {
 
 		$headers = $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'readReceipt', 'returnPath', 'to', 'cc', 'subject'));
 		$headers = $this->_headersToString($headers);
-		$message = implode("\r\n", $this->_cakeEmail->message());
+		$lines = $this->_cakeEmail->message();
+		$messages = array();
+		foreach ($lines as $line) {
+			if ((!empty($line)) && ($line[0] === '.')) {
+				$messages[] = '.' . $line;
+			} else {
+				$messages[] = $line;
+			}
+		}
+		$message = implode("\r\n", $messages);
 		$this->_smtpSend($headers . "\r\n\r\n" . $message . "\r\n\r\n\r\n.");
 		$this->_content = array('headers' => $headers, 'message' => $message);
 	}
@@ -198,7 +218,7 @@ class SmtpTransport extends AbstractTransport {
  * Protected method for sending data to SMTP connection
  *
  * @param string $data data to be sent to SMTP server
- * @param mixed $checkCode code to check for in server response, false to skip
+ * @param string|boolean $checkCode code to check for in server response, false to skip
  * @return void
  * @throws SocketException
  */

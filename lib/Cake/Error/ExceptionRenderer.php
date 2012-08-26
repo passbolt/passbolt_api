@@ -23,6 +23,7 @@
 App::uses('Sanitize', 'Utility');
 App::uses('Router', 'Routing');
 App::uses('CakeResponse', 'Network');
+App::uses('Controller', 'Controller');
 
 /**
  * Exception Renderer.
@@ -146,9 +147,18 @@ class ExceptionRenderer {
 			$request = new CakeRequest();
 		}
 		$response = new CakeResponse(array('charset' => Configure::read('App.encoding')));
+
+		if (method_exists($exception, 'responseHeader')) {
+			$response->header($exception->responseHeader());
+		}
+
 		try {
-			$controller = new CakeErrorController($request, $response);
+			if (class_exists('AppController')) {
+				$controller = new CakeErrorController($request, $response);
+			}
 		} catch (Exception $e) {
+		}
+		if (empty($controller)) {
 			$controller = new Controller($request, $response);
 			$controller->viewPath = 'Errors';
 		}
@@ -179,7 +189,7 @@ class ExceptionRenderer {
 		$this->controller->set(array(
 			'code' => $code,
 			'url' => h($url),
-			'name' => $error->getMessage(),
+			'name' => h($error->getMessage()),
 			'error' => $error,
 			'_serialize' => array('code', 'url', 'name')
 		));
@@ -201,7 +211,7 @@ class ExceptionRenderer {
 		$url = $this->controller->request->here();
 		$this->controller->response->statusCode($error->getCode());
 		$this->controller->set(array(
-			'name' => $message,
+			'name' => h($message),
 			'url' => h($url),
 			'error' => $error,
 			'_serialize' => array('name', 'url')
@@ -224,7 +234,7 @@ class ExceptionRenderer {
 		$code = ($error->getCode() > 500 && $error->getCode() < 506) ? $error->getCode() : 500;
 		$this->controller->response->statusCode($code);
 		$this->controller->set(array(
-			'name' => $message,
+			'name' => h($message),
 			'message' => h($url),
 			'error' => $error,
 			'_serialize' => array('name', 'message')
@@ -245,7 +255,7 @@ class ExceptionRenderer {
 		$this->controller->set(array(
 			'code' => $code,
 			'url' => h($url),
-			'name' => $error->getMessage(),
+			'name' => h($error->getMessage()),
 			'error' => $error,
 			'_serialize' => array('code', 'url', 'name', 'error')
 		));
@@ -263,6 +273,12 @@ class ExceptionRenderer {
 			$this->controller->render($template);
 			$this->controller->afterFilter();
 			$this->controller->response->send();
+		} catch (MissingViewException $e) {
+			try {
+				$this->_outputMessage('error500');
+			} catch (Exception $e) {
+				$this->_outputMessageSafe('error500');
+			}
 		} catch (Exception $e) {
 			$this->_outputMessageSafe('error500');
 		}
@@ -276,10 +292,11 @@ class ExceptionRenderer {
  * @return void
  */
 	protected function _outputMessageSafe($template) {
-		$this->controller->layoutPath = '';
-		$this->controller->subDir = '';
+		$this->controller->layoutPath = null;
+		$this->controller->subDir = null;
 		$this->controller->viewPath = 'Errors/';
 		$this->controller->viewClass = 'View';
+		$this->controller->layout = 'error';
 		$this->controller->helpers = array('Form', 'Html', 'Session');
 
 		$this->controller->render($template);

@@ -39,8 +39,8 @@ class XmlArticle extends CakeTestModel {
  * @var array
  */
 	public $belongsTo = array(
-		'XmlUser' => array(
-			'className' => 'XmlArticle',
+		'User' => array(
+			'className' => 'XmlUser',
 			'foreignKey' => 'user_id'
 		)
 	);
@@ -65,7 +65,11 @@ class XmlUser extends CakeTestModel {
  *
  * @var array
  */
-	public $hasMany = array('Article');
+	public $hasMany = array(
+		'Article' => array(
+			'className' => 'XmlArticle'
+		)
+	);
 }
 
 /**
@@ -1033,6 +1037,28 @@ XML;
 		$obj = Xml::build($data);
 		$result = $obj->asXml();
 		$this->assertContains('mark &amp; mark', $result);
+	}
+
+/**
+ * Test that entity loading is disabled by default.
+ *
+ * @return void
+ */
+	public function testNoEntityLoading() {
+		$file = CAKE . 'VERSION.txt';
+		$xml = <<<XML
+<!DOCTYPE cakephp [
+  <!ENTITY payload SYSTEM "file://$file" >]>
+<request>
+  <xxe>&payload;</xxe>
+</request>
+XML;
+		try {
+			$result = Xml::build($xml);
+			$this->assertEquals('', (string)$result->xxe);
+		} catch (Exception $e) {
+			$this->assertTrue(true, 'A warning was raised meaning external entities were not loaded');
+		}
 	}
 
 }
