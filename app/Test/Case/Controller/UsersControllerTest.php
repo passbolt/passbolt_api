@@ -68,7 +68,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEqual($result->header->status, Message::ERROR, '/users should not be accessible without being logged in');
 
 		// test with normal user
-		$kk = $this->user->findByUsername('cedric@passbolt.com');
+		$kk = $this->user->findByUsername('user@passbolt.com');
  		$this->user->setActive($kk);
 
 		$result = json_decode($this->testAction('/users.json',array('return' => 'contents','method' => 'GET'), true));
@@ -91,7 +91,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEqual($result->header->status, Message::ERROR, '/users/view should not be accessible without being logged in');
 
 		// test with normal user
-		$kk = $this->user->findByUsername('cedric@passbolt.com');
+		$kk = $this->user->findByUsername('user@passbolt.com');
  		$this->user->setActive($kk);
 
 		$result = json_decode($this->testAction('/users/view',array('return' => 'contents','method' => 'GET'), true));

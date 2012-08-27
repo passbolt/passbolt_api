@@ -31,7 +31,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$user = new User();
 
 		$user->useDbConfig = 'test';
-		$kk = $user->findByUsername('kevin@passbolt.com');
+		$kk = $user->findByUsername('user@passbolt.com');
 		$user->setActive($kk);
 
 		$category->useDbConfig = 'test';
