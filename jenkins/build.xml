@@ -41,7 +41,7 @@
 			--coverage-clover ${build}/coverage/coverage.xml
 			--log-junit ${build}/phpunit/passbolt.xml
 			-v
-			${src}/app/Test/Case/AllComponentTest.php"/>
+			${src}/app/Test/Case/AllTest.php"/>
 		</exec>
 	</target>
 
