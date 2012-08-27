@@ -9,6 +9,7 @@
  */
 App::uses('AuthComponent', 'Controller/Component');
 App::uses('BcryptFormAuthenticate', 'Controller/Component/Auth');
+App::uses('Common', 'Controller/Component');
 App::uses('Role', 'Model');
 class User extends AppModel {
 
