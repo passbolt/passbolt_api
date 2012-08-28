@@ -8,6 +8,13 @@
 	        inherits: <%== linkOpen(this.inherits) %>
 	    </div>
 	    <%} %>
+	    <% if(this.sees){ 
+			for(var i in this.sees) {
+		%>
+	    <div class='see'>
+	        see: <%== linkOpen(this.sees[i]) %>
+	    </div>
+	    <% } } %>
 	    <% if(this.tags){ %>
 	    <div class='tags'>
 	        tags: <%== linkTags(this.tags) %>
