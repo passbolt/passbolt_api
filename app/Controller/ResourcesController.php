@@ -85,8 +85,7 @@ class ResourcesController extends AppController {
 		//pr($resources); die();
 		
 		if(!$resources){
-			$this->Message->error(__('Something wrong happened'));
-			return;
+			$resources = array();
 		}
 
 		$this->set('data', $resources);

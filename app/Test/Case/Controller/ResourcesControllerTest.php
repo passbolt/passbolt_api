@@ -91,6 +91,16 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(2, sizeof($result['body'][1]['CategoryResource']), 
 			$url ." counting the number of elements should return '2' but is reading ". sizeof($result['body'][1]['CategoryResource'])
 		);
+		
+		// Test when the category is empty
+		$mapusaCat = $categoryModel->findByName('Mapusa');
+		$id = $mapusaCat['Category']['id'];
+		// should return success
+		$result = json_decode($this->testAction("/resources/viewByCategory/$id.json", array('return'=>'contents')), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/resources/viewByCategory/$id.json : The test should return sucess but is returning {$result['header']['status']}");
+		// should return an empty array
+		$result = json_decode($this->testAction("/resources/viewByCategory/$id.json", array('return'=>'contents')), true);
+		$this->assertEquals(0, sizeof($result['body']), "/resources/viewByCategory/$id.json : The test should count 0 elements but is actually counting ". sizeof($result['body']));
  } 
 
  public function testAdd(){
