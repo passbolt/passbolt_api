@@ -30,6 +30,7 @@
 	Router::parseExtensions('json');
 	Router::mapResources('dictionaries');
 	Router::mapResources('users');
+	Router::mapResources('categories');
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
@@ -50,6 +51,15 @@
  */
 	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
 	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'view'));
+
+/**
+ * Custom route for category::view with parameters
+ */
+	Router::connect('/categories/type/*', array('controller' => 'categories', 'action' => 'type'));	
+	Router::connect('/categories/move/*', array('controller' => 'categories', 'action' => 'move'));	
+	Router::connect('/categories/rename/*', array('controller' => 'categories', 'action' => 'rename'));	
+	Router::connect('/categories/children/*', array('controller' => 'categories', 'action' => 'children'));
+	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'view'));
 
 /**
  * Load all plugin routes.	See the CakePlugin documentation on 
