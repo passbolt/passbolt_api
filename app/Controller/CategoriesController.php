@@ -218,7 +218,7 @@ class CategoriesController extends AppController {
 		// try to save
 		$fields = $this->Category->getFindFields("edit");
 		$this->request->data['Category']['id'] = $id;
-		$category = $this->Category->update($this->request->data, true, $fields['fields']);
+		$category = $this->Category->save($this->request->data, true, $fields['fields']);
 		if ($category === false) {
 			$this->Message->error(__('The category could not be updated'));
 			return;
