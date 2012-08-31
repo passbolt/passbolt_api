@@ -15,15 +15,15 @@ class Category extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree', 'Containable');
+	public $actsAs = array('Tree', 'Containable', 'SoftDelete');
 	
 	public $hasMany = array(
-  'CategoryResource'
-  );
+		'CategoryResource'
+	);
 		
-		public $belongsTo = array('CategoryType' => array(
-			'className' => 'CategoryType'
-		));
+	public $belongsTo = array('CategoryType' => array(
+		'className' => 'CategoryType'
+	));
 
 /**
  * Get the validation rules upon context

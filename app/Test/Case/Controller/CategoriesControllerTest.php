@@ -37,6 +37,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$category->useDbConfig = 'test';
 		$goa = $category->findByName('Goa');
 		$id = $goa['Category']['id'];
+		
+		pr($category->find('all'));
 			
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/categories/view.json", array('return'=>'contents')), true);
@@ -48,6 +50,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 		// test if the object returned is a success one
 		$result = json_decode($this->testAction("/categories/view/$id/1.json", array('return'=>'contents')), true);
+		pr($result); die();
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], 
 			'categories/view/' . $id . '/1.json should return success'
 		);
