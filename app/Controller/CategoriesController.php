@@ -8,7 +8,7 @@
  * @package      app.Controller.CategoriesController
  * @since        version 2.12.7
  */
- 
+
 App::uses('CategoryType', 'Model');
 
 class CategoriesController extends AppController {
@@ -59,28 +59,27 @@ class CategoriesController extends AppController {
  * @param  bool $children whether or not we want the children returned
  * @return void
  */
-	public function getRoots($children=false){
+	public function getRoots($children=false) {
 		$data = array();
-		
+
 		$o = $this->Category->getFindOptions('getRoots');
 		$categories = $this->Category->find('threaded', $o);
-		
-		if(!$children) {
+
+		if (!$children) {
 			$data = $categories;
-		}
-		else {
-			foreach($categories as $category){
+		} else {
+			foreach ($categories as $category) {
 				// @todo Think about category parameter, it should be categories ... or this is out of concept ?
 				$o = $this->Category->getFindOptions('getWithChildren', $category);
 				$result = $this->Category->find('threaded', $o);
 				$data[] = $result[0];
-			}	
+			}
 		}
-		
+
 		$this->set('data', $data);
 		$this->Message->success();
 	}
-	
+
 /**	
  * get the children for a corresponding category
  * @param $id, the id of the parent category
@@ -223,10 +222,16 @@ class CategoriesController extends AppController {
 
 		// save the new name only
 		$c['Category'] = array(
-			'id'   => $id,
-			'name' => $name
+			'id'		=> $id,
+			'name'	=> $name
 		);
-		// @todo #PASSBOLT-162 split validation from save
+
+		$this->Category->set($c);
+		if (!$this->Category->validates()) {
+			$this->Message->error(__('Could not validate category data'));
+			return;
+		}
+		
 		if ($this->Category->save($c)) {
 			$this->Message->success(__('The category have been renamed'));
 		} else {
@@ -321,23 +326,23 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id invalid'));
 			return;
 		}
-		
+
 		$type = $this->Category->CategoryType->findByName($typeName);
 		if (!$type) {
 			$this->Message->error(__('The type does not exist'));
 			return;
 		}
-		
+
 		$category = $this->Category->findById($id);
 		if (!$category) {
 			$this->Message->error(__('The category does not exist'));
 			return;
 		}
-		
+
 		$category['Category']['category_type_id'] = $type['CategoryType']['id'];
 		$category = $this->Category->save($category);
-		
-		if(!$category){
+
+		if (!$category) {
 			 $this->Message->error(__('The type could not be changed'));
 				return;
 		}
