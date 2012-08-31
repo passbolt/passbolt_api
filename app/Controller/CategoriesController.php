@@ -10,6 +10,7 @@
  */
 
 App::uses('CategoryType', 'Model');
+App::uses('Sanitize', 'Utility');
 
 class CategoriesController extends AppController {
 
@@ -21,8 +22,6 @@ class CategoriesController extends AppController {
  * @param bool $children whether or not we want the children returned
  * @return void
  *
- * @todo should be renamed to 'view' otherwise we need Rest mapping in routes
- * see http://book.cakephp.org/2.0/en/development/rest.html
  */
 	public function view($id=null, $children=false) {
 		// check if the category id is provided
@@ -137,6 +136,8 @@ class CategoriesController extends AppController {
 
 		// set the data for validation and save
 		$catpost = $this->request->data;
+		// Sanitize
+		$catpost = Sanitize::clean($catpost);
 		$this->Category->set($catpost);
 
 		// check if the data is valid
@@ -145,14 +146,10 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// @todo #PASSBOLT-161
-		// filter out given fields that are not supposed to be there
-		// + Security::sanitize paranoid mode
-
 		// try to save
-		// @todo #PASSBOLT-162 split validation from save
+		$fields = $this->Category->getFindFields("add");
 		$this->Category->create();
-		$category = $this->Category->save($catpost);
+		$category = $this->Category->save($catpost, true, $fields['fields']);
 		if ($category === false) {
 			$this->Message->error(__('The category could not be saved'));
 			return;
@@ -166,7 +163,7 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-		$fields = $this->Category->getFindFields('add');
+		$fields = $this->Category->getFindFields('addResult');
 		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
 		$this->Message->success(__('The category was sucessfully added'));
 	}
@@ -226,13 +223,17 @@ class CategoriesController extends AppController {
 			'name'	=> $name
 		);
 
+		// sanitize the data
+		$c['Category'] = Sanitize::clean($c['Category']);
+
 		$this->Category->set($c);
 		if (!$this->Category->validates()) {
 			$this->Message->error(__('Could not validate category data'));
 			return;
 		}
-		
-		if ($this->Category->save($c)) {
+
+		$fields = $this->Category->getFindFields("rename");
+		if ($this->Category->save($c, true, $fields['fields'])) {
 			$this->Message->success(__('The category have been renamed'));
 		} else {
 			$this->Message->error(__('The category could not be saved'));
@@ -272,34 +273,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// @todo remy: can some of this be moved to the model intead?
-		// First, manage the parent
-		$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
-		if ($category['Category']['parent_id'] != $parentId) {
-			$category['Category']['parent_id'] = $parentId;
-			$category = $this->Category->save($category);
-			if (!$category) {
-				$this->Message->error(__('The category could not be moved'));
-				return;
-			}
-		}
-		// then, manage the position
-		$nbChildren = $this->Category->childCount($parentId, true);
-		// if the position is first one or last one
-		if ($position == 1) {
-			$result = $this->Category->moveUp($id, true);
-		} elseif ($position >= $nbChildren) {
-			$result = $this->Category->moveDown($id, true);
-		} else {
-			$currentPosition = $this->Category->getPosition($id);
-			$steps = $currentPosition - $position;
-			echo "position = $currentPosition, steps = $steps";
-			if ($steps > 0) {
-				$result = $this->Category->moveUp($id, $steps);
-			} else {
-				$result = $this->Category->moveDown($id, -($steps));
-			}
-		}
+		$result = $this->Category->move($id, $position, $parentId);
 		// deliver some results
 		if ($result) {
 			$this->Message->success(__('The category was sucessfully moved'));
