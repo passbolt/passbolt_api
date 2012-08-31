@@ -5,8 +5,8 @@ steal(
 
 	/*
 	 * @class mad.controller.component.ContainerController
-	 * @inherits {mad.controller.ComponentController}
-	 * @parent index
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.controller.component
 	 * 
 	 * Our implementation of the UI container component
 	 * 

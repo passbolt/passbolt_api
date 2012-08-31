@@ -1,26 +1,21 @@
-steal( 
-    MAD_ROOT+'/view',
+steal(
+	MAD_ROOT + '/view',
 	MAD_ROOT + '/view/template/component/grid.ejs'
-)
-.then( function ($) {
+).then(function ($) {
 
 	/*
 	 * @class mad.view.component.Grid
 	 * @inherits mad.view.View
-	 * @parent index
+	 * @hide
 	 * 
-	 * Our implementation of the view grid component.
+	 * Our implementation of the view grid component
 	 * 
 	 * @constructor
 	 * Creates a grid view
 	 * @return {mad.view.component.Grid}
 	 */
-	mad.view.View.extend('mad.view.component.Grid',
-	/** @static */
-	{}
+	mad.view.View.extend('mad.view.component.Grid', /** @static */ {  }, /** @prototype */ {
 
-	/** @prototype */
-	, {
 		// Constructor like
 		'init': function (controller, options) {
 			this._super(controller, options);
@@ -74,7 +69,8 @@ steal(
 		'insertItems': function (items, position, refId) {
 			var $tbody = $('tbody', this.$grid),
 				position = position || 'last',
-				$ref = refId ? $('#' + refId, this.element) : null;
+				$ref = refId ? $('#' + refId, this.element) : null,
+				$row = null;
 
 			if (!$.isArray(items)) {
 				items = [items];
@@ -85,17 +81,17 @@ steal(
 					rowContent = '<tr id="' + item.id + '">';
 
 				// insert column data
-				for (var j in this.controller.options.columnModel) {
+				for(var j in this.controller.options.columnModel) {
 					var columnModel = this.controller.options.columnModel[j],
 						cssClass = columnModel.name,
 						cellValue = null;
 
 					// A column adapater function is provided
-					if (columnModel.valueAdapter) {
+					if(columnModel.valueAdapter) {
 						cellValue = columnModel.valueAdapter(item[columnModel.name], item, columnModel, i);
 					}
 					// A widget will take care of the cell rendering
-					else if (columnModel.widget || columnModel.cellAdapter) {
+					else if(columnModel.widget || columnModel.cellAdapter) {
 						cellValue = '';
 					}
 					// Else display the column value
@@ -110,22 +106,22 @@ steal(
 				rowContent += '</tr>'
 
 				// insert the row
-				switch (position) {
-					case 'first':
-						var $row = $(rowContent).prependTo($tbody);
-						break;
+				switch(position) {
+				case 'first':
+					$row = $(rowContent).prependTo($tbody);
+					break;
 
-					case 'last':
-						var $row = $(rowContent).appendTo($tbody);
-						break;
+				case 'last':
+					$row = $(rowContent).appendTo($tbody);
+					break;
 
-					case 'before':
-						var $row = $(rowContent).insertBefore($ref);
-						break;
+				case 'before':
+					$row = $(rowContent).insertBefore($ref);
+					break;
 
-					case 'after':
-						var $row = $(rowContent).insertAfter($ref);
-						break;
+				case 'after':
+					$row = $(rowContent).insertAfter($ref);
+					break;
 				}
 			}
 		},

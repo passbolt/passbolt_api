@@ -5,8 +5,8 @@ steal(MAD_ROOT + '/controller/componentController.js',
 
 	/*
 	 * @class mad.controller.component.ListController
-	 * @inherits {mad.controller.ComponentController}
-	 * @parent index
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.controller.component
 	 * 
 	 * The Button class Controller is our implementation of the UI component button.
 	 * 

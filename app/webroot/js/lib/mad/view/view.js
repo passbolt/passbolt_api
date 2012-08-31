@@ -1,16 +1,16 @@
-steal( 
-    'jquery/class',
-    MAD_ROOT+'/event/eventable.js' /// @deprecated or not ?
-)
-.then( function ($) {
+steal(
+	'jquery/class',
+	MAD_ROOT + '/event/eventable.js').then(function ($) {
 
 	/*
 	 * @class mad.view.View
 	 * @inherits jQuery.View
-	 * @parent index
+	 * @parent mad.core
+	 * 
+	 * The view class is our representation of the <b>V</b> of the MVC model. 
 	 * 
 	 * @constructor
-	 * 
+	 * constructor oh yeah
 	 * @return {mad.view.View}
 	 */
 	$.Class('mad.view.View',
@@ -19,9 +19,9 @@ steal(
 		'defaults': {
 			'templateUri': null
 		}
-	}
+	},
 	/** @prototype */
-	, {
+	{
 
 		/**
 		 * The component controller which use this view
@@ -47,7 +47,7 @@ steal(
 		 */
 		'templateUri': null,
 
-		// Constructor like
+		// Constructor like 
 		'init': function (controller, options) {
 			this.controller = controller;
 			this.element = controller.element;
@@ -56,8 +56,8 @@ steal(
 
 			// add the classes to the top element
 			// @todo Hmmmmmmm. Ou pas ici
-			for (var i in options.cssClasses) {
-				if (!this.element.hasClass(options.cssClasses[i])) {
+			for(var i in options.cssClasses) {
+				if(!this.element.hasClass(options.cssClasses[i])) {
 					this.element.addClass(options.cssClasses[i]);
 				}
 			}
@@ -73,7 +73,7 @@ steal(
 			var returnValue = '';
 
 			// the template uri defined
-			if (this.templateUri != null) {
+			if(this.templateUri != null) {
 				returnValue = this.templateUri;
 			}
 			// define the template functions of the class name
@@ -90,7 +90,7 @@ steal(
 		 * @return {void}
 		 */
 		'loading': function (loading) {
-			if (loading) {
+			if(loading) {
 				this.element.prepend('<div class="js_loading" />');
 			} else {
 				$('.js_loading', this.element).remove();
@@ -109,7 +109,7 @@ steal(
 		 */
 		'render': function (options) {
 			// if the view does is not template based leave
-			if (!this.templateBased) {
+			if(!this.templateBased) {
 				return true;
 			}
 
@@ -121,7 +121,7 @@ steal(
 			var render = $.View(this.getTemplate(), this.controller.viewData);
 
 			// display the rendered view
-			if (display) {
+			if(display) {
 				this.element.append(render);
 				returnValue = true;
 			}

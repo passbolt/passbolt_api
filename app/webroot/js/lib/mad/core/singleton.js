@@ -1,33 +1,36 @@
-steal( 
+steal(
     'jquery/class'
-)
-.then( function ($) {
+).then(function ($) {
 
 	/*
 	 * @class mad.core.Singleton
 	 * @inherits mad.core.Class
-	 * @parent index
+	 * @parent mad.core
 	 * 
-	 * Implementation of the pattern singleton in javascript on top of the
-	 * JMVC framework.
-	 * <br/>
-	 * There are two ways to use the singleton class :
-	 * <ul><li> 
-	 * Either by <b>extending</b> directly the class
-	 * @codestart
-	 * mad.core.Singleton.extend('myNewSingleton',{},{});
-	 * @codeend
-	 * </li><li>
-	 * Or by <b>augmenting</b> an existing class with the Singleton class
-	 * @codestart
-	 * MyExistingClass.augment('mad.core.Singleton');
-	 * @codeend
-	 * </li></ul>
+	 * This class is our implementation of the pattern singleton on top of the
+	 * javascriptMVC framework. There are two ways to use the singleton class :
+	 * <ul>
+	 *	<li> 
+	 *		Either by <b>extending</b> directly the class
+	 *		@codestart
+	mad.core.Singleton.extend('myNewSingletonClass',{},{});
+	 *		@codeend
+	 *	</li>
+	 *	<li>
+	 *		Or by <b>augmenting</b> an existing class with the Singleton class
+	 *		@codestart
+	MyExistingClass.augment('mad.core.Singleton');
+	 *		@codeend
+	 *	</li>
+	 * </ul>
 	 * 
-	 * @constructor
-	 * Instanciate the Singleton class.
-	 * <br/> <b>private</b>
-	 * @return {mad.core.Singleton}
+	 * Once your class is a singleton, the only way to get the instance is to call
+	 * the static <i>singleton</i> method which expects the same parameters than the
+	 * constructor of the class.
+	 * 
+	 * @codestart
+	MyClass.singleton([CLASS_PARAMS]);
+	 * @codeend
 	 */
 	$.Class('mad.core.Singleton',
 
@@ -38,17 +41,17 @@ steal(
 		 * Singleton instance
 		 * @type {jQuery.Class}
 		 */
-		'instance': null,
+		'singletonInstance': null,
 
 		/**
-		 * Get instance of the singleton
+		 * Get the singleton instance
 		 * @return {jQuery.Class}
 		 */
 		'singleton': function () {
 			var returnValue = null;
 
 			if (this.instance != null) {
-				returnValue = this.instance;
+				returnValue = this.singletonInstance;
 			} else {
 				this.instance = 'CALL_FROM_SINGLETON';
 				returnValue = this.newInstance.apply(this, arguments);
@@ -58,21 +61,25 @@ steal(
 		}
 	},
 
-	/** @prototype */
+	/** 
+	 * @hide
+	 * @prototype 
+	 */
 	{
 
 		/**
 		 * Class Constructor
 		 * @private
+		 * @hide
 		 */
 		'init': function () {
 			if (this.Class.fullName == 'mad.core.Singleton') {
 				throw new mad.error.CallAbstractFunction();
-			} else if (this.Class.instance != 'CALL_FROM_SINGLETON') {
+			} else if (this.Class.singletonInstance != 'CALL_FROM_SINGLETON') {
 				throw new mad.error.CallPrivateFunction();
 			}
 
-			this.Class.instance = this;
+			this.Class.singletonInstance = this;
 		}
 
 	});

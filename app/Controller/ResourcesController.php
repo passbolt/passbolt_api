@@ -92,15 +92,15 @@ class ResourcesController extends AppController {
 		$this->set('data', $resources);
 		$this->Message->success();
 	}
-		
+	
 	public function populate(){
 		$this -> layout = 'html5';
 		$this->Resource->create();
-			$catDrupalId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
+		$catDrupalId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
 		$catAnjunaId = '4ff6111c-8534-4d17-869c-2184cbdd56cb';
 		$catHippiesId = '4ff6111d-9e6c-4d71-80ee-2184cbdd56cb';
 		$this->Resource->saveAll(
-			array(
+			array( 
 				0 => array(  
 				'Category' => array( 'id' => $catGoaId ),
 				'Resource' => array('name' => 'festival du cinema', 'username' => 'festival', 'expiry_date' => null, 'uri' => 'http://www.iffigoa.org/', 'description' => 'description of the Goa Film Festival')

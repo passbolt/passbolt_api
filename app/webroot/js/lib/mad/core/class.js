@@ -1,16 +1,37 @@
-steal( 
-    'jquery/class'
-)
-.then( function ($) {
+ /*
+  * @page mad.core Core
+  * @tag mad.core
+  * @parent index
+	*	
+	*	The Mad library is an extension of the JavascriptMVC framework. We extended some classes of the original
+	*	framework to fit our needs:
+	*	
+	*	<ul>
+	*		<li>[mad.core.Class|Class]</li>
+	*		<li>[mad.controller.Controller|Controller]</li>
+	*		<li>[mad.view.View|View]</li>
+	*	</ul>
+	*	
+	* Add to theses classes :
+	* 
+	*	<ul>
+	*		<li>[mad.core.Singleton|Singleton]</li>
+	*	</ul>
+	*	
+  */
+
+steal('jquery/class').then(function ($) {
 
 	/*
 	 * @class mad.core.Class
-	 * @parent index
-	 * Our layer up on the JMVC Class with some features :
+	 * @parent mad.core
+	 * This class is our layer placed upon the javascriptMVC class Class. It adds the following features to the
+	 * existing library.
+	 * 
 	 * <ul><li>
-	 * Allow developpers to <b>decorate</b> an instance with a subset of function (prototype function right now)
+	 * <b>Decorate</b> an instance with a subset of functions.
 	 * </li><li>
-	 * Allow developpers to <b>augment</b> a class with properties of another one (prototype and static vars and functions)
+	 * <b>Augment</b> a class with the properties of another.
 	 * </li></ul>
 	 */
 
@@ -18,46 +39,43 @@ steal(
 
 	/* 
 	 * @function decorate
+	 * @todo Accept jmvc object as parameter
 	 * 
-	 * Decorate an instance with the functions of another object.
-	 * <br/> 
-	 * <b>todo</b> Accept JMVC Class object
-	 * <br/><br/>
-	 * <b>Example</b>
-	 * <br/>
+	 * Decorate an instance with the properties of another object.
+	 * 
+	 * <h2>Example</h2>
 	 * @codestart
-	 * $.Class('MyClass',{
-	 *    'funcToDecorate': function() {
-	 *        return 'I am the function to decorate';
-	 *    },
-	 * });
-	 * 
-	 * var MyDecorator = {
-	 *    'funcToDecorate': function() {
-	 *        return this._super()+' which has been decorated, oh yeah!';
-	 *    },
-	 *    'moreFunc': function() {
-	 *        return 'I am an additional function';
-	 *    }
-	 * };
-	 * 
-	 * var myInstance = new MyClass();
-	 * myInstance.funcToDecorate();     
-	 * // will return 'I am the function to decorate'
-	 * myInstance.decorate('MyDecorator');
-	 * myInstance.funcToDecorate();     
-	 * // will return 'I am the function to decorate which has been decorated, oh yeah!'
-	 * myInstance.moreFunc();     
-	 * // will return 'I am an additional function'
-	 * 
+	$.Class('MyClass',{
+		'funcToDecorate': function() {
+				return 'I am the function to decorate';
+		},
+	});
+
+	var MyDecorator = {
+		'funcToDecorate': function() {
+				return this._super()+' which has been decorated, oh yeah!';
+			},
+		'moreFunc': function() {
+				return 'I am an additional function';
+		}
+	};
+	
+  var myInstance = new MyClass();
+	myInstance.funcToDecorate();     
+	// will return 'I am the function to decorate'
+	myInstance.decorate('MyDecorator');
+	myInstance.funcToDecorate();     
+	// will return 'I am the function to decorate which has been decorated, oh yeah!'
+	myInstance.moreFunc();     
+	// will return 'I am an additional function'
 	 * @codeend
 	 * 
 	 * @param {String} decoratorName The name of the object to use as decorator
 	 * @return {Object} Returns the decorated instance
 	 */
 	$.Class.prototype.decorate = function (decoratorName) {
-		var Decorator = $.String.getObject(decoratorName)
-		lvl = null;
+		var Decorator = $.String.getObject(decoratorName),
+			lvl = null;
 
 		// Not yet decorated
 		if (typeof this._decorator == 'undefined') {
@@ -74,7 +92,7 @@ steal(
 		// decorate the instance with the functions of the Decorator Class
 		for (var i in Decorator) {
 			//                    console.log('decorate '+i+' by '+decoratorName+' in level '+lvl);
-			if (typeof this[i] != 'undefined') {
+			if(typeof this[i] != 'undefined') {
 
 				// store the old function
 				this._decorator[lvl].f[i] = this[i];
@@ -85,7 +103,7 @@ steal(
 						var tmp = this._super,
 							returnValue;
 						this._super = instance._decorator[lvl].f[fn];
-						var returnValue = Decorator[fn].apply(instance, arguments);
+						returnValue = Decorator[fn].apply(instance, arguments);
 						this._super = tmp;
 						return returnValue;
 					}
@@ -107,39 +125,37 @@ steal(
 	/* 
 	 * @function augment
 	 * 
-	 * Augment a class with the properties of another.
+	 * Augment a class with the properties (prototype & static) of another.
 	 * <br/>
-	 * Allow a kind of multiple inheritance. If you have multiple init function, each function
-	 * will be called once after other (LIFO).
-	 * <br/><br/>
-	 * <b>Example</b>
-	 * <br/>
+	 * Allow a kind of multiple inheritance. Each init function of the Class used to augment
+	 * will be called once after other (LIFO) when an instance is created.
+	 * 
+	 * <h2>Example</h2>
 	 * @codestart
-	 * $.Class('MyClass',{
-	 *    'myVar':0,
-	 *    'init':function(){
-	 *        this.myVar++;
-	 *    },
-	 * });
-	 * 
-	 * $.Class('MyAugmentator',{
-	 *    'init':function(){
-	 *        this.myVar++;
-	 *    },
-	 *    'moreFunc': function() {
-	 *        return 'I am an additional function';
-	 *    }
-	 * });
-	 * 
-	 * MyClass.augment(MyAugmentator);
-	 * var myInstance = new MyClass();
-	 * // myInstance.myVar == 2
-	 * myInstance.moreFunc();
-	 * // will return 'I am an additional function'
-	 * 
+	$.Class('MyClass',{
+		'myVar':0,
+		'init':function(){
+				this.myVar++;
+		},
+	});
+
+	$.Class('MyAugmentator',{
+		'init':function(){
+				this.myVar++;
+		},
+		'moreFunc': function() {
+				return 'I am an additional function';
+		}
+	});
+	
+	MyClass.augment(MyAugmentator);
+	var myInstance = new MyClass();
+	// myInstance.myVar == 2
+	myInstance.moreFunc();
+	// will return 'I am an additional function'
 	 * @codeend
 	 * 
-	 * @param  {String} objectName The name of the object to use to augment the class
+	 * @param  {String} objectName The name of the object to use as augmentator
 	 * @return  {void}
 	 */
 	$.Class.augment = function (objectName) {
@@ -147,21 +163,21 @@ steal(
 
 		// Add static properties to the class to augment
 		var blackListedStaticProperties = ['namespace', 'shortName', 'fullName', 'defaults'];
-		for (var i in Augmentator) {
+		for(var i in Augmentator) {
 
-			if (typeof $.Class[i] == 'undefined' && $.inArray(i, blackListedStaticProperties) == -1) {
+			if(typeof $.Class[i] == 'undefined' && $.inArray(i, blackListedStaticProperties) == -1) {
 				this[i] = Augmentator[i];
 			}
 		}
 
 		// Add prototype properties to the class to augment
 		var blackListedPrototypeProperties = ['Class'];
-		for (var i in Augmentator.prototype) {
-			if (typeof $.Class.prototype[i] == 'undefined' && $.inArray(i, blackListedPrototypeProperties) == -1) {
+		for(var i in Augmentator.prototype) {
+			if(typeof $.Class.prototype[i] == 'undefined' && $.inArray(i, blackListedPrototypeProperties) == -1) {
 
 				// augment a constructor, try something closed to multiple inheritance
-				if (i == 'init') {
-					if (typeof this.prototype.__inits == 'undefined') {
+				if(i == 'init') {
+					if(typeof this.prototype.__inits == 'undefined') {
 						// List of constructors
 						this.prototype.__inits = [];
 						this.prototype.__inits.push(this.prototype[i]);
@@ -169,7 +185,7 @@ steal(
 						this.prototype[i] = (function (clazz, fn) {
 							return function (el, options, test) {
 								//                                    var returnValue = null;
-								for (var i in this.__inits) {
+								for(var i in this.__inits) {
 									var initResult = this.__inits[i].apply(this, arguments);
 									//                                        console.log(initResult);
 									//                                        if(returnValue == null){

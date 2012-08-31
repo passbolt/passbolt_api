@@ -1,38 +1,61 @@
-steal(MAD_ROOT + '/core/singleton.js')
-.then( function ($) {
+/*
+ * @page mad.tools Tools
+ * @tag mad.tools
+ * @parent index
+ * 
+ *  Tools style oh yeah
+ */
+
+steal(
+	MAD_ROOT + '/core/singleton.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.object.Map
-	 * @parent index
-	 * @inherits $.Class
+	 * @inherits jQuery.Class
+	 * @parent mad.tools
 	 * 
-	 * The ajax wrapper is an interface to the jQuery ajax function. It allows 
-	 * developpers to make their ajax request, moreover it allows them to make 
-	 * ajax transactions to minimize server calls by aggregating ajax requests 
+	 * The Map object 
 	 * 
 	 * @constructor
-	 * Creates a new ajax wrapper
+	 * Create a new Map instance. This one will be used to map any object to another.
+	 * @param {array} map The mapping to use
 	 * @return {mad.object.Map}
 	 */
-	$.Class('mad.object.Map',
+	$.Class('mad.object.Map', /** @static */ {
 
-	/** @static */
-
-	{
+		/**
+		 * @see mad.object.Map.prototype.mapObject
+		 */
 		'mapObject': function (object, map) {
 			return map.mapObject(object);
 		},
+
+		/**
+		 * @see mad.object.Map.prototype.mapObjects
+		 */
 		'mapObjects': function (arr, map) {
 			return map.mapObjects(arr);
 		}
-	},
 
-	/** @prototype */
-	{
+	}, /** @prototype */ {
+
+		/**
+		 * The setting to use for the mapping
+		 * @type Object
+		 */
+		'map': {},
+
+		// constructor like
 		'init': function (map) {
 			this.map = map;
 		},
 
+		/**
+		 * Map an object to another
+		 * @param {Object} object The object to map
+		 * @return {Object} The mapped object
+		 */
 		'mapObject': function (object) {
 			var returnValue = {};
 
@@ -66,13 +89,13 @@ steal(MAD_ROOT + '/core/singleton.js')
 							var keyToMap = this.map[key].key;
 							var objectFieldToMap = getObjFieldPointer(object, keyToMap);
 							// @todo what to do if the key to map does not exist
-							if (objectFieldToMap != null) {
+							if(objectFieldToMap != null) {
 								current[mapKeyElt] = func(objectFieldToMap, this);
 							}
 						} else {
 							var objectFieldToMap = getObjFieldPointer(object, this.map[key]);
 							// @todo what to do if the key to map does not exist
-							if (objectFieldToMap != null) {
+							if(objectFieldToMap != null) {
 								current[mapKeyElt] = objectFieldToMap;
 							}
 						}
@@ -80,7 +103,7 @@ steal(MAD_ROOT + '/core/singleton.js')
 					}
 					// else we move the cursor in the mapKeyElts
 					else {
-						if (typeof current[mapKeyElt] == 'undefined') current[mapKeyElt] = [];
+						if(typeof current[mapKeyElt] == 'undefined') current[mapKeyElt] = [];
 						current = current[mapKeyElt];
 					}
 
@@ -91,16 +114,23 @@ steal(MAD_ROOT + '/core/singleton.js')
 			return returnValue;
 		},
 
+		/**
+		 * Map an array of objects to an array of objects
+		 * @param {array} arr The array of objects to map
+		 * @return {array} The array of mapped objects
+		 * @see mad.object.Map.prototype.mapObject
+		 */
 		'mapObjects': function (arr) {
-			if (!($.isArray(arr))) {
+			if(!($.isArray(arr))) {
 				throw new mad.error.WrongParameters('The function mapObjects is expecting an array as first parameter');
 			}
 			var returnValue = [];
-			for (var i in arr) {
+			for(var i in arr) {
 				returnValue[i] = this.mapObject(arr[i]);
 			}
 			return returnValue;
 		}
+
 	});
 
 });

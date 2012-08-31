@@ -1,3 +1,47 @@
+ /*
+  * @page mad.controller.component Components
+  * @tag mad.controller.component
+	* @parent index
+  * 
+	*	<p>
+	*		Component controller is our representation of graphical controllers. It is linked and it is controlling a view
+	*		which is by default the class [mad.view.View|mad.view.View].
+	*	</p>
+	*	
+	*	<p>
+	*		<h2>Linked view</h2>
+	*		Each component controller can be rendered following these strategies :
+	*		<ul>
+	*			<li>Use the default View</li>
+	*			<li>Use a custom view</li>
+	*		</ul>
+	*	</p>
+	*	
+	*	<p>
+	*		<h3>Example : Component controller with a default View</h3>
+	*		@demo /js/mad/demo/controller/component.html
+	*	</p>
+	*	
+	*	<p>
+	*		<h3>Example : Component controller with a custom View</h3>
+	*		@demo /js/mad/demo/controller/component.html
+	*	</p>
+	*	
+	*	You will find in this package all the components we developped for our framework :
+	*	<ul>
+	*		<li>[mad.controller.component.ButtonController|Button]</li>
+	*		<li>[mad.controller.component.ContainerController|Container]</li>
+	*		<li>[mad.controller.component.GridController|Grid]</li>
+	*		<li>[mad.controller.component.InputController|Input]</li>
+	*		<li>[mad.controller.component.ListController|List]</li>
+	*		<li>[mad.controller.component.PopupController|Popup]</li>
+	*		<li>[mad.controller.component.TabController|Tab]</li>
+	*		<li>[mad.controller.component.TreeController|Tree]</li>
+	*		<li>[mad.controller.component.WorkspaceController|Workspace]</li>
+	*	</ul>
+	*	
+  */
+
 steal(
     MAD_ROOT+'/controller/controller.js',
     MAD_ROOT+'/helper/controllerHelper.js',
@@ -8,7 +52,7 @@ steal(
 	/*
 	 * @class mad.controller.ComponentController
 	 * @inherits mad.controller.Controller
-	 * @parent index
+	 * @parent mad.controller.component
 	 * 
 	 * The class Component controller is our representation of controllers which take
 	 * care of UI Components.

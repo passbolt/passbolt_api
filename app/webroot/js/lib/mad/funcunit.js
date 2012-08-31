@@ -39,7 +39,7 @@ steal(
 //	"./test/helper/component/boxDecorator.js",
 //    "./test/helper/controller.js",
 //    "./test/lang/i18n.js",
-//    "./test/net/ajax.js",
+    "./test/net/ajax.js",
 	"./test/object/map.js",
 //	"./route/extensionControllerActionDispatcher.js"
 	"./test/route/routeListener.js",

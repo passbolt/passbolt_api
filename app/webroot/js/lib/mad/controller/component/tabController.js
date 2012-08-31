@@ -7,8 +7,8 @@ steal(
 
 	/*
 	 * @class mad.controller.component.TabController
-	 * @inherits {mad.controller.ComponentController}
-	 * @parent index 
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.component
 	 * 
 	 * @constructor
 	 * Creates a new TabController

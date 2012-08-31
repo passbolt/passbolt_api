@@ -32,20 +32,19 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 			// *************************************************************
 			// Header menu area
 			// *************************************************************
-			var newButton = new mad.controller.component.ButtonController($('#js_new_resource_button', this.element), {
-			}).render();
+			var newButton = new mad.controller.component.ButtonController($('#js_new_resource_button', this.element));
 			
 			var editButton = new mad.controller.component.ButtonController($('#js_edit_resource_button', this.element), {
 				'state': 'disabled'
-			}).render();
+			});
 			
 			var shareButton = new mad.controller.component.ButtonController($('#js_share_resource_button', this.element), {
 				'state': 'disabled'
-			}).render();
+			});
 			
 			var moreButton = new mad.controller.component.ButtonController($('#js_more_resource_button', this.element), {
 				'state': 'disabled'
-			}).render();
+			});
 
 			// *************************************************************
 			// First side area
@@ -100,9 +99,19 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 		/* ************************************************************** */
 
 		/**
+		 * Observe when the user wants to create a new resource
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'#js_new_resource_button click': function (element, event) {
+			
+		},
+
+		/**
 		 * Observe when the user wants to edit a resource
 		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQury event
+		 * @param {Event} event The jQuery event
 		 * @param {string} resourceId The resource id of the resource to edit
 		 * @return {void}
 		 */
@@ -115,7 +124,7 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 		/**
 		 * Observe when the user wants to share a resource
 		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQury event
+		 * @param {Event} event The jQuery event
 		 * @param {string} resourceId The resource id of the resource to share
 		 * @return {void}
 		 */
@@ -132,7 +141,7 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 		/**
 		 * Observe when a resource is unselected
 		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQury event
+		 * @param {Event} event The jQuery event
 		 * @param {string} resourceId The unselected Resource id
 		 * @return {void}
 		 */
@@ -149,7 +158,7 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 		/**
 		 * Observe when a resource is selected
 		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQury event
+		 * @param {Event} event The jQuery event
 		 * @param {string} resourceId The selected Resource id
 		 * @return {void}
 		 */

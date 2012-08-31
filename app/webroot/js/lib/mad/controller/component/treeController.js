@@ -8,9 +8,9 @@ steal(
 
 	/*
 	 * @class mad.controller.component.TreeController
-	 * @inherits {mad.controller.ComponentController}
-	 * @parent index
-	 * @see {mad.view.component.Tree}
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.controller.component
+	 * @see mad.view.component.Tree
 	 * 
 	 * The Tree class Controller is our implementation of the UI component tree.
 	 * The common view works upon the jstree plugin.

@@ -1,13 +1,14 @@
-steal( 
-     MAD_ROOT+'/route/dispatcherInterface.js',
-     MAD_ROOT+'/helper/routeHelper.js'
-)
-.then( function ($) {
+steal(
+	MAD_ROOT + '/route/dispatcherInterface.js',
+	MAD_ROOT + '/helper/routeHelper.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.route.ExtensionControllerActionDispatcher
+	 * @inherits mad.route.DispatcherInterface
+	 * @parent mad.route
 	 * 
-	 * The ExteionsControllerAction dispatcher is the common way to dispatch a route. Based
+	 * The ExtensionsControllerAction dispatcher is the common way to dispatch a route. Based
 	 * on the extension name, the controller name and the action name it will dispatch the route
 	 * to the target action of the target controller of the target extension.
 	 * 
@@ -23,24 +24,19 @@ steal(
 	 * 
 	 * Once the controller is identified, the dispatcher calls the action on this controller. The
 	 * action is an instance's function of the controller.
-	 *   
-	 * @parent index
 	 */
-	mad.route.DispatcherInterface.extend('mad.route.ExtensionControllerActionDispatcher', {
+	mad.route.DispatcherInterface.extend('mad.route.ExtensionControllerActionDispatcher', /** @static */ {
 
 		'dispatch': function (route, options) {
 			var controlerId = '',
 				$controler = null,
-				defaultControllerId = 'gacd-page-controller' // @todo check if this variable is still used
-				,
+				defaultControllerId = 'gacd-page-controller', // @todo check if this variable is still used
 				parameters = [];
 
 			// The controllerId is given
 			if (typeof (options.controllerId) != 'undefined') {
-				controllerId = options.controllerId
-			}
-			// Find him following the route
-			else {
+				controllerId = options.controllerId;
+			} else { // Else find it from the route
 				controllerId = 'js_' + route.extension + '_' + route.controller + '_controller';
 			}
 
@@ -72,7 +68,7 @@ steal(
 
 			// extract parameters
 			for (var i = 1; true; i++) {
-				if (typeof route['p' + i] === 'undefined') break; // For you Remy the future PIO
+				if(typeof route['p' + i] === 'undefined') break; // For you Remy the future PIO
 				parameters.push(route['p' + i]);
 			}
 
@@ -81,6 +77,6 @@ steal(
 			var controller = $controller.controller();
 			controller[route.action].apply(controller, parameters);
 		}
-	}, {});
+	}, /** @prototype */ { });
 
 });

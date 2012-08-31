@@ -67,12 +67,10 @@ steal(
 				}
 			}
 
-console.log(1);
 			//the next in the split has to be the controller, else there is an error in the controller name
 			if (split[0] != 'controller') {
 				throw new mad.Error('Controller name mal formed');
 			}
-console.log(2);
 			split = split.splice(1);
 
 			// target the view folder

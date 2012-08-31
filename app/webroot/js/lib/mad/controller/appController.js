@@ -37,7 +37,7 @@ steal(
 		 */
 		'getGlobal': function (name) {
 			if (mad.controller.AppController.APP_NS_ID == null) {
-				throw new mad.error('The application namespace is not initialized');
+				throw new mad.error.Error('The application namespace is not initialized');
 			}
 			return window[mad.controller.AppController.APP_NS_ID][name];
 		},

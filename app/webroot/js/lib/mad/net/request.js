@@ -1,14 +1,12 @@
-steal( 
+steal(
 	'jquery/class',
-	MAD_ROOT+'/net/response.js'
-)
-.then( function ($) {
+	MAD_ROOT + '/net/response.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.net.Request
-	 * 
-	 * @inherits {mad.core.Class}
-	 * @parent index
+	 * @inherits mad.core.Class
+	 * @parent mad.net
 	 * 
 	 * Layer used on top of the ajax function of the jQuery library to setup request.
 	 * It deals with the response handler to treat server response.
@@ -61,7 +59,7 @@ steal(
 				}
 			}, {});
 			request.dataType = 'json Response' + uid + '.model';
-
+			
 			// Override the ajax success callback
 			request.success = function (response, isSuccess, obj) {
 

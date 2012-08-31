@@ -8,14 +8,6 @@
 	        inherits: <%== linkOpen(this.inherits) %>
 	    </div>
 	    <%} %>
-	    <% if(this.sees){ %>
-	    <div class='see'>
-			see : 
-			<% for(var i in this.sees) { %>
-				<% if(i>0) { %>, <%}%> <%== linkOpen(this.sees[i]) %>
-			<% } %>
-	    </div>
-	    <% } %>
 	    <% if(this.tags){ %>
 	    <div class='tags'>
 	        tags: <%== linkTags(this.tags) %>
@@ -34,6 +26,14 @@
 		<% if(this.test){ %>
 	    <div class='test'>
 	        test: <a href='<%= steal.root? steal.root.join(this.test): this.test %>'><%=this.test.match(/[^\/]*$/)[0]%></a>
+	    </div>
+	    <% } %>
+	    <% if(this.sees){ %>
+	    <div class='see'>
+			see : 
+			<% for(var i in this.sees) { %>
+				<% if(i>0) { %>, <%}%> <%== linkOpen(this.sees[i]) %>
+			<% } %>
 	    </div>
 	    <% } %>
 		<% if(this.line !== undefined && window.DOCS_SRC_MAP){ %>
