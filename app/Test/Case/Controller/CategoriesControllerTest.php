@@ -261,7 +261,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 		// check that the previous name doesn't exist anymore
 		$cat = $category->findByName('Drug places');
-		$this->assertTrue(empty($cat), "Failed to check that Drup places has been renamed into something else.");
+		$this->assertTrue(empty($cat), "Failed to check that Drug places has been renamed into something else.");
 
 		 // check that the new name is there
 		$cat = $category->findByName('Booze places');
