@@ -42,5 +42,8 @@ $config = array(
 			'salt' => 'jdwmlckzlfwsl123wldcaxss',
 			'hmac' => 'odqw1AEN9fskDeWDqwodiqwd213109icjalkdnasdjjqd'
 		)
+	),
+	'GPG' => array(
+		'trustModel' => 'always'
 	)
 );

@@ -8,10 +8,23 @@
  * @package      app.Controller.CategoriesController
  * @since        version 2.12.7
  */
- 
+
 App::uses('CategoryType', 'Model');
+App::uses('Sanitize', 'Utility');
 
 class CategoriesController extends AppController {
+/**
+ * index - get a list of categories
+ * @todo define what this function should do. for the moment, it is a clone of getroots
+ */
+	public function index(){
+		$data = array();
+		$o = $this->Category->getFindOptions('index');
+		$categories = $this->Category->find('threaded', $o);	
+		$data = $categories;
+		$this->set('data', $data);
+		$this->Message->success();
+	}
 
 /**
  * Get a category
@@ -21,8 +34,6 @@ class CategoriesController extends AppController {
  * @param bool $children whether or not we want the children returned
  * @return void
  *
- * @todo should be renamed to 'view' otherwise we need Rest mapping in routes
- * see http://book.cakephp.org/2.0/en/development/rest.html
  */
 	public function view($id=null, $children=false) {
 		// check if the category id is provided
@@ -59,35 +70,34 @@ class CategoriesController extends AppController {
  * @param  bool $children whether or not we want the children returned
  * @return void
  */
-	public function getRoots($children=false){
+	public function getroots($children=false) {
 		$data = array();
-		
+
 		$o = $this->Category->getFindOptions('getRoots');
 		$categories = $this->Category->find('threaded', $o);
-		
-		if(!$children) {
+
+		if (!$children) {
 			$data = $categories;
-		}
-		else {
-			foreach($categories as $category){
+		} else {
+			foreach ($categories as $category) {
 				// @todo Think about category parameter, it should be categories ... or this is out of concept ?
 				$o = $this->Category->getFindOptions('getWithChildren', $category);
 				$result = $this->Category->find('threaded', $o);
 				$data[] = $result[0];
-			}	
+			}
 		}
-		
+
 		$this->set('data', $data);
 		$this->Message->success();
 	}
-	
+
 /**	
  * get the children for a corresponding category
  * @param $id, the id of the parent category
  * @return void
  * @todo Rest mapping in routes
  */
-	public function viewChildren($id=null) {
+	public function children($id=null) {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -138,6 +148,8 @@ class CategoriesController extends AppController {
 
 		// set the data for validation and save
 		$catpost = $this->request->data;
+		// Sanitize
+		$catpost = Sanitize::clean($catpost);
 		$this->Category->set($catpost);
 
 		// check if the data is valid
@@ -146,14 +158,10 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// @todo #PASSBOLT-161
-		// filter out given fields that are not supposed to be there
-		// + Security::sanitize paranoid mode
-
 		// try to save
-		// @todo #PASSBOLT-162 split validation from save
+		$fields = $this->Category->getFindFields("add");
 		$this->Category->create();
-		$category = $this->Category->save($catpost);
+		$category = $this->Category->save($catpost, true, $fields['fields']);
 		if ($category === false) {
 			$this->Message->error(__('The category could not be saved'));
 			return;
@@ -167,9 +175,56 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-		$fields = $this->Category->getFindFields('add');
+		$fields = $this->Category->getFindFields('addResult');
 		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
 		$this->Message->success(__('The category was sucessfully added'));
+	}
+
+/**
+ * Edit a category
+ */
+	public function edit($id){
+		// check the HTTP request method
+		if (!$this->request->is('put')) {
+			$this->Message->error(__('Invalid request method, should be PUT'));
+			return;
+		}
+		// check if data was provided
+		if (!isset($this->request->data['Category'])) {
+			$this->Message->error(__('No data were provided'));
+			return;
+		}
+
+		// sanitize
+		$this->request->data = Sanitize::clean($this->request->data);
+
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+		// check if the category exists
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'));
+			return;
+		}
+		$this->Category->set($this->request->data);
+		// check if the data is valid
+		if (!$this->Category->validates()) {
+			$this->Message->error(__('Could not validate category data'));
+			return;
+		}
+		// try to save
+		$fields = $this->Category->getFindFields("edit");
+		$this->request->data['Category']['id'] = $id;
+		$category = $this->Category->save($this->request->data, true, $fields['fields']);
+		if ($category === false) {
+			$this->Message->error(__('The category could not be updated'));
+			return;
+		}
+		
+		$this->Message->success(__('The category was sucessfully updated'));
 	}
 
 /**	
@@ -223,11 +278,21 @@ class CategoriesController extends AppController {
 
 		// save the new name only
 		$c['Category'] = array(
-			'id'   => $id,
-			'name' => $name
+			'id'		=> $id,
+			'name'	=> $name
 		);
-		// @todo #PASSBOLT-162 split validation from save
-		if ($this->Category->save($c)) {
+
+		// sanitize the data
+		$c['Category'] = Sanitize::clean($c['Category']);
+
+		$this->Category->set($c);
+		if (!$this->Category->validates()) {
+			$this->Message->error(__('Could not validate category data'));
+			return;
+		}
+
+		$fields = $this->Category->getFindFields("rename");
+		if ($this->Category->save($c, true, $fields['fields'])) {
 			$this->Message->success(__('The category have been renamed'));
 		} else {
 			$this->Message->error(__('The category could not be saved'));
@@ -242,6 +307,8 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function move($id=null, $position=null, $parentId=null) {
+		$position = Sanitize::clean($position);
+		$parentId = Sanitize::clean($parentId);
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
@@ -266,35 +333,8 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('It is not possible to move the category at this position'));
 			return;
 		}
-
-		// @todo remy: can some of this be moved to the model intead?
-		// First, manage the parent
-		$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
-		if ($category['Category']['parent_id'] != $parentId) {
-			$category['Category']['parent_id'] = $parentId;
-			$category = $this->Category->save($category);
-			if (!$category) {
-				$this->Message->error(__('The category could not be moved'));
-				return;
-			}
-		}
-		// then, manage the position
-		$nbChildren = $this->Category->childCount($parentId, true);
-		// if the position is first one or last one
-		if ($position == 1) {
-			$result = $this->Category->moveUp($id, true);
-		} elseif ($position >= $nbChildren) {
-			$result = $this->Category->moveDown($id, true);
-		} else {
-			$currentPosition = $this->Category->getPosition($id);
-			$steps = $currentPosition - $position;
-			echo "position = $currentPosition, steps = $steps";
-			if ($steps > 0) {
-				$result = $this->Category->moveUp($id, $steps);
-			} else {
-				$result = $this->Category->moveDown($id, -($steps));
-			}
-		}
+		
+		$result = $this->Category->move($id, $position, $parentId);
 		// deliver some results
 		if ($result) {
 			$this->Message->success(__('The category was sucessfully moved'));
@@ -309,7 +349,8 @@ class CategoriesController extends AppController {
  * @param varchar $typeName, the name of the type
  * @return 1 if success, 0 if failure
  */
-	public function setType($id=null, $typeName=null) {
+	public function type($id=null, $typeName=null) {
+		$typeName = Sanitize::clean($typeName);
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is not provided'));
@@ -321,23 +362,23 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id invalid'));
 			return;
 		}
-		
+
 		$type = $this->Category->CategoryType->findByName($typeName);
 		if (!$type) {
 			$this->Message->error(__('The type does not exist'));
 			return;
 		}
-		
+
 		$category = $this->Category->findById($id);
 		if (!$category) {
 			$this->Message->error(__('The category does not exist'));
 			return;
 		}
-		
+
 		$category['Category']['category_type_id'] = $type['CategoryType']['id'];
 		$category = $this->Category->save($category);
-		
-		if(!$category){
+
+		if (!$category) {
 			 $this->Message->error(__('The type could not be changed'));
 				return;
 		}

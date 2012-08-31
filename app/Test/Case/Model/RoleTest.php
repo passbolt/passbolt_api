@@ -3,9 +3,9 @@
  * Role Model Test
  *
  * @copyright	 Copyright 2012, Passbolt.com
- * @package	   app.Test.Case.Model.RoleTest
- * @since		 version 2.12.7
  * @license	   http://www.passbolt.com/license
+ * @package	   app.Test.Case.Model.RoleTest
+ * @since		   version 2.12.7
  */
 App::uses('Role', 'Model');
 

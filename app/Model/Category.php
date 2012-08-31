@@ -15,15 +15,15 @@ class Category extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree', 'Containable');
+	public $actsAs = array('Tree', 'Containable'/*, 'SoftDelete'*/);
 	
 	public $hasMany = array(
-  'CategoryResource'
-  );
+		'CategoryResource'
+	);
 		
-		public $belongsTo = array('CategoryType' => array(
-			'className' => 'CategoryType'
-		));
+	public $belongsTo = array('CategoryType' => array(
+		'className' => 'CategoryType'
+	));
 
 /**
  * Get the validation rules upon context
@@ -161,6 +161,48 @@ class Category extends AppModel {
 	}
 
 /**
+ * move an element from a position to another in the tree
+ * can be moved among its sieblings, can also change parent
+ * @param uuid $id the if of the category
+ * @param int $position the position from 1 to n
+ * @param uuid $parentId the parent Id (if we wish to change it)
+ * @return bool true or false
+ * 
+ */
+	public function move($id, $position, $parentId=null){
+		// First, manage the parent
+		$category = $this->findById($id);
+		if(!$category)
+			return false;
+		
+		$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
+		if ($category['Category']['parent_id'] != $parentId) {
+			$category['Category']['parent_id'] = $parentId;
+			$category = $this->save($category);
+			if (!$category) {
+				return false;
+			}
+		}
+		// then, manage the position
+		$nbChildren = $this->childCount($parentId, true);
+		// if the position is first one or last one
+		if ($position == 1) {
+			$result = $this->moveUp($id, true);
+		} elseif ($position >= $nbChildren) {
+			$result = $this->moveDown($id, true);
+		} else {
+			$currentPosition = $this->getPosition($id);
+			$steps = $currentPosition - $position;
+			if ($steps > 0) {
+				$result = $this->moveUp($id, $steps);
+			} else {
+				$result = $this->moveDown($id, -($steps));
+			}
+		}
+		return $result;
+	}
+
+/**
  * get the current position of a category among its sieblings, starting from 1
  * @param uuid $id the id of the category
  * @return the current position starting from 1, false if category doesnt exist
@@ -194,10 +236,11 @@ class Category extends AppModel {
 		switch($case){
 			case 'get':
 			case 'getChildren':
-			case 'add':
+			case 'addResult':
+			case 'index' :
 				$fields = array(
 					'fields' => array(
-						'Category.id', 'Category.name', 'Category.parent_id'
+						'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id'
 					)
 				);
 			break;
@@ -208,6 +251,21 @@ class Category extends AppModel {
 					),
 					'contain' => array(
 						'Resource' => Resource::getFindFields('view')
+					)
+				);
+			break;
+			case 'rename':
+				$fields = array(
+					'fields' => array(
+						'name'
+					)
+				);
+			break;
+			case 'add':
+			case 'edit':
+				$fields = array(
+					'fields' => array(
+						'name', 'parent_id', 'category_type_id'
 					)
 				);
 			break;
@@ -254,6 +312,7 @@ class Category extends AppModel {
 				);
 			break;
 			case 'getRoots':
+			case 'index':
 				$c = array(
 					'conditions' => array(
 						'parent_id' => null

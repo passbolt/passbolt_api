@@ -37,7 +37,7 @@ class DictionariesControllerTest extends ControllerTestCase {
 		$this->assertEqual($result->header->status, Message::ERROR, '/dictionaries should not be accessible without being logged in');
 
 		// login with keke
-		$kk = $this->user->findByUsername('kevin@passbolt.com');
+		$kk = $this->user->findByUsername('user@passbolt.com');
 		$this->user->setActive($kk);
 
 		// test bogus dictionary

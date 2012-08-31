@@ -120,11 +120,11 @@ class UserTest extends CakeTestCase {
 
     // Get admin user
     $param = array(
-      'conditions' => array('username' => 'kevin@passbolt.com')
+      'conditions' => array('username' => 'admin@passbolt.com')
     );
     $user = $this->User->find('first',$param);
     $this->User->setActive($user);
-    $this->assertEqual(User::isGuest(), false, 'User::isGuest should return false, kevin is an admin');
+    $this->assertEqual(User::isGuest(), false, 'User::isGuest should return false, admin@passbolt.com is an admin');
   }
 
   public function testIsAdmin() {    
@@ -135,11 +135,11 @@ class UserTest extends CakeTestCase {
 
     // Get admin user
     $param = array(
-      'conditions' => array('username' => 'kevin@passbolt.com')
+      'conditions' => array('username' => 'admin@passbolt.com')
     );
     $user = $this->User->find('first',$param);
     $this->User->setActive($user);
-    $this->assertEqual(User::isAdmin(), true, 'User::Admin should return true, kevin is an admin');
+    $this->assertEqual(User::isAdmin(), true, 'User::Admin should return true, admin@passbolt.com is an admin');
   }
 
   public function testGetFindConditions() {
@@ -190,9 +190,9 @@ class UserTest extends CakeTestCase {
 	}
 
   public function testModifiedBy() {
-		// get kevin and set it as current user
+		// get a user and set it as current user
     $param = array(
-      'conditions' => array('username' => 'kevin@passbolt.com')
+      'conditions' => array('username' => 'user@passbolt.com')
     );
     $kevin = $this->User->find('first',$param);
     $this->User->setActive($kevin);
@@ -208,7 +208,7 @@ class UserTest extends CakeTestCase {
     $kk = $this->User->find('first',$param);
 
 		$this->assertEqual($kevin['User']['id'], $kk['User']['modified_by'], 
-			'Kevin should be mark as the one who updated his record'
+			'user should be mark as the one who updated his record'
 		);
 	}
 

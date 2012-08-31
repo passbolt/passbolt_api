@@ -10,15 +10,16 @@
 
 App::uses('Category', 'Model');
 App::uses('CategoryResource', 'Model');
- 
+
 class ResourcesController extends AppController {
-	/**
+/**
  * Get a resource
  * Renders a json object of the resource
  *
  * @param uuid $id the id of the resource
  * @return void
  */
+
 	public function view($id=null) {
 		// check if the category id is provided
 		if (!isset($id)) {
@@ -42,40 +43,39 @@ class ResourcesController extends AppController {
 		$this->set('data', $resource);
 		$this->Message->success();
 	}
-	
+
 /**
  * Get all resources in a category id
  * Renders a json object of the resources
  *
- * @param uuid $category_id the id of the category
+ * @param uuid $categoryId the id of the category
  * @param bool recursive, whether we want also the resources of all subcategories
  * @return void
  */
-		public function viewByCategory($category_id=null, $recursive=false) {
+	public function viewByCategory($categoryId=null, $recursive=false) {
 			// check if the category id is provided
-			if (!isset($category_id)) {
-				$this->Message->error(__('The category id is missing'));
-				return;
-			}
-			// check if the id is valid
-			if (!Common::isUuid($category_id)) {
-				$this->Message->error(__('The category id invalid'));
-				return;
+		if (!isset($categoryId)) {
+			$this->Message->error(__('The category id is missing'));
+			return;
 		}
-		
+			// check if the id is valid
+		if (!Common::isUuid($categoryId)) {
+			$this->Message->error(__('The category id invalid'));
+			return;
+		}
+
 		// check if the category exists
-		$category = $this->Resource->CategoryResource->Category->findById($category_id);
-		if(!$category){
+		$category = $this->Resource->CategoryResource->Category->findById($categoryId);
+		if (!$category) {
 			$this->Message->error(__('The category doesn\t exist'));
 			return;
 		}
-	
-		if($recursive == false) {
-			$data = array('CategoryResource.category_id' => $category_id);
-		}
-		else{
+
+		if ($recursive == false) {
+			$data = array('CategoryResource.category_id' => $categoryId);
+		} else {
 			$cats = $this->Resource->CategoryResource->Category->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
-			foreach($cats as $cat){
+			foreach ($cats as $cat) {
 				$data['CategoryResource.category_id'][] = $cat['Category']['id'];
 			}
 		}
@@ -83,52 +83,51 @@ class ResourcesController extends AppController {
 		$options = $this->Resource->getFindOptions('viewByCategory', $data);
 		$resources = $this->Resource->find('all', $options);
 		//pr($resources); die();
-		
-		if(!$resources){
-			$this->Message->error(__('Something wrong happened'));
-			return;
+
+		if (!$resources) {
+			$resources = array();
 		}
 
 		$this->set('data', $resources);
 		$this->Message->success();
 	}
-	
-	public function populate(){
-		$this -> layout = 'html5';
+
+	public function populate() {
+		$this->layout = 'html5';
 		$this->Resource->create();
 		$catDrupalId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
 		$catAnjunaId = '4ff6111c-8534-4d17-869c-2184cbdd56cb';
 		$catHippiesId = '4ff6111d-9e6c-4d71-80ee-2184cbdd56cb';
 		$this->Resource->saveAll(
-			array( 
-				0 => array(  
+			array(
+				0 => array(
 				'Category' => array( 'id' => $catGoaId ),
 				'Resource' => array('name' => 'festival du cinema', 'username' => 'festival', 'expiry_date' => null, 'uri' => 'http://www.iffigoa.org/', 'description' => 'description of the Goa Film Festival')
 				),
-				1 => array(  
+				1 => array(
 				'Category' => array( 'id' => $catGoaId ),
 				'Resource' => array('name' => 'Church Square', 'username' => 'priest1', 'expiry_date' => null, 'uri' => '', 'description' => 'this is a description test')
 				),
-				2 => array(  
+				2 => array(
 				'Category' => array( 'id' => $catAnjunaId ),
 				'Resource' => array('name' => 'hill door', 'username' => 'hippie', 'expiry_date' => null, 'uri' => 'http://www.hippiehill.com', 'description' => 'never underestimate the power of Anjuna Hills')
 				),
-				3 => array(  
+				3 => array(
 				'Category' => array( 'id' => $catHippiesId ),
 				'Resource' => array('name' => 'washroom', 'username' => 'sousouchaie', 'expiry_date' => null, 'uri' => '', 'description' => 'How to get inside the washroom at Hippie ?')
 				),
-				4 => array(  
+				4 => array(
 				'Resource' => array('name' => 'random', 'username' => 'user1', 'expiry_date' => '2014-07-01', 'uri' => 'http://www.enova-tech.net', 'description' => 'sample entry')
 				)
 			)
 		);
 	}
-	
-	/**
-	 * Delete a resource
-	 * @param uuid id the id of the resource to delete
-	 */
-	public function delete($id = null){
+
+/**
+ * Delete a resource
+ * @param uuid id the id of the resource to delete
+ */
+	public function delete($id = null) {
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The resource id is missing'));
@@ -139,25 +138,23 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('The resource id invalid'));
 			return;
 		}
-		
 		$resource = $this->Resource->findById($id);
-		if(!$resource){
+		if (!$resource) {
 			$this->Message->error(__('The resource doesn\'t exist'));
 			return;
 		}
-		
 		$resource['Resource']['deleted'] = '1';
-		if(!$this->Resource->save($resource)){
+		if (!$this->Resource->save($resource)) {
 			$this->Message->error(__('Error while deleting'));
 			return;
 		}
 		$this->Message->success();
 	}
-	
-	/**
-	 * Add a resource
-	 */
-	public function add(){
+
+/**
+ * Add a resource
+ */
+	public function add() {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
@@ -168,7 +165,6 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('No data were provided'));
 			return;
 		}
-					
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;
@@ -185,9 +181,9 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('The resource could not be saved'));
 			return;
 		}
-		
+
 		// Save the relations
-		foreach($resourcepost['Category'] as $cat){
+		foreach ($resourcepost['Category'] as $cat) {
 				$crdata = array(
 					'CategoryResource' => array(
 						'category_id' => $cat['id'],
@@ -202,7 +198,7 @@ class ResourcesController extends AppController {
 			}
 			// if validation passes, then save the data
 			$res = $this->Resource->CategoryResource->save();
-			if(!$res){
+			if (!$res) {
 				$this->Message->error(__('Could not save the association'));
 				return;
 			}
@@ -210,10 +206,10 @@ class ResourcesController extends AppController {
 		$this->Message->success(__('The resource was sucessfully saved'));
 	}
 
-	/**
-	 * Update a resource
-	 */
-	public function update(){
+/**
+ * Update a resource
+ */
+	public function update() {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
@@ -231,24 +227,24 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('The resource id invalid'));
 			return;
 		}
-		
+
 		// get the resource id
 		$resource = $this->Resource->findById($resourcepost['Resource']['id']);
-		if(!$resource){
+		if (!$resource) {
 			$this->Message->error(__('The resource doesn\'t exist'));
 			return;
 		}
 
 		$fields = $this->Resource->getFindFields('view');
 		$mask = '/([a-zA-Z]*)\.([a-zA-Z_]*)/i';
-		foreach($fields['fields'] as $f){
+		foreach ($fields['fields'] as $f) {
 			preg_match($mask, $f, $matches);
 			$model = $matches[1];
 			$key = $matches[2];
 			$resource[$model][$key] = $resourcepost[$model][$key];
 		}
 		$save = $this->Resource->save($resource);
-		if(!$save){
+		if (!$save) {
 			$this->Message->error(__('The resource could not be updated'));
 			return;
 		}
