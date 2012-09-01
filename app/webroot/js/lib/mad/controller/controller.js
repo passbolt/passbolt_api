@@ -76,6 +76,7 @@ steal(
 		'getApp': function () {
 			var returnValue = null;
 
+			// the controller is the an App controller
 			if (this instanceof mad.controller.AppController) {
 				returnValue = this;
 			} else {

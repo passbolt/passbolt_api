@@ -32,11 +32,7 @@ steal(
 	MyClass.singleton([CLASS_PARAMS]);
 	 * @codeend
 	 */
-	$.Class('mad.core.Singleton',
-
-	/** @static */
-
-	{
+	$.Class('mad.core.Singleton', /** @static */ {
 		/**
 		 * Singleton instance
 		 * @type {jQuery.Class}
@@ -53,7 +49,7 @@ steal(
 			if (this.instance != null) {
 				returnValue = this.singletonInstance;
 			} else {
-				this.instance = 'CALL_FROM_SINGLETON';
+				this.singletonInstance = 'CALL_FROM_SINGLETON';
 				returnValue = this.newInstance.apply(this, arguments);
 			}
 

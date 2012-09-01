@@ -5,7 +5,6 @@
 	<property name="config" value="${env.WORKSPACE}/jenkins"/>
 	<property name="src" value="${env.WORKSPACE}"/>
 	<property name="build" value="${src}/build"/>
-	<property name="doc" value="${src}/doc"/>
 
 	<target name="main" depends="clean, install, phpcs-ci, jslint, jsdoc, phploc, jsunit, phpunit" />
 	
@@ -15,7 +14,6 @@
 		<delete dir="${src}/generatedJUnitFiles" failonerror="false"/>
 
 		<mkdir dir="${build}"/>
-		<mkdir dir="${doc}"/>
 		<symlink link="${src}/app/webroot/js/mad" resource="${src}/app/webroot/js/lib/mad" failonerror="false"/>
 	</target>
 
@@ -76,6 +74,7 @@
 			<include name="lib/mad/**/*.js" />
 			<exclude name="**/*.min.js" />
 			<exclude name="**/*test*" />
+			<exclude name="**/*demo*" />
 		</fileset>
 		<pathconvert pathsep=" " property="jsfiles.clean" refid="jsfiles.raw" />
 		<exec executable="java" output="${build}/jslint/jslint.xml">
@@ -84,7 +83,6 @@
 	</target>
 	
 	<target name="jsdoc" description="Generate javascript documentation">
-		<mkdir dir="${doc}/js"/>
 		<exec dir="${src}/app/webroot/js/documentjs" executable="./doc">
 			<arg line=" mad"/>
 		</exec>

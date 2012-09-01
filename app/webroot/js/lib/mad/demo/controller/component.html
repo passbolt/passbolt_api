@@ -4,39 +4,7 @@
 	<head>
 		<title>Controller Example</title>
 		<script type='text/javascript' src='../../../steal/steal.js'></script>
-		<style type='text/css'>
-			body {font-family: verdana}
-			.tabs {
-
-				padding: 0px; margin: 0px;
-			}
-			.tabs li {
-				float: left;
-				padding: 10px;
-				background-color: #F6F6F6;
-				list-style: none;
-				margin-left: 10px;
-			}
-			.tabs li a {
-				color: #1C94C4;
-				font-weight: bold;
-				text-decoration: none;
-			}
-			.tabs li.active a {
-				color: #F6A828;
-				cursor: default;
-			}
-			.tab {
-				border: solid 1px #F6A828;
-			}
-			/* clearfix from jQueryUI */
-			.ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-			.ui-helper-clearfix { display: inline-block; }
-			/* required comment for clearfix to work in Opera \*/
-			* html .ui-helper-clearfix { height:1%; }
-			.ui-helper-clearfix { display:block; }
-			/* end clearfix */
-		</style>
+		<style type='text/css'></style>
 	</head>
 	<body>
 		
@@ -44,64 +12,65 @@
 												DEMO HTML BLOCK
  -------------------------------------------------------------------------->
 <div id="demo-html">
-	<div id="mad_demo_app_controller">
-		<div id="mad_demo_component" />
-	</div>
-	<ul id='tabs' class='ui-helper-clearfix''>
-			<li><a href='#tab1'>Tab 1</a></li>
-		<li><a href='#tab2'>Tab 2</a></li>
-		<li><a href='#tab3'>Tab 3</a></li>
-	</ul>
-	<div id='tab1' class='tab'>Tab 1 Content</div>
-	<div id='tab2' class='tab'>Tab 2 Content</div>
-	<div id='tab3' class='tab'>Tab 3 Content</div>
+<div id="js_demo_app_controller">
+	<div id="js_demo_component"></div>
+</div>
 </div>
 
 <!-- -----------------------------------------------------------------------
 												DEMO JAVASCRIPT BLOCK
  -------------------------------------------------------------------------->
 <script type='text/javascript'>
-steal('mad/demo/init.js').then(function(){
+steal('mad/demo/init.js').then(function() {
 	
-	mad.controller.ComponentController.extend('mad.demo.componentDemo', {
-		init: function(){
+	mad.controller.ComponentController.extend('demo.controller.DemoComponentController', 
+	/** @static */
+	{
+		'defaults': {
+			'templateUri': '//mad/demo/view/template/component/demoComponent.ejs'
+		}
+	},
+	/** @prototype */
+	{
+		'init': function(element, options){
 			this._super();
-			console.log('ya');
+		},
+		
+		/* ************************************************************** */
+		/* LISTEN TO VIEWS EVENT */
+		/* ************************************************************** */
+		
+		'button click': function (el, ev) {
+			if (this.state.is('ready')){
+				this.setState('optionsVisible');
+			} else {
+				this.setState('ready');
+			}
+		},
+		
+		/* ************************************************************** */
+		/* LISTEN TO THE STATE CHANGES */
+		/* ************************************************************** */
+		
+		'stateOptionsVisible': function (go) {
+			if (go) {
+				$('ul', this.element).show();
+				$('button').html('Hide options');
+			} else {
+				$('button').html('Show options');
+			}
+		},
+		
+		'stateReady': function (go) {
+			if (go) {
+				$('ul', this.element).hide();
+			}
 		}
+		
 	});
-	var demoComponent = new mad.demo.componentDemo($('#mad_demo_component'));
 	
-	// create a new Tabs class
-	$.Controller("Tabs",{
-
-		// initialize widget
-		init : function(el){
-
-			// activate the first tab
-			$(el).children("li:first").addClass('active')
-
-			// hide the other tabs
-			var tab = this.tab;
-			this.element.children("li:gt(0)").each(function(){
-				tab($(this)).hide()
-			})
-		},
-
-		// helper function finds the tab for a given li
-		tab : function(li){
-			return $(li.find("a").attr("href"))
-		},
-
-		// hides old active tab, shows new one
-		"li click" : function(el, ev){
-			ev.preventDefault();
-			this.tab(this.find('.active').removeClass('active')).hide()
-			this.tab(el.addClass('active')).show();
-		}
-	})
-
-	// adds the controller to the element
-	$("#tabs").tabs();
+	var demoComponent = new demo.controller.DemoComponentController($('#js_demo_component'), {});
+	demoComponent.render();
 })
 </script>
 

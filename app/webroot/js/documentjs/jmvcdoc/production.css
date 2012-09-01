@@ -533,13 +533,14 @@ iframe {
 	border:0
 }
 .demo pre {
-	padding:10px;
+	padding:2px;
 	margin:0;
 	background-image:none
 }
 .demo pre code {
 	font-family:"Courier New";
-	border:0
+	border:0;
+	tab-size: 2;
 }
 .component {
 	margin-right:12px;
