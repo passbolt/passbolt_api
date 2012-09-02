@@ -6,9 +6,37 @@ steal(
 
 	/*
 	 * @class mad.bootstrap.AppBootstrap
-	 * BLABLA sur la classe
+	 * @inherits mad.bootstrap.BootstrapInterface
+	 * @parent mad.core
 	 * 
-	 * @parent index
+	 * The framework AppBoostrap class is our application launcher. It performs several task to setup the 
+	 * application environment :
+	 * <ul>
+	 *	<li>Initialize the application namespace</li>
+	 *	<li>Set the global variables</li>
+	 *	<li>Initialize the event bus</li>
+	 *	<li>Initialize the route listener</li>
+	 *	<li>Initialize the translation engine</li>
+	 *	<li>Initialize the application</li>
+	 *	<li>Dispatch to the conveniant action following the route</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 *	<h2>Example</h2>
+	 *	The bootstrap use by the demo found in the documentation
+	 *	
+	 *	@codestart
+	var boot = new mad.bootstrap.AppBootstrap({
+		'appRootUrl': 'http://passbolt.local', // Application root url
+		'lg': 'en-EN', // The langue of the application
+		'appNamespaceId': 'demo', // Application namespace
+		'appControllerId': 'js_demo_app_controller', // Application controller DOM node id
+		'appControllerClass': mad.controller.AppController, // Application controller class
+		'eventBusControllerId': 'mad_test_event_bus_controller' // Event bus controller DOM node id
+	});
+	 *	@codeend
+	 * </p>
+	 * 
 	 * @constructor
 	 * Creates a Application Bootstrap
 	 * @param {Array} options Array of options

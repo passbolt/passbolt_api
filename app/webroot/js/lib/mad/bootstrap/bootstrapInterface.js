@@ -6,7 +6,6 @@ steal(
 	/*
 	 * @class mad.bootstrap.BootstrapInterface
 	 * The core Interface Bootstrap is a representation of a Bootstrap process
-	 * @parent index
 	 */
 	$.Class('mad.bootstrap.BootstrapInterface',
 

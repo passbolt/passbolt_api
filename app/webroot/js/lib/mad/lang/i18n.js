@@ -1,7 +1,21 @@
-steal( 
-    MAD_ROOT+'/core/singleton.js'
-)
-.then( function ($) {
+/*
+ * @page mad.lang Internationalization
+ * @tag mad.lang
+ * @parent index
+ * 
+ * In order to translate sentences either in PHP or in Javascript use the global function 
+ * __(str [, var1, var2 ...])
+ * 
+ * @codestart
+__('Hello the %s world', 'mad')
+ * @codeend
+ * 
+ * %s : Variables' hook. Put as many as you want, but provide to the function as many variables as they are hooks in the string
+ */
+
+steal(
+	MAD_ROOT + '/core/singleton.js'
+).then(function ($) {
 
 	/**
 	 * Translate the given string.
@@ -11,8 +25,8 @@ steal(
 	 * @return {string} The translated string
 	 */
 	__ = function (str) {
-		var variables = []
-		translation = '';
+		var variables = [],
+			translation = '';
 
 		// extract variables from arguments  
 		var args = Array.prototype.slice.call(arguments);
@@ -29,16 +43,15 @@ steal(
 
 	/*
 	 * @class mad.lang.I18n
+	 * @inherits mad.core.Singleton
 	 * Our implementation of the I18n system.
-	 * @parent index
+	 * @parent mad.lang
+	 * 
 	 * @constructor
 	 * Create a I18n object to manage translation
 	 * @return {mad.lang.I18n}
 	 */
-	mad.core.Singleton.extend('mad.lang.I18n',
-
-	/** @prototype */
-	{
+	mad.core.Singleton.extend('mad.lang.I18n', /** @prototype */ {
 
 		/**
 		 * The current dictionnary to use
@@ -66,7 +79,7 @@ steal(
 		 * @return {void}
 		 */
 		'loadDico': function (dico) {
-			for (var i in dico) {
+			for(var i in dico) {
 				this.dico[i] = dico[i]; //make a copy of the data to be sure there will be existing in the app scope
 			}
 		},
@@ -86,18 +99,18 @@ steal(
 			split = str.split('%s');
 
 			// if the string does not contain the proper number of variables throw an exception
-			if (split.length != vars.length + 1) {
+			if(split.length != vars.length + 1) {
 				throw new mad.error.WrongParameters('I18n Error : The sentence to translate does not contain as many hooks as they are variables');
 			}
 			// no hook found in the string
-			if (split.length < 2) {
+			if(split.length < 2) {
 				return str;
 			}
 			// replace string's hooks with the given variables
 			var j;
-			for (var i in vars) {
+			for(var i in vars) {
 				j = parseInt(i);
-				if (typeof vars[j] != 'string' && typeof vars[j] != 'number' && typeof vars[j] != 'boolean') {
+				if(typeof vars[j] != 'string' && typeof vars[j] != 'number' && typeof vars[j] != 'boolean') {
 					throw new mad.error.WrongParameters('I18n Error : Variables has to be a scalar');
 				}
 				returnValue += split[i] + vars[j];
@@ -115,7 +128,7 @@ steal(
 		 */
 		'getEntry': function (str) {
 			var returnValue = str;
-			if (typeof this.dico[str] != 'undefined' && this.dico[str] != '') {
+			if(typeof this.dico[str] != 'undefined' && this.dico[str] != '') {
 				returnValue = this.dico[str];
 			}
 			return returnValue;
