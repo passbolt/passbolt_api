@@ -26,9 +26,8 @@
 /**
  * Additional App Configuration
  */
-	Configure::load('app');				 // Application
-	// Special Classes
-	require_once(APP . 'Controller' . DS . 'Component' . DS .'Common.php');
+	Configure::load('app'); // Application
+	require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
 
 /**
  * Cache Engine Configuration

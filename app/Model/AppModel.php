@@ -68,7 +68,7 @@ class AppModel extends Model {
  * @param array data
  * @return array
  */
-	static function getFindOptions($case, &$data = null) {
+	public static function getFindOptions($case, &$data = null) {
 		return array_merge(
 			static::getFindConditions($case, &$data),
 			static::getFindFields($case)

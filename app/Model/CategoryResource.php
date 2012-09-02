@@ -7,18 +7,19 @@
  * @since				 version 2.12.7
  * @license			 http://www.passbolt.com/license
  */
-	
+
 App::uses('Category', 'Model');
 App::uses('Resource', 'Model');
-	
+
 class CategoryResource extends AppModel {
-	var $useTable = "categories_resources";
-	
+
+	public $useTable = "categories_resources";
+
 	public $belongsTo = array(
-    'Category', 'Resource'
- );
-	
-	/**
+		'Category', 'Resource'
+	);
+
+/**
  * Get the validation rules upon context
  * @param string context
  * @return array cakephp validation rules
@@ -27,35 +28,34 @@ class CategoryResource extends AppModel {
 		$rules = array(
 			'category_id' => array(
 				'exist' => array(
-					'rule'		=> array('categoryTypeExists', null),
+					'rule' => array('categoryTypeExists', null),
 					'allowEmpty' => true,
 					'message' => __('The category type provided does not exist')
-					),
-					'uuid' => array(
-						'rule'		 => 'uuid',
-						'allowEmpty' => true,
-						'required' => false,
-						'message'	=> __('UUID must be in correct format')
-					)
 				),
-				'resource_id' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'allowEmpty' => true,
+					'required' => false,
+					'message'	=> __('UUID must be in correct format')
+				)
+			),
+			'resource_id' => array(
 				'exist' => array(
-					'rule'		=> array('categoryTypeExists', null),
+					'rule' => array('categoryTypeExists', null),
 					'allowEmpty' => true,
 					'message' => __('The category type provided does not exist')
-					),
-					'uuid' => array(
-						'rule'		 => 'uuid',
-						'allowEmpty' => true,
-						'required' => false,
-						'message'	=> __('UUID must be in correct format')
-					)
+				),
+				'uuid' => array(
+					'rule' => 'uuid',
+					'allowEmpty' => true,
+					'required' => false,
+					'message'	=> __('UUID must be in correct format')
 				)
+			)
 		);
 	}
-	
-	
-	/**
+
+/**
  * Check if a category with same id exists
  * @param check
  */
@@ -81,12 +81,11 @@ class CategoryResource extends AppModel {
 			return false;
 		} else {
 			$resourceM = new Resource();
-			$exists = $resourceM>find('count', array(
+			$exists = $resourceM->find('count', array(
 				'conditions' => array('Resource.id' => $check['resource_id']),
 				 'recursive' => -1
 			));
 			return $exists > 0;
 		}
 	}
-	
 }

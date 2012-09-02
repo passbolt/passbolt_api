@@ -17,17 +17,18 @@ class GpgComponent extends Component {
  * @return void
  * @access public
  */
-	function encrypt($recipient, $data, $options) {
+	public function encrypt($recipient, $data, $options) {
 		$defaults = Configure::read('GPG');
 		$options = am($defaults, $options);
 
-		//preg_match('^/(always)/$',$options['trustModel']);		
+		//preg_match('^/(always)/$',$options['trustModel']);
 
 		$tmp = APP . 'tmp' . DS . 'gpg' . DS . 'encrypt' . md5(uniqid(rand()));
 		$encrypted = $tmp . '.pgp';
 		file_put_contents($tmp, $data);
 
-		$use = 'gpg --trust-model '.$options['trustModel'].' -r "' . $recipient . '" --out ' . $encrypted . ' --encrypt ' . $tmp;
+		$use = 'gpg --trust-model ' . $options['trustModel'] . ' -r "' . $recipient .
+			'" --out ' . $encrypted . ' --encrypt ' . $tmp;
 		$a = `$use`;
 
 		unlink($tmp);
@@ -36,7 +37,7 @@ class GpgComponent extends Component {
 		}
 
 		$out = file_get_contents($encrypted);
-		@unlink($encrypted);
+		unlink($encrypted);
 
 		return $out;
 	}

@@ -93,7 +93,7 @@ class User extends AppModel {
 		// @todo use bcrypt instead #PASSBOLT-157
 		if (isset($this->data['User']['password'])) {
 			//$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
-    	$this->data['User']['password'] = BcryptFormAuthenticate::hash($this->data['User']['password']);
+			$this->data['User']['password'] = BcryptFormAuthenticate::hash($this->data['User']['password']);
 		}
 		return true;
 	}

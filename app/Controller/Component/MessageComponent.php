@@ -164,10 +164,10 @@ class MessageComponent extends Component {
 		// optional body (see also beforeRender)
 		if (isset($options['body'])) {
 			$m['body'] = $options['body'];
-		}else{
+		} else {
 			$m['body'] = array();
 		}
-		
+
 		$this->messages[] = $m;
 
 		// Need some directions?

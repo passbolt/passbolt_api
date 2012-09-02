@@ -2,25 +2,25 @@
 /**
  * Category Controller
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @package			 app.Model.Category
- * @since				 version 2.12.7
- * @license			 http://www.passbolt.com/license
+ * @copyright    Copyright 2012, Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Model.Category
+ * @since        version 2.12.7
  */
 App::uses('CategoryType', 'Model');
 App::uses('Resource', 'Model');
-	
+
 class Category extends AppModel {
 
 /**
  * Model behave as a tree with left, right, parent_id
  */
 	public $actsAs = array('Tree', 'Containable'/*, 'SoftDelete'*/);
-	
+
 	public $hasMany = array(
 		'CategoryResource'
 	);
-		
+
 	public $belongsTo = array('CategoryType' => array(
 		'className' => 'CategoryType'
 	));
@@ -76,9 +76,8 @@ class Category extends AppModel {
 					'required' => false,
 					'message'	=> __('UUID must be in correct format')
 				)
-				)
+			)
 		);
-		
 
 		/* a context switch if needed
 		switch ($context) {
@@ -121,7 +120,6 @@ class Category extends AppModel {
 			return $exists > 0;
 		}
 	}
-
 
 /**
  * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
@@ -169,12 +167,12 @@ class Category extends AppModel {
  * @return bool true or false
  * 
  */
-	public function move($id, $position, $parentId=null){
+	public function move($id, $position, $parentId=null) {
 		// First, manage the parent
 		$category = $this->findById($id);
-		if(!$category)
+		if (!$category) {
 			return false;
-		
+		}
 		$parentId = ($parentId == null ? $category['Category']['parent_id'] : $parentId);
 		if ($category['Category']['parent_id'] != $parentId) {
 			$category['Category']['parent_id'] = $parentId;

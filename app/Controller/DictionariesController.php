@@ -15,7 +15,7 @@ class DictionariesController extends AppController {
  */
 	public function view($l = 'default') {
 		// get user locale or application default one
-		// @todo #PASSBOLT-158 User::get('i18n.locale');
+		// TODO #PASSBOLT-158 User::get('i18n.locale');
 		$l = ($l != 'default') ? $l : Configure::read('i18n.locale');
 
 		// find it in cache or read from model

@@ -8,7 +8,9 @@
  * @since        version 2.12.9
  */
 class GpgKey extends AppModel {
+
 	public $name = 'GpgKey';
+
 	public $useTable = 'gpgKeys';
 
 /**
@@ -18,7 +20,7 @@ class GpgKey extends AppModel {
  * @return void
  * @access public
  */
-	function import($key) {
+	public function import($key) {
 		$tmp = APP . 'tmp' . DS . 'gpg' . DS . 'keys' . md5(uniqid(rand()));
 		file_put_contents($tmp, $key);
 		$cmd = 'gpg --import ' . $tmp;
@@ -35,7 +37,7 @@ class GpgKey extends AppModel {
  * @return void
  * @access public
  */
-	function remove($key) {
+	public function remove($key) {
 		$cmd = 'gpg --batch --delete-key --yes ' . $key;
 		$cmd = escapeshellcmd($cmd);
 		exec($cmd,$output);
@@ -49,9 +51,9 @@ class GpgKey extends AppModel {
  * @return mixed array or false if error
  * @access public
  */
-  function fingerprint($id) {
+	public function fingerprint($id) {
 		$f = false;
-		$cmd = 'gpg --fingerprint '. $id;
+		$cmd = 'gpg --fingerprint ' . $id;
 		$cmd = escapeshellcmd($cmd);
 		exec($cmd,$output);
 
@@ -69,7 +71,7 @@ class GpgKey extends AppModel {
  * @return mixed array or false if error
  * @access protected
  */
-  function _deserializeFingerPrint($o) {
+	protected function _deserializeFingerPrint($o) {
 		// parse first line
 		// ex: pub   2048R/E513B181 2012-08-25
 		preg_match('/pub   ([0-9]{4})([A-Z]{1})\/([A-Z0-9]{8}) ([0-9]{4}-[0-9]{2}-[0-9]{2})/', $o[0], $matches);
@@ -93,19 +95,18 @@ class GpgKey extends AppModel {
 		if (count($matches) != 2) {
 			return false;
 		}
-		$f['fingerprint'] =  $matches[1];
+		$f['fingerprint'] = $matches[1];
 
 		// parse third line
 		// ex: uid Lisa <lisa@passbolt.com>
-		$email = '[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@' 
-		. '(?:[-_a-z0-9][-_a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4}|museum|travel)';
-		preg_match('/uid                  ([0-9\w\ ]+) <('.$email.')>/', $o[2], $matches);
+		$email = '[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@' .
+			'(?:[-_a-z0-9][-_a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4}|museum|travel)';
+		preg_match('/uid                  ([0-9\w\ ]+) <(' . $email . ')>/', $o[2], $matches);
 		if (count($matches) != 3) {
 			return false;
 		}
-		$f['uid'] =  $matches[1] .' <'.$matches[2].'>';
-	
+		$f['uid'] = $matches[1] . ' <' . $matches[2] . '>';
+
 		return $f;
 	}
-
 }

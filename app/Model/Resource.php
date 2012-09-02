@@ -8,12 +8,14 @@
  * @since         version 2.12.7
  */
 class Resource extends AppModel {
+
 	public $actsAs = array('Containable');
-	
+
 	public $hasMany = array(
-  	'CategoryResource'
-  );
-  /**
+		'CategoryResource'
+	);
+
+/**
  * Get the validation rules upon context
  * @param string context
  * @return array cakephp validation rules
@@ -42,55 +44,56 @@ class Resource extends AppModel {
 					)
 				),
 				'expiry_date' => array(
-	     'date' => array(
-	       'required' => false,  
-	       'allowEmpty' => true,  
-	       'rule' => array('date', 'ymd'),
-	       'message' => __('Please indicate a valid date')
-	     ),
-	     'infuture' => array(
-	       'rule' => array('isInFuture'),
-	       'message' => __('The date should be in the future.')
-	     ),
-	   ),
+					'date' => array(
+			    	'required' => false,
+						'allowEmpty' => true,
+			 			'rule' => array('date', 'ymd'),
+						'message' => __('Please indicate a valid date')
+					),
+					'infuture' => array(
+						'rule' => array('isInFuture'),
+						'message' => __('The date should be in the future.')
+					),
+				),
 				'uri' => array(
-						'alphaNumeric' => array(
+					'alphaNumeric' => array(
 						'rule'		 => '/^.{2,64}$/i',
 						'required' => false,
-						'allowEmpty' => true, 
-						'message'	=> __('Alphanumeric only')
+						'allowEmpty' => true,
+							'message'	=> __('Alphanumeric only')
 					)
 				),
 				'description' => array(
-						'alphaNumeric' => array(
-						'rule'		 => '/^[^<>]*$/i',
-						'required' => false,
-						'allowEmpty' => true, 
-						'message'	=> __('Text only. No HTML allowed')
-					)
-				),
-			);
-			switch ($case) {
-				default:
-				case 'default' :
-					$rules = $default;
-			}
-			return $rules;
+					'alphaNumeric' => array(
+					'rule'		 => '/^[^<>]*$/i',
+					'required' => false,
+					'allowEmpty' => true,
+					'message'	=> __('Text only. No HTML allowed')
+				)
+			),
+		);
+		switch ($case) {
+			default:
+			case 'default':
+				$rules = $default;
+			break;
+		}
+		return $rules;
 	}
 
-	/**
-	 * Validates if a date is in future
-	 * @param array $check the parameters
-	 * @return bool true if the date is in future, false otherwise
-	 */
-	function isInFuture($check) {
-		  $now = time();
-    $expiryDate = strtotime($check['expiry_date']);
-    $interval = $expiryDate - $now;
-    return ($interval > 0) ;
-  }
+/**
+ * Validates if a date is in future
+ * @param array $check the parameters
+ * @return bool true if the date is in future, false otherwise
+ */
+	public function isInFuture($check) {
+		$now = time();
+		$expiryDate = strtotime($check['expiry_date']);
+		$interval = $expiryDate - $now;
+		return ($interval > 0);
+	}
 
-	/**
+/**
  * Return the find options to be used
  *
  * @param string context
@@ -103,8 +106,8 @@ class Resource extends AppModel {
 			Resource::getFindFields($case)
 		);
 	}
-	
-	/**
+
+/**
  * Return the conditions to be used for a given context
  *
  * @param $context string{guest or id}
@@ -117,12 +120,15 @@ class Resource extends AppModel {
 		switch ($case) {
 			case 'view':
 				$conditions = array(
-					'conditions' => array('Resource.deleted'=>0)
+					'conditions' => array('Resource.deleted' => 0)
 				);
 			break;
 			case 'viewByCategory':
 				$conditions = array(
-					'conditions' => array('CategoryResource.category_id'=>$data['CategoryResource.category_id'], 'Resource.deleted'=>0)
+					'conditions' => array(
+						'CategoryResource.category_id' => $data['CategoryResource.category_id'],
+						'Resource.deleted' => 0
+					)
 				);
 			break;
 			default:
@@ -133,7 +139,7 @@ class Resource extends AppModel {
 		return $conditions;
 	}
 
-	/**
+/**
  * Return the list of field to fetch for given context
  * @param string $case context ex: login, activation
  * @return $condition array
@@ -158,6 +164,4 @@ class Resource extends AppModel {
 		}
 		return $fields;
 	}
-	
-	
 }

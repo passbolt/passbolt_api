@@ -13,14 +13,15 @@ App::uses('CategoryType', 'Model');
 App::uses('Sanitize', 'Utility');
 
 class CategoriesController extends AppController {
+
 /**
  * index - get a list of categories
  * @todo define what this function should do. for the moment, it is a clone of getroots
  */
-	public function index(){
+	public function index() {
 		$data = array();
 		$o = $this->Category->getFindOptions('index');
-		$categories = $this->Category->find('threaded', $o);	
+		$categories = $this->Category->find('threaded', $o);
 		$data = $categories;
 		$this->set('data', $data);
 		$this->Message->success();
@@ -122,12 +123,12 @@ class CategoriesController extends AppController {
 
 /**
  * Add a category inside the tree, and return a success object with the added category
- * 
+ *
  * Post Variables
  *   $parentId, the parent id of the category
  *   $name, the name of the category
  *   $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
- *     if position is not available (example : position 2 when there are no children, 
+ *     if position is not available (example : position 2 when there are no children,
  *			the category will be inserted in last)
  *     if position is 0, it will not be handled. Count starts from 1.
  *   $type (optional), the type of the category (default is set is missing)
@@ -183,7 +184,7 @@ class CategoriesController extends AppController {
 /**
  * Edit a category
  */
-	public function edit($id){
+	public function edit($id) {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
@@ -223,7 +224,7 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category could not be updated'));
 			return;
 		}
-		
+
 		$this->Message->success(__('The category was sucessfully updated'));
 	}
 
@@ -333,7 +334,7 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('It is not possible to move the category at this position'));
 			return;
 		}
-		
+
 		$result = $this->Category->move($id, $position, $parentId);
 		// deliver some results
 		if ($result) {
