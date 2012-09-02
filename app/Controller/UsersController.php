@@ -6,7 +6,7 @@
  * @license     http://www.passbolt.com/license
  * @package     app.Controller.UsersController
  * @since       version 2.12.9
- */ 
+ */
 class UsersController extends AppController {
 
 /**
@@ -26,7 +26,7 @@ class UsersController extends AppController {
 			return;
 		}
 		// avoid looping if the requested URL is logout
-		if($this->Auth->redirect() == '/logout') { 
+		if ($this->Auth->redirect() == '/logout') {
 			$this->redirect('/');
 		} else {
 			$this->redirect($this->Auth->redirect());
@@ -47,7 +47,7 @@ class UsersController extends AppController {
  */
 	public function index() {
 		$o = $this->User->getFindOptions('userIndex');
-		$data = $this->User->find('all', $o);	
+		$data = $this->User->find('all', $o);
 		if (!empty($data)) {
 			$this->Message->success();
 			$this->set('data', $data);
@@ -73,7 +73,7 @@ class UsersController extends AppController {
 			return;
 		}
 		// not sql needed if a user is asking for his own data
-		if(User::get('id') == $id) {
+		if (User::get('id') == $id) {
 			$resource = User::get();
 		} else {
 			$o = $this->User->getFindFields('userView');

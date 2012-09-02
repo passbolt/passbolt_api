@@ -12,8 +12,6 @@
  * @license			 http://www.passbolt.com/license
  */
 class Role extends AppModel {
-	public $name = 'role';
-
 	const GUEST = 'guest';
 	const USER	= 'user';
 	const ADMIN = 'admin';

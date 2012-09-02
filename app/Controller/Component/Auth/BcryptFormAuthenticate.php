@@ -8,7 +8,7 @@
  * @since        version 2.12.9
  */
 App::uses('FormAuthenticate', 'Controller/Component/Auth');
- 
+
 class BcryptFormAuthenticate extends FormAuthenticate {
 
 /**
@@ -21,7 +21,7 @@ class BcryptFormAuthenticate extends FormAuthenticate {
 	protected function _findUser($username, $password) {
 		$this->settings['scope'] = array(
 			'active' => 1
-			//@TODO is not guest and password is not null
+			// TODO is not guest and password is not null
 		);
 		$u = parent::_findUser($username, $password);
 		if (is_array($u)) {
@@ -37,11 +37,11 @@ class BcryptFormAuthenticate extends FormAuthenticate {
  * @return string Hashed password.
  * @access protected
  */
-	public function _password($password) {
+	protected function _password($password) {
 		// @todo PASSBOLT-180 use a non application-wide salt
 		return self::hash($password);
 	}
- 
+
 /**
  * Create a blowfish / bcrypt hash.
  * Individual salts could/should used for increased security.

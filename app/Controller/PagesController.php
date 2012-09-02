@@ -59,7 +59,7 @@ class PagesController extends AppController {
 		if (!$count) {
 			$this->redirect('/');
 		}
-		$page = $subpage = $title_for_layout = null;
+		$page = $subpage = $title = null;
 
 		if (!empty($path[0])) {
 			$page = $path[0];
@@ -68,9 +68,9 @@ class PagesController extends AppController {
 			$subpage = $path[1];
 		}
 		if (!empty($path[$count - 1])) {
-			$title_for_layout = Inflector::humanize($path[$count - 1]);
+			$title = Inflector::humanize($path[$count - 1]);
 		}
-		$this->set(compact('page', 'subpage', 'title_for_layout'));
+		$this->set(compact('page', 'subpage', 'title'));
 		$this->render(implode('/', $path));
 	}
 }

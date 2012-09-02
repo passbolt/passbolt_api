@@ -31,16 +31,16 @@ class AppController extends Controller {
  * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
  * @return void 
  */
-	function beforeFilter() {
+	public function beforeFilter() {
 		// Paranoia - Hidding PHP version number
-		$this->response->header('X-Powered-By', 'PHP'); 
+		$this->response->header('X-Powered-By', 'PHP');
 
 		// Add a callback detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
 			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
 		}));
 
-		// Set default layout 
+		// Set default layout
 		//if ( || $this->request->is('json')) {
 			$this->layout = 'json';
 			$this->view = '/Json/default';
@@ -48,7 +48,7 @@ class AppController extends Controller {
 		//	$this->layout = 'html5';
 		//}
 
-		// Set active user Anonymous 
+		// Set active user Anonymous
 		// or use what is in the session
 		User::get();
 
@@ -59,7 +59,7 @@ class AppController extends Controller {
 		//$this->Auth->logoutRedirect = Configure::read('Auth.logoutRedirect');
 		$this->Auth->authorize = array('Controller'); //@see AppController::isAuthorized
 
-		// @todo this will be remove via the initial auth check 
+		// @todo this will be remove via the initial auth check
 		// User::set() will load default config
 		if ($this->Session->read('Config.language') != null) {
 			Configure::write('Config.language', $this->Session->read('Config.language'));
@@ -69,30 +69,20 @@ class AppController extends Controller {
 	}
 
 /**
- * Called after the controller action is run, but before the view is rendered. You can use this method
- * to perform logic or set view variables that are required on every request.
- *
- * @return void
- * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
- */
-	function beforeRender() {
-	}
-
-/**
  * Authorization check main callback
  * @link http://api20.cakephp.org/class/auth-component#method-AuthComponentisAuthorized
  * @param mixed $user The user to check the authorization of. If empty the user in the session will be used.
  * @return boolean True if $user is authorized, otherwise false
  * @access public
- */ 
-	function isAuthorized($user) {
+ */
+	public function isAuthorized($user) {
 		if ($this->isWhitelisted()) {
-		  return true;
+			return true;
 		}
 		if (User::isAnonymous()) {
 			if ($this->request->is('Json')) {
 				$this->Message->error(__('You are not authorized to access that location.'), array(
-					'statusCode' => '403' // forbidden				
+					'statusCode' => '403' // forbidden
 				));
 				return true; // no need to redirect to login
 			}
@@ -106,8 +96,9 @@ class AppController extends Controller {
  * @param string $controller, current is used if null
  * @param string $action, current is used if null
  * @return bool true if the controller action pair is whitelisted
+ * @access public
  */
-	function isWhitelisted($controller=null, $action=null) {
+	public function isWhitelisted($controller=null, $action=null) {
 		if ($controller == null) {
 			$controller = strtolower($this->name);
 		}
@@ -117,5 +108,5 @@ class AppController extends Controller {
 		//echo $controller.':'.$action;
 		$whitelist = Configure::read('Auth.whitelist');
 		return (isset($whitelist[$controller][$action]));
-	} 
+	}
 }

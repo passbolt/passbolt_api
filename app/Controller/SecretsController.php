@@ -8,5 +8,4 @@
  * @since         version 2.12.7
  */
 class SecretsController extends AppController {
-  
 }
