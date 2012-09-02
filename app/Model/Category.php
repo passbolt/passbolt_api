@@ -15,7 +15,7 @@ class Category extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree', 'Containable', 'SoftDelete');
+	public $actsAs = array('Tree', 'Containable'/*, 'SoftDelete'*/);
 	
 	public $hasMany = array(
 		'CategoryResource'
@@ -237,6 +237,7 @@ class Category extends AppModel {
 			case 'get':
 			case 'getChildren':
 			case 'addResult':
+			case 'index' :
 				$fields = array(
 					'fields' => array(
 						'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id'
@@ -261,6 +262,7 @@ class Category extends AppModel {
 				);
 			break;
 			case 'add':
+			case 'edit':
 				$fields = array(
 					'fields' => array(
 						'name', 'parent_id', 'category_type_id'
@@ -310,6 +312,7 @@ class Category extends AppModel {
 				);
 			break;
 			case 'getRoots':
+			case 'index':
 				$c = array(
 					'conditions' => array(
 						'parent_id' => null

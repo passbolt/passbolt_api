@@ -1,23 +1,26 @@
-steal(MAD_ROOT + '/controller/componentController.js', 
-	MAD_ROOT + '/view/template/component/button.ejs')
-	
-.then( function ($) {
+steal(
+	MAD_ROOT + '/controller/componentController.js',
+	MAD_ROOT + '/view/template/component/button.ejs'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.component.ButtonController
-	 * @inherits {mad.controller.ComponentController}
-	 * @parent index
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.controller.component
 	 * 
 	 * The Button class Controller is our implementation of the UI component button.
+	 *	<p>
+	 *		<h2>Example</h2>
+	 *		@demo /js/mad/demo/controller/component/simple_button.html
+	 *	</p>
 	 * 
 	 * @constructor
 	 * Creates a new Button Controller Component
 	 * @param {array} options Optional parameters
 	 * @return {mad.controller.component.ButtonController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.ButtonController',
-	/** @static */
-	{
+	mad.controller.ComponentController.extend('mad.controller.component.ButtonController', /** @static */ {
+
 		'defaults': {
 			'label': 'Button Component',
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/button.ejs',
@@ -27,9 +30,8 @@ steal(MAD_ROOT + '/controller/componentController.js',
 				'click': null
 			}
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
 
 		/**
 		 * Value of the button. This value will be released when events occured
@@ -37,7 +39,7 @@ steal(MAD_ROOT + '/controller/componentController.js',
 		 */
 		'value': null,
 
-		// Construcor
+		// Construcor like
 		'init': function (el, options) {
 			this._super();
 			this.value = options.value;
@@ -70,9 +72,9 @@ steal(MAD_ROOT + '/controller/componentController.js',
 		 * Listen to the event click on the DOM button element
 		 * @return {void}
 		 */
-		'click': function () {
+		'click': function (el, ev) {
 			if (this.options.events.click) {
-				this.options.events.click(this.element, this.value);
+				this.options.events.click(this.element, ev, this.value);
 			}
 		},
 

@@ -407,4 +407,4 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type.json : The test should return error but has returned {$result['header']['status']}");
  }
 	
-}仡
+}

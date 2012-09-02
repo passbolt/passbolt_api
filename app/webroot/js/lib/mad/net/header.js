@@ -1,11 +1,9 @@
-steal('jquery/class')
-.then( function ($) {
+steal('jquery/class').then(function ($) {
 
 	/*
 	 * @class mad.net.Header
-	 * 
-	 * @inherits {mad.core.Class}
-	 * @parent index
+	 * @inherits mad.core.Class
+	 * @parent mad.net
 	 * 
 	 * The ajax response header model
 	 * 
@@ -14,7 +12,6 @@ steal('jquery/class')
 	 * @return {mad.net.Header}
 	 */
 	$.Model('mad.net.Header',
-
 	/** @static */
 	{
 		'STATUS_ERROR': 'error',

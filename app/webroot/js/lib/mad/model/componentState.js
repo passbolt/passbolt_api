@@ -1,31 +1,34 @@
 steal(
-    'jquery/model'
-)
-.then(function () {
+	'jquery/model'
+).then(function () {
+
 	/*
 	 * @class mad.model.ComponentState
-	 * @inherits {$.Model}
-	 * @parent index
+	 * @inherits jQuery.Model
+	 * @parent mad.controller.component
 	 * 
 	 * The component state model will carry the state of a given component.
-	 * Component will listen to any change on it and adapt their behavior
+	 * Component will listen to any change on it and it will adapt its behavior.
 	 * 
 	 * @constructor
 	 * Creates a component state
 	 * @param {array} options
 	 * @return {mad.model.ComponentState}
 	 */
-	$.Model('mad.model.ComponentState',
-	/** @static */
-	{
+	$.Model('mad.model.ComponentState', /** @static */ {
+
+		/**
+		 * Define attributes of the model
+		 * @type {Object}
+		 */
 		attributes: {
 			'label': null,
 			// current state name
 			'previous': null // previous state name
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
+
 		/**
 		 * Check if the current state is equal to the given state
 		 * @param {string} stateName The state to check
@@ -46,15 +49,13 @@ steal(
 			this.attr('label', stateName);
 		},
 
-
 		/**
-		 * Get the current state
-		 * @return {string} The current state
+		 * Get the current state name
+		 * @return {string} The current state name
 		 */
 		'getState': function () {
 			return this.attr('label');
 		}
-
 
 	});
 });

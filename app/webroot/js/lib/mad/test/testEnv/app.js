@@ -1,14 +1,3 @@
-/*
- * @page index Passbolt
- * @tag home
- *
- * ###Passbolt
- *  
- * Our Passbolt
- *  
- * * passbolt.passbolt.controller.PasswordWorkspaceController
- */
-
 APP_URL = 'http://passbolt.local';
 MAD_ROOT = 'lib/mad';
 steal(

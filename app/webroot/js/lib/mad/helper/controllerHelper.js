@@ -1,15 +1,11 @@
-steal( 
-    'jquery/class'
-)
-.then( function ($) {
+steal(
+	'jquery/class'
+).then(function ($) {
 
 	/**
 	 * The controller class helper offers to the developper tools arround controllers
 	 */
-	$.Class('mad.helper.ControllerHelper',
-
-	/** @static */
-	{
+	$.Class('mad.helper.ControllerHelper', /** @static */ {
 
 		/**
 		 * Get view path of a controller.
@@ -42,10 +38,10 @@ steal(
 		 */
 		'getViewPath': function (clazz, options) {
 			var returnValue = '//';
-			
+
 			var clazzName = clazz.fullName;
 			var split = clazzName.split('.');
-
+console.dir(clazzName);
 			// extract the controller name, and treat it to find its view name
 			var controllerName = split.pop();
 			var viewName = $.String.camelize(controllerName.substr(0, controllerName.indexOf('Controller')));
@@ -59,20 +55,17 @@ steal(
 				if (split[1] != 'controller') {
 					returnValue += 'app/plugin/' + split[1];
 					split = split.splice(2);
-				}
-				//else we are in the application
-				else {
+				} else {
+					//else we are in the application
 					returnValue += 'app';
 					split = split.splice(1);
 				}
 			}
 
-console.log(1);
 			//the next in the split has to be the controller, else there is an error in the controller name
 			if (split[0] != 'controller') {
-				throw new mad.Error('Controller name mal formed');
+				throw new mad.error.Error('Controller name mal formed');
 			}
-console.log(2);
 			split = split.splice(1);
 
 			// target the view folder
@@ -92,7 +85,7 @@ console.log(2);
 
 			var clazzName = clazz.fullName;
 			var split = clazzName.split('.');
-
+			
 			// extract the controller name, and treat it to find its view name
 			var controllerName = split.pop();
 			var viewName = $.String.camelize(controllerName.substr(0, controllerName.indexOf('Controller')));
@@ -129,16 +122,9 @@ console.log(2);
 
 			var view = $.String.getObject(returnValue, null);
 			return view;
-			//				// check if the view template exists
-			//				if(check){
-			//					
-			//				}
-			return returnValue;
 		}
 
-	},
-
-	/** @prototype */
-	{});
+	}, /** @prototype */ {}
+);
 
 });

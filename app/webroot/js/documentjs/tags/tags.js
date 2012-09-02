@@ -35,6 +35,7 @@ steal.then(function() {
 'documentjs/tags/download.js',
  'documentjs/tags/hide.js', 
  //'//documentjs/tags/iframe.js', 
+ 'documentjs/tags/see.js', 
  'documentjs/tags/inherits.js', 'documentjs/tags/page.js', 
  'documentjs/tags/param.js', 'documentjs/tags/parent.js',
   'documentjs/tags/plugin.js', 'documentjs/tags/return.js', 

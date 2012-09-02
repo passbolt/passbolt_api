@@ -7,8 +7,8 @@ steal(
 
 	/*
 	 * @class mad.controller.component.InputController
-	 * @inherits {mad.controller.ComponentController}
-	 * @parent index
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.controller.component
 	 * @todo to finish
 	 * 
 	 * The Input class Controller is our implementation of the UI component input

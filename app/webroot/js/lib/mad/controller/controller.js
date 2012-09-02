@@ -1,16 +1,24 @@
-steal('jquery/controller', 
-	MAD_ROOT + '/route/extensionControllerActionDispatcher.js')
-
-.then(function ($) {
+steal(
+	'jquery/controller',
+	MAD_ROOT + '/route/extensionControllerActionDispatcher.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.Controller
-	 * @inherits $.Controller
-	 * @parent index
+	 * @inherits jQuery.Controller
+	 * @parent mad.core
 	 * 
 	 * The core class Controller is an extension of the JavascriptMVC Controller. This
-	 * class provides to developpers specific common tools to create application's 
-	 * controllers.
+	 * class allow us to easily hook common behavior, such as :
+	 * <ul>
+	 *	<li>
+	 *		referencing automatically newly created controllers with the 
+	 *		[mad.controller.AppController|Application Controller]
+	 *	</li>
+	 *	<li>
+	 *		set automatically an id to the DOM element if no id has been provided
+	 *	</li>
+	 * </ul>
 	 * 
 	 * @constructor
 	 * Creates a new controller
@@ -18,10 +26,7 @@ steal('jquery/controller',
 	 * References it to the application controller.
 	 * @return {mad.controller.Controller}
 	 */
-	$.Controller('mad.controller.Controller',
-
-	/** @static */
-	{
+	$.Controller('mad.controller.Controller', /** @static */ {
 		/**
 		 * Get the controller dispatcher. The Dispatcher explain how the routes have to
 		 * be dispatch for this controller.
@@ -32,10 +37,8 @@ steal('jquery/controller',
 		'getDispatcher': function () {
 			return mad.route.ExtensionControllerActionDispatcher;
 		}
-	},
 
-	/** @prototype */
-	{
+	}, /** @prototype */ {
 
 		// Class constructor
 		'init': function (el, options) {
@@ -49,9 +52,11 @@ steal('jquery/controller',
 			// reference the controller to the application
 			this.getApp().referenceComponent(this);
 			// propagate : a new controller has been released
-			if (mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID + '_controller_released', {
-				'component': this
-			});
+			if (mad.eventBus) {
+				mad.eventBus.trigger(mad.APP_NS_ID + '_controller_released', {
+					'component': this
+				});
+			}
 		},
 
 		/**
@@ -71,6 +76,7 @@ steal('jquery/controller',
 		'getApp': function () {
 			var returnValue = null;
 
+			// the controller is the an App controller
 			if (this instanceof mad.controller.AppController) {
 				returnValue = this;
 			} else {
@@ -81,7 +87,7 @@ steal('jquery/controller',
 
 			return returnValue;
 		},
-		
+
 		/**
 		 * Get Child controllers
 		 * @todo or @deprecated
@@ -89,7 +95,7 @@ steal('jquery/controller',
 		'getComponent': function (id) {
 			return mad.app.getComponent(id);
 		},
-		
+
 		/**
 		 * Get id of the controller
 		 * @return {String} Id of the component

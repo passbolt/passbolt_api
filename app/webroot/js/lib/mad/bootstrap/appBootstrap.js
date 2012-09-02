@@ -1,9 +1,8 @@
-steal( 
+steal(
     'jquery/dom/route',
-    MAD_ROOT+'/bootstrap/bootstrapInterface.js'
+    MAD_ROOT + '/bootstrap/bootstrapInterface.js'
 //    'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
-)
-.then( function ($) {
+).then(function ($) {
 
 	/*
 	 * @class mad.bootstrap.AppBootstrap
@@ -24,12 +23,8 @@ steal(
 	 * 
 	 * @todo write states schema of the application
 	 */
-	mad.bootstrap.BootstrapInterface.extend('mad.bootstrap.AppBootstrap',
+	mad.bootstrap.BootstrapInterface.extend('mad.bootstrap.AppBootstrap', /* @static */ {
 
-	/*
-	 * @static
-	 */
-	{
 		'defaults': {
 			'appRootUrl': '',
 			'lang': 'en-EN',
@@ -44,12 +39,9 @@ steal(
 				'ready': null
 			}
 		}
-	},
 
-	/*
-	 * @prototype
-	 */
-	{
+	}, /*  @prototype */ {
+
 		'init': function (options) {
 			// the current route
 			this.currentRoute = null;
@@ -107,20 +99,22 @@ steal(
 
 				// Dispatch to the right action
 				var route = mad.route.RouteListener.singleton().getRoute();
-				if (route == null) route = this.options.defaultRoute;
+				if (route == null && this.options.defaultRoute != null) {
+					route = this.options.defaultRoute;
+				}
 				if (route != null) {
 					this.dispatch(route);
 				}
+
 				// Application is ready
 				this.ready();
+
+			} catch (ex) {
+				// Catch any exceptions released by the system
+				this.options.errorHandlerClass.handleException(ex);
 			}
 
-			// Catch any exceptions released by the system
-			catch (ex) {
-				this.options.errorHandlerClass.handleException(ex)
-			}
-
-			// 
+			//
 			// END OF THE APPLICATION BOOTSTRAP PROCESS
 			// 
 		},
@@ -141,7 +135,6 @@ steal(
 			mad.setGlobal('ERROR_HANDLER_CLASS', this.options.errorHandlerClass);
 			mad.setGlobal('RESPONSE_HANDLER_CLASS', this.options.responseHandlerClass);
 		},
-
 
 		/**
 		 * Init application globals
@@ -191,7 +184,7 @@ steal(
 		 * @todo make the subscription to the application for the extensions more clear
 		 */
 		'initExtensions': function () {
-			new passbolt.activity.bootstrap.Bootstrap();
+			var activityBootstrap = new passbolt.activity.bootstrap.Bootstrap();
 		},
 
 		/**
@@ -244,10 +237,11 @@ steal(
 			// get the target controller
 			var controllerName = route.controller.charAt(0).toUpperCase() + route.controller.slice(1) + 'Controller';
 			var appNs = mad.getGlobal('APP_NS');
+			var controllerClass = null;
 			if (route.extension == 'passbolt') {
-				var controllerClass = appNs.controller[controllerName];
+				controllerClass = appNs.controller[controllerName];
 			} else {
-				var controllerClass = appNs[route.extension].controller[controllerName];
+				controllerClass = appNs[route.extension].controller[controllerName];
 			}
 
 

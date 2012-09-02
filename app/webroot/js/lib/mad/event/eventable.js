@@ -1,17 +1,14 @@
-steal( 
-    'jquery/class'
-)
-.then( function ($) {
+steal(
+	'jquery/class'
+).then(function ($) {
 
-	$.Class('mad.event.Eventable',
 
-	/** @static */
-	{},
+	$.Class('mad.event.Eventable', /** @static */ {
+		//
+	}, /** @prototype */ {
 
-	/** @prototype */
-	{
 		/**
-		 * Trigger an element on the event bus
+		 * Trigger an event on the associated DOM element.
 		 * @param {String} eventName Event name
 		 * @param {Array} eventData (Optional) Parameters to send with the event 
 		 * @return {void}
@@ -22,14 +19,15 @@ steal(
 		},
 
 		/**
-		 * Bind an event on the event bus
+		 * Bind an event on the associated DOM element.
 		 * @param {String} eventName Event name
 		 * @param {function} func The function to execute when the event is fired
 		 * @return {void}
 		 */
 		'bind': function (eventName, func) {
-			this.element.bind(eventName, func)
+			this.element.bind(eventName, func);
 		}
+
 	});
 
 });

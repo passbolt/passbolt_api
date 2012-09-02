@@ -6,7 +6,7 @@
  * @license     http://www.passbolt.com/license
  * @package     app.Controller.UsersController
  * @since       version 2.12.9
- */
+ */ 
 class UsersController extends AppController {
 
 /**

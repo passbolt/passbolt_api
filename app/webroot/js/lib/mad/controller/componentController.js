@@ -1,21 +1,152 @@
+/*
+ * @page mad.controller.component Components
+ * @tag mad.controller.component
+ * @parent index
+ * @see mad.controller.ComponentController
+ * @see mad.model.ComponentState
+ *
+ *	<p>
+ *		Component controller is our representation of graphical controllers. It is linked to a view 
+ *		that it is controlling. An other aspect of the component controller is that it is implementing
+ *		a state system to make the development of the behaviors cleaner.
+ *	</p>
+ *
+ *	<p>
+ *		<h2>Linked view</h2>
+ *		Each component controller can be rendered following these strategies :
+ *		<ul>
+ *			<li>Use the default View</li>
+ *			<li>Use a custom view</li>
+ *		</ul>
+ *	</p>
+ *	
+ *	<p>
+ *		<h3>The default View</h3>
+ *		By default the Component controller uses the provided default view [mad.view.View|mad.view.View].
+ *		The view is initialized in the component controller constructor and rendered in the 
+ *		[mad.controller.ComponentController.prototype.render|render] function of this one.
+ *		
+ *		<br/><br/>
+ *		
+ *		The view is using the EmbedJS engine to render components. Our view classes are automatically binded
+ *		to a template file based on the name of the component controller. By instance for the following
+ *		<i>mad.controller.component.MyComponent</i> component controller class the associated template will be
+ *		
+ *		@codestart
+ lib/mad/view/template/controller/component/myComponent.ejs
+ *		@codeend
+ *		
+ *		You can override this template uri by setting the optional parameter <i>templateUri</i>.
+ *		
+ *		@codestart
+	var myComponent = new mad.controller.component.MyComponent($('#myComponent'), {
+		'templateUri': MAD_ROOT + '/view/template/controller/component/myCustomTemplateUri.ejs'
+	});
+ *		@codeend
+ *	</p>
+ *
+ *	<p>
+ *		<h3>The custom View</h3>
+ *		The framework is flexible and allow you to customize the view to use by the component controller to render
+ *		its view.
+ *		
+ *		@codestart
+	var myComponent = new mad.controller.component.MyComponent($('#myComponent'), {
+		'viewClass': mad.view.component.MyCustomViewComponent
+	});
+ *		@codeend
+ *		
+ *		The custom view class mad.view.component.MyCustomViewComponent has to inherit the 
+ *		[mad.view.View|mad.view.View] class. You can implement in this class all the required view features.
+ *	</p>
+ *	
+ *	<p>
+ *		<h2>Component' states management</h2>
+ *		Each component controller behavior can be isolated and packaged in a specific function to make the 
+ *		code clear and reusable.
+ *		<br/><br/>
+ *		Each Component Controller instances embeds a [mad.model.ComponentState|mad.model.ComponentState] object
+ *		to manage its state. The Component Controller instances are listening changes from the Component State
+ *		model and they are updating their behavior following this process.
+ *		<br/>
+ *		<ol>
+ *			
+ *			<li>
+ *				By default the Component Controller is entering in ready state when the Component is rendered or if
+ *				it is not a renderable component (Button, Input ...) when the instanciation process is finished.<br/><br/>
+ *			</li>
+ *		
+ *			<li>
+ *				Change the Component Controller state
+ *				@codestart
+	myComponentController.setState('monkeyState');
+ *				@codeend
+ *			</li>
+ *			
+ *			<li>
+ *				Implement the method which will carry the state
+ *				@codestart
+	'stateMonkeyState': function (go) {
+		if (go) {
+			// Code to fire when the Component 
+			// Controller is entering into MonkeyState
+		} else {
+			// Code to fire when the Component 
+			// Controller is leaving MonkeyState
+		}
+	}
+ *				@codeend
+ *			</li>
+ *		</ol>
+ *		
+ *		By default all Component Controllers own the following state :
+ *		
+ *		<ul>
+ *			<li>loading : a loading state which display a loading animation</li>
+ *			<li>ready : the initial state</li>
+ *			<li>hidden : hide the component controller</li>
+ *		</ul>
+ *	</p>
+ *
+ *	<p>
+ *		<h2>Included framework Components Controllers</h2>
+ *		<ul>
+ *			<li>[mad.controller.component.ButtonController|Button]</li>
+ *			<li>[mad.controller.component.ContainerController|Container]</li>
+ *			<li>[mad.controller.component.GridController|Grid]</li>
+ *			<li>[mad.controller.component.InputController|Input]</li>
+ *			<li>[mad.controller.component.ListController|List]</li>
+ *			<li>[mad.controller.component.PopupController|Popup]</li>
+ *			<li>[mad.controller.component.TabController|Tab]</li>
+ *			<li>[mad.controller.component.TreeController|Tree]</li>
+ *			<li>[mad.controller.component.WorkspaceController|Workspace]</li>
+ *		</ul>
+ *	</p>
+ *	
+ *	<p>
+ *		<h2>Example</h2>
+ *		@demo /js/mad/demo/controller/component.html
+ *	</p>
+ */
+
 steal(
-    MAD_ROOT+'/controller/controller.js',
-    MAD_ROOT+'/helper/controllerHelper.js',
-    MAD_ROOT+'/view/view.js'
-)
-.then( function ($) {
+	MAD_ROOT + '/controller/controller.js',
+	MAD_ROOT + '/helper/controllerHelper.js',
+	MAD_ROOT + '/view/view.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.ComponentController
 	 * @inherits mad.controller.Controller
-	 * @parent index
-	 * 
+	 * @parent mad.controller.component
+	 * @see mad.model.ComponentState
+	 *
 	 * The class Component controller is our representation of controllers which take
 	 * care of UI Components.
 	 * <br/>
 	 * The class Component controller is associated to its own view which takes to
 	 * display data to users.
-	 * 
+	 *
 	 * @constructor
 	 * Creates a new Component Controller
 	 * @param {array} options Optional parameters
@@ -26,18 +157,24 @@ steal(
 	 * the template.
 	 * @return {mad.controller.ComponentController}
 	 */
-	mad.controller.Controller.extend('mad.controller.ComponentController',
-	/** @static */
-	{
+	mad.controller.Controller.extend('mad.controller.ComponentController', /** @static */ {
+
 		'defaults': {
-			'label': 'ComponentController', // Label of the component
-			'icon': null,					// @todo
-			'templateUri': null,			// the template which will used by the view to render the component
-			'templateBased': true,			// based on template, by default true
-			'viewClass': mad.view.View,		// associated view will be an instance of this viewClass
-			'state': 'ready',		// the state to put the component when the rendering is finished
+			'label': 'ComponentController',
+			// Label of the component
+			'icon': null,
+			// @todo
+			'templateUri': null,
+			// the template which will used by the view to render the component
+			'templateBased': true,
+			// based on template, by default true
+			'viewClass': mad.view.View,
+			// associated view will be an instance of this viewClass
+			'state': 'ready',
+			// the state to put the component when the rendering is finished
 			'cssClasses': ['js_component']
 		},
+
 		/**
 		 * The component will listen to the following array of events.
 		 * The class has to implement a function for each event. Prefere 
@@ -47,9 +184,8 @@ steal(
 		 */
 		'listensTo': []
 
-	}
-	/** @prototype */
-	, {
+	}, /** @prototype */ {
+
 		/**
 		 * The component state.
 		 * @type {mad.model.ComponentState}
@@ -94,11 +230,10 @@ steal(
 
 			// If the component is not template based, switch to its default state
 			// after instanciation.
-			if(!this.options.templateBased){
+			if (!this.options.templateBased) {
 				this.setState(this.options.state);
-			}
-			// Pass common Component Controller data to the view
-			else {
+			} else {
+				// Pass common Component Controller data to the view
 				this.setViewData('controller', this);
 				this.setViewData('icon', this.options.icon);
 				this.setViewData('label', this.options.label);
@@ -131,15 +266,15 @@ steal(
 		'goNextState': function (newState) {
 			var previousState = this.state.attr('previous'),
 				debugMsg = this.getId() + ' switching';
-			
+
 			if (previousState) {
 				var previousStateListener = this['state' + $.String.capitalize(previousState)];
 				if (previousStateListener) {
 					previousStateListener.call(this, false);
 				}
-				debugMsg += ' from '+previousState;
+				debugMsg += ' from ' + previousState;
 			}
-			debugMsg += ' to '+newState+' state';
+			debugMsg += ' to ' + newState + ' state';
 			steal.dev.log(debugMsg);
 			var newStateListener = this['state' + $.String.capitalize(newState)];
 			if (newStateListener) {
@@ -183,11 +318,15 @@ steal(
 			return this;
 		},
 		
-		'refresh': function(){
+		/**
+		 * Refresh the view
+		 * @return {void}
+		 */
+		'refresh': function () {
 			this.element.empty();
 			this.render();
 		},
-		
+
 		/**
 		 * Render the component
 		 * @see {mad.view.View}
@@ -204,10 +343,10 @@ steal(
 				display = options.display || true;
 
 			returnValue = this.view.render(options);
-			
+
 			// set the state of the component with the given default state
 			this.setState(this.options.state);
-			
+
 			return returnValue === true ? this : returnValue;
 		},
 

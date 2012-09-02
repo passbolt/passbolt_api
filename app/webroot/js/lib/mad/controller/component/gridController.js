@@ -9,9 +9,9 @@ steal(
 
 	/*
 	 * @class mad.controller.component.GridController
-	 * @inherits {mad.controller.ComponentController}
-	 * @parent index
-	 * @see {mad.view.component.Grid}
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.controller.component
+	 * @see mad.view.component.Grid
 	 * 
 	 * The Grid class Controller is our implementation of the UI component grid.
 	 * 

@@ -6,9 +6,8 @@ steal(
 
 	/*
 	 * @class mad.net.Response
-	 * 
-	 * @inherits {mad.core.Class}
-	 * @parent index
+	 * @inherits mad.core.Class
+	 * @parent mad.net
 	 * 
 	 * Our ajax response model
 	 * 

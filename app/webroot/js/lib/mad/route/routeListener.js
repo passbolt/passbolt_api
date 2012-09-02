@@ -1,25 +1,26 @@
-steal(MAD_ROOT + '/core/singleton.js')
-.then( function ($) {
+/*
+ * @page mad.route Route
+ * @tag mad.route
+ * @parent index
+ * @hide
+ *
+ * Route doc to make
+ * 
+ */
+
+steal(MAD_ROOT + '/core/singleton.js').then(function ($) {
 
 	/*
 	 * @class mad.route.RouteListener
+	 * @inherits mad.core.Singleton
+	 * @parent mad.route
+	 * 
 	 * The route listener will be one of the stone reference of the application.
 	 * It will be the guarantor of the route change
 	 * 
-	 * @parent index
-	 * @inherits mad.core.Singleton
-	 * @constructor
-	 * Creates a new route listener
-	 * @return {mad.route.RouteListener}
 	 */
-	mad.core.Singleton.extend('mad.route.RouteListener',
-
-	/** @static */
-
-	{},
-
-	/** @prototype */
-	{
+	mad.core.Singleton.extend('mad.route.RouteListener', /** @static */ {
+	}, /** @prototype */ {
 		'init': function () {
 			this._super();
 
@@ -43,13 +44,16 @@ steal(MAD_ROOT + '/core/singleton.js')
 				var route = self.getRoute();
 				// if a route has been find, trigger the event on the event bus
 				if (route != null) {
-					if (mad.eventBus) mad.eventBus.trigger(mad.APP_NS_ID + '_route_change', [route]);
+					if (mad.eventBus) {
+						mad.eventBus.trigger(mad.APP_NS_ID + '_route_change', [route]);
+					}
 				}
 			});
 		},
 
 		/**
-		 * Get route
+		 * Get the current route based on the hash
+		 * @return {mad.route.Route}
 		 */
 		'getRoute': function () {
 			var returnValue = null;

@@ -4,14 +4,13 @@ steal(
 .then( function ($) {
 
 	/*
-	 * @class mad.view.View
+	 * @class mad.view.component.Tab
 	 * @inherits jQuery.View
-	 * @see {jQuery.tabs}
-	 * @parent index
+	 * @hide
 	 * 
 	 * @constructor
 	 * 
-	 * @return {mad.view.View}
+	 * @return {mad.view.component.Tab}
 	 */
 	mad.view.View.extend('mad.view.component.Tab',
 	/** @static */
