@@ -13,7 +13,7 @@ App::uses('Resource', 'Model');
 
 class CategoryResource extends AppModel {
 
-	public var $useTable = "categories_resources";
+	public $useTable = "categories_resources";
 
 	public $belongsTo = array(
 		'Category', 'Resource'

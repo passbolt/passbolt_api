@@ -11,10 +11,10 @@
 class MailerComponent extends Component {
 
 	// email object
-	public var $email;
+	public $email;
 
 	// controller shortcut
-	public var $Controller;
+	public $Controller;
 
 /**
  * Initialize
