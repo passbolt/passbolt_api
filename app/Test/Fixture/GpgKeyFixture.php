@@ -1,12 +1,22 @@
 <?php
+/**
+ * GpgKey Fixture
+ *
+ * @copyright   Copyright 2012, Passbolt.com
+ * @license     http://www.passbolt.com/license
+ * @package     app.Test.Fixture.GpgKeyFixture
+ * @since       version 2.12.9
+ */
 class GpgKeyFixture extends CakeTestFixture {
-  public $useDbConfig = 'test';
-  public $import = 'GpgKey';
+
+	public $useDbConfig = 'test';
+
+	public $import = 'GpgKey';
 
 	public function init() {
-  	$this->records = array(
+		$this->records = array(
 			array(
-				'id' => '0208f3a4-cccc-0000-a0c5-080027796c4c', 
+				'id' => '0208f3a4-cccc-0000-a0c5-080027796c4c',
 				'user_id' => 'bbd56042-cccc-11e1-a0c5-080027796c4a',
 				'key_id' => 'E513B181',
 				'bits' => '2048',

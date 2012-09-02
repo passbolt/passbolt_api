@@ -15,7 +15,7 @@ class MyFormHelper extends FormHelper {
  * @return string input
  * @access public
  */
-	function input($fieldName, $options = array()) {
+	public function input($fieldName, $options = array()) {
 		if (isset($options['class']) && !empty($options['class']) && strstr($options['class'],'required')) {
 			$options['label'] .= $this->required();
 		}
@@ -23,14 +23,15 @@ class MyFormHelper extends FormHelper {
 			$options['after'] = $this->hint($options['hint']);
 			unset($options['hint']);
 		}
-		return parent::input($fieldName, $options)."\n";
+		return parent::input($fieldName, $options) . "\n";
 	}
 
-	function submit($label,$options=array()) {
-		return parent::submit($label, $options)."\n";
+	public function submit($label,$options=array()) {
+		return parent::submit($label, $options) . "\n";
 	}
-	function end() {
-		return parent::end()."\n";
+
+	public function end() {
+		return parent::end() . "\n";
 	}
 
 /**
@@ -38,11 +39,11 @@ class MyFormHelper extends FormHelper {
  * @return string
  * @access public
  */
-	function required(){
+	public function required() {
 		return ' <span class="required">*</span>';
 	}
 
-	function hint($message) {
+	public function hint($message) {
 		return '<p class=\'info\'><span>' . $message . '</span></p>';
 	}
 }

@@ -10,8 +10,10 @@
 App::uses('Role', 'Model');
 
 class RoleTest extends CakeTestCase {
-  public $fixtures = array('app.role'); 
-  public $autoFixtures = true;
+
+	public $fixtures = array('app.role');
+
+	public $autoFixtures = true;
 
 /**
  * Setup

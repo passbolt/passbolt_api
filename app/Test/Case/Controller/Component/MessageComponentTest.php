@@ -84,7 +84,7 @@ class MessageComponentTest extends CakeTestCase {
 		$this->assertEqual(count($this->MessageComponent->messages), 2, 'there should be two messages present');
 		$this->MessageComponent->error('error test3',array('body' => 'body test'));
 		$this->assertEqual($this->MessageComponent->messages[2]['body'], 'body test', 'body should be allowed to set using __add() $options parameter');
-		
+
 		//$this->MessageComponent->Controller->redirect('http://cakephp.org', 301, false);
 		$this->MessageComponent->error('error test4',array('redirect' => true));
 		$this->MessageComponent->Controller->response = $this->getMock('CakeResponse', array('header', 'statusCode'));
@@ -93,9 +93,8 @@ class MessageComponentTest extends CakeTestCase {
 		//	->method('header')
 		//	->with('Location', 'http://cakephp.org');
 		//$this->MessageComponent->error('error test4',array('redirect' => 'http://cakephp.org'));
-		//$this->assertEqual($this->MessageComponent->messages[1]['body'], 'body test', 'body should be allowed to set usi  		
+		//$this->assertEqual($this->MessageComponent->messages[1]['body'], 'body test', 'body should be allowed to set usi
 		//$this->MessageComponent->error('error test4',array('redirect' => '/ss'));
-		
 	}
 
 	public function testWarning() {

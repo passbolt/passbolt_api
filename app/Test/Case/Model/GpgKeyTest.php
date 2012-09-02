@@ -10,8 +10,11 @@
 App::uses('User', 'Model');
 
 class GpgKeyTest extends CakeTestCase {
-  public $fixtures = array('app.gpgKey'); 
-  public $autoFixtures = true;
+
+	public $fixtures = array('app.gpgKey');
+
+	public $autoFixtures = true;
+
 	public $lisa;
 
 /**
@@ -52,7 +55,7 @@ class GpgKeyTest extends CakeTestCase {
 		$this->assertEqual($f['type'], $k['type'], 'Key type should be the same');
 		$this->assertEqual($f['key_id'], $k['key_id'], 'Key UID should be the same');
 		//$this->assertEqual($f['modified'], $k['modified'], 'Key modified dates should be the same');
-}
+	}
 
 /**
  * Test if removing the key from keyring works
