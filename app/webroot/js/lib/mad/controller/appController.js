@@ -5,8 +5,8 @@ steal(
 
 	/*
 	 * @class mad.controller.AppController
-	 * @inherits [mad.controller.Controller,mad.core.Singleton]
-	 * @parent index
+	 * @inherits mad.controller.ComponentController
+	 * @parent mad.core
 	 * 
 	 * The main application controller.
 	 * This class is by definition a singleton.

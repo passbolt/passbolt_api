@@ -1,19 +1,14 @@
-steal( 
-	'jquery/class'
-)
-.then( function ($) {
+steal('jquery/class').then(function ($) {
 
 	/*
 	 * @class mad.error.ErrorHandler
-	 * 
-	 * @inherits {mad.core.Class}
-	 * @parent index
+	 * @inherits jQuery.Class
+	 * @parent mad.core
 	 * 
 	 * Common error handler. Use the console as output
 	 */
-	$.Class('mad.error.ErrorHandler',
-	/** @static */
-	{
+	$.Class('mad.error.ErrorHandler', /** @static */ {
+
 		/**
 		 * Handle Exception
 		 * @param {Exception} ex
@@ -43,6 +38,6 @@ steal(
 		}
 	},
 
-	/** @prototype */
-	{});
+	/** @prototype */ {});
+
 });
