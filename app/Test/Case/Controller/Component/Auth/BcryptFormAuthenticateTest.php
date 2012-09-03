@@ -2,10 +2,10 @@
 /**
  * BcrypFormAuthenticateTest file
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      Cake.Test.Case.Controller.Component.Auth
- * @since        version 2.12.9
+ * @copyright   Copyright 2012, Passbolt.com
+ * @license     http://www.passbolt.com/license
+ * @package     Cake.Test.Case.Controller.Component.Auth
+ * @since       version 2.12.9
  */
 
 App::uses('AuthComponent', 'Controller/Component');
@@ -20,7 +20,7 @@ require_once CAKE . 'Test' . DS . 'Case' . DS . 'Model' . DS . 'models.php';
 /**
  * Test case for FormAuthentication
  *
- * @package       Cake.Test.Case.Controller.Component.Auth
+ * @package			 Cake.Test.Case.Controller.Component.Auth
  */
 class BcryptFormAuthenticateTest extends CakeTestCase {
 
@@ -50,7 +50,7 @@ class BcryptFormAuthenticateTest extends CakeTestCase {
  *
  * @return void
  */
-  public function testConfig() {
+	public function testConfig() {
 		// Test cost
 		$this->assertEqual((Configure::read('Auth.bcrypt.cost') > 3), true, 'Bcrypt cost should be min 4');
 		$this->assertEqual((Configure::read('Auth.bcrypt.cost') < 32), true, 'Bcrypt cost should be max 31');
@@ -61,12 +61,12 @@ class BcryptFormAuthenticateTest extends CakeTestCase {
  *
  * @return void
  */
-  public function testHash() {
+	public function testHash() {
 		$password = BcryptFormAuthenticate::hash('password');
 		$this->assertEqual(strlen($password), 60, 'password format should be 61 in length');
 
 		$password2 = $this->auth->_password('password');
-	
+
 		$this->assertEqual($password, $password2, 'passwords should match');
 		//$password = BcryptFormAuthenticate::hash('password', null);
 		//
@@ -134,11 +134,7 @@ class BcryptFormAuthenticateTest extends CakeTestCase {
 		$this->assertFalse($this->auth->authenticate($request, $this->response));
 	}
 
-/**
- * test guest authenticate fail
- *
- * @return void
-
+	/*
 	public function testGuestAuthenticationFail() {
 		$request = new CakeRequest('users/index', false);
 		$request->data = array('User' => array(
@@ -148,7 +144,8 @@ class BcryptFormAuthenticateTest extends CakeTestCase {
 		$result = $this->auth->authenticate($request, $this->response);
 		$this->assertFalse($this->auth->authenticate($request, $this->response));
 	}
- */
+	*/
+
 /**
  * test authenticate success
  *
@@ -165,14 +162,14 @@ class BcryptFormAuthenticateTest extends CakeTestCase {
 		$this->User = ClassRegistry::init('User');
 		//pr($this->User->find('all'));// die;
 		$expected = array( 'User' => array(
-    	'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4a',
-    	'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-    	'username' => 'remy@passbolt.com',
-    	'active' => '1',
-    	'created' => '2012-07-04 13:45:11',
-    	'modified' => '2012-07-04 13:45:14',
-    	'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
-    	'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4a',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'username' => 'remy@passbolt.com',
+			'active' => '1',
+			'created' => '2012-07-04 13:45:11',
+			'modified' => '2012-07-04 13:45:14',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		));
 		$this->assertEquals($expected, $result);
 	}

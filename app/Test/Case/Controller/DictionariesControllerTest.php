@@ -15,8 +15,11 @@ App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
 
 class DictionariesControllerTest extends ControllerTestCase {
+
 	public $fixtures = array('app.user', 'app.role');
+
 	public $user;
+
 	public $session;
 
 	public function setUp() {
@@ -31,7 +34,7 @@ class DictionariesControllerTest extends ControllerTestCase {
 	public function testView() {
 		// make sure there is no active session
 		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-		
+
 		// test with anonymous user
 		$result = json_decode($this->testAction('/dictionaries/en-EN.json',array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::ERROR, '/dictionaries should not be accessible without being logged in');
@@ -43,7 +46,7 @@ class DictionariesControllerTest extends ControllerTestCase {
 		// test bogus dictionary
 		$result = json_decode($this->testAction('/dictionaries/00-00.json',array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::ERROR, '/dictionaries/00-00.json should return an error');
-		
+
 		// test english dictionary
 		$result = json_decode($this->testAction('/dictionaries/en-EN.json',array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS, '/dictionaries/en-EN.json should return something');
@@ -53,9 +56,9 @@ class DictionariesControllerTest extends ControllerTestCase {
 		$this->assertEqual($result->header->status, Message::SUCCESS, '/dictionaries/fr-FR.json should return something');
 
 		// clear cache and test if cache writting works
-		Cache::clear();		
+		Cache::clear();
 		$result = json_decode($this->testAction('/dictionaries/fr-FR.json',array('return' => 'contents', 'method' => 'GET'), true));
-		$c = Cache::read('dictionary_fr-FR','_cake_model_');	
+		$c = Cache::read('dictionary_fr-FR','_cake_model_');
 		$this->assertEqual(!empty($c), true, 'Cache should return something');
 	}
 }
