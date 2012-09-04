@@ -1,5 +1,5 @@
 steal(
-    'jquery/class'
+	'jquery/class'
 ).then(function ($) {
 
 	/*
@@ -46,7 +46,7 @@ steal(
 		'singleton': function () {
 			var returnValue = null;
 
-			if (this.instance != null) {
+			if (this.singletonInstance != null) {
 				returnValue = this.singletonInstance;
 			} else {
 				this.singletonInstance = 'CALL_FROM_SINGLETON';
@@ -55,18 +55,11 @@ steal(
 
 			return returnValue;
 		}
-	},
-
-	/** 
-	 * @hide
-	 * @prototype 
-	 */
-	{
+	}, /** @hide @prototype */ {
 
 		/**
 		 * Class Constructor
 		 * @private
-		 * @hide
 		 */
 		'init': function () {
 			if (this.Class.fullName == 'mad.core.Singleton') {
