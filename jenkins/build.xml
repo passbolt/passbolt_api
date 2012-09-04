@@ -11,6 +11,8 @@
 	<target name="clean" description="Cleanup build artifacts">
 		<delete dir="${build}" failonerror="false"/>
 		<delete dir="${src}/generatedJUnitFiles" failonerror="false"/>
+		<symlink link="${src}/app/webroot/js" action="delete"/>
+		<delete dir="${src}/app/webroot/js/lib/mad" failonerror="false"/>
 
 		<mkdir dir="${build}"/>
 		<symlink link="${src}/app/webroot/js" resource="${src}/app/webroot/js/lib/mad" failonerror="false" overwrite="true"/>
