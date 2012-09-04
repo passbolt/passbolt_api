@@ -11,11 +11,11 @@
 	<target name="clean" description="Cleanup build artifacts">
 		<delete dir="${build}" failonerror="false"/>
 		<delete dir="${src}/generatedJUnitFiles" failonerror="false"/>
-		<symlink link="${src}/app/webroot/js" action="delete"/>
+		<symlink link="${src}/app/webroot/js/mad" action="delete"/>
 		<delete dir="${src}/app/webroot/js/lib/mad" failonerror="false"/>
 
 		<mkdir dir="${build}"/>
-		<symlink link="${src}/app/webroot/js" resource="${src}/app/webroot/js/lib/mad" failonerror="false" overwrite="true"/>
+		<symlink link="${src}/app/webroot/js/mad" resource="${src}/app/webroot/js/lib/mad/" failonerror="false" overwrite="true"/>
 	</target>
 
 	<target name="install" description="Passbolt installer : copy config files, deploy db">
