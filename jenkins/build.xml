@@ -19,10 +19,12 @@
 	</target>
 
 	<target name="install" description="Passbolt installer : copy config files, deploy db">
-		<untar src="${config}/app_Config.tgz" compression="gzip" dest="${src}" />
+		<copy todir="${www}" overwrite="true">
+			<fileset dir="${config}/files/Passbolt"/>
+		</copy>
 		<exec dir="${src}" executable="bash">
 			<arg value="-c"/>
-			<arg value='printf "y\ny\n" | app/Console/cake schema create'/>
+			<arg value='printf "y\ny\n" | php app/Console/cake.php schema create'/>
 		</exec>
 	</target>
 

@@ -7,7 +7,7 @@
  * 
  */
 
-APP_URL = 'http://' + document.location.hostname;
+APP_URL = document.location.origin + document.location.pathname;
 MAD_ROOT = 'lib/mad';
 
 steal(
