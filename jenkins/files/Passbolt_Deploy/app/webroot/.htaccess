@@ -1,8 +1,3 @@
-AuthUserFile /var/lib/jenkins/jobs/Passbolt_Deploy/workspace/deploy/app/webroot/.htpasswd
-AuthType Basic
-AuthName "Authentic black bro"
-Require valid-user
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
 		RewriteBase /deploy
