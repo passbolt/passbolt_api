@@ -15,8 +15,8 @@ steal(
 ).then(
 	'jquery/plugin/jquery-ui-1.8.20.custom.min.js', // load jquery ui lib    
 	'app/bootstrap/appBootstrap.js', // passbolt application bootstrap
-	'app/controller/appController.js', // passbolt main application contr	oller
-	'app/plugin/sample/controller/appController.js' // passbolt sample application controller
+	'app/controller/appController.js' // passbolt main application contr	oller
+
 ).then(function () {
 
 	steal.options.logLevel = 0;
