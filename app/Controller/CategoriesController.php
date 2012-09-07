@@ -71,7 +71,7 @@ class CategoriesController extends AppController {
  * @param  bool $children whether or not we want the children returned
  * @return void
  */
-	public function getroots($children=false) {
+	public function viewRoots($children=false) {
 		$data = array();
 
 		$o = $this->Category->getFindOptions('getRoots');

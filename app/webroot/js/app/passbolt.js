@@ -7,7 +7,7 @@
  * 
  */
 
-APP_URL = 'http://passbolt.local';
+APP_URL = 'http://' + document.location.hostname;
 MAD_ROOT = 'lib/mad';
 
 steal(
@@ -15,8 +15,8 @@ steal(
 ).then(
 	'jquery/plugin/jquery-ui-1.8.20.custom.min.js', // load jquery ui lib    
 	'app/bootstrap/appBootstrap.js', // passbolt application bootstrap
-	'app/controller/appController.js' // passbolt main application contr	oller
-
+	'app/controller/appController.js', // passbolt main application controller
+	'app/test/data/resources.js' // resources data test
 ).then(function () {
 
 	steal.options.logLevel = 0;

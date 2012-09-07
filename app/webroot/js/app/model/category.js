@@ -1,7 +1,4 @@
-steal( 
-    'jquery/model'
-    )
-.then( function () {
+steal('jquery/model').then(function () {
 
 	/*
 	 * @class passbolt.model.Category
@@ -15,9 +12,8 @@ steal(
 	 * @param {array} options
 	 * @return {passbolt.model.Category}
 	 */
-	$.Model('passbolt.model.Category',
-	/** @static */
-	{
+	$.Model('passbolt.model.Category', /** @static */	{
+
 		attributes: {
 			'id': 'string',
 			'parent_id': 'string',
@@ -51,7 +47,7 @@ steal(
 		 */
 		'getRoots': function (params, success, error) {
 			params['children'] = false;
-			var url = APP_URL + '/categories/getRoots/{children}.json';
+			var url = APP_URL + '/categories.json';
 			url = $.String.sub(url, params, true);
 
 			return mad.net.Ajax.singleton().request({
@@ -64,7 +60,7 @@ steal(
 			});
 		}
 
-	},
-	/** @prototype */
-	{});
-})
+	}, /** @prototype */ {
+
+	});
+});
