@@ -1,7 +1,6 @@
 steal(
-    MAD_ROOT+'/controller/componentController.js'
-)
-.then( function ($) {
+	MAD_ROOT + '/controller/componentController.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.component.ContainerController
@@ -12,17 +11,20 @@ steal(
 	 * 
 	 * @constructor
 	 * Create a container controller
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {mad.controller.component.ContainerController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.ContainerController',
-	/** @static */
-	{
+	mad.controller.ComponentController.extend('mad.controller.component.ContainerController', /** @static */ {
+
 		'defaults': {
 			'label': 'Container Component Controller'
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
+
 		/**
 		 * Container's components
 		 * @type {Array}
@@ -51,7 +53,7 @@ steal(
 			var $component = $('<div id="' + componentOptions.id + '"/>').appendTo($area);
 			// if the component is a singleton
 			// @todo do not forget to check about the instanceof
-			if (typeof componentClass.singleton != 'undefined') {
+			if(typeof componentClass.singleton != 'undefined') {
 				returnValue = componentClass.singleton($component, componentOptions);
 			} else {
 				returnValue = new componentClass($component, componentOptions);

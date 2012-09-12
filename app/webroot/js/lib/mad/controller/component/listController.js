@@ -1,7 +1,7 @@
-steal(MAD_ROOT + '/controller/componentController.js', 
-	MAD_ROOT + '/view/template/component/list.ejs')
-	
-.then( function ($) {
+steal(
+	MAD_ROOT + '/controller/componentController.js',
+	MAD_ROOT + '/view/template/component/list.ejs'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.component.ListController
@@ -15,9 +15,8 @@ steal(MAD_ROOT + '/controller/componentController.js',
 	 * @param {array} options Optional parameters
 	 * @return {mad.controller.component.ListController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.ListController',
-	/** @static */
-	{
+	mad.controller.ComponentController.extend('mad.controller.component.ListController', /** @static */ {
+
 		'defaults': {
 			'label': 'Button Component',
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/button.ejs',
@@ -27,9 +26,8 @@ steal(MAD_ROOT + '/controller/componentController.js',
 				'click': null
 			}
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
 
 		/**
 		 * Value of the button. This value will be released when events occured

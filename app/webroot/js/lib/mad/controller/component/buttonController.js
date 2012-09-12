@@ -16,7 +16,9 @@ steal(
 	 * 
 	 * @constructor
 	 * Creates a new Button Controller Component
-	 * @param {array} options Optional parameters
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable
 	 * @return {mad.controller.component.ButtonController}
 	 */
 	mad.controller.ComponentController.extend('mad.controller.component.ButtonController', /** @static */ {

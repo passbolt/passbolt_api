@@ -1,7 +1,6 @@
-steal( 
-    MAD_ROOT+'/view/component/tree.js'
-)
-.then( function ($) {
+steal(
+	MAD_ROOT + '/view/component/tree.js'
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.CategoryChooserController
@@ -9,21 +8,21 @@ steal(
 	 * @parent index 
 	 * 
 	 * @constructor
-	 * Creates a new CategoryChooserController.
+	 * Creates a new Category Chooser Controller.
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.CategoryChooserController}
 	 */
-	mad.controller.component.TreeController.extend('passbolt.controller.component.CategoryChooserController',
+	mad.controller.component.TreeController.extend('passbolt.controller.component.CategoryChooserController', /** @static */ {
 
-	/** @static */
-	{
 		'defaults': {
 			'label': 'Category Chooser'
 		},
 		'listensTo': ['item_selected']
-	},
 
-	/** @prototype */
-	{
+	}, /** @prototype */ {
 
 		'init': function (el, options) {
 			// The map to use to make jstree working with our category model

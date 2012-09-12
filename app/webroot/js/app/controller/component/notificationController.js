@@ -11,11 +11,17 @@ steal(
 	 * @see {mad.view.View}
 	 * @see {mad.core.Singleton}
 	 * 
+	 * @constructor
 	 * The Notification class Controller will be used to display to users message
 	 * from the application.
 	 * </br>
 	 * The notification class Controller is a singleton, use the function .singleton()
 	 * to instanciate or get it.
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
+	 * @return {passbolt.controller.component.NotificationController}
 	 */
 	mad.controller.ComponentController.extend('passbolt.controller.component.NotificationController',
 	/** @static */

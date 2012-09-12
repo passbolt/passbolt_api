@@ -210,7 +210,7 @@ steal(
 		 * @hide */
 		'viewClass': null,
 
-		// Class Constructor
+		// Constructor like
 		'init': function (el, options) {
 			var self = this;
 			this._super(el, options);
@@ -268,14 +268,23 @@ steal(
 				debugMsg = this.getId() + ' switching';
 
 			if (previousState) {
+				// remove the previous state class
+				this.element.removeClass('js_state_' + previousState);
+				// leave the previous state
 				var previousStateListener = this['state' + $.String.capitalize(previousState)];
 				if (previousStateListener) {
 					previousStateListener.call(this, false);
 				}
 				debugMsg += ' from ' + previousState;
 			}
+
+			// debug message
 			debugMsg += ' to ' + newState + ' state';
 			steal.dev.log(debugMsg);
+
+			// add the new state class
+			this.element.addClass('js_state_' + newState);
+			// enter in the new state
 			var newStateListener = this['state' + $.String.capitalize(newState)];
 			if (newStateListener) {
 				newStateListener.call(this, true);

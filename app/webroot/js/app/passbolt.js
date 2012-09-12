@@ -7,7 +7,9 @@
  * 
  */
 
-APP_URL = document.location.origin + document.location.pathname;
+// The application url
+APP_URL = document.location.protocol + '//' + document.location.hostname + document.location.pathname;
+// The mad librarie path with the JMVC directory as root directory
 MAD_ROOT = 'lib/mad';
 
 steal(
@@ -20,6 +22,7 @@ steal(
 ).then(function () {
 
 	steal.options.logLevel = 0;
+
 	$(document).ready(function () {
 
 		//load the bootstrap of the application

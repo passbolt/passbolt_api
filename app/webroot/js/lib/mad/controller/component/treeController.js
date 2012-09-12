@@ -1,10 +1,9 @@
-steal( 
+steal(
 	'jquery/controller',
-	 MAD_ROOT+'/controller/componentController.js',
-	 MAD_ROOT+'/view/component/tree.js',
-	 MAD_ROOT+'/object/map.js'
-)
-.then( function ($) {
+	MAD_ROOT + '/controller/componentController.js',
+	MAD_ROOT + '/view/component/tree.js',
+	MAD_ROOT + '/object/map.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.component.TreeController
@@ -17,22 +16,23 @@ steal(
 	 * 
 	 * @constructor
 	 * Creates a new Tree Controller Component
-	 * @param {array} options Optional parameters
-	 * @param {mad.object.Map} map The mapping object used to map data from the JMVC
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
+	 * @param {mad.object.Map} options.map The mapping object used to map data from the JMVC
 	 * model to the understood format.
 	 * @return {mad.controller.component.TreeController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.TreeController',
-	/** @static */
-	{
+	mad.controller.ComponentController.extend('mad.controller.component.TreeController', /** @static */	{
+
 		'defaults': {
 			'label': 'Tree Component',
 			'viewClass': mad.view.component.Tree,
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs'
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
 
 		/**
 		 * The map to transform JMVC model object into jstree node
@@ -70,7 +70,7 @@ steal(
 				returnValue = [];
 				// map the jmvc model objects into the desired format
 				var mappedData = this.map.mapObjects(data);
-				for (var i in mappedData) {
+				for(var i in mappedData) {
 					returnValue.push(this.insertNode(mappedData[i], position, ref));
 				}
 			} else {

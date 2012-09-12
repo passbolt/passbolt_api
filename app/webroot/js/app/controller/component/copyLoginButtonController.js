@@ -1,27 +1,33 @@
-steal( 
-    MAD_ROOT+'/controller/component/buttonController.js'
-)
-.then( function ($) {
+steal(
+    MAD_ROOT + '/controller/component/buttonController.js'
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.component.CopyLoginButtonController
 	 * @inherits {mad.controller.component.ButtonController}
 	 * @parent index
+	 * 
+	 * 
+	 * @constructor
+	 * Instanciate a copy login button controller
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
+	 * @return {passbolt.controller.component.CopyLoginButtonController}
 	 */
-	mad.controller.component.ButtonController.extend('passbolt.controller.component.CopyLoginButtonController',
-	/** @static */
-	{
+	mad.controller.component.ButtonController.extend('passbolt.controller.component.CopyLoginButtonController', /** @static */ {
+
 		'defaults': {
 			'label': 'Copy Login To Clipboard'
 		}
-	}
-	/** @prototype */
-	, {
+
+	}, /** @prototype */ {
 
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
-		
+
 		/**
 		 * Observe when the mouse leave the component
 		 * @param {jQuery} element The source element

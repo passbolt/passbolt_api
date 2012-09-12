@@ -1,11 +1,9 @@
-steal( 
+steal(
 	'jquery/controller',
-	 MAD_ROOT+'/controller/componentController.js',
-	 MAD_ROOT+'/view/component/grid.js',
-	 MAD_ROOT+'/object/map.js'
-)
-
-.then(function ($) {
+	MAD_ROOT + '/controller/componentController.js',
+	MAD_ROOT + '/view/component/grid.js',
+	MAD_ROOT + '/object/map.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.component.GridController
@@ -17,24 +15,27 @@ steal(
 	 * 
 	 * @constructor
 	 * Creates a new Grid Controller Component
-	 * @param {array} options Optional parameters
-	 * @todo document the parameters for now see {passbolt.controller.component.PasswordBrowserController}
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {mad.controller.component.GridController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.GridController',
-	/** @static */
-	{
+	mad.controller.ComponentController.extend('mad.controller.component.GridController', /** @static */	{
+
 		'defaults': {
 			'label': 'Grid Component',
 			'viewClass': mad.view.component.Grid,
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/grid.ejs',
-			'columnNames': [], // the grid column names
-			'columnModel': [], // the grid column model
-			'map':null // the map to use to map JMVC model to the grid data model
+			'columnNames': [],
+			// the grid column names
+			'columnModel': [],
+			// the grid column model
+			'map': null // the map to use to map JMVC model to the grid data model
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
+
 		/**
 		 * The map to transform JMVC model object into jqgrid understable format
 		 * @type {mad.object.Map}
@@ -96,11 +97,11 @@ steal(
 			this.view.insertItems(mappedData);
 
 			// apply a widget to cells following the columns model
-			for (var j in this.options.columnModel) {
+			for(var j in this.options.columnModel) {
 				var columnModel = this.options.columnModel[j];
 
-				if (columnModel.cellAdapter) {
-					for (var i in mappedData) {
+				if(columnModel.cellAdapter) {
+					for(var i in mappedData) {
 						var itemId = mappedData[i].id;
 						var $cell = $('#' + itemId + ' .' + columnModel.name + ' span');
 						var cellValue = mappedData[i][columnModel.name];
@@ -108,14 +109,14 @@ steal(
 					}
 				}
 				// @todo Cell adapter replace widget, remove this part if not usefull
-				if (columnModel.widget) {
+				if(columnModel.widget) {
 					var widgetClass = columnModel.widget.clazz,
 						widgetJQueryPlugin = widgetClass._fullName,
 						widgetOptions = columnModel.widget.options;
 
 					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
 					// part to insert the items and render widget if there is
-					for (var i in mappedData) {
+					for(var i in mappedData) {
 						var itemId = mappedData[i].id;
 						var $cell = $('#' + itemId + ' .' + columnModel.name + ' span');
 						widgetOptions.value = mappedData[i][columnModel.name];

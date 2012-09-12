@@ -22,7 +22,7 @@ steal(
 	 * 
 	 * @constructor
 	 * Creates a new controller
-	 * <br/>
+	 * <br/> 
 	 * References it to the application controller.
 	 * @return {mad.controller.Controller}
 	 */

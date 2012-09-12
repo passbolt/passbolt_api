@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Controller Example</title>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<style type='text/css'>
+			input.js_state_error { border:1px solid red; }
+			span.js_state_error { color:red; }
+		</style>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<form id="js_demo_form_controller" method="post" action="#">
+		<fieldset>
+			<div>
+				<input type="text" name="demo.model.Fake.label" id="js_fake_label_field" />
+				<span id="js_fake_label_field_feedback" />
+			</div>
+			<input type="submit" value="submit" />
+		</fieldset>
+	</form>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+<script type='text/javascript'>
+steal('mad/demo/init.js').then(function() {
+	
+	// Create a fake model
+	mad.model.Model.extend('demo.model.Fake', {
+		'testFunc' : function(){}
+	});
+	
+	var form = new mad.form.FormController($('#js_demo_form_controller'), {});
+	
+	// Add a label field element to the form
+	form.addElement(
+		new mad.form.element.InputController($('#js_fake_label_field'), {}),
+		new mad.form.element.FeedbackController($('#js_fake_label_field_feedback'), {})
+	);
+	
+	
+});
+</script>
+
+	</body>
+</html>

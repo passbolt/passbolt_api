@@ -12,7 +12,11 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 	 * Our password grid controller
 	 * 
 	 * @constructor
-	 * Creates a new PasswordBrowserController.
+	 * Creates a new Password Browser Controller
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.component.PasswordBrowserController}
 	 */
 	mad.controller.component.GridController.extend('passbolt.controller.component.PasswordBrowserController',

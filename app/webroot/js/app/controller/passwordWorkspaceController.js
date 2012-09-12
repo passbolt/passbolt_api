@@ -1,9 +1,9 @@
-steal(MAD_ROOT + '/controller/component/workspaceController.js', 
-	'app/controller/component/passwordBrowserController.js', 
-	'app/controller/component/categoryChooserController.js', 
-	'app/controller/component/resourceDetailsController.js')
-
-.then(function ($) {
+steal(
+	MAD_ROOT + '/controller/component/workspaceController.js',
+	'app/controller/component/passwordBrowserController.js',
+	'app/controller/component/categoryChooserController.js',
+	'app/controller/component/resourceDetailsController.js'
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.PasswordWorkspaceController
@@ -11,19 +11,22 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 	 * @parent index 
 	 * 
 	 * @constructor
-	 * Creates a new PasswordWorkspaceController
+	 * Creates a new Password Workspace Controller
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.PasswordWorkspaceController}
 	 */
-	mad.controller.component.WorkspaceController.extend('passbolt.controller.PasswordWorkspaceController',
-	/** @static */
-	{
+	mad.controller.component.WorkspaceController.extend('passbolt.controller.PasswordWorkspaceController', /** @static */ {
+
 		'defaults': {
 			'label': 'Password',
 			'templateUri': '//app/view/template/passwordWorkspace.ejs'
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
+
 		// constructor like
 		'init': function (el, options) {
 			this._super();
@@ -33,15 +36,15 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 			// Header menu area
 			// *************************************************************
 			var newButton = new mad.controller.component.ButtonController($('#js_new_resource_button', this.element));
-			
+
 			var editButton = new mad.controller.component.ButtonController($('#js_edit_resource_button', this.element), {
 				'state': 'disabled'
 			});
-			
+
 			var shareButton = new mad.controller.component.ButtonController($('#js_share_resource_button', this.element), {
 				'state': 'disabled'
 			});
-			
+
 			var moreButton = new mad.controller.component.ButtonController($('#js_more_resource_button', this.element), {
 				'state': 'disabled'
 			});
@@ -77,12 +80,12 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 				'readyState': 'hidden'
 			});
 			resourceDetails.render();
-//			var secondSideContainer = new mad.controller.component.ContainerController($('.js_workspace_sidebar_second', this.element), {
-//				'id': 'js_passbolt_password_sidebar_second',
-//				'templateUri': '//' + MAD_ROOT + '/view/template/component/container/vertical.ejs',
-//				'readyState': 'hidden'
-//			});
-//			secondSideContainer.render();
+			//			var secondSideContainer = new mad.controller.component.ContainerController($('.js_workspace_sidebar_second', this.element), {
+			//				'id': 'js_passbolt_password_sidebar_second',
+			//				'templateUri': '//' + MAD_ROOT + '/view/template/component/container/vertical.ejs',
+			//				'readyState': 'hidden'
+			//			});
+			//			secondSideContainer.render();
 		},
 
 		/**
@@ -105,7 +108,7 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 		 * @return {void}
 		 */
 		'#js_new_resource_button click': function (element, event) {
-			
+
 		},
 
 		/**
@@ -149,7 +152,7 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 			// The resource is no more selected, reinit the password workspace
 			// component to its intitial state (ready)
 			this.setState('ready');
-			
+
 			this.getComponent('js_edit_resource_button').setValue(resourceId).setState('disabled');
 			this.getComponent('js_share_resource_button').setValue(resourceId).setState('disabled');
 			this.getComponent('js_more_resource_button').setValue(resourceId).setState('disabled');
@@ -166,17 +169,17 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 			// A resource has been selected, change the state of the password Workspace
 			// controller
 			this.setState('resourceSelected');
-			
+
 			this.getComponent('js_edit_resource_button').setState('ready');
 			this.getComponent('js_share_resource_button').setState('ready');
 			this.getComponent('js_more_resource_button').setState('ready');
-			
+
 			// Another way is to drive the state of all the component from here. I choose
 			// for a first hit to lets the component manage their own states changement
 			//				var secondSideBar = this.getApp().getComponent('js_passbolt_password_sidebar_second');
 			//				secondSideBar.changeStatus('show');
 		},
-		
+
 		/**
 		 * Observe when the user want to copy the login to the clipboard
 		 * @param {jQuery} element The source element
@@ -188,7 +191,7 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_login_clipboard');
 		},
-		
+
 		/**
 		 * Observe when the user want to copy the secret to the clipboard
 		 * @param {jQuery} element The source element
@@ -228,7 +231,7 @@ steal(MAD_ROOT + '/controller/component/workspaceController.js',
 		'stateResourceSelected': function (go) {
 			if (go) {
 				$('.js_workspace_main', this.element).removeClass('grid_13 omega').addClass('grid_7');
-				$('.js_workspace_sidebar_second', this.element).show();				
+				$('.js_workspace_sidebar_second', this.element).show();
 			} else {
 				//
 			}

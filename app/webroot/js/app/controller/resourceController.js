@@ -9,10 +9,14 @@ steal(
 	 * @parent index
 	 * 
 	 * @constructor
+	 * Instanciate a Resource Controller
 	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.ResourceController}
 	 */
-	mad.controller.Controller.extend('passbolt.controller.ResourceController', /** @static */{
+	mad.controller.Controller.extend('passbolt.controller.ResourceController', /** @static */ {
 
 		'create': function () {
 			steal.dev.log('add new resource');
@@ -33,12 +37,6 @@ steal(
 		'delete': function () {
 			steal.dev.log('delete password');
 		}
-		
-	}, /** @prototype */ {
 
-		'defaults': {
-			
-		}
-
-	});
+	}, /** @prototype */ { });
 });

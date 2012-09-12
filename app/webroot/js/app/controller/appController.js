@@ -1,18 +1,16 @@
-steal( 
-    MAD_ROOT+'/controller/appController.js',
-    'app/controller/categoryController.js',
-    'app/controller/resourceController.js',
-    'app/controller/passwordWorkspaceController.js',
-    'app/controller/component/menuController.js',
-    'app/controller/component/notificationController.js',
-	
-    'app/model/category.js',
-    'app/model/resource.js',
-	
+steal(
+	MAD_ROOT + '/controller/appController.js',
+	'app/controller/categoryController.js',
+	'app/controller/resourceController.js',
+	'app/controller/passwordWorkspaceController.js',
+	'app/controller/component/menuController.js',
+	'app/controller/component/notificationController.js',
+
+	'app/model/category.js',
+	'app/model/resource.js',
+
 	'app/view/template/app.ejs'
-)
-.then( 
-    function ($) {
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.AppController
@@ -33,10 +31,9 @@ steal(
 			menuCtl.render();
 
 			// Add a notification controller
-			var notifCtl = passbolt.controller.component.NotificationController
-				.singleton($('#js_notif_controller'), {
-					'state': 'hidden'
-				});
+			var notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notif_controller'), {
+				'state': 'hidden'
+			});
 
 			// Add a workspaces container tabs element to the app 
 			var workspaces = new mad.controller.component.TabController($('#js_workspaces_container'));
@@ -64,7 +61,7 @@ steal(
 			var categories = passbolt.model.Category.getRoots({
 				children: true
 			}, function (request, response, categories) {
-				for (var i in categories) {
+				for(var i in categories) {
 					loadFixturedResources(categories[i]);
 				}
 			});

@@ -10,6 +10,10 @@ steal(
 	 * 
 	 * @constructor
 	 * Creates a new Resource details controller
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.ResourceDetailsController}
 	 */
 	mad.controller.ComponentController.extend('passbolt.controller.component.ResourceDetailsController',
