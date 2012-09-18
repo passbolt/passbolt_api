@@ -36,7 +36,9 @@ steal(
 		 */
 		'getDispatcher': function () {
 			return mad.route.ExtensionControllerActionDispatcher;
-		}
+		},
+
+		'defaults': { }
 
 	}, /** @prototype */ {
 
@@ -49,8 +51,10 @@ steal(
 				var id = this.options.id || uuid();
 				this.element.attr('id', id);
 			}
+
 			// reference the controller to the application
 			this.getApp().referenceComponent(this);
+
 			// propagate : a new controller has been released
 			if (mad.eventBus) {
 				mad.eventBus.trigger(mad.APP_NS_ID + '_controller_released', {

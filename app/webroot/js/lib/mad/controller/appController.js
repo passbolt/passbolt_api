@@ -148,12 +148,13 @@ steal(
 		/**
 		 * App Controller constructor
 		 */
-		'init': function () {
-			this._super();
+		'init': function (el, options) {
 			// make the application global var
 			mad.setGlobal('app', this);
 			// make an alias in the mad lib
 			mad.app = mad.getGlobal('app');
+			
+			this._super(el, options);
 		},
 
 		/**

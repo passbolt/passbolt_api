@@ -5,8 +5,14 @@
 		<title>Controller Example</title>
 		<script type='text/javascript' src='../../../steal/steal.js'></script>
 		<style type='text/css'>
-			input.js_state_error { border:1px solid red; }
-			span.js_state_error { color:red; }
+			/* Form state error style */
+			.form_field.js_state_error { border:1px solid red; }
+			.form_feedback.js_state_error { color:red; }
+			/* form style */
+			div { clear:both; }
+			label { float:left; width:200px; }
+			.form_field { float:left; width:200px; }
+			.form_feedback { float:left; width:200px; }
 		</style>
 	</head>
 	<body>
@@ -17,13 +23,47 @@
 <div id="demo-html">
 <div id="js_demo_app_controller">
 	<form id="js_demo_form_controller" method="post" action="#">
-		<fieldset>
-			<div>
-				<input type="text" name="demo.model.Fake.label" id="js_fake_label_field" />
-				<span id="js_fake_label_field_feedback" />
-			</div>
+		
+		<div>
+			<label>surname</label>
+			<input type="text" name="demo.model.Meeting.surname" id="js_field_surname" class="form_field" />
+			<span id="js_field_surname_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>name</label>
+			<input type="text" name="demo.model.Meeting.name" id="js_field_name" class="form_field" />
+			<span id="js_field_name_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>phone</label>
+			<input type="text" name="demo.model.Meeting.phone" id="js_field_phone" class="form_field" />
+			<span id="js_field_phone_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>email</label>
+			<input type="text" name="demo.model.Meeting.email" id="js_field_email" class="form_field" />
+			<span id="js_field_email_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>meeting date purpose</label>
+			<input type="text" name="demo.model.Meeting.date" id="js_field_datel" class="form_field" />
+			<span id="js_field_date_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>want to meet</label>
+			<select name="demo.model.Person.name" id="js_field_who" class="form_field"></select>
+			<span id="js_field_who_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
 			<input type="submit" value="submit" />
-		</fieldset>
+		</div>
+		
 	</form>
 </div>
 </div>
@@ -35,18 +75,68 @@
 steal('mad/demo/init.js').then(function() {
 	
 	// Create a fake model
-	mad.model.Model.extend('demo.model.Fake', {
-		'testFunc' : function(){}
+	mad.model.Model.extend('demo.model.Meeting', {});
+	mad.model.Model.extend('demo.model.Person', {});
+	
+	var form = new mad.form.FormController($('#js_demo_form_controller'), {
+		'callbacks': {
+			'submit': function(data){
+//				console.log(data);
+			}
+		}
 	});
 	
-	var form = new mad.form.FormController($('#js_demo_form_controller'), {});
-	
-	// Add a label field element to the form
+	// Add a surname field element to the form
 	form.addElement(
-		new mad.form.element.InputController($('#js_fake_label_field'), {}),
-		new mad.form.element.FeedbackController($('#js_fake_label_field_feedback'), {})
+		new mad.form.element.InputController($('#js_field_surname'), {
+			'value': 'Alfonsi'
+		}),
+		new mad.form.FeedbackController($('#js_field_surname_feedback'), {})
 	);
-	
+
+	// Add a name field element to the form
+	form.addElement(
+		new mad.form.element.InputController($('#js_field_name'), {}),
+		new mad.form.FeedbackController($('#js_field_name_feedback'), {})
+	);
+
+	// Add a phone field element to the form
+	form.addElement(
+		new mad.form.element.InputController($('#js_field_phone'), {}),
+		new mad.form.FeedbackController($('#js_field_phone_feedback'), {})
+	);
+
+	// Add a email field element to the form
+	form.addElement(
+		new mad.form.element.InputController($('#js_field_email'), {}),
+		new mad.form.FeedbackController($('#js_field_email_feedback'), {})
+	);
+
+//	// Add a date field element to the form
+//	form.addElement(
+//		new mad.form.element.DateController($('#js_field_date'), {}),
+//		new mad.form.FeedbackController($('#js_field_date_feedback'), {})
+//	);
+
+	// Add a who field element to the form
+	form.addElement(
+		new mad.form.element.DropdownController($('#js_field_who'), {
+			'availableValues': {
+				'c': 'Cedric',
+				'i': 'Isma',
+				'k': 'Kevin',
+				'm': 'Myriam',
+				'r': 'Remy'
+			},
+			'value': 'm',
+			'callbacks': {
+				'selected': function (value) {
+					console.log('drop down changed :', value);
+				}
+			}
+		}),
+		new mad.form.FeedbackController($('#js_field_who_feedback'), {})
+	);
 	
 });
 </script>

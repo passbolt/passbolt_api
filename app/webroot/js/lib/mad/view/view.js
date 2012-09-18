@@ -1,6 +1,7 @@
 steal(
 	'jquery/class',
-	MAD_ROOT + '/event/eventable.js').then(function ($) {
+	MAD_ROOT + '/event/eventable.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.view.View
@@ -13,15 +14,14 @@ steal(
 	 * constructor oh yeah
 	 * @return {mad.view.View}
 	 */
-	$.Class('mad.view.View',
-	/** @static */
-	{
+	mad.controller.Controller('mad.view.View', /** @static */ {
+
 		'defaults': {
-			'templateUri': null
+			'templateUri': null,
+			'element': null
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
 
 		/**
 		 * The component controller which use this view
@@ -32,14 +32,6 @@ steal(
 		'controller': null,
 
 		/**
-		 * The dom node element to render the view
-		 * @type {jQuery}
-		 * @private
-		 * @hide
-		 */
-		'element': null,
-
-		/**
 		 * The associated template uri. If null, the templateUri will be defined on the Class name
 		 * @type {string}
 		 * @private
@@ -47,21 +39,38 @@ steal(
 		 */
 		'templateUri': null,
 
+		/**
+		 * The view is based on a template
+		 * @type {string}
+		 * @private
+		 * @hide
+		 */
+		'templateBased': null,
+
 		// Constructor like 
-		'init': function (controller, options) {
-			this.controller = controller;
-			this.element = controller.element;
+		'init': function (element, options) {
+			this._super(element, options);
+
+			this.controller = options.controller;
 			this.templateUri = options.templateUri;
 			this.templateBased = options.templateBased;
 
 			// add the classes to the top element
 			// @todo Hmmmmmmm. Ou pas ici
-			for(var i in options.cssClasses) {
+			for (var i in options.cssClasses) {
 				if(!this.element.hasClass(options.cssClasses[i])) {
 					this.element.addClass(options.cssClasses[i]);
 				}
 			}
+		},
 
+		/**
+		 * Add	the given class
+		 * @param {string} className The class to add
+		 * @return {void}
+		 */
+		'addClass': function (className) {
+			this.element.addClass(className);
 		},
 
 		/**
@@ -83,6 +92,14 @@ steal(
 
 			return returnValue;
 		},
+		
+		/**
+		 * Hide the element
+		 * @return {void}
+		 */
+		'hide': function () {
+			this.element.hide();
+		},
 
 		/**
 		 * The component is loading
@@ -90,11 +107,20 @@ steal(
 		 * @return {void}
 		 */
 		'loading': function (loading) {
-			if(loading) {
+			if (loading) {
 				this.element.prepend('<div class="js_loading" />');
 			} else {
 				$('.js_loading', this.element).remove();
 			}
+		},
+
+		/**
+		 * Remove	the given class
+		 * @param {string} className The class to remove
+		 * @return {void}
+		 */
+		'removeClass': function (className) {
+				this.element.removeClass(className);
 		},
 
 		/**
@@ -121,7 +147,7 @@ steal(
 			var render = $.View(this.getTemplate(), this.controller.viewData);
 
 			// display the rendered view
-			if(display) {
+			if (display) {
 				this.element.append(render);
 				returnValue = true;
 			}
@@ -141,8 +167,17 @@ steal(
 		 */
 		'setTemplateUri': function (templateUri) {
 			this.templateUri = templateUri;
+		},
+		
+		/**
+		 * Show the element
+		 * @return {void}
+		 */
+		'show': function () {
+			this.element.show();
 		}
+		
 	});
 
-	mad.view.View.augment('mad.event.Eventable');
+//	mad.view.View.augment('mad.event.Eventable');
 });

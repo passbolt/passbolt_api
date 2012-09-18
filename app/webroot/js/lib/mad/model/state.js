@@ -3,19 +3,20 @@ steal(
 ).then(function () {
 
 	/*
-	 * @class mad.model.ComponentState
+	 * @class mad.model.State
 	 * @inherits jQuery.Model
 	 * @parent mad.controller.component
 	 * 
-	 * The component state model will carry the state of a given component.
-	 * Component will listen to any change on it and it will adapt its behavior.
+	 * The State model will carry the state of a given controller.
+	 * <br/>
+	 * Controllers will listen to any change on it and it will adapt its behavior.
 	 * 
 	 * @constructor
-	 * Creates a component state
+	 * Creates a new State
 	 * @param {array} options
-	 * @return {mad.model.ComponentState}
+	 * @return {mad.model.State}
 	 */
-	$.Model('mad.model.ComponentState', /** @static */ {
+	$.Model('mad.model.State', /** @static */ {
 
 		/**
 		 * Define attributes of the model
