@@ -3,10 +3,9 @@
  * @tag mad.form
  * @parent index
  * 
- * 
  * <p>
  *	<h2>Example</h2>
- *	@demo /js/mad/demo/form/formcontroller.html
+ *	@demo ./mad/demo/form/formcontroller.html
  * </p>
  *	
  */
@@ -33,12 +32,17 @@ steal(
 	mad.controller.Controller.extend('mad.form.FormController', /** @static */ {
 
 		'defaults': {
-			'templateBased': false,
+//			'templateBased': false,
 			'callbacks': {
-				'error': function (data) {},
-				'success': function () {}
-			}
-		}
+				'error': function () { },
+				'submit': function (data) { }
+			},
+			'validateOnChange': true
+		},
+
+		'listensTo': [
+			'changed'
+		]
 
 	}, /** @prototype */ {
 
@@ -63,13 +67,9 @@ steal(
 		 */
 		'data': {},
 
-		// constructor of the Class
-		'init': function (el, options) {
-			this._super(el, options);
-		},
-
 		/**
-		 * Add an element to the form
+		 * Add an element to the form and optionaly its associated feedback controller.
+		 * See the validate function to know more about the feedback controller.
 		 * @param {mad.form.FormElement} element The element to add to the form
 		 * @param {mad.form.element.FeddbackController} feedback The form feedback element to associate to the form element
 		 * @return {void}
@@ -100,25 +100,45 @@ steal(
 		},
 
 		/**
-		 * Extract the form data
+		 * Extract the form data. The data will be formated functions of the form element
+		 * name.
+		 * <br/>
+		 * By exemple for the following form
+		 * @codestart
+&lt;input type="text" id="field_id" name="mad.model.MyModel.id" />
+&lt;input type="text" id="field_id" name="mad.model.MyModel.label" />
+&lt;input type="text" id="field_id" name="mad.model.MyModel2.label" />
+		 * @codeend
+		 * 
+		 * The extract data function will return
+		 * @codestart
+{
+	mad.model.MyModel : {
+		id: STRING,
+		label: STRING
+	},
+	mad.model.MyModel2 : {
+		label: STRING
+	}
+}
+		 * @codeend
+		 * 
 		 * @return {array}
 		 */
 		'extractData': function () {
-			var returnValue = {},
-				formData = {};
+			var returnValue = {};
 
 			// Get the form elements value
 			for (var elementId in this.elements) {
-				var element = this.elements[elementId];
-				var elementName = element.getName();
-				// get the element model name
-				var split = elementName.split('.');
-				var elementModelName = split.slice(0, split.length - 1).join('.');
-				if(typeof returnValue[elementModelName] == 'undefined') {
+				var element = this.elements[elementId],
+					model = element.getModel(),
+					elementModelName = model.fullName;
+
+				if (typeof returnValue[elementModelName] == 'undefined') {
 					returnValue[elementModelName] = [];
 				}
 				// get the element attribute name
-				var elementAttributeName = split[split.length - 1];
+				var elementAttributeName = element.getModelAttributeName();
 				returnValue[elementModelName][elementAttributeName] = element.getValue();
 			}
 			
@@ -126,31 +146,60 @@ steal(
 		},
 
 		/**
+		 * validate an element functions of its associated model. If the element is invalid :
+		 * <ul>
+		 *	<li>switch the state of the element to error</li>
+		 *	<li>switch the state of the associated feedback element to error and display 
+		 *	the mad.model.Model.validateAttribute message</li>
+		 *	<li>return false</li>
+		 * </ul>
+		 * 
+		 * @see mad.model.Model
+		 * @return {boolean}
+		 */
+		'validateElement': function (element) {
+			var returnValue = true,
+				model = element.getModel(),
+				modelName = model.fullName,
+				attributeName = element.getModelAttributeName(),
+				value = this.data[modelName][attributeName];
+				
+			// validate the attribute value
+			var validationResult = model.validateAttribute(attributeName, value, this.data[modelName]);
+
+			if(validationResult !== true) {
+				var elementName = element.getName();
+
+				// switch the state of the element to error
+				this.elements[elementName]
+					.setState('error');
+				// set the feedback message, and switch the feedback element state to error
+				this.feedbackElements[elementName]
+					.setMessage(validationResult)
+					.setState('error');
+
+				returnValue = false;
+			} else {
+				// set the feedback message, and switch the feedback element state to success
+				this.feedbackElements[elementName]
+					.setMessage('OK')
+					.setState('success');
+			}
+			
+			return returnValue;
+		},
+
+		/**
 		 * Validate the form
+		 * 
+		 * @see mad.form.FormController.prototype.validateElement
 		 * @return {boolean}
 		 */
 		'validate': function () {
 			var returnValue = true;
-
-			// validate the data
-			for(var modelName in this.data) {
-				// get the model functions of the model name
-				var model = $.String.getObject(modelName);
-				for(var attributeName in this.data[modelName]) {
-					// validate the attribute value
-					var isValidAttribute = model.validateAttribute(attributeName, this.data[modelName][attributeName], this.data[modelName]);
-					if(isValidAttribute !== true) {
-						var elementName = modelName + '.' + attributeName;
-						this.elements[elementName]
-							.setState('error');
-						this.feedbackElements[elementName]
-							.setValue(isValidAttribute)
-							.setState('error');
-						returnValue = false;
-					}
-				}
+			for (var i in this.elements) {
+				returnValue &= this.validateElement (this.elements[i]);
 			}
-
 			return returnValue;
 		},
 
@@ -158,9 +207,17 @@ steal(
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
 
+		/**
+		 * Listen to any submit events on the associated HTML element
+		 * 
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
 		'submit': function (el, ev) {
 			ev.preventDefault();
 			this.data = this.extractData();
+			// Form data are valid
 			if (this.validate()) {
 				// convert form data in model data
 				var modelData = {};
@@ -168,9 +225,39 @@ steal(
 					var ModelClass = $.String.getObject(modelName);
 					modelData[modelName] = new ModelClass(this.data[modelName]);
 				}
-				this.options.callbacks.submit(modelData);
+				// if a submit callback is given, call it
+				if (this.options.callbacks.submit) {
+					this.options.callbacks.submit(modelData);
+				}
 			} else {
-				this.options.callbacks.error();
+				// Data are not valid
+				// if an error callback is given, call it
+				if (this.options.callbacks.error) {
+					this.options.callbacks.submit(modelData);
+				}
+			}
+		},
+		
+		/**
+		 * Listen to any changed event which occured on the form elements contained by
+		 * the form controller. If the validateOnChange option is set to true, validate
+		 * the target form element.
+		 * 
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'changed': function (el, ev, value) {
+			if (this.options.validateOnChange) {
+				this.data = this.extractData();
+				var controllers = $(ev.target).controllers();
+				for (var i in controllers) {
+					// get the form element controller
+					if (controllers[i] instanceof mad.form.FormElement) {
+						var element = controllers[i];
+						this.validateElement(element);
+					}
+				}
 			}
 		}
 
