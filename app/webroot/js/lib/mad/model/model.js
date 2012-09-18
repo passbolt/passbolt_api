@@ -20,23 +20,26 @@ steal('jquery/model').then(function ($) {
 	$.Model('mad.model.Model', /** @static */ {
 
 		/**
-		 *
+		 * The options to use to validate the model attributes.
+		 * @type array
+		 * @protected
+		 */
+		'validateOptions': {},
+
+		/**
+		 * Validate an attribute
+		 * @param {string} attrName The attribute name
+		 * @param {mixed} value The attribute value
+		 * @param {array} modelValues The model attributes values
+		 * @return {boolean}
 		 */
 		'validateAttribute': function (attrName, value, modelValues) {
-			return 'wrong parameter';
+			return 'ah ben ca va pas la';
 		}
 
 	}, /** @prototype */ {
 
-		// Class constructor
-		'init': function (el, options) {
-
-		},
-
-		/**
-		 * 
-		 * @return {void}
-		 */
+		// Destructor like
 		'destroy': function () {}
 
 	});
