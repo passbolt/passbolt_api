@@ -24,7 +24,7 @@ steal('jquery/model').then(function ($) {
 		 * @type array
 		 * @protected
 		 */
-		'validateOptions': {},
+		'validateRules': {},
 
 		/**
 		 * Validate an attribute
@@ -34,7 +34,25 @@ steal('jquery/model').then(function ($) {
 		 * @return {boolean}
 		 */
 		'validateAttribute': function (attrName, value, modelValues) {
-			return 'ah ben ca va pas la';
+			var returnValue = true;
+
+			if (this.validateRules[attrName]) {
+				var rules = this.validateRules[attrName];
+				if ($.isArray(rules)) {
+					for (var i in rules) {
+						var validateResult = mad.model.ValidationRules.validate(rules[i], value, modelValues);
+						if (validateResult !== true) {
+							returnValue = false;
+						} else {
+							validateResult += validateResult;
+						}
+					}
+				} else {
+					returnValue = mad.model.ValidationRules.validate(rules, value, modelValues);
+				}
+			}
+			
+			return returnValue;
 		}
 
 	}, /** @prototype */ {
