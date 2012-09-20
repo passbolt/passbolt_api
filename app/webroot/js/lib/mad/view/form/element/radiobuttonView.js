@@ -3,29 +3,44 @@ steal(
 ).then(function ($) {
 
 	/*
-	 * @class mad.view.form.element.InputView
+	 * @class mad.view.form.element.RadiobuttonView
 	 * @inherits mad.view.form.FormElement
 	 * @hide
 	 * 
 	 * @constructor
-	 * Creates a new Input Form Element View
+	 * Creates a new Radiobutton Form Element View
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller. These get added to
 	 * this.options and merged with defaults static variable
-	 * @return {mad.view.form.element.InputView}
+	 * @return {mad.view.form.element.RadiobuttonView}
 	 */
-	mad.view.form.FormElementView.extend('mad.view.form.element.InputView', /** @static */ {
+	mad.view.form.FormElementView.extend('mad.view.form.element.RadiobuttonView', /** @static */ {
 
 	}, /** @prototype */ {
 
+		'setAvailableValues': function (availableValues) {
+			for (var value in availableValues) {
+				var html = '<input type="radio" name="' + this.getName() + '" value="' + value + '" />' + availableValues[value];
+				this.element.append(html);
+			}
+		},
+
 		/**
-		 * Set the value of the input form element
+		 * Get the value of the readiobutton form element
+		 * @return {string}
+		 */
+		'getValue': function () {
+			return this.element.find(':checked').val();
+		},
+
+		/**
+		 * Set the value of the radiobutton form element
 		 * @param {mixed} value The value to set
 		 * @return {void}
 		 */
 		'setValue': function (value) {
-			this.element.val(value);
+			this.element.find('input').val(value);
 		},
 
 		/* ************************************************************** */

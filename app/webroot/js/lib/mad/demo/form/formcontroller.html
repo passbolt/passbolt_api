@@ -37,6 +37,12 @@
 		</div>
 		
 		<div>
+			<label>I am a freelancer</label>
+			<fieldset id="js_field_freelancer" class="form_field"></fieldset>
+			<span id="js_field_freelancer_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
 			<label>phone</label>
 			<input type="text" name="demo.model.Meeting.phone" id="js_field_phone" class="form_field" />
 			<span id="js_field_phone_feedback" class="form_feedback"/>
@@ -61,6 +67,12 @@
 		</div>
 		
 		<div>
+			<label>I want to talk about</label>
+			<fieldset name="demo.model.Meeting.topics" id="js_field_topics" class="form_field"></fieldset>
+			<span id="js_field_topics_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
 			<input type="submit" value="submit" />
 		</div>
 		
@@ -75,20 +87,24 @@
 steal('mad/demo/init.js').then(function() {
 	
 	// Create a fake model
-	mad.model.Model.extend('demo.model.Meeting', {});
+	mad.model.Model.extend('demo.model.Meeting', {
+		'validateRules': {
+			'surname': 'alphanum'
+		}
+	}, {});
 	mad.model.Model.extend('demo.model.Person', {});
 	
 	var form = new mad.form.FormController($('#js_demo_form_controller'), {
 		'callbacks': {
-			'submit': function(data){
-//				console.log(data);
+			'submit': function (data) {
+				console.log(data);
 			}
 		}
 	});
 	
 	// Add a surname field element to the form
 	form.addElement(
-		new mad.form.element.InputController($('#js_field_surname'), {
+		new mad.form.element.TextboxController($('#js_field_surname'), {
 			'value': 'Alfonsi'
 		}),
 		new mad.form.FeedbackController($('#js_field_surname_feedback'), {})
@@ -96,19 +112,32 @@ steal('mad/demo/init.js').then(function() {
 
 	// Add a name field element to the form
 	form.addElement(
-		new mad.form.element.InputController($('#js_field_name'), {}),
+		new mad.form.element.TextboxController($('#js_field_name'), {}),
 		new mad.form.FeedbackController($('#js_field_name_feedback'), {})
+	);
+
+	// Add a freelancer field element to the form
+	form.addElement(
+		new mad.form.element.RadiobuttonController($('#js_field_freelancer'), {
+		'modelReference': 'demo.model.Meeting.freelancer',
+		'availableValues': {
+				'0': 'No',
+				'1': 'Yes'
+			},
+			'value': ['1']
+		}),
+		new mad.form.FeedbackController($('#js_field_freelancer_feedback'), {})
 	);
 
 	// Add a phone field element to the form
 	form.addElement(
-		new mad.form.element.InputController($('#js_field_phone'), {}),
+		new mad.form.element.TextboxController($('#js_field_phone'), {}),
 		new mad.form.FeedbackController($('#js_field_phone_feedback'), {})
 	);
 
 	// Add a email field element to the form
 	form.addElement(
-		new mad.form.element.InputController($('#js_field_email'), {}),
+		new mad.form.element.TextboxController($('#js_field_email'), {}),
 		new mad.form.FeedbackController($('#js_field_email_feedback'), {})
 	);
 
@@ -128,14 +157,22 @@ steal('mad/demo/init.js').then(function() {
 				'm': 'Myriam',
 				'r': 'Remy'
 			},
-			'value': 'm',
-			'callbacks': {
-				'selected': function (value) {
-					console.log('drop down changed :', value);
-				}
-			}
+			'value': 'm'
 		}),
 		new mad.form.FeedbackController($('#js_field_who_feedback'), {})
+	);
+
+	// Add a topics field element to the form
+	form.addElement(
+		new mad.form.element.CheckboxController($('#js_field_topics'), {
+			'availableValues': {
+					'Business': 'Business',
+					'Administration': 'Administration',
+					'Fiesta': 'Fiesta'
+			},
+			'value': ['Fiesta']
+		}),
+		new mad.form.FeedbackController($('#js_field_topics_feedback'), {})
 	);
 	
 });

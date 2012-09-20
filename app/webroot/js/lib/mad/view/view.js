@@ -120,7 +120,7 @@ steal(
 		 * @return {void}
 		 */
 		'removeClass': function (className) {
-				this.element.removeClass(className);
+			this.element.removeClass(className);
 		},
 
 		/**

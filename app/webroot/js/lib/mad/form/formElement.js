@@ -8,8 +8,7 @@ steal(
 	 * @inherits mad.controller.ComponentController
 	 * @parent mad.form
 	 * 
-	 * Our Form Element class which will be the parent of any Form Element (input,
-	 * dropdown ...)
+	 * Our Form Element class which will be the parent of any Form Elements
 	 * 
 	 * @constructor
 	 * Creates a new Form Element
@@ -28,7 +27,11 @@ steal(
 			'callbacks': {
 				'changed': function (el, ev, value) {}
 			}
-		}
+		},
+
+		'listensTo': [
+			'changed'
+		]
 
 	},/** @prototype */ {
 
@@ -44,25 +47,43 @@ steal(
 		},
 
 		/**
+		 * Get the associated model.attribute
+		 * @return {string}
+		 */
+		'getModelReference': function () {
+			var returnValue = null;
+			if (this.options.modelReference) {
+				returnValue = this.options.modelReference;
+			} else {
+				// Check from the associated HTML element name attribute
+				var nameAttribute = this.view.getName();
+				if (nameAttribute != null) {
+					returnValue = nameAttribute;
+				}
+			}
+			return returnValue;
+		},
+
+		/**
 		 * Get the form element associated model
 		 * @return {mad.model.Model}
 		 */
 		'getModel': function () {
 			var returnValue = null;
-			var split = this.getName().split('.');
+			var split = this.getModelReference().split('.');
 			var modelName = split.slice(0, split.length - 1).join('.');
 			returnValue = $.String.getObject(modelName);
 			return returnValue;
 		},
-		
+
 		/**
 		 * Get the form element attribute name
 		 * @return {string}
 		 */
 		'getModelAttributeName': function () {
 			var returnValue = null;
-			var split = this.getName().split('.');
-			var returnValue = split[split.length - 1];
+			var split = this.getModelReference().split('.');
+			returnValue = split[split.length - 1];
 			return returnValue;
 		},
 

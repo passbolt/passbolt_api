@@ -78,7 +78,7 @@ steal(
 			if (!element instanceof mad.form.FormElement) {
 				throw new mad.error.WrongParameters('The function addElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
 			}
-			var elementName = element.getName();
+			var elementName = element.getModelReference();
 			this.elements[elementName] = element;
 			if (typeof feedback != 'undefined') {
 				this.feedbackElements[elementName] = feedback;
@@ -94,7 +94,7 @@ steal(
 			if (!element instanceof mad.form.FormElement) {
 				throw new mad.error.WrongParameters('The function removeElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
 			}
-			var elementName = element.getName();
+			var elementName = element.getModelReference();
 			delete this.elements[elementName];
 			delete this.feedbackElements[elementName];
 		},
@@ -162,14 +162,13 @@ steal(
 				model = element.getModel(),
 				modelName = model.fullName,
 				attributeName = element.getModelAttributeName(),
-				value = this.data[modelName][attributeName];
-				
+				value = this.data[modelName][attributeName],
+				elementName = element.getModelReference();
+
 			// validate the attribute value
 			var validationResult = model.validateAttribute(attributeName, value, this.data[modelName]);
 
 			if(validationResult !== true) {
-				var elementName = element.getName();
-
 				// switch the state of the element to error
 				this.elements[elementName]
 					.setState('error');
@@ -180,6 +179,8 @@ steal(
 
 				returnValue = false;
 			} else {
+				this.elements[elementName]
+					.setState('success');
 				// set the feedback message, and switch the feedback element state to success
 				this.feedbackElements[elementName]
 					.setMessage('OK')

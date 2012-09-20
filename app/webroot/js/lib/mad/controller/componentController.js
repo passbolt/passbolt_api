@@ -217,7 +217,7 @@ steal(
 			// initialize the view
 			if (!this.options.viewClass instanceof mad.view.View) {
 				// @todo throw the convenient Exception
-				console.warn('not good viewClass');
+				steal.dev.warn('not good viewClass');
 			}
 
 			// Initialize the associated state instance
