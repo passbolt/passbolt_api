@@ -15,6 +15,7 @@
 		<delete dir="${src}/app/webroot/js/mad" failonerror="false"/>
 
 		<mkdir dir="${build}"/>
+		<mkdir dir="${src}/app/tmp/gpg"/>
 		<symlink link="${src}/app/webroot/js/mad" resource="${src}/app/webroot/js/lib/mad/" failonerror="false" overwrite="true"/>
 	</target>
 
