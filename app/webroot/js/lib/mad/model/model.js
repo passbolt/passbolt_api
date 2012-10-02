@@ -42,16 +42,17 @@ steal('jquery/model').then(function ($) {
 					for (var i in rules) {
 						var validateResult = mad.model.ValidationRules.validate(rules[i], value, modelValues);
 						if (validateResult !== true) {
-							returnValue = false;
-						} else {
-							validateResult += validateResult;
+							if (returnValue === true) {
+								returnValue = '';
+							}
+							returnValue += validateResult;
 						}
 					}
 				} else {
 					returnValue = mad.model.ValidationRules.validate(rules, value, modelValues);
 				}
 			}
-			
+
 			return returnValue;
 		}
 
