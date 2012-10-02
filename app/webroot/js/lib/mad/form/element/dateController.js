@@ -7,7 +7,7 @@ steal(
 	/*
 	 * @class mad.form.element.DateController
 	 * @inherits mad.form.FormElement
-	 * @parent mad.form
+	 * @parent mad.form.element
 	 * 
 	 * The Date Form Element Controller is our implementation of the UI component date
 	 * 

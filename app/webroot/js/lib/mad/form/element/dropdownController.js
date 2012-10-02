@@ -7,8 +7,8 @@ steal(
 	/*
 	 * @class mad.form.element.DropdownController
 	 * @inherits mad.form.FormChoiceElement
-	 * @view mad.view.form.element.Dropdown
-	 * @parent mad.form
+	 * @see mad.view.form.element.Dropdown
+	 * @parent mad.form.element
 	 * 
 	 * The Dropdown Form Element Controller is our implementation of the UI component dropdown
 	 * 
@@ -25,7 +25,8 @@ steal(
 		'defaults': {
 			'label': 'DropdownController Form Element Controller',
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/input.ejs',
-			'viewClass': mad.view.form.element.DropdownView
+			'viewClass': mad.view.form.element.DropdownView,
+			'emptyValue': true
 		}
 
 	}, /** @prototype */ { });

@@ -7,7 +7,7 @@ steal(
 	/*
 	 * @class mad.form.element.TextboxController
 	 * @inherits mad.form.FormElement
-	 * @parent mad.form
+	 * @parent mad.form.element
 	 * 
 	 * The Input Form Element Controller is our implementation of the UI component input
 	 * 
