@@ -56,13 +56,11 @@ steal(
 		/**
 		 * The current dictionnary to use
 		 * @type {array}
-		 * @private
 		 */
 		'dico': {},
 
 		/**
 		 * Translate the string
-		 * @public
 		 * @param {string} str The string to translate
 		 * @param {array} vars The array of variables to inject in the string
 		 * @return {string} The translated string
@@ -74,7 +72,6 @@ steal(
 
 		/**
 		 * Load the given dictionnary as dictionnary of translated terms
-		 * @public
 		 * @param {array} dico The dictionnary to use
 		 * @return {void}
 		 */
@@ -86,7 +83,6 @@ steal(
 
 		/**
 		 * Replace the variables' hooks in the translated string
-		 * @private
 		 * @param {string} str The translated string
 		 * @param {array} vars The variables to inject in the string
 		 * @return {string}
@@ -122,7 +118,6 @@ steal(
 
 		/**
 		 * Get entry in the dictionnary
-		 * @private
 		 * @param {string} str The dictionnary key
 		 * @return {string}
 		 */

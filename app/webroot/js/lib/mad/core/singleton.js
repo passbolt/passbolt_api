@@ -57,10 +57,7 @@ steal(
 		}
 	}, /** @hide @prototype */ {
 
-		/**
-		 * Class Constructor
-		 * @private
-		 */
+		// Constructor like
 		'init': function () {
 			if (this.Class.fullName == 'mad.core.Singleton') {
 				throw new mad.error.CallAbstractFunction();

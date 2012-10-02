@@ -26,7 +26,6 @@ steal(
 		/**
 		 * The component controller which use this view
 		 * @type {mad.controller.ComponentController}
-		 * @private
 		 * @hide
 		 */
 		'controller': null,
@@ -34,7 +33,6 @@ steal(
 		/**
 		 * The associated template uri. If null, the templateUri will be defined on the Class name
 		 * @type {string}
-		 * @private
 		 * @hide
 		 */
 		'templateUri': null,
@@ -42,7 +40,6 @@ steal(
 		/**
 		 * The view is based on a template
 		 * @type {string}
-		 * @private
 		 * @hide
 		 */
 		'templateBased': null,

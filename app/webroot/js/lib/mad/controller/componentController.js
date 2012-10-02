@@ -125,7 +125,7 @@
  *	
  *	<p>
  *		<h2>Example</h2>
- *		@demo /js/mad/demo/controller/component.html
+ *		@demo ./mad/demo/controller/component.html
  *	</p>
  */
 
@@ -194,19 +194,16 @@ steal(
 
 		/** Data to pass to the view
 		 * @type {array}
-		 * @private
 		 * @hide */
 		'viewData': [],
 
 		/** The rendered view, if not displayed it will be stored in it
 		 * @type {string}
-		 * @private
 		 * @hide */
 		'renderedView': '',
 
 		/** The associated view class, by default {mad.view.View}
 		 * @type {mad.view.View}
-		 * @private
 		 * @hide */
 		'viewClass': null,
 
@@ -228,12 +225,17 @@ steal(
 
 			this._super(el, options);// bind state changes	
 
+			// reference the controller to the application
+			this.getApp().referenceComponent(this);
+
 			// Once the controller is fully released, initialize the component's associated view
 			this.initView();
 		},
 
 		// destructor like
 		'destroy': function () {
+			// unreference the component to the app
+			this.getApp().unreferenceComponent(this);
 			this.state.unbind('label');
 			this._super();
 		},

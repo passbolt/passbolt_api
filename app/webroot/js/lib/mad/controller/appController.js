@@ -141,7 +141,6 @@ steal(
 		/**
 		 * Reference to application's components
 		 * @type mad.controller.ComponentController
-		 * @private
 		 */
 		'_components': {},
 
@@ -190,7 +189,7 @@ steal(
 
 		/**
 		 * Called when the application is ready            
-		 * @event {APP_NS_ID'}_app_ready
+		 * @event {APP_NS_ID_app_ready}
 		 * @return {void}
 		 */
 		'ready': function () {

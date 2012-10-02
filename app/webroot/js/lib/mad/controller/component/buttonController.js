@@ -11,7 +11,7 @@ steal(
 	 * The Button class Controller is our implementation of the UI component button.
 	 *	<p>
 	 *		<h2>Example</h2>
-	 *		@demo /js/mad/demo/controller/component/simple_button.html
+	 *		@demo ./mad/demo/controller/component/simple_button.html
 	 *	</p>
 	 * 
 	 * @constructor

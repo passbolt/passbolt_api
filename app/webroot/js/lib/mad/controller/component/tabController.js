@@ -7,7 +7,7 @@ steal(
 	/*
 	 * @class mad.controller.component.TabController
 	 * @inherits mad.controller.ComponentController
-	 * @view mad.view.component.Tab
+	 * @see mad.view.component.Tab
 	 * @parent mad.component
 	 * 
 	 * @constructor

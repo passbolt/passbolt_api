@@ -54,7 +54,7 @@ steal(
 		 * @return {void}
 		 */
 		'change': function (el, event) {
-			el.trigger('changed', el.val());
+			el.trigger('changed', el.find(':checked').val());
 		}
 
 	});

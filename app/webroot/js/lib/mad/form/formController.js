@@ -1,15 +1,3 @@
-/*
- * @page mad.form Form
- * @tag mad.form
- * @parent index
- * 
- * <p>
- *	<h2>Example</h2>
- *	@demo ./mad/demo/form/formcontroller.html
- * </p>
- *	
- */
-
 steal(
 	MAD_ROOT + '/controller',
 	MAD_ROOT + '/form/formElement.js'
@@ -49,21 +37,18 @@ steal(
 		/**
 		 * The form elements
 		 * @type mad.form.element.FormElement[]
-		 * @private
 		 */
 		'elements': {},
 
 		/**
 		 * The feedbacks elements associated to the form elements
 		 * @type mad.form.element.FeedbackInterface[]
-		 * @private
 		 */
 		'feedbackElements': {},
 
 		/**
 		 * The form data
 		 * @type mad.model.Model[]
-		 * @private
 		 */
 		'data': {},
 
@@ -72,6 +57,7 @@ steal(
 		 * See the validate function to know more about the feedback controller.
 		 * @param {mad.form.FormElement} element The element to add to the form
 		 * @param {mad.form.element.FeddbackController} feedback The form feedback element to associate to the form element
+		 * @exception mad.error.WrongParameters
 		 * @return {void}
 		 */
 		'addElement': function (element, feedback) {
@@ -141,7 +127,7 @@ steal(
 				var elementAttributeName = element.getModelAttributeName();
 				returnValue[elementModelName][elementAttributeName] = element.getValue();
 			}
-			
+
 			return returnValue;
 		},
 

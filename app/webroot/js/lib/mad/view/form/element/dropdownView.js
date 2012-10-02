@@ -21,10 +21,14 @@ steal(
 	}, /** @prototype */ {
 
 		'setAvailableValues': function (availableValues) {
-			for (var value in availableValues) {
-				var html = '<option value="' + value + '">' + availableValues[value] + '</option>';
-				this.element.append(html);
+			var html = '';
+			if (this.controller.options.emptyValue) {
+				html += '<option value="">' + __('select a value') + '</option>';
 			}
+			for (var value in availableValues) {
+				html += '<option value="' + value + '">' + availableValues[value] + '</option>';
+			}
+			this.element.append(html);
 		},
 		
 		/**
@@ -47,7 +51,7 @@ steal(
 		 * @return {void}
 		 */
 		'change': function (el, event) {
-			el.trigger('changed', el.val());
+			el.trigger('changed', el.find(':checked').val());
 		}
 		
 	});

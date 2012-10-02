@@ -120,7 +120,6 @@ steal(
 
 		/**
 		 * Add a request to the current transaction
-		 * @private
 		 * @hide
 		 */
 		'_addRequest': function (request) {
@@ -143,7 +142,6 @@ steal(
 
 		/**
 		 * Generate a new current transaction id
-		 * @private
 		 * @hide
 		 */
 		'_generateTransactionId': function () {
@@ -152,7 +150,6 @@ steal(
 
 		/**
 		 * Get the current transaction id, generate a new one if null
-		 * @private
 		 * @hide
 		 */
 		'_getTransactionId': function () {
@@ -164,7 +161,6 @@ steal(
 
 		/**
 		 * Get the current transaction
-		 * @private
 		 * @hide
 		 */
 		'_getTransaction': function (id) {
@@ -177,7 +173,6 @@ steal(
 		 * Here we use a timeout cycle to wait (1ms) on possible additional requests.
 		 * We have to test this method without console.log, which can make the code
 		 * execution sync ... etc ...
-		 * @private
 		 * @hide
 		 */
 		'_executeTransaction': function () {
@@ -230,7 +225,6 @@ steal(
 
 		/**
 		 * Execute a request. Bundled or not
-		 * @private
 		 * @hide
 		 */
 		'_executeRequest': function (request) {
@@ -241,7 +235,6 @@ steal(
 
 		/**
 		 * Bundle requests
-		 * @private
 		 * @hide
 		 */
 		'_bundleRequests': function (requests) {

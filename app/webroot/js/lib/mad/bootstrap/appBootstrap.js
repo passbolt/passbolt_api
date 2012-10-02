@@ -249,7 +249,7 @@ steal(
 		/**
 		 * Dispatch to the right action following the hash url
 		 * @param {mad.route.Route} route The route to dispatch to
-		 * @use core.controller::getDispatcher()
+		 * @see core.controller::getDispatcher()
 		 * @return {void}
 		 */
 		'dispatch': function (route) {
