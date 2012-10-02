@@ -273,6 +273,7 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 		 */
 		'stateResourceSelected': function (go) {
 			if (go) {
+				console.log('yo');
 				this.hideColumn('modified');
 				this.hideColumn('copyLogin');
 				this.hideColumn('copySecret');

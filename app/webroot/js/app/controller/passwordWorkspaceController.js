@@ -108,7 +108,7 @@ steal(
 		 * @return {void}
 		 */
 		'#js_new_resource_button click': function (element, event) {
-
+			
 		},
 
 		/**
@@ -169,7 +169,6 @@ steal(
 			// A resource has been selected, change the state of the password Workspace
 			// controller
 			this.setState('resourceSelected');
-
 			this.getComponent('js_edit_resource_button').setState('ready');
 			this.getComponent('js_share_resource_button').setState('ready');
 			this.getComponent('js_more_resource_button').setState('ready');
