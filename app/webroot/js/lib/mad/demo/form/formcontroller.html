@@ -56,13 +56,13 @@
 		
 		<div>
 			<label>meeting date purpose</label>
-			<input type="text" name="demo.model.Meeting.date" id="js_field_datel" class="form_field" />
+			<input type="text" name="demo.model.Meeting.date" id="js_field_date" class="form_field" />
 			<span id="js_field_date_feedback" class="form_feedback"/>
 		</div>
 		
 		<div>
 			<label>want to meet</label>
-			<select name="demo.model.Person.name" id="js_field_who" class="form_field"></select>
+			<select name="demo.model.Person.id" id="js_field_who" class="form_field"></select>
 			<span id="js_field_who_feedback" class="form_feedback"/>
 		</div>
 		
@@ -89,10 +89,22 @@ steal('mad/demo/init.js').then(function() {
 	// Create a fake model
 	mad.model.Model.extend('demo.model.Meeting', {
 		'validateRules': {
-			'surname': 'alphanum'
+			'surname': ['alphanum', 'required'],
+			'name': ['alphanum', 'required'],
+			'freelancer': ['required'],
+			'phone': ['required', 'num'],
+			'email': ['required', 'email'],
+			'date': ['required', {
+				'rule':'date', 
+				'options': {'type': 'us'}
+			}]
 		}
 	}, {});
-	mad.model.Model.extend('demo.model.Person', {});
+	mad.model.Model.extend('demo.model.Person', {
+		'validateRules': {
+			'id': ['required', 'uid']
+		}
+	}, {});
 	
 	var form = new mad.form.FormController($('#js_demo_form_controller'), {
 		'callbacks': {
@@ -105,14 +117,16 @@ steal('mad/demo/init.js').then(function() {
 	// Add a surname field element to the form
 	form.addElement(
 		new mad.form.element.TextboxController($('#js_field_surname'), {
-			'value': 'Alfonsi'
+			'value': 'Passbolt'
 		}),
 		new mad.form.FeedbackController($('#js_field_surname_feedback'), {})
 	);
 
 	// Add a name field element to the form
 	form.addElement(
-		new mad.form.element.TextboxController($('#js_field_name'), {}),
+		new mad.form.element.TextboxController($('#js_field_name'), {
+			'value': 'Jean'
+		}),
 		new mad.form.FeedbackController($('#js_field_name_feedback'), {})
 	);
 
@@ -141,11 +155,11 @@ steal('mad/demo/init.js').then(function() {
 		new mad.form.FeedbackController($('#js_field_email_feedback'), {})
 	);
 
-//	// Add a date field element to the form
-//	form.addElement(
-//		new mad.form.element.DateController($('#js_field_date'), {}),
-//		new mad.form.FeedbackController($('#js_field_date_feedback'), {})
-//	);
+	// Add a date field element to the form
+	form.addElement(
+		new mad.form.element.TextboxController($('#js_field_date'), {}),
+		new mad.form.FeedbackController($('#js_field_date_feedback'), {})
+	);
 
 	// Add a who field element to the form
 	form.addElement(
@@ -156,8 +170,8 @@ steal('mad/demo/init.js').then(function() {
 				'k': 'Kevin',
 				'm': 'Myriam',
 				'r': 'Remy'
-			},
-			'value': 'm'
+			}
+//			'value': ''
 		}),
 		new mad.form.FeedbackController($('#js_field_who_feedback'), {})
 	);
