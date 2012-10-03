@@ -20,7 +20,7 @@ steal('funcunit', function () {
 		'special': '!@#$%^&*()_-+={}[]:";<>?,./\\|~',
 		'null': null,
 		'email': 'passbolt_team-2012@passbolt_team-2012.com',
-		'date': '2012/01/01'
+		'date': '01/01/2012'
 	};
 
 	test('mad.model.ValidationRules : alpha ASCII', function () {
@@ -188,7 +188,7 @@ steal('funcunit', function () {
 		// TRUE Excepted
 		////////////////////////////////////////////////////////////////////////
 		ok(mad.model.ValidationRules.validate('date', samples['date']) === true, samples['date']);
-		ok(mad.model.ValidationRules.validate('date', samples['date'], {'type': 'us'}) === true, samples['date']);
+		ok(mad.model.ValidationRules.validate('date', samples['date']) === true, samples['date']);
 		
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
@@ -203,5 +203,32 @@ steal('funcunit', function () {
 		ok(mad.model.ValidationRules.validate('date', samples['digit']) !== true, samples['digit']);
 		ok(mad.model.ValidationRules.validate('date', samples['float']) !== true, samples['float']);
 		ok(mad.model.ValidationRules.validate('date', samples['special']) !== true, samples['special']);
+	});
+	
+
+	test('mad.model.ValidationRules : size', function () {
+		var str = '';
+		
+		////////////////////////////////////////////////////////////////////////
+		// TRUE Excepted
+		////////////////////////////////////////////////////////////////////////
+		str = "abcd"
+		ok(mad.model.ValidationRules.validate('size', str, {'min':3}) === true, 'min 3 with ' + str);
+		str = "ab"
+		ok(mad.model.ValidationRules.validate('size', str, {'max':3}) === true, 'max 3 with ' + str);
+		str = "abcde"
+		ok(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}) === true, 'min 3 max 8 with ' + str);
+		
+		////////////////////////////////////////////////////////////////////////
+		// FALSE Excepted
+		////////////////////////////////////////////////////////////////////////
+		str = "ab"
+		ok(mad.model.ValidationRules.validate('size', str, {'min':3}) !== true, 'min 3 with' + str);
+		str = "abcd"
+		ok(mad.model.ValidationRules.validate('size', str, {'max':3}) !== true, 'max 3 with ' + str);
+		str = "ab"
+		ok(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}) !== true, 'min 3 max 8 with ' + str);
+		str = "abcdefghi"
+		ok(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}) !== true, 'min 3 max 8 with ' + str);
 	});
 });

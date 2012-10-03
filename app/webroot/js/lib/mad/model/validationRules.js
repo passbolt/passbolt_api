@@ -31,7 +31,7 @@ steal(
 		'validate': function (rule, value, options) {
 
 			if (typeof rule == 'object'){
-				options = options || rule.options || {};
+				options = rule.options || options || {};
 				rule = rule.rule;
 			}
 
@@ -126,11 +126,79 @@ steal(
 		 * 
 		 */
 		'date': function (value, options) {
-			var xregexp = XRegExp("^[0-9]{4}/[0-9]{2}/[0-9]{2}$");
-			if (!xregexp.test(value)) {
-				return __('Only date format is allowed');
+			options = options || {};
+			var format = options.format || 'dd/mm/yyyy',
+				yearPos = null,
+				monthPos = null,
+				dayPos = null,
+				days = [0,31,29,31,30,31,30,31,31,30,31,30,31],
+				dateRegExp = '',
+				returnValue = true;
+
+			switch (format) {
+				case 'm/d/y':
+					dateRegExp = /^(\d{1,2})[./-](\d{1,2})[./-](\d{2}|\d{4})$/;
+					monthPos=1; dayPos=2; yearPos=3;
+					break;
+
+				case 'mm/dd/yy':
+					dateRegExp = /^(\d{1,2})[./-](\d{1,2})[./-](\d{2})$/;
+					monthPos=1; dayPos=2; yearPos=3;
+					break;
+
+				case 'mm/dd/yyyy':
+					dateRegExp = /^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/;
+					monthPos=1; dayPos=2; yearPos=3;
+					break;
+
+				case 'dd/mm/yyyy':
+					dateRegExp = /^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/;
+					monthPos=2; dayPos=1; yearPos=3;
+					break;
+
+				case 'y/m/d':
+					dateRegExp = /^(\d{2}|\d{4})[./-](\d{1,2})[./-](\d{1,2})$/;
+					monthPos=2; dayPos=3; yearPos=1;
+					break;
+
+				case 'yy/mm/dd':
+					dateRegExp = /^(\d{1,2})[./-](\d{1,2})[./-](\d{1,2})$/;
+					monthPos=2; dayPos=3; yearPos=1;
+					break;
+
+				case 'yyyy/mm/dd':
+					dateRegExp = /^(\d{4})[./-](\d{1,2})[./-](\d{1,2})$/;
+					monthPos=2; dayPos=3; yearPos=1;
+					break;
 			}
-			return true;
+			
+			var dateParts = value.match(dateRegExp);
+			if (!dateParts) {
+				returnValue = __('The date format is incorect, expected : ') + format;
+			} else {
+				year = dateParts[yearPos] * 1;
+				month = dateParts[monthPos] * 1;
+				day = dateParts[dayPos] * 1;
+				
+				// check date numbers
+				if (day < 1 || day > days[month] ||
+					month < 1 || month > 12) {
+					returnValue = __('The date format is incorect, expected : ') + format;
+				}
+				
+				// check leap year
+				if (month == 2 && day == 29) {
+					var isLeapYear = (year % 4 != 0 ? false : 
+						(year % 100 != 0 ? true: 
+						(year % 1000 != 0 ? false : true)));
+					
+					if (!isLeapYear) {
+						returnValue = __('The year %s is not a leap year', year);
+					}
+				}
+			}
+			
+			return returnValue;
 		},
 
 		/**
@@ -138,6 +206,30 @@ steal(
 		 */
 		'uid': function (value, options) {
 			return true;
+		},
+
+		/**
+		 * 
+		 */
+		'size': function (value, options) {
+			console.log(value, options);
+			options = options || {};
+			var returnValue = true,
+				min = options.min || null,
+				max = options.max || null;
+
+			if (min) {
+				if (value.length < min) {
+					returnValue = __("A least ") + min + __(" characters");
+				}
+			}
+			if (max) {
+				if (value.length > max) {
+					returnValue = __("Cannot exceed ") + max + __(" characters");
+				}
+			}
+
+			return returnValue;
 		}
 
 	}, /** @prototype */ { });

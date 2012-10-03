@@ -73,6 +73,12 @@
 		</div>
 		
 		<div>
+			<label>The password to open the door</label>
+			<input type="text" name="demo.model.Meeting.password" id="js_field_password" class="form_field" />
+			<span id="js_field_password_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
 			<input type="submit" value="submit" />
 		</div>
 		
@@ -97,6 +103,10 @@ steal('mad/demo/init.js').then(function() {
 			'date': ['required', {
 				'rule':'date', 
 				'options': {'type': 'us'}
+			}],
+			'password': [{
+				'rule': 'size',
+				'options': {'min': 3, 'max': 8}
 			}]
 		}
 	}, {});
@@ -187,6 +197,12 @@ steal('mad/demo/init.js').then(function() {
 			'value': ['Fiesta']
 		}),
 		new mad.form.FeedbackController($('#js_field_topics_feedback'), {})
+	);
+	
+	// Add a surname field element to the form
+	form.addElement(
+		new mad.form.element.TextboxController($('#js_field_password'), {}),
+		new mad.form.FeedbackController($('#js_field_password_feedback'), {})
 	);
 	
 });
