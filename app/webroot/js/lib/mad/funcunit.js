@@ -27,10 +27,10 @@ steal(
 		});	
 	},
 	
-	//    "./test/controller/appController.js",
+//	"./test/controller/appController.js",
 	"./test/controller/controller.js",
 	"./test/controller/containerController.js",
-	//    "./test/controller/componentController.js",
+	"./test/controller/componentController.js",
 	//	"./test/controller/component/treeController.js",
 	"./test/core/class.js",
 	"./test/core/singleton.js",

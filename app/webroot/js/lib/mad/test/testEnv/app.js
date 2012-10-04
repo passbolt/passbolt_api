@@ -17,8 +17,10 @@ MAD_ROOT + '/mad.js' // the mad framework
 			'appControllerId': 'mad_test_app_controller', // Application controller DOM node id
 			'appControllerClass': mad.controller.AppController, // Application controller class
 			'eventBusControllerId': 'mad_test_event_bus_controller', // Event bus controller DOM node id
-			'ready': function () {
-				$('body').addClass('mad_test_app_ready');
+			'callbacks' : {
+				'ready': function () {
+					$('body').addClass('mad_test_app_ready');
+				}
 			}
 		});
 

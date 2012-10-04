@@ -1,13 +1,3 @@
-/*
- * @page mad.controller.component Components
- * @tag mad.controller.component
- * @parent mad.model
- * @see mad.controller.ComponentController
- * @see mad.model.ComponentState
- * 
- * 
- */
-
 steal(
 	'jquery/model'
 ).then(function () {
@@ -156,13 +146,18 @@ steal(
 					monthPos=2; dayPos=1; yearPos=3;
 					break;
 
+				case 'd/m/yy':
+					dateRegExp = /^(\d{1,2})[./-](\d{1,2})[./-](\d{2}|\d{4})$/;
+					monthPos=2; dayPos=1; yearPos=3;
+					break;
+
 				case 'y/m/d':
 					dateRegExp = /^(\d{2}|\d{4})[./-](\d{1,2})[./-](\d{1,2})$/;
 					monthPos=2; dayPos=3; yearPos=1;
 					break;
 
 				case 'yy/mm/dd':
-					dateRegExp = /^(\d{1,2})[./-](\d{1,2})[./-](\d{1,2})$/;
+					dateRegExp = /^(\d{4}|\d{1,2})[./-](\d{1,2})[./-](\d{1,2})$/;
 					monthPos=2; dayPos=3; yearPos=1;
 					break;
 
@@ -197,7 +192,6 @@ steal(
 					}
 				}
 			}
-			
 			return returnValue;
 		},
 
@@ -212,7 +206,6 @@ steal(
 		 * 
 		 */
 		'size': function (value, options) {
-			console.log(value, options);
 			options = options || {};
 			var returnValue = true,
 				min = options.min || null,

@@ -182,27 +182,66 @@ steal('funcunit', function () {
 	});
 
 	test('mad.model.ValidationRules : date', function () {
-		var str = '';
+		var str = '',
+			dates = {
+				'mm/dd/yy' : {
+					'valid' : ['01/20/12', '1/1/12'],
+					'invalid' : ['20/1/12', '1/32/12', '1/20/2012']
+				},
+				'mm/dd/yyyy' : {
+					'valid' : ['01/20/2012', '1/20/2012'],
+					'invalid' : ['20/1/12', '1/32/12']
+				},
+				'dd/mm/yyyy': {
+					'valid' :  ['20/01/2012', '20/1/2012'],
+					'invalid' : ['41/1/12', '1/32/12']
+				},
+				'd/m/yy': {
+					'valid' :  ['20/1/12', '20/1/2012'],
+					'invalid' : ['41/1/12', '1/32/12']
+				},
+				'y/m/d' : {
+					'valid' :  ['12/1/20', '2012/1/20'],
+					'invalid' : ['12/32/1', '12/1/32']
+				},
+				'yy/mm/dd' : {
+					'valid' :  ['12/1/20', '2012/1/20'],
+					'invalid' : ['12/32/1', '12/1/32']
+				},
+				'yyyy/mm/dd' : {
+					'valid' :  ['2012/01/20'],
+					'invalid' : ['12/1/1', '2012/13/1', '2012/1/32']
+				}
+			}
 		
 		////////////////////////////////////////////////////////////////////////
 		// TRUE Excepted
 		////////////////////////////////////////////////////////////////////////
-		ok(mad.model.ValidationRules.validate('date', samples['date']) === true, samples['date']);
-		ok(mad.model.ValidationRules.validate('date', samples['date']) === true, samples['date']);
+		equal(mad.model.ValidationRules.validate('date', samples['date']), true, 'default format with ' + samples['date']);
+		for (var format in dates) {
+			for (var i in dates[format]['valid']){
+				equal(mad.model.ValidationRules.validate('date', dates[format]['valid'][i], {'format':format}), true, format + ' format with ' + dates[format]['valid'][i]);
+			}
+		}
 		
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
-		ok(mad.model.ValidationRules.validate('date', samples['alphaASCII']) !== true, samples['alphaASCII']);
-		ok(mad.model.ValidationRules.validate('date', samples['alphaASCIIUpper']) !== true, samples['alphaASCIIUpper']);
-		ok(mad.model.ValidationRules.validate('date', samples['alphaAccent']) !== true, samples['alphaAccent']);
-		ok(mad.model.ValidationRules.validate('date', samples['alphaLatin']) !== true, samples['alphaLatin']);
-		ok(mad.model.ValidationRules.validate('date', samples['alphaChinese']) !== true, samples['alphaChinese']);
-		ok(mad.model.ValidationRules.validate('date', samples['alphaArabic']) !== true, samples['alphaArabic']);
-		ok(mad.model.ValidationRules.validate('date', samples['alphaRussian']) !== true, samples['alphaRussian']);
-		ok(mad.model.ValidationRules.validate('date', samples['digit']) !== true, samples['digit']);
-		ok(mad.model.ValidationRules.validate('date', samples['float']) !== true, samples['float']);
-		ok(mad.model.ValidationRules.validate('date', samples['special']) !== true, samples['special']);
+		for (var format in dates) {
+			for (var i in dates[format]['invalid']){
+				notEqual(mad.model.ValidationRules.validate('date', dates[format]['invalid'][i], {'format':format}), true, format + ' format with ' + dates[format]['invalid'][i]);
+			}
+		}
+		notEqual(mad.model.ValidationRules.validate('date', samples['alphaASCII']), true, samples['alphaASCII']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['alphaASCIIUpper']), true, samples['alphaASCIIUpper']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['alphaAccent']), true, samples['alphaAccent']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['alphaLatin']), true, samples['alphaLatin']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['alphaChinese']), true, samples['alphaChinese']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['alphaArabic']), true, samples['alphaArabic']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['alphaRussian']), true, samples['alphaRussian']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['digit']), true, samples['digit']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['float']), true, samples['float']);
+		notEqual(mad.model.ValidationRules.validate('date', samples['special']), true, samples['special']);
 	});
 	
 
