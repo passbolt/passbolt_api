@@ -41,7 +41,7 @@ steal(
 
 			var clazzName = clazz.fullName;
 			var split = clazzName.split('.');
-console.dir(clazzName);
+
 			// extract the controller name, and treat it to find its view name
 			var controllerName = split.pop();
 			var viewName = $.String.camelize(controllerName.substr(0, controllerName.indexOf('Controller')));
