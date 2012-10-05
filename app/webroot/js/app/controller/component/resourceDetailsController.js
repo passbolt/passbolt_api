@@ -1,7 +1,6 @@
-steal( 
-    MAD_ROOT+'/view/component/tree.js'
-)
-.then(function ($) {
+steal(
+	MAD_ROOT + '/view/component/tree.js'
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.ResourceDetailsController
@@ -16,18 +15,15 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.ResourceDetailsController}
 	 */
-	mad.controller.ComponentController.extend('passbolt.controller.component.ResourceDetailsController',
+	mad.controller.ComponentController.extend('passbolt.controller.component.ResourceDetailsController', /** @static */ {
 
-	/** @static */
-	{
 		'defaults': {
 			'label': 'Resource Details Controller'
 		},
 		'listensTo': []
-	},
 
-	/** @prototype */
-	{
+	}, /** @prototype */ {
+
 		'init': function (el, options) {
 			this._super(el, options);
 			this.setViewData('resource', new passbolt.model.Resource);
@@ -52,7 +48,7 @@ steal(
 			var copySecretButton = new mad.controller.component.ButtonController($('#js_details_copy_secret_button', this.element), {
 				'value': resource.Resource.id
 			}).render();
-			
+
 			var oneClickLoginButton = new mad.controller.component.ButtonController($('#js_details_one_click_login_button', this.element), {
 				'value': resource.Resource.id
 			}).render();
@@ -105,14 +101,15 @@ steal(
 			var self = this;
 			this.crtResourceId = resource.id;
 			this.setState('loading');
-			var resource = passbolt.model.Resource.get({
+
+			passbolt.model.Resource.get({
 				id: resource.id
-			}, function (request, response, resource) {
-				if(self.crtResourceId != request.data.id){
+			}, function (request, response, rs) {
+				if (self.crtResourceId != request.data.id) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.get request callback in passbolt.controller.component.ResourceDetailsController');
 					return;
 				}
-				self.load(resource);
+				self.load(rs);
 				self.setState('ready');
 			});
 		}

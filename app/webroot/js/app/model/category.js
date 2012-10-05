@@ -28,7 +28,7 @@ steal('jquery/model').then(function () {
 		 * Get a category
 		 */
 		'get': function (params, success, error) {
-			params['children'] = typeof (params['children']) != 'undefined' ? params['children'] : false;
+			params.children = typeof (params.children) != 'undefined' ? params.children : false;
 			var url = APP_URL + '/categories/get/{id}/{children}';
 			url = $.String.sub(url, params, true);
 
@@ -46,8 +46,8 @@ steal('jquery/model').then(function () {
 		 * Get the roots category
 		 */
 		'getRoots': function (params, success, error) {
-			params['children'] = false;
-			var url = APP_URL + '/categories.json';
+			params.children = false;
+			var url = APP_URL + '/categories/index/1.json';
 			url = $.String.sub(url, params, true);
 
 			return mad.net.Ajax.singleton().request({

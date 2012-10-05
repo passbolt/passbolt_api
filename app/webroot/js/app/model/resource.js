@@ -1,7 +1,4 @@
-steal(
-    'jquery/model'
-)
-.then( function () {
+steal('jquery/model').then(function () {
 	/*
 	 * @class passbolt.model.Resource
 	 * @inherits {$.Model}
@@ -14,9 +11,8 @@ steal(
 	 * @param {array} options
 	 * @return {passbolt.model.Resource}
 	 */
-	$.Model('passbolt.model.Resource',
-	/** @static */
-	{
+	$.Model('passbolt.model.Resource', /** @static */ {
+
 		attributes: {
 			'Resource.id': 'string',
 			'Resource.name': 'string',
@@ -35,14 +31,14 @@ steal(
 		'getByCategory': function (params, success, error) {
 			var urlTpl = APP_URL + '/resources/viewByCategory/{category_id}/{recursive}',
 				url = $.String.sub(urlTpl, $.extend(true, {}, params), true);
-				
+
 			return mad.net.Ajax.singleton().request({
 				url: url,
 				type: 'get',
 				dataType: 'passbolt.model.Resource.models',
 				data: {
-					category_id: params['category_id'],
-					recursive: params['recursive']
+					category_id: params.category_id,
+					recursive: params.recursive
 				},
 				success: success,
 				error: error
@@ -54,22 +50,21 @@ steal(
 		 */
 		'get': function (params, success, error) {
 			var url = APP_URL + '/resources/view/{id}';
-			url = $.String.sub(url, params, true);
-
+			url = $.String.sub(url, $.extend(true, {}, params), true);
 			return mad.net.Ajax.singleton().request({
 				url: url,
 				type: 'get',
 				dataType: 'passbolt.model.Resource.model',
 				data: {
-					id: params['id']
+					id: params.id
 				},
 				success: success,
 				error: error
 			});
 		}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
+
 		'Resource': {
 			'id': 'string',
 			'name': 'string',
@@ -81,5 +76,6 @@ steal(
 			'created': 'string',
 			'modified': 'string'
 		}
+
 	});
-})
+});
