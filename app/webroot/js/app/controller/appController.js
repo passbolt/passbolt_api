@@ -57,14 +57,14 @@ steal(
 
 			// @dev BEGIN
 
-			// Create local resources for fixtures
-			var categories = passbolt.model.Category.getRoots({
-				children: true
-			}, function (request, response, categories) {
-				for(var i in categories) {
-					loadFixturedResources(categories[i]);
-				}
-			});
+//			// Create local resources for fixtures
+//			var categories = passbolt.model.Category.getRoots({
+//				children: true
+//			}, function (request, response, categories) {
+//				for(var i in categories) {
+//					loadFixturedResources(categories[i]);
+//				}
+//			});
 
 			mad.eventBus.trigger('app_ready');
 

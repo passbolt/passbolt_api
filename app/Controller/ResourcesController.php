@@ -92,37 +92,6 @@ class ResourcesController extends AppController {
 		$this->Message->success();
 	}
 
-	public function populate() {
-		$this->layout = 'html5';
-		$this->Resource->create();
-		$catDrupalId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
-		$catAnjunaId = '4ff6111c-8534-4d17-869c-2184cbdd56cb';
-		$catHippiesId = '4ff6111d-9e6c-4d71-80ee-2184cbdd56cb';
-		$this->Resource->saveAll(
-			array(
-				0 => array(
-				'Category' => array( 'id' => $catGoaId ),
-				'Resource' => array('name' => 'festival du cinema', 'username' => 'festival', 'expiry_date' => null, 'uri' => 'http://www.iffigoa.org/', 'description' => 'description of the Goa Film Festival')
-				),
-				1 => array(
-				'Category' => array( 'id' => $catGoaId ),
-				'Resource' => array('name' => 'Church Square', 'username' => 'priest1', 'expiry_date' => null, 'uri' => '', 'description' => 'this is a description test')
-				),
-				2 => array(
-				'Category' => array( 'id' => $catAnjunaId ),
-				'Resource' => array('name' => 'hill door', 'username' => 'hippie', 'expiry_date' => null, 'uri' => 'http://www.hippiehill.com', 'description' => 'never underestimate the power of Anjuna Hills')
-				),
-				3 => array(
-				'Category' => array( 'id' => $catHippiesId ),
-				'Resource' => array('name' => 'washroom', 'username' => 'sousouchaie', 'expiry_date' => null, 'uri' => '', 'description' => 'How to get inside the washroom at Hippie ?')
-				),
-				4 => array(
-				'Resource' => array('name' => 'random', 'username' => 'user1', 'expiry_date' => '2014-07-01', 'uri' => 'http://www.enova-tech.net', 'description' => 'sample entry')
-				)
-			)
-		);
-	}
-
 /**
  * Delete a resource
  * @param uuid id the id of the resource to delete
