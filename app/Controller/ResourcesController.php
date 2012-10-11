@@ -74,7 +74,18 @@ class ResourcesController extends AppController {
 		if ($recursive == false) {
 			$data = array('CategoryResource.category_id' => $categoryId);
 		} else {
-			$cats = $this->Resource->CategoryResource->Category->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
+			$cats = $this->Resource->CategoryResource->Category->find(
+				'all',
+				array(
+					'conditions' => array(
+						'Category.lft >=' => $category['Category']['lft'],
+						'Category.rght <=' => $category['Category']['rght']
+						),
+					'order' => array(
+						'Category.lft' => 'ASC'
+						)
+				)
+			);
 			foreach ($cats as $cat) {
 				$data['CategoryResource.category_id'][] = $cat['Category']['id'];
 			}
