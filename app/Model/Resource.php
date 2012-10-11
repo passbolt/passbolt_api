@@ -130,7 +130,7 @@ class Resource extends AppModel {
 						'Resource.deleted' => 0
 					),
 					'order' => array(
-						'Resource.created ASC'
+						'Resource.name ASC'
 					)
 				);
 			break;
