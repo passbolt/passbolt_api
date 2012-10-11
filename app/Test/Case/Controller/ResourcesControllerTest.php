@@ -89,6 +89,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals('washroom', $result['body'][3]['Resource']['name'],
 			$url . " test should read 'washroom' but is reading {$result['body'][3]['Resource']['name']}"
 		);
+		$errors = print_r($result, true);
+		$this->log("debug : $errors", 'app.debug'); // Log the error
 		$this->assertEquals(2, count($result['body'][1]['CategoryResource']),
 			$url . " counting the number of elements should return '2' but is reading " . count($result['body'][1]['CategoryResource'])
 		);
