@@ -86,10 +86,9 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 		$url = "/resources/viewByCategory/" . $id . "/1.json";
 		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
-		pr($result);
-		die();
+		$debug = print_r($result, true);
 		$this->assertEquals('washroom', $result['body'][3]['Resource']['name'],
-			$url . " test should read 'washroom' but is reading {$result['body'][3]['Resource']['name']}"
+			$url . " test should read 'washroom' but is reading {$result['body'][3]['Resource']['name']} - debug : $debug"
 		);
 		$this->assertEquals(2, count($result['body'][1]['CategoryResource']),
 			$url . " counting the number of elements should return '2' but is reading " . count($result['body'][1]['CategoryResource'])
