@@ -86,6 +86,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 		$url = "/resources/viewByCategory/" . $id . "/1.json";
 		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
+		pr($result);
+		die();
 		$this->assertEquals('washroom', $result['body'][3]['Resource']['name'],
 			$url . " test should read 'washroom' but is reading {$result['body'][3]['Resource']['name']}"
 		);
