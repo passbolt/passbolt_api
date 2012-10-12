@@ -45,9 +45,9 @@ class Resource extends AppModel {
 				),
 				'expiry_date' => array(
 					'date' => array(
-			    	'required' => false,
+						'required' => false,
 						'allowEmpty' => true,
-			 			'rule' => array('date', 'ymd'),
+						'rule' => array('date', 'ymd'),
 						'message' => __('Please indicate a valid date')
 					),
 					'infuture' => array(
@@ -128,6 +128,9 @@ class Resource extends AppModel {
 					'conditions' => array(
 						'CategoryResource.category_id' => $data['CategoryResource.category_id'],
 						'Resource.deleted' => 0
+					),
+					'order' => array(
+						'Resource.name ASC'
 					)
 				);
 			break;
