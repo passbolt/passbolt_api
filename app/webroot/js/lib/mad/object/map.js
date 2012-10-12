@@ -90,7 +90,7 @@ steal(
 							var objectFieldToMap = getObjFieldPointer(object, keyToMap);
 							// @todo what to do if the key to map does not exist
 							if(objectFieldToMap != null) {
-								current[mapKeyElt] = func(objectFieldToMap, this);
+								current[mapKeyElt] = func(objectFieldToMap, this, object);
 							}
 						} else {
 							var objectFieldToMap = getObjFieldPointer(object, this.map[key]);

@@ -26,7 +26,7 @@ steal(
 
 		'init': function (el, options) {
 			this._super(el, options);
-			this.setViewData('resource', new passbolt.model.Resource);
+			this.setViewData('resource', new passbolt.model.Resource());
 			this.render();
 		},
 

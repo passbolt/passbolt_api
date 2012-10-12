@@ -1,5 +1,5 @@
 steal(
-	'jquery/class',
+	MAD_ROOT + '/controller',
 	MAD_ROOT + '/event/eventable.js'
 ).then(function ($) {
 

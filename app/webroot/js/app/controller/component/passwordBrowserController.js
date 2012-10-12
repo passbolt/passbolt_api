@@ -1,8 +1,9 @@
-steal(MAD_ROOT + '/controller/component/gridController.js', 
-	'app/controller/component/copyLoginButtonController.js', 
-	'app/controller/component/copySecretButtonController.js')
-	
-.then( function($) {
+steal(
+	MAD_ROOT + '/controller/component/gridController.js',
+	'app/controller/component/copyLoginButtonController.js',
+	'app/controller/component/copySecretButtonController.js',
+	'lib/jquery/jquery-ui-1.9.0.custom.js'
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.component.PasswordBrowserController
@@ -19,14 +20,12 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.component.PasswordBrowserController}
 	 */
-	mad.controller.component.GridController.extend('passbolt.controller.component.PasswordBrowserController',
-	/** @static */
-	{
+	mad.controller.component.GridController.extend('passbolt.controller.component.PasswordBrowserController', /** @static */ {
+
 		'listensTo': ['item_selected', 'item_hovered'],
 		'defaults': {}
-	},
-	/** @prototype */
-	{
+
+	}, /** @prototype */ {
 		/**
 		 * The current selected resource id
 		 * @type {string}
@@ -87,11 +86,14 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 				'width': 100,
 				'cellAdapter': function (cellElement, cellValue) {
 					mad.helper.ComponentHelper.create(
-						cellElement, 'inside_replace', passbolt.controller.component.CopyLoginButtonController, {
+						cellElement,
+						'inside_replace',
+						passbolt.controller.component.CopyLoginButtonController, {
 							'cssClasses': ['js_copy_login_button'],
 							'state': 'hidden',
 							'value': cellValue
-						});
+						}
+					);
 				}
 			}, {
 				'name': 'copySecret',
@@ -99,23 +101,25 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 				'width': 100,
 				'cellAdapter': function (cellElement, cellValue) {
 					mad.helper.ComponentHelper.create(
-						cellElement, 'inside_replace', passbolt.controller.component.CopySecretButtonController, {
+						cellElement,
+						'inside_replace',
+						passbolt.controller.component.CopySecretButtonController, {
 							'cssClasses': ['js_copy_secret_button'],
 							'state': 'hidden',
 							'value': cellValue
-						});
+						}
+					);
 				}
 			}];
 
 			this._super(el, options);
-		}
+		},
 
 		/**
 		 * Load the browsers with the given resources
 		 * @param {app.model.Resource[]} resources The resources to display
 		 * @return {void}
 		 */
-		,
 		'load': function (resources) {
 			this._super(resources);
 		},
@@ -215,7 +219,7 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 				'recursive': true
 			}, function (request, response, resources) {
 				// The callback is out of date, an other category has been selected
-				if(self.crtCategoryId != request.data.category_id){
+				if (self.crtCategoryId != request.data.category_id) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
 					return;
 				}

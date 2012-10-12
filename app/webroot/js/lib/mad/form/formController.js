@@ -5,7 +5,7 @@ steal(
 
 	/*
 	 * @class mad.form.FormController
-	 * @inherits mad.controller.Controller
+	 * @inherits mad.controller.ComponentController
 	 * @parent mad.form
 	 * 
 	 * The mad form controller
@@ -17,7 +17,7 @@ steal(
 	 * this.options and merged with defaults static variable
 	 * @return {mad.controller.FormController}
 	 */
-	mad.controller.Controller.extend('mad.form.FormController', /** @static */ {
+	mad.controller.ComponentController.extend('mad.form.FormController', /** @static */ {
 
 		'defaults': {
 //			'templateBased': false,
@@ -25,6 +25,7 @@ steal(
 				'error': function () { },
 				'submit': function (data) { }
 			},
+			'tag': 'form',
 			'validateOnChange': true
 		},
 
@@ -168,9 +169,11 @@ steal(
 				this.elements[elementName]
 					.setState('success');
 				// set the feedback message, and switch the feedback element state to success
-				this.feedbackElements[elementName]
-					.setMessage('OK')
-					.setState('success');
+				if (this.feedbackElements[elementName]){
+					this.feedbackElements[elementName]
+						.setMessage('OK')
+						.setState('success');
+				}
 			}
 			
 			return returnValue;

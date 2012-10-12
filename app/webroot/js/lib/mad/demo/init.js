@@ -1,5 +1,5 @@
 // The application url
-APP_URL = document.location.protocol + '//' + document.location.hostname + document.location.pathname;
+APP_URL = document.location.protocol + '//' + document.location.hostname;
 // The mad librarie path with the JMVC directory as root directory
 MAD_ROOT = 'lib/mad';
 

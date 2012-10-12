@@ -1,8 +1,8 @@
-steal('jquery/model').then(function () {
+steal(MAD_ROOT + '/model').then(function () {
 
 	/*
 	 * @class passbolt.model.Category
-	 * @inherits {$.Model}
+	 * @inherits {mad.model.Model}
 	 * @parent index
 	 * 
 	 * The Category model
@@ -12,7 +12,7 @@ steal('jquery/model').then(function () {
 	 * @param {array} options
 	 * @return {passbolt.model.Category}
 	 */
-	$.Model('passbolt.model.Category', /** @static */	{
+	mad.model.Model('passbolt.model.Category', /** @static */	{
 
 		attributes: {
 			'id': 'string',
@@ -23,6 +23,30 @@ steal('jquery/model').then(function () {
 			'category_type_id': 'string',
 			'children': 'passbolt.model.Category.models'
 		},
+
+		create : function (attrs, success, error) {
+			var extractedData = {};
+			for (var name in attrs) {
+				if (typeof attrs[name] == undefined || typeof attrs[name] != 'string') continue;
+				extractedData[name] = attrs[name];
+			}
+			var data = {
+				Category: extractedData
+			};
+			$.post(APP_URL + 'categories', data, success, "json");
+		},
+
+//		'save': function (params, success, error) {
+//			console.log(this);
+//			var url = APP_URL + '/categories/add.json';
+//			return mad.net.Ajax.singleton().request({
+//				url: url,
+//				type: 'post',
+//				data: this,
+//				success: success,
+//				error: error
+//			});
+//		},
 
 		/**
 		 * Get a category

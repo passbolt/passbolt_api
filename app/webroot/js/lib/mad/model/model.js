@@ -54,6 +54,33 @@ steal('jquery/model').then(function ($) {
 			}
 
 			return returnValue;
+		},
+
+		/**
+		 * Get a model in 
+		 * @param {array} data The array to search in
+		 * @param {string} key The key to search
+		 * @param {string} value The value of the key to search
+		 */
+		'search': function (data, key, value) {
+			var split = key.split('.');
+			for (var i in data) {
+				var compare = data[i];
+				for (var j in split) {
+					compare = compare[split[j]];
+				}
+				if (compare == value) {
+					return data[i];
+				}
+				// search in children
+				if (data[i].children) {
+					var childrenSearch = mad.model.Model.search (data[i].children, key, value);
+					if (childrenSearch != null) {
+						return childrenSearch;
+					}
+				}
+			}
+			return null;
 		}
 
 	}, /** @prototype */ {
