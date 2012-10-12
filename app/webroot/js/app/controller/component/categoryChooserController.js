@@ -1,5 +1,5 @@
 steal(
-	MAD_ROOT + '/view/component/tree.js'
+	MAD_ROOT + '/view/component/tree/jstree.js'
 ).then(function ($) {
 
 	/*
@@ -18,28 +18,74 @@ steal(
 	mad.controller.component.TreeController.extend('passbolt.controller.component.CategoryChooserController', /** @static */ {
 
 		'defaults': {
-			'label': 'Category Chooser'
-		},
-		'listensTo': ['item_selected']
-
-	}, /** @prototype */ {
-
-		'init': function (el, options) {
+			'label': 'Category Chooser',
+			'viewClass': mad.view.component.tree.Jstree,
+			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
 			// The map to use to make jstree working with our category model
-			options.map = new mad.object.Map({
-				'attr.id': {
-					'key': 'Category.id',
-					'func': function (value, map) {
-						return value;
-					}
-				},
+			'map': new mad.object.Map({
+				'attr.id': 'Category.id',
 				'data': 'Category.name',
 				'children': {
 					'key': 'children',
 					'func': mad.object.Map.mapObjects
 				}
+			})
+		}
+
+	}, /** @prototype */ {
+
+		/**
+		 * Show the contextual menu
+		 * @param {string} itemId The identifier of the selected item
+		 * @param {string} x The x position where the menu will be rendered
+		 * @param {string} y The y position where the menu will be rendered
+		 * @return {void}
+		 */
+		'showContextualMenu': function (itemId, x, y) {
+			var menuItems = [
+				{ 'MenuItem': new mad.model.MenuItem({
+					'id': uuid(),
+					'label': 'open',
+					'action': function () {
+						passbolt.eventBus.trigger('category_selected', {'id': itemId});
+					}
+				}) }, { 'MenuItem': new mad.model.MenuItem({
+					'id': uuid(),
+					'label': 'create',
+					'action': function () {
+						console.log('Menu Create');
+					}
+				}), 'children': [
+					{ 'MenuItem': new mad.model.MenuItem({
+						'id': uuid(),
+						'label': 'secret',
+						'action': function () {
+							console.log('Menu Create Secret');
+						}
+					}) }, { 'MenuItem': new mad.model.MenuItem({
+						'id': uuid(),
+						'label': 'category',
+						'action': function () {
+							passbolt.eventBus.trigger('request_category_creation', {'id': itemId});
+						}
+					})
+				}]
+			}];
+
+			// Instanciate the menu controller
+			// @todo An html helper to insert component should be solve the view problem is this code part
+			if ($('#js_category_chooser_contextual_menu').length) {
+				$('#js_category_chooser_contextual_menu').remove();
+			}
+
+			var $menu = $('<ul id="js_category_chooser_contextual_menu" class="contextual_menu"/>');
+			mad.app.element.prepend($menu);
+			var contextualMenu = new mad.controller.component.ContextualMenuController($menu, {
+				'mouseX': x,
+				'mouseY': y
 			});
-			this._super(el, options);
+			contextualMenu.render();
+			contextualMenu.load(menuItems);
 		},
 
 		/* ************************************************************** */
@@ -51,12 +97,26 @@ steal(
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event
 		 * @param {string} itemId The item identifier
+		 * @param {Event} srcEvent The jQuery source event
 		 * @return {void}
 		 */
-		'item_selected': function (element, event, itemId) {
+		'item_selected': function (element, event, itemId, srcEvent) {
 			passbolt.eventBus.trigger('category_selected', {
 				'id': itemId
 			});
+		},
+
+		/**
+		 * An item has been right selected
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} itemId The item identifier
+		 * @param {Event} srcEvent The jQuery source event
+		 * @return {void}
+		 */
+		'item_right_selected': function (element, event, itemId, srcEvent) {
+			this._super(element, event, itemId);
+			this.showContextualMenu(itemId, srcEvent.pageX, srcEvent.pageY);
 		},
 
 		/* ************************************************************** */
