@@ -116,6 +116,7 @@ steal(
 		 * 
 		 */
 		'date': function (value, options) {
+			value = value || '';
 			options = options || {};
 			var format = options.format || 'dd/mm/yyyy',
 				yearPos = null,
@@ -206,6 +207,7 @@ steal(
 		 * 
 		 */
 		'size': function (value, options) {
+			value = value || '';
 			options = options || {};
 			var returnValue = true,
 				min = options.min || null,

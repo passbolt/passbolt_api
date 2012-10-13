@@ -65,13 +65,29 @@ steal(
 		},
 
 		/**
+		 * Get model name
+		 */
+		'getModelName': function () {
+			var returnValue,
+				split = this.getModelReference().split('.');
+			for (var i in split) {
+				if (split[i][0] === split[i][0].toUpperCase()) {
+					returnValue = split.slice(0, parseInt(i)+1).join('.');
+					break;
+				}
+			}
+			return returnValue;
+		},
+
+		/**
 		 * Get the form element associated model
 		 * @return {mad.model.Model}
 		 */
 		'getModel': function () {
-			var returnValue = null;
-			var split = this.getModelReference().split('.');
-			var modelName = split.slice(0, split.length - 1).join('.');
+			var returnValue = null,
+				modelName = this.getModelName();
+			
+			// @todo throw an exception if the model does not exist
 			returnValue = $.String.getObject(modelName);
 			return returnValue;
 		},
@@ -81,9 +97,10 @@ steal(
 		 * @return {string}
 		 */
 		'getModelAttributeName': function () {
-			var returnValue = null;
-			var split = this.getModelReference().split('.');
-			returnValue = split[split.length - 1];
+			var returnValue = null,
+				modelReference = this.getModelReference(),
+				modelName = this.getModelName();
+			returnValue = modelReference.substring(modelName.length+1, modelReference.length);
 			return returnValue;
 		},
 

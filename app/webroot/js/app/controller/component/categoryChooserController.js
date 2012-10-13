@@ -123,6 +123,10 @@ steal(
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
 
+		'categpry_created': function (category) {
+			alert('created');
+		},
+
 		/**
 		 * Observe when the application is ready and load the tree with the roots
 		 * categories

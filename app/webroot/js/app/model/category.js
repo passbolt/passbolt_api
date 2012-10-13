@@ -15,38 +15,26 @@ steal(MAD_ROOT + '/model').then(function () {
 	mad.model.Model('passbolt.model.Category', /** @static */	{
 
 		attributes: {
-			'id': 'string',
-			'parent_id': 'string',
-			'lft': 'string',
-			'rght': 'string',
-			'name': 'string',
-			'category_type_id': 'string',
+			// Cannot manage attributes like this, our representation is fully compatible with the cakephp model structure
+//			'id': 'string',
+//			'parent_id': 'string',
+//			'lft': 'string',
+//			'rght': 'string',
+//			'name': 'string',
+//			'category_type_id': 'string',
 			'children': 'passbolt.model.Category.models'
 		},
 
 		create : function (attrs, success, error) {
-			var extractedData = {};
-			for (var name in attrs) {
-				if (typeof attrs[name] == undefined || typeof attrs[name] != 'string') continue;
-				extractedData[name] = attrs[name];
-			}
-			var data = {
-				Category: extractedData
-			};
-			$.post(APP_URL + 'categories', data, success, "json");
+			var url = APP_URL + 'categories';
+			return mad.net.Ajax.singleton().request({
+				url: url,
+				type: 'post',
+				data: attrs,
+				success: success,
+				error: error
+			});
 		},
-
-//		'save': function (params, success, error) {
-//			console.log(this);
-//			var url = APP_URL + '/categories/add.json';
-//			return mad.net.Ajax.singleton().request({
-//				url: url,
-//				type: 'post',
-//				data: this,
-//				success: success,
-//				error: error
-//			});
-//		},
 
 		/**
 		 * Get a category
@@ -55,7 +43,6 @@ steal(MAD_ROOT + '/model').then(function () {
 			params.children = typeof (params.children) != 'undefined' ? params.children : false;
 			var url = APP_URL + '/categories/get/{id}/{children}';
 			url = $.String.sub(url, params, true);
-
 			return mad.net.Ajax.singleton().request({
 				url: url,
 				type: 'get',

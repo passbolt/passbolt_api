@@ -119,16 +119,45 @@ steal(
 			for (var elementId in this.elements) {
 				var element = this.elements[elementId],
 					model = element.getModel(),
-					elementModelName = model.fullName;
+					modelName = model.fullName,
+					modelShortName = model.shortName;
 
-				if (typeof returnValue[elementModelName] == 'undefined') {
-					returnValue[elementModelName] = [];
+				// 
+				if (typeof returnValue[modelName] == 'undefined') {
+					returnValue[modelName] = {};
+					returnValue[modelName][modelShortName] = {};
 				}
+
 				// get the element attribute name
-				var elementAttributeName = element.getModelAttributeName();
-				returnValue[elementModelName][elementAttributeName] = element.getValue();
+				var eltAttrName = element.getModelAttributeName();
+				// if the attribute name is a reference to another model attribute
+				if (eltAttrName.indexOf('.') != -1) {
+					var returnValueCursor = returnValue[modelName],
+						eltAttrNames = eltAttrName.split('.');
+
+					for (var i in eltAttrNames) {
+						returnValueCursor[eltAttrNames[i]] = {};
+						returnValueCursor = returnValueCursor[eltAttrNames[i]];
+					}
+					returnValueCursor = element.getValue();
+				} else {
+					returnValue[modelName][modelShortName][eltAttrName] = element.getValue();
+				}
 			}
 
+			return returnValue;
+		},
+
+		/**
+		 * Convert data to model representation
+		 * @return {array}
+		 */
+		'dataToModel': function () {
+			var returnValue = {};
+			for (var modelName in this.data) {
+				var ModelClass = $.String.getObject(modelName);
+				returnValue[modelName] = new ModelClass(this.data[modelName]);
+			}
 			return returnValue;
 		},
 
@@ -210,11 +239,7 @@ steal(
 			// Form data are valid
 			if (this.validate()) {
 				// convert form data in model data
-				var modelData = {};
-				for (var modelName in this.data) {
-					var ModelClass = $.String.getObject(modelName);
-					modelData[modelName] = new ModelClass(this.data[modelName]);
-				}
+				var modelData = this.dataToModel();
 				// if a submit callback is given, call it
 				if (this.options.callbacks.submit) {
 					this.options.callbacks.submit(modelData);

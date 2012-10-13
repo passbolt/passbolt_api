@@ -18,6 +18,7 @@ steal(
 
 		'add': function (category) {
 			category['passbolt.model.Category'].save();
+			mad.eventBus.trigger('category_created', category);
 		},
 
 		'get': function (options, callback) {

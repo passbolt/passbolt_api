@@ -49,7 +49,7 @@ steal('jquery/model').then(function () {
 		 * Get a resource
 		 */
 		'get': function (params, success, error) {
-			var url = APP_URL + '/resources/view/{id}';
+			var url = APP_URL + '/resources/{id}';
 			url = $.String.sub(url, $.extend(true, {}, params), true);
 			return mad.net.Ajax.singleton().request({
 				url: url,
