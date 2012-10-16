@@ -57,10 +57,12 @@ steal('jquery/model').then(function ($) {
 		},
 
 		/**
-		 * Get a model in 
+		 * Get a model instance in an array function of the parameters key (id, Category.id ...)
+		 * and its value
 		 * @param {array} data The array to search in
 		 * @param {string} key The key to search
 		 * @param {string} value The value of the key to search
+		 * @return {mad.model.Model}
 		 */
 		'search': function (data, key, value) {
 			var split = key.split('.');
@@ -86,7 +88,25 @@ steal('jquery/model').then(function ($) {
 	}, /** @prototype */ {
 
 		// Destructor like
-		'destroy': function () {}
+		'destroy': function () {},
+
+		/**
+		 * Override the jmvc model serialize function, to serialize associated models
+		 * @return {object}
+		 */
+		'serialize' : function () {
+			var returnValue = this._super();
+			// Check the serialization contain an array of Class
+			// Change done for JMVC 3.2.4
+			for (var i in returnValue) {
+				if ($.isArray(returnValue[i])) {
+					for (var j in returnValue[i]) {
+						returnValue[i][j] = returnValue[i][j].serialize();
+					}
+				}
+			}
+			return returnValue;
+		}
 
 	});
 

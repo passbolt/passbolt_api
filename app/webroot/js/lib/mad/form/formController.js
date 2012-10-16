@@ -130,20 +130,45 @@ steal(
 
 				// get the element attribute name
 				var eltAttrName = element.getModelAttributeName();
+
 				// if the attribute name is a reference to another model attribute
 				if (eltAttrName.indexOf('.') != -1) {
-					var returnValueCursor = returnValue[modelName],
-						eltAttrNames = eltAttrName.split('.');
+					var cursor = returnValue[modelName],
+						eltAttrNames = eltAttrName.split('.'),
+						subModelName = eltAttrNames[0],
+						subModelAttrName = eltAttrNames[1];
+					
+					// the submodel is an array
+					var xregexp = new XRegExp("models$");
+					if (xregexp.test(model.attributes[subModelName])) {
+						returnValue[modelName][subModelName] = [];
+						var values = element.getValue();
+						if (!$.isArray(values)) values = [values];
 
-					for (var i in eltAttrNames) {
-						returnValueCursor[eltAttrNames[i]] = {};
-						returnValueCursor = returnValueCursor[eltAttrNames[i]];
+						for (var i in values) {
+							var subModelData = {};
+							subModelData[subModelName] = {};
+							subModelData[subModelName][subModelAttrName] = values[i];
+							returnValue[modelName][subModelName].push(subModelData);
+						}
+					} else {
+						returnValue[modelName][subModelName] = {};
+						returnValue[modelName][subModelName][subModelAttrName] = element.getValue();
 					}
-					returnValueCursor = element.getValue();
+
+//					for (var i in eltAttrNames) {
+//						if(i == eltAttrNames.length - 1) { // if we reach the lead
+//							cursor[eltAttrNames[i]] = element.getValue();
+//						} else { // move the cursor
+//							cursor[eltAttrNames[i]] = {};
+//							cursor = cursor[eltAttrNames[i]];
+//						}
+//					}
 				} else {
 					returnValue[modelName][modelShortName][eltAttrName] = element.getValue();
 				}
 			}
+			console.log(returnValue);
 
 			return returnValue;
 		},
@@ -179,10 +204,13 @@ steal(
 				modelName = model.fullName,
 				attributeName = element.getModelAttributeName(),
 				value = this.data[modelName][attributeName],
-				elementName = element.getModelReference();
+				elementName = element.getModelReference(),
+				validationResult = true;
 
 			// validate the attribute value
-			var validationResult = model.validateAttribute(attributeName, value, this.data[modelName]);
+			if (model.validateAttribute) {
+				validationResult = model.validateAttribute(attributeName, value, this.data[modelName]);
+			}
 
 			if(validationResult !== true) {
 				// switch the state of the element to error

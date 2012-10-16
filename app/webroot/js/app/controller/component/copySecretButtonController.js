@@ -18,7 +18,9 @@ steal(
 	mad.controller.component.ButtonController.extend('passbolt.controller.component.CopySecretButtonController', /** @static */ {
 
 		'defaults': {
-			'label': 'Copy Secret To Clipboard'
+			'label': 'Copy Secret To Clipboard',
+			'cssClasses': ['button_icon', 'copy_secret_button_icon'],
+			'tag': 'div'
 		}
 
 	}, /** @prototype */ {

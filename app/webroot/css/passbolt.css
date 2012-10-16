@@ -31,4 +31,51 @@ button:disabled { background-color: #ffffff; }
 .js_component_error { border:2px solid #FF0000; }
 /*.js_hidden { position:absolute; left:-10000px; }*/
 
- .contextual_menu { position:absolute; background:#FFF; z-index:1000; border:1px dashed red; }
+.contextual_menu { position:absolute; background:#FFF; z-index:2; border:1px dashed red; }
+
+/* Icons */
+.button_icon { width:18px; height:18px; }
+.button_icon.js_state_disabled { display: none; }
+.new_button_icon { background: url('../img/icons/add.png'); }
+.edit_button_icon { background: url('../img/icons/pencil.png'); }
+.trash_button_icon { background: url('../img/icons/trash_can.png'); }
+.share_button_icon { background: url('../img/icons/share.png'); }
+.more_button_icon { background: url('../img/more_button_icon.png'); }
+.copy_login_button_icon { background: url('../img/icons/copy.png'); }
+.copy_secret_button_icon { background: url('../img/icons/copy.png'); }
+.menu_button_dropdown_icon { background: url('../img/menu_button_dropdown_icon.png'); }
+
+/* Menu button */
+.user_menu_button_container {color: #969696; float:left; margin-right: 11px; height: 27px; line-height: 27px; background-color: #F3F3F3; border: 1px solid #C0C0C0; border-radius: 3px; }
+.user_menu_button_container .button_icon { margin-top: 4px; opacity:0.55; }
+.user_menu_button_container:hover .button_icon { opacity:1; }
+.user_menu_button_container.js_state_disabled { display: none; }
+.user_menu_button_more { width: 75px; line-height: 18px; background-repeat: no-repeat; background-position: 65px center; }
+.user_menu_button_create { width: 85px; line-height: 18px; background-repeat: no-repeat; background-position: 65px center; }
+
+/* Le brol de deco */
+.workspace_label,
+.workspace_actions_container,
+.workspace_view_actions_container { padding-top: 11px; height:40px; border-bottom: 1px solid #C0C0C0; margin-bottom: 7px; }
+
+/**/
+.workspace_label { text-transform: uppercase; font-weight: bold; }
+
+/* Password browser component Grid */
+#js_passbolt_password_browser { table-layout:fixed; width: 100%; border-collapse: collapse; }
+#js_passbolt_password_browser th { text-align:left; }
+#js_passbolt_password_browser td { line-height:23px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; border-top: 1px solid #C0C0C0; border-bottom: 1px solid #C0C0C0; }
+#js_passbolt_password_browser tbody tr:hover { background-color: #FFFFD6; }
+#js_passbolt_password_browser .password_browser_category_label { color: #777; font-size: 11px; line-height:23px; }
+
+#js_passbolt_password_browser .grid_column { }
+#js_passbolt_password_browser .grid_column_name { width:30%; }
+#js_passbolt_password_browser .grid_column_username { width:15%; }
+#js_passbolt_password_browser .grid_column_uri { width:25%; }
+#js_passbolt_password_browser .grid_column_modified {  width:20%; }
+#js_passbolt_password_browser .grid_column_copyLogin { width:5%; }
+#js_passbolt_password_browser .grid_column_copySecret { width:5%; }
+
+#js_passbolt_password_browser.js_state_resourceSelected .grid_column_name { width:40%; }
+#js_passbolt_password_browser.js_state_resourceSelected .grid_column_username { width:30%; }
+#js_passbolt_password_browser.js_state_resourceSelected .grid_column_uri { width:30%; }

@@ -60,7 +60,7 @@ steal(
 						'id': uuid(),
 						'label': 'secret',
 						'action': function () {
-							console.log('Menu Create Secret');
+							passbolt.eventBus.trigger('request_resource_creation', {'categoryId': itemId});
 						}
 					}) }, { 'MenuItem': new mad.model.MenuItem({
 						'id': uuid(),
@@ -123,8 +123,16 @@ steal(
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
 
-		'categpry_created': function (category) {
-			alert('created');
+		/**
+		 * Observe when a category is inserted
+		 * 
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} category The inserted category
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} category_created': function (el, event, category) {
+			this.insertItem(category, category.Category.parent_id, 'last');
 		},
 
 		/**
@@ -134,7 +142,7 @@ steal(
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'{mad.eventBus} app_ready': function (ui, event) {
+		'{passbolt.eventBus} app_ready': function (ui, event) {
 			var self = this;
 			//load categories function of the selected database
 			this.setState('loading');

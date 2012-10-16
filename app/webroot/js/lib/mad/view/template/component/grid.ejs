@@ -1,17 +1,11 @@
-<table border="2">
-	<thead>
-		<tr>
-			<% for (var i in columnModel) { %>
-				<th 
-					id="<%= columnModel[i].name %>" 
-					style="width:<%= columnModel[i].width %>px">
+<thead>
+	<tr>
+		<% for (var i in columnModel) { %>
+			<th class="grid_column grid_column_<%= columnModel[i].name %>">
+				<%= columnNames[i] %>
+			</th>
+		<% } %>
+	</tr>
+</thead>
 
-					<%= columnNames[i] %>
-
-				</th>
-			<% } %>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>
-</table>
+<tbody></tbody>

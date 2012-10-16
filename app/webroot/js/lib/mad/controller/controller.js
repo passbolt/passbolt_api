@@ -102,6 +102,14 @@ steal(
 		 */
 		'getId': function () {
 			return this.element[0].id;
+		},
+
+		/**
+		 * Destroy the controller
+		 * @return {void}
+		 */
+		'goToHell': function () {
+			this.element.remove();
 		}
 
 	});

@@ -42,36 +42,37 @@ steal(
 			// The map to use to make jstree working with our category model
 			options.map = new mad.object.Map({
 				'id': 'Resource.id',
-				'title': 'Resource.name',
-				'login': 'Resource.username',
-				'url': 'Resource.uri',
+				'name': 'Resource.name',
+				'username': 'Resource.username',
+				'uri': 'Resource.uri',
 				'modified': 'Resource.modified',
 				'copyLogin': 'Resource.id',
-				'copySecret': 'Resource.id'
+				'copySecret': 'Resource.id',
+				'Category': 'Category'
 			});
 
 			// the columns names
-			options.columnNames = ['Row', 'Title', 'Login', 'Url', 'Modified.', '', ''];
+			options.columnNames = ['Name', 'Username', 'Uri', 'Modified', '', ''];
 
 			// the columns model
 			options.columnModel = [{
-				'name': 'row',
-				'index': 'row',
+				'name': 'name',
+				'index': 'name',
 				'width': 100,
 				'valueAdapter': function (value, item, columnModel, rowNum) {
-					return rowNum;
+					var returnValue = value;
+					for (var i in item.Category) {
+						returnValue += ' <span class="password_browser_category_label">' + item.Category[0].name + '</span>';
+					}
+					return returnValue;
 				}
 			}, {
-				'name': 'title',
-				'index': 'title',
+				'name': 'username',
+				'index': 'username',
 				'width': 100
 			}, {
-				'name': 'login',
-				'index': 'login',
-				'width': 100
-			}, {
-				'name': 'url',
-				'index': 'url',
+				'name': 'uri',
+				'index': 'uri',
 				'width': 100
 			}, {
 				'name': 'modified',
@@ -85,12 +86,11 @@ steal(
 				'index': 'copyLogin',
 				'width': 100,
 				'cellAdapter': function (cellElement, cellValue) {
-					mad.helper.ComponentHelper.create(
+					var brol = mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',
 						passbolt.controller.component.CopyLoginButtonController, {
-							'cssClasses': ['js_copy_login_button'],
-							'state': 'hidden',
+							'state': 'disabled',
 							'value': cellValue
 						}
 					);
@@ -104,7 +104,6 @@ steal(
 						cellElement,
 						'inside_replace',
 						passbolt.controller.component.CopySecretButtonController, {
-							'cssClasses': ['js_copy_secret_button'],
 							'state': 'hidden',
 							'value': cellValue
 						}
@@ -193,6 +192,17 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Observe when a resource is inserted
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} resource The inserted resource
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} resource_created': function (el, event, resource) {
+			this.insertItems(resource, resource.Resource.parent_id, 'first');
+		},
+
+		/**
 		 * Observe when category is selected
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event
@@ -201,7 +211,6 @@ steal(
 		 */
 		'{passbolt.eventBus} category_selected': function (element, evt, category) {
 			var self = this;
-
 			this.crtCategoryId = category.id;
 
 			// if a resource was selected, inform the system that the resource is no more selected
@@ -218,6 +227,7 @@ steal(
 				'category_id': category.id,
 				'recursive': true
 			}, function (request, response, resources) {
+				console.log(resources);
 				// The callback is out of date, an other category has been selected
 				if (self.crtCategoryId != request.data.category_id) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
@@ -267,7 +277,7 @@ steal(
 			if (go) {
 				this.crtSelectedResourceId = null;
 				this.crtFocusedResourceId = null;
-			} else {}
+			}
 		},
 
 		/**

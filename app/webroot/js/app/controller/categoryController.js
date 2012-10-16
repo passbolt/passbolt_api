@@ -17,8 +17,9 @@ steal(
 	mad.controller.Controller.extend('passbolt.controller.CategoryController', /** @static */ {
 
 		'add': function (category) {
-			category['passbolt.model.Category'].save();
-			mad.eventBus.trigger('category_created', category);
+			passbolt.model.Category.add(category['passbolt.model.Category'], function (request, response, category) {
+				mad.eventBus.trigger('category_created', category);
+			});
 		},
 
 		'get': function (options, callback) {

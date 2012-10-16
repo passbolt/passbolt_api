@@ -62,6 +62,23 @@ steal(
 		},
 
 		/**
+		 * Insert an item in the tree
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
+		 * @throw mad.error.CallAbstractFunction
+		 * @return {void}
+		 */
+		'insertItem': function (item, refItemId, position) {
+			var refItem = mad.model.Model.search(this.state.data, 'Category.id', refItemId);
+			refItem.children.push(item);
+			this.view.insertItem(item, refItemId, position);
+		},
+
+		/**
 		 * Load the tree with an additionnal node at the specific position (ref + position)
 		 * @param {object|array} data The data which represent the node
 		 * @return {void}

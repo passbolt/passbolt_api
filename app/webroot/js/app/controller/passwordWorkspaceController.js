@@ -3,7 +3,9 @@ steal(
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
-	'app/controller/form/category/createFormController.js'
+	'app/controller/form/category/createFormController.js',
+	'app/controller/form/resource/createFormController.js',
+	'app/controller/component/userMenuButtonController.js'
 ).then(function ($) {
 
 	/*
@@ -36,17 +38,21 @@ steal(
 			// *************************************************************
 			// Header menu area
 			// *************************************************************
-			var newButton = new mad.controller.component.ButtonController($('#js_new_resource_button', this.element));
+			var newButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_creation_button', this.element));
 
-			var editButton = new mad.controller.component.ButtonController($('#js_edit_resource_button', this.element), {
+			var editButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_edition_button', this.element), {
 				'state': 'disabled'
 			});
 
-			var shareButton = new mad.controller.component.ButtonController($('#js_share_resource_button', this.element), {
+			var deleteButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_deletion_button', this.element), {
 				'state': 'disabled'
 			});
 
-			var moreButton = new mad.controller.component.ButtonController($('#js_more_resource_button', this.element), {
+			var shareButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_sharing_button', this.element), {
+				'state': 'disabled'
+			});
+
+			var moreButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_more_button', this.element), {
 				'state': 'disabled'
 			});
 
@@ -68,7 +74,7 @@ steal(
 			var passwordBrowserController = this.addComponent(passbolt.controller.component.PasswordBrowserController, {
 				'id': 'js_passbolt_password_browser'
 			}, 'js_workspace_main');
-			passwordBrowserController = passwordBrowserController.decorate('mad.helper.component.BoxDecorator'); // decorator sample, oh yeah
+//			passwordBrowserController = passwordBrowserController.decorate('mad.helper.component.BoxDecorator'); // decorator sample, oh yeah
 			passwordBrowserController.render();
 
 			// *************************************************************
@@ -108,18 +114,18 @@ steal(
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'#js_new_resource_button click': function (element, event) {
-			
+		'#js_request_resource_creation_button click': function (element, event, categoryId) {
+			passbolt.eventBus.trigger('request_resource_creation', {'categoryId': categoryId});
 		},
 
 		/**
 		 * Observe when the user wants to edit a resource
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The resource id of the resource to edit
+		 * @param {string} resourceId The resource id to edit
 		 * @return {void}
 		 */
-		'#js_edit_resource_button click': function (element, event, resourceId) {
+		'#js_request_resource_edition_button click': function (element, event, resourceId) {
 			mad.controller.component.PopupController.get({
 				'label': 'edit a resource'
 			});
@@ -132,7 +138,7 @@ steal(
 		 * @param {string} resourceId The resource id of the resource to share
 		 * @return {void}
 		 */
-		'#js_share_resource_button click': function (element, event, resourceId) {
+		'#js_request_resource_sharing_button click': function (element, event, resourceId) {
 			mad.controller.component.PopupController.get({
 				'label': 'share a resource'
 			});
@@ -141,6 +147,17 @@ steal(
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
+
+		/**
+		 * Observe when category is selected
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} category The selected Category
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} category_selected': function (element, evt, category) {
+			this.getComponent('js_request_resource_creation_button').setValue(category.id);
+		},
 
 		/**
 		 * Observe when a resource is unselected
@@ -154,9 +171,10 @@ steal(
 			// component to its intitial state (ready)
 			this.setState('ready');
 
-			this.getComponent('js_edit_resource_button').setValue(resourceId).setState('disabled');
-			this.getComponent('js_share_resource_button').setValue(resourceId).setState('disabled');
-			this.getComponent('js_more_resource_button').setValue(resourceId).setState('disabled');
+			this.getComponent('js_request_resource_edition_button').setState('disabled');
+			this.getComponent('js_request_resource_deletion_button').setState('disabled');
+			this.getComponent('js_request_resource_sharing_button').setState('disabled');
+			this.getComponent('js_request_resource_more_button').setState('disabled');
 		},
 
 		/**
@@ -170,9 +188,10 @@ steal(
 			// A resource has been selected, change the state of the password Workspace
 			// controller
 			this.setState('resourceSelected');
-			this.getComponent('js_edit_resource_button').setState('ready');
-			this.getComponent('js_share_resource_button').setState('ready');
-			this.getComponent('js_more_resource_button').setState('ready');
+			this.getComponent('js_request_resource_edition_button').setValue(resourceId).setState('ready');
+			this.getComponent('js_request_resource_deletion_button').setValue(resourceId).setState('ready');
+			this.getComponent('js_request_resource_sharing_button').setValue(resourceId).setState('ready');
+			this.getComponent('js_request_resource_more_button').setValue(resourceId).setState('ready');
 
 			// Another way is to drive the state of all the component from here. I choose
 			// for a first hit to lets the component manage their own states changement
@@ -205,19 +224,41 @@ steal(
 		},
 
 		/**
-		 * Observe when the user request a category create
+		 * Observe when the user request a category creation
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_category_creation': function (element, evt, category) {
+		'{passbolt.eventBus} request_category_creation': function (element, evt, data) {
 			var uid = uuid();
 			var popup = mad.controller.component.PopupController.get({}, passbolt.controller.form.category.CreateFormController, {
 				id: uid,
-				data : { parentId: category.id },
+				data : { parentId: data.id },
 				callbacks : {
 					submit: function (data) {
 						passbolt.controller.CategoryController.add(data);
+						popup.goToHell();
+					}
+				}
+			});
+			mad.app.getComponent(uid).render();
+		},
+
+		/**
+		 * Observe when the user request a resource creation
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} request_resource_creation': function (element, evt, data) {
+			var uid = uuid();
+			var popup = mad.controller.component.PopupController.get({}, passbolt.controller.form.resource.CreateFormController, {
+				id: uid,
+				data : { categoryId: data.categoryId },
+				callbacks : {
+					submit: function (data) {
+						passbolt.controller.ResourceController.add(data);
+						popup.goToHell();
 					}
 				}
 			});
@@ -238,8 +279,6 @@ steal(
 			if (go) {
 				$('.js_workspace_main', this.element).removeClass('grid_7').addClass('grid_13 omega');
 				$('.js_workspace_sidebar_second', this.element).hide();
-			} else {
-				//
 			}
 		},
 
@@ -252,8 +291,6 @@ steal(
 			if (go) {
 				$('.js_workspace_main', this.element).removeClass('grid_13 omega').addClass('grid_7');
 				$('.js_workspace_sidebar_second', this.element).show();
-			} else {
-				//
 			}
 		}
 

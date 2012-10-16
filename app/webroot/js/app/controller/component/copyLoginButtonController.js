@@ -19,7 +19,9 @@ steal(
 	mad.controller.component.ButtonController.extend('passbolt.controller.component.CopyLoginButtonController', /** @static */ {
 
 		'defaults': {
-			'label': 'Copy Login To Clipboard'
+			'label': 'Copy Login To Clipboard',
+			'cssClasses': ['button_icon', 'copy_login_button_icon'],
+			'tag': 'div'
 		}
 
 	}, /** @prototype */ {

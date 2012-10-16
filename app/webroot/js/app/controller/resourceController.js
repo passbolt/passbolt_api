@@ -18,8 +18,10 @@ steal(
 	 */
 	mad.controller.Controller.extend('passbolt.controller.ResourceController', /** @static */ {
 
-		'create': function () {
-			steal.dev.log('add new resource');
+		'add': function (resource) {
+			passbolt.model.Resource.add(resource['passbolt.model.Resource'], function (request, response, resource) {
+				mad.eventBus.trigger('resource_created', resource);
+			});
 		},
 
 		'getCategoryResources': function (options, callback) {

@@ -13,7 +13,11 @@ steal(
 	 * Instanciate a new Jstree view
 	 * @return {mad.view.component.tree.Jstree}
 	 */
-	mad.view.component.Tree.extend('mad.view.component.tree.Jstree', /** @static */ { }, /** @prototype */ {
+	mad.view.component.Tree.extend('mad.view.component.tree.Jstree', /** @static */ {
+
+		listenTo: ['contextmenu.jstree', 'select_node.jstree']
+
+	}, /** @prototype */ {
 
 		/**
 		 * The jstree instance
@@ -29,18 +33,26 @@ steal(
 		},
 
 		/**
-		 * Insert a node in the tree
-		 * @param {mixed} jsonNode The node to insert
-		 * @param {string} position The position of the newly created node. This can be a zero based index to position the element at a specific point among the current children. You can also pass in one of those strings: "before", "after", "inside", "first", "last". The default value is last
-		 * @param {mixed} ref This can be a DOM node, jQuery node or selector pointing to the element you want to create in (or next to). The default value is the root node element
+		 * Insert an item in the tree
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the tree view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created node. This can 
+		 * be a zero based index to position the element at a specific point among 
+		 * the current children. You can also pass in one of those strings: "before", 
+		 * "after", "inside", "first", "last". By dhe default value is set to last.
+		 * @throw mad.error.CallAbstractFunction
 		 * @return {JQuery} The created node
+		 * @todo does not require a map in this case
 		 */
-		'insertNode': function (jsonNode, position, ref) {
+		'insertItem': function (item, refItemId, position) {
 			position = position || 'last';
-			ref = ref || this.element;
-			var node = this.jstreeInstance.create_node(ref, position, jsonNode);
-			for (var i in jsonNode.children) {
-				this.insertNode(jsonNode.children[i], 'last', node);
+			var $ref = refItemId ? this.element.find('#' + refItemId) : this.element;
+			// map the jmvc model objects into the desired format
+			var mappedItem = this.map.mapObject(item);
+			var node = this.jstreeInstance.create_node($ref, position, mappedItem);
+			for (var i in item.children) {
+				this.insertItem(item.children[i], mappedItem.attr.id, 'last');
 			}
 		},
 
@@ -61,29 +73,39 @@ steal(
 			});
 			this.jstreeInstance = $.jstree._reference(this.controller.getId());
 
-			// pas propre mode, mais on deroule
-
 			// change the component status in ready
-			this.status = 'ready';
 			// @todo ca craint ce changement de status a la main comme ca, a voir
-			
-			// bind jstree events 
-			// (this kind of wrinting event.eventcomplement is not supported by JMVC
-			// @todo unbind le bazarre dans une fonction destroy
-			this.element.bind('select_node.jstree', function (event, data) {
-				var itemId = data.rslt.obj.attr("id");
-				self.itemSelected(itemId, data.rslt.obj);
-			});
-			
-			// bind jstree events 
-			// (this kind of wrinting event.eventcomplement is not supported by JMVC
-			// @todo unbind le bazarre dans une fonction destroy
-			this.element.bind('contextmenu.jstree', function (event, data, b) {
+			this.status = 'ready';
+		},
+		
+		/* ************************************************************** */
+		/* LISTEN TO THE VIEW EVENTS */
+		/* ************************************************************** */
+		
+		/**
+		 * An item has been right selected
+		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'contextmenu.jstree' : function (element, event) {
 			event.stopPropagation();
 			event.preventDefault();
-				var $item = $(event.originalEvent.target).parent('li');
-				self.itemRightSelected($item[0].id, $item, event);
-			});
+			var $li = $(event.originalEvent.target).parent('li');
+			this.itemRightSelected($li[0].id, $li, event);
+		},
+
+		/**
+		 * An item has been selected
+		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} event The jQuery event
+		 * @param {mixed} data The event data
+		 * @return {void}
+		 */
+		'select_node.jstree' : function (element, event, data) {
+			var itemId = data.rslt.obj.attr("id");
+			this.itemSelected(itemId, data.rslt.obj);
 		}
+
 	});
 });

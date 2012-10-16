@@ -32,15 +32,16 @@ class ResourcesController extends AppController {
 			return;
 		}
 		// check if it exists
-		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
-		$this->Resource->contain(array('CategoryResource'));
-		$o = $this->Resource->getFindFields('view');
-		$resource = $this->Resource->findById($id, $o['fields']);
-		if (!$resource) {
+		$data = array(
+			'Resource.id' => $id
+		);
+		$options = $this->Resource->getFindOptions('view', $data);
+		$resources = $this->Resource->find('all', $options);
+		if (!count($resources)) {
 			$this->Message->error(__('The resource does not exist'));
 			return;
 		}
-		$this->set('data', $resource);
+		$this->set('data', $resources[0]);
 		$this->Message->success();
 	}
 
@@ -156,6 +157,8 @@ class ResourcesController extends AppController {
 			return;
 		}
 
+		$this->Resource->bindModel(array('hasAndBelongsToMany' => array('Category')));
+		$this->Resource->contain(array('Category'));
 		$resource = $this->Resource->save($resourcepost);
 		if ($resource === false) {
 			$this->Message->error(__('The resource could not be saved'));
@@ -166,8 +169,8 @@ class ResourcesController extends AppController {
 		foreach ($resourcepost['Category'] as $cat) {
 				$crdata = array(
 					'CategoryResource' => array(
-						'category_id' => $cat['id'],
-						'resource_id' => $resource['Resource']['id'],
+						'category_id' => $cat['Category']['id'],
+						'resource_id' => $resource['Resource']['id']
 					)
 				);
 			// check if the data is valid
@@ -184,6 +187,13 @@ class ResourcesController extends AppController {
 			}
 		}
 		$this->Message->success(__('The resource was sucessfully saved'));
+		
+		$data = array(
+			'Resource.id' => $resource['Resource']['id']
+		);
+		$options = $this->Resource->getFindOptions('add', $data);
+		$resources = $this->Resource->find('all', $options);
+		$this->set('data', $resources[0]);
 	}
 
 /**

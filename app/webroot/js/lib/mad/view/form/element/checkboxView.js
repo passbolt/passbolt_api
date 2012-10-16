@@ -58,7 +58,9 @@ steal(
 		 * @return {void}
 		 */
 		'change': function (el, event) {
-			el.trigger('changed', this.getValue());
+			el.trigger('changed', {
+				value: this.getValue()
+			});
 		}
 
 	});

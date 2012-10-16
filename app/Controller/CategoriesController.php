@@ -67,7 +67,7 @@ class CategoriesController extends AppController {
 		if ($children == true) {
 			$o = $this->Category->getFindOptions('getWithChildren', $category);
 			$data = $this->Category->find('threaded', $o);
-			$this->set('data', $data);
+			$this->set('data', $data[0]);
 		} else {
 			$o = $this->Category->getFindOptions('get');
 			$this->set('data', $this->Category->find('first', $o));

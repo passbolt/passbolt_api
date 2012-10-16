@@ -1,7 +1,6 @@
 steal(
 	MAD_ROOT + '/core/singleton.js',
 	MAD_ROOT + '/net/request.js'
-
 ).then(function ($) {
 
 	/*
@@ -68,9 +67,8 @@ steal(
 		*		
 		* </p>
     */
-	mad.core.Singleton('mad.net.Ajax',
-	/** @static */
-	{
+	mad.core.Singleton('mad.net.Ajax', /** @static */ {
+
 		/**
 		 * Perform an ajax request, parameters are similar to the ajax function of the jQuery
 		 * library. Add to this one a second parameter to define if the request has to be in 
@@ -83,10 +81,8 @@ steal(
 		'request': function (setting, isTransaction) {
 			return mad.net.Ajax.singleton().request(setting, isTransaction);
 		}
-	},
 
-	/** @prototype */
-	{
+	}, /** @prototype */ {
 
 		/**
 		 * Pending transactions
@@ -109,7 +105,7 @@ steal(
 		 * @hide
 		 */
 		'request': function (request, isTransaction) {
-			if(isTransaction) {
+			if (isTransaction) {
 				this._addRequest(request);
 				this._executeTransaction();
 			} else {
@@ -124,7 +120,7 @@ steal(
 		 */
 		'_addRequest': function (request) {
 			var transactionId = this._getTransactionId();
-			if(typeof this.transactions[transactionId] == 'undefined') {
+			if (typeof this.transactions[transactionId] == 'undefined') {
 				this.transactions[transactionId] = {
 					'requests': [],
 					'waitFor': 0,
@@ -153,7 +149,7 @@ steal(
 		 * @hide
 		 */
 		'_getTransactionId': function () {
-			if(this.transactionId == null) {
+			if (this.transactionId == null) {
 				this._generateTransactionId();
 			}
 			return this.transactionId;
@@ -186,7 +182,7 @@ steal(
 				steal.dev.log('pending requests : ' + transaction.waitFor);
 
 				// if no more pending request, launche the transaction
-				if(transaction.waitFor == 0) {
+				if (transaction.waitFor == 0) {
 					// reset transaction id to allow new transaction
 					self._generateTransactionId();
 					// build the bundled request
@@ -205,7 +201,7 @@ steal(
 							//                                srvData = $.extend(true,{},srvData);
 							var transactionId = srvData.transactionId;
 							var transaction = self._getTransaction(transactionId);
-							for(var requestId in transaction.requests) {
+							for (var requestId in transaction.requests) {
 								var resultRequest = new mad.net.Response(srvData.requests[requestId]);
 								// execute success function of the stored request
 								if(typeof transaction.requests[requestId].success != 'undefined') {
@@ -239,7 +235,7 @@ steal(
 		 */
 		'_bundleRequests': function (requests) {
 			var bundle = [];
-			for(var i in requests) {
+			for (var i in requests) {
 				bundle.push({
 					'id': requests[i].id,
 					'url': requests[i].url,

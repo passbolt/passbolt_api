@@ -166,11 +166,11 @@ steal(
 		 * Listen to the view event changed
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mixed} value The selected value
+		 * @param {mixed} data The event data
 		 * @return {void}
 		 */
-		'changed': function (el, event, value) {
-			this.value = value;
+		'changed': function (el, event, data) {
+			this.value = data.value;
 			if (this.options.callbacks.changed) {
 				this.options.callbacks.changed(this.value);
 			}

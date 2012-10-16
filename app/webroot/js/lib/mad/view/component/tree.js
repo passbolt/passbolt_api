@@ -22,14 +22,17 @@ steal(
 		},
 
 		/**
-		 * Insert a node in the tree
-		 * @param {mixed} jsonNode The node to insert
-		 * @param {string} position The position of the newly created node. This can be a zero based index to position the element at a specific point among the current children. You can also pass in one of those strings: "before", "after", "inside", "first", "last". The default value is last
-		 * @param {mixed} ref This can be a DOM node, jQuery node or selector pointing to the element you want to create in (or next to). The default value is the root node element
+		 * Insert an item in the tree
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
 		 * @throw mad.error.CallAbstractFunction
-		 * @return {JQuery} The created node
+		 * @return {void}
 		 */
-		'insertNode': function (jsonNode, position, ref) {
+		'insertItem': function (item, ref, position) {
 			throw new mad.error.CallAbstractFunction();
 		},
 
@@ -72,23 +75,28 @@ steal(
 		 * @param {object|array} data The data which represent the node
 		 * @todo the mapping could be done in the view ?
 		 */
-		'load': function (data, position, ref) {
+		'load': function (data) {
 			var mappedData;
 
 			if ($.isArray(data)) {
-				returnValue = [];
-				// map the jmvc model objects into the desired format
-				mappedData = this.map.mapObjects(data);
-				for(var i in mappedData) {
-					returnValue.push(this.insertNode(mappedData[i]));
+				for (var i in data) {
+					this.insertItem (data[i], null, 'last');
 				}
+				
+//				returnValue = [];
+//				// map the jmvc model objects into the desired format
+//				mappedData = this.map.mapObjects(data);
+//				for(var i in mappedData) {
+//					returnValue.push(this.insertNode(mappedData[i]));
+//				}
 			} else {
+				console.log('kdshf');
 				// map the jmvc model objects into the desired format
 				mappedData = mad.object.Map.mapObject(data, this.map);
 				returnValue = this.insertNode(mappedData);
 			}
 
-			return returnValue;
+//			return returnValue;
 		},
 
 		/**
@@ -98,10 +106,6 @@ steal(
 		'render': function () {
 			this._super();
 		}
-		
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
 
 	});
 });

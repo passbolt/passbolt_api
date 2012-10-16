@@ -31,7 +31,8 @@ steal(
 			// the grid column names
 			'columnModel': [],
 			// the grid column model
-			'map': null // the map to use to map JMVC model to the grid data model
+			'map': null, // the map to use to map JMVC model to the grid data model
+			'tag': 'table'
 		}
 
 	}, /** @prototype */ {
@@ -81,30 +82,33 @@ steal(
 		},
 
 		/**
-		 * Insert items in the grid
-		 * @param {$.Model[]} items The array of items to insert in the grid
-		 * @param {string} position The position to insert the new items.
-		 * Allowed inside_replace, first, last, before, after
-		 * @param {string} refId The reference item id to position the new ones
+		 * Insert an item in the grid
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
+		 * @throw mad.error.CallAbstractFunction
 		 * @return {void}
 		 */
-		'insertItems': function (items, position, refId) {
-			var mappedData = this.map.mapObjects(items),
-				// map items to the view format
-				self = this;
+		'insertItems': function (items, refItemId, position) {
+			var self = this;
+			items = !$.isArray(items) ? [items] : items;
+			var mappedItems = this.map.mapObjects(items);
 
 			// insert items in the view
-			this.view.insertItems(mappedData);
+			this.view.insertItems(items, refItemId, position);
 
 			// apply a widget to cells following the columns model
 			for(var j in this.options.columnModel) {
 				var columnModel = this.options.columnModel[j];
 
 				if(columnModel.cellAdapter) {
-					for(var i in mappedData) {
-						var itemId = mappedData[i].id;
-						var $cell = $('#' + itemId + ' .' + columnModel.name + ' span');
-						var cellValue = mappedData[i][columnModel.name];
+					for(var i in mappedItems) {
+						var itemId = mappedItems[i].id;
+						var $cell = $('#' + itemId + ' .grid_column_' + columnModel.name + ' span');
+						var cellValue = mappedItems[i][columnModel.name];
 						columnModel.cellAdapter($cell, cellValue);
 					}
 				}
@@ -116,10 +120,10 @@ steal(
 
 					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
 					// part to insert the items and render widget if there is
-					for(var i in mappedData) {
-						var itemId = mappedData[i].id;
-						var $cell = $('#' + itemId + ' .' + columnModel.name + ' span');
-						widgetOptions.value = mappedData[i][columnModel.name];
+					for(var i in mappedItems) {
+						var itemId = mappedItems[i].id;
+						var $cell = $('#' + itemId + ' .grid_column_' + columnModel.name + ' span');
+						widgetOptions.value = mappedItems[i][columnModel.name];
 						$cell[widgetJQueryPlugin](widgetOptions);
 						$cell[widgetJQueryPlugin]('render');
 					}
