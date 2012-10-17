@@ -31,9 +31,15 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testIndex() {
+		$category = new Category();
+		$user = new User();
+		$user->useDbConfig = 'test';
+		$kk = $user->findByUsername('user@passbolt.com');
+		$user->setActive($kk);
+
 		// test when no parameters are provided (default behaviour : children=false)
 		$result = json_decode($this->testAction("/categories/index.json", array('method' => 'get', 'return' => 'contents')), true);
-				$debug = print_r($result, true);
+		$debug = print_r($result, true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
 		$this->assertEquals('Goa', $result['body'][0]['Category']['name'], "/categories/index.json : \$result['body'][0]['Category']['name'] should return 'Goa' but is returning {$result['body'][0]['Category']['name']}");
 
