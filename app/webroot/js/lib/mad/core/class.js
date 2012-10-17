@@ -69,7 +69,6 @@ steal('jquery/class').then(function ($) {
 
 		// decorate the instance with the functions of the Decorator Class
 		for (var i in Decorator) {
-			//                    console.log('decorate '+i+' by '+decoratorName+' in level '+lvl);
 			if(typeof this[i] != 'undefined') {
 
 				// store the old function
@@ -165,12 +164,7 @@ steal('jquery/class').then(function ($) {
 								//                                    var returnValue = null;
 								for(var i in this.__inits) {
 									var initResult = this.__inits[i].apply(this, arguments);
-									//                                        console.log(initResult);
-									//                                        if(returnValue == null){
-									//                                            returnValue = initResult;
-									//                                        }
 								}
-								//                                    return returnValue;
 							}
 						})(this, 'init');
 					}

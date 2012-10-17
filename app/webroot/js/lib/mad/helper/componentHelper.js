@@ -7,8 +7,14 @@ steal(
 	 */
 	$.Class('mad.helper.ComponentHelper', /** @static */ {
 
+
+		/**
+		 * Insanciate and position a component
+		 * 
+		 */
 		'create': function (refElement, position, Clazz, options) {
-			var $component = $('<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>');
+			var returnValue = null,
+				$component = $('<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>');
 
 			// insert the component functions of the reference element and the given position
 			switch (position) {
@@ -34,8 +40,14 @@ steal(
 				break;
 			}
 
-			// init the component
-			return new Clazz($component, options);
+			// Instanciate the component
+			if (typeof Clazz.singleton != 'undefined') {
+				returnValue = Clazz.singleton($component, options);
+			} else {
+				returnValue = new Clazz($component, options);
+			}
+
+			return returnValue;
 		}
 
 	}, /** @prototype */ {

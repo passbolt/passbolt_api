@@ -34,7 +34,7 @@ steal(
 		 * @return {void}
 		 */
 		'hideColumn': function (columnName) {
-			$('.grid_column_' + columnName, this.element).hide();
+			$('.js_grid_column_' + columnName, this.element).hide();
 		},
 
 		/**
@@ -43,7 +43,34 @@ steal(
 		 * @return {void}
 		 */
 		'showColumn': function (columnName) {
-			$('.grid_column_' + columnName, this.element).show();
+			$('.js_grid_column_' + columnName, this.element).show();
+		},
+
+		/**
+		 * Select an item
+		 * @param {string} itemId The item to select
+		 * @return {void}
+		 */
+		'selectItem': function (itemId) {
+			$('#' + itemId, this.element).addClass('js_grid_selected_item');
+		},
+
+		/**
+		 * Unselect an item
+		 * @param {string} itemId The item to unselect
+		 * @return {void}
+		 */
+		'unselectItem': function (itemId) {
+			$('#' + itemId, this.element).removeClass('js_grid_selected_item');
+		},
+
+		/**
+		 * Delete an item in the grid
+		 * @param {string} itemId The item to delete
+		 * @return {void}
+		 */
+		'deleteItems': function (itemId) {
+			$('#' + itemId, this.element).remove();
 		},
 
 		/**
@@ -72,7 +99,7 @@ steal(
 				// insert column data
 				for(var j in this.controller.options.columnModel) {
 					var columnModel = this.controller.options.columnModel[j],
-						cssClass = 'grid_column_' + columnModel.name,
+						cssClass = 'js_grid_column_' + columnModel.name,
 						cellValue = null;
 
 					// A column adapater function is provided
@@ -125,7 +152,7 @@ steal(
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'tr click': function (element, event) {
+		'tbody tr click': function (element, event) {
 			this.element.trigger('item_selected', element[0].id);
 		},
 		
@@ -135,7 +162,7 @@ steal(
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'tr hover': function (element, event) {
+		'tbody tr hover': function (element, event) {
 			this.element.trigger('item_hovered', element[0].id);
 		}
 

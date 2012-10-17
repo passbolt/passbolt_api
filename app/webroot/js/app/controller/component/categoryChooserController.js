@@ -46,26 +46,29 @@ steal(
 				{ 'MenuItem': new mad.model.MenuItem({
 					'id': uuid(),
 					'label': 'open',
-					'action': function () {
+					'action': function (menu) {
+						menu.goToHell();
 						passbolt.eventBus.trigger('category_selected', {'id': itemId});
 					}
 				}) }, { 'MenuItem': new mad.model.MenuItem({
 					'id': uuid(),
 					'label': 'create',
-					'action': function () {
+					'action': function (menu) {
 						console.log('Menu Create');
 					}
 				}), 'children': [
 					{ 'MenuItem': new mad.model.MenuItem({
 						'id': uuid(),
 						'label': 'secret',
-						'action': function () {
-							passbolt.eventBus.trigger('request_resource_creation', {'categoryId': itemId});
+						'action': function (menu) {
+							menu.goToHell();
+							passbolt.eventBus.trigger('request_resource_creation', itemId);
 						}
 					}) }, { 'MenuItem': new mad.model.MenuItem({
 						'id': uuid(),
 						'label': 'category',
-						'action': function () {
+						'action': function (menu) {
+							menu.goToHell();
 							passbolt.eventBus.trigger('request_category_creation', {'id': itemId});
 						}
 					})

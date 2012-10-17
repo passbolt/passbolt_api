@@ -129,7 +129,7 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('Error while deleting'));
 			return;
 		}
-		$this->Message->success();
+		$this->Message->success(__('The resource was sucessfully deleted'));
 	}
 
 /**
@@ -169,7 +169,7 @@ class ResourcesController extends AppController {
 		foreach ($resourcepost['Category'] as $cat) {
 				$crdata = array(
 					'CategoryResource' => array(
-						'category_id' => $cat['Category']['id'],
+						'category_id' => $cat['id'],
 						'resource_id' => $resource['Resource']['id']
 					)
 				);

@@ -26,21 +26,30 @@ steal(
 		 * @return {void}
 		 */
 		'initFormElement': function () {
+			// temporary for update demonstration
+			this.options.data.Resource = this.options.data.Resource || {};
+
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_category_id'), {
-					'value': this.options.data.categoryId
+					'value': this.options.data.Category.id || ''
 				})
 			);
 			this.addElement(
-				new mad.form.element.TextboxController($('#js_field_name'), {}),
+				new mad.form.element.TextboxController($('#js_field_name'), {
+					'value': this.options.data.Resource.name || ''
+				}),
 				new mad.form.FeedbackController($('#js_field_name_feedback'), {})
 			);
 			this.addElement(
-				new mad.form.element.TextboxController($('#js_field_username'), {}),
+				new mad.form.element.TextboxController($('#js_field_username'), {
+					'value': this.options.data.Resource.username || ''
+				}),
 				new mad.form.FeedbackController($('#js_field_username_feedback'), {})
 			);
 			this.addElement(
-				new mad.form.element.TextboxController($('#js_field_uri'), {}),
+				new mad.form.element.TextboxController($('#js_field_uri'), {
+					'value': this.options.data.Resource.uri || ''
+				}),
 				new mad.form.FeedbackController($('#js_field_uri_feedback'), {})
 			);
 		},

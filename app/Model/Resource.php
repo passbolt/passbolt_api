@@ -180,7 +180,9 @@ class Resource extends AppModel {
 				);
 			break;
 			default:
-				$fields = array('fields' => array());
+				$fields = array(
+					'fields' => array()
+				);
 			break;
 		}
 		return $fields;

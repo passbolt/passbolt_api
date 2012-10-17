@@ -48,9 +48,7 @@ steal(
 			// get the menuItem
 			var menuItem = mad.model.Model.search(this.state.data, 'MenuItem.id', itemId);
 			// execute the associated action
-			menuItem.MenuItem.action();
-			// kill the menu
-			this.element.remove();
+			menuItem.MenuItem.action(this);
 		}
 
 	});

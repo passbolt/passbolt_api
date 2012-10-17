@@ -147,8 +147,8 @@ steal(
 
 						for (var i in values) {
 							var subModelData = {};
-							subModelData[subModelName] = {};
-							subModelData[subModelName][subModelAttrName] = values[i];
+							subModelData = {};
+							subModelData[subModelAttrName] = values[i];
 							returnValue[modelName][subModelName].push(subModelData);
 						}
 					} else {
@@ -168,7 +168,6 @@ steal(
 					returnValue[modelName][modelShortName][eltAttrName] = element.getValue();
 				}
 			}
-			console.log(returnValue);
 
 			return returnValue;
 		},

@@ -21,6 +21,7 @@ steal(
 		'add': function (resource) {
 			passbolt.model.Resource.add(resource['passbolt.model.Resource'], function (request, response, resource) {
 				mad.eventBus.trigger('resource_created', resource);
+				mad.eventBus.trigger('passbolt_notify', {'title': response.header.message});
 			});
 		},
 
@@ -36,8 +37,13 @@ steal(
 			steal.dev.log('update password');
 		},
 
-		'delete': function () {
-			steal.dev.log('delete password');
+		'delete': function (resourceId) {
+			passbolt.model.Resource['delete']({
+				'id': resourceId
+			}, function (request, response, resource) {
+				mad.eventBus.trigger('resource_deleted', resourceId);
+				mad.eventBus.trigger('passbolt_notify', {'title': response.header.message});
+			});
 		}
 
 	}, /** @prototype */ { });

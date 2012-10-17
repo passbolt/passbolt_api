@@ -97,13 +97,13 @@ steal(
 		 * @param {string} resourceId The selected Resource id
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_selected': function (element, event, resource) {
+		'{passbolt.eventBus} resource_selected': function (element, event, resourceId) {
 			var self = this;
-			this.crtResourceId = resource.id;
+			this.crtResourceId = resourceId;
 			this.setState('loading');
 
 			passbolt.model.Resource.get({
-				id: resource.id
+				id: this.crtResourceId
 			}, function (request, response, rs) {
 				if (self.crtResourceId != request.data.id) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.get request callback in passbolt.controller.component.ResourceDetailsController');

@@ -33,7 +33,7 @@ steal(
 			'Category': 'passbolt.model.Category.models'
 		},
 
-		add : function (resource, success, error) {
+		'add' : function (resource, success, error) {
 			var data = resource.serialize();
 			var url = APP_URL + '/resources/add';
 			return mad.net.Ajax.singleton().request({
@@ -43,6 +43,18 @@ steal(
 				success: success,
 				error: error,
 				dataType: 'passbolt.model.Resource.model'
+			});
+		},
+
+		'delete' : function (params, success, error) {
+			var url = APP_URL + '/resources/delete/{id}';
+			url = $.String.sub(url, $.extend(true, {}, params), true);
+			return mad.net.Ajax.singleton().request({
+				url: url,
+				type: 'delete',
+				data: null,
+				success: success,
+				error: error
 			});
 		},
 

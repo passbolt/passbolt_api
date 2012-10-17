@@ -22,9 +22,6 @@ steal(
 	 */
 	mad.controller.component.GridController.extend('passbolt.controller.component.PasswordBrowserController', /** @static */ {
 
-		'listensTo': ['item_selected', 'item_hovered'],
-		'defaults': {}
-
 	}, /** @prototype */ {
 		/**
 		 * The current selected resource id
@@ -86,7 +83,7 @@ steal(
 				'index': 'copyLogin',
 				'width': 100,
 				'cellAdapter': function (cellElement, cellValue) {
-					var brol = mad.helper.ComponentHelper.create(
+					mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',
 						passbolt.controller.component.CopyLoginButtonController, {
@@ -173,18 +170,26 @@ steal(
 		'item_selected': function (element, evt, itemId) {
 			// if the resource selected is the same than the previous one unselect
 			if (itemId == this.crtSelectedResourceId) {
-				this.crtSelectedResourceId = null;
-				mad.eventBus.trigger('resource_unselected', {
-					'id': itemId
-				});
-				this.state.setState('ready');
+				this.setState('ready');
+				mad.eventBus.trigger('resource_unselected', itemId);
 			} else {
+				this.setState('ready');
 				this.crtSelectedResourceId = itemId;
-				mad.eventBus.trigger('resource_selected', {
-					'id': itemId
-				});
 				this.setState('resourceSelected');
+				mad.eventBus.trigger('resource_selected', itemId);
 			}
+		},
+		
+		/**
+		 * Observe when an resource is unselected
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} data The unselected resource id
+		 * @return {void}
+		 */
+		'item_unselected': function (element, evt, itemId) {
+				this.setState('ready');
+				mad.eventBus.trigger('resource_unselected', itemId);
 		},
 
 		/* ************************************************************** */
@@ -192,7 +197,7 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Observe when a resource is inserted
+		 * Observe when a resource is deleted
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {mad.model.Model} resource The inserted resource
@@ -200,6 +205,20 @@ steal(
 		 */
 		'{passbolt.eventBus} resource_created': function (el, event, resource) {
 			this.insertItems(resource, resource.Resource.parent_id, 'first');
+		},
+
+		/**
+		 * Observe when a resource is inserted
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} resourceId The deleted resource
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} resource_deleted': function (el, event, resourceId) {
+			if (this.crtSelectedResourceId == resourceId) {
+				this.element.trigger('item_unselected', resourceId);
+			}
+			this.deleteItems(resourceId);
 		},
 
 		/**
@@ -227,7 +246,6 @@ steal(
 				'category_id': category.id,
 				'recursive': true
 			}, function (request, response, resources) {
-				console.log(resources);
 				// The callback is out of date, an other category has been selected
 				if (self.crtCategoryId != request.data.category_id) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
@@ -287,13 +305,15 @@ steal(
 		 */
 		'stateResourceSelected': function (go) {
 			if (go) {
-				this.hideColumn('modified');
-				this.hideColumn('copyLogin');
-				this.hideColumn('copySecret');
+				this.view.hideColumn('modified');
+				this.view.hideColumn('copyLogin');
+				this.view.hideColumn('copySecret');
+				this.view.selectItem(this.crtSelectedResourceId);
 			} else {
-				this.showColumn('modified');
-				this.showColumn('copyLogin');
-				this.showColumn('copySecret');
+				this.view.showColumn('modified');
+				this.view.showColumn('copyLogin');
+				this.view.showColumn('copySecret');
+				this.view.unselectItem(this.crtSelectedResourceId);
 			}
 		}
 
