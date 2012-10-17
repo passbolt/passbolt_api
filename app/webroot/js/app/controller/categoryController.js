@@ -16,14 +16,16 @@ steal(
 	 */
 	mad.controller.Controller.extend('passbolt.controller.CategoryController', /** @static */ {
 
-		'create': function () {
-			steal.dev.log('add new password');
+		'add': function (category) {
+			category['passbolt.model.Category'].save();
 		},
 
 		'get': function (options, callback) {
-			var options = options || {};
+			options = options || {};
 			passbolt.model.Category.get(options, function (category) {
-				callback(category);
+				if (callback) {
+					callback(category);
+				}
 			});
 		},
 

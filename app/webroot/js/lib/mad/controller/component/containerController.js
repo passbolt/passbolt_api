@@ -50,7 +50,8 @@ steal(
 			var area = typeof area != 'undefined' ? area : 'mad-container-main';
 			var $area = this.element.find('.' + area);
 
-			var $component = $('<div id="' + componentOptions.id + '"/>').appendTo($area);
+			// @todo ici encore un mechant todo sur un helper pour generer du html
+			var $component = $('<' + componentClass.defaults.tag + ' id="' + componentOptions.id + '"/>').appendTo($area);
 			// if the component is a singleton
 			// @todo do not forget to check about the instanceof
 			if(typeof componentClass.singleton != 'undefined') {

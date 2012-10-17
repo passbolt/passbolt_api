@@ -2,7 +2,8 @@ steal(
 	MAD_ROOT + '/controller/component/workspaceController.js',
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
-	'app/controller/component/resourceDetailsController.js'
+	'app/controller/component/resourceDetailsController.js',
+	'app/controller/form/category/createFormController.js'
 ).then(function ($) {
 
 	/*
@@ -201,6 +202,26 @@ steal(
 		'{passbolt.eventBus} copy_secret_clipboard': function (element, evt, resourceId) {
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_secret_clipboard');
+		},
+
+		/**
+		 * Observe when the user request a category create
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} request_category_creation': function (element, evt, category) {
+			var uid = uuid();
+			var popup = mad.controller.component.PopupController.get({}, passbolt.controller.form.category.CreateFormController, {
+				id: uid,
+				data : { parentId: category.id },
+				callbacks : {
+					submit: function (data) {
+						passbolt.controller.CategoryController.add(data);
+					}
+				}
+			});
+			mad.app.getComponent(uid).render();
 		},
 
 		/* ************************************************************** */

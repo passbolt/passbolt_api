@@ -30,3 +30,5 @@ button:disabled { background-color: #ffffff; }
 .js_component { position:relative; }
 .js_component_error { border:2px solid #FF0000; }
 /*.js_hidden { position:absolute; left:-10000px; }*/
+
+ .contextual_menu { position:absolute; background:#FFF; z-index:1000; border:1px dashed red; }

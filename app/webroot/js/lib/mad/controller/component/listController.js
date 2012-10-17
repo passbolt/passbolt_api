@@ -11,7 +11,7 @@ steal(
 	 * The Button class Controller is our implementation of the UI component button.
 	 * 
 	 * @constructor
-	 * Creates a new Button Controller Component
+	 * Creates a new List Controller Component
 	 * @param {array} options Optional parameters
 	 * @return {mad.controller.component.ListController}
 	 */

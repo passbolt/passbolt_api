@@ -3,7 +3,6 @@ steal(
 	'app/controller/categoryController.js',
 	'app/controller/resourceController.js',
 	'app/controller/passwordWorkspaceController.js',
-	'app/controller/component/menuController.js',
 	'app/controller/component/notificationController.js',
 
 	'app/model/category.js',
@@ -27,7 +26,7 @@ steal(
 			this.render();
 
 			// Add a notification controller
-			var menuCtl = new passbolt.controller.component.MenuController($('#js_menu_controller'));
+			var menuCtl = new mad.controller.component.MenuController($('#js_menu_controller'));
 			menuCtl.render();
 
 			// Add a notification controller
@@ -69,7 +68,7 @@ steal(
 			mad.eventBus.trigger('app_ready');
 
 			// test the exception catcher
-			throw new mad.error.Error('Simulated exception to demonstrate the error handler system, and the notification system');
+//			throw new mad.error.Error('Simulated exception to demonstrate the error handler system, and the notification system');
 
 			// @dev END
 		}

@@ -172,7 +172,9 @@ steal(
 			// associated view will be an instance of this viewClass
 			'state': 'ready',
 			// the state to put the component when the rendering is finished
-			'cssClasses': ['js_component']
+			'cssClasses': ['js_component'],
+			// the associated tag
+			'tag': 'div'
 		},
 
 		/**
