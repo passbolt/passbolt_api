@@ -15,14 +15,23 @@ App::uses('Sanitize', 'Utility');
 class CategoriesController extends AppController {
 
 /**
- * index - get a list of categories
- * @todo define what this function should do. for the moment, it is a clone of getroots
+ * index - get the list of categories
  */
-	public function index() {
+	public function index($children = false) {
 		$data = array();
-		$o = $this->Category->getFindOptions('index');
+
+		$o = $this->Category->getFindOptions('getRoots');
 		$categories = $this->Category->find('threaded', $o);
-		$data = $categories;
+
+		if (!$children) {
+			$data = $categories;
+		} else {
+			foreach ($categories as $category) {
+				$o = $this->Category->getFindOptions('getWithChildren', $category);
+				$result = $this->Category->find('threaded', $o);
+				$data[] = $result[0];
+			}
+		}
 		$this->set('data', $data);
 		$this->Message->success();
 	}
@@ -58,37 +67,11 @@ class CategoriesController extends AppController {
 		if ($children == true) {
 			$o = $this->Category->getFindOptions('getWithChildren', $category);
 			$data = $this->Category->find('threaded', $o);
-			$this->set('data', $data);
+			$this->set('data', $data[0]);
 		} else {
 			$o = $this->Category->getFindOptions('get');
 			$this->set('data', $this->Category->find('first', $o));
 		}
-		$this->Message->success();
-	}
-
-/**	
- * get the roots categories
- * @param  bool $children whether or not we want the children returned
- * @return void
- */
-	public function getroots($children=false) {
-		$data = array();
-
-		$o = $this->Category->getFindOptions('getRoots');
-		$categories = $this->Category->find('threaded', $o);
-
-		if (!$children) {
-			$data = $categories;
-		} else {
-			foreach ($categories as $category) {
-				// @todo Think about category parameter, it should be categories ... or this is out of concept ?
-				$o = $this->Category->getFindOptions('getWithChildren', $category);
-				$result = $this->Category->find('threaded', $o);
-				$data[] = $result[0];
-			}
-		}
-
-		$this->set('data', $data);
 		$this->Message->success();
 	}
 

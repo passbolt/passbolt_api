@@ -1,10 +1,9 @@
-steal( 
+steal(
 	'jquery/controller',
-	 MAD_ROOT+'/controller/componentController.js',
-	 MAD_ROOT+'/view/component/tree.js',
-	 MAD_ROOT+'/object/map.js'
-)
-.then( function ($) {
+	MAD_ROOT + '/controller/componentController.js',
+	MAD_ROOT + '/view/component/tree/list.js',
+	MAD_ROOT + '/object/map.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.component.TreeController
@@ -17,28 +16,36 @@ steal(
 	 * 
 	 * @constructor
 	 * Creates a new Tree Controller Component
-	 * @param {array} options Optional parameters
-	 * @param {mad.object.Map} map The mapping object used to map data from the JMVC
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
+	 * @param {mad.object.Map} options.map The mapping object used to map data from the JMVC
 	 * model to the understood format.
 	 * @return {mad.controller.component.TreeController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.TreeController',
-	/** @static */
-	{
+	mad.controller.ComponentController.extend('mad.controller.component.TreeController', /** @static */	{
+
 		'defaults': {
 			'label': 'Tree Component',
-			'viewClass': mad.view.component.Tree,
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs'
-		}
-	},
-	/** @prototype */
-	{
+			'viewClass': mad.view.component.tree.List,
+			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
+			'map': null,
+			'callbacks': {
+				'item_selected': null,
+				'item_right_selected': null,
+				'item_hovered': null
+			}
+		},
 
-		/**
-		 * The map to transform JMVC model object into jstree node
-		 * @type {mad.object.Map}
-		 */
-		'map': null,
+		// listen to the following custom view event
+		'listensTo': [
+			'item_selected',
+			'item_right_selected',
+			'item_hovered'
+		]
+
+	}, /** @prototype */ {
 
 		// Construcor
 		'init': function (el, options) {
@@ -49,49 +56,86 @@ steal(
 			if (typeof this.options.map == 'undefined') {
 				throw new mad.error.MissingOption('map', 'mad.controller.component.TreeController');
 			}
-			this.map = this.options.map;
+
+			// @todo find a way to manage the view variables/options
+			this.view.map = this.options.map;
+		},
+
+		/**
+		 * Insert an item in the tree
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
+		 * @throw mad.error.CallAbstractFunction
+		 * @return {void}
+		 */
+		'insertItem': function (item, refItemId, position) {
+			var refItem = mad.model.Model.search(this.state.data, 'Category.id', refItemId);
+			refItem.children.push(item);
+			this.view.insertItem(item, refItemId, position);
 		},
 
 		/**
 		 * Load the tree with an additionnal node at the specific position (ref + position)
 		 * @param {object|array} data The data which represent the node
-		 * @param {string} position The position of the newly created node. This can be a zero based index to position the element at a specific point among the current children. You can also pass in one of those strings: "before", "after", "inside", "first", "last". The default value is last
-		 * @param {mixed} ref This can be a DOM node, jQuery node or selector pointing to the element you want to create in (or next to). The default value is the root node element
-		 * @return {jQuery} The created node(s)
-		 * @todo the mapping could be done in the view ?
+		 * @return {void}
 		 */
-		'load': function (data, position, ref) {
+		'load': function (data) {
 			var returnValue = null;
+			this.state.data = data;
+			this.view.load(this.state.data);
+		},
 
-			position = (typeof position != 'undefined') ? position : 'last';
-			ref = (typeof ref != 'undefined') ? ref : this.element;
+		/* ************************************************************** */
+		/* LISTEN TO THE VIEW EVENTS */
+		/* ************************************************************** */
 
-			if ($.isArray(data)) {
-				returnValue = [];
-				// map the jmvc model objects into the desired format
-				var mappedData = this.map.mapObjects(data);
-				for (var i in mappedData) {
-					returnValue.push(this.insertNode(mappedData[i], position, ref));
-				}
-			} else {
-				// map the jmvs model objects into the desired format
-				var mappedData = mad.object.Map.mapObject(data, this.map);
-				returnValue = this.insertNode(mappedData, position, ref);
+		/**
+		 * An item has been selected
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} itemId The item identifier
+		 * @return {void}
+		 */
+		'item_selected': function (element, event, itemId) {
+			// override this function, call _super if you want the default behavior processed
+			if (this.options.callbacks.itemSelected) {
+				this.options.callbacks.itemSelected(element, event, itemId);
 			}
-
-			return returnValue;
 		},
 
 		/**
-		 * Insert a node in the tree
-		 * @param {mixed} jsonNode The node to insert
-		 * @param {string} position The position of the newly created node. This can be a zero based index to position the element at a specific point among the current children. You can also pass in one of those strings: "before", "after", "inside", "first", "last". The default value is last
-		 * @param {mixed} ref This can be a DOM node, jQuery node or selector pointing to the element you want to create in (or next to). The default value is the root node element
-		 * @return {JQuery} The created node
+		 * An item has been right selected
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} itemId The item identifier
+		 * @param {Event} srcEvent The jQuery source event
+		 * @return {void}
 		 */
-		'insertNode': function (jsonNode, position, ref) {
-			return this.view.insertNode(jsonNode, position, ref);
+		'item_right_selected': function (element, event, itemId, srcEvent) {
+			// override this function, call _super if you want the default behavior processed
+			if (this.options.callbacks.itemRightSelected) {
+				this.options.callbacks.itemRightSelected(element, event, itemId, srcEvent);
+			}
+		},
+
+		/**
+		 * An item has been hovered
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} itemId The item identifier
+		 * @return {void}
+		 */
+		'item_hovered': function (element, event, itemId) {
+			// override this function, call _super if you want the default behavior processed
+			if (this.options.callbacks.itemHovered) {
+				this.options.callbacks.itemHovered(element, event, itemId);
+			}
 		}
+
 	});
 
 });

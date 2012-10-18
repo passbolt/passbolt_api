@@ -1,7 +1,6 @@
-steal( 
-    MAD_ROOT+'/controller/controller.js'
-)
-.then( function ($) {
+steal(
+	MAD_ROOT + '/controller/controller.js'
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.CategoryController
@@ -10,33 +9,37 @@ steal(
 	 * 
 	 * @constructor
 	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.CategoryController}
 	 */
-	mad.controller.Controller.extend('passbolt.controller.CategoryController',
-	/** @static */
-	{
-		'create': function () {
-			steal.dev.log('add new password');
-		}
+	mad.controller.Controller.extend('passbolt.controller.CategoryController', /** @static */ {
 
-		,
+		'add': function (category) {
+			passbolt.model.Category.add(category['passbolt.model.Category'],
+				function (request, response, category) {
+					mad.eventBus.trigger('category_created', category);
+					mad.eventBus.trigger('passbolt_notify', {'title': response.header.message});
+				});
+		},
+
 		'get': function (options, callback) {
-			var options = options || {};
+			options = options || {};
 			passbolt.model.Category.get(options, function (category) {
-				callback(category);
+				if (callback) {
+					callback(category);
+				}
 			});
-		}
+		},
 
-		,
 		'update': function () {
 			steal.dev.log('update password');
-		}
+		},
 
-		,
 		'delete': function () {
 			steal.dev.log('delete password');
 		}
-	}
-	/** @prototype */
-	, {});
+
+	}, /** @prototype */  {});
 });

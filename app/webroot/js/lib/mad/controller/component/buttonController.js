@@ -11,12 +11,14 @@ steal(
 	 * The Button class Controller is our implementation of the UI component button.
 	 *	<p>
 	 *		<h2>Example</h2>
-	 *		@demo /js/mad/demo/controller/component/simple_button.html
+	 *		@demo ./mad/demo/controller/component/simple_button.html
 	 *	</p>
 	 * 
 	 * @constructor
 	 * Creates a new Button Controller Component
-	 * @param {array} options Optional parameters
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable
 	 * @return {mad.controller.component.ButtonController}
 	 */
 	mad.controller.ComponentController.extend('mad.controller.component.ButtonController', /** @static */ {
@@ -62,7 +64,6 @@ steal(
 			this.value = value;
 			return this;
 		},
-
 
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */

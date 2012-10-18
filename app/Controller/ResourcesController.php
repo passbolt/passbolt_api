@@ -32,15 +32,16 @@ class ResourcesController extends AppController {
 			return;
 		}
 		// check if it exists
-		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
-		$this->Resource->contain(array('CategoryResource'));
-		$o = $this->Resource->getFindFields('view');
-		$resource = $this->Resource->findById($id, $o['fields']);
-		if (!$resource) {
+		$data = array(
+			'Resource.id' => $id
+		);
+		$options = $this->Resource->getFindOptions('view', $data);
+		$resources = $this->Resource->find('all', $options);
+		if (!count($resources)) {
 			$this->Message->error(__('The resource does not exist'));
 			return;
 		}
-		$this->set('data', $resource);
+		$this->set('data', $resources[0]);
 		$this->Message->success();
 	}
 
@@ -74,7 +75,18 @@ class ResourcesController extends AppController {
 		if ($recursive == false) {
 			$data = array('CategoryResource.category_id' => $categoryId);
 		} else {
-			$cats = $this->Resource->CategoryResource->Category->find('all', array('conditions' => array('Category.lft >=' => $category['Category']['lft'], 'Category.rght <=' => $category['Category']['rght'])));
+			$cats = $this->Resource->CategoryResource->Category->find(
+				'all',
+				array(
+					'conditions' => array(
+						'Category.lft >=' => $category['Category']['lft'],
+						'Category.rght <=' => $category['Category']['rght']
+						),
+					'order' => array(
+						'Category.lft' => 'ASC'
+						)
+				)
+			);
 			foreach ($cats as $cat) {
 				$data['CategoryResource.category_id'][] = $cat['Category']['id'];
 			}
@@ -90,37 +102,6 @@ class ResourcesController extends AppController {
 
 		$this->set('data', $resources);
 		$this->Message->success();
-	}
-
-	public function populate() {
-		$this->layout = 'html5';
-		$this->Resource->create();
-		$catDrupalId = '4ff6111b-efb8-4a26-aab4-2184cbdd56cb';
-		$catAnjunaId = '4ff6111c-8534-4d17-869c-2184cbdd56cb';
-		$catHippiesId = '4ff6111d-9e6c-4d71-80ee-2184cbdd56cb';
-		$this->Resource->saveAll(
-			array(
-				0 => array(
-				'Category' => array( 'id' => $catGoaId ),
-				'Resource' => array('name' => 'festival du cinema', 'username' => 'festival', 'expiry_date' => null, 'uri' => 'http://www.iffigoa.org/', 'description' => 'description of the Goa Film Festival')
-				),
-				1 => array(
-				'Category' => array( 'id' => $catGoaId ),
-				'Resource' => array('name' => 'Church Square', 'username' => 'priest1', 'expiry_date' => null, 'uri' => '', 'description' => 'this is a description test')
-				),
-				2 => array(
-				'Category' => array( 'id' => $catAnjunaId ),
-				'Resource' => array('name' => 'hill door', 'username' => 'hippie', 'expiry_date' => null, 'uri' => 'http://www.hippiehill.com', 'description' => 'never underestimate the power of Anjuna Hills')
-				),
-				3 => array(
-				'Category' => array( 'id' => $catHippiesId ),
-				'Resource' => array('name' => 'washroom', 'username' => 'sousouchaie', 'expiry_date' => null, 'uri' => '', 'description' => 'How to get inside the washroom at Hippie ?')
-				),
-				4 => array(
-				'Resource' => array('name' => 'random', 'username' => 'user1', 'expiry_date' => '2014-07-01', 'uri' => 'http://www.enova-tech.net', 'description' => 'sample entry')
-				)
-			)
-		);
 	}
 
 /**
@@ -148,7 +129,7 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('Error while deleting'));
 			return;
 		}
-		$this->Message->success();
+		$this->Message->success(__('The resource was sucessfully deleted'));
 	}
 
 /**
@@ -176,6 +157,8 @@ class ResourcesController extends AppController {
 			return;
 		}
 
+		$this->Resource->bindModel(array('hasAndBelongsToMany' => array('Category')));
+		$this->Resource->contain(array('Category'));
 		$resource = $this->Resource->save($resourcepost);
 		if ($resource === false) {
 			$this->Message->error(__('The resource could not be saved'));
@@ -187,7 +170,7 @@ class ResourcesController extends AppController {
 				$crdata = array(
 					'CategoryResource' => array(
 						'category_id' => $cat['id'],
-						'resource_id' => $resource['Resource']['id'],
+						'resource_id' => $resource['Resource']['id']
 					)
 				);
 			// check if the data is valid
@@ -204,6 +187,13 @@ class ResourcesController extends AppController {
 			}
 		}
 		$this->Message->success(__('The resource was sucessfully saved'));
+		
+		$data = array(
+			'Resource.id' => $resource['Resource']['id']
+		);
+		$options = $this->Resource->getFindOptions('add', $data);
+		$resources = $this->Resource->find('all', $options);
+		$this->set('data', $resources[0]);
 	}
 
 /**

@@ -41,7 +41,7 @@ steal(
 
 			var clazzName = clazz.fullName;
 			var split = clazzName.split('.');
-console.dir(clazzName);
+
 			// extract the controller name, and treat it to find its view name
 			var controllerName = split.pop();
 			var viewName = $.String.camelize(controllerName.substr(0, controllerName.indexOf('Controller')));
@@ -61,9 +61,10 @@ console.dir(clazzName);
 					split = split.splice(1);
 				}
 			}
-
 			//the next in the split has to be the controller, else there is an error in the controller name
 			if (split[0] != 'controller') {
+			console.log(returnValue);
+			console.log(split);
 				throw new mad.error.Error('Controller name mal formed');
 			}
 			split = split.splice(1);

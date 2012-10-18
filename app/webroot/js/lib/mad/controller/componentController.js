@@ -125,7 +125,7 @@
  *	
  *	<p>
  *		<h2>Example</h2>
- *		@demo /js/mad/demo/controller/component.html
+ *		@demo ./mad/demo/controller/component.html
  *	</p>
  */
 
@@ -172,7 +172,9 @@ steal(
 			// associated view will be an instance of this viewClass
 			'state': 'ready',
 			// the state to put the component when the rendering is finished
-			'cssClasses': ['js_component']
+			'cssClasses': ['js_component'],
+			// the associated tag
+			'tag': 'div'
 		},
 
 		/**
@@ -194,54 +196,48 @@ steal(
 
 		/** Data to pass to the view
 		 * @type {array}
-		 * @private
 		 * @hide */
 		'viewData': [],
 
 		/** The rendered view, if not displayed it will be stored in it
 		 * @type {string}
-		 * @private
 		 * @hide */
 		'renderedView': '',
 
 		/** The associated view class, by default {mad.view.View}
 		 * @type {mad.view.View}
-		 * @private
 		 * @hide */
 		'viewClass': null,
 
-		// Class Constructor
+		// Constructor like
 		'init': function (el, options) {
 			var self = this;
-			this._super(el, options);
 
 			// initialize the view
-			this.view = new this.options.viewClass(this, {
-				'templateUri': this.options.templateUri,
-				'cssClasses': this.options.cssClasses,
-				'templateBased': this.options.templateBased
-			});
+			if (!this.options.viewClass instanceof mad.view.View) {
+				// @todo throw the convenient Exception
+				steal.dev.warn('not good viewClass');
+			}
 
-			// bind state changes
-			this.state = new mad.model.ComponentState();
+			// Initialize the associated state instance
+			this.state = new mad.model.State();
 			this.state.bind('label', function (event, newStateName) {
 				self.goNextState(newStateName);
 			});
 
-			// If the component is not template based, switch to its default state
-			// after instanciation.
-			if (!this.options.templateBased) {
-				this.setState(this.options.state);
-			} else {
-				// Pass common Component Controller data to the view
-				this.setViewData('controller', this);
-				this.setViewData('icon', this.options.icon);
-				this.setViewData('label', this.options.label);
-			}
+			this._super(el, options);
+
+			// reference the controller to the application
+			this.getApp().referenceComponent(this);
+
+			// Once the controller is fully released, initialize the component's associated view
+			this.initView();
 		},
 
 		// destructor like
 		'destroy': function () {
+			// unreference the component to the app
+			this.getApp().unreferenceComponent(this);
 			this.state.unbind('label');
 			this._super();
 		},
@@ -268,17 +264,56 @@ steal(
 				debugMsg = this.getId() + ' switching';
 
 			if (previousState) {
+				// remove the previous state class
+				this.view.removeClass('js_state_' + previousState);
+				// leave the previous state
 				var previousStateListener = this['state' + $.String.capitalize(previousState)];
 				if (previousStateListener) {
 					previousStateListener.call(this, false);
 				}
 				debugMsg += ' from ' + previousState;
 			}
+
+			// debug message
 			debugMsg += ' to ' + newState + ' state';
 			steal.dev.log(debugMsg);
+
+			// add the new state class
+			this.view.addClass('js_state_' + newState);
+			// enter in the new state
+
 			var newStateListener = this['state' + $.String.capitalize(newState)];
 			if (newStateListener) {
 				newStateListener.call(this, true);
+			}
+		},
+
+		/**
+		 * Initialize the associated component's view
+		 * <ul>
+		 *	<li>Instanciate the view with the given options.viewClass (default : mad.view.View)</li>
+		 *	<li>Set the common view data : controller (to be able to access to the associated controller), icon, label ...</li>
+		 *	<li>Switch the component to the ready state if it is not based on a template, else the render function will do the transition</li>
+		 * </ul>
+		 * @return {void}
+		 */
+		'initView': function () {
+			// Init the associated view
+			this.view = new this.options.viewClass(this.element, {
+				'templateUri': this.options.templateUri,
+				'cssClasses': this.options.cssClasses,
+				'templateBased': this.options.templateBased,
+				'controller': this
+			});
+
+			// Set the common view data
+			this.setViewData('controller', this);
+			this.setViewData('icon', this.options.icon);
+			this.setViewData('label', this.options.label);
+
+			// If the component is not based on a template, switch to its default state
+			if (!this.options.templateBased) {
+				this.setState(this.options.state);
 			}
 		},
 
@@ -338,8 +373,8 @@ steal(
 		 * return false. If the option display is set to false, return the rendered view
 		 */
 		'render': function (options) {
+			options = options || {}
 			var returnValue = false,
-				options = options || {},
 				display = options.display || true;
 
 			returnValue = this.view.render(options);
@@ -380,9 +415,9 @@ steal(
 		 */
 		'stateHidden': function (go) {
 			if (go) {
-				this.element.hide()
+				this.view.hide()
 			} else {
-				this.element.show()
+				this.view.show()
 			}
 		}
 

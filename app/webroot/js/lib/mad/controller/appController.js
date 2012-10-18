@@ -141,19 +141,19 @@ steal(
 		/**
 		 * Reference to application's components
 		 * @type mad.controller.ComponentController
-		 * @private
 		 */
 		'_components': {},
 
 		/**
 		 * App Controller constructor
 		 */
-		'init': function () {
-			this._super();
+		'init': function (el, options) {
 			// make the application global var
 			mad.setGlobal('app', this);
 			// make an alias in the mad lib
 			mad.app = mad.getGlobal('app');
+			
+			this._super(el, options);
 		},
 
 		/**
@@ -189,7 +189,7 @@ steal(
 
 		/**
 		 * Called when the application is ready            
-		 * @event {APP_NS_ID'}_app_ready
+		 * @event {APP_NS_ID_app_ready}
 		 * @return {void}
 		 */
 		'ready': function () {

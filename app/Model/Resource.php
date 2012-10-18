@@ -14,6 +14,12 @@ class Resource extends AppModel {
 	public $hasMany = array(
 		'CategoryResource'
 	);
+	
+	public $hasAndBelongsToMany = array(
+		'Category' => array (
+			'className' => 'Category'
+		)
+	);
 
 /**
  * Get the validation rules upon context
@@ -45,9 +51,9 @@ class Resource extends AppModel {
 				),
 				'expiry_date' => array(
 					'date' => array(
-			    	'required' => false,
+						'required' => false,
 						'allowEmpty' => true,
-			 			'rule' => array('date', 'ymd'),
+						'rule' => array('date', 'ymd'),
 						'message' => __('Please indicate a valid date')
 					),
 					'infuture' => array(
@@ -102,7 +108,7 @@ class Resource extends AppModel {
  */
 	public static function getFindOptions($case,&$data = null) {
 		return array_merge(
-			Resource::getFindConditions($case,&$data),
+			Resource::getFindConditions($case, &$data),
 			Resource::getFindFields($case)
 		);
 	}
@@ -118,9 +124,20 @@ class Resource extends AppModel {
 	public static function getFindConditions($case = 'view', &$data = null) {
 		$conditions = array();
 		switch ($case) {
+			case 'add':
+				$conditions = array(
+					'conditions' => array(
+						'Resource.deleted' => 0,
+						'Resource.id' => $data['Resource.id']
+					)
+				);
+			break;
 			case 'view':
 				$conditions = array(
-					'conditions' => array('Resource.deleted' => 0)
+					'conditions' => array(
+						'Resource.deleted' => 0,
+						'Resource.id' => $data['Resource.id']
+					)
 				);
 			break;
 			case 'viewByCategory':
@@ -128,6 +145,9 @@ class Resource extends AppModel {
 					'conditions' => array(
 						'CategoryResource.category_id' => $data['CategoryResource.category_id'],
 						'Resource.deleted' => 0
+					),
+					'order' => array(
+						'Resource.name ASC'
 					)
 				);
 			break;
@@ -151,15 +171,18 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified'
 					),
 					'contain' => array(
-						'CategoryResource'
+						'CategoryResource',
+						'Category'
 					)
 				);
 			break;
 			default:
-				$fields = array('fields' => array());
+				$fields = array(
+					'fields' => array()
+				);
 			break;
 		}
 		return $fields;

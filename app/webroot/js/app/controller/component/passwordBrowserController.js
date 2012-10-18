@@ -1,8 +1,9 @@
-steal(MAD_ROOT + '/controller/component/gridController.js', 
-	'app/controller/component/copyLoginButtonController.js', 
-	'app/controller/component/copySecretButtonController.js')
-	
-.then( function($) {
+steal(
+	MAD_ROOT + '/controller/component/gridController.js',
+	'app/controller/component/copyLoginButtonController.js',
+	'app/controller/component/copySecretButtonController.js',
+	'lib/jquery/jquery-ui-1.9.0.custom.js'
+).then(function ($) {
 
 	/*
 	 * @class passbolt.controller.component.PasswordBrowserController
@@ -12,17 +13,16 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 	 * Our password grid controller
 	 * 
 	 * @constructor
-	 * Creates a new PasswordBrowserController.
+	 * Creates a new Password Browser Controller
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.component.PasswordBrowserController}
 	 */
-	mad.controller.component.GridController.extend('passbolt.controller.component.PasswordBrowserController',
-	/** @static */
-	{
-		'listensTo': ['item_selected', 'item_hovered'],
-		'defaults': {}
-	},
-	/** @prototype */
-	{
+	mad.controller.component.GridController.extend('passbolt.controller.component.PasswordBrowserController', /** @static */ {
+
+	}, /** @prototype */ {
 		/**
 		 * The current selected resource id
 		 * @type {string}
@@ -39,36 +39,37 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 			// The map to use to make jstree working with our category model
 			options.map = new mad.object.Map({
 				'id': 'Resource.id',
-				'title': 'Resource.name',
-				'login': 'Resource.username',
-				'url': 'Resource.uri',
+				'name': 'Resource.name',
+				'username': 'Resource.username',
+				'uri': 'Resource.uri',
 				'modified': 'Resource.modified',
 				'copyLogin': 'Resource.id',
-				'copySecret': 'Resource.id'
+				'copySecret': 'Resource.id',
+				'Category': 'Category'
 			});
 
 			// the columns names
-			options.columnNames = ['Row', 'Title', 'Login', 'Url', 'Modified.', '', ''];
+			options.columnNames = ['Name', 'Username', 'Uri', 'Modified', '', ''];
 
 			// the columns model
 			options.columnModel = [{
-				'name': 'row',
-				'index': 'row',
+				'name': 'name',
+				'index': 'name',
 				'width': 100,
 				'valueAdapter': function (value, item, columnModel, rowNum) {
-					return rowNum;
+					var returnValue = value;
+					for (var i in item.Category) {
+						returnValue += ' <span class="password_browser_category_label">' + item.Category[0].name + '</span>';
+					}
+					return returnValue;
 				}
 			}, {
-				'name': 'title',
-				'index': 'title',
+				'name': 'username',
+				'index': 'username',
 				'width': 100
 			}, {
-				'name': 'login',
-				'index': 'login',
-				'width': 100
-			}, {
-				'name': 'url',
-				'index': 'url',
+				'name': 'uri',
+				'index': 'uri',
 				'width': 100
 			}, {
 				'name': 'modified',
@@ -83,11 +84,13 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 				'width': 100,
 				'cellAdapter': function (cellElement, cellValue) {
 					mad.helper.ComponentHelper.create(
-						cellElement, 'inside_replace', passbolt.controller.component.CopyLoginButtonController, {
-							'cssClasses': ['js_copy_login_button'],
-							'state': 'hidden',
+						cellElement,
+						'inside_replace',
+						passbolt.controller.component.CopyLoginButtonController, {
+							'state': 'disabled',
 							'value': cellValue
-						});
+						}
+					);
 				}
 			}, {
 				'name': 'copySecret',
@@ -95,23 +98,24 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 				'width': 100,
 				'cellAdapter': function (cellElement, cellValue) {
 					mad.helper.ComponentHelper.create(
-						cellElement, 'inside_replace', passbolt.controller.component.CopySecretButtonController, {
-							'cssClasses': ['js_copy_secret_button'],
+						cellElement,
+						'inside_replace',
+						passbolt.controller.component.CopySecretButtonController, {
 							'state': 'hidden',
 							'value': cellValue
-						});
+						}
+					);
 				}
 			}];
 
 			this._super(el, options);
-		}
+		},
 
 		/**
 		 * Load the browsers with the given resources
 		 * @param {app.model.Resource[]} resources The resources to display
 		 * @return {void}
 		 */
-		,
 		'load': function (resources) {
 			this._super(resources);
 		},
@@ -166,23 +170,56 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 		'item_selected': function (element, evt, itemId) {
 			// if the resource selected is the same than the previous one unselect
 			if (itemId == this.crtSelectedResourceId) {
-				this.crtSelectedResourceId = null;
-				mad.eventBus.trigger('resource_unselected', {
-					'id': itemId
-				});
-				this.state.setState('ready');
+				this.setState('ready');
+				mad.eventBus.trigger('resource_unselected', itemId);
 			} else {
+				this.setState('ready');
 				this.crtSelectedResourceId = itemId;
-				mad.eventBus.trigger('resource_selected', {
-					'id': itemId
-				});
 				this.setState('resourceSelected');
+				mad.eventBus.trigger('resource_selected', itemId);
 			}
+		},
+		
+		/**
+		 * Observe when an resource is unselected
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} data The unselected resource id
+		 * @return {void}
+		 */
+		'item_unselected': function (element, evt, itemId) {
+				this.setState('ready');
+				mad.eventBus.trigger('resource_unselected', itemId);
 		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
+
+		/**
+		 * Observe when a resource is deleted
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} resource The inserted resource
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} resource_created': function (el, event, resource) {
+			this.insertItems(resource, resource.Resource.parent_id, 'first');
+		},
+
+		/**
+		 * Observe when a resource is inserted
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} resourceId The deleted resource
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} resource_deleted': function (el, event, resourceId) {
+			if (this.crtSelectedResourceId == resourceId) {
+				this.element.trigger('item_unselected', resourceId);
+			}
+			this.deleteItems(resourceId);
+		},
 
 		/**
 		 * Observe when category is selected
@@ -193,7 +230,6 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 		 */
 		'{passbolt.eventBus} category_selected': function (element, evt, category) {
 			var self = this;
-
 			this.crtCategoryId = category.id;
 
 			// if a resource was selected, inform the system that the resource is no more selected
@@ -211,7 +247,7 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 				'recursive': true
 			}, function (request, response, resources) {
 				// The callback is out of date, an other category has been selected
-				if(self.crtCategoryId != request.data.category_id){
+				if (self.crtCategoryId != request.data.category_id) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
 					return;
 				}
@@ -259,7 +295,7 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 			if (go) {
 				this.crtSelectedResourceId = null;
 				this.crtFocusedResourceId = null;
-			} else {}
+			}
 		},
 
 		/**
@@ -269,13 +305,15 @@ steal(MAD_ROOT + '/controller/component/gridController.js',
 		 */
 		'stateResourceSelected': function (go) {
 			if (go) {
-				this.hideColumn('modified');
-				this.hideColumn('copyLogin');
-				this.hideColumn('copySecret');
+				this.view.hideColumn('modified');
+				this.view.hideColumn('copyLogin');
+				this.view.hideColumn('copySecret');
+				this.view.selectItem(this.crtSelectedResourceId);
 			} else {
-				this.showColumn('modified');
-				this.showColumn('copyLogin');
-				this.showColumn('copySecret');
+				this.view.showColumn('modified');
+				this.view.showColumn('copyLogin');
+				this.view.showColumn('copySecret');
+				this.view.unselectItem(this.crtSelectedResourceId);
 			}
 		}
 

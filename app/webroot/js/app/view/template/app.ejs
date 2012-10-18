@@ -2,15 +2,7 @@
   Menu bar
  ----------------------------------------------------------------------------->
 <div id="menubar" class="grid_16 alpha omega">
-
-	<div id="menubar_left" class="grid_8 alpha">
-		<div id="js_menu_controller"/>
-	</div>
-
-	<div id="menubar_right" class="grid_8 omega">
-		Menu bar Right
-	</div>
-
+	<ul id="js_menu" class="grid_8 alpha"/>
 </div>
 
 <div class="clear"></div>
@@ -22,25 +14,27 @@
 <div id="userbar" class="grid_16 alpha omega">
 
 	<div id="logo" class="grid_3 alpha">
-		<span>PASSBOLT</span>
+		<span>Passbolt</span>
 	</div>
 
 	<div id="search_container" class="grid_10">
 
-		<div id="js_notif_controller" />
+		<div id="js_notificator" />
 
-		<div id="search_field" class="grid_8 alpha">
-			<input type="text" /> 
+		<div id="search_field_container" class="grid_8 alpha">
+			<input id="search_field" type="text" /> 
 		</div>
 
-		<div id="search_button" class="grid_2 omega">
-			<input type="button" value="search"/> 
+		<div id="search_button_container" class="grid_2 omega">
+			<div id="search_button" class="button_icon search_button_icon"/>
 		</div>
 
 	</div>
 
-	<div id="login_container" class="grid_3 omega"> <!-- 2 + 10 + 2 = 16 wtf -->
-		biloute@gmail.com
+	<div id="login_container" class="grid_3 omega">
+		<div id="login_button" class="button_icon menu_button_dropdown_icon">
+			<span>biloute@gmail.com</span>
+		</div>
 	</div>
 
 </div>

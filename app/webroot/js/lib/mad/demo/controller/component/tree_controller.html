@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Component Tree Controller Example</title>
+		<script type='text/javascript' src='../../../../steal/steal.js'></script>
+		<style type='text/css'>
+			
+		</style>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<h3>Simple list tree representation</h3>
+	<ul id="js_demo_list_controller"></ul>
+	<h3>Jstree representation</h3>
+	<div id="js_demo_jstree_controller"></div>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+<script type='text/javascript'>
+steal(
+	'mad/demo/init.js'
+).then('mad/view/component/tree/jstree.js', function() {
+
+	mad.model.Model.extend('demo.model.Person', {
+		'validateRules': {
+			'surname': ['alphanum', 'required'],
+			'name': ['alphanum', 'required'],
+			'freelancer': ['required'],
+			'phone': ['required', 'num'],
+			'email': ['required', 'email']
+		}
+	}, {});
+	
+	var data = new Array(
+		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Cedric', 'name': 'Alfonsi', 'freelancer': true }) , 'children': [
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Cedric Junior', 'name': 'Alfonsi', 'freelancer': false }) }
+		]},
+		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Kevin', 'name': 'Muller', 'freelancer': true }) , 'children': [
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Kevin Junior', 'name': 'Muller', 'freelancer': false }) },
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Shruti Junior', 'name': 'Muller', 'freelancer': false }) }
+		] },
+		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Isma', 'name': 'Guennouni', 'freelancer': true }) , 'children': [
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Isma Junior', 'name': 'Guennouni', 'freelancer': false }) },
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Myriam Junior', 'name': 'Guennouni', 'freelancer': false }) }
+		] },
+		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Myriam', 'name': 'Djerouni', 'freelancer': true }) , 'children': [
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Isma Junior', 'name': 'Guennouni', 'freelancer': false }) },
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Myriam Junior', 'name': 'Guennouni', 'freelancer': false }) }
+		] },
+		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Remy', 'name': 'Bertaud', 'freelancer': true }) , 'children': [
+			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Remy Junior', 'name': 'Bertaud', 'freelancer': false }) }
+		] }
+	);
+	// Instanciate a list controller
+	var list = new mad.controller.component.TreeController($('#js_demo_list_controller'), {
+		'map': new mad.object.Map({
+			'id': 'Resource.id',
+			'label': {
+				'key': 'Resource.name',
+				'func': function (value, map, rowObject) {
+					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
+				}
+			},
+			'children': {
+				'key': 'children',
+				'func': mad.object.Map.mapObjects
+			}
+		}),
+		'callbacks': {
+			'itemSelected': function (element, event, itemId) {
+				console.log ('selected : ' + itemId);
+			},
+			'itemRightSelected': function (element, event, itemId) {
+				console.log ('right selected : ' + itemId);
+			},
+			'itemHovered': function (element, event, itemId) {
+				console.log ('hovered : ' + itemId);
+			}
+		}
+	}, {});
+	
+	list.load(data);	
+	
+	
+	// Instanciate a list controller
+	var jstree = new mad.controller.component.TreeController($('#js_demo_jstree_controller'), {
+		'viewClass': mad.view.component.tree.Jstree,
+		'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
+		'map': new mad.object.Map({
+			'attr.id': 'Resource.id',
+			'data': {
+				'key': 'Resource.surname',
+				'func': function (value, map, rowObject) {
+					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
+				}
+			},
+			'children': {
+				'key': 'children',
+				'func': mad.object.Map.mapObjects
+			}
+		}),
+		'callbacks': {
+			'itemSelected': function (element, event, itemId) {
+				console.log ('selected : ' + itemId);
+			},
+			'itemRightSelected': function (element, event, itemId) {
+				console.log ('right selected : ' + itemId);
+			},
+			'itemHovered': function (element, event, itemId) {
+				console.log ('hovered : ' + itemId);
+			}
+		}
+	}, {});
+	
+	jstree.render();
+	jstree.load(data);
+});
+</script>
+
+	</body>
+</html>

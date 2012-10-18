@@ -35,7 +35,7 @@ steal(
             
             /**
              * Get a plugin name controller functions of a route
-             * @param lb.core.models.Route
+             * @param {lb.core.models.Route} route
              * @static
              * @todo set the application name. Now gacd is currently used, and clean the param
              * @todo move a part in classHelper
@@ -62,7 +62,7 @@ steal(
             
             /**
              * Get a class name controller functions of a route
-             * @param lb.core.models.Route
+             * @param {lb.core.models.Route} route
              * @static
              * @todo set the application name. Now gacd is currently used
              */
@@ -76,7 +76,7 @@ steal(
         , {
             /**
              * There is no constructor
-             * @throw {lb.core.NoConstructor}
+             * @exception lb.core.NoConstructor
              */
             'init' : function(){
                 throw new lb.core.NoConstructor();

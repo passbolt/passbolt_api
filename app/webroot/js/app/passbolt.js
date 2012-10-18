@@ -7,19 +7,22 @@
  * 
  */
 
-APP_URL = 'http://passbolt.local';
+// The application url
+APP_URL = document.location.protocol + '//' + document.location.hostname + document.location.pathname;
+// The mad librarie path with the JMVC directory as root directory
 MAD_ROOT = 'lib/mad';
 
 steal(
 	MAD_ROOT + '/mad.js' // the mad framework
 ).then(
-	'jquery/plugin/jquery-ui-1.8.20.custom.min.js', // load jquery ui lib    
+//	'jquery/plugin/jquery-ui-1.8.20.custom.min.js', // load jquery ui lib    
 	'app/bootstrap/appBootstrap.js', // passbolt application bootstrap
-	'app/controller/appController.js', // passbolt main application contr	oller
-	'app/plugin/sample/controller/appController.js' // passbolt sample application controller
+	'app/controller/appController.js' // passbolt main application controller
+//	'app/test/data/resources.js' // resources data test
 ).then(function () {
 
-	steal.options.logLevel = 0;
+	steal.options.logLevel = 1;
+
 	$(document).ready(function () {
 
 		//load the bootstrap of the application

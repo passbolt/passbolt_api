@@ -23,7 +23,30 @@ class CategoriesControllerTest extends ControllerTestCase {
 	public $fixtures = array('app.category', 'app.category_type', 'app.category_resource', 'app.user', 'app.role');
 
 	public function setUp() {
+		$this->Category = new Category();
+		$this->User = new User();
+		$this->Category->useDbConfig = 'test';
+		$this->User->useDbConfig = 'test';
 		parent::setUp();
+	}
+
+	public function testIndex() {
+		$category = new Category();
+		$user = new User();
+		$user->useDbConfig = 'test';
+		$kk = $user->findByUsername('user@passbolt.com');
+		$user->setActive($kk);
+
+		// test when no parameters are provided (default behaviour : children=false)
+		$result = json_decode($this->testAction("/categories/index.json", array('method' => 'get', 'return' => 'contents')), true);
+		$debug = print_r($result, true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
+		$this->assertEquals('Goa', $result['body'][0]['Category']['name'], "/categories/index.json : \$result['body'][0]['Category']['name'] should return 'Goa' but is returning {$result['body'][0]['Category']['name']}");
+
+		// test with children = true
+		$result = json_decode($this->testAction("/categories/index/1.json", array('method' => 'get', 'return' => 'contents')), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index/1.json : The test should return success but is returning {$result['header']['status']}");
+		$this->assertTrue($result['body'][0]['children'] > 0, "/categories/index/1.json : \$result['body'][0]['Category']['name'] should return 'Goa' but is returning {$result['body'][0]['Category']['name']}");
 	}
 
 	public function testView() {
@@ -59,8 +82,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 		// test that content returned are correct
 		$result = json_decode($this->testAction("/categories/$id/1.json", array('method' => 'get', 'return' => 'contents')), true);
 		// test Anjuna id
-		$this->assertEquals('UV Bar', $result['body'][0]['children'][0]['children'][0]['children'][0]['Category']['name'],
-			'The test should return UVBar but is returning ' . $result['body'][0]['children'][0]['children'][0]['children'][0]['Category']['name']
+		$this->assertEquals('UV Bar', $result['body']['children'][0]['children'][0]['children'][0]['Category']['name'],
+			'The test should return UVBar but is returning ' . $result['body']['children'][0]['children'][0]['children'][0]['Category']['name']
 		);
 
 		// test without children

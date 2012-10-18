@@ -56,6 +56,8 @@
 /**
  * Custom route for category::view with parameters
  */
+	Router::connect('/categories/index', array('controller' => 'categories', 'action' => 'index'));
+	Router::connect('/categories/index/*', array('controller' => 'categories', 'action' => 'index'));
 	Router::connect('/categories/type/*', array('controller' => 'categories', 'action' => 'type'));
 	Router::connect('/categories/move/*', array('controller' => 'categories', 'action' => 'move'));
 	Router::connect('/categories/rename/*', array('controller' => 'categories', 'action' => 'rename'));

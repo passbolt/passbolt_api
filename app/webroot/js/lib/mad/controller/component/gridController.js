@@ -1,11 +1,9 @@
-steal( 
+steal(
 	'jquery/controller',
-	 MAD_ROOT+'/controller/componentController.js',
-	 MAD_ROOT+'/view/component/grid.js',
-	 MAD_ROOT+'/object/map.js'
-)
-
-.then(function ($) {
+	MAD_ROOT + '/controller/componentController.js',
+	MAD_ROOT + '/view/component/grid.js',
+	MAD_ROOT + '/object/map.js'
+).then(function ($) {
 
 	/*
 	 * @class mad.controller.component.GridController
@@ -17,24 +15,32 @@ steal(
 	 * 
 	 * @constructor
 	 * Creates a new Grid Controller Component
-	 * @param {array} options Optional parameters
-	 * @todo document the parameters for now see {passbolt.controller.component.PasswordBrowserController}
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {mad.controller.component.GridController}
 	 */
-	mad.controller.ComponentController.extend('mad.controller.component.GridController',
-	/** @static */
-	{
+	mad.controller.ComponentController.extend('mad.controller.component.GridController', /** @static */	{
+
 		'defaults': {
 			'label': 'Grid Component',
 			'viewClass': mad.view.component.Grid,
+			'cssClasses': ['mad_grid'],
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/grid.ejs',
-			'columnNames': [], // the grid column names
-			'columnModel': [], // the grid column model
-			'map':null // the map to use to map JMVC model to the grid data model
-		}
-	},
-	/** @prototype */
-	{
+			// the grid column names
+			'columnNames': [],
+			// the grid column model
+			'columnModel': [],
+			// the map to use to map JMVC model to the grid data model
+			'map': null,
+			// the top tag of the grid
+			'tag': 'table'
+		},
+		'listensTo': ['item_selected', 'item_unselected', 'item_hovered']
+
+	}, /** @prototype */ {
+
 		/**
 		 * The map to transform JMVC model object into jqgrid understable format
 		 * @type {mad.object.Map}
@@ -62,63 +68,58 @@ steal(
 		},
 
 		/**
-		 * Hide Column
-		 * @param {string} columnName The column name to hide
+		 * Delete an item in the grid
+		 * @param {string} itemId The item to delete
 		 * @return {void}
 		 */
-		'hideColumn': function (columnName) {
-			this.view.hideColumn(columnName);
+		'deleteItems': function (itemId) {
+			// insert items in the view
+			this.view.deleteItems(itemId);
 		},
 
 		/**
-		 * Show Column
-		 * @param {string} columnName The column name to show
+		 * Insert an item in the grid
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
+		 * @throw mad.error.CallAbstractFunction
 		 * @return {void}
 		 */
-		'showColumn': function (columnName) {
-			this.view.showColumn(columnName);
-		},
-
-		/**
-		 * Insert items in the grid
-		 * @param {$.Model[]} items The array of items to insert in the grid
-		 * @param {string} position The position to insert the new items.
-		 * Allowed inside_replace, first, last, before, after
-		 * @param {string} refId The reference item id to position the new ones
-		 * @return {void}
-		 */
-		'insertItems': function (items, position, refId) {
-			var mappedData = this.map.mapObjects(items),
-				// map items to the view format
-				self = this;
+		'insertItems': function (items, refItemId, position) {
+			var self = this;
+			items = !$.isArray(items) ? [items] : items;
+			var mappedItems = this.map.mapObjects(items);
 
 			// insert items in the view
-			this.view.insertItems(mappedData);
+			this.view.insertItems(items, refItemId, position);
 
 			// apply a widget to cells following the columns model
-			for (var j in this.options.columnModel) {
+			for(var j in this.options.columnModel) {
 				var columnModel = this.options.columnModel[j];
 
-				if (columnModel.cellAdapter) {
-					for (var i in mappedData) {
-						var itemId = mappedData[i].id;
-						var $cell = $('#' + itemId + ' .' + columnModel.name + ' span');
-						var cellValue = mappedData[i][columnModel.name];
+				if(columnModel.cellAdapter) {
+					for(var i in mappedItems) {
+						var itemId = mappedItems[i].id;
+						var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+						var cellValue = mappedItems[i][columnModel.name];
 						columnModel.cellAdapter($cell, cellValue);
 					}
 				}
 				// @todo Cell adapter replace widget, remove this part if not usefull
-				if (columnModel.widget) {
+				if(columnModel.widget) {
 					var widgetClass = columnModel.widget.clazz,
 						widgetJQueryPlugin = widgetClass._fullName,
 						widgetOptions = columnModel.widget.options;
 
 					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
 					// part to insert the items and render widget if there is
-					for (var i in mappedData) {
-						var itemId = mappedData[i].id;
-						var $cell = $('#' + itemId + ' .' + columnModel.name + ' span');
-						widgetOptions.value = mappedData[i][columnModel.name];
+					for(var i in mappedItems) {
+						var itemId = mappedItems[i].id;
+						var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+						widgetOptions.value = mappedItems[i][columnModel.name];
 						$cell[widgetJQueryPlugin](widgetOptions);
 						$cell[widgetJQueryPlugin]('render');
 					}
@@ -141,16 +142,37 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * An item has been selected
+		 * Observe when the mouse leave the component
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'item_selected': function (row, event) {},
+		'tbody mouseleave': function (element, evt) {
+			if (this.crtFocusedResourceId) {
+				mad.eventBus.trigger('resource_unfocused', {
+					'id': this.crtFocusedResourceId
+				});
+				this.crtFocusedResourceId = null;
+			}
+		},
 
 		/**
-		 * An item has been hovered
+		 * Observe when a resource is hovered
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} data The hovered resource id
 		 * @return {void}
 		 */
-		'item_hovered': function (row, event) {}
+		'item_hovered': function (row, event, itemId) {},
+
+		/**
+		 * Observe when an resource is selected
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {string} data The selected resource id
+		 * @return {void}
+		 */
+		'item_selected': function (row, event, itemId) {}
 	});
 
 });

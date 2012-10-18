@@ -6,11 +6,13 @@ steal(
 	 * @class mad.controller.component.PopupController
 	 * @inherits mad.controller.ComponentController
 	 * @parent mad.component
-	 * 
-	 * 
-	 * 
+	 *
 	 * @constructor
 	 * Creates a new Popup Controller
+	 * 
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable 
 	 * @return {mad.controller.component.PopupController}
 	 */
 	mad.controller.component.ContainerController.extend('mad.controller.component.PopupController', /** @static */ {
@@ -37,6 +39,20 @@ steal(
 		}
 
 	}, /** @prototype */ {
+
+		/**
+		 * Render the component
+		 * @see {mad.controller.componentController}
+		 */
+		'render': function (options) {
+			var returnValue = this._super();
+			this.element.find('.js_popup_content_wrapper').position({
+				my: "center center",
+				at: "center center",
+				of: this.element
+			});
+			return returnValue;
+		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
