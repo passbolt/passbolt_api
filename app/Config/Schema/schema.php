@@ -179,7 +179,7 @@ class AppSchema extends CakeSchema {
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'username' => 'anonymous@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'we are legions',
 			'active' => 1,
 			'created' => '2012-07-04 13:39:25',

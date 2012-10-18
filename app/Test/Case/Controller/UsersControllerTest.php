@@ -110,4 +110,8 @@ class UsersControllerTest extends ControllerTestCase {
 		$result = json_decode($this->testAction('/users/' . User::get('id') . '.json',array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS,'/users/view asking for self should return something');
 	}
+
+	public function testLogout() {
+		$result = $this->testAction('/logout',array('return' => 'contents'), true);
+	}
 }

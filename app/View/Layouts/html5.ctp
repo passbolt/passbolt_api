@@ -4,7 +4,7 @@
  *
  * @copyright     copyright 2012 passbolt.com
  * @license       http://www.passbolt.com/license
- * @package       app.View.Layouts
+ * @package       app.View.Layouts.html5
  * @since         version 2.12.6
  */
 ?>
@@ -15,8 +15,20 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title><?php echo $this->fetch('title'); ?></title>
+  <!--
+           ____                  __          ____
+          / __ \____  _____ ____/ /_  ____  / / /_
+         / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
+        / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
+       /_/    \__,_/____/____/_.___/\____/_/\__/
+
+       The password management solution
+       (c) 2012 passbolt.com
+
+   -->
+  <base href="<?php echo Router::url('/',true);?>">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width">
 <?php echo $this->element('css'); ?>
 <?php echo $this->element('scriptHeader'); ?>
@@ -24,7 +36,9 @@
 <body>
 <!-- header -->
 <header>
-<?php //echo $this->element('header'); ?>
+<div class="header">
+<?php echo $this->element('header'); ?>
+</div>
 </header>
 <!-- main -->
 <div role="main" id="container">
@@ -32,8 +46,9 @@
 </div>
 <!-- footer -->
 <footer>
-<?php echo $this->fetch('footer'); ?>
-<small><?php echo 'v.'.Configure::read('App.version.number'); ?></small>
+<div class="footer">
+<?php echo $this->element('footer'); ?>
+</div>
 </footer>
 <?php echo $this->fetch('scriptBottom'); ?>
 <?php echo $this->element('sql_dump'); ?>

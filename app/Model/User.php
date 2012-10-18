@@ -29,7 +29,7 @@ class User extends AppModel {
  * Details of belongs to relationships
  *
  * @var array
- * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#belongsto
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
 	public $belongsTo = array('Role');
 
@@ -300,6 +300,10 @@ class User extends AppModel {
 			/* case 'login': */
 			case 'userActivation':
 				$fields = array(
+					'fields' => array(
+						'User.id', 'User.username'
+						//'User.active','User.permissions',
+					),
 					'contain' => array(
 						'Role(id,name)',
 						//'Timezone(id,name)',
@@ -307,10 +311,6 @@ class User extends AppModel {
 						//'Settings(*)',
 						//'Person(id,firstname,lastname)'
 						//'Office(name,acronym,region,type)',
-					),
-					'fields' => array(
-						'User.id', 'User.username'
-						//'User.active','User.permissions',
 					)
 				);
 			break;

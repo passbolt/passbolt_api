@@ -17,7 +17,7 @@ class UsersController extends AppController {
 		// check if the user Authentication worked
 		// someone can not remain anonymous forever
 		if (!$this->Auth->login() || User::isAnonymous()) {
-			$this->layout = 'html5';
+			$this->layout = 'login';
 			$this->view = '/Users/login';
 			if ($this->request->is('post')) {
 				$this->request->data['User']['password'] = null;
@@ -26,7 +26,7 @@ class UsersController extends AppController {
 			return;
 		}
 		// avoid looping if the requested URL is logout
-		if ($this->Auth->redirect() == '/logout') {
+		if ($this->Auth->redirect() == '/logout' || $this->Auth->redirect() == '/login') {
 			$this->redirect('/');
 		} else {
 			$this->redirect($this->Auth->redirect());
