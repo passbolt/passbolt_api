@@ -20,13 +20,26 @@ class BcryptFormAuthenticate extends FormAuthenticate {
  */
 	protected function _findUser($username, $password) {
 		$this->settings['scope'] = array(
-			'active' => 1
-			// TODO is not guest and password is not null
+		  'active' => 1,
+			'NOT' => array('Role.name' => 'guest')
 		);
+		$this->settings['fields'] = array(
+			'username' => 'username',
+			'password' => 'password'
+		);
+		$this->settings['contain'] = array(
+			'Role(id,name)'
+		);
+		$this->settings['recursive'] = -1;
 		$u = parent::_findUser($username, $password);
+
+    // fixing unusual return format
 		if (is_array($u)) {
 			 $u = array('User' => $u);
-		}
+		}	
+		$u['Role'] = $u['User']['Role'];
+		unset($u['User']['Role']);
+
 		return $u;
 	}
 

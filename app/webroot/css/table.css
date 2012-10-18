@@ -1,0 +1,18 @@
+table {
+  width:100%;
+}
+table label.no_text {
+  width:2em;
+  vertical-align:bottom;
+  height:13px;
+}
+table label.no_text span {
+  display:none;
+}
+table tr {
+  border-bottom:1px solid #CCC;
+}
+table th.small,
+table td.small {
+  width:2em;
+}

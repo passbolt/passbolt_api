@@ -31,6 +31,7 @@
 	Router::mapResources('dictionaries');
 	Router::mapResources('users');
 	Router::mapResources('categories');
+	Router::mapResources('resources');
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',

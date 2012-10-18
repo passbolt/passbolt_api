@@ -1,0 +1,36 @@
+/* 
+  shiny as silk! 
+  @thanks famfamfam.com 
+*/
+.with_icon.success {
+	background: transparent url(../img/icons/16x16/famfamfam/success.png) center left no-repeat;
+}
+.with_icon.error {
+	background: transparent url(../img/icons/16x16/famfamfam/error.png) center left no-repeat;
+}
+.with_icon.warning {
+	background: transparent url(../img/icons/16x16/famfamfam/warning.png) center left no-repeat;
+}
+.with_icon.info,
+.with_icon.information,
+.with_icon.notice {
+	background: transparent url(../img/icons/16x16/famfamfam/information.png) center left no-repeat;
+}
+.with_icon.fav {
+	background: transparent url(../img/icons/16x16/famfamfam/fav.png) center left no-repeat;
+}
+.with_icon.unfav {
+	background: transparent url(../img/icons/16x16/famfamfam/unfav.png) center left no-repeat;
+}
+
+/* icon only */
+.with_icon.no_text span {
+  visibility:hidden;
+}
+
+/* forcing extra padding with_icon */
+body .container .with_icon {
+	padding-left:2.4em;
+	background-position:.7em center;
+}
+
