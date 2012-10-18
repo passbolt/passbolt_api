@@ -58,12 +58,12 @@ steal(
 		 * See the validate function to know more about the feedback controller.
 		 * @param {mad.form.FormElement} element The element to add to the form
 		 * @param {mad.form.element.FeddbackController} feedback The form feedback element to associate to the form element
-		 * @exception mad.error.WrongParameters
+		 * @exception mad.error.WrongParametersException
 		 * @return {void}
 		 */
 		'addElement': function (element, feedback) {
 			if (!element instanceof mad.form.FormElement) {
-				throw new mad.error.WrongParameters('The function addElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
+				throw new mad.error.WrongParametersException('The function addElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
 			}
 			var elementName = element.getModelReference();
 			this.elements[elementName] = element;
@@ -75,11 +75,12 @@ steal(
 		/**
 		 * Remove an element from the form
 		 * @param {mad.form.FormElement} element The element to remove from the form
+		 * @exception mad.error.WrongParametersException
 		 * @return {void}
 		 */
 		'removeElement': function (element) {
 			if (!element instanceof mad.form.FormElement) {
-				throw new mad.error.WrongParameters('The function removeElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
+				throw new mad.error.WrongParametersException('The function removeElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
 			}
 			var elementName = element.getModelReference();
 			delete this.elements[elementName];
@@ -168,7 +169,6 @@ steal(
 					returnValue[modelName][modelShortName][eltAttrName] = element.getValue();
 				}
 			}
-
 			return returnValue;
 		},
 
@@ -201,8 +201,9 @@ steal(
 			var returnValue = true,
 				model = element.getModel(),
 				modelName = model.fullName,
+				modelShortName = model.shortName;
 				attributeName = element.getModelAttributeName(),
-				value = this.data[modelName][attributeName],
+				value = element.getValue(),
 				elementName = element.getModelReference(),
 				validationResult = true;
 
@@ -289,7 +290,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'changed': function (el, ev, value) {
+		'changed': function (el, ev, data) {
 			if (this.options.validateOnChange) {
 				this.data = this.extractData();
 				var controllers = $(ev.target).controllers();

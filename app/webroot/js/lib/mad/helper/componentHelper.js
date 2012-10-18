@@ -9,36 +9,23 @@ steal(
 
 
 		/**
-		 * Insanciate and position a component
-		 * 
+		 * Create a new component controller function of the given parameters
+		 * @param {HTMLElement} refElement The element reference
+		 * @param {string} position The position about the reference element
+		 * @param {mad.controller.ComponentController} Clazz The component controller class reference
+		 * @return {mad.controller.ComponentController}
 		 */
 		'create': function (refElement, position, Clazz, options) {
+			refElement = typeof refElement == 'string' ? $(refElement) : refElement;
 			var returnValue = null,
-				$component = $('<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>');
+				component = '<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>',
+				$component = null;
 
-			// insert the component functions of the reference element and the given position
-			switch (position) {
-			case 'inside_replace':
-				refElement.empty();
-				$component = $component.prependTo(refElement);
-				break;
-
-			case 'first':
-				$component = $component.prependTo(refElement);
-				break;
-
-			case 'last':
-				$component = $component.appendTo(refElement);
-				break;
-
-			case 'before':
-				$component = $component.insertBefore(refElement);
-				break;
-
-			case 'after':
-				$component = $component.insertAfter(refElement);
-				break;
+			if (refElement.length == 0) {
+				throw new mad.error.WrongParametersException('refElement');
 			}
+
+			$component = mad.helper.HtmlHelper.create(refElement, position, component);
 
 			// Instanciate the component
 			if (typeof Clazz.singleton != 'undefined') {

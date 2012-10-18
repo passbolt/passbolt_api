@@ -18,6 +18,10 @@ steal(
 	mad.model.Model('passbolt.model.Resource', /** @static */ {
 
 		'validateRules': {
+			'name': ['alphanum', 'required'],
+			'username': ['alphanum', 'required', 'nospace'],
+			'uri': ['required', 'uri'],
+			'description': ['text']
 		},
 
 		attributes: {
@@ -36,7 +40,7 @@ steal(
 		'add' : function (resource, success, error) {
 			var data = resource.serialize();
 			var url = APP_URL + '/resources/add';
-			return mad.net.Ajax.singleton().request({
+			return mad.net.Ajax.request({
 				url: url,
 				type: 'post',
 				data: data,
@@ -84,7 +88,7 @@ steal(
 		'get': function (params, success, error) {
 			var url = APP_URL + '/resources/view/{id}';
 			url = $.String.sub(url, $.extend(true, {}, params), true);
-			return mad.net.Ajax.singleton().request({
+			return mad.net.Ajax.request({
 				url: url,
 				type: 'get',
 				dataType: 'passbolt.model.Resource.model',

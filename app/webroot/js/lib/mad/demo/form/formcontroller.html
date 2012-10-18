@@ -99,24 +99,24 @@ steal('mad/demo/init.js').then(function() {
 			'Topic': 'demo.model.Topic.models'
 		},
 		'validateRules': {
-//			'surname': ['alphanum', 'required'],
-//			'name': ['alphanum', 'required'],
-//			'freelancer': ['required'],
-//			'phone': ['required', 'num'],
-//			'email': ['required', 'email'],
-//			'date': ['required', {
-//				'rule':'date', 
-//				'options': {'type': 'us'}
-//			}],
-//			'password': [{
-//				'rule': 'size',
-//				'options': {'min': 3, 'max': 8}
-//			}]
+			'surname': ['alphanum', 'required'],
+			'name': ['alphanum', 'required'],
+			'freelancer': ['required'],
+			'phone': ['required', 'num'],
+			'email': ['required', 'email'],
+			'date': ['required', {
+				'rule':'date', 
+				'options': {'type': 'us'}
+			}],
+			'password': [{
+				'rule': 'size',
+				'options': {'min': 3, 'max': 8}
+			}]
 		}
 	}, {});
 	mad.model.Model.extend('demo.model.Person', {
 		'validateRules': {
-//			'id': ['required', 'uid']
+			'id': ['required', 'uid']
 		}
 	}, {});
 	mad.model.Model.extend('demo.model.Topic', {

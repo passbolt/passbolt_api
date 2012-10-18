@@ -94,9 +94,79 @@ steal(
 		 * 
 		 */
 		'required': function (value) {
-			var xregexp = XRegExp("^[\s\t\n ]*$");
+			var xregexp = XRegExp("^[\s\n\t ]*$");
 			if (value === null || xregexp.test(value)) {
 				return __('Required');
+			}
+			return true;
+		},
+
+		/**
+		 * 
+		 */
+		'text': function (value) {
+			var xregexp = XRegExp("<(.|\n)*?>");
+			if (xregexp.test(value)) {
+				return __('No HTML tags allowed');
+			}
+			return true;
+		},
+
+		/**
+		 * 
+		 */
+		'uri': function (value) {
+//			var regexUri = /^([a-z0-9+.-]+):(?://(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)(?::(\d*))?(/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?|(/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?$/g;
+			var	regexUri = "^\
+				([a-z0-9+.-]+):\
+					(?:\
+						(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?\
+						((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)\
+						(?::(\d*))?\
+						(/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?\
+					|\
+						(/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?\
+				)\
+				(?:\
+					\((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*)\
+				)?\
+				(?:\
+					#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*)\
+				)?\
+			$";
+			//^
+			//#scheme								([a-z0-9+.-]+):
+			//(?:
+			//	#it has an authority:
+			//	#userinfo						(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?
+			//	#host								((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)
+			//	#port								(?::(\d*))?
+			//	#path								(/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?
+			//	|
+			//	#it doesn't have an authority:
+			//	#path								(/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?
+			//)
+			//(?:
+			//	#query string				\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*)
+			//)?
+			//(?:
+			//	#fragment						#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*)
+			//)?
+			//$
+			var xregexp = XRegExp(regexUri);
+			if (!xregexp.test(value)) {
+				return __('Only URI format is allowed');
+			}
+			return true;
+		},
+
+		/**
+		 * 
+		 */
+		'nospace': function (value) {
+			var xregexp = XRegExp("[ ]+");
+			if (xregexp.test(value)) {
+				return __('No space are allowed');
 			}
 			return true;
 		},

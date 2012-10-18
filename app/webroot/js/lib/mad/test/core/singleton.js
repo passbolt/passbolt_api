@@ -19,14 +19,14 @@ steal('funcunit', function () {
 	test('Singleton : Check that the singleton is abstract', function () {
 		raises(function () {
 			new mad.core.Singleton();
-		}, mad.error.CallAbstractFunction, mad.error.CallAbstractFunction.message);
+		}, mad.error.CallAbstractFunctionException, mad.error.CallAbstractFunctionException.message);
 	});
 
 	test('Singleton : Check that the singleton constructor cannot be called (almost)', function () {
 		mad.core.Singleton.extend('mad.test.singleton.SingletonUnitTest', {}, {});
 		raises(function () {
 			new mad.test.singleton.SingletonUnitTest();
-		}, mad.error.CallPrivateFunction, mad.error.CallPrivateFunction.message);
+		}, mad.error.CallPrivateFunctionException, mad.error.CallPrivateFunctionException.message);
 		delete mad.test.singleton.SingletonUnitTest;
 	});
 

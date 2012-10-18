@@ -34,7 +34,7 @@ steal(
 		add : function (resource, success, error) {
 			var data = resource.serialize();
 			var url = APP_URL + 'categories';
-			return mad.net.Ajax.singleton().request({
+			return mad.net.Ajax.request({
 				url: url,
 				type: 'post',
 				data: data,
@@ -51,7 +51,7 @@ steal(
 			params.children = params.children || false;
 			var url = APP_URL + '/categories/{id}/{children}';
 			url = $.String.sub(url, params, true);
-			return mad.net.Ajax.singleton().request({
+			return mad.net.Ajax.request({
 				url: url,
 				type: 'get',
 				dataType: 'passbolt.model.Category.model',

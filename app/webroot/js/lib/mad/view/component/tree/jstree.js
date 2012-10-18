@@ -41,7 +41,6 @@ steal(
 		 * be a zero based index to position the element at a specific point among 
 		 * the current children. You can also pass in one of those strings: "before", 
 		 * "after", "inside", "first", "last". By dhe default value is set to last.
-		 * @throw mad.error.CallAbstractFunction
 		 * @return {JQuery} The created node
 		 * @todo does not require a map in this case
 		 */

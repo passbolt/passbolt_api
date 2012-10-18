@@ -29,11 +29,11 @@ steal(
 		 * @param {string} position The position of the newly created item. You can pass in one
 		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
 		 * is set to last.
-		 * @throw mad.error.CallAbstractFunction
+		 * @throw mad.error.CallAbstractFunctionException
 		 * @return {void}
 		 */
 		'insertItem': function (item, ref, position) {
-			throw new mad.error.CallAbstractFunction();
+			throw new mad.error.CallAbstractFunctionException();
 		},
 
 		/**

@@ -7,6 +7,7 @@ steal('funcunit', function () {
 		teardown: function () {}
 	});
 
+	var htmlTags = ['<!DOCTYPE>', '<a>', '<abbr>', '<acronym>', '<address>', '<applet>', '<area>', '<article>', '<aside>', '<audio>', '<b>', '<base>', '<basefont>', '<bdi>', '<bdo>', '<big>', '<blockquote>', '<body>', '<br>', '<button>', '<canvas>', '<caption>', '<center>', '<cite>', '<code>', '<col>', '<colgroup>', '<command>', '<datalist>', '<dd>', '<del>', '<details>', '<dfn>', '<dir>', '<div>', '<dl>', '<dt>', '<em>', '<embed>', '<fieldset>', '<figcaption>', '<figure>', '<font>', '<footer>', '<form>', '<frame>', '<frameset>', '<head>', '<header>', '<hgroup>', '<h1> - <h6>', '<hr>', '<html>', '<i>', '<iframe>', '<img>', '<input>', '<ins>', '<kbd>', '<keygen>', '<label>', '<legend>', '<li>', '<link>', '<map>', '<mark>', '<menu>', '<meta>', '<meter>', '<nav>', '<noframes>', '<noscript>', '<object>', '<ol>', '<optgroup>', '<option>', '<output>', '<p>', '<param>', '<pre>', '<progress>', '<q>', '<rp>', '<rt>', '<ruby>', '<s>', '<samp>', '<script>', '<section>', '<select>', '<small>', '<source>', '<span>', '<strike>', '<strong>', '<style>', '<sub>', '<summary>', '<sup>', '<table>', '<tbody>', '<td>', '<textarea>', '<tfoot>', '<th>', '<thead>', '<time>', '<title>', '<tr>', '<track>', '<tt>', '<u>', '<ul>', '<var>', '<video>', '<wbr>'];
 	var samples = {
 		'alphaASCII': 'abcdefghijklmnopqrstuvwxyz',
 		'alphaASCIIUpper' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -20,7 +21,8 @@ steal('funcunit', function () {
 		'special': '!@#$%^&*()_-+={}[]:";<>?,./\\|~',
 		'null': null,
 		'email': 'passbolt_team-2012@passbolt_team-2012.com',
-		'date': '01/01/2012'
+		'date': '01/01/2012',
+		'html': '<h1>La solution gestion de mot de passe</h1> parfaite pour les <b>business</b> et les <span style="font-size:10px">petites</span> entreprises sans oublier les accents <span style="background: url()">indispensables</span> dans l\'alphabet latin ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÚÚÚÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ'
 	};
 
 	test('mad.model.ValidationRules : alpha ASCII', function () {
@@ -75,7 +77,6 @@ steal('funcunit', function () {
 		ok(mad.model.ValidationRules.validate('alphanum', samples['alphaArabic']) === true, samples['alphaArabic']);
 		ok(mad.model.ValidationRules.validate('alphanum', samples['alphaRussian']) === true, samples['alphaRussian']);
 		ok(mad.model.ValidationRules.validate('alphanum', samples['digit']) === true, samples['digit']);
-		
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
@@ -86,7 +87,6 @@ steal('funcunit', function () {
 
 	test('mad.model.ValidationRules : num', function () {
 		var str = '';
-		
 		////////////////////////////////////////////////////////////////////////
 		// TRUE Excepted
 		////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,6 @@ steal('funcunit', function () {
 		// float with 0 in first char
 		str = '0.233';
 		ok(mad.model.ValidationRules.validate('num', str) === true, str);
-	
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
@@ -110,7 +109,6 @@ steal('funcunit', function () {
 		ok(mad.model.ValidationRules.validate('num', str) !== true, str);
 		str = '.57';
 		ok(mad.model.ValidationRules.validate('num', str) !== true, str);
-		
 		// samples
 		ok(mad.model.ValidationRules.validate('num', samples['email']) !== true, samples['email']);
 		ok(mad.model.ValidationRules.validate('num', samples['alphaASCII']) !== true, samples['alphaASCII']);
@@ -125,7 +123,6 @@ steal('funcunit', function () {
 
 	test('mad.model.ValidationRules : required', function () {
 		var str = '';
-		
 		////////////////////////////////////////////////////////////////////////
 		// TRUE Excepted
 		////////////////////////////////////////////////////////////////////////
@@ -140,7 +137,6 @@ steal('funcunit', function () {
 		ok(mad.model.ValidationRules.validate('required', samples['digit']) === true, samples['digit']);
 		ok(mad.model.ValidationRules.validate('required', samples['float']) === true, samples['float']);
 		ok(mad.model.ValidationRules.validate('required', samples['special']) === true, samples['special']);
-	
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
@@ -159,13 +155,11 @@ steal('funcunit', function () {
 
 	test('mad.model.ValidationRules : email', function () {
 		var str = '';
-		
 		////////////////////////////////////////////////////////////////////////
 		// TRUE Excepted
 		////////////////////////////////////////////////////////////////////////
 		ok(mad.model.ValidationRules.validate('email', samples['email']) === true, samples['email']);
 		var str = '';
-		
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
@@ -223,7 +217,6 @@ steal('funcunit', function () {
 				equal(mad.model.ValidationRules.validate('date', dates[format]['valid'][i], {'format':format}), true, format + ' format with ' + dates[format]['valid'][i]);
 			}
 		}
-		
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
@@ -244,30 +237,69 @@ steal('funcunit', function () {
 		notEqual(mad.model.ValidationRules.validate('date', samples['special']), true, samples['special']);
 	});
 	
-
 	test('mad.model.ValidationRules : size', function () {
 		var str = '';
-		
 		////////////////////////////////////////////////////////////////////////
 		// TRUE Excepted
 		////////////////////////////////////////////////////////////////////////
 		str = "abcd"
-		ok(mad.model.ValidationRules.validate('size', str, {'min':3}) === true, 'min 3 with ' + str);
+		equal(mad.model.ValidationRules.validate('size', str, {'min':3}), true, 'min 3 with ' + str);
 		str = "ab"
-		ok(mad.model.ValidationRules.validate('size', str, {'max':3}) === true, 'max 3 with ' + str);
+		equal(mad.model.ValidationRules.validate('size', str, {'max':3}), true, 'max 3 with ' + str);
 		str = "abcde"
-		ok(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}) === true, 'min 3 max 8 with ' + str);
-		
+		equal(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}), true, 'min 3 max 8 with ' + str);
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
 		str = "ab"
-		ok(mad.model.ValidationRules.validate('size', str, {'min':3}) !== true, 'min 3 with' + str);
+		notEqual(mad.model.ValidationRules.validate('size', str, {'min':3}), true, 'min 3 with' + str);
 		str = "abcd"
-		ok(mad.model.ValidationRules.validate('size', str, {'max':3}) !== true, 'max 3 with ' + str);
+		notEqual(mad.model.ValidationRules.validate('size', str, {'max':3}), true, 'max 3 with ' + str);
 		str = "ab"
-		ok(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}) !== true, 'min 3 max 8 with ' + str);
+		notEqual(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}), true, 'min 3 max 8 with ' + str);
 		str = "abcdefghi"
-		ok(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}) !== true, 'min 3 max 8 with ' + str);
+		notEqual(mad.model.ValidationRules.validate('size', str, {'min':3, 'max':8}), true, 'min 3 max 8 with ' + str);
+	});
+	
+	test('mad.model.ValidationRules : nospace', function () {
+		var str = '';
+		////////////////////////////////////////////////////////////////////////
+		// TRUE Excepted
+		////////////////////////////////////////////////////////////////////////
+		equal(mad.model.ValidationRules.validate('nospace', samples['alphaASCII']), true, samples['alphaASCII']);
+		equal(mad.model.ValidationRules.validate('nospace', samples['alphaASCIIUpper']), true, samples['alphaASCIIUpper']);
+		equal(mad.model.ValidationRules.validate('nospace', samples['alphaAccent']), true, samples['alphaAccent']);
+		equal(mad.model.ValidationRules.validate('nospace', samples['digit']), true, samples['digit']);
+		////////////////////////////////////////////////////////////////////////
+		// FALSE Excepted
+		////////////////////////////////////////////////////////////////////////		
+		str = ' ' + samples['alphaASCII'];
+		notEqual(mad.model.ValidationRules.validate('nospace', str), true, str);
+		str = samples['alphaASCII'] + ' ';
+		notEqual(mad.model.ValidationRules.validate('nospace', str), true, str);
+		str = samples['alphaASCII'] + ' ' + samples['alphaASCII'];
+		notEqual(mad.model.ValidationRules.validate('nospace', str), true, str);
+	});
+	
+	test('mad.model.ValidationRules : text', function () {
+		var str = '';
+		////////////////////////////////////////////////////////////////////////
+		// TRUE Excepted
+		////////////////////////////////////////////////////////////////////////
+		equal(mad.model.ValidationRules.validate('required', samples['email']),  true, samples['email']);
+		equal(mad.model.ValidationRules.validate('required', samples['alphaASCII']), true, samples['alphaASCII']);
+		equal(mad.model.ValidationRules.validate('required', samples['alphaASCIIUpper']), true, samples['alphaASCIIUpper']);
+		equal(mad.model.ValidationRules.validate('required', samples['alphaAccent']), true, samples['alphaAccent']);
+		equal(mad.model.ValidationRules.validate('required', samples['alphaLatin']), true, samples['alphaLatin']);
+		equal(mad.model.ValidationRules.validate('required', samples['alphaChinese']), true, samples['alphaChinese']);
+		equal(mad.model.ValidationRules.validate('required', samples['alphaArabic']), true, samples['alphaArabic']);
+		equal(mad.model.ValidationRules.validate('required', samples['alphaRussian']), true, samples['alphaRussian']);
+		equal(mad.model.ValidationRules.validate('required', samples['digit']), true, samples['digit']);
+		equal(mad.model.ValidationRules.validate('required', samples['float']), true, samples['float']);
+		equal(mad.model.ValidationRules.validate('required', samples['special']), true, samples['special']);
+		////////////////////////////////////////////////////////////////////////
+		// FALSE Excepted
+		////////////////////////////////////////////////////////////////////////
+		notEqual(mad.model.ValidationRules.validate('text', samples['html']), true, samples['html']);
 	});
 });

@@ -35,7 +35,7 @@ steal('funcunit', function () {
 
 		raises(function () {
 			mad.helper.ControllerHelper.getViewPath(mad.controller.component.UnitTestComponentControler);
-		}, mad.error.Error, mad.error.Error.message);
+		}, mad.error.Exception, mad.error.Exception.message);
 	});
 
 	test('ControllerHelper.getViewPath : get view path of app controllers', function () {

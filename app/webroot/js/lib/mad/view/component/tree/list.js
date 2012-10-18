@@ -22,7 +22,6 @@ steal(
 		 * @param {string} position The position of the newly created item. You can pass in one
 		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
 		 * is set to last.
-		 * @throw mad.error.CallAbstractFunction
 		 * @return {void}
 		 * @todo does not require a map in this case
 		 */

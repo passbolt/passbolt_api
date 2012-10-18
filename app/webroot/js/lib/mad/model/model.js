@@ -35,11 +35,11 @@ steal('jquery/model').then(function ($) {
 		 */
 		'validateAttribute': function (attrName, value, modelValues) {
 			var returnValue = true;
-
 			if (this.validateRules[attrName]) {
 				var rules = this.validateRules[attrName];
 				if ($.isArray(rules)) {
 					for (var i in rules) {
+						console.log(attrName, value, modelValues, rules[i]);
 						var validateResult = mad.model.ValidationRules.validate(rules[i], value, modelValues);
 						if (validateResult !== true) {
 							if (returnValue === true) {

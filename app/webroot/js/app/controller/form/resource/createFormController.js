@@ -52,6 +52,12 @@ steal(
 				}),
 				new mad.form.FeedbackController($('#js_field_uri_feedback'), {})
 			);
+			this.addElement(
+				new mad.form.element.TextboxController($('#js_field_description'), {
+					'value': this.options.data.Resource.description || ''
+				}),
+				new mad.form.FeedbackController($('#js_field_description_feedback'), {})
+			);
 		},
 
 		/**
