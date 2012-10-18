@@ -14,7 +14,7 @@ ul#js_menu { margin: 0; padding: 0; }
 
 /* User Bar */
 #userbar { position:relative; background-color:#f3f3f3; height: 49px; line-height: 49px; margin-bottom: 9px; }
-#userbar #logo { background: url(/img/logo_small.png) no-repeat 4px center; }
+#userbar #logo { background: url(../img/logo_small.png) no-repeat 4px center; }
 #userbar #logo span { font-size: 13px; color: #777; margin-left:38px; }
 
 /* Search */
@@ -34,7 +34,7 @@ ul#js_menu { margin: 0; padding: 0; }
 .js_popup_label { color: black; cursor: default; font-size: 16px; font-weight: normal; line-height: 24px; }
 .js_popup_close { width:16px; height:16px; float:right; }
 
-#js_notificator { font-size:13px; font-family: arial; position:absolute; top:39px; line-height:20px; padding:0 4px; height:20px; background-color: #F9EDBE; border:1px solid transparent; border-radius:2px; box-shadow:0 2px 4px rgba(0, 0, 0, 0.2); }
+#js_notificator { font-size:13px; font-family: arial; position:absolute; top:39px; line-height:20px; min-width: 200px; padding:0 4px; height:20px; background-color: #F9EDBE; border:1px solid transparent; border-radius:2px; box-shadow:0 2px 4px rgba(0, 0, 0, 0.2); }
 #js_notificator .notification_status { font-weight: bold; }
 #js_notificator #js_notification_more_button { font-weight:bold; color:#C0C0C0; font-size:11px; }
 #js_notificator #js_notification_details_container { position:absolute; top:20px; left:-1px; width:100%; z-index:2; }
@@ -45,7 +45,7 @@ ul#js_menu { margin: 0; padding: 0; }
 .js_workspace_actions_container li,
 	.js_workspace_view_actions_container li { display:inline-block; list-style:none; font:13px/27px Arial,sans-serif; font-weight:bold; padding:0 4px; }
 
-.js_loading { position:absolute; width:100%; height:100%; background: #FF0000 url(/img/loader.gif) no-repeat center center; }
+.js_loading { position:absolute; width:100%; height:100%; background: #FF0000 url(../img/loader.gif) no-repeat center center; }
 .js_component { position:relative; }
 .js_component_error { border:2px solid #FF0000; }
 /*.js_hidden { position:absolute; left:-10000px; }*/
