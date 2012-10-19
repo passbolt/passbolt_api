@@ -46,7 +46,6 @@ class UsersControllerTest extends ControllerTestCase {
 		));
 		$result = $this->testAction('/users/login', array('return' => 'vars','method' => 'POST', 'data'=> $data), true);
 		pr($result); die;
-		
 
 		// check if we get form
 		$result = $this->testAction('/users/login', array('return' => 'view','method' => 'GET'), true);
