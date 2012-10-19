@@ -161,6 +161,12 @@ class Resource extends AppModel {
 					)
 				);
 			break;
+			case 'delete':
+				$fields = array('fields' => array('deleted'));
+			break;
+			case 'save':
+				$fields = array('fields' => array('name', 'username', 'expiry_date', 'uri', 'description', 'deleted'));
+			break;
 			default:
 				$fields = array('fields' => array());
 			break;
