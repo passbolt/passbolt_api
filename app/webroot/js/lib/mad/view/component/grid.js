@@ -6,7 +6,6 @@ steal(
 	/*
 	 * @class mad.view.component.Grid
 	 * @inherits mad.view.View
-	 * @hide
 	 * 
 	 * Our implementation of the view grid component
 	 * 
@@ -30,22 +29,12 @@ steal(
 		},
 
 		/**
-		 * Get item id of a given row
-		 * @param {jQuery} row The row element
-		 * @return {string} the item id
-		 */
-		'getItemId': function (row) {
-			return row[0].id;
-		},
-
-		/**
 		 * Hide Column
 		 * @param {string} columnName The column name to hide
 		 * @return {void}
 		 */
 		'hideColumn': function (columnName) {
-			$('#' + columnName, this.element).hide();
-			$('.' + columnName, this.element).hide();
+			$('.js_grid_column_' + columnName, this.element).hide();
 		},
 
 		/**
@@ -54,8 +43,34 @@ steal(
 		 * @return {void}
 		 */
 		'showColumn': function (columnName) {
-			$('#' + columnName, this.element).show();
-			$('.' + columnName, this.element).show();
+			$('.js_grid_column_' + columnName, this.element).show();
+		},
+
+		/**
+		 * Select an item
+		 * @param {string} itemId The item to select
+		 * @return {void}
+		 */
+		'selectItem': function (itemId) {
+			$('#' + itemId, this.element).addClass('js_grid_selected_item');
+		},
+
+		/**
+		 * Unselect an item
+		 * @param {string} itemId The item to unselect
+		 * @return {void}
+		 */
+		'unselectItem': function (itemId) {
+			$('#' + itemId, this.element).removeClass('js_grid_selected_item');
+		},
+
+		/**
+		 * Delete an item in the grid
+		 * @param {string} itemId The item to delete
+		 * @return {void}
+		 */
+		'deleteItems': function (itemId) {
+			$('#' + itemId, this.element).remove();
 		},
 
 		/**
@@ -66,29 +81,30 @@ steal(
 		 * @param {string} refId The reference item id to position the new ones
 		 * @return {void}
 		 */
-		'insertItems': function (items, position, refId) {
-			var $tbody = $('tbody', this.$grid),
-				position = position || 'last',
-				$ref = refId ? $('#' + refId, this.element) : null,
-				$row = null;
+		'insertItems': function (items, refItemId, position) {
+			position = position || 'last';
+			var $row = null,
+				$ref = refItemId && (position == 'after' || position == 'before')? $('#' + refItemId, this.element) : $('tbody', this.$grid);
 
-			if (!$.isArray(items)) {
-				items = [items];
+			items = !$.isArray(items) ? [items] : items;
+			var mappedItems = this.controller.map.mapObjects(items);
+			if (!$.isArray(mappedItems)) {
+				mappedItems = [mappedItems];
 			}
 
 			for (var i in items) {
-				var item = items[i],
-					rowContent = '<tr id="' + item.id + '">';
+				var mappedItem = mappedItems[i],
+					rowContent = '<tr id="' + mappedItem.id + '">';
 
 				// insert column data
 				for(var j in this.controller.options.columnModel) {
 					var columnModel = this.controller.options.columnModel[j],
-						cssClass = columnModel.name,
+						cssClass = 'js_grid_column_' + columnModel.name,
 						cellValue = null;
 
 					// A column adapater function is provided
 					if(columnModel.valueAdapter) {
-						cellValue = columnModel.valueAdapter(item[columnModel.name], item, columnModel, i);
+						cellValue = columnModel.valueAdapter(mappedItem[columnModel.name], mappedItem, columnModel, i);
 					}
 					// A widget will take care of the cell rendering
 					else if(columnModel.widget || columnModel.cellAdapter) {
@@ -96,7 +112,7 @@ steal(
 					}
 					// Else display the column value
 					else {
-						cellValue = item[columnModel.name];
+						cellValue = mappedItem[columnModel.name];
 					}
 
 					// append the cell to the row
@@ -108,11 +124,11 @@ steal(
 				// insert the row
 				switch(position) {
 				case 'first':
-					$row = $(rowContent).prependTo($tbody);
+					$row = $(rowContent).prependTo($ref);
 					break;
 
 				case 'last':
-					$row = $(rowContent).appendTo($tbody);
+					$row = $(rowContent).appendTo($ref);
 					break;
 
 				case 'before':
@@ -126,53 +142,28 @@ steal(
 			}
 		},
 
+		/* ************************************************************** */
+		/* LISTEN TO THE VIEW EVENTS */
+		/* ************************************************************** */
+		
 		/**
-		 * bind events... temporary, look inside comments
+		 * An item has been selected
+		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'bindEvents': function () {
-			var self = this;
-			// @todo Ca c'est pas bien, comme ce n'est pas un controller, le binding ne sera pas detruit lors de la destruction du composant
-			// Faire heriter view de controller plutot que de class fait du sens ici
-			$('tbody tr', this.element).live('click', function (event) {
-				var $row = $(this);
-				var itemId = self.getItemId($row);
-				self.element.trigger('item_selected', itemId);
-			});
-			$('tbody tr', this.element).live('hover', function (event) {
-				var $row = $(this);
-				var itemId = self.getItemId($row);
-				self.element.trigger('item_hovered', itemId);
-			});
+		'tbody tr click': function (element, event) {
+			this.element.trigger('item_selected', element[0].id);
 		},
-
+		
 		/**
-		 * Render the jstree component
+		 * An item has been hovered
+		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'render': function () {
-			this._super();
-			this.bindEvents();
-
-			//				this.$jqgrid = this.element.find('table');
-			//				this.$jqgrid.jqGrid({
-			////					url:'example.php',
-			//					datatype: 'local',
-			//					mtype: 'GET',
-			//					colNames:this.controller.options.columnNames,
-			//					colModel :this.controller.options.columnModel,
-			////					pager: '#pager',
-			//					rowNum:0,
-			//					rowList:[10,20,30],
-			////					sortname: 'id',
-			////					sortorder: 'desc',
-			//					viewrecords: true,
-			//					gridview: true,
-			//					caption: 'My first grid',
-			//					onSelectRow:function(rowId, status, e){
-			//						self.itemSelected(rowId);
-			//					}
-			//				});
+		'tbody tr hover': function (element, event) {
+			this.element.trigger('item_hovered', element[0].id);
 		}
 
 	});

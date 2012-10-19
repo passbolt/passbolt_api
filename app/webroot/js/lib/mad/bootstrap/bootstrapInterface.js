@@ -18,7 +18,7 @@ steal(
 		 * Constructor of the Bootstrap Class
 		 */
 		'init': function (options) {
-			throw new mad.error.CallInterfaceConstructor();
+			throw new mad.error.CallInterfaceConstructorException();
 		}
 
 		/**
@@ -27,7 +27,7 @@ steal(
 		 */
 		,
 		'ready': function () {
-			throw new mad.error.CallInterfaceFunction();
+			throw new mad.error.CallInterfaceFunctionException();
 		}
 
 	});

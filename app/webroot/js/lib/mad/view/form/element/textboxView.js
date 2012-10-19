@@ -20,6 +20,14 @@ steal(
 	}, /** @prototype */ {
 
 		/**
+		 * Get the value of the textbox form element
+		 * @return {mixed} The value of the component
+		 */
+		'getValue': function (value) {
+			return this.element.val();
+		},
+
+		/**
 		 * Set the value of the textbox form element
 		 * @param {mixed} value The value to set
 		 * @return {void}
@@ -39,7 +47,9 @@ steal(
 		 * @return {void}
 		 */
 		'change': function (el, event) {
-			el.trigger('changed', el.val());
+			el.trigger('changed', {
+				value: this.getValue()
+			});
 		}
 
 	});

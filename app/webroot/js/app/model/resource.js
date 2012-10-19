@@ -1,28 +1,65 @@
-steal('jquery/model').then(function () {
+steal(
+	'jquery/model',
+	'app/model/category.js'
+).then(function () {
+
 	/*
 	 * @class passbolt.model.Resource
-	 * @inherits {$.Model}
+	 * @inherits {mad.model.Model}
 	 * @parent index
 	 * 
 	 * The resource model
 	 * 
 	 * @constructor
 	 * Creates a resource
-	 * @param {array} options
+	 * @param {array} data 
 	 * @return {passbolt.model.Resource}
 	 */
-	$.Model('passbolt.model.Resource', /** @static */ {
+	mad.model.Model('passbolt.model.Resource', /** @static */ {
+
+		'validateRules': {
+			'name': ['alphanum', 'required'],
+			'username': ['alphanum', 'required', 'nospace'],
+			'uri': ['required', 'uri'],
+			'description': ['text']
+		},
 
 		attributes: {
-			'Resource.id': 'string',
-			'Resource.name': 'string',
-			'Resource.username': 'string',
-			'Resource.expiry_date': 'string',
-			'Resource.uri': 'string',
-			'Resource.description': 'string',
-			'Resource.deleted': 'string',
-			'Resource.created': 'string',
-			'Resource.modified': 'string'
+//			'id': 'string',
+//			'name': 'string',
+//			'username': 'string',
+//			'expiry_date': 'string',
+//			'uri': 'string',
+//			'description': 'string',
+//			'deleted': 'string',
+//			'created': 'string',
+//			'modified': 'string'
+			'Category': 'passbolt.model.Category.models'
+		},
+
+		'add' : function (resource, success, error) {
+			var data = resource.serialize();
+			var url = APP_URL + '/resources/add';
+			return mad.net.Ajax.request({
+				url: url,
+				type: 'post',
+				data: data,
+				success: success,
+				error: error,
+				dataType: 'passbolt.model.Resource.model'
+			});
+		},
+
+		'delete' : function (params, success, error) {
+			var url = APP_URL + '/resources/delete/{id}';
+			url = $.String.sub(url, $.extend(true, {}, params), true);
+			return mad.net.Ajax.singleton().request({
+				url: url,
+				type: 'delete',
+				data: null,
+				success: success,
+				error: error
+			});
 		},
 
 		/**
@@ -51,7 +88,7 @@ steal('jquery/model').then(function () {
 		'get': function (params, success, error) {
 			var url = APP_URL + '/resources/view/{id}';
 			url = $.String.sub(url, $.extend(true, {}, params), true);
-			return mad.net.Ajax.singleton().request({
+			return mad.net.Ajax.request({
 				url: url,
 				type: 'get',
 				dataType: 'passbolt.model.Resource.model',

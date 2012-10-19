@@ -38,40 +38,27 @@ steal(
 		},
 
 		/**
+		 * Get a component
+		 * @param {string} id The component id to get
+		 * @return mad.controller.ComponentController
+		 */
+		'getComponent': function (id) {
+			return this.components[id];
+		},
+
+		/**
 		 * Add a component to the container
-		 * @param {String} componentClass The component class to use to instantiate the component
+		 * @param {String} ComponentClass The component class to use to instantiate the component
 		 * @param {Array} componentOptions The optional data to pass to the component constructor
 		 * @param {String} area The area to add the component. Default : mad-container-main
 		 * @todo Implement this function with the view system
 		 */
-		'addComponent': function (componentClass, componentOptions, area) {
-			var returnValue = null;
-
-			var area = typeof area != 'undefined' ? area : 'mad-container-main';
-			var $area = this.element.find('.' + area);
-
-			// @todo ici encore un mechant todo sur un helper pour generer du html
-			var $component = $('<' + componentClass.defaults.tag + ' id="' + componentOptions.id + '"/>').appendTo($area);
-			// if the component is a singleton
-			// @todo do not forget to check about the instanceof
-			if(typeof componentClass.singleton != 'undefined') {
-				returnValue = componentClass.singleton($component, componentOptions);
-			} else {
-				returnValue = new componentClass($component, componentOptions);
-			}
-
-			// reference the component
-			//                this.referenceComponent({
-			//                    'id':           componentOptions.id,
-			//                    'component':    component,
-			//                    'area':         area
-			//                });
-			//                //use a model maybe
-			//                this.components.push({
-			//                    'id':           componentOptions.id,
-			//                    'component':    component,
-			//                    'area':         area
-			//                });
+		'addComponent': function (ComponentClass, componentOptions, area) {
+			area = area || 'mad-container-main';
+			var returnValue = null,
+				$area = this.element.find('.' + area);
+			returnValue = mad.helper.ComponentHelper.create($area, 'inside_replace', ComponentClass, componentOptions);
+			this.components[returnValue.getId()] = returnValue;
 			return returnValue;
 		}
 

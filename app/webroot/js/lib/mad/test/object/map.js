@@ -74,7 +74,7 @@ steal('funcunit', function () {
 
 		raises(function () {
 			var mappedObjects = map.mapObjects(object);
-		}, mad.error.WrongParameters, mad.error.WrongParameters.message);
+		}, mad.error.WrongParametersException, mad.error.WrongParametersException.message);
 
 		var arr = [object, object, object];
 		var mappedObjects = map.mapObjects(arr);

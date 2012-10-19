@@ -54,11 +54,27 @@ steal(
 			// Store the map which will be used to map JMVC Model objects into jstree node objects
 			// This parameter is mandatory
 			if (typeof this.options.map == 'undefined') {
-				throw new mad.error.MissingOption('map', 'mad.controller.component.TreeController');
+				throw new mad.error.MissingOptionException('map', 'mad.controller.component.TreeController');
 			}
 
 			// @todo find a way to manage the view variables/options
 			this.view.map = this.options.map;
+		},
+
+		/**
+		 * Insert an item in the tree
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
+		 * @return {void}
+		 */
+		'insertItem': function (item, refItemId, position) {
+			var refItem = mad.model.Model.search(this.state.data, 'Category.id', refItemId);
+			refItem.children.push(item);
+			this.view.insertItem(item, refItemId, position);
 		},
 
 		/**

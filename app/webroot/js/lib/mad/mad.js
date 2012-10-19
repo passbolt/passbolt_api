@@ -24,7 +24,7 @@ steal(
 	MAD_ROOT + '/core/class.js'
 ).then(
 	MAD_ROOT + '/bootstrap/appBootstrap.js',
-	MAD_ROOT + '/error/error.js',
+	MAD_ROOT + '/error/exception.js',
 	MAD_ROOT + '/error/errorHandler.js',
 	MAD_ROOT + '/controller/appController.js',
 	MAD_ROOT + '/controller/controller.js',

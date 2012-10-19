@@ -225,7 +225,7 @@ steal(
 				self.goNextState(newStateName);
 			});
 
-			this._super(el, options);// bind state changes	
+			this._super(el, options);
 
 			// reference the controller to the application
 			this.getApp().referenceComponent(this);
@@ -281,6 +281,7 @@ steal(
 			// add the new state class
 			this.view.addClass('js_state_' + newState);
 			// enter in the new state
+
 			var newStateListener = this['state' + $.String.capitalize(newState)];
 			if (newStateListener) {
 				newStateListener.call(this, true);
@@ -372,8 +373,8 @@ steal(
 		 * return false. If the option display is set to false, return the rendered view
 		 */
 		'render': function (options) {
+			options = options || {}
 			var returnValue = false,
-				options = options || {},
 				display = options.display || true;
 
 			returnValue = this.view.render(options);

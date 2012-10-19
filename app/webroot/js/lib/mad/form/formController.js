@@ -58,12 +58,12 @@ steal(
 		 * See the validate function to know more about the feedback controller.
 		 * @param {mad.form.FormElement} element The element to add to the form
 		 * @param {mad.form.element.FeddbackController} feedback The form feedback element to associate to the form element
-		 * @exception mad.error.WrongParameters
+		 * @exception mad.error.WrongParametersException
 		 * @return {void}
 		 */
 		'addElement': function (element, feedback) {
 			if (!element instanceof mad.form.FormElement) {
-				throw new mad.error.WrongParameters('The function addElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
+				throw new mad.error.WrongParametersException('The function addElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
 			}
 			var elementName = element.getModelReference();
 			this.elements[elementName] = element;
@@ -75,11 +75,12 @@ steal(
 		/**
 		 * Remove an element from the form
 		 * @param {mad.form.FormElement} element The element to remove from the form
+		 * @exception mad.error.WrongParametersException
 		 * @return {void}
 		 */
 		'removeElement': function (element) {
 			if (!element instanceof mad.form.FormElement) {
-				throw new mad.error.WrongParameters('The function removeElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
+				throw new mad.error.WrongParametersException('The function removeElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
 			}
 			var elementName = element.getModelReference();
 			delete this.elements[elementName];
@@ -119,16 +120,68 @@ steal(
 			for (var elementId in this.elements) {
 				var element = this.elements[elementId],
 					model = element.getModel(),
-					elementModelName = model.fullName;
+					modelName = model.fullName,
+					modelShortName = model.shortName;
 
-				if (typeof returnValue[elementModelName] == 'undefined') {
-					returnValue[elementModelName] = [];
+				// 
+				if (typeof returnValue[modelName] == 'undefined') {
+					returnValue[modelName] = {};
+					returnValue[modelName][modelShortName] = {};
 				}
-				// get the element attribute name
-				var elementAttributeName = element.getModelAttributeName();
-				returnValue[elementModelName][elementAttributeName] = element.getValue();
-			}
 
+				// get the element attribute name
+				var eltAttrName = element.getModelAttributeName();
+
+				// if the attribute name is a reference to another model attribute
+				if (eltAttrName.indexOf('.') != -1) {
+					var cursor = returnValue[modelName],
+						eltAttrNames = eltAttrName.split('.'),
+						subModelName = eltAttrNames[0],
+						subModelAttrName = eltAttrNames[1];
+					
+					// the submodel is an array
+					var xregexp = new XRegExp("models$");
+					if (xregexp.test(model.attributes[subModelName])) {
+						returnValue[modelName][subModelName] = [];
+						var values = element.getValue();
+						if (!$.isArray(values)) values = [values];
+
+						for (var i in values) {
+							var subModelData = {};
+							subModelData = {};
+							subModelData[subModelAttrName] = values[i];
+							returnValue[modelName][subModelName].push(subModelData);
+						}
+					} else {
+						returnValue[modelName][subModelName] = {};
+						returnValue[modelName][subModelName][subModelAttrName] = element.getValue();
+					}
+
+//					for (var i in eltAttrNames) {
+//						if(i == eltAttrNames.length - 1) { // if we reach the lead
+//							cursor[eltAttrNames[i]] = element.getValue();
+//						} else { // move the cursor
+//							cursor[eltAttrNames[i]] = {};
+//							cursor = cursor[eltAttrNames[i]];
+//						}
+//					}
+				} else {
+					returnValue[modelName][modelShortName][eltAttrName] = element.getValue();
+				}
+			}
+			return returnValue;
+		},
+
+		/**
+		 * Convert data to model representation
+		 * @return {array}
+		 */
+		'dataToModel': function () {
+			var returnValue = {};
+			for (var modelName in this.data) {
+				var ModelClass = $.String.getObject(modelName);
+				returnValue[modelName] = new ModelClass(this.data[modelName]);
+			}
 			return returnValue;
 		},
 
@@ -148,12 +201,16 @@ steal(
 			var returnValue = true,
 				model = element.getModel(),
 				modelName = model.fullName,
+				modelShortName = model.shortName;
 				attributeName = element.getModelAttributeName(),
-				value = this.data[modelName][attributeName],
-				elementName = element.getModelReference();
+				value = element.getValue(),
+				elementName = element.getModelReference(),
+				validationResult = true;
 
 			// validate the attribute value
-			var validationResult = model.validateAttribute(attributeName, value, this.data[modelName]);
+			if (model.validateAttribute) {
+				validationResult = model.validateAttribute(attributeName, value, this.data[modelName]);
+			}
 
 			if(validationResult !== true) {
 				// switch the state of the element to error
@@ -210,11 +267,7 @@ steal(
 			// Form data are valid
 			if (this.validate()) {
 				// convert form data in model data
-				var modelData = {};
-				for (var modelName in this.data) {
-					var ModelClass = $.String.getObject(modelName);
-					modelData[modelName] = new ModelClass(this.data[modelName]);
-				}
+				var modelData = this.dataToModel();
 				// if a submit callback is given, call it
 				if (this.options.callbacks.submit) {
 					this.options.callbacks.submit(modelData);
@@ -237,7 +290,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'changed': function (el, ev, value) {
+		'changed': function (el, ev, data) {
 			if (this.options.validateOnChange) {
 				this.data = this.extractData();
 				var controllers = $(ev.target).controllers();

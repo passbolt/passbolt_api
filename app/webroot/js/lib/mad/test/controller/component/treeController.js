@@ -93,13 +93,13 @@ steal('funcunit', function () {
 				map: map,
 				strategy: 'badStrategy'
 			});
-		}, testEnv.mad.error.WrongParameters, 'The strategy parameter is wrong, it should be one of the followin (jstree, ...)');
+		}, testEnv.mad.error.WrongParametersException, 'The strategy parameter is wrong, it should be one of the followin (jstree, ...)');
 		// no map
 		raises(function () {
 			treeController = new testEnv.mad.controller.component.TreeController($tree, {
 				strategy: 'jstree'
 			});
-		}, testEnv.mad.error.MissingOptions, 'The map options is missing');
+		}, testEnv.mad.error.MissingOptionsException, 'The map options is missing');
 	});
 
 	test('TreeController: Check the instanciated tree is well the desired component', function () {

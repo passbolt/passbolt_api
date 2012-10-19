@@ -15,53 +15,29 @@ steal(
 	mad.view.component.Tree.extend('mad.view.component.tree.List', /** @static */ { }, /** @prototype */ {
 
 		/**
-		 * Insert a node in the tree
-		 * @param {mixed} jsonNode The node to insert
-		 * @param {string} position The position of the newly created node. This can be a zero based index to position the element at a specific point among the current children. You can also pass in one of those strings: "before", "after", "inside", "first", "last". The default value is last
-		 * @param {mixed} ref This can be a DOM node, jQuery node or selector pointing to the element you want to create in (or next to). The default value is the root node element
-		 * @return {JQuery} The created node
-		 */
-		'insertNode': function (jsonNode, position, ref) {
-			position = (typeof position != 'undefined') ? position : 'last';
-			ref = (typeof ref != 'undefined') ? ref : this.element;
-			//var node = this.jstreeInstance.create_node(ref, position, jsonNode);
-			var $child = $('<li id="' + jsonNode.id + '">' + jsonNode.label + '</li>').appendTo(ref);
-
-			for (var i in jsonNode.children) {
-				var $children = $('<ul/>').appendTo($child);
-				this.insertNode(jsonNode.children[i], 'last', $children);
-			}
-		},
-
-		/**
-		 * Render the jstree component
+		 * Insert an item in the tree
+		 * @param {mad.model.Model} item The item to insert
+		 * @param {string} refItemId The reference item id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
 		 * @return {void}
+		 * @todo does not require a map in this case
 		 */
-		'render': function () {
-			var self = this;
-			this._super();
+		'insertItem': function (item, refItemId, position) {
+			position = position || 'last';
+			var $ref = refItemId ? this.element.find('#' + refItemId + ' ul:first') : this.element;
+			// map the jmvc model objects into the desired format
+			var mappedItem = this.map.mapObject(item);
 
-			this.element.jstree({
-				"json_data": {
-					"data": []
-				},
-				"plugins": ["json_data", "ui"]
+			//var node = this.jstreeInstance.create_node(ref, position, jsonNode);
+			var $child = $('<li id="' + mappedItem.id + '">' + mappedItem.label + '</li>').appendTo($ref);
 
-			});
-			this.jstreeInstance = $.jstree._reference(this.controller.getId());
-
-			// pas propre mode, mais on deroule
-
-			// change the component status in ready
-			this.status = 'ready';
-			// @todo ca craint ce changement de status a la main comme ca, a voir
-			
-			// bind jstree events 
-			// (this kind of wrinting event.eventcomplement is not supported by JMVC)
-			this.element.bind('select_node.jstree', function (event, data) {
-				var itemId = data.rslt.obj.attr("id");
-				self.itemSelected(itemId, data.rslt.obj);
-			});
+			for (var i in mappedItem.children) {
+				$('<ul/>').appendTo($child);
+				this.insertItem(item.children[i], mappedItem.id, 'last');
+			}
 		},
 		
 		/* ************************************************************** */
@@ -72,7 +48,6 @@ steal(
 		 * An item has been selected
 		 * @param {HTMLElement} element The element the event occured on
 		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
 		 * @return {void}
 		 */
 		'li click': function (element, event) {
@@ -85,7 +60,6 @@ steal(
 		 * An item has been selected
 		 * @param {HTMLElement} element The element the event occured on
 		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
 		 * @return {void}
 		 */
 		'li contextmenu': function (element, event) {
@@ -101,7 +75,6 @@ steal(
 		 * An item has been hovered
 		 * @param {HTMLElement} element The element the event occured on
 		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
 		 * @return {void}
 		 */
 		'li hover': function (element, event) {

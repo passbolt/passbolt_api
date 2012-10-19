@@ -34,7 +34,7 @@ steal(
 		 */
 		'getGlobal': function (name) {
 			if(mad.controller.AppController.APP_NS_ID == null) {
-				throw new mad.error.Error('The application namespace is not initialized');
+				throw new mad.error.Exception('The application namespace is not initialized');
 			}
 			return window[mad.controller.AppController.APP_NS_ID][name];
 		},
@@ -47,7 +47,7 @@ steal(
 		 */
 		'deleteGlobal': function (name) {
 			if(mad.controller.AppController.APP_NS_ID == null) {
-				throw new mad.error('The application namespace is not initialized');
+				throw new mad.error.Exception('The application namespace is not initialized');
 			}
 
 			delete window[mad.controller.AppController.APP_NS_ID][name]; // delete the global variable
@@ -67,7 +67,7 @@ steal(
 		 */
 		'setGlobal': function (name, value) {
 			if(mad.controller.AppController.APP_NS_ID == null) {
-				throw new mad.error('The application namespace is not initialized');
+				throw new mad.error.Exception('The application namespace is not initialized');
 			}
 			mad.controller.AppController.globals.push(name); // reference the name of the variable
 			window[mad.controller.AppController.APP_NS_ID][name] = value; // store the variable
@@ -96,7 +96,7 @@ steal(
 			}
 			//If the application namespace has yet been populated, something is wrong ... throw an error
 			if(typeof window[mad.controller.AppController.APP_NS_ID].APP_NS_ID != 'undefined') {
-				throw new Error('The application namespace (' + mad.controller.AppController.APP_NS_ID + ') has yet been populated.');
+				throw new mad.error.Exception('The application namespace has yet been initialized');
 			}
 			//make global variables with the ns variables
 			mad.controller.AppController.setGlobal('APP_NS_ID', mad.controller.AppController.APP_NS_ID);
@@ -148,6 +148,7 @@ steal(
 		 * App Controller constructor
 		 */
 		'init': function (el, options) {
+			console.log('gn2');
 			// make the application global var
 			mad.setGlobal('app', this);
 			// make an alias in the mad lib

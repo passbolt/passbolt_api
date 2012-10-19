@@ -46,7 +46,7 @@ class UsersControllerTest extends ControllerTestCase {
 		));
 		$result = $this->testAction('/users/login', array('return' => 'vars','method' => 'POST', 'data'=> $data), true);
 		pr($result); die;
-		*/
+		
 
 		// check if we get form
 		$result = $this->testAction('/users/login', array('return' => 'view','method' => 'GET'), true);
@@ -59,6 +59,7 @@ class UsersControllerTest extends ControllerTestCase {
 		));
 		$result = $this->testAction('/users/login', array('return' => 'vars','method' => 'POST', 'data' => $data), true);
 		$this->assertEqual($result['flashMessages'][0]['header']['status'], Message::ERROR, 'user login with bogus user should return an error');
+		*/
 	}
 
 	public function testIndex() {
@@ -109,5 +110,9 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$result = json_decode($this->testAction('/users/' . User::get('id') . '.json',array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS,'/users/view asking for self should return something');
+	}
+
+	public function testLogout() {
+		$result = $this->testAction('/logout',array('return' => 'contents'), true);
 	}
 }

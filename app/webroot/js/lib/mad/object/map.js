@@ -122,7 +122,7 @@ steal(
 		 */
 		'mapObjects': function (arr) {
 			if(!($.isArray(arr))) {
-				throw new mad.error.WrongParameters('The function mapObjects is expecting an array as first parameter');
+				throw new mad.error.WrongParametersException('The function mapObjects is expecting an array as first parameter');
 			}
 			var returnValue = [];
 			for(var i in arr) {

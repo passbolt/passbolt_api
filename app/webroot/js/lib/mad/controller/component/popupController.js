@@ -40,6 +40,20 @@ steal(
 
 	}, /** @prototype */ {
 
+		/**
+		 * Render the component
+		 * @see {mad.controller.componentController}
+		 */
+		'render': function (options) {
+			var returnValue = this._super();
+			this.element.find('.js_popup_content_wrapper').position({
+				my: "center center",
+				at: "center center",
+				of: this.element
+			});
+			return returnValue;
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */

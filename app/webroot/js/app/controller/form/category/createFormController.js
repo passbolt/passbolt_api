@@ -14,12 +14,17 @@ steal(
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable 
-	 * @return {passbolt.form.category.CreateFormController}
+	 * @return {passbolt.controller.form.category.CreateFormController}
 	 */
 	mad.form.FormController.extend('passbolt.controller.form.category.CreateFormController', /** @static */ {
 
 	}, /** @prototype */ {
 
+		/**
+		 * Init the form elements
+		 * @todo Think about a common form controller function initFormElement
+		 * @return {void}
+		 */
 		'initFormElement': function () {
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_parent_id'), {
@@ -32,6 +37,11 @@ steal(
 			);
 		},
 
+		/**
+		 * Render the form and init the form elements
+		 * @return {void}
+		 * @todo Think about a common form controller function initFormElement
+		 */
 		'render': function () {
 			this._super();
 			this.initFormElement();

@@ -18,8 +18,11 @@ steal(
 	 */
 	mad.controller.Controller.extend('passbolt.controller.ResourceController', /** @static */ {
 
-		'create': function () {
-			steal.dev.log('add new resource');
+		'add': function (resource) {
+			passbolt.model.Resource.add(resource['passbolt.model.Resource'], function (request, response, resource) {
+				mad.eventBus.trigger('resource_created', resource);
+				mad.eventBus.trigger('passbolt_notify', {'title': response.header.message});
+			});
 		},
 
 		'getCategoryResources': function (options, callback) {
@@ -34,8 +37,13 @@ steal(
 			steal.dev.log('update password');
 		},
 
-		'delete': function () {
-			steal.dev.log('delete password');
+		'delete': function (resourceId) {
+			passbolt.model.Resource['delete']({
+				'id': resourceId
+			}, function (request, response, resource) {
+				mad.eventBus.trigger('resource_deleted', resourceId);
+				mad.eventBus.trigger('passbolt_notify', {'title': response.header.message});
+			});
 		}
 
 	}, /** @prototype */ { });

@@ -85,7 +85,7 @@ steal(
 
 				// check compulsory options (an option compulsory lol)
 				if ($.trim(this.options.appRootUrl) === '') {
-					throw new mad.error.MissingOption('appRootUrl', 'mad.bootstrap.AppBootstrap');
+					throw new mad.error.MissingOptionException('appRootUrl', 'mad.bootstrap.AppBootstrap');
 				}
 
 				// Reference the application namespace
@@ -110,7 +110,7 @@ steal(
 				this.initGlobals();
 
 				// Initialize internationalization
-				//					this.initInternationalization();
+				this.initInternationalization();
 
 				// Initialize the event bus controller
 				this.initEventBus();
@@ -181,15 +181,14 @@ steal(
 			// Load the javascript dictionnary
 			mad.net.Ajax.singleton().request({
 				'type': mad.net.Request.METHOD_GET,
-				'url': mad.getGlobal('APP_ROOT_URL') + '/dictionaries/get.json',
+				'url': mad.getGlobal('APP_ROOT_URL') + '/dictionaries/en-EN.json',
 				'async': false,
 				'dataType': 'json',
-				'success': function (responseData, response) {
+				'success': function (request, response, data) {
 					// load the client dictionnary
-					mad.lang.I18n.singleton().loadDico(responseData);
+					mad.lang.I18n.singleton().loadDico(data);
 				},
-				'error': function (ajaxResponse) {
-					// 
+				'error': function (request, response) {
 					steal.dev.warn('Unable to load the client dictionnary');
 				}
 			});

@@ -1,0 +1,28 @@
+/* search */
+.header .second {
+  float:left;
+	width:100%;
+}
+.header .search legend,
+.header .search label {
+  display:none;
+}
+.header .search {
+  float:left;
+  width:36em;
+  margin:1em .5em .5em .2em;
+}
+.header .search form {
+  margin:0;
+  padding:0;
+}
+.header .search .input,
+.header .search .button {
+  float:left;
+}
+.header .search .input.text input {
+  width:24em;
+  margin-right:.3em;
+}
+
+

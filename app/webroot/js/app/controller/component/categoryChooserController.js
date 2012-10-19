@@ -46,26 +46,29 @@ steal(
 				{ 'MenuItem': new mad.model.MenuItem({
 					'id': uuid(),
 					'label': 'open',
-					'action': function () {
+					'action': function (menu) {
+						menu.goToHell();
 						passbolt.eventBus.trigger('category_selected', {'id': itemId});
 					}
 				}) }, { 'MenuItem': new mad.model.MenuItem({
 					'id': uuid(),
 					'label': 'create',
-					'action': function () {
+					'action': function (menu) {
 						console.log('Menu Create');
 					}
 				}), 'children': [
 					{ 'MenuItem': new mad.model.MenuItem({
 						'id': uuid(),
 						'label': 'secret',
-						'action': function () {
-							console.log('Menu Create Secret');
+						'action': function (menu) {
+							menu.goToHell();
+							passbolt.eventBus.trigger('request_resource_creation', itemId);
 						}
 					}) }, { 'MenuItem': new mad.model.MenuItem({
 						'id': uuid(),
 						'label': 'category',
-						'action': function () {
+						'action': function (menu) {
+							menu.goToHell();
 							passbolt.eventBus.trigger('request_category_creation', {'id': itemId});
 						}
 					})
@@ -124,13 +127,25 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Observe when a category is inserted
+		 * 
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} category The inserted category
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} category_created': function (el, event, category) {
+			this.insertItem(category, category.Category.parent_id, 'last');
+		},
+
+		/**
 		 * Observe when the application is ready and load the tree with the roots
 		 * categories
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'{mad.eventBus} app_ready': function (ui, event) {
+		'{passbolt.eventBus} app_ready': function (ui, event) {
 			var self = this;
 			//load categories function of the selected database
 			this.setState('loading');

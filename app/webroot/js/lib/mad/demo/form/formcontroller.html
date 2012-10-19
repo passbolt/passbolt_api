@@ -62,13 +62,13 @@
 		
 		<div>
 			<label>want to meet</label>
-			<select name="demo.model.Person.id" id="js_field_who" class="form_field"></select>
+			<select name="demo.model.Meeting.Person.id" id="js_field_who" class="form_field"></select>
 			<span id="js_field_who_feedback" class="form_feedback"/>
 		</div>
 		
 		<div>
 			<label>I want to talk about</label>
-			<fieldset name="demo.model.Meeting.topics" id="js_field_topics" class="form_field"></fieldset>
+			<fieldset name="demo.model.Meeting.Topic.id" id="js_field_topics" class="form_field"></fieldset>
 			<span id="js_field_topics_feedback" class="form_feedback"/>
 		</div>
 		
@@ -94,6 +94,10 @@ steal('mad/demo/init.js').then(function() {
 	
 	// Create a fake model
 	mad.model.Model.extend('demo.model.Meeting', {
+		'attributes': {
+			'Person': 'demo.model.Person.model',
+			'Topic': 'demo.model.Topic.models'
+		},
 		'validateRules': {
 			'surname': ['alphanum', 'required'],
 			'name': ['alphanum', 'required'],
@@ -113,6 +117,11 @@ steal('mad/demo/init.js').then(function() {
 	mad.model.Model.extend('demo.model.Person', {
 		'validateRules': {
 			'id': ['required', 'uid']
+		}
+	}, {});
+	mad.model.Model.extend('demo.model.Topic', {
+		'validateRules': {
+//			'id': ['required', 'uid']
 		}
 	}, {});
 	
@@ -180,8 +189,8 @@ steal('mad/demo/init.js').then(function() {
 				'k': 'Kevin',
 				'm': 'Myriam',
 				'r': 'Remy'
-			}
-//			'value': ''
+			},
+			'value': 'c'
 		}),
 		new mad.form.FeedbackController($('#js_field_who_feedback'), {})
 	);
@@ -190,11 +199,11 @@ steal('mad/demo/init.js').then(function() {
 	form.addElement(
 		new mad.form.element.CheckboxController($('#js_field_topics'), {
 			'availableValues': {
-					'Business': 'Business',
-					'Administration': 'Administration',
-					'Fiesta': 'Fiesta'
+					'b': 'Business',
+					'a': 'Administration',
+					'f': 'Fiesta'
 			},
-			'value': ['Fiesta']
+			'value': ['f']
 		}),
 		new mad.form.FeedbackController($('#js_field_topics_feedback'), {})
 	);

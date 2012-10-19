@@ -14,6 +14,12 @@ class Resource extends AppModel {
 	public $hasMany = array(
 		'CategoryResource'
 	);
+	
+	public $hasAndBelongsToMany = array(
+		'Category' => array (
+			'className' => 'Category'
+		)
+	);
 
 /**
  * Get the validation rules upon context
@@ -102,7 +108,7 @@ class Resource extends AppModel {
  */
 	public static function getFindOptions($case,&$data = null) {
 		return array_merge(
-			Resource::getFindConditions($case,&$data),
+			Resource::getFindConditions($case, &$data),
 			Resource::getFindFields($case)
 		);
 	}
@@ -118,9 +124,20 @@ class Resource extends AppModel {
 	public static function getFindConditions($case = 'view', &$data = null) {
 		$conditions = array();
 		switch ($case) {
+			case 'add':
+				$conditions = array(
+					'conditions' => array(
+						'Resource.deleted' => 0,
+						'Resource.id' => $data['Resource.id']
+					)
+				);
+			break;
 			case 'view':
 				$conditions = array(
-					'conditions' => array('Resource.deleted' => 0)
+					'conditions' => array(
+						'Resource.deleted' => 0,
+						'Resource.id' => $data['Resource.id']
+					)
 				);
 			break;
 			case 'viewByCategory':
@@ -154,10 +171,11 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified'
 					),
 					'contain' => array(
-						'CategoryResource'
+						'CategoryResource',
+						'Category'
 					)
 				);
 			break;
@@ -168,7 +186,9 @@ class Resource extends AppModel {
 				$fields = array('fields' => array('name', 'username', 'expiry_date', 'uri', 'description', 'deleted'));
 			break;
 			default:
-				$fields = array('fields' => array());
+				$fields = array(
+					'fields' => array()
+				);
 			break;
 		}
 		return $fields;

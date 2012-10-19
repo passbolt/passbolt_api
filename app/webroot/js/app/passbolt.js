@@ -15,9 +15,10 @@ MAD_ROOT = 'lib/mad';
 steal(
 	MAD_ROOT + '/mad.js' // the mad framework
 ).then(
-	'jquery/plugin/jquery-ui-1.8.20.custom.min.js', // load jquery ui lib    
+//	'jquery/plugin/jquery-ui-1.8.20.custom.min.js', // load jquery ui lib    
 	'app/bootstrap/appBootstrap.js', // passbolt application bootstrap
-	'app/controller/appController.js' // passbolt main application controller
+	'app/controller/appController.js', // passbolt main application controller
+	'/css/passbolt.css' // passbolt main application controller
 //	'app/test/data/resources.js' // resources data test
 ).then(function () {
 

@@ -20,13 +20,13 @@ steal(
 		 * @return {void}
 		 */
 		'dispatch': function (route, options) {
-			throw new mad.error.CallInterfaceFunction();
+			throw new mad.error.CallInterfaceFunctionException();
 		}
 
 	}, /** @prototype */ {
 
 		'init': function () {
-			throw new mad.error.CallInterfaceConstructor();
+			throw new mad.error.CallInterfaceConstructorException();
 		}
 
 	});

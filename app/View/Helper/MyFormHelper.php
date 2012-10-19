@@ -16,9 +16,9 @@ class MyFormHelper extends FormHelper {
  * @access public
  */
 	public function input($fieldName, $options = array()) {
-		if (isset($options['class']) && !empty($options['class']) && strstr($options['class'],'required')) {
-			$options['label'] .= $this->required();
-		}
+		//if (isset($options['class']) && !empty($options['class']) && strstr($options['class'],'required')) {
+		//	$options['label'] .= $this->required();
+		//}
 		if (isset($options['hint'])) {
 			$options['after'] = $this->hint($options['hint']);
 			unset($options['hint']);

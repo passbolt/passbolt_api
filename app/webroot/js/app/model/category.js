@@ -1,4 +1,6 @@
-steal(MAD_ROOT + '/model').then(function () {
+steal(
+	MAD_ROOT + '/model'
+).then(function () {
 
 	/*
 	 * @class passbolt.model.Category
@@ -14,52 +16,45 @@ steal(MAD_ROOT + '/model').then(function () {
 	 */
 	mad.model.Model('passbolt.model.Category', /** @static */	{
 
+		'validateRules': {
+			
+		},
+
 		attributes: {
-			'id': 'string',
-			'parent_id': 'string',
-			'lft': 'string',
-			'rght': 'string',
-			'name': 'string',
-			'category_type_id': 'string',
+			// Cannot manage attributes like this, our representation is fully compatible with the cakephp model structure
+//			'id': 'string',
+//			'parent_id': 'string',
+//			'lft': 'string',
+//			'rght': 'string',
+//			'name': 'string',
+//			'category_type_id': 'string',
 			'children': 'passbolt.model.Category.models'
 		},
 
-		create : function (attrs, success, error) {
-			var extractedData = {};
-			for (var name in attrs) {
-				if (typeof attrs[name] == undefined || typeof attrs[name] != 'string') continue;
-				extractedData[name] = attrs[name];
-			}
-			var data = {
-				Category: extractedData
-			};
-			$.post(APP_URL + 'categories', data, success, "json");
+		add : function (resource, success, error) {
+			var data = resource.serialize();
+			var url = APP_URL + 'categories';
+			return mad.net.Ajax.request({
+				url: url,
+				type: 'post',
+				data: data,
+				success: success,
+				error: error,
+				dataType: 'passbolt.model.Category.model'
+			});
 		},
-
-//		'save': function (params, success, error) {
-//			console.log(this);
-//			var url = APP_URL + '/categories/add.json';
-//			return mad.net.Ajax.singleton().request({
-//				url: url,
-//				type: 'post',
-//				data: this,
-//				success: success,
-//				error: error
-//			});
-//		},
 
 		/**
 		 * Get a category
 		 */
 		'get': function (params, success, error) {
-			params.children = typeof (params.children) != 'undefined' ? params.children : false;
-			var url = APP_URL + '/categories/get/{id}/{children}';
+			params.children = params.children || false;
+			var url = APP_URL + '/categories/{id}/{children}';
 			url = $.String.sub(url, params, true);
-
-			return mad.net.Ajax.singleton().request({
+			return mad.net.Ajax.request({
 				url: url,
 				type: 'get',
-				dataType: 'passbolt.model.Category.models',
+				dataType: 'passbolt.model.Category.model',
 				data: null,
 				success: success,
 				error: error

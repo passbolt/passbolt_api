@@ -96,7 +96,7 @@ steal(
 
 			// if the string does not contain the proper number of variables throw an exception
 			if(split.length != vars.length + 1) {
-				throw new mad.error.WrongParameters('I18n Error : The sentence to translate does not contain as many hooks as they are variables');
+				throw new mad.error.WrongParametersException('I18n Error : The sentence to translate does not contain as many hooks as they are variables');
 			}
 			// no hook found in the string
 			if(split.length < 2) {
@@ -107,7 +107,7 @@ steal(
 			for(var i in vars) {
 				j = parseInt(i);
 				if(typeof vars[j] != 'string' && typeof vars[j] != 'number' && typeof vars[j] != 'boolean') {
-					throw new mad.error.WrongParameters('I18n Error : Variables has to be a scalar');
+					throw new mad.error.WrongParametersException('I18n Error : Variables has to be a scalar');
 				}
 				returnValue += split[i] + vars[j];
 			}
