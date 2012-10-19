@@ -56,8 +56,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 		);
 	}
 
- public function testViewByCategory() {
- 	$categoryModel = new Category();
+	public function testViewByCategory() {
+ 		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
 		$goaCat = $categoryModel->findByName('Goa');
 
@@ -102,15 +102,15 @@ class ResourcesControllerTest extends ControllerTestCase {
 		// should return an empty array
 		$result = json_decode($this->testAction("/resources/viewByCategory/$id.json", array('return' => 'contents')), true);
 		$this->assertEquals(0, count($result['body']), "/resources/viewByCategory/$id.json : The test should count 0 elements but is actually counting " . count($result['body']));
- }
+	}
 
- public function testAdd() {
- 	$categoryModel = new Category();
+	public function testAdd() {
+		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
 		$goaCat = $categoryModel->findByName('Goa');
 
-		// test insertion with parameter parent_id, and position 50 (doesnt exist)
-		$result = json_decode($this->testAction('/resources/add.json', array(
+		// test insertion with parameter parent_id, and position 50 (doesn't exist)
+		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
 					'name' => 'test1',
@@ -120,12 +120,22 @@ class ResourcesControllerTest extends ControllerTestCase {
 					),
 					'Category' => array(
 						 0 => array(
-					 		'id' => $goaCat['Category']['id']
+							'id' => $goaCat['Category']['id']
 						 )
 					)
 			 ),
 			 'method' => 'post',
 			 'return' => 'contents'
 		)), true);
+	}
+
+	public function testDelete() {
+		$res = $this->Resource->findByName('washroom');
+		$id = $res['Resource']['id'];
+		$result = json_decode($this->testAction("/resources/$id.json", array(
+			 'method' => 'delete',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
 	}
 }
