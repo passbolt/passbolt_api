@@ -14,7 +14,7 @@ class Resource extends AppModel {
 	public $hasMany = array(
 		'CategoryResource'
 	);
-	
+
 	public $hasAndBelongsToMany = array(
 		'Category' => array (
 			'className' => 'Category'
