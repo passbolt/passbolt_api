@@ -263,7 +263,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$cat = $category->findByName('Drug places');
 		$id = $cat['Category']['id'];
 
-		// without paramters
+		// without parameters
 		$result = json_decode($this->testAction("/categories.json", array('method' => 'delete', 'return' => 'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/delete : The test should return success but is returning {$result['header']['status']}");
 
