@@ -52,7 +52,7 @@ steal(
 		 * @return {void}
 		 */
 		'selectItem': function (itemId) {
-			$('#' + itemId, this.element).addClass('js_grid_selected_item');
+			$('#' + itemId, this.element).addClass('selected');
 		},
 
 		/**
@@ -61,7 +61,7 @@ steal(
 		 * @return {void}
 		 */
 		'unselectItem': function (itemId) {
-			$('#' + itemId, this.element).removeClass('js_grid_selected_item');
+			$('#' + itemId, this.element).removeClass('selected');
 		},
 
 		/**

@@ -29,6 +29,14 @@ steal(
 			var menuItems = [
 				{ 'MenuItem': new mad.model.MenuItem({
 					'id': uuid(),
+					'label': 'home',
+					'class': 'home',
+					'action': function () {
+						passbolt.eventBus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
+					}
+				})
+			}, { 'MenuItem': new mad.model.MenuItem({
+					'id': uuid(),
 					'label': 'passwords',
 					'action': function () {
 						passbolt.eventBus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
@@ -36,9 +44,16 @@ steal(
 				})
 			}, { 'MenuItem': new mad.model.MenuItem({
 					'id': uuid(),
-					'label': 'people & groups',
+					'label': 'people',
 					'action': function () {
 						passbolt.eventBus.trigger('workspace_selected', 'js_passbolt_peopleWorkspace_controller');
+					}
+				})
+			}, { 'MenuItem': new mad.model.MenuItem({
+					'id': uuid(),
+					'label': 'help',
+					'action': function () {
+						passbolt.eventBus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
 					}
 				})
 			}];

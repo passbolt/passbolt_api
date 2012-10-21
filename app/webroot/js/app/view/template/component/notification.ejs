@@ -1,12 +1,10 @@
-<div>
-	<span class="notification_status"><%= status %></span>&nbsp;&nbsp;
-	<span class="notification_title"><%= title %></span>&nbsp;&nbsp;
-	<% if (message) { %>
-		<span id="js_notification_more_button"><%= __('see details') %></span>
-	<% } %>
-</div>
-<div id="js_notification_details_container">
-	<div id="js_notification_details">
+<span class="notification_status"><%= status %></span>&nbsp;&nbsp;
+<span class="notification_title"><%= title %></span>&nbsp;&nbsp;
+<% if (message) { %>
+	<span class="js_notification_more_button"><%= __('see details') %></span>
+<% } %>
+<div class="js_notification_details_container">
+	<div class="js_notification_details">
 		<div><%= message %></div>
 		<div><%= data %></div>
 	</div>

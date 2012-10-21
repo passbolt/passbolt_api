@@ -1,5 +1,6 @@
 steal(
-	MAD_ROOT + '/controller/component/treeController.js'
+	MAD_ROOT + '/controller/component/treeController.js',
+	MAD_ROOT + '/view/template/component/tree/menuItem.ejs'
 ).then(function ($) {
 
 	/**
@@ -19,10 +20,12 @@ steal(
 
 		'defaults': {
 			'label': 'MenuController',
+			'itemTemplateUri': MAD_ROOT + '/view/template/component/tree/menuItem.ejs',
 
 			'map': new mad.object.Map({
 				'id': 'MenuItem.id',
 				'label': 'MenuItem.label',
+				'cssClasses': 'MenuItem.class',
 				'children': {
 					'key': 'children',
 					'func': mad.object.Map.mapObjects

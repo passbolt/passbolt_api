@@ -1,51 +1,62 @@
-<!-----------------------------------------------------------------------------
-  Menu bar
- ----------------------------------------------------------------------------->
-<div id="menubar" class="grid_16 alpha omega">
-	<ul id="js_menu" class="grid_8 alpha"/>
-</div>
-
-<div class="clear"></div>
+<header>
+	<div class="header">
 
 <!-----------------------------------------------------------------------------
-  User bar
+	Menu bar
+ ----------------------------------------------------------------------------->
+		<nav>
+			<div class="top navigation">
+				<ul id="js_menu"/>
+			</div>
+		</nav>
+
+<!-----------------------------------------------------------------------------
+	User bar
  ----------------------------------------------------------------------------->
 
-<div id="userbar" class="grid_16 alpha omega">
+		<div id="userbar" class="second">
 
-	<div id="logo" class="grid_3 alpha">
-		<span>Passbolt</span>
-	</div>
+			<div class="logo">
+				<h1>
+					<a href="#">
+						<span>Passbolt</span>
+					</a>
+				</h1>
+			</div>
 
-	<div id="search_container" class="grid_10">
+			<div id="search_container" class="search">
 
-		<div id="js_notificator" />
+				<div id="js_notificator" class="notificator" />
 
-		<div id="search_field_container" class="grid_8 alpha">
-			<input id="search_field" type="text" /> 
+				<fieldset> 
+					<legend>Please enter a search keyword</legend> 
+					<div class="input text required">
+						<label for="PasswordSearch">Search</label>
+						<input name="data[Search][password]" class="required" maxlength="50" type="text" id="js_search_field">
+					</div> 
+					<div class="submit"><input type="submit" value="search"></div> 
+				</fieldset>
+
+			</div>
+
+<!-----------------------------------------------------------------------------
+	Login control
+ ----------------------------------------------------------------------------->
+			<!--
+			<div id="login_container">
+				<div id="login_button" class="button_icon menu_button_dropdown_icon">
+					<span>biloute@gmail.com</span>
+				</div>
+			</div>
+			-->
+
 		</div>
 
-		<div id="search_button_container" class="grid_2 omega">
-			<div id="search_button" class="button_icon search_button_icon"/>
-		</div>
-
 	</div>
-
-	<div id="login_container" class="grid_3 omega">
-		<div id="login_button" class="button_icon menu_button_dropdown_icon">
-			<span>biloute@gmail.com</span>
-		</div>
-	</div>
-
-</div>
-
-<div class="clear"></div>
+</header>
 
 <!-----------------------------------------------------------------------------
   Workspaces Container
  ----------------------------------------------------------------------------->
 
-<div id="js_workspaces_container" class="grid_16 alpha omega"/>
-
-
-<div class="clear"></div>
+<div id="js_workspaces_container"/>

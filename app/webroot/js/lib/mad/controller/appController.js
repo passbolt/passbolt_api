@@ -144,11 +144,8 @@ steal(
 		 */
 		'_components': {},
 
-		/**
-		 * App Controller constructor
-		 */
+		// constructor like
 		'init': function (el, options) {
-			console.log('gn2');
 			// make the application global var
 			mad.setGlobal('app', this);
 			// make an alias in the mad lib

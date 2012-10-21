@@ -92,7 +92,7 @@ a.button.disabled {
   background:white;
 }
 
-/* active */
+/* inactive */
 input[type=submit].disabled:hover,
 input.button.disabled:hover,
 button.disabled:hover,
@@ -106,4 +106,21 @@ a.button.disabled:active {
   box-shadow:0 0 0;
   top:0;
   border:1px solid #CCC;
+}
+
+/* with icon */
+button.with_icon {
+  padding: .5em .55em .55em;
+	opacity: .7;
+}
+button.with_icon:hover {
+	opacity: 1;
+}
+button.with_icon.left_icon {
+	padding-left:2em;
+	background-position:.3em center;
+}
+button.with_icon.right_icon {
+	padding-right:2.4em;
+	background-position:90% center;
 }

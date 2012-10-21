@@ -34,12 +34,6 @@
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>
-<!-- header -->
-<header>
-<div class="header">
-<?php echo $this->element('header'); ?>
-</div>
-</header>
 <!-- main -->
 <div role="main" id="container">
 <?php echo $this->fetch('content'); ?>

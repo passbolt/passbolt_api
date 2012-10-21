@@ -56,7 +56,7 @@ steal(
 
 			this._super();
 			var eltWidth = this.element.width(),
-				refEltWidth = $('#search_field').width(),
+				refEltWidth = $('#js_search_field').width(),
 				left = (refEltWidth - eltWidth) / 2
 			this.element.css('left', left);
 		},

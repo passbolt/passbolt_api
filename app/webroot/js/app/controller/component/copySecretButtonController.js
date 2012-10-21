@@ -19,8 +19,8 @@ steal(
 
 		'defaults': {
 			'label': 'Copy Secret To Clipboard',
-			'cssClasses': ['button_icon', 'copy_secret_button_icon'],
-			'tag': 'div'
+			'cssClasses': ['with_icon', 'copy_secret'],
+			'tag': 'button'
 		}
 
 	}, /** @prototype */ {

@@ -8,3 +8,13 @@
   margin:1% 2%;
   float:left;
 }
+.content.middle {
+  width:50%;
+  margin:1% 2%;
+  float:left;
+}
+.sidebar.right {
+  width:22%;
+  margin:1% 2%;
+  float:left;
+}
