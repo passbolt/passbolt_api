@@ -171,7 +171,7 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified', 'created', 'modified'
 					),
 					'contain' => array(
 						'CategoryResource',
@@ -184,7 +184,7 @@ class Resource extends AppModel {
 			break;
 			case 'save':
 			case 'edit':
-				$fields = array('fields' => array('name', 'username', 'expiry_date', 'uri', 'description', 'deleted'));
+				$fields = array('fields' => array('name', 'username', 'expiry_date', 'uri', 'description', 'created', 'modified', 'created_by', 'modified_by', 'deleted'));
 			break;
 			default:
 				$fields = array(
