@@ -1,7 +1,7 @@
 steal(
 	'jquery/controller',
 	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/view/component/tree/list.js',
+	MAD_ROOT + '/view/component/tree.js',
 	MAD_ROOT + '/object/map.js'
 ).then(function ($) {
 
@@ -28,15 +28,17 @@ steal(
 
 		'defaults': {
 			'label': 'Tree Component',
-			'viewClass': mad.view.component.tree.List,
+			'viewClass': mad.view.component.Tree,
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
-			'itemTemplateUri': MAD_ROOT + '/view/template/component/tree/treeItem.ejs',
+			'itemTemplateUri': '//' + MAD_ROOT + '/view/template/component/tree/treeItem.ejs',
 			'map': null,
 			'callbacks': {
 				'item_selected': null,
 				'item_right_selected': null,
 				'item_hovered': null
-			}
+			},
+			'tag': 'ul',
+			'cssClasses': ['tree']
 		},
 
 		// listen to the following custom view event

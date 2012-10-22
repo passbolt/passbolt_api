@@ -29,11 +29,23 @@ steal(
 		 * @param {string} position The position of the newly created item. You can pass in one
 		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
 		 * is set to last.
-		 * @throw mad.error.CallAbstractFunctionException
 		 * @return {void}
+		 * @todo does not require a map in this case
 		 */
-		'insertItem': function (item, ref, position) {
-			throw new mad.error.CallAbstractFunctionException();
+		'insertItem': function (item, refItemId, position) {
+			position = position || 'last';
+			var $ref = refItemId ? this.element.find('#' + refItemId + ' ul:first') : this.element;
+			// map the jmvc model objects into the desired format
+			var mappedItem = this.map.mapObject(item);
+			mappedItem.hasChildren = item.children && item.children.length ? true : false;
+
+			var itemRender = $.View(this.controller.options.itemTemplateUri, mappedItem);
+			var $child = $(itemRender).appendTo($ref);
+
+			for (var i in mappedItem.children) {
+				$('<ul/>').appendTo($child);
+				this.insertItem(item.children[i], mappedItem.id, 'last');
+			}
 		},
 
 		/**
@@ -82,21 +94,9 @@ steal(
 				for (var i in data) {
 					this.insertItem (data[i], null, 'last');
 				}
-				
-//				returnValue = [];
-//				// map the jmvc model objects into the desired format
-//				mappedData = this.map.mapObjects(data);
-//				for(var i in mappedData) {
-//					returnValue.push(this.insertNode(mappedData[i]));
-//				}
 			} else {
-				console.log('kdshf');
-				// map the jmvc model objects into the desired format
-				mappedData = mad.object.Map.mapObject(data, this.map);
-				returnValue = this.insertNode(mappedData);
+				this.insertItem (data, null, 'last');
 			}
-
-//			return returnValue;
 		},
 
 		/**
@@ -105,6 +105,50 @@ steal(
 		 */
 		'render': function () {
 			this._super();
+		},
+		
+		/* ************************************************************** */
+		/* LISTEN TO THE VIEW EVENTS */
+		/* ************************************************************** */
+
+		/**
+		 * An item has been selected
+		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'li click': function (element, event) {
+			event.stopPropagation();
+			event.preventDefault();
+			this.itemSelected(element[0].id, element);
+		},
+
+		/**
+		 * An item has been selected
+		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'li contextmenu': function (element, event) {
+			event.stopPropagation();
+			event.preventDefault();
+			if(event.which == 3){
+				this.itemRightSelected(element[0].id, element, event);
+			}
+			return false;
+		},
+
+		/**
+		 * An item has been hovered
+		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'li hover': function (element, event) {
+			event.stopPropagation();
+			event.preventDefault();
+			this.itemHovered(element[0].id, element);
+			return false;
 		}
 
 	});
