@@ -4,8 +4,7 @@ steal(
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
 	'app/controller/form/category/createFormController.js',
-	'app/controller/form/resource/createFormController.js',
-	'app/controller/component/userMenuButtonController.js'
+	'app/controller/form/resource/createFormController.js'
 ).then(function ($) {
 
 	/*
@@ -38,22 +37,22 @@ steal(
 			// *************************************************************
 			// Header menu area
 			// *************************************************************
-			var newButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_creation_button', this.element));
+			var newButton = new mad.controller.component.ButtonController($('#js_request_resource_creation_button', this.element));
 
-			var editButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_edition_button', this.element), {
-				'state': 'disabled'
+			var editButton = new mad.controller.component.ButtonController($('#js_request_resource_edition_button', this.element), {
+				'state': 'hidden'
 			});
 
-			var deleteButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_deletion_button', this.element), {
-				'state': 'disabled'
+			var deleteButton = new mad.controller.component.ButtonController($('#js_request_resource_deletion_button', this.element), {
+				'state': 'hidden'
 			});
 
-			var shareButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_sharing_button', this.element), {
-				'state': 'disabled'
+			var shareButton = new mad.controller.component.ButtonController($('#js_request_resource_sharing_button', this.element), {
+				'state': 'hidden'
 			});
 
-			var moreButton = new passbolt.controller.component.UserMenuButtonController($('#js_request_resource_more_button', this.element), {
-				'state': 'disabled'
+			var moreButton = new mad.controller.component.ButtonController($('#js_request_resource_more_button', this.element), {
+				'state': 'hidden'
 			});
 
 			// *************************************************************
@@ -173,10 +172,10 @@ steal(
 			// component to its intitial state (ready)
 			this.setState('ready');
 
-			mad.app.getComponent('js_request_resource_edition_button').setState('disabled');
-			mad.app.getComponent('js_request_resource_deletion_button').setState('disabled');
-			mad.app.getComponent('js_request_resource_sharing_button').setState('disabled');
-			mad.app.getComponent('js_request_resource_more_button').setState('disabled');
+			mad.app.getComponent('js_request_resource_edition_button').setState('hidden');
+			mad.app.getComponent('js_request_resource_deletion_button').setState('hidden');
+			mad.app.getComponent('js_request_resource_sharing_button').setState('hidden');
+			mad.app.getComponent('js_request_resource_more_button').setState('hidden');
 		},
 
 		/**
@@ -282,7 +281,7 @@ steal(
 			passbolt.model.Resource.get({
 				id: resourceId
 			}, function (request, response, resource) {
-				
+
 				var popup = mad.controller.component.PopupController.get({
 					label: __('Edit a Resource')
 				}, passbolt.controller.form.resource.CreateFormController, {
@@ -296,7 +295,7 @@ steal(
 					}
 				});
 				mad.app.getComponent(uid).render();
-				
+
 			});
 		},
 
@@ -322,7 +321,7 @@ steal(
 		 */
 		'stateReady': function (go) {
 			if (go) {
-				$('.js_workspace_main', this.element).removeClass('grid_7').addClass('grid_13 omega');
+				$('.js_workspace_main', this.element).removeClass('middle').addClass('right');
 				$('.js_workspace_sidebar_second', this.element).hide();
 			}
 		},
@@ -334,7 +333,7 @@ steal(
 		 */
 		'stateResourceSelected': function (go) {
 			if (go) {
-				$('.js_workspace_main', this.element).removeClass('grid_13 omega').addClass('grid_7');
+				$('.js_workspace_main', this.element).removeClass('right').addClass('middle');
 				$('.js_workspace_sidebar_second', this.element).show();
 			}
 		}

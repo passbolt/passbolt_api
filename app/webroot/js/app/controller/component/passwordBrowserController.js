@@ -87,7 +87,7 @@ steal(
 						cellElement,
 						'inside_replace',
 						passbolt.controller.component.CopyLoginButtonController, {
-							'state': 'disabled',
+							'state': 'hidden',
 							'value': cellValue
 						}
 					);

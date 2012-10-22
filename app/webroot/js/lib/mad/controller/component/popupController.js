@@ -19,7 +19,8 @@ steal(
 
 		'defaults': {
 			'label': 'Popup Container Controller',
-			'cssClasses': 'js_popup'
+			'cssClasses': ['popup'],
+			'tag': 'div'
 		},
 
 		/**
@@ -28,9 +29,14 @@ steal(
 		 * @return {mad.controller.component.PopupController}
 		 */
 		'get': function (popupOptions, ComponentClass, componentOptions) {
-			var popupId = uuid();
-			var $popup = $('<div id="' + popupId + '" class="js_popup"/>').appendTo(mad.app.element);
-			var popup = new mad.controller.component.PopupController($popup, popupOptions).render();
+			popupOptions.id = uuid();
+			var popup = mad.helper.ComponentHelper.create(
+				mad.app.element,
+				'first',
+				mad.controller.component.PopupController,
+				popupOptions
+			);
+			popup.render();
 			// If a component class is given add it to the popup
 			if (ComponentClass) {
 				popup.addComponent(ComponentClass, componentOptions, 'js_popup_content');
@@ -46,7 +52,7 @@ steal(
 		 */
 		'render': function (options) {
 			var returnValue = this._super();
-			this.element.find('.js_popup_content_wrapper').position({
+			this.element.find('.js_popup_content_container').position({
 				my: "center center",
 				at: "center center",
 				of: this.element

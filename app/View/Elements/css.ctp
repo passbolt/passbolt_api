@@ -7,12 +7,12 @@
  * @package       app.View.Elements.css
  * @since         version 2.12.6
  */
- $css = array('reset','grid','font','colors','icons','form','buttons','navigation','tree','breadcrumb','table','footer');
+ $css = array('reset','grid','font','colors','icons','form','buttons','navigation','popup','tree','breadcrumb','table','footer');
  if (!User::isAnonymous()) {
-   $css = array_merge($css,array('search','header'));
+   $css = array_merge($css,array('notificator','header','search','workspace.password','menu.contextual'));
  }
 ?>
-  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato" />
+<!--  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato" />-->
 <?php foreach($css as $s) : ?>
   <link rel="stylesheet" type="text/css" href="css/<?php echo $s; ?>.css" />
 <?php endforeach; ?>

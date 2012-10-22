@@ -20,8 +20,8 @@ steal(
 
 		'defaults': {
 			'label': 'Copy Login To Clipboard',
-			'cssClasses': ['button_icon', 'copy_login_button_icon'],
-			'tag': 'div'
+			'cssClasses': ['with_icon', 'copy_login'],
+			'tag': 'button'
 		}
 
 	}, /** @prototype */ {

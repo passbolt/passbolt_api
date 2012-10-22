@@ -30,6 +30,7 @@ steal(
 			'label': 'Tree Component',
 			'viewClass': mad.view.component.tree.List,
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
+			'itemTemplateUri': MAD_ROOT + '/view/template/component/tree/treeItem.ejs',
 			'map': null,
 			'callbacks': {
 				'item_selected': null,

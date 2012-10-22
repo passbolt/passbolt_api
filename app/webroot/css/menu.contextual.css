@@ -1,0 +1,6 @@
+.contextual_menu { 
+	position:absolute; 
+	background:#FFF; 
+	z-index:2; 
+	border:1px solid #C0C0C0; 
+}

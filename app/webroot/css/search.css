@@ -8,6 +8,7 @@
   display:none;
 }
 .header .search {
+	position:relative;
   float:left;
   width:36em;
   margin:1em .5em .5em .2em;

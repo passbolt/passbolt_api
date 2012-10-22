@@ -30,7 +30,8 @@ steal(
 			'value': null,
 			'events': {
 				'click': null
-			}
+			},
+			'tag': 'button'
 		}
 
 	}, /** @prototype */ {

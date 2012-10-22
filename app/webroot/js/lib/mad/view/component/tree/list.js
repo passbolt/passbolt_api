@@ -12,7 +12,9 @@ steal(
 	 * Instanciate a new list view
 	 * @return {mad.view.component.tree.List}
 	 */
-	mad.view.component.Tree.extend('mad.view.component.tree.List', /** @static */ { }, /** @prototype */ {
+	mad.view.component.Tree.extend('mad.view.component.tree.List', /** @static */ {
+
+	}, /** @prototype */ {
 
 		/**
 		 * Insert an item in the tree
@@ -31,8 +33,8 @@ steal(
 			// map the jmvc model objects into the desired format
 			var mappedItem = this.map.mapObject(item);
 
-			//var node = this.jstreeInstance.create_node(ref, position, jsonNode);
-			var $child = $('<li id="' + mappedItem.id + '">' + mappedItem.label + '</li>').appendTo($ref);
+			var itemRender = $.View(this.controller.options.itemTemplateUri, mappedItem);
+			var $child = $(itemRender).appendTo($ref);
 
 			for (var i in mappedItem.children) {
 				$('<ul/>').appendTo($child);
