@@ -31,6 +31,9 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 		$this->Resource = new Resource();
 		$this->Resource->useDbConfig = 'test';
+
+		$this->CategoryResource = new CategoryResource();
+		$this->CategoryResource->useDbConfig = 'test';
 	}
 
 	public function testView() {
@@ -109,7 +112,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$categoryModel->useDbConfig = 'test';
 		$goaCat = $categoryModel->findByName('Goa');
 
-		// test insertion with parameter parent_id, and position 50 (doesn't exist)
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
@@ -127,6 +129,42 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'method' => 'post',
 			 'return' => 'contents'
 		)), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
+		// check that Categories were properly saved
+		$resource = $this->Resource->findByName("test1");
+		$catres = $this->CategoryResource->find('all', array(
+			'conditions' => array(
+				'resource_id' => $resource["Resource"]["id"]
+			)
+		));
+		$this->assertEquals(1, count($catres), "Add : /resources.json : The number of categories returned should be 1, but actually is " . count($catres));
+		$this->assertEquals($goaCat['Category']['id'], $catres['0']['CategoryResource']['category_id'], "Add : /resources.json : the category inserted should be {$goaCat['Category']['id']} but is {$catres['0']['CategoryResource']['category_id']}");
+
+		// todo : Add more tests for add. Without categories, with wrong categories, etc...
+	}
+
+	public function testEdit() {
+		$categoryModel = new Category();
+		$categoryModel->useDbConfig = 'test';
+		$goaCat = $categoryModel->findByName('Goa');
+		$resource = $this->Resource->findByName("washroom");
+		$id = $resource['Resource']['id'];
+
+		$resource['Resource']['name'] = "test";
+
+		$result = json_decode($this->testAction("/resources/$id.json", array(
+			'data' => array(
+				'Resource' => $resource['Resource'],
+				'Category' => array(
+					 0 => array(
+						'id' => $goaCat['Category']['id']
+					 )
+				)
+			 ),
+			 'method' => 'put',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "update /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
 	}
 
 	public function testDelete() {
