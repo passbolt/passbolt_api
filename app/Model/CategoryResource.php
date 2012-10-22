@@ -19,6 +19,8 @@ class CategoryResource extends AppModel {
 		'Category', 'Resource'
 	);
 
+	public $actsAs = array('Trackable');
+
 /**
  * Get the validation rules upon context
  * @param string context
