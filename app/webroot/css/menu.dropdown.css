@@ -1,0 +1,21 @@
+.dropdownmenu {
+	list-style: none;
+	position:absolute;
+	z-index:2; 
+	background:#FFF;
+	border:1px solid #C0C0C0; 
+}
+.dropdownmenu ul {
+	list-style:none;
+	position:absolute;
+	top:0;
+	left:100%;
+	background:#FFF;
+	border:1px solid #C0C0C0; 
+}
+.dropdownmenu li {
+	position:relative;
+}
+.dropdownmenu .node.closed .node {
+	display:none;
+}

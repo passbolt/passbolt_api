@@ -1,10 +1,10 @@
 steal(
-	MAD_ROOT + '/controller/component/menuController.js'
+	MAD_ROOT + '/controller/component/dropDownMenuController.js'
 ).then(function ($) {
 
 	/**
 	 * @class mad.controller.component.ContextualMenuController
-	 * @inherits {mad.controller.component.MenuController}
+	 * @inherits {mad.controller.component.DropDownMenuController}
 	 * @parent index
 	 * 
 	 * @constructor
@@ -15,7 +15,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {mad.controller.component.ContextualMenuController}
 	 */
-	mad.controller.component.MenuController.extend('mad.controller.component.ContextualMenuController', /** @static */ {
+	mad.controller.component.DropDownMenuController.extend('mad.controller.component.ContextualMenuController', /** @static */ {
 
 	}, /** @prototype */ {
 
@@ -46,7 +46,7 @@ steal(
 		 * @return {void}
 		 */
 		'mouseleave': function (element, event) {
-			$(this.element).remove();
+			this.goToHell();
 		}
 
 	});

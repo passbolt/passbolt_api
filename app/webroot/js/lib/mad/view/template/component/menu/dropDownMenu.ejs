@@ -1,0 +1,16 @@
+<%
+var cssClasses = [
+	hasChildren ? 'root closed' : 'leaf',
+];
+%>
+
+
+<li id="<%= id %>" class="<%= cssClasses.join(' ') %> node">
+
+	<div>
+
+		<a href="#" class=""><%= label %></a>
+
+	</div>
+
+</li>
