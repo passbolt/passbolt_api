@@ -4,6 +4,8 @@
 	<head>
 		<title>Component Tree Controller Example</title>
 		<script type='text/javascript' src='../../../../steal/steal.js'></script>
+		<link rel="stylesheet" type="text/css" href="../../../../../../css/icons.css">
+		<link rel="stylesheet" type="text/css" href="../../../../../../css/tree.css">
 		<style type='text/css'>
 			
 		</style>
@@ -15,10 +17,12 @@
  -------------------------------------------------------------------------->
 <div id="demo-html">
 <div id="js_demo_app_controller">
-	<h3>Simple list tree representation</h3>
+	<h3>Simple list representation</h3>
 	<ul id="js_demo_list_controller"></ul>
-	<h3>Jstree representation</h3>
-	<div id="js_demo_jstree_controller"></div>
+	<h3>Simple tree representation</h3>
+	<ul id="js_demo_tree_controller"></ul>
+	<h3>Dynamic tree representation</h3>
+	<ul id="js_demo_dynamicTree_controller" class="tree"></ul>
 </div>
 </div>
 
@@ -69,6 +73,33 @@ steal(
 				'func': function (value, map, rowObject) {
 					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
 				}
+			}
+		}),
+		'callbacks': {
+			'itemSelected': function (element, event, itemId) {
+				console.log ('selected : ' + itemId);
+			},
+			'itemRightSelected': function (element, event, itemId) {
+				console.log ('right selected : ' + itemId);
+			},
+			'itemHovered': function (element, event, itemId) {
+				console.log ('hovered : ' + itemId);
+			}
+		}
+	}, {});
+	
+	list.render();
+	list.load(data);	
+	
+	// Instanciate a list controller
+	var tree = new mad.controller.component.TreeController($('#js_demo_tree_controller'), {
+		'map': new mad.object.Map({
+			'id': 'Resource.id',
+			'label': {
+				'key': 'Resource.name',
+				'func': function (value, map, rowObject) {
+					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
+				}
 			},
 			'children': {
 				'key': 'children',
@@ -88,16 +119,14 @@ steal(
 		}
 	}, {});
 	
-	list.load(data);	
+	tree.render();
+	tree.load(data);
 	
-	
-	// Instanciate a list controller
-	var jstree = new mad.controller.component.TreeController($('#js_demo_jstree_controller'), {
-		'viewClass': mad.view.component.tree.Jstree,
-		'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
+	// Instanciate a dynamic tree controller
+	var dynTree = new mad.controller.component.DynamicTreeController($('#js_demo_dynamicTree_controller'), {
 		'map': new mad.object.Map({
-			'attr.id': 'Resource.id',
-			'data': {
+			'id': 'Resource.id',
+			'label': {
 				'key': 'Resource.surname',
 				'func': function (value, map, rowObject) {
 					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
@@ -121,8 +150,8 @@ steal(
 		}
 	}, {});
 	
-	jstree.render();
-	jstree.load(data);
+	dynTree.render();
+	dynTree.load(data);
 });
 </script>
 
