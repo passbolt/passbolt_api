@@ -9,7 +9,7 @@
  */
 class Resource extends AppModel {
 
-	public $actsAs = array('Containable');
+	public $actsAs = array('Containable', 'Trackable');
 
 	public $hasMany = array(
 		'CategoryResource'
@@ -183,6 +183,7 @@ class Resource extends AppModel {
 				$fields = array('fields' => array('deleted'));
 			break;
 			case 'save':
+			case 'edit':
 				$fields = array('fields' => array('name', 'username', 'expiry_date', 'uri', 'description', 'deleted'));
 			break;
 			default:
