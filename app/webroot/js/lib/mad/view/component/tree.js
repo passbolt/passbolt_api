@@ -47,6 +47,15 @@ steal(
 				this.insertItem(item.children[i], mappedItem.id, 'last');
 			}
 		},
+		
+		/**
+		 * Delete an item from the tree
+		 * @param {string} itemId The target item to delete
+		 * @return {void}
+		 */
+		'deleteItem': function (itemId) {
+			var $item = $('#' + itemId, this.element).remove();
+		},
 
 		/**
 		 * An item has been selected

@@ -81,6 +81,15 @@ steal(
 		},
 
 		/**
+		 * Delete an item from the tree
+		 * @param {string} itemId The target delete item id
+		 * @return {void}
+		 */
+		'deleteItem': function (itemId) {
+			this.view.deleteItem(itemId);
+		},
+
+		/**
 		 * Load the tree with an additionnal node at the specific position (ref + position)
 		 * @param {object|array} data The data which represent the node
 		 * @return {void}

@@ -15,16 +15,16 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.CategoryChooserController}
 	 */
-	mad.controller.component.TreeController.extend('passbolt.controller.component.CategoryChooserController', /** @static */ {
+	mad.controller.component.DynamicTreeController.extend('passbolt.controller.component.CategoryChooserController', /** @static */ {
 
 		'defaults': {
 			'label': 'Category Chooser',
-			'viewClass': mad.view.component.tree.Jstree,
+			'viewClass': mad.view.component.tree.List,
 			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
 			// The map to use to make jstree working with our category model
 			'map': new mad.object.Map({
-				'attr.id': 'Category.id',
-				'data': 'Category.name',
+				'id': 'Category.id',
+				'label': 'Category.name',
 				'children': {
 					'key': 'children',
 					'func': mad.object.Map.mapObjects
@@ -71,9 +71,23 @@ steal(
 							menu.goToHell();
 							passbolt.eventBus.trigger('request_category_creation', {'id': itemId});
 						}
-					})
-				}]
-			}];
+					})}
+				]}, { 'MenuItem': new mad.model.MenuItem({
+					'id': uuid(),
+					'label': 'rename...',
+					'action': function (menu) {
+						menu.goToHell();
+						passbolt.eventBus.trigger('category_renamed', {'id': itemId});
+					}
+				})}, { 'MenuItem': new mad.model.MenuItem({
+					'id': uuid(),
+					'label': 'remove',
+					'action': function (menu) {
+						menu.goToHell();
+						passbolt.eventBus.trigger('request_category_deletion', {'id': itemId});
+					}
+				})}
+			];
 
 			// Instanciate the menu controller
 			// @todo An html helper to insert component should be solve the view problem is this code part
@@ -136,6 +150,18 @@ steal(
 		 */
 		'{passbolt.eventBus} category_created': function (el, event, category) {
 			this.insertItem(category, category.Category.parent_id, 'last');
+		},
+
+		/**
+		 * Observe when a category is deleted
+		 * 
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} category The deleted category id
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} category_deleted': function (el, event, categoryId) {
+			this.deleteItem(categoryId);
 		},
 
 		/**

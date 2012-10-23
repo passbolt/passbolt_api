@@ -44,6 +44,20 @@ steal(
 			});
 		},
 
+		'delete' : function (categoryId, success, error) {
+			var url = APP_URL + 'categories/' + categoryId;
+			return mad.net.Ajax.request({
+				url: url,
+				type: 'delete',
+				data: {
+					'id' : categoryId
+				},
+				success: success,
+				error: error,
+				dataType: 'json'
+			});
+		},
+
 		/**
 		 * Get a category
 		 */

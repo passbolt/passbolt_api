@@ -111,15 +111,6 @@ steal(
 			this._super(el, options);
 		},
 
-		/**
-		 * Load the browsers with the given resources
-		 * @param {app.model.Resource[]} resources The resources to display
-		 * @return {void}
-		 */
-		'load': function (resources) {
-			this._super(resources);
-		},
-
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
@@ -234,9 +225,7 @@ steal(
 
 			// if a resource was selected, inform the system that the resource is no more selected
 			if (this.state.is('resourceSelected')) {
-				mad.eventBus.trigger('resource_unselected', {
-					'id': this.crtSelectedResourceId
-				});
+				mad.eventBus.trigger('resource_unselected', this.crtSelectedResourceId);
 			}
 
 			// change the state of the component to loading 
@@ -255,6 +244,74 @@ steal(
 				// change the state to ready
 				self.setState('ready');
 			});
+		},
+
+		/**
+		 * Observe when a category is deleted
+		 * 
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} category The deleted category id
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} category_deleted': function (el, event, categoryId) {
+			var self = this;
+
+			// the deleted category was browsed by the user => empty
+			if (this.crtCategoryId == categoryId) {
+				// if a resource was selected, inform the system that the resource is no more selected
+				if (this.state.is('resourceSelected')) {
+					mad.eventBus.trigger('resource_unselected', this.crtSelectedResourceId);
+				}
+				// brutal empty
+				this.empty();
+
+			} else if (this.crtCategoryId != null) { // another category is browsed => refresh
+
+				var lastSelectedItemId = this.crtSelectedResourceId;
+
+				// if a resource was selected, inform the system that the resource is no more selected
+				if (this.state.is('resourceSelected')) {
+					mad.eventBus.trigger('resource_unselected', lastSelectedItemId);
+				}
+
+				// => reload the component with fresh data
+				
+				this.setState('loading');
+				// load resources of the selected category
+				passbolt.model.Resource.getByCategory({
+					'category_id': this.crtCategoryId,
+					'recursive': true
+				}, function (request, response, resources) {
+					// The callback is out of date, an other category has been selected
+					if (self.crtCategoryId != request.data.category_id) {
+						steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
+						return;
+					}
+					self.load(resources);
+					// change the state to ready
+					self.setState('ready');
+					// if the latest selected resource still exists	
+					var lastSelectedItem = passbolt.model.Resource.searchOne(resources, 'Resource.id', lastSelectedItemId);
+					if (lastSelectedItem != null) {
+						self.crtSelectedResourceId = lastSelectedItemId;
+						self.setState('resourceSelected');
+						mad.eventBus.trigger('resource_selected', lastSelectedItemId);
+					}
+				});
+
+				// Another way would be to define which resources belong to this category, and drop them from the view
+				// get all items which belong to the delete category
+//				var items = this.state.data;
+//				var itemsToDelete = passbolt.model.Resource.search(items, 'Category.id', categoryId);
+//				if (itemsToDelete.length) {
+//					var itemsIds = [];
+//					for (var i in itemsToDelete) {
+//						itemsIds.push(itemsToDelete[i]['Resource'].id);
+//					}
+//					this.deleteItems(itemsIds);
+//				}
+			}
 		},
 
 		/**

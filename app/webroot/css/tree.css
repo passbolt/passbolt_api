@@ -1,5 +1,9 @@
+.tree {
+	list-style: none;
+}
 .tree ul {
 	padding-left:.5em;
+	list-style: none;
 }
 .tree .node.leaf {
   padding-left:10px;
