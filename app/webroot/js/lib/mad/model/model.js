@@ -39,7 +39,6 @@ steal('jquery/model').then(function ($) {
 				var rules = this.validateRules[attrName];
 				if ($.isArray(rules)) {
 					for (var i in rules) {
-						console.log(attrName, value, modelValues, rules[i]);
 						var validateResult = mad.model.ValidationRules.validate(rules[i], value, modelValues);
 						if (validateResult !== true) {
 							if (returnValue === true) {
@@ -57,32 +56,56 @@ steal('jquery/model').then(function ($) {
 		},
 
 		/**
-		 * Get a model instance in an array function of the parameters key (id, Category.id ...)
+		 * Get all model instances in an array which match the search paramaters
+		 * @param {array} data The array to search in
+		 * @param {string} key The key to search
+		 * @param {string} value The value of the key to search
+		 * @return {array}
+		 */
+		'search': function (data, key, value) {
+			var returnValue = [],
+				split = key.split('.'),
+				modelName = split[0],
+				attrName = split[1];
+
+			for (var i in data) {
+				if ($.isArray(data[i][modelName])) {
+					for (var j in data[i][modelName]) {
+						if (data[i][modelName][j][attrName] == value) {
+							returnValue.push(data[i]);
+						}
+					}
+				} else {
+					if (data[i][modelName][attrName] == value) {
+						returnValue.push(data[i]);
+					}
+				}
+				// search in children
+				if (data[i].children) {
+					var childrenSearch = mad.model.Model.search (data[i].children, key, value);
+					if (childrenSearch != null) {
+						returnValue = $.merge ([], returnValue, childrenSearch);
+					}
+				}
+			}
+			return returnValue;
+		},
+		
+		/**
+		 * Get on model instance in an array which match the search parameters
 		 * and its value
 		 * @param {array} data The array to search in
 		 * @param {string} key The key to search
 		 * @param {string} value The value of the key to search
 		 * @return {mad.model.Model}
 		 */
-		'search': function (data, key, value) {
-			var split = key.split('.');
-			for (var i in data) {
-				var compare = data[i];
-				for (var j in split) {
-					compare = compare[split[j]];
-				}
-				if (compare == value) {
-					return data[i];
-				}
-				// search in children
-				if (data[i].children) {
-					var childrenSearch = mad.model.Model.search (data[i].children, key, value);
-					if (childrenSearch != null) {
-						return childrenSearch;
-					}
-				}
+		'searchOne': function (data, key, value) {
+			var returnValue = null;
+			var searchResults = mad.model.Model.search(data, key, value);
+			if (searchResults.length) {
+				returnValue = searchResults[0];
 			}
-			return null;
+			return returnValue;
 		}
 
 	}, /** @prototype */ {
