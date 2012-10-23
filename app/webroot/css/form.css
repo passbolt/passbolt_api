@@ -123,6 +123,7 @@ textarea {
 	.error       - error messages used for validation issues
 */
 .message {
+	font-size:.8em;
 	font-weight:bold;
 	border-bottom:1px solid;
   padding:.8em;
@@ -133,7 +134,14 @@ textarea {
   border:0;
 }
 .input.error label {
-	font-weight:bold;
+	color: #D40000;
+}
+.input .message.error {
+	color: #D40000;
+}
+.input input.error,
+.input textarea.error {
+	border:1px solid #D40000;
 }
 .input .inline.message {
 	display:inline-block;

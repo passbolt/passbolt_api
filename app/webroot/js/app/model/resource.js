@@ -20,7 +20,7 @@ steal(
 		'validateRules': {
 			'name': ['alphanum', 'required'],
 			'username': ['alphanum', 'required', 'nospace'],
-			'uri': ['required', 'uri'],
+//			'uri': ['required', 'uri'],
 			'description': ['text']
 		},
 

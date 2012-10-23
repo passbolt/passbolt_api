@@ -133,6 +133,7 @@ steal(
 		 */
 		'load': function (items) {
 			this.empty();
+			this.state.data = items;
 			this.insertItems(items);
 		},
 

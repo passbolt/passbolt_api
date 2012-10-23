@@ -63,8 +63,6 @@ steal(
 			}
 			//the next in the split has to be the controller, else there is an error in the controller name
 			if (split[0] != 'controller') {
-			console.log(returnValue);
-			console.log(split);
 				throw new mad.error.Exception('Controller name mal formed');
 			}
 			split = split.splice(1);

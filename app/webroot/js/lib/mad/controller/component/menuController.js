@@ -49,7 +49,7 @@ steal(
 		'item_selected': function (element, event, itemId) {
 			this._super(element, event, itemId);
 			// get the menuItem
-			var menuItem = mad.model.Model.search(this.state.data, 'MenuItem.id', itemId);
+			var menuItem = mad.model.Model.searchOne(this.state.data, 'MenuItem.id', itemId);
 			// execute the associated action
 			menuItem.MenuItem.action(this);
 		}

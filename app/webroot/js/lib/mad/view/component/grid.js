@@ -66,11 +66,16 @@ steal(
 
 		/**
 		 * Delete an item in the grid
-		 * @param {string} itemId The item to delete
+		 * @param {array|string} itemsIds The item(s) to delete
 		 * @return {void}
 		 */
-		'deleteItems': function (itemId) {
-			$('#' + itemId, this.element).remove();
+		'deleteItems': function (itemsIds) {
+			if (!$.isArray(itemsIds)) {
+				itemsIds = [itemsIds];
+			}
+			for (var i in itemsIds) {
+				$('#' + itemsIds[i], this.element).remove();
+			}
 		},
 
 		/**

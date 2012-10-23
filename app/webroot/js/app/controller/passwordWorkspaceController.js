@@ -246,6 +246,16 @@ steal(
 		},
 
 		/**
+		 * Observe when the user requests a category deletion
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} request_category_deletion': function (element, evt, data) {
+			passbolt.controller.CategoryController['delete'](data.id);
+		},
+
+		/**
 		 * Observe when the user requests a resource creation
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event

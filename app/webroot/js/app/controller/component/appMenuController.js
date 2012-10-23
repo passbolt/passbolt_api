@@ -30,7 +30,7 @@ steal(
 				{ 'MenuItem': new mad.model.MenuItem({
 					'id': uuid(),
 					'label': 'home',
-					'class': 'home',
+					'cssClasses': ['home'],
 					'action': function () {
 						passbolt.eventBus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
 					}
