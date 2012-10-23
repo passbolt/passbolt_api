@@ -1,16 +1,17 @@
 <%
-var cssClasses = [
-	hasChildren ? 'root closed' : 'leaf',
-];
+var cssClasses = cssClasses || [];
+var classes = hasChildren ? ['root', 'closed'] : ['leaf'];
+classes = $.merge(classes, cssClasses);
+var classesControl = hasChildren ? ['with_icon', 'triangle_right'] : [];
 %>
 
-
-<li id="<%= id %>" class="<%= cssClasses.join(' ') %> node">
+<li id="<%= id %>" class="<%= classes.join(' ') %> node">
 
 	<div>
-
-		<a href="#" class=""><%= label %></a>
-
+		<a href="#"><%= label %></a>
+		<a href="#" class="control <%= classesControl.join(' ') %>">
+			<span>more</span>
+		</a>
 	</div>
 
 </li>

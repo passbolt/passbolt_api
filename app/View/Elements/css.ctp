@@ -9,7 +9,7 @@
  */
  $css = array('reset','grid','font','colors','icons','form','buttons','navigation','popup','tree','breadcrumb','table','footer');
  if (!User::isAnonymous()) {
-   $css = array_merge($css,array('notificator','header','search','workspace.password','menu.contextual'));
+   $css = array_merge($css,array('notificator','header','search','workspace.password','menu.dropdown'));
  }
 ?>
 <!--  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato" />-->

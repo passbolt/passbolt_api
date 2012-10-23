@@ -57,6 +57,15 @@
 .with_icon.triangle_down { 
 	background-image: url('../img/triangle_down.png'); 
 }
+.with_icon.triangle_up { 
+	background-image: url('../img/triangle_up.png'); 
+}
+.with_icon.triangle_left { 
+	background-image: url('../img/triangle_left.png'); 
+}
+.with_icon.triangle_right { 
+	background-image: url('../img/triangle_right.png'); 
+}
 
 /* icon only */
 .with_icon.no_text span {

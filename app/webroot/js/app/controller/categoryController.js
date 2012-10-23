@@ -37,8 +37,12 @@ steal(
 			steal.dev.log('update password');
 		},
 
-		'delete': function () {
-			steal.dev.log('delete password');
+		'delete': function (categoryId) {
+			passbolt.model.Category['delete'](categoryId,
+				function (request, response) {
+					mad.eventBus.trigger('category_deleted', categoryId);
+					mad.eventBus.trigger('passbolt_notify', {'title': response.header.message});
+				});
 		}
 
 	}, /** @prototype */  {});
