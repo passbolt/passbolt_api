@@ -37,7 +37,7 @@ class CategoryResource extends AppModel {
 				),
 				'exist' => array(
 					'rule' => array('categoryExists', null),
-					'message' => __('The category type provided does not exist')
+					'message' => __('The category provided does not exist')
 				)
 			),
 			'resource_id' => array(
@@ -49,7 +49,7 @@ class CategoryResource extends AppModel {
 				),
 				'exist' => array(
 					'rule' => array('resourceExists', null),
-					'message' => __('The category type provided does not exist')
+					'message' => __('The resource provided does not exist')
 				)
 			)
 		);
@@ -66,7 +66,7 @@ class CategoryResource extends AppModel {
  * @param check
  */
 	public function categoryExists($check) {
-		if ($check['parent_id'] == null) {
+		if ($check['category_id'] == null) {
 			return false;
 		} else {
 			$exists = $this->Category->find('count', array(
@@ -82,7 +82,7 @@ class CategoryResource extends AppModel {
  * @param check
  */
 	public function resourceExists($check) {
-		if ($check['parent_id'] == null) {
+		if ($check['resource_id'] == null) {
 			return false;
 		} else {
 			$exists = $this->Resource->find('count', array(

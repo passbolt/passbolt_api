@@ -33,7 +33,7 @@ class CategoryResourceTest extends CakeTestCase {
 		);
 
 		foreach ($testcases as $testcase => $result) {
-			$cr = array('CategoryResource' => array('name' => $testcase));
+			$cr = array('CategoryResource' => array('category_id' => $testcase));
 			$this->CategoryResource->set($cr);
 			if ($result) {
 				$msg = 'validation of the category_resource "category id" with "' . $testcase . '" should validate';
@@ -61,7 +61,7 @@ class CategoryResourceTest extends CakeTestCase {
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56cb' => true
 		);
 		foreach ($testcases as $testcase => $result) {
-			$cr = array('CategoryResource' => array('name' => $testcase));
+			$cr = array('CategoryResource' => array('resource_id' => $testcase));
 			$this->CategoryResource->set($cr);
 			if ($result) {
 				$msg = 'validation of the category_resource "resource id" with "' . $testcase . '" should validate';
