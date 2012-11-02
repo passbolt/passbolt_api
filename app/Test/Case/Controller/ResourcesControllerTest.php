@@ -141,6 +141,60 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals($goaCat['Category']['id'], $catres['0']['CategoryResource']['category_id'], "Add : /resources.json : the category inserted should be {$goaCat['Category']['id']} but is {$catres['0']['CategoryResource']['category_id']}");
 
 		// todo : Add more tests for add. Without categories, with wrong categories, etc...
+		// Add without Category
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test2',
+					'username' => 'test2',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
+
+		// Test with a bad format of category
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test3',
+					'username' => 'test3',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				),
+				'Category' => array(
+					 0 => array(
+						'id' => '8u7'
+					 )
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+
+		// Test with wrong id for category
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test3',
+					'username' => 'test3',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				),
+				'Category' => array(
+					 0 => array(
+						'id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56hg'
+					 )
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
 	}
 
 	public function testEdit() {
