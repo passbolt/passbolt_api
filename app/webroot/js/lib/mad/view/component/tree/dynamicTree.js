@@ -1,7 +1,6 @@
 steal(
-	'lib/jstree/jquery.jstree.js',
-	MAD_ROOT + '/view/component/tree.js'
-).then(function ($) {
+	'mad/view/component/tree.js'
+).then(function () {
 
 	/*
 	 * @class mad.view.component.tree.Jstree
@@ -56,28 +55,28 @@ steal(
 
 		/**
 		 * Uncollapse an item
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'a.control.open click': function (element, event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var li = element.parents('li');
+		'a.control.open click': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+			var li = el.parents('li');
 			var itemId = li[0].id;
 			this.element.trigger('item_opened', itemId);
 		},
 
 		/**
 		 * Colapse an item
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'a.control.close click': function (element, event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var li = element.parents('li');
+		'a.control.close click': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+			var li = el.parents('li');
 			var itemId = li[0].id;
 			this.element.trigger('item_closed', itemId);
 		}

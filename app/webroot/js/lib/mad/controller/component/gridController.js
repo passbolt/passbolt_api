@@ -1,14 +1,15 @@
 steal(
 	'jquery/controller',
-	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/view/component/grid.js',
-	MAD_ROOT + '/object/map.js'
-).then(function ($) {
+	'mad/controller/componentController.js',
+	'mad/view/component/grid.js',
+	'mad/object/map.js'
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.GridController
 	 * @inherits mad.controller.ComponentController
 	 * @parent mad.controller.component
+	 * @demo ./mad/demo/controller/grid_controller.html
 	 * @see mad.view.component.Grid
 	 * 
 	 * The Grid class Controller is our implementation of the UI component grid.
@@ -27,7 +28,11 @@ steal(
 			'label': 'Grid Component',
 			'viewClass': mad.view.component.Grid,
 			'cssClasses': ['mad_grid'],
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/grid.ejs',
+			'templateUri': 'mad/view/template/component/grid.ejs',
+			'itemTemplateUri': 'mad/view/template/component/grid/gridItem.ejs',
+
+			// The class of the item
+			'itemClass': null,
 			// the grid column names
 			'columnNames': [],
 			// the grid column model
@@ -35,9 +40,13 @@ steal(
 			// the map to use to map JMVC model to the grid data model
 			'map': null,
 			// the top tag of the grid
-			'tag': 'table'
-		},
-		'listensTo': ['item_selected', 'item_unselected', 'item_hovered']
+			'tag': 'table',
+			// callbacks associated to the events which could occured
+			'callbacks': {
+				'item_selected': null,
+				'item_hovered': null
+			}
+		}
 
 	}, /** @prototype */ {
 
@@ -51,6 +60,7 @@ steal(
 		'init': function (el, options) {
 			this._super(el, options);
 			this.map = this.options.map;
+			this.itemClass= options.itemClass || null;
 			this.setViewData('items', []);
 			this.setViewData('columnModel', this.options.columnModel);
 			this.setViewData('columnNames', this.options.columnNames);
@@ -68,13 +78,13 @@ steal(
 		},
 
 		/**
-		 * Delete an item in the grid
-		 * @param {string} itemId The item to delete
+		 * Remove an item to the grid
+		 * @param {mad.model.Model} item The item to remove
 		 * @return {void}
 		 */
-		'deleteItems': function (itemId) {
-			// insert items in the view
-			this.view.deleteItems(itemId);
+		'removeItem': function (item) {
+			// Remove the item to the view
+			this.view.removeItem(item);
 		},
 
 		/**
@@ -87,25 +97,22 @@ steal(
 		 * is set to last.
 		 * @return {void}
 		 */
-		'insertItems': function (items, refItemId, position) {
+		'insertItem': function (item, refItemId, position) {
 			var self = this;
-			items = !$.isArray(items) ? [items] : items;
-			var mappedItems = this.map.mapObjects(items);
+			var mappedItem = this.map.mapObject(item);
 
-			// insert items in the view
-			this.view.insertItems(items, refItemId, position);
+			// insert the item in the view
+			this.view.insertItem(item, refItemId, position);
 
 			// apply a widget to cells following the columns model
 			for(var j in this.options.columnModel) {
 				var columnModel = this.options.columnModel[j];
 
 				if(columnModel.cellAdapter) {
-					for(var i in mappedItems) {
-						var itemId = mappedItems[i].id;
-						var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
-						var cellValue = mappedItems[i][columnModel.name];
-						columnModel.cellAdapter($cell, cellValue);
-					}
+					var itemId = mappedItem.id;
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var cellValue = mappedItem[columnModel.name];
+					columnModel.cellAdapter($cell, cellValue, mappedItem, item, columnModel);
 				}
 				// @todo Cell adapter replace widget, remove this part if not usefull
 				if(columnModel.widget) {
@@ -115,26 +122,36 @@ steal(
 
 					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
 					// part to insert the items and render widget if there is
-					for(var i in mappedItems) {
-						var itemId = mappedItems[i].id;
-						var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
-						widgetOptions.value = mappedItems[i][columnModel.name];
-						$cell[widgetJQueryPlugin](widgetOptions);
-						$cell[widgetJQueryPlugin]('render');
-					}
+					var itemId = mappedItem[i].id;
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					widgetOptions.value = mappedItem[i][columnModel.name];
+					$cell[widgetJQueryPlugin](widgetOptions);
+					$cell[widgetJQueryPlugin]('render');
 				}
 			}
 		},
 
 		/**
+		 * Refresh item
+		 * @param {mad.model.Model} item The item to refresh
+		 * @return {void}
+		 */
+		'refreshItem': function (item) {
+			this.view.refreshItem(item);
+		},
+
+		/**
 		 * Load items in the grid. If the grid contain items, empty it
-		 * @param {$.Model[]} items The array of items to insert in the grid
+		 * @param {mad.model.Model[]} items The array or list of items to insert in the grid
 		 * @return {void}
 		 */
 		'load': function (items) {
+			var self = this;
 			this.empty();
 			this.state.data = items;
-			this.insertItems(items);
+			can.each(items, function (item, i) {
+				self.insertItem(item);
+			});
 		},
 
 		/* ************************************************************** */
@@ -142,37 +159,45 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Observe when the mouse leave the component
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * Observe when the mouse leave the main area of component. It does not include
+		 * table header.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
 		'tbody mouseleave': function (element, evt) {
-			if (this.crtFocusedResourceId) {
-				mad.eventBus.trigger('resource_unfocused', {
-					'id': this.crtFocusedResourceId
-				});
-				this.crtFocusedResourceId = null;
+			//
+		},
+
+		/**
+		 * Observe when an item is selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
+		 * @return {void}
+		 */
+		' item_selected': function (el, ev, item, srcEvent) {
+			// override this function, call _super if you want the default behavior processed
+			if (this.options.callbacks.itemSelected) {
+				this.options.callbacks.itemSelected(el, ev, item, srcEvent);
 			}
 		},
 
 		/**
-		 * Observe when a resource is hovered
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} data The hovered resource id
+		 * An item has been hovered
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The hovered item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'item_hovered': function (row, event, itemId) {},
-
-		/**
-		 * Observe when an resource is selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} data The selected resource id
-		 * @return {void}
-		 */
-		'item_selected': function (row, event, itemId) {}
+		' item_hovered': function (el, ev, item, srcEvent) {
+			// override this function, call _super if you want the default behavior processed
+			if (this.options.callbacks.itemHovered) {
+				this.options.callbacks.itemHovered(el, ev, item, srcEvent);
+			}
+		}
 	});
 
 });

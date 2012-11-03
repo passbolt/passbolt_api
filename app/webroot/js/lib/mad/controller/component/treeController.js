@@ -1,14 +1,17 @@
 steal(
 	'jquery/controller',
-	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/view/component/tree.js',
-	MAD_ROOT + '/object/map.js'
-).then(function ($) {
+	'mad/controller/componentController.js',
+	'mad/view/component/tree.js',
+	'mad/object/map.js',
+	'mad/view/template/component/tree.ejs',
+	'mad/view/template/component/tree/treeItem.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.TreeController
 	 * @inherits mad.controller.ComponentController
 	 * @parent mad.controller.component
+	 * @demo ./mad/demo/controller/tree_controller.html
 	 * @see mad.view.component.Tree
 	 * 
 	 * The Tree class Controller is our implementation of the UI component tree.
@@ -29,39 +32,34 @@ steal(
 		'defaults': {
 			'label': 'Tree Component',
 			'viewClass': mad.view.component.Tree,
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
-			'itemTemplateUri': '//' + MAD_ROOT + '/view/template/component/tree/treeItem.ejs',
+			'templateUri': 'mad/view/template/component/tree.ejs',
+			'itemTemplateUri': 'mad/view/template/component/tree/treeItem.ejs',
+			'cssClasses': ['tree'],
+
+			// The class of the item
+			'itemClass': null,
+			// the map to use to map JMVC model to the tree data model
 			'map': null,
+			// the top tag of the grid
+			'tag': 'ul',
+			// callbacks associated to the events which could occured
 			'callbacks': {
 				'item_selected': null,
 				'item_right_selected': null,
 				'item_hovered': null
-			},
-			'tag': 'ul',
-			'cssClasses': ['tree']
-		},
-
-		// listen to the following custom view event
-		'listensTo': [
-			'item_selected',
-			'item_right_selected',
-			'item_hovered'
-		]
+			}
+		}
 
 	}, /** @prototype */ {
 
 		// Construcor
 		'init': function (el, options) {
+			options = options || [];
+			// @todo put all the controller instance variables in the model, the consistance of these
+			// variables should not be carried by the controller
+			this.map = options.map || null;
+			this.itemClass= options.itemClass || null;
 			this._super(el, options);
-
-			// Store the map which will be used to map JMVC Model objects into jstree node objects
-			// This parameter is mandatory
-			if (typeof this.options.map == 'undefined') {
-				throw new mad.error.MissingOptionException('map', 'mad.controller.component.TreeController');
-			}
-
-			// @todo find a way to manage the view variables/options
-			this.view.map = this.options.map;
 		},
 
 		/**
@@ -75,29 +73,38 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (item, refItemId, position) {
-			var refItem = mad.model.Model.search(this.state.data, 'Category.id', refItemId);
-			refItem.children.push(item);
 			this.view.insertItem(item, refItemId, position);
 		},
 
 		/**
-		 * Delete an item from the tree
-		 * @param {string} itemId The target delete item id
+		 * Remove an item from the tree
+		 * @param {mad.model.Model} item The target item to remove
 		 * @return {void}
 		 */
-		'deleteItem': function (itemId) {
-			this.view.deleteItem(itemId);
+		'removeItem': function (item) {
+			this.view.removeItem(item);
 		},
 
 		/**
-		 * Load the tree with an additionnal node at the specific position (ref + position)
-		 * @param {object|array} data The data which represent the node
+		 * Load the tree with the given items
+		 * @param {mad.model.Model.List} items The list of items to load into the tree
 		 * @return {void}
 		 */
-		'load': function (data) {
-			var returnValue = null;
-			this.state.data = data;
-			this.view.load(this.state.data);
+		'load': function (items) {
+			var self = this;
+			can.each(items, function (item, i) {
+				self.insertItem(item);
+			});
+		},
+
+		/**
+		 * Set the associated map, which will be used to map the model data to the
+		 * expected view data
+		 * @param {mad.object.Map} map The map
+		 * @return {void}
+		 */
+		'setMap': function (map) {
+			this.map = map;
 		},
 
 		/* ************************************************************** */
@@ -106,44 +113,46 @@ steal(
 
 		/**
 		 * An item has been selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'item_selected': function (element, event, itemId) {
+		' item_selected': function (el, ev, item, srcEvent) {
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemSelected) {
-				this.options.callbacks.itemSelected(element, event, itemId);
+				this.options.callbacks.itemSelected(el, ev, item, srcEvent);
 			}
 		},
 
 		/**
 		 * An item has been right selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
-		 * @param {Event} srcEvent The jQuery source event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The right selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'item_right_selected': function (element, event, itemId, srcEvent) {
+		' item_right_selected': function (el, ev, item, srcEvent) {
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemRightSelected) {
-				this.options.callbacks.itemRightSelected(element, event, itemId, srcEvent);
+				this.options.callbacks.itemRightSelected(el, ev, item, srcEvent);
 			}
 		},
 
 		/**
 		 * An item has been hovered
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The hovered item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'item_hovered': function (element, event, itemId) {
+		' item_hovered': function (el, ev, item, srcEvent) {
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemHovered) {
-				this.options.callbacks.itemHovered(element, event, itemId);
+				this.options.callbacks.itemHovered(el, ev, item, srcEvent);
 			}
 		}
 
