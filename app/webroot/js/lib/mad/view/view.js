@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/controller',
-	MAD_ROOT + '/event/eventable.js'
-).then(function ($) {
+	'mad/controller',
+	'mad/event/eventable.js'
+).then(function () {
 
 	/*
 	 * @class mad.view.View
@@ -19,6 +19,19 @@ steal(
 		'defaults': {
 			'templateUri': null,
 			'element': null
+		},
+
+		/**
+		 * Render a template. Prefer use this function instean of can.View.render or
+		 * jQuery.View cause they are not working with steal mapping of JMVC 3.3. We
+		 * do
+		 * @param {string} uri Template uri to render
+		 * @param {array} data The data to pass to the renderer
+		 * @return {string}
+		 */
+		'render': function (uri, data) {
+			uri = steal.idToUri(uri).toString();
+			return can.view.render(uri, data);
 		}
 
 	}, /** @prototype */ {
@@ -76,6 +89,7 @@ steal(
 		 * @return {String} The component template uri
 		 */
 		'getTemplate': function (options) {
+			
 			var returnValue = '';
 
 			// the template uri defined
@@ -84,7 +98,7 @@ steal(
 			}
 			// define the template functions of the class name
 			else {
-				returnValue = mad.helper.ControllerHelper.getViewPath(this.controller.Class);
+				returnValue = mad.helper.ControllerHelper.getViewPath(this.controller.getClass());
 			}
 
 			return returnValue;
@@ -131,21 +145,19 @@ steal(
 		 * return false. If the option display is set to false, return the rendered view
 		 */
 		'render': function (options) {
+			options = options || {};
 			// if the view does is not template based leave
 			if(!this.templateBased) {
 				return true;
 			}
-
-			//				console.log('RENDER TEMPLATE '+this.getTemplate());
-			var options = options || {};
 			var display = options.display || true;
 
 			// render the view
-			var render = $.View(this.getTemplate(), this.controller.viewData);
+			var render = mad.view.View.render(this.getTemplate(), this.controller.viewData);
 
 			// display the rendered view
 			if (display) {
-				this.element.append(render);
+				this.element.html(render);
 				returnValue = true;
 			}
 			// return the rendered view
