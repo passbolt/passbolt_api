@@ -26,35 +26,39 @@ class CategoryResource extends AppModel {
  * @param string context
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($context='default') {
-		$rules = array(
+	public static function getValidationRules($case='default') {
+		$default = array(
 			'category_id' => array(
-				'exist' => array(
-					'rule' => array('categoryTypeExists', null),
-					'allowEmpty' => true,
-					'message' => __('The category type provided does not exist')
-				),
 				'uuid' => array(
 					'rule' => 'uuid',
-					'allowEmpty' => true,
-					'required' => false,
+					'required' => true,
+					'allowEmpty' => false,
 					'message'	=> __('UUID must be in correct format')
+				),
+				'exist' => array(
+					'rule' => array('categoryExists', null),
+					'message' => __('The category provided does not exist')
 				)
 			),
 			'resource_id' => array(
-				'exist' => array(
-					'rule' => array('categoryTypeExists', null),
-					'allowEmpty' => true,
-					'message' => __('The category type provided does not exist')
-				),
 				'uuid' => array(
 					'rule' => 'uuid',
-					'allowEmpty' => true,
-					'required' => false,
+					'required' => true,
+					'allowEmpty' => false,
 					'message'	=> __('UUID must be in correct format')
+				),
+				'exist' => array(
+					'rule' => array('resourceExists', null),
+					'message' => __('The resource provided does not exist')
 				)
 			)
 		);
+		switch ($case) {
+			default:
+			case 'default' :
+				$rules = $default;
+		}
+		return $rules;
 	}
 
 /**
@@ -62,11 +66,10 @@ class CategoryResource extends AppModel {
  * @param check
  */
 	public function categoryExists($check) {
-		if ($check['parent_id'] == null) {
+		if ($check['category_id'] == null) {
 			return false;
 		} else {
-			$categoryM = new Category();
-			$exists = $this->find('count', array(
+			$exists = $this->Category->find('count', array(
 				'conditions' => array('Category.id' => $check['category_id']),
 				 'recursive' => -1
 			));
@@ -79,11 +82,10 @@ class CategoryResource extends AppModel {
  * @param check
  */
 	public function resourceExists($check) {
-		if ($check['parent_id'] == null) {
+		if ($check['resource_id'] == null) {
 			return false;
 		} else {
-			$resourceM = new Resource();
-			$exists = $resourceM->find('count', array(
+			$exists = $this->Resource->find('count', array(
 				'conditions' => array('Resource.id' => $check['resource_id']),
 				 'recursive' => -1
 			));
