@@ -57,7 +57,7 @@ Envjs.reportError = function(e, fn){
 		console.log("-"+name+
 			new Array(max-name.length).join(" ")+
 			" = "+
-			(""+e[name]).split("\n").join(space) );
+			(""+(typeof e[name] === "function" ? e[name]() : e[name] ) ).split("\n").join(space) );
     }
     if(typeof fn === 'string'){
     	var args = [space+fn];
@@ -406,11 +406,17 @@ Envjs.loadLocalScript = function(script){
         xhr.onreadystatechange = function(){
             //console.log("readyState %s", xhr.readyState);
             if(xhr.readyState === 4){
-                Envjs.eval(
-                    script.ownerDocument.ownerWindow,
-                    xhr.responseText,
-                    filename
-                );
+            	try {
+            		Envjs.eval(
+	                    script.ownerDocument.ownerWindow,
+	                    xhr.responseText,
+	                    filename
+	                );
+            	} catch (e) {
+            		console.log("could not load script %s \n %s", filename, e );
+    				Envjs.onScriptLoadError(script, e);
+            	}
+                
             }
         };
         xhr.send(null, false);
@@ -6743,7 +6749,7 @@ __extend__(Document.prototype, DocumentEvent.prototype);
  */
 
 //CLOSURE_START
-(function(){
+(function(Date){
 
 
 
@@ -6755,7 +6761,10 @@ __extend__(Document.prototype, DocumentEvent.prototype);
 
 //private
 var $timers = [],
-    EVENT_LOOP_RUNNING = false;
+    EVENT_LOOP_RUNNING = false,
+    getNow = function(){
+    	return new Date().getTime()
+    };
 
 $timers.lock = function(fn){
     Envjs.sync(fn)();
@@ -6777,7 +6786,7 @@ Envjs.clear = function(){
 var Timer = function(fn, interval){
     this.fn = fn;
     this.interval = interval;
-    this.at = Date.now() + interval;
+    this.at = getNow() + interval;
     // allows for calling wait() from callbacks
     this.running = false;
 };
@@ -6896,7 +6905,7 @@ clearInterval = clearTimeout = function(num){
 Envjs.wait = function(wait) {
     //console.log('wait %s', wait);
     var delta_wait,
-        start = Date.now(),
+        start = getNow(),
         was_running = EVENT_LOOP_RUNNING;
 
     if (wait < 0) {
@@ -6905,7 +6914,7 @@ Envjs.wait = function(wait) {
     }
     EVENT_LOOP_RUNNING = true;
     if (wait !== 0 && wait !== null && wait !== undefined){
-        wait += Date.now();
+        wait += getNow();
     }
 
     var earliest,
@@ -6938,7 +6947,7 @@ Envjs.wait = function(wait) {
             }
         });
         //next sleep time
-        sleep = earliest && earliest.at - Date.now();
+        sleep = earliest && earliest.at - getNow();
 		/*console.log('timer loop earliest %s sleep %s', earliest, sleep);*/
         if ( earliest && sleep <= 0 ) {
             nextfn = earliest.fn;
@@ -6952,7 +6961,7 @@ Envjs.wait = function(wait) {
                 earliest.running = false;
             }
             goal = earliest.at + earliest.interval;
-            now = Date.now();
+            now = getNow();
             if ( goal < now ) {
                 earliest.at = now;
             } else {
@@ -6964,7 +6973,7 @@ Envjs.wait = function(wait) {
         // bunch of subtle cases here ...
         if ( !earliest ) {
             // no events in the queue (but maybe XHR will bring in events, so ...
-            if ( !wait || wait < Date.now() ) {
+            if ( !wait || wait < getNow() ) {
                 // Loop ends if there are no events and a wait hasn't been
                 // requested or has expired
                 break;
@@ -6976,7 +6985,7 @@ Envjs.wait = function(wait) {
                 //TODO: why waste a check on a tight
                 // loop if it just falls through?
             // if they will happen within the next delta, fall through to sleep
-            } else */if ( wait === 0 || ( wait > 0 && wait < Date.now () ) ) {
+            } else */if ( wait === 0 || ( wait > 0 && wait < getNow () ) ) {
                 // loop ends even if there are events but the user
                 // specifcally asked not to wait too long
                 break;
@@ -7004,7 +7013,7 @@ Envjs.wait = function(wait) {
  * @license MIT
  */
 //CLOSURE_END
-}());
+}(Date));
 /*
  * Pure JavaScript Browser Environment
  * By John Resig <http://ejohn.org/> and the Envjs Team
@@ -7142,8 +7151,9 @@ HTMLDocument.prototype = new Document();
 
 __extend__(HTMLDocument.prototype, {
     createElement: function(tagName){
+
         var node;
-        tagName = tagName.toUpperCase();
+        tagName = ("" + tagName).toUpperCase();
         // create Element specifying 'this' as ownerDocument
         // This is an html document so we need to use explicit interfaces per the
         //TODO: would be much faster as a big switch
@@ -24814,6 +24824,9 @@ Navigator = function(){
         },
         get platform(){
             return Envjs.platform;
+        },
+        get language(){
+            return "en-US";
         },
         get plugins(){
             return [];

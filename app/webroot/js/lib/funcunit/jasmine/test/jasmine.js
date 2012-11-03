@@ -1,0 +1,5 @@
+steal('funcunit/jasmine')
+	.then('./spec/SpecHelper.js')
+	.then('./spec/PlayerSpec.js')
+	.then('./src/Player.js')
+	.then('./src/Song.js')

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>can.route test page</title>
+</head>
+<body>
+	<p>This is a dummy page to use<br/> for testing pushState route goodness</p>
+	<script type='text/javascript'>
+	(function(){
+		var types = ["STEALSTANDALONE","STEALDOJO","STEALMOO","STEALYUI","STEALZEPTO"];
+		for(var i =0; i < types.length; i++){
+			if(window.parent[types[i]]){
+				window[types[i]] = window.parent[types[i]]
+			}
+		}
+	})();
+	
+
+	</script>
+<script type='text/javascript' src='../../../steal/steal.js'></script>
+<script type='text/javascript'>
+steal('can/route/pushstate', function() {
+	// make sure it's after ready
+    setTimeout(function(){
+    	window.parent.routeTestReady(can.route, window.location, window.history)
+    },30)
+    
+})
+</script>
+
+</body>
+</html>

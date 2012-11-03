@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>jQuery Event Key</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            table {
+              border-collapse: collapse;
+            }
+
+            td, th {
+              border: 1px solid #ACACAC;
+              padding: 5px;
+            }
+
+        </style>
+	</head>
+	<body>
+    <h1>jQuery.event.key keymap customizer</h1>
+    <p><label for='key'>Type in input:</label><input id='key' /></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Event type</th>
+          <th>keyName()</th>
+          <th>keyCode</th>
+          <th>charCode</th>
+          <th>which</th>
+          <th>keyIdentifier</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="keydown">
+          <td>keydown</td>
+          <td class="keyName"></td>
+          <td class="keyCode"></td>
+          <td class="charCode"></td>
+          <td class="which"></td>
+          <td class="keyIdentifier"></td>
+        </tr>
+        <tr id="keypress">
+          <td>keypress</td>
+          <td class="keyName"></td>
+          <td class="keyCode"></td>
+          <td class="charCode"></td>
+          <td class="which"></td>
+          <td class="keyIdentifier"></td>
+        </tr>
+        <tr id="keyup">
+          <td>keyup</td>
+          <td class="keyName"></td>
+          <td class="keyCode"></td>
+          <td class="charCode"></td>
+          <td class="which"></td>
+          <td class="keyIdentifier"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p id="lastKeyPress">Last character registered on keypress <span></span></p>
+
+    <p>Provide this customized key mapping with your application:</p>
+
+    <pre id="code"></pre>
+
+    <script type='text/javascript'
+            src='../../../steal/steal.js'>
+    </script>
+    <script id="demo-source" type='text/javascript'>
+      steal('jquery/event/key').then(function(){
+        // converts a single character into a unicode character
+        var readable = {
+          "\r" : "\\r",
+          "\b" : "\\b",
+          "\t" : "\\t"
+        }, columns = ['keyCode', 'charCode', 'which', 'keyIdentifier'],
+            list = $('#mapping tbody'),
+            originalMap = $.event.key(),
+            lastKeyPress = null,
+            updatedMap = {},
+            update = function(name, which) {
+              var code = [];
+              if(name && which) {
+                updatedMap[name] = which;
+                $.event.key(updatedMap);
+                $.each(updatedMap, function(name, current) {
+                  if(current !== undefined) {
+                    code.push('\n    "' + toUnicode(name) + '" : ' + current);
+                  }
+                });
+              }
+              $('#code').text('$.event.key("' + jQuery.uaMatch(navigator.userAgent).browser +
+                  '", {' + code.join(',') + '\n});');
+            },
+            setKeyPress = function(val) {
+              lastKeyPress = (val && val.toLowerCase()) || null;
+              $('#lastKeyPress span').html(val || '');
+            },
+            toUnicode = function(name) {
+              if(name.length > 1) {
+                return name;
+              }
+              var result = '\\u',
+                  hex = name.charCodeAt(0).toString(16),
+                  fill = 4 - hex.length;
+              for(var i = 0; i < fill; i++) {
+                result += '0';
+              }
+              return result + hex;
+            };
+
+        $('#key').on('keydown keypress keyup', function(ev){
+          var context = $('#' + ev.type), keyName = ev.keyName();
+          $.each(columns, function(i, name) {
+            context.find('.' + name).html(ev.originalEvent[name]);
+          });
+          context.find('.keyName').html(readable[keyName] || keyName);
+        });
+
+        $('#key').on('keydown', function(ev) {
+          setKeyPress();
+        });
+
+        $('#key').on('keypress', function(ev) {
+          setKeyPress(ev.keyName());
+        });
+
+        $('#key').on('keyup', function(ev) {
+          if(ev.which > 48 && !ev.shiftKey && !ev.altKey && !ev.ctrlKey) {
+            // If different than the last keypress
+            if(lastKeyPress !== null && ev.keyName() != lastKeyPress) {
+              update(lastKeyPress, ev.which);
+            }
+            // If it is not in the keymap
+            if(!ev.keyName()) {
+              update(lastKeyPress, ev.which);
+            }
+            setKeyPress();
+          }
+        });
+
+        update();
+      });
+    </script>
+	</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>can.route.pushstate demo</title>
+    <link rel="stylesheet" type="text/css" href="/can/util/demos/demos.css" />
+    <style>
+        td {width: 95px;}
+        #layout {
+            table-layout: fixed;
+            width: 100%;
+
+        }
+    </style>
+</head>
+<body>
+    <table id='layout'>
+        <tr>
+            <td colspan="2"><h2>window.location</h2></td>
+        </tr>
+        <tr>
+            <td>
+                <div id='input'>
+                    <label for='path'>path="</label><span id='path'></span>"
+                </div>
+            </td>
+            <td>Change the demo's path (<a href='/demo/recipe/8'>try it</a>) or push the <a href="javascript://" class='back'>back</a> or
+                <a href="javascript://" class='forward'>forward</a> 
+                button. Notice how <code>can.route</code>'s attributes change.</td>
+        </tr>
+        <tr>
+            <td colspan="2"><h2>can.route.attr(data)</h2></td>
+        </tr>
+        <tr>
+            <td>
+                <div id='route-data-container'>
+                <pre id='route-data'></pre>
+                </div>
+            </td>
+            <td><a id="add-path">Add</a> or change the Route Data's properties (except for the 
+                special route property). Notice how the path changes.</td>
+        </tr>
+        <tr>
+            <td colspan="2"><h2>can.route(route, default)</h2></td>
+        </tr>
+        <tr>
+            <td><ul id='routes'></ul></td>
+            <td>can.route uses these routes to match and create urls. Edit the 
+                default values. <a id='changeRoute' href="javascript://">Show Me</a></td>
+        </tr>
+        <tr>
+            <td colspan="2"><h2>can.link(name, data)</h2></td>
+        </tr>
+        <tr>
+            <td><div id='link'></div></td>
+            <td>Returns a link that
+                updates the <b>path</b> with a url determined by the routes.  Specifically:
+                <code id='linkresult'></code>.
+                Try it: <span id='linktry'></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><h2>can.url(data)</h2></td>
+        </tr>
+        <tr>
+            <td><div id='url'></div></td>
+            <td>Returns a <b>path</b> url determined by the routes.  Specifically:
+                <code id='urlresult'></code>.
+                <a id='urltry'>Go there!</a></td>
+        </tr>
+    </table>
+    <div>
+        
+    </div>
+    <div style='clear: both'></div>
+    
+    
+    <!--<input type='text' id='create-route'/>-->
+    
+    
+    
+    <h2>Events</h2>
+<pre id='binding'>can.route.bind("change", function(ev, attr, how, newVal, oldVal){
+  log(ev.batchNum, attr, how, newVal, oldVal)
+})</pre>
+<table>
+    <thead>
+        <th>batchNum</th>
+        <th>attr</th>
+        <th>how</th>
+        <th>newVal</th>
+        <th>oldVal</th>
+    </thead>
+</table>
+<div id="container">
+<table>
+    <tbody id='events'>
+        
+    </tbody>
+</table>
+</div>
+<script type='text/javascript' src='/steal/steal.js'></script>
+<script type='text/javascript'>
+steal('can/route/pushstate', 
+    'can/util/json.js',
+    'can/observe',
+    'can/view/ejs',
+    'can/view/modifiers',
+    'can/route',
+    'can/util/demos/observer.js',
+function() {
+    var BASE_URL = '/demo/';
+    // DRAW ROUTES
+    
+    // route observe that get smapped to routes
+    var routes = new can.Observe.List([
+        {route : BASE_URL+":type/:id", def : {}},
+        {route : BASE_URL+":type", def : {type : "recipe"}}
+    ]);
+    var drawRoutes = function(){
+        var routesEl= $("#routes");
+        routesEl.empty();
+        
+        // draw routes
+        routes.each(function(route){
+            // setup an Observer
+            // <a href='javascript://' class='destroy'>X</a>
+            var pre = $("<li><pre></pre>")
+                .appendTo(routesEl)
+                .find("pre")
+            
+            new Observer(pre,{
+                observe: route.def,
+                fullName : "can.route('<span>"+route.route+"</span>', "
+            })
+        })
+        //$("#links").html("linksEJS",{})
+        
+        new Observer( $("<pre>").appendTo("#link"),
+            {
+                observe : new can.Observe({type: "recipe", id: "5"}),
+                fullName : "can.route.link('click me',",
+                end : function(){
+        
+                    $("#linktry").html(can.route.link("click me", this.options.obs.attr() ));
+        
+                    
+                    $("#linkresult").text(can.route.link("click me", this.options.obs.attr() ))
+                    
+                    return "";
+                
+                }
+            });
+        new Observer( $("<pre>").appendTo("#url"),
+            {
+                observe : new can.Observe({type: "recipe"}),
+                fullName : "can.route.url(",
+                end : function(){
+                    
+                    
+                    $("#urlresult").text( can.route.url(this.options.obs.attr() ) );
+                    $("#urltry").attr("href", can.route.url(this.options.obs.attr() ))
+                    
+                    return ""
+                }
+            });
+    }
+
+    $('#routes').delegate(".destroy", "click",function(){
+        var li = $(this).closest('li')
+        routes.splice(li.index(), 1);
+    })
+    
+    var change = function(){
+        can.route.routes = {};
+        routes.each(function(route){
+            var r = route.attr()
+            can.route(r.route, r.def )
+        })
+        drawRoutes();
+    }
+    change();
+    routes.bind("change",change);
+    
+    // SETUP NAVIGATE
+    
+    $("#path").bind("click", function(){
+        var input = $("<input type='text'/>"),
+            start = $("#path").text();
+            
+        new EditOver(input, {
+            el: $(this),
+            focus: true 
+        })
+        input.bind("change", function(){
+            history.pushState(null,null,input.val());
+            input.remove();
+        })
+        input.bind("keyup", function(){
+            $("#path").text(input.val())
+        })
+        input.bind("keydown", function(ev){
+            if(ev.keyCode == 27){
+                $("#path").text(start)
+                input.remove();
+            }
+        })
+    })
+    var setInput = function(){
+        $("#path").text(location.pathname+location.search);
+    };
+    setInput();
+    // HTML5 history is a mess - history.path changes when the path changes
+    can.route.history.bind('path',setInput);
+    
+    $(".back").click(function(){
+        window.history.back()
+    })
+    $(".forward").click(function(){
+        window.history.forward()
+    })
+    
+    
+    new Observer("#route-data",{
+        observe : can.route.data,
+        observeName : "can.route"
+    })
+    var lastNum = 0;
+    can.route.bind("change", function(ev, attr, how, newVal, oldVal){
+        
+        var content = $("<tr><td>"+
+            [ev.batchNum, attr, how, newVal, ""+oldVal].join("</td><td>")
+            +"</td></tr>");
+        $("#events").append(content);
+        
+        if(lastNum != ev.batchNum){
+            content.addClass("border")
+            lastNum = ev.batchNum;
+        }
+        
+        var c = $("#container")
+        c.scrollTop( c[0].scrollHeight )
+        
+        $("#add-path").attr("href",can.route.url({foo:"bar"},true))
+        
+    })
+    $("#changeRoute").click(function(){
+        routes[1].attr({ route: BASE_URL+":type", def: {type: "recipe",foo: "bar"} }, true)
+        history.pushState(null,null,BASE_URL);
+    })
+})
+</script>
+<script type='text/ejs' id='linksEJS'>
+<pre>can.route.link("recipe 5",{type: "recipe", id: 5}) = </code><%= can.route.link("click me",{type: "recipe", id: 5}) %>
+</script>
+</body>
+</html>

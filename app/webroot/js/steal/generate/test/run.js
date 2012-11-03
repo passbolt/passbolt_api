@@ -1,7 +1,6 @@
 load('steal/rhino/rhino.js')
 
-steal('steal/test', "steal/generate")
-	.then('steal/generate/system.js').then(function(s){
+steal('steal/test', "steal/generate",'steal/generate/system.js',function(s){
 	_S = steal.test;
 	
 	//turn off printing

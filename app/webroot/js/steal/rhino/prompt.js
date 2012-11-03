@@ -1,4 +1,4 @@
-steal(function( steal ) {
+steal(function() {
 	steal.prompt = function( question ) {
 		java.lang.System.out.print(question);
 		var br = new java.io.BufferedReader(new java.io.InputStreamReader(java.lang.System["in"]));

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Model Convert Demo</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            li {border: solid 1px gray; padding: 5px; width: 250px;}
+            li a {color: red; font-weight: bold;}
+            p {width: 400px;}
+        </style>
+    </head>
+    <body>
+<div id="demo-html">
+<input type="text" id="input" />
+<div id="printer"></div>
+</div>	
+<script type='text/javascript' 
+        src='../../../steal/steal.js'>   
+</script>
+<script type='text/javascript' id="demo-source">   
+steal('can/observe/attributes', 'can/control')
+.then(function(){
+	
+var Contact = can.Observe({
+  attributes : { 
+    // labels birthday a date
+    birthday : 'date'
+  },
+  convert : {
+    // a date converter helper
+    date : function(raw){
+      if(typeof raw == 'string'){
+        // if a string, convert to a date
+        var matches = raw.match(/(\d+)-(\d+)-(\d+)/)
+        return new Date( matches[1], 
+                         (+matches[2])-1, 
+                         matches[3] )
+      }else if(raw instanceof Date){
+        return raw;
+      }
+    }
+  },
+  serialize:{
+    date:function(date){
+      return date.getFullYear() + 
+        "-" + date.getDate() +
+        "-" + date.getMonth();
+    }
+  }
+},{
+  // helper function that returns age in years
+  age : function(){
+    return new Date().getFullYear() - 
+      this.birthday.getFullYear()
+  }
+});
+
+var AgeWidget = can.Control({
+  init:function(){
+    this.element.find('#input').val(
+      this.options.contact.serialize('birthday'));
+
+      this.element.find('#printer')
+        .html(this.options.contact.age())
+  },
+  "#input change":function(elm,event){
+    this.options.contact.attr('birthday', elm.val());
+  },
+  "{contact} change":function(contact, event){
+    this.element.find('#printer')
+      .html(this.options.contact.age());
+  }
+})
+
+new AgeWidget('#demo-html', {
+  contact: new Contact({
+    birthday: "1985-29-11"
+  })
+});
+
+})
+</script>
+    </body>
+</html>

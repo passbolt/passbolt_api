@@ -2,23 +2,31 @@
 /**
  * Tests compressing a very basic page and one that is using steal
  */
+
+// load('steal/build/pluginify/test/pluginify_test.js')
+load('steal/build/js/js_test.js')
+load('steal/build/open/test/open_test.js')
+load('steal/build/css/test/css_test.js')
+load('steal/build/packages/test/packages_test.js')
+load('steal/build/apps/test/apps_test.js')
+
 load('steal/rhino/rhino.js')
-steal('steal/test/test.js', function( s ) {
-	STEALPRINT = false;
+steal('steal', 'steal/test/test.js', function( s ) {
+	// STEALPRINT = false;
 	s.test.module("steal/build")
 	
 	s.test.test("steal.dev removes parens", function(){
 		load('steal/rhino/rhino.js')
 		var dev = readFile('steal/build/test/dev.js'),
 			devCleaned = readFile('steal/build/test/devCleaned.js');
-		steal("steal/build","steal/build/scripts").then(function(s2){
-			var a = steal.build.builders.scripts.clean("var bla;var foo;steal.dev.log('hi')")
+		steal("steal/build","steal/build/js").then(function(s2){
+			var a = steal.build.js.clean("var bla;var foo;steal.dev.log('hi')")
 			s.test.equals(a, "var bla;var foo;", "clean works")
-			var b = steal.build.builders.scripts.clean("var bla;steal.dev.log('hi()');var foo;steal.dev.log('onetwo(bla())')")
+			var b = steal.build.js.clean("var bla;steal.dev.log('hi()');var foo;steal.dev.log('onetwo(bla())')")
 			s.test.equals(b, "var bla;;var foo;", "clean works with parens")
-			var c = steal.build.builders.scripts.clean("var bla;steal.dev.warn('hi()');var foo;steal.dev.warn('onetwo(bla())')")
+			var c = steal.build.js.clean("var bla;steal.dev.warn('hi()');var foo;steal.dev.warn('onetwo(bla())')")
 			s.test.equals(b, "var bla;;var foo;", "clean works with warn")
-			var d = steal.build.builders.scripts.clean(dev);
+			var d = steal.build.js.clean(dev);
 			s.test.equals(d, devCleaned, "clean really works")
 		});
 		s.test.clear();
@@ -26,7 +34,7 @@ steal('steal/test/test.js', function( s ) {
 	
 	s.test.test("less packages correctly", function(){
 		load('steal/rhino/rhino.js')
-		steal("steal/build","steal/build/scripts","steal/build/styles", "steal/build/apps").then(function(s2){
+		steal('steal', "steal/build","steal/build/js","steal/build/css", "steal/build/apps", function(s2){
 			s2.build("steal/build/test/styles/styles.html", {
 				to: 'steal/build/test/styles'
 			})
@@ -52,15 +60,15 @@ steal('steal/test/test.js', function( s ) {
 	
 	s.test.test("open", function(){
 		load('steal/rhino/rhino.js')
-		steal("steal/build").then(function(newSteal){
+		steal('steal', "steal/build", function(newSteal){
 			var count = 0;
-			newSteal.build.open("steal/build/test/stealpage.html", function(scripts){
-				scripts.each(function(stl, content){
+			newSteal.build.open("steal/build/test/stealpage.html", {}, function(scripts){
+				scripts.each('js', function(options, stl){
 					count++;
-					s.test.equals(content.length > 1, true, "No content from "+stl.path)
+					// s.test.equals(options.text.length > 1, true, "No content from "+options.id)
 				})
 			})
-			s.test.equals(count, 4, "Basic source not right number")
+			s.test.equals(window.packagesStolen.length, 3)
 			
 		});
 		s.test.clear();
@@ -68,7 +76,7 @@ steal('steal/test/test.js', function( s ) {
 	
 	s.test.test("using stealjs", function(){
 		load('steal/rhino/rhino.js')
-		steal("steal/build","steal/build/scripts").then(function(s2){
+		steal('steal', "steal/build","steal/build/js", function(s2){
 			s2.build("steal/build/test/stealpage.html", {
 				to: 'steal/build/test'
 			})
@@ -90,7 +98,7 @@ steal('steal/test/test.js', function( s ) {
 	
 	s.test.test("jquery ready code doesn't run", function(){
 		load('steal/rhino/rhino.js')
-		steal("steal/build","steal/build/scripts").then(function(s2){
+		steal('steal', "steal/build","steal/build/scripts", function(s2){
 			s2.build("steal/build/test/jqueryready.html", {
 				to: 'steal/build/test'
 			})
@@ -108,7 +116,7 @@ steal('steal/test/test.js', function( s ) {
 	// if it fails no production file will be created so it will error
 	s.test.test("duplicate dependencies don't finish early", function(){
 		load('steal/rhino/rhino.js')
-		steal("steal/build","steal/build/scripts").then(function(s2){
+		steal('steal', "steal/build","steal/build/scripts", function(s2){
 			s2.build("steal/build/test/circular/circular.html", {
 				to: 'steal/build/test/circular'
 			})
@@ -121,7 +129,7 @@ steal('steal/test/test.js', function( s ) {
 	
 	s.test.test("exclude files", function(){
 		load('steal/rhino/rhino.js')
-		steal("steal/build","steal/build/scripts").then(function(s2){
+		steal('steal', "steal/build","steal/build/scripts", function(s2){
 			s2.build("steal/build/test/circular/circular.html", {
 				to: 'steal/build/test/circular',
 				exclude: ['steal/build/test/circular/fileB.js', 'jquery/jquery.js']
@@ -135,31 +143,31 @@ steal('steal/test/test.js', function( s ) {
 		s.test.clear();
 		
 	});
-	
-	// Closure doesn't handle these characters, and you should probably be pulling them in from elsewhere.
-	// but I'd still like this to work.
-	return;
-	s.test.test("foreign characters", function(){
-		s.test.remove('steal/build/test/production.js')
-		load('steal/rhino/rhino.js')
-		steal("steal/build","steal/build/scripts").then(function(s2){
-			s2.build("steal/build/test/foreign.html", {
-				to: 'steal/build/test'
-			})
-		})
-		
-		s.test.clear();
-	
-		//check that srcs are equal
-		f1 = readFile('steal/build/test/foreign.js')
-			.replace(/[\r\n;]/g,"");
-		f2 = readFile('steal/build/test/production.js').replace(/steal\.\w+\([^\)]+\);/g,"")
-			.replace(/[\r\n;]/g,"");
-		s.test.equals(f1, f2, "Foreign Characters")
-	
-		s.test.clear();
-		s.test.remove('steal/build/test/production.js')
-	});
-	
-
+// 	
+	// // Closure doesn't handle these characters, and you should probably be pulling them in from elsewhere.
+	// // but I'd still like this to work.
+	// return;
+	// s.test.test("foreign characters", function(){
+		// s.test.remove('steal/build/test/production.js')
+		// load('steal/rhino/rhino.js')
+		// steal("steal/build","steal/build/scripts").then(function(s2){
+			// s2.build("steal/build/test/foreign.html", {
+				// to: 'steal/build/test'
+			// })
+		// })
+// 		
+		// s.test.clear();
+// 	
+		// //check that srcs are equal
+		// f1 = readFile('steal/build/test/foreign.js')
+			// .replace(/[\r\n;]/g,"");
+		// f2 = readFile('steal/build/test/production.js').replace(/steal\.\w+\([^\)]+\);/g,"")
+			// .replace(/[\r\n;]/g,"");
+		// s.test.equals(f1, f2, "Foreign Characters")
+// 	
+		// s.test.clear();
+		// s.test.remove('steal/build/test/production.js')
+	// });
+// 	
+// 
 });

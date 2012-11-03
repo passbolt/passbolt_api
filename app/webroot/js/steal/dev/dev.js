@@ -50,7 +50,8 @@ steal.dev = {
 	 * @param {String} out the message
 	 */
 	warn: function( out ) {
-		if(steal.options.logLevel < 2){
+		var ll = steal.config().logLevel;
+		if(ll < 2){
 			Array.prototype.unshift.call(arguments, 'steal.js WARN:');
 			if ( window.console && console.warn ) {
 				this._logger( "warn", Array.prototype.slice.call(arguments) );
@@ -70,7 +71,8 @@ steal.dev = {
 	 * @param {String} out the message
 	 */
 	log: function( out ) {
-		if (steal.options.logLevel < 1) {
+		var ll = steal.config().logLevel;
+		if (ll < 1) {
 			if (window.console && console.log) {
 				Array.prototype.unshift.call(arguments, 'steal.js INFO:');
 				this._logger( "log", Array.prototype.slice.call(arguments) );

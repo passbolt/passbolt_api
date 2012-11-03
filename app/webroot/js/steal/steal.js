@@ -1,1181 +1,1506 @@
-(function(){
-	
-	// Gets the window (even if there is none)
-	var win = (function(){return this}).call(null),
-		// String constants (for better minification)
-		STR_ONLOAD = "onload",
-		STR_ONERROR = "onerror",
-		STR_ONREADYSTATECHANGE = "onreadystatechange",
-		STR_CREATE_ELEMENT = 'createElement',
-		STR_GET_BY_TAG = 'getElementsByTagName',
-		
-		// the document ( might not exist in rhino )
-		doc = win.document,
-		
+// steal is a resource loader for JavaScript.  It is broken into the following parts:
+//
+// - Helpers - basic utility methods used internally
+// - AOP - aspect oriented code helpers
+// - Deferred - a minimal deferred implementation
+// - Uri - methods for dealing with urls
+// - Api - steal's API
+// - Resource - an object that represents a resource that is loaded and run and has dependencies.
+// - Type - a type systems used to load and run different types of resources
+// - Packages -  used to define packages
+// - Extensions - makes steal pre-load a type based on an extension (ex: .coffee)
+// - Mapping - configures steal to load resources in a different location
+// - Startup - startup code
+// - jQuery - code to make jQuery's readWait work
+// - Error Handling - detect scripts failing to load
+// - Has option - used to specify that one resources contains multiple other resources
+// - Window Load - API for knowing when the window has loaded and all scripts have loaded
+// - Interactive - Code for IE
+// - Options - 
+(function( win, undefined ) {
+
+	// ## Helpers ##
+	// The following are a list of helper methods used internally to steal
+	var
+	// check that we have a document
+	doc = win.document,
+		docEl = doc && doc.documentElement,
+		// a jQuery-like $.each
+		each = function( o, cb ) {
+			var i, len;
+
+			// weak array detection, but we only use this internally so don't
+			// pass it weird stuff
+			if ( typeof o.length == 'number' ) {
+				for ( i = 0, len = o.length; i < len; i++ ) {
+					cb.call(o[i], i, o[i], o)
+				}
+			} else {
+				for ( i in o ) {
+					cb.call(o[i], i, o[i], o)
+				}
+			}
+			return o;
+		},
+		// adds the item to the array only if it doesn't currently exist
+		uniquePush = function(arr, item){
+			for(var i=0; i < arr.length; i++){
+				if(arr[i] == item){
+					return;
+				}
+			}
+			arr.push(item)
+		},
+		// if o is a string
+		isString = function( o ) {
+			return typeof o == "string";
+		},
+		// if o is a function
+		isFn = function( o ) {
+			return typeof o == "function";
+		},
+		// dummy function
+		noop = function() {},
+		// creates an element
+		createElement = function( nodeName ) {
+			return doc.createElement(nodeName)
+		},
 		// creates a script tag
 		scriptTag = function() {
-			var start = doc[STR_CREATE_ELEMENT]('script');
-			start.type = 'text/javascript';
+			var start = createElement("script");
+			start.type = "text/javascript";
 			return start;
 		},
-		// a function that returns the head element
-		// creates and caches the lookup if necessary
+		// minify-able verstion of getElementsByTagName
+		getElementsByTagName = function( tag ) {
+			return doc.getElementsByTagName(tag);
+		},
+		// A function that returns the head element
+		// creates and caches the lookup for faster
+		// performance.
 		head = function() {
-			var d = doc,
-				de = d.documentElement,
-				heads = d[STR_GET_BY_TAG]("head"),
-				hd = heads[0];
-			if (! hd ) {
-				hd = d[STR_CREATE_ELEMENT]('head');
-				de.insertBefore(hd, de.firstChild);
+			var hd = getElementsByTagName("head")[0];
+			if (!hd ) {
+				hd = createElement("head");
+				docEl.insertBefore(hd, docEl.firstChild);
 			}
 			// replace head so it runs fast next time.
-			head = function(){
+			head = function() {
 				return hd;
 			}
 			return hd;
 		},
 		// extends one object with another
 		extend = function( d, s ) {
-			for ( var p in s ) {
-				d[p] = s[p];
-			}
+			// only extend if we have something to extend
+			s && each(s, function( k ) {
+				d[k] = s[k];
+			});
 			return d;
 		},
-		// a jQuery-like $.each
-		each = function(arr, cb){
-			for(var i =0, len = arr.length; i <len; i++){
-				cb.call(arr[i],i,arr[i])
-			}
-			return arr;
-		},
-		// makes an array of things
-		makeArray = function(args){
+		// makes an array of things, or a mapping of things
+		map = function( args, cb ) {
 			var arr = [];
-			each(args, function(i, str){arr[i] = str});
+			each(args, function( i, str ) {
+				arr.push(cb ? (isString(cb) ? str[cb] : cb.call(str, str)) : str)
+			});
 			return arr;
 		},
 		// testing support for various browser behaviors
 		support = {
 			// does onerror work in script tags?
-			error: doc && (function(){
+			error: doc && (function() {
 				var script = scriptTag();
-				script.setAttribute( "onerror", "return;" );
-				return typeof script["onerror"] === "function" ?
-					true : "onerror" in script
+				script.onerror = noop;
+				return isFn(script.onerror) || "onerror" in script
 			})(),
 			// If scripts support interactive ready state.
-			// This is set later.
+			// This is tested later.
 			interactive: false,
-			attachEvent : doc && scriptTag().attachEvent
+			// use attachEvent for event listening (IE)
+			attachEvent: doc && scriptTag().attachEvent
 		},
 		// a startup function that will be called when steal is ready
-		startup = function(){},
-		// the old steal value
-		oldsteal = win.steal,
+		startup = noop,
 		// if oldsteal is an object
 		// we use it as options to configure steal
-		opts = typeof oldsteal == 'object' ? oldsteal : {};
+		opts = typeof win.steal == "object" ? win.steal : {},
+		// adds a suffix to the url for cache busting
+		addSuffix = function( str ) {
+			if ( opts.suffix ) {
+				str = (str + '').indexOf('?') > -1 ? str + "&" + opts.suffix : str + "?" + opts.suffix;
+			}
+			return str;
+		},
+		endsInSlashRegex = /\/$/;
 		
-	// =============================== STEAL ===============================
-
-	/**
-	 * @class steal
-	 * @parent stealjs
-	 * 
-	 * __steal__ is a function that loads scripts, css, and 
-	 * other resources into your application.
-	 * 
-	 *     steal(FILE_or_FUNCTION, ...)
-	 * 
-	 * ## Quick Walkthrough
-	 * 
-	 * Add a script tag that loads <code>steal/steal.js</code> and add
-	 * the path to the first file to load in the query string like:
-	 * 
-	 * &lt;script type='text/javascript'
-	 *     src='../steal/steal.js?myapp/myapp.js'>
-	 * &lt;/script>
-	 * 
-	 * Then, start loading things and using them like:
-	 * 
-	 *     steal('myapp/tabs.js',
-	 *           'myapp/slider.js', 
-	 *           'myapp/style.css',function(){
-	 *     
-	 *        // tabs and slider have loaded 
-	 *        $('#tabs').tabs();
-	 *        $('#slider').slider()
-	 *     })
-	 * 
-	 * Make sure your widgets load their dependencies too:
-	 * 
-	 *     // myapp/tabs.js
-	 *     steal('jquery', function(){
-	 *       $.fn.tabs = function(){
-	 *        ...
-	 *       }
-	 *     })
-	 * 
-	 * ## Examples:
-	 * 
-	 *     // Loads ROOT/jquery/controller/controller.js
-	 *     steal('jquery/controller')
-	 *     steal('jquery/controller/controller.js')
-	 *     
-	 *     // Loads coffee script type and a coffee file relative to
-	 *     // the current file
-	 *     steal('steal/coffee').then('./mycoffee.coffee')
-	 *     
-	 *     // Load 2 files and dependencies in parallel and
-	 *     // callback when both have completed
-	 *     steal('jquery/controller','jquery/model', function(){
-	 *       // $.Controller and $.Model are available
-	 *     })
-	 *     
-	 *     // Loads a coffee script with a non-standard extension (cf)
-	 *     // relative to the current page and instructs the build
-	 *     // system to not package it (but it will still be loaded).
-	 *     steal({
-	 *        src: "./foo.cf",
-	 *        packaged: false,
-	 *        type: "coffee"
-	 *      })
-	 * 
-	 * The following is a longer walkthrough of how to install
-	 * and use steal:
-	 * 
-	 * ## Adding steal to a page
-	 * 
-	 * After installing StealJS (or JavaScriptMVC), 
-	 * find the <code>steal</code> folder with
-	 * <code>steal/steal.js</code>. 
-	 * 
-	 * To use steal, add a script tag
-	 * to <code>steal/steal.js</code> to your
-	 * html pages.  
-	 * 
-	 * This walkthrough assumes you have the steal script 
-	 * in <code>public/steal/steal.js</code> and a directory 
-	 * structure like:
-	 * 
-	 * @codestart text
-	 * /public
-	 *     /steal
-	 *     /pages
-	 *         myapp.html
-	 *     /myapp
-	 *         myapp.js
-	 *         jquery.js
-	 *         jquery.ui.tabs.js
-	 * @codeend
-	 * 
-	 * To use steal in <code>public/pages/myapp.html</code>,
-	 * add a script tag in <code>myapp.html</code>:
-	 * 
-	 * @codestart html
-	 * &lt;script type='text/javascript'
-	 *     src='../steal/steal.js'>
-	 * &lt;/script>
-	 * @codeend
-	 * 
-	 * <div class='whisper'>PRO TIP: Bottom load your scripts. It
-	 * will increase your application's percieved response time.</div>
-	 * 
-	 * ## Loading the First Script
-	 * 
-	 * Once steal has been added to your page, it's time
-	 * to load scripts. We want to load <code>myapp.js</code>
-	 * and have it load <code>jquery.js</code> and 
-	 * <code>jquery.ui.tabs.js</code>.
-	 * 
-	 * By default, steal likes your scripts
-	 * to be within in the [steal.static.root steal.root] folder.  The [steal.root] the 
-	 * folder contains the <code>steal</code> folder.  In this example,
-	 * it is the <code>public</code> folder.
-	 * 
-	 * To load <code>myapp/myapp.js</code>, we have two options:
-	 * 
-	 * #### Add a script tag
-	 *  
-	 * Add a script tag after the steal 
-	 * script that 'steals' <code>myapp.js</code> like:
-	 * 
-	 * @codestart html
-	 * &lt;script type='text/javascript'>
-	 *   steal('myapp/myapp.js')
-	 * &lt;/script>
-	 * @codeend
-	 * 
-	 * #### Add the script parameter
-	 * 
-	 * The most common (and shortest) way to load <code>myapp.js</code>
-	 * is to add the script path to the steal script's src after in the
-	 * query params.  So, instead of adding a script, we change 
-	 * the steal script from:
-	 * 
-	 * @codestart html
-	 * &lt;script type='text/javascript'
-	 *     src='../steal/steal.js'>
-	 * &lt;/script>
-	 * @codeend
-	 * 
-	 * To
-	 * 
-	 * @codestart html
-	 * &lt;script type='text/javascript'
-	 *     src='../steal/steal.js?<b>myapp/myapp.js</b>'>
-	 * &lt;/script>
-	 * @codeend
-	 * 
-	 * <div class='whisper'>PRO TIP: You can also just add
-	 * <code>?myapp</code> to the query string.</div>
-	 * 
-	 * ## Loading Scripts
-	 * 
-	 * We want to load <code>jquery.js</code> and
-	 * <code>jquery.ui.tabs.js</code> into the page and then
-	 * add then create a tabs widget.  First we need to load 
-	 * <code>jquery.js</code>.
-	 * 
-	 * By default, steal loads script relative to [steal.root]. To
-	 * load <code>myapp/jquery.js</code> we can the following to
-	 * <code>myapp.js</code>:
-	 * 
-	 *     steal('myapp/jquery.js');
-	 *     
-	 * But, we can also load relative to <code>myapp.js</code> like:
-	 * 
-	 *     steal('./jquery.js');
-	 *     
-	 * Next, we need to load <code>jquery.ui.tabs.js</code>.  You
-	 * might expect something like:
-	 * 
-	 *     steal('./jquery.js','./jquery.ui.tabs.js')
-	 * 
-	 * to work.  But there are two problems / complications:
-	 * 
-	 *   - steal loads scripts in parallel and runs out of order
-	 *   - <code>jquery.ui.tabs.js</code> depends on jQuery being loaded
-	 *   
-	 * This means that steal might load <code>jquery.ui.tabs.js</code>
-	 * before <code>jquery.js</code>.  But this is easily fixed.
-	 * 
-	 * [steal.static.then] waits until all previous scripts have loaded and
-	 * run before loading scripts after it.  We can load <code>jquery.ui.tabs.js</code>
-	 * after <code>jquery.js</code> like:
-	 * 
-	 *     steal('./jquery.js').then('./jquery.ui.tabs.js')
-	 * 
-	 * Finally, we need to add tabs to the page after 
-	 * the tabs's widget has loaded.  We can add a callback function to
-	 * steal that will get called when all previous scripts have finished
-	 * loading:
-	 * 
-	 *     steal('./jquery.js').then('./jquery.ui.tabs.js', function($){
-	 *       $('#tabs').tabs();
-	 *     })
-	 *
-	 * ## Other Info
-	 * 
-	 * ### Exclude Code Blocks From Production
-	 *
-	 * To exclude code blocks from being included in 
-	 * production builds, add the following around
-	 * the code blocks.
-	 *
-	 *     //!steal-remove-start
-	 *         code to be removed at build
-	 *     //!steal-remove-end
-	 * 
-	 * ### Lookup Paths
-	 * 
-	 * By default steal loads resources relative 
-	 * to [steal.static.root steal.root].  For example, the following
-	 * loads foo.js in <code>steal.root</code>:
-	 * 
-	 *     steal('foo.js'); // loads //foo.js
-	 *     
-	 * This is the same as writing:
-	 * 
-	 *     steal('//foo.js');
-	 *     
-	 * Steal uses <code>'//'</code> to designate the [steal.static.root steal.root]
-	 * folder.
-	 * 
-	 * To load relative to the current file, add <code>"./"</code> or
-	 *  <code>"../"</code>:
-	 *  
-	 *     steal("./bar.js","../folder/zed.js");
-	 * 
-	 * Often, scripts can be found in a folder within the same 
-	 * name. For example, [jQuery.Controller $.Controller] is 
-	 * in <code>//jquery/controller/controller.js</code>. For convience,
-	 * if steal is provided a path without an extension like:
-	 * 
-	 *     steal('FOLDER/PLUGIN');
-	 *     
-	 * It is the same as writing:
-	 * 
-	 *     steal('FOLDER/PLUGIN/PLUGIN.js')
-	 *     
-	 * This means that <code>//jquery/controller/controller.js</code>
-	 * can be loaded like:
-	 * 
-	 *      steal('jquery/controller')
-	 * 
-	 * ### Types
-	 * 
-	 * steal can load resources other than JavaScript.
-	 * 
-	 * 
-	 * @constructor
-	 * 
-	 * Loads resources specified by each argument.  By default, resources
-	 * are loaded in parallel and run in any order.
-	 * 
-	 * 
-	 * @param {String|Function|Object} resource... 
-	 * 
-	 * Each argument specifies a resource.  Resources can 
-	 * be given as a:
-	 * 
-	 * ### Object
-	 *  
-	 * An object that specifies the loading and build 
-	 * behavior of a resource.  
-	 *    
-	 *      steal({
-	 *        src: "myfile.cf",
-	 *        type: "coffee",
-	 *        packaged: true,
-	 *        unique: true,
-	 *        ignore: false,
-	 *        waits: false
-	 *      })
-	 *    
-	 * The available options are:
-	 *    
-	 *  - __src__ {*String*} - the path to the resource.  
-	 *    
-	 *  - __waits__ {*Boolean default=false*} - true the resource should wait 
-	 *    for prior steals to load and run. False if the resource should load and run in
-	 *    parallel.  This defaults to true for functions.
-	 *  
-	 *  - __unique__ {*Boolean default=true*} - true if this is a unique resource 
-	 *    that 'owns' this url.  This is true for files, false for functions.
-	 *             
-	 *  - __ignore__ {*Boolean default=false*} - true if this resource should
-	 *    not be built into a production file and not loaded in
-	 *    production.  This is great for script that should only be available
-	 *    in development mode.
-	 *  
-	 *  - __packaged__ {*Boolean default=true*} - true if the script should be built
-	 *    into the production file. false if the script should not be built
-	 *    into the production file, but still loaded.  This is useful for 
-	 *    loading 'packages'.
-	 * 
-	 *  - __type__ {*String default="js"*} - the type of the resource.  This 
-	 *    is typically inferred from the src.
-	 * 
-	 * ### __String__
-	 *  
-	 * Specifies src of the resource.  For example:
-	 *  
-	 *       steal('./file.js')
-	 *         
-	 * Is the same as calling:
-	 *      
-	 *       steal({src: './file.js'})
-	 *  
-	 * ### __Function__ 
-	 *  
-	 * A callback function that runs when all previous steals
-	 * have completed.
-	 *    
-	 *     steal('jquery', 'foo',function(){
-	 *       // jquery and foo have finished loading
-	 *       // and runing
-	 *     })
-	 * 
-	 * @return {steal} the steal object for chaining
-	 */
-	function steal() {
-		// convert arguments into an array
-		var args = makeArray(arguments);
-		pending.push.apply(pending,  args);
-		// steal.after is called everytime steal is called
-		// it kicks off loading these files
-		steal.after(args);
-		// return steal for chaining
-		return steal;
-	};
-	
-	
-	// =============================== PATHS .8 ============================
-
-// things that matter ... 
-//  - the current file being loaded
-//  - the location of the page
-//  - the file
-
-	/**
-	 * @class
-	 * Used for getting information out of a path
-	 * @constructor
-	 * Takes a path
-	 * @param {String} path 
-	 */
-	steal.File = function( path ) {
-		// if new was not used, use it.
-		if ( this.constructor != steal.File ) {
-			return new steal.File(path);
+		
+		// ## AOP ##
+	// Aspect oriented programming helper methods are used to
+	// weave in functionality into steal's API.
+	// calls `before` before `f` is called.
+	//     steal.complete = before(steal.complete, f)
+	// `changeArgs=true` makes before return the same args
+	function before(f, before, changeArgs) {
+		return changeArgs ?
+		function before_changeArgs() {
+			return f.apply(this, before.apply(this, arguments));
+		} : function before_args() {
+			before.apply(this, arguments);
+			return f.apply(this, arguments);
 		}
-		// save the path
-		this.path = typeof path == 'string'? path : path.path;
-	};
-	// alias steal.File to File
-	var File = steal.File,
-	
-		// a reference to the current file
-		curFile;
-	
-	// get and sets the current file
-	File.cur = function(newCurFile){
-		if(newCurFile !== undefined){
-			curFile = File(newCurFile);
-		}else{
-			return curFile || File("");
+	}
+	// returns a function that calls `after` 
+	// after `f`
+	function after(f, after, changeRet) {
+		return changeRet ?
+		function after_CRet() {
+			return after.apply(this, [f.apply(this, arguments)].concat(map(arguments)));
+		} : function after_Ret() {
+			var ret = f.apply(this, arguments);
+			after.apply(this, arguments);
+			return ret;
 		}
-	};
-	
+	}
 
-	extend(File.prototype,
+
+	// ## Deferred .63
+	var Deferred = function( func ) {
+		if (!(this instanceof Deferred)) return new Deferred();
+
+		this.doneFuncs = [];
+		this.failFuncs = [];
+		this.resultArgs = null;
+		this.status = "";
+
+		// check for option function: call it with this as context and as first
+		// parameter, as specified in jQuery api
+		func && func.call(this, this);
+	}
+
+	Deferred.when = function() {
+		var args = map(arguments);
+		if ( args.length < 2 ) {
+			var obj = args[0];
+			if ( obj && (isFn(obj.isResolved) && isFn(obj.isRejected)) ) {
+				return obj;
+			} else {
+				return Deferred().resolve(obj);
+			}
+		} else {
+
+			var df = Deferred(),
+				done = 0,
+				// resolve params: params of each resolve, we need to track down
+				// them to be able to pass them in the correct order if the master
+				// needs to be resolved
+				rp = [];
+
+			each(args, function( j, arg ) {
+				arg.done(function() {
+					rp[j] = (arguments.length < 2) ? arguments[0] : arguments;
+					if (++done == args.length ) {
+						df.resolve.apply(df, rp);
+					}
+				}).fail(function() {
+					df.reject(arguments);
+				});
+			});
+
+			return df;
+
+		}
+	}
+
+	var resolveFunc = function( type, status ) {
+		return function( context ) {
+			var args = this.resultArgs = (arguments.length > 1) ? arguments[1] : [];
+			return this.exec(context, this[type], args, status);
+		}
+	},
+		doneFunc = function( type, status ) {
+			return function() {
+				var self = this;
+				each(arguments, function( i, v, args ) {
+					if (!v ) return;
+					if ( v.constructor === Array ) {
+						args.callee.apply(self, v)
+					} else {
+						// immediately call the function if the deferred has been resolved
+						if ( self.status === status ) v.apply(this, self.resultArgs || []);
+
+						self[type].push(v);
+					}
+				});
+				return this;
+			}
+		};
+
+	extend(Deferred.prototype, {
+		resolveWith: resolveFunc("doneFuncs", "rs"),
+		rejectWith: resolveFunc("failFuncs", "rj"),
+		done: doneFunc("doneFuncs", "rs"),
+		fail: doneFunc("failFuncs", "rj"),
+		always: function() {
+			var args = map(arguments);
+			if ( args.length && args[0] ) this.done(args[0]).fail(args[0]);
+
+			return this;
+		},
+		then: function() {
+			var args = map(arguments);
+			// fail function(s)
+			if ( args.length > 1 && args[1] ) this.fail(args[1]);
+
+			// done function(s)
+			if ( args.length && args[0] ) this.done(args[0]);
+
+			return this;
+		},
+		isResolved: function() {
+			return this.status === "rs";
+		},
+		isRejected: function() {
+			return this.status === "rj";
+		},
+		reject: function() {
+			return this.rejectWith(this, arguments);
+		},
+		resolve: function() {
+			return this.resolveWith(this, arguments);
+		},
+		exec: function( context, dst, args, st ) {
+			if ( this.status !== "" ) return this;
+
+			this.status = st;
+
+			each(dst, function( i, d ) {
+				d.apply(context, args);
+			});
+
+			return this;
+		}
+	});
+	// ## HELPER METHODS FOR DEFERREDS
+	// Used to call a method on an object or resolve a
+	// deferred on it when a group of deferreds is resolved.
+	//
+	//     whenEach(resources,"complete",resource,"execute")
+	var whenEach = function( arr, func, obj, func2 ) {
+		
+		var deferreds = map(arr, func)
+		return Deferred.when.apply(Deferred, deferreds).then(function() {
+			if ( isFn(obj[func2]) ) {
+				obj[func2]()
+			} else {
+				obj[func2].resolve();
+			}
+
+		});
+	};
+
+	// ## URI ##
+	/**
+	 * @class steal.URI
+	 * A URL / URI helper for getting information from a URL.
+	 * 
+	 *     var uri = URI( "http://stealjs.com/index.html" )
+	 *     uri.path //-> "/index.html"
+	 */
+	var URI = function( url ) {
+		if ( this.constructor !== URI ) {
+			return new URI(url);
+		}
+		extend(this, URI.parse("" + url));
+	};
+	// the current url (relative to root, which is relative from page)
+	// normalize joins from this
+	//
+	extend(URI, {
+		// parses a URI into it's basic parts
+		parse: function( string ) {
+			var uriParts = string.split("?"),
+				uri = uriParts.shift(),
+				queryParts = uriParts.join("").split("#"),
+				protoParts = uri.split("://"),
+				parts = {
+					query: queryParts.shift(),
+					fragment: queryParts.join("#")
+				},
+				pathParts;
+
+			if ( protoParts[1] ) {
+				parts.protocol = protoParts.shift();
+				pathParts = protoParts[0].split("/");
+				parts.host = pathParts.shift();
+				parts.path = "/" + pathParts.join("/");
+			} else {
+				parts.path = protoParts[0];
+			}
+			return parts;
+		}
+	});
+	/**
+	 * @attribute page
+	 * The location of the page as a URI.
+	 * 
+	 *     steal.URI.page.protocol //-> "http"
+	 */
+	URI.page = URI(win.location && location.href);
+	/**
+	 * @attribute cur
+	 * 
+	 * The current working directory / path.  Anything
+	 * loaded relative will be loaded relative to this.
+	 */
+	URI.cur = URI();
+
 	/**
 	 * @prototype
-	 */ 
-	{
-		// Removes hash and querystring
-		clean: function() {
-			return this.path.match(/([^\?#]*)/)[1];
-		},
-		// gets the files extension
-		ext : function(){
-			var match = this.clean().match(/\.([\w\d]+)$/)
-			return match ? match[1] : "";
-		},
-		// Returns everything before the last /
+	 */
+	extend(URI.prototype, {
 		dir: function() {
-			// remove any query string
-			var cleaned = this.clean(),
-				// get the last /
-				last = cleaned.lastIndexOf('/'),
-			    // if there is a last /, get everything up to that point
-				dir = (last != -1) ? cleaned.substring(0, last) : '';
-			// make sure we aren't left with just https/ or file:/
-			return /^(https?:\/|file:\/)$/.test(dir) ? cleaned : dir;
+			var parts = this.path.split("/");
+			parts.pop();
+			return URI(this.domain() + parts.join("/"))
 		},
-		// Returns everything after the last /
 		filename: function() {
-			var cleaned = this.clean(),
-				last = cleaned.lastIndexOf('/'),
-				filename = (last != -1) ? cleaned.substring(last+1, cleaned.length) : cleaned;
-			return /^(https?:\/|file:\/)$/.test(filename) ? cleaned : filename;
+			return this.path.split("/").pop();
 		},
-		// Returns the domain for the current path.
-		// Returns null if the domain is a file.
+		ext: function() {
+			var filename = this.filename();
+			return~filename.indexOf(".") ? filename.split(".").pop() : "";
+		},
 		domain: function() {
-			var http = this.path.match(/^(?:https?:\/\/)([^\/]*)/);
-			return http ? http[1] : null;
+			return this.protocol ? this.protocol + "://" + this.host : "";
 		},
-		/**
-		 * Joins a url onto a path.  One way of understanding this is that your File object represents your current location, and calling join() is analogous to "cd" on a command line.
-		 * @codestart
-		 * new steal.File("d/e").join("../a/b/c"); // Yields the path "d/a/b/c"
-		 * @codeend
-		 * @param {String} url
-		 */
-		join: function( url ) {
-			return File(url).joinFrom(this.path);
+		isCrossDomain: function( uri ) {
+			uri = URI(uri || win.location.href);
+			var domain = this.domain(),
+				uriDomain = uri.domain()
+				return (domain && uriDomain && domain != uriDomain) || this.protocol === "file" || (domain && !uriDomain);
 		},
-
-		/**
-		 * Returns the path of this file referenced from another url or path.
-		 * 
-		 *     new steal.File('a/b.c').joinFrom('/d/e')//-> /d/e/a/b.c
-		 * 
-		 * @param {String} url
-		 * @param {Boolean} expand if the path should be expanded
-		 * @return {String} 
-		 */
-		joinFrom: function( url, expand ) {
-			var u = File(url);
-			
-			// if this.path is absolutely referenced
-			if ( this.protocol() ) { //if we are absolutely referenced
-				
-				//try to shorten the path as much as possible:
-				var firstDomain = this.domain(),
-					secondDomain = u.domain();
-				
-				// if domains are equal, shorten
-				if ( firstDomain && firstDomain == secondDomain ) {
-					
-					return this.toReferenceFromSameDomain(url);
-				} else {
-					// if there is no domain or not equal, use our path
-					return this.path;
-				}
-			
-			// the path is the same as the folder the page is in
-			} else if ( url === steal.pageUrl().dir() && !expand ) {
-
-				return this.path;
-
-			} else if ( this.isLocalAbsolute() ) { // we are a path like /page.js
-
-				return (u.domain() ? u.protocol() + "//" + u.domain() : "" )+ this.path;
-				
-			} else  { //we have 2 relative paths, remove folders with every ../
-				
-				if ( url === '' ) {
-					return this.path.replace(/\/$/, '');
-				}
-				
-				var urls = url.split('/'),
-					paths = this.path.split('/'),
-					path = paths[0];
-				
-				//if we are joining from a folder like cookbook/, remove the last empty part
-				if ( url.match(/\/$/) ) {
-					urls.pop();
-				}
-				// for each .. remove one folder
-				while ( path == '..' && paths.length > 0 ) {
-					// if we've emptied out, folders, just break
-					// leaving any additional ../s
-					if(! urls.pop() ){ 
-						break;
-					}
-					paths.shift();
-					
-					path = paths[0];
-				}
-				return urls.concat(paths).join('/');
+		isRelativeToDomain: function() {
+			return !this.path.indexOf("/");
+		},
+		hash: function() {
+			return this.fragment ? "#" + this.fragment : ""
+		},
+		search: function() {
+			return this.query ? "?" + this.query : ""
+		},
+		// like join, but returns a string
+		add: function( uri ) {
+			return this.join(uri) + '';
+		},
+		join: function( uri, min ) {
+			uri = URI(uri);
+			if ( uri.isCrossDomain(this) ) {
+				return uri;
 			}
-		},
-		// Returns true if the file is relative to a domain or a protocol
-		relative: function() {
-			return this.path.match(/^(https?:|file:|\/)/) === null;
-		},
-		/**
-		 * Returns the relative path between two paths with common folders.
-		 * @codestart
-		 * new steal.File('a/b/c/x/y').toReferenceFromSameDomain('a/b/c/d/e')//-> ../../x/y
-		 * @codeend
-		 * @param {Object} url
-		 * @return {String} 
-		 */
-		toReferenceFromSameDomain: function( url ) {
-			var parts = this.path.split('/'),
-				other_parts = url.split('/'),
-				result = '';
-			while ( parts.length > 0 && other_parts.length > 0 && parts[0] == other_parts[0] ) {
-				parts.shift();
-				other_parts.shift();
+			if ( uri.isRelativeToDomain() ) {
+				return URI(this.domain() + uri)
 			}
-			each(other_parts, function(){ result += '../'; })
-			return result + parts.join('/');
+			// at this point we either
+			// - have the same domain
+			// - this has a domain but uri does not
+			// - both don't have domains
+			var left = this.path ? this.path.split("/") : [],
+				right = uri.path.split("/"),
+				part = right[0];
+			//if we are joining from a folder like cookbook/, remove the last empty part
+			if ( this.path.match(/\/$/) ) {
+				left.pop();
+			}
+			while ( part == ".." && left.length ) {
+				// if we've emptied out, folders, just break
+				// leaving any additional ../s
+				if (!left.pop() ) {
+					break;
+				}
+				right.shift();
+
+				part = right[0];
+			}
+			return extend(URI(this.domain() + left.concat(right).join("/")), {
+				query: uri.query
+			});
 		},
 		/**
-		 * Is the file on the same domain as our page.
-		 */
-		isCrossDomain: function() {
-			return this.isLocalAbsolute() ? false : this.domain() != File(win.location.href).domain();
-		},
-		isLocalAbsolute: function() {
-			return this.path.indexOf('/') === 0;
-		},
-		protocol: function() {
-			var match = this.path.match(/^(https?:|file:)/);
-			return match && match[0];
-		},
-		/**
-		 * For a given path, a given working directory, and file location, update the path so 
-		 * it points to a location relative to steal's root.
-		 * 
-		 * We want everything relative to steal's root so the same app can work in multiple pages.
-		 * 
+		 * For a given path, a given working directory, and file location, update the
+		 * path so it points to a location relative to steal's root.
+		 *
+		 * We want everything relative to steal's root so the same app can work in
+		 * multiple pages.
+		 *
 		 * ./files/a.js = steals a.js
 		 * ./files/a = a/a.js
 		 * files/a = //files/a/a.js
 		 * files/a.js = loads //files/a.js
 		 */
-		normalize: function() {
-
-			var current = File.cur().dir(),
-				//if you are cross domain from the page, and providing a path that doesn't have an domain
-				path = this.path;
-			if (/^\/\//.test(this.path)) { //if path is rooted from steal's root (DEPRECATED) 
-				path = this.path.substr(2);
-			} 
-			else if (/^\.\//.test(this.path)) { // should be relative
-				this.path = this.path.substr(2);
-				path = this.joinFrom(current);
-				this.path = "./" + this.path;
+		normalize: function( cur ) {
+			cur = cur ? cur.dir() : URI.cur.dir();
+			var path = this.path,
+				res = URI(path);
+			//if path is rooted from steal's root (DEPRECATED)
+			if (!path.indexOf("//") ) {
+				res = URI(path.substr(2));
+			} else if (!path.indexOf("./") ) { // should be relative
+				res = cur.join(path.substr(2));
 			}
-			else if (/^[^\.|\/]/.test(this.path)) {}
-			else {
-				if (this.relative() ||
-				File.cur().isCrossDomain() && //if current file is on another domain and
-				!this.protocol()) { //this file doesn't have a protocol
-					path = this.joinFrom(current);
+			// only if we start with ./ or have a /foo should we join from cur
+			else if ( this.isRelative() ) {
+				res = cur.join(this.domain() + path)
+			}
+			res.query = this.query;
+			return res;
+		},
+		isRelative: function() {
+			return /^[\.|\/]/.test(this.path)
+		},
+		// a min path from 2 urls that share the same domain
+		pathTo: function( uri ) {
+			uri = URI(uri);
+			var uriParts = uri.path.split("/"),
+				thisParts = this.path.split("/"),
+				result = [];
+			while ( uriParts.length && thisParts.length && uriParts[0] == thisParts[0] ) {
+				uriParts.shift();
+				thisParts.shift();
+			}
+			each(thisParts, function() {
+				result.push("../")
+			})
+			return URI(result.join("") + uriParts.join("/"));
+		},
+		mapJoin: function( url ) {
+			return this.join(URI(url).insertMapping());
+		},
+		// helper to go from jquery to jquery/jquery.js
+		addJS: function() {
+			var ext = this.ext();
+			if (!ext ) {
+				// if first character of path is a . or /, just load this file
+				if (!this.isRelative() ) {
+					this.path += "/" + this.filename();
 				}
+				this.path += ".js"
 			}
-			
-			return path;
+			return this;
 		}
 	});
+		
+	// create the steal function now to use as a namespace.
+
+
+	function steal() {
+		// convert arguments into an array
+		var args = map(arguments);
+		if ( args.length ) {
+			pending.push.apply(pending, args);
+			// steal.after is called everytime steal is called
+			// it kicks off loading these files
+			steal.after(args);
+			// return steal for chaining
+		}
+		return steal;
+	};
+	steal._id = Math.floor(1000 * Math.random());
+	// ## CONFIG ##
 	
+	// stores the current config settings
+	var stealConfig = {
+		types: {},
+		ext: {},
+		env: "development",
+		loadProduction: true,
+		logLevel: 0
+	},
+	
+		matchesId = function( loc, id ) {
+			if ( loc === "*" ) {
+				return true;
+			} else if ( id.indexOf(loc) === 0 ) {
+				return true;
+			}
+		};
+	/**
+	 * `steal.config(config)` configures steal. Typically it it used
+	 * in __stealconfig.js__.  The available options are:
+	 * 
+	 *  - map - map an id to another id
+	 *  - paths - maps an id to a file
+	 *  - root - the path to the "root" folder
+	 *  - env - `"development"` or `"production"`
+	 *  - types - processor rules for various types
+	 *  - ext - behavior rules for extensions
+	 *  - urlArgs - extra queryString arguments
+	 *  - startFile - the file to load
+	 * 
+	 * ## map
+	 * 
+	 * Maps an id to another id with a certain scope of other ids. This can be
+	 * used to use different modules within the same id or map ids to another id.
+	 * Example:
+	 * 
+	 *     steal.config({
+	 *       map: {
+	 *         "*": {
+	 *           "jquery/jquery.js": "jquery"
+	 *         },
+	 *         "compontent1":{
+	 *           "underscore" : "underscore1.2"
+	 *         },
+	 *         "component2":{
+	 *           "underscore" : "underscore1.1"  
+	 *         }
+	 *       }
+	 *     })
+	 * 
+	 * ## paths
+	 * 
+	 * Maps an id or matching ids to a url. Each mapping is specified
+	 * by an id or part of the id to match and what that 
+	 * part should be replaced with.
+	 * 
+	 *     steal.config({
+	 *       paths: {
+	 * 	       // maps everything in a jquery folder like: `jquery/controller`
+	 *         // to http://cdn.com/jquery/controller/controller.com
+	 * 	       "jquery/" : "http://cdn.com/jquery/"
+	 * 
+	 *         // if path does not end with /, it matches only that id
+	 *         "jquery" : "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
+	 *       }
+	 *     }) 
+	 * 
+	 * ## root
+	 * ## env
+	 * 
+	 * If production, does not load "ignored" scripts and loads production script.  If development gives more warnings / errors.
+	 * 
+	 * ## types
+	 * 
+	 * The types option can specify how a type is loaded. 
+	 * 
+	 * ## ext
+	 * 
+	 * The ext option specifies the default behavior if file is loaded with the 
+	 * specified extension. For a given extension, a file that configures the type can be given or
+	 * an existing type. For example, for ejs:
+	 * 
+	 *     steal.config({ext: {"ejs": "can/view/ejs/ejs.js"}})
+	 * 
+	 * This tells steal to make sure `can/view/ejs/ejs.js` is executed before any file with
+	 * ".ejs" is executed.
+	 * 
+	 * ## startFile
+	 */
+	steal.config = function( config ) {
+		if(!config){ // called as a getter, so just return
+			return stealConfig;
+		}
+		if(arguments.length === 1 && typeof config === "string"){ // called as a getter, so just return
+			return stealConfig[config];
+		}
+		for(var prop in config){
+			var value = config[prop]
+			// if it's a special function
+			steal.config[prop] ?
+				// run it
+				steal.config[prop](value) :
+				// otherwise set or extend
+				(typeof value == "object" && stealConfig[prop] ?
+					// extend
+					extend( stealConfig[prop], value) :
+					// set
+					stealConfig[prop] = value);
+				
+		}
+		// redo all resources
+		each(resources, function( id, resource ) {
+			if ( resource.options.type != "fn" ) {
+				// TODO this is terrible
+				var buildType = resource.options.buildType;
+				resource.setOptions(resource.orig);
+				var newId = resource.options.id;
+				// this mapping is to move a config'd key
+				if ( id !== newId ) {
+					resources[newId] = resource;
+					// TODO: remove the old one ....
+				}
+				resource.options.buildType = buildType;
+			}
+		})
+		return stealConfig;
+	};
+	steal.config.startFile = function(startFile){
+		// make sure startFile and production look right
+		stealConfig.startFile = "" + URI(startFile).addJS()
+		if (!stealConfig.production ) {
+			stealConfig.production = URI(stealConfig.startFile).dir() + "/production.js";
+		}
+		
+	}
+	/**
+	 * Read or define the path relative URI's should be referenced from.
+	 * 
+	 *     window.location //-> "http://foo.com/site/index.html"
+	 *     steal.URI.root("http://foo.com/app/files/")
+	 *     steal.root.toString() //-> "../../app/files/"
+	 */
+	steal.config.root = function( relativeURI ) {
+		if ( relativeURI !== undefined ) {
+			var root = URI(relativeURI);
+
+			// the current folder-location of the page http://foo.com/bar/card
+			var cleaned = URI.page,
+				// the absolute location or root
+				loc = cleaned.join(relativeURI);
+
+			// cur now points to the 'root' location, but from the page
+			URI.cur = loc.pathTo(cleaned)
+			stealConfig.root = root;
+			return;
+		}
+		stealConfig.root =  root || URI("");
+	}
+	steal.config.root("");
+	/**
+	 * @function steal.id
+	 * 
+	 * Given a resource id passed to `steal( resourceID, currentWorkingId )`, this function converts it to the 
+	 * final, unique id. This function can be overwritten 
+	 * to change how unique ids are defined, for example, to be more AMD-like.
+	 * 
+	 * The following are the default rules.
+	 * 
+	 * Given an ID:
+	 * 
+	 *  1. Check the id has an extension like _.js_ or _.customext_. If it doesn't:
+	 *      1. Check if the id is relative, meaning it starts with _../_ or _./_. If it is not, add 
+	 *         "/" plus everything after the last "/". So `foo/bar` becomes `foo/bar/bar`
+	 *      2. Add .js to the id.
+	 *  2. Check if the id is relative, meaning it starts with _../_ or _./_. If it is relative,
+	 *     set the id to the id joined from the currentWorkingId.
+	 *  3. Check the 
+	 * 
+	 * 
+	 * `steal.id()`
+	 */
+	// returns the "rootSrc" id, something that looks like requireJS
+	// for a given id/path, what is the "REAL" id that should be used
+	// this is where substituation can happen
+	steal.id = function( id, currentWorkingId, type ) {
+		// id should be like
+		var uri = URI(id);
+		uri = uri.addJS().normalize(currentWorkingId ? new URI(currentWorkingId) : null)
+		// check foo/bar
+		if (!type ) {
+			type = "js"
+		}
+		if ( type == "js" ) {
+			// if it ends with .js remove it ...
+			// if it ends
+		}
+		// check map config
+		var map = stealConfig.map || {};
+		// always run past 
+		each(map, function( loc, maps ) {
+			// is the current working id matching loc
+			if ( matchesId(loc, currentWorkingId) ) {
+				// run maps
+				each(maps, function( part, replaceWith ) {
+					if (("" + uri).indexOf(part) == 0 ) {
+						uri = URI(("" + uri).replace(part, replaceWith))
+					}
+				})
+			}
+		})
+		
+		return uri;
+	}
+	
+	steal.amdToId = function(id, currentWorkingId, type){
+		var uri = URI(id);
+		uri = uri.normalize(currentWorkingId ? new URI(currentWorkingId) : null)
+		// check foo/bar
+		if (!type ) {
+			type = "js"
+		}
+		if ( type == "js" ) {
+			// if it ends with .js remove it ...
+			// if it ends
+		}
+		// check map config
+		var map = stealConfig.map || {};
+		// always run past 
+		each(map, function( loc, maps ) {
+			// is the current working id matching loc
+			if ( matchesId(loc, currentWorkingId) ) {
+				// run maps
+				each(maps, function( part, replaceWith ) {
+					if (("" + uri).indexOf(part) == 0 ) {
+						uri = URI(("" + uri).replace(part, replaceWith))
+					}
+				})
+			}
+		})
+		return uri;
+	}
+
+
+	steal.config.shim = function(shims){
+
+		for(var id in shims){
+			var resource = Resource.make(id);
+			if(typeof shims[id] === "object"){
+				var needs = shims[id].deps || []
+				if(typeof shims[id].exports === "string"){
+					var exports = (function(_exports){
+						return function(){
+							return win[_exports];
+						}
+					})(shims[id].exports)
+				} else {
+					exports = shims[id].exports;
+				}
+			} else {
+				needs = shims[id];
+			}
+			(function(_resource, _needs){
+				_resource.options.needs = _needs;
+			})(resource, needs)
+
+			if(exports){
+				resource.exports = (function(_resource, _exports, _needs){
+					return function(){
+						var args = _needs.map(function(id){
+							return Resource.make(id).value;
+						})
+						_resource.value = _exports.apply(null, args)
+						return _resource.value
+					}
+				})(resource, exports, needs)
+			}
+		}
+
+	}
+
+	// for a given ID, where should I find this resource
+	/**
+	 * `steal.idToUri( id, noJoin )` takes an id and returns a URI that
+	 * is the location of the file. It uses the paths option of  [steal.config].
+	 * Passing true for `noJoin` does not join from the root URI.
+	 */
+	steal.idToUri = function( id, noJoin ) {
+		// this is normalize
+		var paths = stealConfig.paths || {},
+			path;
+		// always run past 
+		each(paths, function( part, replaceWith ) {
+			path = ""+id;
+			// if path ends in / only check first part of id
+			if((endsInSlashRegex.test(part) && path.indexOf(part) == 0) ||
+				// or check if its a full match only
+				path === part){
+				id = URI(path.replace(part, replaceWith));
+			}
+		})
+
+		return noJoin ? id : stealConfig.root.join(id)
+	}
+	steal.amdIdToUri = function( id, noJoin ){
+		// this is normalize
+		var paths = stealConfig.paths || {},
+			path;
+		// always run past 
+		each(paths, function( part, replaceWith ) {
+			path = ""+id;
+			// if path ends in / only check first part of id
+			if((endsInSlashRegex.test(part) && path.indexOf(part) == 0) ||
+				// or check if its a full match only
+				path === part){
+				id = URI(path.replace(part, replaceWith));
+			}
+		})
+		if( /(^|\/)[^\/\.]+$/.test(id) ){
+			id= URI(id+".js")
+		}
+		return id //noJoin ? id : stealConfig.root.join(id)
+	}
+
+
+
+	// This can't be added to the prototype using extend because
+	// then for some reason IE < 9 won't recognize it.
+	URI.prototype.toString = function() {
+		return this.domain() + this.path + this.search() + this.hash();
+	};
+
+	// temp add steal.File for backward compat
+	steal.File = steal.URI = URI;
+	// --- END URI
 	var pending = [],
 		s = steal,
-		id = 0,
-		steals = {};
+		id = 0;
 
+
+	/**
+	 * @add steal
+	 */
+	// =============================== STATIC API ===============================
+	var page;
+
+	extend(steal, {
+		each: each,
+		extend: extend,
+		Deferred: Deferred,
+		// Currently used a few places
+		isRhino: win.load && win.readUrl && win.readFile,
+		/**
+		 * @hide
+		 * Makes options
+		 * @param {Object} options
+		 */
+		makeOptions: function( options, curId ) {
+			// convert it to a uri
+			if (!options.id ) {
+				throw {
+					message: "no id",
+					options: options
+				}
+			}
+			options.id = options.toId ? options.toId(options.id, curId) : steal.id(options.id, curId);
+			// set the ext
+			options.ext = options.id.ext();
+			
+			// Check if it's a configured needs
+			var configedExt = stealConfig.ext[options.ext];
+			// if we have something, but it's not a type
+			if ( configedExt && ! stealConfig.types[configedExt] ) {
+				if (!options.needs ) {
+					options.needs = [];
+				}
+	
+				options.needs.push(configedExt);
+			}
+			
+			return options;
+		},
+		/**
+		 * Calls steal, but waits until all previous steals
+		 * have completed loading until loading the
+		 * files passed to the arguments.
+		 */
+		then: function() {
+			var args = map(arguments);
+			args.unshift(null)
+			return steal.apply(win, args);
+		},
+		/**
+		 * `steal.bind( event, handler(eventData...) )` listens to 
+		 * events on steal. Typically these are used by various build processes
+		 * to know when steal starts and finish loading resources and their
+		 * dependencies. Listen to an event like:
+		 * 
+		 *     steal.bind('end', function(rootResource){
+		 *       rootResource.dependencies // the first stolen resources.
+		 *     })
+		 * 
+		 * Steal supports the following events:
+		 * 
+		 *  - __start__ - steal has started loading a group of resources and their dependencies.
+		 *  - __end__ - steal has finished loading a group of resources and their dependencies.
+		 *  - __done__ - steal has finished loading the first set of resources and their dependencies.
+		 *  - __ready__ - after both steal's "done" event  and the `window`'s onload event have fired.
+		 * 
+		 * For example, the following html:
+		 * 
+		 * @codestart html
+		 * &lt;script src='steal/steal.js'>&lt;/script>
+		 * &lt;script>
+		 * steal('can/control', function(){
+		 *   setTimeout(function(){
+		 *     steal('can/model')    
+		 *   },200)
+		 * })
+		 * &lt;/script>
+		 * @codeend
+		 * 
+		 * Would fire:
+		 * 
+		 *  - __start__ - immediately after `steal('can/control')` is called
+		 *  - __end__ - after 'can/control', all of it's dependencies, and the callback function have executed and completed.
+		 *  - __done__ - fired after the first 'end' event.
+		 *  - __ready__ - fired after window.onload and the 'done' event
+		 *  - __start__ - immediately after `steal('can/model')` is called
+		 *  - __end__ - fired after 'can/model' and all of it's dependencies have fired.
+		 * 
+		 * 
+		 * 
+		 * @param {String} event
+		 * @param {Function} listener
+		 */
+		bind: function( event, listener ) {
+			if (!events[event] ) {
+				events[event] = []
+			}
+			var special = steal.events[event]
+			if ( special && special.add ) {
+				listener = special.add(listener);
+			}
+			listener && events[event].push(listener);
+			return steal;
+		},
+		/**
+		 * `steal.one(eventName, handler(eventArgs...) )` works just like
+		 * [steal.bind] but immediately unbinds after `handler` is called.
+		 */
+		one: function( event, listener ) {
+			return steal.bind(event, function() {
+				listener.apply(this, arguments);
+				steal.unbind(event, arguments.callee);
+			});
+		},
+		events: {},
+		/**
+		 * `steal.unbind( eventName, handler )` removes an event listener on steal.
+		 * @param {String} event
+		 * @param {Function} listener
+		 */
+		unbind: function( event, listener ) {
+			var evs = events[event] || [],
+				i = 0;
+			while ( i < evs.length ) {
+				if ( listener === evs[i] ) {
+					evs.splice(i, 1);
+				} else {
+					i++;
+				}
+			}
+		},
+		trigger: function( event, arg ) {
+			var arr = events[event] || [];
+			// array items might be removed during each iteration (with unbind),
+			// so we iterate over a copy
+			each(map(arr), function( i, f ) {
+				f(arg);
+			})
+		},
+		/**
+		 * @hide
+		 * Creates resources and marks them as loading so steal doesn't try 
+		 * to load them. 
+		 * 
+		 *      steal.has("foo/bar.js","zed/car.js");
+		 * 
+		 * This is used when a file has other resources in it. 
+		 */
+		has: function() {
+			// we don't use IE's interactive script functionality while
+			// production scripts are loading
+			support.interactive = false;
+			each(arguments, function( i, arg ) {
+				var stel = Resource.make(arg);
+				stel.loading = stel.executing = true;
+			});
+		},
+
+		// a dummy function to add things to after the stel is created, but before executed is called
+		preexecuted: function() {},
+		/**
+		 * @hide
+		 * Signals that a resource's JS code has been run.  This is used
+		 * when a file has other resources in it.
+		 * 
+		 *     steal.has("foo/bar.js");
+		 * 
+		 *     //start code for foo/bar.js 
+		 *     steal("zed/car.js", function(){ ... });
+		 *     steal.executed("foo/bar.js");
+		 * 
+		 * When a resource is executed, its dependent resources are loaded and eventually 
+		 * executed.
+		 */
+		// called when a script has loaded via production
+		executed: function( name ) {
+			// create the steal, mark it as loading, then as loaded
+			var resource = Resource.make(name);
+			resource.loading = resource.executing = true;
+			//convert(stel, "complete");
+			steal.preexecuted(resource);
+			resource.executed()
+			return steal;
+		},
+		type: function( type, cb ) {
+			var typs = type.split(" ");
+
+			if (!cb ) {
+				return types[typs.shift()].require
+			}
+
+			types[typs.shift()] = {
+				require: cb,
+				convert: typs
+			};
+		}
+	});
+
+
+	// ============ RESOURCE ================
+	// a map of resources by resourceID
+	var resources = {};
 	// this is for methods on a 'steal instance'.  A file can be in one of a few states:
 	// created - the steal instance is created, but we haven't started loading it yet
 	//           this happens when thens are used
 	// loading - (loading=true) By calling load, this will tell steal to load a file
 	// loaded - (isLoaded=true) The file has been run, but its dependency files have been completed
 	// complete - all of this files dependencies have loaded and completed.
-	steal.p = {
-		// adds a new steal and throws an error if the script doesn't load
-		// this also checks the steals map
-		make: function(options){
-			
-			var stel = new steal.p.init(options),
-				rootSrc = stel.options.rootSrc;
-			
-			if(stel.unique && rootSrc){
-				// the .js is b/c we are not adding that automatically until
-				// load because we defer 'type' determination until then
-				if(!steals[rootSrc] && ! steals[rootSrc+".js"]){  //if we haven't loaded it before
-					steals[rootSrc] = stel;
-				} else{ // already have this steal
-					stel = steals[rootSrc];
-					// extend the old stolen file with any new options
-					extend(stel.options, typeof options === "string" ? {} : options)
+
+	// A Resource is almost anything. It is different from a module
+	// as it doesn't represent some unit of functionality, rather
+	// it represents a unit that can have other units "within" it
+	// as dependencies.  A resource can:
+	//
+	// - load - load the resource to the client so it is available, but don't run it yet
+	// - run - run the code for the resource
+	// - executed - the code has been run for the resource, but all
+	//   dependencies for that resource might not have finished
+	// - completed - all resources within the resource have completed
+	//
+	// __options__
+	// `options` can be a string, function, or object.
+	//
+	// __properties__
+	//
+	// - options - has a number of properties
+	//    - src - a URI to this resource that can be loaded from the current page
+	//    - rootSrc - a URI to this resource relative to the current root URI.
+	//    - type - the type of resource: "fn", "js", "css", etc
+	//    - needs - other resources that must be loaded prior to this resource
+	//    - fn - a callback function to run when executed
+	// - unique - false if this resource should be loaded each time
+	// - waits - this resource should wait until all prior scripts have completed before running
+	// - loaded - a deferred indicating if this resource has been loaded to the client
+	// - run - a deferred indicating if the the code for this resource run
+	// - completed - a deferred indicating if all of this resources dependencies have
+	//   completed
+	// - dependencies - an array of dependencies
+	var Resource = function( options ) {
+		// an array for dependencies, this is the steal calls this resource makes
+		this.dependencies = [];
+
+		// an array of implicit dependencies this steal needs
+		this.needsDependencies = [];
+
+		// id for debugging
+		this.id = (++id);
+		// the original options
+		this.orig = options;
+		// the parent steal's id
+		this.curId = steal.cur && steal.cur.options.id;
+
+		this.setOptions(options);
+		// create the deferreds used to manage state
+		this.loaded = Deferred();
+		this.run = Deferred();
+		this.completed = Deferred();
+	};
+	// `Resource.make` is used to either create
+	// a new resource, or return an existing
+	// resource that matches the options.
+	Resource.make = function( options ) {
+		// create the temporary reasource
+		var resource = new Resource(options),
+			// use `rootSrc` as the definitive ID
+			id = resource.options.id;
+
+		// assuming this resource should not be created again.
+		if ( resource.unique && id ) {
+
+			// Check if we already have a resource for this rootSrc
+			// Also check with a .js ending because we defer 'type'
+			// determination until later
+			if (!resources[id] && !resources[id + ".js"] ) {
+				// If we haven't loaded, cache the resource
+				resources[id] = resource;
+			} else {
+
+				// Otherwise get the cached resource
+				existingResource = resources[id];
+				// If options were passed, copy new properties over.
+				// Don't copy src, etc because those have already
+				// been changed to be the right values;
+				if (!isString(options) ) {
+					// extend everything other than id
+					for(var prop in options){
+						if(prop !== "id") {
+							existingResource.options[prop] = options[prop];
+						}
+					}
 				}
+				return existingResource;
 			}
-			
-			return stel;
-		},
-		init: function( options ) {
-			this.dependencies = [];
-			// id for debugging
-			this.id = (++id);
-			
-			// if we have no options, we are the global init ... set ourselves up ...
-			if(!options){ //global init cur ...
+		}
+
+		return resource;
+	};
+
+	// updates the paths of things ...
+	// use modules b/c they are more fuzzy
+	// a module's id stays the same, but a path might change
+	// 
+	Resource.update = function() {
+		for ( var rootSrc in resources ) {
+			if (!resources[resources].loaded.isResolved() ) {
+
+			}
+		}
+	};
+
+	extend(Resource.prototype, {
+		setOptions: function( options ) {
+			var prevOptions = this.options; 
+			// if we have no options, we are the global Resource that
+			// contains all other resources.
+			if (!options ) { //global init cur ...
 				this.options = {};
 				this.waits = false;
-				this.pack = "production.js";
-			} 
-			//handle callback functions	
-			else if ( typeof options == 'function' ) {
-				var path = File.cur().path;
-				
+			}
+			//handle callback functions
+			else if ( isFn(options) ) {
+				var uri = URI.cur,
+					self = this,
+					cur = steal.cur;
 				this.options = {
-					fn : function() {
-					
-						//set the path ..
-						File.cur(path);
-						
-						// call the function, someday soon this will be requireJS-like
-						options(steal.send || win.jQuery || steal); 
+					fn: function() {
+
+						// Set the URI if there are steals
+						// within the callback.
+						URI.cur = uri;
+
+						// we should get the current "module"
+						// check it's listed dependencies and see
+						// if they have a value
+						var args = [],
+							found = false,
+							dep, value;
+						// iterate backwards through dependencies
+						for ( var i = cur.dependencies.length; i >= 0; i-- ) {
+							dep = cur.dependencies[i];
+
+							if ( found ) {
+								if ( dep === null  ) {
+								//	//alert("YES")
+									break;
+								}
+								// We need to access the stored modules in this order
+								// - calculated id
+								// - original name
+								// - dependency return value otherwise
+								value = modules[dep.options.id] || modules[dep.orig] || dep.value;
+								args.unshift(value);
+								
+								// what does this do?
+								
+							}
+							
+							if ( dep === self ) {
+								found = true;
+							}
+						}
+
+
+
+						var ret = options.apply(cur, args);
+
+						// if this returns a value, we should register it as a module ...
+						if ( ret ) {
+							// register this module ....
+							cur.value = ret;
+						}
+						return ret;
 					},
-					rootSrc: path,
-					orig: options,
+					id: uri,
 					type: "fn"
 				}
 				// this has nothing to do with 'loading' options
 				this.waits = true;
 				this.unique = false;
 			} else {
-				
 				// save the original options
-				this.orig = options;
-
-				this.options = steal.makeOptions(extend({},
-					typeof options == 'string' ? { src: options } : options));
+				this.options = steal.makeOptions(extend({}, isString(options) ? {
+					id: options
+				} : options), this.curId);
 
 				this.waits = this.options.waits || false;
 				this.unique = true;
 			}
+			// if there are other options we haven't already set, reuse the old ones
+			for(opt in prevOptions){
+				if(!this.options[opt]){
+					this.options[opt] = prevOptions[opt];
+				}
+			}
 		},
-		complete : function(){
-			this.completed = true;
+		
+		// Calling complete indicates that all dependencies have
+		// been completed for this resource
+		complete: function() {
+			this.completed.resolve();
 		},
-		/**
-		 * @hide
-		 * After the script has been loaded and run
-		 * 
-		 *   - check what else has been stolen, load them
-		 *   - mark yourself as complete when everything is completed
-		 *   - this is where all the actions is
-		 */
-
-		loaded: function(script){
+		// After the script has been loaded and run
+		// - checks what has been stolen (in pending)
+		// - wires up pendings steal's deferreds to eventually complete this
+		// - this is where all of steal's complexity is
+		executed: function( script ) {
 			var myqueue, 
 				stel, 
-				src = (script && script.src) || this.options.src,
+				src = this.options.src,
 				rootSrc = this.options.rootSrc;
+			// Set this as the current file so any relative urls
+			// will load from it.
+			// rootSrc needs to be the translated path
+			// we need id vs rootSrc ...
 			
-			//set yourself as the current file
-			File.cur(rootSrc);
-			
-			// mark yourself as 'loaded'.  
-			this.isLoaded = true;
-			
-			// If we are IE, get the queue from interactives
-			// TODO move this out of this function
-			if (support.interactive && src) {
+			if ( this.options.id ) {
+				URI.cur = URI(this.options.id);
+			}
+			if( this.exports ){
+				this.exports()
+			}
+			// set this as the current resource
+			steal.cur = this;
+
+			// mark yourself as 'loaded'.
+			this.run.resolve();
+
+			// If we are IE, get the queue from interactives.
+			// It in interactives because you can't use onload to know
+			// which script is executing.
+			if ( support.interactive && src ) {
 				myqueue = interactives[src];
 			}
-			// is there a case in IE where, this makes sense?
-			// in other browsers, the queue of items to load is
+			// In other browsers, the queue of items to load is
 			// what is in pending
-			if(!myqueue){
+			if (!myqueue ) {
 				myqueue = pending.slice(0);
 				pending = [];
 			}
-			
-			// if we have nothing, mark us as complete (resolve if deferred)
-			if(!myqueue.length){
+
+			// if we have nothing, mark us as complete
+			if (!myqueue.length ) {
 				this.complete();
 				return;
 			}
-			
+			//print("-setting up "+this.options.id)
 			// now we have to figure out how to wire up our pending steals
 			var self = this,
-				set = [],
 				// the current
-				joiner,  
-				initial = [],
+				isProduction = stealConfig.env == "production",
+
+				stealInstances = [];
+
+			// iterate through the collection and add all the 'needs'
+			// before fetching...
+			each(myqueue, function( i, item ) {
+				if( item === null){
+					stealInstances.push(null);
+					return
+				}
 				
-				isProduction = steal.options.env == 'production',
-				
-				files = [],
-				
-				// a helper that basically does a join
-				// when everything in arr's func method is called,
-				// call func2 on obj
-				whenEach = function(arr, func, obj, func2){
-					var big = [obj, func2];
-					each(arr, function(i, item){
-						big.unshift(item, func)
-					});
-					when.apply(steal, big);
-				},
-				// a helper that does the oposite of a join.  When
-				// obj's func method is called, call func2 on all items.
-				whenThe = function(obj, func, items, func2){
-					each(items, function(i, item){
-						when(obj, func, item, func2)
-					})
-				};
-			
-			
-			//now go through what you stole and hook everything up
-			//BUT, we go through backwards
-			each(myqueue.reverse(), function(i, item){
-				
-				//in production, ignore ignored items (like steal/dev
-				if(isProduction && item.ignore){
+				if ( (isProduction && item.ignore) || (!isProduction && !steal.isRhino && item.prodonly)) {
 					return;
 				}
 				
 				// make a steal object
-				stel = steal.p.make( item );
-				
-				// add it as a dependency, circular are not allowed
-				self.dependencies.unshift(stel)
-				
-				
-				if(stel.waits === false){ // file
-					// on the current 
-					files.push(stel);
-				
-				}else{ // function
-					
-					// essentially have to bind current files to call previous joiner's load
-					// and to wait for current stel's complete
-					
-					if(!joiner){ // if no previous joiner, then we are at the start of a file
-						
-						// when they are complete, complete the file
-						whenEach( files.concat(stel), "complete", self, "complete");
-						
-						// if there was a function then files, then end, function loads all files
-						if(files.length){
-							whenThe(stel,"complete", files ,"load")
-						}
-						
-					} else { //   function,  file1, file2, file3, joiner function
-						
-						whenEach(files.concat(stel) , "complete", joiner, "load");
-						
-						// make stel complete load files
-						whenThe(stel,"complete", files.length ? files : [joiner] ,"load")
-						
-					}
-					// the joiner is the previous thing
-					joiner = stel;
-					files = [];
-					
+				var stel = Resource.make(item);
+				if ( packHash[stel.options.id] && stel.options.type !== 'fn' ) { // if we are production, and this is a package, mark as loading, but steal package?
+					steal.has(""+stel.options.id);
+					stel = Resource.make(packHash[""+stel.options.id]);
 				}
+				// has to happen before 'needs' for when reversed...
+				stealInstances.push(stel);
 			});
-			
-			// now we should be left with the starting files
-			if(files.length){
-				// we have initial files
-				// if there is a joiner, we need to load it when the initial files are complete
-				if(joiner){
-					whenEach(files, "complete", joiner, "load");
-				} else {
-					whenEach(files, "complete", self, "complete");
+			//print("-instances "+this.options.id)
+			// The set of resources before the previous "wait" resource
+			var priorSet = [],
+				// The current set of resources after and including the
+				// previous "wait" resource
+				set = [],
+				// The first set of resources that we will execute
+				// right away. This should be the first set of dependencies
+				// that we can load in parallel. If something has
+				// a need, the need should be in this set
+				firstSet = [],
+				// Should we be adding resources to the
+				// firstSet
+				setFirstSet = true;
+
+			// Goes through each resource and maintains
+			// a list of the set of resources
+			// that must be complete before the current
+			// resource (`priorSet`).
+			each( stealInstances, function( i, resource ) {
+				// add it as a dependency, circular are not allowed
+				self.dependencies.push(resource);
+
+				// if there's a wait and it's not the first thing
+				if ( (resource === null || resource.waits) && set.length ) {
+					// add the current set to `priorSet`
+					priorSet = priorSet.concat(set);
+					// empty the current set
+					set = [];
+					// we have our firs set of items
+					setFirstSet = false;
+					if(resource === null) {
+						return;
+					}
+
 				}
-				// reverse it back and load each initial file
-				each(files.reverse(), function(){
-					this.load();
+				if ( resource === null ) return;
+
+				// when the priorSet is completed, execute this resource
+				// and when it's needs are done
+				var waitsOn = priorSet.slice(0);
+				// if there are needs, this can not be part of the "firstSet"
+				each(resource.options.needs || [], function( i, raw ) {
+					
+					var need = Resource.make(raw);
+					// add the need to the resource's dependencies
+					uniquePush(resource.needsDependencies, need);
+					waitsOn.push(need);
+					// add needs to first set to execute
+					firstSet.push(need)
 				});
-			} else if(joiner){
-				// we have inital function
-				joiner.load()
-			} else {
-				// we had nothing
-				self.complete();
-			}
+				waitsOn.length && whenEach(waitsOn, "completed", resource, "execute");
+
+				// what is this used for?
+				resource.waitedOn = resource.waitedOn ? resource.waitedOn.concat(priorSet) : priorSet.slice(0);
+
+				// add this steal to the current set
+				set.push(resource);
+				// if we are still on the first set, and this has no needs
+				if ( setFirstSet && (resource.options.needs || []).length == 0) {
+					// add this to the first set of things
+					firstSet.push(resource)
+				}
+				// start loading the resource if possible
+				resource.load();
+			});
+
+			// when every thing is complete, mark us as completed
+			priorSet = priorSet.concat(set);
+			whenEach(priorSet, "completed", self, "completed");
+
+			// execute the first set of dependencies
+			each(firstSet, function( i, f ) {
+				f.execute();
+			});
 
 		},
 		/**
 		 * Loads this steal
 		 */
-		load: function(returnScript) {
+		load: function( returnScript ) {
 			// if we are already loading / loaded
-			if(this.loading || this.isLoaded){
+			if ( this.loading || this.loaded.isResolved() ) {
 				return;
 			}
+
 			this.loading = true;
+			this.loaded.resolve();
+		},
+		execute: function() {
 			var self = this;
-			// get yourself
-			steal.require(this.options, function load_calling_loaded(script){
-				self.loaded(script);
-			}, function(error, src){
-				win.clearTimeout && win.clearTimeout(self.completeTimeout)
-				throw "steal.js : "+self.options.src+" not completed"
-			});
-			
+			if (!self.loaded.isResolved() ) {
+				self.loaded.resolve();
+			}
+			if (!self.executing ) {
+				self.executing = true;
+
+				steal.require(self.options, function( value ) {
+					
+					self.executed( value );
+				}, function( error, src ) {
+					var abortFlag = self.options.abort,
+						errorCb = self.options.error;
+
+					// if an error callback was provided, fire it
+					if ( errorCb ) {
+						errorCb.call(self.options);
+					}
+
+					win.clearTimeout && win.clearTimeout(self.completeTimeout)
+
+					// if abort: false, register the script as loaded, and don't throw
+					if ( abortFlag === false ) {
+						self.executed();
+						return;
+					}
+					throw "steal.js : " + self.options.src + " not completed"
+				});
+			}
 		}
 
-	};
-	steal.p.init.prototype = steal.p;
-	/**
-	 * @add steal
-	 */
-	// =============================== STATIC API ===============================
-	var page;
-	/**
-	 *  @static
-	 */
-	extend(steal,{
-		/**
-		 * @attribute root
-		 * The location of the steal folder.
-		 */
-		root : File(""),
-		/**
-		 * Gets or sets the path from the current page to 
-		 * steal's (or JavaScriptMVC's) root folder.  When passed a src, it sets the root folder. 
-		 * Otherwise, it returns the path to the root folder.
-		 * 
-		 * This is the path from which 
-		 * all plugins are stolen.  When you steal a plugin like steal("jquery/controller"), 
-		 * the plugin path is joined with this rootUrl to create a full path 
-		 * to the controller.js file.
-		 * 
-		 * By default, the rootUrl is calculated from the
-		 * steal script and the window location.  For example, if the 
-		 * script tag looks like this:
-		 * 
-		 *     <script type='text/javascript' src='../../steal/steal.js?ui/app'></script>
-		 * 
-		 * rootUrl will be set to "../../".
-		 * Setting the rootUrl can be useful if you want to have
-		 * steal.js in a different location.
-		 * 
-		 * ## Example
-		 * 
-		 * The following sets steal root to a different folder.
-		 * 
-		 *     steal.rootUrl("../../jmvc/")
-		 * 
-		 * This appends  <code>"../../jmvc"</code> to paths
-		 * loaded from [steal.static.root].  In some strange cases this might be desirable if 
-		 * plugin folders are in a different location from the steal directory. 
-		 * 
-		 * It also sets the current url to this directory so the first calls to steal work relative to the root JMVC directory.
-		 * 
-		 * @param {String} [src] a relative path from the current page to the root directory of JMVC, like ../../
-		 * @return {String} returns the last path passed to rootUrl
-		 */
-		rootUrl : function(src){
-			if (src !== undefined) {
-				steal.root = File(src);
-				
-				// set cur with the location
-				var cleaned = steal.pageUrl(),
-					loc = cleaned.join(src);
-
-				File.cur( cleaned.toReferenceFromSameDomain(loc) );
-				return steal;
-			} else {
-				return steal.root.path;
-			}
-		},
-		extend : extend,
-		/**
-		 * @function pageUrl
-		 * Gets or sets the location of the page using 
-		 * steal.  This defaults to the window's location.
-		 * 
-		 * However, sometimes it is necessary to 
-		 * have steal believe it is making requests from
-		 * another page.
-		 * 
-		 * @param {String} [newPage] a path to the page using steal (probably the windows location)
-		 * @return {steal.File} returns the last path to a page passed to pageUrl, converted to a steal.File object 
-		 */
-		pageUrl : function(newPage){
-			if(newPage){
-				page = File( File(newPage).clean() );
-				return steal;
-			} else{
-				return page || File("");
-			}
-		},
-		//gets and sets which page steal thinks it's at
-		// TODO: make location change-able ...
-		/**
-		 * Gets the currently running script location.
-		 * 
-		 * @return String
-		 */
-		cur: function( file ) {
-			if (file === undefined) {
-				return File.cur();
-			} else {
-				File.cur(file);
-				return steal;
-			}
-		},
-		isRhino: win.load && win.readUrl && win.readFile,
-		/**
-		 * @attribute options
-		 * Configurable options
-		 */
-		options : {
-			env : 'development',
-			// TODO: document this
-			loadProduction : true
-		},
-		/**
-		 * @hide
-		 * when a 'unique' steal gets added ...
-		 * @param {Object} stel
-		 */
-		add : function(stel){
-			steals[stel.rootSrc] = stel;
-		},
-		/**
-		 * @hide
-		 * Makes options
-		 * @param {Object} options
-		 */
-		makeOptions : function(options){
-			
-			var ext = File(options.src).ext();
-			if (!ext) {
-				// if first character of path is a . or /, just load this file
-				if (options.src.indexOf(".") == 0 || options.src.indexOf("/") == 0) {
-					options.src = options.src + ".js"
-				}
-				// else, load as a plugin
-				else {
-					options.src = options.src + "/" + File(options.src).filename() + ".js";
-				}
-			}
-			
-			var orig = options.src,
-				// path relative to the current files path
-				// this is done relative to jmvcroot
-				normalized = steal.File(orig).normalize(),
-				protocol = steal.File(options.src).protocol();
-				
-			extend(options,{
-				originalSrc : options.src,
-				rootSrc : normalized,
-				// path from the page
-				src : steal.root.join(normalized),
-				// "file:" or "http:" depending on what protocol the request uses
-				protocol: protocol || (doc? location.protocol: "file:")
-			});
-			options.originalSrc = options.src;
-			
-			return options;
-		},
-		/**
-		 * Calls steal, but waits until all previous steals
-		 * have completed loading until loading the 
-		 * files passed to the arguments.
-		 */
-		then : function(){
-			var args = typeof arguments[0] == 'function' ? 
-				arguments : [function(){}].concat(makeArray( arguments ) )
-			return steal.apply(win, args );
-		},
-		/**
-		 * Listens to events on Steal
-		 * @param {String} event
-		 * @param {Function} listener
-		 */
-		bind: function(event, listener){
-			if(!events[event]){
-				events[event] = [] 
-			}
-			var special = steal.events[event]
-			if(special && special.add){
-				listener = special.add(listener);
-			}
-			listener && events[event].push(listener);
-			return steal;
-		},
-		one : function(event, listener){
-			steal.bind(event,function(){
-				listener.apply(this, arguments);
-				steal.unbind(event, arguments.callee);
-			});
-			return steal;
-		},
-		events : {},
-		/**
-		 * Unbinds an event listener on steal
-		 * @param {Object} event
-		 * @param {Object} listener
-		 */
-		unbind : function(event, listener){
-			var evs = events[event] || [],
-				i = 0;
-			while(i < evs.length){
-				if(listener === evs[i]){
-					evs.splice(i,1);
-				}else{
-					i++;
-				}
-			}
-		},
-		trigger : function(event, arg){
-			var arr = events[event] || [],
-				copy = [];
-			// array items might be removed during each iteration (with unbind), so we iterate over a copy
-			for(var i =0, len = arr.length; i <len; i++){
-				copy[i] = arr[i];
-			}
-			each(copy, function(i,f){
-				f(arg);
-			})
-		},
-		/**
-		 * @hide
-		 * Used to tell steal that it is loading a number of plugins
-		 */
-		loading : function(){
-			// we don't use IE's interactive script functionality while production scripts are loading
-			useInteractive = false;
-			each(arguments, function(i, arg){
-				var stel = steal.p.make( arg );
-				stel.loading = true;
-			});
-		},
-		// a dummy function to add things to after the stel is created, but before 
-		// loaded is called
-		preloaded : function(){},
-		// called when a script has loaded via production
-		loaded: function(name){
-			// create the steal, mark it as loading, then as loaded
-			var stel = steal.p.make( name );
-			stel.loading = true;
-			convert(stel, "complete");
-			
-			steal.preloaded(stel);
-			stel.loaded()
-			return steal;
-		}
 	});
-	
+
+
 	var events = {};
-	startup = before(startup, function(){
-		
-		steal.pageUrl(win.location ?  win.location.href : "");
-		
-	})
-	
-	
-	// =============================== TYPE SYSTEM ===============================
-	
-	var types = steal.types = {};
-	
-	
-	steal.
+
+
+
+	// ### TYPES ##
+	var types = stealConfig.types;
 	/**
-	 * Registers a type.  You define the type of the file, the basic type it converts to, and a 
-	 * conversion function where you convert the original file to JS or CSS.  This is modeled after the 
+	 * Registers a type.  You define the type of the file, the basic type it
+	 * converts to, and a conversion function where you convert the original file
+	 * to JS or CSS.  This is modeled after the
 	 * [http://api.jquery.com/extending-ajax/#Converters AJAX converters] in jQuery.
-	 * 
-	 * Types are designed to make it simple to switch between steal's development and production modes.  In development mode, the types are converted 
-	 * in the browser to allow devs to see changes as they work.  When the app is built, these converter functions are run by the build process, 
-	 * and the processed text is inserted into the production script, optimized for performance.
-	 * 
-	 * Here's an example converting files of type .foo to JavaScript.  Foo is a fake language that saves global variables defined like.  A .foo file might 
+	 *
+	 * Types are designed to make it simple to switch between steal's development
+	 * and production modes.  In development mode, the types are converted
+	 * in the browser to allow devs to see changes as they work.  When the app is
+	 * built, these converter functions are run by the build process,
+	 * and the processed text is inserted into the production script, optimized for
+	 * performance.
+	 *
+	 * Here's an example converting files of type .foo to JavaScript.  Foo is a
+	 * fake language that saves global variables defined like.  A .foo file might
 	 * look like this:
-	 * 
+	 *
 	 *     REQUIRED FOO
-	 * 
+	 *
 	 * To define this type, you'd call steal.type like this:
-	 * 
+	 *
 	 *     steal.type("foo js", function(options, original, success, error){
 	 *       var parts = options.text.split(" ")
 	 *       options.text = parts[0]+"='"+parts[1]+"'";
 	 *       success();
 	 *     });
-	 * 
-	 * The method we provide is called with the text of .foo files in options.text. We parse the file, create 
-	 * JavaScript and put it in options.text.  Couldn't be simpler.
-	 * 
-	 * Here's an example, converting [http://jashkenas.github.com/coffee-script/ coffeescript] to JavaScript:
-	 * 
+	 *
+	 * The method we provide is called with the text of .foo files in options.text.
+	 * We parse the file, create JavaScript and put it in options.text.  Couldn't
+	 * be simpler.
+	 *
+	 * Here's an example,
+	 * converting [http://jashkenas.github.com/coffee-script/ coffeescript]
+	 * to JavaScript:
+	 *
 	 *     steal.type("coffee js", function(options, original, success, error){
 	 *       options.text = CoffeeScript.compile(options.text);
 	 *       success();
 	 *     });
-	 * 
-	 * In this example, any time steal encounters a file with
-	 * extension .coffee, it will call the given 
-	 * converter method.  CoffeeScript.compile takes the text of the file, converts it from coffeescript to javascript, 
-	 * and saves the JavaScript text in options.text.
-	 * 
-	 * Similarly, languages on top of CSS, like [http://lesscss.org/ LESS], can be converted to CSS:
-	 * 
+	 *
+	 * In this example, any time steal encounters a file with extension .coffee,
+	 * it will call the given converter method.  CoffeeScript.compile takes the
+	 * text of the file, converts it from coffeescript to javascript, and saves
+	 * the JavaScript text in options.text.
+	 *
+	 * Similarly, languages on top of CSS, like [http://lesscss.org/ LESS], can
+	 * be converted to CSS:
+	 *
 	 *     steal.type("less css", function(options, original, success, error){
 	 *       new (less.Parser)({
 	 *         optimization: less.optimization,
@@ -1185,106 +1510,111 @@
 	 *         success();
 	 *       });
 	 *     });
-	 * 
-	 * This simple type system could be used to convert any file type to be used in your JavaScript app.  For example, 
-	 * [http://fdik.org/yml/ yml] could be used for configuration.  jQueryMX uses steal.type to support JS templates, such as EJS, TMPL, and others.
-	 * 
-	 * @param {String} type A string that defines the new type being defined and the type being converted to, 
-	 * separated by a space, like "coffee js".  
-	 * 
-	 * There can be more than two steps used in conversion, such as "ejs view 
-	 * js".  This will define a method that converts .ejs files to .view files.  There should be another converter for "view js" 
-	 * that makes this final conversion to JS.
-	 * 
-	 * @param {Function} cb( options, original, success, error ) a callback function that converts the new file type 
-	 * to a basic type.  This method needs to do two things: 1) save the text of the converted file in options.text 
-	 * and 2) call success() when the conversion is done (it can work asynchronously).
-	 * 
+	 *
+	 * This simple type system could be used to convert any file type to be used
+	 * in your JavaScript app.  For example, [http://fdik.org/yml/ yml] could be
+	 * used for configuration.  jQueryMX uses steal.type to support JS templates,
+	 * such as EJS, TMPL, and others.
+	 *
+	 * @param {String} type A string that defines the new type being defined and
+	 * the type being converted to, separated by a space, like "coffee js".
+	 *
+	 * There can be more than two steps used in conversion, such as "ejs view js".
+	 * This will define a method that converts .ejs files to .view files.  There
+	 * should be another converter for "view js" that makes this final conversion
+	 * to JS.
+	 *
+	 * @param {Function} cb( options, original, success, error ) a callback
+	 * function that converts the new file type to a basic type.  This method
+	 * needs to do two things: 1) save the text of the converted file in
+	 * options.text and 2) call success() when the conversion is done (it can work
+	 * asynchronously).
+	 *
 	 * - __options__ - the steal options for this file, including path information
-	 * - __original__ - the original argument passed to steal, which might be a path or a function
-	 * - __success__ - a method to call when the file is converted and processed successfully
-	 * - __error__ - a method called if the conversion fails or the file doesn't exist
+	 * - __original__ - the original argument passed to steal, which might be a
+	 *   path or a function
+	 * - __success__ - a method to call when the file is converted and processed
+	 *   successfully
+	 * - __error__ - a method called if the conversion fails or the file doesn't
+	 *   exist
 	 */
-	type = function(type, cb){
-		var typs = type.split(" ");
-		
-		if(!cb){
-			return types[typs.shift()].require
-		}
-		
-		types[typs.shift()] = {
-			require : cb,
-			convert: typs
-		};
+	steal.config.types = function(types){
+		each(types, steal.type)
 	};
+
+
+
 	// adds a type (js by default) and buildType (css, js)
 	// this should happen right before loading
-	// however, what if urls are different 
+	// however, what if urls are different
 	// because one file has JS and another does not?
 	// we could check if it matches something with .js because foo.less.js SHOULD
 	// be rare
-	steal.p.load = before(steal.p.load, function(){
+	Resource.prototype.execute = before(Resource.prototype.execute, function() {
 		var raw = this.options;
-		
+
 		// if it's a string, get it's extension and check if
 		// it is a registered type, if it is ... set the type
-		if(!raw.type){
-			var ext = File(raw.src).ext();
-			if(!ext && !types[ext]){
+		if (!raw.type ) {
+			var ext = URI(raw.id).ext();
+			if (!ext && !types[ext] ) {
 				ext = "js";
 			}
-			raw.type =  ext;
+			raw.type = ext;
 		}
-		if (!types[raw.type]){
+		if (!types[raw.type] && stealConfig.env == 'development' ) {
 			throw "steal.js - type " + raw.type + " has not been loaded.";
+		} else if (!types[raw.type] && stealConfig.env == 'production' ) {
+			// if we haven't defined EJS yet and we're in production, its ok, just ignore it
+			return;
 		}
-		var converters =  types[raw.type].convert;
+		var converters = types[raw.type].convert;
 		raw.buildType = converters.length ? converters[converters.length - 1] : raw.type;
 	});
-	
+
 	steal.
 	/**
-	 * Called for every file that is loaded.  It sets up a string of methods called for each type in the conversion chain and calls each type one by one.  
-	 * 
+	 * Called for every file that is loaded.  It sets up a string of methods called
+	 * for each type in the conversion chain and calls each type one by one.
+	 *
 	 * For example, if the file is a coffeescript file, here's what happens:
-	 * 
-	 *   - The "text" type converter is called first.  This will perform an AJAX request for the file and save it in options.text.  
-	 *   - Then the coffee type converter is called (the user provided method).  This converts the text from coffeescript to JavaScript.  
-	 *   - Finally the "js" type converter is called, which inserts the JavaScript in the page as a script tag that is executed. 
-	 * 
+	 *
+	 *   - The "text" type converter is called first.  This will perform an AJAX
+	 *   request for the file and save it in options.text.
+	 *   - Then the coffee type converter is called (the user provided method).
+	 *   This converts the text from coffeescript to JavaScript.
+	 *   - Finally the "js" type converter is called, which inserts the JavaScript
+	 *   in the page as a script tag that is executed.
+	 *
 	 * @param {Object} options the steal options for this file, including path information
 	 * @param {Function} success a method to call when the file is converted and processed successfully
 	 * @param {Function} error a method called if the conversion fails or the file doesn't exist
 	 */
-	require = function(options, success, error){
+	require = function( options, success, error ) {
+		// add the src option
+		options.src = options.idToUri ? options.idToUri(options.id) : steal.idToUri(options.id);
+
 		// get the type
 		var type = types[options.type],
 			converters;
-		
+
 		// if this has converters, make it get the text first, then pass it to the type
-		if(type.convert.length){
+		if ( type.convert.length ) {
 			converters = type.convert.slice(0);
-			converters.unshift('text', options.type)
-		} else  {
+			converters.unshift("text", options.type)
+		} else {
 			converters = [options.type]
 		}
-//                
-//                // DIRTY HACK CED STYLE NINJA
-//                if(options.type == 'ejs'){
-//                    console.dir(types, converters, types[converters.shift()]);
-////                    console.log($.ajax({url:options.src, async:false}));
-////                    success.apply(this, [options, converters, success, error]);
-////                    return;
-//                }
 		require(options, converters, success, error)
 	};
-	function require(options, converters, success, error){
-		
+
+	function require(options, converters, success, error) {
+
 		var type = types[converters.shift()];
-		
-		type.require(options, function require_continue_check(){
+
+		type.require(options, function require_continue_check() {
 			// if we have more types to convert
-			if(converters.length){
+			if ( converters.length ) {
 				require(options, converters, success, error)
 			} else { // otherwise this is the final
 				success.apply(this, arguments);
@@ -1293,535 +1623,520 @@
 	};
 
 
-// =============================== TYPES ===============================
+	// =============================== TYPES ===============================
+	// a clean up script that prevents memory leaks and removes the
+	// script
+	var cleanUp = function( elem ) {
+		elem.onreadystatechange = elem.onload = elem.onerror = null;
 
-// a clean up script that prevents memory leaks and removes the
-// script
-var cleanUp = function(script) {
-		script[ STR_ONREADYSTATECHANGE ]
-			= script[ STR_ONLOAD ]
-			= script[STR_ONERROR]
-			= null;
-			
-		head().removeChild( script );
+		setTimeout(function() {
+			head().removeChild(elem);
+		}, 1);
 	},
-	// the last inserted script, needed for IE
-	lastInserted,
-	// if the state is done
-	stateCheck = /loaded|complete/;
-steal.type("js", function(options, success, error){
-	// create a script tag
-	var script = scriptTag(), 
-		deps;
-	// if we have text, just set and insert text
-	if (options.text) {
-		// insert
-		script.text = options.text;
-		
-	}
-	else {
-		
-		var callback = function(evt){
-			if (!script.readyState || stateCheck.test(script.readyState)) {
-				cleanUp(script);
-				success(script);
-			}
-		}
-		// listen to loaded
-		if (support.attachEvent) {
-			script.attachEvent(STR_ONREADYSTATECHANGE, callback)
-		} else {
-			script[STR_ONLOAD] = callback;
-		}
-		
-		// error handling doesn't work on firefox on the filesystem
-		if (support.error && error && options.protocol !== "file:") {
-			if(support.attachEvent){
-				script.attachEvent(STR_ONERROR, error);
-			} else {
-				script[ STR_ONERROR ] = error;
-			}
-		}
-		script.src = options.src;
-		script.onSuccess = success;
-	}
-		
-	// insert the script
-	lastInserted = script;
-	head().insertBefore(script, head().firstChild);
+		// the last inserted script, needed for IE
+		lastInserted,
+		// if the state is done
+		stateCheck = /^loade|c|u/;
 
-	// if text, just call success right away, and clean up
-	if (options.text) {
-		success();
-		cleanUp(script);
-	}
-});
 
-steal.type("fn", function(options, success, error){
-	success(options.fn());
-});
-steal.type("text", function(options, success, error){
-	steal.request(options, function(text){
-		options.text = text;
-		success(text);
-	}, error)
-});
+	var cssCount = 0,
+		createSheet = doc && doc.createStyleSheet,
+		lastSheet, lastSheetOptions;
 
-var cssCount = 0,
-	createSheet = doc && doc.createStyleSheet,
-	lastSheet,
-	lastSheetOptions;
-
-steal.type("css", function css_type(options, success, error){
-	if(options.text){ // less
-		var css  = doc[STR_CREATE_ELEMENT]('style');
-		css.type = 'text/css';
-		if (css.styleSheet) { // IE
-			css.styleSheet.cssText = options.text;
-		} else {
-			(function (node) {
-				if (css.childNodes.length > 0) {
-					if (css.firstChild.nodeValue !== node.nodeValue) {
-						css.replaceChild(node, css.firstChild);
+	// Apply all the basic types
+	steal.config({
+		types:{
+			"js": function( options, success, error ) {
+				// create a script tag
+				var script = scriptTag(),
+					callback = function() {
+						if (!script.readyState || stateCheck.test(script.readyState) ) {
+							cleanUp(script);
+							success();
+						}
+					};
+	
+				// if we have text, just set and insert text
+				if ( options.text ) {
+					// insert
+					script.text = options.text;
+	
+				} else {
+	
+					// listen to loaded
+					script.onload = script.onreadystatechange = callback;
+	
+					var src = options.src; //steal.idToUri( options.id );
+					// error handling doesn't work on firefox on the filesystem
+					if ( support.error && error && src.protocol !== "file" ) {
+						script.onerror = error;
 					}
-				} else {
-					css.appendChild(node);
+					script.src = "" + src;
+					//script.src = options.src = addSuffix(options.src);
+					//script.async = false;
+					script.onSuccess = success;
 				}
-			})(doc.createTextNode(options.text));
-		}
-		head().appendChild(css);
-	} else {
-		if( createSheet ){
-			// IE has a 31 sheet and 31 import per sheet limit
-			if(cssCount == 0){
-				lastSheet = document.createStyleSheet(options.src);
-				lastSheetOptions = options;
-				cssCount++;
-			} else {
-				var relative = File(options.src).joinFrom(
-					File(lastSheetOptions.src).dir());
-					
-				lastSheet.addImport( relative );
-				cssCount++;
-				if(cssCount == 30){
-					cssCount = 0;
-				}
-			}
-			success()
-			return;
-		}
-
-		
-		options = options || {};
-		var link = doc[STR_CREATE_ELEMENT]('link');
-		link.rel = options.rel || "stylesheet";
-		link.href = options.src;
-		link.type = 'text/css';
-		head().appendChild(link);
-	}
 	
-	success();
-});
-
-// Overwrite
-if(opts.types){
-	for(var type in opts.types){
-		steal.type(type, opts.types[type]);
-	}
-}
-
-
-// =============================== HELPERS ===============================
-var factory = function() {
-	return win.ActiveXObject ? new ActiveXObject("Microsoft.XMLHTTP") : new XMLHttpRequest();
-};
-
-
-steal.
-/**
- * Performs an XHR request
- * @param {Object} options
- * @param {Function} success
- * @param {Function} error
- */
-request = function(options, success, error){
-	var request = new factory(),
-		contentType = (options.contentType || "application/x-www-form-urlencoded; charset=utf-8"),
-		clean = function(){
-			request = check = clean = null;
-		},
-		check = function(){
-			if ( request.readyState === 4 )  {
-				if ( request.status === 500 || request.status === 404 || 
-					 request.status === 2 || request.status < 0 || 
-					 (request.status === 0 && request.responseText === '') ) {
-					error && error(request.status);
-					clean();
-				} else {
-					success(request.responseText);
-					clean();
-				}
-				return;
-			} 
-		};
-		
-	request.open("GET", options.src, options.async === false ? false : true);
-	request.setRequestHeader('Content-type', contentType);
-	if ( request.overrideMimeType ) {
-		request.overrideMimeType(contentType);
-	}
+				// insert the script
+				lastInserted = script;
+				head().insertBefore(script, head().firstChild);
 	
-	request.onreadystatechange = function(){
-	  check();                                                               
-	}
-	try {
-		request.send(null);
-	}
-	catch (e) {
-		if (clean) {
-			console.error(e);
-			error && error();
-			clean();
-		}
-	}
-			 
-};
-
-
-
-
-	//  =============================== MAPPING ===============================
-	var insertMapping = function(p){
-		// don't worry about // rooted paths
-		var mapName,
-			map;
-			
-		// go through mappings
-		for(var mapName in steal.mappings){
-			map = steal.mappings[mapName]
-			if(map.test.test(p)){ 
-				return p.replace(mapName, map.path);
+				// if text, just call success right away, and clean up
+				if ( options.text ) {
+					callback();
+				}
+			},
+			"fn": function( options, success ) {
+				var ret;
+				if (!options.skipCallbacks ) {
+					ret = options.fn();
+				}
+				success(ret);
+			},
+			"text": function( options, success, error ) {
+				steal.request(options, function( text ) {
+					options.text = text;
+					success(text);
+				}, error)
+			},
+			"css": function( options, success, error ) {
+				if ( options.text ) { // less
+					var css = createElement("style");
+					css.type = "text/css";
+					if ( css.styleSheet ) { // IE
+						css.styleSheet.cssText = options.text;
+					} else {
+						(function( node ) {
+							if ( css.childNodes.length ) {
+								if ( css.firstChild.nodeValue !== node.nodeValue ) {
+									css.replaceChild(node, css.firstChild);
+								}
+							} else {
+								css.appendChild(node);
+							}
+						})(doc.createTextNode(options.text));
+					}
+					head().appendChild(css);
+				} else {
+					if ( createSheet ) {
+						// IE has a 31 sheet and 31 import per sheet limit
+						if (!cssCount++ ) {
+							lastSheet = doc.createStyleSheet(addSuffix(options.src));
+							lastSheetOptions = options;
+						} else {
+							var relative = "" + URI(URI(lastSheetOptions.src).dir()).pathTo(options.src);
+							lastSheet.addImport(addSuffix(relative));
+							if ( cssCount == 30 ) {
+								cssCount = 0;
+							}
+						}
+						success();
+						return;
+					}
+	
+					options = options || {};
+					var link = createElement("link");
+					link.rel = options.rel || "stylesheet";
+					link.href = addSuffix(options.src);
+					link.type = "text/css";
+					head().appendChild(link);
+				}
+	
+				success();
 			}
 		}
-		return p;
-	};
-	File.prototype.mapJoin = function( url ){
-		url = insertMapping(url);
-		return File(url).joinFrom(this.path);
-	};
-	// modifies src
-	steal.makeOptions = after(steal.makeOptions,function(raw){
-		raw.src = steal.root.join(raw.rootSrc = insertMapping(raw.rootSrc));
 	});
 	
-	//root mappings to other locations
-	steal.mappings = {};
-	
+
+
+	// =============================== HELPERS ===============================
+	var factory = function() {
+		return win.ActiveXObject ? new ActiveXObject("Microsoft.XMLHTTP") : new XMLHttpRequest();
+	};
+
+
 	steal.
 	/**
-	 * Maps a 'rooted' folder to another location.
-	 * @param {String|Object} from the location you want to map from.  For example:
-	 *   'foo/bar'
-	 * @param {String} [to] where you want to map this folder too.  Ex: 'http://foo.cdn/bar'
-	 * @return {steal}
+	 * Performs an XHR request
+	 * @param {Object} options
+	 * @param {Function} success
+	 * @param {Function} error
 	 */
-	map = function(from, to){
-		if(typeof from == "string"){
-			steal.mappings[from] = {
-				test : new RegExp("^("+from+")([/.]|$)"),
-				path: to
+	request = function( options, success, error ) {
+		var request = new factory(),
+			contentType = (options.contentType || "application/x-www-form-urlencoded; charset=utf-8"),
+			clean = function() {
+				request = check = clean = null;
+			},
+			check = function() {
+				var status;
+				if ( request && request.readyState === 4 ) {
+					status = request.status;
+					if ( status === 500 || status === 404 || status === 2 || request.status < 0 || (!status && request.responseText === "") ) {
+						error && error(request.status);
+					} else {
+						success(request.responseText);
+					}
+					clean();
+				}
 			};
-		} else { // its an object
-			for(var key in from){
-				steal.map(key, from[key]);
+		request.open("GET", options.src + '', !(options.async === false));
+		request.setRequestHeader("Content-type", contentType);
+		if ( request.overrideMimeType ) {
+			request.overrideMimeType(contentType);
+		}
+
+		request.onreadystatechange = check;
+		try {
+			request.send(null);
+		}
+		catch (e) {
+			if ( clean ) {
+				console.error(e);
+				error && error();
+				clean();
 			}
 		}
-		return this;
-	}
+
+	};
+
+
+	//  ============================== Packages ===============================
+	/**
+	 * @function steal.packages
+	 * `steal.packages( packageIds... )` defines modules for deferred downloading.
+	 * 
+	 * This is used by the build system to build collections of modules that will be downloaded
+	 * after initial page load.
+	 * 
+	 * For example, an application that wants to progressively load the contents and
+	 * dependencies of _login/login.js_, _filemanager/filemanager.js_, and _contacts/contacts.js_,
+	 * while immediately loading the current users's data might look like:
+	 * 
+	 *     steal.packages('login','filemanager','contacts')
+	 *     steal('models/user', function(User){
+	 * 	   
+	 *       // get the current User
+	 *       User.findOne({id: "current"}, 
+	 * 
+	 *         // success - they logged in
+	 *         function(user){
+	 *           if(window.location.hash == "#filemanager"){
+	 *             steal('filemanager')  
+	 *           }
+	 *         }, 
+	 *         // error - they are logged out
+	 *         function(){
+	 *           steal('login', function(){
+	 *             new Login(document.body);
+	 *             // preload filemanager
+	 * 
+	 *           })  
+	 *         })
+	 *     })
+	 * 
+	 *
+	 * 		steal.packages('tasks','dashboard','fileman');
+	 *
+	 */
+	var packs = [],
+		packHash = {};
+	steal.packages = function( map ) {
+
+		if (!arguments.length ) {
+			return packs;
+		} else {
+			if ( typeof map == 'string' ) {
+				packs.push.apply(packs, arguments);
+			} else {
+				packHash = map;
+			}
+
+			return this;
+		}
+	};
+
 	
+
+	//  =============================== MAPPING ===============================
+	URI.prototype.insertMapping = function() {
+		// go through mappings
+		var orig = "" + this,
+			key, value;
+		for ( key in steal.mappings ) {
+			value = steal.mappings[key]
+			if ( value.test.test(orig) ) {
+				return orig.replace(key, value.path);
+			}
+		}
+		return URI(orig);
+	};
+
 	// =============================== STARTUP ===============================
-	
-	
-	var currentCollection;
-	
+	var rootSteal = false;
+
 	// essentially ... we need to know when we are on our first steal
 	// then we need to know when the collection of those steals ends ...
-	// and, it helps if we use a 'collection' steal because of it's natural 
+	// and, it helps if we use a 'collection' steal because of it's natural
 	// use for going through the pending queue
-	// 
-	extend(steal,{
+	//
+	extend(steal, {
+		// modifies src
+/*makeOptions : after(steal.makeOptions,function(raw){
+			raw.src = URI.root().join(raw.rootSrc = URI( raw.rootSrc ).insertMapping());
+		}),*/
+
+		//root mappings to other locations
+		mappings: {},
+
+		/**
+		 * Maps a 'rooted' folder to another location.
+		 * @param {String|Object} from the location you want to map from.  For example:
+		 *   'foo/bar'
+		 * @param {String} [to] where you want to map this folder too.  Ex: 'http://foo.cdn/bar'
+		 * @return {steal}
+		 */
+		map: function( from, to ) {
+			if ( isString(from) ) {
+				steal.mappings[from] = {
+					test: new RegExp("^(\/?" + from + ")([/.]|$)"),
+					path: to
+				};
+				each(resources, function( id, resource ) {
+					if ( resource.options.type != "fn" ) {
+						// TODO terrible
+						var buildType = resource.options.buildType;
+						resource.setOptions(resource.orig);
+						resource.options.buildType = buildType;
+					}
+				})
+			} else { // its an object
+				each(from, steal.map);
+			}
+			return this;
+		},
 		// called after steals are added to the pending queue
-		after: function(){
+		after: function() {
 			// if we don't have a current 'top' steal
 			// we create one and set it up
 			// to start loading its dependencies (the current pending steals)
-			if(! currentCollection ){
-				currentCollection = new steal.p.init();
-				
-				// keep a reference in case it disappears 
-				var cur = currentCollection,
+			if (!rootSteal ) {
+				rootSteal = new Resource();
+				// keep a reference in case it disappears
+				var cur = rootSteal,
 					// runs when a steal is starting
-					go = function(){
+					go = function() {
 						// indicates that a collection of steals has started
 						steal.trigger("start", cur);
-						when(cur,"complete", function(){
+						cur.completed.then(function() {
+
+							rootSteal = null;
 							steal.trigger("end", cur);
+
+
 						});
-						cur.loaded();
+
+						cur.executed();
 					};
-				// if we are in rhino, start loading dependencies right away
-				if(!win.setTimeout){
+				// If we are in the browser, wait a
+				// brief timeout before executing the rootResource.
+				// This allows embeded script tags with steal to be part of 
+				// the initial set
+				if ( win.setTimeout ) {
+					// we want to insert a "wait" after the current pending
+					steal.pushPending();
+					setTimeout(function() {
+						steal.popPending();
+						go();
+					}, 0)
+				} else {
+					// if we are in rhino, start loading dependencies right away
 					go()
-				}else{
-					// otherwise wait a small timeout to make 
-					// sure we get all steals in the current file
-					setTimeout(go,0)
 				}
 			}
 		},
-		_before : before,
+		_before: before,
 		_after: after
 	});
-	
-	// this can probably move above
-	steal.p.complete = before(steal.p.complete, function(){
-		if(this === currentCollection){ // this is the last steal
-			currentCollection = null;
-		}
-	});
-	
-	
-	
-	// =============================== jQuery ===============================
+
 	(function(){
+		var myPending;
+		steal.pushPending = function(){
+			myPending = pending.slice(0);
+			pending = [];
+			each(myPending, function(i, arg){
+				Resource.make(arg);
+			})
+		}
+		steal.popPending = function(){
+			pending = pending.length ? myPending.concat(null,pending) : myPending;
+		}
+	})();
+
+	// =============================== jQuery ===============================
+	(function() {
 		var jQueryIncremented = false,
-			jQ,
-			ready = false;
-		
+			jQ, ready = false;
+
 		// check if jQuery loaded after every script load ...
-		steal.p.loaded = before(steal.p.loaded, function(){
-	
-			var $ = typeof jQuery !== "undefined" ? jQuery : null;
-			if ($ && "readyWait" in $) {
-				
+		Resource.prototype.executed = before(Resource.prototype.executed, function() {
+
+			var $ = win.jQuery;
+			if ( $ && "readyWait" in $ ) {
+
 				//Increment jQuery readyWait if ncecessary.
-				if (!jQueryIncremented) {
+				if (!jQueryIncremented ) {
 					jQ = $;
 					$.readyWait += 1;
 					jQueryIncremented = true;
 				}
 			}
 		});
-		
+
 		// once the current batch is done, fire ready if it hasn't already been done
-		steal.bind('end', function(){
-			if (jQueryIncremented && !ready) {
+		steal.bind("end", function() {
+			if ( jQueryIncremented && !ready ) {
 				jQ.ready(true);
 				ready = true;
 			}
 		})
 
-		
+
 	})();
-	
+
 	// =============================== ERROR HANDLING ===============================
-	
-	steal.p.load = after(steal.p.load, function(stel){
-		if(win.document && !this.completed && !this.completeTimeout && !steal.isRhino &&
-			(this.options.protocol == "file:" || !support.error)){
+	extend(Resource.prototype, {
+		load: after(Resource.prototype.load, function( stel ) {
 			var self = this;
-			this.completeTimeout = setTimeout(function(){
-				throw "steal.js : "+self.options.src+" not completed"
-			},5000);
+			if ( doc && !self.completed && !self.completeTimeout && !steal.isRhino && (self.options.src.protocol == "file" || !support.error) ) {
+				self.completeTimeout = setTimeout(function() {
+					throw "steal.js : " + self.options.src + " not completed"
+				}, 5000);
+			}
+		}),
+		complete: after(Resource.prototype.complete, function() {
+			this.completeTimeout && clearTimeout(this.completeTimeout)
+		}),
+
+
+		// if we're about to mark a file as executed, mark its "has" array files as
+		// executed also
+		executed: before(Resource.prototype.executed, function() {
+			if ( this.options.has ) {
+				this.loadHas();
+			}
+		}),
+
+		/**
+		 * @hide
+		 * Goes through the array of files listed in this.options.has, marks them all as loaded.
+		 * This is used for files like production.css, which, once they load, need to mark the files they
+		 * contain as loaded.
+		 */
+		loadHas: function() {
+			var stel, i, current = URI.cur;
+
+			if ( this.options.buildType == 'js' ) {
+				return;
+			}
+
+			// mark everything in has loaded
+			each(this.options.has, function( i, has ) {
+				// don't want the current file to change, since we're just marking files as loaded
+				URI.cur = URI(current);
+				steal.executed(has);
+			});
+
 		}
 	});
-	steal.p.complete = after(steal.p.complete, function(){
-		this.completeTimeout && clearTimeout(this.completeTimeout)
-	})
-	
-	
-	// =============================== AOP ===============================
-	function before(f, before, changeArgs){
-		return changeArgs ? 
-			function before_changeArgs(){
-				return f.apply(this,before.apply(this,arguments));
-			}:
-			function before_args(){
-				before.apply(this,arguments);
-				return f.apply(this,arguments);
-			}
-	}
-	/**
-	 * Set up a function that runs after the first param. 
-	 * @param {Object} f
-	 * @param {Object} after
-	 * @param {Object} changeRet If true, the result of the function will be passed to the after function as the first param.  If false, the after function's params are the 
-	 * same as the original function's params
-	 */
-	function after(f, after, changeRet){
-		
-		return changeRet ?
-			function after_CRet(){
-				return after.apply(this,[f.apply(this,arguments)].concat(makeArray(arguments)));
-			}:
-			function after_Ret(){
-				var ret = f.apply(this,arguments);
-				after.apply(this,arguments);
-				return ret;
-			}
-	}
-	
-	// converts a function to work with when
-	function convert(ob, func){
-			
-		var oldFunc = ob[func];
-		
-		// if we don't have callbacks
-		if(!ob[func].callbacks){
-			//replace start with a function that will call ob2's method
-			ob[func] = function(){
-				var me = arguments.callee,
-					ret;
-				
-				// call the original function
-				ret = oldFunc.apply(ob,arguments);
-				
-				var cbs = me.callbacks,
-					len = cbs.length;
-				
-				//mark as called so any callees added to this caller will
-				//automatically get called
-				me.called = true;
-				// call other callbacks
-				for(var i =0; i < len; i++){
-					cbs[i].called()
-				}
-				return ret;
-				
-			}
-			ob[func].callbacks = [];
-		}
 
-		return ob[func];
-	};
-	
-	// maintains 
-	function join(obj, meth){
-		this.obj = obj;
-		this.meth = meth;
-		convert(obj, meth);
-		this.calls = 0
-	};
-	
-	extend(join.prototype,{
-		called : function(){
-			this.calls--;
-			this.go();
-		},
-		// adds functions that will call this join
-		add : function(obj, meth){
-			// converts the function to be able to call 
-			// this join
-			var f = convert(obj, meth);
-			if(!f.called){
-				
-				// adds us to the callback ... the callback will call
-				// called
-				f.callbacks.push(this);
-				this.calls++;
-			}
-		},
-		// call go every time the funtion is called
-		
-		go : function(){
-			if(this.calls === 0){
-				this.obj[this.meth]()
-			}
-		}
-	})
-	// chains two functions.  When the first one is called,
-	//   it calls the second function.
-	//   If the second function has multiple callers, it waits until all have been called
-	// 
-	//   when(parent,"start", steal, "start")
+	// =========== HAS ARRAY STUFF ============
+	// Logic that deals with files that have collections of other files within
+	// them.  This is usually a production.css file,
+	// which when it loads, needs to mark several CSS and LESS files it represents
+	// as being "loaded".  This is done by the production.js file having
+	// steal({src: "production.css", has: ["file1.css", "file2.css"]
 	//
-	function when(){
-		// handle if we get called with a function
-		var args = makeArray(arguments),
-			last = args[args.length -1];
-			
-		if(typeof last === 'function' ){
-			args[args.length -1] = {
-				'fn' : last
+	// after a steal is created, if its been loaded
+	// already and has a "has", mark those files as loaded
+	Resource.make = after(Resource.make, function( stel ) {
+		// if we have things
+		if ( stel.options.has ) {
+			// if we have loaded this already (and we are adding has's)
+			if ( stel.run.isResolved() ) {
+				stel.loadHas();
+			} else {
+				// have to mark has as loading and executing (so we don't try to get them)
+				steal.has.apply(steal, stel.options.has)
 			}
-			args.push("fn");
-		};
-		
-		var waitMeth = args.pop(), 
-			waitObj = args.pop(),
-			joined = new join(waitObj, waitMeth); 
-		
-		for(var i =0; i < args.length; i = i+2){
-			joined.add(args[i], args[i+1])
 		}
-		
-		// call right away if it should
-		joined.go();
-	}
-	
+		return stel;
+	}, true);
+
+
+
+
 	// =========== DEBUG =========
-	
-	/*var name = function(stel){
+
+
+    /*var name = function(stel){
 		if(stel.options && stel.options.type == "fn"){
-			return stel.options.orig.toString().substr(0,50)
+			return stel.orig.name? stel.orig.name : stel.options.id+":fn";//(""+stel.orig).substr(0,10)
 		}
-		return stel.options ? stel.options.rootSrc : "CONTAINER"
+		return stel.options ? stel.options.id + "": "CONTAINER"
 	}
 
-	
-	steal.p.load = before(steal.p.load, function(){
-		console.log("load", name(this), this.loading, this.id)
+
+	//Resource.prototype.load = before( Resource.prototype.load, function(){
+	//	console.log("      load", name(this), this.loading, steal._id, this.id)
+	//})
+
+	Resource.prototype.executed = before(Resource.prototype.executed, function(){
+		var namer= name(this)
+		console.log("      executed", namer, steal._id, this.id)
 	})
 	
-	steal.p.loaded = before(steal.p.loaded, function(){
-		console.log("loaded", name(this), this.id)
-	})
-	steal.p.complete = before(steal.p.complete, function(){
-		console.log("complete", name(this), this.id)
+	Resource.prototype.complete = before(Resource.prototype.complete, function(){
+		console.log("      complete", name(this), steal._id, this.id)
 	})*/
 
+
+
 	// ============= WINDOW LOAD ========
-	var addEvent = function(elem, type, fn) {
+	var addEvent = function( elem, type, fn ) {
 		if ( elem.addEventListener ) {
-			elem.addEventListener( type, fn, false );
+			elem.addEventListener(type, fn, false);
 		} else if ( elem.attachEvent ) {
-			elem.attachEvent( "on" + type, fn );
+			elem.attachEvent("on" + type, fn);
 		} else {
 			fn();
 		}
-	};
-	var loaded = {
-		load : function(){},
-		end : function(){}
-	};
-	
-	var firstEnd = false;
-	addEvent(win, "load", function(){
-		loaded.load();
+	},
+		loaded = {
+			load: Deferred(),
+			end: Deferred()
+		},
+		firstEnd = false;
+
+	addEvent(win, "load", function() {
+		loaded.load.resolve();
 	});
-	steal.one("end", function(collection){
-		loaded.end();
+
+	steal.one("end", function( collection ) {
+		loaded.end.resolve(collection);
 		firstEnd = collection;
 		steal.trigger("done", firstEnd)
 	})
-	when(loaded,"load",loaded,"end", function(){
+	steal.firstComplete = loaded.end;
+
+	Deferred.when(loaded.load, loaded.end).then(function() {
 		steal.trigger("ready")
 		steal.isReady = true;
 	});
-	
+
 	steal.events.done = {
-		add : function(cb){
-			if(firstEnd){
+		add: function( cb ) {
+			if ( firstEnd ) {
 				cb(firstEnd);
 				return false;
 			} else {
@@ -1829,289 +2144,323 @@ request = function(options, success, error){
 			}
 		}
 	};
-	
-	// =========== HAS ARRAY STUFF ============
-	// Logic that deals with files that have collections of other files within them.  This is usually a production.css file, 
-	// which when it loads, needs to mark several CSS and LESS files it represents as being "loaded".  This is done 
-	// by the production.js file having steal({src: "production.css", has: ["file1.css", "file2.css"]  
-	
-	// after a steal is created, if its been loaded already and has a "has", mark those files as loaded
-	steal.p.make = after(steal.p.make, function(stel){
-		// if we have things
-		if( stel.options.has ) {
-			// if we have loaded this already (and we are adding has's)
-			if( stel.isLoaded ) {
-				stel.loadHas();
-			} else {
-				// have to mark has as loading 
-				steal.loading.apply(steal,stel.options.has)
-			}
-		}
-		return stel;
-	}, true)
-	
-	// if we're about to mark a file as loaded, mark its "has" array files as loaded also
-	steal.p.loaded = before(steal.p.loaded, function(){
-		if(this.options.has){
-			this.loadHas();
-		}
-	})
 
-	steal.p.
-		/**
-		 * @hide
-		 * Goes through the array of files listed in this.options.has, marks them all as loaded.  
-		 * This is used for files like production.css, which, once they load, need to mark the files they 
-		 * contain as loaded.
-		 */
-		loadHas = function(){
-			var stel, i,
-				current = File.cur();
-			
-			// mark everything in has loaded
-			for(i=0; i<this.options.has.length; i++){
-				// don't want the current file to change, since we're just marking files as loaded
-				File.cur(current)
-				stel = steal.p.make( this.options.has[i] );
-				// need to set up a "complete" callback for this file, so later waits know its already 
-				// been completed
-				convert(stel, "complete")
-				stel.loaded();
-				
-			}
-		}
-	
+
+
 	// =========== INTERACTIVE STUFF ===========
-	// Logic that deals with making steal work with IE.  IE executes scripts out of order, so in order to tell which scripts are 
+	// Logic that deals with making steal work with IE.  IE executes scripts out of order, so in order to tell which scripts are
 	// dependencies of another, steal needs to check which is the currently "interactive" script.
-	
-
-var interactiveScript, 
+	var interactiveScript,
 	// key is script name, value is array of pending items
 	interactives = {},
-	getInteractiveScript = function(){
-		var i, script,
-		  scripts = doc[STR_GET_BY_TAG]('script');
-		for (i = scripts.length - 1; i > -1 && (script = scripts[i]); i--) {
-			if (script.readyState === 'interactive') {
-				return script;
-			}
-		}
-	},
-	getCachedInteractiveScript = function() {
-		var scripts, i, script;
-		if (interactiveScript && interactiveScript.readyState === 'interactive') {
-			return interactiveScript;
-		}
-		
-		if(script = getInteractiveScript()){
-			interactiveScript = script;
-			return script;
-		}
-		
-		// check last inserted
-		if(lastInserted && lastInserted.readyState == 'interactive'){
-			return lastInserted;
-		}
-	
-		return null;
-	};
-	
-support.interactive = doc && !!getInteractiveScript();
-
-
-if (support.interactive) {
-
-	// after steal is called, check which script is "interactive" (for IE)
-	steal.after = after(steal.after, function(){
-		var interactive = getCachedInteractiveScript();
-		// if no interactive script, this is a steal coming from inside a steal, let complete handle it
-		if (!interactive || !interactive.src || /steal\.(production|production\.[a-zA-Z0-9\-\.\_]*)*js/.test(interactive.src)) {
-			return;
-		}
-		// get the source of the script
-		var src = interactive.src;
-		// create an array to hold all steal calls for this script
-		if (!interactives[src]) {
-			interactives[src] = []
-		}
-		// add to the list of steals for this script tag
-		if (src) {
-			interactives[src].push.apply(interactives[src], pending);
-			pending = [];
-		}
-	})
-	
-	// This is used for packaged scripts.  As the packaged script executes, we grab the 
-	// dependencies that have come so far and assign them to the loaded script
-	steal.preloaded = before(steal.preloaded, function(stel){
-		// get the src name
-		var src = stel.options.src,
-			// and the src of the current interactive script
-			interactiveSrc = getCachedInteractiveScript().src;
-		
-		
-		interactives[src] = interactives[interactiveSrc];
-		interactives[interactiveSrc] = null;
-	});
-	
-}
-	
-	// ===========  OPTIONS ==========
-	
-	var stealCheck  = /steal\.(production\.)?js.*/,
-		getStealScriptSrc = function(){
-			if(!doc){
-				return;
-			}
-			var scripts = doc[STR_GET_BY_TAG]("script"),
-				i = 0,
-				len = scripts.length;
-	
-			
-			//find the steal script and setup initial paths.
-			for ( ; i < len; i++ ) {
-				var src = scripts[i].src;
-				if ( src && stealCheck.test(src) ) { //if script has steal.js
+		getInteractiveScript = function() {
+			var scripts = getElementsByTagName("script"),
+				i = scripts.length;
+			while ( i-- ) {
+				if ( scripts[i].readyState === "interactive" ) {
 					return scripts[i];
 				}
-	
 			}
-			return;
-		};
-	steal.getScriptOptions = function(script){
-			var script = script || getStealScriptSrc(),
-				src,
-				scriptOptions,
-				options = {},
-				commaSplit;
-				
-			if(script){
-				var src = script.src,
-					start =  src.replace(stealCheck,"");
-				if(/steal\/$/.test(start)){
-					options.rootUrl = start.substr(0, start.length - 6);
-				} else {
-					options.rootUrl = start+"../"
-				}
-				if ( /steal\.production\.js/.test(src) ) {
-					options.env = "production";
-				}
-				if ( src.indexOf('?') !== -1 ) {
-					
-					scriptOptions = src.split('?')[1];
-					commaSplit = scriptOptions.split(",");
-					
-					if ( commaSplit[0] ) {
-						options.startFile = commaSplit[0];
-					} 
-					if ( commaSplit[1] && steal.options.env != "production" ) {
-						options.env = commaSplit[1];
-					}
-					
-				}
-			
-			}
-			return options;
-		};
-	
-	startup = after(startup, function(){
-			var options = steal.options, 
-				startFiles = [];
-			extend(options, steal.getScriptOptions());
-			// a steal that existed before this steal
-			if(typeof oldsteal == 'object'){
-				extend(options, oldsteal);
-			}
-			
-			// if it looks like steal[xyz]=bar, add those to the options
-			var search = win.location && decodeURIComponent(win.location.search);
-			search && search.replace(/steal\[([^\]]+)\]=([^&]+)/g, function( whoe, prop, val ) {
-				// support array like params
-				var commaSeparated = val.split(",");
-				if(commaSeparated.length > 1){
-					val = commaSeparated;
-				}
-				options[prop] = val;
-			});
-			
-			// CALCULATE CURRENT LOCATION OF THINGS ...
-			steal.rootUrl(options.rootUrl);
-			
-			// CLEAN UP OPTIONS
-			// make startFile have .js ending
-			if(options.startFile && options.startFile.indexOf(".") == '-1'){
-				options.startFile = options.startFile + "/" + options.startFile.match(/[^\/]+$/)[0] + ".js";
-			}
-			
-			if(!options.logLevel){
-				options.logLevel = 0;
+		},
+		getCachedInteractiveScript = function() {
+			if ( interactiveScript && interactiveScript.readyState === 'interactive' ) {
+				return interactiveScript;
 			}
 
-			//calculate production location;
-			if (!options.production && options.startFile ) {
-				options.production = File(options.startFile).dir() + '/production.js';
+			if ( interactiveScript = getInteractiveScript() ) {
+				return interactiveScript;
 			}
-			if ( options.production ) {
-				options.production = options.production + (options.production.indexOf('.js') == -1 ? '.js' : '');
+
+			// check last inserted
+			if ( lastInserted && lastInserted.readyState == 'interactive' ) {
+				return lastInserted;
 			}
-			each(options.loaded || [], function(i, stel){
-				steal.loaded(stel)
-			})
-			
-			if(typeof options.startFiles === "string"){
-				startFiles.push(options.startFiles);
+
+			return null;
+		};
+
+
+	support.interactive = doc && !! getInteractiveScript();
+
+	if ( support.interactive ) {
+
+		// after steal is called, check which script is "interactive" (for IE)
+		steal.after = after(steal.after, function() {
+
+			// check if disabled by steal.loading()
+			if (!support.interactive ) {
+				return;
 			}
-			else if(options.startFiles && options.startFiles.length){
-				startFiles = options.startFiles;
+
+			var interactive = getCachedInteractiveScript();
+			// if no interactive script, this is a steal coming from inside a steal, let complete handle it
+			if (!interactive || !interactive.src || /steal\.(production|production\.[a-zA-Z0-9\-\.\_]*)*js/.test(interactive.src) ) {
+				return;
 			}
-			var steals = [];
-			// need to load startFiles in dev or production mode (to run funcunit in production)
-			if( startFiles.length ){
-				steal.options.startFiles = startFiles;
-				steals.push.apply(steals, startFiles)
+			// get the source of the script
+			var src = interactive.src;
+			// create an array to hold all steal calls for this script
+			if (!interactives[src] ) {
+				interactives[src] = []
 			}
-			// either instrument is in this page (if we're the window opened from steal.browser), or its opener has it
-			if ( options.instrument || (!options.browser && win.top && win.top.opener && 
-					win.top.opener.steal && win.top.opener.steal.options.instrument) ) {
+			// add to the list of steals for this script tag
+			if ( src ) {
+				interactives[src].push.apply(interactives[src], pending);
+				pending = [];
+			}
+		})
+
+		// This is used for packaged scripts.  As the packaged script executes, we grab the
+		// dependencies that have come so far and assign them to the loaded script
+		steal.preexecuted = before(steal.preexecuted, function( stel ) {
+			// check if disabled by steal.loading()
+			if (!support.interactive ) {
+				return;
+			}
+
+			// get the src name
+			var src = stel.options.src,
+				// and the src of the current interactive script
+				interactiveSrc = getCachedInteractiveScript().src;
+
+			interactives[src] = interactives[interactiveSrc];
+			interactives[interactiveSrc] = null;
+
+		})
+	}
+
+	
+	// ## Config ##
+	var stealCheck = /steal\.(production\.)?js.*/,
+		getStealScriptSrc = function() {
+			if (!doc ) {
+				return;
+			}
+			var scripts = getElementsByTagName("script"),
+				script;
+
+			// find the steal script and setup initial paths.
+			each(scripts, function( i, s ) {
+				if ( stealCheck.test(s.src) ) {
+					script = s;
+				}
+			});
+			return script;
+		};
+
+	steal.getScriptOptions = function( script ) {
+
+		var options = {},
+			parts, src, query, startFile, env;
+
+		script = script || getStealScriptSrc();
+
+		if ( script ) {
+
+			// Split on question mark to get query
+			parts = script.src.split("?");
+			src = parts.shift();
+			query = parts.join("?");
+
+			// Split on comma to get startFile and env
+			parts = query.split(",");
+
+			if ( src.indexOf("steal.production") > -1 ) {
+				options.env = "production";
+			}
+
+			// Grab startFile
+			startFile = parts[0];
+
+			if ( startFile ) {
+				if ( startFile.indexOf(".js") == -1 ) {
+					startFile += "/" + startFile.split("/").pop() + ".js";
+				}
+				options.startFile = startFile;
+			}
+
+			// Grab env
+			env = parts[1];
+
+			if ( env ) {
+				options.env = env;
+			}
+
+			// Split on / to get rootUrl
+			parts = src.split("/")
+			parts.pop();
+			if ( parts[parts.length - 1] == "steal" ) {
+				parts.pop();
+			}
+			options.root = parts.join("/")
+
+		}
+
+		return options;
+	};
+
+	startup = after(startup, function() {
+		// get options from 
+		var options = {};
+
+		// A: GET OPTIONS
+		// 1. get script options
+		extend(options, steal.getScriptOptions());
+
+		// 2. options from a steal object that existed before this steal
+		extend(options, opts);
+
+		// 3. if url looks like steal[xyz]=bar, add those to the options
+		// does this ened to be supported anywhere?
+		var search = win.location && decodeURIComponent(win.location.search);
+		search && search.replace(/steal\[([^\]]+)\]=([^&]+)/g, function( whoe, prop, val ) {
+			options[prop] = ~val.indexOf(",") ? val.split(",") : val;
+		});
+
+		// B: DO THINGS WITH OPTIONS
+		// CALCULATE CURRENT LOCATION OF THINGS ...
+		steal.config(options);
+		
+
+		// mark things that have already been loaded
+		each(options.executed || [], function( i, stel ) {
+			steal.executed(stel)
+		})
+		// immediate steals we do
+		var steals = [];
+
+		// add start files first
+		if ( options.startFiles ) {
+			/// this can be a string or an array
+			steals.push.apply(steals, isString(options.startFiles) ? [options.startFiles] : options.startFiles)
+			options.startFiles = steals.slice(0)
+		}
+
+		// either instrument is in this page (if we're the window opened from
+		// steal.browser), or its opener has it
+		// try-catching this so we dont have to build up to the iframe
+		// instrumentation check
+		try {
+			// win.top.steal.instrument is for qunit
+			// win.top.opener.steal.instrument is for funcunit
+			if(!options.browser && ((win.top && win.top.steal.instrument) || 
+									(win.top && win.top.opener && win.top.opener.steal && win.top.opener.steal.instrument))) {
+
 				// force startFiles to load before instrument
-				steals.push(function(){}, {
-					src: "steal/instrument",
+				steals.push(noop, {
+					id: "steal/instrument",
 					waits: true
 				});
 			}
-			//we only load things with force = true
-			if (options.env == 'production' && options.loadProduction) {
-				if (options.production) {
-					//steal(steal.options.startFile);
-					steal({
-						src: options.production,
-						force: true
-					});
-				}
+		} catch (e) {
+			// This would throw permission denied if
+			// the child window was from a different domain
+		}
+
+		// we only load things with force = true
+		if ( stealConfig.env == "production" && stealConfig.loadProduction && stealConfig.production ) {
+			steal({
+				id: stealConfig.production,
+				force: true
+			});
+		} else {
+			steals.unshift("stealconfig.js")
+
+			if ( options.loadDev !== false ) {
+				steals.unshift({
+					id: "steal/dev/dev.js",
+					ignore: true
+				});
 			}
-			else {
-				if (options.loadDev !== false) {
-					steals.unshift({
-						src: 'steal/dev/dev.js',
-						ignore: true
-					});
-				}
-				
-				if (options.startFile) {
-					steals.push(options.startFile)
-				}
+
+			if ( options.startFile ) {
+				steals.push(null,options.startFile)
 			}
-			if (steals.length) {
-				steal.apply(null, steals);
-			}
+		}
+		if ( steals.length ) {
+			steal.apply(win, steals);
+		}
 	});
-	
-	
-	steal.when = when;
+
+
+	// ## AMD ##
+	var modules = {
+
+	};
+
+	// convert resources to modules ...
+	// a function is a module definition piece
+	// you steal(moduleId1, moduleId2, function(module1, module2){});
+	// 
+	win.define = function( moduleId, dependencies, method ) {
+		if(typeof moduleId == 'function'){
+			modules[URI.cur+""] = moduleId();
+		} else if(!method && dependencies){
+			if(typeof dependencies == "function"){
+				modules[moduleId] = dependencies();
+			} else {
+				modules[moduleId] = dependencies;
+			}
+			
+		} else if (dependencies && method && !dependencies.length ) {
+			modules[moduleId] = method();
+		} else {
+			steal.apply(null, map(dependencies, function(dependency){
+				dependency = typeof dependency === "string" ? {
+					id: dependency
+				} : dependency;
+				dependency.toId = steal.amdToId;
+				
+				dependency.idToUri = steal.amdIdToUri;
+				return dependency;
+			}).concat(method) )
+		}
+		
+	}
+	win.require = function(dependencies, method){
+		var depends = map(dependencies, function(dependency){
+				dependency = typeof dependency === "string" ? {
+					id: dependency
+				} : dependency;
+				dependency.toId = steal.amdToId;
+				
+				dependency.idToUri = steal.amdIdToUri;
+				return dependency;
+			}).concat([method]);
+		console.log("stealing",depends.slice(0))
+		steal.apply(null, depends )
+	}
+	win.define.amd = {
+		jQuery: true
+	}
+
+
+	//steal.when = when;
 	// make steal public
 	win.steal = steal;
-	
+
+
+	// make steal loaded
+	define("steal", [], function() {
+		return steal;
+	});
+
+	define("require",function(){
+		return require;
+	})
+
+	var stealResource = new Resource("steal")
+	stealResource.value = steal;
+	stealResource.loaded.resolve();
+	stealResource.run.resolve();
+	stealResource.executing = true;
+	stealResource.completed.resolve();
+
+	resources[stealResource.options.id] = stealResource;
+
 	startup();
-	
-})()
+	//win.steals = steals;
+	win.steal.resources = resources;
+	win.Resource = Resource;
+
+})(this);

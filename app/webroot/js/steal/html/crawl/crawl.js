@@ -6,8 +6,9 @@ var queue = [],
 	s = steal,
 	getDocType  = function(url){
 		var content;
-		if(s.File(url).domain() === null){
-			content = readFile(s.File(url).clean());
+		print(url);
+		if( !s.URI(url).domain() ){
+			content = readFile(s.URI(url).path);
 		} else {
 			content = readUrl(url);
 		}

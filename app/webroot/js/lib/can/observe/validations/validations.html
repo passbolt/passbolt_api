@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Model Validations Demo</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+			p {width: 400px;}
+			#warnings {
+				color: red;
+			}
+        </style>
+	</head>
+	<body>
+<div id="demo-instructions">
+		<h1>Observe Validations Demo</h1>
+		<p>This demo demonstrates using validations to prevent
+		a person's birthday from being in the future.</p>
+</div>
+<div id="demo-html">
+<div id='person'></div>
+<input id='updater'/>
+<div id='warnings'></div>
+</div>
+<script type='text/javascript' 
+        src='../../../steal/steal.js'>   
+</script>
+<script type='text/ejs' id='personEJS'>
+<h3>Person <%= person.attr('name') %> is <%= person.ageThisYear() %> years old.</h3>
+</script>
+<script type='text/javascript'  id="demo-source">   
+steal('can/observe/validations',
+      'can/observe/attributes',
+      'can/control',
+      'can/view/ejs',function(){
+
+// Create a Person Observe Constructor
+// that converts dates
+Person = can.Observe({
+  convert : {
+    date : function(raw){
+      if(typeof raw == 'string'){
+        var matches = raw.match(/(\d+)-(\d+)-(\d+)/)
+        return matches ? new Date( +matches[1], 
+                         (+matches[2])-1, 
+                         +matches[3] )
+                         : null;
+      }else if(raw instanceof Date){
+        return raw;
+      }
+    }
+  },
+  attributes : { 
+    birthday : 'date'
+  },
+  init : function(){
+    this.validate("birthday",function(bithday){
+      if(bithday == null){
+        return "your birthday needs to be formatted YYYY-MM-DD"
+      }
+      if(bithday > new Date){
+        return "your birthday needs to be in the past"
+      }
+    })
+  }
+},{
+  // return the age this year
+  ageThisYear : function(){
+    // use attr to get the birthday so this is bindable
+    var birthday = this.attr('birthday');
+    if(birthday){
+      // return a value if we have one
+      return new Date().getFullYear() - 
+        birthday.getFullYear()
+    }
+  },
+  // get back the birthday
+  getBirthday : function(){
+    return ""+this.birthday.getFullYear()+
+           "-"+(this.birthday.getMonth()+1)+
+           "-"+this.birthday.getDate();
+  }
+});
+
+// create an instance of Person
+var justin = new Person({'name' : 'Justin Meyer',
+                         'birthday': '1982-10-20'})
+
+// make an Updater control that will update
+// the person's html
+var Updater = can.Control({
+  init : function(){
+    this.element.val(this.options.person.getBirthday())
+  },
+  "change" : function(){
+    // test if it's valid
+    var person = this.options.person,
+        newVal = this.element.val(),
+        errors = person.errors("birthday", newVal)
+    if(errors){
+      // give a warning
+      $("#warnings").html(errors.join("<br/>")).show()
+    } else {
+      person.attr("birthday", newVal );
+      $("#warnings").hide()
+    }
+  }
+})
+
+new Updater("#updater",{person: justin})
+
+// use EJS to bind to the name
+$("#person").html(can.view("personEJS", {person: justin}))
+
+})
+</script>
+	</body>
+</html>

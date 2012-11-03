@@ -1,7 +1,7 @@
 steal({
-	src: "./coffee-script.js",
+	id: "./coffee-script.js",
 	ignore: true
-}, function() {
+}, function(CoffeeScript) {
 
 	/**
 	 * @page steal.coffee CoffeeScript

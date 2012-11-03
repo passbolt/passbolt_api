@@ -1,0 +1,8 @@
+{
+  "name": "docco-generator",
+  "version" : "0.0.1",
+  "dependencies": {
+    "docco": ">= 0.1.x"
+  },
+  "engine": "node >= 0.6.x"
+}

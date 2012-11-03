@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../../../funcunit/qunit/qunit.css" />
+        <title>can DIST Zepto Test</title>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<script type='text/javascript'>
+			steal("can/util/zepto/zepto.0.8.js")
+				.then('can/dist/edge/can.zepto.js')
+				.then('can/test/mvc_test.js')
+				.then('can/construct/construct_test.js',
+					'can/observe/observe_test.js',
+					'can/view/view_test.js',
+					'can/control/control_test.js',
+					'can/model/model_test.js',
+					'can/view/ejs/ejs_test.js')
+		</script>
+    </head>
+    <body>
+
+        <h1 id="qunit-header">can DIST Zepto Tests</h1>
+    	<h2 id="qunit-banner"></h2>
+    	<div id="qunit-testrunner-toolbar"></div>
+    	<h2 id="qunit-userAgent"></h2>
+		<div id="test-content"></div>
+        <ol id="qunit-tests"></ol>
+		<div id="qunit-test-area"></div>
+    </body>
+</html>

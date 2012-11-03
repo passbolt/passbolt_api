@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Model Convert Demo</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            li {border: solid 1px gray; padding: 5px; width: 250px;}
+            li a {color: red; font-weight: bold;}
+            p {width: 400px;}
+        </style>
+    </head>
+    <body>
+<div id="demo-html">
+<input type="text" id="input" value="Brian" />
+</div>	
+<script type='text/javascript' src='../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">   
+steal('can/observe/setter', 'can/control')
+.then(function(){
+	
+var School = can.Observe({
+  setName: function(name, success, error){
+    if(!name){
+      error("no name");
+    }
+    return error;
+  }
+});
+
+var SchoolNamer = can.Control({
+  "{school} error":function(){
+	alert("No name!")
+  },
+  "#input change":function(elm,evt){
+	this.options.school.attr('name', elm.val())
+  }
+});
+
+new SchoolNamer('#demo-html', {
+  school: new School()
+});
+
+})
+</script>
+    </body>
+</html>

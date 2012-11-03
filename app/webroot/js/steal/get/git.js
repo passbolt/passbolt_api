@@ -1,77 +1,137 @@
+steal('steal',function(s){
+/**
+ * Gets the sha of the most recent commit
+ *
+ * @param {Object} info the github repos information
+ * @return {String} the sha of the most recent commit (ex: 'ba7013dfaee2e503069f594ec271ec9795edb16c')
+ */
+var lastCommitSha = function(inf){
+	var commitsText = readUrl("https://api.github.com/repos/" + 
+								inf.user + "/" + 
+								inf.repo + "/" + 
+								"commits?sha=" + inf.branch);
 
-
-
-steal(function(s){
-	
-	
- 
-// gets the last commit for a project from github's api
-var lastCommitId = function(inf){
-	var commitsText = readUrl("https://github.com/api/v2/json/commits/list/" + 
+	eval("var commits = " + commitsText);
+	return commits[0].commit.tree.sha;
+},
+/**
+ * Gets the API url for the tree at the sha specified
+ *
+ * @param {Object} info the github repos information
+ * @param {String} sha the sha of the tree
+ * @param {Boolean} recursive whether we want to get the tree recursively (i.e. all tress within this tree)
+ * @return {String} the API url of the tree (ex: 'https://api.github.com/repos/jupiterjs/funcunit/git/trees/ba7013dfaee2e503069f594ec271ec9795edb16c')
+ */
+getTreeUrl = function(inf, sha, recursive){
+	sha = !sha ? lastCommitSha(inf) : sha;
+	var url = "https://api.github.com/repos/" + 
 				inf.user + "/" + 
 				inf.repo + "/" + 
-				inf.branch);
-	eval("var c = " + commitsText);
-	return c.commits[0].tree;
-},
-// returns a url of commit data
-lastCommitUrl = function(inf){
-	return "https://github.com/api/v2/json/tree/show/" + 
-			inf.user + "/" + 
-			inf.repo + "/" + lastCommitId(inf);
-	
+				"git/trees/" + sha;
+	if(recursive) {
+		url += "?recursive=1";
+	}
 
+	return url;
+},
+/**
+ * Gets the API url for the folder(tree) at the sha specified
+ * Traverse the whole repo tree until we find the matching
+ * folder path 
+ *
+ * @param {Object} info the github repos information
+ * @return {String} the API url of the folder (ex: 'https://api.github.com/repos/jupiterjs/funcunit/git/trees/ba7013dfaee2e503069f594ec271ec9795edb16c')
+ */
+getFolderUrl = function(inf) {
+	var repoTreeText = readUrl(getTreeUrl(inf, inf.branch, true)),
+		repoTree,
+		folderPath = inf.resource.replace(/\/$/, ""),
+		sha;
+
+	eval("var t = " + repoTreeText);
+	repoTree = t.tree;
+	for(file in repoTree) {
+		//print('-f ' + repoTree[file].path);
+		if(folderPath === repoTree[file].path) {
+			sha = repoTree[file].sha;
+			break;
+		}
+	}
+	return getTreeUrl(inf, sha);
 },
 github = s.get.git = {
-		// get a map of names to urls ...  urls don't have to be pretty ...
+		/**
+		 * Generate a map of names to urls
+		 *
+		 * @param {String} content tree data from the repo/folder
+		 * @param {String} rawUrl the API url for the repo/folder
+		 * @param {String} originalUrl the original url for the repo/folder
+		 * @return {Object} mapping of names to urls
+		 */
 		ls : function(content, rawUrl, originalUrl){
-			var info = github.info(originalUrl);
+			var info = github.info(originalUrl),
+				tree,
+				item,
+				data = {}
 			
 			//print("item -- "+info.base)
 			
-			var data = {};
-			
-			// if we are the top level folder, use lastCommitData
-			if( info.resource == "/" ) {
-				eval("var commits = " + content);
-				// use gitHub's commit API
-				commits.tree.forEach(function(item){
-					if(item.name.indexOf(".git") === 0){
-						
-					} else if ( item.type == "blob" ) {
-						data[item.name] = info.base + item.name;
-					}
-					else if ( item.type == "tree" ) {
-						data[item.name+"/"] = info.base + item.name+"/";
-					}
-				})
-				
-			} else {
-				content.replace(/href\s*=\s*\"*([^\">]*)/ig, function(whole, url){
-					if(url.indexOf(".git") === 0){
-						return;
-					}
-					data[url] = info.base + url
-				})
+			eval("var t = " + content);
+			tree = t.tree;
+			// use gitHub's commit API
+			for(var i = 0; i < tree.length; i++) {
+				item = tree[i]
+				//print('item: ' + item.path)
+				if(item.path.indexOf(".git") === 0){
+					
+				} else if ( item.type == "blob" ) {
+					data[item.path] = info.base + item.path;
+				}
+				else if ( item.type == "tree" ) {
+					data[item.path+"/"] = info.base + item.path+"/";
+				}
 			}
 			
 			return data;
 			
 		},
-		// return the 'raw' place to either get folder's contents, or download file ...
+		/**
+		 * Return the raw place to get the repo/folder contents
+		 * or doanload a file
+		 *
+		 * - root folder will return the API url for the root tree
+		 * - folder will return the API url for folder's tree
+		 * - file will return the raw download url
+		 *
+		 * @param {String} url url to convert
+		 * @return {String} raw place to doanload contents or file
+		 */
 		raw : function(url){
-			// https://github.com/secondstory/secondstoryjs-plugins/
-			// --> https://github.com/secondstory/secondstoryjs-plugins/
 			var info = github.info(url);
 			if(info.resource == "/"){ // root level folder
-				return lastCommitUrl(info)
+				return getTreeUrl(info)
 			} else if( /\/$/.test(url) ) { // a folder
-				return "https://"+info.domain+"/"+info.user+"/"+info.repo+"/tree/"+info.branch+"/"+info.resource+"?raw=true"
-			} else { //download url ...
-				return "https://"+info.domain+"/"+info.user+"/"+info.repo+"/raw/"+info.branch+"/"+info.resource
+				return getFolderUrl(info)
+			} else { // download url
+				return "https://raw."+info.domain+"/"+info.user+"/"+info.repo+"/"+info.branch+"/"+info.resource
 			}
 		},
-		// helper to get info from a github url
+		/**
+		 * Helper to get info for a github repo
+		 *
+		 * Resulting info object has the following properties:
+		 *
+		 * - `protocol`: protocol of the url 
+		 * - `domain`: domain of the repo
+		 * - `user`: github user 
+		 * - `repo`: repo's name 
+		 * - `branch`: branch from url or master 
+		 * - `resource`: path within the current repo 
+		 * - `base`: base url for the repo 
+		 *
+		 * @param {String} url url of the repo
+		 * @return {Object} containing the repo info
+		 */
 		info : function(url){
 			var split = url.split("/"),
 				data = {},
@@ -92,9 +152,7 @@ github = s.get.git = {
 			data.base = "https://"+data.domain+"/"+data.user+"/"+data.repo+"/tree/"+data.branch+"/"+( data.resource == "/" ? "" : data.resource)
 			return data;
 		},
-		lastCommitUrl : lastCommitUrl
+		getTreeUrl : getTreeUrl,
+		getFolderUrl : getFolderUrl
 	};
-
-
-
 })()

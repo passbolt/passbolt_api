@@ -1,0 +1,31 @@
+// _args = ['selenium', 'path/to/page.html']; load('funcunit/open/selenium')
+// ./js funcunit/open/selenium funcunit/funcunit.html -coverage
+(function(){
+	load('steal/rhino/rhino.js');
+	
+	var getDefaultBrowser = function(){
+		return "*firefox";
+	}
+	
+	steal('funcunit/open/utils.js') 
+		.then('funcunit/selenium',
+			function(){
+				var opts = FuncUnit.opts(_args);
+				
+				FuncUnit.browserName = opts.browser || getDefaultBrowser();
+				
+				// expose FuncUnit.browser so people can call close themselves
+				FuncUnit.browser = new steal.browser.selenium({
+					serverHost: opts.seleniumHost,
+					serverPort: opts.seleniumPort
+				});
+				
+				FuncUnit.bindEvents(FuncUnit.browser)
+				
+				// Loads the FuncUnit page in Selenium
+				FuncUnit.browser.open(opts.page)
+			})
+
+	java.lang.System.exit(0);
+
+})()

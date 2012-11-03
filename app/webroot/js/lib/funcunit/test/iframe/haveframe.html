@@ -1,0 +1,17 @@
+<html>
+	<head></head>
+	<body>
+		<a href='#' id='open'>Click to open</a>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<script type='text/javascript'>
+		steal('funcunit/browser/resources/jquery.js', function(){
+			$(document).ready(function(){
+				$('#open').click(function(ev){
+					ev.preventDefault()
+					$('<iframe src="iframe.html" name="my frame"></iframe>').appendTo(document.body)
+				})
+			})
+		})
+		</script>
+	</body>
+</html>

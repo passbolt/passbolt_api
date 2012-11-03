@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Animate Demo</title>
+</head>
+<body>
+<style type="text/css">
+  #block {
+    background-color: #bca;
+    width: 100px;
+    border: 1px solid green;
+  }
+</style>
+<div id="demo-html">
+  <button id="go">&raquo; Run</button>
+
+  <div id="block">Hello!</div>
+</div>
+<div style='clear:both'></div>
+<script type='text/javascript'
+        src='../../../steal/steal.js'>
+</script>
+<script type='text/javascript' id="demo-source">
+  steal('jquery/dom/animate').then(function () {
+    $("#go").click(function () {
+      $('#block').animate({"width" : '1px'}, 1000, "ease-in").animate({"width" : '200px'}, 100, "ease-in")
+    });
+  });
+</script>
+</body>
+</html>

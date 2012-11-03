@@ -1,0 +1,51 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+<div id="dummy"></div>
+
+<!-- PUT ANY TEMPLATES YOU NEED HERE -->
+<script id="listEJS" type="text/ejs">
+<form>
+    <h1>Done items</h1>
+    <input type="button" value="Add item" class="add-item" />
+    <% items.each(function(item){%>
+        <% if(item.attr('is_done') === false){ %>
+               <div <%= (el)-> el.data('item', item) %>  class="item"><%= item.title %></div>
+        <% } %>
+    <%})%>
+</form>
+</script>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<script type='text/javascript'>
+steal('can/view/ejs', 'can/control','can/model',function(){
+	Dummy = can.Control({
+        init: function(element, options) {
+            can.append(this.element, can.view('listEJS', {
+                items: this.options.list
+            }));
+        },
+        "div click" : function(el, ev){
+            el.data('item').attr('is_done', true);            
+        },
+        ".add-item click" : function(el, ev){
+            var item = new Item({title: "Title " + (this.options.list.length + 1), is_done: false})
+            this.options.list.push(item)
+        }
+    });
+    
+    can.Model('Item', {}, {});
+    var list = new Item.List;
+    for(var i = 0; i < 2; i++){
+        var item = new Item({title: "Title " + i, is_done: (i % 2 === 0)})
+        list.push(item)
+    }
+           
+
+    new Dummy('#dummy', {list: list});
+})
+		</script>
+	</body>
+	
+</html>
