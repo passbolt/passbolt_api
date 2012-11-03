@@ -1,6 +1,6 @@
 steal(
-    MAD_ROOT + '/controller/component/buttonController.js'
-).then(function ($) {
+    'mad/controller/component/buttonController.js'
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.component.CopyLoginButtonController
@@ -21,7 +21,8 @@ steal(
 		'defaults': {
 			'label': 'Copy Login To Clipboard',
 			'cssClasses': ['with_icon', 'copy_login'],
-			'tag': 'button'
+			// The associated password browser
+			'browser': null
 		}
 
 	}, /** @prototype */ {
@@ -32,11 +33,11 @@ steal(
 
 		/**
 		 * Observe when the mouse leave the component
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'click': function () {
+		'click': function (el, ev) {
 			mad.eventBus.trigger('copy_login_clipboard', this.value);
 		},
 
@@ -45,27 +46,29 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Observe when a resource is focused
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resource The focused resource
+		 * Observe when the mouse leave the component
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{mad.eventBus} resource_focused': function (element, evt, resource) {
-			if (this.value == resource.id) {
-				this.setState('ready');
+		'{browser} tbody mouseleave': function (el, ev) {
+			if (this.state.is('ready')) {
+				this.setState('hidden');
 			}
 		},
 
 		/**
-		 * Observe when a resource is unfocused
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resource The unfocused resource
+		 * Observe when an resource is hovered in the browser controller
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The hovered resource instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'{mad.eventBus} resource_unfocused': function (element, evt, resource) {
-			if (this.value == resource.id) {
+		'{browser} item_hovered': function (el, ev, item) {
+			if (this.value.id == item.id) {
+				this.setState('ready');
+			} else {
 				this.setState('hidden');
 			}
 		}

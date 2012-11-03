@@ -1,9 +1,8 @@
 steal(
-	MAD_ROOT + '/controller/component/gridController.js',
+	'mad/controller/component/gridController.js',
 	'app/controller/component/copyLoginButtonController.js',
-	'app/controller/component/copySecretButtonController.js',
-	'lib/jquery/jquery-ui-1.9.0.custom.js'
-).then(function ($) {
+	'app/controller/component/copySecretButtonController.js'
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.component.PasswordBrowserController
@@ -22,6 +21,15 @@ steal(
 	 */
 	mad.controller.component.GridController.extend('passbolt.controller.component.PasswordBrowserController', /** @static */ {
 
+		'defaults': {
+			// the type of the item rendered by the grid
+			itemClass: passbolt.model.Resource,
+			// the list of resources displayed by the grid
+			resources: new passbolt.model.Resource.List(),
+			// the list of displayed categories
+			categories: new passbolt.model.Category.List()
+		}
+
 	}, /** @prototype */ {
 		/**
 		 * The current selected resource id
@@ -38,13 +46,13 @@ steal(
 		'init': function (el, options) {
 			// The map to use to make jstree working with our category model
 			options.map = new mad.object.Map({
-				'id': 'Resource.id',
-				'name': 'Resource.name',
-				'username': 'Resource.username',
-				'uri': 'Resource.uri',
-				'modified': 'Resource.modified',
-				'copyLogin': 'Resource.id',
-				'copySecret': 'Resource.id',
+				'id': 'id',
+				'name': 'name',
+				'username': 'username',
+				'uri': 'uri',
+				'modified': 'modified',
+				'copyLogin': 'id',
+				'copySecret': 'id',
 				'Category': 'Category'
 			});
 
@@ -55,55 +63,45 @@ steal(
 			options.columnModel = [{
 				'name': 'name',
 				'index': 'name',
-				'width': 100,
 				'valueAdapter': function (value, item, columnModel, rowNum) {
 					var returnValue = value;
-					for (var i in item.Category) {
-						returnValue += ' <span class="password_browser_category_label">' + item.Category[0].name + '</span>';
-					}
+					can.each(item.Category, function (category, i) {
+						returnValue += ' <span class="password_browser_category_label">' + category.name + '</span>';
+					});
 					return returnValue;
 				}
 			}, {
 				'name': 'username',
-				'index': 'username',
-				'width': 100
+				'index': 'username'
 			}, {
 				'name': 'uri',
-				'index': 'uri',
-				'width': 100
+				'index': 'uri'
 			}, {
 				'name': 'modified',
 				'index': 'modified',
-				'width': 100,
 				'valueAdapter': function (value, item, columnModel, rowNum) {
 					return moment(value).fromNow();
 				}
 			}, {
 				'name': 'copyLogin',
 				'index': 'copyLogin',
-				'width': 100,
-				'cellAdapter': function (cellElement, cellValue) {
+				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 					mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',
-						passbolt.controller.component.CopyLoginButtonController, {
-							'state': 'hidden',
-							'value': cellValue
-						}
+						passbolt.controller.component.CopyLoginButtonController,
+						{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 					);
 				}
 			}, {
 				'name': 'copySecret',
 				'index': 'copySecret',
-				'width': 100,
-				'cellAdapter': function (cellElement, cellValue) {
+				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 					mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',
-						passbolt.controller.component.CopySecretButtonController, {
-							'state': 'hidden',
-							'value': cellValue
-						}
+						passbolt.controller.component.CopySecretButtonController,
+						{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 					);
 				}
 			}];
@@ -111,106 +109,182 @@ steal(
 			this._super(el, options);
 		},
 
+		/**
+		 * Insert a resource in the grid
+		 * @param {mad.model.Model} resource The resource to insert
+		 * @param {string} refResourceId The reference resource id. By default the grid view object
+		 * will choose the root as reference element.
+		 * @param {string} position The position of the newly created item. You can pass in one
+		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
+		 * is set to last.
+		 * @return {void}
+		 */
+		'insertItem': function (resource, refResourceId, position) {
+			// add the resource to the list of the observed resources
+			this.options.resources.push(resource);
+			// remove the item to the grid
+			this._super(resource, refResourceId, position);
+		},
+
+		/**
+		 * Remove an item to the grid
+		 * @param {mad.model.Model} item The item to remove
+		 * @return {void}
+		 */
+		'removeItem': function (item) {
+			// if the grid is in the selected state, check that the resource to delete is not selected
+			if (this.state.is('resourceSelected')) {
+				// if the resource deleted is the currently selected item
+				if (item.id == this.crtSelectedResourceId) {
+					// switch to the start state
+					this.setState('ready');
+					// inform the world that the resource is unselected
+					mad.eventBus.trigger('resource_unselected', item);
+				}
+			}
+			// remove the item to the grid
+			this._super(item);
+		},
+
+		/**
+		 * Load resources in the grid
+		 * @param {passbolt.model.Resource.List} resources The list of resources to
+		 * load into the grid
+		 * @return {void}
+		 */
+		'load': function (resources) {
+			// load the resources
+			this._super(resources);
+			// rebind the controller with the changes on the options
+			this.on();
+		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE MODEL EVENTS */
+		/* ************************************************************** */
+
+		/**
+		 * Observe when a resource is created. If the resource is created in a category
+		 * displayed by the grid. Add the new resource a the top of the grid
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The created resource
+		 * @return {void}
+		 */
+		'{passbolt.model.Resource} created': function (model, ev, resource) {
+			var self = this;
+
+			// check that the new resource is tagged by a category displayed by the 
+			// password browser.
+			// too costly, but indexOf does not work in the lists, maybe the test is not
+			// done on id of model but on another data. Take a look, maybe relative to model
+			// binding
+			can.each(this.options.categories, function (category, i) {
+				can.each(resource.Category, function (rsCategory, j) {
+					if (category.id == rsCategory.id) {
+						self.insertItem(resource, null, 'first');
+						self.on();
+					}
+				});
+			});
+		},
+
+		/**
+		 * Observe when a resource is updated. If the resource is rendered by the grid
+		 * refresh its content. We listen the model directly, listening on changes on
+		 * a list seems too much here (one event for each updated attribute)
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The updated resource
+		 * @return {void}
+		 */
+		'{passbolt.model.Resource} updated': function (model, ev, resource) {
+			if (this.options.resources.indexOf(resource) != -1) {
+				this.refreshItem(resource);
+			}
+		},
+
+		/**
+		 * Observe when resources are removed to the list
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resources The removed resource
+		 * @return {void}
+		 */
+		'{resources} remove': function (model, ev, resources) {
+			var self = this;
+			can.each(resources, function (resource, i) {
+				self.removeItem(resource);
+			});
+		},
+
+		/**
+		 * Observe when categories are removed to the list. And remove resources
+		 * which own this categories.
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Category} categories The removed categories
+		 * @return {void}
+		 */
+		'{categories} remove': function (model, ev, categories) {
+			var self = this;
+
+			// remove all the resource which are tagged by one of the deleted categories
+			// and remove them to the password browser.
+			// too costly, but indexOf does not work in the lists, maybe the test is not
+			// done on id of model but on another data. Take a look, maybe relative to model
+			// binding
+			can.each(categories, function (categoryRemoved, i) {
+				can.each(self.options.resources, function (resource, j) {
+					can.each(resource.Category, function (category, h) {
+						if (category.id == categoryRemoved.id) {
+							self.removeItem(resource);
+						}
+					});
+				});
+			});
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
 
 		/**
-		 * Observe when the mouse leave the component
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * Observe when an item is selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'tbody mouseleave': function (element, evt) {
-			if (this.crtFocusedResourceId) {
-				mad.eventBus.trigger('resource_unfocused', {
-					'id': this.crtFocusedResourceId
-				});
-				this.crtFocusedResourceId = null;
-			}
-		},
-
-		/**
-		 * Observe when a resource is hovered
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} data The hovered resource id
-		 * @return {void}
-		 */
-		'item_hovered': function (element, evt, itemId) {
-			// Display button such as copy to clipboard
-			if (this.crtFocusedResourceId) {
-				mad.eventBus.trigger('resource_unfocused', {
-					'id': this.crtFocusedResourceId
-				});
-			}
-
-			this.crtFocusedResourceId = itemId;
-			mad.eventBus.trigger('resource_focused', {
-				'id': this.crtFocusedResourceId
-			});
-		},
-
-		/**
-		 * Observe when an resource is selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} data The selected resource id
-		 * @return {void}
-		 */
-		'item_selected': function (element, evt, itemId) {
+		' item_selected': function (el, ev, item, srcEvent) {
 			// if the resource selected is the same than the previous one unselect
-			if (itemId == this.crtSelectedResourceId) {
+			if (item.id == this.crtSelectedResourceId) {
 				this.setState('ready');
-				mad.eventBus.trigger('resource_unselected', itemId);
+				mad.eventBus.trigger('resource_unselected', item);
 			} else {
 				this.setState('ready');
-				this.crtSelectedResourceId = itemId;
+				this.crtSelectedResourceId = item.id;
 				this.setState('resourceSelected');
-				mad.eventBus.trigger('resource_selected', itemId);
+				mad.eventBus.trigger('resource_selected', item);
 			}
 		},
-		
+
 		/**
-		 * Observe when an resource is unselected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} data The unselected resource id
+		 * Observe when a resource is unselected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The selected item instance or its id
 		 * @return {void}
 		 */
-		'item_unselected': function (element, evt, itemId) {
-				this.setState('ready');
-				mad.eventBus.trigger('resource_unselected', itemId);
+		' item_unselected': function (el, ev, item) {
+			this.setState('ready');
+			mad.eventBus.trigger('resource_unselected', item);
 		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
-
-		/**
-		 * Observe when a resource is deleted
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mad.model.Model} resource The inserted resource
-		 * @return {void}
-		 */
-		'{passbolt.eventBus} resource_created': function (el, event, resource) {
-			this.insertItems(resource, resource.Resource.parent_id, 'first');
-		},
-
-		/**
-		 * Observe when a resource is inserted
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mad.model.Model} resourceId The deleted resource
-		 * @return {void}
-		 */
-		'{passbolt.eventBus} resource_deleted': function (el, event, resourceId) {
-			if (this.crtSelectedResourceId == resourceId) {
-				this.element.trigger('item_unselected', resourceId);
-			}
-			this.deleteItems(resourceId);
-		},
 
 		/**
 		 * Observe when category is selected
@@ -223,6 +297,11 @@ steal(
 			var self = this;
 			this.crtCategoryId = category.id;
 
+			// override the current list of categories with the categories to display
+			// and its children
+			this.options.categories = category.getSubCategories(true);
+			this.options.categories.push(category);
+
 			// if a resource was selected, inform the system that the resource is no more selected
 			if (this.state.is('resourceSelected')) {
 				mad.eventBus.trigger('resource_unselected', this.crtSelectedResourceId);
@@ -231,12 +310,12 @@ steal(
 			// change the state of the component to loading 
 			this.setState('loading');
 			// load resources of the selected category
-			passbolt.model.Resource.getByCategory({
-				'category_id': category.id,
+			passbolt.model.Resource.findAll({
+				'category_id': this.crtCategoryId,
 				'recursive': true
-			}, function (request, response, resources) {
+			}, function (resources, response, request) {
 				// The callback is out of date, an other category has been selected
-				if (self.crtCategoryId != request.data.category_id) {
+				if (self.crtCategoryId != request.originParams.category_id) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
 					return;
 				}
@@ -244,74 +323,6 @@ steal(
 				// change the state to ready
 				self.setState('ready');
 			});
-		},
-
-		/**
-		 * Observe when a category is deleted
-		 * 
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mad.model.Model} category The deleted category id
-		 * @return {void}
-		 */
-		'{passbolt.eventBus} category_deleted': function (el, event, categoryId) {
-			var self = this;
-
-			// the deleted category was browsed by the user => empty
-			if (this.crtCategoryId == categoryId) {
-				// if a resource was selected, inform the system that the resource is no more selected
-				if (this.state.is('resourceSelected')) {
-					mad.eventBus.trigger('resource_unselected', this.crtSelectedResourceId);
-				}
-				// brutal empty
-				this.empty();
-
-			} else if (this.crtCategoryId != null) { // another category is browsed => refresh
-
-				var lastSelectedItemId = this.crtSelectedResourceId;
-
-				// if a resource was selected, inform the system that the resource is no more selected
-				if (this.state.is('resourceSelected')) {
-					mad.eventBus.trigger('resource_unselected', lastSelectedItemId);
-				}
-
-				// => reload the component with fresh data
-				
-				this.setState('loading');
-				// load resources of the selected category
-				passbolt.model.Resource.getByCategory({
-					'category_id': this.crtCategoryId,
-					'recursive': true
-				}, function (request, response, resources) {
-					// The callback is out of date, an other category has been selected
-					if (self.crtCategoryId != request.data.category_id) {
-						steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
-						return;
-					}
-					self.load(resources);
-					// change the state to ready
-					self.setState('ready');
-					// if the latest selected resource still exists	
-					var lastSelectedItem = passbolt.model.Resource.searchOne(resources, 'Resource.id', lastSelectedItemId);
-					if (lastSelectedItem != null) {
-						self.crtSelectedResourceId = lastSelectedItemId;
-						self.setState('resourceSelected');
-						mad.eventBus.trigger('resource_selected', lastSelectedItemId);
-					}
-				});
-
-				// Another way would be to define which resources belong to this category, and drop them from the view
-				// get all items which belong to the delete category
-//				var items = this.state.data;
-//				var itemsToDelete = passbolt.model.Resource.search(items, 'Category.id', categoryId);
-//				if (itemsToDelete.length) {
-//					var itemsIds = [];
-//					for (var i in itemsToDelete) {
-//						itemsIds.push(itemsToDelete[i]['Resource'].id);
-//					}
-//					this.deleteItems(itemsIds);
-//				}
-			}
 		},
 
 		/**
