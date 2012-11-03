@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/controller/component/containerController.js'
-).then(function ($) {
+	'mad/controller/component/containerController.js'
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.PopupController
@@ -28,23 +28,26 @@ steal(
 		 * @param {array} options Options to pass to the popup constructor
 		 * @return {mad.controller.component.PopupController}
 		 */
-		'get': function (popupOptions, ComponentClass, componentOptions) {
-			popupOptions.id = uuid();
+		'getPopup': function (popupOptions, ComponentClass, componentOptions) {
+			// create the popup component just behind the app controller tag
 			var popup = mad.helper.ComponentHelper.create(
 				mad.app.element,
 				'first',
 				mad.controller.component.PopupController,
 				popupOptions
 			);
+			// render the popup
 			popup.render();
 			// If a component class is given add it to the popup
 			if (ComponentClass) {
-				popup.addComponent(ComponentClass, componentOptions, 'js_popup_content');
+				var component = popup.addComponent(ComponentClass, componentOptions, 'js_popup_content');
+				component.render();
 			}
 			return popup;
 		}
 
 	}, /** @prototype */ {
+
 
 		/**
 		 * Render the component
