@@ -1,12 +1,13 @@
 steal(
 	'jquery/class'
-).then(function ($) {
+).then(function () {
 
-	/**
-	 * The controller class helper offers to the developper tools arround controllers
+	/*
+	 * @class mad.helper.ComponentHelper
+	 * @inherits {mad.Class}
+	 * @parent utilities
 	 */
 	$.Class('mad.helper.ComponentHelper', /** @static */ {
-
 
 		/**
 		 * Create a new component controller function of the given parameters
@@ -16,7 +17,6 @@ steal(
 		 * @return {mad.controller.ComponentController}
 		 */
 		'create': function (refElement, position, Clazz, options) {
-			refElement = typeof refElement == 'string' ? $(refElement) : refElement;
 			var returnValue = null,
 				component = '<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>',
 				$component = null;
@@ -25,6 +25,7 @@ steal(
 				throw new mad.error.WrongParametersException('refElement');
 			}
 
+			// insert the component in the DOM
 			$component = mad.helper.HtmlHelper.create(refElement, position, component);
 
 			// Instanciate the component
