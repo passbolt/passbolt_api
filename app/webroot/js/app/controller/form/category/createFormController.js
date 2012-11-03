@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/form/formController.js',
+	'mad/form/formController.js',
 	'app/view/template/form/category/createForm.ejs'
-).then(function ($) {
+).then(function () {
 
 	/**
 	 * @class passbolt.controller.form.category.CreateFormController
@@ -28,12 +28,14 @@ steal(
 		'initFormElement': function () {
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_parent_id'), {
-					'value': this.options.data.parentId
+					modelReference: 'passbolt.model.Category.parent_id'
 				})
 			);
 			this.addElement(
-				new mad.form.element.TextboxController($('#js_field_name'), {}),
-				new mad.form.FeedbackController($('#js_field_name_feedback'), {})
+				new mad.form.element.TextboxController($('#js_field_name'), {
+					modelReference: 'passbolt.model.Category.name'
+				}),
+				new mad.form.FeedbackController($('#js_field_name_feedback'))
 			);
 		},
 
@@ -45,6 +47,7 @@ steal(
 		'render': function () {
 			this._super();
 			this.initFormElement();
+			this.load(this.options.data);
 		}
 
 	});
