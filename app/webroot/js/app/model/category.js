@@ -1,5 +1,6 @@
 steal(
-	MAD_ROOT + '/model'
+//	'jquery/model/list',
+	'mad/model'
 ).then(function () {
 
 	/*
@@ -16,84 +17,119 @@ steal(
 	 */
 	mad.model.Model('passbolt.model.Category', /** @static */	{
 
-		'validateRules': {
-			
-		},
+/* ************************************************************** */
+/* MODEL DEFINITION */
+/* ************************************************************** */
 
-		attributes: {
-			// Cannot manage attributes like this, our representation is fully compatible with the cakephp model structure
-//			'id': 'string',
-//			'parent_id': 'string',
-//			'lft': 'string',
-//			'rght': 'string',
-//			'name': 'string',
-//			'category_type_id': 'string',
+		'validateRules': { },
+
+		'attributes': {
+			'id': 'string',
+			'parent_id': 'string',
+			'lft': 'string',
+			'rght': 'string',
+			'name': 'string',
+			'category_type_id': 'string',
 			'children': 'passbolt.model.Category.models'
 		},
 
-		add : function (resource, success, error) {
-			var data = resource.serialize();
-			var url = APP_URL + 'categories';
-			return mad.net.Ajax.request({
-				url: url,
-				type: 'post',
-				data: data,
-				success: success,
-				error: error,
-				dataType: 'passbolt.model.Category.model'
-			});
-		},
+/* ************************************************************** */
+/* CRUD FUNCTION */
+/* ************************************************************** */
 
-		'delete' : function (categoryId, success, error) {
-			var url = APP_URL + 'categories/' + categoryId;
+		/**
+		 * Create a new category
+		 * @params {array} attrs Attributes of the new category
+		 * @return {jQuery.Deferred)
+		 */
+		'create' : function (attrs, success, error) {
+			var self = this;
+			var params = this.toCakePHP(attrs);
 			return mad.net.Ajax.request({
-				url: url,
-				type: 'delete',
-				data: {
-					'id' : categoryId
-				},
+				url: APP_URL + '/categories',
+				type: 'POST',
+				params: params,
 				success: success,
-				error: error,
-				dataType: 'json'
+				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				var def = $.Deferred();
+				def.resolveWith(this, [self.toCan(data.body), new mad.net.Response(data)]);
+				return def;
 			});
 		},
 
 		/**
-		 * Get a category
+		 * Destroy a category following the given parameter
+		 * @params {string} id the id of the instance to remove
+		 * @return {jQuery.Deferred)
 		 */
-		'get': function (params, success, error) {
-			params.children = params.children || false;
-			var url = APP_URL + '/categories/{id}/{children}';
-			url = $.String.sub(url, params, true);
+		'destroy' : function (id, success, error) {
+			var params = {id:id};
 			return mad.net.Ajax.request({
-				url: url,
-				type: 'get',
-				dataType: 'passbolt.model.Category.model',
-				data: null,
+				url: APP_URL + 'categories/{id}',
+				type: 'DELETE',
+				params: params,
 				success: success,
 				error: error
 			});
 		},
 
 		/**
-		 * Get the roots category
+		 * Find a category following the given parameter
+		 * @params {array} params Optional parameters
+		 * @return {jQuery.Deferred)
 		 */
-		'getRoots': function (params, success, error) {
-			params.children = false;
-			var url = APP_URL + '/categories/index/1.json';
-			url = $.String.sub(url, params, true);
+		'findOne': function (params, success, error) {
+			params.children = params.children || false;
+			return mad.net.Ajax.request({
+				url: APP_URL + '/categories/{id}/{children}.json',
+				type: 'GET',
+				params: params,
+				success: success,
+				error: error
+			});
+		},
 
-			return mad.net.Ajax.singleton().request({
-				url: url,
-				type: 'get',
-				dataType: 'passbolt.model.Category.models',
-				data: null,
+		/**
+		 * Find a bunch of categories following the given parameters
+		 * @params {array} params Optional parameters
+		 * @return {jQuery.Deferred)
+		 */
+		'findAll': function (params, success, error) {
+			return mad.net.Ajax.request({
+				url: APP_URL + '/categories/index/{children}.json',
+				type: 'GET',
+				params: params,
 				success: success,
 				error: error
 			});
 		}
 
+
 	}, /** @prototype */ {
 
+		/**
+		 * Get children categories
+		 * @param {boolean} flat Return as flat list
+		 * @return {passbolt.model.Category.List}
+		 */
+		'getSubCategories': function (flat, _root) {
+			var returnValue = can.makeArray(this.children);
+			if (flat) {
+				for (var i in returnValue) {
+					var subCategories = returnValue[i].getSubCategories(true, true);
+					for (var j in subCategories) {
+						returnValue.push(subCategories[j]);
+					}
+					delete subCategories;
+				}
+			}
+			if (!_root) {
+				returnValue = new passbolt.model.Category.List(returnValue);
+			}
+			return returnValue;
+		}
+
 	});
+
 });

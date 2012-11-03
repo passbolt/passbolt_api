@@ -25,94 +25,87 @@ steal(
 		},
 
 		attributes: {
-//			'id': 'string',
-//			'name': 'string',
-//			'username': 'string',
-//			'expiry_date': 'string',
-//			'uri': 'string',
-//			'description': 'string',
-//			'deleted': 'string',
-//			'created': 'string',
-//			'modified': 'string'
+			'id': 'string',
+			'name': 'string',
+			'username': 'string',
+			'uri': 'string',
+			'modified': 'date',
+			'created': 'date',
+			'description': 'string',
 			'Category': 'passbolt.model.Category.models'
 		},
 
-		'add' : function (resource, success, error) {
-			var data = resource.serialize();
-			var url = APP_URL + '/resources/add';
+		'create' : function (attrs, success, error) {
+			var self = this;
+			var params = this.toCakePHP(attrs);
 			return mad.net.Ajax.request({
-				url: url,
-				type: 'post',
-				data: data,
-				success: success,
-				error: error,
-				dataType: 'passbolt.model.Resource.model'
-			});
-		},
-
-		'delete' : function (params, success, error) {
-			var url = APP_URL + '/resources/delete/{id}';
-			url = $.String.sub(url, $.extend(true, {}, params), true);
-			return mad.net.Ajax.singleton().request({
-				url: url,
-				type: 'delete',
-				data: null,
+				url: APP_URL + '/resources',
+				type: 'POST',
+				params: params,
 				success: success,
 				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				var def = $.Deferred();
+				def.resolveWith(this, [self.toCan(data.body), new mad.net.Response(data)]);
+				return def;
 			});
 		},
 
-		/**
-		 * Get resources for a given category
-		 */
-		'getByCategory': function (params, success, error) {
-			var urlTpl = APP_URL + '/resources/viewByCategory/{category_id}/{recursive}',
-				url = $.String.sub(urlTpl, $.extend(true, {}, params), true);
-
-			return mad.net.Ajax.singleton().request({
-				url: url,
-				type: 'get',
-				dataType: 'passbolt.model.Resource.models',
-				data: {
-					category_id: params.category_id,
-					recursive: params.recursive
-				},
-				success: success,
-				error: error
-			});
-		},
-
-		/**
-		 * Get a resource
-		 */
-		'get': function (params, success, error) {
-			var url = APP_URL + '/resources/view/{id}';
-			url = $.String.sub(url, $.extend(true, {}, params), true);
+		'destroy' : function (id, success, error) {
+			var params = {id:id};
 			return mad.net.Ajax.request({
-				url: url,
-				type: 'get',
-				dataType: 'passbolt.model.Resource.model',
-				data: {
-					id: params.id
-				},
+				url: APP_URL + '/resources/{id}',
+				type: 'DELETE',
+				params: params,
 				success: success,
 				error: error
+			});
+		},
+
+		'findAll': function (params, success, error) {
+			return mad.net.Ajax.request({
+				url: APP_URL + '/resources/viewByCategory/{category_id}/{recursive}',
+				type: 'GET',
+				params: params,
+				success: success,
+				error: error
+			});
+		},
+
+		'findOne': function (params, success, error) {
+			return mad.net.Ajax.request({
+				url: APP_URL + '/resources/{id}',
+				type: 'GET',
+				params: params,
+				success: success,
+				error: error
+			});
+		},
+
+		'update' : function(id, attrs, success, error) {
+			var self = this;
+			// remove not desired attributes
+			delete attrs.created;
+			delete attrs.modified;
+			// format data as expected by cakePHP
+			var params = this.toCakePHP(attrs);
+			// add the root of the params, it will be used in the url template
+			params.id = id;
+			return mad.net.Ajax.request({
+				url: APP_URL + '/resources/{id}',
+				type: 'PUT',
+				params: params,
+				success: success,
+				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				// pipe the result to convert cakephp response format into can format
+				var def = $.Deferred();
+				def.resolveWith(this, [self.toCan(data.body)]);
+				return def;
 			});
 		}
 
 	}, /** @prototype */ {
-
-		'Resource': {
-			'id': 'string',
-			'name': 'string',
-			'username': 'string',
-			'expiry_date': 'string',
-			'uri': 'string',
-			'description': 'string',
-			'deleted': 'string',
-			'created': 'string',
-			'modified': 'string'
-		}
 
 	});
 });
