@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/core/class.js',
-	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/view/template/app.ejs'
+	'mad/core/class.js',
+	'mad/controller/componentController.js',
+	'mad/view/template/app.ejs'
 ).then(function () {
 
 	/*
@@ -34,7 +34,7 @@ steal(
 		 * @return {mixed} Value of the variable 
 		 */
 		'getGlobal': function (name) {
-			if(mad.controller.AppController.APP_NS_ID == null) {
+			if (mad.controller.AppController.APP_NS_ID == null) {
 				throw new mad.error.Exception('The application namespace is not initialized');
 			}
 			return window[mad.controller.AppController.APP_NS_ID][name];
@@ -47,13 +47,13 @@ steal(
 		 * @return {void}
 		 */
 		'deleteGlobal': function (name) {
-			if(mad.controller.AppController.APP_NS_ID == null) {
+			if (mad.controller.AppController.APP_NS_ID == null) {
 				throw new mad.error.Exception('The application namespace is not initialized');
 			}
 
 			delete window[mad.controller.AppController.APP_NS_ID][name]; // delete the global variable
 			var position = $.inArray(name, mad.controller.AppController.globals); // delete the reference of the global
-			if(position == -1) {
+			if (position == -1) {
 				throw new Error('The global variable (' + name + ') has not well been referenced');
 			}
 			delete mad.controller.AppController.globals[position];
@@ -67,7 +67,7 @@ steal(
 		 * @return {void}
 		 */
 		'setGlobal': function (name, value) {
-			if(mad.controller.AppController.APP_NS_ID == null) {
+			if (mad.controller.AppController.APP_NS_ID == null) {
 				throw new mad.error.Exception('The application namespace is not initialized');
 			}
 			mad.controller.AppController.globals.push(name); // reference the name of the variable
@@ -92,11 +92,11 @@ steal(
 			mad.controller.AppController.APP_NS_ID = appNsId;
 
 			//If the application namespace does not exist yet create it
-			if(typeof window[mad.controller.AppController.APP_NS_ID] == 'undefined') {
+			if (typeof window[mad.controller.AppController.APP_NS_ID] == 'undefined') {
 				window[mad.controller.AppController.APP_NS_ID] = {};
 			}
 			//If the application namespace has yet been populated, something is wrong ... throw an error
-			if(typeof window[mad.controller.AppController.APP_NS_ID].APP_NS_ID != 'undefined') {
+			if (typeof window[mad.controller.AppController.APP_NS_ID].APP_NS_ID != 'undefined') {
 				throw new mad.error.Exception('The application namespace has yet been initialized');
 			}
 			//make global variables with the ns variables
@@ -116,14 +116,14 @@ steal(
 		 */
 		'destroy': function () {
 			// if the namespace has not been populated
-			if(mad.controller.AppController.APP_NS_ID == null) {
+			if (mad.controller.AppController.APP_NS_ID == null) {
 				return;
 			}
 
 			// delete globals
-			for(var i in mad.controller.AppController.globals) {
+			for (var i in mad.controller.AppController.globals) {
 				var name = mad.controller.AppController.globals[i];
-				if(name == 'APP_NS') continue; // This is a reference to itselef, delete it after
+				if (name == 'APP_NS') continue; // This is a reference to itselef, delete it after
 				mad.controller.AppController.deleteGlobal(name)
 			}
 
@@ -180,7 +180,7 @@ steal(
 		 */
 		'getComponent': function (componentId) {
 			var returnValue = null;
-			if(typeof this._components[componentId] != 'undefined') {
+			if (typeof this._components[componentId] != 'undefined') {
 				returnValue = this._components[componentId];
 			}
 			return returnValue;
