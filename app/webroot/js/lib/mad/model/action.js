@@ -3,27 +3,28 @@ steal(
 ).then(function () {
 
 	/*
-	 * @class mad.model.MenuItem
+	 * @class mad.model.Action
 	 * @inherits jQuery.Model
 	 * @parent mad.controller.component
 	 * 
-	 * The Menu Item model will carry the menu item used by the menu controller
+	 * The Action model will carry actions used by other component
 	 * 
 	 * @constructor
-	 * Creates a new Menu Item
+	 * Creates a new Action
 	 * @param {array} options
-	 * @return {mad.model.MenuItem}
+	 * @return {mad.model.Action}
 	 */
-	$.Model('mad.model.MenuItem', /** @static */ {
+	$.Model('mad.model.Action', /** @static */ {
 
 		/**
 		 * Define attributes of the model
 		 * @type {Object}
 		 */
 		attributes: {
-			'id': null,
-			'label': null,
-			'action': null
+			'id': 'string',
+			'label': 'string',
+			'icon': 'string',
+			'action': 'string'
 		}
 
 	}, /** @prototype */ {});
