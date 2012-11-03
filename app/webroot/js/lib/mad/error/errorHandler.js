@@ -1,13 +1,29 @@
-steal('jquery/class').then(function ($) {
+steal('jquery/class').then(function () {
 
 	/*
 	 * @class mad.error.ErrorHandler
 	 * @inherits jQuery.Class
 	 * @parent mad.core
 	 * 
-	 * Common error handler. Use the console as output
+	 * Common error handler.
+	 * Use the console as logger.
 	 */
 	$.Class('mad.error.ErrorHandler', /** @static */ {
+
+		/**
+		 * Log the error or exception
+		 * @return {void}
+		 */
+		'_log': function (status, title, message, data) {
+			var log = status.toUpperCase() + ' ' +
+				title + ' ' +
+				'(' + message + ')';
+
+			steal.dev.warn(log);
+			if (data) {
+				steal.dev.warn(data);
+			}
+		},
 
 		/**
 		 * Handle Exception
@@ -15,11 +31,13 @@ steal('jquery/class').then(function ($) {
 		 * @return {void}
 		 */
 		'handleException': function (exception) {
-			steal.dev.warn('An exception occured: status(exception) title (' + exception.name + ') message (' + exception.message + ')');
-			if (exception.stack) {
-				steal.dev.warn(exception.stack);
-				throw exception;
-			}
+			mad.error.ErrorHandler._log(
+				'exception',
+				exception.name,
+				exception.message,
+				exception.stack || null
+			);
+			throw exception;
 		},
 
 		/**
@@ -31,10 +49,12 @@ steal('jquery/class').then(function ($) {
 		 * @return {void}
 		 */
 		'handleError': function (status, title, message, data) {
-			steal.dev.warn('An error occured: status(' + status + ') title (' + title + ') message (' + message + ')');
-			if (data) {
-				steal.dev.warn(data);
-			}
+			mad.error.ErrorHandler._log(
+				status,
+				title,
+				message || '',
+				data || null
+			);
 		}
 	},
 
