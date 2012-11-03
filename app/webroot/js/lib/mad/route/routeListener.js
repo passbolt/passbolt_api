@@ -8,7 +8,7 @@
  * 
  */
 
-steal(MAD_ROOT + '/core/singleton.js').then(function () {
+steal('mad/core/singleton.js').then(function () {
 
 	/*
 	 * @class mad.route.RouteListener

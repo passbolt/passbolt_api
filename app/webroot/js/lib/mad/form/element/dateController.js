@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/form/formElement.js',
-	MAD_ROOT + '/view/form/element/dateView.js',
-	MAD_ROOT + '/view/template/component/input.ejs'
+	'mad/form/formElement.js',
+	'mad/view/form/element/dateView.js',
+	'mad/view/template/component/input.ejs'
 ).then(function () {
 
 	/*
@@ -24,7 +24,7 @@ steal(
 		'defaults': {
 			'label': 'Input Date Element Controller',
 			'templateBased': false,
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/input.ejs',
+			'templateUri': '//' + 'mad/view/template/component/input.ejs',
 			'value': null,
 			'event': {
 				'click': null

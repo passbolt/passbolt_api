@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/form/formElement.js',
-	MAD_ROOT + '/view/form/formElementView.js'
+	'mad/form/formElement.js',
+	'mad/view/form/formElementView.js'
 ).then(function () {
 
 	/*

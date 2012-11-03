@@ -1,8 +1,8 @@
 steal(
-	MAD_ROOT + '/controller/component/containerController.js',
-	MAD_ROOT + '/view/component/tab.js',
-	MAD_ROOT + '/view/template/component/tab.ejs'
-).then(function ($) {
+	'mad/controller/component/containerController.js',
+	'mad/view/component/tab.js',
+	'mad/view/template/component/tab.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.TabController

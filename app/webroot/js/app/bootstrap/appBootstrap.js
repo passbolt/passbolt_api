@@ -1,8 +1,7 @@
 steal(
-    MAD_ROOT,
+	'mad/bootstrap/appBootstrap.js',
 	'app/helper/errorHandler.js'
-)
-.then( function () {
+).then( function () {
 
 	mad.bootstrap.AppBootstrap.extend('passbolt.bootstrap.AppBootstrap', {
 
@@ -10,4 +9,5 @@ steal(
 			this._super(options);
 		}
 	});
+
 });

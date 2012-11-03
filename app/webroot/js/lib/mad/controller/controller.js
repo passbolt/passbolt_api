@@ -1,6 +1,6 @@
 steal(
 	'jquery/controller',
-	MAD_ROOT + '/route/extensionControllerActionDispatcher.js'
+	'mad/route/extensionControllerActionDispatcher.js'
 ).then(function () {
 
 	/*

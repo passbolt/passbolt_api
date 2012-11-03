@@ -1,5 +1,5 @@
 steal(
-	MAD_ROOT + '/controller/appController.js',
+	'mad/controller/appController.js',
 
 	'app/controller/passwordWorkspaceController.js',
 	'app/controller/peopleWorkspaceController.js',

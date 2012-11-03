@@ -1,5 +1,5 @@
 steal( 
-	MAD_ROOT+'/error/errorHandler.js'
+	'mad/error/errorHandler.js'
 ).then(function () {
 
 	/*

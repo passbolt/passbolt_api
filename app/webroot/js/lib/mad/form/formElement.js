@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/view/form/formElementView.js'
-).then(function ($) {
+	'mad/controller/componentController.js',
+	'mad/view/form/formElementView.js'
+).then(function () {
 
 	/*
 	 * @class mad.form.FormElement
@@ -23,6 +23,7 @@ steal(
 		'defaults': {
 			'viewClass': mad.view.form.FormElementView,
 			'templateBased': false,
+			'modelReference': null,
 			'value': null,
 			'callbacks': {
 				'changed': function (el, ev, value) {}
@@ -169,7 +170,7 @@ steal(
 		 * @param {mixed} data The event data
 		 * @return {void}
 		 */
-		'changed': function (el, event, data) {
+		' changed': function (el, event, data) {
 			this.value = data.value;
 			if (this.options.callbacks.changed) {
 				this.options.callbacks.changed(this.value);

@@ -1,12 +1,12 @@
 steal(
-	MAD_ROOT + '/error/callAbstractFunctionException.js',
-	MAD_ROOT + '/error/callInterfaceConstructorException.js',
-	MAD_ROOT + '/error/callInterfaceFunctionException.js',
-	MAD_ROOT + '/error/callPrivateFunctionException.js',
-	MAD_ROOT + '/error/missingOptionException.js',
-	MAD_ROOT + '/error/noConstructorException.js',
-	MAD_ROOT + '/error/templateMissingException.js',
-	MAD_ROOT + '/error/wrongParametersException.js'
+	'mad/error/callAbstractFunctionException.js',
+	'mad/error/callInterfaceConstructorException.js',
+	'mad/error/callInterfaceFunctionException.js',
+	'mad/error/callPrivateFunctionException.js',
+	'mad/error/missingOptionException.js',
+	'mad/error/noConstructorException.js',
+	'mad/error/templateMissingException.js',
+	'mad/error/wrongParametersException.js'
 ).then(function () {
 
 	$.String.getObject('mad.error', null, true);

@@ -14,8 +14,8 @@ __('Hello the %s world', 'mad')
  */
 
 steal(
-	MAD_ROOT + '/core/singleton.js'
-).then(function ($) {
+	'mad/core/singleton.js'
+).then(function () {
 
 	/**
 	 * Translate the given string.

@@ -1,8 +1,8 @@
 steal(
-	MAD_ROOT + '/form/formChoiceElement.js',
-	MAD_ROOT + '/view/form/element/dropdownView.js',
-	MAD_ROOT + '/view/template/component/input.ejs'
-).then(function ($) {
+	'mad/form/formChoiceElement.js',
+	'mad/view/form/element/dropdownView.js',
+	'mad/view/template/component/input.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.form.element.DropdownController
@@ -24,7 +24,7 @@ steal(
 
 		'defaults': {
 			'label': 'DropdownController Form Element Controller',
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/input.ejs',
+			'templateUri': '//' + 'mad/view/template/component/input.ejs',
 			'viewClass': mad.view.form.element.DropdownView,
 			'emptyValue': true
 		}

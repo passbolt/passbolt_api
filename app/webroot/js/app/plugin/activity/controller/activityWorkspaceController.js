@@ -1,9 +1,9 @@
 steal( 
     'jquery/view/ejs',
     'app/controller/component/passwordBrowserController.js',
-    MAD_ROOT+'/controller/component/workspaceController.js',
-    MAD_ROOT+'/view/template/component/container/three-column.ejs',
-    MAD_ROOT+'/view/template/component/container/vertical.ejs'
+    'mad/controller/component/workspaceController.js',
+    'mad/view/template/component/container/three-column.ejs',
+    'mad/view/template/component/container/vertical.ejs'
 )
 .then(
     function($){

@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/core/singleton.js'
+	'mad/controller/componentController.js',
+	'mad/core/singleton.js'
 ).then(function () {
 
 	/*

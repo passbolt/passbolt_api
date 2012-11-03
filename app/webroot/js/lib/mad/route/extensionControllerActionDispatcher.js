@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/route/dispatcherInterface.js',
-	MAD_ROOT + '/helper/routeHelper.js'
+	'mad/route/dispatcherInterface.js',
+	'mad/helper/routeHelper.js'
 ).then(function () {
 
 	/*

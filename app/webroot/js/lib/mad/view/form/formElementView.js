@@ -1,5 +1,5 @@
 steal(
-	MAD_ROOT + '/view'
+	'mad/view'
 ).then(function () {
 
 	/*

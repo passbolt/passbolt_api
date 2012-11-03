@@ -1,5 +1,5 @@
 steal(
-	MAD_ROOT + '/controller/componentController.js'
+	'mad/controller/componentController.js'
 ).then(function () {
 
 	/*
