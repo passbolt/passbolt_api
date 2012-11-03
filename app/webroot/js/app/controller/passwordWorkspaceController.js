@@ -1,11 +1,11 @@
 steal(
-	MAD_ROOT + '/controller/component/workspaceController.js',
+	'mad/controller/component/workspaceController.js',
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.PasswordWorkspaceController
@@ -24,7 +24,7 @@ steal(
 
 		'defaults': {
 			'label': 'Password',
-			'templateUri': '//app/view/template/passwordWorkspace.ejs'
+			'templateUri': 'app/view/template/passwordWorkspace.ejs'
 		}
 
 	}, /** @prototype */ {
@@ -35,30 +35,17 @@ steal(
 			this.render(); // render the component to be used by the others
 
 			// *************************************************************
-			// Header menu area
+			// User menu area
 			// *************************************************************
-			var newButton = new mad.controller.component.ButtonController($('#js_request_resource_creation_button', this.element));
-
-			var editButton = new mad.controller.component.ButtonController($('#js_request_resource_edition_button', this.element), {
-				'state': 'hidden'
-			});
-
-			var deleteButton = new mad.controller.component.ButtonController($('#js_request_resource_deletion_button', this.element), {
-				'state': 'hidden'
-			});
-
-			var shareButton = new mad.controller.component.ButtonController($('#js_request_resource_sharing_button', this.element), {
-				'state': 'hidden'
-			});
-
-			var moreButton = new mad.controller.component.ButtonController($('#js_request_resource_more_button', this.element), {
-				'state': 'hidden'
-			});
+			new mad.controller.component.ButtonController('#js_request_resource_creation_button');
+			new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'hidden'});
+			new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'hidden'});
+			new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'hidden'});
+			new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'hidden'});
 
 			// *************************************************************
 			// First side area
 			// *************************************************************
-
 			// Add the Category Chooser component
 			var categoryChooser = this.addComponent(passbolt.controller.component.CategoryChooserController, {
 				'id': 'js_passbolt_password_category_chooser'
@@ -68,7 +55,6 @@ steal(
 			// *************************************************************
 			// Main area
 			// *************************************************************
-
 			// Add the Password browser component
 			var passwordBrowserController = this.addComponent(passbolt.controller.component.PasswordBrowserController, {
 				'id': 'js_passbolt_password_browser'
@@ -85,7 +71,7 @@ steal(
 				'id': 'js_passbolt_password_sidebar_second',
 				'readyState': 'hidden'
 			});
-			resourceDetails.render();
+//			resourceDetails.render();
 		},
 
 		/**
@@ -103,46 +89,46 @@ steal(
 
 		/**
 		 * Observe when the user wants to create a new resource
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'#js_request_resource_creation_button click': function (element, event) {
-			var categoryId = element.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_creation', categoryId);
+		'#js_request_resource_creation_button click': function (el, ev) {
+			var category = el.controller().getValue();
+			passbolt.eventBus.trigger('request_resource_creation', category);
 		},
 
 		/**
 		 * Observe when the user wants to edit a resource
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'#js_request_resource_edition_button click': function (element, event) {
-			var resourceId = element.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_edition', resourceId);
+		'#js_request_resource_edition_button click': function (el, ev) {
+			var resource = el.controller().getValue();
+			passbolt.eventBus.trigger('request_resource_edition', resource);
 		},
 
 		/**
 		 * Observe when the user wants to delete a resource
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'#js_request_resource_deletion_button click': function (element, event) {
-			var resourceId = element.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_deletion', resourceId);
+		'#js_request_resource_deletion_button click': function (el, ev) {
+			var resource = el.controller().getValue();
+			passbolt.eventBus.trigger('request_resource_deletion', resource);
 		},
 
 		/**
 		 * Observe when the user wants to share a resource
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'#js_request_resource_sharing_button click': function (element, event, resourceId) {
-			var resourceId = element.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_sharing', resourceId);
+		'#js_request_resource_sharing_button click': function (el, ev) {
+			var resource = el.controller().getValue();
+			passbolt.eventBus.trigger('request_resource_sharing', resource);
 		},
 
 		/* ************************************************************** */
@@ -151,23 +137,23 @@ steal(
 
 		/**
 		 * Observe when category is selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} category The selected Category
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Category} category The selected category
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} category_selected': function (element, evt, category) {
-			mad.app.getComponent('js_request_resource_creation_button').setValue(category.id);
+		'{passbolt.eventBus} category_selected': function (el, ev, category) {
+			mad.app.getComponent('js_request_resource_creation_button').setValue(category);
 		},
 
 		/**
 		 * Observe when a resource is unselected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The unselected Resource id
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The unselected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_unselected': function (element, event, resourceId) {
+		'{passbolt.eventBus} resource_unselected': function (el, ev, resource) {
 			// The resource is no more selected, reinit the password workspace
 			// component to its intitial state (ready)
 			this.setState('ready');
@@ -180,19 +166,19 @@ steal(
 
 		/**
 		 * Observe when a resource is selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The selected Resource id
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_selected': function (element, event, resourceId) {
+		'{passbolt.eventBus} resource_selected': function (el, ev, resource) {
 			// A resource has been selected, change the state of the password Workspace
 			// controller
 			this.setState('resourceSelected');
-			mad.app.getComponent('js_request_resource_edition_button').setValue(resourceId).setState('ready');
-			mad.app.getComponent('js_request_resource_deletion_button').setValue(resourceId).setState('ready');
-			mad.app.getComponent('js_request_resource_sharing_button').setValue(resourceId).setState('ready');
-			mad.app.getComponent('js_request_resource_more_button').setValue(resourceId).setState('ready');
+			mad.app.getComponent('js_request_resource_edition_button').setValue(resource).setState('ready');
+			mad.app.getComponent('js_request_resource_deletion_button').setValue(resource).setState('ready');
+			mad.app.getComponent('js_request_resource_sharing_button').setValue(resource).setState('ready');
+			mad.app.getComponent('js_request_resource_more_button').setValue(resource).setState('ready');
 
 			// Another way is to drive the state of all the component from here. I choose
 			// for a first hit to lets the component manage their own states changement
@@ -202,121 +188,118 @@ steal(
 
 		/**
 		 * Observe when the user want to copy the login to the clipboard
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The resource id
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} copy_login_clipboard': function (element, evt, resourceId) {
+		'{passbolt.eventBus} copy_login_clipboard': function (el, ev, resource) {
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_login_clipboard');
 		},
 
 		/**
 		 * Observe when the user want to copy the secret to the clipboard
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The resource id
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} copy_secret_clipboard': function (element, evt, resourceId) {
+		'{passbolt.eventBus} copy_secret_clipboard': function (el, ev, resource) {
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_secret_clipboard');
 		},
 
 		/**
 		 * Observe when the user requests a category creation
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_category_creation': function (element, evt, data) {
-			var uid = uuid();
-			var popup = mad.controller.component.PopupController.get({}, passbolt.controller.form.category.CreateFormController, {
-				id: uid,
-				data : { parentId: data.id },
+		'{passbolt.eventBus} request_category_creation': function (el, ev, data) {
+			var category = new passbolt.model.Category({
+				parent_id: data.id
+			});
+			var popup = mad.controller.component.PopupController.getPopup({
+				label: __('Create a new Category')
+			}, passbolt.controller.form.category.CreateFormController, {
+				data: category,
 				callbacks : {
 					submit: function (data) {
-						passbolt.controller.CategoryController.add(data);
-						popup.goToHell();
+						var instance = new passbolt.model.Category(data['passbolt.model.Category'])
+							.save();
+						popup.remove();
 					}
 				}
 			});
-			mad.app.getComponent(uid).render();
 		},
 
 		/**
 		 * Observe when the user requests a category deletion
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_category_deletion': function (element, evt, data) {
-			passbolt.controller.CategoryController['delete'](data.id);
+		'{passbolt.eventBus} request_category_deletion': function (el, ev, category) {
+			category.destroy();
 		},
 
 		/**
 		 * Observe when the user requests a resource creation
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} categoryId The target category to insert the resource
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Category} category The target category to insert the resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_resource_creation': function (element, evt, categoryId) {
-			var uid = uuid();
-			var popup = mad.controller.component.PopupController.get({
+		'{passbolt.eventBus} request_resource_creation': function (element, evt, category) {
+			var resource = new passbolt.model.Resource({
+				Category: [{ id: category.id }]
+			});
+			var popup = mad.controller.component.PopupController.getPopup({
 				label: __('Create a new Resource')
 			}, passbolt.controller.form.resource.CreateFormController, {
-				id: uid,
-				data: { Category: { id: categoryId } },
+				data: resource,
 				callbacks : {
 					submit: function (data) {
-						passbolt.controller.ResourceController.add(data);
-						popup.goToHell();
+						var instance = new passbolt.model.Resource(data['passbolt.model.Resource'])
+							.save();
+						popup.remove();
 					}
 				}
 			});
-			mad.app.getComponent(uid).render();
 		},
 
 		/**
 		 * Observe when the user requests a resource edition
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The target resource to edit
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The target resource to edit
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_resource_edition': function (element, evt, resourceId) {
-			var uid = uuid();
-			passbolt.model.Resource.get({
-				id: resourceId
-			}, function (request, response, resource) {
-
-				var popup = mad.controller.component.PopupController.get({
-					label: __('Edit a Resource')
-				}, passbolt.controller.form.resource.CreateFormController, {
-					id: uid,
-					data : resource,
-					callbacks : {
-						submit: function (data) {
-//							passbolt.controller.ResourceController.update(data);
-							popup.goToHell();
-						}
+		'{passbolt.eventBus} request_resource_edition': function (el, ev, resource) {
+			var popup = mad.controller.component.PopupController.getPopup({
+				label: __('Edit a Resource')
+			}, passbolt.controller.form.resource.CreateFormController, {
+				data : resource,
+				callbacks : {
+					submit: function (data) {
+						resource.attr(data['passbolt.model.Resource'])
+							.save();
+						popup.remove();
 					}
-				});
-				mad.app.getComponent(uid).render();
-
+				}
 			});
 		},
 
 		/**
 		 * Observe when the user requests a resource deletion
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The target resource to delete
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_resource_deletion': function (element, evt, resourceId) {
-			passbolt.controller.ResourceController.delete(resourceId);
+		'{passbolt.eventBus} request_resource_deletion': function (el, ev, resource) {
+			resource.destroy();
 		},
 
 		/* ************************************************************** */

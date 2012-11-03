@@ -1,5 +1,5 @@
 steal(
-	MAD_ROOT + '/controller/component/workspaceController.js'
+	'mad/controller/component/workspaceController.js'
 ).then(function () {
 
 	/*
@@ -19,7 +19,7 @@ steal(
 
 		'defaults': {
 			'label': 'People',
-			'templateUri': '//app/view/template/peopleWorkspace.ejs'
+			'templateUri': 'app/view/template/peopleWorkspace.ejs'
 		}
 
 	}, /** @prototype */ {
