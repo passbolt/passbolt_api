@@ -62,7 +62,7 @@ steal(
 	'mad/model/action.js',
 	'mad/model/state.js',
 	'mad/model/validationRules.js',
-	'mad/net',
+	'mad/net/ajax.js',
 	'mad/object/map.js',
 	'mad/string/uuid.js',
 	'mad/route/routeListener.js',
