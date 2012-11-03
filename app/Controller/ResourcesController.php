@@ -196,7 +196,7 @@ class ResourcesController extends AppController {
 		$data = array(
 			'Resource.id' => $resource['Resource']['id']
 		);
-		$options = $this->Resource->getFindOptions('add', $data);
+		$options = $this->Resource->getFindOptions('view', $data);
 		$resources = $this->Resource->find('all', $options);
 		$this->set('data', $resources[0]);
 	}
@@ -287,6 +287,12 @@ class ResourcesController extends AppController {
 			}
 		}
 		$this->Message->success(__('The resource was sucessfully updated'));
+		$data = array(
+			'Resource.id' => $resource['Resource']['id']
+		);
+		$options = $this->Resource->getFindOptions('view', $data);
+		$resources = $this->Resource->find('all', $options);
+		$this->set('data', $resources[0]);
 	}
 }
 
