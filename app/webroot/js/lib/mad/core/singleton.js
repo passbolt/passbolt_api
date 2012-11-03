@@ -1,6 +1,6 @@
 steal(
 	'jquery/class'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.core.Singleton
@@ -59,13 +59,13 @@ steal(
 
 		// Constructor like
 		'init': function () {
-			if (this.Class.fullName == 'mad.core.Singleton') {
+			if (this.getClass().fullName == 'mad.core.Singleton') {
 				throw new mad.error.CallAbstractFunctionException();
-			} else if (this.Class.singletonInstance != 'CALL_FROM_SINGLETON') {
+			} else if (this.getClass().singletonInstance != 'CALL_FROM_SINGLETON') {
 				throw new mad.error.CallPrivateFunctionException('The class is a singleton');
 			}
 
-			this.Class.singletonInstance = this;
+			this.getClass().singletonInstance = this;
 		}
 
 	});

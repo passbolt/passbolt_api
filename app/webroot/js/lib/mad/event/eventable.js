@@ -1,6 +1,6 @@
 steal(
 	'jquery/class'
-).then(function ($) {
+).then(function () {
 
 
 	$.Class('mad.event.Eventable', /** @static */ {

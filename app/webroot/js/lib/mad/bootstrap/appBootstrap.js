@@ -2,7 +2,7 @@ steal(
     'jquery/dom/route',
     MAD_ROOT + '/bootstrap/bootstrapInterface.js'
 //    'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.bootstrap.AppBootstrap
@@ -110,7 +110,7 @@ steal(
 				this.initGlobals();
 
 				// Initialize internationalization
-				this.initInternationalization();
+//				this.initInternationalization();
 
 				// Initialize the event bus controller
 				this.initEventBus();
@@ -126,13 +126,13 @@ steal(
 				//	                this.initExtensions();
 
 				// Dispatch to the right action
-				var route = mad.route.RouteListener.singleton().getRoute();
-				if (route == null && this.options.defaultRoute != null) {
-					route = this.options.defaultRoute;
-				}
-				if (route != null) {
-					this.dispatch(route);
-				}
+//				var route = mad.route.RouteListener.singleton().getRoute();
+//				if (route == null && this.options.defaultRoute != null) {
+//					route = this.options.defaultRoute;
+//				}
+//				if (route != null) {
+//					this.dispatch(route);
+//				}
 
 				// Application is ready
 				this.ready();

@@ -1,7 +1,7 @@
 steal( 
     MAD_ROOT+'/bootstrap/bootstrapInterface.js'
 )
-.then( function ($) {
+.then( function () {
 
 	mad.bootstrap.BootstrapInterface.extend('mad.Bootstrap.ExtensionBootstrap', {}, {
 

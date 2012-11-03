@@ -1,7 +1,7 @@
 steal(
 	MAD_ROOT + '/controller/componentController.js',
 	MAD_ROOT + '/view/template/component/button.ejs'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.ButtonController

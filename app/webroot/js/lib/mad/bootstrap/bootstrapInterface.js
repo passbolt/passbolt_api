@@ -1,19 +1,10 @@
-steal( 
-    'jquery/class'
-)
-.then( function ($) {
+steal('jquery/class').then(function () {
 
 	/*
 	 * @class mad.bootstrap.BootstrapInterface
 	 * The core Interface Bootstrap is a representation of a Bootstrap process
 	 */
-	$.Class('mad.bootstrap.BootstrapInterface',
-
-	/*
-	 * @prototype
-	 */
-	{
-
+	$.Class('mad.bootstrap.BootstrapInterface', /** @prototype */	{
 		/**
 		 * Constructor of the Bootstrap Class
 		 */
@@ -29,7 +20,6 @@ steal(
 		'ready': function () {
 			throw new mad.error.CallInterfaceFunctionException();
 		}
-
 	});
 
 });

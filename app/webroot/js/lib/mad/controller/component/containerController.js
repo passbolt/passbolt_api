@@ -1,6 +1,6 @@
 steal(
 	MAD_ROOT + '/controller/componentController.js'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.ContainerController

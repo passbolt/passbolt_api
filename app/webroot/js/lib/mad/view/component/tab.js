@@ -1,7 +1,7 @@
 steal( 
     MAD_ROOT+'/view'
 )
-.then( function ($) {
+.then( function () {
 
 	/*
 	 * @class mad.view.component.Tab

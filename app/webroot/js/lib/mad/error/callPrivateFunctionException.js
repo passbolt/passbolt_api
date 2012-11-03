@@ -1,4 +1,4 @@
-steal('jquery/lang/string').then(function ($) {
+steal('jquery/lang/string').then(function () {
 
 	$.String.getObject('mad.error', null, true);
 

@@ -1,4 +1,7 @@
-steal('jquery/class').then(function ($) {
+steal(
+	'jquery/class',
+	'jquery/lang/string'
+).then(function () {
 
 	/*
 	 * @class mad.core.Class
@@ -97,6 +100,10 @@ steal('jquery/class').then(function ($) {
 		}
 
 		return this;
+	}
+
+	$.Class.prototype.getClass = function () {
+		return this.constructor;
 	}
 
 	/* 

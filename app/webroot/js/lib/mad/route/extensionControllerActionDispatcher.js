@@ -1,7 +1,7 @@
 steal(
 	MAD_ROOT + '/route/dispatcherInterface.js',
 	MAD_ROOT + '/helper/routeHelper.js'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.route.ExtensionControllerActionDispatcher

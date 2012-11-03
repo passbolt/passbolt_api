@@ -7,7 +7,7 @@ steal(
 	MAD_ROOT + '/mad.js' // the mad framework
 ).then(function () {
 
-	steal.options.logLevel = 0;
+//	steal.options.logLevel = 0;
 
 	//load the bootstrap of the application
 	var boot = new mad.bootstrap.AppBootstrap({

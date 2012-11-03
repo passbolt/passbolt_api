@@ -1,6 +1,6 @@
 steal( 
 	MAD_ROOT+'/error/errorHandler.js'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class app.helper.ErrorHandler

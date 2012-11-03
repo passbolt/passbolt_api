@@ -2,7 +2,7 @@ steal(
 	MAD_ROOT + '/form/formElement.js',
 	MAD_ROOT + '/view/form/element/textboxView.js',
 	MAD_ROOT + '/view/template/component/input.ejs'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.form.element.TextboxController

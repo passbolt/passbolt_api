@@ -1,7 +1,7 @@
 steal(
 	MAD_ROOT + '/form/formElement.js',
 	MAD_ROOT + '/view/form/formElementView.js'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.form.FormChoiceElement

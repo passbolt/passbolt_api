@@ -1,6 +1,6 @@
 steal(
 	MAD_ROOT + '/view/form/formElementView.js'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.view.form.element.TextboxView

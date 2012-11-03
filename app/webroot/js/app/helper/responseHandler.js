@@ -1,7 +1,7 @@
 steal( 
 	'jquery/class'
 	)
-.then( function ($) {
+.then( function () {
 
 	/*
 	 * @class passbolt.helper.ResponseHandler

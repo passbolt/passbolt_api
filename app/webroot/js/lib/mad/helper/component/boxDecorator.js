@@ -1,9 +1,10 @@
 steal(
 	'jquery/class',
 	'jquery/view/ejs',
+	'jquery/lang/string',
 	MAD_ROOT + '/controller/controller.js',
 	MAD_ROOT + '/view/template/component/decorator/box.ejs'
-).then(function ($) {
+).then(function () {
 
 	$.String.getObject('mad.helper.component', window, true);
 	mad.helper.component.BoxDecorator = {

@@ -7,7 +7,7 @@ steal(
 	MAD_ROOT + '/error/noConstructorException.js',
 	MAD_ROOT + '/error/templateMissingException.js',
 	MAD_ROOT + '/error/wrongParametersException.js'
-).then(function ($) {
+).then(function () {
 
 	$.String.getObject('mad.error', null, true);
 	mad.error.Exception = function (message, title) {

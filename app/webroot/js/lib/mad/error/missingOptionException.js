@@ -1,6 +1,6 @@
 steal(
 	'jquery/lang/string'
-).then(function ($) {
+).then(function () {
 
 	$.String.getObject('mad.error', null, true);
 	mad.error.MissingOptionException = function (optionName, className, message) {

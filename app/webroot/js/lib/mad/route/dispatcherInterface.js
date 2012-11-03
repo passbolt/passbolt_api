@@ -1,6 +1,6 @@
 steal(
 	'jquery/class'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.route.DispatcherInterface

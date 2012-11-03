@@ -1,7 +1,8 @@
 steal(
+	MAD_ROOT + '/core/class.js',
 	MAD_ROOT + '/controller/componentController.js',
 	MAD_ROOT + '/view/template/app.ejs'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class mad.controller.AppController

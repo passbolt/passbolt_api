@@ -1,6 +1,6 @@
 steal(
 	MAD_ROOT + '/controller/component/workspaceController.js'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.PeopleWorkspaceController
