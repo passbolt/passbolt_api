@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/view/component/tree/jstree.js'
-).then(function ($) {
+	'mad/controller/component/dynamicTreeController.js'
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.CategoryChooserController
@@ -20,11 +20,12 @@ steal(
 		'defaults': {
 			'label': 'Category Chooser',
 			'viewClass': mad.view.component.tree.List,
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
+			'itemClass': passbolt.model.Category,
+			'templateUri': 'mad/view/template/component/tree.ejs',
 			// The map to use to make jstree working with our category model
 			'map': new mad.object.Map({
-				'id': 'Category.id',
-				'label': 'Category.name',
+				'id': 'id',
+				'label': 'name',
 				'children': {
 					'key': 'children',
 					'func': mad.object.Map.mapObjects
@@ -41,53 +42,41 @@ steal(
 		 * @param {string} y The y position where the menu will be rendered
 		 * @return {void}
 		 */
-		'showContextualMenu': function (itemId, x, y) {
-			var menuItems = [
-				{ 'MenuItem': new mad.model.MenuItem({
-					'id': uuid(),
-					'label': 'open',
+		'showContextualMenu': function (item, x, y) {
+			var menuItems = mad.model.Action.models([
+				{ 'id': uuid(), 'label': 'open',
 					'action': function (menu) {
-						menu.goToHell();
-						passbolt.eventBus.trigger('category_selected', {'id': itemId});
-					}
-				}) }, { 'MenuItem': new mad.model.MenuItem({
-					'id': uuid(),
-					'label': 'create',
+						passbolt.eventBus.trigger('category_selected', item);
+						menu.remove();
+					}},
+				{ 'id': uuid(), 'label': 'create',
 					'action': function (menu) {
 						console.log('Menu Create');
-					}
-				}), 'children': [
-					{ 'MenuItem': new mad.model.MenuItem({
-						'id': uuid(),
-						'label': 'secret',
-						'action': function (menu) {
-							menu.goToHell();
-							passbolt.eventBus.trigger('request_resource_creation', itemId);
-						}
-					}) }, { 'MenuItem': new mad.model.MenuItem({
-						'id': uuid(),
-						'label': 'category',
-						'action': function (menu) {
-							menu.goToHell();
-							passbolt.eventBus.trigger('request_category_creation', {'id': itemId});
-						}
-					})}
-				]}, { 'MenuItem': new mad.model.MenuItem({
-					'id': uuid(),
-					'label': 'rename...',
+					},
+					'children': [
+						{ 'id': uuid(), 'label': 'secret',
+							'action': function (menu) {
+								passbolt.eventBus.trigger('request_resource_creation', item);
+							menu.remove();
+							}},
+						{ 'id': uuid(), 'label': 'category',
+							'action': function (menu) {
+								passbolt.eventBus.trigger('request_category_creation', item);
+							menu.remove();
+							}}
+					]},
+				{ 'id': uuid(), 'label': 'rename...',
 					'action': function (menu) {
-						menu.goToHell();
-						passbolt.eventBus.trigger('category_renamed', {'id': itemId});
-					}
-				})}, { 'MenuItem': new mad.model.MenuItem({
-					'id': uuid(),
-					'label': 'remove',
+						passbolt.eventBus.trigger('category_renamed', item);
+						menu.remove();
+					}},
+				{ 'id': uuid(), 'label': 'remove',
 					'action': function (menu) {
-						menu.goToHell();
-						passbolt.eventBus.trigger('request_category_deletion', {'id': itemId});
+						passbolt.eventBus.trigger('request_category_deletion', item);
+						menu.remove();
 					}
-				})}
-			];
+				}
+			]);
 
 			// Instanciate the menu controller
 			// @todo An html helper to insert component should be solve the view problem is this code part
@@ -105,64 +94,74 @@ steal(
 			contextualMenu.load(menuItems);
 		},
 
+		/**
+		 * Load the tree with the given categories
+		 * @param {passbolt.model.Category.List} items The list of categories to 
+		 * load into the tree
+		 * @return {void}
+		 */
+		'load': function (items) {
+			this._super(items);
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
 
 		/**
 		 * An item has been selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
-		 * @param {Event} srcEvent The jQuery source event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'item_selected': function (element, event, itemId, srcEvent) {
-			passbolt.eventBus.trigger('category_selected', {
-				'id': itemId
-			});
+		' item_selected': function (el, ev, item, srcEvent) {
+			passbolt.eventBus.trigger('category_selected', item);
 		},
 
 		/**
 		 * An item has been right selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
-		 * @param {Event} srcEvent The jQuery source event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The right selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
-		'item_right_selected': function (element, event, itemId, srcEvent) {
-			this._super(element, event, itemId);
-			this.showContextualMenu(itemId, srcEvent.pageX, srcEvent.pageY);
+		' item_right_selected': function (el, ev, item, srcEvent) {
+			this._super(el, event, ev);
+			this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE MODEL EVENTS */
+		/* ************************************************************** */
+
+		/**
+		 * Observe when a category is created
+		 * @param {HTMLElement} el The el the event occured on
+		 * @param {HTMLEvent} ev The ev which occured
+		 * @param {mad.model.Model} category The inserted category
+		 * @return {void}
+		 */
+		'{passbolt.model.Category} created': function (el, ev, category) {
+			this.insertItem(category, category.parent_id, 'last');
+		},
+
+		/**
+		 * Observe when a category is destroyed
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The ev which occured
+		 * @param {mad.model.Model} category The inserted category
+		 * @return {void}
+		 */
+		'{passbolt.model.Category} destroyed': function (model, ev, category) {
+			this.removeItem(category);
 		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
-
-		/**
-		 * Observe when a category is inserted
-		 * 
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mad.model.Model} category The inserted category
-		 * @return {void}
-		 */
-		'{passbolt.eventBus} category_created': function (el, event, category) {
-			this.insertItem(category, category.Category.parent_id, 'last');
-		},
-
-		/**
-		 * Observe when a category is deleted
-		 * 
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mad.model.Model} category The deleted category id
-		 * @return {void}
-		 */
-		'{passbolt.eventBus} category_deleted': function (el, event, categoryId) {
-			this.deleteItem(categoryId);
-		},
 
 		/**
 		 * Observe when the application is ready and load the tree with the roots
@@ -173,15 +172,16 @@ steal(
 		 */
 		'{passbolt.eventBus} app_ready': function (ui, event) {
 			var self = this;
-			//load categories function of the selected database
+			// load categories function of the selected database
 			this.setState('loading');
-			passbolt.model.Category.getRoots({
-				children: false
-			}, function (request, response, categories) {
-				// load the tree with the categories
-				self.load(categories);
-				self.setState('ready');
-			});
+			passbolt.model.Category.findAll({},
+				function (categories, response, request) {
+					// load the tree with the categories
+					self.load(categories);
+					self.setState('ready');
+				},
+				function (response) { }
+			);
 		}
 
 	});
