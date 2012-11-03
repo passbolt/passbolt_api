@@ -40,7 +40,7 @@
  *		
  *		@codestart
 	var myComponent = new mad.controller.component.MyComponent($('#myComponent'), {
-		'templateUri': MAD_ROOT + '/view/template/controller/component/myCustomTemplateUri.ejs'
+		'templateUri': 'mad/view/template/controller/component/myCustomTemplateUri.ejs'
 	});
  *		@codeend
  *	</p>
@@ -130,10 +130,10 @@
  */
 
 steal(
-	MAD_ROOT + '/controller/controller.js',
-	MAD_ROOT + '/helper/controllerHelper.js',
-	MAD_ROOT + '/view/view.js'
-).then(function ($) {
+	'mad/controller/controller.js',
+	'mad/helper/controllerHelper.js',
+	'mad/view/view.js'
+).then(function () {
 
 	/*
 	 * @class mad.controller.ComponentController
@@ -175,16 +175,7 @@ steal(
 			'cssClasses': ['js_component'],
 			// the associated tag
 			'tag': 'div'
-		},
-
-		/**
-		 * The component will listen to the following array of events.
-		 * The class has to implement a function for each event. Prefere 
-		 * the lowercase/underscore writting to be able to see easily what
-		 * kind of function it is.
-		 * @type array
-		 */
-		'listensTo': []
+		}
 
 	}, /** @prototype */ {
 
@@ -271,12 +262,7 @@ steal(
 				if (previousStateListener) {
 					previousStateListener.call(this, false);
 				}
-				debugMsg += ' from ' + previousState;
 			}
-
-			// debug message
-			debugMsg += ' to ' + newState + ' state';
-			steal.dev.log(debugMsg);
 
 			// add the new state class
 			this.view.addClass('js_state_' + newState);
