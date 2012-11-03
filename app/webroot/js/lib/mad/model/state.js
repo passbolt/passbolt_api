@@ -1,10 +1,10 @@
 steal(
-	'jquery/model'
+	'mad/model'
 ).then(function () {
 
 	/*
 	 * @class mad.model.State
-	 * @inherits jQuery.Model
+	 * @inherits mad.model.Model
 	 * @parent mad.controller.component
 	 * 
 	 * The State model will carry the state of a given controller.
@@ -16,16 +16,13 @@ steal(
 	 * @param {array} options
 	 * @return {mad.model.State}
 	 */
-	$.Model('mad.model.State', /** @static */ {
+	mad.model.Model.extend('mad.model.State', /** @static */ {
 
-		/**
-		 * Define attributes of the model
-		 * @type {Object}
-		 */
-		attributes: {
-			'label': null,
+		'attributes': {
+			// previous state name
+			'previous': 'string',
 			// current state name
-			'previous': null // previous state name
+			'label': 'string'
 		}
 
 	}, /** @prototype */ {
@@ -36,7 +33,7 @@ steal(
 		 * @return {boolean}
 		 */
 		'is': function (stateName) {
-			return this.label == stateName;
+			return this.attr('label') == stateName;
 		},
 
 		/**
@@ -46,7 +43,7 @@ steal(
 		 * @return {void}
 		 */
 		'setState': function (stateName) {
-			this.previous = this.label;
+			this.attr('previous', this.attr('label'));
 			this.attr('label', stateName);
 		},
 
