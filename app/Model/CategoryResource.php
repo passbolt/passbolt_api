@@ -92,4 +92,75 @@ class CategoryResource extends AppModel {
 			return $exists > 0;
 		}
 	}
+
+/**
+ * Return the find options to be used
+ *
+ * @param string context
+ * @return array
+ * @access public
+ */
+	public static function getFindOptions($case,&$data = null) {
+		return array_merge(
+			Resource::getFindConditions($case, &$data),
+			Resource::getFindFields($case)
+		);
+	}
+
+/**
+ * Return the conditions to be used for a given context
+ *
+ * @param $context string{guest or id}
+ * @param $data used in find conditions (such as User.id)
+ * @return $condition array
+ * @access public
+ */
+	public static function getFindConditions($case = 'view', &$data = null) {
+		$conditions = array();
+		switch ($case) {
+			case 'add':
+				$conditions = array();
+			break;
+			case 'view':
+				$conditions = array(
+					'conditions' => array(
+						'CategoryResource.id' => $data['CategoryResource.id']
+					)
+				);
+			break;
+			default:
+				$conditions = array(
+					'conditions' => array()
+				);
+		}
+		return $conditions;
+	}
+
+/**
+ * Return the list of field to fetch for given context
+ * @param string $case context ex: login, activation
+ * @return $condition array
+ */
+	public static function getFindFields($case = 'view') {
+		switch($case){
+			case 'view':
+			case 'add':
+			case 'edit':
+				$fields = array(
+					'fields' => array(
+						'CategoryResource.id', 'CategoryResource.category_id', 'CategoryResource.resource_id'
+					)
+				);
+			break;
+			case 'delete':
+				$fields = array();
+			break;
+			default:
+				$fields = array(
+					'fields' => array()
+				);
+			break;
+		}
+		return $fields;
+	}
 }
