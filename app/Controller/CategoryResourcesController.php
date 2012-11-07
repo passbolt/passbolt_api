@@ -8,12 +8,7 @@
  * @package      app.Controller.CategoriesResourcesController
  * @since        version 2.12.7
  */
-class CategoriesResourcesController extends AppController {
-
-	public function index() {
-		pr($this->CategoryResource->find('all'));
-		die();
-	}
+class CategoryResourcesController extends AppController {
 
 /**
  * Get a categoryResource
