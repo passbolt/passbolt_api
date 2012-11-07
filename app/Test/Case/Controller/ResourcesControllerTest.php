@@ -140,7 +140,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(1, count($catres), "Add : /resources.json : The number of categories returned should be 1, but actually is " . count($catres));
 		$this->assertEquals($goaCat['Category']['id'], $catres['0']['CategoryResource']['category_id'], "Add : /resources.json : the category inserted should be {$goaCat['Category']['id']} but is {$catres['0']['CategoryResource']['category_id']}");
 
-		// todo : Add more tests for add. Without categories, with wrong categories, etc...
 		// Add without Category
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
@@ -201,16 +200,21 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
 		$goaCat = $categoryModel->findByName('Goa');
+		$bagaCat = $categoryModel->findByName('Baga');
 		$resource = $this->Resource->findByName("washroom");
 		$id = $resource['Resource']['id'];
 
 		$resource['Resource']['name'] = "test";
+		$before = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
 
 		$result = json_decode($this->testAction("/resources/$id.json", array(
 			'data' => array(
 				'Resource' => $resource['Resource'],
 				'Category' => array(
 					 0 => array(
+						'id' => $bagaCat['Category']['id']
+					 ),
+					 1 => array(
 						'id' => $goaCat['Category']['id']
 					 )
 				)
@@ -219,6 +223,27 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "update /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$result = $this->Resource->findById($id);
+		$this->assertEquals("test", $result['Resource']['name'], "update /resources/$id.json : The test should have modified the name into 'test', but name is still {$result['Resource']['name']}");
+
+		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
+		$this->assertEquals($after[0]['CategoryResource']['category_id'], $bagaCat['Category']['id'], "update /resources/$id.json : The resource should now belong to category id {$bagaCat['Category']['id']} but belongs to {$after[0]['CategoryResource']['resource_id']} instead");
+
+		// Test with a bad format of category
+		$result = json_decode($this->testAction("/resources/$id.json", array(
+			'data' => array(
+				'Category' => array(
+					 0 => array(
+						'id' => '8u7'
+					 )
+				)
+			 ),
+			 'method' => 'put',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
+		$this->assertTrue(count($after) == 0, "update /resources/$id.json : After this test, there should be no categories associated to the resource anymore.");
 	}
 
 	public function testDelete() {
@@ -229,5 +254,12 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+
+		$id = 1;
+		$result = json_decode($this->testAction("/resources/$id.json", array(
+			 'method' => 'delete',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "delete /resources/$id.json : The test should return a error but is returning {$result['header']['status']}");
 	}
 }

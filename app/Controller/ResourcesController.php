@@ -180,6 +180,7 @@ class ResourcesController extends AppController {
 							'resource_id' => $resource['Resource']['id']
 						)
 					);
+				$this->Resource->CategoryResource->create();
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates()) {
@@ -271,9 +272,10 @@ class ResourcesController extends AppController {
 				$crdata = array(
 					'CategoryResource' => array(
 						'category_id' => $cat['id'],
-						'resource_id' => $resourcepost['Resource']['id']
+						'resource_id' => $id
 					)
 				);
+				$this->Resource->CategoryResource->create();
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates()) {
