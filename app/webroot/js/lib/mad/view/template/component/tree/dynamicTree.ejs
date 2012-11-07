@@ -5,7 +5,7 @@ var cssClasses = [
 %>
 
 
-<li id="<%= id %>" class="<%= cssClasses.join(' ') %> node">
+<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses.join(' ') %> node">
 
 	<div>
 
@@ -16,6 +16,10 @@ var cssClasses = [
 		<a href="#" class=""><%= label %></a>
 
 		<a href="#" class="control more"><span>more</span></a>
+
+<% if(hasChildren) { %>
+		<ul />
+<% } %>
 
 	</div>
 

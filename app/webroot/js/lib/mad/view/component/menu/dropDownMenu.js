@@ -1,7 +1,6 @@
 steal(
-	'lib/jstree/jquery.jstree.js',
-	MAD_ROOT + '/view/component/tree.js'
-).then(function ($) {
+	'mad/view/component/tree.js'
+).then(function () {
 
 	/*
 	 * @class mad.view.component.menu.DropDownMenu
@@ -24,11 +23,11 @@ steal(
 
 		/**
 		 * Open an item
-		 * @param {string} itemId The target item to open
+		 * @param {mad.model.Model} item The target item to open
 		 * @return {void}
 		 */
-		'open': function (itemId) {
-			var li = $('#' + itemId, this.element);
+		'open': function (item) {
+			var li = $('#' + item.id, this.element);
 			li.removeClass('closed')
 				.addClass('opened');
 			var control = $('.control:first', li);
@@ -38,11 +37,11 @@ steal(
 
 		/**
 		 * Close an item
-		 * @param {string} itemId The target item to close
+		 * @param {mad.model.Model} item The target item to close
 		 * @return {void}
 		 */
-		'close': function (itemId) {
-			var li = $('#' + itemId, this.element);
+		'close': function (item) {
+			var li = $('#' + item.id, this.element);
 			li.removeClass('opened')
 				.addClass('closed');
 			var control = $('.control:first', li);
@@ -56,27 +55,39 @@ steal(
 
 		/**
 		 * Uncollapse an item
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'a mouseover': function (element, event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var li = element.parents('li');
-			var itemId = li[0].id;
-			this.element.trigger('item_opened', itemId);
+		'a mouseover': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+
+			var data = null,
+				li = el.parents('li');
+			if (this.controller.itemClass) {
+				data = li.data(this.controller.itemClass.fullName);
+			} else {
+				data = li[0].id;
+			}
+
+			this.element.trigger('item_opened', data);
 		},
 
 		/**
 		 * Uncollapse an item
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li mouseleave': function (element, event) {
-			var itemId = element[0].id;
-			this.element.trigger('item_closed', itemId);
+		'li mouseleave': function (el, ev) {
+			var data = null;
+			if (this.controller.itemClass) {
+				data = el.data(this.controller.itemClass.fullName);
+			} else {
+				data = el[0].id;
+			}
+			this.element.trigger('item_closed', data);
 		}
 
 	});

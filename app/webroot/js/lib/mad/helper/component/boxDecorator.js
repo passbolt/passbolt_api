@@ -1,9 +1,10 @@
 steal(
 	'jquery/class',
 	'jquery/view/ejs',
-	MAD_ROOT + '/controller/controller.js',
-	MAD_ROOT + '/view/template/component/decorator/box.ejs'
-).then(function ($) {
+	'jquery/lang/string',
+	'mad/controller/controller.js',
+	'mad/view/template/component/decorator/box.ejs'
+).then(function () {
 
 	$.String.getObject('mad.helper.component', window, true);
 	mad.helper.component.BoxDecorator = {
@@ -25,7 +26,7 @@ steal(
 			//                html = this.renderedView;
 
 			// The box template
-			var boxTemplate = '//' + MAD_ROOT + '/view/template/component/decorator/box.ejs';
+			var boxTemplate = '//' + 'mad/view/template/component/decorator/box.ejs';
 			// Insert the box before the component element
 			var $box = $($.View(boxTemplate)).insertBefore(this.element);
 			// Detach the component element and add it to the box element

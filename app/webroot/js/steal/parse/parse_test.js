@@ -4,7 +4,7 @@
  */
 load('steal/rhino/rhino.js');
 
-steal('steal/test','steal/parse').then( function( s ) {
+steal('steal/test','steal/parse',function( s, parse ) {
 	STEALPRINT = false;
 	s.test.module("steal/parse")
 	
@@ -36,7 +36,7 @@ steal('steal/test','steal/parse').then( function( s ) {
 	})	
 	
 	s.test.test("parse", function(t){
-		var parser = steal.parse(readFile('steal/parse/test/testCode.js')),
+		var parser = parse(readFile('steal/parse/test/testCode.js')),
 			token,
 			tokens = [];
 			
@@ -48,7 +48,7 @@ steal('steal/test','steal/parse').then( function( s ) {
 	});
 	
 	s.test.test("parse steal plugins", function(t){
-		var parser = steal.parse(readFile('steal/parse/test/stealCode1.js')),
+		var parser = parse(readFile('steal/parse/test/stealCode1.js')),
 			tokens = [];
 
 		parser.until(["steal","("]);
@@ -64,7 +64,7 @@ steal('steal/test','steal/parse').then( function( s ) {
 	});
 	
 	s.test.test("parse logs", function(t){
-		var parser = steal.parse(readFile('steal/parse/test/dev.js')),
+		var parser = parse(readFile('steal/parse/test/dev.js')),
 			tokens = [];
 
 		var tok = parser.until(["steal",".","dev",".","log","("]);

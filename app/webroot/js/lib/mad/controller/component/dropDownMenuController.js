@@ -1,8 +1,8 @@
 steal(
-	MAD_ROOT + '/controller/component/menuController.js',
-	MAD_ROOT + '/view/component/menu/dropDownMenu.js',
-	MAD_ROOT + '/view/template/component/menu/dropDownMenu.ejs'
-).then(function ($) {
+	'mad/controller/component/menuController.js',
+	'mad/view/component/menu/dropDownMenu.js',
+	'mad/view/template/component/menu/dropDownMenu.ejs'
+).then(function () {
 
 	/**
 	 * @class mad.controller.component.DropDownMenuController
@@ -22,43 +22,34 @@ steal(
 		'defaults': {
 			'label': 'Drop Down Menu Controller Component',
 			'viewClass': mad.view.component.menu.DropDownMenu,
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/tree.ejs',
-			'itemTemplateUri': '//' + MAD_ROOT + '/view/template/component/menu/dropDownMenu.ejs',
+			'templateUri': 'mad/view/template/component/tree.ejs',
+			'itemTemplateUri': 'mad/view/template/component/menu/dropDownMenu.ejs',
 			'cssClasses': ['dropdownmenu'],
 			'callbacks': {
 				'item_selected': null,
 				'item_right_selected': null,
 				'item_hovered': null
 			}
-		},
-
-		// listen to the following custom view event
-		'listensTo': [
-			'item_selected',
-			'item_right_selected',
-			'item_hovered',
-			'item_opened',
-			'item_closed'
-		]
+		}
 
 	}, /** @prototype */ {
 
 		/**
 		 * Open an item
-		 * @param {string} itemId The target item to open
+		 * @param {mad.model.Model} item The target item to open
 		 * @return {void}
 		 */
-		'open': function (itemId) {
-			this.view.open(itemId);
+		'open': function (item) {
+			this.view.open(item);
 		},
 
 		/**
 		 * Close an item
-		 * @param {string} itemId The target item to close
+		 * @param {mad.model.Model} item The target item to close
 		 * @return {void}
 		 */
-		'close': function (itemId) {
-			this.view.close(itemId);
+		'close': function (item) {
+			this.view.close(item);
 		},
 
 		/* ************************************************************** */
@@ -67,24 +58,24 @@ steal(
 
 		/**
 		 * An item has been uncollapsed
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} item The target item
 		 * @return {void}
 		 */
-		'item_opened': function (element, event, itemId) {
-			this.open(itemId);
+		' item_opened': function (el, ev, item) {
+			this.open(item);
 		},
 
 		/**
 		 * An item has been uncollapsed
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.model.Model} item The target item
 		 * @return {void}
 		 */
-		'item_closed': function (element, event, itemId) {
-			this.close(itemId);
+		' item_closed': function (el, ev, item) {
+			this.close(item);
 		}
 
 	});

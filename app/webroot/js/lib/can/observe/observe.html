@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>can.Observe</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            .error {border: solid 1px red;}
+            .error_text { color: red; font-size: 10px;}
+            td {padding: 3px;}
+			textarea {
+				width: 400px;
+				height: 200px;
+				display: inline-block;
+			}
+			#warning {
+				color: red;
+			}
+			.propName {color: green}
+			.remove:hover {
+				background-color: red;
+			}
+			pre {
+				font-size: 14px;
+				line-height: 21px;
+			}
+			.edit-over {
+				padding: 0px;
+				margin: 0px;
+				border: solid 1px gray;
+				-webkit-box-shadow: 5px 5px 5px #999;
+				-moz-box-shadow: 5px 5px 5px #999;
+				box-shadow: 5px 5px 5px #999;
+			}
+        </style>
+	</head>
+	<body>
+	
+	<pre id='observer1'></pre>
+	<pre id='observer2'></pre>
+	<pre id='observer3'></pre>
+	<pre id='observer4'></pre>
+	<pre id='observer5'></pre>
+		<script type='text/javascript' 
+                src='../../steal/steal.js'>   
+        </script>
+		<script type='text/javascript'>
+steal('can/observe/delegate', 
+
+	'can/view/ejs',
+	function(){
+	
+
+		
+		
+		new Observer("#observer1",{
+			obs: new can.Observe({})
+		})
+		
+		new Observer("#observer2",{
+			obs: new can.Observe({foo : "bar"})
+		})
+		
+		new Observer("#observer3",{
+			obs: new can.Observe({a: "b", c: "d"})
+		})
+	
+		new Observer("#observer4", {
+			obs: new can.Observe({ "a" : {b: "c"}, "d" : {e : "f"}}) 
+		} )
+		
+		new Observer("#observer5", {
+			obs: new can.Observe({items: [1, 2, {a:"b"}]}) 
+		} )
+})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>route</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            .error {border: solid 1px red;}
+            .error_text { color: red; font-size: 10px;}
+            td {padding: 3px;}
+        </style>
+	</head>
+	<body>
+	    <h1>route Demo</h1>
+	
+		<a href="#!foo/test">foo/bar</a>
+	    <a href="#!foo/">foo/</a>
+		<a href="#!">empty</a>
+		
+		<p class="status"></p>
+		
+		<script type='text/javascript' 
+                src='../../../steal/steal.js'>   
+        </script>
+
+		<script type='text/javascript'>
+			steal('can/control/route', function(){
+				
+				var Router = can.Control({
+					init : function(el, options) {
+						can.route('foo/:bar', { bar : 'default' });
+					},
+
+					"foo/:bar route" : function(data) {
+						$('.status').html("foo/:bar bar is: " + data.bar);
+					},
+					"route" : function(){
+						$('.status').html('Empty route');
+					}
+				});
+				
+				new Router(window)
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,13 @@
+<tr id="<%= id %>" <%= (el) -> el.data(item.constructor.fullName, item) %>>
+
+<% for (var i in cells) { %>
+
+	<td class="js_grid_column_<%= cells[i].columnName %>">
+		<span>
+			<%== cells[i].value %>
+		</span>
+	</td>
+
+<% } %>
+
+</tr>

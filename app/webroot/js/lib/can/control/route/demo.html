@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>can.route demo</title>
+    <style type='text/css'>
+        body {
+	        font-family: verdana; font-size: 16px;
+        	width: 660px;
+        	line-height: 24px;
+        	margin: 0px;
+        }
+		
+        a {
+	        color: #1F54C6;
+        }
+
+        .value {
+	        cursor: pointer;
+        }
+
+        .propName {
+	        cursor: pointer;
+        }
+
+        .end {
+	        cursor:pointer;
+        }
+
+        h2 {
+	        border-bottom: 1px solid #D2D988;
+	        padding-bottom: 0px;
+	        margin-bottom: 5px;
+	        font-size: 16px;
+	        font-family: "Courier New", Courier, monospace;
+        }
+
+	    .status span {
+		    color: grey;
+	    }
+
+	    input {
+		    padding: 3px;
+		    width: 80%;
+		    border: 1px solid #DEDEDE;
+		    font-size: 110%;
+	    }
+
+        p.status {
+	        background-color: #F9F7DF;
+	        border: solid 1px white;
+	        padding: 13px;
+        }
+
+	    .status span.comment {
+		    color: #007000;
+	    }
+    </style>
+</head>
+<body>
+
+<h2>"eventHandler" : function(data)</h2>
+<p class="status">
+	<span style="color: grey;" class="action"></span> :
+	<span>
+		<span style="color: purple;">function</span>
+		<span style="color: blue;">(data)</span> {
+	</span><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;data<span class="comment">
+		// -> <span class="data comment"></span>
+	</span>
+	<br />}
+</p>
+
+<h2>Hash</h2>
+<div><input id="hash" type="text" /></div>
+
+<h2>Links</h2>
+<ul>
+	<li><a href="#!">#!</a></li>
+	<li><a href="#!people">#!people</a></li>
+	<li><a href="#!users&limit=10">#!users&limit=10</a></li>
+	<li><a href="#!people&order=asc&limit=10">#!people&order=asc&limit=10</a></li>
+	<li><a href="#!todo/1">#!todo/1</a></li>
+	<li><a href="#!todo/today">#!todo/today</a></li>
+</ul>
+
+<h2>can.route</h2>
+<div id="route"></div>
+
+<script type='text/javascript' src='../../../steal/steal.js'></script>
+
+<script type='text/javascript'>
+	steal('can/control/route', 'can/util/demos/observer.js', function(){
+		var setInput = function(){
+				$("#hash").val(window.location.hash);
+			},
+			setStatus = function(method, data) {
+				$('.status .action').html('&quot;' + method + '&quot;');
+				$('.status .data').html(can.toJSON(data));
+			}
+
+		var Router = can.Control({
+			"route" : function(data){
+				setStatus("route", data);
+			},
+
+			":type route" : function(data) {
+				setStatus(":type route", data);
+			},
+
+			"todo/:id route" : function(data) {
+				setStatus("todo/:id route", data);
+			}
+		});
+
+		new Router(window);
+
+		new Observer( $("<pre>").appendTo("#route"),
+		{
+			observe : can.route,
+			fullName : "can.route.attr("
+		});
+
+		setInput();
+		$(window).bind("hashchange",setInput);
+		$('#hash').change(function() {
+			window.location.hash = $(this).val();
+		});
+	})
+</script>
+</body>
+</html>

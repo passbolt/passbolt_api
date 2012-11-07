@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/view'
-).then(function ($) {
+	'mad/view'
+).then(function () {
 
 	/*
 	 * @class mad.view.component.Tree
@@ -9,12 +9,6 @@ steal(
 	mad.view.View.extend('mad.view.component.Tree', /** @static */ {
 
 	}, /** @prototype */ {
-
-		/**
-		 * The map to transform JMVC model object into jstree node
-		 * @type {mad.object.Map}
-		 */
-		'map': null,
 
 		// Constructor like
 		'init': function (controller, options) {
@@ -34,129 +28,140 @@ steal(
 		 */
 		'insertItem': function (item, refItemId, position) {
 			position = position || 'last';
-			var $ref = refItemId ? this.element.find('#' + refItemId + ' ul:first') : this.element;
+			var $refElement = refItemId ? this.element.find('#' + refItemId) : null,
+				$refList = $refElement ? $refElement.find('ul:first') : this.element,
+				self = this;
+
+			// if no refList found, create it
+			if (!$refList.length) {
+				$refElement.append('<ul/>');
+				$refList = $refElement.find('ul:first');
+			}
+
 			// map the jmvc model objects into the desired format
-			var mappedItem = this.map.mapObject(item);
-			mappedItem.hasChildren = item.children && item.children.length ? true : false;
+			var mappedItem = this.controller.map.mapObject(item);
+			mappedItem.hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
+			mappedItem.item = item;
+			mappedItem.itemClass = this.controller.itemClass;
 
-			var itemRender = $.View(this.controller.options.itemTemplateUri, mappedItem);
-			var $child = $(itemRender).appendTo($ref);
+			var itemRender = mad.view.View.render(this.controller.options.itemTemplateUri, mappedItem);
+			var $child = $(itemRender).appendTo($refList);
 
-			for (var i in mappedItem.children) {
-				$('<ul/>').appendTo($child);
-				this.insertItem(item.children[i], mappedItem.id, 'last');
+			if (mappedItem.hasChildren) {
+				can.each(item.children, function (item, i) {
+					self.insertItem(item, mappedItem.id, 'last');
+				});
 			}
 		},
-		
+
 		/**
-		 * Delete an item from the tree
-		 * @param {string} itemId The target item to delete
+		 * Remove an item from the tree
+		 * @param {mad.model.Model} item The target item to remove
 		 * @return {void}
 		 */
-		'deleteItem': function (itemId) {
-			var $item = $('#' + itemId, this.element).remove();
+		'removeItem': function (item) {
+			var $item = $('#' + item.id, this.element).remove();
 		},
 
 		/**
 		 * An item has been selected
 		 * @event item_selected
-		 * @param {string} itemId The right selected item id
+		 * @param {mixed} item The selected item instance or its id
 		 * @param {HTMLElement} element The element the event occured on
+		 * @param {Event} srcEvent The jQuery source event
 		 * @return {void}
 		 */
-		'itemSelected': function (itemId, element, srcEvent) {
-			this.element.trigger('item_selected', [itemId, srcEvent]);
+		'itemSelected': function (item, element, srcEvent) {
+			this.element.trigger('item_selected', [item, srcEvent]);
 		},
 
 		/**
 		 * An item has been right selected
 		 * @event item_right_selected
-		 * @param {string} itemId The right selected item id
+		 * @param {mixed} item The selected item instance or its id
 		 * @param {HTMLElement} element The element the event occured on
 		 * @param {Event} srcEvent The jQuery source event
 		 * @return {void}
 		 */
-		'itemRightSelected': function (itemId, element, srcEvent) {
-			element.trigger('item_right_selected', [itemId, srcEvent]);
+		'itemRightSelected': function (item, element, srcEvent) {
+			element.trigger('item_right_selected', [item, srcEvent]);
 		},
 
 		/**
 		 * An item has been hovered
 		 * @event item_hovered
-		 * @param {string} itemId The right selected item id
+		 * @param {mixed} item The selected item instance or its id
 		 * @param {HTMLElement} element The element the event occured on
 		 * @return {void}
 		 */
-		'itemHovered': function (itemId, element, srcEvent) {
-			this.element.trigger('item_hovered', [itemId, srcEvent]);
+		'itemHovered': function (item, element, srcEvent) {
+			this.element.trigger('item_hovered', [item, srcEvent]);
 		},
 
-		/**
-		 * Load the tree with an additionnal node at the specific position (ref + position)
-		 * @param {object|array} data The data which represent the node
-		 * @todo the mapping could be done in the view ?
-		 */
-		'load': function (data) {
-			var mappedData;
-
-			if ($.isArray(data)) {
-				for (var i in data) {
-					this.insertItem (data[i], null, 'last');
-				}
-			} else {
-				this.insertItem (data, null, 'last');
-			}
-		},
-
-		/**
-		 * Render the jstree component
-		 * @return {void}
-		 */
-		'render': function () {
-			this._super();
-		},
-		
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
 
 		/**
 		 * An item has been selected
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li click': function (element, event) {
-			event.stopPropagation();
-			event.preventDefault();
-			this.itemSelected(element[0].id, element);
+		'li click': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+
+			var data = null;
+			if (this.controller.itemClass) {
+				data = el.data(this.controller.itemClass.fullName);
+			} else {
+				data = el[0].id;
+			}
+
+			this.itemSelected(data, el, ev);
+			return false;
 		},
 
 		/**
 		 * An item has been selected
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li contextmenu': function (element, event) {
-			event.stopPropagation();
-			event.preventDefault();
-			if(event.which == 3){
-				this.itemRightSelected(element[0].id, element, event);
+		'li contextmenu': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+
+			if (ev.which == 3) {
+				var data = null;
+				if (this.controller.itemClass) {
+					data = el.data(this.controller.itemClass.fullName);
+				} else {
+					data = el[0].id;
+				}
+				this.itemRightSelected(data, el, ev);
 			}
+
 			return false;
 		},
 
 		/**
 		 * An item has been hovered
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li hover': function (element, event) {
-			event.stopPropagation();
-			event.preventDefault();
-			this.itemHovered(element[0].id, element);
+		'li hover': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+			var data = null;
+			if (this.controller.itemClass) {
+				data = el.data(this.controller.itemClass.fullName);
+			} else {
+				data = el[0].id;
+			}
+			this.itemHovered(data, el, ev);
 			return false;
 		}
 

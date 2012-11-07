@@ -1,5 +1,5 @@
 //@documentjs-ignore
-steal.then(function( steal ) {
+steal(function() {
 
 
 	var rsplit = function( string, regex ) {
@@ -34,7 +34,7 @@ steal.then(function( steal ) {
 			}
 		};
 
-		steal.EJS = function( options ) {
+		var EJS = function( options ) {
 			options = typeof options === "string" ? {
 				view: options
 			} : options;
@@ -96,7 +96,7 @@ steal.then(function( steal ) {
 			vEJS.update(this.name, this);
 			this.template = template;
 		};
-	var vEJS = steal.EJS;
+	var vEJS = EJS;
 	/* @Prototype*/
 	vEJS.prototype = {
 		/**
@@ -528,4 +528,5 @@ steal.then(function( steal ) {
 		request.open(params.method, params.url);
 		request.send(null);
 	};
+	return vEJS;
 });

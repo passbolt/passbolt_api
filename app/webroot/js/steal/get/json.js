@@ -2,7 +2,8 @@
 	var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
 		isArray = function( arr ) {
 			return Object.prototype.toString.call(arr) === "[object Array]";
-		};
+		},
+		s= steal;
 
 
 	JSONparse = function( text, reviver ) {
@@ -94,9 +95,7 @@
 		}
 		return '"' + string + '"';
 	};
-	var vtoJSON = null;
-	var steal = steal;
-	vtoJSON = function( o, compact ) {
+	var toJSON = function( o, compact ) {
 		var type = typeof(o);
 
 		if ( type == "undefined" ){
@@ -121,7 +120,7 @@
 		if ( isArray(o) ) {
 			var ret = [];
 			for ( var i = 0; i < o.length; i++ ) {
-				ret.push(vtoJSON(o[i], compact));
+				ret.push(toJSON(o[i], compact));
 			}
 			if ( compact ) {
 				return "[" + ret.join(",") + "]";
@@ -152,7 +151,7 @@
 				continue; //skip non-string or number keys
 			}
 			
-			var val = vtoJSON(o[k], compact);
+			var val = toJSON(o[k], compact);
 			if ( typeof(val) != "string" ) {
 				// skip non-serializable values
 				continue;
@@ -167,6 +166,5 @@
 		}
 		return "{" + ret.join(", ") + "}";
 	};
-	toJSON = vtoJSON;
-
+	s.toJSON = toJSON;
 })();

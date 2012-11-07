@@ -1,2 +1,2 @@
 steal('steal/coffee')
-	.then('./coffee.coffee')
+	.then('steal/coffee/coffee.coffee')

@@ -1,0 +1,13 @@
+<div class="template">
+<% items.each(function(item){ %>
+	<div class="loop">
+    <% if( item.attr('children') ) { %>
+        <div class="node">
+            <%== can.view.render('//can/view/ejs/recursive.ejs', {items:item.attr('children')}) %>
+        </div>
+	<%} else {%>
+		<div class="leaf">L</div>
+	<%}%>
+    </div>
+<%}) %>
+</div>

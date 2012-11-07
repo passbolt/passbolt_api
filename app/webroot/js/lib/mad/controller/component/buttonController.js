@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/view/template/component/button.ejs'
-).then(function ($) {
+	'mad/controller/componentController.js',
+	'mad/view/template/component/button.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.ButtonController
@@ -25,7 +25,7 @@ steal(
 
 		'defaults': {
 			'label': 'Button Component',
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/button.ejs',
+			'templateUri': 'mad/view/template/component/button.ejs',
 			'templateBased': false,
 			'value': null,
 			'events': {

@@ -1,6 +1,6 @@
 steal(
 	'jquery/class'
-).then(function ($) {
+).then(function () {
 
 	/**
 	 * The controller class helper offers to the developper tools arround controllers
@@ -20,7 +20,7 @@ steal(
 		 * <br/><br/>
 		 * For controllers from the mad squirrel library (mad.controller.component.ContainerController):
 		 * <br/>
-		 * MAD_ROOT/view/template/component/containerController.ejs
+		 * mad/view/template/component/containerController.ejs
 		 * <br/><br/>
 		 * For controllers from the application (passbolt.controller.PasswordWorkspaceController):
 		 * <br/>
@@ -37,7 +37,7 @@ steal(
 		 * true and the view template does not exist return an empty string
 		 */
 		'getViewPath': function (clazz, options) {
-			var returnValue = '//';
+			var returnValue = '';
 
 			var clazzName = clazz.fullName;
 			var split = clazzName.split('.');
@@ -48,7 +48,7 @@ steal(
 
 			// extract namespace
 			if (split[0] == 'mad') {
-				returnValue += MAD_ROOT;
+				returnValue += 'mad';
 				split = split.splice(1);
 			} else if (split[0] == mad.controller.AppController.getGlobal('APP_NS_ID')) {
 				//we are in a plugin
@@ -84,7 +84,7 @@ steal(
 
 			var clazzName = clazz.fullName;
 			var split = clazzName.split('.');
-			
+
 			// extract the controller name, and treat it to find its view name
 			var controllerName = split.pop();
 			var viewName = $.String.camelize(controllerName.substr(0, controllerName.indexOf('Controller')));

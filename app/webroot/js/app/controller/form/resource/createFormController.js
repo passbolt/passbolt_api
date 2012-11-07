@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/form/formController.js',
+	'mad/form/formController.js',
 	'app/view/template/form/resource/createForm.ejs'
-).then(function ($) {
+).then(function () {
 
 	/**
 	 * @class passbolt.controller.form.resource.CreateFormController
@@ -29,32 +29,37 @@ steal(
 			// temporary for update demonstration
 			this.options.data.Resource = this.options.data.Resource || {};
 
+			// Add category id hidden field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_category_id'), {
-					'value': this.options.data.Category.id || ''
+					modelReference: 'passbolt.model.Resource.Category.id'
 				})
 			);
+			// Add resource name field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_name'), {
-					'value': this.options.data.Resource.name || ''
+					modelReference: 'passbolt.model.Resource.name'
 				}),
 				new mad.form.FeedbackController($('#js_field_name_feedback'), {})
 			);
+			// Add resource username field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_username'), {
-					'value': this.options.data.Resource.username || ''
+					modelReference: 'passbolt.model.Resource.username'
 				}),
 				new mad.form.FeedbackController($('#js_field_username_feedback'), {})
 			);
+			// Add resource uri field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_uri'), {
-					'value': this.options.data.Resource.uri || ''
+					modelReference: 'passbolt.model.Resource.uri'
 				}),
 				new mad.form.FeedbackController($('#js_field_uri_feedback'), {})
 			);
+			// Add resource description field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_description'), {
-					'value': this.options.data.Resource.description || ''
+					modelReference: 'passbolt.model.Resource.description'
 				}),
 				new mad.form.FeedbackController($('#js_field_description_feedback'), {})
 			);
@@ -68,6 +73,7 @@ steal(
 		'render': function () {
 			this._super();
 			this.initFormElement();
+			this.load(this.options.data);
 		}
 
 	});

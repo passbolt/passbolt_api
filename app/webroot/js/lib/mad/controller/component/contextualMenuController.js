@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/controller/component/dropDownMenuController.js'
-).then(function ($) {
+	'mad/controller/component/dropDownMenuController.js'
+).then(function () {
 
 	/**
 	 * @class mad.controller.component.ContextualMenuController
@@ -41,12 +41,12 @@ steal(
 
 		/**
 		 * The mouse leave the contextual menu
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {Event} ev The jQuery event
 		 * @return {void}
 		 */
-		'mouseleave': function (element, event) {
-			this.goToHell();
+		'mouseleave': function (el, ev) {
+			this.remove();
 		}
 
 	});

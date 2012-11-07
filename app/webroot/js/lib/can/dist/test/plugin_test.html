@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="../../../funcunit/qunit/qunit.css" />
+		<title>can DIST Plugin Test</title>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<script type='text/javascript'>
+			steal('can/util/jquery/jquery.1.7.1.js')
+				.then('can/dist/edge/can.jquery.js')
+				.then('can/dist/edge/can.construct.proxy.js',
+					  'can/dist/edge/can.construct.super.js',
+					  'can/dist/edge/can.observe.attributes.js',
+					  'can/dist/edge/can.observe.backup.js',
+					  'can/dist/edge/can.observe.delegate.js',
+					  'can/dist/edge/can.observe.setter.js',
+					  'can/dist/edge/can.observe.validations.js',
+					  'can/dist/edge/can.control.plugin.js')
+				.then('funcunit/qunit',
+					  'can/util/fixture')
+				.then('can/construct/proxy/proxy_test.js',
+					  'can/construct/super/super_test.js',
+					  'can/observe/attributes/attributes_test.js',
+					  'can/observe/delegate/delegate_test.js',
+					  'can/observe/backup/backup_test.js',
+					  'can/observe/setter/setter_test.js',
+					  'can/observe/validations/validations_test.js',
+					  'can/control/plugin/plugin_test.js')
+		</script>
+	</head>
+	<body>
+
+		<h1 id="qunit-header">can DIST Plugin Tests</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<div id="test-content"></div>
+		<ol id="qunit-tests"></ol>
+		<div id="qunit-test-area"></div>
+	</body>
+</html>

@@ -1,7 +1,6 @@
-steal( 
-    MAD_ROOT+'/view'
-)
-.then( function ($) {
+steal(
+	'mad/view'
+).then(function () {
 
 	/*
 	 * @class mad.view.component.Tab
@@ -12,12 +11,10 @@ steal(
 	 * 
 	 * @return {mad.view.component.Tab}
 	 */
-	mad.view.View.extend('mad.view.component.Tab',
-	/** @static */
-	{  },
+	mad.view.View.extend('mad.view.component.Tab', /** @static */ {
 
-	/** @prototype */
-	{
+	}, /** @prototype */ {
+
 		/**
 		 * Add a component to the container. Add its dom element
 		 * @param {Array} componentOptions The options of the component to add
@@ -31,4 +28,5 @@ steal(
 			return $component;
 		}
 	});
+
 });

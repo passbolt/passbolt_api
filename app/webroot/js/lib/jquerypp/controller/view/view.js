@@ -1,0 +1,1 @@
+steal('jquery/controller', 'can/control/view');

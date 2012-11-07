@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-03.dtd"-->
+
+<coverage line-rate="0.9" branch-rate="0.0">
+	<sources>
+		<source><%= steal.File.cwd() %></source>
+		<source>--source</source>
+	</sources>
+	<packages>
+		<package name="" line-rate="<%= total.lineCoverage %>" branch-rate="0.0" complexity="0.0">
+			<classes>
+			<% for(var file in files){ %>
+				<class name="" filename="<%= file %>" line-rate="<%= files[file].lineCoverage %>" branch-rate="0.0" complexity="0.0">
+					<lines>
+						<% for(var i=0; i < files[file].lines; i++) { %>
+						<% if(files[file].linesUsed[i]){ %>
+						<line number="<%= i %>" hits="<%= files[file].linesUsed[i] %>" branch="false"/>
+						<% } else { %>
+						<line number="<%= i %>" hits="0" branch="false"/>
+						<% } %>
+						<% } %>
+					</lines>
+				</class>
+			<% } %>
+			</classes>
+		</package>
+	</packages>
+</coverage>

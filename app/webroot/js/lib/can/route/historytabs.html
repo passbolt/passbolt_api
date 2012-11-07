@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>can.route history tabs</title>
+            <style type="text/css">
+        body {font-family: verdana}
+        .tabs {
+            padding: 0px; margin: 0px;
+        }
+        .tabs li {
+            float: left;
+            padding: 10px;
+            background-color: #F6F6F6;
+            list-style: none;
+            margin-left: 10px;
+        }
+        .tabs li a {
+            color: #1C94C4;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .tabs li.active a {
+            color: #F6A828;
+            cursor: default;
+        }
+        .tab {
+            border: solid 1px #F6A828;
+        }
+        /* clearfix from jQueryUI */
+        .ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+        .ui-helper-clearfix { display: inline-block; }
+        /* required comment for clearfix to work in Opera \*/
+        * html .ui-helper-clearfix { height:1%; }
+        .ui-helper-clearfix { display:block; }
+        /* end clearfix */
+    </style>
+</head>
+<body>
+<div id="demo-html">
+	<ul id="recipes" class="tabs ui-helper-clearfix">
+	  <li><a href="#recipe1">Recipe 1</a></li>
+	  <li><a href="#recipe2">Recipe 2</a></li>
+	  <li><a href="#recipe3">Recipe 3</a></li>
+	</ul>
+	<div id="recipe1" class="tab">
+		Recipe 1 Content
+	</div>
+	<div id="recipe2" class="tab">
+		Recipe 2 Content
+	</div>
+	<div id="recipe3" class="tab">
+		Recipe 3 Content
+	</div>
+	
+	<ul id="tasks" class="tabs ui-helper-clearfix">
+	  <li><a href="#task1">Task 1</a></li>
+	  <li><a href="#task2">Task 2</a></li>
+	  <li><a href="#task3">Task 3</a></li>
+	</ul>
+	<div id="task1" class="tab">
+		Task 1 Content
+	</div>
+	<div id="task2" class="tab">
+		Task 2 Content
+	</div>
+	<div id="task3" class="tab">
+		Task 3 Content
+	</div>
+</div>
+        
+		<script type='text/javascript' src='../../steal/steal.js'></script>
+		<script type='text/javascript'>
+steal('can/route', 'can/control',
+function() {
+    
+  var HistoryTabs = can.Control({
+    init: function( el ) {
+      
+      // hide all tabs
+      var tab = this.tab;
+      this.element.children( 'li' ).each(function() {
+        tab( $( this ) ).hide();
+      });
+      
+      // activate the first tab
+      var active = can.route.attr(this.options.attr);
+      this.activate(active)
+    },
+    "{can.route} {attr}" : function(route, ev, newVal, oldVal){
+    	this.activate(newVal, oldVal)
+    },
+    // helper function finds the tab for a given li
+    tab: function( li ) {
+      return $( li.find( 'a' ).attr( 'href' ) );
+    },
+    // helper function finds li for a given id
+    button : function(id){
+    	// if nothing is active, activate the first
+    	return id ? this.element.find("a[href=#"+id+"]").parent() : this.element.children( 'li:first' );
+    },
+    // activates 
+    activate: function( active, oldActive ){
+    	// deactivate the old active
+    	var oldButton = this.button(oldActive).removeClass('active');
+    	this.tab(oldButton).hide();
+    	// activate new
+    	var newButton = this.button(active).addClass('active');
+    	this.tab(newButton).show();
+    },
+    "li click" : function(el, ev){
+    	// prevent the default setting
+    	ev.preventDefault();
+    	// update the route data
+    	can.route.attr(this.options.attr, this.tab(el)[0].id)
+    }
+  });
+  
+  can.route(":recipe",{
+  	recipe: "recipe1",
+  	task: "task3"
+  });
+  
+  can.route(":recipe/:task",{
+  	recipe: "recipe1",
+  	task: "task3"
+  });
+  
+  // adds the controller to the element
+  new HistoryTabs( '#recipes',{attr: 'recipe'});
+  new HistoryTabs( '#tasks',{attr: 'task'});
+})
+		</script>
+    </body>
+</html>

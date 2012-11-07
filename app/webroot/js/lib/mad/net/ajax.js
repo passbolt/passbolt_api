@@ -1,12 +1,12 @@
 steal(
-	MAD_ROOT + '/core/singleton.js',
-	MAD_ROOT + '/net/request.js'
-).then(function ($) {
+	'mad/core/singleton.js',
+	'mad/net/response.js',
+	'mad/net/responseHandler.js'
+).then(function () {
 
 	/*
     * @class mad.net.Ajax
 		* @inherits mad.core.Singleton
-		* @see mad.net.Request
 		* @see mad.net.Response
 		* @see mad.net.ResponseHandler
 		* @parent mad.net
@@ -70,179 +70,90 @@ steal(
 	mad.core.Singleton('mad.net.Ajax', /** @static */ {
 
 		/**
-		 * Perform an ajax request, parameters are similar to the ajax function of the jQuery
-		 * library. Add to this one a second parameter to define if the request has to be in 
-		 * a transaction or not !
-		 * @param {Array} request The ajax request object
-		 * @param {Boolean} isTransaction If set to true the system will try to bundle several
-		 * request in one.
-		 * @hide
+		 * Perform an ajax request
+		 * @param {Array} request The ajax request settings (almost similar to the 
+		 * jQuery ajax function)
+		 * @return {jQuery.deferred}
 		 */
-		'request': function (setting, isTransaction) {
-			return mad.net.Ajax.singleton().request(setting, isTransaction);
+		'request': function (setting) {
+			return mad.net.Ajax.singleton().request(setting);
 		}
 
 	}, /** @prototype */ {
 
 		/**
-		 * Pending transactions
+		 * Perform an ajax request
+		 * @param {Array} request The ajax request settings (almost similar to the 
+		 * jQuery ajax function)
+		 * @return {jQuery.deferred}
 		 */
-		'transactions': [],
+		'request': function (request) {
+			var ResponseHandlerClass = mad.getGlobal('RESPONSE_HANDLER_CLASS');
 
-		/**
-		 * Current transaction Id.
-		 */
-		'transactionId': null,
+			// Duplicate and store the original params in a variable
+			request.originParams = $.extend({}, request.params);
+			// Treat templated uri (like /controller/action/{id}
+			request.url = $.String.sub(request.url, request.params, true);
+			// By default we expect json data
+			request.dataType = request.dataType || 'json';
+			// Add the params left to the request
+			request.data = request.params;
 
-		/**
-		 * Perform an ajax request, parameters are similar to the ajax function of the jQuery
-		 * library. Add to this one a second parameter to define if the request has to be in 
-		 * a transaction or not !
-		 * @param {Array} request The ajax request object
-		 * @param {Boolean} isTransaction If set to true the system will try to bundle several
-		 * request in one.
-		 * @see mad.net.Ajax.static.request
-		 * @hide
-		 */
-		'request': function (request, isTransaction) {
-			if (isTransaction) {
-				this._addRequest(request);
-				this._executeTransaction();
-			} else {
-				request = mad.net.Request.setupRequest(request);
-				this._executeRequest(request);
-			}
-		},
+			// make the ajax request
+			var returnValue = can.ajax(request)
+				// pipe it to intercept server before any other treatments
+				.pipe(
 
-		/**
-		 * Add a request to the current transaction
-		 * @hide
-		 */
-		'_addRequest': function (request) {
-			var transactionId = this._getTransactionId();
-			if (typeof this.transactions[transactionId] == 'undefined') {
-				this.transactions[transactionId] = {
-					'requests': [],
-					'waitFor': 0,
-					'transactionId': transactionId
-				};
-			}
+					// the request has been performed sucessfully
+					function (data, textStatus, jqXHR) {
+						var response = new mad.net.Response(data),
+							// the deferred to return
+							deferred = null;
 
-			// Identify the request
-			var requestId = uuid();
-			request.id = requestId;
-			this.transactions[transactionId].requests[requestId] = request;
-			this.transactions[transactionId].waitFor++;
-			steal.dev.log('pending requests : ' + this.transactions[transactionId].waitFor);
-		},
+						// @todo check the response format is valid
 
-		/**
-		 * Generate a new current transaction id
-		 * @hide
-		 */
-		'_generateTransactionId': function () {
-			this.transactionId = uuid();
-		},
-
-		/**
-		 * Get the current transaction id, generate a new one if null
-		 * @hide
-		 */
-		'_getTransactionId': function () {
-			if (this.transactionId == null) {
-				this._generateTransactionId();
-			}
-			return this.transactionId;
-		},
-
-		/**
-		 * Get the current transaction
-		 * @hide
-		 */
-		'_getTransaction': function (id) {
-			var transactionId = typeof id != 'undefined' ? id : this._getTransactionId();
-			return this.transactions[transactionId];
-		},
-
-		/**
-		 * Execute the requests transaction.
-		 * Here we use a timeout cycle to wait (1ms) on possible additional requests.
-		 * We have to test this method without console.log, which can make the code
-		 * execution sync ... etc ...
-		 * @hide
-		 */
-		'_executeTransaction': function () {
-			var self = this;
-			setTimeout(function () {
-				// get the current transaction
-				var transaction = self._getTransaction();
-				// decrease the counter of pending request
-				transaction.waitFor--;
-				// @debug
-				steal.dev.log('pending requests : ' + transaction.waitFor);
-
-				// if no more pending request, launche the transaction
-				if (transaction.waitFor == 0) {
-					// reset transaction id to allow new transaction
-					self._generateTransactionId();
-					// build the bundled request
-					var bundleRequests = self._bundleRequests(transaction.requests);
-
-					// execute the bundled request
-					self._executeRequest({
-						type: 'POST',
-						url: APP_URL + '/ajax/requests',
-						data: {
-							'requests': bundleRequests,
-							'transactionId': transaction.transactionId
-						},
-						dataType: 'json',
-						success: function (srvData) {
-							//                                srvData = $.extend(true,{},srvData);
-							var transactionId = srvData.transactionId;
-							var transaction = self._getTransaction(transactionId);
-							for (var requestId in transaction.requests) {
-								var resultRequest = new mad.net.Response(srvData.requests[requestId]);
-								// execute success function of the stored request
-								if(typeof transaction.requests[requestId].success != 'undefined') {
-									transaction.requests[requestId].success(srvData.requests[requestId].data);
-								}
-							}
-
-							// remove the transaction
-							delete transaction;
-							delete self.transactions[transactionId];
+						// the server returns an error
+						if (response.getStatus() == mad.net.Response.STATUS_ERROR) {
+							deferred = $.Deferred();
+							deferred.rejectWith(this, [jqXHR, 'error', response]);
+							return deferred;
 						}
-					});
 
-				}
-			}, 1); // wait 1 ms seems to be enough
-		},
+						// @todo treat notice, warning & success
 
-		/**
-		 * Execute a request. Bundled or not
-		 * @hide
-		 */
-		'_executeRequest': function (request) {
-			//				setTimeout(function(){
-			$.ajax(request);
-			//				}, 2000);
-		},
+						// everything fine, continue
+						// override the deferred to pass the desired data
+						// findOne, findAll get this deffered, but create seems to have
+						// its own, it return only the bulk server response (treat it there)
+						deferred = $.Deferred();
+						deferred.resolveWith(this, [data, response, request]);
+						return deferred;
+					},
 
-		/**
-		 * Bundle requests
-		 * @hide
-		 */
-		'_bundleRequests': function (requests) {
-			var bundle = [];
-			for (var i in requests) {
-				bundle.push({
-					'id': requests[i].id,
-					'url': requests[i].url,
-					'data': requests[i].data
-				});
-			}
-			return bundle;
+					// the request has not been performed
+					function (jqXHR, textStatus, data) {
+						var response = mad.net.Response.getResponse('unreachable');
+						var deferred = $.Deferred();
+						deferred.rejectWith(this, [jqXHR, response.getStatus(), response, request]);
+						return deferred;
+					}
+
+				); // end of pipe
+
+			// Handle the server success response with the default response handler
+			returnValue.then(function (data, textStatus, jqXHR) {
+				var response = new mad.net.Response(data);
+				responseHandler = new ResponseHandlerClass(response, request);
+				responseHandler.handle();
+			});
+
+			// Handle the server fail response with the default response handler
+			returnValue.fail(function (jqXHR, textStatus, response) {
+				responseHandler = new ResponseHandlerClass(response, request);
+				responseHandler.handle();
+			});
+
+			return returnValue;
 		}
 
 	});

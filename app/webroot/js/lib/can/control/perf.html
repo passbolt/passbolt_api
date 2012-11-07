@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+		<title>Playground</title>
+</head>
+<style type="text/css">
+  body { font-family: verdana } .tabs { padding: 0px; margin: 0px; } .tabs li { float:
+  left; padding: 10px; background-color: #F6F6F6; list-style: none; margin-left: 10px;
+  } .tabs li a { color: #1C94C4; font-weight: bold; text-decoration: none; } .tabs
+  li.active a { color: #F6A828; cursor: default; } .tab { border: solid 1px #F6A828;
+  } /* clearfix from jQueryUI */ .ui-helper-clearfix:after { content: "."; display:
+  block; height: 0; clear: both; visibility: hidden; } .ui-helper-clearfix { display:
+  inline-block; } /* required comment for clearfix to work in Opera \*/ * html .ui-helper-clearfix
+  { height:1%; } .ui-helper-clearfix { display:block; } /* end clearfix */
+</style>
+<body>
+	<p>In <a href="http://jsperf.com/tabs-timing-test/6" target="_blank">synch</a> mode:<br>Can ~300<br>Backbone ~ 450<br>Ember ~1400</p>
+	<p>In <a href="http://jsperf.com/tabs-timing-test/4" target="_blank">asynch</a> mode:<br>Can ~150<br>Backbone ~150<br>Ember ~90</p>
+<button id="doCan">CanJS</button>
+<button id="doBackbone">Backbone</button>
+<button id="doEmber">Ember</button>
+<button id="reset">Reset</button>
+<div id="container"></div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://canjs.us/release/latest/can.jquery.js"></script>
+<script src="http://cloud.github.com/downloads/emberjs/ember.js/ember-0.9.7.1.min.js"></script>
+<script src="http://cloud.github.com/downloads/SteveSanderson/knockout/knockout-2.1.0.js"></script>
+<script src="http://underscorejs.org/underscore-min.js"></script>
+<script src="http://backbonejs.org/backbone-min.js"></script>
+<script type="text/x-handlebars" data-template-name="emberTpl">
+<div class="wrapper">  
+<ul class="tabs ui-helper-clearfix">
+    <li>
+      <a href="#">Tab 1</a>
+    </li>
+    <li>
+      <a href="#">Tab 2</a>
+    </li>
+    <li>
+      <a href="#">Tab 3</a>
+    </li>
+  </ul>
+  <div class="tab">
+    Tab 1 Content
+  </div>
+  <div class="tab">
+    Tab 2 Content
+  </div>
+  <div class="tab">
+    Tab 3 Content
+  </div>
+</div>
+</script>
+<div style="display: none">
+<div id="tabView">
+<ul class="tabs ui-helper-clearfix">
+    <li>
+      <a href="#">Tab 1</a>
+    </li>
+    <li>
+      <a href="#">Tab 2</a>
+    </li>
+    <li>
+      <a href="#">Tab 3</a>
+    </li>
+  </ul>
+  <div class="tab">
+    Tab 1 Content
+  </div>
+  <div class="tab">
+    Tab 2 Content
+  </div>
+  <div class="tab">
+    Tab 3 Content
+  </div>
+</div>
+</div>
+<script>
+    var container = $('#container'),
+          tabView = $('#tabView').html(),
+          runs = 100;
+    
+      var CanTabs = can.Control({
+        init: function(el) {
+    
+          // activate the first tab
+          this.element.find('li:first').addClass('active');
+    
+          // hide the other tabs
+          var self = this;
+          this.element.find('li:gt(0)').each(function() {
+            self.tab($(this)).hide();
+          });
+        },
+    
+        // helper function finds the tab for a given li
+        tab: function(li) {
+          return this.element.find('.tab:eq(' + li.index() + ')');
+        },
+    
+        // hides old active tab, shows new one
+        'li click': function(el, ev) {
+          ev.preventDefault();
+          this.tab(this.element.find('.active').removeClass('active')).hide();
+          this.tab(el.addClass('active')).show();
+        }
+      });
+    
+      var BBTabs = Backbone.View.extend({
+        events: {
+          'click li': 'activate'
+        },
+    
+        render: function() {
+          this.$el.find('li:first').addClass('active');
+    
+          var self = this;
+          this.$el.find('li:gt(0)').each(function() {
+            self.tab($(this)).hide();
+          });
+        },
+    
+        tab: function(li) {
+          return this.$el.find('.tab:eq(' + li.index() + ')');
+        },
+    
+        activate: function(ev) {
+          ev.originalEvent.preventDefault();
+          this.tab(this.$el.find('.active').removeClass('active')).hide();
+          this.tab($(ev.currentTarget).addClass('active')).show();
+        }
+      });
+    
+    App = Ember.Application.create();
+    App.Tabs = Em.View.extend({
+        templateName: "emberTpl",
+        id: "df",
+        didInsertElement: function(){
+                var el = $(Ember.get(this, 'element')),
+                        tab = Ember.get(this, 'tab'),
+                        self = this;
+                el.find('li:first').addClass('active');
+                el.find('li:gt(0)').each(function(){
+                        tab.apply(self, [$(this)]).hide();
+                });
+        },
+        tab: function(li){
+                var el = this.$('.wrapper');
+                return el.find('.tab:eq(' + li.index() + ')');
+        },
+        click: function(e){
+                var el = this.$('.wrapper'),
+                        li = $(e.target).parent(),
+                        tab = Ember.get(this, 'tab');
+                if(li.is('li')) {
+                        tab.apply(this, [el.find('.active').removeClass('active')]).hide();
+                        tab.apply(this, [li.addClass('active')]).show();
+                }
+        }
+    });
+  	function doCan() {
+  		for(i = 0; i < runs; i++) {
+  			var el = container.append('<div>').children(':last').append(tabView);
+          	new CanTabs(el);
+      	}
+  	}
+    
+	function doBackbone() {
+  		for(i = 0; i < runs; i++) {
+			var el = container.append('<div>').children(':last').append(tabView);     
+			new BBTabs({
+				el: el
+			}).render();
+		}
+	}
+	function doEmber() {
+  		for(i = 0; i < runs; i++) {
+			App.Tabs.create().appendTo('#container');
+		}
+	}
+
+  window.reset = function() {
+    $('#container').html('')
+  };
+  $(function(){
+  	$('#doCan').on('click', function(){
+  		window.doCan();
+  	})
+  	$('#doBackbone').on('click', function(){
+  		window.doBackbone();
+  	})
+  	$('#doEmber').on('click', function(){
+  		window.doEmber();
+  	})
+  	$('#reset').on('click', function(){
+  		window.reset();
+  	})
+  })
+</script>
+</body>
+</html>

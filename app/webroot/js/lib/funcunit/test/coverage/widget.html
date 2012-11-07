@@ -1,0 +1,14 @@
+<html>
+	<head></head>
+	<body>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<script type='text/javascript'>
+		steal('funcunit/browser/resources/jquery.js','funcunit/test/coverage/widget.js', function(){
+			$(function(){
+				$('#widget').my_widget();
+			});
+		})
+		</script>
+		<div id="widget"></div>
+	</body>
+</html>

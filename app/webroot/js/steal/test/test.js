@@ -1,12 +1,13 @@
 // this is test helpers for steal
-steal(function(steal){
+steal('steal', function(steal){
 	
 var assertions = [],
 	module = "";
 steal.test =  {
 	//clears every property fromt he window, returns steal (might return old stuff)
 	clear: function() {
-		var win = this.getWindow();
+		var win = this.getWindow(),
+			steal = steal;
 		for(var n in win){
 			if(n != "_S" && n != "STEALPRINT"){
 				//this[n] = null;
@@ -15,6 +16,12 @@ steal.test =  {
 		}
 		this.testNamespace();
 		return steal;
+	},
+	// compares the file character counts, which is much faster than the string comparison
+	compareFiles: function(expected, actual, msg){
+		var actualJS = readFile(actual),
+			expectedJS = readFile(expected);
+		this.equals(actualJS.length, expectedJS.length, msg);
 	},
 	getWindow: function() {
 		return (function(){return this}).call(null,0)
@@ -100,18 +107,32 @@ steal.test =  {
 			print("I DON'T GET IT")
 		}
 		Envjs(src, {
-			scriptTypes : {
-				"text/javascript" : true,
-				"text/envjs" : true,
+			scriptTypes: {
+				"text/javascript": true,
+				"text/envjs": true,
 				"": true
-			}, 
-			fireLoad: fireLoad !== undefined ? fireLoad : true, 
+			},
+			fireLoad: true,
 			logLevel: 2,
+			afterScriptLoad: {
+				// prevent $(document).ready from being called even though load is fired
+				"jquery.js": function( script ) {
+					window.jQuery && jQuery.readyWait++;
+				},
+				"steal.js": function(script){
+					// a flag to tell steal we're in "build" mode
+					// this is used to completely ignore files with the "ignore" flag set
+					window.steal.isBuilding = true;
+					// if there's timers (like in less) we'll never reach next line 
+					// unless we bind to done here and kill timers
+					window.steal.one('done', function(){
+						Envjs.clear();
+					});
+					newSteal = window.steal;
+				}
+			},
 			dontPrintUserAgent: true
 		});
-		//var newSteal = window.steal;
-		//newSteal.done(function(){});
-		//Envjs.wait();
 		
 	},
 	test : function(name, test){
@@ -124,5 +145,5 @@ steal.test =  {
 		print("==========  "+name+"  =========")
 	}
 }
-	
+	return steal;
 })

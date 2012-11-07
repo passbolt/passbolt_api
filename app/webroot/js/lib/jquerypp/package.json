@@ -1,0 +1,27 @@
+{
+  "name" : "jquerypp",
+  "description" : "jQuery's missing utils and special events",
+  "version" : "1.0.0",
+  "maintainers" : [
+    {
+      "name" : "Bitovi",
+      "email" : "contact@bitovi.com",
+      "web" : "http://bitovi.com/"
+    }
+  ],
+  "devDependencies" : {
+    "grunt" : "~0.3.11",
+    "http-server" : "0.5.1"
+  },
+  "homepage" : "http://jquerypp.com",
+  "repository" : {
+    "type" : "git",
+    "url" : "git://github.com/jupiterjs/jquerypp.git"
+  },
+  "licenses" : [
+    {
+      "type" : "MIT",
+      "url" : "http://opensource.org/licenses/mit-license.php"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/view',
-	MAD_ROOT + '/view/template/component/grid.ejs'
-).then(function ($) {
+	'mad/view',
+	'mad/view/template/component/grid.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.view.component.Grid
@@ -65,87 +65,105 @@ steal(
 		},
 
 		/**
-		 * Delete an item in the grid
-		 * @param {array|string} itemsIds The item(s) to delete
+		 * Remove an item to the grid
+		 * @param {mad.model.Model} item The item to remove
 		 * @return {void}
 		 */
-		'deleteItems': function (itemsIds) {
-			if (!$.isArray(itemsIds)) {
-				itemsIds = [itemsIds];
-			}
-			for (var i in itemsIds) {
-				$('#' + itemsIds[i], this.element).remove();
-			}
+		'removeItem': function (item) {
+			var el = $('#' + item.id, this.element);
+			el.remove();
 		},
 
 		/**
-		 * Insert items in the grid
-		 * @param {array} items The array of items to insert in the grid
-		 * @param {string} position The position to insert the new items.
+		 * Render a row for a given item
+		 * @param {mad.model.Model} item The item to use to render the row
+		 * @return {void}
+		 */
+		'_renderRow': function (item) {
+			var returnValue = null,
+				// the mapped item
+				mappedItem = this.controller.map.mapObject(item),
+				// the cells data (columnName, value)
+				cells = [];
+
+			// insert column data
+			for(var j in this.controller.options.columnModel) {
+				// the column model which describe the current column
+				var columnModel = this.controller.options.columnModel[j],
+					// the cell value
+					cellValue = null;
+
+				// A column adapater is provided, use it to adapt the cell value
+				if(columnModel.valueAdapter) {
+					cellValue = columnModel.valueAdapter(mappedItem[columnModel.name], mappedItem, columnModel);
+				} else if(columnModel.widget || columnModel.cellAdapter) {
+					// A widget will take care of the cell rendering
+					cellValue = '';
+				} else {
+					// Else, use the mapped item value as it is as cell value
+					cellValue = mappedItem[columnModel.name];
+				}
+				cells.push({
+					'columnName' : columnModel.name,
+					'value': cellValue
+				});
+			}
+			
+			// render the row item
+			returnValue = mad.view.View.render(this.controller.options.itemTemplateUri, {
+				'item': item,
+				'id': mappedItem.id,
+				'cells': cells
+			});
+			
+			return returnValue;
+		},
+
+		/**
+		 * Insert an intem in the grid
+		 * @param {mad.model.Model} item The item to insert in the grid
+		 * @param {string} position The position to insert the new item
 		 * Allowed first, last, before, after
 		 * @param {string} refId The reference item id to position the new ones
 		 * @return {void}
 		 */
-		'insertItems': function (items, refItemId, position) {
+		'insertItem': function (item, refItemId, position) {
+			// By default position the new element inside as final element
 			position = position || 'last';
-			var $row = null,
-				$ref = refItemId && (position == 'after' || position == 'before')? $('#' + refItemId, this.element) : $('tbody', this.$grid);
+			// the reference HTML Element to use to position the new one
+			var $ref = refItemId ? $('#' + refItemId, this.element) : $('tbody', this.element),
+				// the mapped item
+				mappedItem = this.controller.map.mapObject(item),
+				// the row html fragment to insert
+				row = '';
 
-			items = !$.isArray(items) ? [items] : items;
-			var mappedItems = this.controller.map.mapObjects(items);
-			if (!$.isArray(mappedItems)) {
-				mappedItems = [mappedItems];
-			}
+			// render the row
+			row = this._renderRow(item);
 
-			for (var i in items) {
-				var mappedItem = mappedItems[i],
-					rowContent = '<tr id="' + mappedItem.id + '">';
-
-				// insert column data
-				for(var j in this.controller.options.columnModel) {
-					var columnModel = this.controller.options.columnModel[j],
-						cssClass = 'js_grid_column_' + columnModel.name,
-						cellValue = null;
-
-					// A column adapater function is provided
-					if(columnModel.valueAdapter) {
-						cellValue = columnModel.valueAdapter(mappedItem[columnModel.name], mappedItem, columnModel, i);
-					}
-					// A widget will take care of the cell rendering
-					else if(columnModel.widget || columnModel.cellAdapter) {
-						cellValue = '';
-					}
-					// Else display the column value
-					else {
-						cellValue = mappedItem[columnModel.name];
-					}
-
-					// append the cell to the row
-					rowContent += '<td class="' + cssClass + '"><span>' + cellValue + '</span></td>';
-				}
-
-				rowContent += '</tr>'
-
-				// insert the row
-				switch(position) {
-				case 'first':
-					$row = $(rowContent).prependTo($ref);
-					break;
-
-				case 'last':
-					$row = $(rowContent).appendTo($ref);
-					break;
-
-				case 'before':
-					$row = $(rowContent).insertBefore($ref);
-					break;
-
-				case 'after':
-					$row = $(rowContent).insertAfter($ref);
-					break;
-				}
-			}
+			// insert the raw html fragment in the grid
+			mad.helper.HtmlHelper.create($ref, position, row);
 		},
+
+		/**
+		 * Refresh item
+		 * @param {mad.model.Model} item The item to refresh
+		 * @return {void}
+		 */
+		'refreshItem': function (item) {
+			// the mapped item
+			var mappedItem = this.controller.map.mapObject(item),
+				// the row html fragment to insert
+				row = '',
+				// the current row
+				$current = $('#' + mappedItem.id, this.element);
+
+			// render the row
+			row = this._renderRow(item);
+
+			// insert the raw html fragment in the grid
+			mad.helper.HtmlHelper.create($current, 'replace_with', row);
+		},
+		
 
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
@@ -153,22 +171,34 @@ steal(
 		
 		/**
 		 * An item has been selected
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'tbody tr click': function (element, event) {
-			this.element.trigger('item_selected', element[0].id);
+		'tbody tr click': function (el, ev) {
+			var data = null;
+			if (this.controller.itemClass) {
+				data = el.data(this.controller.itemClass.fullName);
+			} else {
+				data = el[0].id;
+			}
+			this.element.trigger('item_selected', [data, ev]);
 		},
 		
 		/**
 		 * An item has been hovered
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'tbody tr hover': function (element, event) {
-			this.element.trigger('item_hovered', element[0].id);
+		'tbody tr hover': function (el, ev) {
+			var data = null;
+			if (this.controller.itemClass) {
+				data = el.data(this.controller.itemClass.fullName);
+			} else {
+				data = el[0].id;
+			}
+			this.element.trigger('item_hovered', [data, ev]);
 		}
 
 	});

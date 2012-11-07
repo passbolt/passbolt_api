@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/controller/componentController.js',
-	MAD_ROOT + '/core/singleton.js'
-).then(function ($) {
+	'mad/controller/componentController.js',
+	'mad/core/singleton.js'
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.component.NotificationController

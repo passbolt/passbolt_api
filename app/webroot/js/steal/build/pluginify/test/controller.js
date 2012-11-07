@@ -11,48 +11,18 @@
 		replacer: /\{([^\}]+)\}/g,
 		dot: /\./
 	},
+		// gets the nextPart property from current
+		// add - if true and nextPart doesnt exist, create it as an empty object
 		getNext = function(current, nextPart, add){
 			return current[nextPart] !== undefined ? current[nextPart] : ( add && (current[nextPart] = {}) );
 		},
+		// returns true if the object can have properties (no nulls)
 		isContainer = function(current){
 			var type = typeof current;
-			return type && (  type == 'function' || type == 'object' );
+			return current && ( type == 'function' || type == 'object' );
 		},
-		getObject = function( objectName, roots, add ) {
-			
-			var parts = objectName ? objectName.split(regs.dot) : [],
-				length =  parts.length,
-				currents = $.isArray(roots) ? roots : [roots || window],
-				current,
-				ret, 
-				i,
-				c = 0,
-				type;
-			
-			if(length == 0){
-				return currents[0];
-			}
-			while(current = currents[c++]){
-				for (i =0; i < length - 1 && isContainer(current); i++ ) {
-					current = getNext(current, parts[i], add);
-				}
-				if( isContainer(current) ) {
-					
-					ret = getNext(current, parts[i], add); 
-					
-					if( ret !== undefined ) {
-						
-						if ( add === false ) {
-							delete current[parts[i]];
-						}
-						return ret;
-						
-					}
-					
-				}
-			}
-		},
-
+		// a reference
+		getObject,
 		/** 
 		 * @class jQuery.String
 		 * @parent jquerymx.lang
@@ -79,10 +49,11 @@
 			
 			/**
 			 * @function getObject
-			 * Gets an object from a string.
+			 * Gets an object from a string.  It can also modify objects on the
+			 * 'object path' by removing or adding properties.
 			 * 
 			 *     Foo = {Bar: {Zar: {"Ted"}}}
-		 	 *     $.String.getobject("Foo.Bar.Zar") //-> "Ted"
+		 	 *     $.String.getObject("Foo.Bar.Zar") //-> "Ted"
 			 * 
 			 * @param {String} name the name of the object to look for
 			 * @param {Array} [roots] an array of root objects to look for the 
@@ -92,7 +63,49 @@
 			 *  not modify the root object
 			 * @return {Object} The object.
 			 */
-			getObject : getObject,
+			getObject : getObject = function( name, roots, add ) {
+			
+				// the parts of the name we are looking up
+				// ['App','Models','Recipe']
+				var parts = name ? name.split(regs.dot) : [],
+					length =  parts.length,
+					current,
+					ret, 
+					i,
+					r = 0,
+					type;
+				
+				// make sure roots is an array
+				roots = $.isArray(roots) ? roots : [roots || window];
+				
+				if(length == 0){
+					return roots[0];
+				}
+				// for each root, mark it as current
+				while( current = roots[r++] ) {
+					// walk current to the 2nd to last object
+					// or until there is not a container
+					for (i =0; i < length - 1 && isContainer(current); i++ ) {
+						current = getNext(current, parts[i], add);
+					}
+					// if we can get a property from the 2nd to last object
+					if( isContainer(current) ) {
+						
+						// get (and possibly set) the property
+						ret = getNext(current, parts[i], add); 
+						
+						// if there is a value, we exit
+						if( ret !== undefined ) {
+							// if add is false, delete the property
+							if ( add === false ) {
+								delete current[parts[i]];
+							}
+							return ret;
+							
+						}
+					}
+				}
+			},
 			/**
 			 * Capitalizes a string
 			 * @param {String} s the string.
@@ -163,23 +176,63 @@
 			 * @param {Boolean} [remove] if a match is found, remove the property from the object
 			 */
 			sub: function( s, data, remove ) {
-				var obs = [];
+				var obs = [],
+					remove = typeof remove == 'boolean' ? !remove : remove;
 				obs.push(s.replace(regs.replacer, function( whole, inside ) {
 					//convert inside to type
-					var ob = getObject(inside, data, typeof remove == 'boolean' ? !remove : remove),
-						type = typeof ob;
-					if((type === 'object' || type === 'function') && type !== null){
+					var ob = getObject(inside, data, remove);
+					
+					// if a container, push into objs (which will return objects found)
+					if( isContainer(ob) ){
 						obs.push(ob);
 						return "";
 					}else{
 						return ""+ob;
 					}
 				}));
+				
 				return obs.length <= 1 ? obs[0] : obs;
 			},
 			_regs : regs
 		});
-})(jQuery);
+})(jQuery);;
+(function( $ ) {
+	/**
+	 * @attribute destroyed
+	 * @parent specialevents
+	 * @download  http://jmvcsite.heroku.com/pluginify?plugins[]=jquery/dom/destroyed/destroyed.js
+	 * @test jquery/event/destroyed/qunit.html
+	 * Provides a destroyed event on an element.
+	 * <p>
+	 * The destroyed event is called when the element
+	 * is removed as a result of jQuery DOM manipulators like remove, html,
+	 * replaceWith, etc. Destroyed events do not bubble, so make sure you don't use live or delegate with destroyed
+	 * events.
+	 * </p>
+	 * <h2>Quick Example</h2>
+	 * @codestart
+	 * $(".foo").bind("destroyed", function(){
+	 *    //clean up code
+	 * })
+	 * @codeend
+	 * <h2>Quick Demo</h2>
+	 * @demo jquery/event/destroyed/destroyed.html 
+	 * <h2>More Involved Demo</h2>
+	 * @demo jquery/event/destroyed/destroyed_menu.html 
+	 */
+
+	var oldClean = jQuery.cleanData;
+
+	$.cleanData = function( elems ) {
+		for ( var i = 0, elem;
+		(elem = elems[i]) !== undefined; i++ ) {
+			$(elem).triggerHandler("destroyed");
+			//$.event.remove( elem, 'destroyed' );
+		}
+		oldClean(elems);
+	};
+
+})(jQuery);;
 (function( $ ) {
 
 	// =============== HELPERS =================
@@ -236,6 +289,7 @@
 	 * @parent jquerymx
 	 * @download dist/jquery/jquery.class.js
 	 * @test jquery/class/qunit.html
+	 * @description Easy inheritance in JavaScript.
 	 * 
 	 * Class provides simulated inheritance in JavaScript. Use clss to bridge the gap between
 	 * jQuery's functional programming style and Object Oriented Programming. It 
@@ -248,6 +302,8 @@
 	 *   - Setup and initialization methods
 	 *   - Easy callback function creation
 	 * 
+	 * 
+	 * The [mvc.class Get Started with jQueryMX] has a good walkthrough of $.Class.
 	 * 
 	 * ## Static v. Prototype
 	 * 
@@ -291,7 +347,7 @@
 	 *     this.health = 10;
 	 *
 	 *     // increments count
-	 *     this.Class.count++;
+	 *     this.constructor.count++;
 	 *   },
 	 *   eat: function( smallChildren ){
 	 *     this.health += smallChildren;
@@ -349,7 +405,7 @@
 	 *         staticMethod: function() { return 1;}
 	 *     },{})
 	 *
-	 *     First.extend("Second",{
+	 *     First("Second",{
 	 *         staticMethod: function() { return this._super()+1;}
 	 *     },{})
 	 *
@@ -361,26 +417,29 @@
 	 * It makes it possible to drop your code into another app without problems.
 	 * Making a namespaced class is easy:
 	 * 
-	 * @codestart
-	 * $.Class("MyNamespace.MyClass",{},{});
+	 * 
+	 *     $.Class("MyNamespace.MyClass",{},{});
 	 *
-	 * new MyNamespace.MyClass()
-	 * @codeend
+	 *     new MyNamespace.MyClass()
+	 * 
+	 * 
 	 * <h2 id='introspection'>Introspection</h2>
+	 * 
 	 * Often, it's nice to create classes whose name helps determine functionality.  Ruby on
 	 * Rails's [http://api.rubyonrails.org/classes/ActiveRecord/Base.html|ActiveRecord] ORM class
 	 * is a great example of this.  Unfortunately, JavaScript doesn't have a way of determining
 	 * an object's name, so the developer must provide a name.  Class fixes this by taking a String name for the class.
-	 * @codestart
-	 * $.Class.extend("MyOrg.MyClass",{},{})
-	 * MyOrg.MyClass.shortName //-> 'MyClass'
-	 * MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
-	 * @codeend
+	 * 
+	 *     $.Class("MyOrg.MyClass",{},{})
+	 *     MyOrg.MyClass.shortName //-> 'MyClass'
+	 *     MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
+	 * 
 	 * The fullName (with namespaces) and the shortName (without namespaces) are added to the Class's
 	 * static properties.
 	 *
 	 *
-	 * <h2>Setup and initialization methods</h2>
+	 * ## Setup and initialization methods
+	 * 
 	 * <p>
 	 * Class provides static and prototype initialization functions.
 	 * These come in two flavors - setup and init.
@@ -482,7 +541,7 @@
 	 * @demo jquery/class/class.html
 	 * 
 	 * 
-	 * ## Constructor
+	 * @constructor
 	 * 
 	 * To create a Class call:
 	 * 
@@ -503,7 +562,8 @@
 	 *   </div>
 	 * </div>
 	 * 
-	 * When a Class is created, the static setup and init methods are called.
+	 * When a Class is created, the static [jQuery.Class.static.setup setup] 
+	 * and [jQuery.Class.static.init init]  methods are called.
 	 * 
 	 * To create an instance of a Class, call:
 	 * 
@@ -512,7 +572,8 @@
 	 * The created instance will have all the 
 	 * prototype properties and methods defined by the PROTOTYPE object.
 	 * 
-	 * When an instance is created, the prototype setup and init methods 
+	 * When an instance is created, the prototype [jQuery.Class.prototype.setup setup] 
+	 * and [jQuery.Class.prototype.init init]  methods 
 	 * are called.
 	 */
 
@@ -529,7 +590,7 @@
 		 * Returns a callback function for a function on this Class.
 		 * Proxy ensures that 'this' is set appropriately.  
 		 * @codestart
-		 * $.Class.extend("MyClass",{
+		 * $.Class("MyClass",{
 		 *     getData: function() {
 		 *         this.showing = null;
 		 *         $.get("data.json",this.proxy('gotData'),'json')
@@ -543,7 +604,7 @@
 		 * <h2>Currying Arguments</h2>
 		 * Additional arguments to proxy will fill in arguments on the returning function.
 		 * @codestart
-		 * $.Class.extend("MyClass",{
+		 * $.Class("MyClass",{
 		 *    getData: function( <b>callback</b> ) {
 		 *      $.get("data.json",this.proxy('process',<b>callback</b>),'json');
 		 *    },
@@ -560,7 +621,7 @@
 		 * is called each function in the array is passed the return value of the prior function.  This is often used
 		 * to eliminate currying initial arguments.
 		 * @codestart
-		 * $.Class.extend("MyClass",{
+		 * $.Class("MyClass",{
 		 *    getData: function( callback ) {
 		 *      //calls process, then callback with value from process
 		 *      $.get("data.json",this.proxy(['process2',callback]),'json') 
@@ -594,7 +655,13 @@
 			// keep a reference to us in self
 			self = this;
 			
-			
+			//!steal-remove-start
+			for( var i =0; i< funcs.length;i++ ) {
+				if(typeof funcs[i] == "string" && !isFunction(this[funcs[i]])){
+					throw ("class.js "+( this.fullName || this.Class.fullName)+" does not have a "+funcs[i]+"method!");
+				}
+			}
+			//!steal-remove-end
 			return function class_cb() {
 				// add the arguments after the curried args
 				var cur = concatArgs(args, arguments),
@@ -633,7 +700,7 @@
 		 * with arbitrary parameters.
 		 * <h3>Example</h3>
 		 * @codestart
-		 * $.Class.extend("MyClass",{},{})
+		 * $.Class("MyClass",{},{})
 		 * var mc = MyClass.newInstance.apply(null, new Array(parseInt(Math.random()*10,10))
 		 * @codeend
 		 * @return {class} instance of the class
@@ -695,17 +762,28 @@
 		/**
 		 * Extends a class with new static and prototype functions.  There are a variety of ways
 		 * to use extend:
-		 * @codestart
-		 * //with className, static and prototype functions
-		 * $.Class.extend('Task',{ STATIC },{ PROTOTYPE })
-		 * //with just classname and prototype functions
-		 * $.Class.extend('Task',{ PROTOTYPE })
-		 * //With just a className
-		 * $.Class.extend('Task')
-		 * @codeend
+		 * 
+		 *     // with className, static and prototype functions
+		 *     $.Class('Task',{ STATIC },{ PROTOTYPE })
+		 *     // with just classname and prototype functions
+		 *     $.Class('Task',{ PROTOTYPE })
+		 *     // with just a className
+		 *     $.Class('Task')
+		 * 
+		 * You no longer have to use <code>.extend</code>.  Instead, you can pass those options directly to
+		 * $.Class (and any inheriting classes):
+		 * 
+		 *     // with className, static and prototype functions
+		 *     $.Class('Task',{ STATIC },{ PROTOTYPE })
+		 *     // with just classname and prototype functions
+		 *     $.Class('Task',{ PROTOTYPE })
+		 *     // with just a className
+		 *     $.Class('Task')
+		 * 
 		 * @param {String} [fullName]  the classes name (used for classes w/ introspection)
 		 * @param {Object} [klass]  the new classes static/class functions
 		 * @param {Object} [proto]  the new classes prototype functions
+		 * 
 		 * @return {jQuery.Class} returns the new class
 		 */
 		extend: function( fullName, klass, proto ) {
@@ -764,38 +842,63 @@
 					current = getObject(parts.join('.'), window, true),
 					namespace = current;
 
-				
+				//!steal-remove-start
+				if (!Class.nameOk ) {
+					//steal.dev.isHappyName(fullName)
+				}
+				if(current[shortName]){
+					
+				}
+				//!steal-remove-end
 				current[shortName] = Class;
 			}
 
 			// set things that can't be overwritten
 			extend(Class, {
 				prototype: prototype,
+				/**
+				 * @attribute namespace 
+				 * The namespaces object
+				 * 
+				 *     $.Class("MyOrg.MyClass",{},{})
+				 *     MyOrg.MyClass.namespace //-> MyOrg
+				 * 
+				 */
 				namespace: namespace,
+				/**
+				 * @attribute shortName 
+				 * The name of the class without its namespace, provided for introspection purposes.
+				 * 
+				 *     $.Class("MyOrg.MyClass",{},{})
+				 *     MyOrg.MyClass.shortName //-> 'MyClass'
+				 *     MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
+				 * 
+				 */
 				shortName: shortName,
 				constructor: Class,
+				/**
+				 * @attribute fullName 
+				 * The full name of the class, including namespace, provided for introspection purposes.
+				 * 
+				 *     $.Class("MyOrg.MyClass",{},{})
+				 *     MyOrg.MyClass.shortName //-> 'MyClass'
+				 *     MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
+				 * 
+				 */
 				fullName: fullName
 			});
 
 			//make sure our prototype looks nice
 			Class[STR_PROTOTYPE].Class = Class[STR_PROTOTYPE].constructor = Class;
 
-			/**
-			 * @attribute fullName 
-			 * The full name of the class, including namespace, provided for introspection purposes.
-			 * @codestart
-			 * $.Class.extend("MyOrg.MyClass",{},{})
-			 * MyOrg.MyClass.shortName //-> 'MyClass'
-			 * MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
-			 * @codeend
-			 */
+			
 
 			// call the class setup
 			var args = Class.setup.apply(Class, concatArgs([_super_class],arguments));
 			
 			// call the class init
 			if ( Class.init ) {
-				Class.init.apply(Class, args || []);
+				Class.init.apply(Class, args || concatArgs([_super_class],arguments));
 			}
 
 			/* @Prototype*/
@@ -866,24 +969,25 @@
 			 */
 			//Breaks up code
 			/**
-			 * @attribute Class
-			 * References the static properties of the instance's class.
-			 * <h3>Quick Example</h3>
-			 * @codestart
-			 * // a class with a static classProperty property
-			 * $.Class.extend("MyClass", {classProperty : true}, {});
+			 * @attribute constructor
 			 * 
-			 * // a new instance of myClass
-			 * var mc1 = new MyClass();
+			 * A reference to the Class (or constructor function).  This allows you to access 
+			 * a class's static properties from an instance.
 			 * 
-			 * //
-			 * mc1.Class.classProperty = false;
+			 * ### Quick Example
 			 * 
-			 * // creates a new MyClass
-			 * var mc2 = new mc.Class();
-			 * @codeend
-			 * Getting static properties via the Class property, such as it's 
-			 * [jQuery.Class.static.fullName fullName] is very common.
+			 *     // a class with a static property
+			 *     $.Class("MyClass", {staticProperty : true}, {});
+			 *     
+			 *     // a new instance of myClass
+			 *     var mc1 = new MyClass();
+			 * 
+			 *     // read the static property from the instance:
+			 *     mc1.constructor.staticProperty //-> true
+			 *     
+			 * Getting static properties with the constructor property, like
+			 * [jQuery.Class.static.fullName fullName], is very common.
+			 * 
 			 */
 		}
 
@@ -908,44 +1012,7 @@
 	proxy = clss.proxy;
 
 
-})(jQuery);
-(function( $ ) {
-	/**
-	 * @attribute destroyed
-	 * @parent specialevents
-	 * @download  http://jmvcsite.heroku.com/pluginify?plugins[]=jquery/dom/destroyed/destroyed.js
-	 * @test jquery/event/destroyed/qunit.html
-	 * Provides a destroyed event on an element.
-	 * <p>
-	 * The destroyed event is called when the element
-	 * is removed as a result of jQuery DOM manipulators like remove, html,
-	 * replaceWith, etc. Destroyed events do not bubble, so make sure you don't use live or delegate with destroyed
-	 * events.
-	 * </p>
-	 * <h2>Quick Example</h2>
-	 * @codestart
-	 * $(".foo").bind("destroyed", function(){
-	 *    //clean up code
-	 * })
-	 * @codeend
-	 * <h2>Quick Demo</h2>
-	 * @demo jquery/event/destroyed/destroyed.html 
-	 * <h2>More Involved Demo</h2>
-	 * @demo jquery/event/destroyed/destroyed_menu.html 
-	 */
-
-	var oldClean = jQuery.cleanData;
-
-	$.cleanData = function( elems ) {
-		for ( var i = 0, elem;
-		(elem = elems[i]) !== undefined; i++ ) {
-			$(elem).triggerHandler("destroyed");
-			//$.event.remove( elem, 'destroyed' );
-		}
-		oldClean(elems);
-	};
-
-})(jQuery);
+})(jQuery);;
 (function( $ ) {
 	// ------- HELPER FUNCTIONS  ------
 	
@@ -978,6 +1045,7 @@
 		each = $.each,
 		
 		STR_PROTOTYPE = 'prototype',
+		STR_CONSTRUCTOR = 'constructor',
 		slice = Array[STR_PROTOTYPE].slice,
 		
 		// Binds an element, returns a function that unbinds
@@ -1027,6 +1095,7 @@
 	 * @download  http://jmvcsite.heroku.com/pluginify?plugins[]=jquery/controller/controller.js
 	 * @test jquery/controller/qunit.html
 	 * @inherits jQuery.Class
+	 * @description jQuery widget factory.
 	 * 
 	 * jQuery.Controller helps create organized, memory-leak free, rapidly performing
 	 * jQuery widgets.  Its extreme flexibility allows it to serve as both
@@ -1040,7 +1109,7 @@
 	 * down auto-magically. Read about [http://jupiterjs.com/news/writing-the-perfect-jquery-plugin 
 	 * the theory behind controller] and 
 	 * a [http://jupiterjs.com/news/organize-jquery-widgets-with-jquery-controller walkthrough of its features]
-	 * on Jupiter's blog.  The [mvc.controller MVC in JavaScriptMVC tutorial] also has a great walkthrough.
+	 * on Jupiter's blog. [mvc.controller Get Started with jQueryMX] also has a great walkthrough.
 	 * 
 	 * Controller inherits from [jQuery.Class $.Class] and makes heavy use of 
 	 * [http://api.jquery.com/delegate/ event delegation]. Make sure 
@@ -1169,7 +1238,7 @@
 	 *         el.css("backgroundColor","")
 	 *       },
 	 *       ".create click" : function() {
-	 *         this.find("ol").append("&lt;li class='todo'>New Todo&lt;/li>"); 
+	 *         this.find("ol").append("<li class='todo'>New Todo</li>"); 
 	 *       }
 	 *     })
 	 * 
@@ -1340,7 +1409,11 @@
 			}
 
 			// make sure listensTo is an array
-			
+			//!steal-remove-start
+			if (!isArray(this.listensTo) ) {
+				throw "listensTo is not an array in " + this.fullName;
+			}
+			//!steal-remove-end
 			// calculate and cache actions
 			this.actions = {};
 
@@ -1551,10 +1624,11 @@
 		 * default it is called with the element and options passed to the controller.
 		 */
 		setup: function( element, options ) {
-			var funcName, ready, cls = this.Class;
+			var funcName, ready, cls = this[STR_CONSTRUCTOR];
 
 			//want the raw element here
-			element = element.jquery ? element[0] : element;
+			element = (typeof element == 'string' ? $(element) :
+				(element.jquery ? element : [element]) )[0];
 
 			//set element and className on element
 			var pluginname = cls.pluginName || cls._fullName;
@@ -1565,13 +1639,28 @@
 			//set in data
 			(data(element) || data(element, {}))[pluginname] = this;
 
-			//adds bindings
-			this._bindings = [];
+			
 			/**
 			 * @attribute options
-			 * Options is [jQuery.Controller.static.defaults] merged with the 2nd argument
+			 * 
+			 * Options are used to configure an controller.  They are
+			 * the 2nd argument
 			 * passed to a controller (or the first argument passed to the 
 			 * [jquery.controller.plugin controller's jQuery plugin]).
+			 * 
+			 * For example:
+			 * 
+			 *     $.Controller('Hello')
+			 *     
+			 *     var h1 = new Hello($('#content1'), {message: 'World'} );
+			 *     equal( h1.options.message , "World" )
+			 *     
+			 *     var h2 = $('#content2').hello({message: 'There'})
+			 *                            .controller();
+			 *     equal( h2.options.message , "There" )
+			 * 
+			 * Options are merged with [jQuery.Controller.static.defaults defaults] in
+			 * [jQuery.Controller.prototype.setup setup].
 			 * 
 			 * For example:
 			 * 
@@ -1590,19 +1679,13 @@
 			 *     $("#tabs1").tabs()                         // adds 'ui-active-state'
 			 *     $("#tabs2").tabs({activeClass : 'active'}) // adds 'active'
 			 *     
-			 *  
+			 * Options are typically updated by calling 
+			 * [jQuery.Controller.prototype.update update];
+			 *
 			 */
 			this.options = extend( extend(true, {}, cls.defaults), options);
 
-			//go through the cached list of actions and use the processor to bind
-			for ( funcName in cls.actions ) {
-				if ( cls.actions.hasOwnProperty(funcName) ) {
-					ready = cls.actions[funcName] || cls._action(funcName, this.options);
-					this._bindings.push(
-					ready.processor(ready.delegate || element, ready.parts[2], ready.parts[1], funcName, this));
-				}
-			}
-
+			
 
 			/**
 			 * @attribute called
@@ -1612,13 +1695,8 @@
 			 */
 			this.called = "init";
 
-			//setup to be destroyed ... don't bind b/c we don't want to remove it
-			var destroyCB = shifter(this,"destroy");
-			this.element.bind("destroyed", destroyCB);
-			this._bindings.push(function( el ) {
-				//destroyCB.removed = true;
-				$(element).unbind("destroyed", destroyCB);
-			});
+			// bind all event handlers
+			this.bind();
 
 			/**
 			 * @attribute element
@@ -1665,28 +1743,40 @@
 			 *       }
 			 *     }
 			 */
-			return this.element;
+			return [this.element, this.options].concat(makeArray(arguments).slice(2));
+			/**
+			 * @function init
+			 * 
+			 * Implement this.
+			 */
 		},
 		/**
-		 * Bind attaches event handlers that will be removed when the controller is removed.  
-		 * This is a good way to attach to an element not in the controller's element.
-		 * <br/>
-		 * <h3>Examples:</h3>
-		 * @codestart
-		 * init: function() {
-		 *    // calls somethingClicked(el,ev)
-		 *    this.bind('click','somethingClicked') 
+		 * Bind attaches event handlers that will be 
+		 * removed when the controller is removed.  
 		 * 
-		 *    // calls function when the window is clicked
-		 *    this.bind(window, 'click', function(ev){
-		 *      //do something
-		 *    })
-		 * },
-		 * somethingClicked: function( el, ev ) {
-		 *   
-		 * }
-		 * @codeend
-		 * @param {HTMLElement|jQuery.fn} [el=this.element] The element to be bound
+		 * This used to be a good way to listen to events outside the controller's
+		 * [jQuery.Controller.prototype.element element].  However,
+		 * using templated event listeners is now the prefered way of doing this.
+		 * 
+		 * ### Example:
+		 * 
+		 *     init: function() {
+		 *        // calls somethingClicked(el,ev)
+		 *        this.bind('click','somethingClicked') 
+		 *     
+		 *        // calls function when the window is clicked
+		 *        this.bind(window, 'click', function(ev){
+		 *          //do something
+		 *        })
+		 *     },
+		 *     somethingClicked: function( el, ev ) {
+		 *       
+		 *     }
+		 * 
+		 * @param {HTMLElement|jQuery.fn|Object} [el=this.element] 
+		 * The element to be bound.  If an eventName is provided,
+		 * the controller's element is used instead.
+		 * 
 		 * @param {String} eventName The event to listen for.
 		 * @param {Function|String} func A callback function or the String name of a controller function.  If a controller
 		 * function name is given, the controller function is called back with the bound element and event as the first
@@ -1694,6 +1784,37 @@
 		 * @return {Integer} The id of the binding in this._bindings
 		 */
 		bind: function( el, eventName, func ) {
+			if( el === undefined ) {
+				//adds bindings
+				this._bindings = [];
+				//go through the cached list of actions and use the processor to bind
+				
+				var cls = this[STR_CONSTRUCTOR],
+					bindings = this._bindings,
+					actions = cls.actions,
+					element = this.element;
+					
+				for ( funcName in actions ) {
+					if ( actions.hasOwnProperty(funcName) ) {
+						ready = actions[funcName] || cls._action(funcName, this.options);
+						bindings.push(
+							ready.processor(ready.delegate || element, 
+							                ready.parts[2], 
+											ready.parts[1], 
+											funcName, 
+											this));
+					}
+				}
+	
+	
+				//setup to be destroyed ... don't bind b/c we don't want to remove it
+				var destroyCB = shifter(this,"destroy");
+				element.bind("destroyed", destroyCB);
+				bindings.push(function( el ) {
+					$(el).unbind("destroyed", destroyCB);
+				});
+				return bindings.length;
+			}
 			if ( typeof el == 'string' ) {
 				func = eventName;
 				eventName = el;
@@ -1707,6 +1828,14 @@
 			}
 			this._bindings.push(binder(el, eventName, func, selector));
 			return this._bindings.length;
+		},
+		_unbind : function(){
+			var el = this.element[0];
+			each(this._bindings, function( key, value ) {
+				value(el);
+			});
+			//adds bindings
+			this._bindings = [];
 		},
 		/**
 		 * Delegate will delegate on an elememt and will be undelegated when the controller is removed.
@@ -1736,11 +1865,81 @@
 			return this._binder(element, eventName, func, selector);
 		},
 		/**
-		 * Called if an controller's [jquery.controller.plugin jQuery helper] is 
+		 * Update extends [jQuery.Controller.prototype.options this.options] 
+		 * with the `options` argument and rebinds all events.  It basically
+		 * re-configures the controller.
+		 * 
+		 * For example, the following controller wraps a recipe form. When the form
+		 * is submitted, it creates the recipe on the server.  When the recipe
+		 * is `created`, it resets the form with a new instance.
+		 * 
+		 *     $.Controller('Creator',{
+		 *       "{recipe} created" : function(){
+		 *         this.update({recipe : new Recipe()});
+		 *         this.element[0].reset();
+		 *         this.find("[type=submit]").val("Create Recipe")
+		 *       },
+		 *       "submit" : function(el, ev){
+		 *         ev.preventDefault();
+		 *         var recipe = this.options.recipe;
+		 *         recipe.attrs( this.element.formParams() );
+		 *         this.find("[type=submit]").val("Saving...")
+		 *         recipe.save();
+		 *       }
+		 *     });
+		 *     $('#createRecipes').creator({recipe : new Recipe()})
+		 * 
+		 * 
+		 * @demo jquery/controller/demo-update.html
+		 * 
+		 * Update is called if a controller's [jquery.controller.plugin jQuery helper] is 
 		 * called on an element that already has a controller instance
-		 * of the same type.  The base method 
-		 * extends [jQuery.Controller.prototype.options this.options] 
-		 * with the options passed in.  If you overwrite this, you might want to call
+		 * of the same type. 
+		 * 
+		 * For example, a widget that listens for model updates
+		 * and updates it's html would look like.  
+		 * 
+		 *     $.Controller('Updater',{
+		 *       // when the controller is created, update the html
+		 *       init : function(){
+		 *         this.updateView();
+		 *       },
+		 *       
+		 *       // update the html with a template
+		 *       updateView : function(){
+		 *         this.element.html( "content.ejs",
+		 *                            this.options.model ); 
+		 *       },
+		 *       
+		 *       // if the model is updated
+		 *       "{model} updated" : function(){
+		 *         this.updateView();
+		 *       },
+		 *       update : function(options){
+		 *         // make sure you call super
+		 *         this._super(options);
+		 *          
+		 *         this.updateView();
+		 *       }
+		 *     })
+		 * 
+		 *     // create the controller
+		 *     // this calls init
+		 *     $('#item').updater({model: recipe1});
+		 *     
+		 *     // later, update that model
+		 *     // this calls "{model} updated"
+		 *     recipe1.update({name: "something new"});
+		 *     
+		 *     // later, update the controller with a new recipe
+		 *     // this calls update
+		 *     $('#item').updater({model: recipe2});
+		 *     
+		 *     // later, update the new model
+		 *     // this calls "{model} updated"
+		 *     recipe2.update({name: "something newer"});
+		 * 
+		 * _NOTE:_ If you overwrite `update`, you probably need to call
 		 * this._super.
 		 * 
 		 * ### Example
@@ -1757,10 +1956,14 @@
 		 *     $('#myel').thing({prop : 'val1'}); // alerts init:val1
 		 *     $('#myel').thing({prop : 'val2'}); // alerts update:val2
 		 * 
-		 * @param {Object} options the object passed to the [jquery.controller.plugin jQuery helper function]
+		 * @param {Object} options A list of options to merge with 
+		 * [jQuery.Controller.prototype.options this.options].  Often, this method
+		 * is called by the [jquery.controller.plugin jQuery helper function].
 		 */
 		update: function( options ) {
 			extend(this.options, options);
+			this._unbind();
+			this.bind();
 		},
 		/**
 		 * Destroy unbinds and undelegates all event handlers on this controller, 
@@ -1790,10 +1993,10 @@
 		 */
 		destroy: function() {
 			if ( this._destroyed ) {
-				throw this.Class.shortName + " controller instance has been deleted";
+				throw this[STR_CONSTRUCTOR].shortName + " controller already deleted";
 			}
 			var self = this,
-				fname = this.Class.pluginName || this.Class._fullName,
+				fname = this[STR_CONSTRUCTOR].pluginName || this[STR_CONSTRUCTOR]._fullName,
 				controllers;
 			
 			// mark as destroyed
@@ -1803,9 +2006,7 @@
 			this.element.removeClass(fname);
 
 			// unbind bindings
-			each(this._bindings, function( key, value ) {
-				value(self.element[0]);
-			});
+			this._unbind();
 			// clean up
 			delete this._actions;
 
@@ -1845,7 +2046,7 @@
 
 
 
-	//set commong events to be processed as a basicProcessor
+	//set common events to be processed as a basicProcessor
 	each("change click contextmenu dblclick keydown keyup keypress mousedown mousemove mouseout mouseover mouseup reset resize scroll select submit focusin focusout mouseenter mouseleave".split(" "), function( i, v ) {
 		processors[v] = basicProcessor;
 	});
@@ -1857,7 +2058,7 @@
 	//controllers can be strings or classes
 	var i, isAControllerOf = function( instance, controllers ) {
 		for ( i = 0; i < controllers.length; i++ ) {
-			if ( typeof controllers[i] == 'string' ? instance.Class._shortName == controllers[i] : instance instanceof controllers[i] ) {
+			if ( typeof controllers[i] == 'string' ? instance[STR_CONSTRUCTOR]._shortName == controllers[i] : instance instanceof controllers[i] ) {
 				return true;
 			}
 		}
@@ -1876,7 +2077,7 @@
 			//check if arguments
 			this.each(function() {
 	
-				controllers = data(this, "controllers");
+				controllers = $.data(this, "controllers");
 				for ( cname in controllers ) {
 					if ( controllers.hasOwnProperty(cname) ) {
 						c = controllers[cname];
@@ -1900,4 +2101,4 @@
 	});
 	
 
-})(jQuery)
+})(jQuery);

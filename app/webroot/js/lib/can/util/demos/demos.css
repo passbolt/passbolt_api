@@ -1,0 +1,153 @@
+
+body {font-family: verdana; font-size: 16px;
+	width: 660px;
+	line-height: 24px;
+	margin: 0px;
+}
+#hash {
+	font-size: 18px;
+	width: 364px;
+	border: none;
+	
+}
+.value {
+	cursor: pointer;
+}
+.propName {
+	cursor: pointer;
+}
+.end {
+	cursor:pointer;
+}
+.good{
+	color: green;
+}
+.bad{
+	color: red;
+}
+h2 {
+	border-bottom: 1px solid #D2D988;
+	padding-bottom: 0px;
+	margin-bottom: 5px;
+	font-size: 16px;
+	font-family: "Courier New", Courier, monospace;
+}
+#teacher h2 {
+	border:none;
+	margin-top:0px;
+}
+#route-data.error, #hash.error:hover {border: solid 1px red}
+li {
+	font-family: monospace;
+}
+.destroy {color: red}
+pre {
+	line-height: 22px;
+	margin: 0px;
+	padding-top: 0px;
+}
+textarea {
+	width: 380px;
+	height:290px;
+	border-bottom: 1px solid #D2D988;
+	padding-bottom: 0px;
+	margin-bottom: 5px;
+	font-size: 16px;
+	font-family: "Courier New", Courier, monospace;
+}
+.edit-over {
+	padding: 0px;
+	margin: 0px;
+	border: solid 1px gray;
+
+}
+
+#input {
+	height: 28px;
+	border: solid 1px #C3E2EF;
+	float: left;
+	font-size: 18px;
+	padding: 4px 4px 0px 4px;
+	width: 315px;
+}
+.name, .value, #hash:hover, .back:hover, .forward:hover, .value:hover, .name:hover {
+
+	background-color: #F9F7DF;
+}
+#binding {
+	font-size: 12px;
+}
+th {
+	font-size: 12px;
+}
+td, th {
+	text-align: left;
+	vertical-align: top;
+	width: 400px;
+}
+#container {
+	height: 100px;
+	overflow-y: auto;
+}
+.border td{
+	border-top: solid 1px #C3E2EF;
+}
+
+td.explanation {
+	width: 250px;
+}
+
+#route-data-container {
+	min-height: 110px;
+}
+li {
+	list-style: none;
+	padding: 3px;
+}
+#reapply {
+	cursor:pointer;
+	color: blue;
+	font-size: 14px;
+}
+#reapply.glow {
+	background-color: #ff3300;
+	color: white;
+	font-weight:bold;
+}
+ul {
+	margin: 0px;
+	padding: 0px;
+}
+.remove:hover {
+	background: url(../../observe/remove.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.destroy {
+	float: right;
+	text-decoration: none;
+}
+pre {margin: 0px;}
+.comment {
+	color: green;
+}
+#layout {
+	width: 100%;
+	
+}
+#linkresult {
+	font-size: 12px;
+}
+#teacher {
+	padding-left: 20px;
+}
+#teacher h2 {
+	font-family: "Trebuchet MS",Verdana,Helvetica,Arial, sans-serif;
+	font-size: 17px;
+}
+#teacher ul li {
+	font-family: "Trebuchet MS",Verdana,Helvetica,Arial, sans-serif;
+	list-style-type: disc;
+	margin-left: 20px;
+	font-family: 
+}

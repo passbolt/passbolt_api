@@ -8,7 +8,7 @@ steal('jquery/controller', 'steal/less').then(function(){
         }
     });
 })
-.then(function($) {
+.then(function() {
     $(document).ready(function() {
         $(document.body).myapp_app();
     });    

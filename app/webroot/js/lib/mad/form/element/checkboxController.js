@@ -1,8 +1,8 @@
 steal(
-	MAD_ROOT + '/form/formElement.js',
-	MAD_ROOT + '/view/form/element/checkboxView.js',
-	MAD_ROOT + '/view/template/component/input.ejs'
-).then(function ($) {
+	'mad/form/formElement.js',
+	'mad/view/form/element/checkboxView.js',
+	'mad/view/template/component/input.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.form.element.CheckboxController
@@ -23,7 +23,7 @@ steal(
 
 		'defaults': {
 			'label': 'CheckboxController Form Element Controller',
-			'templateUri': '//' + MAD_ROOT + '/view/template/component/input.ejs',
+			'templateUri': '//' + 'mad/view/template/component/input.ejs',
 			'viewClass': mad.view.form.element.CheckboxView
 		}
 

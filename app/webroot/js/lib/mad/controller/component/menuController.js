@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/controller/component/treeController.js',
-	MAD_ROOT + '/view/template/component/menu/menuItem.ejs'
-).then(function ($) {
+	'mad/controller/component/treeController.js',
+	'mad/view/template/component/menu/menuItem.ejs'
+).then(function () {
 
 	/**
 	 * @class mad.controller.component.MenuController
@@ -20,12 +20,15 @@ steal(
 
 		'defaults': {
 			'label': 'MenuController',
-			'itemTemplateUri': MAD_ROOT + '/view/template/component/menu/menuItem.ejs',
+			// The template to use to render each action
+			'itemTemplateUri': 'mad/view/template/component/menu/menuItem.ejs',
 			'cssClasses': ['menu'],
+			'itemClass': mad.model.Action,
+			// The map to use to map the model to the expected view format
 			'map': new mad.object.Map({
-				'id': 'MenuItem.id',
-				'label': 'MenuItem.label',
-				'cssClasses': 'MenuItem.cssClasses',
+				'id': 'id',
+				'label': 'label',
+				'cssClasses': 'cssClasses',
 				'children': {
 					'key': 'children',
 					'func': mad.object.Map.mapObjects
@@ -41,17 +44,15 @@ steal(
 
 		/**
 		 * An item has been selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} itemId The item identifier
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {string} item The selected item
 		 * @return {void}
 		 */
-		'item_selected': function (element, event, itemId) {
-			this._super(element, event, itemId);
-			// get the menuItem
-			var menuItem = mad.model.Model.searchOne(this.state.data, 'MenuItem.id', itemId);
+		' item_selected': function (el, ev, item) {
+			this._super(el, ev, item);
 			// execute the associated action
-			menuItem.MenuItem.action(this);
+			item.action(this);
 		}
 
 	});

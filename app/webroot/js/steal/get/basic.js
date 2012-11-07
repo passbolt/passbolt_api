@@ -1,4 +1,4 @@
-steal(function(s){
+steal('steal',function(s){
 
 /**
  * A basic getter

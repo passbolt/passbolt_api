@@ -7,8 +7,8 @@
  */
 
 steal(
-	MAD_ROOT + '/core/singleton.js'
-).then(function ($) {
+	'mad/core/singleton.js'
+).then(function () {
 
 	/*
 	 * @class mad.object.Map
@@ -116,18 +116,16 @@ steal(
 
 		/**
 		 * Map an array of objects to an array of objects
-		 * @param {array} arr The array of objects to map
+		 * @param {mixed} data The data to map
 		 * @return {array} The array of mapped objects
 		 * @see mad.object.Map.prototype.mapObject
 		 */
-		'mapObjects': function (arr) {
-			if(!($.isArray(arr))) {
-				throw new mad.error.WrongParametersException('The function mapObjects is expecting an array as first parameter');
-			}
+		'mapObjects': function (data) {
+			var self = this;
 			var returnValue = [];
-			for(var i in arr) {
-				returnValue[i] = this.mapObject(arr[i]);
-			}
+			can.each(data, function(elt, i) { 
+				returnValue[i] = self.mapObject(data[i]);
+			});
 			return returnValue;
 		}
 

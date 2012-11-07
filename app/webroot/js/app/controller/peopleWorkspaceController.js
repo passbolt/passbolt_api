@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/controller/component/workspaceController.js'
-).then(function ($) {
+	'mad/controller/component/workspaceController.js'
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.PeopleWorkspaceController
@@ -19,7 +19,7 @@ steal(
 
 		'defaults': {
 			'label': 'People',
-			'templateUri': '//app/view/template/peopleWorkspace.ejs'
+			'templateUri': 'app/view/template/peopleWorkspace.ejs'
 		}
 
 	}, /** @prototype */ {

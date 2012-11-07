@@ -1,5 +1,5 @@
 //gets system info (mostly if windows and where FF is
-steal(function( steal ) {
+steal('steal',function( steal ) {
 
 	var get_browser_location = function( browser_name ) {
 		var is = java.lang.Runtime.getRuntime().exec(["sh", "-c", "which " + browser_name]).getInputStream(),

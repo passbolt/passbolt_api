@@ -11,22 +11,26 @@
  * 
  * ## Usage
  * 
- * To turn on instrumentation, simply load a page with the steal option instrument set to true.  One way 
- * to do this is to open any page with steal[instrument]=true in the URL, like 
- * http://localhost/mypage.html?steal[instrument]=true.
+ * To turn on instrumentation, steal this plugin and set the files you want to ignore, then resume 
+ * stealing files, which will be instrumented:
+ * 
+ *     steal("steal/instrument", function(){ 
+ *     	  steal.instrument.ignores = ["steal", "myignores"] 
+ *     })
+ *     .then("./some_file.js")
  * 
  * ## Ignoring files
  * 
- * If you want to tell steal.instrument to ignore certain directories, files, or file patterns, add a 
- * list of patterns to the steal instrument param value.  This param accepts an array of strings which are used to ignore files.  For 
- * example: http://localhost/mypage.html?steal[instrument]=jquery,*_test.js.
+ * If you want to tell steal.instrument to ignore certain directories, files, or file patterns, set 
+ * steal.instrument.ignores, an array of strings which are used to ignore files.  For 
+ * example:
+ * 
+ *     steal.instrument.ignores = ["jquery","*_test.js."]
  * 
  * The * is a wildcard character.  The above example would ignore any files in the jquery directory, along with 
  * any file ending in _test.js.  Ignored files are stolen normally, without any instrumentation.
  * 
- * To ignore all JMVC and test directories, pass !jmvc steal[instrument]=!jmvc, which ignores "jquery","funcunit","steal","documentjs","*\/test","*_test.js", "mxui"
- * 
- * To ignore nothing, pass true, like http://localhost/mypage.html?steal[instrument]=true
+ * To ignore all JMVC and test directories, use !jmvc, which ignores "jquery","funcunit","steal","documentjs","*\/test","*_test.js", "mxui"
  * 
  * ## How it works
  * 
@@ -82,14 +86,14 @@
  * - Remote files (not on the same domain) are skipped because they can't be loaded via AJAX.
  * 
  */
+if(!steal.instrument){
+	steal.instrument = {};
+}
 
-
-
-steal.instrument = {};
 steal("./parser.js").then("./process.js", "./utils.js", function(){
 
 var utils = steal.instrument.utils,
-	origJSConverter = steal.types.js.require,
+	origJSConverter = steal.config().types.js.require,
 	extend = function(orig, newO){
 		for(var k in newO){
 			orig[k] = newO[k];
@@ -99,7 +103,8 @@ var utils = steal.instrument.utils,
 extend(steal.instrument, {
 	// keep track of all current instrumentation data (also stored in localStorage)
 	files: {},
-	ignores: steal.options.instrument || utils.parentWin().steal.instrument.ignores || [],
+	// to define which files are ignored, steal("steal/instrument", function(){ steal.instrument.ignores = ["steal", "myignores"] })
+	ignores: utils.parentWin().steal.instrument.ignores || ["steal/instrument"],
 	/**
 	 * Calculates block and line coverage information about each file and the entire collection.  Call this 
 	 * when you are ready to display a coverage report, like:
@@ -264,7 +269,8 @@ extend(steal.instrument, {
 	},
 	jsConvert: function(options, success, error){
 		var files = utils.parentWin().steal.instrument.files,
-			fileName = options.rootSrc,
+			file = options.src,
+			fileName = file.path,
 			instrumentation = files[fileName],
 			processInstrumentation = function(instrumentation){
 				var code = instrumentation.instrumentedCode;
@@ -273,19 +279,16 @@ extend(steal.instrument, {
 				utils.globalEval(code);
 				success();
 			}
-		if(utils.shouldIgnore(fileName) ||  
-			options.type != "js" || 
-			// if both are file: URLs its fine, otherwise make sure its the same domain
-			(!(location.protocol == "file:" && steal.File(options.originalSrc).protocol() == "file:") &&
-				location.host !== steal.File(options.originalSrc).domain())){
+		
+		if(utils.shouldIgnore(fileName) || file.ext() != "js"){
 			return origJSConverter.apply(this, arguments);
-		}	
+		}
+		
 		if(instrumentation){
 			processInstrumentation(instrumentation)
 			return;
 		}
-		
-		
+
 		steal.request(options, function(text){
 			// check cache first
 			var fileHash = utils.hashCode(text),
@@ -326,7 +329,7 @@ if(typeof steal.instrument.ignores === "string"){
 for(var i=0; i<steal.instrument.ignores.length; i++){
 	if(steal.instrument.ignores[i] === "!jmvc"){
 		// remove it and add jmvc files
-		steal.instrument.ignores.splice(i, 1, "jquery","funcunit","steal","documentjs","*/test","*_test.js", "*funcunit.js", "mxui");
+		steal.instrument.ignores.splice(i, 1, "/can", "/jquery","/funcunit","/steal","/documentjs","*/test","*_test.js", "*funcunit.js");
 		
 	}
 }

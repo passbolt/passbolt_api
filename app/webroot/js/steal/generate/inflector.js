@@ -1,7 +1,7 @@
 // based on the Inflector class found on a DZone snippet contributed by Todd Sayre
 // http://snippets.dzone.com/posts/show/3205
 steal(function( steal ) {
-	steal.Inflector = {
+	var Inflector  = {
 		Inflections: {
 			plural: [
 				[/(quiz)$/i, "$1zes"],
@@ -60,44 +60,44 @@ steal(function( steal ) {
 			uncountable: ["sheep", "fish", "series", "species", "money", "rice", "information", "equipment"]
 		},
 		pluralize: function( word ) {
-			for ( var i = 0; i < steal.Inflector.Inflections.uncountable.length; i++ ) {
-				var uncountable = steal.Inflector.Inflections.uncountable[i];
+			for ( var i = 0; i < Inflector.Inflections.uncountable.length; i++ ) {
+				var uncountable = Inflector.Inflections.uncountable[i];
 				if ( word.toLowerCase() === uncountable ) {
 					return uncountable;
 				}
 			}
-			for ( i = 0; i < steal.Inflector.Inflections.irregular.length; i++ ) {
-				var singular = steal.Inflector.Inflections.irregular[i][0];
-				var plural = steal.Inflector.Inflections.irregular[i][1];
+			for ( i = 0; i < Inflector.Inflections.irregular.length; i++ ) {
+				var singular = Inflector.Inflections.irregular[i][0];
+				var plural = Inflector.Inflections.irregular[i][1];
 				if ((word.toLowerCase() === singular) || (word === plural)) {
 					return word.substring(0, 1) + plural.substring(1);
 				}
 			}
-			for ( i = 0; i < steal.Inflector.Inflections.plural.length; i++ ) {
-				var regex = steal.Inflector.Inflections.plural[i][0];
-				var replace_string = steal.Inflector.Inflections.plural[i][1];
+			for ( i = 0; i < Inflector.Inflections.plural.length; i++ ) {
+				var regex = Inflector.Inflections.plural[i][0];
+				var replace_string = Inflector.Inflections.plural[i][1];
 				if ( regex.test(word) ) {
 					return word.replace(regex, replace_string);
 				}
 			}
 		},
 		singularize: function( word ) {
-			for ( var i = 0; i < steal.Inflector.Inflections.uncountable.length; i++ ) {
-				var uncountable = steal.Inflector.Inflections.uncountable[i];
+			for ( var i = 0; i < Inflector.Inflections.uncountable.length; i++ ) {
+				var uncountable = Inflector.Inflections.uncountable[i];
 				if ( word.toLowerCase() === uncountable ) {
 					return uncountable;
 				}
 			}
-			for ( i = 0; i < steal.Inflector.Inflections.irregular.length; i++ ) {
-				var singular = steal.Inflector.Inflections.irregular[i][0];
-				var plural = steal.Inflector.Inflections.irregular[i][1];
+			for ( i = 0; i < Inflector.Inflections.irregular.length; i++ ) {
+				var singular = Inflector.Inflections.irregular[i][0];
+				var plural = Inflector.Inflections.irregular[i][1];
 				if ((word.toLowerCase() === singular) || (word.toLowerCase() === plural)) {
 					return word.substring(0, 1) + singular.substring(1);
 				}
 			}
-			for ( i = 0; i < steal.Inflector.Inflections.singular.length; i++ ) {
-				var regex = steal.Inflector.Inflections.singular[i][0];
-				var replace_string = steal.Inflector.Inflections.singular[i][1];
+			for ( i = 0; i < Inflector.Inflections.singular.length; i++ ) {
+				var regex = Inflector.Inflections.singular[i][0];
+				var replace_string = Inflector.Inflections.singular[i][1];
 				if ( regex.test(word) ) {
 					return word.replace(regex, replace_string);
 				}
@@ -105,4 +105,5 @@ steal(function( steal ) {
 			return word;
 		}
 	};
+	return Inflector;
 });

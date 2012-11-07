@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>can.Control.plugin</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            .error {border: solid 1px red;}
+            .error_text { color: red; font-size: 10px;}
+            td {padding: 3px;}
+        </style>
+	</head>
+	<body>
+
+<div id="demo-html">
+<div id="control"></div>
+<button>Update myPlugin</button>
+</div>	
+<script type='text/javascript' src='../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
+steal('can/construct/super')
+.then('can/control/plugin')
+.then(function(){
+	
+var Plugin = can.Control({
+  pluginName: 'myPlugin'
+}, {
+  init : function(el, options) {
+    this.updateCount = 0;
+    this.update({
+      text : 'Initialized. Updated'
+    });
+},
+  update : function(options) {
+    // Call the old update. Use this._super 
+    // when using can/construct/super
+    can.Control.prototype.update.call(this, options);
+    this.element.html(this.options.text + 
+		' ' + (++this.updateCount) + 
+		' times');
+  }
+});
+
+var updateCount = 0;
+$('#control').myPlugin();
+$('button').click(function() {
+  $('#control').myPlugin({
+    text : 'Update button clicked. Updated',
+    times : ++updateCount
+  });
+});
+});
+</script>
+</body>
+</html>

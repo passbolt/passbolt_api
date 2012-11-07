@@ -1,6 +1,6 @@
 steal(
-	MAD_ROOT + '/view/component/tree.js'
-).then(function ($) {
+	'mad/view/component/tree.js'
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.ResourceDetailsController
@@ -18,17 +18,12 @@ steal(
 	mad.controller.ComponentController.extend('passbolt.controller.component.ResourceDetailsController', /** @static */ {
 
 		'defaults': {
-			'label': 'Resource Details Controller'
-		},
-		'listensTo': []
+			'label': 'Resource Details Controller',
+			// the resource to bind the component on
+			'resource': null
+		}
 
 	}, /** @prototype */ {
-
-		'init': function (el, options) {
-			this._super(el, options);
-			this.setViewData('resource', new passbolt.model.Resource());
-			this.render();
-		},
 
 		/**
 		 * Load details of a resource
@@ -36,26 +31,37 @@ steal(
 		 * @return {void}
 		 */
 		'load': function (resource) {
+			if (this.state.is('hidden')) {
+				this.setState('ready')
+			}
+
+			// push the new resource in the options to be able to listen the resource
+			// change in the function name
+			this.options.resource = resource;
+			// pass the new resource to the view
 			this.setViewData('resource', resource);
+			// refresh the view
 			this.refresh();
-			// The controller will be destroyed after the refresh ... empty => delete node => destroy controller
-			// We do not need to create button here, but if we need to manage state, for the share button we will
-			// do like that
-			var copyLoginButton = new mad.controller.component.ButtonController($('#js_details_copy_login_button', this.element), {
-				'value': resource.Resource.id
-			}).render();
-
-			var copySecretButton = new mad.controller.component.ButtonController($('#js_details_copy_secret_button', this.element), {
-				'value': resource.Resource.id
-			}).render();
-
-			var oneClickLoginButton = new mad.controller.component.ButtonController($('#js_details_one_click_login_button', this.element), {
-				'value': resource.Resource.id
-			}).render();
-
-			var shareButton = new mad.controller.component.ButtonController($('#js_details_share_button', this.element), {
-				'value': resource.Resource.id
-			}).render();
+			// rebind the listener
+			this.on();
+			
+//			// We do not need to create button here, but if we need to manage state, for the share button we will
+//			// do like that
+//			var copyLoginButton = new mad.controller.component.ButtonController($('#js_details_copy_login_button', this.element), {
+//				'value': resource.id
+//			}).render();
+//
+//			var copySecretButton = new mad.controller.component.ButtonController($('#js_details_copy_secret_button', this.element), {
+//				'value': resource.id
+//			}).render();
+//
+//			var oneClickLoginButton = new mad.controller.component.ButtonController($('#js_details_one_click_login_button', this.element), {
+//				'value': resource.id
+//			}).render();
+//
+//			var shareButton = new mad.controller.component.ButtonController($('#js_details_share_button', this.element), {
+//				'value': resource.id
+//			}).render();
 		},
 
 		/* ************************************************************** */
@@ -63,13 +69,13 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Listen to the click on the h2 event, rolldown the following p tag
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * Observe when the user clicks on the h2 event, rolldown the following p tag
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'h2 click': function (element, event) {
-			element.next('p').toggle();
+		'h2 click': function (el, ev) {
+			el.next('p').toggle();
 		},
 
 		/**
@@ -91,27 +97,37 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Observe when a resource is selected
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQury event
-		 * @param {string} resourceId The selected Resource id
+		 * Observe when an resource is updated
+		 * @param {passbolt.model.Resource} resource The updated resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_selected': function (element, event, resourceId) {
-			var self = this;
-			this.crtResourceId = resourceId;
-			this.setState('loading');
+		'{resource} updated': function (resource) {
+			// The reference of the resource does not change, refresh the component
+			this.refresh();
+		},
 
-			passbolt.model.Resource.get({
-				id: this.crtResourceId
-			}, function (request, response, rs) {
-				if (self.crtResourceId != request.data.id) {
-					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.get request callback in passbolt.controller.component.ResourceDetailsController');
-					return;
-				}
-				self.load(rs);
-				self.setState('ready');
-			});
+		/**
+		 * Observe when an resource is selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The selected resource instance
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} resource_selected': function (element, event, resource) {
+			this.load(resource);
+		},
+
+		/**
+		 * Observe when an resource is unselected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The selected resource instance
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} resource_unselected': function (element, event, resource) {
+			// ubind the current resource to avoid any troubles
+			this.options.resource = null;
+			this.on();
 		}
 
 	});

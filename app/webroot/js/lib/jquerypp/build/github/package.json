@@ -1,0 +1,13 @@
+{
+  "name": "github-download-updater",
+  "version" : "0.0.1",
+  "dependencies": {
+    "commander": ">= 0.1.x",
+    "github": ">= 0.1.x",
+    "underscore" : ">= 0.1.x",
+    "underscore.deferred" : ">= 0.1.x",
+    "tafa-misc-util" : ">= 0.1.x",
+    "mime" : ">= 1.2.5"
+  },
+  "engine": "node >= 0.6.x"
+}

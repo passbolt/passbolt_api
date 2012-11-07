@@ -3,7 +3,7 @@
  * Tests compressing a very basic page and one that is using steal
  */
 load('steal/rhino/rhino.js')
-steal('steal/test', function( s ) {
+steal('steal', 'steal/test', function( s ) {
 	STEALPRINT = false;
 	s.test.module("steal/coffee")
 	
@@ -17,8 +17,8 @@ steal('steal/test', function( s ) {
 	
 	s.test.test("build and production", function(){
 		load('steal/rhino/rhino.js')
-		steal("steal/build","steal/build/scripts").then(function(s2){
-			s2.build('steal/coffee/coffee.html', {
+		steal('steal', "steal/build","steal/build/scripts").then(function(s2){
+			steal.build('steal/coffee/coffee.html', {
 				to: 'steal/coffee'
 			})
 			

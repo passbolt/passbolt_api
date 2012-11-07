@@ -64,5 +64,6 @@ steal('steal/test','steal/build', 'steal/build/pluginify', function( s ) {
 		
 		s.test.wait("jQuery.Controller");
 		s.test.ok(true, "controller exists")
+		s.test.clear();
 	})
 });

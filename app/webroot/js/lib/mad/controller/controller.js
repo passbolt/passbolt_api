@@ -1,7 +1,7 @@
 steal(
 	'jquery/controller',
-	MAD_ROOT + '/route/extensionControllerActionDispatcher.js'
-).then(function ($) {
+	'mad/route/extensionControllerActionDispatcher.js'
+).then(function () {
 
 	/*
 	 * @class mad.controller.Controller
@@ -108,7 +108,7 @@ steal(
 		 * Destroy the controller
 		 * @return {void}
 		 */
-		'goToHell': function () {
+		'remove': function () {
 			this.element.remove();
 		}
 

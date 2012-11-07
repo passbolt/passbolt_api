@@ -1,7 +1,7 @@
 steal(
-	MAD_ROOT + '/form/formElement.js'
-//	MAD_ROOT + '/view/template/component/feedback.ejs'
-).then(function ($) {
+	'mad/form/formElement.js'
+//	'mad/view/template/component/feedback.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.form.FeedbackController

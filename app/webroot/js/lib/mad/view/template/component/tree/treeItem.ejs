@@ -1,1 +1,6 @@
-<li id="<%= id %>"><%= label %></li>
+<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
+	<%= label %>
+<% if(hasChildren) { %>
+	<ul />
+<% } %>
+</li>

@@ -1,75 +1,98 @@
-steal('jquery/class').then(function ($) {
+steal(
+	'jquery/class'
+).then(function () {
 
 	/*
 	 * @class mad.net.ResponseHandler
+	 * @see mad.error.ErrorHandler
 	 * @inherits mad.core.Class
 	 * @parent mad.net
 	 * 
-	 * The common ajax response handler
+	 * Ajax server response handler
 	 * 
 	 * @constructor
-	 * Creates a new ajax response handler
+	 * Creates a new ajax server response handler
 	 * @param {mad.net.Response} response The server response
-	 * @param {array} callbacks The optional callbacks passed of the orginial request (success, error)
-	 * @param {request} request The request (the original callbacks have been removed and placed in the callbacks array)
+	 * @param {object} request The request parameters
+	 * @param {object} callbacks The optional callbacks to push on if existing
 	 * @return {mad.net.ResponseHandler}
 	 */
-	$.Class('mad.net.ResponseHandler',
-	/** @static */
-	{},
+	$.Class('mad.net.ResponseHandler', /** @static */ {
 
-	/** @prototype */
-	{
+	}, /** @prototype */ {
+
+		/**
+		 * The server response to treat
+		 * @type {mad.net.Response}
+		 */
+		'response': null,
+
+		/**
+		 * The server request
+		 * @type {object}
+		 */
+		'request': null,
+
+		/**
+		 * The callback to push on
+		 * @type {object}
+		 */
+		'callback': null,
+
 		// Constructor like
-		'init': function (response, callbacks, request) {
+		'init': function (response, request, callbacks) {
 			this.response = response;
 			this.request = request;
-			this.callbacks = callbacks;
+			this.callbacks = callbacks || {};
 		},
 
 		/**
-		 * Notify the error handler
-		 * @return {void}
-		 */
-		'notifyErrorHandler': function () {
-			var message = 'request : ' + this.request.url + ' / method :' + this.request.type + ' / server message  :' + this.response.header.message;
-			var data = this.response.content && this.response.body.content.response ? this.response.body.content.response : {};
-			mad.getGlobal('ERROR_HANDLER_CLASS').handleError(this.response.header.status, this.response.header.title, message, data);
-		},
-
-		/**
-		 * Handle the response
+		 * Handle the reponse and dispatch to the right action.
 		 * @return {void}
 		 */
 		'handle': function () {
+			// log response
+			this._log();
 			// Dispatch the response function of the response status
-			switch(this.response.header.status) {
-			case mad.net.Header.STATUS_ERROR:
-				this.error();
+			switch (this.response.getStatus('status')) {
+			case mad.net.Response.STATUS_ERROR:
+				this._error();
 				break;
-			case mad.net.Header.STATUS_NOTICE:
-				this.notice();
+			case mad.net.Response.STATUS_NOTICE:
+				this._notice();
 				break;
-			case mad.net.Header.STATUS_SUCCESS:
-				this.success();
+			case mad.net.Response.STATUS_SUCCESS:
+				this._success();
 				break;
-			case mad.net.Header.STATUS_WARNING:
-				this.warning();
+			case mad.net.Response.STATUS_WARNING:
+				this._warning();
 				break;
 			}
+		},
+
+		/**
+		 * Log the server response
+		 * @return {void}
+		 */
+		'_log': function () {
+			var message = this.response.getStatus().toUpperCase() + ' ' +
+				this.request.type.toUpperCase() + ' ' +
+				this.request.url + '  ' +
+				this.response.getController() + ' ' +
+				this.response.getAction() + ' (' +
+				this.response.getTitle() + ')';
+
+			steal.dev.log(message);
 		},
 
 		/**
 		 * Handle success response
 		 * @return {void}
 		 */
-		'success': function () {
-			// Log the request result into the console
-			var message = 'status : ' + this.response.header.status + ' / request : ' + this.request.url + ' / method :' + this.request.type + ' / server message  :' + this.response.header.message;
-			steal.dev.log(message);
+		'_success': function () {
 			// callback if defined
-			if(this.callbacks.success) {
-				this.callbacks.success(this.request, this.response, this.response.body);
+			if (this.callbacks.success) {
+				this.callbacks.success(this.response, this.request);
 			}
 		},
 
@@ -77,11 +100,17 @@ steal('jquery/class').then(function ($) {
 		 * Handle error response
 		 * @return {void}
 		 */
-		'error': function () {
-			this.notifyErrorHandler();
+		'_error': function () {
+			// notify the error handler
+			mad.getGlobal('ERROR_HANDLER_CLASS').handleError(
+				this.response.getStatus(),
+				this.response.getTitle(),
+				this.response.getMessage(),
+				this.response.getData()
+			);
 			// callback if defined
-			if(this.callbacks.error) {
-				this.callbacks.error(this);
+			if (this.callbacks.error) {
+				this.callbacks.error(this.response, this.request);
 			}
 		},
 
@@ -89,11 +118,17 @@ steal('jquery/class').then(function ($) {
 		 * Handle notice response
 		 * @return {void}
 		 */
-		'notice': function () {
-			this.notifyErrorHandler();
+		'_notice': function () {
+			// notify the error handler
+			mad.getGlobal('ERROR_HANDLER_CLASS').handleError(
+				this.response.getStatus(),
+				this.response.getTitle(),
+				this.response.getMessage(),
+				this.response.getData()
+			);
 			// callback if defined
-			if(this.callbacks.notice) {
-				this.callbacks.notice(this);
+			if (this.callbacks.notice) {
+				this.callbacks.notice(this.response, this.request);
 			}
 		},
 
@@ -101,11 +136,17 @@ steal('jquery/class').then(function ($) {
 		 * Handle warning response
 		 * @return {void}
 		 */
-		'warning': function () {
-			this.notifyErrorHandler();
+		'_warning': function () {
+			// notify the error handler
+			mad.getGlobal('ERROR_HANDLER_CLASS').handleError(
+				this.response.getStatus(),
+				this.response.getTitle(),
+				this.response.getMessage(),
+				this.response.getData()
+			);
 			// callback if defined
-			if(this.callbacks.warning) {
-				this.callbacks.warning(this);
+			if (this.callbacks.warning) {
+				this.callbacks.warning(this.response, this.request);
 			}
 		}
 	});

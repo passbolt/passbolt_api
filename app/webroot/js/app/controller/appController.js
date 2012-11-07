@@ -1,9 +1,9 @@
 steal(
-	MAD_ROOT + '/controller/appController.js',
-	'app/controller/categoryController.js',
-	'app/controller/resourceController.js',
+	'mad/controller/appController.js',
+
 	'app/controller/passwordWorkspaceController.js',
 	'app/controller/peopleWorkspaceController.js',
+
 	'app/controller/component/appMenuController.js',
 	'app/controller/component/notificationController.js',
 
@@ -11,7 +11,7 @@ steal(
 	'app/model/resource.js',
 
 	'app/view/template/app.ejs'
-).then(function ($) {
+).then(function () {
 
 	/*
 	 * @class passbolt.controller.AppController
@@ -28,8 +28,9 @@ steal(
 			this.render();
 
 			// Add the app menu controller
-			var menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'));
+			var menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'))
 			menuCtl.render();
+			menuCtl.initMenuItems();
 
 			// Add a notification controller
 			var notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
@@ -63,7 +64,7 @@ steal(
 			// @todo Il est bien puant ce ready, check the state management pour gerer ca
 			mad.eventBus.trigger('app_ready');
 			// test the exception catcher
-			throw new mad.error.Exception('Simulated exception to demonstrate the error handler system, and the notification system');
+//			throw new mad.error.Exception('Simulated exception to demonstrate the error handler system, and the notification system');
 		},
 
 		/* ************************************************************** */

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Model Setter Demo</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            li {border: solid 1px gray; padding: 5px; width: 250px;}
+            li a {color: red; font-weight: bold;}
+            p {width: 400px;}
+        </style>
+    </head>
+    <body>
+<div id="demo-html">
+<a href="#" class="prev">PREV</a>
+<a href="#" class="next">NEXT</a>
+<div class="cur">Offset: <span></span></div>
+</div>	
+<script type='text/javascript' src='../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">   
+steal('can/observe/setter', 'can/control')
+.then('can/model')
+.then(function(){
+
+var Paginate = can.Model({},{
+  setCount : function( newCount ){
+    return Math.max(0, newCount  );
+  },
+  setOffset : function( newOffset ){
+    return Math.max( 0 , Math.min(newOffset, this.count ) )
+  },
+  next : function(){
+    this.attr('offset', this.offset+this.limit);
+  },
+  prev : function(){
+    this.attr('offset', this.offset - this.limit )
+  },
+  canNext : function(){
+    return this.offset > this.count - this.limit
+  },
+  canPrev : function(){
+    return this.offset > 0
+  }
+})
+
+var Paginator = can.Control({
+  '.next click': function(elm,ev){
+	var pag = this.options.paginate;
+    pag.attr('offset', pag.offset+pag.limit);
+  },
+  '.prev click':function(elm,ev){
+	var pag = this.options.paginate;
+    pag.attr('offset', pag.offset-pag.limit );
+  },
+  "{paginate} change":function(){
+	var pag = this.options.paginate;
+    this.element.find('.prev')[pag.canPrev() ? 
+      'addClass' : 'removeClass']('enabled');
+
+    this.element.find('.next')[pag.canNext() ? 
+      'addClass' : 'removeClass']('enabled');	
+
+    this.element.find('.cur span').html(
+	  pag.attr('offset'))
+  }
+});
+
+new Paginator('#demo-html', {
+  paginate: new Paginate({
+	count: Infinity,
+	offset: 0,
+	limit: 100
+  })
+})
+
+})
+
+</script>
+</body>
+</html>
