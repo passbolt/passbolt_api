@@ -50,6 +50,10 @@ class CategoryResource extends AppModel {
 				'exist' => array(
 					'rule' => array('resourceExists', null),
 					'message' => __('The resource provided does not exist')
+				),
+				'uniqueCombi' => array(
+					'rule' => array('uniqueCombi', null),
+					'message' => __('The CategoryResource entered is a duplicate')
 				)
 			)
 		);
@@ -94,6 +98,19 @@ class CategoryResource extends AppModel {
 	}
 
 /**
+ * Check if a category with same id exists
+ * @param check
+ */
+	public function uniqueCombi($check) {
+		$cr = $this->data['CategoryResource'];
+		$combi = array(
+			'CategoryResource.category_id' => $cr['category_id'],
+			'categoryResource.resource_id' => $cr['resource_id']
+		);
+		return $this->isUnique($combi, false);
+	}
+
+/**
  * Return the find options to be used
  *
  * @param string context
@@ -102,8 +119,8 @@ class CategoryResource extends AppModel {
  */
 	public static function getFindOptions($case,&$data = null) {
 		return array_merge(
-			Resource::getFindConditions($case, &$data),
-			Resource::getFindFields($case)
+			CategoryResource::getFindConditions($case, &$data),
+			CategoryResource::getFindFields($case)
 		);
 	}
 
