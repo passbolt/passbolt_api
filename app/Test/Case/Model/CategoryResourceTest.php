@@ -12,11 +12,12 @@ App::uses('User', 'Model');
 
 class CategoryResourceTest extends CakeTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.resource', 'app.categoryResource', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
 		$this->CategoryResource = ClassRegistry::init('CategoryResource');
+		$this->CategoryResource->useDb = 'test';
 	}
 
 /**
@@ -29,7 +30,7 @@ class CategoryResourceTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'4ff6111c-8534-4d17-869c-2184cbdd56cb' => true
+			'4ff61120-04dc-4590-9510-2184cbdd56cb' => true
 		);
 
 		foreach ($testcases as $testcase => $result) {
@@ -39,6 +40,7 @@ class CategoryResourceTest extends CakeTestCase {
 					'resource_id' => '50210bfb-cec8-417f-87fe-270cb4e000c3' // resource_id is passed here because when we don't pass it test fails for obscure reasons
 				)
 			);
+			$this->CategoryResource->create();
 			$this->CategoryResource->set($cr);
 			if ($result) {
 				$msg = 'validation of the category_resource "category id" with "' . $testcase . '" should validate';
@@ -69,9 +71,10 @@ class CategoryResourceTest extends CakeTestCase {
 			$cr = array(
 				'CategoryResource' => array(
 					'resource_id' => $testcase,
-					'category_id' => '4ff6111c-8534-4d17-869c-2184cbdd56cb'
+					'category_id' => '4ff61120-04dc-4590-9510-2184cbdd56cb'
 				)
 			);
+			$this->CategoryResource->create();
 			$this->CategoryResource->set($cr);
 			if ($result) {
 				$msg = 'validation of the category_resource "resource id" with "' . $testcase . '" should validate';
@@ -84,6 +87,22 @@ class CategoryResourceTest extends CakeTestCase {
 			}
 			$this->assertEqual($validation, $result, $msg);
 		}
+	}
+
+/**
+ * Test Duplicates
+ * @return void
+ */
+	public function testDuplicatesValidation() {
+		$cr = $this->CategoryResource->findById('1');
+		$cr['CategoryResource']['id'] = '';
+		// test duplicates
+		$this->CategoryResource->create();
+		$this->CategoryResource->set($cr);
+		$validation = $this->CategoryResource->validates(array('fieldList' => array('category_id', 'resource_id')));
+		//$validation = $this->CategoryResource->save($cr);
+		var_dump($validation);
+		$this->assertEqual($validation, false, print_r($this->CategoryResource->invalidFields(), true));
 	}
 
 }
