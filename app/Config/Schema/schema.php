@@ -233,8 +233,8 @@ class AppSchema extends CakeSchema {
 					'cakephp' => array(
 						'cp-project1' => array(
 							'Resources' => array(
-								array('Resource' => array( 'cpp1-pwd1' => 'ecpat', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'cpp1-pwd2' => 'ecpat', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+								array('Resource' => array( 'name' => 'cpp1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+								array('Resource' => array( 'name' => 'cpp1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
 							)
 						),
 						'cp-project2' => array(
@@ -248,7 +248,7 @@ class AppSchema extends CakeSchema {
 					'drupal' => array(
 						'd-project1' => array(
 							'Resources' => array(
-								array('Resource' => array( 'dp1-pwd1' => 'ecpat', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+								array('Resource' => array( 'name' => 'dp1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
 							)
 						),
 						'd-project2' => array()
@@ -256,8 +256,8 @@ class AppSchema extends CakeSchema {
 					'others' => array(
 						'o-project1' => array(
 							'Resources' => array(
-								array('Resource' => array( 'op1-pwd1' => 'ecpat', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'op1-pwd2' => 'ecpat', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+								array('Resource' => array( 'name' => 'op1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+								array('Resource' => array( 'name' => 'op1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
 							)
 						),
 						'o-project2' => array()
