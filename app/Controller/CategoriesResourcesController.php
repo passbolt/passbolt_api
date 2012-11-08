@@ -8,7 +8,12 @@
  * @package      app.Controller.CategoriesResourcesController
  * @since        version 2.12.7
  */
-class CategoryResourcesController extends AppController {
+ 
+App::uses('Sanitize', 'Utility');
+
+class CategoriesResourcesController extends AppController {
+
+	public $uses = array('CategoryResource');
 
 /**
  * Get a categoryResource
@@ -24,7 +29,7 @@ class CategoryResourcesController extends AppController {
 			return;
 		}
 		// check if the id is valid
-		if (!is_int($id)) {
+		if (!is_int((int)$id)) {
 			$this->Message->error(__('The categoryResource id invalid'));
 			return;
 		}
@@ -32,8 +37,8 @@ class CategoryResourcesController extends AppController {
 		$data = array(
 			'CategoryResource.id' => $id
 		);
-		$options = $this->Resource->getFindOptions('view', $data);
-		$cr = $this->Resource->find('all', $options);
+		$options = $this->CategoryResource->getFindOptions('view', $data);
+		$cr = $this->CategoryResource->find('all', $options);
 		if (!count($cr)) {
 			$this->Message->error(__('The CategoryResource does not exist'));
 			return;
@@ -53,22 +58,59 @@ class CategoryResourcesController extends AppController {
 			return;
 		}
 		// check if the id is valid
-		if (!is_int($id)) {
+		if (!is_int((int)$id)) {
 			$this->Message->error(__('The categoryResource id is invalid'));
 			return;
 		}
 		$resource = $this->CategoryResource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The resource doesn\'t exist'));
+			$this->Message->error(__('The categoryResource doesn\'t exist'));
 			return;
 		}
-		$resource['Resource']['deleted'] = '1';
-		$fields = $this->Resource->getFindFields('delete');
-		if (!$this->Resource->save($resource, true, $fields['fields'])) {
+
+		if (!$this->CategoryResource->delete($id)) {
 			$this->Message->error(__('Error while deleting'));
 			return;
 		}
-		$this->Message->success(__('The resource was sucessfully deleted'));
+		$this->Message->success(__('The categoryResource was sucessfully deleted'));
 	}
 
+/**
+ * Add a CategoriResource
+ * @param post : the posted data
+ */
+	public function add() {
+		// check the HTTP request method
+		if (!$this->request->is('post')) {
+			$this->Message->error(__('Invalid request method, should be POST'));
+			return;
+		}
+		// check if data was provided
+		if (!isset($this->request->data['CategoryResource'])) {
+			$this->Message->error(__('No data were provided'));
+			return;
+		}
+
+		// set the data for validation and save
+		$this->request->data = Sanitize::clean($this->request->data);
+		$crpost = $this->request->data;
+		$this->CategoryResource->set($crpost);
+
+		$fields = $this->CategoryResource->getFindFields('add');
+
+		// check if the data is valid
+		if (!$this->CategoryResource->validates()) {
+			$this->Message->error(__('Could not validate resource data'));
+			return;
+		}
+
+		$cr = $this->CategoryResource->save($crpost, false, $fields['fields']);
+		if ($cr === false) {
+			$this->Message->error(__('The CategoryResource could not be saved'));
+			return;
+		}
+		$fields = $this->CategoryResource->getFindFields('add');
+		$this->set('data', $this->CategoryResource->findById($cr['CategoryResource']['id'], $fields['fields']));
+		$this->Message->success(__('The categoryResource was sucessfully added'));
+	}
 }
