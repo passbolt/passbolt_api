@@ -51,10 +51,6 @@
 	);
 	Router::connect(
 		"/categoriesResources/*",
-		array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT")
-	);
-	Router::connect(
-		"/categoriesResources/*",
 		array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE")
 	);
 
