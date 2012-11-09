@@ -8,6 +8,7 @@
  * @license      http://www.passbolt.com/license
  */
 App::uses('Category', 'Model');
+App::uses('User', 'Model');
 
 class CategoryTest extends CakeTestCase {
 
@@ -42,7 +43,7 @@ class CategoryTest extends CakeTestCase {
  */
 	public function testParentValidation() {
 		$testcases = array(
-			'' => true, 'wrongid' => false, '4ff6111b-efb8-4a26-aab4-2184cbdd56cb' => true,
+			'' => true, 'wrongid' => false, '509bb871-13d0-4d82-b6ea-fb098cebc04d' => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -55,7 +56,7 @@ class CategoryTest extends CakeTestCase {
 	}
 
 /**
- * Test Categiry type Validation
+ * Test Category type Validation
  * @return void
  */
 	public function testCategoryTypeValidation() {
@@ -79,8 +80,7 @@ class CategoryTest extends CakeTestCase {
 		$this->assertEquals(true, $result);
 
 		// test if id is null
-		$category = $this->Category->findByName('Goa');
-		$result = $this->Category->parentExists($category['Category']);
+		$result = $this->Category->parentExists(array('parent_id' => ''));
 		$this->assertEquals(true, $result);
 
 		// test if id doesn't exist
@@ -91,33 +91,33 @@ class CategoryTest extends CakeTestCase {
 
 	public function testIsChild() {
 		// assert true
-		$parent = $this->Category->findByName('Hippies places');
-		$child = $this->Category->findByName('Anjuna');
+		$parent = $this->Category->findByName('administration');
+		$child = $this->Category->findByName('accounts');
 
 		$this->assertEquals(true, $this->Category->isChild($child, $parent));
 
 		// assert false
-		$child = $this->Category->findByName('Baga');
+		$child = $this->Category->findByName('cakephp');
 		$this->assertEquals(false, $this->Category->isChild($child, $parent));
 	}
 
 	public function testIsLeaf() {
 		// assert false
-		$leaf = $this->Category->findByName('Anjuna');
+		$leaf = $this->Category->findByName('administration');
 		$this->assertEquals(false, $this->Category->isLeaf($leaf));
 
 		// assert true
-		$leaf = $this->Category->findByName('Play pool table');
+		$leaf = $this->Category->findByName('accounts');
 		$this->assertEquals(true, $this->Category->isLeaf($leaf));
 	}
 
 	public function testIsTopLevelElement() {
-		$elt = $this->Category->findByName('Anjuna');
+		$elt = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$children = $this->Category->children($elt['Category']['id']);
 		$tree = array_merge(array(0 => $elt), $children);
 		$this->assertEquals(true, $this->Category->isTopLevelElement($elt, $tree));
 
-		$elt = $this->Category->findByName('Curlie\'s');
+		$elt = $this->Category->findByName('administration');
 		$this->assertEquals(false, $this->Category->isTopLevelElement($elt, $tree));
 	}
 
@@ -142,19 +142,19 @@ class CategoryTest extends CakeTestCase {
 		$category = array('Category' => array('name' => 'testAdd', 'parent_id' => $parent['Category']['id']));
 		$this->Category->create();
 		$result = $this->Category->save($category);
-		$this->assertTrue($result['Category']['lft'] == '14');
+		$this->assertTrue($result['Category']['lft'] == '35');
 
 		// Test that a category is added properly if parameters are correct and without parent_id
-		$category = array('Category' => array('name' => 'testAdd1'));
+		$category = array('Category' => array('name' => 'testAdd1', 'parent_id' => null));
 		$this->Category->create();
 		$result = $this->Category->save($category);
-		$this->assertTrue($result['Category']['lft'] == '31');
+		$this->assertTrue($result['Category']['lft'] == '37');
 	}
 
 	public function testGetPosition() {
-		$uvbar = $this->Category->findByName('Curlie\'s');
+		$uvbar = $this->Category->findByName('accounts');
 		$position = $this->Category->getPosition($uvbar['Category']['id']);
-		$this->assertEquals(2, $position);
+		$this->assertEquals(1, $position);
 		$this->assertFalse($this->Category->getPosition('badid'));
 	}
 
