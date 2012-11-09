@@ -53,8 +53,8 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($kk);
 
-		$cat = $this->Category->findByName('Goa');
-		$res = $this->Resource->findByName('hill door');
+		$cat = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
+		$res = $this->Resource->findByName('facebook account');
 
 		$result = json_decode($this->testAction('/categoriesResources.json', array(
 			'data' => array(
