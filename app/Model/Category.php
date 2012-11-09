@@ -303,6 +303,7 @@ class Category extends AppModel {
 				);
 			break;
 			case 'Resource.viewByCategory':
+			case 'view':
 				$c = array(
 					'conditions' => array(
 						'Category.id' => $data['Category.id']
