@@ -105,7 +105,7 @@ class CategoryResource extends AppModel {
 		$cr = $this->data['CategoryResource'];
 		$combi = array(
 			'CategoryResource.category_id' => $cr['category_id'],
-			'categoryResource.resource_id' => $cr['resource_id']
+			'CategoryResource.resource_id' => $cr['resource_id']
 		);
 		return $this->isUnique($combi, false);
 	}
