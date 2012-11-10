@@ -34,6 +34,15 @@
 	Router::mapResources('resources');
 	Router::mapResources('secrets');
 
+	// God knows why.. the edit mapping is not working for resource. So we redeclare it manually
+	Router::connect(
+		"/resources/*",
+		array("controller" => 'resources', "action" => "edit", "[method]" => "PUT")
+	);
+	Router::connect(
+		"/resources/*",
+		array("controller" => 'resources', "action" => "delete", "[method]" => "DELETE")
+	);
 	// The line below doesn't seem to work
 	// Router::mapResources('categoriesResources');
 	// So we declare the routes mapping for this function manually
@@ -44,6 +53,10 @@
 	Router::connect(
 		"/categoriesResources/*",
 		array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET")
+	);
+	Router::connect(
+		"/categoriesResources/*",
+		array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT")
 	);
 	Router::connect(
 		"/categoriesResources/*",
