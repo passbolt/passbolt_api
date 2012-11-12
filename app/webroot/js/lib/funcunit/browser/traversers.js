@@ -92,7 +92,7 @@ var traversers = [
 		FuncUnit.prototype[name] = function(selector){
 			var args = arguments;
 			// find is called (with "this" as document) from FuncUnit.fn.init, so in this case don't queue it up, just run the regular find
-			if (FuncUnit.win && this[0] && this[0].nodeType !== 9) { // document nodes are 9
+			if (FuncUnit.win && this[0] && this[0].parentNode && this[0].parentNode.nodeType !== 9) { // document nodes are 9
 				FuncUnit.add({
 					method: function(success, error){
 						// adjust the collection by using the real traverser method
@@ -105,10 +105,6 @@ var traversers = [
 					bind: this
 				});
 			}
-			// TODO: closest calling find() doesn't work with context being document 
-			// in latest jQuery
-			// (needs to be document.documentElement)
-			// in latest jQuer
 			return orig.apply(this, arguments);
 		}
 	};

@@ -1,15 +1,14 @@
 module("funcunit find closest",{
 	setup: function() {
-		var self = this;
 		S.open("//funcunit/test/findclosest.html")
 	}
 });
 
 test("closest", function(){
-	S(":contains('Holler')").closest("#foo").click(function(){
+	S("a:contains('Holler')").closest("#foo").click(function(){
 		ok(this.hasClass("iWasClicked"),"we clicked #foo")
 	})
-	S(":contains('Holler')").closest(".baz").click(function(){
+	S("a:contains('Holler')").closest(".baz").click(function(){
 		ok(this.hasClass("iWasClicked"),"we clicked .baz")
 	})
 	

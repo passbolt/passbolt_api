@@ -74,14 +74,12 @@ steal(function(){
 		}
 		
 		page = _args.shift();
-		
 		var opts = steal.opts(_args, {
 			// true to run with coverage on
 			coverage: 0,
 			// the browser you want to open ("*iexplore")
 			browser: 1,
-			// turn on if you want to exit hard with the -e flag
-			failOnError: 0,
+			failOnError: parseInt(java.lang.System.getenv("ERRORLEV"), 10),
 			// provide a filename to record test output in an xml format that jenkins can read
 			out: 1,
 			// use to provide your own selenium host server
@@ -94,7 +92,11 @@ steal(function(){
 		
 		// output.js uses this to create the file
 		FuncUnit.outputFile = opts.out;
-		print("Opening "+opts.page);;
+		
+		// turn on with the -e flag if you want to exit hard
+		FuncUnit.failOnError = parseInt(java.lang.System.getenv("ERRORLEV"), 10);
+		
+		print("Opening "+opts.page);
 		return opts;
 	}
 })

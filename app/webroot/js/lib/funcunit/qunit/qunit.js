@@ -1331,20 +1331,19 @@ QUnit.jsDump = (function() {
 				type = "date";
 			} else if (QUnit.is("Function", obj)) {
 				type = "function";
-			} else if (
-				// native arrays
-				toString.call( obj ) === "[object Array]" ||
-				toString.call( obj ) === "[object JavaArray]" ||
-				// NodeList objects
-				( typeof obj.length === "number" && typeof obj.item !== "undefined" && ( obj.length ? obj.item(0) === obj[0] : ( obj.item( 0 ) === null && typeof obj[0] === "undefined" ) ) )
-			) {
-				type = "array";
 			} else if (typeof obj.setInterval !== undefined && typeof obj.document !== "undefined" && typeof obj.nodeType === "undefined") {
 				type = "window";
 			} else if (obj.nodeType === 9) {
 				type = "document";
 			} else if (obj.nodeType) {
 				type = "node";
+			} else if (
+				// native arrays
+				toString.call( obj ) === "[object Array]" ||
+				// NodeList objects
+				( typeof obj.length === "number" && typeof obj.item !== "undefined" && ( obj.length ? obj.item(0) === obj[0] : ( obj.item( 0 ) === null && typeof obj[0] === "undefined" ) ) )
+			) {
+				type = "array";
 			} else {
 				type = typeof obj;
 			}
@@ -1654,6 +1653,22 @@ var appendToBody = function(type, id){
 	var el = document.createElement(type);
 	el.setAttribute("id", id);
 	document.body.appendChild( el );
+}
+
+
+	
+// TODO remove this once jquery patches http://bugs.jquery.com/ticket/10373
+var gCS = window.getComputedStyle;
+window.getComputedStyle = function(elem){
+	if(elem.ownerDocument.defaultView && window.getComputedStyle !== elem.ownerDocument.defaultView.getComputedStyle) {
+		return elem.ownerDocument.defaultView.getComputedStyle( elem, null );
+	}
+	try {
+		return gCS(elem, null);
+	} catch (ex) {
+		// Here's to IE 8 and under:
+		return elem.currentStyle;
+	}
 }
 
 // set up page if it hasn't been

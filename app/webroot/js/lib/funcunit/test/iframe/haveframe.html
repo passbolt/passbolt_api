@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head></head>
 	<body>
@@ -7,7 +8,6 @@
 		steal('funcunit/browser/resources/jquery.js', function(){
 			$(document).ready(function(){
 				$('#open').click(function(ev){
-					ev.preventDefault()
 					$('<iframe src="iframe.html" name="my frame"></iframe>').appendTo(document.body)
 				})
 			})

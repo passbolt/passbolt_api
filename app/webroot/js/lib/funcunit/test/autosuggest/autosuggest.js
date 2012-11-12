@@ -1,5 +1,5 @@
 steal("funcunit/browser/resources/jquery.js")
-.then("./js/jquery-ui-1.8.16.custom.min.js", function(){
+.then("./js/jquery-ui-1.9.1.custom.js", function(){
 	var availableTags = [
 		"ActionScript",
 		"AppleScript",

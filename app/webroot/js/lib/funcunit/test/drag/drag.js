@@ -1,7 +1,6 @@
 //load a lot of stuff ...
 steal('funcunit/browser/resources/jquery.js')
-	.then('funcunit/test/jquery.event.drag.js')
-	.then('funcunit/test/jquery.event.drop.js', function(){
+	.then('funcunit/test/dragdrop.js', function(){
 	
 	var hoveredOnce = false;
 	$(".over").bind('mouseover',function(){

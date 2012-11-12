@@ -62,8 +62,7 @@ steal('jquery', './core.js', 'funcunit/syn', function($, FuncUnit, Syn) {
 					success = options;
 					options = {};
 				}
-				var selector = this.selector, 
-					context = this.context;
+				var selector = this.selector;
 				FuncUnit.add({
 					method: function(success, error){
 						options = options || {}
@@ -123,8 +122,7 @@ steal('jquery', './core.js', 'funcunit/syn', function($, FuncUnit, Syn) {
 		 */
 		type: function( text, success ) {
 			this._addExists();
-			var selector = this.selector, 
-				context = this.context;
+			var selector = this.selector;
 			// type("") is a shortcut for clearing out a text input
 			if(text === ""){
 				text = "[ctrl]a[ctrl-up]\b"
@@ -199,8 +197,7 @@ steal('jquery', './core.js', 'funcunit/syn', function($, FuncUnit, Syn) {
 			}
 			options.from = this.selector;
 	
-			var selector = this.selector, 
-				context = this.context;
+			var selector = this.selector;
 			FuncUnit.add({
 				method: function(success, error){
 					steal.dev.log("dragging " + selector);
@@ -255,8 +252,7 @@ steal('jquery', './core.js', 'funcunit/syn', function($, FuncUnit, Syn) {
 			}
 			options.from = this.selector;
 	
-			var selector = this.selector, 
-				context = this.context;
+			var selector = this.selector;
 			FuncUnit.add({
 				method: function(success, error){
 					steal.dev.log("moving " + selector);
@@ -277,8 +273,7 @@ steal('jquery', './core.js', 'funcunit/syn', function($, FuncUnit, Syn) {
 		 */
 		scroll: function( direction, amount, success ) {
 			this._addExists();
-			var selector = this.selector, 
-				context = this.context,
+			var selector = this.selector,
 				direction;
 			if (direction == "left" || direction == "right") {
 				direction = "Left";

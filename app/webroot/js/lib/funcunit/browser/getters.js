@@ -382,9 +382,10 @@ steal('jquery', './core.js', function($, FuncUnit) {
 			//assume last arg is success
 			var args = FuncUnit.makeArray(arguments), 
 				isWait = args.length > argIndex,
-				success;
+				success,
+				self = this;
 			
-			args.unshift(this.selector,this.context,fname)
+			args.unshift(this.selector,this.frame,fname)
 			if(isWait){
 				//get the args greater and equal to argIndex
 				var tester = args[argIndex+3],
@@ -477,6 +478,7 @@ steal('jquery', './core.js', function($, FuncUnit) {
 							} else {
 								// after every successful wait, check for a new document (if someone clicked a link), 
 								// and overwrite alert/confirm/prompt
+								// TODO this creates a potential race if a new document is loaded but its steal isn't ready...should poll
 								FuncUnit.checkForNewDocument();
 							}
 						}

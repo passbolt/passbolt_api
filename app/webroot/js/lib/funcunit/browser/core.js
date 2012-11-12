@@ -1,4 +1,5 @@
-steal('./init', function(oldFuncUnit) {
+steal('jquery', './init', function(jQuery, oldFuncUnit) {
+	
 	if(!window.QUnit && !window.jasmine){
 		steal('funcunit/qunit')
 	}
@@ -9,23 +10,20 @@ steal('./init', function(oldFuncUnit) {
 	// context can be an object with frame and forceSync:
 	// - a number or string: this is a frame name/number, and means only do a sync query
 	// - true: means force the query to be sync only
-	FuncUnit = function( selector, context ) {
+	FuncUnit = function( selector, frame ) {
 		// if you pass true as context, this will avoid doing a synchronous query
 		var frame,
 			forceSync, 
-			isSyncOnly = false,
-			isAsyncOnly = false;
-			
-		if(typeof context === "string"){
-			frame = context;
+			isSyncOnly = false;
+		
+		if(frame && frame.forceSync){
+			forceSync = frame.forceSync;
 		}
-		if(context && typeof context.forceSync === "boolean"){
-			forceSync = context.forceSync;	
-			if (typeof context.frame == "number" || typeof context.frame == "string") {
-				frame = context.frame;
-				context = context.frame;
-			}
+		
+		if(frame && typeof frame.frame !== "undefined"){ // its passed as an object
+			frame = frame.frame;
 		}
+		
 		isSyncOnly = typeof forceSync === "boolean"? forceSync: isSyncOnly;
 		// if its a function, just run it in the queue
 		if(typeof selector == "function"){
@@ -35,39 +33,38 @@ steal('./init', function(oldFuncUnit) {
 		this.selector = selector;
 		// run this method in the queue also
 		if(isSyncOnly === true){
-			var collection = performSyncQuery(selector, context, this);
-			collection.frame = frame;
+			var collection = performSyncQuery(selector, frame);
 			return collection;
-		} else if(isAsyncOnly === true){
-			performAsyncQuery(selector, context, this);
-			return this;
 		} else { // do both
-			performAsyncQuery(selector, context, this);
-			var collection = performSyncQuery(selector, context, this);
-			collection.frame = frame;
+			performAsyncQuery(selector, frame, this);
+			var collection = performSyncQuery(selector, frame);
 			return collection;
 		}
 	}
+
+
 	
 	var getContext = function(context){
 			if (typeof context === "number" || typeof context === "string") {
 				// try to get the context from an iframe in the funcunit document
 				var sel = (typeof context === "number" ? "iframe:eq(" + context + ")" : "iframe[name='" + context + "']"),
-					frames = new origFuncUnit.fn.init(sel, FuncUnit.win.document, true);
-				context = (frames.length ? frames.get(0).contentWindow : FuncUnit.win).document;
+					frames = new origFuncUnit.fn.init(sel, FuncUnit.win.document.documentElement, true);
+				var frame = (frames.length ? frames.get(0).contentWindow : FuncUnit.win).document.documentElement;
+				
 			} else {
-				context = FuncUnit.win.document;
+				frame = FuncUnit.win.document.documentElement;
 			}
-			return context;
+			return frame;
 		},
-		performAsyncQuery = function(selector, context, self){
+		performAsyncQuery = function(selector, frame, self){
 			FuncUnit.add({
 				method: function(success, error){
+					this.frame = frame;
 					if (FuncUnit.win) {
-						context = getContext(context);
+						frame = getContext(frame);
 					}
 					this.selector = selector;
-					this.bind = new origFuncUnit.fn.init( selector, context, true );
+					this.bind = new origFuncUnit.fn.init( selector, frame, true );
 					success();
 					return this;
 				},
@@ -75,11 +72,14 @@ steal('./init', function(oldFuncUnit) {
 				type: "query"
 			});
 		},
-		performSyncQuery = function(selector, context, self){
+		performSyncQuery = function(selector, frame){
+			var origFrame = frame;
 			if (FuncUnit.win) {
-				context = getContext(context);
+				frame = getContext(frame);
 			}
-			return new origFuncUnit.fn.init( selector, context, true );
+			var obj = new origFuncUnit.fn.init( selector, frame, true );
+			obj.frame = origFrame;
+			return obj;
 		}
 	
 	oldFuncUnit.jQuery.extend(FuncUnit, oldFuncUnit, origFuncUnit)

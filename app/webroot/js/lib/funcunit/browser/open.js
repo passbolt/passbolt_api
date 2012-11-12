@@ -21,10 +21,6 @@ var confirms = [],
 	urlWithoutHash = function(url){
 		return url.replace(/\#.*$/, "");
 	},
-	absolutize = function(url){
-		var f = steal.File(url);
-		return f.isCrossDomain() ? f.path : f.join(steal.config().root, true);
-	},
 	// returns true if url matches current window's url
 	isCurrentPage = function(url){
 		var pathname = urlWithoutHash(FuncUnit.win.location.pathname),
@@ -217,10 +213,9 @@ $.extend(FuncUnit,{
 	 */
 	getAbsolutePath: function( path ) {
 		if ( /^\/\//.test(path) ){
-			return steal.File(absolutize(steal.config().root.path)).join(path.substr(2)) + '';
-		} else {
-			return absolutize(path);
+			path = path.substr(2);
 		}
+		return steal.config().root.join(path)+''
 	},
 	/**
 	 * @attribute win
