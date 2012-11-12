@@ -162,8 +162,8 @@ class ResourcesController extends AppController {
 			return;
 		}
 
-		$this->Resource->bindModel(array('hasAndBelongsToMany' => array('Category')));
-		$this->Resource->contain(array('Category'));
+		//$this->Resource->bindModel(array('hasAndBelongsToMany' => array('Category')));
+		//$this->Resource->contain(array('Category'));
 		$resource = $this->Resource->save($resourcepost, false, $fields['fields']);
 
 		if ($resource === false) {
@@ -172,24 +172,27 @@ class ResourcesController extends AppController {
 		}
 
 		// Save the relations
-		foreach ($resourcepost['Category'] as $cat) {
-				$crdata = array(
-					'CategoryResource' => array(
-						'category_id' => $cat['id'],
-						'resource_id' => $resource['Resource']['id']
-					)
-				);
-			// check if the data is valid
-			$this->Resource->CategoryResource->set($crdata);
-			if (!$this->Resource->CategoryResource->validates()) {
-				$this->Message->error(__('Could not validate CategoryResource'));
-				return;
-			}
-			// if validation passes, then save the data
-			$res = $this->Resource->CategoryResource->save();
-			if (!$res) {
-				$this->Message->error(__('Could not save the association'));
-				return;
+		if (isset($resourcepost['Category'])) {
+			foreach ($resourcepost['Category'] as $cat) {
+					$crdata = array(
+						'CategoryResource' => array(
+							'category_id' => $cat['id'],
+							'resource_id' => $resource['Resource']['id']
+						)
+					);
+				$this->Resource->CategoryResource->create();
+				// check if the data is valid
+				$this->Resource->CategoryResource->set($crdata);
+				if (!$this->Resource->CategoryResource->validates()) {
+					$this->Message->error(__('Could not validate CategoryResource'));
+					return;
+				}
+				// if validation passes, then save the data
+				$res = $this->Resource->CategoryResource->save();
+				if (!$res) {
+					$this->Message->error(__('Could not save the association'));
+					return;
+				}
 			}
 		}
 		$this->Message->success(__('The resource was sucessfully saved'));
@@ -269,9 +272,10 @@ class ResourcesController extends AppController {
 				$crdata = array(
 					'CategoryResource' => array(
 						'category_id' => $cat['id'],
-						'resource_id' => $resourcepost['Resource']['id']
+						'resource_id' => $id
 					)
 				);
+				$this->Resource->CategoryResource->create();
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates()) {

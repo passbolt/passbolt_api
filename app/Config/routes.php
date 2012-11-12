@@ -27,11 +27,45 @@
  * @see http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
  * @see http://book.cakephp.org/2.0/en/development/rest.html
  */
-	Router::parseExtensions('json');
+ 	Router::parseExtensions('json');
 	Router::mapResources('dictionaries');
 	Router::mapResources('users');
 	Router::mapResources('categories');
 	Router::mapResources('resources');
+	Router::mapResources('secrets');
+
+	// God knows why.. the edit mapping is not working for resource. So we redeclare it manually
+	Router::connect(
+		"/resources/*",
+		array("controller" => 'resources', "action" => "edit", "[method]" => "PUT")
+	);
+	Router::connect(
+		"/resources/*",
+		array("controller" => 'resources', "action" => "delete", "[method]" => "DELETE")
+	);
+	// The line below doesn't seem to work
+	// Router::mapResources('categoriesResources');
+	// So we declare the routes mapping for this function manually
+	Router::connect(
+		"/categoriesResources",
+		array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET")
+	);
+	Router::connect(
+		"/categoriesResources/*",
+		array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET")
+	);
+	Router::connect(
+		"/categoriesResources/*",
+		array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT")
+	);
+	Router::connect(
+		"/categoriesResources/*",
+		array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST")
+	);
+	Router::connect(
+		"/categoriesResources/*",
+		array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE")
+	);
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',

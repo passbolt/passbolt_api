@@ -15,7 +15,7 @@ class Category extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree', 'Containable');
+	public $actsAs = array('Tree', 'Containable', 'Trackable');
 
 	public $hasMany = array(
 		'CategoryResource'
@@ -303,6 +303,7 @@ class Category extends AppModel {
 				);
 			break;
 			case 'Resource.viewByCategory':
+			case 'view':
 				$c = array(
 					'conditions' => array(
 						'Category.id' => $data['Category.id']

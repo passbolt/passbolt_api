@@ -37,7 +37,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testView() {
-		$festival = $this->Resource->findByName('festival du cinema');
+		$festival = $this->Resource->findByName('facebook account');
 		$id = $festival['Resource']['id'];
 
 		// test when no parameters are provided
@@ -54,17 +54,18 @@ class ResourcesControllerTest extends ControllerTestCase {
 			'resources/view/' . $id . '.json should return success'
 		);
 
-		$this->assertEquals('festival du cinema', $result['body']['Resource']['name'],
-			'resources/view/' . $id . ".json should a resource named 'festival du cinema' but returned {$result['body']['Resource']['name']} instead"
+		$this->assertEquals('facebook account', $result['body']['Resource']['name'],
+			'resources/view/' . $id . ".json should a resource named 'facebook account' but returned {$result['body']['Resource']['name']} instead"
 		);
 	}
 
 	public function testViewByCategory() {
  		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
-		$goaCat = $categoryModel->findByName('Goa');
+		$projectCat = $categoryModel->findByName('cp-project2');
+		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
 
-		$id = $goaCat['Category']['id'];
+		$id = $projectCat['Category']['id'];
 
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/resources/viewByCategory.json", array('return' => 'contents')), true);
@@ -80,24 +81,25 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'],
 			$url . " should return success but returned {$result['header']['status']}"
 		);
-		$this->assertEquals('festival du cinema', $result['body'][1]['Resource']['name'],
+		$this->assertEquals('cpp2-pwd2', $result['body'][1]['Resource']['name'],
 			$url . " test should read 'festival du cinema' but is reading {$result['body'][1]['Resource']['name']}"
 		);
 		$this->assertEquals(2, count($result['body']),
 			$url . " counting the number of elements should return '2' but is reading " . count($result['body'])
 		);
 
+		$id = $rootCat['Category']['id'];
 		$url = "/resources/viewByCategory/" . $id . "/1.json";
 		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
-		$this->assertEquals('washroom', $result['body'][4]['Resource']['name'],
-			$url . " test should read 'washroom' but is reading {$result['body'][4]['Resource']['name']}"
+		$this->assertEquals('cpp2-pwd2', $result['body'][4]['Resource']['name'],
+			$url . " test should read 'cpp2-pwd2' but is reading {$result['body'][4]['Resource']['name']}"
 		);
-		$this->assertEquals(2, count($result['body'][1]['CategoryResource']),
-			$url . " counting the number of elements should return '2' but is reading " . count($result['body'][1]['CategoryResource'])
+		$this->assertEquals(11, count($result['body']),
+			$url . " counting the number of elements should return '11' but is reading " . count($result['body'][1]['CategoryResource'])
 		);
 
 		// Test when the category is empty
-		$mapusaCat = $categoryModel->findByName('Mapusa');
+		$mapusaCat = $categoryModel->findByName('cp-project3');
 		$id = $mapusaCat['Category']['id'];
 		// should return success
 		$result = json_decode($this->testAction("/resources/viewByCategory/$id.json", array('return' => 'contents')), true);
@@ -110,7 +112,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	public function testAdd() {
 		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
-		$goaCat = $categoryModel->findByName('Goa');
+		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
 
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
@@ -122,7 +124,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 					),
 					'Category' => array(
 						 0 => array(
-							'id' => $goaCat['Category']['id']
+							'id' => $rootCat['Category']['id']
 						 )
 					)
 			 ),
@@ -138,26 +140,84 @@ class ResourcesControllerTest extends ControllerTestCase {
 			)
 		));
 		$this->assertEquals(1, count($catres), "Add : /resources.json : The number of categories returned should be 1, but actually is " . count($catres));
-		$this->assertEquals($goaCat['Category']['id'], $catres['0']['CategoryResource']['category_id'], "Add : /resources.json : the category inserted should be {$goaCat['Category']['id']} but is {$catres['0']['CategoryResource']['category_id']}");
+		$this->assertEquals($rootCat['Category']['id'], $catres['0']['CategoryResource']['category_id'], "Add : /resources.json : the category inserted should be {$rootCat['Category']['id']} but is {$catres['0']['CategoryResource']['category_id']}");
 
-		// todo : Add more tests for add. Without categories, with wrong categories, etc...
+		// Add without Category
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test2',
+					'username' => 'test2',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
+
+		// Test with a bad format of category
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test3',
+					'username' => 'test3',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				),
+				'Category' => array(
+					 0 => array(
+						'id' => '8u7'
+					 )
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+
+		// Test with wrong id for category
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test3',
+					'username' => 'test3',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				),
+				'Category' => array(
+					 0 => array(
+						'id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56hg'
+					 )
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
 	}
 
 	public function testEdit() {
 		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
-		$goaCat = $categoryModel->findByName('Goa');
-		$resource = $this->Resource->findByName("washroom");
+		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
+		$accountCat = $categoryModel->findByName('accounts');
+		$resource = $this->Resource->findByName("facebook account");
 		$id = $resource['Resource']['id'];
 
 		$resource['Resource']['name'] = "test";
+		$before = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
 
 		$result = json_decode($this->testAction("/resources/$id.json", array(
 			'data' => array(
 				'Resource' => $resource['Resource'],
 				'Category' => array(
 					 0 => array(
-						'id' => $goaCat['Category']['id']
+						'id' => $accountCat['Category']['id']
+					 ),
+					 1 => array(
+						'id' => $rootCat['Category']['id']
 					 )
 				)
 			 ),
@@ -165,15 +225,43 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "update /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$result = $this->Resource->findById($id);
+		$this->assertEquals("test", $result['Resource']['name'], "update /resources/$id.json : The test should have modified the name into 'test', but name is still {$result['Resource']['name']}");
+
+		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
+		$this->assertEquals($after[0]['CategoryResource']['category_id'], $accountCat['Category']['id'], "update /resources/$id.json : The resource should now belong to category id {$accountCat['Category']['id']} but belongs to {$after[0]['CategoryResource']['resource_id']} instead");
+
+		// Test with a bad format of category
+		$result = json_decode($this->testAction("/resources/$id.json", array(
+			'data' => array(
+				'Category' => array(
+					 0 => array(
+						'id' => '8u7'
+					 )
+				)
+			 ),
+			 'method' => 'put',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
+		$this->assertTrue(count($after) == 0, "update /resources/$id.json : After this test, there should be no categories associated to the resource anymore.");
 	}
 
 	public function testDelete() {
-		$res = $this->Resource->findByName('washroom');
+		$res = $this->Resource->findByName('facebook account');
 		$id = $res['Resource']['id'];
 		$result = json_decode($this->testAction("/resources/$id.json", array(
 			 'method' => 'delete',
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+
+		$id = 1;
+		$result = json_decode($this->testAction("/resources/$id.json", array(
+			 'method' => 'delete',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "delete /resources/$id.json : The test should return a error but is returning {$result['header']['status']}");
 	}
 }

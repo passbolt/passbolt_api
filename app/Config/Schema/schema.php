@@ -15,18 +15,17 @@ App::uses('User', 'Model');
 App::uses('Role', 'Model');
 
 class AppSchema extends CakeSchema {
-	
-	static $created = array();
-	
+
+	public static $created = array();
+
 	public function before($event = array()) {
 		$db = ConnectionManager::getDataSource($this->connection);
 		$db->cacheSources = false;
 		return true;
 	}
 
-	public function insertMainData ($categories, $parentCategory=null) {
-		
-		foreach ($categories as $categoryId => $subCategories){
+	public function insertCategories ($categories, $parentCategory=null) {
+		foreach ($categories as $categoryId => $subCategories) {
 			// Insert Category
 			if ($categoryId != 'Resources') {
 				$this->Category->create();
@@ -36,37 +35,34 @@ class AppSchema extends CakeSchema {
 						'parent_id' => isset($parentCategory) ? $parentCategory['Category']['id'] : null
 					)
 				));
-				$this->insertMainData ($subCategories, $category);
-			} 
-			// insert Resources
-			else {
+				$this->insertCategories ($subCategories, $category);
+			} else {
 				$resources = $subCategories;
-				foreach($resources as $value){
+				foreach ($resources as $value) {
 					$this->Resource->create();
 					$resource = $this->Resource->save($value);
 					$this->CategoryResource->create();
 					$this->CategoryResource->save(array(
 						'CategoryResource' => array( 'category_id' => $parentCategory['Category']['id'], 'resource_id' => $resource['Resource']['id'] )
 					));
-				}		
+				}
 			}
 		}
 	}
-	
+
 	public function after($event = array()) {
-	
 		if (isset($event['create'])) {
 			switch ($event['create']) {
 				case 'categories':
 					array_push(self::$created, 'categories');
-					if(in_array('resources', self::$created)) {
+					if (in_array('resources', self::$created)) {
 						$this->Category = ClassRegistry::init('Category');
 						$this->Resource = ClassRegistry::init('Resource');
 						$this->CategoryResource = ClassRegistry::init('CategoryResource');
-						$this->insertMainData($this->_getDefaultData());
+						$this->insertMainCategories($this->_getDefaultCategories());
 					}
 				break;
-			
+
 				case 'category_types' :
 					array_push(self::$created, 'category_types');
 					$categoryType = ClassRegistry::init('CategoryType');
@@ -80,7 +76,7 @@ class AppSchema extends CakeSchema {
 					$categoryType->create();
 					$categoryType->save($type);
 					break;
-				
+
 				case 'users':
 					array_push(self::$created, 'users');
 					$user = ClassRegistry::init('User');
@@ -90,17 +86,17 @@ class AppSchema extends CakeSchema {
 						$user->save($u);
 					}
 				break;
-				
+
 				case 'resources':
 					array_push(self::$created, 'resources');
-					if(in_array('categories', self::$created)) {
+					if (in_array('categories', self::$created)) {
 						$this->Category = ClassRegistry::init('Category');
 						$this->Resource = ClassRegistry::init('Resource');
 						$this->CategoryResource = ClassRegistry::init('CategoryResource');
-						$this->insertMainData($this->_getDefaultData());
+						$this->insertCategories($this->_getDefaultCategories());
 					}
 				break;
-				
+
 				case 'roles':
 					array_push(self::$created, 'roles');
 					$role = ClassRegistry::init('Role');
@@ -113,7 +109,7 @@ class AppSchema extends CakeSchema {
 			}
 		}
 	}
-	
+
 	public $roles = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'key' => 'unique', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -190,7 +186,6 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
 	);
 
-
 	public $gpgKeys = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -209,63 +204,70 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
-	protected function _getDefaultData() {
+	protected function _getDefaultCategories() {
 		$categories = array (
-			'Projects' => array(
-				'CakePHP' => array(
-						'Passbolt'=>array(
-							'Resources'=>array(
-								array('Resource' => array( 'name' => 'htpasswd', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'name' => 'test', 'username' => 'test@passbolt.com', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' ))
-							)
-						),
-						'KeyBolt'=>array(
-							'Resources'=>array(
-								array('Resource' => array( 'name' => 'htpasswd', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'name' => 'test', 'username' => 'test@keybolt.com', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' ))
-							)
-						)
-				),
-				'Drupal'=>array(
-					'Ecpat'=>array(
-						'Resources'=>array(
-							array('Resource' => array( 'name' => 'ecpat', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+			'Bolt Softwares Pvt. Ltd.' => array(
+				'administration' => array(
+					'accounts' => array(
+						'Resources' => array(
+							array('Resource' => array( 'name' => 'bank password', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
 						)
 					),
-					'Gt-sat'=>array(
-						'Resources'=>array(
-							array('Resource' => array( 'name' => 'gt-sat', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://gt-sat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+					'marketing' => array(
+						'Resources' => array(
+							array('Resource' => array( 'name' => 'facebook account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
+						)
+					),
+					'hr' => array(
+						'Resources' => array(
+							array('Resource' => array( 'name' => 'salesforce account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
+						)
+					),
+					'misc' => array(
+						'Resources' => array(
+							array('Resource' => array( 'name' => 'tetris license', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
 						)
 					)
 				),
-				'Magento'=>array()
-			),
-			'Administration' => array(
-				'Jenkins'=>array(
-					'Resources'=>array(
-						array('Resource' => array( 'name' => 'cedric', 'username' => 'cedric@passbolt.com', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/jenkins/job/Passbolt', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'Isma', 'username' => 'isma@passbolt.com', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/jenkins/job/Passbolt', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'kevin', 'username' => 'kevin@passbolt.com', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/jenkins/job/Passbolt', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'Myriam', 'username' => 'myriam@passbolt.com', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/jenkins/job/Passbolt', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'Remy', 'username' => 'remy@passbolt.com', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/jenkins/job/Passbolt', 'description' => 'this is a description test' ))
+				'projects' => array(
+					'cakephp' => array(
+						'cp-project1' => array(
+							'Resources' => array(
+								array('Resource' => array( 'name' => 'cpp1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+								array('Resource' => array( 'name' => 'cpp1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+							)
+						),
+						'cp-project2' => array(
+							'Resources' => array(
+								array('Resource' => array( 'name' => 'cpp2-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+								array('Resource' => array( 'name' => 'cpp2-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+							)
+						),
+						'cp-project3' => array()
+					),
+					'drupal' => array(
+						'd-project1' => array(
+							'Resources' => array(
+								array('Resource' => array( 'name' => 'dp1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+							)
+						),
+						'd-project2' => array()
+					),
+					'others' => array(
+						'o-project1' => array(
+							'Resources' => array(
+								array('Resource' => array( 'name' => 'op1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+								array('Resource' => array( 'name' => 'op1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+							)
+						),
+						'o-project2' => array()
 					)
-				)
-			),
-			'Management' => array(
-				'Jiira'=>array(
-					'Resources'=>array(
-						array('Resource' => array( 'name' => 'cedric', 'username' => 'https://passbolt.atlassian.net', 'expiry_date' => null, 'uri' => 'https://passbolt.atlassian.net', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'Isma', 'username' => 'cedric@passbolt.com', 'expiry_date' => null, 'uri' => 'https://passbolt.atlassian.net', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'kevin', 'username' => 'cedric@passbolt.com', 'expiry_date' => null, 'uri' => 'https://passbolt.atlassian.net', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'Myriam', 'username' => 'cedric@passbolt.com', 'expiry_date' => null, 'uri' => 'https://passbolt.atlassian.net', 'description' => 'this is a description test' )),
-						array('Resource' => array( 'name' => 'Remy', 'username' => 'cedric@passbolt.com', 'expiry_date' => null, 'uri' => 'http://www.enova-tech.net', 'description' => 'this is a description test' ))
-					)
-				)
-			),
+				),
+			)
 		);
 		return $categories;
 	}
-	
+
 	protected function _getDefaultUsers() {
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',

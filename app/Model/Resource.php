@@ -7,6 +7,9 @@
  * @package       app.Model.Resource
  * @since         version 2.12.7
  */
+
+App::uses('User', 'Model');
+
 class Resource extends AppModel {
 
 	public $actsAs = array('Containable', 'Trackable');
