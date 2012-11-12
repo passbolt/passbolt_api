@@ -1,6 +1,7 @@
-steal('funcunit', 
-'//'+MAD_ROOT+'/test/view/template/componentController.ejs',
-function() {
+steal(
+	'funcunit',
+	'mad/test/view/template/componentController.ejs'
+).then(function () {
 
 	var testEnv = null;
 	module("mad.helper.component", {
@@ -8,7 +9,7 @@ function() {
 		setup: function () {
 			stop();
 
-			S.open('//' + MAD_ROOT + '/test/testEnv/app.html', function () {
+			S.open('//' + 'mad/test/testEnv/app.html', function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
 				// when the app is ready continue the tests
@@ -42,7 +43,7 @@ function() {
 		ok(typeof component.render != 'undefined', 'The component has well been decorated');
 		ok(typeof component.getBoxElement != 'undefined', 'The component has well been decorated');
 
-		component.setTemplateUri('//' + MAD_ROOT + '/test/view/template/componentController.ejs');
+		component.setTemplateUri('//' + 'mad/test/view/template/componentController.ejs');
 		component.render();
 
 		// the component has well been rendered

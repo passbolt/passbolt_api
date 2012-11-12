@@ -23,9 +23,9 @@ steal('funcunit', function () {
 		mad.controller.Controller.extend('mad.controller.component.UnitTestComponentController', {}, {});
 		mad.controller.Controller.extend('mad.controler.component.UnitTestComponentController', {}, {}); // Controller class name mal formed
 		mad.controller.Controller.extend('mad.controller.component.UnitTestComponentControler', {}, {}); // Controller class name mal formed
-		equal(mad.helper.ControllerHelper.getViewPath(mad.controller.UnitTestController), '//' + MAD_ROOT + '/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the mad lib');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.controller.UnitTestController), '//' + 'mad/view/template/unitTest.ejs', 'Get view path ok with controller in the controller folder of the mad lib');
 
-		equal(mad.helper.ControllerHelper.getViewPath(mad.controller.component.UnitTestComponentController), '//' + MAD_ROOT + '/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the mad lib');
+		equal(mad.helper.ControllerHelper.getViewPath(mad.controller.component.UnitTestComponentController), '//' + 'mad/view/template/component/unitTestComponent.ejs', 'Get view path ok with controller in a subfolder of the controller folder of the mad lib');
 
 		// Try to get a view path of an undefined class
 		raises(function () {

@@ -1,0 +1,39 @@
+{
+	"header": {
+		"id": "static_persons_fixture_id",
+		"status": "success",
+		"title": "Ajax fixture request for persons",
+		"message": "Get all the persons",
+		"controller": "persons",
+		"action": "index"
+	},
+	"body": [
+		{
+			"Person": { "id": "person_1", "surname": "Cedric", "name": "Alfonsi", "freelancer": true, "phone": "0091001", "email": "cedric@passbolt.com"},
+			"visited": [{"id":"france", "label":"France"}, {"id":"india", "label":"Inde"}],
+			"children": [{"Person" : { "id": "person_11", "surname": "Cedric Junior", "name": "Alfonsi", "freelancer": false }}]
+		}, {
+			"Person": { "id": "person_2", "surname": "Kevin", "name": "Muller", "freelancer": true, "phone": "0091002", "email": "kevin@passbolt.com" },
+			"visited": [{"id":"france", "label":"France"}, {"id":"india", "label":"Inde"}],
+			"children": [
+				{"Person" : { "id": "person_21", "surname": "Kevin Junior", "name": "Muller", "freelancer": false }},
+				{"Person" : { "id": "person_22", "surname": "Shruti Junior", "name": "Muller", "freelancer": false }}]
+		}, {
+			"Person": { "id": "person_3", "surname": "Isma", "name": "Guennouni", "freelancer": true, "phone": "0033001", "email": "ismail@passbolt.com"},
+			"visited": [{"id":"france", "label":"France"}, {"id":"india", "label":"Inde"}],
+			"children": [
+				{"Person" : { "id": "person_31", "surname": "Isma Junior", "name": "Guennouni", "freelancer": false }},
+				{"Person" : { "id": "person_32", "surname": "Myriam Junior", "name": "Guennouni", "freelancer": false }}]
+		}, {
+			"Person": { "id": "person_4", "surname": "Myriam", "name": "Djerouni", "freelancer": true, "phone": "003302", "email": "myriam@passbolt.com" },
+			"visited": [{"id":"france", "label":"France"}, {"id":"india", "label":"Inde"}],
+			"children": [
+				{"Person" : { "id": "person_41", "surname": "Isma Junior", "name": "Guennouni", "freelancer": false }},
+				{"Person" : { "id": "person_42", "surname": "Myriam Junior", "name": "Guennouni", "freelancer": false }}]
+		}, {
+			"Person": { "id": "person_5", "surname": "Remy", "name": "Bertaud", "freelancer": true, "phone": "0091003", "email": "remy@passbolt.com" },
+			"visited": [{"id":"france", "label":"France"}, {"id":"india", "label":"Inde"}],
+			"children": [{"Person" : { "id": "person_51", "surname": "Remy Junior", "name": "Bertaud", "freelancer": false }}]
+		}
+	]
+}

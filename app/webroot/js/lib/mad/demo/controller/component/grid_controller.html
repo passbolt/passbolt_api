@@ -4,11 +4,8 @@
 	<head>
 		<title>Component Tree Controller Example</title>
 		<script type='text/javascript' src='../../../../steal/steal.js'></script>
-		<link rel="stylesheet" type="text/css" href="../../../../../../css/icons.css">
-		<link rel="stylesheet" type="text/css" href="../../../../../../css/tree.css">
-		<style type='text/css'>
-			
-		</style>
+		<link rel="stylesheet" type="text/css" href="../../../../../../css/table.css">
+		<style type='text/css'></style>
 	</head>
 	<body>
 		
@@ -17,12 +14,8 @@
  -------------------------------------------------------------------------->
 <div id="demo-html">
 <div id="js_demo_app_controller">
-	<h3>Simple list representation</h3>
-	<ul id="js_demo_list_controller"></ul>
-	<h3>Simple tree representation</h3>
-	<ul id="js_demo_tree_controller"></ul>
-	<h3>Dynamic tree representation</h3>
-	<ul id="js_demo_dynamicTree_controller" class="tree"></ul>
+	<h3>Grid representation</h3>
+	<table id="js_demo_grid_controller"></table>
 </div>
 </div>
 
@@ -32,126 +25,73 @@
 <script type='text/javascript'>
 steal(
 	'mad/demo/init.js'
-).then('mad/view/component/tree/jstree.js', function() {
+).then(
+	'mad/test/data/model/person.js'
+).then(function() {
 
-	mad.model.Model.extend('demo.model.Person', {
-		'validateRules': {
-			'surname': ['alphanum', 'required'],
-			'name': ['alphanum', 'required'],
-			'freelancer': ['required'],
-			'phone': ['required', 'num'],
-			'email': ['required', 'email']
+	var map = new mad.object.Map({
+		'id': 'id',
+		'name': 'name',
+		'surname': 'surname',
+		'freelancer': 'freelancer',
+		'phone': 'phone',
+		'email': 'email',
+		'children': {
+			'key': 'children',
+			'func': mad.object.Map.mapObjects
 		}
-	}, {});
-	
-	var data = new Array(
-		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Cedric', 'name': 'Alfonsi', 'freelancer': true }) , 'children': [
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Cedric Junior', 'name': 'Alfonsi', 'freelancer': false }) }
-		]},
-		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Kevin', 'name': 'Muller', 'freelancer': true }) , 'children': [
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Kevin Junior', 'name': 'Muller', 'freelancer': false }) },
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Shruti Junior', 'name': 'Muller', 'freelancer': false }) }
-		] },
-		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Isma', 'name': 'Guennouni', 'freelancer': true }) , 'children': [
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Isma Junior', 'name': 'Guennouni', 'freelancer': false }) },
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Myriam Junior', 'name': 'Guennouni', 'freelancer': false }) }
-		] },
-		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Myriam', 'name': 'Djerouni', 'freelancer': true }) , 'children': [
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Isma Junior', 'name': 'Guennouni', 'freelancer': false }) },
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Myriam Junior', 'name': 'Guennouni', 'freelancer': false }) }
-		] },
-		{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Remy', 'name': 'Bertaud', 'freelancer': true }) , 'children': [
-			{ 'Resource': new demo.model.Person({ 'id': uuid(), 'surname': 'Remy Junior', 'name': 'Bertaud', 'freelancer': false }) }
-		] }
-	);
+	});
+
+	var columnNames = ['Name', 'Surname', 'Freelancer', 'Phone', 'Email', 'Children'];
+
+	var columnModel = [{
+		'name': 'name',
+		'index': 'name'
+	}, {
+		'name': 'surname',
+		'index': 'surname'
+	}, {
+		'name': 'freelancer',
+		'index': 'freelancer'
+	}, {
+		'name': 'phone',
+		'index': 'phone'
+	}, {
+		'name': 'email',
+		'index': 'email'
+	}, {
+		'name': 'children',
+		'index': 'children',
+		'valueAdapter': function (value, item, columnModel, rowNum) {
+			var returnValue = item.children.length;
+			return returnValue;
+		}
+	}];
+
 	// Instanciate a list controller
-	var list = new mad.controller.component.TreeController($('#js_demo_list_controller'), {
-		'map': new mad.object.Map({
-			'id': 'Resource.id',
-			'label': {
-				'key': 'Resource.name',
-				'func': function (value, map, rowObject) {
-					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
-				}
-			}
-		}),
+	var grid = new mad.controller.component.GridController($('#js_demo_grid_controller'), {
+		'map': map,
+		'itemClass': demo.model.Person,
+		'columnNames': columnNames,
+		'columnModel': columnModel,
 		'callbacks': {
-			'itemSelected': function (element, event, itemId) {
-				console.log ('selected : ' + itemId);
+			'itemSelected': function (element, event, item) {
+				console.log ('selected : ', item);
 			},
-			'itemRightSelected': function (element, event, itemId) {
-				console.log ('right selected : ' + itemId);
+			'itemRightSelected': function (element, event, item) {
+				console.log ('right selected : ', item);
 			},
-			'itemHovered': function (element, event, itemId) {
-				console.log ('hovered : ' + itemId);
+			'itemHovered': function (element, event, item) {
+				console.log ('hovered : ', item);
 			}
 		}
 	}, {});
 	
-	list.render();
-	list.load(data);	
-	
-	// Instanciate a list controller
-	var tree = new mad.controller.component.TreeController($('#js_demo_tree_controller'), {
-		'map': new mad.object.Map({
-			'id': 'Resource.id',
-			'label': {
-				'key': 'Resource.name',
-				'func': function (value, map, rowObject) {
-					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
-				}
-			},
-			'children': {
-				'key': 'children',
-				'func': mad.object.Map.mapObjects
-			}
-		}),
-		'callbacks': {
-			'itemSelected': function (element, event, itemId) {
-				console.log ('selected : ' + itemId);
-			},
-			'itemRightSelected': function (element, event, itemId) {
-				console.log ('right selected : ' + itemId);
-			},
-			'itemHovered': function (element, event, itemId) {
-				console.log ('hovered : ' + itemId);
-			}
-		}
-	}, {});
-	
-	tree.render();
-	tree.load(data);
-	
-	// Instanciate a dynamic tree controller
-	var dynTree = new mad.controller.component.DynamicTreeController($('#js_demo_dynamicTree_controller'), {
-		'map': new mad.object.Map({
-			'id': 'Resource.id',
-			'label': {
-				'key': 'Resource.surname',
-				'func': function (value, map, rowObject) {
-					return rowObject.Resource.name + ' ' + rowObject.Resource.surname;
-				}
-			},
-			'children': {
-				'key': 'children',
-				'func': mad.object.Map.mapObjects
-			}
-		}),
-		'callbacks': {
-			'itemSelected': function (element, event, itemId) {
-				console.log ('selected : ' + itemId);
-			},
-			'itemRightSelected': function (element, event, itemId) {
-				console.log ('right selected : ' + itemId);
-			},
-			'itemHovered': function (element, event, itemId) {
-				console.log ('hovered : ' + itemId);
-			}
-		}
-	}, {});
-	
-	dynTree.render();
-	dynTree.load(data);
+	grid.render();
+	demo.model.Person.findAll({}, function (persons, response, request) {
+		grid.load(persons);
+	}, function (response) {});
+
 });
 </script>
 

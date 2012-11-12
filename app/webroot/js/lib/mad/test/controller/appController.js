@@ -1,5 +1,4 @@
 steal('funcunit', function () {
-	$appCtl = $('body');
 
 	module("mad.controller", {
 		// runs before each test
@@ -10,9 +9,9 @@ steal('funcunit', function () {
 
 	test('AppController : Set the namespace of the application', function () {
 		// try to get the app controller before the application namespace has been instantiated
-		raises(function () {
-			var appCtl = mad.controller.AppController.singleton($appCtl);
-		}, mad.error.Exception, 'The application namespace is not initialized');
+//		raises(function () {
+//			var appCtl = mad.controller.AppController.singleton($appCtl);
+//		}, mad.error.Exception, 'The application namespace is not initialized');
 		// try to access to the globals function before the initialization of the ns
 		raises(function () {
 			mad.controller.AppController.getGlobal('TEST');

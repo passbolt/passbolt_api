@@ -5,7 +5,7 @@ steal('funcunit', function () {
 		// runs before each test
 		setup: function () {
 			stop();
-			S.open('//' + MAD_ROOT + '/test/testEnv/mad.html', function () {
+			S.open('//' + 'mad/test/testEnv/mad.html', function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
 

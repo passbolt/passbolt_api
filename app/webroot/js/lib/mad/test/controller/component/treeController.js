@@ -1,46 +1,64 @@
-steal('funcunit', function () {
+steal(
+	'funcunit'
+).then(function () {
 
 	// Test environnement, the window of the released popup
 	var testEnv = null,
 		treeController = null,
 		map = null;
 
+	var instanciateTree  = function (type) {
+		type = type || 'list';
+		var map = null;
+		switch (type) {
+		case 'list':
+			map = new testEnv.mad.object.Map({
+				'id': 'id',
+				'label': {
+					'key': 'name',
+					'func': function (value, map, rowObject) {
+						return rowObject.name + ' ' + rowObject.surname;
+					}
+				}
+			});
+			break;
+		case 'tree':
+			map = new testEnv.mad.object.Map({
+				'id': 'id',
+				'label': {
+					'key': 'name',
+					'func': function (value, map, rowObject) {
+						return rowObject.name + ' ' + rowObject.surname;
+					}
+				},
+				'children': {
+					'key': 'children',
+					'func': mad.object.Map.mapObjects
+				}
+			});
+			break;
+		}
+
+		var $tree = testEnv.mad.helper.HtmlHelper.create(testEnv.$('#mad_test_app_controller'), 'inside_replace', '<ul/>');
+		var tree = new testEnv.mad.controller.component.TreeController($tree, {
+			id: 'test_tree',
+			itemClass: testEnv.demo.model.Person,
+			map: map
+		});
+		tree.render();
+		return tree;
+	}
+
 	module("mad.controller.component", {
 		// runs before each test
 		setup: function () {
-
 			stop();
-
-			S.open('//' + MAD_ROOT + '/test/testEnv/app.html', function () {
+			var url = '//lib/mad/test/testEnv/app.html';
+//			var url = steal.idToUri('mad/test/testEnv/app.html').toString(); // sopen does not get full url, it needs relative url
+			S.open(url, function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
-				// In test environnement some configuration variables have to be updated
-				testEnv.$.jstree._themes = APP_URL + '/js/lib/jstree/themes/';
-				// set the map
-				map = new testEnv.mad.object.Map({
-					'attr.id': {
-						'key': 'id',
-						'func': function (value, map) {
-							return treeController.getId() + '_node_' + value;
-						}
-					},
-					'type': 'icon',
-					'data': 'label',
-					'children': {
-						'key': 'children',
-						'func': testEnv.mad.object.Map.mapObjects
-					}
-				});
-
-				// when the app is ready continue the tests
 				S('body').hasClass('mad_test_app_ready', true, function () {
-					// instantiate a tree
-					var $tree = testEnv.$('<div id="tree"/>').appendTo(testEnv.$('body'));
-					treeController = new testEnv.mad.controller.component.TreeController($tree, {
-						map: map,
-						strategy: 'jstree'
-					});
-					treeController.render();
 					start();
 				});
 			});
@@ -49,108 +67,125 @@ steal('funcunit', function () {
 		teardown: function () {}
 	});
 
-	var data = [{
-		"id": 1,
-		"label": "Parent Child 1",
-		"action": "#",
-		"type": "folder",
-		"children": [{
-			"id": 11,
-			"label": "Child 1",
-			"action": "#",
-			"type": "file",
-			"children": [{
-				"id": 111,
-				"label": "Sub Child 1",
-				"action": "#",
-				"type": "folder"
-			}]
-		}]
-	}, {
-		"id": 2,
-		"label": "Parent Child 2",
-		"action": "#",
-		"type": "folder",
-		"children": [{
-			"id": 21,
-			"label": "Child 2",
-			"action": "#",
-			"type": "file",
-			"children": [{
-				"id": 211,
-				"label": "Sub Child 2",
-				"action": "#",
-				"type": "folder"
-			}]
-		}]
-	}];
+	test('TreeController.init', function () {
+		var tree = instanciateTree();
+		notEqual(tree, null, 'The instance is not null');
+		equal(tree instanceof testEnv.mad.controller.component.TreeController, true, 'The instance is belonging to the right type');
+	});
 
-	test('TreeController: Check the instanciation', function () {
-		var $tree = S("#tree");
-		// bad strategy
+	// Test the insert item function
+	test('TreeController: Test insert item', function () {
+		var tree = instanciateTree('tree');
+
+		// Test that item class is well defined before inserting items
+		tree.options.itemClass = null;
+		// Try to insert a null item
 		raises(function () {
-			treeController = new testEnv.mad.controller.component.TreeController($tree, {
-				map: map,
-				strategy: 'badStrategy'
-			});
-		}, testEnv.mad.error.WrongParametersException, 'The strategy parameter is wrong, it should be one of the followin (jstree, ...)');
-		// no map
+			tree.insertItem(null);
+		}, testEnv.mad.error.Exception, 'The associated itemClass can not be null');
+		tree.setItemClass(testEnv.demo.model.Person);
+
+		// Try to insert a null item
 		raises(function () {
-			treeController = new testEnv.mad.controller.component.TreeController($tree, {
-				strategy: 'jstree'
+			tree.insertItem(null);
+		}, testEnv.mad.error.WrongParametersException, 'Wrong parameter [item] expected type is [demo.model.Person]');
+
+		// Try to insert an instance of a wrong type
+		var wrongTypeIns = new testEnv.mad.model.Model({id:'bad_id', 'name':'bad_name', 'surname':'bad_surname'});
+		raises(function () {
+			tree.insertItem(wrongTypeIns);
+		}, testEnv.mad.error.WrongParametersException, 'Wrong parameter [item] expected type is [demo.model.Person]');
+
+		// Insert an item an check it has been rendered
+		testEnv.demo.model.Person.findAll().then(function (persons, response, request) {
+			var item = persons[0];
+			tree.insertItem(item);
+			// check the item exists in the view
+			S('#' + item.id).exists(1000, null, 'Item found in the view ' + item.surname);
+		});
+
+	});
+
+	// Test remove function
+	test('TreeController: Test remove item', function () {
+		var tree = instanciateTree('list');
+
+		testEnv.demo.model.Person.findAll().then(function (persons, response, request) {
+			var item = persons[0];
+			tree.insertItem(item);
+			tree.removeItem(item);
+			S('#' + item.id).missing(1000, null, 'Item not found in the view ' + item.surname);
+		});
+	});
+
+	// load a list and test that all items are rendered
+	test('TreeController: Load simple list data', function () {
+		var tree = instanciateTree();
+
+		testEnv.demo.model.Person.findAll().then(function (persons, response, request) {
+			tree.load(persons);
+			// check that all items have been rendered
+			can.each(persons, function (person, i) {
+				S('#' + person.id).exists(1000, null, 'Item found in the view ' + person.surname);
 			});
-		}, testEnv.mad.error.MissingOptionsException, 'The map options is missing');
+		});
+
 	});
 
-	test('TreeController: Check the instanciated tree is well the desired component', function () {
-		ok(treeController instanceof testEnv.mad.controller.component.TreeController, "The instanciated component is well an instance of the TreeController component Class");
-		ok(treeController instanceof testEnv.mad.controller.ComponentController, "The instanciated component is well an instance of the ComponentController Class");
+	// load a tree and test that all items are rendered
+	test('TreeController: Load tree data', function () {
+		var tree = instanciateTree('tree');
+
+		testEnv.demo.model.Person.findAll().then(function (persons, response, request) {
+			tree.load(persons);
+			var listPersons = testEnv.mad.model.Model.nestedListToList(persons, 'children');
+			// check that all items have been rendered
+			can.each(listPersons, function (person, i) {
+				S('#' + person.id).exists(1000, null, 'Item found in the view ' + person.surname);
+			});
+		});
+
 	});
 
-	test('TreeController: Load a node at the root', function () {
-		var assertNodesCount = 0,
-			nodesCount = 3;
+	// Test events on simple list
+	test('TreeController: Catch events (hover, click)', function () {
+		var tree = instanciateTree('tree');
 
-		// check if a node is existing in the DOM
-		var checkExistingNode = function (object) {
-				if (S('#tree #tree_node_' + object.id).length) {
-					assertNodesCount++;
-				}
-				for (var j in object.children) {
-					checkExistingNode(object.children[j]);
-				}
-			}
+		// Insert an item an check it has been rendered
+		testEnv.demo.model.Person.findAll().then(function (persons, response, request) {
+			var listPersons = mad.model.Model.nestedListToList(persons, 'children'),
+				hovered  = 0,
+				selected  = 0,
+				rightSelected = 0;
+			tree.load(persons);
 
-			//load the node in the jstree and test they are existing in the DOM
-			treeController.load(data[0]);
-		checkExistingNode(data[0]);
+			can.each(listPersons, function (person, i) {
+				// fuck in unit tests, the element is not released in the parameters
+				// listen in item hovered in tree item
+				tree.element.one('item_hovered', function (/*el,*/ ev, item, srcEvent) {
+					equal(item.id, person.id, 'The component is well catching the mouse hover event and the returned item is correct');
+					hovered++;
+				});
+				// listen in item selected in tree item
+				tree.element.one('item_selected', function (/*el,*/ ev, item, srcEvent) {
+					equal(item.id, person.id, 'The component is well catching the mouse click event and the returned item is correct');
+					selected++;
+				});
+//				// listen in item selected in tree item
+//				tree.element.one('item_right_selected', function (/*el,*/ ev, item, srcEvent) {
+//					equal(item.id, person.id, 'The component is well catching the mouse right click event and the returned item is correct');
+//					rightSelected++;
+//				});
 
-		// All the nodes are existing
-		equal(assertNodesCount, nodesCount, 'All the nodes are existing');
-	});
+				testEnv.$('#' + person.id + ' .label').trigger('mouseenter');
+				testEnv.$('#' + person.id + ' .label').trigger('click');
+//				testEnv.$('#' + person.id + ' .label').trigger('contextmenu');
+			});
+			equal(hovered, listPersons.length, 'All the items have been hovered');
+			equal(selected, listPersons.length, 'All the items have been clicked');
+//			equal(rightSelected, listPersons.length, 'All the items have been right clicked');
+		});
 
-	test('TreeController: Load multiple nodes at the root', function () {
-		var assertNodesCount = 0,
-			nodesCount = 6;
-
-		// check if a node is existing in the DOM
-		var checkExistingNode = function (object) {
-				if (S('#tree #tree_node_' + object.id).length) {
-					assertNodesCount++;
-				}
-				for (var j in object.children) {
-					checkExistingNode(object.children[j]);
-				}
-			}
-
-			//load the nodes in the jstree and test they are existing in the DOM
-			treeController.load(data);
-		for (var i in data) {
-			checkExistingNode(data[i]);
-		}
-
-		// All the nodes are existing
-		equal(assertNodesCount, nodesCount, 'All the nodes are existing');
 	});
 
 });
