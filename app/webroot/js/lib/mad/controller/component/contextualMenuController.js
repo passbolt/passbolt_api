@@ -20,14 +20,34 @@ steal(
 	}, /** @prototype */ {
 
 		'destroy': function () {
-			$('#js_contextual_menu_ref_point').remove();
+			$('#js_contextual_anchor', this.element).remove();
 		},
 
+		/**
+		 * Render the component. Override the parent behavior to automatically position
+		 * the contextual menu functons of optional parameters mouseX and mouseY.
+		 * @see {mad.view.View}
+		 * @param {array} options Associative array of options
+		 * @param {boolean} options.display Display the rendered component. If true
+		 * the rendered component will be push in the DOM else the rendered component
+		 * will be stored in the instance's variable renderedView
+		 * @return {mixed} Return true if the method does not encountered troubles else
+		 * return false. If the option display is set to false, return the rendered view
+		 */
 		'render': function () {
 			this._super();
 
-			$refPoint = $('<div id="js_contextual_menu_ref_point" style="position:absolute; top:' + (this.options.mouseY-5) + 'px; left:' + (this.options.mouseX-5) + 'px">');
-			$('body').prepend($refPoint);
+			// we make the view's job in the controller
+			// Insert the reference point in the DOM
+			var refPointHtml = '<div id="js_contextual_anchor" style="position:absolute;"></div>'
+			var refPoint = mad.helper.HtmlHelper.create('body', 'first', refPointHtml);
+			var $refPoint = $(refPoint);
+			console.log($refPoint);
+			$refPoint.css({
+				left: this.options.mouseX,
+				top: this.options.mouseY
+			});
+			// Position the contextual menu functions of the reference point and the given options
 			this.element.position({
 				my: "left top",
 				at: "right bottom",

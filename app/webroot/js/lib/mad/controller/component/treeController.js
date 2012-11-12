@@ -36,9 +36,10 @@ steal(
 			'itemTemplateUri': 'mad/view/template/component/tree/treeItem.ejs',
 			'cssClasses': ['tree'],
 
-			// The class of the item
+			// the itemClass which represents the items managed by the component
 			'itemClass': null,
-			// the map to use to map JMVC model to the tree data model
+			// the associated map, which will be used to map the model data to the
+		  // expected view format
 			'map': null,
 			// the top tag of the grid
 			'tag': 'ul',
@@ -52,16 +53,6 @@ steal(
 
 	}, /** @prototype */ {
 
-		// Construcor
-		'init': function (el, options) {
-			options = options || [];
-			// @todo put all the controller instance variables in the model, the consistance of these
-			// variables should not be carried by the controller
-			this.map = options.map || null;
-			this.itemClass= options.itemClass || null;
-			this._super(el, options);
-		},
-
 		/**
 		 * Insert an item in the tree
 		 * @param {mad.model.Model} item The item to insert
@@ -73,6 +64,12 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (item, refItemId, position) {
+			if (this.getItemClass() == null) {
+				throw new mad.error.Exception('The associated itemClass can not be null');
+			}
+			if (!(item instanceof this.getItemClass())) {
+				throw new mad.error.WrongParametersException('item', this.getItemClass().fullName);
+			}
 			this.view.insertItem(item, refItemId, position);
 		},
 
@@ -98,13 +95,39 @@ steal(
 		},
 
 		/**
+		 * Get the itemClass which represents the items managed by the component
+		 * @return {mad.model.Model}
+		 */
+		'getItemClass': function () {
+			return this.options.itemClass;
+		},
+
+		/**
+		 * Set the itemClass which represents the items managed by the component
+		 * @params {mad.model.Model} itemClass The item class
+		 * @return {void}
+		 */
+		'setItemClass': function (itemClass) {
+			this.options.itemClass = itemClass;
+		},
+
+		/**
+		 * Get the associated map, which will be used to map the model data to the
+		 * expected view format
+		 * @return {mad.object.Map}
+		 */
+		'getMap': function (map) {
+			return this.options.map;
+		},
+
+		/**
 		 * Set the associated map, which will be used to map the model data to the
-		 * expected view data
+		 * expected view format
 		 * @param {mad.object.Map} map The map
 		 * @return {void}
 		 */
 		'setMap': function (map) {
-			this.map = map;
+			this.options.map = map;
 		},
 
 		/* ************************************************************** */

@@ -59,16 +59,15 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'a mouseover': function (el, ev) {
+		'li mouseover': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
-			var data = null,
-				li = el.parents('li');
-			if (this.controller.itemClass) {
-				data = li.data(this.controller.itemClass.fullName);
+			var data = null;
+			if (this.controller.getItemClass()) {
+				data = el.data(this.controller.getItemClass().fullName);
 			} else {
-				data = li[0].id;
+				data = el[0].id;
 			}
 
 			this.element.trigger('item_opened', data);
@@ -81,9 +80,12 @@ steal(
 		 * @return {void}
 		 */
 		'li mouseleave': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
 			var data = null;
-			if (this.controller.itemClass) {
-				data = el.data(this.controller.itemClass.fullName);
+
+			if (this.controller.getItemClass()) {
+				data = el.data(this.controller.getItemClass().fullName);
 			} else {
 				data = el[0].id;
 			}

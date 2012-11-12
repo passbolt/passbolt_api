@@ -8,7 +8,7 @@ var classesControl = hasChildren ? ['with_icon', 'triangle_right'] : [];
 <li id="<%= id %>" class="<%= classes.join(' ') %> node" <%= (el) -> el.data( itemClass.fullName, item ) %>>
 
 	<div>
-		<a href="#"><%= label %></a>
+		<a href="#" class="label"><%= label %></a>
 		<a href="#" class="control <%= classesControl.join(' ') %>">
 			<span>more</span>
 		</a>

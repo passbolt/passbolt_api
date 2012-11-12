@@ -39,10 +39,10 @@ steal(
 			}
 
 			// map the jmvc model objects into the desired format
-			var mappedItem = this.controller.map.mapObject(item);
+			var mappedItem = this.controller.getMap().mapObject(item);
 			mappedItem.hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
 			mappedItem.item = item;
-			mappedItem.itemClass = this.controller.itemClass;
+			mappedItem.itemClass = this.controller.getItemClass();
 
 			var itemRender = mad.view.View.render(this.controller.options.itemTemplateUri, mappedItem);
 			var $child = $(itemRender).appendTo($refList);
@@ -108,15 +108,16 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li click': function (el, ev) {
+		'li .label click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
-			var data = null;
-			if (this.controller.itemClass) {
-				data = el.data(this.controller.itemClass.fullName);
+			var data = null,
+				li = el.parents('li');
+			if (this.controller.getItemClass()) {
+				data = li.data(this.controller.getItemClass().fullName);
 			} else {
-				data = el[0].id;
+				data = li[0].id;
 			}
 
 			this.itemSelected(data, el, ev);
@@ -129,16 +130,17 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li contextmenu': function (el, ev) {
+		'li .label contextmenu': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
 			if (ev.which == 3) {
-				var data = null;
-				if (this.controller.itemClass) {
-					data = el.data(this.controller.itemClass.fullName);
+				var data = null,
+					li = el.parents('li');
+				if (this.controller.getItemClass()) {
+					data = li.data(this.controller.getItemClass().fullName);
 				} else {
-					data = el[0].id;
+					data = li[0].id;
 				}
 				this.itemRightSelected(data, el, ev);
 			}
@@ -152,14 +154,16 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li hover': function (el, ev) {
+		'li .label hover': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
-			var data = null;
-			if (this.controller.itemClass) {
-				data = el.data(this.controller.itemClass.fullName);
+
+			var data = null,
+				li = el.parents('li');
+			if (this.controller.getItemClass()) {
+				data = li.data(this.controller.getItemClass().fullName);
 			} else {
-				data = el[0].id;
+				data = li[0].id;
 			}
 			this.itemHovered(data, el, ev);
 			return false;

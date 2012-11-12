@@ -50,20 +50,16 @@ steal(
 
 	}, /** @prototype */ {
 
-		/**
-		 * The map to transform JMVC model object into jqgrid understable format
-		 * @type {mad.object.Map}
-		 */
-		'map': null,
-
 		// Construcor like
 		'init': function (el, options) {
 			this._super(el, options);
-			this.map = this.options.map;
-			this.itemClass= options.itemClass || null;
+			if (options.columnModel) {
+				this.setColumnModel(options.columnModel);
+			}
+			if (options.columnNames) {
+				this.setColumnNames(options.columnNames);
+			}
 			this.setViewData('items', []);
-			this.setViewData('columnModel', this.options.columnModel);
-			this.setViewData('columnNames', this.options.columnNames);
 		},
 
 		/**
@@ -75,6 +71,78 @@ steal(
 			// The hypothesis let's believe me than the remove function will deeply removed
 			// each element and launch the destroy function of each component controller
 			this.view.empty();
+		},
+
+		/**
+		 * Get the column names of the grid
+		 * @return {array}
+		 */
+		'getColumnNames': function () {
+			return this.options.columnName;
+		},
+
+		/**
+		 * Set the column names of the grid
+		 * @params {array} columnName
+		 * @return {void}
+		 */
+		'setColumnNames': function (columnName) {
+			this.options.columnName = columnName;
+			this.setViewData('columnNames', this.options.columnNames);
+		},
+
+		/**
+		 * Get the column model of the grid
+		 * @return {mad.model.Model}
+		 */
+		'getColumnModel': function () {
+			return this.options.columnModel;
+		},
+
+		/**
+		 * Set the column model of the grid
+		 * @params {array} columnModel
+		 * @return {void}
+		 */
+		'setColumnModel': function (columnModel) {
+			this.options.columnModel = columnModel;
+			this.setViewData('columnModel', this.options.columnModel);
+		},
+
+		/**
+		 * Get the itemClass which represents the items managed by the component
+		 * @return {mad.model.Model}
+		 */
+		'getItemClass': function () {
+			return this.options.itemClass;
+		},
+
+		/**
+		 * Set the itemClass which represents the items managed by the component
+		 * @params {mad.model.Model} itemClass The item class
+		 * @return {void}
+		 */
+		'setItemClass': function (itemClass) {
+			this.options.itemClass = itemClass;
+		},
+
+		/**
+		 * Get the associated map, which will be used to map the model data to the
+		 * expected view format
+		 * @return {mad.object.Map}
+		 */
+		'getMap': function (map) {
+			return this.options.map;
+		},
+
+		/**
+		 * Set the associated map, which will be used to map the model data to the
+		 * expected view format
+		 * @param {mad.object.Map} map The map
+		 * @return {void}
+		 */
+		'setMap': function (map) {
+			this.options.map = map;
 		},
 
 		/**
@@ -98,15 +166,24 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (item, refItemId, position) {
-			var self = this;
-			var mappedItem = this.map.mapObject(item);
+
+			if (this.getItemClass() == null) {
+				throw new mad.error.Exception('The associated itemClass can not be null');
+			}
+			if (!(item instanceof this.getItemClass())) {
+				throw new mad.error.WrongParametersException('item', this.getItemClass().fullName);
+			}
+
+			var self = this,
+				mappedItem = this.getMap().mapObject(item),
+				columnModels = this.getColumnModel();
 
 			// insert the item in the view
 			this.view.insertItem(item, refItemId, position);
 
 			// apply a widget to cells following the columns model
-			for(var j in this.options.columnModel) {
-				var columnModel = this.options.columnModel[j];
+			for(var j in columnModels) {
+				var columnModel = columnModels[j];
 
 				if(columnModel.cellAdapter) {
 					var itemId = mappedItem.id;
@@ -148,7 +225,6 @@ steal(
 		'load': function (items) {
 			var self = this;
 			this.empty();
-			this.state.data = items;
 			can.each(items, function (item, i) {
 				self.insertItem(item);
 			});

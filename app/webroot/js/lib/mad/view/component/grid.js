@@ -82,14 +82,16 @@ steal(
 		'_renderRow': function (item) {
 			var returnValue = null,
 				// the mapped item
-				mappedItem = this.controller.map.mapObject(item),
+				mappedItem = this.controller.getMap().mapObject(item),
 				// the cells data (columnName, value)
-				cells = [];
+				cells = [],
+				// the grid column models
+				columnModels = this.controller.getColumnModel();
 
 			// insert column data
-			for(var j in this.controller.options.columnModel) {
+			for(var j in columnModels) {
 				// the column model which describe the current column
-				var columnModel = this.controller.options.columnModel[j],
+				var columnModel = columnModels[j],
 					// the cell value
 					cellValue = null;
 
@@ -133,7 +135,7 @@ steal(
 			// the reference HTML Element to use to position the new one
 			var $ref = refItemId ? $('#' + refItemId, this.element) : $('tbody', this.element),
 				// the mapped item
-				mappedItem = this.controller.map.mapObject(item),
+				mappedItem = this.controller.getMap().mapObject(item),
 				// the row html fragment to insert
 				row = '';
 
@@ -151,7 +153,7 @@ steal(
 		 */
 		'refreshItem': function (item) {
 			// the mapped item
-			var mappedItem = this.controller.map.mapObject(item),
+			var mappedItem = this.controller.getMap().mapObject(item),
 				// the row html fragment to insert
 				row = '',
 				// the current row
@@ -177,8 +179,8 @@ steal(
 		 */
 		'tbody tr click': function (el, ev) {
 			var data = null;
-			if (this.controller.itemClass) {
-				data = el.data(this.controller.itemClass.fullName);
+			if (this.controller.getItemClass()) {
+				data = el.data(this.controller.getItemClass().fullName);
 			} else {
 				data = el[0].id;
 			}
@@ -193,8 +195,8 @@ steal(
 		 */
 		'tbody tr hover': function (el, ev) {
 			var data = null;
-			if (this.controller.itemClass) {
-				data = el.data(this.controller.itemClass.fullName);
+			if (this.controller.getItemClass()) {
+				data = el.data(this.controller.getItemClass().fullName);
 			} else {
 				data = el[0].id;
 			}

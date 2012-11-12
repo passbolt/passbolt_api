@@ -23,11 +23,11 @@ steal(
 
 		/**
 		 * Open an item
-		 * @param {string} itemId The target item to open
+		 * @param {mad.model.Model} item The target item to open
 		 * @return {void}
 		 */
-		'open': function (itemId) {
-			var li = $('#' + itemId, this.element);
+		'open': function (item) {
+			var li = $('#' + item.id, this.element);
 			li.removeClass('closed')
 				.addClass('opened');
 			var control = $('.control:first', li);
@@ -37,11 +37,11 @@ steal(
 
 		/**
 		 * Close an item
-		 * @param {string} itemId The target item to close
+		 * @param {mad.model.Model} item The target item to close
 		 * @return {void}
 		 */
-		'close': function (itemId) {
-			var li = $('#' + itemId, this.element);
+		'close': function (item) {
+			var li = $('#' + item.id, this.element);
 			li.removeClass('opened')
 				.addClass('closed');
 			var control = $('.control:first', li);
@@ -62,9 +62,16 @@ steal(
 		'a.control.open click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
-			var li = el.parents('li');
-			var itemId = li[0].id;
-			this.element.trigger('item_opened', itemId);
+			var data = null,
+				li = el.parents('li');
+
+			if (this.controller.getItemClass()) {
+				data = li.data(this.controller.getItemClass().fullName);
+			} else {
+				data = li[0].id;
+			}
+
+			this.element.trigger('item_opened', data);
 		},
 
 		/**
@@ -76,9 +83,16 @@ steal(
 		'a.control.close click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
-			var li = el.parents('li');
-			var itemId = li[0].id;
-			this.element.trigger('item_closed', itemId);
+			var data = null,
+				li = el.parents('li');
+
+			if (this.controller.getItemClass()) {
+				data = li.data(this.controller.getItemClass().fullName);
+			} else {
+				data = li[0].id;
+			}
+
+			this.element.trigger('item_closed', data);
 		}
 
 	});

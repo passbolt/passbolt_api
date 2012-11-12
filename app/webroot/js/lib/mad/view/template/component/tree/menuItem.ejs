@@ -4,8 +4,8 @@ var cssClasses = cssClasses || '';
 
 <li id="<%= id %>" class="<%= cssClasses %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
 	<a href="#">
-		<span>
-			aaa<%= label %>
+		<span class="item">
+			<%= label %>
 		</span>
 	</a>
 </li>
