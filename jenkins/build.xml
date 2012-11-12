@@ -28,14 +28,6 @@
 		</exec>
 	</target>
 
-	<target name="jsunit" description="Run unit tests with funcunit and phantomjs">
-		<mkdir dir="${build}/jsunit"/>
-		<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="testresults.xml">
-			<arg line=" -a ./js funcunit/run selenium mad/funcunit.html"/>
-		</exec>
-		<move file="${src}/app/webroot/js/testresults.xml" tofile="${build}/jsunit/madsquirrel.xml"/>
-	</target>
-
 	<target name="phpunit" description="Run unit tests with PHPUnit">
 		<mkdir dir="${build}/phpunit"/>
 		<exec dir="${src}" executable="${src}/app/Console/cake" failonerror="true">
@@ -82,12 +74,6 @@
 		<pathconvert pathsep=" " property="jsfiles.clean" refid="jsfiles.raw" />
 		<exec executable="java" output="${build}/jslint/jslint.xml">
 			<arg line="-jar ${src}/../../../bin/jslint4java/jslint4java.jar --report xml ${jsfiles.clean} --undef --eqeq --continue --plusplus --regexp --vars --sloppy" />
-		</exec>
-	</target>
-	
-	<target name="jsdoc" description="Generate javascript documentation">
-		<exec dir="${src}/app/webroot/js/documentjs" executable="./doc">
-			<arg line=" mad"/>
 		</exec>
 	</target>
 	
