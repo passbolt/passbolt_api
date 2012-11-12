@@ -110,24 +110,10 @@ steal(
 
 		/**
 		 * Get children categories
-		 * @param {boolean} flat Return as flat list
 		 * @return {passbolt.model.Category.List}
 		 */
-		'getSubCategories': function (flat, _root) {
-			var returnValue = can.makeArray(this.children);
-			if (flat) {
-				for (var i in returnValue) {
-					var subCategories = returnValue[i].getSubCategories(true, true);
-					for (var j in subCategories) {
-						returnValue.push(subCategories[j]);
-					}
-					delete subCategories;
-				}
-			}
-			if (!_root) {
-				returnValue = new passbolt.model.Category.List(returnValue);
-			}
-			return returnValue;
+		'getSubCategories': function () {
+			return mad.model.Model.nestedToList(this, 'children');
 		}
 
 	});

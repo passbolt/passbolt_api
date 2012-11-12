@@ -101,7 +101,7 @@ steal('jquery/model').then(function () {
 		 * @return {boolean}
 		 */
 		'isModelAttribute': function (name) {
-			return /models$/.test(this.attributes[name]) || /model$/.test(this.attributes[name]);
+			return /model[s]?$/.test(this.attributes[name]);
 		},
 
 		/**
@@ -164,6 +164,49 @@ steal('jquery/model').then(function () {
 				} else {
 					returnValue = mad.model.ValidationRules.validate(rules, value, modelValues);
 				}
+			}
+
+			return returnValue;
+		},
+
+		/**
+		 * Transform a nested model instance in flat list
+		 * @param {mad.model.Model} instance The target model instance to transform
+		 * @param {string} attrName The name of the attribute which store the nested data
+		 * @return {mad.model.Model.List} 
+		 */
+		'nestedToList': function (instance, attrName, _loop) {
+			var returnValue = [];
+
+			returnValue.push(instance);
+			can.each(instance[attrName], function (subInstance, i) {
+				$.merge(returnValue, mad.model.Model.nestedToList(subInstance, attrName, true));
+			});
+
+			if (!_loop) {
+				var Class = instance.getClass();
+				returnValue = new Class.List(returnValue);
+			}
+			return returnValue;
+		},
+
+		/**
+		 * Transform a nested list of model instances in flat list
+		 * @param {mad.model.Model} instance The target model instances to transform
+		 * @param {string} attrName The name of the attribute which store the nested data
+		 * @return {mad.model.Model.List} 
+		 */
+		'nestedListToList': function (instances, attrName) {
+			var returnValue = null,
+				data = [];
+			can.each(instances, function (instance, i) {
+				$.merge(data, mad.model.Model.nestedToList(instance, attrName, true));
+			});
+
+			// if the input is not empty, transform the output in list
+			if (instances.length) {
+				var Class = instances[0].getClass();
+				returnValue = new Class.List(data);
 			}
 
 			return returnValue;
@@ -272,24 +315,14 @@ steal('jquery/model').then(function () {
 		}
 
 	}, /** @prototype */ {
-//		/**
-//		 * Override the jmvc model serialize function, to serialize associated models
-//		 * @return {object}
-//		 deprecated or not, check with the create
-//		 */
-//		'serialize' : function () {
-//			var returnValue = this._super();
-//			// Check the serialization contain an array of Class
-//			// Change done for JMVC 3.2.4
-//			for (var i in returnValue) {
-//				if ($.isArray(returnValue[i])) {
-//					for (var j in returnValue[i]) {
-//						returnValue[i][j] = returnValue[i][j].serialize();
-//					}
-//				}
-//			}
-//			return returnValue;
-//		}
+
+		/**
+		* Get the Class of the instance
+		* @return {$.Class}
+		*/
+		'getClass': function () {
+			return this.constructor;
+		}
 
 	});
 
