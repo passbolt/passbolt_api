@@ -21,8 +21,11 @@ steal(
 		'create': function (refElement, position, content) {
 			var returnValue = $(content);
 
+			if (!(refElement instanceof jQuery)) {
+				throw new mad.error.WrongParametersException('refElement', 'jQuery');
+			}
 			if (refElement.length == 0) {
-				throw new mad.error.WrongParametersException('refElement');
+				throw new mad.error.WrongParametersException('refElement', 'jQuery');
 			}
 
 			// insert the component functions of the reference element and the given position

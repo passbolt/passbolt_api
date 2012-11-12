@@ -131,8 +131,7 @@
 
 steal(
 	'mad/controller/controller.js',
-	'mad/helper/controllerHelper.js',
-	'mad/view/view.js'
+	'mad/helper/controllerHelper.js'
 ).then(function () {
 
 	/*
@@ -360,15 +359,13 @@ steal(
 		 */
 		'render': function (options) {
 			options = options || {}
-			var returnValue = false,
-				display = options.display || true;
-
+			var returnValue = false;
 			returnValue = this.view.render(options);
 
 			// set the state of the component with the given default state
 			this.setState(this.options.state);
 
-			return returnValue === true ? this : returnValue;
+			return options.display ? this : returnValue;
 		},
 
 		/* ************************************************************** */

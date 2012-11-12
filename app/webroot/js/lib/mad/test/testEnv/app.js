@@ -1,10 +1,14 @@
 APP_URL = 'http://passbolt.local';
 
 steal(
-	'mad/mad.js' // the mad framework
+	'mad/mad.js'
+).then(
+	// laod the usefull models
+	'mad/test/data/model/person.js',
+	'mad/test/data/model/country.js'
 ).then(function () {
 
-	steal.options.logLevel = 0;
+//	steal.options.logLevel = 0;
 
 	$(document).ready(function () {
 
@@ -18,6 +22,7 @@ steal(
 			'eventBusControllerId': 'mad_test_event_bus_controller', // Event bus controller DOM node id
 			'callbacks' : {
 				'ready': function () {
+					console.log('ready');
 					$('body').addClass('mad_test_app_ready');
 				}
 			}

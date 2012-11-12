@@ -102,6 +102,10 @@ steal(
 		return this;
 	}
 
+	/**
+	 * Get the Class of the instance
+	 * @return {$.Class}
+	 */
 	$.Class.prototype.getClass = function () {
 		return this.constructor;
 	}

@@ -14,22 +14,34 @@ steal(
 	// the mad framework
 	'mad/mad.js'
 ).then(
-	'app/bootstrap/appBootstrap.js', // passbolt application bootstrap
-	'app/controller/appController.js' // passbolt main application controller
+	// passbolt application bootstrap
+	'app/bootstrap/appBootstrap.js',
+	// passbolt main application controller
+	'app/controller/appController.js',
+	// the passbolt response handler
+	'app/net/responseHandler.js'
 ).then(function () {
 
 	$(document).ready(function () {
 
 		//load the bootstrap of the application
 		var boot = new passbolt.bootstrap.AppBootstrap({
-			'appRootUrl': 'http://passbolt.local', // Application root url
-			'dictionary': 'en-EN', // The langue of the application
-			'appNamespaceId': 'passbolt', // Application namespace
-			'appControllerId': 'js_app_controller', // Application controller DOM node id
-			'appControllerClass': passbolt.controller.AppController, // Application controller class
-			'errorHandlerClass': passbolt.helper.ErrorHandler, // Set the Error handler class
-			'responseHandlerClass': passbolt.helper.ResponseHandler, // Set the Response handler class
-			'eventBusControllerId': 'passbolt_event_bus_controller', // Event bus controller DOM node id
+			// Application root url
+			'appRootUrl': 'http://passbolt.local',
+			// The langue of the application
+			'dictionary': 'en-EN',
+			// Application namespace
+			'appNamespaceId': 'passbolt',
+			// Application controller DOM node id
+			'appControllerId': 'js_app_controller',
+			// Application controller class
+			'appControllerClass': passbolt.controller.AppController,
+			// Set the Error handler class
+			'errorHandlerClass': passbolt.helper.ErrorHandler,
+			// Set the default Response handler class
+			'responseHandlerClass': passbolt.net.ResponseHandler,
+			// Event bus controller DOM node id
+			'eventBusControllerId': 'passbolt_event_bus_controller',
 			//                , 'dispatchOptions' : {                                                     // Dispatcher options (not used here, but in case of page to page application, the DOM node id of the page controller)
 			//                    'pageControllerId'  : 'passbolt-page-controller'
 			//                }

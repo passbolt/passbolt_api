@@ -6,10 +6,10 @@ steal(
 
 	'app/controller/component/appMenuController.js',
 	'app/controller/component/notificationController.js',
-
+	// the ressources workspace models
 	'app/model/category.js',
 	'app/model/resource.js',
-
+	// the application template
 	'app/view/template/app.ejs'
 ).then(function () {
 
@@ -36,6 +36,7 @@ steal(
 			var notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
 				'state': 'hidden'
 			});
+//			notifCtl.render()
 
 			// Add a workspaces container tabs element to the app 
 			var wksCtl = new mad.controller.component.TabController($('#js_workspaces_container'));

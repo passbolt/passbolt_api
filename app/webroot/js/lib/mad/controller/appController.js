@@ -1,5 +1,4 @@
 steal(
-	'mad/core/class.js',
 	'mad/controller/componentController.js',
 	'mad/view/template/app.ejs'
 ).then(function () {
