@@ -89,7 +89,6 @@ steal(
 		 */
 		'request': function (request) {
 			var ResponseHandlerClass = mad.getGlobal('RESPONSE_HANDLER_CLASS');
-
 			// Duplicate and store the original params in a variable
 			request.originParams = $.extend({}, request.params);
 			// Treat templated uri (like /controller/action/{id}
@@ -118,7 +117,6 @@ steal(
 							deferred.rejectWith(this, [jqXHR, 'error', response]);
 							return deferred;
 						}
-
 						// @todo treat notice, warning & success
 
 						// everything fine, continue
@@ -126,7 +124,7 @@ steal(
 						// findOne, findAll get this deffered, but create seems to have
 						// its own, it return only the bulk server response (treat it there)
 						deferred = $.Deferred();
-						deferred.resolveWith(this, [data, response, request]);
+						deferred.resolveWith(this, [data.body, response, request]);
 						return deferred;
 					},
 
@@ -141,8 +139,7 @@ steal(
 				); // end of pipe
 
 			// Handle the server success response with the default response handler
-			returnValue.then(function (data, textStatus, jqXHR) {
-				var response = new mad.net.Response(data);
+			returnValue.then(function (data, response, request) {
 				responseHandler = new ResponseHandlerClass(response, request);
 				responseHandler.handle();
 			});
