@@ -15,20 +15,28 @@
  */
 
 steal(
-	'lib/jquery/jquery-1.8.2.min.js'
+	'lib/jquery/jquery-1.8.2.min.js',
+	// usefull to position element, and does not require other dependancies than 
+	// the jQuery core lib
+	'lib/xregexp/xregexp-all-min.js'
 ).then(
-	'lib/xregexp/xregexp-all-min.js',
+	'lib/jquery/jquery.ui.position.js',
 	'jquery/class',
 	'jquery/controller',
 	'jquery/model',
 	'jquery/view/ejs',
+	// override the jmvc Class class prototype directly
 	'mad/core/class.js'
+).then(
+	// load mad core libraries
+	'mad/controller',
+	'mad/model',
+	'mad/view'
 ).then(
 	'mad/bootstrap/appBootstrap.js',
 	'mad/error/exception.js',
 	'mad/error/errorHandler.js',
 	'mad/controller/appController.js',
-	'mad/controller/controller.js',
 	'mad/controller/componentController.js',
 	'mad/controller/component/buttonController.js',
 	'mad/controller/component/containerController.js',
@@ -58,7 +66,6 @@ steal(
 	'mad/helper/componentHelper.js',
 	'mad/helper/component/boxDecorator.js',
 	'mad/lang/i18n.js',
-	'mad/model',
 	'mad/model/action.js',
 	'mad/model/state.js',
 	'mad/model/validationRules.js',
@@ -67,7 +74,6 @@ steal(
 	'mad/string/uuid.js',
 	'mad/route/routeListener.js',
 	'mad/route/dispatcherInterface.js',
-	'mad/route/extensionControllerActionDispatcher.js',
-	'mad/view/view.js'
+	'mad/route/extensionControllerActionDispatcher.js'
 	//    'mad/route/pageDispatcher.js',
 );
