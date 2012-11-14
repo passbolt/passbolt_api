@@ -23,34 +23,54 @@ font-style: normal;
   font-weight: normal;
   font-style: normal;
 }
+.icon-inline,
 .icon:before,
 .icon.social:before {
   font-family: "entypo";
   font-size:2em;
 	line-height:1;
+  height:1em;
   font-weight: normal;
   font-style: normal;
-  display: inline-block;
+  position:absolute;
+	left:.7em;
+	top:0;
   -webkit-font-smoothing: antialiased;
 }
+.icon + .text {
+  margin-left:1em;
+}
+
+.icon-inline.social,
 .icon.social:before {
   font-family: "entypo-social";
 }
 
 /* actions */
-.icon.create {
-  content: '\f2795';
+.icon.create:before {
+  content: '\2295';
 }
-.icon.edit {
-  content: '\f270E';
+.icon.edit:before  {
+  content: '\270E';
 }
-.icon.login {
-  content: '\fE740';
+.icon.login:before  {
+  content: '\E740';
 }
-.icon.logout {
-  content: '\fE741';
+.icon.logout:before  {
+  content: '\E741';
 }
-
+.icon.search:before  {
+  content: '\F50D';
+}
+.icon.share:before  {
+  content: '\1F53F';
+}
+.icon.delete:before  {
+  content: '\E729';
+}
+.icon.more:before  {
+  content: '\E003';
+}
 /* social */
 .icon.social.facebook:before {
   content: '\f30e';

@@ -108,19 +108,3 @@ a.button.disabled:active {
   border:1px solid #CCC;
 }
 
-/* with icon */
-button.with_icon {
-  padding: .5em .55em .55em;
-	opacity: .7;
-}
-button.with_icon:hover {
-	opacity: 1;
-}
-button.with_icon.left_icon {
-	padding-left:2em;
-	background-position:.3em center;
-}
-button.with_icon.right_icon {
-	padding-right:2.4em;
-	background-position:90% center;
-}
