@@ -70,7 +70,11 @@ class PagesController extends AppController {
 			$title = Inflector::humanize($path[$count - 1]);
 		}
 		$this->set(compact('page', 'subpage', 'title'));
-		$this->layout = 'html5';
+		if ($page == 'demo') {
+		  $this->layout = 'demo';
+		} else {
+			$this->layout = 'html5';
+		}
 		$this->render(implode('/', $path));
 	}
 }

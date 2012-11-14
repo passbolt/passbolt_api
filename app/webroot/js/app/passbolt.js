@@ -27,7 +27,7 @@ steal(
 		//load the bootstrap of the application
 		var boot = new passbolt.bootstrap.AppBootstrap({
 			// Application root url
-			'appRootUrl': 'http://passbolt.local',
+			'appRootUrl': 'http://localhost/passbolt',
 			// The langue of the application
 			'dictionary': 'en-EN',
 			// Application namespace
