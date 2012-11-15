@@ -29,10 +29,9 @@
 
 	<target name="jsunit" description="Run unit tests with funcunit and phantomjs">
 		<mkdir dir="${build}/jsunit"/>
-		<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="testresults.xml">
+		<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="${build}/jsunit/madsquirrel.xml">
 			<arg line=" -a ./steal/js funcunit/open/selenium http://passbolt.local/js/lib/mad/funcunit.html"/>
 		</exec>
-		<move file="${src}/app/webroot/js/testresults.xml" tofile="${build}/jsunit/madsquirrel.xml"/>
 	</target>
 
 	<target name="phpunit" description="Run unit tests with PHPUnit">
