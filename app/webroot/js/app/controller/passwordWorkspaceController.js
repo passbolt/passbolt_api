@@ -251,7 +251,7 @@ steal(
 		 * @param {passbolt.model.Category} category The target category to insert the resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_resource_creation': function (element, evt, category) {
+		'{passbolt.eventBus} request_resource_creation': function (el, ev, category) {
 			var resource = new passbolt.model.Resource({
 				Category: [{ id: category.id }]
 			});

@@ -75,11 +75,13 @@ steal(
 
 		/**
 		 * Listen the event passbolt_notify and display any 
-		 * @param {Notification} notif
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {array} notif
 		 */
 		// @todo notice that the event has to be writen with a-Z0-1_
 		// create an object Notification
-		'{mad.eventBus} passbolt_notify': function (elt, event, notif) {
+		'{mad.eventBus} passbolt_notify': function (el, ev, notif) {
 			this.reset();
 			this.setViewData({
 				'status': notif.status,
@@ -93,8 +95,8 @@ steal(
 
 		/**
 		 * The user wants to see the message details
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
 		'#js_notification_more_button click': function (element, ev) {

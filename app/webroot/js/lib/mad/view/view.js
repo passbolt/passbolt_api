@@ -93,8 +93,8 @@ steal(
 			var returnValue = '';
 
 			// the template uri defined
-			if(this.templateUri != null) {
-				returnValue = this.templateUri;
+			if(this.getTemplateUri() != null) {
+				returnValue = this.getTemplateUri();
 			}
 			// define the template functions of the class name
 			else {
@@ -170,12 +170,20 @@ steal(
 		},
 
 		/**
+		 * Get the view's template uri
+		 * @return {string}
+		 */
+		'getTemplateUri': function () {
+			return this.options.templateUri;
+		},
+
+		/**
 		 * Set the view's template uri
 		 * @param {string} templateUri The template uri
 		 * @return {void}
 		 */
 		'setTemplateUri': function (templateUri) {
-			this.templateUri = templateUri;
+			this.options.templateUri = templateUri;
 		},
 		
 		/**

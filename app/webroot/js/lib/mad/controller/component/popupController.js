@@ -69,9 +69,11 @@ steal(
 
 		/**
 		 * Listen to the user interaction click with the close button
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'.js_popup_close click': function () {
+		'.js_popup_close click': function (el, ev) {
 			this.element.remove();
 		}
 

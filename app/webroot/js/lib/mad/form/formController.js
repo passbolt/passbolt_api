@@ -165,7 +165,7 @@ steal(
 						eltValue = can.isArray(eltValue) ? eltValue : [eltValue];
 						leafValue = [];
 						can.each(eltValue, function (val, i) {
-							console.log('val', val);
+//							console.log('val', val);
 							var obj = {};
 							obj[attrName] = val;
 							leafValue.push(obj);

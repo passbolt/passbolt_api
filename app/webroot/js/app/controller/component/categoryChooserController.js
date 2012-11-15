@@ -37,7 +37,7 @@ steal(
 
 		/**
 		 * Show the contextual menu
-		 * @param {string} itemId The identifier of the selected item
+		 * @param {passbolt.model.Category} item The item to show the contextual menu for
 		 * @param {string} x The x position where the menu will be rendered
 		 * @param {string} y The y position where the menu will be rendered
 		 * @return {void}
@@ -94,16 +94,6 @@ steal(
 			contextualMenu.load(menuItems);
 		},
 
-		/**
-		 * Load the tree with the given categories
-		 * @param {passbolt.model.Category.List} items The list of categories to 
-		 * load into the tree
-		 * @return {void}
-		 */
-		'load': function (items) {
-			this._super(items);
-		},
-
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
@@ -112,7 +102,7 @@ steal(
 		 * An item has been selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mixed} item The selected item instance or its id
+		 * @param {passbolt.model.Category} item The selected item instance or its id
 		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */
@@ -124,7 +114,7 @@ steal(
 		 * An item has been right selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mixed} item The right selected item instance or its id
+		 * @param {passbolt.model.Category} item The right selected item instance or its id
 		 * @param {HTMLEvent} ev The source event which occured
 		 * @return {void}
 		 */

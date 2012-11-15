@@ -140,13 +140,13 @@ steal(
 
 			// Handle the server success response with the default response handler
 			returnValue.then(function (data, response, request) {
-				responseHandler = new ResponseHandlerClass(response, request);
+				var responseHandler = new ResponseHandlerClass(response, request);
 				responseHandler.handle();
 			});
 
 			// Handle the server fail response with the default response handler
 			returnValue.fail(function (jqXHR, textStatus, response) {
-				responseHandler = new ResponseHandlerClass(response, request);
+				var responseHandler = new ResponseHandlerClass(response, request);
 				responseHandler.handle();
 			});
 

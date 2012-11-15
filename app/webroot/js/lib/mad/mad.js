@@ -22,12 +22,15 @@ steal(
 ).then(
 	'lib/jquery/jquery.ui.position.js',
 	'jquery/class',
+	// override the jmvc Class class
+	// loaded in a different block because the jquerypp libs inherit to the jquery
+	// Class that we need to override
+	'mad/core/class.js'
+).then(
+	// load jquerypp libraries
 	'jquery/controller',
 	'jquery/model',
 	'jquery/view/ejs',
-	// override the jmvc Class class prototype directly
-	'mad/core/class.js'
-).then(
 	// load mad core libraries
 	'mad/controller',
 	'mad/model',

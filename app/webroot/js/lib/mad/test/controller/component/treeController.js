@@ -53,7 +53,7 @@ steal(
 		// runs before each test
 		setup: function () {
 			stop();
-			var url = '//lib/mad/test/testEnv/app.html';
+			var url = 'lib/mad/test/testEnv/app.html';
 //			var url = steal.idToUri('mad/test/testEnv/app.html').toString(); // sopen does not get full url, it needs relative url
 			S.open(url, function () {
 				// store the env windows in a global var for the following unit tests

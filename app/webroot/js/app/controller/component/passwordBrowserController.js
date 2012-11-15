@@ -325,30 +325,6 @@ steal(
 			});
 		},
 
-		/**
-		 * Observe when the user want to copy the login to the clipboard
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The resource id
-		 * @return {void}
-		 */
-		'{passbolt.eventBus} copy_login_clipboard': function (element, evt, resourceId) {
-			// let's the workspace manage the copy, usefull here to adapt the password browser
-			steal.dev.log('the password browser listen to the event copy_login_clipboard');
-		},
-
-		/**
-		 * Observe when the user want to copy the secret to the clipboard
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {string} resourceId The resource id
-		 * @return {void}
-		 */
-		'{passbolt.eventBus} copy_secret_clipboard': function (element, evt, resourceId) {
-			// let's the workspace manage the copy, usefull here to adapt the password browser
-			steal.dev.log('the password browser listen to the event copy_secret_clipboard');
-		},
-
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */

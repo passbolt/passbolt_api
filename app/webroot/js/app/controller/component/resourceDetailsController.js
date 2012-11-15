@@ -81,15 +81,15 @@ steal(
 		/**
 		 *
 		 */
-		'#js_copy_login_button click': function (element, event, resourceId) {
-			mad.eventBus.trigger('copy_login_clipboard', resourceId);
+		'#js_copy_login_button click': function (element, event) {
+//			mad.eventBus.trigger('copy_login_clipboard', resourceId);
 		},
 
 		/**
 		 *
 		 */
-		'#js_copy_secret_button click': function (element, event, resourceId) {
-			mad.eventBus.trigger('copy_secret_clipboard', resourceId);
+		'#js_copy_secret_button click': function (element, event) {
+//			mad.eventBus.trigger('copy_secret_clipboard', resourceId);
 		},
 
 		/* ************************************************************** */

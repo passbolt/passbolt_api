@@ -23,16 +23,13 @@ steal(
 		'defaults': {
 			'viewClass': mad.view.form.FormElementView,
 			'templateBased': false,
+			// the model representing this element
 			'modelReference': null,
 			'value': null,
 			'callbacks': {
 				'changed': function (el, ev, value) {}
 			}
-		},
-
-		'listensTo': [
-			'changed'
-		]
+		}
 
 	},/** @prototype */ {
 
@@ -55,62 +52,8 @@ steal(
 			var returnValue = null;
 			if (this.options.modelReference) {
 				returnValue = this.options.modelReference;
-			} else {
-				// Check from the associated HTML element name attribute
-				var nameAttribute = this.view.getName();
-				if (nameAttribute != null) {
-					returnValue = nameAttribute;
-				}
 			}
 			return returnValue;
-		},
-
-		/**
-		 * Get model name
-		 */
-		'getModelName': function () {
-			var returnValue,
-				split = this.getModelReference().split('.');
-			for (var i in split) {
-				if (split[i][0] === split[i][0].toUpperCase()) {
-					returnValue = split.slice(0, parseInt(i)+1).join('.');
-					break;
-				}
-			}
-			return returnValue;
-		},
-
-		/**
-		 * Get the form element associated model
-		 * @return {mad.model.Model}
-		 */
-		'getModel': function () {
-			var returnValue = null,
-				modelName = this.getModelName();
-			
-			// @todo throw an exception if the model does not exist
-			returnValue = $.String.getObject(modelName);
-			return returnValue;
-		},
-
-		/**
-		 * Get the form element attribute name
-		 * @return {string}
-		 */
-		'getModelAttributeName': function () {
-			var returnValue = null,
-				modelReference = this.getModelReference(),
-				modelName = this.getModelName();
-			returnValue = modelReference.substring(modelName.length+1, modelReference.length);
-			return returnValue;
-		},
-
-		/**
-		 * Get the name of the form element
-		 * @return {string}
-		 */
-		'getName': function () {
-			return this.view.getName();
 		},
 
 		/**
