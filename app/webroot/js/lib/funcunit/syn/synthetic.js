@@ -328,9 +328,15 @@ steal(function(){
 		 */
 		isFocusable: function( elem ) {
 			var attributeNode;
-			return (this.focusable.test(elem.nodeName) || 
-				((attributeNode = elem.getAttributeNode("tabIndex")) 
-				&& attributeNode.specified)) && Syn.isVisible(elem);
+
+			// IE8 Standards doesn't like this on some elements
+			if(elem.getAttributeNode){
+				attributeNode = elem.getAttributeNode("tabIndex")
+			}
+
+			return this.focusable.test(elem.nodeName) || 
+				   (attributeNode && attributeNode.specified) && 
+				    Syn.isVisible(elem);
 		},
 		/**
 		 * Returns if an element is visible or not
@@ -377,7 +383,9 @@ steal(function(){
 				return -1;
 			},
 			getWindow: function( element ) {
-				return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+				if(element.ownerDocument){
+					return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+				}
 			},
 			extend: extend,
 			scrollOffset: function( win , set) {
@@ -608,8 +616,7 @@ steal(function(){
 				//send the event
 				ret = Syn.dispatch(event, dispatchEl, type, autoPrevent);
 			}
-
-			//run default behavior
+			
 			ret && Syn.support.ready === 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
 			return ret;
 		},

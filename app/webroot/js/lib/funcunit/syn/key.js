@@ -613,6 +613,9 @@ steal('./synthetic','./browsers.js',function(Syn) {
 			},
 			'shift': function() {
 				return null;
+			},
+			'ctrl': function() {
+				return null;
 			}
 		}
 	});

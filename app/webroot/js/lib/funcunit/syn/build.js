@@ -19,10 +19,3 @@ var copyToDist = function(path){
 	print("copying to "+fileName)
 	steal.File(path).copyTo("funcunit/syn/resources/"+fileName);
 }
-var filesToCopy = [
-	"funcunit/browser/resources/jquery.js"
-]
-
-for(var i = 0; i < filesToCopy.length; i++) {
-	copyToDist(filesToCopy[i])
-}

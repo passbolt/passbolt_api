@@ -1,5 +1,4 @@
-(function(){
-	
+steal("funcunit/syn/synthetic.js", function(Syn){	
 	var didSomething = false;
 	window.doSomething = function(){
 		didSomething = true;
@@ -102,6 +101,64 @@ test("Checkbox is checked on click", function(){
 	Syn.trigger("click",{},st.g("checkbox"));
 })
 
+test("Select is changed on click", function(){
+	
+	var select1 = 0,
+		select2 = 0;
+
+	st.g("qunit-test-area").innerHTML = '<select id="s1"><option id="s1o1">One</option><option id="s1o2">Two</option></select><select id="s2"><option id="s2o1">One</option><option id="s2o2">Two</option></select>';
+
+
+	st.bind(st.g("s1"),"change",function(ev){
+		select1++;
+	});
+	st.bind(st.g("s2"),"change",function(ev){
+		select2++;
+	});
+
+	Syn.trigger('click', {}, st.g('s1o2'));
+	equals(st.g('s1').selectedIndex, 1, "select worked");
+	equals(select1, 1, "change event");
+	Syn.trigger('click', {}, st.g('s2o2'));
+	equals(st.g('s2').selectedIndex, 1, "select worked");
+	equals(select2, 1, "change event");
+	Syn.trigger('click', {}, st.g('s1o1'));
+	equals(st.g('s1').selectedIndex, 0, "select worked");
+	equals(select1, 2, "change event");
+});
+
+test("Select is change on click (iframe)", function(){
+	stop();
+	var rootJoin  = st.rootJoin;
+	
+	var page3 = rootJoin("funcunit/syn/test/qunit/page3.html"),
+		iframe = document.createElement('iframe');
+
+	st.bind(iframe,"load",function(){
+		var iget = function(id){
+			return iframe.contentWindow.document.getElementById(id);
+		};
+		st.bind(iget('select1'), "change", function(){
+			ok(true, "select worked");
+		});
+		st.bind(iget('select2'), "change", function(){
+			ok(true, "select worked");
+		});
+
+		Syn.click(iget('s1o2'), {}, function(){
+			start();
+			Syn.click(iget('s2o2'));
+			Syn.click(iget('s1o1'));
+		});
+
+	});
+
+	iframe.src = page3
+		
+	st.g("qunit-test-area").appendChild(iframe);
+	
+})
+
 test("Click Radio Buttons", function(){
 
 	var radio1=0,
@@ -173,7 +230,7 @@ test("Click Anchor Runs HREF JavaScript", function(){
 test("Click! Anchor has href", function(){
 	stop();
 	st.binder("jsHrefHash","click",function(ev){
-		ok(this.href.indexOf("#aHash") > -1 ,"got href");
+		ok(ev.srcElement.href.indexOf("#aHash") > -1 ,"got href");
 	});
 	
 	Syn.click({},"jsHrefHash", function(){
@@ -335,5 +392,35 @@ test("h3 click in popup", 1,function(){
 	},500);
 });
 
+test("focus on an element then another in another page", function(){
+	stop();
+	
+	var page1 = "test/qunit/page1.html",
+		page2 = "test/qunit/page2.html"
 
-})()
+	if(typeof steal !== 'undefined'){
+		page1 = st.rootJoin("funcunit/syn/test/qunit/page1.html");
+		page2 = st.rootJoin("funcunit/syn/test/qunit/page2.html");
+	}
+	
+	var iframe = document.createElement('iframe'),
+		calls = 0;
+	
+	st.bind(iframe,"load", function(){
+		if(calls == 0){	
+			Syn.click( iframe.contentWindow.document.getElementById("first") ,{}, function(){			
+				iframe.contentWindow.location = page2;
+			});
+			calls++;
+		}else{
+			Syn.click( iframe.contentWindow.document.getElementById("second") ,{}, function(){
+				start();
+			});
+		}
+	});
+	iframe.src = page1
+	st.g("qunit-test-area").appendChild(iframe);
+})
+
+
+})

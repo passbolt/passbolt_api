@@ -1,4 +1,5 @@
 steal('jquery', './core.js', 'funcunit/syn', function($, FuncUnit, Syn) {
+	window.Syn = Syn;
 	/**
 	 * @add FuncUnit
 	 */
@@ -122,6 +123,8 @@ steal('jquery', './core.js', 'funcunit/syn', function($, FuncUnit, Syn) {
 		 */
 		type: function( text, success ) {
 			this._addExists();
+			// when you type in something you have to click on it first
+			this.click();
 			var selector = this.selector;
 			// type("") is a shortcut for clearing out a text input
 			if(text === ""){

@@ -8,6 +8,7 @@ test("Type and slow Click", function(){
 	
 	S("#copy").click();
 	S("#seewhatyoutyped").text("copied javascriptmvc","copy");
+	S("#seewhatyouchanged").text("changed javascriptmvc","change");
 })
 
 test("ctrl test", function(){
