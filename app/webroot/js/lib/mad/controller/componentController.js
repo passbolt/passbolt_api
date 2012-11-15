@@ -114,11 +114,12 @@
  *			<li>[mad.controller.component.ButtonController|Button]</li>
  *			<li>[mad.controller.component.ContainerController|Container]</li>
  *			<li>[mad.controller.component.GridController|Grid]</li>
- *			<li>[mad.controller.component.InputController|Input]</li>
- *			<li>[mad.controller.component.ListController|List]</li>
  *			<li>[mad.controller.component.PopupController|Popup]</li>
  *			<li>[mad.controller.component.TabController|Tab]</li>
  *			<li>[mad.controller.component.TreeController|Tree]</li>
+ *			<li>[mad.controller.component.DynamicTreeController|Tree]</li>
+ *			<li>[mad.controller.component.MenuController|Tree]</li>
+ *			<li>[mad.controller.component.DropDownMenuController|Tree]</li>
  *			<li>[mad.controller.component.WorkspaceController|Workspace]</li>
  *		</ul>
  *	</p>
@@ -159,20 +160,21 @@ steal(
 	mad.controller.Controller.extend('mad.controller.ComponentController', /** @static */ {
 
 		'defaults': {
+			// the default component label
 			'label': 'ComponentController',
-			// Label of the component
+			// the default component icon (@deprecated or not ?)
 			'icon': null,
-			// @todo
-			'templateUri': null,
 			// the template which will used by the view to render the component
-			'templateBased': true,
+			'templateUri': null,
 			// based on template, by default true
-			'viewClass': mad.view.View,
+			'templateBased': true,
 			// associated view will be an instance of this viewClass
+			'viewClass': mad.view.View,
+			// the initial state of the component
 			'state': 'ready',
-			// the state to put the component when the rendering is finished
+			// the default tags to associate to the top component DOM HTMLElement
 			'cssClasses': ['js_component'],
-			// the associated tag
+			// the default top component DOM HTMLElement
 			'tag': 'div'
 		}
 
@@ -180,37 +182,58 @@ steal(
 
 		/**
 		 * The component state.
-		 * @type {mad.model.ComponentState}
+		 * @type {mad.model.State}
 		 */
 		'state': null,
 
-		/** Data to pass to the view
+		/**
+		 * Data to pass to the view
 		 * @type {array}
-		 * @hide */
+		 * @hide
+		 */
 		'viewData': [],
 
-		/** The rendered view, if not displayed it will be stored in it
-		 * @type {string}
-		 * @hide */
-		'renderedView': '',
+		// Override the init and render functions to be sure the component is fully 
+		// initialized before calling the ready state
+		'setup': function () {
+			var oldInit = this.init,
+				oldRender = this.render;
 
-		/** The associated view class, by default {mad.view.View}
-		 * @type {mad.view.View}
-		 * @hide */
-		'viewClass': null,
+			// override the init function
+			this.init = function () {
+				oldInit.apply(this, arguments);
+				// If the component is not based on a template, switch to its init state
+				// define by the optional parameter state
+				if (!this.options.templateBased) {
+					this.setState(this.options.state);
+				}
+			};
+
+			// override the render function
+			this.render = function () {
+				oldRender.apply(this, arguments);
+				// If the component is  based on a template, switch to its init state
+				// define by the optional parameter state
+				if (this.options.templateBased) {
+					this.setState(this.options.state);
+				}
+			};
+
+			return this._super.apply(this, arguments);
+		},
 
 		// Constructor like
 		'init': function (el, options) {
 			var self = this;
 
-			// initialize the view
+			// Check that the view class parameters is well a mad.view.View instance
 			if (!this.options.viewClass instanceof mad.view.View) {
-				// @todo throw the convenient Exception
-				steal.dev.warn('not good viewClass');
+				throw new mad.error.WrongParametersException('options.viewClass', 'mad.view.View');
 			}
 
 			// Initialize the associated state instance
 			this.state = new mad.model.State();
+			// Observe any change on the state's label attribute
 			this.state.bind('label', function (event, newStateName) {
 				self.goNextState(newStateName);
 			});
@@ -228,6 +251,7 @@ steal(
 		'destroy': function () {
 			// unreference the component to the app
 			this.getApp().unreferenceComponent(this);
+			// Unobserve any change on the state's label attribute
 			this.state.unbind('label');
 			this._super();
 		},
@@ -295,11 +319,6 @@ steal(
 			this.setViewData('controller', this);
 			this.setViewData('icon', this.options.icon);
 			this.setViewData('label', this.options.label);
-
-			// If the component is not based on a template, switch to its default state
-			if (!this.options.templateBased) {
-				this.setState(this.options.state);
-			}
 		},
 
 		/**
@@ -312,7 +331,9 @@ steal(
 		},
 
 		/**
-		 * Set the current element state
+		 * Set the current element state. The component is listening on state.label
+		 * attribute changes.
+		 * @see {mad.controller.ComponentController.prototype.gotNextState}
 		 * @param {string} name the state name to switch on
 		 * @return {void}
 		 */
@@ -362,9 +383,6 @@ steal(
 			var returnValue = false;
 			returnValue = this.view.render(options);
 
-			// set the state of the component with the given default state
-			this.setState(this.options.state);
-
 			return options.display ? this : returnValue;
 		},
 
@@ -388,6 +406,15 @@ steal(
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
+			// override this function to implement your own behavior
+		},
+
+		/**
+		 * Listen to the change relative to the state Disabled.
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateDisabled': function (go) {
 			// override this function to implement your own behavior
 		},
 
