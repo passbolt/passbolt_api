@@ -12,11 +12,9 @@
 	<target name="clean" description="Cleanup build artifacts">
 		<delete dir="${build}" failonerror="false"/>
 		<delete dir="${src}/generatedJUnitFiles" failonerror="false"/>
-		<symlink link="${src}/app/webroot/js/funcunit" action="delete"/>
-		<delete dir="${src}/app/webroot/js/funcunit" failonerror="false"/>
 
 		<mkdir dir="${build}"/>
-		<symlink link="${src}/app/webroot/js/lib/funcunit" resource="${src}/app/webroot/js/lib/funcunit/" failonerror="false" overwrite="true"/>
+		<symlink link="${src}/app/webroot/js/lib/funcunit" resource="${src}/app/webroot/js/lib/funcunit" failonerror="false" overwrite="true"/>
 	</target>
 
 	<target name="install" description="Passbolt installer : copy config files, deploy db">
@@ -32,7 +30,7 @@
 	<target name="jsunit" description="Run unit tests with funcunit and phantomjs">
 		<mkdir dir="${build}/jsunit"/>
 		<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="testresults.xml">
-			<arg line=" -a ./steal/js lib/funcunit/open/selenium lib/mad/funcunit.html"/>
+			<arg line=" -a ./steal/js funcunit/open/selenium http://passbolt.local/js/lib/mad/funcunit.html"/>
 		</exec>
 		<move file="${src}/app/webroot/js/testresults.xml" tofile="${build}/jsunit/madsquirrel.xml"/>
 	</target>
