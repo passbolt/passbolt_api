@@ -29,8 +29,8 @@
 
 	<target name="jsunit" description="Run unit tests with funcunit and phantomjs">
 		<mkdir dir="${build}/jsunit"/>
-		<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="${build}/jsunit/madsquirrel.xml">
-			<arg line=" -a ./steal/js funcunit/open/selenium http://passbolt.local/js/lib/mad/funcunit.html"/>
+		<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="jsunit_mad_output">
+			<arg line=" -a ./steal/js funcunit/open/selenium http://passbolt.local/js/lib/mad/funcunit.html -browser '*firefox' -out ${build}/jsunit/madsquirrel.xml"/>
 		</exec>
 	</target>
 
