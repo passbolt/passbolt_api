@@ -14,7 +14,7 @@ class Secret extends AppModel {
 
 	public $actsAs = array('Containable', 'Trackable');
 
-	public $hasOne = array(
+	public $belongsTo = array(
 		'Resource',
 		'User',
 	);
