@@ -171,11 +171,12 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified', 'created', 'modified'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified', 'Secret.data', 'created', 'modified'
 					),
 					'contain' => array(
 						'CategoryResource',
-						'Category'
+						'Category',
+						'Secret'
 					)
 				);
 			break;
