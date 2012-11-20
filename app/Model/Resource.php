@@ -18,6 +18,10 @@ class Resource extends AppModel {
 		'CategoryResource'
 	);
 
+	public $hasOne = array(
+		'Secret'
+	);
+
 	public $hasAndBelongsToMany = array(
 		'Category' => array (
 			'className' => 'Category'
