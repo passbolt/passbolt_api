@@ -162,13 +162,27 @@ class ResourcesController extends AppController {
 			return;
 		}
 
-		//$this->Resource->bindModel(array('hasAndBelongsToMany' => array('Category')));
-		//$this->Resource->contain(array('Category'));
+		//$this->Resource->contain(array('Secret'));
 		$resource = $this->Resource->save($resourcepost, false, $fields['fields']);
 
 		if ($resource === false) {
 			$this->Message->error(__('The resource could not be saved'));
 			return;
+		}
+		// Save the associated secret
+		if (isset($resourcepost['Secret'])) {
+			$resourcepost['Secret']['resource_id'] = isset($resourcepost['Secret']['resource_id']) ? $resourcepost['Secret']['resource_id'] : $resource['Resource']['id'];
+			$user = $this->Auth->user();
+			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : $user['User']['id'];
+			$this->Resource->Secret->set($resourcepost['Secret']);
+			if (!$this->Resource->Secret->validates()) {
+				$this->Message->error(__('Could not validate secret model'));
+				return;
+			}
+			if (!$this->Resource->Secret->save()) {
+				$this->Message->error(__('Could not save secret'));
+				return;
+			}
 		}
 
 		// Save the relations
