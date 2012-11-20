@@ -179,7 +179,9 @@ class ResourcesController extends AppController {
 				$this->Message->error(__('Could not validate secret model'));
 				return;
 			}
-			if (!$this->Resource->Secret->save()) {
+			$fields = $this->Resource->Secret->getFindFields('save');
+			// TODO : Encrypt data and save it once per user
+			if (!$this->Resource->Secret->save($resourcepost['Secret'], false, $fields['fields'])) {
 				$this->Message->error(__('Could not save secret'));
 				return;
 			}
