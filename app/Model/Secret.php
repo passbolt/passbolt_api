@@ -135,8 +135,6 @@ class Secret extends AppModel {
 			case 'view':
 				$conditions = array(
 					'conditions' => array(
-						'Resource.deleted' => 0,
-						'Resource.id' => $data['Resource.id']
 					)
 				);
 			break;
@@ -156,11 +154,10 @@ class Secret extends AppModel {
 	public static function getFindFields($case = 'view') {
 		switch($case){
 			case 'view':
-			case 'delete':
-				$fields = array('fields' => array('deleted'));
+				$fields = array('fields' => array('id', 'user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
 			break;
 			case 'save':
-				$fields = array('fields' => array('name', 'username', 'expiry_date', 'uri', 'description', 'created', 'modified', 'created_by', 'modified_by', 'deleted'));
+				$fields = array('fields' => array('user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
 			break;
 			default:
 				$fields = array(
