@@ -1,5 +1,6 @@
 steal(
-	'mad/view/component/tree.js'
+	'mad/view/component/tree.js',
+	'app/view/component/resourceDetails.js'
 ).then(function () {
 
 	/*
@@ -20,7 +21,8 @@ steal(
 		'defaults': {
 			'label': 'Resource Details Controller',
 			// the resource to bind the component on
-			'resource': null
+			'resource': null,
+			'viewClass': passbolt.view.component.ResourceDetails
 		}
 
 	}, /** @prototype */ {
@@ -32,7 +34,7 @@ steal(
 		 */
 		'load': function (resource) {
 			if (this.state.is('hidden')) {
-				this.setState('ready')
+				this.setState('ready');
 			}
 
 			// push the new resource in the options to be able to listen the resource
@@ -42,58 +44,12 @@ steal(
 			this.setViewData('resource', resource);
 			// refresh the view
 			this.refresh();
-			// rebind the listener
+			// rebind the controller listeners
 			this.on();
-			
-//			// We do not need to create button here, but if we need to manage state, for the share button we will
-//			// do like that
-//			var copyLoginButton = new mad.controller.component.ButtonController($('#js_details_copy_login_button', this.element), {
-//				'value': resource.id
-//			}).render();
-//
-//			var copySecretButton = new mad.controller.component.ButtonController($('#js_details_copy_secret_button', this.element), {
-//				'value': resource.id
-//			}).render();
-//
-//			var oneClickLoginButton = new mad.controller.component.ButtonController($('#js_details_one_click_login_button', this.element), {
-//				'value': resource.id
-//			}).render();
-//
-//			var shareButton = new mad.controller.component.ButtonController($('#js_details_share_button', this.element), {
-//				'value': resource.id
-//			}).render();
 		},
 
 		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * Observe when the user clicks on the h2 event, rolldown the following p tag
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'h2 click': function (el, ev) {
-			el.next('p').toggle();
-		},
-
-		/**
-		 *
-		 */
-		'#js_copy_login_button click': function (element, event) {
-//			mad.eventBus.trigger('copy_login_clipboard', resourceId);
-		},
-
-		/**
-		 *
-		 */
-		'#js_copy_secret_button click': function (element, event) {
-//			mad.eventBus.trigger('copy_secret_clipboard', resourceId);
-		},
-
-		/* ************************************************************** */
-		/* LISTEN TO THE APP EVENTS */
+		/* LISTEN TO THE MODEL EVENTS */
 		/* ************************************************************** */
 
 		/**
@@ -105,6 +61,10 @@ steal(
 			// The reference of the resource does not change, refresh the component
 			this.refresh();
 		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE APP EVENTS */
+		/* ************************************************************** */
 
 		/**
 		 * Observe when an resource is selected
