@@ -82,7 +82,7 @@ class AppModel extends Model {
  * @return $condition array
  * @access public
  */
-	public static function getFindFields($case = null) {
+	public static function getFindFields($case = null, $role=null) {
 		return array('fields' => array());
 	}
 
@@ -95,7 +95,7 @@ class AppModel extends Model {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = null, &$data = null) {
+	public static function getFindConditions($case = null, $role=null, &$data = null) {
 		return array('conditions' => array());
 	}
 }
