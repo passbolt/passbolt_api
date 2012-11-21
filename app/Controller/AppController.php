@@ -66,6 +66,8 @@ class AppController extends Controller {
 		} else {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
+		
+		// shortcut variable for the current user
 		$this->currentUser = $this->Auth->user();
 	}
 
