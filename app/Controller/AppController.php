@@ -66,6 +66,7 @@ class AppController extends Controller {
 		} else {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
+		$this->currentUser = $this->Auth->user();
 	}
 
 /**
