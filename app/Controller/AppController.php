@@ -69,9 +69,6 @@ class AppController extends Controller {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
 
-		// shortcut variable for the current user
-		$this->currentUser = $this->Auth->user();
-
 		// sanitize any post data
 		if (isset($this->request->data) && !empty($this->request->data)) {
 			$this->request->data = Sanitize::clean($this->request->data);
