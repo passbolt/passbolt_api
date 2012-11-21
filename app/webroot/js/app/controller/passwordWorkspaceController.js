@@ -3,6 +3,7 @@ steal(
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
+	'app/controller/component/passwordsActionsMenuController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js'
 ).then(function () {
@@ -37,11 +38,10 @@ steal(
 			// *************************************************************
 			// User menu area
 			// *************************************************************
-			new mad.controller.component.ButtonController('#js_request_resource_creation_button');
-			new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'hidden'});
-			new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'hidden'});
-			new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'hidden'});
-			new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'hidden'});
+			var userMenu = this.addComponent(passbolt.controller.component.PasswordsActionsMenuController, {
+				'id': 'js_passbolt_password_actions_menu'
+			}, 'workspace_actions_container');
+			userMenu.render();
 
 			// *************************************************************
 			// First side area
@@ -84,54 +84,6 @@ steal(
 		},
 
 		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * Observe when the user wants to create a new resource
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'#js_request_resource_creation_button click': function (el, ev) {
-			var category = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_creation', category);
-		},
-
-		/**
-		 * Observe when the user wants to edit a resource
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'#js_request_resource_edition_button click': function (el, ev) {
-			var resource = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_edition', resource);
-		},
-
-		/**
-		 * Observe when the user wants to delete a resource
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'#js_request_resource_deletion_button click': function (el, ev) {
-			var resource = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_deletion', resource);
-		},
-
-		/**
-		 * Observe when the user wants to share a resource
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'#js_request_resource_sharing_button click': function (el, ev) {
-			var resource = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_sharing', resource);
-		},
-
-		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
 
@@ -143,7 +95,6 @@ steal(
 		 * @return {void}
 		 */
 		'{passbolt.eventBus} category_selected': function (el, ev, category) {
-			mad.app.getComponent('js_request_resource_creation_button').setValue(category);
 		},
 
 		/**
@@ -157,11 +108,6 @@ steal(
 			// The resource is no more selected, reinit the password workspace
 			// component to its intitial state (ready)
 			this.setState('ready');
-
-			mad.app.getComponent('js_request_resource_edition_button').setState('hidden');
-			mad.app.getComponent('js_request_resource_deletion_button').setState('hidden');
-			mad.app.getComponent('js_request_resource_sharing_button').setState('hidden');
-			mad.app.getComponent('js_request_resource_more_button').setState('hidden');
 		},
 
 		/**
@@ -175,15 +121,6 @@ steal(
 			// A resource has been selected, change the state of the password Workspace
 			// controller
 			this.setState('resourceSelected');
-			mad.app.getComponent('js_request_resource_edition_button').setValue(resource).setState('ready');
-			mad.app.getComponent('js_request_resource_deletion_button').setValue(resource).setState('ready');
-			mad.app.getComponent('js_request_resource_sharing_button').setValue(resource).setState('ready');
-			mad.app.getComponent('js_request_resource_more_button').setValue(resource).setState('ready');
-
-			// Another way is to drive the state of all the component from here. I choose
-			// for a first hit to lets the component manage their own states changement
-			//				var secondSideBar = this.getApp().getComponent('js_passbolt_password_sidebar_second');
-			//				secondSideBar.changeStatus('show');
 		},
 
 		/**
