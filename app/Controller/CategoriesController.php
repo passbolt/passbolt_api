@@ -53,7 +53,7 @@ class CategoriesController extends AppController {
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The category id invalid'));
+			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
 		// check if it exists
