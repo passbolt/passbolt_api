@@ -230,45 +230,51 @@ class Category extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'get') {
-		switch($case){
-			case 'get':
-			case 'getChildren':
-			case 'addResult':
-			case 'index' :
-				$fields = array(
-					'fields' => array(
-						'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id'
-					)
-				);
-			break;
-			case 'Resource.viewByCategory':
-				$fields = array(
-					'fields' => array(
-						'Category.id', 'Category.name', 'Category.parent_id'
-					),
-					'contain' => array(
-						'Resource' => Resource::getFindFields('view')
-					)
-				);
-			break;
-			case 'rename':
-				$fields = array(
-					'fields' => array(
-						'name'
-					)
-				);
-			break;
-			case 'add':
-			case 'edit':
-				$fields = array(
-					'fields' => array(
-						'name', 'parent_id', 'category_type_id'
-					)
-				);
-			break;
-			default:
-				$fields = array('fields' => array());
+	public static function getFindFields($case = 'get', $role='user') {
+		$fields = null;
+		switch($role){
+			case 'user':
+				switch($case){
+					case 'get':
+					case 'getChildren':
+					case 'addResult':
+					case 'index' :
+						$fields = array(
+							'fields' => array(
+								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id'
+							)
+						);
+					break;
+					case 'Resource.viewByCategory':
+						$fields = array(
+							'fields' => array(
+								'Category.id', 'Category.name', 'Category.parent_id'
+							),
+							'contain' => array(
+								'Resource' => Resource::getFindFields('view')
+							)
+						);
+					break;
+					case 'rename':
+						$fields = array(
+							'fields' => array(
+								'name'
+							)
+						);
+					break;
+					case 'add':
+					case 'edit':
+						$fields = array(
+							'fields' => array(
+								'name', 'parent_id', 'category_type_id'
+							)
+						);
+					break;
+					default:
+						$fields = array('fields' => array());
+					break;
+				}
+			case 'admin':
 			break;
 		}
 		return $fields;
@@ -282,46 +288,52 @@ class Category extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'get', &$data = null) {
-		switch ($case) {
-			case 'getWithChildren':
-				$c = array(
-					'conditions' => array(
-						'Category.lft >=' => $data['Category']['lft'],
-						'Category.rght <=' => $data['Category']['rght']
-					),
-					'order' => 'lft ASC'
-				);
+	public static function getFindConditions($case = 'get', $role='user', &$data = null) {
+		$c = null;
+		switch($role){
+			case 'user':
+				switch ($case) {
+					case 'getWithChildren':
+						$c = array(
+							'conditions' => array(
+								'Category.lft >=' => $data['Category']['lft'],
+								'Category.rght <=' => $data['Category']['rght']
+							),
+							'order' => 'lft ASC'
+						);
+					break;
+					case 'getChildren':
+						$c = array(
+							'conditions' => array(
+								'Category.lft >' => $data['Category']['lft'],
+								'Category.rght <' => $data['Category']['rght']
+							),
+							'order' => 'lft ASC'
+						);
+					break;
+					case 'Resource.viewByCategory':
+					case 'view':
+						$c = array(
+							'conditions' => array(
+								'Category.id' => $data['Category.id']
+							)
+						);
+					break;
+					case 'getRoots':
+					case 'index':
+						$c = array(
+							'conditions' => array(
+								'parent_id' => null
+							),
+							'order' => 'lft ASC'
+						);
+					break;
+					case 'get':
+					default:
+						$c = array('conditions' => array());
+				}
+			case 'admin':
 			break;
-			case 'getChildren':
-				$c = array(
-					'conditions' => array(
-						'Category.lft >' => $data['Category']['lft'],
-						'Category.rght <' => $data['Category']['rght']
-					),
-					'order' => 'lft ASC'
-				);
-			break;
-			case 'Resource.viewByCategory':
-			case 'view':
-				$c = array(
-					'conditions' => array(
-						'Category.id' => $data['Category.id']
-					)
-				);
-			break;
-			case 'getRoots':
-			case 'index':
-				$c = array(
-					'conditions' => array(
-						'parent_id' => null
-					),
-					'order' => 'lft ASC'
-				);
-			break;
-			case 'get':
-			default:
-				$c = array('conditions' => array());
 		}
 		return $c;
 	}
