@@ -13,21 +13,20 @@ App::uses('CategoryType', 'Model');
 App::uses('Sanitize', 'Utility');
 
 class CategoriesController extends AppController {
-
 /**
  * index - get the list of categories
  */
 	public function index($children = false) {
 		$data = array();
 
-		$o = $this->Category->getFindOptions('getRoots');
+		$o = $this->Category->getFindOptions('getRoots', $this->currentUser['Role']['name']);
 		$categories = $this->Category->find('threaded', $o);
 
 		if (!$children) {
 			$data = $categories;
 		} else {
 			foreach ($categories as $category) {
-				$o = $this->Category->getFindOptions('getWithChildren', $category);
+				$o = $this->Category->getFindOptions('getWithChildren', $this->currentUser['Role']['name'], $category);
 				$result = $this->Category->find('threaded', $o);
 				$data[] = $result[0];
 			}
@@ -65,12 +64,12 @@ class CategoriesController extends AppController {
 
 		// get the thread of children
 		if ($children == true) {
-			$o = $this->Category->getFindOptions('getWithChildren', $category);
+			$o = $this->Category->getFindOptions('getWithChildren', $this->currentUser['Role']['name'], $category);
 			$data = $this->Category->find('threaded', $o);
 			$this->set('data', $data[0]);
 		} else {
 			$data = array('Category.id' => $id);
-			$o = $this->Category->getFindOptions('view', $data);
+			$o = $this->Category->getFindOptions('view', $this->currentUser['Role']['name'], $data);
 			$this->set('data', $this->Category->find('first', $o));
 		}
 		$this->Message->success();
@@ -100,7 +99,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 		// find children thread and return
-		$o = $this->Category->getFindOptions('getChildren', $category);
+		$o = $this->Category->getFindOptions('getChildren', $this->currentUser['Role']['name'], $category);
 		$this->set('data', $this->Category->find('threaded', $o));
 		$this->Message->success();
 	}
@@ -144,7 +143,7 @@ class CategoriesController extends AppController {
 		}
 
 		// try to save
-		$fields = $this->Category->getFindFields("add");
+		$fields = $this->Category->getFindFields("add", $this->currentUser['Role']['name']);
 		$this->Category->create();
 		$category = $this->Category->save($catpost, true, $fields['fields']);
 		if ($category === false) {
@@ -160,7 +159,7 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-		$fields = $this->Category->getFindFields('addResult');
+		$fields = $this->Category->getFindFields('addResult', $this->currentUser['Role']['name']);
 		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
 		$this->Message->success(__('The category was sucessfully added'));
 	}
@@ -201,7 +200,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 		// try to save
-		$fields = $this->Category->getFindFields("edit");
+		$fields = $this->Category->getFindFields("edit", $this->currentUser['Role']['name']);
 		$this->request->data['Category']['id'] = $id;
 		$category = $this->Category->save($this->request->data, true, $fields['fields']);
 		if ($category === false) {
@@ -276,7 +275,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		$fields = $this->Category->getFindFields("rename");
+		$fields = $this->Category->getFindFields("rename", $this->currentUser['Role']['name']);
 		if ($this->Category->save($c, true, $fields['fields'])) {
 			$this->Message->success(__('The category have been renamed'));
 		} else {
