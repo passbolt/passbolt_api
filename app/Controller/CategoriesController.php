@@ -13,6 +13,7 @@ App::uses('CategoryType', 'Model');
 App::uses('Sanitize', 'Utility');
 
 class CategoriesController extends AppController {
+
 /**
  * index - get the list of categories
  */
