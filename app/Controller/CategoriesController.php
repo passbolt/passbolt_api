@@ -12,6 +12,7 @@
 App::uses('CategoryType', 'Model');
 
 class CategoriesController extends AppController {
+
 /**
  * index - get the list of categories
  */

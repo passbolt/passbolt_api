@@ -12,6 +12,7 @@ App::uses('Category', 'Model');
 App::uses('CategoryType', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
+
 // Uses sessions
 // App::uses('CakeSession', 'Model/Datasource'); // doesn't work here
 if (!class_exists('CakeSession')) {
@@ -408,7 +409,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type.json : The test should return error but has returned {$result['header']['status']}");
 	}
 
-	function testXSS() {
+	public function testXSS() {
 		// check the response when a category is added (without parent_id)
 		$result = json_decode($this->testAction('/categories.json', array(
 			'data' => array(
@@ -422,9 +423,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
 		$lastCreated = $categoryModel->find('first', array(
-        'order' => array('Category.created' => 'desc')
-    ));
+			'order' => array('Category.created' => 'desc')
+		));
 		$this->assertEquals($lastCreated['Category']['name'],'&lt;script&gt;alert(&quot;xss&quot;);&lt;/script&gt;',"Html should be striped down");
-
 	}
 }

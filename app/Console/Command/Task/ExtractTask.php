@@ -10,10 +10,10 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         CakePHP(tm) v 1.2.0.5012
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @copyright    Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link         http://cakephp.org CakePHP(tm) Project
+ * @since        CakePHP(tm) v 1.2.0.5012
+ * @license      MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -23,7 +23,7 @@ App::uses('Folder', 'Utility');
 /**
  * Language string extractor
  *
- * @package       Cake.Console.Command.Task
+ * @package			 Cake.Console.Command.Task
  */
 class ExtractTask extends AppShell {
 
@@ -249,7 +249,7 @@ class ExtractTask extends AppShell {
 		$this->hr();
 		$this->out(__d('cake_console', 'Paths:'));
 		foreach ($this->_paths as $path) {
-			$this->out('   ' . $path);
+			$this->out('	 ' . $path);
 		}
 		$this->out(__d('cake_console', 'Output Directory: ') . $this->_output);
 		$this->hr();
@@ -315,11 +315,12 @@ class ExtractTask extends AppShell {
 			$this->out(__d('cake_console', 'Processing %s...', $file));
 
 			$code = file_get_contents($file);
-                        //quick to add the support of javascript
-                        if($extension = pathinfo($file, PATHINFO_EXTENSION) == 'js'){
-                            $code = '<?php '.$code.' ?>';
-                        }
-                        
+
+			//quick to add the support of javascript
+			if ($extension = pathinfo($file, PATHINFO_EXTENSION) == 'js') {
+				$code = '<?php ' . $code . ' ?>';
+			}
+
 			$allTokens = token_get_all($code);
 
 			$this->_tokens = array();
@@ -579,7 +580,7 @@ class ExtractTask extends AppShell {
  * @return string Translation template header
  */
 	protected function _writeHeader() {
-		$output  = "# LANGUAGE translation of CakePHP Application\n";
+		$output	= "# LANGUAGE translation of CakePHP Application\n";
 		$output .= "# Copyright YEAR NAME <EMAIL@ADDRESS>\n";
 		$output .= "#\n";
 		$output .= "#, fuzzy\n";
