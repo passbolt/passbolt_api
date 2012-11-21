@@ -8,8 +8,6 @@
  * @package      app.Controller.CategoriesResourcesController
  * @since        version 2.12.7
  */
- 
-App::uses('Sanitize', 'Utility');
 
 class CategoriesResourcesController extends AppController {
 
@@ -92,7 +90,6 @@ class CategoriesResourcesController extends AppController {
 		}
 
 		// set the data for validation and save
-		$this->request->data = Sanitize::clean($this->request->data);
 		$crpost = $this->request->data;
 		$this->CategoryResource->set($crpost);
 

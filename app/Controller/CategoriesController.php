@@ -10,7 +10,6 @@
  */
 
 App::uses('CategoryType', 'Model');
-App::uses('Sanitize', 'Utility');
 
 class CategoriesController extends AppController {
 /**
@@ -132,8 +131,6 @@ class CategoriesController extends AppController {
 
 		// set the data for validation and save
 		$catpost = $this->request->data;
-		// Sanitize
-		$catpost = Sanitize::clean($catpost);
 		$this->Category->set($catpost);
 
 		// check if the data is valid
@@ -178,9 +175,6 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('No data were provided'));
 			return;
 		}
-
-		// sanitize
-		$this->request->data = Sanitize::clean($this->request->data);
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
