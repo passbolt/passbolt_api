@@ -542,8 +542,8 @@ class AppSchema extends CakeSchema {
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cProjects['Category']['id'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $gTeamleads['Group']['id'],
+			'aro' => 'User',
+			'aro_foreign_key' => $uRemy['User']['id'],
 			'_create' => '1',
 			'_read' => '1',
 			'_update' => '1',
