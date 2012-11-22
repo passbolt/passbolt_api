@@ -50,6 +50,34 @@ class AppSchema extends CakeSchema {
 		}
 	}
 
+	public function insertGroups ($groups, $parentGroup=null) {
+		foreach ($groups as $groupName => $subGroups) {
+			// Insert group
+			if ($groupName != 'Users') {
+				$this->Group->create();
+				$group = $this->Group->save(array(
+					'Group' => array(
+						'name' => $groupName,
+						'parent_id' => isset($parentGroup) ? $parentGroup['Group']['id'] : null
+					)
+				));
+				$this->insertGroups ($subGroups, $group);
+			} else {
+				$users = $subGroups;
+				foreach ($users as $value) {
+					if (!($user = $this->User->findByUsername($value['User']['username']))) {
+						$this->User->create();
+						$user = $this->User->save($value);
+					}
+					$this->GroupUser->create();
+					$this->GroupUser->save(array(
+						'GroupUser' => array( 'group_id' => $parentGroup['Group']['id'], 'user_id' => $user['User']['id'] )
+					));
+				}
+			}
+		}
+	}
+
 	public function after($event = array()) {
 		if (isset($event['create'])) {
 			switch ($event['create']) {
@@ -96,6 +124,25 @@ class AppSchema extends CakeSchema {
 						$this->insertCategories($this->_getDefaultCategories());
 					}
 				break;
+
+				case 'groups':
+					array_push(self::$created, 'groups');
+					if (in_array('groups', self::$created)) {
+						$this->Group = ClassRegistry::init('Group');
+						$this->User = ClassRegistry::init('User');
+						$this->GroupUser = ClassRegistry::init('GroupUser');
+						$this->insertGroups($this->_getDefaultGroups());
+					}
+				break;
+
+				case 'permissions':
+					array_push(self::$created, 'permissions');
+					$permission = ClassRegistry::init('Permission');
+					$ps = $this->_getDefaultPermissions();
+					foreach ($ps as $p) {
+						$permission->create();
+						$permission->save($p);
+					}
 
 				case 'roles':
 					array_push(self::$created, 'roles');
@@ -199,6 +246,16 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
+	public $groups_users = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
+		'group_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'index', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'user_id' => array('column' => array('user_id', 'group_id'), 'unique' => 0)),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+
 	public $groups = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'parent_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -211,16 +268,6 @@ class AppSchema extends CakeSchema {
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
-	);
-
-	public $groups_users = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'group_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'index', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'user_id' => array('column' => array('user_id', 'group_id'), 'unique' => 0)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
@@ -325,6 +372,71 @@ class AppSchema extends CakeSchema {
 		return $categories;
 	}
 
+	protected function _getDefaultGroups() {
+		$userRoleId = '0208f57a-c5cd-11e1-a0c5-080027796c4c';
+		$defaultPassword = 'test123';
+		$categories = array (
+			'Bolt Softwares Pvt. Ltd.' => array(
+				'management' => array(
+					'Users' => array(
+						array('User' => array( 'role_id' => $userRoleId, 'username' => 'dark.vador@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					)
+				),
+				'administration' => array(
+					'accounting dpt' => array(
+						'Users' => array(
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'aurelie.gerhards@test.com', 'password' => $defaultPassword, 'active' => '1')),
+						),
+					),
+					'human resources' => array(
+						'Users' => array(
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'ismail.guennouni@test.com', 'password' => $defaultPassword, 'active' => '1')),
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'myriam.djerouni@test.com', 'password' => $defaultPassword, 'active' => '1'))
+						),
+					),
+				),
+				'developers' => array(
+					'team leads' => array(
+						'Users' => array(
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'remy.bertot@test.com', 'password' => $defaultPassword, 'active' => '1')),
+						),
+					),
+					'drupal' => array(
+						'Users' => array(
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'cedric.alfonsi@test.com', 'password' => $defaultPassword, 'active' => '1')),
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'kevin.muller@test.com', 'password' => $defaultPassword, 'active' => '1'))
+						),
+					),
+					'cakephp' => array(
+						'Users' => array(
+							array('User' => array( 'username' => 'remy.bertot@test.com'))
+						),
+					),
+				),
+				'freelancers' => array(
+					'company a' => array(
+						'Users' => array(
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
+						),
+					),
+					'company b' => array(
+						'Users' => array(
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
+							array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
+						),
+					),
+					'Users' => array(
+						array('User' => array( 'role_id' => $userRoleId, 'username' => 'jean-rene@test.com', 'password' => $defaultPassword, 'active' => '1')),
+						array('User' => array( 'role_id' => $userRoleId, 'username' => 'bertrand.lepouce@test.com', 'password' => $defaultPassword, 'active' => '1')),
+						array('User' => array( 'role_id' => $userRoleId, 'username' => 'ramesh.kumar@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					),
+				),
+			)
+		);
+		return $categories;
+	}
+
 	protected function _getDefaultUsers() {
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
@@ -351,38 +463,24 @@ class AppSchema extends CakeSchema {
 		return $us;
 	}
 
+	protected function _getDefaultPermissions() {
+		$c = $this->Category->findByName("drupal");
+		$g = $this->Group->findByName("drupal");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $c['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $g['Group']['id'],
+			'_read' => '1',
+		));
+		return $ps;
+	}
+
 	protected function _getDefaultRoles() {
 		$rs[] = array('Role' => array(
 			'id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
 			'name' => 'guest',
 			'description' => 'Non logged-in user',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
-		));
-		$rs[] = array('Role' => array(
-			'id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'name' => 'user',
-			'description' => 'Logged in default user',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
-		));
-		$rs[] = array('Role' => array(
-			'id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
-			'name' => 'admin',
-			'description' => 'Organization administrator',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
-		));
-		$rs[] = array('Role' => array(
-			'id' => '142c1340-c5cd-11e1-a0c5-080027796c4c',
-			'name' => 'root',
-			'description' => 'Super Administrator',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
