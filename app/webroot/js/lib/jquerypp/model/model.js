@@ -1,6 +1,6 @@
 /*global OpenAjax: true */
 
-steal('jquery', 'can/util', 'can/model','can/observe/attributes','can/observe/setter','can/model/elements', function($, can){
+steal('jquery', 'can/util', 'can/model','can/observe/attributes','can/observe/setter','can/observe/elements', function($, can){
 	$.Model = can.Model;
 	var get = $.Model.prototype.__get;
 	$.Model.prototype.__get = function(attr) {

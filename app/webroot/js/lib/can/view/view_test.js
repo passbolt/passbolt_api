@@ -1,4 +1,4 @@
-steal('can/view', function(can) {
+(function() {
 	module("can/view");
 
 	/*test("Ajax transport", function(){
@@ -30,23 +30,6 @@ steal('can/view', function(can) {
 	}
 
 	test("buildFragment works right", function(){
-		can.append( can.$("#qunit-test-area"), can.view("//can/view/test/qunit/plugin.ejs",{}) )
-		ok(/something/.test( can.$("#something span")[0].firstChild.nodeValue ),"something has something");
-		can.remove( can.$("#something") );
-		can.append( can.$("#qunit-test-area"), can.view("//can/view/test/qunit/plugin.ejs",{}) )
-		ok(/something/.test( can.$("#something span")[0].firstChild.nodeValue ),"something has something");
-		can.remove( can.$("#something") );
-		can.append( can.$("#qunit-test-area"), can.view("//can/view/test/qunit/plugin.ejs",{}) )
-		ok(/something/.test( can.$("#something span")[0].firstChild.nodeValue ),"something has something");
-		can.remove( can.$("#something") );
-		can.append( can.$("#qunit-test-area"), can.view("//can/view/test/qunit/plugin.ejs",{}) )
-		ok(/something/.test( can.$("#something span")[0].firstChild.nodeValue ),"something has something");
-		can.remove( can.$("#something") );
-	})
-
-
-	test("plugin in ejs", function(){
-
 		can.append( can.$("#qunit-test-area"), can.view("//can/view/test/qunit/plugin.ejs",{}) )
 		ok(/something/.test( can.$("#something span")[0].firstChild.nodeValue ),"something has something");
 		can.remove( can.$("#something") );
@@ -185,16 +168,30 @@ steal('can/view', function(can) {
 
 
 	test("return renderer", function() {
-		can.view.ejs('renderer_test', "This is a <%= test %>");
+		var directResult = can.view.ejs('renderer_test', "This is a <%= test %>");
 		var renderer = can.view('renderer_test');
+		ok(can.isFunction(directResult), 'Renderer returned directly');
 		ok(can.isFunction(renderer), 'Renderer is a function');
 		equal(renderer({ test : 'working test' }), 'This is a working test', 'Rendered');
 		renderer = can.view("//can/view/test/qunit/template.ejs");
 		ok(can.isFunction(renderer), 'Renderer is a function');
 		equal(renderer({ message : 'Rendered!' }), '<h3>Rendered!</h3>', 'Synchronous template loaded and rendered');
 		// TODO doesn't get caught in Zepto for whatever reason
-//		raises(function() {
-//			can.view('jkflsd.ejs');
-//		}, 'Nonexistent template throws error');
-	})
-});
+		// raises(function() {
+		//      can.view('jkflsd.ejs');
+		// }, 'Nonexistent template throws error');
+	});
+
+	test("nameless renderers (#162)", function() {
+		var nameless = can.view.ejs('<h2><%= message %></h2>');
+		var result = nameless({
+			message : 'HI!'
+		});
+		equal(result, '<h2>HI!</h2>', 'Got EJS result rendered');
+		nameless = can.view.mustache('<h3>{{message}}</h3>');
+		result = nameless({
+			message : 'MUSTACHE!'
+		});
+		equal(result, '<h3>MUSTACHE!</h3>', 'Got MUSTACHE result rendered');
+	});
+})();

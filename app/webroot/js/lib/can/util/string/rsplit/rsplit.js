@@ -1,4 +1,4 @@
-steal('can/util/string',function() {
+steal('can/util', 'can/util/string',function(can) {
 	/**
 	 * @add jQuery.String
 	 */
@@ -32,4 +32,6 @@ steal('can/util/string',function() {
 		}
 		return retArr;
 	};
+
+	return can;
 });

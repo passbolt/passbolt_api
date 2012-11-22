@@ -85,4 +85,5 @@ steal('can/util', 'can/control', 'can/view',function(can) {
 		return can.view(view, data, helpers); //what about controllers in other folders?
 	};
 
+	return can;
 });

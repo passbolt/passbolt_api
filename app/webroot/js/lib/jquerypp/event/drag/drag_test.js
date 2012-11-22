@@ -1,7 +1,5 @@
-steal("jquery/event/drop",
-	'funcunit/qunit',
-	'funcunit/syn')
-	.then("jquery/event/drop/drop_test.js",function(){
+steal("jquery/event/drop", 'funcunit/qunit', 'funcunit/syn', "jquery/event/drop/drop_test.js",
+function($, QUnit, Syn) {
 
 module("jquery/event/drag",{
 	makePoints : function(){

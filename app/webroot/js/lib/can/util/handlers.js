@@ -1,4 +1,4 @@
-steal(function(){
+steal('can/util', function(can) {
 	
 	var id = 0;
 	can.addHandler = function(el, ev, handler){
@@ -47,5 +47,6 @@ steal(function(){
 			handleData.apply(el,[ev].concat(args))
 		})
 	}
-	
+
+	return can;
 })

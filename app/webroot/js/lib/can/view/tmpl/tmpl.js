@@ -519,5 +519,6 @@ steal('can/util', 'can/view', function(can) {
 			return "function(data){return ("+tmpl+").call(jQuery, jQuery, {data: data}).join(''); }";
 		}
 	})
-	can.view.ext = ".tmpl"
+	can.view.ext = ".tmpl";
+	return can;
 })

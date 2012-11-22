@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.hide
 	 * @tag documentation
@@ -19,7 +19,7 @@ steal.then(function() {
 	 *  _setProperty: function( property, value, success, error, capitalized ) {
 	 * @codeend
 	 */
-	DocumentJS.tags.hide = {
+	return  {
 		add: function( line ) {
 			var m = line.match(/^\s*@hide/)
 			if ( m ) {

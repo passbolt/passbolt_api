@@ -12,16 +12,15 @@
  * @param {Object} options
  */
 
-steal(function(){
-	
+steal('steal','./out', function(s, out){
 	// Makes a JSON object for search data
-	DocumentJS.searchData = function(objects, options){
+	var searchData = function(objects, options){
 		
 		var searchData = {};
 
 		addToSearchData(objects, searchData)
 		
-		return new DocumentJS.File(options.out + "/searchData.json").save(DocumentJS.out(searchData, false));
+		return new s.URI(options.out + "/searchData.json").save( out(searchData, false) );
 	}
 	var addIDs = function(list){
 		var count = 0;
@@ -119,7 +118,7 @@ steal(function(){
 			return -1;
 		}
 	
-DocumentJS.searchData.addToSearchData =addToSearchData;
+	searchData.addToSearchData =addToSearchData;
 	
-	
+	return searchData;
 })

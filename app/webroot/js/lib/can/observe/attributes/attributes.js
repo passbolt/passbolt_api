@@ -114,7 +114,7 @@ can.each([ can.Observe, can.Model ], function(clss){
 			"boolean": function( val ) {
 				return Boolean(val === "false" ? 0 : val);
 			},
-			"default": function( val, error, type ) {
+			"default": function( val, oldVal, error, type ) {
 				var construct = can.getObject(type),
 					context = window,
 					realType;
@@ -125,7 +125,7 @@ can.each([ can.Observe, can.Model ], function(clss){
 					// get the object before the last .
 					context = can.getObject(realType);
 				}
-				return typeof construct == "function" ? construct.call(context, val) : val;
+				return typeof construct == "function" ? construct.call(context, val, oldVal) : val;
 			}
 		},
 		/**
@@ -187,7 +187,7 @@ can.each([ can.Observe, can.Model ], function(clss){
 		var self = this;
 		oldSetup.call(self, superClass, stat, proto);
 
-		can.each(["attributes", "validations"], function( name ) {
+		can.each(["attributes"], function( name ) {
 			if (!self[name] || superClass[name] === self[name] ) {
 				self[name] = {};
 			}
@@ -229,7 +229,8 @@ can.Observe.prototype.__convert = function(prop, value){
 	// check if there is a
 
 	var Class = this.constructor,
-		val, type, converter;
+		oldVal = this.attr(prop),
+		type, converter;
 		
 	if(Class.attributes){
 		// the type of the attribute
@@ -241,7 +242,7 @@ can.Observe.prototype.__convert = function(prop, value){
 			// just use the value
 			value : 
 			// otherwise, pass to the converter
-			converter.call(Class, value, function() {}, type);
+			converter.call(Class, value, oldVal, function() {}, type);
 };
 
 /**

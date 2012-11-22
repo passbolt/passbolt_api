@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.scope
 	 * @tag documentation
@@ -31,7 +31,7 @@ steal.then(function() {
 	 * 
 	 * In the example above the use of @@scope forces __date__, __number__ and __boolean__ methods to be __convert's__ children.
 	 */
-	DocumentJS.tags.scope = {
+	return{
 		add: function( line ) {
 			print("Scope! " + line)
 			this.starts_scope = true;

@@ -508,5 +508,5 @@ lang.extend(NodeList, {
 
 return NodeList;
 });
-
+return;
 })

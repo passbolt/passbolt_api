@@ -58,7 +58,7 @@ DocumentationHelpers = {
 		if ( stat != -1 ) {
 			name = name.substring(0, stat) + "." + name.substring(stat + 8);
 		} else if ( prto != -1 ) {
-			name = jQuery.String.underscore(name.substring(0, prto).replace("$.", "")) + "." + name.substring(prto + 11);
+			name = can.underscore(name.substring(0, prto).replace("$.", "")) + "." + name.substring(prto + 11);
 		}
 
 		if (this._data.construct) {
@@ -76,11 +76,12 @@ DocumentationHelpers = {
 		return content.replace(/\[\s*((?:['"][^"']*["'])|[^\|\]\s]*)\s*\|?\s*([^\]]*)\s*\]/g, function( match, first, n ) {
 			//need to get last
 			//need to remove trailing whitespace
+
 			if (/^["']/.test(first) ) {
 				first = first.substr(1, first.length - 2)
 			}
 			if ( /^\/\//.test(first) ) {
-				first = steal.root.join(first.substr(2))
+				first = steal.config().root.join(first.substr(2)).path
 			}
 			var url = Doc.findOne({name: first}) || null;
 			if(!url){
@@ -106,7 +107,7 @@ DocumentationHelpers = {
 				if (!n ) {
 					n = dontReplace ? first : first.replace(/\\.static/, "")
 				}
-				return  "<a href='" +$.route.url({who:  url.name }) + "'>" + n + "</a>"
+				return  "<a href='" +can.route.url({who:  url.name }) + "'>" + n + "</a>"
 			} else if ( typeof first == 'string' && first.match(/^https?|www\.|#/) ) {
 				return "<a href='" + first + "'>" + (n || first) + "</a>"
 			}
@@ -120,7 +121,8 @@ DocumentationHelpers = {
 		return url = parts[2] ? parts[2] : url;
 	},
 	source : function(comment){
-		var matches = comment.src.match(/([^\/]+)\/(.+)/);
+		var path = comment.src.path || comment.src,
+			matches = path.match(/([^\/]+)\/(.+)/);
 		return DOCS_SRC_MAP[matches[1]]+"/blob/master/"+matches[2]+"#L"+comment.line
 	}
 }

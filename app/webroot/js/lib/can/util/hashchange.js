@@ -92,7 +92,7 @@
  *     })
  *    
  */
-steal('can/util',function($){
+steal('can/util', 'jquery', function($, can) {
   '$:nomunge'; // Used by YUI compressor.
   
   // Method / object references.
@@ -265,4 +265,6 @@ steal('can/util',function($){
     
     return self;
   })();
+
+  return can;
 })

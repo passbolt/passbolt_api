@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.codestart
 	 * @tag documentation
@@ -48,7 +48,7 @@ steal.then(function() {
 	 *
 	 * @codeend 
 	 */
-	DocumentJS.tags.codestart = {
+	return {
 		add: function( line, last ) {
 			var m = line.match(/^\s*@codestart\s*([\w-]*)\s*(.*)/)
 

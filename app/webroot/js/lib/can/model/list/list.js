@@ -1,4 +1,4 @@
-steal('can/util', 'can/model/elements', function(can) {
+steal('can/util', 'can/observe/elements', function(can) {
 
 	var getArgs = function( args ) {
 		if ( args[0] && (can.isArray(args[0])) ) {
@@ -12,7 +12,7 @@ steal('can/util', 'can/model/elements', function(can) {
 		//used for namespacing
 		id = 0,
 		getIds = function( item ) {
-			return item[item.constructor.id]
+			return item.__get(item.constructor.id);
 		},
 		ajaxMaker = can.Model._ajax,
 
@@ -338,17 +338,16 @@ steal('can/util', 'can/model/elements', function(can) {
 			var list = [],
 				constructor = this[0].constructor,
 				underscored = constructor._fullName,
-				idName = constructor.id,
 				test = new RegExp(underscored + "_([^ ]+)"),
 				matches, val, args = getArgs(arguments);
 
 			for ( var i = 0; i < args.length; i++ ) {
 				if ( args[i].nodeName && (matches = args[i].className.match(test)) ) {
                 // If this is a dom element
-					val = this.grep(function(item){ return item[idName] === matches[1] })[0];
+					val = this.grep(function(item){ return getIds(item) === matches[1] })[0];
 				} else {
                 // Else an id was provided as a number or string.
-					val = this.grep(function(item){ return item[idName] === args[i] })[0];
+					val = this.grep(function(item){ return getIds(item) === args[i] })[0];
 				}
 				val && list.push(val)
 			}
@@ -375,7 +374,6 @@ steal('can/util', 'can/model/elements', function(can) {
 			var list = [],
 				constructor = this[0].constructor,
 				underscored = constructor._fullName,
-				idName = constructor.id,
 				test = new RegExp(underscored + "_([^ ]+)"),
 				matches, val;
 			args = getArgs(arguments)
@@ -387,8 +385,8 @@ steal('can/util', 'can/model/elements', function(can) {
 				var inst = this[i],
 					found = false
 					for ( var a = 0; a < args.length; a++ ) {
-						var id = (args[a].nodeName && (matches = args[a].className.match(test)) && matches[1]) || (typeof args[a] == 'string' || typeof args[a] == 'number' ? args[a] : args[a][idName]);
-						if ( inst[idName] == id ) {
+						var id = (args[a].nodeName && (matches = args[a].className.match(test)) && matches[1]) || (typeof args[a] == 'string' || typeof args[a] == 'number' ? args[a] : getIds(args[a]));
+						if ( getIds(inst) == id ) {
 							list.push.apply(list, this.splice(i, 1));
 							args.splice(a, 1);
 							found = true;
@@ -518,33 +516,46 @@ steal('can/util', 'can/model/elements', function(can) {
     _updateAttrs :function(items, remove){
       var len = items.length,
           newVal,
-          curVal;
+          curVal,
+          itemsNotInList = [];
+
+      var id = this.constructor.id;
+      function getId(obj) {
+        return obj.attr ? obj.attr(id) : obj[id];
+      }
 
       for ( var i = 0; i < len; i++ ) {
         newVal = items[i];
         curVal = null;
 
-        if ( can.Observe.canMakeObserve(newVal) && newVal[this.constructor.id] ) {
-          curVal = this.get(newVal[this.constructor.id])[0];
+        if ( can.Observe.canMakeObserve(newVal) && getId(newVal)) {
+          curVal = this.get(getId(newVal))[0];
           if (curVal){
             curVal.attr(newVal, remove)
           } else {
-            this.push(newVal)
+            itemsNotInList.push(newVal);
           }
         }
       }
 
+      if (itemsNotInList.length){
+        //splice everything onto end of list so as not to trigger change events for each push
+        if (this.constructor.namespace){
+        	itemsNotInList = can.makeArray(this.constructor.namespace.models(itemsNotInList));
+        }
+        this.splice.apply(this, [this.length, 0].concat(itemsNotInList));
+      }
+
       if(remove){
-        var id = this.constructor.id,
-            existingIds = this.map(function(element) {
-              return element[id];
+        var existingIds = this.map(function(element) {
+              return getId(element);
             }),
-            itemIds = items.map(function(element){
-              return element[id];
+            itemIds = can.map(items, function(element){
+              return getId(element);
             });
 
         can.each(existingIds, $.proxy(function(id){
-          if(itemIds.indexOf(id) == -1){
+          if(!~can.inArray(id,itemIds)){
             this.remove(id);
           }
         }, this));

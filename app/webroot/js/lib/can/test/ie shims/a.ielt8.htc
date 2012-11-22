@@ -1,0 +1,72 @@
+﻿<PUBLIC:COMPONENT lightWeight="true">
+<PUBLIC:PROPERTY NAME="classList" GET="getClassList" />
+<PUBLIC:PROPERTY NAME="children" GET="getChildren" />
+<PUBLIC:PROPERTY NAME="firstElementChild" GET="getFirstElementChild" />
+<PUBLIC:PROPERTY NAME="lastElementChild" GET="getLastElementChild" />
+<PUBLIC:PROPERTY NAME="nextElementSibling" GET="getNextElementSibling" />
+<PUBLIC:PROPERTY NAME="previousElementSibling" GET="getPreviousElementSibling" />
+<PUBLIC:PROPERTY NAME="childElementCount" GET="getChildElementCount" />
+<PUBLIC:PROPERTY NAME="reversed" GET="getReversed" />
+
+<PUBLIC:PROPERTY NAME="control" GET="getControl" />
+<PUBLIC:PROPERTY NAME="labels" GET="getLabels" />
+
+<PUBLIC:PROPERTY NAME="selectionStart" GET="getSelectionStart" PUT="setSelectionStart" />
+<PUBLIC:PROPERTY NAME="selectionEnd" GET="getSelectionEnd" PUT="setSelectionEnd" />
+
+<PUBLIC:PROPERTY NAME="textContent" GET="getTextContent" PUT="setTextContent" />
+
+<PUBLIC:PROPERTY NAME="DOCUMENT_POSITION_DISCONNECTED" GET="_g1" />
+<PUBLIC:PROPERTY NAME="DOCUMENT_POSITION_PRECEDING" GET="_g2" />
+<PUBLIC:PROPERTY NAME="DOCUMENT_POSITION_FOLLOWING" GET="_g4" />
+<PUBLIC:PROPERTY NAME="DOCUMENT_POSITION_CONTAINS" GET="_g8" />
+<PUBLIC:PROPERTY NAME="DOCUMENT_POSITION_CONTAINED_BY" GET="_g16" />
+<PUBLIC:PROPERTY NAME="ELEMENT_NODE" GET="_g1" />
+<PUBLIC:PROPERTY NAME="TEXT_NODE" GET="_g3" />
+<PUBLIC:PROPERTY NAME="PROCESSING_INSTRUCTION_NODE" GET="_g7" />
+<PUBLIC:PROPERTY NAME="COMMENT_NODE" GET="_g8" />
+<PUBLIC:PROPERTY NAME="DOCUMENT_NODE" GET="_g9" />
+<PUBLIC:PROPERTY NAME="DOCUMENT_TYPE_NODE" GET="_g10" />
+<PUBLIC:PROPERTY NAME="DOCUMENT_FRAGMENT_NODE" GET="_g11" />
+
+<PUBLIC:PROPERTY NAME="offsetTop" GET="getOffsetTop" />
+<PUBLIC:PROPERTY NAME="offsetLeft" GET="getOffsetLeft" />
+
+<SCRIPT>
+/*@requared window.Node.prototype = { ielt8 : true }*/
+var 
+	Node_proto=window.Node.prototype,
+	Element_proto=window.Element.prototype,
+	getChildren=Element_proto.getchildren,
+	getClassList=Element_proto.getclassList,
+	getLastElementChild=Element_proto.getlastElementChild,
+	getFirstElementChild=Element_proto.getfirstElementChild,
+	getNextElementSibling=Element_proto.getnextElementSibling,
+	getPreviousElementSibling=Element_proto.getpreviousElementSibling,
+	getChildElementCount=Element_proto.getchildElementCount,
+	getControl=Element_proto.getcontrol,
+	getLabels=Element_proto.getlabels,
+	getSelectionStart=Element_proto.getselectionStart,
+	setSelectionStart=Element_proto.setselectionStart,
+	getSelectionEnd=Element_proto.getselectionEnd,
+	setSelectionEnd=Element_proto.setselectionEnd,
+	getReversed=Element_proto.getreversed,
+	getTextContent=Node_proto.gettextContent,
+	setTextContent=Node_proto.settextContent,
+	_g1=Node_proto.g1,
+	_g2=Node_proto.g2,
+	_g4=Node_proto.g4,
+	_g7=Node_proto.g7,
+	_g8=Node_proto.g8,
+	_g9=Node_proto.g9,
+	_g10=Node_proto.g10,
+	_g11=Node_proto.g11,
+	_g16=Node_proto.g16,
+	getOffsetTop=Element_proto.getoffsetTop,
+	getOffsetLeft=Element_proto.getoffsetLeft;
+
+if(this != window) {//Strange IE bug where thisObj === window
+	Node_proto.__ielt8__element_init__.call(this);
+}
+</SCRIPT>
+</PUBLIC:COMPONENT>

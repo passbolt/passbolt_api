@@ -2,6 +2,12 @@
 <head>
   <link rel="stylesheet" type="text/css" href="../funcunit/qunit/qunit.css" />
   <title>jQuery++ QUnit Test</title>
+  <script type="text/javascript">
+      if (typeof window.console === "undefined") { 
+        console = {};
+        console.log = console.warn = console.error = function(a){};
+      }
+  </script>
   <script type='text/javascript' src='../steal/steal.js?jquery/test'></script>
 </head>
 <body>

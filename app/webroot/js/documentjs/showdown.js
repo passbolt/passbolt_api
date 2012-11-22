@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	//
 	// showdown.js -- A javascript port of Markdown.
 	//
@@ -62,7 +62,7 @@ steal.then(function() {
 	//
 	// Showdown namespace
 	//
-	Showdown = {};
+	var Showdown = {};
 
 	//
 	// converter
@@ -1230,4 +1230,5 @@ steal.then(function() {
 		}
 
 	} // end of Showdown.converter
+	return  new Showdown.converter();
 })

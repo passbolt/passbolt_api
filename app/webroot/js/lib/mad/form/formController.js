@@ -156,7 +156,7 @@ steal(
 
 				// if sub models
 				if (modelRefs.length>2) {
-					var leafSubModelRef = modelRefs[modelRefs.length - 2],
+					var leafSubModelRef = modelRefs[modelRefs.length - 2], // the last one is the field
 						leafValue = null;
 
 					// format the element value following the leaf model multiplicity

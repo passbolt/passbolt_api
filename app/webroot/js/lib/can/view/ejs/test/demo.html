@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>can.view.ejs demo</title>
+	<link rel="stylesheet" type="text/css" href="../../../util/demos/demos.css" />
+</head>
+<body>
+	<table id='layout'>
+		<tr>
+			<td colspan="2"><h2>template</h2></td>
+		</tr>
+		<tr>
+			<td>
+<textarea id='teacherEjs'><h2 class='<%= teacher.attr('grade') 
+  < 'c'? "good" : "bad" %>'>
+	<%= teacher.attr('name') %>
+</h2>
+
+<ul>
+  <% list(teacher.students, 
+	function(student){ %>
+	<li>
+	  <%= student.attr('name') %>
+	</li>
+  <% }) %>
+</ul></textarea>
+			</td>
+			<td class="explanation">The template shown is rendered with the data below.  You can change it and click <button id='reapply'>Reapply</button> 
+				to see the result change. Can.view renders the template with the data and appends it to the element as shown.  If data is changed, 
+				the results automatically update with live binding</td>
+		</tr>
+		<tr>
+			<td colspan="2"><h2>data</h2></td>
+		</tr>
+		<tr>
+			<td>
+				<div id='ejs-data-container'>
+				<pre id='ejs-data'></pre>
+				</div>
+			</td>
+			<td class="explanation">Change the data's properties by hovering over any of them. Without even reapplying the template, the result below 
+				will update (because of live binding).</td>
+		</tr>
+		<tr>
+			<td colspan="2"><h2>can.view( template, data )</h2></td>
+		</tr>
+		<tr>
+			<td colspan="2"><div id='teacher'></div></td>
+		</tr>
+	</table>
+</div>
+<script type='text/javascript' src='../../../../steal/steal.js'></script>
+<script type='text/javascript'>
+steal('can/view/ejs', 
+	'can/util/json.js',
+	'can/observe',
+	'can/util/demos/observer.js',
+function() {
+	var teacher = new can.Observe({
+		  name : "Mr. Smith",
+		  grade : "a",
+		  students : [
+			{name : "Brian"},
+			{name : "Payal"},
+			{name : "Curtis"},
+			{name : "Alexis"}
+		  ]
+		});
+	new Observer( $("#ejs-data"),
+		{
+			observe : teacher,
+			fullName : "new can.Observe("
+		});
+		
+	var reapply = function(){
+		$("#reapply").removeClass("glow");
+		var viewText = document.getElementById("teacherEjs").value,
+			result = new can.EJS({text: viewText}).render({teacher: teacher}),
+			frag = can.view.frag(result);
+		$('#teacher').html( frag );
+	}
+	
+	$('#reapply').bind("click", reapply);
+	$('#teacherEjs').bind("keypress", function(){
+		$("#reapply").addClass("glow");
+	});
+	reapply();
+})
+</script>
+</body>
+</html>

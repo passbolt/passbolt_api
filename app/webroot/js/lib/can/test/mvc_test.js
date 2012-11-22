@@ -1,4 +1,4 @@
-steal('can/util', 'can/construct', function(can, Construct) {
+(function(undefined) {
 
 module("mvc");
 
@@ -36,8 +36,13 @@ test("Model basics",function(){
 		}]]
 	})*/
 
+	var url = "can/test/fixtures/foo.json";
+	if(typeof steal !== 'undefined') {
+		url = steal.config().root.join(url) + '';
+	}
+
 	var Task = can.Model({
-		findAll : steal.config().root.join("can/test/foo.json")+''
+		findAll : url
 	},{
 		print : function(){
 			return this.name;
@@ -98,4 +103,4 @@ test("Control Basics",3,function(){
 	
 })
 
-});
+})();

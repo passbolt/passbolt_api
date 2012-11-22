@@ -1,4 +1,4 @@
-steal.then(function() {
+steal('./type',function(Type) {
 	/**
 	 * @class DocumentJS.types.function
 	 * @tag documentation
@@ -31,7 +31,7 @@ steal.then(function() {
 	 * honorific = function(name, gender){
 	 * @codeend 
 	 */
-	DocumentJS.Type("function",
+	Type("function",
 	/**
 	 * @Static
 	 */

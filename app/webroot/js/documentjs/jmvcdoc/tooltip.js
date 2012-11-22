@@ -1,5 +1,5 @@
-steal('jquery/controller', 'mxui/layout/positionable', function(){
-	$.Controller('Tooltip',{
+steal('can/control', 'canui/layout/positionable', function(){
+	can.Control('Tooltip',{
 		init : function(){
 			this.element.mxui_layout_positionable({
 				my: "left top",
@@ -13,8 +13,4 @@ steal('jquery/controller', 'mxui/layout/positionable', function(){
 			this.element.trigger("show",options.of)
 		}
 	})
-	
-	//$('<div id="tooltip"/>').appendTo(document.body).tooltip();
-	
-	
 })

@@ -1,3 +1,4 @@
+(function() {
 module('can/observe/compute')
 
 test("Basic Compute",function(){
@@ -24,21 +25,30 @@ test("Basic Compute",function(){
 test("compute on prototype", function(){
 	
 	var Person = can.Observe({
-		fullName : can.compute(function(){
+		fullName: function(){
 			return this.attr("first") + " " +this.attr("last")
-		})
+		}
 	})
 	
 	var me = new Person({
 		first : "Justin",
 		last : "Meyer"
 	});
+	var fullName = can.compute( me.fullName, me );
 	
-	equals(me.fullName(), "Justin Meyer");
+	equals(fullName(), "Justin Meyer");
 	
-	me.bind("fullName", function(){
-		
-	}) 
+	var called = 0;
+	
+	fullName.bind("change", function( ev, newVal, oldVal ) {
+		called++;
+		equal(called, 1, "called only once");
+		equal(newVal, "Justin Shah");
+		equal(oldVal, "Justin Meyer")
+	});
+	
+	me.attr('last',"Shah")
+	
 	// to make this work, we'd have to look for a computed function and bind to it's change ...
 	// maybe bind can just work this way?
 })
@@ -145,4 +155,74 @@ test("empty compute", function(){
 	
 	c(0);
 	
+});
+
+test("only one update on a batchTransaction",function(){
+	var person = new can.Observe({first: "Justin", last: "Meyer"});
+	var func = function(){
+		return person.attr('first')+" "+person.attr('last')+Math.random()
+	};
+	var callbacks = 0;
+	can.compute.binder(func, window, function(newVal, oldVal){
+		callbacks++;
+	});
+	
+	person.attr({
+		first: "Brian",
+		last: "Moschel"
+	});
+	
+	equal(callbacks,1,"only one callback")
 })
+
+test("only one update on a start and end transaction",function(){
+	var person = new can.Observe({first: "Justin", last: "Meyer"}),
+		age = can.compute(5);
+	var func = function(newVal,oldVal){
+		return person.attr('first')+" "+person.attr('last')+age()+Math.random();
+	};
+	var callbacks = 0;
+	can.compute.binder(func, window, function(newVal, oldVal){
+		callbacks++;
+	});
+	
+	can.Observe.startBatch();
+	
+	person.attr('first',"Brian");
+	stop();
+	setTimeout(function(){
+		person.attr('last',"Moschel");
+		age(12)
+		
+		can.Observe.stopBatch();
+		
+		equal(callbacks,1,"only one callback")
+		
+		start();
+	})
+
+	
+	
+})
+
+test("Compute emits change events when an embbedded observe has properties added or removed", 3, function() {
+	var obs = new can.Observe(),
+		compute1 = can.compute(function(){
+			var txt = obs.attr('foo');
+			obs.each(function(val){
+				txt += val.toString();
+			});
+			return txt;
+		});
+
+	compute1.bind('change', function(ev, newVal, oldVal) {
+		ok(true, 'change handler fired: ' + newVal);
+	})
+
+	obs.attr('foo', 1);
+	obs.attr('bar', 2);
+	obs.attr('foo', 3);
+	obs.removeAttr('bar');
+	obs.removeAttr('bar');
+});
+})();

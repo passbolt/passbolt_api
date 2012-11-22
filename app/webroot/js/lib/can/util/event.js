@@ -51,6 +51,6 @@ can.dispatch = function(event){
 	});
 }
 
-
+return can;
 
 })

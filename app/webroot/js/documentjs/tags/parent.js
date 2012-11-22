@@ -1,5 +1,5 @@
-steal.then(function() {
-	(function() {
+steal(function() {
+	return (function() {
 		var waiting = {}
 
 		/**
@@ -24,16 +24,15 @@ steal.then(function() {
 		 * 
 		 * @image jmvc/images/parent_tag_example.png
 		 */
-		DocumentJS.tags.parent = {
-			add: function( line ) {
+		return {
+			add: function( line , curData, objects) {
 				var m = line.match(/^\s*@parent\s*([\w\.\/\$]*)\s*([\d]*)/)
 				var name = m[1],
-					Class = DocumentJS.Page,
-					inst = DocumentJS.objects[name],
+					inst = objects[name],
 					pos = m[2] ? parseInt(m[2]) : null
 
 					if (!inst ) {
-						inst = DocumentJS.objects[name] = {
+						inst = objects[name] = {
 							name: name
 						}
 					}

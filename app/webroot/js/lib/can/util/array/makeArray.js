@@ -6,4 +6,6 @@ steal('./each.js',function(){
 		})
 		return ret;
 	};
+
+	return can;
 })

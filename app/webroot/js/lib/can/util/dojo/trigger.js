@@ -164,5 +164,5 @@ define("plugd/trigger",["dojo"], function(dojo){
 	return d.trigger;
 	
 });
-
+return;
 })

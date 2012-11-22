@@ -4,7 +4,7 @@ module("search");
 
 test("findOne by name", function(){
 	stop();
-	Doc.location = steal.root.join("jmvc/docs/");
+	Doc.location = steal.config().root.join("jmvc/docs/");
 	
 	
 	console.log(Doc.location)
@@ -27,7 +27,7 @@ test("findOne by name", function(){
 
 test("findOne all by name", function(){
 	stop();
-	Doc.location = steal.root.join("jmvc/docs/");
+	Doc.location = steal.config().root.join("jmvc/docs/");
 	Doc.findOne({ name: "jQuery.Class" }, function(data){
 		ok(data);
 		start();
@@ -36,7 +36,7 @@ test("findOne all by name", function(){
 
 test("findAll by search", function(){
 	stop();
-	Doc.location = steal.root.join("jmvc/docs/");
+	Doc.location = steal.config().root.join("jmvc/docs/");
 	
 	Doc.load(function(){
 		

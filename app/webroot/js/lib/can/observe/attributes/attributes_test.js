@@ -1,4 +1,4 @@
-steal('can/util', 'can/observe/attributes', function(can) {
+steal('can/util', 'can/model', 'can/model/list', 'can/observe/attributes', function(can) {
 
 module("can/observe/attributes");
 
@@ -167,6 +167,140 @@ test("defaults", function(){
 	equals(link.attr('rupees'), 255);
 });
 
+test("nested model attr", function(){
+  can.Model('NestedAttrTest.User', {}, {});
 
+  can.Model('NestedAttrTest.Task', {
+      attributes : {
+        owner : "NestedAttrTest.User.model"
+      }
+    }, {});
+
+
+  can.Model('NestedAttrTest.Project',{
+      attributes : {
+        creator : "NestedAttrTest.User.model"
+      }
+    }, {});
+
+    var michael = NestedAttrTest.User.model({ id : 17, name : 'Michael'});
+    var amy = NestedAttrTest.User.model({ id : 29, name : 'Amy'});
+
+    // add bindings so the objects get stored in the User.store
+    michael.bind('foo', function(){});
+    amy.bind('foo', function(){});
+
+    var task = NestedAttrTest.Task.model({
+      id : 1,
+      name : "Do it!",
+      owner : {id : 17}
+    });
+
+    var project = NestedAttrTest.Project.model({
+      id : 1,
+      name : "Get Things Done",
+      creator : {id : 17}
+    });
+
+    task.bind('foo', function(){});
+    project.bind('foo', function(){});
+
+    equal(task.attr('owner.name'), 'Michael', 'owner hash correctly modeled');
+    equal(project.attr('creator.name'), 'Michael', 'creator hash correctly modeled');
+
+    task.attr({ owner : { id : 29, name : 'Amy'}});
+    equal(task.attr('owner.name'), 'Amy', 'Task correctly updated to Amy user model');
+    equal(task.attr('owner.id'), 29, 'Task correctly updated to Amy user model');
+
+    equal(project.attr('creator.name'), 'Michael', 'Project creator should still be Michael');
+    equal(project.attr('creator.id'), 17, 'Project creator should still be Michael');
+    equal(NestedAttrTest.User.store[17].id, 17, "The model store should still have Michael associated by his id");
+});
+
+test("attr() should respect convert functions for lists when updating", function(){
+  can.Model('ListTest.User', {}, {});
+  can.Model.List('ListTest.User.List', {}, {});
+
+  can.Model('ListTest.Task', {
+    attributes : {
+      project : "ListTest.Project.model"
+    }
+  }, {});
+
+  can.Model('ListTest.Project',{
+      attributes : {
+        members : "ListTest.User.models"
+      }
+    }, {});
+
+    var task = ListTest.Task.model({
+      id : 1,
+      name : "Do it!",
+      project : {
+        id : 789,
+        name : "Get stuff done",
+        members : []
+      }
+    });
+
+    equal(task.project.members instanceof ListTest.User.List, true, "the list is a User List");
+
+    task.attr({
+      id : 1,
+      project : {
+        id : 789,
+        members: [{ id : 72, name : "Andy"}, { id : 74, name : "Michael"}]
+      }
+    });
+
+    equal(task.project.members instanceof ListTest.User.List, true, "the list is a User List");
+    equal(task.project.members.length, 2, "The members were added");
+    equal(task.project.members[0] instanceof ListTest.User, true, "The members was converted to a model object");
+    equal(task.project.members[1] instanceof ListTest.User, true, "The user was converted to a model object");
+});
+
+test("plugin passes old value to converter", 2, function() {
+	var Ob = can.Observe('AttrOldVal', {
+		oldVal : function(val, oldVal) {
+			if(val === 'first') {
+				ok(!oldVal, 'First time does not have an old value');
+			}
+			if(val === 'second') {
+				equal(oldVal, 'first', 'Old value is correct');
+			}
+			return val;
+		},
+		attributes : {
+			test : 'AttrOldVal.oldVal'
+		}
+	}, {});
+
+	var o = new Ob({
+		test : 'first'
+	});
+
+	o.attr('test', 'second');
+});
+
+test("attr does not blow away old observable when going from empty to having items (#160)", function(){
+	can.Model('EmptyListTest.User', {}, {});
+	can.Model.List('EmptyListTest.User.List', {}, {});
+
+	can.Model('EmptyListTest.Project',{
+		attributes : {
+			members : "EmptyListTest.User.models"
+		}
+	}, {});
+
+	var project = EmptyListTest.Project.model({
+		id : 789,
+		members : []
+	});
+
+	var oldCid = project.attr("members")._cid;
+	project.attr({members:['bob']});
+	same(project.attr("members")._cid, oldCid, "should be the same observe, so that views bound to the old one get updates")
+	equals(project.attr("members").length, 1, "list should have bob in it");
+});
 
 })();

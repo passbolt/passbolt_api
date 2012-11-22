@@ -58,6 +58,23 @@ test("remove", function(){
 	equals(res[0].id, "a1")
 })
 
+test("remove with a shadowed id", function(){
+	var MyModel = can.Model.extend({
+		id: 'foo'
+	},{
+		foo: function() {
+			return 'bar';
+		}
+	});
+
+	var list = new MyModel.List([
+		new MyModel({ foo: 'bar' }),
+		new MyModel({ foo: 'baz' })
+	]);
+	list.remove('bar');
+	equals(list.length,1,'bar was removed');
+	equals(list[0].attr('foo'),'baz');
+});
 
 test("list from models", function(){
 	var people = Person.models([{id: 1}, {id: 2}]);
@@ -240,6 +257,75 @@ test("attr update a list when less things come back and remove is true", functio
   equal(people.attr('1.age'), 101, "Andy's age incremented by 100 years");
 });
 
+test("attr update an empty list only fires one change event", function(){
+  var people = Person.models([]);
+  var changeCount = 0;
+  people.bind('change', function(){
+    changeCount++
+  });
+
+  people.attr([
+    {
+      id : 3,
+      name : 'Andy',
+      age : 101
+    },
+    {
+      id : 1,
+      name : 'Michael',
+      age : 120
+    }]
+  );
+
+
+  equal(changeCount, 1, "Only one change event is fired even though two items added");
+});
+
+test("attr update a list with shadowed ids", function(){
+  var MyPerson = Person.extend({
+    id: function() {
+      return 'hi!';
+    }
+  });
+  var people = MyPerson.models([
+    {
+      id : 1,
+      name : 'Michael',
+      age : 20
+    },
+    {
+      id : 2,
+      name : 'Amy',
+      age : 80
+    },
+    {
+      id : 3,
+      name : 'Andy',
+      age : 1
+    }
+  ]);
+
+  people.attr([
+    {
+      id : 3,
+      name : 'Andy',
+      age : 101
+    },
+    {
+      id : 1,
+      name : 'Michael',
+      age : 120
+    }], true);
+
+
+  equal(people.length, 2, "Removed Amy");
+
+  equal(people.attr('0.id'), 1);
+  equal(people.attr('0.age'), 120, "Michael's age incremented by 100 years");
+
+  equal(people.attr('1.id'), 3, "Andy is now the 2nd person in the list");
+  equal(people.attr('1.age'), 101, "Andy's age incremented by 100 years");
+});
 
 test("attr updates items based on id (when present), not position", function(){
     var people = Person.models([
@@ -302,11 +388,11 @@ test("events - add", 4, function(){
 	
 	// check that we are listening to updates on person ...
 	
-	ok( $(person).data("events"), "person has events" );
+	ok( $._data(person,"events"), "person has events" );
 	
 	list.pop()
 	
-	ok( !$(person).data("events"), "person has no events" );
+	ok( !$._data(person, "events"), "person has no events" );
 	
 });
 

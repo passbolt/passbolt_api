@@ -2,7 +2,7 @@
 @parent canjs
 @description A JavaScript template framework.
 
-can.view is a JavaScript template framework that provides:
+`can.view` is a JavaScript template framework that provides:
 
  - template loading from html elements or external files
  - synchronous and asynchronous template loading
@@ -13,7 +13,7 @@ can.view supports other templating languages, but using [can.EJS] is highly enco
 
 ## Use
 
-`can.view( idOrUrl, data)` loads template content from an element or url, renders
+`can.view( idOrUrl, data)` loads template content from an element, a url or a string, renders
 it with data, and converts it to a documentFragment so it can be easily and 
 efficiently inserted into the DOM.
 
@@ -65,6 +65,37 @@ matches the type of template:
 
     document.getElementById('recipes')
       .appendChild( can.view('templates/recipes.ejs', recipeData ) )
+
+### Creating templates from strings
+
+You can also register a view string for a given id programmatically for any registered template engine using
+`can.view.<engine>(id, template)`:
+
+    can.view.ejs('myViewEJS', '<h2><%= message %></h2>');
+    can.view('myView', { message : 'Hello EJS' });
+    // -> <h2>Hello EJS</h2>
+
+### Renderer functions
+
+Additionally to rendering a template immediately it is also possible to retrieve a renderer function by just passing
+the view name. The renderer function can be called with the template data at a later point in time:
+
+    var renderer = can.view('templates/recipes.ejs');
+    // Do some things
+    document.getElementById('recipes')
+      .appendChild( renderer(recipeData ) )
+
+It is also possible to get a nameless renderer function when creating a template from a string:
+
+    var renderer = can.view.ejs('<strong><%= message %></strong>');
+    renderer({
+      message : 'Message form EJS'
+    }); // -> <strong>Message from EJS</strong>
+
+    renderer = can.view.mustache('<strong>{{message}}</strong>');
+    renderer({
+      message : 'Message form Mustache'
+    }); // -> <strong>Message from Mustache</strong>
 
 ## Supported Template Engines
 

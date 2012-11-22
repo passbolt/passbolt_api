@@ -249,7 +249,7 @@ can.each([ can.Observe, can.Model ], function(clss){
     	 */
    		validatePresenceOf: function(attrNames, options) {
       		validate.call(this, attrNames, options, function(value) {
-         		if(typeof value == 'undefined' || value == "" || value === null){
+         		if(typeof value == 'undefined' || value === "" || value === null){
 					return this.constructor.validationMessages.presence;
 				}
       		});
