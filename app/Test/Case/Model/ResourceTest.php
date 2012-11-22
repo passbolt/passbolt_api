@@ -1,6 +1,6 @@
 <?php
 /**
- * Cateogry Model Test
+ * Resource Model Test
  *
  * @copyright     Copyright 2012, Passbolt.com
  * @package       app.Test.Case.Model.ResourceTest
@@ -11,7 +11,7 @@ App::uses('Resource', 'Model');
 
 class ResourceTest extends CakeTestCase {
 
-	public $fixtures = array('app.resource');
+	public $fixtures = array('app.resource', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();

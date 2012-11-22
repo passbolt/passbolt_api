@@ -35,7 +35,7 @@ class ResourcesController extends AppController {
 		$data = array(
 			'Resource.id' => $id
 		);
-		$options = $this->Resource->getFindOptions('view', $data);
+		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
 		if (!count($resources)) {
 			$this->Message->error(__('The resource does not exist'));
@@ -92,9 +92,8 @@ class ResourcesController extends AppController {
 			}
 		}
 		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
-		$options = $this->Resource->getFindOptions('viewByCategory', $data);
+		$options = $this->Resource->getFindOptions('viewByCategory', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
-		//pr($resources); die();
 
 		if (!$resources) {
 			$resources = array();
@@ -125,7 +124,7 @@ class ResourcesController extends AppController {
 			return;
 		}
 		$resource['Resource']['deleted'] = '1';
-		$fields = $this->Resource->getFindFields('delete');
+		$fields = $this->Resource->getFindFields('delete', User::get('Role.name'));
 		if (!$this->Resource->save($resource, true, $fields['fields'])) {
 			$this->Message->error(__('Error while deleting'));
 			return;
@@ -152,7 +151,7 @@ class ResourcesController extends AppController {
 		$resourcepost = $this->request->data;
 		$this->Resource->set($resourcepost);
 
-		$fields = $this->Resource->getFindFields('save');
+		$fields = $this->Resource->getFindFields('save', User::get('Role.name'));
 
 		// check if the data is valid
 		if (!$this->Resource->validates()) {
@@ -170,14 +169,13 @@ class ResourcesController extends AppController {
 		// Save the associated secret
 		if (isset($resourcepost['Secret'])) {
 			$resourcepost['Secret']['resource_id'] = isset($resourcepost['Secret']['resource_id']) ? $resourcepost['Secret']['resource_id'] : $resource['Resource']['id'];
-			$user = $this->Auth->user();
-			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : $user['User']['id'];
+			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : User::get('User.id');
 			$this->Resource->Secret->set($resourcepost['Secret']);
 			if (!$this->Resource->Secret->validates()) {
 				$this->Message->error(__('Could not validate secret model'));
 				return;
 			}
-			$fields = $this->Resource->Secret->getFindFields('save');
+			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
 			// TODO : Encrypt data and save it once per user
 			if (!$this->Resource->Secret->save($resourcepost['Secret'], false, $fields['fields'])) {
 				$this->Message->error(__('Could not save secret'));
@@ -213,7 +211,7 @@ class ResourcesController extends AppController {
 		$data = array(
 			'Resource.id' => $resource['Resource']['id']
 		);
-		$options = $this->Resource->getFindOptions('view', $data);
+		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
 		$this->set('data', $resources[0]);
 	}
@@ -260,7 +258,7 @@ class ResourcesController extends AppController {
 				$this->Message->error(__('Could not validate Resource'));
 				return;
 			}
-			$fields = $this->Resource->getFindFields('edit');
+			$fields = $this->Resource->getFindFields('edit', User::get('Role.name'));
 			$save = $this->Resource->save($resourcepost, false, $fields['fields']);
 			if (!$save) {
 				$this->Message->error(__('The resource could not be updated'));
@@ -307,7 +305,7 @@ class ResourcesController extends AppController {
 		$data = array(
 			'Resource.id' => $resource['Resource']['id']
 		);
-		$options = $this->Resource->getFindOptions('view', $data);
+		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
 		$this->set('data', $resources[0]);
 	}
