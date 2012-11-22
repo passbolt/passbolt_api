@@ -114,7 +114,7 @@ class Resource extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'view', $role='user', &$data = null) {
+	public static function getFindConditions($case = 'view',  $role = Role::USER, &$data = null) {
 		$conditions = array();
 		switch ($case) {
 			case 'add':
@@ -151,7 +151,7 @@ class Resource extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'view', $role='user') {
+	public static function getFindFields($case = 'view', $role = Role::USER) {
 		switch($case){
 			case 'view':
 			case 'viewByCategory':
