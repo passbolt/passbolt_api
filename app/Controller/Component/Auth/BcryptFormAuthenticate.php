@@ -33,14 +33,14 @@ class BcryptFormAuthenticate extends FormAuthenticate {
 		$this->settings['recursive'] = -1;
 		$u = parent::_findUser($username, $password);
 
-		if($u == false) {
+		if ($u == false) {
 			return $u;
 		}
 
-    // fixing unusual return format
+		// fixing unusual return format
 		if (is_array($u)) {
-			 $u = array('User' => $u);
-		}	
+			$u = array('User' => $u);
+		}
 		$u['Role'] = $u['User']['Role'];
 		unset($u['User']['Role']);
 

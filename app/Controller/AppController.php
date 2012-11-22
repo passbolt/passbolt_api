@@ -8,8 +8,10 @@
  * @since        version 2.12.7
  * @license      http://www.passbolt.com/license
  */
+App::uses('Sanitize', 'Utility');
 App::uses('Controller', 'Controller');
 App::import('Model','User');
+
 class AppController extends Controller {
 
 /**
@@ -65,6 +67,11 @@ class AppController extends Controller {
 			Configure::write('Config.language', $this->Session->read('Config.language'));
 		} else {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
+		}
+
+		// sanitize any post data
+		if (isset($this->request->data) && !empty($this->request->data)) {
+			$this->request->data = Sanitize::clean($this->request->data);
 		}
 	}
 

@@ -19,7 +19,7 @@ if (!class_exists('CakeSession')) {
 
 class ResourcesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.resource', 'app.category', 'app.category_resource', 'app.user', 'app.role');
+	public $fixtures = array('app.resource', 'app.category', 'app.category_resource', 'app.secret', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
@@ -196,6 +196,40 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+	}
+
+/**
+ * Test adding a resource with a secret 
+ */
+	public function testAddWithSecret() {
+		$categoryModel = new Category();
+		$categoryModel->useDbConfig = 'test';
+		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
+
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test1',
+					'username' => 'test1',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+					),
+					'Category' => array(
+						 0 => array(
+							'id' => $rootCat['Category']['id']
+						 )
+					),
+					'Secret' => array(
+						'data' => 'This is a test'
+					),
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
+		// check that Categories were properly saved
+		$secret = $this->Resource->Secret->findByResourceId($result['body']['Resource']['id']);
+		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
 	}
 
 	public function testEdit() {
