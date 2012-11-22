@@ -1,0 +1,1 @@
+The IE shims here are the ES5 DOM Shims (v 0.7) from https://github.com/termi/ES5-DOM-SHIM.

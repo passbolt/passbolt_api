@@ -1,0 +1,1 @@
+window.foobar = "baz";

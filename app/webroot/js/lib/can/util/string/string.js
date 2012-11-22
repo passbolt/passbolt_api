@@ -39,7 +39,9 @@ steal('can/util',function(can) {
 			 *     can.esc( "<foo>&<bar>" ) //-> "&lt;foo&lt;&amp;&lt;bar&lt;"
 			 */
 			esc : function( content ) {
-				return ( "" + content )
+				// Convert bad values into empty strings
+				var isInvalid = content === null || content === undefined || (isNaN(content) && ("" + content === 'NaN'));
+				return ( "" + ( isInvalid ? '' : content ) )
 					.replace(/&/g, '&amp;')
 					.replace(/</g, '&lt;')
 					.replace(/>/g, '&gt;')

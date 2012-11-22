@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			* {
+				-moz-box-sizing: border-box; 
+				-webkit-box-sizing: border-box; 
+				box-sizing: border-box;
+				padding: 0;
+				margin: 0;
+			}
+      html {
+        height: 100%;
+      }
+			body {
+				background-color: black;
+			}
+			iframe {
+				float: left;
+				width: 32%;
+				height: 50%;
+				border-color: #eee;
+				border-style: dashed;
+				border-width: 0 2px 2px 0;
+			}
+			#mootools {
+				border-right: 0;
+			}
+			#dojo {
+				border-bottom: 0;
+			}
+			#yui {
+				border-bottom: 0;
+			}
+			#plugins {
+				border-bottom: 0;
+				border-right: 0;
+			}
+		</style>
+		<title>Test... EVERYTHING</title>
+	</head>
+	<body>
+		<iframe src='test.html?library=jquery' id='jquery'></iframe>
+    <iframe src='test.html?library=zepto' id='zepto'></iframe>
+		<iframe src='test.html?library=mootools' id='mootools'></iframe>
+		<iframe src='test.html?library=dojo' id='dojo'></iframe>
+		<iframe src='test.html?library=yui' id='yui'></iframe>
+		<iframe src='plugin_test.html' id='plugins'></iframe>
+	</body>
+</html>

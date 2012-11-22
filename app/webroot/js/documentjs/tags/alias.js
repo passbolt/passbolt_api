@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.alias
 	 * @tag documentation
@@ -15,7 +15,7 @@ steal.then(function() {
 	 *  ...
 	 * @codeend 
 	 */
-	DocumentJS.tags.alias = {
+	return {
 		add: function( line ) {
 			var m = line.match(/^\s*@alias\s*([\w\-\.]*)/)
 			if ( m ) {

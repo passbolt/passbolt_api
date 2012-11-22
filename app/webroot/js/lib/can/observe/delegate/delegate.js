@@ -73,6 +73,8 @@ steal('can/util', 'can/observe', function(can) {
 				// reset match and values tests
 				hasMatch = undefined;
 				valuesEqual = true;
+
+				// yeah, all this under here has to be redone v
 				
 				// for each attr in a delegate
 				for(var a =0 ; a < delegate.attrs.length; a++){
@@ -94,9 +96,10 @@ steal('can/util', 'can/observe', function(can) {
 						valuesEqual = this.attr(attr.attr) !== undefined
 					}
 				}
+
+
 				
 				// if there is a match and valuesEqual ... call back
-
 				if(hasMatch && valuesEqual) {
 					// how to get to the changed property from the delegate
 					var from = prop.replace(hasMatch+".","");
@@ -284,20 +287,29 @@ steal('can/util', 'can/observe', function(can) {
 		delegate :  function(selector, event, handler){
 			selector = can.trim(selector);
 			var delegates = this._observe_delegates || (this._observe_delegates = []),
-				attrs = [];
+				attrs = [],
+				selectorRegex = /([^\s=,]+)(?:=("[^",]*"|'[^',]*'|[^\s"',]*))?(,?)\s*/g,
+				matches;
 			
-			// split selector by spaces
-			selector.replace(/([^\s=]+)=?([^\s]+)?/g, function(whole, attr, value){
-			  attrs.push({
-			  	// the attribute name
-				attr: attr,
-				// the attribute's pre-split names (for speed)
-				parts: attr.split('.'),
-				// the value associated with this prop
-				value: value
-			  })
-			}); 
-			
+			// parse each property in the selector
+			while(matches = selectorRegex.exec(selector)) {
+				// we need to do a little doctoring to make up for the quotes.
+				if(matches[2] && $.inArray(matches[2].substr(0, 1), ['"', "'"]) >= 0) {
+					matches[2] = matches[2].substr(1, -1);
+				}
+				
+				attrs.push({
+					// the attribute name
+					attr: matches[1],
+					// the attribute name, pre-split for speed
+					parts: matches[1].split('.'),
+					// the value associated with this property (if there was one given)
+					value: matches[2],
+					// whether this selector combines with the one after it with AND or OR
+					or: matches[3] === ','
+				});
+			}
+
 			// delegates has pre-processed info about the event
 			delegates.push({
 				// the attrs name for unbinding

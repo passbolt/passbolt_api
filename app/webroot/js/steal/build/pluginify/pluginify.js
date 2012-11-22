@@ -25,11 +25,11 @@ steal('steal', 'steal/parse','steal/build',
 	 *   - out - where to put the generated file
 	 *   - exclude - an array of files to exclude
 	 *   - nojquery - exclude jquery
-	 *   - global - what the callback to steal functions should be.  Defaults to jQuery as $.
 	 *   - compress - compress the file
 	 *   - wrapInner - an array containing code you want to wrap the output in [before, after]
-	 *   - skipCallbacks - don't run any of the code in steal callbacks (used for canjs build)
+	 *   - skipAll - don't run any of the code in steal callbacks (used for canjs build)
 	 *   - shim - add existing global object to modules collection
+	 *   - standAlone - Only stip
 	 */
 	s.build.pluginify = function(plugin, opts){
 		s.print("" + plugin + " >");
@@ -39,11 +39,10 @@ steal('steal', 'steal/parse','steal/build',
 				"out": 1,
 				"exclude": -1,
 				"nojquery": 0,
-				"global": 0,
 				"compress": 0,
 				"onefunc": 0,
 				"wrapInner": 0,
-				"skipCallbacks": 0,
+				"skipAll": 0,
 				"standAlone": 0,
 				"shim": {},
 				"exports": {}
@@ -51,7 +50,6 @@ steal('steal', 'steal/parse','steal/build',
 			where = opts.out || plugin + "/" + plugin.replace(/\//g, ".") + ".js";
 
 		opts.exclude = !opts.exclude ? [] : (isArray(opts.exclude) ? opts.exclude : [opts.exclude]);
-		opts.global = opts.global || "jQuery";
 		opts.namespace = opts.namespace || "namespace";
 
 		if (opts.nojquery) {
@@ -83,12 +81,11 @@ steal('steal', 'steal/parse','steal/build',
 			pageSteal, 
 			steals = [], 
 			fns = {};
-		
+
 		steal.build.open("steal/rhino/blank.html", {
 			startFile : plugin, 
-			skipCallbacks: opts.skipCallbacks
+			skipAll: opts.skipAll
 		}, function(opener){
-			
 			opener.each(function(stl, resource, i){
 				print("> ",stl.id)
 				if(stl.buildType === "fn") {
@@ -97,15 +94,22 @@ steal('steal', 'steal/parse','steal/build',
 				else if(fns[stl.id] && stl.buildType === "js"){ // if its a js type and we already had a function, ignore it
 					return;
 				}
-				if ( (opts.standAlone && ( ""+stl.id ) === plugin )
-					|| (!opts.standAlone && !inExclude(stl))) {
-				
+				var id = ( ""+stl.id );
+				var inStandAlone = (opts.standAlone &&  id === plugin) ||
+					(opts.standAlone && opts.standAlone.indexOf && opts.standAlone.indexOf(id) !== -1);
+				if ( inStandAlone || (!opts.standAlone && !inExclude(stl)) ) {
+
 					var content = s.build.pluginify.content(stl, opts, resource, opener.steal);
 					if (content) {
-						//s.print("  > " + stl.id)
-						if(stl.buildType === 'fn') {
+						out += '// ## ' + stl.id + '\n';
+						if(stl.buildType === 'fn' && !opts.onefunc) {
 							out += '\nmodule[\'' + stl.id + '\'] = ';
 						}
+
+						if(opts.onefunc) {
+							content = content.substring(0, content.lastIndexOf('return'));
+						}
+
 						out += s.build.js.clean(content);
 					}
 				}
@@ -115,22 +119,31 @@ steal('steal', 'steal/parse','steal/build',
 			}, true);
 		}, true, false);
 
-		var output = 'var module = { _orig: window.module, _define: window.define };\n';
+		var output = '';
 
-		for(key in opts.shim) {
-			output += 'module[\'' + key + '\'] = ' + opts.shim[key] + ';\n';
+		if(opts.onefunc) {
+			output = opts.wrapInner && opts.wrapInner.length ? opts.wrapInner[0] : '(function(window, undefined) {';
+			output += out;
+			output += opts.wrapInner && opts.wrapInner.length ? opts.wrapInner[1] : '\n\n})(window);';
 		}
+		else {
+			output = 'module = { _orig: window.module, _define: window.define };\n';
 
-		output += 'var define = function(id, deps, value) {\n';
-		output += '\tmodule[id] = value();\n';
-		output += '};\ndefine.amd = { jQuery: true };\n' + out + '\n';
+			for(key in opts.shim) {
+				output += 'module[\'' + key + '\'] = ' + opts.shim[key] + ';\n';
+			}
 
-		for(key in opts.exports) {
-			output += 'window[\'' + opts.exports[key] + '\'] = module[\'' + key + '\'];\n';
+			output += 'define = function(id, deps, value) {\n';
+			output += '\tmodule[id] = value();\n';
+			output += '};\ndefine.amd = { jQuery: true };\n' + out + '\n';
+
+			for(key in opts.exports) {
+				output += 'window[\'' + opts.exports[key] + '\'] = module[\'' + key + '\'];\n';
+			}
+
+			output += '\nwindow.define = module._define;\n';
+			output += '\nwindow.module = module._orig;';
 		}
-
-		output += '\nwindow.define = module._define;\n';
-		output += '\nwindow.module = module._orig;';
 
 		if (opts.compress) {
 			var compressorName = (typeof(opts.compress) == "string") ? opts.compress : "localClosure";
@@ -144,7 +157,7 @@ steal('steal', 'steal/parse','steal/build',
 	var funcCount = {};
 	//gets content from a steal
 	s.build.pluginify.content = function(resourceOpts, opts, resource, stl){
-		var param = [],//opts.global; TODO: temporarily commented for 3.3 release
+		var param = [],
 		deps = stl.resources[resourceOpts.id].dependencies;
 
 		for(var i = 0; i < deps.length - 1; i++) {

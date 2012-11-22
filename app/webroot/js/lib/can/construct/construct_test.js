@@ -1,7 +1,7 @@
-steal('can/util', 'can/construct', function(can, Construct) {
+(function(undefined) {
 	module("can/construct",{
 		setup : function(){
-			var Animal = this.Animal = Construct({
+			var Animal = this.Animal = can.Construct({
 		        count: 0,
 		        test: function() {
 		            return this.match ? true : false
@@ -47,8 +47,8 @@ steal('can/util', 'can/construct', function(can, Construct) {
 
 
 	test("inherit", function(){
-		var Base = Construct({});
-		ok(new Base instanceof Construct)
+		var Base = can.Construct({});
+		ok(new Base instanceof can.Construct)
 		var Inherit = Base({});
 		ok(new Inherit instanceof Base);
 
@@ -73,7 +73,7 @@ steal('can/util', 'can/construct', function(can, Construct) {
 	    equals(1000, ajax.hairs, "right number of animals");
 
 	    ok(a1 instanceof this.Animal)
-	    ok(a1 instanceof Construct)
+	    ok(a1 instanceof can.Construct)
 	})
 
 
@@ -84,11 +84,11 @@ steal('can/util', 'can/construct', function(can, Construct) {
 
 
 	test("namespaces",function(){
-		var Todo = Construct("Todo",{},{})
+		var Todo = can.Construct("Todo",{},{})
 
 
 
-		var fb = Construct.extend("Foo.Bar")
+		var fb = can.Construct.extend("Foo.Bar")
 		ok(Foo.Bar === fb, "returns class")
 		equals(fb.shortName, "Bar", "short name is right");
 		equals(fb.fullName, "Foo.Bar","fullName is right")
@@ -127,7 +127,7 @@ steal('can/util', 'can/construct', function(can, Construct) {
 					protoInitArgs = arguments;
 				}
 			}
-		Construct.extend("Car",staticProps,protoProps);
+		can.Construct.extend("Car",staticProps,protoProps);
 
 		var geo = new Car("geo");
 		equals(staticSetup, 1);
@@ -138,7 +138,7 @@ steal('can/util', 'can/construct', function(can, Construct) {
 		same(can.makeArray(staticInitArgs), ["something"] )
 		same(can.makeArray(protoInitArgs),["Ford: geo"] )
 
-		same(can.makeArray(staticSetupArgs),[Construct, "Car",staticProps, protoProps] ,"static construct");
+		same(can.makeArray(staticSetupArgs),[can.Construct, "Car",staticProps, protoProps] ,"static construct");
 
 
 		//now see if staticSetup gets called again ...
@@ -150,7 +150,7 @@ steal('can/util', 'can/construct', function(can, Construct) {
 
 
 	test("Creating without extend", function(){
-		Construct("Bar",{
+		can.Construct("Bar",{
 			ok : function(){
 				ok(true, "ok called")
 			}
@@ -164,4 +164,4 @@ steal('can/util', 'can/construct', function(can, Construct) {
 		});
 		new Foo().dude(true);
 	});
-});
+})();

@@ -1,11 +1,16 @@
 load('steal/rhino/rhino.js')
 load('steal/rhino/test.js');
 
-steal('steal','steal/get',function(rhinoSteal){
+steal('steal','steal/get/post.js','steal/get/base64.js','steal/get',function(rhinoSteal, post, base64){
 	var _S = steal.test;
+	var G = steal.get;
 	
-	_S
+	_S.test("base64", function(t){
+		base64.encode("hello world") ;
+	});
+
 	
+
 	_S.module("steal/get")
 	STEALPRINT = false;
 	
@@ -51,7 +56,8 @@ steal('steal','steal/get',function(rhinoSteal){
 //	});
 	
 	
-	var G = steal.get;
+	
+
 	
 	
 	
@@ -65,6 +71,16 @@ steal('steal','steal/get',function(rhinoSteal){
 		t.equals(info.repo, "secondstoryjs-plugins", "Right repo");
 		t.equals(info.branch, "master", "Right branch");
 		t.equals(info.resource, "/", "Right resource");
+	});
+	
+	_S.test("fetch with git, ignore all", function(t){
+		
+		G.fetch("https://github.com/jupiterjs/funcunit",
+			"steal/get/test/",{
+				getter : G.git,
+				ignore : [/.*[^\/]$/]
+			});
+		
 	});
 	
 	_S.test("github.raw", function(t){
@@ -112,17 +128,9 @@ steal('steal','steal/get',function(rhinoSteal){
 		new steal.File(out).remove();
 	});
 	
-	_S.test("fetch with git, ignore all", function(t){
-		
-		G.fetch("https://github.com/jupiterjs/funcunit",
-			"steal/get/test/",{
-				getter : G.git,
-				ignore : [/.*[^\/]$/]
-			});
-		
-	});
 	
-	_S.test("fetch with basic, ignore all", function(t){
+	
+	/*_S.test("fetch with basic, ignore all", function(t){
 		
 		G.fetch("http://jabbify.googlecode.com/svn/trunk/jabbify/apps/",
 			"steal/get/test/",{
@@ -130,7 +138,7 @@ steal('steal','steal/get',function(rhinoSteal){
 				ignore : [/.*[^\/]$/]
 			});
 		
-	});
+	});*/
 	
 	
 	_S.test("fetch dependencies", function(t){

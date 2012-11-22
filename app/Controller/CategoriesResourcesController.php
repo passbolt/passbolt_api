@@ -9,8 +9,6 @@
  * @since        version 2.12.7
  */
 
-App::uses('Sanitize', 'Utility');
-
 class CategoriesResourcesController extends AppController {
 
 	public $uses = array('CategoryResource');
@@ -37,7 +35,7 @@ class CategoriesResourcesController extends AppController {
 		$data = array(
 			'CategoryResource.id' => $id
 		);
-		$options = $this->CategoryResource->getFindOptions('view', User::get('Role.name'), $data);
+		$options = $this->CategoryResource->getFindOptions('view', $data);
 		$cr = $this->CategoryResource->find('all', $options);
 		if (!count($cr)) {
 			$this->Message->error(__('The CategoryResource does not exist'));

@@ -21,7 +21,8 @@ steal('steal', 'steal/test', function( s ) {
 					"css out right");
 					
 				s.test.clear();
-				s.test.remove('steal/build/css/test/production.css')
+				s.test.remove('steal/build/css/test/production.css');
+				s.test.remove('steal/build/css/test/production.js')
 			});
 	});
 // 

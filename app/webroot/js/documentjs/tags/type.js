@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.type
 	 * @tag documentation
@@ -30,7 +30,7 @@ steal.then(function() {
 	 *  }
 	 * @codeend 
 	 */
-	DocumentJS.tags.type = {
+	return {
 		add: function( line ) {
 			var m = line.match(/^\s*@type\s*([\w\.\/\$]*)/)
 			if ( m ) {

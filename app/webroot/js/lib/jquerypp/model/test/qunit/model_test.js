@@ -181,7 +181,7 @@ test("hookup and model", function(){
 	p.hookup( div[0] );
 	ok(div.hasClass("person"), "has person");
 	ok(div.hasClass("person_5"), "has person_5");
-	equals(p, div.model(),"gets model" )
+	equals(p, div.instance(),"gets model" )
 })
 // test that models returns an array of unique instances
 test("unique models", function(){
@@ -193,7 +193,7 @@ test("unique models", function(){
 	p.hookup( div1[0] );
 	p.hookup( div2[0] );
 	p2.hookup( div3[0] );
-	var models = div1.add(div2).add(div3).models();
+	var models = div1.add(div2).add(div3).instances();
 	equals(p, models[0], "gets models" )
 	equals(p2, models[1], "gets models" )
 	equals(2, models.length, "gets models" )
@@ -485,7 +485,7 @@ test("hookup and elements", function(){
 	
 	var esc = new Escaper({id: " some crazy #/ %ing stuff"});
 	
-	li.model(esc);
+	li.instance(esc);
 	
 	var res  = esc.elements(ul);
 	

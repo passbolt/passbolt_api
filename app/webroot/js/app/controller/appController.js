@@ -36,7 +36,6 @@ steal(
 			var notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
 				'state': 'hidden'
 			});
-//			notifCtl.render()
 
 			// Add a workspaces container tabs element to the app 
 			var wksCtl = new mad.controller.component.TabController($('#js_workspaces_container'));

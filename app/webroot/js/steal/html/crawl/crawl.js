@@ -65,6 +65,7 @@ steal.html.crawl = function(url, opts){
 	s.File(opts.out).mkdirs();
 	
 	s.html.load(url, browserType, function(hash){
+		
 		var docType = getDocType(url),
 			data = s.html.crawl.getPageData(this),
 			total = docType+"\n<html lang='en'>\n"+data.html+"\n</html>";

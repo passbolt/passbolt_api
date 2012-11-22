@@ -1,8 +1,11 @@
 steal('can', function(can){
 	
+	
+	
+	
 	var events = [],
 		transactionCount = 0,
-		originalBatchTrigger = can.batchTrigger,
+		originalBatchTrigger = can.Observe.triggerBatch,
 		changedBatchTrigger = function(obj, ev){
 			originalBatchTrigger.apply(this, arguments);
 			if(ev === "change"){
@@ -20,11 +23,11 @@ steal('can', function(can){
 			}
 		};
 	
-	can.batchTrigger = changedBatchTrigger;
+	can.Observe.triggerBatch = changedBatchTrigger;
 	
 	can.transaction = function(){
 		if( transactionCount === 0 ) {
-			can.batchTrigger = recordingBatchTrigger;
+			can.Observe.triggerBatch = recordingBatchTrigger;
 		}
 		
 		
@@ -36,11 +39,14 @@ steal('can', function(can){
 			if( transactionCount === 0 ) {
 				var myEvents = events.slice(0)
 				events = [];
-				can.batchTrigger = changedBatchTrigger;
+				can.Observe.triggerBatch = changedBatchTrigger;
 				can.each(myEvents, function(eventArgs){
 					originalBatchTrigger.apply(can, eventArgs);
 				});
 			}
 		}
 	};
+	
+	return can.Observe;
+	
 });

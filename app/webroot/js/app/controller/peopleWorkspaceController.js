@@ -24,16 +24,6 @@ steal(
 
 	}, /** @prototype */ {
 
-		// constructor like
-		'init': function (el, options) {
-			this._super();
-			this.render();
-		}
-
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
 	});
 
 });

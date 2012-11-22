@@ -12,6 +12,7 @@ __1.0.0__
 - fix: [jQuery.event.swipe.max isn't actually being used](https://github.com/jupiterjs/jquerypp/issues/33)
 - fix: [Range triggers error on IE8](https://github.com/jupiterjs/jquerypp/issues/39)
 - fix: [[FormParams] convertValue function: Null value to undefined (Internet Explorer Fix)](https://github.com/jupiterjs/jquerypp/pull/51)
+- fix: [HoverInit delay 0 does not trigger hoverenter if immediately moused out](https://github.com/bitovi/jquerypp/issues/57)
 
 __1.0 Beta 2__
 
@@ -28,6 +29,6 @@ __1.0 Beta 2__
   - Links to annotated sources ([e.g. jQuery.animate](http://donejs.com/jquery/docs/jquery.animate.html))
   - Changelog and list of heroes section
 
-__1.0 Beta__ (June 1st 2012)
+__1.0 Beta__
 
 - Released!

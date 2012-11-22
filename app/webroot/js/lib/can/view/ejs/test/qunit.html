@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../../../../funcunit/qunit/qunit.css" />
+        <style>
+            body  {
+                margin: 0px; padding: 0px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <h1 id="qunit-header">ejs Test Suite</h1>
+    	<h2 id="qunit-banner"></h2>
+    	<div id="qunit-testrunner-toolbar"></div>
+    	<h2 id="qunit-userAgent"></h2>
+		<div id="test-content"></div>
+        <ol id="qunit-tests"></ol>
+		<div id="qunit-test-area"></div>
+		<script type='text/javascript' src='../../../../steal/steal.js'></script>
+	    <script type='text/javascript'>
+	    	steal('can/util','can/view/ejs', 'can/observe', 'can/util/event.js', 'funcunit/qunit', function(CAN){
+	    		window.can = CAN;
+	    	}).then('can/view/ejs/test/ejs_test.js')
+	    </script>
+    </body>
+</html>

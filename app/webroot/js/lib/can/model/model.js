@@ -18,12 +18,22 @@ steal('can/util','can/observe', function( can ) {
 		},function(){
 			d.rejectWith(this, arguments);
 		});
+
+		if(typeof def.abort === 'function') {
+			d.abort = function() {
+				return def.abort();
+			}
+		}
+
 		return d;
 	},
 		modelNum = 0,
 		ignoreHookup = /change.observe\d+/,
 		getId = function( inst ) {
-			return inst[inst.constructor.id];
+			// Instead of using attr, use __get for performance.
+			// Need to set reading
+			can.Observe.__reading && can.Observe.__reading(inst, inst.constructor.id)
+			return inst.__get(inst.constructor.id);
 		},
 		// Ajax `options` generator function
 		ajax = function( ajaxOb, data, type, dataType, success, error ) {
@@ -544,10 +554,14 @@ steal('can/util','can/observe', function( can ) {
 	can.Model = can.Observe({
 		fullName: "can.Model",
 		setup : function(base){
-			can.Observe.apply(this, arguments);
+			// create store here if someone wants to use model without inheriting from it
+			this.store = {};
+			can.Observe.setup.apply(this, arguments);
+			// Set default list as model list
 			if(!can.Model){
 				return;
 			}
+			this.List = ML({Observe: this},{});
 			var self = this,
 				clean = can.proxy(this._clean, self);
 			
@@ -572,7 +586,12 @@ steal('can/util','can/observe', function( can ) {
 					can.Construct._overwrite(self, base, name,function(){
 						// increment the numer of requests
 						this._reqs++;
-						return newMethod.apply(this, arguments).then(clean, clean);
+						var def = newMethod.apply(this, arguments);
+						var then = def.then(clean, clean);
+						then.abort = def.abort;
+
+						// attach abort to our then and return it
+						return then;
 					})
 				}
 			});
@@ -580,8 +599,7 @@ steal('can/util','can/observe', function( can ) {
 			if(self.fullName == "can.Model" || !self.fullName){
 				self.fullName = "Model"+(++modelNum);
 			}
-			// Ddd ajax converters.
-			this.store = {};
+			// Add ajax converters.
 			this._reqs = 0;
 			this._url = this._shortName+"/{"+this.id+"}"
 		},
@@ -674,11 +692,13 @@ steal('can/util','can/observe', function( can ) {
 		 *       count: 15000 //how many total items there might be
 		 *       data: [{id: 1, name : "justin"},{id:2, name: "brian"}, ...]
 		 *     }
-		 * 
+		 *
+		 * @param {can.Observe.List} [oldList] If passed, updates oldList with the converted instancesRawData
+		 * instead of returning a new model list.
 		 * @return {Array} a [can.Model.List] of instances.  Each instance is created with
 		 * [can.Model.model].
 		 */
-		models: function( instancesRawData ) {
+		models: function( instancesRawData, oldList ) {
 
 			if ( ! instancesRawData ) {
 				return;
@@ -690,7 +710,8 @@ steal('can/util','can/observe', function( can ) {
 
 			// Get the list type.
 			var self = this,
-				res = new( self.List || ML),
+				tmp = [],
+				res = oldList instanceof can.Observe.List ? oldList : new( self.List || ML),
 				// Did we get an `array`?
 				arr = can.isArray(instancesRawData),
 				
@@ -719,14 +740,21 @@ steal('can/util','can/observe', function( can ) {
 			}
 			//!steal-remove-end
 
+			if(res.length > 0) {
+				res.splice(0);
+			}
+
 			can.each(raw, function( rawPart ) {
-				res.push( self.model( rawPart ));
+				tmp.push( self.model( rawPart ));
 			});
+
+			// We only want one change event so push everything at once
+			res.push.apply(res, tmp);
 
 			if ( ! arr ) { // Push other stuff onto `array`.
 				can.each(instancesRawData, function(val, prop){
 					if ( prop !== 'data' ) {
-						res[prop] = val;
+						res.attr(prop, val);
 					}
 				})
 			}
@@ -1040,7 +1068,10 @@ steal('can/util','can/observe', function( can ) {
 	}, function( method, name ) {
 		can.Model[name] = function( oldFind ) {
 			return function( params, success, error ) {
-				return pipe( oldFind.call( this, params ), this, method ).then( success, error );
+				var def = pipe( oldFind.call( this, params ), this, method );
+				def.then( success, error );
+				// return the original promise
+				return def;
 			};
 		};
 	});

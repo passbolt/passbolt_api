@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.codeend
 	 * @tag documentation
@@ -42,7 +42,7 @@ steal.then(function() {
 	 *
 	 * @codeend 
 	 */
-	DocumentJS.tags.codeend = {
+	return {
 		add: function( line, data ) {
 
 			if (!data.lines ) {

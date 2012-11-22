@@ -12,7 +12,7 @@ Favorites = {
 		} else {
 			favs.push(who);
 		}
-		fav = $.toJSON(favs)
+		fav = can.toJSON(favs)
 		$.cookie("favorites", fav, {
 			expires: 364
 		});

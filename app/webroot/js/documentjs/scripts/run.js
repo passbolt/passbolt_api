@@ -2,6 +2,6 @@
 load(java.lang.System.getProperty("basepath")+"../steal/rhino/utils.js")
 
 load('steal/rhino/rhino.js');
-load('documentjs/documentjs.js');
-
-DocumentJS(_args.shift(), steal.opts(_args || {}, {out: 1}));
+steal('documentjs/documentjs.js', function(DocumentJS){
+	DocumentJS(_args.shift(), steal.opts(_args || {}, {out: 1}));
+})

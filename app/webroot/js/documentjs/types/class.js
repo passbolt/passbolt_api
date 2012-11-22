@@ -1,4 +1,4 @@
-steal.then(function() {
+steal('./type',function(Type) {
 	/**
 	 * @class DocumentJS.types.class
 	 * @tag documentation
@@ -40,7 +40,7 @@ steal.then(function() {
 	 * })
 	 * @codeend
 	 */
-	DocumentJS.Type("class",
+	Type("class",
 	/**
 	 * @Static
 	 */

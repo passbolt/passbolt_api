@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.tag
 	 * @tag documentation
@@ -23,7 +23,7 @@ steal.then(function() {
 	 * 
 	 * @image jmvc/images/tag_tag_example.png
 	 */
-	DocumentJS.tags.tag = {
+	return {
 		add: function( line ) {
 			var parts = line.match(/^\s*@tag\s*(.+)/);
 

@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.iframe
 	 * @tag documentation
@@ -18,9 +18,9 @@ steal.then(function() {
 	 * 
 	 * @iframe jquery/view/view.html 700
 	 */
-	DocumentJS.tags.iframe = {
+	return  {
 		add: function( line ) {
-			var m = line.match(/^\s*@iframe\s*([\w\.\/]*)\s*([\w]*)\s*(.*)/)
+			var m = line.match(/^\s*@iframe\s*([\-\w\.\/]*)\s*([\w]*)\s*(.*)/)
 
 			if ( m ) {
 				var src = m[1] ? m[1].toLowerCase() : '';

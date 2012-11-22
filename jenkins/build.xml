@@ -6,8 +6,7 @@
 	<property name="src" value="${env.WORKSPACE}"/>
 	<property name="build" value="${src}/build"/>
 
-	<target name="main" depends="clean, install, phpcs-ci, jslint, phploc, jsunit, phpunit" />
-<!--	<target name="main" depends="clean, install, phpcs-ci, jslint, jsdoc, phploc, jsunit, phpunit" />-->
+	<target name="main" depends="clean, install, phpcs-ci, jslint, jsdoc, phploc, jsunit, phpunit" />
 	
 	<target name="clean" description="Cleanup build artifacts">
 		<delete dir="${build}" failonerror="false"/>
@@ -85,7 +84,7 @@
 	
 	<target name="jsdoc" description="Generate javascript documentation">
 		<exec dir="${src}/app/webroot/js/documentjs" executable="./doc">
-			<arg line=" mad"/>
+			<arg line=" lib/mad"/>
 		</exec>
 	</target>
 	

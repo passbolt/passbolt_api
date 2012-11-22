@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.return
 	 * @tag documentation
@@ -23,7 +23,7 @@ steal.then(function() {
 	 * 
 	 * @image jmvc/images/return_tag_example.png
 	 */
-	DocumentJS.tags["return"] = {
+	return {
 		add: function( line ) {
 			if (!this.ret ) {
 				this.ret = {
@@ -32,7 +32,7 @@ steal.then(function() {
 				}
 			}
 
-			var parts = line.match(/\s*@return\s+(?:\{([\w\|\.\/]+)\})?\s*(.*)?/);
+			var parts = line.match(/\s*@return\s+(?:\{([^\}]+)\})?\s*(.*)?/);
 
 			if (!parts ) {
 				return;

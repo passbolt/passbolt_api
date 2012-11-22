@@ -24,7 +24,7 @@ test("matches", function(){
 					'foo.bar' )
 	// - props - 
 	// - returns - 'foo.bar'
-})
+});
 
 
 
@@ -49,7 +49,8 @@ test("delegate", 4,function(){
 	
 	state.undelegate();
 	
-})
+});
+
 test("delegate on add", 2, function(){
 	
 	var state = new can.Observe({});
@@ -63,7 +64,7 @@ test("delegate on add", 2, function(){
 	
 	state.attr("foo","bar")
 	
-})
+});
 
 test("delegate set is called on add", 2, function(){
 	var state = new can.Observe({});
@@ -108,7 +109,7 @@ test("delegate's this", 5, function(){
 	
 	// update the prop
 	state.attr('prop','food')
-})
+});
 
 
 test("delegate on deep properties with *", function(){
@@ -174,7 +175,7 @@ test("compound sets", function(){
 		type : "person"
 	});
 	equals(count, 3, "setting person does not fire anything");
-})
+});
 
 test("undelegate within event loop",1, function(){
 
@@ -200,6 +201,43 @@ test("undelegate within event loop",1, function(){
 	state.delegate("type","set",f4);
 	state.attr("type","other");
 
-})
+});
+
+test("selector types", 5, function() {
+
+	var state = new can.Observe({
+		foo: "a",
+		bar: "b",
+		baz: "c",
+		box: "d",
+		baw: "e"
+	});
+
+	state.delegate("foo=aa", "change", function() {
+		ok(true, "Unquoted value in selector matched.");
+	})
+	state.attr({foo: 'aa'});
+
+	state.delegate("bar='b b'", "change", function() {
+		ok(true, "Single-quoted value in selector matched.");
+	})
+	state.attr({bar: 'b b'});
+
+	state.delegate('baz="c c"', "change", function() {
+		ok(true, "Double-quoted value in selector matched.");
+	})
+	state.attr({baz: 'c c'});
+
+	state.delegate('box', "change", function() {
+		ok(true, "No-value attribute in selector matched.")
+	})
+	state.attr({box: 'quux'});
+
+	state.delegate('baw=', "change", function() {
+		ok(true, "Empty-value shortcut in selector matched.")
+	})
+	state.attr({baw: ''});
+
+});
 
 })();

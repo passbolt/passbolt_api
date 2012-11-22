@@ -1,5 +1,16 @@
 steal('can/util','can/util/string','can/util/object', function (can) {
 
+	// Get the URL from old Steal root, new Steal config or can.fixture.rootUrl
+	var getUrl = function(url) {
+		if(typeof steal !== 'undefined') {
+			if(can.isFunction(steal.config)) {
+				return steal.config().root.mapJoin(url).toString();
+			}
+			return steal.root.join(url).toString();
+		}
+		return (can.fixture.rootUrl || '') + url;
+	}
+
 	var updateSettings = function (settings, originalOptions) {
 			if (!can.fixture.on) {
 				return;
@@ -20,7 +31,7 @@ steal('can/util','can/util/string','can/util/object', function (can) {
 					_logger( "log", Array.prototype.slice.call(arguments) );
 				}
 				else if (window.opera && window.opera.postError) {
-					opera.postError("fixture INFO: " + out);
+					opera.postError("fixture INFO: " + Array.prototype.join.call(arguments, ','));
 				}
 			}
 
@@ -49,9 +60,7 @@ steal('can/util','can/util/string','can/util/object', function (can) {
 
 				if (/^\/\//.test(url)) {
 					// this lets us use rootUrl w/o having steal...
-					url = can.fixture.rootUrl === steal.config().root ?
-						steal.config().root.mapJoin(settings.fixture.substr(2)) + '' :
-						can.fixture.rootUrl + settings.fixture.substr(2);
+					url = getUrl(settings.fixture.substr(2));
 				}
 
 				if(data) {
@@ -234,7 +243,7 @@ steal('can/util','can/util/string','can/util/object', function (can) {
 		 * Makes an attempt to guess where the id is at in the url and returns it.
 		 * @param {Object} settings
 		 */
-			getId = function (settings) {
+		getId = function (settings) {
 			var id = settings.data.id;
 
 			if (id === undefined && typeof settings.data === "number") {
@@ -787,7 +796,7 @@ steal('can/util','can/util/string','can/util/object', function (can) {
 	 * If you are using StealJS it will use the Steal root
 	 * URL by default.
 	 */
-	can.fixture.rootUrl = window.steal ? steal.config().root : undefined;
+	can.fixture.rootUrl = getUrl('');
 
 	can.fixture["-handleFunction"] = function (settings) {
 		if (typeof settings.fixture === "string" && can.fixture[settings.fixture]) {

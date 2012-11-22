@@ -1,4 +1,4 @@
-steal("can/control", "can/util/function", function() {
+steal("can/util", "can/control", "can/util/function", function(can) {
 
 	// Hang on to original action
 	var originalSetup = can.Control.setup,
@@ -28,7 +28,6 @@ steal("can/control", "can/util/function", function() {
 				var processorName = [event, mod].join( modifier.delim );
 				
 				processors[ processorName ] = function( el, nil, selector, methodName, control ) {
-
 					var callback = modifier.modify( mod, can.Control._shifter(control, methodName), control.options );
 					control[event] = callback;
 
@@ -78,4 +77,5 @@ steal("can/control", "can/util/function", function() {
 
 	});
 
+	return can;
 });

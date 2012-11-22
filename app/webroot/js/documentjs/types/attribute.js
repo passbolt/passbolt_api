@@ -1,4 +1,4 @@
-steal.then(function() {
+steal('./type',function(Type) {
 	/**
 	 * @class DocumentJS.types.attribute
 	 * @tag documentation
@@ -19,7 +19,7 @@ steal.then(function() {
 	 * 
 	 * You can see the end result [jQuery.fixture.delay | here].
 	 */
-	DocumentJS.Type("attribute",
+	Type("attribute",
 	/**
 	 * @Static
 	 */

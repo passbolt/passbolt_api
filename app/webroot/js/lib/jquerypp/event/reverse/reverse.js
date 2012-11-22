@@ -1,4 +1,4 @@
-steal('jquery', function() {
+steal('jquery', function($) {
 	$.event.reverse = function(name, attributes) {
 		var bound = $(),
 			count = 0;

@@ -1,4 +1,4 @@
-steal.then(function() {
+steal('./type',function(Type) {
 	/**
 	 * @class DocumentJS.types.add
 	 * @tag documentation
@@ -26,7 +26,7 @@ steal.then(function() {
 	 * 
 	 * @image jmvc/images/add_tag_example.png 970
 	 */
-	DocumentJS.Type("add",
+	Type("add",
 	/**
 	 * @Static
 	 */
@@ -41,11 +41,11 @@ steal.then(function() {
 		 * @constructor
 		 * @param {Object} type data
 		 */
-		init: function( props ) {
-			if (!DocumentJS.objects[props.name] ) {
-				DocumentJS.objects[props.name] = props;
+		init: function( props , comment, objects) {
+			if (!objects[props.name] ) {
+				objects[props.name] = props;
 			}
-			return DocumentJS.objects[props.name];
+			return objects[props.name];
 		},
 	/*
 	 * Possible scopes for @add.

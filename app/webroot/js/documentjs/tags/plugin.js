@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.plugin
 	 * @tag documentation
@@ -23,7 +23,7 @@ steal.then(function() {
 	 * 
 	 * @image jmvc/images/plugin_tag_example.png
 	 */
-	DocumentJS.tags.plugin = {
+	return {
 		add: function( line ) {
 			this.plugin = line.match(/@plugin ([^ ]+)/)[1];
 		}

@@ -10,7 +10,6 @@
 
 App::uses('Category', 'Model');
 App::uses('CategoryResource', 'Model');
-App::uses('Sanitize', 'Utility');
 
 class ResourcesController extends AppController {
 /**
@@ -150,7 +149,6 @@ class ResourcesController extends AppController {
 		}
 
 		// set the data for validation and save
-		$this->request->data = Sanitize::clean($this->request->data);
 		$resourcepost = $this->request->data;
 		$this->Resource->set($resourcepost);
 
@@ -242,7 +240,6 @@ class ResourcesController extends AppController {
 		}
 
 		// set the data for validation and save
-		$this->request->data = Sanitize::clean($this->request->data);
 		$resourcepost = $this->request->data;
 
 		if (isset($resourcepost['Resource'])) {

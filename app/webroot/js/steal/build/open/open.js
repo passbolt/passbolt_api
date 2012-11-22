@@ -258,6 +258,33 @@ steal('steal',function(s){
 					window.jQuery && jQuery.holdReady(true);
 				},
 				"steal.js": function(script){
+					if(stealData.skipAll){
+						window.steal.config({
+							types: {
+								"js" : function(options, success){
+									var text;
+									if(options.text){
+										text = options.text;
+									}else{
+										text = readFile(options.id);
+									}
+									// check if steal is in this file
+									var stealInFile = /steal\(/.test(text);
+									if(stealInFile){
+										// if so, load it
+										eval(text)
+									} else {
+										// skip this file
+									}
+									success()
+								},
+								"fn": function (options, success) {
+									// skip all functions
+									success();
+								}
+							}
+						})
+					}
 					// a flag to tell steal we're in "build" mode
 					// this is used to completely ignore files with the "ignore" flag set
 					window.steal.isBuilding = true;

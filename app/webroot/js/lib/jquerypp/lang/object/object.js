@@ -220,6 +220,6 @@ var compareMethods = {
 		return (""+a).toLowerCase() == (""+b).toLowerCase()
 	}
 }
-	
-	
+
+return $;
 });

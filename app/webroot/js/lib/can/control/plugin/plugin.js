@@ -10,9 +10,6 @@ var i,
 		}
 		return false;
 	},
-	data = function(el, data){
-		return $el.data('controls');
-	},
 	makeArray = can.makeArray,
 	old = can.Control.setup;
 
@@ -241,4 +238,5 @@ can.Control.prototype.update = function( options ) {
 		this.on();
 };
 
+return can;
 });

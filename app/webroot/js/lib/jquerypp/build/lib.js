@@ -1,4 +1,4 @@
-steal(
+steal("jquery",
 	"jquery/dom/animate",
 	"jquery/dom/compare",
 	"jquery/dom/cookie",
@@ -20,5 +20,7 @@ steal(
 	"jquery/event/key",
 	"jquery/event/pause",
 	"jquery/event/resize",
-	"jquery/event/swipe"
-)
+	"jquery/event/swipe",
+function($) {
+	return $;
+});

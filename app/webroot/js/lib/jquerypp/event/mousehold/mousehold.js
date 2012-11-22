@@ -134,5 +134,5 @@ event.setupHelper([
  *
  */
 "mousehold" ], "mousedown", onmousehold );
-
+return $;
 });
