@@ -139,7 +139,7 @@ class User extends AppModel {
  * @access public
  */
 	public static function setActive($user = null) {
-		// Instantiate the mode are we are in a static/singleton context
+		// Instantiate the mode as we are in a static/singleton context
 		$_this = Common::getModel('User');
 		$u = array();
 
@@ -151,7 +151,7 @@ class User extends AppModel {
 			if (is_string($user) && Common::isUuid($user)) {
 				$user = array('User' => array('id' => $user));
 			}
-			$u = $_this->find('first', User::getFindOptions('userActivation',$user) );
+			$u = $_this->find('first', User::getFindOptions('userActivation', Role::USER, $user) );
 		}
 
 		if (empty($u)) {
@@ -203,20 +203,6 @@ class User extends AppModel {
 	}
 
 /**
- * Return the find options to be used
- *
- * @param string context
- * @return array
- * @access public
- */
-	public static function getFindOptions($case,&$data = null) {
-		return array_merge(
-			User::getFindConditions($case,&$data),
-			User::getFindFields($case)
-		);
-	}
-
-/**
  * Return the conditions to be used for a given context
  * for example if you want to activate a User session
  *
@@ -225,7 +211,7 @@ class User extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = User::ANONYMOUS, &$data = null) {
+	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::USER, &$data = null) {
 		$conditions = array();
 		switch ($case) {
 			/*
@@ -279,7 +265,7 @@ class User extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindFields($case = User::ANONYMOUS) {
+	public static function getFindFields($case = User::ANONYMOUS, $role = Role::USER) {
 		switch ($case) {
 			//case 'resetPassword':
 			//case 'forgotPassword':
