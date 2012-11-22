@@ -180,7 +180,7 @@ steal('steal','steal/parse',function(steal, parse){
 								if( lineNbr < parseInt( lineNum) ){
 									break;
 								}
-								print("checked "+lineNum+" "+currentLineMap[lineNum])
+								// print("checked "+lineNum+" "+currentLineMap[lineNum])
 								lastNum = parseInt(lineNum);
 								lastId = currentLineMap[lineNum];
 							}

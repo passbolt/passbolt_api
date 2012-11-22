@@ -10,6 +10,10 @@ steal(function() {
 		}
 		return response;
 	}
+	steal.promptPassword = function(question){
+		var password = java.lang.System.console().readPassword(question)
+		return new java.lang.String(password)+"";
+	}
 	/**
 	 * 
 	 * @param {String} question

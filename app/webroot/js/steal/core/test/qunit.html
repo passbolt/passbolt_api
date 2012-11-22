@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="qunit/qunit.css" />
+    <title>QUnit Test</title>
+    <style>
+      body  {
+        margin: 0px; padding: 0px;
+      }
+    </style>
+    <script type='text/javascript' src='qunit/qunit.js'></script>
+    <script type="text/javascript">
+      QUnit.config.reorder = false;
+      st = function(){}
+    </script>
+    <script type="text/javascript" src="../helpers.js"></script>
+    <script type="text/javascript" src="../uri.js"></script>
+    <script type="text/javascript" src="../deferred.js"></script>
+    <script type="text/javascript" src="../static.js"></script>
+    <script type="text/javascript" src="../config_manager.js"></script>
+    <script type="text/javascript">
+        config = new ConfigManager({});
+    </script>
+    <script type="text/javascript" src="../amd.js"></script>
+    <script type="text/javascript" src="../config.js"></script>
+    <script type="text/javascript" src="../module.js"></script>
+    <script type="text/javascript" src="../types.js"></script>
+    <script type="text/javascript" src="../interactive.js"></script>
+    <script type="text/javascript" src="test_helpers.js"></script>
+    <script type="text/javascript" src="helpers.js"></script>
+    <script type="text/javascript" src="uri.js"></script>
+    <script type="text/javascript" src="deferred.js"></script>
+    <script type="text/javascript" src="config.js"></script>
+    <!-- These tests fail because of extensive API changes. 
+        <script type="text/javascript" src="module.js"></script>
+    -->
+    <script type="text/javascript" src="amd.js"></script>
+    <!-- These tests fail because of extensive API changes. 
+        <script type="text/javascript" src="static.js"></script>
+        <script type="text/javascript" src="interactive.js"></script>
+    -->
+  </head>
+  <body>
+
+    <h1 id="qunit-header">Steal Test Suite</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <div id="test-content"></div>
+    <ol id="qunit-tests"></ol>
+    <div id="qunit-test-area"></div>
+  </body>
+</html>

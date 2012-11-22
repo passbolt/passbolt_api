@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title></title>
+</head>
+<body>
+
+<script type='text/javascript' src='../../../steal/steal.js'></script>
+<script type='text/javascript'>
+steal(
+	'steal/test/inline_steals/ejs.ejs',
+  'jquery',
+	 function(ejs, jquery) {
+
+	      ejs({message: "Hello World"});
+        if(typeof jquery === "undefined"){
+          throw "No jQuery"
+        }
+        if(window.top !== window){
+          window.top.ok(true, 'EJS dependencies loaded')
+          window.top.ok(true, 'jQuery shim works correctly')
+          window.top.start();
+        }
+	 }
+);
+</script>
+</body>
+</html>
