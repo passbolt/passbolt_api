@@ -111,20 +111,6 @@ class CategoryResource extends AppModel {
 	}
 
 /**
- * Return the find options to be used
- *
- * @param string context
- * @return array
- * @access public
- */
-	public static function getFindOptions($case,&$data = null) {
-		return array_merge(
-			CategoryResource::getFindConditions($case, &$data),
-			CategoryResource::getFindFields($case)
-		);
-	}
-
-/**
  * Return the conditions to be used for a given context
  *
  * @param $context string{guest or id}
@@ -132,7 +118,7 @@ class CategoryResource extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'view', &$data = null) {
+	public static function getFindConditions($case = 'view', $role='user', &$data = null) {
 		$conditions = array();
 		switch ($case) {
 			case 'add':
@@ -158,7 +144,7 @@ class CategoryResource extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'view') {
+	public static function getFindFields($case = 'view', $role='user') {
 		switch($case){
 			case 'view':
 			case 'add':

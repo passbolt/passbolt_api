@@ -8,7 +8,7 @@
  * @package      app.Controller.CategoriesResourcesController
  * @since        version 2.12.7
  */
- 
+
 App::uses('Sanitize', 'Utility');
 
 class CategoriesResourcesController extends AppController {
@@ -37,7 +37,7 @@ class CategoriesResourcesController extends AppController {
 		$data = array(
 			'CategoryResource.id' => $id
 		);
-		$options = $this->CategoryResource->getFindOptions('view', $data);
+		$options = $this->CategoryResource->getFindOptions('view', User::get('Role.name'), $data);
 		$cr = $this->CategoryResource->find('all', $options);
 		if (!count($cr)) {
 			$this->Message->error(__('The CategoryResource does not exist'));
@@ -96,7 +96,7 @@ class CategoriesResourcesController extends AppController {
 		$crpost = $this->request->data;
 		$this->CategoryResource->set($crpost);
 
-		$fields = $this->CategoryResource->getFindFields('add');
+		$fields = $this->CategoryResource->getFindFields('add', User::get('Role.name'));
 
 		// check if the data is valid
 		if (!$this->CategoryResource->validates()) {
@@ -109,7 +109,7 @@ class CategoriesResourcesController extends AppController {
 			$this->Message->error(__('The CategoryResource could not be saved'));
 			return;
 		}
-		$fields = $this->CategoryResource->getFindFields('add');
+		$fields = $this->CategoryResource->getFindFields('add', User::get('Role.name'));
 		$this->set('data', $this->CategoryResource->findById($cr['CategoryResource']['id'], $fields['fields']));
 		$this->Message->success(__('The categoryResource was sucessfully added'));
 	}
