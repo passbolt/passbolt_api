@@ -8,12 +8,5 @@
  * @since         version 2.12.7
  */
 class SecretsController extends AppController {
-/**
- * Get a Secret
- * Renders a json object of the resource
- *
- * @param int $id the id of the resource
- * @return void
- */
 
 }
