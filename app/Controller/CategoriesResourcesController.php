@@ -35,7 +35,7 @@ class CategoriesResourcesController extends AppController {
 		$data = array(
 			'CategoryResource.id' => $id
 		);
-		$options = $this->CategoryResource->getFindOptions('view', $data);
+		$options = $this->CategoryResource->getFindOptions('view', User::get('Role.name'), $data);
 		$cr = $this->CategoryResource->find('all', $options);
 		if (!count($cr)) {
 			$this->Message->error(__('The CategoryResource does not exist'));
