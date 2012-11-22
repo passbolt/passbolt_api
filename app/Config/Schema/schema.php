@@ -299,6 +299,7 @@ class AppSchema extends CakeSchema {
 		'_read' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_update' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_delete' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_editown' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
@@ -464,14 +465,90 @@ class AppSchema extends CakeSchema {
 	}
 
 	protected function _getDefaultPermissions() {
-		$c = $this->Category->findByName("drupal");
-		$g = $this->Group->findByName("drupal");
+		$cDrupal = $this->Category->findByName("drupal");
+		$cRoot = $this->Category->findByName("Bolt Softwares Pvt. Ltd.");
+		$cAdministration = $this->Category->findByName("administration");
+		$cAccounts = $this->Category->findByName("accounts");
+		$gDrupal = $this->Group->findByName("drupal");
+		$gManagement = $this->Group->findByName("management");
+		$gAdministration = $this->Group->findByName("administration");
+		// Group Management have modify rights on everything
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $c['Category']['id'],
+			'aco_foreign_key' => $cRoot['Category']['id'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $g['Group']['id'],
+			'aro_foreign_key' => $gManagement['Group']['id'],
+			'_create' => '1',
 			'_read' => '1',
+			'_update' => '1',
+			'_delete' => '1',
+		));
+		// Group administration have modify rights on administration
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cAdministration['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gAdministration['Group']['id'],
+			'_create' => '1',
+			'_read' => '1',
+			'_update' => '1',
+			'_delete' => '1',
+		));
+		// Group administration have read only rights on administration > accounts
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cAccounts['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gAdministration['Group']['id'],
+			'_create' => '0',
+			'_read' => '1',
+			'_update' => '0',
+			'_delete' => '0',
+		));
+		// Group developers > Drupal have read only rights on Projects > Drupal
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cDrupal['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gDrupal['Group']['id'],
+			'_read' => '1',
+		));
+		// Group cakephp has access to category cakephp in readonly
+		$cCakephp = $this->Category->findByName("cakephp");
+		$gCakephp = $this->Group->findByName("cakephp");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cCakephp['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gCakephp['Group']['id'],
+			'_read' => '1',
+		));
+		// Group Team leads has access to others in modify
+		$cProjects = $this->Category->findByName("others");
+		$gTeamleads = $this->Group->findByName("team leads");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cProjects['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gTeamleads['Group']['id'],
+			'_create' => '1',
+			'_read' => '1',
+			'_update' => '1',
+			'_delete' => '1',
+		));
+		// Remy Bertot has admin rights on others
+		$cProjects = $this->Category->findByName("others");
+		$uRemy = $this->User->findByUsername("remy.bertot@test.com");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cProjects['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gTeamleads['Group']['id'],
+			'_create' => '1',
+			'_read' => '1',
+			'_update' => '1',
+			'_delete' => '1',
+			'_admin' => '1'
 		));
 		return $ps;
 	}
