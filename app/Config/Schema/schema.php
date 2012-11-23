@@ -50,28 +50,27 @@ class AppSchema extends CakeSchema {
 		}
 	}
 
-	public function insertGroups ($groups, $parentGroup=null) {
-		foreach ($groups as $groupName => $subGroups) {
+	public function insertGroups ($groups) {
+		foreach ($groups as $groupName => $users) {
 			// Insert group
 			if ($groupName != 'Users') {
 				$this->Group->create();
 				$group = $this->Group->save(array(
 					'Group' => array(
-						'name' => $groupName,
-						'parent_id' => isset($parentGroup) ? $parentGroup['Group']['id'] : null
+						'name' => $groupName
 					)
 				));
-				$this->insertGroups ($subGroups, $group);
-			} else {
-				$users = $subGroups;
-				foreach ($users as $value) {
-					if (!($user = $this->User->findByUsername($value['User']['username']))) {
-						$this->User->create();
-						$user = $this->User->save($value);
-					}
+			}
+
+			foreach ($users['Users'] as $value) {
+				if (!($user = $this->User->findByUsername($value['User']['username']))) {
+					$this->User->create();
+					$user = $this->User->save($value);
+				}
+				if ($groupName != 'Users') {
 					$this->GroupUser->create();
 					$this->GroupUser->save(array(
-						'GroupUser' => array( 'group_id' => $parentGroup['Group']['id'], 'user_id' => $user['User']['id'] )
+						'GroupUser' => array( 'group_id' => $group['Group']['id'], 'user_id' => $user['User']['id'] )
 					));
 				}
 			}
@@ -258,9 +257,6 @@ class AppSchema extends CakeSchema {
 
 	public $groups = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'parent_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'lft' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
-		'rght' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
 		'name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
@@ -377,63 +373,72 @@ class AppSchema extends CakeSchema {
 		$userRoleId = '0208f57a-c5cd-11e1-a0c5-080027796c4c';
 		$defaultPassword = 'test123';
 		$categories = array (
-			'Bolt Softwares Pvt. Ltd.' => array(
-				'management' => array(
-					'Users' => array(
-						array('User' => array( 'role_id' => $userRoleId, 'username' => 'dark.vador@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					)
+			'management' => array(
+				'Users' => array(
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'dark.vador@test.com', 'password' => $defaultPassword, 'active' => '1')),
+				)
+			),
+			'accounting dpt' => array(
+				'Users' => array(
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'aurelie.gerhards@test.com', 'password' => $defaultPassword, 'active' => '1')),
 				),
-				'administration' => array(
-					'accounting dpt' => array(
-						'Users' => array(
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'aurelie.gerhards@test.com', 'password' => $defaultPassword, 'active' => '1')),
-						),
-					),
-					'human resources' => array(
-						'Users' => array(
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'ismail.guennouni@test.com', 'password' => $defaultPassword, 'active' => '1')),
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'myriam.djerouni@test.com', 'password' => $defaultPassword, 'active' => '1'))
-						),
-					),
+			),
+			'human resources' => array(
+				'Users' => array(
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'ismail.guennouni@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'myriam.djerouni@test.com', 'password' => $defaultPassword, 'active' => '1'))
 				),
-				'developers' => array(
-					'team leads' => array(
-						'Users' => array(
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'remy.bertot@test.com', 'password' => $defaultPassword, 'active' => '1')),
-						),
-					),
-					'drupal' => array(
-						'Users' => array(
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'cedric.alfonsi@test.com', 'password' => $defaultPassword, 'active' => '1')),
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'kevin.muller@test.com', 'password' => $defaultPassword, 'active' => '1'))
-						),
-					),
-					'cakephp' => array(
-						'Users' => array(
-							array('User' => array( 'username' => 'remy.bertot@test.com'))
-						),
-					),
+			),
+			'developers' => array(
+				'Users' => array(
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'remy.bertot@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'cedric.alfonsi@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'kevin.muller@test.com', 'password' => $defaultPassword, 'active' => '1'))
 				),
-				'freelancers' => array(
-					'company a' => array(
-						'Users' => array(
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
-						),
-					),
-					'company b' => array(
-						'Users' => array(
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
-							array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
-						),
-					),
-					'Users' => array(
-						array('User' => array( 'role_id' => $userRoleId, 'username' => 'jean-rene@test.com', 'password' => $defaultPassword, 'active' => '1')),
-						array('User' => array( 'role_id' => $userRoleId, 'username' => 'bertrand.lepouce@test.com', 'password' => $defaultPassword, 'active' => '1')),
-						array('User' => array( 'role_id' => $userRoleId, 'username' => 'ramesh.kumar@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					),
+			),
+			'developers team leads' => array(
+				'Users' => array(
+					array('User' => array( 'username' => 'remy.bertot@test.com'))
 				),
-			)
+			),
+			'developers drupal' => array(
+				'Users' => array(
+					array('User' => array( 'username' => 'cedric.alfonsi@test.com')),
+					array('User' => array( 'username' => 'kevin.muller@test.com'))
+				),
+			),
+			'developers cakephp' => array(
+				'Users' => array(
+					array('User' => array( 'username' => 'remy.bertot@test.com'))
+				),
+			),
+			'freelancers' => array(
+				'Users' => array(
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
+				),
+			),
+			'company a' => array(
+				'Users' => array(
+					array('User' => array('username' => 'a-user1@test.com')),
+					array('User' => array('username' => 'a-user2@test.com')),
+				),
+			),
+			'company b' => array(
+				'Users' => array(
+					array('User' => array('username' => 'b-user1@test.com')),
+					array('User' => array('username' => 'b-user2@test.com')),
+				),
+			),
+			'Users' => array(
+				'Users' => array(
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'jean-rene@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'bertrand.lepouce@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'ramesh.kumar@test.com', 'password' => $defaultPassword, 'active' => '1')),
+				),
+			),
 		);
 		return $categories;
 	}
@@ -469,9 +474,9 @@ class AppSchema extends CakeSchema {
 		$cRoot = $this->Category->findByName("Bolt Softwares Pvt. Ltd.");
 		$cAdministration = $this->Category->findByName("administration");
 		$cAccounts = $this->Category->findByName("accounts");
-		$gDrupal = $this->Group->findByName("drupal");
+		$gDrupal = $this->Group->findByName("developers drupal");
 		$gManagement = $this->Group->findByName("management");
-		$gAdministration = $this->Group->findByName("administration");
+		$gAdministration = $this->Group->findByName("accounting dpt");
 		// Group Management have modify rights on everything
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
@@ -515,7 +520,7 @@ class AppSchema extends CakeSchema {
 		));
 		// Group cakephp has access to category cakephp in readonly
 		$cCakephp = $this->Category->findByName("cakephp");
-		$gCakephp = $this->Group->findByName("cakephp");
+		$gCakephp = $this->Group->findByName("developers cakephp");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cCakephp['Category']['id'],
@@ -525,7 +530,7 @@ class AppSchema extends CakeSchema {
 		));
 		// Group Team leads has access to others in modify
 		$cProjects = $this->Category->findByName("others");
-		$gTeamleads = $this->Group->findByName("team leads");
+		$gTeamleads = $this->Group->findByName("developers team leads");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cProjects['Category']['id'],
