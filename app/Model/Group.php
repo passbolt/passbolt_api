@@ -14,7 +14,7 @@ class Group extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree', 'Containable', 'Trackable');
+	public $actsAs = array('Containable', 'Trackable');
 
 	// TODO : link it with GroupUser
 	/*public $hasMany = array(
