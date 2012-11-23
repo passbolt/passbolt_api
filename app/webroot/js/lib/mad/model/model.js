@@ -1,4 +1,6 @@
-steal('jquery/model').then(function () {
+steal(
+	'jquery/model'
+).then(function () {
 
 	/*
 	 * @class mad.model.Model
@@ -43,7 +45,8 @@ steal('jquery/model').then(function () {
 [
 	{
 		model: {mad.net.Model},
-		label: {string}
+		label: {string},
+		multiple: {boolean}
 	},
 	{
 		...
@@ -53,7 +56,7 @@ steal('jquery/model').then(function () {
 		 * @param {string} str The string to work on
 		 * @return {array}
 		 */
-		'getModelReferences': function (str) {
+		'getModelAttributes': function (str) {
 			var returnValue = [],
 				split = str.split('.');
 
@@ -61,32 +64,34 @@ steal('jquery/model').then(function () {
 				// get the top model reference
 				if (!returnValue.length) {
 					// the top model has a upper case first character
+					// it is important to respect the wording (package lowcase, and Class
+					// first char upcase)
 					if (split[i][0] === split[i][0].toUpperCase()) {
 						var modelName = split.slice(0, parseInt(i)+1).join('.');
 						var model = $.String.getObject(modelName);
-						returnValue.push({
-							label: modelName,
-							multiple: false,
-							model: model
-						});
+						returnValue.push(new mad.model.Attribute({
+							'name': modelName,
+							'multiple': false,
+							'modelReference': model
+						}));
 					}
 				} else {
-					// after we found the top model reference, check for sub model
-					var ownerModel = returnValue[returnValue.length - 1].model;
+					// after we found the top model reference, check for sub models
+					var ownerModel = returnValue[returnValue.length - 1].modelReference;
 					// if the current split is a reference to a submodel
 					if (ownerModel.attributes[split[i]]) {
 						var attrName = ownerModel.attributes[split[i]];
 						var modelName = attrName.slice(0,attrName.lastIndexOf('.'));
 						var model = $.String.getObject(modelName);
-						returnValue.push({
-							label: split[i],
-							multiple: /models$/.test(attrName),
-							model: model
-						});
+						returnValue.push(new mad.model.Attribute({
+							'name': split[i],
+							'multiple': /models$/.test(attrName),
+							'modelReference': model
+						}));
 					} else {
 						// else the split is a reference to a scalar attribute
 						returnValue.push({
-							label: split[i]
+							name: split[i]
 						});
 						break;
 					}

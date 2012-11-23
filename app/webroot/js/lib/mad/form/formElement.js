@@ -39,11 +39,6 @@ steal(
 		 */
 		'value': null,
 
-		// constructor like
-		'init': function (el, options) {
-			this._super(el, options);
-		},
-
 		/**
 		 * Get the associated model.attribute
 		 * @return {string}
