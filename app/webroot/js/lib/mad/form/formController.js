@@ -144,11 +144,11 @@ steal(
 			var returnValue = {};
 
 			// Get the form elements value
-			for (var elementId in this.elements) {
+			for (var eltId in this.elements) {
 				// Get the model references of the current element
-				var fieldAttrs = mad.model.Model.getModelAttributes(this.elements[elementId].getModelReference()),
+				var fieldAttrs = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference()),
 					// the elt value
-					eltValue = this.elements[elementId].getValue(),
+					eltValue = this.elements[eltId].getValue(),
 					// the attr name
 					attrName = fieldAttrs[fieldAttrs.length - 1].name;
 
@@ -209,23 +209,18 @@ steal(
 			var returnValue = true,
 				// the model references of the element
 				fieldAttrs = mad.model.Model.getModelAttributes(element.getModelReference()),
-				// the root model reference
-				rootModel = fieldAttrs[0].modelReference,
 				// the leaf model reference
 				model = fieldAttrs[fieldAttrs.length-2].modelReference,
 				// the attribute name
 				attrName = fieldAttrs[fieldAttrs.length-1].name,
 				// the validation result
 				validationResult = true,
-				// the associated model reference
-				eltModelRef = element.getModelReference(),
 				// the element's id
 				eltId = element.getId();
 
 			// validate the attribute value
 			if (model.validateAttribute) {
 				var value = element.getValue();
-				
 				validationResult = model.validateAttribute(attrName, element.getValue());
 			}
 
@@ -234,10 +229,11 @@ steal(
 				this.elements[eltId]
 					.setState('error');
 				// set the feedback message, and switch the feedback element state to error
-				this.feedbackElements[eltId]
-					.setMessage(validationResult)
-					.setState('error');
-
+				if (this.feedbackElements[eltId]){
+					this.feedbackElements[eltId]
+						.setMessage(validationResult)
+						.setState('error');
+				}
 				returnValue = false;
 			} else {
 				this.elements[eltId]

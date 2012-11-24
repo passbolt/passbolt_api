@@ -1,7 +1,6 @@
 steal(
 	'mad/form/formElement.js',
-	'mad/view/form/element/textboxView.js',
-	'mad/view/template/component/input.ejs'
+	'mad/view/form/element/textboxView.js'
 ).then(function () {
 
 	/*
@@ -23,8 +22,8 @@ steal(
 
 		'defaults': {
 			'label': 'Textbox Form Element Controller',
-			'templateUri': '//' + 'mad/view/template/component/input.ejs',
-			'viewClass': mad.view.form.element.TextboxView
+			'viewClass': mad.view.form.element.TextboxView,
+			'tag': 'input'
 		}
 
 	}, /** @prototype */ { });

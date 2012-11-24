@@ -59,30 +59,6 @@
 			<fieldset id="js_field_visited" class="form_field"></fieldset>
 			<span id="js_field_visited_feedback" class="form_feedback"/>
 		</div>
-<!--		
-		<div>
-			<label>meeting date purpose</label>
-			<input type="text" name="demo.model.Meeting.date" id="js_field_date" class="form_field" />
-			<span id="js_field_date_feedback" class="form_feedback"/>
-		</div>
-		
-		<div>
-			<label>want to meet</label>
-			<select name="demo.model.Meeting.Person.id" id="js_field_who" class="form_field"></select>
-			<span id="js_field_who_feedback" class="form_feedback"/>
-		</div>
-		
-		<div>
-			<label>I want to talk about</label>
-			<fieldset name="demo.model.Meeting.Topic.id" id="js_field_topics" class="form_field"></fieldset>
-			<span id="js_field_topics_feedback" class="form_feedback"/>
-		</div>
-		
-		<div>
-			<label>The password to open the door</label>
-			<input type="text" name="demo.model.Meeting.password" id="js_field_password" class="form_field" />
-			<span id="js_field_password_feedback" class="form_feedback"/>
-		</div>-->
 		
 		<div>
 			<input type="submit" value="submit" />
@@ -101,39 +77,6 @@ steal(
 ).then(
 	'mad/test/data/model/person.js'
 ).then(function() {
-//	
-//	// Create a fake model
-//	mad.model.Model.extend('demo.model.Meeting', {
-//		'attributes': {
-//			'Person': 'demo.model.Person.model',
-//			'Topic': 'demo.model.Topic.models'
-//		},
-//		'validateRules': {
-//			'surname': ['alphanum', 'required'],
-//			'name': ['alphanum', 'required'],
-//			'freelancer': ['required'],
-//			'phone': ['required', 'num'],
-//			'email': ['required', 'email'],
-//			'date': ['required', {
-//				'rule':'date', 
-//				'options': {'type': 'us'}
-//			}],
-//			'password': [{
-//				'rule': 'size',
-//				'options': {'min': 3, 'max': 8}
-//			}]
-//		}
-//	}, {});
-//	mad.model.Model.extend('demo.model.Person', {
-//		'validateRules': {
-//			'id': ['required', 'uid']
-//		}
-//	}, {});
-//	mad.model.Model.extend('demo.model.Topic', {
-//		'validateRules': {
-////			'id': ['required', 'uid']
-//		}
-//	}, {});
 	
 	var form = new mad.form.FormController($('#js_demo_form_controller'), {
 		'callbacks': {
@@ -199,44 +142,6 @@ steal(
 	var person = demo.model.Person.findOne({id: 'person_1'}, function (person, response, request) {
 		form.load(person);
 	});
-
-//	// Add a date field element to the form
-//	form.addElement(
-//		new mad.form.element.TextboxController('#js_field_date'),
-//		new mad.form.FeedbackController('#js_field_date_feedback')
-//	);
-//
-//	// Add a who field element to the form
-//	form.addElement(
-//		new mad.form.element.DropdownController('#js_field_who', {
-//			'availableValues': {
-//				'c': 'Cedric',
-//				'i': 'Isma',
-//				'k': 'Kevin',
-//				'm': 'Myriam',
-//				'r': 'Remy'
-//			}
-//		}),
-//		new mad.form.FeedbackController('#js_field_who_feedback')
-//	);
-//
-//	// Add a topics field element to the form
-//	form.addElement(
-//		new mad.form.element.CheckboxController('#js_field_topics', {
-//			'availableValues': {
-//					'b': 'Business',
-//					'a': 'Administration',
-//					'f': 'Fiesta'
-//			}
-//		}),
-//		new mad.form.FeedbackController('#js_field_topics_feedback')
-//	);
-//	
-//	// Add a surname field element to the form
-//	form.addElement(
-//		new mad.form.element.TextboxController('#js_field_password'),
-//		new mad.form.FeedbackController('#js_field_password_feedback')
-//	);
 	
 });
 </script>

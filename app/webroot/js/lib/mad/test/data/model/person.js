@@ -47,7 +47,7 @@ steal(
 		'attributes': {
 			'surname': 'string',
 			'name': 'string',
-			'freelance': 'boolean',
+			'freelancer': 'boolean',
 			'phone': 'string',
 			'email': 'string',
 			'children': 'demo.model.Person.models',
