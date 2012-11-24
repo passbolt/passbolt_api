@@ -1,5 +1,4 @@
 steal(
-//	'jquery/model/list',
 	'mad/model'
 ).then(function () {
 

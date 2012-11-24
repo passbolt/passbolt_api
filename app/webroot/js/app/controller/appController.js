@@ -9,6 +9,7 @@ steal(
 	// the ressources workspace models
 	'app/model/category.js',
 	'app/model/resource.js',
+	'app/model/filter.js',
 	// the application template
 	'app/view/template/app.ejs'
 ).then(function () {
