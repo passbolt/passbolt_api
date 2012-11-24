@@ -18,7 +18,7 @@ steal(
 		},
 		// runs after each test
 		teardown: function () {}
-	})
+	});
 
 	function instanciateForm () {
 		var returnValue = testEnv.mad.helper.ComponentHelper.create(testEnv.mad.app.element, 'last', testEnv.mad.form.FormController, {});
