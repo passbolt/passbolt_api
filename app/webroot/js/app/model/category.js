@@ -28,7 +28,6 @@ steal(
 			'lft': 'string',
 			'rght': 'string',
 			'name': 'string',
-			'category_type_id': 'string',
 			'children': 'passbolt.model.Category.models'
 		},
 

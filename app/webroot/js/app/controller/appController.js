@@ -5,6 +5,7 @@ steal(
 	'app/controller/peopleWorkspaceController.js',
 
 	'app/controller/component/appMenuController.js',
+	'app/controller/component/appFilterController.js',
 	'app/controller/component/notificationController.js',
 	// the ressources workspace models
 	'app/model/category.js',
@@ -29,11 +30,17 @@ steal(
 			this.render();
 
 			// Add the app menu controller
-			var menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'))
+			var menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'));
 			menuCtl.render();
 			menuCtl.initMenuItems();
 
-			// Add a notification controller
+			// Add the filter controller
+			var filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {
+
+			});
+			filterCtl.render();
+
+			// Add the notification controller
 			var notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
 				'state': 'hidden'
 			});

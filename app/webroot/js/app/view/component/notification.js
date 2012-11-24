@@ -28,10 +28,11 @@ steal(
 			this._super();
 
 			// position the notificator functions of the search field
-			var eltWidth = this.element.width(),
-				refEltWidth = $('#js_search_field').width(),
-				left = (refEltWidth - eltWidth) / 2
-			this.element.css('left', left);
+			this.element.position({
+				my: "center top",
+				at: "center bottom",
+				of: $('#js_search_field')
+			});
 		},
 
 		/* ************************************************************** */

@@ -17,13 +17,21 @@
   margin:0;
   padding:0;
 }
+.header .search .tags,
 .header .search .input,
 .header .search .button {
   float:left;
+}
+.header .search .tags {
+	
+}
+.header .search .tag {
+	
 }
 .header .search .input.text input {
   width:24em;
   margin-right:.3em;
 }
-
-
+.header .search .button {
+	
+}
