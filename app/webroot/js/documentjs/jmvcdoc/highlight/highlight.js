@@ -1,4 +1,4 @@
-steal('jquery',function(){
+steal('can/util',function(){
 
 /*
 Syntax highlighting with language autodetection.

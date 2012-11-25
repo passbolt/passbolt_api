@@ -1,4 +1,4 @@
-steal.then(function() {
+steal('./type',function(Type) {
 	var ignoreCheck = /\@documentjs-ignore/,
 		commentReg = /\r?\n(?:\s*\*+)?/g,
 		spaceReg = /\S/g,
@@ -39,7 +39,7 @@ steal.then(function() {
 	 * Creates new [DocumentJS.Pair | Doc.Pairs].
 	 * @hide
 	 */
-	DocumentJS.Script = {
+	var Script = {
 
 		// removes indent inline
 		removeIndent: function( lines ) {
@@ -100,9 +100,7 @@ steal.then(function() {
 					src: docScript
 				}
 			}
-
-			var source = docScript.text || readFile(docScript.src);
-
+			var source = readFile(docScript.src);
 			//check if the source has @documentjs-ignore
 			if ( ignoreCheck.test(source) ) {
 				return;
@@ -119,34 +117,32 @@ steal.then(function() {
 
 			// handle markdown docs
 			if (/\.md$/.test(docScript.src) ) {
-				type = DocumentJS.Type.create(source, "", scope, objects, 'page', docScript.src.match(/([^\/]+)\.md$/)[1]);
+				type = Type.create(source, "", scope, objects, 'page', docScript.src.match(/([^\/]+)\.md$/)[1]);
 				if ( type ) {
-
 					objects[type.name] = type;
 					//get the new scope if you need it
 					// if we don't have a type, assume we can have children
-					scope = !type.type || DocumentJS.types[type.type].hasChildren ? type : scope;
+					scope = !type.type || Type.types[type.type].hasChildren ? type : scope;
 					type.src = docScript.src;
 				}
 				return;
 			}
 
 			comments = this.getComments(source);
-
 			//clean comments
 			for ( var i = 0; i < comments.length; i++ ) {
 				var comment = comments[i];
 
 				//var start = new Date;
 
-				type = DocumentJS.Type.create(comment.comment, comment.code, scope, objects);
+				type = Type.create(comment.comment, comment.code, scope, objects);
 
 				//processTime = processTime + (new Date - start)
 				if ( type ) {
 					objects[type.name] = type;
 					//get the new scope if you need it
 					// if we don't have a type, assume we can have children
-					scope = !type.type || DocumentJS.types[type.type].hasChildren ? type : scope;
+					scope = !type.type || Type.types[type.type].hasChildren ? type : scope;
 
 					type.src = docScript.src;
 					type.line = comment.line;
@@ -203,8 +199,10 @@ steal.then(function() {
 		}
 	};
 
-	DocumentJS.Type("script", {
+	Type("script", {
 		useName: false,
 		hasChildren: true
-	})
+	});
+	
+	return Script;
 })

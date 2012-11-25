@@ -287,14 +287,15 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Observe when category is selected
+		 * Listen to the browser filter
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event
-		 * @param {string} category The selected Category
+		 * @param {passbolt.model.Filter} filter The filter to apply
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} category_selected': function (element, evt, category) {
+		'{passbolt.eventBus} filter_resources_browser': function (element, evt, filter) {
 			var self = this;
+			var category = filter.categories[0];
 			this.crtCategoryId = category.id;
 
 			// override the current list of categories with the categories to display

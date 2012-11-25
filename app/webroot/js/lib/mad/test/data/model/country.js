@@ -6,12 +6,13 @@ steal(
 	var COUNTRIES = [];
 
 	// get all the countries
-	can.fixture("/countries", '//mad/test/data/fixtures/countries.json');
+	var jsonFile = steal.idToUri('mad/test/data/fixtures/countries.json').toString();
+	can.fixture("/countries", jsonFile);
 	// get a target country
 	can.fixture("/countries/{id}", function (req) {
 		var returnValue = null;
 		$.ajax({
-			url: '/js/mad/test/data/fixtures/countries.json',
+			url: jsonFile,
 			async: false
 		}).then(function (data) {
 			can.each(data.body, function (country, i) {

@@ -1,4 +1,4 @@
-steal.then(function() {
+steal('documentjs/showdown.js',function(converter) {
 	/**
 	 * @class DocumentJS.tags.constructor
 	 * @parent DocumentJS.tags
@@ -19,8 +19,7 @@ steal.then(function() {
      *  }
 	 * @codeend
 	 */
-	DocumentJS.tags.constructor =
-	{
+	return {
 		add: function( line ) {
 			var parts = line.match(/\s?@constructor(.*)?/);
 
@@ -34,7 +33,7 @@ steal.then(function() {
 
 		done : function(){
 			if(this.construct ){
-				this.construct = DocumentJS.converter.makeHtml(this.construct)
+				this.construct = converter.makeHtml(this.construct)
 			}
 		}
 	};

@@ -1,59 +1,172 @@
-(function( $ ) {
+module = { _orig: window.module, _define: window.define };
+module['jquery'] = $;
+define = function(id, deps, value) {
+	module[id] = value();
+};
+define.amd = { jQuery: true };
+// ## can/util/can.js
+
+module['can/util/can.js'] = (function(){
+	window.can = window.can || {};
+	window.can.isDeferred = function( obj ) {
+		var isFunction = this.isFunction;
+		// Returns `true` if something looks like a deferred.
+		return obj && isFunction(obj.then) && isFunction(obj.pipe);
+	};
+	return window.can;
+})();// ## can/util/preamble.js
+
+module['can/util/preamble.js'] = (function() {
+// # CanJS v#{VERSION}
+// (c) 2012 Bitovi  
+// MIT license  
+// [http://canjs.us/](http://canjs.us/)
+})();// ## can/util/array/each.js
+
+module['can/util/array/each.js'] = (function (can) {
+	can.each = function (elements, callback, context) {
+		var i = 0, key;
+		if (elements) {
+			if (typeof elements.length === 'number' && elements.pop) {
+				if ( elements.attr ) {
+					elements.attr('length');
+				}
+				for (key = elements.length; i < key; i++) {
+					if (callback.call(context || elements[i], elements[i], i, elements) === false) {
+						break;
+					}
+				}
+			} else {
+				for (key in elements) {
+					if (callback.call(context || elements[key], elements[key], key, elements) === false) {
+						break;
+					}
+				}
+			}
+		}
+		return elements;
+	};
+})(module["can/util/can.js"]);// ## can/util/jquery/jquery.js
+
+module['can/util/jquery/jquery.js'] = (function($, can) {
+	// jquery.js
+	// ---------
+	// _jQuery node list._
+	$.extend( can, jQuery, {
+		trigger: function( obj, event, args ) {
+			if ( obj.trigger ) {
+				obj.trigger( event, args );
+			} else {
+				$.event.trigger( event, args, obj, true );
+			}
+		},
+		addEvent: function(ev, cb){
+			$([this]).bind(ev, cb);
+			return this;
+		},
+		removeEvent: function(ev, cb){
+			$([this]).unbind(ev, cb);
+			return this;
+		},
+		// jquery caches fragments, we always needs a new one
+		buildFragment : function(result, element){
+			var ret = $.buildFragment([result],$(element));
+			return ret.cacheable ? $.clone(ret.fragment) : ret.fragment;
+		},
+		$: jQuery,
+		each: can.each
+	});
+
+	// Wrap binding functions.
+	$.each(['bind','unbind','undelegate','delegate'],function(i,func){
+		can[func] = function(){
+			var t = this[func] ? this : $([this]);
+			t[func].apply(t, arguments);
+			return this;
+		};
+	});
+
+	// Wrap modifier functions.
+	$.each(["append","filter","addClass","remove","data","get"], function(i,name){
+		can[name] = function(wrapped){
+			return wrapped[name].apply(wrapped, can.makeArray(arguments).slice(1));
+		};
+	});
+
+	// Memory safe destruction.
+	var oldClean = $.cleanData;
+
+	$.cleanData = function( elems ) {
+		$.each( elems, function( i, elem ) {
+			if ( elem ) {
+				can.trigger(elem,"destroyed",[],false);
+			}
+		});
+		oldClean(elems);
+	};
+
+	return can;
+})(module["jquery"], module["can/util/can.js"], module["jquery"], module["can/util/preamble.js"], module["can/util/array/each.js"]);// ## can/util/string/string.js
+
+module['can/util/string/string.js'] = (function(can) {
+	// ##string.js
+	// _Miscellaneous string utility functions._  
+	
 	// Several of the methods in this plugin use code adapated from Prototype
-	//  Prototype JavaScript framework, version 1.6.0.1
-	//  (c) 2005-2007 Sam Stephenson
-	var regs = {
-		undHash: /_|-/,
-		colons: /::/,
-		words: /([A-Z]+)([A-Z][a-z])/g,
-		lowUp: /([a-z\d])([A-Z])/g,
-		dash: /([a-z\d])([A-Z])/g,
-		replacer: /\{([^\}]+)\}/g,
-		dot: /\./
-	},
-		// gets the nextPart property from current
-		// add - if true and nextPart doesnt exist, create it as an empty object
-		getNext = function(current, nextPart, add){
-			return current[nextPart] !== undefined ? current[nextPart] : ( add && (current[nextPart] = {}) );
+	// Prototype JavaScript framework, version 1.6.0.1.
+	// © 2005-2007 Sam Stephenson
+	var undHash     = /_|-/,
+		colons      = /\=\=/,
+		words       = /([A-Z]+)([A-Z][a-z])/g,
+		lowUp       = /([a-z\d])([A-Z])/g,
+		dash        = /([a-z\d])([A-Z])/g,
+		replacer    = /\{([^\}]+)\}/g,
+		quote       = /"/g,
+		singleQuote = /'/g,
+
+		// Returns the `prop` property from `obj`.
+		// If `add` is true and `prop` doesn't exist in `obj`, create it as an 
+		// empty object.
+		getNext = function( obj, prop, add ) {
+			return prop in obj ?
+				obj[ prop ] : 
+				( add && ( obj[ prop ] = {} ));
 		},
-		// returns true if the object can have properties (no nulls)
-		isContainer = function(current){
-			var type = typeof current;
-			return current && ( type == 'function' || type == 'object' );
-		},
-		// a reference
-		getObject,
-		/** 
-		 * @class jQuery.String
-		 * @parent jquerymx.lang
-		 * 
-		 * A collection of useful string helpers. Available helpers are:
-		 * <ul>
-		 *   <li>[jQuery.String.capitalize|capitalize]: Capitalizes a string (some_string &raquo; Some_string)</li>
-		 *   <li>[jQuery.String.camelize|camelize]: Capitalizes a string from something undercored 
-		 *       (some_string &raquo; someString, some-string &raquo; someString)</li>
-		 *   <li>[jQuery.String.classize|classize]: Like [jQuery.String.camelize|camelize], 
-		 *       but the first part is also capitalized (some_string &raquo; SomeString)</li>
-		 *   <li>[jQuery.String.niceName|niceName]: Like [jQuery.String.classize|classize], but a space separates each 'word' (some_string &raquo; Some String)</li>
-		 *   <li>[jQuery.String.underscore|underscore]: Underscores a string (SomeString &raquo; some_string)</li>
-		 *   <li>[jQuery.String.sub|sub]: Returns a string with {param} replaced values from data.
-		 *       <code><pre>
-		 *       $.String.sub("foo {bar}",{bar: "far"})
-		 *       //-> "foo far"</pre></code>
-		 *   </li>
-		 * </ul>
-		 * 
-		 */
-		str = $.String = $.extend( $.String || {} , {
-			
+
+		// Returns `true` if the object can have properties (no `null`s).
+		isContainer = function( current ) {
+			return (/^f|^o/).test( typeof current );
+		};
+
+		can.extend(can, {
+			// Escapes strings for HTML.
+			/**
+			 * @function can.esc
+			 * @parent can.util
+			 *
+			 * `can.esc(string)` escapes a string for insertion into html.
+			 * 
+			 *     can.esc( "<foo>&<bar>" ) //-> "&lt;foo&lt;&amp;&lt;bar&lt;"
+			 */
+			esc : function( content ) {
+				// Convert bad values into empty strings
+				var isInvalid = content === null || content === undefined || (isNaN(content) && ("" + content === 'NaN'));
+				return ( "" + ( isInvalid ? '' : content ) )
+					.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(quote, '&#34;')
+					.replace(singleQuote, "&#39;");
+			},
 			
 			/**
-			 * @function getObject
+			 * @function can.getObject
+			 * @parent can.util
 			 * Gets an object from a string.  It can also modify objects on the
 			 * 'object path' by removing or adding properties.
 			 * 
 			 *     Foo = {Bar: {Zar: {"Ted"}}}
-		 	 *     $.String.getObject("Foo.Bar.Zar") //-> "Ted"
+			 *     can.getObject("Foo.Bar.Zar") //-> "Ted"
 			 * 
 			 * @param {String} name the name of the object to look for
 			 * @param {Array} [roots] an array of root objects to look for the 
@@ -63,40 +176,42 @@
 			 *  not modify the root object
 			 * @return {Object} The object.
 			 */
-			getObject : getObject = function( name, roots, add ) {
+			getObject : function( name, roots, add ) {
 			
-				// the parts of the name we are looking up
-				// ['App','Models','Recipe']
-				var parts = name ? name.split(regs.dot) : [],
+				// The parts of the name we are looking up  
+				// `['App','Models','Recipe']`
+				var	parts = name ? name.split('.') : [],
 					length =  parts.length,
 					current,
-					ret, 
-					i,
 					r = 0,
-					type;
+					ret, i;
+
+				// Make sure roots is an `array`.
+				roots = can.isArray(roots) ? roots : [roots || window];
 				
-				// make sure roots is an array
-				roots = $.isArray(roots) ? roots : [roots || window];
-				
-				if(length == 0){
+				if ( ! length ) {
 					return roots[0];
 				}
-				// for each root, mark it as current
-				while( current = roots[r++] ) {
-					// walk current to the 2nd to last object
-					// or until there is not a container
-					for (i =0; i < length - 1 && isContainer(current); i++ ) {
-						current = getNext(current, parts[i], add);
+
+				// For each root, mark it as current.
+				while ( roots[r] ) {
+					current = roots[r];
+
+					// Walk current to the 2nd to last object or until there 
+					// is not a container.
+					for (i =0; i < length - 1 && isContainer( current ); i++ ) {
+						current = getNext( current, parts[i], add );
 					}
-					// if we can get a property from the 2nd to last object
+
+					// If we can get a property from the 2nd to last object...
 					if( isContainer(current) ) {
 						
-						// get (and possibly set) the property
+						// Get (and possibly set) the property.
 						ret = getNext(current, parts[i], add); 
 						
-						// if there is a value, we exit
-						if( ret !== undefined ) {
-							// if add is false, delete the property
+						// If there is a value, we exit.
+						if ( ret !== undefined ) {
+							// If `add` is `false`, delete the property
 							if ( add === false ) {
 								delete current[parts[i]];
 							}
@@ -104,70 +219,53 @@
 							
 						}
 					}
+					r++;
 				}
 			},
+			// Capitalizes a string.
 			/**
-			 * Capitalizes a string
+			 * @function can.capitalize
+			 * @parent can.util
+			 * `can.capitalize(string)` capitalizes the first letter of the string passed.
+			 *
+			 *		can.capitalize('candy is fun!'); //-> Returns: 'Candy is fun!'
+			 *
 			 * @param {String} s the string.
 			 * @return {String} a string with the first character capitalized.
 			 */
 			capitalize: function( s, cache ) {
-				return s.charAt(0).toUpperCase() + s.substr(1);
+				// Used to make newId.
+				return s.charAt(0).toUpperCase() + s.slice(1);
 			},
+			
+			// Underscores a string.
 			/**
-			 * Capitalizes a string from something undercored. Examples:
-			 * @codestart
-			 * jQuery.String.camelize("one_two") //-> "oneTwo"
-			 * "three-four".camelize() //-> threeFour
-			 * @codeend
-			 * @param {String} s
-			 * @return {String} a the camelized string
-			 */
-			camelize: function( s ) {
-				s = str.classize(s);
-				return s.charAt(0).toLowerCase() + s.substr(1);
-			},
-			/**
-			 * Like [jQuery.String.camelize|camelize], but the first part is also capitalized
-			 * @param {String} s
-			 * @return {String} the classized string
-			 */
-			classize: function( s , join) {
-				var parts = s.split(regs.undHash),
-					i = 0;
-				for (; i < parts.length; i++ ) {
-					parts[i] = str.capitalize(parts[i]);
-				}
-
-				return parts.join(join || '');
-			},
-			/**
-			 * Like [jQuery.String.classize|classize], but a space separates each 'word'
-			 * @codestart
-			 * jQuery.String.niceName("one_two") //-> "One Two"
-			 * @codeend
-			 * @param {String} s
-			 * @return {String} the niceName
-			 */
-			niceName: function( s ) {
-				return str.classize(s,' ');
-			},
-
-			/**
+			 * @function can.underscore
+			 * @parent can.util
+			 * 
 			 * Underscores a string.
-			 * @codestart
-			 * jQuery.String.underscore("OneTwo") //-> "one_two"
-			 * @codeend
+			 * 
+			 *     can.underscore("OneTwo") //-> "one_two"
+			 * 
 			 * @param {String} s
 			 * @return {String} the underscored string
 			 */
 			underscore: function( s ) {
-				return s.replace(regs.colons, '/').replace(regs.words, '$1_$2').replace(regs.lowUp, '$1_$2').replace(regs.dash, '_').toLowerCase();
+				return s
+					.replace(colons, '/')
+					.replace(words, '$1_$2')
+					.replace(lowUp, '$1_$2')
+					.replace(dash, '_')
+					.toLowerCase();
 			},
+			// Micro-templating.
 			/**
+			 * @function can.sub
+			 * @parent can.util
+			 * 
 			 * Returns a string with {param} replaced values from data.
 			 * 
-			 *     $.String.sub("foo {bar}",{bar: "far"})
+			 *     can.sub("foo {bar}",{bar: "far"})
 			 *     //-> "foo far"
 			 *     
 			 * @param {String} s The string to replace
@@ -175,1288 +273,592 @@
 			 * objects can be used.
 			 * @param {Boolean} [remove] if a match is found, remove the property from the object
 			 */
-			sub: function( s, data, remove ) {
-				var obs = [],
-					remove = typeof remove == 'boolean' ? !remove : remove;
-				obs.push(s.replace(regs.replacer, function( whole, inside ) {
-					//convert inside to type
-					var ob = getObject(inside, data, remove);
+			sub: function( str, data, remove ) {
+
+				var obs = [];
+
+				obs.push( str.replace( replacer, function( whole, inside ) {
+
+					// Convert inside to type.
+					var ob = can.getObject( inside, data, remove === undefined? remove : !remove );
 					
-					// if a container, push into objs (which will return objects found)
-					if( isContainer(ob) ){
-						obs.push(ob);
+					// If a container, push into objs (which will return objects found).
+					if ( isContainer( ob ) ) {
+						obs.push( ob );
 						return "";
-					}else{
-						return ""+ob;
+					} else {
+						return "" + ob;
 					}
 				}));
 				
 				return obs.length <= 1 ? obs[0] : obs;
 			},
-			_regs : regs
+
+			// These regex's are used throughout the rest of can, so let's make
+			// them available.
+			replacer : replacer,
+			undHash : undHash
 		});
-})(jQuery);;
-(function( $ ) {
-	/**
-	 * @attribute destroyed
-	 * @parent specialevents
-	 * @download  http://jmvcsite.heroku.com/pluginify?plugins[]=jquery/dom/destroyed/destroyed.js
-	 * @test jquery/event/destroyed/qunit.html
-	 * Provides a destroyed event on an element.
-	 * <p>
-	 * The destroyed event is called when the element
-	 * is removed as a result of jQuery DOM manipulators like remove, html,
-	 * replaceWith, etc. Destroyed events do not bubble, so make sure you don't use live or delegate with destroyed
-	 * events.
-	 * </p>
-	 * <h2>Quick Example</h2>
-	 * @codestart
-	 * $(".foo").bind("destroyed", function(){
-	 *    //clean up code
-	 * })
-	 * @codeend
-	 * <h2>Quick Demo</h2>
-	 * @demo jquery/event/destroyed/destroyed.html 
-	 * <h2>More Involved Demo</h2>
-	 * @demo jquery/event/destroyed/destroyed_menu.html 
+	return can;
+})(module["can/util/jquery/jquery.js"]);// ## can/construct/construct.js
+
+module['can/construct/construct.js'] = (function(can) {
+
+	// ## construct.js
+	// `can.Construct`  
+	// _This is a modified version of
+	// [John Resig's class](http://ejohn.org/blog/simple-javascript-inheritance/).  
+	// It provides class level inheritance and callbacks._
+	
+	// A private flag used to initialize a new class instance without
+	// initializing it's bindings.
+	var initializing = 0;
+
+	/** 
+	 * @add can.Construct 
 	 */
-
-	var oldClean = jQuery.cleanData;
-
-	$.cleanData = function( elems ) {
-		for ( var i = 0, elem;
-		(elem = elems[i]) !== undefined; i++ ) {
-			$(elem).triggerHandler("destroyed");
-			//$.event.remove( elem, 'destroyed' );
-		}
-		oldClean(elems);
-	};
-
-})(jQuery);;
-(function( $ ) {
-
-	// =============== HELPERS =================
-
-	    // if we are initializing a new class
-	var initializing = false,
-		makeArray = $.makeArray,
-		isFunction = $.isFunction,
-		isArray = $.isArray,
-		extend = $.extend,
-		getObject = $.String.getObject,
-		concatArgs = function(arr, args){
-			return arr.concat(makeArray(args));
-		},
-		
-		// tests if we can get super in .toString()
-		fnTest = /xyz/.test(function() {
-			xyz;
-		}) ? /\b_super\b/ : /.*/,
-		
-		// overwrites an object with methods, sets up _super
-		//   newProps - new properties
-		//   oldProps - where the old properties might be
-		//   addTo - what we are adding to
-		inheritProps = function( newProps, oldProps, addTo ) {
-			addTo = addTo || newProps
-			for ( var name in newProps ) {
-				// Check if we're overwriting an existing function
-				addTo[name] = isFunction(newProps[name]) && 
-							  isFunction(oldProps[name]) && 
-							  fnTest.test(newProps[name]) ? (function( name, fn ) {
-					return function() {
-						var tmp = this._super,
-							ret;
-
-						// Add a new ._super() method that is the same method
-						// but on the super-class
-						this._super = oldProps[name];
-
-						// The method only need to be bound temporarily, so we
-						// remove it when we're done executing
-						ret = fn.apply(this, arguments);
-						this._super = tmp;
-						return ret;
-					};
-				})(name, newProps[name]) : newProps[name];
-			}
-		},
-		STR_PROTOTYPE = 'prototype'
-
-	/**
-	 * @class jQuery.Class
-	 * @plugin jquery/class
-	 * @parent jquerymx
-	 * @download dist/jquery/jquery.class.js
-	 * @test jquery/class/qunit.html
-	 * @description Easy inheritance in JavaScript.
-	 * 
-	 * Class provides simulated inheritance in JavaScript. Use clss to bridge the gap between
-	 * jQuery's functional programming style and Object Oriented Programming. It 
-	 * is based off John Resig's [http://ejohn.org/blog/simple-javascript-inheritance/|Simple Class]
-	 * Inheritance library.  Besides prototypal inheritance, it includes a few important features:
-	 * 
-	 *   - Static inheritance
-	 *   - Introspection
-	 *   - Namespaces
-	 *   - Setup and initialization methods
-	 *   - Easy callback function creation
-	 * 
-	 * 
-	 * The [mvc.class Get Started with jQueryMX] has a good walkthrough of $.Class.
-	 * 
-	 * ## Static v. Prototype
-	 * 
-	 * Before learning about Class, it's important to
-	 * understand the difference between
-	 * a class's __static__ and __prototype__ properties.
-	 * 
-	 *     //STATIC
-	 *     MyClass.staticProperty  //shared property
-	 *     
-	 *     //PROTOTYPE
-	 *     myclass = new MyClass()
-	 *     myclass.prototypeMethod() //instance method
-	 * 
-	 * A static (or class) property is on the Class constructor
-	 * function itself
-	 * and can be thought of being shared by all instances of the 
-	 * Class. Prototype propertes are available only on instances of the Class.
-	 * 
-	 * ## A Basic Class
-	 * 
-	 * The following creates a Monster class with a
-	 * name (for introspection), static, and prototype members.
-	 * Every time a monster instance is created, the static
-	 * count is incremented.
-	 *
-	 * @codestart
-	 * $.Class('Monster',
-	 * /* @static *|
-	 * {
-	 *   count: 0
-	 * },
-	 * /* @prototype *|
-	 * {
-	 *   init: function( name ) {
-	 *
-	 *     // saves name on the monster instance
-	 *     this.name = name;
-	 *
-	 *     // sets the health
-	 *     this.health = 10;
-	 *
-	 *     // increments count
-	 *     this.constructor.count++;
-	 *   },
-	 *   eat: function( smallChildren ){
-	 *     this.health += smallChildren;
-	 *   },
-	 *   fight: function() {
-	 *     this.health -= 2;
-	 *   }
-	 * });
-	 *
-	 * hydra = new Monster('hydra');
-	 *
-	 * dragon = new Monster('dragon');
-	 *
-	 * hydra.name        // -> hydra
-	 * Monster.count     // -> 2
-	 * Monster.shortName // -> 'Monster'
-	 *
-	 * hydra.eat(2);     // health = 12
-	 *
-	 * dragon.fight();   // health = 8
-	 *
-	 * @codeend
-	 *
-	 * 
-	 * Notice that the prototype <b>init</b> function is called when a new instance of Monster is created.
-	 * 
-	 * 
-	 * ## Inheritance
-	 * 
-	 * When a class is extended, all static and prototype properties are available on the new class.
-	 * If you overwrite a function, you can call the base class's function by calling
-	 * <code>this._super</code>.  Lets create a SeaMonster class.  SeaMonsters are less
-	 * efficient at eating small children, but more powerful fighters.
-	 * 
-	 * 
-	 *     Monster("SeaMonster",{
-	 *       eat: function( smallChildren ) {
-	 *         this._super(smallChildren / 2);
-	 *       },
-	 *       fight: function() {
-	 *         this.health -= 1;
-	 *       }
-	 *     });
-	 *     
-	 *     lockNess = new SeaMonster('Lock Ness');
-	 *     lockNess.eat(4);   //health = 12
-	 *     lockNess.fight();  //health = 11
-	 * 
-	 * ### Static property inheritance
-	 * 
-	 * You can also inherit static properties in the same way:
-	 * 
-	 *     $.Class("First",
-	 *     {
-	 *         staticMethod: function() { return 1;}
-	 *     },{})
-	 *
-	 *     First("Second",{
-	 *         staticMethod: function() { return this._super()+1;}
-	 *     },{})
-	 *
-	 *     Second.staticMethod() // -> 2
-	 * 
-	 * ## Namespaces
-	 * 
-	 * Namespaces are a good idea! We encourage you to namespace all of your code.
-	 * It makes it possible to drop your code into another app without problems.
-	 * Making a namespaced class is easy:
-	 * 
-	 * 
-	 *     $.Class("MyNamespace.MyClass",{},{});
-	 *
-	 *     new MyNamespace.MyClass()
-	 * 
-	 * 
-	 * <h2 id='introspection'>Introspection</h2>
-	 * 
-	 * Often, it's nice to create classes whose name helps determine functionality.  Ruby on
-	 * Rails's [http://api.rubyonrails.org/classes/ActiveRecord/Base.html|ActiveRecord] ORM class
-	 * is a great example of this.  Unfortunately, JavaScript doesn't have a way of determining
-	 * an object's name, so the developer must provide a name.  Class fixes this by taking a String name for the class.
-	 * 
-	 *     $.Class("MyOrg.MyClass",{},{})
-	 *     MyOrg.MyClass.shortName //-> 'MyClass'
-	 *     MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
-	 * 
-	 * The fullName (with namespaces) and the shortName (without namespaces) are added to the Class's
-	 * static properties.
-	 *
-	 *
-	 * ## Setup and initialization methods
-	 * 
-	 * <p>
-	 * Class provides static and prototype initialization functions.
-	 * These come in two flavors - setup and init.
-	 * Setup is called before init and
-	 * can be used to 'normalize' init's arguments.
-	 * </p>
-	 * <div class='whisper'>PRO TIP: Typically, you don't need setup methods in your classes. Use Init instead.
-	 * Reserve setup methods for when you need to do complex pre-processing of your class before init is called.
-	 *
-	 * </div>
-	 * @codestart
-	 * $.Class("MyClass",
-	 * {
-	 *   setup: function() {} //static setup
-	 *   init: function() {} //static constructor
-	 * },
-	 * {
-	 *   setup: function() {} //prototype setup
-	 *   init: function() {} //prototype constructor
-	 * })
-	 * @codeend
-	 *
-	 * ### Setup
-	 * 
-	 * Setup functions are called before init functions.  Static setup functions are passed
-	 * the base class followed by arguments passed to the extend function.
-	 * Prototype static functions are passed the Class constructor 
-	 * function arguments.
-	 * 
-	 * If a setup function returns an array, that array will be used as the arguments
-	 * for the following init method.  This provides setup functions the ability to normalize
-	 * arguments passed to the init constructors.  They are also excellent places
-	 * to put setup code you want to almost always run.
-	 * 
-	 * 
-	 * The following is similar to how [jQuery.Controller.prototype.setup]
-	 * makes sure init is always called with a jQuery element and merged options
-	 * even if it is passed a raw
-	 * HTMLElement and no second parameter.
-	 * 
-	 *     $.Class("jQuery.Controller",{
-	 *       ...
-	 *     },{
-	 *       setup: function( el, options ) {
-	 *         ...
-	 *         return [$(el),
-	 *                 $.extend(true,
-	 *                    this.Class.defaults,
-	 *                    options || {} ) ]
-	 *       }
-	 *     })
-	 * 
-	 * Typically, you won't need to make or overwrite setup functions.
-	 * 
-	 * ### Init
-	 *
-	 * Init functions are called after setup functions.
-	 * Typically, they receive the same arguments
-	 * as their preceding setup function.  The Foo class's <code>init</code> method
-	 * gets called in the following example:
-	 * 
-	 *     $.Class("Foo", {
-	 *       init: function( arg1, arg2, arg3 ) {
-	 *         this.sum = arg1+arg2+arg3;
-	 *       }
-	 *     })
-	 *     var foo = new Foo(1,2,3);
-	 *     foo.sum //-> 6
-	 * 
-	 * ## Proxies
-	 * 
-	 * Similar to jQuery's proxy method, Class provides a
-	 * [jQuery.Class.static.proxy proxy]
-	 * function that returns a callback to a method that will always
-	 * have
-	 * <code>this</code> set to the class or instance of the class.
-	 * 
-	 * 
-	 * The following example uses this.proxy to make sure
-	 * <code>this.name</code> is available in <code>show</code>.
-	 * 
-	 *     $.Class("Todo",{
-	 *       init: function( name ) { 
-	 *       	this.name = name 
-	 *       },
-	 *       get: function() {
-	 *         $.get("/stuff",this.proxy('show'))
-	 *       },
-	 *       show: function( txt ) {
-	 *         alert(this.name+txt)
-	 *       }
-	 *     })
-	 *     new Todo("Trash").get()
-	 * 
-	 * Callback is available as a static and prototype method.
-	 * 
-	 * ##  Demo
-	 * 
-	 * @demo jquery/class/class.html
-	 * 
-	 * 
-	 * @constructor
-	 * 
-	 * To create a Class call:
-	 * 
-	 *     $.Class( [NAME , STATIC,] PROTOTYPE ) -> Class
-	 * 
-	 * <div class='params'>
-	 *   <div class='param'><label>NAME</label><code>{optional:String}</code>
-	 *   <p>If provided, this sets the shortName and fullName of the 
-	 *      class and adds it and any necessary namespaces to the 
-	 *      window object.</p>
-	 *   </div>
-	 *   <div class='param'><label>STATIC</label><code>{optional:Object}</code>
-	 *   <p>If provided, this creates static properties and methods
-	 *   on the class.</p>
-	 *   </div>
-	 *   <div class='param'><label>PROTOTYPE</label><code>{Object}</code>
-	 *   <p>Creates prototype methods on the class.</p>
-	 *   </div>
-	 * </div>
-	 * 
-	 * When a Class is created, the static [jQuery.Class.static.setup setup] 
-	 * and [jQuery.Class.static.init init]  methods are called.
-	 * 
-	 * To create an instance of a Class, call:
-	 * 
-	 *     new Class([args ... ]) -> instance
-	 * 
-	 * The created instance will have all the 
-	 * prototype properties and methods defined by the PROTOTYPE object.
-	 * 
-	 * When an instance is created, the prototype [jQuery.Class.prototype.setup setup] 
-	 * and [jQuery.Class.prototype.init init]  methods 
-	 * are called.
-	 */
-
-	clss = $.Class = function() {
+	can.Construct = function() {
 		if (arguments.length) {
-			clss.extend.apply(clss, arguments);
+			return can.Construct.extend.apply(can.Construct, arguments);
 		}
 	};
 
-	/* @Static*/
-	extend(clss, {
-		/**
-		 * @function proxy
-		 * Returns a callback function for a function on this Class.
-		 * Proxy ensures that 'this' is set appropriately.  
-		 * @codestart
-		 * $.Class("MyClass",{
-		 *     getData: function() {
-		 *         this.showing = null;
-		 *         $.get("data.json",this.proxy('gotData'),'json')
-		 *     },
-		 *     gotData: function( data ) {
-		 *         this.showing = data;
-		 *     }
-		 * },{});
-		 * MyClass.showData();
-		 * @codeend
-		 * <h2>Currying Arguments</h2>
-		 * Additional arguments to proxy will fill in arguments on the returning function.
-		 * @codestart
-		 * $.Class("MyClass",{
-		 *    getData: function( <b>callback</b> ) {
-		 *      $.get("data.json",this.proxy('process',<b>callback</b>),'json');
-		 *    },
-		 *    process: function( <b>callback</b>, jsonData ) { //callback is added as first argument
-		 *        jsonData.processed = true;
-		 *        callback(jsonData);
-		 *    }
-		 * },{});
-		 * MyClass.getData(showDataFunc)
-		 * @codeend
-		 * <h2>Nesting Functions</h2>
-		 * Proxy can take an array of functions to call as 
-		 * the first argument.  When the returned callback function
-		 * is called each function in the array is passed the return value of the prior function.  This is often used
-		 * to eliminate currying initial arguments.
-		 * @codestart
-		 * $.Class("MyClass",{
-		 *    getData: function( callback ) {
-		 *      //calls process, then callback with value from process
-		 *      $.get("data.json",this.proxy(['process2',callback]),'json') 
-		 *    },
-		 *    process2: function( type,jsonData ) {
-		 *        jsonData.processed = true;
-		 *        return [jsonData];
-		 *    }
-		 * },{});
-		 * MyClass.getData(showDataFunc);
-		 * @codeend
-		 * @param {String|Array} fname If a string, it represents the function to be called.  
-		 * If it is an array, it will call each function in order and pass the return value of the prior function to the
-		 * next function.
-		 * @return {Function} the callback function.
-		 */
-		proxy: function( funcs ) {
-
-			//args that should be curried
-			var args = makeArray(arguments),
-				self;
-
-			// get the functions to callback
-			funcs = args.shift();
-
-			// if there is only one function, make funcs into an array
-			if (!isArray(funcs) ) {
-				funcs = [funcs];
-			}
-			
-			// keep a reference to us in self
-			self = this;
-			
-			//!steal-remove-start
-			for( var i =0; i< funcs.length;i++ ) {
-				if(typeof funcs[i] == "string" && !isFunction(this[funcs[i]])){
-					throw ("class.js "+( this.fullName || this.Class.fullName)+" does not have a "+funcs[i]+"method!");
-				}
-			}
-			//!steal-remove-end
-			return function class_cb() {
-				// add the arguments after the curried args
-				var cur = concatArgs(args, arguments),
-					isString, 
-					length = funcs.length,
-					f = 0,
-					func;
-				
-				// go through each function to call back
-				for (; f < length; f++ ) {
-					func = funcs[f];
-					if (!func ) {
-						continue;
-					}
-					
-					// set called with the name of the function on self (this is how this.view works)
-					isString = typeof func == "string";
-					if ( isString && self._set_called ) {
-						self.called = func;
-					}
-					
-					// call the function
-					cur = (isString ? self[func] : func).apply(self, cur || []);
-					
-					// pass the result to the next function (if there is a next function)
-					if ( f < length - 1 ) {
-						cur = !isArray(cur) || cur._use_call ? [cur] : cur
-					}
-				}
-				return cur;
-			}
-		},
+	/**
+	 * @static
+	 */
+	can.extend(can.Construct, {
 		/**
 		 * @function newInstance
-		 * Creates a new instance of the class.  This method is useful for creating new instances
-		 * with arbitrary parameters.
-		 * <h3>Example</h3>
-		 * @codestart
-		 * $.Class("MyClass",{},{})
-		 * var mc = MyClass.newInstance.apply(null, new Array(parseInt(Math.random()*10,10))
-		 * @codeend
+		 * Creates a new instance of the constructor function.  This method is useful for creating new instances
+		 * with arbitrary parameters.  Typically you want to simply use the __new__ operator instead.
+		 * 
+		 * ## Example
+		 * 
+		 * The following creates a `Person` Construct and then creates a new instance of person, but
+		 * by using `apply` on newInstance to pass arbitrary parameters.
+		 * 
+		 *     var Person = can.Construct({
+		 *       init : function(first, middle, last) {
+		 *         this.first = first;
+		 *         this.middle = middle;
+		 *         this.last = last;
+		 *       }
+		 *     });
+		 * 
+		 *     var args = ["Justin","Barry","Meyer"],
+		 *         justin = new Person.newInstance.apply(null, args);
+		 * 
+		 * @param {Object} [args] arguments that get passed to [can.Construct::setup] and [can.Construct::init]. Note
+		 * that if [can.Construct::setup] returns an array, those arguments will be passed to [can.Construct::init]
+		 * instead.
 		 * @return {class} instance of the class
 		 */
 		newInstance: function() {
-			// get a raw instance objet (init is not called)
-			var inst = this.rawInstance(),
+			// Get a raw instance object (`init` is not called).
+			var inst = this.instance(),
+				arg = arguments,
 				args;
 				
-			// call setup if there is a setup
+			// Call `setup` if there is a `setup`
 			if ( inst.setup ) {
 				args = inst.setup.apply(inst, arguments);
 			}
-			// call init if there is an init, if setup returned args, use those as the arguments
+
+			// Call `init` if there is an `init`  
+			// If `setup` returned `args`, use those as the arguments
 			if ( inst.init ) {
-				inst.init.apply(inst, isArray(args) ? args : arguments);
+				inst.init.apply(inst, args || arguments);
 			}
+
 			return inst;
 		},
+		// Overwrites an object with methods. Used in the `super` plugin.
+		// `newProps` - New properties to add.  
+		// `oldProps` - Where the old properties might be (used with `super`).  
+		// `addTo` - What we are adding to.
+		_inherit: function( newProps, oldProps, addTo ) {
+			can.extend(addTo || newProps, newProps || {})
+		},
+		// used for overwriting a single property.
+		// this should be used for patching other objects
+		// the super plugin overwrites this
+		_overwrite : function(what, oldProps, propName, val){
+			what[propName] = val;
+		},
+		// Set `defaults` as the merger of the parent `defaults` and this 
+		// object's `defaults`. If you overwrite this method, make sure to
+		// include option merging logic.
 		/**
-		 * Setup gets called on the inherting class with the base class followed by the
-		 * inheriting class's raw properties.
+		 * Setup is called immediately after a constructor function is created and 
+		 * set to inherit from its base constructor.  It is called with a base constructor and
+		 * the params used to extend the base constructor. It is useful for setting up additional inheritance work.
 		 * 
-		 * Setup will deeply extend a static defaults property on the base class with 
-		 * properties on the base class.  For example:
+		 * ## Example
 		 * 
-		 *     $.Class("MyBase",{
+		 * The following creates a `Base` class that when extended, adds a reference to the base
+		 * class.
+		 * 
+		 * 
+		 *     Base = can.Construct({
+		 *       setup : function(base, fullName, staticProps, protoProps){
+		 * 	       this.base = base;
+		 *         // call base functionality
+		 *         can.Construct.setup.apply(this, arguments)
+		 *       }
+		 *     },{});
+		 * 
+		 *     Base.base //-> can.Construct
+		 *     
+		 *     Inherting = Base({});
+		 * 
+		 *     Inheriting.base //-> Base
+		 * 
+		 * ## Base Functionality
+		 * 
+		 * Setup deeply extends the static `defaults` property of the base constructor with 
+		 * properties of the inheriting constructor.  For example:
+		 * 
+		 *     MyBase = can.Construct({
 		 *       defaults : {
 		 *         foo: 'bar'
 		 *       }
 		 *     },{})
 		 * 
-		 *     MyBase("Inheriting",{
+		 *     Inheriting = MyBase({
 		 *       defaults : {
 		 *         newProp : 'newVal'
 		 *       }
 		 *     },{}
 		 *     
-		 *     Inheriting.defaults -> {foo: 'bar', 'newProp': 'newVal'}
+		 *     Inheriting.defaults // -> {foo: 'bar', 'newProp': 'newVal'}
 		 * 
-		 * @param {Object} baseClass the base class that is being inherited from
-		 * @param {String} fullName the name of the new class
-		 * @param {Object} staticProps the static properties of the new class
-		 * @param {Object} protoProps the prototype properties of the new class
+		 * @param {Object} base the base constructor that is being inherited from
+		 * @param {String} [fullName] the name of the new constructor
+		 * @param {Object} [staticProps] the static properties of the new constructor
+		 * @param {Object} [protoProps] the prototype properties of the new constructor
 		 */
-		setup: function( baseClass, fullName ) {
-			// set defaults as the merger of the parent defaults and this object's defaults
-			this.defaults = extend(true, {}, baseClass.defaults, this.defaults);
-			return arguments;
+		setup: function( base, fullName ) {
+			this.defaults = can.extend(true,{}, base.defaults, this.defaults);
 		},
-		rawInstance: function() {
-			// prevent running init
-			initializing = true;
+		// Create's a new `class` instance without initializing by setting the
+		// `initializing` flag.
+		instance: function() {
+
+			// Prevents running `init`.
+			initializing = 1;
+
 			var inst = new this();
-			initializing = false;
-			// allow running init
+
+			// Allow running `init`.
+			initializing = 0;
+
 			return inst;
 		},
+		// Extends classes.
 		/**
+		 * @hide
 		 * Extends a class with new static and prototype functions.  There are a variety of ways
 		 * to use extend:
 		 * 
 		 *     // with className, static and prototype functions
-		 *     $.Class('Task',{ STATIC },{ PROTOTYPE })
+		 *     can.Construct('Task',{ STATIC },{ PROTOTYPE })
 		 *     // with just classname and prototype functions
-		 *     $.Class('Task',{ PROTOTYPE })
+		 *     can.Construct('Task',{ PROTOTYPE })
 		 *     // with just a className
-		 *     $.Class('Task')
+		 *     can.Construct('Task')
 		 * 
 		 * You no longer have to use <code>.extend</code>.  Instead, you can pass those options directly to
-		 * $.Class (and any inheriting classes):
+		 * can.Construct (and any inheriting classes):
 		 * 
 		 *     // with className, static and prototype functions
-		 *     $.Class('Task',{ STATIC },{ PROTOTYPE })
+		 *     can.Construct('Task',{ STATIC },{ PROTOTYPE })
 		 *     // with just classname and prototype functions
-		 *     $.Class('Task',{ PROTOTYPE })
+		 *     can.Construct('Task',{ PROTOTYPE })
 		 *     // with just a className
-		 *     $.Class('Task')
+		 *     can.Construct('Task')
 		 * 
 		 * @param {String} [fullName]  the classes name (used for classes w/ introspection)
 		 * @param {Object} [klass]  the new classes static/class functions
 		 * @param {Object} [proto]  the new classes prototype functions
 		 * 
-		 * @return {jQuery.Class} returns the new class
+		 * @return {can.Construct} returns the new class
 		 */
 		extend: function( fullName, klass, proto ) {
-			// figure out what was passed and normalize it
+			// Figure out what was passed and normalize it.
 			if ( typeof fullName != 'string' ) {
 				proto = klass;
 				klass = fullName;
 				fullName = null;
 			}
-			if (!proto ) {
+
+			if ( ! proto ) {
 				proto = klass;
 				klass = null;
 			}
-
 			proto = proto || {};
+
 			var _super_class = this,
-				_super = this[STR_PROTOTYPE],
+				_super = this.prototype,
 				name, shortName, namespace, prototype;
 
 			// Instantiate a base class (but only create the instance,
-			// don't run the init constructor)
-			initializing = true;
-			prototype = new this();
-			initializing = false;
+			// don't run the init constructor).
+			prototype = this.instance();
 			
-			// Copy the properties over onto the new prototype
-			inheritProps(proto, _super, prototype);
+			// Copy the properties over onto the new prototype.
+			can.Construct._inherit(proto, _super, prototype);
 
-			// The dummy class constructor
-			function Class() {
-				// All construction is actually done in the init method
-				if ( initializing ) return;
-
-				// we are being called w/o new, we are extending
-				if ( this.constructor !== Class && arguments.length ) { 
-					return arguments.callee.extend.apply(arguments.callee, arguments)
-				} else { //we are being called w/ new
-					return this.Class.newInstance.apply(this.Class, arguments)
-				}
-			}
-			// Copy old stuff onto class
-			for ( name in this ) {
-				if ( this.hasOwnProperty(name) ) {
-					Class[name] = this[name];
+			// The dummy class constructor.
+			function Constructor() {
+				// All construction is actually done in the init method.
+				if ( ! initializing ) {
+					return this.constructor !== Constructor && arguments.length ?
+						// We are being called without `new` or we are extending.
+						arguments.callee.extend.apply(arguments.callee, arguments) :
+						// We are being called with `new`.
+						this.constructor.newInstance.apply(this.constructor, arguments);
 				}
 			}
 
-			// copy new static props on class
-			inheritProps(klass, this, Class);
+			// Copy old stuff onto class (can probably be merged w/ inherit)
+			for ( name in _super_class ) {
+				if ( _super_class.hasOwnProperty(name) ) {
+					Constructor[name] = _super_class[name];
+				}
+			}
 
-			// do namespace stuff
+			// Copy new static properties on class.
+			can.Construct._inherit(klass, _super_class, Constructor);
+
+			// Setup namespaces.
 			if ( fullName ) {
 
-				var parts = fullName.split(/\./),
+				var parts = fullName.split('.'),
 					shortName = parts.pop(),
-					current = getObject(parts.join('.'), window, true),
-					namespace = current;
+					current = can.getObject(parts.join('.'), window, true),
+					namespace = current,
+					_fullName = can.underscore(fullName.replace(/\./g, "_")),
+					_shortName = can.underscore(shortName);
 
-				//!steal-remove-start
-				if (!Class.nameOk ) {
-					//steal.dev.isHappyName(fullName)
-				}
-				if(current[shortName]){
-					
-				}
-				//!steal-remove-end
-				current[shortName] = Class;
+				
+				
+				current[shortName] = Constructor;
 			}
 
-			// set things that can't be overwritten
-			extend(Class, {
+			// Set things that shouldn't be overwritten.
+			can.extend(Constructor, {
+				constructor: Constructor,
 				prototype: prototype,
 				/**
 				 * @attribute namespace 
-				 * The namespaces object
+				 * The namespace keyword is used to declare a scope. This enables you to organize
+				 * code and provides a way to create globally unique types.
 				 * 
-				 *     $.Class("MyOrg.MyClass",{},{})
-				 *     MyOrg.MyClass.namespace //-> MyOrg
+				 *     can.Construct("MyOrg.MyConstructor",{},{})
+				 *     MyOrg.MyConstructor.namespace //-> MyOrg
 				 * 
 				 */
 				namespace: namespace,
 				/**
-				 * @attribute shortName 
-				 * The name of the class without its namespace, provided for introspection purposes.
+				 * @attribute shortName
+				 * If you pass a name when creating a Construct, the `shortName` property will be set to the
+				 * actual name without the namespace:
 				 * 
-				 *     $.Class("MyOrg.MyClass",{},{})
-				 *     MyOrg.MyClass.shortName //-> 'MyClass'
-				 *     MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
+				 *     can.Construct("MyOrg.MyConstructor",{},{})
+				 *     MyOrg.MyConstructor.shortName //-> 'MyConstructor'
+				 *     MyOrg.MyConstructor.fullName //->  'MyOrg.MyConstructor'
 				 * 
 				 */
 				shortName: shortName,
-				constructor: Class,
+				_shortName : _shortName,
 				/**
 				 * @attribute fullName 
-				 * The full name of the class, including namespace, provided for introspection purposes.
+				 * If you pass a name when creating a Construct, the `fullName` property will be set to
+				 * the actual name including the full namespace:
 				 * 
-				 *     $.Class("MyOrg.MyClass",{},{})
-				 *     MyOrg.MyClass.shortName //-> 'MyClass'
-				 *     MyOrg.MyClass.fullName //->  'MyOrg.MyClass'
+				 *     can.Construct("MyOrg.MyConstructor",{},{})
+				 *     MyOrg.MyConstructor.shortName //-> 'MyConstructor'
+				 *     MyOrg.MyConstructor.fullName //->  'MyOrg.MyConstructor'
 				 * 
 				 */
-				fullName: fullName
+				fullName: fullName,
+				_fullName: _fullName
 			});
 
-			//make sure our prototype looks nice
-			Class[STR_PROTOTYPE].Class = Class[STR_PROTOTYPE].constructor = Class;
+			// Make sure our prototype looks nice.
+			Constructor.prototype.constructor = Constructor;
 
 			
-
-			// call the class setup
-			var args = Class.setup.apply(Class, concatArgs([_super_class],arguments));
+			// Call the class `setup` and `init`
+			var t = [_super_class].concat(can.makeArray(arguments)),
+				args = Constructor.setup.apply(Constructor, t );
 			
-			// call the class init
-			if ( Class.init ) {
-				Class.init.apply(Class, args || concatArgs([_super_class],arguments));
+			if ( Constructor.init ) {
+				Constructor.init.apply(Constructor, args || t );
 			}
 
-			/* @Prototype*/
-			return Class;
+			/**
+			 * @prototype
+			 */
+			return Constructor;
 			/** 
 			 * @function setup
-			 * If a setup method is provided, it is called when a new 
-			 * instances is created.  It gets passed the same arguments that
-			 * were given to the Class constructor function (<code> new Class( arguments ... )</code>).
 			 * 
-			 *     $.Class("MyClass",
-			 *     {
-			 *        setup: function( val ) {
-			 *           this.val = val;
-			 *         }
-			 *     })
-			 *     var mc = new MyClass("Check Check")
-			 *     mc.val //-> 'Check Check'
+			 * If a prototype `setup` method is provided, it is called when a new 
+			 * instance is created.  It is passed the same arguments that
+			 * were passed to the Constructor constructor 
+			 * function (`new Constructor( arguments ... )`).  If `setup` returns an
+			 * array, those arguments are passed to [can.Construct::init] instead
+			 * of the original arguments.
 			 * 
-			 * Setup is called before [jQuery.Class.prototype.init init].  If setup 
-			 * return an array, those arguments will be used for init. 
+			 * Typically, you should only provide [can.Construct::init] methods to 
+			 * handle initilization code. Use `setup` for:
 			 * 
-			 *     $.Class("jQuery.Controller",{
-			 *       setup : function(htmlElement, rawOptions){
-			 *         return [$(htmlElement), 
-			 *                   $.extend({}, this.Class.defaults, rawOptions )] 
+			 *   - initialization code that you want to run before inheriting constructor's 
+			 *     init method is called.
+			 *   - initialization code that should run without inheriting constructors having to 
+			 *     call base methods (ex: `MyBase.prototype.init.call(this, arg1)`).
+			 *   - passing modified/normalized arguments to `init`.
+			 * 
+			 * ## Examples
+			 * 
+			 * The following is similar to code in [can.Control]'s setup method that
+			 * converts the first argument to a jQuery collection and extends the 
+			 * second argument with the constructor's [can.Construct.defaults defaults]:
+			 * 
+			 *     can.Construct("can.Control",{
+			 *       setup: function( htmlElement, rawOptions ) {
+			 *         // set this.element
+			 *         this.element = $(htmlElement);
+			 * 
+			 *         // set this.options
+			 *         this.options = can.extend( {}, 
+			 * 	                               this.constructor.defaults, 
+			 * 	                               rawOptions );
+			 * 
+			 *         // pass the wrapped element and extended options
+			 *         return [this.element, this.options] 
 			 *       }
 			 *     })
 			 * 
-			 * <div class='whisper'>PRO TIP: 
-			 * Setup functions are used to normalize constructor arguments and provide a place for
-			 * setup code that extending classes don't have to remember to call _super to
-			 * run.
-			 * </div>
+			 * ## Base Functionality
 			 * 
-			 * Setup is not defined on $.Class itself, so calling super in inherting classes
+			 * Setup is not defined on can.Construct itself, so calling super in inherting classes
 			 * will break.  Don't do the following:
 			 * 
-			 *     $.Class("Thing",{
+			 *     Thing = can.Construct({
 			 *       setup : function(){
 			 *         this._super(); // breaks!
 			 *       }
 			 *     })
 			 * 
-			 * @return {Array|undefined} If an array is return, [jQuery.Class.prototype.init] is 
+			 * @return {Array|undefined} If an array is return, [can.Construct.prototype.init] is 
 			 * called with those arguments; otherwise, the original arguments are used.
 			 */
-			//break up
+			//  
 			/** 
 			 * @function init
-			 * If an <code>init</code> method is provided, it gets called when a new instance
-			 * is created.  Init gets called after [jQuery.Class.prototype.setup setup], typically with the 
-			 * same arguments passed to the Class 
-			 * constructor: (<code> new Class( arguments ... )</code>).  
 			 * 
-			 *     $.Class("MyClass",
-			 *     {
-			 *        init: function( val ) {
-			 *           this.val = val;
-			 *        }
+			 * If a prototype `init` method is provided, it gets called after [can.Construct::setup] when a new instance
+			 * is created. The `init` method is where your constructor code should go. Typically,
+			 * you will find it saving the arguments passed to the constructor function for later use. 
+			 * 
+			 * ## Examples
+			 * 
+			 * The following creates a Person constructor with a first and last name property:
+			 * 
+			 *     var Person = can.Construct({
+			 *       init : function(first, last){
+			 *         this.first = first;
+			 *         this.last = last;
+			 *       }
 			 *     })
-			 *     var mc = new MyClass(1)
-			 *     mc.val //-> 1
 			 * 
-			 * [jQuery.Class.prototype.setup Setup] is able to modify the arguments passed to init.  Read
-			 * about it there.
+			 *     var justin = new Person("Justin","Meyer");
+			 *     justin.first //-> "Justin"
+			 *     justin.last  //-> "Meyer"
 			 * 
+			 * The following extends person to create a Programmer constructor
+			 * 
+			 *     var Programmer = Person({
+			 *       init : function(first, last, lang){
+			 *         // call base functionality
+			 *         Person.prototype.init.call(this, first, last);
+			 * 
+			 *         // save the lang
+			 *         this.lang = lang
+			 *       },
+			 *       greet : function(){
+			 *         return "I am " + this.first + " " + this.last + ". " +
+			 *                "I write " + this.lang + ".";
+			 *       }
+			 *     })
+			 * 
+			 *     var brian = new Programmer("Brian","Moschel","ECMAScript")
+			 *     brian.greet() //-> "I am Brian Moschel.\
+			 *                   //    I write ECMAScript."
+			 * 
+			 * ## Notes
+			 * 
+			 * [can.Construct::setup] is able to modify the arguments passed to init.
+			 * 
+			 * It doesn't matter what init returns because the `new` keyword always
+			 * returns the new object.
 			 */
-			//Breaks up code
+			//  
 			/**
 			 * @attribute constructor
 			 * 
-			 * A reference to the Class (or constructor function).  This allows you to access 
-			 * a class's static properties from an instance.
+			 * A reference to the constructor function that created the instance. It allows you to access
+			 * the constructor function's static properties from an instance.
 			 * 
-			 * ### Quick Example
+			 * ## Example
 			 * 
-			 *     // a class with a static property
-			 *     $.Class("MyClass", {staticProperty : true}, {});
-			 *     
-			 *     // a new instance of myClass
-			 *     var mc1 = new MyClass();
+			 * Incrementing a static counter, that counts how many instances have been created:
 			 * 
-			 *     // read the static property from the instance:
-			 *     mc1.constructor.staticProperty //-> true
-			 *     
-			 * Getting static properties with the constructor property, like
-			 * [jQuery.Class.static.fullName fullName], is very common.
+			 *     Counter = can.Construct({
+			 * 	     count : 0
+			 *     },{
+			 *       init : function(){
+			 *         this.constructor.count++;
+			 *       }
+			 *     })
+			 * 
+			 *     new Counter();
+			 *     Counter.count //-> 1; 
 			 * 
 			 */
 		}
 
-	})
+	});
+	return can.Construct;
+})(module["can/util/string/string.js"]);// ## can/control/control.js
 
-
-
-
-
-	clss.callback = clss[STR_PROTOTYPE].callback = clss[STR_PROTOTYPE].
-	/**
-	 * @function proxy
-	 * Returns a method that sets 'this' to the current instance.  This does the same thing as 
-	 * and is described better in [jQuery.Class.static.proxy].
-	 * The only difference is this proxy works
-	 * on a instance instead of a class.
-	 * @param {String|Array} fname If a string, it represents the function to be called.  
-	 * If it is an array, it will call each function in order and pass the return value of the prior function to the
-	 * next function.
-	 * @return {Function} the callback function
-	 */
-	proxy = clss.proxy;
-
-
-})(jQuery);;
-(function( $ ) {
-	// ------- HELPER FUNCTIONS  ------
+module['can/control/control.js'] = (function( can ) {
+	// ## control.js
+	// `can.Control`  
+	// _Controller_
 	
-	// Binds an element, returns a function that unbinds
+	// Binds an element, returns a function that unbinds.
 	var bind = function( el, ev, callback ) {
-		var wrappedCallback,
-			binder = el.bind && el.unbind ? el : $(isFunction(el) ? [el] : el);
-		//this is for events like >click.
-		if ( ev.indexOf(">") === 0 ) {
-			ev = ev.substr(1);
-			wrappedCallback = function( event ) {
-				if ( event.target === el ) {
-					callback.apply(this, arguments);
-				} 
+
+			can.bind.call( el, ev, callback );
+
+			return function() {
+				can.unbind.call(el, ev, callback);
 			};
-		}
-		binder.bind(ev, wrappedCallback || callback);
-		// if ev name has >, change the name and bind
-		// in the wrapped callback, check that the element matches the actual element
-		return function() {
-			binder.unbind(ev, wrappedCallback || callback);
-			el = ev = callback = wrappedCallback = null;
-		};
-	},
-		makeArray = $.makeArray,
-		isArray = $.isArray,
-		isFunction = $.isFunction,
-		extend = $.extend,
-		Str = $.String,
-		each = $.each,
-		
-		STR_PROTOTYPE = 'prototype',
-		STR_CONSTRUCTOR = 'constructor',
-		slice = Array[STR_PROTOTYPE].slice,
-		
-		// Binds an element, returns a function that unbinds
+		},
+		isFunction = can.isFunction,
+		extend = can.extend,
+		each = can.each,
+		slice = [].slice,
+		paramReplacer = /\{([^\}]+)\}/g,
+		special = can.getObject("$.event.special") || {},
+
+		// Binds an element, returns a function that unbinds.
 		delegate = function( el, selector, ev, callback ) {
-			var binder = el.delegate && el.undelegate ? el : $(isFunction(el) ? [el] : el)
-			binder.delegate(selector, ev, callback);
+			can.delegate.call(el, selector, ev, callback);
 			return function() {
-				binder.undelegate(selector, ev, callback);
-				binder = el = ev = callback = selector = null;
+				can.undelegate.call(el, selector, ev, callback);
 			};
 		},
 		
-		// calls bind or unbind depending if there is a selector
+		// Calls bind or unbind depending if there is a selector.
 		binder = function( el, ev, callback, selector ) {
-			return selector ? delegate(el, selector, ev, callback) : bind(el, ev, callback);
+			return selector ?
+				delegate( el, can.trim( selector ), ev, callback ) : 
+				bind( el, ev, callback );
 		},
 		
-		// moves 'this' to the first argument, wraps it with jQuery if it's an element
-		shifter = function shifter(context, name) {
-			var method = typeof name == "string" ? context[name] : name;
-			return function() {
-				context.called = name;
-    			return method.apply(context, [this.nodeName ? $(this) : this].concat( slice.call(arguments, 0) ) );
-			};
-		},
-		// matches dots
-		dotsReg = /\./g,
-		// matches controller
-		controllersReg = /_?controllers?/ig,
-		//used to remove the controller from the name
-		underscoreAndRemoveController = function( className ) {
-			return Str.underscore(className.replace("jQuery.", "").replace(dotsReg, '_').replace(controllersReg, ""));
-		},
-		// checks if it looks like an action
-		actionMatcher = /[^\w]/,
-		// handles parameterized action names
-		parameterReplacer = /\{([^\}]+)\}/g,
-		breaker = /^(?:(.*?)\s)?([\w\.\:>]+)$/,
-		basicProcessor,
-		data = function(el, data){
-			return $.data(el, "controllers", data)
-		};
+		basicProcessor;
+	
 	/**
-	 * @class jQuery.Controller
-	 * @parent jquerymx
-	 * @plugin jquery/controller
-	 * @download  http://jmvcsite.heroku.com/pluginify?plugins[]=jquery/controller/controller.js
-	 * @test jquery/controller/qunit.html
-	 * @inherits jQuery.Class
-	 * @description jQuery widget factory.
-	 * 
-	 * jQuery.Controller helps create organized, memory-leak free, rapidly performing
-	 * jQuery widgets.  Its extreme flexibility allows it to serve as both
-	 * a traditional View and a traditional Controller.  
-	 * 
-	 * This means it is used to
-	 * create things like tabs, grids, and contextmenus as well as 
-	 * organizing them into higher-order business rules.
-	 * 
-	 * Controllers make your code deterministic, reusable, organized and can tear themselves 
-	 * down auto-magically. Read about [http://jupiterjs.com/news/writing-the-perfect-jquery-plugin 
-	 * the theory behind controller] and 
-	 * a [http://jupiterjs.com/news/organize-jquery-widgets-with-jquery-controller walkthrough of its features]
-	 * on Jupiter's blog. [mvc.controller Get Started with jQueryMX] also has a great walkthrough.
-	 * 
-	 * Controller inherits from [jQuery.Class $.Class] and makes heavy use of 
-	 * [http://api.jquery.com/delegate/ event delegation]. Make sure 
-	 * you understand these concepts before using it.
-	 * 
-	 * ## Basic Example
-	 * 
-	 * Instead of
-	 * 
-	 * 
-	 *     $(function(){
-	 *       $('#tabs').click(someCallbackFunction1)
-	 *       $('#tabs .tab').click(someCallbackFunction2)
-	 *       $('#tabs .delete click').click(someCallbackFunction3)
-	 *     });
-	 * 
-	 * do this
-	 * 
-	 *     $.Controller('Tabs',{
-	 *       click: function() {...},
-	 *       '.tab click' : function() {...},
-	 *       '.delete click' : function() {...}
-	 *     })
-	 *     $('#tabs').tabs();
-	 * 
-	 * 
-	 * ## Tabs Example
-	 * 
-	 * @demo jquery/controller/controller.html
-	 * 
-	 * ## Using Controller
-	 * 
-	 * Controller helps you build and organize jQuery plugins.  It can be used
-	 * to build simple widgets, like a slider, or organize multiple
-	 * widgets into something greater.
-	 * 
-	 * To understand how to use Controller, you need to understand 
-	 * the typical lifecycle of a jQuery widget and how that maps to
-	 * controller's functionality:
-	 * 
-	 * ### A controller class is created.
-	 *       
-	 *     $.Controller("MyWidget",
-	 *     {
-	 *       defaults :  {
-	 *         message : "Remove Me"
-	 *       }
-	 *     },
-	 *     {
-	 *       init : function(rawEl, rawOptions){ 
-	 *         this.element.append(
-	 *            "<div>"+this.options.message+"</div>"
-	 *           );
-	 *       },
-	 *       "div click" : function(div, ev){ 
-	 *         div.remove();
-	 *       }  
-	 *     }) 
-	 *     
-	 * This creates a <code>$.fn.my_widget</code> jQuery helper function
-	 * that can be used to create a new controller instance on an element. Find
-	 * more information [jquery.controller.plugin  here] about the plugin gets created 
-	 * and the rules around its name.
-	 *       
-	 * ### An instance of controller is created on an element
-	 * 
-	 *     $('.thing').my_widget(options) // calls new MyWidget(el, options)
-	 * 
-	 * This calls <code>new MyWidget(el, options)</code> on 
-	 * each <code>'.thing'</code> element.  
-	 *     
-	 * When a new [jQuery.Class Class] instance is created, it calls the class's
-	 * prototype setup and init methods. Controller's [jQuery.Controller.prototype.setup setup]
-	 * method:
-	 *     
-	 *  - Sets [jQuery.Controller.prototype.element this.element] and adds the controller's name to element's className.
-	 *  - Merges passed in options with defaults object and sets it as [jQuery.Controller.prototype.options this.options]
-	 *  - Saves a reference to the controller in <code>$.data</code>.
-	 *  - [jquery.controller.listening Binds all event handler methods].
-	 *   
-	 * 
-	 * ### The controller responds to events
-	 * 
-	 * Typically, Controller event handlers are automatically bound.  However, there are
-	 * multiple ways to [jquery.controller.listening listen to events] with a controller.
-	 * 
-	 * Once an event does happen, the callback function is always called with 'this' 
-	 * referencing the controller instance.  This makes it easy to use helper functions and
-	 * save state on the controller.
-	 * 
-	 * 
-	 * ### The widget is destroyed
-	 * 
-	 * If the element is removed from the page, the 
-	 * controller's [jQuery.Controller.prototype.destroy] method is called.
-	 * This is a great place to put any additional teardown functionality.
-	 * 
-	 * You can also teardown a controller programatically like:
-	 * 
-	 *     $('.thing').my_widget('destroy');
-	 * 
-	 * ## Todos Example
-	 * 
-	 * Lets look at a very basic example - 
-	 * a list of todos and a button you want to click to create a new todo.
-	 * Your HTML might look like:
-	 * 
-	 * @codestart html
-	 * &lt;div id='todos'>
-	 *  &lt;ol>
-	 *    &lt;li class="todo">Laundry&lt;/li>
-	 *    &lt;li class="todo">Dishes&lt;/li>
-	 *    &lt;li class="todo">Walk Dog&lt;/li>
-	 *  &lt;/ol>
-	 *  &lt;a class="create">Create&lt;/a>
-	 * &lt;/div>
-	 * @codeend
-	 * 
-	 * To add a mousover effect and create todos, your controller might look like:
-	 * 
-	 *     $.Controller('Todos',{
-	 *       ".todo mouseover" : function( el, ev ) {
-	 *         el.css("backgroundColor","red")
-	 *       },
-	 *       ".todo mouseout" : function( el, ev ) {
-	 *         el.css("backgroundColor","")
-	 *       },
-	 *       ".create click" : function() {
-	 *         this.find("ol").append("<li class='todo'>New Todo</li>"); 
-	 *       }
-	 *     })
-	 * 
-	 * Now that you've created the controller class, you've must attach the event handlers on the '#todos' div by
-	 * creating [jQuery.Controller.prototype.setup|a new controller instance].  There are 2 ways of doing this.
-	 * 
-	 * @codestart
-	 * //1. Create a new controller directly:
-	 * new Todos($('#todos'));
-	 * //2. Use jQuery function
-	 * $('#todos').todos();
-	 * @codeend
-	 * 
-	 * ## Controller Initialization
-	 * 
-	 * It can be extremely useful to add an init method with 
-	 * setup functionality for your widget.
-	 * 
-	 * In the following example, I create a controller that when created, will put a message as the content of the element:
-	 * 
-	 *     $.Controller("SpecialController",
-	 *     {
-	 *       init: function( el, message ) {
-	 *         this.element.html(message)
-	 *       }
-	 *     })
-	 *     $(".special").special("Hello World")
-	 * 
-	 * ## Removing Controllers
-	 * 
-	 * Controller removal is built into jQuery.  So to remove a controller, you just have to remove its element:
-	 * 
-	 * @codestart
-	 * $(".special_controller").remove()
-	 * $("#containsControllers").html("")
-	 * @codeend
-	 * 
-	 * It's important to note that if you use raw DOM methods (<code>innerHTML, removeChild</code>), the controllers won't be destroyed.
-	 * 
-	 * If you just want to remove controller functionality, call destroy on the controller instance:
-	 * 
-	 * @codestart
-	 * $(".special_controller").controller().destroy()
-	 * @codeend
-	 * 
-	 * ## Accessing Controllers
-	 * 
-	 * Often you need to get a reference to a controller, there are a few ways of doing that.  For the 
-	 * following example, we assume there are 2 elements with <code>className="special"</code>.
-	 * 
-	 * @codestart
-	 * //creates 2 foo controllers
-	 * $(".special").foo()
-	 * 
-	 * //creates 2 bar controllers
-	 * $(".special").bar()
-	 * 
-	 * //gets all controllers on all elements:
-	 * $(".special").controllers() //-> [foo, bar, foo, bar]
-	 * 
-	 * //gets only foo controllers
-	 * $(".special").controllers(FooController) //-> [foo, foo]
-	 * 
-	 * //gets all bar controllers
-	 * $(".special").controllers(BarController) //-> [bar, bar]
-	 * 
-	 * //gets first controller
-	 * $(".special").controller() //-> foo
-	 * 
-	 * //gets foo controller via data
-	 * $(".special").data("controllers")["FooController"] //-> foo
-	 * @codeend
-	 * 
-	 * ## Calling methods on Controllers
-	 * 
-	 * Once you have a reference to an element, you can call methods on it.  However, Controller has
-	 * a few shortcuts:
-	 * 
-	 * @codestart
-	 * //creates foo controller
-	 * $(".special").foo({name: "value"})
-	 * 
-	 * //calls FooController.prototype.update
-	 * $(".special").foo({name: "value2"})
-	 * 
-	 * //calls FooController.prototype.bar
-	 * $(".special").foo("bar","something I want to pass")
-	 * @codeend
-	 * 
-	 * These methods let you call one controller from another controller.
-	 * 
+	 * @add can.Control
 	 */
-	$.Class("jQuery.Controller",
+	var Control = can.Control = can.Construct(
 	/** 
 	 * @Static
 	 */
 	{
+		// Setup pre-processes which methods are event listeners.
 		/**
-		 * Does 2 things:
+		 * @hide
 		 * 
-		 *   - Creates a jQuery helper for this controller.</li>
-		 *   - Calculates and caches which functions listen for events.</li>
-		 *    
-		 * ### jQuery Helper Naming Examples
-		 * 
-		 * 
-		 *     "TaskController" -> $().task_controller()
-		 *     "Controllers.Task" -> $().controllers_task()
+		 * Setup pre-process which methods are event listeners.
 		 * 
 		 */
 		setup: function() {
-			// Allow contollers to inherit "defaults" from superclasses as it done in $.Class
-			this._super.apply(this, arguments);
 
-			// if you didn't provide a name, or are controller, don't do anything
-			if (!this.shortName || this.fullName == "jQuery.Controller" ) {
-				return;
-			}
-			// cache the underscored names
-			this._fullName = underscoreAndRemoveController(this.fullName);
-			this._shortName = underscoreAndRemoveController(this.shortName);
+			// Allow contollers to inherit "defaults" from super-classes as it 
+			// done in `can.Construct`
+			can.Construct.setup.apply( this, arguments );
 
-			var controller = this,
-				/**
-				 * @attribute pluginName
-				 * Setting the <code>pluginName</code> property allows you
-				 * to change the jQuery plugin helper name from its 
-				 * default value.
-				 * 
-				 *     $.Controller("Mxui.Layout.Fill",{
-				 *       pluginName: "fillWith"
-				 *     },{});
-				 *     
-				 *     $("#foo").fillWith();
-				 */
-				pluginname = this.pluginName || this._fullName,
-				funcName, forLint;
+			// If you didn't provide a name, or are `control`, don't do anything.
+			if ( can.Control ) {
 
-			// create jQuery plugin
-			if (!$.fn[pluginname] ) {
-				$.fn[pluginname] = function( options ) {
+				// Cache the underscored names.
+				var control = this,
+					funcName;
 
-					var args = makeArray(arguments),
-						//if the arg is a method on this controller
-						isMethod = typeof options == "string" && isFunction(controller[STR_PROTOTYPE][options]),
-						meth = args[0];
-					return this.each(function() {
-						//check if created
-						var controllers = data(this),
-							//plugin is actually the controller instance
-							plugin = controllers && controllers[pluginname];
-
-						if ( plugin ) {
-							if ( isMethod ) {
-								// call a method on the controller with the remaining args
-								plugin[meth].apply(plugin, args.slice(1));
-							} else {
-								// call the plugin's update method
-								plugin.update.apply(plugin, args);
-							}
-
-						} else {
-							//create a new controller instance
-							controller.newInstance.apply(controller, [this].concat(args));
-						}
-					});
-				};
-			}
-
-			// make sure listensTo is an array
-			//!steal-remove-start
-			if (!isArray(this.listensTo) ) {
-				throw "listensTo is not an array in " + this.fullName;
-			}
-			//!steal-remove-end
-			// calculate and cache actions
-			this.actions = {};
-
-			for ( funcName in this[STR_PROTOTYPE] ) {
-				if (funcName == 'constructor' || !isFunction(this[STR_PROTOTYPE][funcName]) ) {
-					continue;
-				}
-				if ( this._isAction(funcName) ) {
-					this.actions[funcName] = this._action(funcName);
+				// Calculate and cache actions.
+				control.actions = {};
+				for ( funcName in control.prototype ) {
+					if ( control._isAction(funcName) ) {
+						control.actions[funcName] = control._action(funcName);
+					}
 				}
 			}
 		},
-		hookup: function( el ) {
-			return new this(el);
+
+		// Moves `this` to the first argument, wraps it with `jQuery` if it's an element
+		_shifter : function( context, name ) {
+
+			var method = typeof name == "string" ? context[name] : name;
+
+			if ( ! isFunction( method )) {
+				method = context[ method ];
+			}
+			
+			return function() {
+				context.called = name;
+				return method.apply(context, [this.nodeName ? can.$(this) : this].concat( slice.call(arguments, 0)));
+			};
 		},
 
+		// Return `true` if is an action.
 		/**
 		 * @hide
 		 * @param {String} methodName a prototype function
 		 * @return {Boolean} truthy if an action or not
 		 */
 		_isAction: function( methodName ) {
-			if ( actionMatcher.test(methodName) ) {
-				return true;
-			} else {
-				return $.inArray(methodName, this.listensTo) > -1 || $.event.special[methodName] || processors[methodName];
-			}
-
+			
+			var val = this.prototype[methodName],
+				type = typeof val;
+			// if not the constructor
+			return (methodName !== 'constructor') &&
+				// and is a function or links to a function
+				( type == "function" || (type == "string" &&  isFunction(this.prototype[val] ) ) ) &&
+				// and is in special, a processor, or has a funny character
+				!! ( special[methodName] || processors[methodName] || /[^\w]/.test(methodName) );
 		},
+		// Takes a method name and the options passed to a control
+		// and tries to return the data necessary to pass to a processor
+		// (something that binds things).
 		/**
 		 * @hide
-		 * This takes a method name and the options passed to a controller
+		 * Takes a method name and the options passed to a control
 		 * and tries to return the data necessary to pass to a processor
 		 * (something that binds things).
 		 * 
 		 * For performance reasons, this called twice.  First, it is called when 
-		 * the Controller class is created.  If the methodName is templated
-		 * like : "{window} foo", it returns null.  If it is not templated
+		 * the Control class is created.  If the methodName is templated
+		 * like: "{window} foo", it returns null.  If it is not templated
 		 * it returns event binding data.
 		 * 
 		 * The resulting data is added to this.actions.
 		 * 
-		 * When a controller instance is created, _action is called again, but only
+		 * When a control instance is created, _action is called again, but only
 		 * on templated actions.  
 		 * 
 		 * @param {Object} methodName the method that will be bound
@@ -1465,42 +867,47 @@
 		 * The processor is what does the binding/subscribing.
 		 */
 		_action: function( methodName, options ) {
-			// reset the test index
-			parameterReplacer.lastIndex = 0;
 			
-			//if we don't have options (a controller instance), we'll run this later
-			if (!options && parameterReplacer.test(methodName) ) {
-				return null;
+			// If we don't have options (a `control` instance), we'll run this 
+			// later.  
+			paramReplacer.lastIndex = 0;
+			if ( options || ! paramReplacer.test( methodName )) {
+				// If we have options, run sub to replace templates `{}` with a
+				// value from the options or the window
+				var convertedName = options ? can.sub(methodName, [options, window]) : methodName,
+					
+					// If a `{}` template resolves to an object, `convertedName` will be
+					// an array
+					arr = can.isArray(convertedName),
+
+					// Get the name
+					name = arr ? convertedName[1] : convertedName,
+
+					// Grab the event off the end
+					parts = name.split(/\s+/g),
+					event = parts.pop();
+
+				return {
+					processor: processors[event] || basicProcessor,
+					parts: [name, parts.join(" "), event],
+					delegate : arr ? convertedName[0] : undefined
+				};
 			}
-			// If we have options, run sub to replace templates "{}" with a value from the options
-			// or the window
-			var convertedName = options ? Str.sub(methodName, [options, window]) : methodName,
-				
-				// If a "{}" resolves to an object, convertedName will be an array
-				arr = isArray(convertedName),
-				
-				// get the parts of the function = [convertedName, delegatePart, eventPart]
-				parts = (arr ? convertedName[1] : convertedName).match(breaker),
-				event = parts[2],
-				processor = processors[event] || basicProcessor;
-			return {
-				processor: processor,
-				parts: parts,
-				delegate : arr ? convertedName[0] : undefined
-			};
 		},
+		// An object of `{eventName : function}` pairs that Control uses to 
+		// hook up events auto-magically.
 		/**
 		 * @attribute processors
-		 * An object of {eventName : function} pairs that Controller uses to hook up events
+		 * An object of `{eventName : function}` pairs that Control uses to hook up events
 		 * auto-magically.  A processor function looks like:
 		 * 
-		 *     jQuery.Controller.processors.
-		 *       myprocessor = function( el, event, selector, cb, controller ) {
-		 *          //el - the controller's element
+		 *     can.Control.processors.
+		 *       myprocessor = function( el, event, selector, cb, control ) {
+		 *          //el - the control's element
 		 *          //event - the event (myprocessor)
 		 *          //selector - the left of the selector
 		 *          //cb - the function to call
-		 *          //controller - the binding controller
+		 *          //control - the binding control
 		 *       };
 		 * 
 		 * This would bind anything like: "foo~3242 myprocessor".
@@ -1508,7 +915,7 @@
 		 * The processor must return a function that when called, 
 		 * unbinds the event handler.
 		 * 
-		 * Controller already has processors for the following events:
+		 * Control already has processors for the following events:
 		 * 
 		 *   - change 
 		 *   - click 
@@ -1535,54 +942,36 @@
 		 * Listen to events on the document or window 
 		 * with templated event handlers:
 		 * 
-		 *
-		 *     $.Controller('Sized',{
-		 *       "{window} resize" : function(){
-		 *         this.element.width(this.element.parent().width() / 2);
+		 *     Sized = can.Control({
+		 *       "{window} resize": function(){
+		 *         this.element.width( this.element.parent().width() / 2 );
 		 *       }
 		 *     });
 		 *     
-		 *     $('.foo').sized();
+		 *     new Sized( $( '#foo' ) );
 		 */
 		processors: {},
-		/**
-		 * @attribute listensTo
-		 * An array of special events this controller 
-		 * listens too.  You only need to add event names that
-		 * are whole words (ie have no special characters).
-		 * 
-		 *     $.Controller('TabPanel',{
-		 *       listensTo : ['show']
-		 *     },{
-		 *       'show' : function(){
-		 *         this.element.show();
-		 *       }
-		 *     })
-		 *     
-		 *     $('.foo').tab_panel().trigger("show");
-		 * 
-		 */
-		listensTo: [],
+		// A object of name-value pairs that act as default values for a 
+		// control instance
 		/**
 		 * @attribute defaults
-		 * A object of name-value pairs that act as default values for a controller's 
-		 * [jQuery.Controller.prototype.options options].
+		 * A object of name-value pairs that act as default values for a control's 
+		 * [can.Control::options this.options].
 		 * 
-		 *     $.Controller("Message",
-		 *     {
-		 *       defaults : {
-		 *         message : "Hello World"
+		 *     Message = can.Control({
+		 *       defaults: {
+		 *         message: "Hello World"
 		 *       }
-		 *     },{
-		 *       init : function(){
-		 *         this.element.text(this.options.message);
+		 *     }, {
+		 *       init: function(){
+		 *         this.element.text( this.options.message );
 		 *       }
-		 *     })
+		 *     });
 		 *     
-		 *     $("#el1").message(); //writes "Hello World"
-		 *     $("#el12").message({message: "hi"}); //writes hi
+		 *     new Message( "#el1" ); //writes "Hello World"
+		 *     new Message( "#el12", { message: "hi" } ); //writes hi
 		 *     
-		 * In [jQuery.Controller.prototype.setup setup] the options passed to the controller
+		 * In [can.Control::setup] the options passed to the control
 		 * are merged with defaults.  This is not a deep merge.
 		 */
 		defaults: {}
@@ -1591,211 +980,313 @@
 	 * @Prototype
 	 */
 	{
+		// Sets `this.element`, saves the control in `data, binds event
+		// handlers.
 		/**
-		 * Setup is where most of controller's magic happens.  It does the following:
+		 * Setup is where most of control's magic happens.  It does the following:
 		 * 
-		 * ### 1. Sets this.element
+		 * ### Sets this.element
 		 * 
-		 * The first parameter passed to new Controller(el, options) is expected to be 
-		 * an element.  This gets converted to a jQuery wrapped element and set as
-		 * [jQuery.Controller.prototype.element this.element].
+		 * The first parameter passed to new Control( el, options ) is expected to be 
+		 * an element.  This gets converted to a Wrapped NodeList element and set as
+		 * [can.Control.prototype.element this.element].
 		 * 
-		 * ### 2. Adds the controller's name to the element's className.
+		 * ### Adds the control's name to the element's className.
 		 * 
-		 * Controller adds it's plugin name to the element's className for easier 
-		 * debugging.  For example, if your Controller is named "Foo.Bar", it adds
+		 * Control adds it's plugin name to the element's className for easier 
+		 * debugging.  For example, if your Control is named "Foo.Bar", it adds
 		 * "foo_bar" to the className.
 		 * 
-		 * ### 3. Saves the controller in $.data
+		 * ### Saves the control in $.data
 		 * 
-		 * A reference to the controller instance is saved in $.data.  You can find 
+		 * A reference to the control instance is saved in $.data.  You can find 
 		 * instances of "Foo.Bar" like: 
 		 * 
-		 *     $("#el").data("controllers")['foo_bar'].
+		 *     $( '#el' ).data( 'controls' )[ 'foo_bar' ]
+		 *
+		 * ### Merges Options
+		 * Merges the default options with optional user-supplied ones.
+		 * Additionally, default values are exposed in the static [can.Control.static.defaults defaults] 
+		 * so that users can change them.
 		 * 
 		 * ### Binds event handlers
 		 * 
-		 * Setup does the event binding described in [jquery.controller.listening Listening To Events].
+		 * Setup does the event binding described in [can.control.listening Listening To Events].
 		 * 
 		 * @param {HTMLElement} element the element this instance operates on.
-		 * @param {Object} [options] option values for the controller.  These get added to
-		 * this.options and merged with [jQuery.Controller.static.defaults defaults].
+		 * @param {Object} [options] option values for the control.  These get added to
+		 * this.options and merged with [can.Control.static.defaults defaults].
 		 * @return {Array} return an array if you wan to change what init is called with. By
-		 * default it is called with the element and options passed to the controller.
+		 * default it is called with the element and options passed to the control.
 		 */
 		setup: function( element, options ) {
-			var funcName, ready, cls = this[STR_CONSTRUCTOR];
 
-			//want the raw element here
-			element = (typeof element == 'string' ? $(element) :
-				(element.jquery ? element : [element]) )[0];
+			var cls = this.constructor,
+				pluginname = cls.pluginName || cls._fullName,
+				arr;
 
-			//set element and className on element
-			var pluginname = cls.pluginName || cls._fullName;
+			// Want the raw element here.
+			this.element = can.$(element)
 
-			//set element and className on element
-			this.element = $(element).addClass(pluginname);
-
-			//set in data
-			(data(element) || data(element, {}))[pluginname] = this;
-
+			if ( pluginname && pluginname !== 'can_control') {
+				// Set element and `className` on element.
+				this.element.addClass(pluginname);
+			}
 			
+			(arr = can.data(this.element,"controls")) || can.data(this.element,"controls",arr = []);
+			arr.push(this);
+			
+			// Option merging.
 			/**
 			 * @attribute options
 			 * 
-			 * Options are used to configure an controller.  They are
+			 * Options are used to configure an control.  They are
 			 * the 2nd argument
-			 * passed to a controller (or the first argument passed to the 
-			 * [jquery.controller.plugin controller's jQuery plugin]).
+			 * passed to a control (or the first argument passed to the 
+			 * [can.Control.plugin control's jQuery plugin]).
 			 * 
 			 * For example:
 			 * 
-			 *     $.Controller('Hello')
+			 *     can.Control('Hello')
 			 *     
-			 *     var h1 = new Hello($('#content1'), {message: 'World'} );
-			 *     equal( h1.options.message , "World" )
+			 *     var h1 = new Hello( $( '#content1' ), { message: 'World' } );
+			 *     equal( h1.options.message , "World" );
 			 *     
-			 *     var h2 = $('#content2').hello({message: 'There'})
-			 *                            .controller();
-			 *     equal( h2.options.message , "There" )
+			 *     var h2 = $( '#content2' ).hello({ message: 'There' })
+			 *                              .control();
+			 *     equal( h2.options.message , "There" );
 			 * 
-			 * Options are merged with [jQuery.Controller.static.defaults defaults] in
-			 * [jQuery.Controller.prototype.setup setup].
+			 * Options are merged with [can.Control.static.defaults defaults] in
+			 * [can.Control.prototype.setup setup].
 			 * 
 			 * For example:
 			 * 
-			 *     $.Controller("Tabs", 
-			 *     {
-			 *        defaults : {
+			 *     Tabs = can.Control({
+			 *        defaults: {
 			 *          activeClass: "ui-active-state"
 			 *        }
-			 *     },
-			 *     {
-			 *        init : function(){
-			 *          this.element.addClass(this.options.activeClass);
+			 *     }, {
+			 *        init: function(){
+			 *          this.element.addClass( this.options.activeClass );
 			 *        }
-			 *     })
+			 *     });
 			 *     
-			 *     $("#tabs1").tabs()                         // adds 'ui-active-state'
-			 *     $("#tabs2").tabs({activeClass : 'active'}) // adds 'active'
+			 *     new Tabs( $( "#tabs1" ) ); // adds 'ui-active-state'
+			 *     new Tabs( $( "#tabs2" ), { activeClass : 'active' } ); // adds 'active'
 			 *     
 			 * Options are typically updated by calling 
-			 * [jQuery.Controller.prototype.update update];
+			 * [can.Control.prototype.update update];
 			 *
 			 */
-			this.options = extend( extend(true, {}, cls.defaults), options);
+			this.options = extend({}, cls.defaults, options);
 
-			
+			// Bind all event handlers.
+			this.on();
 
-			/**
-			 * @attribute called
-			 * String name of current function being called on controller instance.  This is 
-			 * used for picking the right view in render.
-			 * @hide
-			 */
-			this.called = "init";
-
-			// bind all event handlers
-			this.bind();
-
+			// Get's passed into `init`.
 			/**
 			 * @attribute element
-			 * The controller instance's delegated element. This 
-			 * is set by [jQuery.Controller.prototype.setup setup]. It 
-			 * is a jQuery wrapped element.
 			 * 
-			 * For example, if I add MyWidget to a '#myelement' element like:
+			 * The control instance's HTMLElement (or window) wrapped by the 
+			 * util library for ease of use. It is set by the first
+			 * parameter to `new can.Construct( element, options )` 
+			 * in [can.Control::setup].  Control listens on `this.element`
+			 * for events.
 			 * 
-			 *     $.Controller("MyWidget",{
-			 *       init : function(){
-			 *         this.element.css("color","red")
+			 * ### Quick Example
+			 * 
+			 * The following `HelloWorld` control sets the control`s text to "Hello World":
+			 * 
+			 *     HelloWorld = can.Control({
+			 *       init: function(){
+			 * 	       this.element.text( 'Hello World' );
 			 *       }
-			 *     })
+			 *     });
 			 *     
-			 *     $("#myelement").my_widget()
+			 *     // create the controller on the element
+			 *     new HelloWorld( document.getElementById( '#helloworld' ) );
 			 * 
-			 * MyWidget will turn #myelement's font color red.
+			 * ## Wrapped NodeList
 			 * 
-			 * ## Using a different element.
+			 * `this.element` is a wrapped NodeList of one HTMLELement (or window).  This
+			 * is for convience in libraries like jQuery where all methods operate only on a
+			 * NodeList.  To get the raw HTMLElement, write:
 			 * 
-			 * Sometimes, you want a different element to be this.element.  A
-			 * very common example is making progressively enhanced form widgets.
+			 *     this.element[0] //-> HTMLElement
 			 * 
-			 * To change this.element, overwrite Controller's setup method like:
+			 * The following details the NodeList used by each library with 
+			 * an example of updating it's text:
 			 * 
-			 *     $.Controller("Combobox",{
-			 *       setup : function(el, options){
-			 *          this.oldElement = $(el);
-			 *          var newEl = $('<div/>');
-			 *          this.oldElement.wrap(newEl);
-			 *          this._super(newEl, options);
+			 * __jQuery__ `jQuery( HTMLElement )`
+			 * 
+			 *     this.element.text("Hello World")
+			 * 
+			 * __Zepto__ `Zepto( HTMLElement )`
+			 * 
+			 *     this.element.text("Hello World")
+			 * 
+			 * __Dojo__ `new dojo.NodeList( HTMLElement )`
+			 * 
+			 *     // TODO
+			 * 
+			 * __Mootools__ `$$( HTMLElement )`
+			 * 
+			 *    this.element.empty().appendText("Hello World")
+			 * 
+			 * __YUI__ 
+			 * 
+			 *    // TODO
+			 * 
+			 * 
+			 * ## Changing `this.element`
+			 * 
+			 * Sometimes you don't want what's passed to `new can.Control`
+			 * to be this.element.  You can change this by overwriting
+			 * setup or by unbinding, setting this.element, and rebinding.
+			 * 
+			 * ### Overwriting Setup
+			 * 
+			 * The following Combobox overwrites setup to wrap a
+			 * select element with a div.  That div is used 
+			 * as `this.element`. Notice how `destroy` sets back the
+			 * original element.
+			 * 
+			 *     Combobox = can.Control({
+			 *       setup: function( el, options ) {
+			 *          this.oldElement = $( el );
+			 *          var newEl = $( '<div/>' );
+			 *          this.oldElement.wrap( newEl );
+			 *          can.Controll.prototype.setup.call( this, newEl, options );
 			 *       },
-			 *       init : function(){
+			 *       init: function() {
 			 *          this.element //-> the div
 			 *       },
-			 *       ".option click" : function(){
+			 *       ".option click": function() {
 			 *         // event handler bound on the div
 			 *       },
-			 *       destroy : function(){
+			 *       destroy: function() {
 			 *          var div = this.element; //save reference
-			 *          this._super();
-			 *          div.replaceWith(this.oldElement);
+			 *          can.Control.prototype.destroy.call( this );
+			 *          div.replaceWith( this.oldElement );
 			 *       }
+			 *     });
+			 * 
+			 * ### unbining, setting, and rebinding.
+			 * 
+			 * You could also change this.element by calling
+			 * [can.Control::off], setting this.element, and 
+			 * then calling [can.Control::on] like:
+			 * 
+			 *     move: function( newElement ) {
+			 *        this.off();
+			 *        this.element = $( newElement );
+			 *        this.on();
 			 *     }
 			 */
-			return [this.element, this.options].concat(makeArray(arguments).slice(2));
-			/**
-			 * @function init
-			 * 
-			 * Implement this.
-			 */
+			return [this.element, this.options];
 		},
 		/**
-		 * Bind attaches event handlers that will be 
-		 * removed when the controller is removed.  
+		 * `this.on( [element, selector, eventName, handler] )` is used to rebind 
+		 * all event handlers when [can.Control::options this.options] has changed.  It
+		 * can also be used to bind or delegate from other elements or objects.
 		 * 
-		 * This used to be a good way to listen to events outside the controller's
-		 * [jQuery.Controller.prototype.element element].  However,
-		 * using templated event listeners is now the prefered way of doing this.
+		 * ## Rebinding
 		 * 
-		 * ### Example:
+		 * By using templated event handlers, a control can listen to objects outside
+		 * `this.element`.  This is extremely common in MVC programming.  For example,
+		 * the following control might listen to a task model's `completed` property and
+		 * toggle a strike className like:
+		 * 
+		 *     TaskStriker = can.Control({
+		 *       "{task} completed": function(){
+		 * 	       this.update();
+		 *       },
+		 *       update: function(){
+		 *         if ( this.options.task.completed ) {
+		 * 	         this.element.addClass( 'strike' );
+		 * 	       } else {
+		 *           this.element.removeClass( 'strike' );
+		 *         }
+		 *       }
+		 *     });
+		 * 
+		 *     var taskstriker = new TaskStriker({ 
+		 *       task: new Task({ completed: 'true' }) 
+		 *     });
+		 * 
+		 * To update the taskstriker's task, add a task method that updates
+		 * this.options and calls rebind like:
+		 * 
+		 *     TaskStriker = can.Control({
+		 *       "{task} completed": function(){
+		 * 	       this.update();
+		 *       },
+		 *       update: function() {
+		 *         if ( this.options.task.completed ) {
+		 * 	         this.element.addClass( 'strike' );
+		 * 	       } else {
+		 *           this.element.removeClass( 'strike' );
+		 *         }
+		 *       },
+		 *       task: function( newTask ) {
+		 *         this.options.task = newTask;
+		 *         this.on();
+		 *         this.update();
+		 *       }
+		 *     });
+		 * 
+		 *     var taskstriker = new TaskStriker({ 
+		 *       task: new Task({ completed: true }) 
+		 *     });
+		 *     taskstriker.task( new TaskStriker({ 
+		 *       task: new Task({ completed: false }) 
+		 *     }));
+		 * 
+		 * ## Adding new events
+		 * 
+		 * If events need to be bound to outside of the control and templated event handlers
+		 * are not sufficent, you can call this.on to bind or delegate programatically:
 		 * 
 		 *     init: function() {
-		 *        // calls somethingClicked(el,ev)
-		 *        this.bind('click','somethingClicked') 
+		 *        // calls somethingClicked( el, ev )
+		 *        this.on( 'click', 'somethingClicked' ); 
 		 *     
 		 *        // calls function when the window is clicked
-		 *        this.bind(window, 'click', function(ev){
+		 *        this.on( window, 'click', function( ev ) {
 		 *          //do something
-		 *        })
+		 *        });
 		 *     },
 		 *     somethingClicked: function( el, ev ) {
 		 *       
 		 *     }
 		 * 
-		 * @param {HTMLElement|jQuery.fn|Object} [el=this.element] 
+		 * @param {HTMLElement|jQuery.fn|Object} [el=this.element]
 		 * The element to be bound.  If an eventName is provided,
-		 * the controller's element is used instead.
-		 * 
-		 * @param {String} eventName The event to listen for.
-		 * @param {Function|String} func A callback function or the String name of a controller function.  If a controller
-		 * function name is given, the controller function is called back with the bound element and event as the first
+		 * the control's element is used instead.
+		 * @param {String} [selector] A css selector for event delegation.
+		 * @param {String} [eventName] The event to listen for.
+		 * @param {Function|String} [func] A callback function or the String name of a control function.  If a control
+		 * function name is given, the control function is called back with the bound element and event as the first
 		 * and second parameter.  Otherwise the function is called back like a normal bind.
 		 * @return {Integer} The id of the binding in this._bindings
 		 */
-		bind: function( el, eventName, func ) {
-			if( el === undefined ) {
-				//adds bindings
-				this._bindings = [];
-				//go through the cached list of actions and use the processor to bind
-				
-				var cls = this[STR_CONSTRUCTOR],
+		on: function( el, selector, eventName, func ) {
+			if ( ! el ) {
+
+				// Adds bindings.
+				this.off();
+
+				// Go through the cached list of actions and use the processor 
+				// to bind
+				var cls = this.constructor,
 					bindings = this._bindings,
 					actions = cls.actions,
-					element = this.element;
+					element = this.element,
+					destroyCB = can.Control._shifter(this,"destroy"),
+					funcName, ready;
 					
 				for ( funcName in actions ) {
-					if ( actions.hasOwnProperty(funcName) ) {
+					if ( actions.hasOwnProperty( funcName )) {
 						ready = actions[funcName] || cls._action(funcName, this.options);
 						bindings.push(
 							ready.processor(ready.delegate || element, 
@@ -1807,298 +1298,193 @@
 				}
 	
 	
-				//setup to be destroyed ... don't bind b/c we don't want to remove it
-				var destroyCB = shifter(this,"destroy");
-				element.bind("destroyed", destroyCB);
+				// Setup to be destroyed...  
+				// don't bind because we don't want to remove it.
+				can.bind.call(element,"destroyed", destroyCB);
 				bindings.push(function( el ) {
-					$(el).unbind("destroyed", destroyCB);
+					can.unbind.call(el,"destroyed", destroyCB);
 				});
 				return bindings.length;
 			}
+
 			if ( typeof el == 'string' ) {
 				func = eventName;
-				eventName = el;
+				eventName = selector;
+				selector = el;
 				el = this.element;
 			}
-			return this._binder(el, eventName, func);
-		},
-		_binder: function( el, eventName, func, selector ) {
-			if ( typeof func == 'string' ) {
-				func = shifter(this,func);
-			}
-			this._bindings.push(binder(el, eventName, func, selector));
-			return this._bindings.length;
-		},
-		_unbind : function(){
-			var el = this.element[0];
-			each(this._bindings, function( key, value ) {
-				value(el);
-			});
-			//adds bindings
-			this._bindings = [];
-		},
-		/**
-		 * Delegate will delegate on an elememt and will be undelegated when the controller is removed.
-		 * This is a good way to delegate on elements not in a controller's element.<br/>
-		 * <h3>Example:</h3>
-		 * @codestart
-		 * // calls function when the any 'a.foo' is clicked.
-		 * this.delegate(document.documentElement,'a.foo', 'click', function(ev){
-		 *   //do something
-		 * })
-		 * @codeend
-		 * @param {HTMLElement|jQuery.fn} [element=this.element] the element to delegate from
-		 * @param {String} selector the css selector
-		 * @param {String} eventName the event to bind to
-		 * @param {Function|String} func A callback function or the String name of a controller function.  If a controller
-		 * function name is given, the controller function is called back with the bound element and event as the first
-		 * and second parameter.  Otherwise the function is called back like a normal bind.
-		 * @return {Integer} The id of the binding in this._bindings
-		 */
-		delegate: function( element, selector, eventName, func ) {
-			if ( typeof element == 'string' ) {
+
+			if(func === undefined) {
 				func = eventName;
 				eventName = selector;
-				selector = element;
-				element = this.element;
+				selector = null;
 			}
-			return this._binder(element, eventName, func, selector);
+
+			if ( typeof func == 'string' ) {
+				func = can.Control._shifter(this,func);
+			}
+
+			this._bindings.push( binder( el, eventName, func, selector ));
+
+			return this._bindings.length;
 		},
+		// Unbinds all event handlers on the controller.
 		/**
-		 * Update extends [jQuery.Controller.prototype.options this.options] 
-		 * with the `options` argument and rebinds all events.  It basically
-		 * re-configures the controller.
-		 * 
-		 * For example, the following controller wraps a recipe form. When the form
-		 * is submitted, it creates the recipe on the server.  When the recipe
-		 * is `created`, it resets the form with a new instance.
-		 * 
-		 *     $.Controller('Creator',{
-		 *       "{recipe} created" : function(){
-		 *         this.update({recipe : new Recipe()});
-		 *         this.element[0].reset();
-		 *         this.find("[type=submit]").val("Create Recipe")
-		 *       },
-		 *       "submit" : function(el, ev){
-		 *         ev.preventDefault();
-		 *         var recipe = this.options.recipe;
-		 *         recipe.attrs( this.element.formParams() );
-		 *         this.find("[type=submit]").val("Saving...")
-		 *         recipe.save();
-		 *       }
-		 *     });
-		 *     $('#createRecipes').creator({recipe : new Recipe()})
-		 * 
-		 * 
-		 * @demo jquery/controller/demo-update.html
-		 * 
-		 * Update is called if a controller's [jquery.controller.plugin jQuery helper] is 
-		 * called on an element that already has a controller instance
-		 * of the same type. 
-		 * 
-		 * For example, a widget that listens for model updates
-		 * and updates it's html would look like.  
-		 * 
-		 *     $.Controller('Updater',{
-		 *       // when the controller is created, update the html
-		 *       init : function(){
-		 *         this.updateView();
-		 *       },
-		 *       
-		 *       // update the html with a template
-		 *       updateView : function(){
-		 *         this.element.html( "content.ejs",
-		 *                            this.options.model ); 
-		 *       },
-		 *       
-		 *       // if the model is updated
-		 *       "{model} updated" : function(){
-		 *         this.updateView();
-		 *       },
-		 *       update : function(options){
-		 *         // make sure you call super
-		 *         this._super(options);
-		 *          
-		 *         this.updateView();
-		 *       }
-		 *     })
-		 * 
-		 *     // create the controller
-		 *     // this calls init
-		 *     $('#item').updater({model: recipe1});
-		 *     
-		 *     // later, update that model
-		 *     // this calls "{model} updated"
-		 *     recipe1.update({name: "something new"});
-		 *     
-		 *     // later, update the controller with a new recipe
-		 *     // this calls update
-		 *     $('#item').updater({model: recipe2});
-		 *     
-		 *     // later, update the new model
-		 *     // this calls "{model} updated"
-		 *     recipe2.update({name: "something newer"});
-		 * 
-		 * _NOTE:_ If you overwrite `update`, you probably need to call
-		 * this._super.
-		 * 
-		 * ### Example
-		 * 
-		 *     $.Controller("Thing",{
-		 *       init: function( el, options ) {
-		 *         alert( 'init:'+this.options.prop )
-		 *       },
-		 *       update: function( options ) {
-		 *         this._super(options);
-		 *         alert('update:'+this.options.prop)
-		 *       }
-		 *     });
-		 *     $('#myel').thing({prop : 'val1'}); // alerts init:val1
-		 *     $('#myel').thing({prop : 'val2'}); // alerts update:val2
-		 * 
-		 * @param {Object} options A list of options to merge with 
-		 * [jQuery.Controller.prototype.options this.options].  Often, this method
-		 * is called by the [jquery.controller.plugin jQuery helper function].
+		 * @hide
+		 * Unbinds all event handlers on the controller. You should never
+		 * be calling this unless in use with [can.Control::on].
 		 */
-		update: function( options ) {
-			extend(this.options, options);
-			this._unbind();
-			this.bind();
+		off : function(){
+			var el = this.element[0]
+			each(this._bindings || [], function( value ) {
+				value(el);
+			});
+			// Adds bindings.
+			this._bindings = [];
 		},
+		// Prepares a `control` for garbage collection
 		/**
-		 * Destroy unbinds and undelegates all event handlers on this controller, 
-		 * and prevents memory leaks.  This is called automatically
-		 * if the element is removed.  You can overwrite it to add your own
-		 * teardown functionality:
+		 * @function destroy
+		 * `destroy` prepares a control for garbage collection and is a place to
+		 * reset any changes the control has made.  
 		 * 
-		 *     $.Controller("ChangeText",{
-		 *       init : function(){
+		 * ## Allowing Garbage Collection
+		 * 
+		 * Destroy is called whenever a control's element is removed from the page using 
+		 * the library's standard HTML modifier methods.  This means that you
+		 * don't have to call destroy yourself and it 
+		 * will be called automatically when appropriate.  
+		 * 
+		 * The following `Clicker` widget listens on the window for clicks and updates
+		 * its element's innerHTML.  If we remove the element, the window's event handler
+		 * is removed auto-magically:
+		 *  
+		 * 
+		 *      Clickr = can.Control({
+		 *       "{window} click": function() {
+		 * 	       this.element.html( this.count ? 
+		 * 	                          this.count++ : this.count = 0 );
+		 *       }  
+		 *     });
+		 *     
+		 *     // create a clicker on an element
+		 *     new Clicker( "#clickme" );
+		 * 
+		 *     // remove the element
+		 *     $( '#clickme' ).remove();
+		 * 
+		 * 
+		 * The methods you can use that will destroy controls automatically by library:
+		 * 
+		 * __jQuery and Zepto__
+		 * 
+		 *   - $.fn.remove
+		 *   - $.fn.html
+		 *   - $.fn.replaceWith
+		 *   - $.fn.empty
+		 * 
+		 * __Dojo__
+		 * 
+		 *   - dojo.destroy
+		 *   - dojo.empty
+		 *   - dojo.place (with the replace option)
+		 * 
+		 * __Mootools__
+		 * 
+		 *   - Element.prototype.destroy
+		 * 
+		 * __YUI__
+		 * 
+		 *   - TODO!
+		 * 
+		 * 
+		 * ## Teardown in Destroy
+		 * 
+		 * Sometimes, you want to reset a controlled element back to its
+		 * original state when the control is destroyed.  Overwriting destroy
+		 * lets you write teardown code of this manner.  __When overwriting
+		 * destroy, make sure you call Control's base functionality__.
+		 * 
+		 * The following example changes an element's text when the control is
+		 * created and sets it back when the control is removed:
+		 * 
+		 *     Changer = can.Control({
+		 *       init: function() {
 		 *         this.oldText = this.element.text();
-		 *         this.element.text("Changed!!!")
+		 *         this.element.text( "Changed!!!" );
 		 *       },
-		 *       destroy : function(){
-		 *         this.element.text(this.oldText);
-		 *         this._super(); //Always call this!
-		 *     })
+		 *       destroy: function() {
+		 *         this.element.text( this.oldText );
+		 *         can.Control.prototype.destroy.call( this );
+		 *       }
+		 *     });
+		 *     
+		 *     // create a changer which changes #myel's text
+		 *     var changer = new Changer( '#myel' );
 		 * 
-		 * Make sure you always call <code>_super</code> when overwriting
-		 * controller's destroy event.  The base destroy functionality unbinds
-		 * all event handlers the controller has created.
+		 *     // destroy changer which will reset it
+		 *     changer.destroy();
 		 * 
-		 * You could call destroy manually on an element with ChangeText
-		 * added like:
+		 * ## Base Functionality
 		 * 
-		 *     $("#changed").change_text("destroy");
+		 * Control prepares the control for garbage collection by:
+		 * 
+		 *   - unbinding all event handlers
+		 *   - clearing references to this.element and this.options
+		 *   - clearing the element's reference to the control
+		 *   - removing it's [can.Control.pluginName] from the element's className
 		 * 
 		 */
 		destroy: function() {
-			if ( this._destroyed ) {
-				throw this[STR_CONSTRUCTOR].shortName + " controller already deleted";
+			var Class = this.constructor,
+				pluginName = Class.pluginName || Class._fullName,
+				controls;
+			
+			// Unbind bindings.
+			this.off();
+			
+			if(pluginName && pluginName !== 'can_control'){
+				// Remove the `className`.
+				this.element.removeClass(pluginName);
 			}
-			var self = this,
-				fname = this[STR_CONSTRUCTOR].pluginName || this[STR_CONSTRUCTOR]._fullName,
-				controllers;
 			
-			// mark as destroyed
-			this._destroyed = true;
+			// Remove from `data`.
+			controls = can.data(this.element,"controls");
+			controls.splice(can.inArray(this, controls),1);
 			
-			// remove the className
-			this.element.removeClass(fname);
-
-			// unbind bindings
-			this._unbind();
-			// clean up
-			delete this._actions;
-
-			delete this.element.data("controllers")[fname];
-			
-			$(this).triggerHandler("destroyed"); //in case we want to know if the controller is removed
+			can.trigger( this, "destroyed"); // In case we want to know if the `control` is removed.
 			
 			this.element = null;
-		},
-		/**
-		 * Queries from the controller's element.
-		 * @codestart
-		 * ".destroy_all click" : function() {
-		 *    this.find(".todos").remove();
-		 * }
-		 * @codeend
-		 * @param {String} selector selection string
-		 * @return {jQuery.fn} returns the matched elements
-		 */
-		find: function( selector ) {
-			return this.element.find(selector);
-		},
-		//tells callback to set called on this.  I hate this.
-		_set_called: true
+		}
 	});
 
-	var processors = $.Controller.processors,
-
-	//------------- PROCESSSORS -----------------------------
-	//processors do the binding.  They return a function that
-	//unbinds when called.
-	//the basic processor that binds events
-	basicProcessor = function( el, event, selector, methodName, controller ) {
-		return binder(el, event, shifter(controller, methodName), selector);
+	var processors = can.Control.processors,
+	// Processors do the binding.
+	// They return a function that unbinds when called.  
+	//
+	// The basic processor that binds events.
+	basicProcessor = function( el, event, selector, methodName, control ) {
+		return binder( el, event, can.Control._shifter(control, methodName), selector);
 	};
 
 
 
 
-	//set common events to be processed as a basicProcessor
-	each("change click contextmenu dblclick keydown keyup keypress mousedown mousemove mouseout mouseover mouseup reset resize scroll select submit focusin focusout mouseenter mouseleave".split(" "), function( i, v ) {
+	// Set common events to be processed as a `basicProcessor`
+	each(["change", "click", "contextmenu", "dblclick", "keydown", "keyup",
+		"keypress", "mousedown", "mousemove", "mouseout", "mouseover",
+		"mouseup", "reset", "resize", "scroll", "select", "submit", "focusin",
+		"focusout", "mouseenter", "mouseleave",
+		// #104 - Add touch events as default processors
+		// TOOD feature detect?
+		"touchstart", "touchmove", "touchcancel", "touchend", "touchleave"
+	], function( v ) {
 		processors[v] = basicProcessor;
 	});
-	/**
-	 *  @add jQuery.fn
-	 */
 
-	//used to determine if a controller instance is one of controllers
-	//controllers can be strings or classes
-	var i, isAControllerOf = function( instance, controllers ) {
-		for ( i = 0; i < controllers.length; i++ ) {
-			if ( typeof controllers[i] == 'string' ? instance[STR_CONSTRUCTOR]._shortName == controllers[i] : instance instanceof controllers[i] ) {
-				return true;
-			}
-		}
-		return false;
-	};
-	$.fn.extend({
-		/**
-		 * @function controllers
-		 * Gets all controllers in the jQuery element.
-		 * @return {Array} an array of controller instances.
-		 */
-		controllers: function() {
-			var controllerNames = makeArray(arguments),
-				instances = [],
-				controllers, c, cname;
-			//check if arguments
-			this.each(function() {
-	
-				controllers = $.data(this, "controllers");
-				for ( cname in controllers ) {
-					if ( controllers.hasOwnProperty(cname) ) {
-						c = controllers[cname];
-						if (!controllerNames.length || isAControllerOf(c, controllerNames) ) {
-							instances.push(c);
-						}
-					}
-				}
-			});
-			return instances;
-		},
-		/**
-		 * @function controller
-		 * Gets a controller in the jQuery element.  With no arguments, returns the first one found.
-		 * @param {Object} controller (optional) if exists, the first controller instance with this class type will be returned.
-		 * @return {jQuery.Controller} the first controller.
-		 */
-		controller: function( controller ) {
-			return this.controllers.apply(this, arguments)[0];
-		}
-	});
-	
+	return Control;
+})(module["can/util/jquery/jquery.js"], module["can/construct/construct.js"]);
 
-})(jQuery);
+window.define = module._define;
+
+window.module = module._orig;

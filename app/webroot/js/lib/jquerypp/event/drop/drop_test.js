@@ -1,5 +1,4 @@
-steal("jquery/event/drop",'funcunit/syn')  //load your app
-	.then('funcunit/qunit', function() {
+steal("jquery/event/drop",'funcunit/syn', 'funcunit/qunit', function($, Syn) {
 	
 module("jquery/event/drop");
 

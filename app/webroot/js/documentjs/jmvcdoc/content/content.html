@@ -24,7 +24,7 @@
 				
 				$('#content').jmvcdoc_content({clientState : clientState});
 				
-				Doc.location = steal.root.join("jmvc/docs/")
+				Doc.location = steal.config().root.join("jmvc/docs/")
 			
 				Doc.load(function(){
 					var hashchange = function(){

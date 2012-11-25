@@ -46,7 +46,7 @@ class UsersController extends AppController {
  * @access public
  */
 	public function index() {
-		$o = $this->User->getFindOptions('userIndex');
+		$o = $this->User->getFindOptions('userIndex', User::get('Role.name'));
 		$data = $this->User->find('all', $o);
 		if (!empty($data)) {
 			$this->Message->success();
@@ -76,7 +76,7 @@ class UsersController extends AppController {
 		if (User::get('id') == $id) {
 			$resource = User::get();
 		} else {
-			$o = $this->User->getFindFields('userView');
+			$o = $this->User->getFindFields('userView', User::get('Role.name'));
 			$resource = $this->User->findById($id, $o['fields']);
 			if (!$resource) {
 				$this->Message->error(__('The user does not exist'));

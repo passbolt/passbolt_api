@@ -1,4 +1,4 @@
-<%== view("//documentjs/jmvcdoc/content/views/top.ejs",this)%>
+<%== can.view.render("//documentjs/jmvcdoc/content/views/top.ejs",this,DocumentationHelpers)%>
  <div class='comment'><%== link(this.comment)%></div>
  <h2>API</h2>
  <pre class='signiture'><code><%= signiture()%></code></pre>

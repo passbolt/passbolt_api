@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.demo
 	 * @tag documentation
@@ -18,7 +18,7 @@ steal.then(function() {
 	 *   
 	 * @demo jquery/controller/controller.html
 	 */
-	DocumentJS.tags.demo = {
+	return {
 		add: function( line ) {
 			var m = line.match(/^\s*@demo\s*([\w\.\/\-\$]*)\s*([\w]*)/)
 			if ( m ) {

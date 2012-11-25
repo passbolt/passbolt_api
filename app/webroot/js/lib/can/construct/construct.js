@@ -1,4 +1,4 @@
-//@steal-clean
+// steal-clean
 steal("can/util/string", function(can) {
 
 	// ## construct.js

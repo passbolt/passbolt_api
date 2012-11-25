@@ -53,8 +53,9 @@ steal('steal/test','steal/build', 'steal/build/pluginify', function( s ) {
 	});
 	
 	s.test.test("pluginify function", function(t){
-		s.build.pluginify("jquery/controller",{
-			nojquery: true,
+		s.build.pluginify("can/control",{
+			exclude: ["jquery"],
+			shim: {"jquery":"$"},
 			out: "steal/build/pluginify/test/controller.js"
 		})
 		
@@ -62,8 +63,8 @@ steal('steal/test','steal/build', 'steal/build/pluginify', function( s ) {
 			
 		})
 		
-		s.test.wait("jQuery.Controller");
-		s.test.ok(true, "controller exists")
+		s.test.wait("can.Control");
+		s.test.ok(true, "can.Control exists")
 		s.test.clear();
 	})
 });

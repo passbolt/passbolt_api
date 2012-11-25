@@ -1,10 +1,11 @@
+(function() {
 module("can/route")
 
 test("deparam", function(){
 	can.route.routes = {};
 	can.route(":page",{
 		page: "index"
-	})
+	});
 
 	var obj = can.route.deparam("can.Control");
 	same(obj, {
@@ -330,6 +331,7 @@ test("unsticky routes", function(){
 		iCanRoute.attr({type: "bar"});
 
 		setTimeout(function(){
+			console.log('HREF', loc.href)
 			var after = loc.href.substr(loc.href.indexOf("#"));
 			equal(after,"#!bar");
 			iCanRoute.attr({type: "bar", id: "\/"});
@@ -349,9 +351,9 @@ test("unsticky routes", function(){
 					setTimeout(arguments.callee, 30)
 				}
 				
-			},1)
+			},100)
 			
-		},1)
+		},100)
 
 
 	}
@@ -429,4 +431,5 @@ test("dashes in routes", function(){
 
 	window.location.hash = "qunit-header";
 	window.location.hash = "";
-})
+});
+})();

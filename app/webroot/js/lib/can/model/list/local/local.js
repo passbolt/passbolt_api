@@ -26,7 +26,7 @@ $.Model.List("jQuery.Model.List.Local",
 		//  go through and listen to instance updating
 		var ids = [], days = this.days;
 		this.each(function(i, inst){
-			window.localStorage[inst.identity()] = instance.attrs();
+			window.localStorage[inst.identity()] = inst.attrs();
 			ids.push(inst.identity());
 		});
 		window.localStorage[name] = {

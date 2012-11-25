@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.download
 	 * @tag documentation
@@ -23,7 +23,7 @@ steal.then(function() {
 	 * You can click the example download link on this [jQuery.Drag | page]
      *
 	 */
-	DocumentJS.tags.download = {
+	return  {
 		add: function( line ) {
 			var parts = line.match(/^\s*@download\s*([^ ]*)\s*([.]*)/)
 			this.download = parts[1];

@@ -38,7 +38,18 @@ steal('steal', 'steal/test', function(s) {
 				
 				s.test.equals(
 					res.js,
-					'steal.has("a.js","b.js");steal({id:"package/1.js",waits:!0,has:["jquery/jquery.js"]});steal({id:"package/css.css",waits:!0,has:["c.css"]});a;steal.executed("a.js");b;steal.executed("b.js");\n',
+					// tell what this file has
+					'steal.has("a.js","b.js");'+
+					// steal any packages this package depends on
+					'steal({id:"package/1.js",waits:!0,has:["jquery/jquery.js"]});'+
+					'steal({id:"package/css.css",waits:!0,has:["c.css"]});'+
+					// clear pending for future steals
+					'steal.pushPending();'+
+					// the files and executed contexts
+					'a;steal.executed("a.js");b;steal.executed("b.js");'+
+					// pop the previous pending state into being so when this file completes, it's depeendencies will be executed
+					'steal.popPending();'+
+					'\n',
 					"js works");
 					
 				s.test.equals(res.css.code,"c")

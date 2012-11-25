@@ -12,7 +12,7 @@ App::uses('User', 'Model');
 
 class CategoryTest extends CakeTestCase {
 
-	public $fixtures = array('app.category', 'app.category_type');
+	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();

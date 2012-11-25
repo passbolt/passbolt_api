@@ -33,5 +33,5 @@ steal('can/util/can.js', function(can) {
 		}
 
 	can.isPlainObject = isPlainObject;
-	return isPlainObject;
+	return can;
 });

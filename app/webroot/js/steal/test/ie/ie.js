@@ -1,1 +1,3 @@
-steal(function(){})
+steal(function(){
+	console.log("loaded")
+})

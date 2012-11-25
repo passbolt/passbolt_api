@@ -24,7 +24,7 @@
 				
 				$('#search').jmvcdoc_search({clientState : clientState});
 				
-				Doc.location = steal.root.join("jmvc/docs/")
+				Doc.location = steal.config().root.join("jmvc/docs/")
 				START_TIME = new Date();
 				Doc.load(function(){
 					var hashchange = function(){

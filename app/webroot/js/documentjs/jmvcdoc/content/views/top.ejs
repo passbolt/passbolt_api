@@ -25,35 +25,11 @@
 	    <% } %>
 		<% if(this.test){ %>
 	    <div class='test'>
-	        test: <a href='<%= steal.root? steal.root.join(this.test): this.test %>'><%=this.test.match(/[^\/]*$/)[0]%></a>
+	        test: <a href='<%= steal.config().root? steal.config().root.join(this.test): this.test %>'><%=this.test.match(/[^\/]*$/)[0]%></a>
 	    </div>
 	    <% } %>
-	  <% if(this.sees){ %>
-	    <div class='see'>
-			see : 
-			<% for(var i in this.sees) { %>
-				<% if(i>0) { %>, <%}%> <%== linkOpen(this.sees[i]) %>
-			<% } %>
-	    </div>
-	  <% } %>
-	  <% if(this.events){ %>
-	    <div class='see'>
-			event : 
-			<% for(var i in this.events) { %>
-				<% if(i>0) { %>, <%}%> <%== this.events[i] %>
-			<% } %>
-	    </div>
-	  <% } %>
-	  <% if(this.exceptions){ %>
-	    <div class='see'>
-			exception : 
-			<% for(var i in this.exceptions) { %>
-				<% if(i>0) { %>, <%}%> <%== linkOpen(this.exceptions[i]) %>
-			<% } %>
-	    </div>
-	  <% } %>
 		<% if(this.line !== undefined && window.DOCS_SRC_MAP){ %>
 			<a href='<%== source(this) %>'>Source</a>
 		<%}%>
-	</div>	
+	</div>
 </div>

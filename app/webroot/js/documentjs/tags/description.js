@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.description
 	 * @tag documentation
@@ -8,7 +8,7 @@ steal.then(function() {
 	 * 
 	 * 
 	 */
-	DocumentJS.tags.description = {
+	return  {
 		add: function( line ) {
 			var m = line.match(/^\s*@description\s*(.*)/)
 			if ( m ) {

@@ -220,5 +220,6 @@ can.Model("can.Model.Cached", {
         can.Model.prototype.destroyed.apply(this, arguments);
     }
 });
-	
+
+return can.Model.Cached;
 })

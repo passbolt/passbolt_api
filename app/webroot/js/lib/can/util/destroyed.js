@@ -1,7 +1,7 @@
 /**
  * @add can.event.special
  */
-steal('can/util').then(function() {
+steal('jquery', 'can/util').then(function($, can) {
 	/**
 	 * @attribute destroyed
 	 * @parent specialevents
@@ -37,4 +37,5 @@ steal('can/util').then(function() {
 		oldClean(elems);
 	};
 
+	return can;
 });

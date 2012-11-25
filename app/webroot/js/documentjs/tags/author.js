@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.author
 	 * @tag documentation
@@ -14,7 +14,7 @@ steal.then(function() {
 	 *  *|
 	 * @codeend
 	 */
-	DocumentJS.tags.author = {
+	return {
 		add: function( line ) {
 			var m = line.match(/^\s*@author\s*(.*)/)
 			if ( m ) {

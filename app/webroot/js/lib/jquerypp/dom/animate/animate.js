@@ -1,4 +1,4 @@
-steal('jquery', 'jquery/dom/styles', function () {
+steal('jquery', 'jquery/dom/styles', function ($) {
 
 	// Overwrites `jQuery.fn.animate` to use CSS 3 animations if possible
 

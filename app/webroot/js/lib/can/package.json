@@ -1,32 +1,28 @@
 {
-	"name": "CanJS",
-	"description": "MIT-licensed, client-side, JavaScript framework that makes building rich web applications easy.",
-	"version": "1.0.8pre",
-	"maintainers": [
-		{
-			"name": "Bitovi",
-			"email": "contact@bitovi.com",
-			"web": "http://bitovi.com/"
-		}
-	],
-	"devDependencies": {
-		"grunt": "~0.3.11",
-		"grunt-closure-tools": "~0.6.2",
+  "name" : "CanJS",
+  "description" : "MIT-licensed, client-side, JavaScript framework that makes building rich web applications easy.",
+  "version" : "1.1.1",
+  "author" : {
+    "name" : "Bitovi",
+    "email" : "contact@bitovi.com",
+    "web" : "http://bitovi.com/"
+  },
+  "homepage" : "http://canjs.us/",
+  "repository" : {
+    "type" : "git",
+    "url" : "git@github.com:bitovi/canjs.git"
+  },
+  "devDependencies" : {
     "http-server" : "0.5.1"
-	},
-	"homepage": "http://canjs.us/",
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/jupiterjs/canjs.git"
-	},
-	"demos": [
-		"http://canjs.us/#examples",
-		"http://canjs.us/recipes"
-	],
-	"licenses": [
-		{
-			"type": "MIT",
-			"url": "http://opensource.org/licenses/mit-license.php"
-		}
-	]
+  },
+  "demos" : [
+    "http://canjs.us/#examples",
+    "http://canjs.us/recipes"
+  ],
+  "licenses" : [
+    {
+      "type" : "MIT",
+      "url" : "http://opensource.org/licenses/mit-license.php"
+    }
+  ]
 }

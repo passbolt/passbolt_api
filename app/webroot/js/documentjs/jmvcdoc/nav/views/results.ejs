@@ -1,4 +1,4 @@
-<%  
+<%
    var previous = "", res, current, title, titleCleaned, resName;
 %>
 
@@ -10,14 +10,14 @@
 					res = calculateDisplay(previous, title);
 					name = normalizeName(current.name) %>
 		<div class="content">
-			    <a href="<%=$.route.url({who: name})%>" 
-				   class='selected choice <%=current.type%>' 
+			    <a href="<%=can.route.url({who: name})%>"
+				   class='selected choice <%=current.type%>'
 				   style="padding-left: <%= res.length * 20%>px">
 			    	<%if(name != "index") { %>
 						<span class='remove' title="close"></span>
 					<%}%>
 					<%=res.name.replace("jQuery.","$.")%>
-					
+
 				</a>
 				<% previous = title%>
 		</div>
@@ -36,10 +36,10 @@
 	           res = calculateDisplay(previous, title);
 			   name = normalizeName(current.name) ;
 				resName = res.name.replace("jQuery.","$.")
-				titleCleaned = title.replace("jQuery.","$."); 
+				titleCleaned = title.replace("jQuery.","$.");
 			%>
-		    <a href="<%=current.type == 'prototype' || current.type == 'static' ? 'javascript://': $.route.url({who: name}) %>" 
-			   class='result choice <%=current.type%>' 
+		    <a href="<%=current.type == 'prototype' || current.type == 'static' ? 'javascript://': can.route.url({who: name}) %>"
+			   class='result choice <%=current.type%>'
 			   style="padding-left: <%= hasStaticOrPrototype ? res.length * 20 : 20%>px"
 			   data-name="<%= current.name %>">
 		    	<%if(hasStaticOrPrototype) {%>

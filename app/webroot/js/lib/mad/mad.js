@@ -34,6 +34,7 @@ steal(
 	// load mad core libraries
 	'mad/controller',
 	'mad/model',
+	'mad/model/attribute.js',
 	'mad/view'
 ).then(
 	'mad/bootstrap/appBootstrap.js',

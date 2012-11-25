@@ -52,24 +52,7 @@ var getArgs = function( args ) {
 		return args[0] && can.isArray(args[0]) ?
 			args[0] :
 			can.makeArray(args);
-	},
-	collecting = undefined,
-	batchTrigger = function( item, event, args ) {
-		// send no events if initalizing
-		if ( ! item._init) {
-			if (!collecting ) {
-				return can.trigger(item, event, args);
-			} else {
-				collecting.push([
-				item,
-				{
-					type: event,
-					batchNum : batchNum
-				}, 
-				args ] );
-			}
-		}
-	};
+};
 
 can.each({
 	/**
@@ -131,7 +114,7 @@ function( where , name ) {
 		// undefined - the old value
 		if ( this.comparator && args.length ) {
 			this.sort(null, true);
-			batchTrigger(this,"reset", [args])
+			can.Observe.triggerBatch(this,"reset", [args])
 		}
 
 		return res;
@@ -178,4 +161,5 @@ proto.setup = function( instances, options ) {
 	}
 };
 
+return can.Observe;
 });

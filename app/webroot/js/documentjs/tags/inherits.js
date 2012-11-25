@@ -1,4 +1,4 @@
-steal.then(function() {
+steal(function() {
 	/**
 	 * @class DocumentJS.tags.inherits
 	 * @tag documentation
@@ -18,7 +18,7 @@ steal.then(function() {
 	 *  ...
 	 * @codeend
 	 */
-	DocumentJS.tags.inherits = {
+	return {
 		add: function( line ) {
 			var m = line.match(/^\s*@\w+ ([\w\.\$]+)/)
 			if ( m ) {

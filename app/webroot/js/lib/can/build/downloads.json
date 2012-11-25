@@ -1,0 +1,63 @@
+{
+  "jquery": {
+    "src": "dist/<%= pkg.version %>/can.jquery.js",
+    "description": "Can jQuery <%= pkg.version %> Development",
+    "filename": "can.jquery-<%= pkg.version %>.js"
+  },
+  "jqueryMin": {
+    "src": "dist/<%= pkg.version %>/can.jquery.min.js",
+    "description": "Can jQuery <%= pkg.version %> Production",
+    "filename": "can.jquery-<%= pkg.version %>.min.js"
+  },
+  "zepto": {
+    "src": "dist/<%= pkg.version %>/can.zepto.js",
+    "description": "Can Zepto <%= pkg.version %> Development",
+    "filename": "can.zepto-<%= pkg.version %>.js"
+  },
+  "zeptoMin": {
+    "src": "dist/<%= pkg.version %>/can.zepto.min.js",
+    "description": "Can Zepto <%= pkg.version %> Production",
+    "filename": "can.zepto-<%= pkg.version %>.min.js"
+  },
+  "yui": {
+    "src": "dist/<%= pkg.version %>/can.yui.js",
+    "description": "Can YUI <%= pkg.version %> Development",
+    "filename": "can.yui-<%= pkg.version %>.js"
+  },
+  "yuiMin": {
+    "src": "dist/<%= pkg.version %>/can.yui.min.js",
+    "description": "Can YUI <%= pkg.version %> Production",
+    "filename": "can.yui-<%= pkg.version %>.min.js"
+  },
+  "mootools": {
+    "src": "dist/<%= pkg.version %>/can.mootools.js",
+    "description": "Can Mootools <%= pkg.version %> Development",
+    "filename": "can.mootools-<%= pkg.version %>.js"
+  },
+  "mootoolsMin": {
+    "src": "dist/<%= pkg.version %>/can.mootools.min.js",
+    "description": "Can Mootools <%= pkg.version %> Production",
+    "filename": "can.mootools-<%= pkg.version %>.min.js"
+  },
+  "dojo": {
+    "src": "dist/<%= pkg.version %>/can.dojo.js",
+    "description": "Can Dojo <%= pkg.version %> Development",
+    "filename": "can.dojo-<%= pkg.version %>.js"
+  },
+  "dojoMin": {
+    "src": "dist/<%= pkg.version %>/can.dojo.min.js",
+    "description": "Can Dojo <%= pkg.version %> Production",
+    "filename": "can.dojo-<%= pkg.version %>.min.js"
+  },
+  "dist" : {
+    "src" : "dist/can.js.<%= pkg.version %>.zip",
+    "description" : "CanJS <%= pkg.version %>",
+    "filename" : "can.js.<%= pkg.version %>.zip",
+    "content_type" : "application/zip"
+  },
+  "_options" : {
+    "repository" : "canjs",
+    "user" : "bitovi",
+    "overwrite" : true
+  }
+}

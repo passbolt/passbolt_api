@@ -230,7 +230,7 @@ class Category extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'get', $role='user') {
+	public static function getFindFields($case = 'get', $role = Role::USER) {
 		$fields = null;
 		switch($role){
 			case 'user':
@@ -288,7 +288,7 @@ class Category extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'get', $role='user', &$data = null) {
+	public static function getFindConditions($case = 'get', $role = Role::USER, &$data = null) {
 		$c = null;
 		switch($role){
 			case 'user':

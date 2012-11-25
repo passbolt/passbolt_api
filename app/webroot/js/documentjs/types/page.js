@@ -1,4 +1,4 @@
-steal.then(function() {
+steal('./type',function(Type) {
 	/**
 	 * @class DocumentJS.types.page
 	 * @tag documentation
@@ -41,9 +41,8 @@ steal.then(function() {
 	 * 
 	 * @image jmvc/images/page_type_example.png 970
 	 */
-	DocumentJS.Type("page", {
+	Type("page", {
 		code: function() {
-
 		},
 	/*
 	 * Possible scopes for @page.

@@ -4,11 +4,11 @@
  */
 
 // load('steal/build/pluginify/test/pluginify_test.js')
-load('steal/build/js/js_test.js')
-load('steal/build/open/test/open_test.js')
-load('steal/build/css/test/css_test.js')
-load('steal/build/packages/test/packages_test.js')
-load('steal/build/apps/test/apps_test.js')
+load('steal/build/js/js_test.js');
+load('steal/build/open/test/open_test.js');
+load('steal/build/css/test/css_test.js');
+load('steal/build/packages/test/packages_test.js');
+load('steal/build/apps/test/apps_test.js');
 
 load('steal/rhino/rhino.js')
 steal('steal', 'steal/test/test.js', function( s ) {
@@ -19,7 +19,8 @@ steal('steal', 'steal/test/test.js', function( s ) {
 		load('steal/rhino/rhino.js')
 		var dev = readFile('steal/build/test/dev.js'),
 			devCleaned = readFile('steal/build/test/devCleaned.js');
-		steal("steal/build","steal/build/js").then(function(s2){
+			
+		steal("steal/build","steal/build/js",function(s2){
 			var a = steal.build.js.clean("var bla;var foo;steal.dev.log('hi')")
 			s.test.equals(a, "var bla;var foo;", "clean works")
 			var b = steal.build.js.clean("var bla;steal.dev.log('hi()');var foo;steal.dev.log('onetwo(bla())')")
@@ -29,6 +30,7 @@ steal('steal', 'steal/test/test.js', function( s ) {
 			var d = steal.build.js.clean(dev);
 			s.test.equals(d, devCleaned, "clean really works")
 		});
+		
 		s.test.clear();
 	})
 	
@@ -39,14 +41,18 @@ steal('steal', 'steal/test/test.js', function( s ) {
 				to: 'steal/build/test/styles'
 			})
 		});
+		// must be here to clear existing can
+		s.test.clear();
 		// will throw an error if its not working
 		AFTERLESS = false;
 		s.test.open('steal/build/test/styles/prod.html');
+
 		s.test.equals(document.getElementsByTagName("link").length, 1, "there is one css in the page")
 		s.test.equals(document.getElementsByTagName("link")[0].href.indexOf("production.css") != -1, true, "its the production.css")
 		s.test.equals(AFTERLESS, true, "the callback function runs")
 		
 		// this page tests putting link in the head
+		s.test.clear();
 		AFTERLESS = false;
 		s.test.open('steal/build/test/styles/prod2.html');
 		s.test.equals(document.getElementsByTagName("link").length, 1, "there is one css in the page")

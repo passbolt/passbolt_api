@@ -1,4 +1,4 @@
-steal('can/route', function() {
+steal('can/util', 'can/route', function(can) {
     "use strict";
 
     if(window.history && history.pushState) {
@@ -76,4 +76,6 @@ steal('can/route', function() {
             }
         });
     }
+
+	return can;
 });

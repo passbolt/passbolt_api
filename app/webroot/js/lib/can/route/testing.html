@@ -1,31 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>can.route test page</title>
+  <title>can.route test page</title>
 </head>
 <body>
-	<p>This is a dummy page to use<br/> for testing route goodness</p>
-	<script type='text/javascript'>
-	(function(){
-		var types = ["STEALSTANDALONE","STEALDOJO","STEALMOO","STEALYUI","STEALZEPTO"];
-		for(var i =0; i < types.length; i++){
-			if(window.parent[types[i]]){
-				window[types[i]] = window.parent[types[i]]
-			}
-		}
-	})();
-	
-
-	</script>
+<p>This is a dummy page to use<br/> for testing route goodness</p>
+<script type='text/javascript'>
+  (function () {
+    window.CONFIGURATION = window.parent.CONFIGURATION;
+  })();
+</script>
 <script type='text/javascript' src='../../steal/steal.js'></script>
 <script type='text/javascript'>
-steal('can/route', function(route) {
-	// make sure it's after ready
-    setTimeout(function(){
-    	window.parent.routeTestReady(route, window.location)
-    },30)
-    
-})
+  steal(function () {
+    steal.config(window.CONFIGURATION.steal);
+  }, 'can/route', function (undefined, route) {
+    // make sure it's after ready
+    setTimeout(function () {
+      window.parent.routeTestReady(route, window.location)
+    }, 30)
+  })
 </script>
 
 </body>

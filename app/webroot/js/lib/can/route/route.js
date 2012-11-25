@@ -50,7 +50,7 @@ steal('can/util','can/observe', 'can/util/string/deparam', function(can) {
 		},
 		onready = !0,
 		location = window.location,
-		quote = function(str) {
+		wrapQuote = function(str) {
 			return (str+'').replace(/([.?*+\^$\[\]\\(){}|\-])/g, "\\$1");
 		},
 		each = can.each,
@@ -76,7 +76,7 @@ steal('can/util','can/observe', 'can/util/string/deparam', function(can) {
             // A regular expression that will match the route when variable values 
             // are present; i.e. for `:page/:type` the `RegExp` is `/([\w\.]*)/([\w\.]*)/` which
             // will match for any value of `:page` and `:type` (word chars or period).
-			test: new RegExp("^" + test+"($|"+quote(can.route._querySeparator)+")"),
+			test: new RegExp("^" + test+"($|"+wrapQuote(can.route._querySeparator)+")"),
             // The original URL, same as the index for this entry in routes.
 			route: url,
             // An `array` of all the variable names in this route.
@@ -469,5 +469,11 @@ steal('can/util','can/observe', 'can/util/string/deparam', function(can) {
 	});
 	// `onready` event...
 	can.bind.call(document,"ready",can.route.ready);
+
+	// extend route to have a similar property 
+	// that is often checked in mustache to determine
+	// an object's observability
+	can.route.constructor.canMakeObserve = can.Observe.canMakeObserve;
+
 	return can.route;
 });

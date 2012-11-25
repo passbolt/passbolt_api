@@ -1,25 +1,26 @@
-steal.then(function() {
+steal('steal','../distance','../showdown','documentjs/tags',function(s, distance, converter ,tags) {
 	var typeCheckReg = /^\s*@(\w+)/,
 		nameCheckReg = /^\s*@(\w+)[ \t]+([\w\.\$]+)/m,
 		doubleAt = /@@/g;
 	/**
-	 * @class
+	 * @class DocumentJS.Type
 	 * @tag documentation
 	 * Keeps track of types of directives in DocumentJS.  
 	 * Each type is added to the types array.
 	 * @param {Object} type
 	 * @param {Object} props
 	 */
-	DocumentJS.Type = function( type, props ) {
-		DocumentJS.types[type] = props;
+	var Type = function( type, props ) {
+		Type.types[type] = props;
 		props.type = type;
 	}
 
-	DocumentJS.extend(DocumentJS.Type,
+	s.extend(Type,
 	/**
 	 * @Static
 	 */
 	{
+		types : {},
 		/**
 		 * Must get type and name
 		 * @param {String|Array} comment
@@ -27,24 +28,29 @@ steal.then(function() {
 		 * @param {Object} scope
 		 * @return {Object} type
 		 */
-		create: function( comment, code, scope, objects, type, name ) {
+		create: function( comment, code, scope, objects, defaultType, name ) {
 			
 			var firstLine = typeof comment == 'string' ? comment : comment[0],
 				check = firstLine.match(typeCheckReg),
-				props;
+				props,
+				type;
 
 			if (!type ) {
 				if (!(type = this.hasType(check ? check[1] : null))) { //try code
 					type = this.guessType(code);
 				}
-
+				if(!type){
+					type = defaultType;
+				}
 				if (!type ) {
 					return null;
 				}
-			} else if ( typeof type === 'string' ) {
-				type = DocumentJS.types[type.toLowerCase()]
 			}
-
+			
+			if ( typeof type === 'string' ) {
+				type = Type.types[type.toLowerCase()]
+			}
+			
 
 
 			var nameCheck = firstLine.match(nameCheckReg)
@@ -62,13 +68,13 @@ steal.then(function() {
 			if ( nameCheck && nameCheck[2] && nameCheck[1].toLowerCase() == type.type ) {
 				props.name = nameCheck[2]
 			}
-			if ( name ) {
+			if ( name && !props.name ) {
 				props.name = name;
 			}
-			// you are not going to process the comment tye typical way
+			// you are not going to process the comment the typical way
 			// this is mostly for @add
 			if ( type.init ) {
-				return type.init(props, comment)
+				return type.init(props, comment, objects)
 			}
 
 
@@ -83,7 +89,7 @@ steal.then(function() {
 				// if we have a parent ...
 				if ( parent ) {
 
-					if (!parent.type || DocumentJS.types[parent.type].useName ) {
+					if (!parent.type || Type.types[parent.type].useName ) {
 						props.name = parent.name + "." + props.name
 					}
 					if ( props.name === 'toString' ) {
@@ -97,18 +103,27 @@ steal.then(function() {
 					}
 					props.parents.unshift(parent.name);
 
+					if (props.name === "index") {
+					}
 					if ( objects[props.name] ) {
 						var newProps = props;
 						props = objects[props.name];
-						DocumentJS.extend(props, newProps);
+						s.extend(props, newProps);
 					}
 					if (!parent.children ) {
 						parent.children = [];
 					}
 					parent.children.push(props.name)
+
+				} else { // in the case that it doesn't have a parent 
+					if ( objects[props.name] ) {
+						var newProps = props;
+						props = objects[props.name];
+						s.extend(props, newProps);
+					}
 				}
 
-				this.process(props, comment, type)
+				this.process(props, comment, type, objects)
 
 				return props
 			}
@@ -140,7 +155,7 @@ steal.then(function() {
 		hasType: function( type ) {
 			if (!type ) return null;
 
-			return DocumentJS.types.hasOwnProperty(type.toLowerCase()) ? DocumentJS.types[type.toLowerCase()] : null;
+			return Type.types.hasOwnProperty(type.toLowerCase()) ? Type.types[type.toLowerCase()] : null;
 		},
 		/**
 		 * Guess type from code
@@ -148,9 +163,9 @@ steal.then(function() {
 		 * @return {Object} type
 		 */
 		guessType: function( code ) {
-			for ( var type in DocumentJS.types ) {
-				if ( DocumentJS.types[type].codeMatch && DocumentJS.types[type].codeMatch(code) ) {
-					return DocumentJS.types[type];
+			for ( var type in Type.types ) {
+				if ( Type.types[type].codeMatch && Type.types[type].codeMatch(code) ) {
+					return Type.types[type];
 				}
 
 			}
@@ -161,15 +176,15 @@ steal.then(function() {
 				suggest = "",
 				check = function( things ) {
 					for ( var name in things ) {
-						var dist = DocumentJS.distance(incorrect.toLowerCase(), name.toLowerCase())
+						var dist = distance(incorrect.toLowerCase(), name.toLowerCase())
 						if ( dist < lowest ) {
 							lowest = dist
 							suggest = name.toLowerCase()
 						}
 					}
 				}
-				check(DocumentJS.types);
-			check(DocumentJS.tags);
+				check(Type.types);
+			check(tags);
 
 			if ( suggest ) {
 				print("\nWarning!!\nThere is no @" + incorrect + " directive. did you mean @" + suggest + " ?\n")
@@ -182,7 +197,7 @@ steal.then(function() {
 		 * @param {String} comment
 		 * @param {Object} type
 		 */
-		process: function( props, comment, type ) {
+		process: function( props, comment, type, objects ) {
 			var i = 0,
 				lines = typeof comment == 'string' ? comment.split("\n") : comment,
 				len = lines.length,
@@ -206,14 +221,14 @@ steal.then(function() {
 					// lower case it
 					tag = match[1].toLowerCase();
 					// get the tag object
-					var curTag = DocumentJS.tags[tag];
+					var curTag = tags[tag];
 
 					// if we don't have a tag object
 					if (!curTag ) {
 
 						// if it's not a type, suggest it as a type and just add it
 						// maybe they wanted @foobar
-						if (!DocumentJS.types[tag] ) {
+						if (!Type.types[tag] ) {
 							this.suggestType(tag);
 							props.comment += line + "\n"
 						}
@@ -223,7 +238,7 @@ steal.then(function() {
 						curTag.type = tag;
 					}
 					// call the tag types add method
-					curData = curTag.add.call(props, line, curData);
+					curData = curTag.add.call(props, line, curData, objects);
 
 					// depending on curData, we do different things:
 					// if we get ['push',{DATA}], this means we are an
@@ -294,19 +309,20 @@ steal.then(function() {
 			}
 
 			// for each tag, let it run any post processing:
-			try {
-				props.comment = DocumentJS.converter.makeHtml(props.comment);
+			//try {
+				props.comment = converter.makeHtml(props.comment);
 				//allow post processing
-				for ( var tag in DocumentJS.tags ) {
-					if ( DocumentJS.tags[tag].done ) {
-						DocumentJS.tags[tag].done.call(props);
+				for ( var tag in tags ) {
+					if ( tags[tag].done ) {
+						tags[tag].done.call(props);
 					}
 				}
 
-			} catch (e) {
-				print("Error with converting to markdown")
-			}
+			//} catch (e) {
+			//	print("Error with converting to markdown\n"+e+"\n"+props.comment.substr(0,100)+"\n\n")
+			//}
 
 		}
 	});
+	return Type;
 })

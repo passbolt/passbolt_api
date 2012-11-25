@@ -58,20 +58,26 @@ steal('can/util', function(can) {
 							delete observing[name];
 						}
 					}
-				};
+				},
+				batchNum;
 			
-			// when a property value is cahnged
-			var onchanged = function(){
-				// store the old value
-				var oldValue = data.value,
-					// get the new value
-					newvalue = getValueAndBind();
-				// update the value reference (in case someone reads)
-				data.value = newvalue;
-				// if a change happened
-				if ( newvalue !== oldValue ) {
-					callback(newvalue, oldValue);
+			// when a property value is changed
+			var onchanged = function(ev){
+				if(ev.batchNum === undefined || ev.batchNum !== batchNum) {
+					// store the old value
+					var oldValue = data.value,
+						// get the new value
+						newvalue = getValueAndBind();
+					// update the value reference (in case someone reads)
+					data.value = newvalue;
+					// if a change happened
+					if ( newvalue !== oldValue ) {
+						callback(newvalue, oldValue);
+					}
+					batchNum = batchNum = ev.batchNum;
 				}
+				
+				
 			};
 			
 			// gets the value returned by `getterSetter` and also binds to any attributes
@@ -294,7 +300,7 @@ steal('can/util', function(can) {
 					var old = getterSetter;
 					getterSetter = val;
 					if( old !== val){
-						can.trigger(computed, "change",[val, old]);
+						can.Observe.triggerBatch(computed, "change",[val, old]);
 					}
 					
 					return val;
@@ -319,7 +325,7 @@ steal('can/util', function(can) {
 			if( bindings === 0 && canbind){
 				// setup live-binding
 				computedData = computeBinder(getterSetter, context || this, function(newValue, oldValue){
-					can.trigger(computed, "change",[newValue, oldValue])
+					can.Observe.triggerBatch(computed, "change",[newValue, oldValue])
 				});
 			}
 			bindings++;

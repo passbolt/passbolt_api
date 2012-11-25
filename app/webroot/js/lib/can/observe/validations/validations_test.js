@@ -143,6 +143,47 @@ test("validatesPresenceOf", function(){
 	ok(!errors, "no errors "+typeof errors);
 })
 
+test("validatesPresenceOf with numbers and a 0 value", function() {
+  can.Observe.extend("Person", { attributes: {age: "number"}});
+
+  Person.validatePresenceOf("age");
+
+  var person = new Person();
+  var errors = person.errors();
+
+  ok(errors)
+  ok(errors.age)
+  equals(errors.age[0], "can't be empty", "A new Person with no age generates errors.");
+
+  //test for null
+  person = new Person({age: null});
+  errors = person.errors();
+
+  ok(errors)
+  ok(errors.age)
+  equals(errors.age[0], "can't be empty" , "A new Person with null age generates errors.");
+
+  //test for ""
+  person = new Person({age: ""});
+  errors = person.errors();
+
+  ok(errors)
+  ok(errors.age)
+  equals(errors.age[0], "can't be empty" , "A new Person with an empty string age generates errors.");
+
+  //Affirmative test
+  person = new Person({age: 12});
+  errors = person.errors();
+
+  ok(!errors, "A new Person with a valid >0 age doesn't generate errors.");
+
+  //Affirmative test with 0
+  person = new Person({age: 0});
+  errors = person.errors();
+
+  ok(!errors, "A new Person with a valid 0 age doesn't generate errors");
+});
+
 test("validatesRangeOf", function(){
 	Person.validateRangeOf("thing", 2, 5);
 

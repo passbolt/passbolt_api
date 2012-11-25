@@ -68,7 +68,6 @@ class AppController extends Controller {
 		} else {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
-
 		// sanitize any post data
 		if (isset($this->request->data) && !empty($this->request->data)) {
 			$this->request->data = Sanitize::clean($this->request->data);

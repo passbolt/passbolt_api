@@ -28,4 +28,6 @@ steal('can/util','can/route','can/control', function(can){
 			can.route.unbind( 'change', check );
 		};
 	};
+
+	return can;
 });
