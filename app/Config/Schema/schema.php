@@ -106,6 +106,26 @@ class AppSchema extends CakeSchema {
 						$role->save($r);
 					}
 				break;
+
+				case 'tags':
+					array_push(self::$created, 'tags');
+					$tag = ClassRegistry::init('Tag');
+					$ts = $this->_getDefaultTags();
+					foreach ($ts as $t) {
+						$tag->create();
+						$tag->save($t);
+					}
+				break;
+
+				case 'tags_resources':
+					array_push(self::$created, 'tags_resources');
+					$tagResource = ClassRegistry::init('TagResource');
+					$rts = $this->_getDefaultResourceTags();
+					foreach ($rts as $rt) {
+						$tagResource->create();
+						$tagResource->save($rt);
+					}
+				break;
 			}
 		}
 	}
@@ -217,28 +237,49 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
+	public $tags = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+
+	public $tags_resources = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'tag_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'index', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'resource_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'tag_id' => array('column' => array('tag_id', 'resource_id'), 'unique' => 0)),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+
 	protected function _getDefaultCategories() {
 		$categories = array (
 			'Bolt Softwares Pvt. Ltd.' => array(
 				'administration' => array(
 					'accounts' => array(
 						'Resources' => array(
-							array('Resource' => array( 'name' => 'bank password', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
+							array('Resource' => array('id' => '509bb871-b964-48ab-94fe-fb098cebc04d','name' => 'bank password', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
 						)
 					),
 					'marketing' => array(
 						'Resources' => array(
-							array('Resource' => array( 'name' => 'facebook account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
+							array('Resource' => array('id' => '509bb871-5168-49d4-a676-fb098cebc04d', 'name' => 'facebook account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
 						)
 					),
 					'hr' => array(
 						'Resources' => array(
-							array('Resource' => array( 'name' => 'salesforce account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
+							array('Resource' => array('name' => 'salesforce account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
 						)
 					),
 					'misc' => array(
 						'Resources' => array(
-							array('Resource' => array( 'name' => 'tetris license', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
+							array('Resource' => array('name' => 'tetris license', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
 						)
 					)
 				),
@@ -345,5 +386,66 @@ class AppSchema extends CakeSchema {
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));
 		return $rs;
+	}
+
+	protected function _getDefaultTags() {
+		$ts[] = array('Tag' => array(
+			'id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'social',
+			'created' => '2012-11-25 13:39:25',
+			'modified' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$ts[] = array('Tag' => array(
+			'id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'facebook',
+			'created' => '2012-11-25 13:39:25',
+			'modified' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$ts[] = array('Tag' => array(
+			'id' => 'aaa00002-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'twitter',
+			'created' => '2012-11-25 13:39:25',
+			'modified' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$ts[] = array('Tag' => array(
+			'id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'banking',
+			'created' => '2012-11-25 13:39:25',
+			'modified' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		return $ts;
+	}
+
+	protected function _getDefaultResourceTags() {
+		$rts[] = array('TagResource' => array(
+			'id' => 'zzz00001-c5cd-11e1-a0c5-080027796c4c',
+			'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',      // banking
+			'resource_id' => '509bb871-b964-48ab-94fe-fb098cebc04d', // bank
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$rts[] = array('TagResource' => array(
+			'id' => 'zzz00002-c5cd-11e1-a0c5-080027796c4c',
+			'tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',      // facebook
+			'resource_id' => '509bb871-5168-49d4-a676-fb098cebc04d', // facebook
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$rts[] = array('TagResource' => array(
+			'id' => 'zzz00003-c5cd-11e1-a0c5-080027796c4c',
+			'tag_id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',      // social
+			'resource_id' => '509bb871-5168-49d4-a676-fb098cebc04d', // facebook
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		return $rts;
 	}
 }
