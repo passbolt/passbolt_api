@@ -1,5 +1,6 @@
 steal(
-	'jquery/model'
+	'jquery/model',
+	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
 	/*
@@ -36,6 +37,23 @@ steal(
 		 */
 		'isMultipleAttribute': function (attrName) {
 			return /models$/.test(this.attributes[attrName]);
+		},
+
+		/**
+		 * Get attribute description of this model
+		 * @param {string} name The name of the attribute
+		 * @return {mad.model.Attribute}
+		 */
+		'getAttribute': function (name) {
+			var returnValue = null,
+				modelName = this.attributes[name].substr(0, this.attributes[name].lastIndexOf('.')),
+				model = $.String.getObject(modelName);
+			returnValue = new mad.model.Attribute({
+				'name': name,
+				'multiple': this.isMultipleAttribute(name),
+				'modelReference': model
+			});
+			return returnValue;
 		},
 
 		/**
@@ -137,10 +155,11 @@ steal(
 			// if the provided data are formated as ajax server response
 			if (mad.net.Response.isResponse(data)) {
 				data = mad.net.Response.getData(data);
-				data = this.toCan(data);
+				// serialize the data from cake to can format
+				data = mad.model.serializer.CakeSerializer.from(data, this);
 			} else if (data[this.shortName]) {
-				// if provided data are formated as CakePHP
-				data = this.toCan(data);
+				// serialize the data from cake to can format
+				data = mad.model.serializer.CakeSerializer.from(data, this);
 			}
 			return can.Model.model.call(this, data);
 		},
@@ -267,36 +286,6 @@ steal(
 			if (searchResults.length) {
 				returnValue = searchResults[0];
 			}
-			return returnValue;
-		},
-		
-		/**
-		 * Format an array to the cakePHP format
-		 * @param {array} data The array of data to format
-		 * @return {array}
-		 */
-		'toCakePHP': function (data) {
-			var returnValue = {};
-			returnValue[this.shortName] = {};
-			for (var name in data) {
-				if (this.isModelAttribute(name)) {
-					returnValue[name] = data[name];
-				} else {
-					returnValue[this.shortName][name] = data[name];
-				}
-			}
-			return returnValue;
-		},
-
-		/**
-		 * Format an array to the canJS format
-		 * @param {array} data The array of data to format
-		 * @return {array}
-		 */
-		'toCan': function (data) {
-			var returnValue = data;
-			returnValue = $.extend(true, {}, returnValue, returnValue[this.shortName]);
-			delete returnValue[this.shortName];
 			return returnValue;
 		},
 

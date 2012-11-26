@@ -1,6 +1,7 @@
 steal(
 	'jquery/model',
-	'app/model/category.js'
+	'app/model/category.js',
+	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
 	/*
@@ -37,7 +38,7 @@ steal(
 
 		'create' : function (attrs, success, error) {
 			var self = this;
-			var params = this.toCakePHP(attrs);
+			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 			return mad.net.Ajax.request({
 				url: APP_URL + '/resources',
 				type: 'POST',
@@ -90,7 +91,7 @@ steal(
 			delete attrs.created;
 			delete attrs.modified;
 			// format data as expected by cakePHP
-			var params = this.toCakePHP(attrs);
+			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 			// add the root of the params, it will be used in the url template
 			params.id = id;
 			return mad.net.Ajax.request({

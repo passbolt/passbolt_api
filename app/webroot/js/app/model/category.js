@@ -1,5 +1,6 @@
 steal(
-	'mad/model'
+	'mad/model',
+	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
 	/*
@@ -42,7 +43,7 @@ steal(
 		 */
 		'create' : function (attrs, success, error) {
 			var self = this;
-			var params = this.toCakePHP(attrs);
+			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 			return mad.net.Ajax.request({
 				url: APP_URL + '/categories',
 				type: 'POST',

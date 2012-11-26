@@ -27,6 +27,7 @@ steal(
 //	//"./test/helper/controller.js",
 	"./test/lang/i18n.js",
 	"./test/model/model.js",
+	"./test/model/serializer/cakeSerializer.js",
 	"./test/model/validationRules.js",
 	"./test/net/ajax.js",
 	"./test/object/map.js",
