@@ -221,7 +221,7 @@ class HttpSocketTest extends CakeTestCase {
 		$baseConfig = $this->Socket->config;
 		$this->Socket->expects($this->never())->method('connect');
 		$this->Socket->__construct(array('host' => 'foo-bar'));
-		$baseConfig['host']	 = 'foo-bar';
+		$baseConfig['host'] = 'foo-bar';
 		$baseConfig['protocol'] = getprotobyname($baseConfig['protocol']);
 		$this->assertEquals($this->Socket->config, $baseConfig);
 
@@ -253,6 +253,9 @@ class HttpSocketTest extends CakeTestCase {
 			'protocol' => 'tcp',
 			'port' => 23,
 			'timeout' => 30,
+			'ssl_verify_peer' => true,
+			'ssl_verify_depth' => 5,
+			'ssl_verify_host' => true,
 			'request' => array(
 				'uri' => array(
 					'scheme' => 'https',
@@ -260,7 +263,7 @@ class HttpSocketTest extends CakeTestCase {
 					'port' => 23
 				),
 				'redirect' => false,
-				'cookies' => array()
+				'cookies' => array(),
 			)
 		);
 		$this->assertEquals($expected, $this->Socket->config);
@@ -278,6 +281,9 @@ class HttpSocketTest extends CakeTestCase {
 			'protocol' => 'tcp',
 			'port' => 80,
 			'timeout' => 30,
+			'ssl_verify_peer' => true,
+			'ssl_verify_depth' => 5,
+			'ssl_verify_host' => true,
 			'request' => array(
 				'uri' => array(
 					'scheme' => 'http',
@@ -285,7 +291,7 @@ class HttpSocketTest extends CakeTestCase {
 					'port' => 80
 				),
 				'redirect' => false,
-				'cookies' => array()
+				'cookies' => array(),
 			)
 		);
 		$this->assertEquals($expected, $this->Socket->config);
@@ -311,6 +317,15 @@ class HttpSocketTest extends CakeTestCase {
 		$response = $this->Socket->request(true);
 		$this->assertFalse($response);
 
+		$context = array(
+			'ssl' => array(
+				'verify_peer' => true,
+				'verify_depth' => 5,
+				'CN_match' => 'www.cakephp.org',
+				'cafile' => CAKE . 'Config' . DS . 'cacert.pem'
+			)
+		);
+
 		$tests = array(
 			array(
 				'request' => 'http://www.cakephp.org/?foo=bar',
@@ -321,6 +336,7 @@ class HttpSocketTest extends CakeTestCase {
 						'protocol' => 'tcp',
 						'port' => 80,
 						'timeout' => 30,
+						'context' => $context,
 						'request' => array(
 							'uri' => array(
 								'scheme' => 'http',
@@ -763,6 +779,38 @@ class HttpSocketTest extends CakeTestCase {
 	}
 
 /**
+ * Test that redirect urls are urldecoded
+ *
+ * @return void
+ */
+	public function testRequestWithRedirectUrlEncoded() {
+		$request = array(
+			'uri' => 'http://localhost/oneuri',
+			'redirect' => 1
+		);
+		$serverResponse1 = "HTTP/1.x 302 Found\r\nDate: Mon, 16 Apr 2007 04:14:16 GMT\r\nServer: CakeHttp Server\r\nContent-Type: text/html\r\nLocation: http://i.cmpnet.com%2Ftechonline%2Fpdf%2Fa.pdf=\r\n\r\n";
+		$serverResponse2 = "HTTP/1.x 200 OK\r\nDate: Mon, 16 Apr 2007 04:14:16 GMT\r\nServer: CakeHttp Server\r\nContent-Type: text/html\r\n\r\n<h1>You have been redirected</h1>";
+
+		$this->Socket->expects($this->at(1))
+			->method('read')
+			->will($this->returnValue($serverResponse1));
+
+		$this->Socket->expects($this->at(3))
+			->method('write')
+			->with($this->logicalAnd(
+				$this->stringContains('Host: i.cmpnet.com'),
+				$this->stringContains('GET /techonline/pdf/a.pdf')
+			));
+
+		$this->Socket->expects($this->at(4))
+			->method('read')
+			->will($this->returnValue($serverResponse2));
+
+		$response = $this->Socket->request($request);
+		$this->assertEquals('<h1>You have been redirected</h1>', $response->body());
+	}
+
+/**
  * testRequestWithRedirect method
  *
  * @return void
@@ -781,6 +829,11 @@ class HttpSocketTest extends CakeTestCase {
 		$this->assertEquals('<h1>You have been redirected</h1>', $response->body());
 	}
 
+/**
+ * Test that redirects with a count limit are decremented.
+ *
+ * @return void
+ */
 	public function testRequestWithRedirectAsInt() {
 		$request = array(
 			'uri' => 'http://localhost/oneuri',
@@ -795,6 +848,11 @@ class HttpSocketTest extends CakeTestCase {
 		$this->assertEquals(1, $this->Socket->request['redirect']);
 	}
 
+/**
+ * Test that redirects after the redirect count reaches 9 are not followed.
+ *
+ * @return void
+ */
 	public function testRequestWithRedirectAsIntReachingZero() {
 		$request = array(
 			'uri' => 'http://localhost/oneuri',
@@ -1509,7 +1567,6 @@ class HttpSocketTest extends CakeTestCase {
  * testBuildCookies method
  *
  * @return void
- * @todo Test more scenarios
  */
 	public function testBuildCookies() {
 		$cookies = array(
@@ -1625,5 +1682,40 @@ class HttpSocketTest extends CakeTestCase {
 			}
 		}
 		$this->assertEquals(true, $return);
+	}
+
+/**
+ * test configuring the context from the flat keys.
+ *
+ * @return void
+ */
+	public function testConfigContext() {
+		$this->Socket->reset();
+		$this->Socket->request('http://example.com');
+		$this->assertTrue($this->Socket->config['context']['ssl']['verify_peer']);
+		$this->assertEquals(5, $this->Socket->config['context']['ssl']['verify_depth']);
+		$this->assertEquals('example.com', $this->Socket->config['context']['ssl']['CN_match']);
+		$this->assertArrayNotHasKey('ssl_verify_peer', $this->Socket->config);
+		$this->assertArrayNotHasKey('ssl_verify_host', $this->Socket->config);
+		$this->assertArrayNotHasKey('ssl_verify_depth', $this->Socket->config);
+	}
+
+/**
+ * Test that requests fail when peer verification fails.
+ *
+ * @return void
+ */
+	public function testVerifyPeer() {
+		$this->skipIf(!extension_loaded('openssl'), 'OpenSSL is not enabled cannot test SSL.');
+		$socket = new HttpSocket();
+		try {
+			$result = $socket->get('https://typography.com');
+			$this->markTestSkipped('Found valid certificate, was expecting invalid certificate.');
+		} catch (SocketException $e) {
+			$message = $e->getMessage();
+			$this->skipIf(strpos($message, 'Invalid HTTP') !== false, 'Invalid HTTP Response received, skipping.');
+			$this->assertContains('Peer certificate CN', $message);
+			$this->assertContains('Failed to enable crypto', $message);
+		}
 	}
 }

@@ -213,7 +213,6 @@ class Debugger {
 		if (empty($line)) {
 			$line = '??';
 		}
-		$path = self::trimPath($file);
 
 		$info = compact('code', 'description', 'file', 'line');
 		if (!in_array($info, $self->errors)) {
@@ -250,7 +249,6 @@ class Debugger {
 			break;
 			default:
 				return;
-			break;
 		}
 
 		$data = compact(
@@ -297,9 +295,9 @@ class Debugger {
 		$back = array();
 
 		$_trace = array(
-			'line'     => '??',
-			'file'     => '[internal]',
-			'class'    => null,
+			'line' => '??',
+			'file' => '[internal]',
+			'class' => null,
 			'function' => '[main]'
 		);
 
@@ -319,7 +317,7 @@ class Debugger {
 						foreach ($next['args'] as $arg) {
 							$args[] = Debugger::exportVar($arg);
 						}
-						$reference .= join(', ', $args);
+						$reference .= implode(', ', $args);
 					}
 					$reference .= ')';
 				}
@@ -370,9 +368,6 @@ class Debugger {
 			return str_replace(ROOT, 'ROOT', $path);
 		}
 
-		if (strpos($path, CAKE) === 0) {
-			return str_replace($corePath, 'CORE' . DS, $path);
-		}
 		return $path;
 	}
 
@@ -400,7 +395,10 @@ class Debugger {
 		if (!file_exists($file)) {
 			return array();
 		}
-		$data = @explode("\n", file_get_contents($file));
+		$data = file_get_contents($file);
+		if (!empty($data) && strpos($data, "\n") !== false) {
+			$data = explode("\n", $data);
+		}
 
 		if (empty($data) || !isset($data[$line])) {
 			return;
@@ -474,29 +472,23 @@ class Debugger {
 		switch (self::getType($var)) {
 			case 'boolean':
 				return ($var) ? 'true' : 'false';
-			break;
 			case 'integer':
 				return '(int) ' . $var;
 			case 'float':
 				return '(float) ' . $var;
-			break;
 			case 'string':
-				if (trim($var) == '') {
+				if (!trim($var)) {
 					return "''";
 				}
 				return "'" . $var . "'";
-			break;
 			case 'array':
 				return self::_array($var, $depth - 1, $indent + 1);
-			break;
 			case 'resource':
 				return strtolower(gettype($var));
-			break;
 			case 'null':
 				return 'null';
 			default:
 				return self::_object($var, $depth - 1, $indent + 1);
-			break;
 		}
 	}
 
@@ -521,7 +513,7 @@ class Debugger {
 	protected static function _array(array $var, $depth, $indent) {
 		$secrets = array(
 			'password' => '*****',
-			'login'  => '*****',
+			'login' => '*****',
 			'host' => '*****',
 			'database' => '*****',
 			'port' => '*****',
@@ -789,11 +781,11 @@ class Debugger {
 				continue;
 			}
 			if (is_array($value)) {
-				$value = join("\n", $value);
+				$value = implode("\n", $value);
 			}
 			$info .= String::insert($tpl[$key], array($key => $value) + $data, $insertOpts);
 		}
-		$links = join(' ', $links);
+		$links = implode(' ', $links);
 
 		if (isset($tpl['callback']) && is_callable($tpl['callback'])) {
 			return call_user_func($tpl['callback'], $data, compact('links', 'info'));

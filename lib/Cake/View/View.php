@@ -298,11 +298,6 @@ class View extends Object {
 	protected $_eventManager = null;
 
 /**
- * The view file to be rendered, only used inside _execute()
- */
-	private $__viewFileName = null;
-
-/**
  * Whether the event manager was already configured for this object
  *
  * @var boolean
@@ -335,7 +330,7 @@ class View extends Object {
 		if (is_object($controller) && isset($controller->response)) {
 			$this->response = $controller->response;
 		} else {
-			$this->response = new CakeResponse(array('charset' => Configure::read('App.encoding')));
+			$this->response = new CakeResponse();
 		}
 		$this->Helpers = new HelperCollection($this);
 		$this->Blocks = new ViewBlock();
@@ -535,7 +530,9 @@ class View extends Object {
 
 		if (preg_match('/^<!--cachetime:(\\d+)-->/', $out, $match)) {
 			if (time() >= $match['1']) {
+				//@codingStandardsIgnoreStart
 				@unlink($filename);
+				//@codingStandardsIgnoreEnd
 				unset ($out);
 				return false;
 			} else {
@@ -604,17 +601,31 @@ class View extends Object {
 	}
 
 /**
- * Append to an existing or new block.  Appending to a new
+ * Append to an existing or new block. Appending to a new
  * block will create the block.
  *
  * @param string $name Name of the block
  * @param string $value The content for the block.
  * @return void
  * @throws CakeException when you use non-string values.
- * @see ViewBlock::append()
+ * @see ViewBlock::concat()
  */
 	public function append($name, $value = null) {
-		return $this->Blocks->append($name, $value);
+		return $this->Blocks->concat($name, $value);
+	}
+
+/**
+ * Prepend to an existing or new block. Prepending to a new
+ * block will create the block.
+ *
+ * @param string $name Name of the block
+ * @param string $value The content for the block.
+ * @return void
+ * @throws CakeException when you use non-string values.
+ * @see ViewBlock::concat()
+ */
+	public function prepend($name, $value = null) {
+		return $this->Blocks->concat($name, $value, ViewBlock::PREPEND);
 	}
 
 /**
@@ -625,7 +636,7 @@ class View extends Object {
  * @param string $value The content for the block.
  * @return void
  * @throws CakeException when you use non-string values.
- * @see ViewBlock::assign()
+ * @see ViewBlock::set()
  */
 	public function assign($name, $value) {
 		return $this->Blocks->set($name, $value);
@@ -636,18 +647,18 @@ class View extends Object {
  * empty or undefined '' will be returned.
  *
  * @param string $name Name of the block
- * @return The block content or '' if the block does not exist.
- * @see ViewBlock::fetch()
+ * @return string The block content or $default if the block does not exist.
+ * @see ViewBlock::get()
  */
-	public function fetch($name) {
-		return $this->Blocks->get($name);
+	public function fetch($name, $default = '') {
+		return $this->Blocks->get($name, $default);
 	}
 
 /**
  * End a capturing block. The compliment to View::start()
  *
  * @return void
- * @see ViewBlock::start()
+ * @see ViewBlock::end()
  */
 	public function end() {
 		return $this->Blocks->end();
@@ -757,7 +768,7 @@ class View extends Object {
 		} else {
 			$data = array($one => $two);
 		}
-		if ($data == null) {
+		if (!$data) {
 			return false;
 		}
 		$this->viewVars = $data + $this->viewVars;
@@ -830,7 +841,7 @@ class View extends Object {
  */
 	public function loadHelpers() {
 		$helpers = HelperCollection::normalizeObjectArray($this->helpers);
-		foreach ($helpers as $name => $properties) {
+		foreach ($helpers as $properties) {
 			list($plugin, $class) = pluginSplit($properties['class']);
 			$this->{$class} = $this->Helpers->load($properties['class'], $properties['settings']);
 		}
@@ -853,12 +864,16 @@ class View extends Object {
 		$this->_current = $viewFile;
 		$initialBlocks = count($this->Blocks->unclosed());
 
-		$this->getEventManager()->dispatch(new CakeEvent('View.beforeRenderFile', $this, array($viewFile)));
+		$eventManager = $this->getEventManager();
+		$beforeEvent = new CakeEvent('View.beforeRenderFile', $this, array($viewFile));
+
+		$eventManager->dispatch($beforeEvent);
 		$content = $this->_evaluate($viewFile, $data);
+
 		$afterEvent = new CakeEvent('View.afterRenderFile', $this, array($viewFile, $content));
-		//TODO: For BC puporses, set extra info in the event object. Remove when appropriate
+
 		$afterEvent->modParams = 1;
-		$this->getEventManager()->dispatch($afterEvent);
+		$eventManager->dispatch($afterEvent);
 		$content = $afterEvent->data[1];
 
 		if (isset($this->_parents[$viewFile])) {
@@ -882,7 +897,7 @@ class View extends Object {
  * Sandbox method to evaluate a template / view script in.
  *
  * @param string $viewFn Filename of the view
- * @param array $___dataForView Data to include in rendered view.
+ * @param array $dataForView Data to include in rendered view.
  *    If empty the current View::$viewVars will be used.
  * @return string Rendered output
  */
@@ -893,7 +908,7 @@ class View extends Object {
 
 		include $this->__viewFile;
 
-		unset($this->_viewFile);
+		unset($this->__viewFile);
 		return ob_get_clean();
 	}
 
@@ -1147,10 +1162,16 @@ class View extends Object {
 			$this->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this, array($file)));
 		}
 
+		$current = $this->_current;
+		$restore = $this->_currentType;
+
 		$this->_currentType = self::TYPE_ELEMENT;
 		$element = $this->_render($file, array_merge($this->viewVars, $data));
 
-		if (isset($options['callbacks'])) {
+		$this->_currentType = $restore;
+		$this->_current = $current;
+
+		if ($options['callbacks']) {
 			$this->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this, array($file, $element)));
 		}
 		if (isset($options['cache'])) {

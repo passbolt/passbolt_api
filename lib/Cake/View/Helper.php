@@ -14,6 +14,7 @@
  */
 
 App::uses('Router', 'Routing');
+App::uses('Hash', 'Utility');
 
 /**
  * Abstract base class for all other Helpers in CakePHP.
@@ -292,37 +293,53 @@ class Helper extends Object {
  */
 	public function assetUrl($path, $options = array()) {
 		if (is_array($path)) {
-			$path = $this->url($path, !empty($options['fullBase']));
-		} elseif (strpos($path, '://') === false) {
-			if (!array_key_exists('plugin', $options) || $options['plugin'] !== false) {
-				list($plugin, $path) = $this->_View->pluginSplit($path, false);
-			}
-			if (!empty($options['pathPrefix']) && $path[0] !== '/') {
-				$path = $options['pathPrefix'] . $path;
-			}
-			if (
-				!empty($options['ext']) &&
-				strpos($path, '?') === false &&
-				substr($path, -strlen($options['ext'])) !== $options['ext']
-			) {
-				$path .= $options['ext'];
-			}
-			if (isset($plugin)) {
-				$path = Inflector::underscore($plugin) . '/' . $path;
-			}
-			$path = h($this->assetTimestamp($this->webroot($path)));
-
-			if (!empty($options['fullBase'])) {
-				$base = $this->url('/', true);
-				$len = strlen($this->request->webroot);
-				if ($len) {
-					$base = substr($base, 0, -$len);
-				}
-				$path = $base . $path;
-			}
+			return $this->url($path, !empty($options['fullBase']));
 		}
+		if (strpos($path, '://') !== false) {
+			return $path;
+		}
+		if (!array_key_exists('plugin', $options) || $options['plugin'] !== false) {
+			list($plugin, $path) = $this->_View->pluginSplit($path, false);
+		}
+		if (!empty($options['pathPrefix']) && $path[0] !== '/') {
+			$path = $options['pathPrefix'] . $path;
+		}
+		if (
+			!empty($options['ext']) &&
+			strpos($path, '?') === false &&
+			substr($path, -strlen($options['ext'])) !== $options['ext']
+		) {
+			$path .= $options['ext'];
+		}
+		if (isset($plugin)) {
+			$path = Inflector::underscore($plugin) . '/' . $path;
+		}
+		$path = $this->_encodeUrl($this->assetTimestamp($this->webroot($path)));
 
+		if (!empty($options['fullBase'])) {
+			$base = $this->url('/', true);
+			$len = strlen($this->request->webroot);
+			if ($len) {
+				$base = substr($base, 0, -$len);
+			}
+			$path = $base . $path;
+		}
 		return $path;
+	}
+
+/**
+ * Encodes a URL for use in HTML attributes.
+ *
+ * @param string $url The url to encode.
+ * @return string The url encoded for both URL & HTML contexts.
+ */
+	protected function _encodeUrl($url) {
+		$path = parse_url($url, PHP_URL_PATH);
+		$encoded = implode('/', array_map(
+			'rawurlencode',
+			explode('/', $path)
+		));
+		return h(str_replace($path, $encoded, $url));
 	}
 
 /**
@@ -340,20 +357,26 @@ class Helper extends Object {
 			$filepath = preg_replace('/^' . preg_quote($this->request->webroot, '/') . '/', '', $path);
 			$webrootPath = WWW_ROOT . str_replace('/', DS, $filepath);
 			if (file_exists($webrootPath)) {
+				//@codingStandardsIgnoreStart
 				return $path . '?' . @filemtime($webrootPath);
+				//@codingStandardsIgnoreEnd
 			}
 			$segments = explode('/', ltrim($filepath, '/'));
 			if ($segments[0] === 'theme') {
 				$theme = $segments[1];
 				unset($segments[0], $segments[1]);
 				$themePath = App::themePath($theme) . 'webroot' . DS . implode(DS, $segments);
+				//@codingStandardsIgnoreStart
 				return $path . '?' . @filemtime($themePath);
+				//@codingStandardsIgnoreEnd
 			} else {
 				$plugin = Inflector::camelize($segments[0]);
 				if (CakePlugin::loaded($plugin)) {
 					unset($segments[0]);
 					$pluginPath = CakePlugin::path($plugin) . 'webroot' . DS . implode(DS, $segments);
+					//@codingStandardsIgnoreStart
 					return $path . '?' . @filemtime($pluginPath);
+					//@codingStandardsIgnoreEnd
 				}
 			}
 		}
@@ -459,21 +482,21 @@ class Helper extends Object {
  * @deprecated This method will be moved to HtmlHelper in 3.0
  */
 	protected function _formatAttribute($key, $value, $escape = true) {
-		$attribute = '';
 		if (is_array($value)) {
 			$value = implode(' ' , $value);
 		}
-
 		if (is_numeric($key)) {
-			$attribute = sprintf($this->_minimizedAttributeFormat, $value, $value);
-		} elseif (in_array($key, $this->_minimizedAttributes)) {
-			if ($value === 1 || $value === true || $value === 'true' || $value === '1' || $value == $key) {
-				$attribute = sprintf($this->_minimizedAttributeFormat, $key, $key);
-			}
-		} else {
-			$attribute = sprintf($this->_attributeFormat, $key, ($escape ? h($value) : $value));
+			return sprintf($this->_minimizedAttributeFormat, $value, $value);
 		}
-		return $attribute;
+		$truthy = array(1, '1', true, 'true', $key);
+		$isMinimized = in_array($key, $this->_minimizedAttributes);
+		if ($isMinimized && in_array($value, $truthy, true)) {
+			return sprintf($this->_minimizedAttributeFormat, $key, $key);
+		}
+		if ($isMinimized) {
+			return '';
+		}
+		return sprintf($this->_attributeFormat, $key, ($escape ? h($value) : $value));
 	}
 
 /**
@@ -499,7 +522,7 @@ class Helper extends Object {
 
 		// Either 'body' or 'date.month' type inputs.
 		if (
-			($count === 1 && $this->_modelScope && $setScope == false) ||
+			($count === 1 && $this->_modelScope && !$setScope) ||
 			(
 				$count === 2 &&
 				in_array($lastPart, $this->_fieldSuffixes) &&
@@ -525,12 +548,11 @@ class Helper extends Object {
 
 		$isHabtm = (
 			isset($this->fieldset[$this->_modelScope]['fields'][$parts[0]]['type']) &&
-			$this->fieldset[$this->_modelScope]['fields'][$parts[0]]['type'] === 'multiple' &&
-			$count == 1
+			$this->fieldset[$this->_modelScope]['fields'][$parts[0]]['type'] === 'multiple'
 		);
 
 		// habtm models are special
-		if ($count == 1 && $isHabtm) {
+		if ($count === 1 && $isHabtm) {
 			$this->_association = $parts[0];
 			$entity = $parts[0] . '.' . $parts[0];
 		} else {
@@ -593,7 +615,6 @@ class Helper extends Object {
  * @param string $id The name of the 'id' attribute.
  * @return mixed If $options was an array, an array will be returned with $id set.  If a string
  *   was supplied, a string will be returned.
- * @todo Refactor this method to not have as many input/output options.
  */
 	public function domId($options = null, $id = 'id') {
 		if (is_array($options) && array_key_exists($id, $options) && $options[$id] === null) {
@@ -606,7 +627,7 @@ class Helper extends Object {
 
 		$entity = $this->entity();
 		$model = array_shift($entity);
-		$dom = $model . join('', array_map(array('Inflector', 'camelize'), $entity));
+		$dom = $model . implode('', array_map(array('Inflector', 'camelize'), $entity));
 
 		if (is_array($options) && !array_key_exists($id, $options)) {
 			$options[$id] = $dom;
@@ -626,7 +647,6 @@ class Helper extends Object {
  * @param string $key The name of the attribute to be set, defaults to 'name'
  * @return mixed If an array was given for $options, an array with $key set will be returned.
  *   If a string was supplied a string will be returned.
- * @todo Refactor this method to not have as many input/output options.
  */
 	protected function _name($options = array(), $field = null, $key = 'name') {
 		if ($options === null) {
@@ -670,7 +690,6 @@ class Helper extends Object {
  * @param string $key The name of the attribute to be set, defaults to 'value'
  * @return mixed If an array was given for $options, an array with $key set will be returned.
  *   If a string was supplied a string will be returned.
- * @todo Refactor this method to not have as many input/output options.
  */
 	public function value($options = array(), $field = null, $key = 'value') {
 		if ($options === null) {
@@ -749,7 +768,7 @@ class Helper extends Object {
  * @return array Array of options with $key set.
  */
 	public function addClass($options = array(), $class = null, $key = 'class') {
-		if (isset($options[$key]) && trim($options[$key]) != '') {
+		if (isset($options[$key]) && trim($options[$key])) {
 			$options[$key] .= ' ' . $class;
 		} else {
 			$options[$key] = $class;

@@ -18,6 +18,7 @@
  */
 App::uses('CakeSocket', 'Network');
 App::uses('Router', 'Routing');
+App::uses('Hash', 'Utility');
 
 /**
  * Cake network socket connection class.
@@ -64,7 +65,7 @@ class HttpSocket extends CakeSocket {
 		),
 		'raw' => null,
 		'redirect' => false,
-		'cookies' => array()
+		'cookies' => array(),
 	);
 
 /**
@@ -79,7 +80,7 @@ class HttpSocket extends CakeSocket {
  *
  * @var string
  */
-	public $responseClass = 'HttpResponse';
+	public $responseClass = 'HttpSocketResponse';
 
 /**
  * Configuration settings for the HttpSocket and the requests
@@ -92,6 +93,9 @@ class HttpSocket extends CakeSocket {
 		'protocol' => 'tcp',
 		'port' => 80,
 		'timeout' => 30,
+		'ssl_verify_peer' => true,
+		'ssl_verify_depth' => 5,
+		'ssl_verify_host' => true,
 		'request' => array(
 			'uri' => array(
 				'scheme' => array('http', 'https'),
@@ -99,7 +103,7 @@ class HttpSocket extends CakeSocket {
 				'port' => array(80, 443)
 			),
 			'redirect' => false,
-			'cookies' => array()
+			'cookies' => array(),
 		)
 	);
 
@@ -246,7 +250,7 @@ class HttpSocket extends CakeSocket {
  * method and provide a more granular interface.
  *
  * @param string|array $request Either an URI string, or an array defining host/uri
- * @return mixed false on error, HttpResponse on success
+ * @return mixed false on error, HttpSocketResponse on success
  * @throws SocketException
  */
 	public function request($request = array()) {
@@ -348,6 +352,8 @@ class HttpSocket extends CakeSocket {
 			return false;
 		}
 
+		$this->_configContext($this->request['uri']['host']);
+
 		$this->request['raw'] = '';
 		if ($this->request['line'] !== false) {
 			$this->request['raw'] = $this->request['line'];
@@ -395,6 +401,7 @@ class HttpSocket extends CakeSocket {
 			throw new SocketException(__d('cake_dev', 'Class %s not found.', $this->responseClass));
 		}
 		$this->response = new $responseClass($response);
+
 		if (!empty($this->response->cookies)) {
 			if (!isset($this->config['request']['cookies'][$Host])) {
 				$this->config['request']['cookies'][$Host] = array();
@@ -403,7 +410,7 @@ class HttpSocket extends CakeSocket {
 		}
 
 		if ($this->request['redirect'] && $this->response->isRedirect()) {
-			$request['uri'] = $this->response->getHeader('Location');
+			$request['uri'] = trim(urldecode($this->response->getHeader('Location')), '=');
 			$request['redirect'] = is_int($this->request['redirect']) ? $this->request['redirect'] - 1 : $this->request['redirect'];
 			$this->response = $this->request($request);
 		}
@@ -644,6 +651,33 @@ class HttpSocket extends CakeSocket {
 	}
 
 /**
+ * Configure the socket's context.  Adds in configuration
+ * that can not be declared in the class definition.
+ *
+ * @param string $host The host you're connecting to.
+ * @return void
+ */
+	protected function _configContext($host) {
+		foreach ($this->config as $key => $value) {
+			if (substr($key, 0, 4) !== 'ssl_') {
+				continue;
+			}
+			$contextKey = substr($key, 4);
+			if (empty($this->config['context']['ssl'][$contextKey])) {
+				$this->config['context']['ssl'][$contextKey] = $value;
+			}
+			unset($this->config[$key]);
+		}
+		if (empty($this->_context['ssl']['cafile'])) {
+			$this->config['context']['ssl']['cafile'] = CAKE . 'Config' . DS . 'cacert.pem';
+		}
+		if (!empty($this->config['context']['ssl']['verify_host'])) {
+			$this->config['context']['ssl']['CN_match'] = $host;
+			unset($this->config['context']['ssl']['verify_host']);
+		}
+	}
+
+/**
  * Takes a $uri array and turns it into a fully qualified URL string
  *
  * @param string|array $uri Either A $uri array, or a request string. Will use $this->config if left empty.
@@ -842,7 +876,7 @@ class HttpSocket extends CakeSocket {
 			return false;
 		}
 
-		$request['uri']	= $this->_parseUri($request['uri']);
+		$request['uri'] = $this->_parseUri($request['uri']);
 		$request = array_merge(array('method' => 'GET'), $request);
 		if (!empty($this->_proxy['host'])) {
 			$request['uri'] = $this->_buildUri($request['uri'], '%scheme://%host:%port/%path?%query');
@@ -901,7 +935,6 @@ class HttpSocket extends CakeSocket {
  *
  * @param array $cookies Array of cookies to send with the request.
  * @return string Cookie header string to be sent with the request.
- * @todo Refactor token escape mechanism to be configurable
  */
 	public function buildCookies($cookies) {
 		$header = array();
@@ -917,7 +950,6 @@ class HttpSocket extends CakeSocket {
  * @param string $token Token to escape
  * @param array $chars
  * @return string Escaped token
- * @todo Test $chars parameter
  */
 	protected function _escapeToken($token, $chars = null) {
 		$regex = '/([' . implode('', $this->_tokenEscapeChars(true, $chars)) . '])/';
@@ -931,7 +963,6 @@ class HttpSocket extends CakeSocket {
  * @param boolean $hex true to get them as HEX values, false otherwise
  * @param array $chars
  * @return array Escape chars
- * @todo Test $chars parameter
  */
 	protected function _tokenEscapeChars($hex = true, $chars = null) {
 		if (!empty($chars)) {
@@ -944,7 +975,7 @@ class HttpSocket extends CakeSocket {
 			$escape[] = chr(127);
 		}
 
-		if ($hex == false) {
+		if (!$hex) {
 			return $escape;
 		}
 		foreach ($escape as $key => $char) {

@@ -15,8 +15,7 @@
  * @since         CakePHP(tm) v 2.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
-App::uses('Set', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * A class that helps wrap Request information and particulars about a single request.
@@ -163,11 +162,12 @@ class CakeRequest implements ArrayAccess {
 	protected function _processPost() {
 		if ($_POST) {
 			$this->data = $_POST;
-		} elseif ($this->is('put') || $this->is('delete')) {
-			$this->data = $this->_readInput();
-			if (strpos(env('CONTENT_TYPE'), 'application/x-www-form-urlencoded') === 0) {
-				parse_str($this->data, $this->data);
-			}
+		} elseif (
+			($this->is('put') || $this->is('delete')) &&
+			strpos(env('CONTENT_TYPE'), 'application/x-www-form-urlencoded') === 0
+		) {
+				$data = $this->_readInput();
+				parse_str($data, $this->data);
 		}
 		if (ini_get('magic_quotes_gpc') === '1') {
 			$this->data = stripslashes_deep($this->data);
@@ -229,8 +229,10 @@ class CakeRequest implements ArrayAccess {
 	protected function _url() {
 		if (!empty($_SERVER['PATH_INFO'])) {
 			return $_SERVER['PATH_INFO'];
-		} elseif (isset($_SERVER['REQUEST_URI'])) {
+		} elseif (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '://') === false) {
 			$uri = $_SERVER['REQUEST_URI'];
+		} elseif (isset($_SERVER['REQUEST_URI'])) {
+			$uri = substr($_SERVER['REQUEST_URI'], strlen(FULL_BASE_URL));
 		} elseif (isset($_SERVER['PHP_SELF']) && isset($_SERVER['SCRIPT_NAME'])) {
 			$uri = str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['PHP_SELF']);
 		} elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
@@ -319,7 +321,7 @@ class CakeRequest implements ArrayAccess {
 	protected function _processFiles() {
 		if (isset($_FILES) && is_array($_FILES)) {
 			foreach ($_FILES as $name => $data) {
-				if ($name != 'data') {
+				if ($name !== 'data') {
 					$this->params['form'][$name] = $data;
 				}
 			}
@@ -351,7 +353,7 @@ class CakeRequest implements ArrayAccess {
 				$this->_processFileData($newPath, $fields, $field);
 			} else {
 				$newPath .= '.' . $field;
-				$this->data = Set::insert($this->data, $newPath, $fields);
+				$this->data = Hash::insert($this->data, $newPath, $fields);
 			}
 		}
 	}
@@ -364,17 +366,17 @@ class CakeRequest implements ArrayAccess {
  * @return string The client IP.
  */
 	public function clientIp($safe = true) {
-		if (!$safe && env('HTTP_X_FORWARDED_FOR') != null) {
+		if (!$safe && env('HTTP_X_FORWARDED_FOR')) {
 			$ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
 		} else {
-			if (env('HTTP_CLIENT_IP') != null) {
+			if (env('HTTP_CLIENT_IP')) {
 				$ipaddr = env('HTTP_CLIENT_IP');
 			} else {
 				$ipaddr = env('REMOTE_ADDR');
 			}
 		}
 
-		if (env('HTTP_CLIENTADDRESS') != null) {
+		if (env('HTTP_CLIENTADDRESS')) {
 			$tmpipaddr = env('HTTP_CLIENTADDRESS');
 
 			if (!empty($tmpipaddr)) {
@@ -675,7 +677,7 @@ class CakeRequest implements ArrayAccess {
 	public function accepts($type = null) {
 		$raw = $this->parseAccept();
 		$accept = array();
-		foreach ($raw as $value => $types) {
+		foreach ($raw as $types) {
 			$accept = array_merge($accept, $types);
 		}
 		if ($type === null) {
@@ -694,8 +696,50 @@ class CakeRequest implements ArrayAccess {
  * @return array An array of prefValue => array(content/types)
  */
 	public function parseAccept() {
+		return $this->_parseAcceptWithQualifier($this->header('accept'));
+	}
+
+/**
+ * Get the languages accepted by the client, or check if a specific language is accepted.
+ *
+ * Get the list of accepted languages:
+ *
+ * {{{ CakeRequest::acceptLanguage(); }}}
+ *
+ * Check if a specific language is accepted:
+ *
+ * {{{ CakeRequest::acceptLanguage('es-es'); }}}
+ *
+ * @param string $language The language to test.
+ * @return If a $language is provided, a boolean. Otherwise the array of accepted languages.
+ */
+	public static function acceptLanguage($language = null) {
+		$raw = self::_parseAcceptWithQualifier(self::header('Accept-Language'));
 		$accept = array();
-		$header = explode(',', $this->header('accept'));
+		foreach ($raw as $qualifier => $languages) {
+			foreach ($languages as &$lang) {
+				if (strpos($lang, '_')) {
+					$lang = str_replace('_', '-', $lang);
+				}
+				$lang = strtolower($lang);
+			}
+			$accept = array_merge($accept, $languages);
+		}
+		if ($language === null) {
+			return $accept;
+		}
+		return in_array(strtolower($language), $accept);
+	}
+
+/**
+ * Parse Accept* headers with qualifier options
+ *
+ * @param string $header
+ * @return array
+ */
+	protected static function _parseAcceptWithQualifier($header) {
+		$accept = array();
+		$header = explode(',', $header);
 		foreach (array_filter($header) as $value) {
 			$prefPos = strpos($value, ';');
 			if ($prefPos !== false) {
@@ -717,31 +761,13 @@ class CakeRequest implements ArrayAccess {
 	}
 
 /**
- * Get the languages accepted by the client, or check if a specific language is accepted.
+ * Provides a read accessor for `$this->query`.  Allows you
+ * to use a syntax similar to `CakeSession` for reading url query data.
  *
- * Get the list of accepted languages:
- *
- * {{{ CakeRequest::acceptLanguage(); }}}
- *
- * Check if a specific language is accepted:
- *
- * {{{ CakeRequest::acceptLanguage('es-es'); }}}
- *
- * @param string $language The language to test.
- * @return If a $language is provided, a boolean. Otherwise the array of accepted languages.
+ * @return mixed The value being read
  */
-	public static function acceptLanguage($language = null) {
-		$accepts = preg_split('/[;,]/', self::header('Accept-Language'));
-		foreach ($accepts as &$accept) {
-			$accept = strtolower($accept);
-			if (strpos($accept, '_') !== false) {
-				$accept = str_replace('_', '-', $accept);
-			}
-		}
-		if ($language === null) {
-			return $accepts;
-		}
-		return in_array($language, $accepts);
+	public function query($name) {
+		return Hash::get($this->query, $name);
 	}
 
 /**

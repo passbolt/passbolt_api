@@ -432,7 +432,6 @@ class Hash {
 		}
 		$stack = array();
 
-		$i = 1;
 		while (!empty($needle)) {
 			$key = key($needle);
 			$val = $needle[$key];
@@ -528,7 +527,7 @@ class Hash {
 			$element = $data[$key];
 			unset($data[$key]);
 
-			if (is_array($element)) {
+			if (is_array($element) && !empty($element)) {
 				if (!empty($data)) {
 					$stack[] = array($data, $path);
 				}

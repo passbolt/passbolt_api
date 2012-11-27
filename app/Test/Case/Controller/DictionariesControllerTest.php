@@ -7,6 +7,7 @@
  * @since        version 2.12.7
  * @license      http://www.passbolt.com/license
  */
+App::uses('AppController', 'Controller');
 App::uses('DictionariesController', 'Controller');
 App::uses('Dictionary', 'Model');
 App::uses('User', 'Model');

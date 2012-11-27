@@ -129,7 +129,7 @@ class TranslateBehavior extends ModelBehavior {
 				'conditions' => array(
 					$Model->escapeField() => $db->identifier($RuntimeModel->escapeField('foreign_key')),
 					$RuntimeModel->escapeField('model') => $Model->name,
-					$RuntimeModel->escapeField('locale')  => $locale
+					$RuntimeModel->escapeField('locale') => $locale
 				)
 			);
 			$conditionFields = $this->_checkConditions($Model, $query);
@@ -140,15 +140,25 @@ class TranslateBehavior extends ModelBehavior {
 			return $query;
 		}
 
-		$fields = array_merge($this->settings[$Model->alias], $this->runtime[$Model->alias]['fields']);
+		$fields = array_merge(
+			$this->settings[$Model->alias],
+			$this->runtime[$Model->alias]['fields']
+		);
 		$addFields = array();
 		if (empty($query['fields'])) {
 			$addFields = $fields;
 		} elseif (is_array($query['fields'])) {
+			$isAllFields = (
+				in_array($Model->alias . '.' . '*', $query['fields']) ||
+				in_array($Model->escapeField('*'), $query['fields'])
+			);
 			foreach ($fields as $key => $value) {
 				$field = (is_numeric($key)) ? $value : $key;
-
-				if (in_array($Model->escapeField('*'), $query['fields']) || in_array($Model->alias . '.' . $field, $query['fields']) || in_array($field, $query['fields'])) {
+				if (
+					$isAllFields ||
+					in_array($Model->alias . '.' . $field, $query['fields']) ||
+					in_array($field, $query['fields'])
+				) {
 					$addFields[] = $field;
 				}
 			}
@@ -184,7 +194,7 @@ class TranslateBehavior extends ModelBehavior {
  */
 	protected function _checkConditions(Model $Model, $query) {
 		$conditionFields = array();
-		if (empty($query['conditions']) || (!empty($query['conditions']) && !is_array($query['conditions'])) ) {
+		if (empty($query['conditions']) || (!empty($query['conditions']) && !is_array($query['conditions']))) {
 			return $conditionFields;
 		}
 		foreach ($query['conditions'] as $col => $val) {
@@ -328,7 +338,7 @@ class TranslateBehavior extends ModelBehavior {
  * @return boolean true.
  */
 	public function beforeSave(Model $Model, $options = array()) {
-		if (isset($options['validate']) && $options['validate'] == false) {
+		if (isset($options['validate']) && !$options['validate']) {
 			unset($this->runtime[$Model->alias]['beforeSave']);
 		}
 		if (isset($this->runtime[$Model->alias]['beforeSave'])) {
@@ -372,6 +382,21 @@ class TranslateBehavior extends ModelBehavior {
 			}
 		}
 		$this->runtime[$Model->alias]['beforeSave'] = $tempData;
+	}
+
+/**
+ * Restores model data to the original data.
+ * This solves issues with saveAssociated and validate = first.
+ *
+ * @param Model $model
+ * @return void
+ */
+	public function afterValidate(Model $Model) {
+		$Model->data[$Model->alias] = array_merge(
+			$Model->data[$Model->alias],
+			$this->runtime[$Model->alias]['beforeSave']
+		);
+		return true;
 	}
 
 /**
@@ -425,7 +450,11 @@ class TranslateBehavior extends ModelBehavior {
 				$conditions['locale'] = $_locale;
 				$conditions['content'] = $_value;
 				if (array_key_exists($_locale, $translations)) {
-					$RuntimeModel->save(array($RuntimeModel->alias => array_merge($conditions, array('id' => $translations[$_locale]))));
+					$RuntimeModel->save(array(
+						$RuntimeModel->alias => array_merge(
+							$conditions, array('id' => $translations[$_locale])
+						)
+					));
 				} else {
 					$RuntimeModel->save(array($RuntimeModel->alias => $conditions));
 				}
@@ -632,7 +661,6 @@ class TranslateBehavior extends ModelBehavior {
 		if (is_string($fields)) {
 			$fields = array($fields);
 		}
-		$RuntimeModel = $this->translateModel($Model);
 		$associations = array();
 
 		foreach ($fields as $key => $value) {

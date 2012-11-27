@@ -7,6 +7,7 @@
  * @package       app.Test.Case.Controller.ResourcesControllerTest
  * @since         version 2.12.9
  */
+App::uses('AppController', 'Controller');
 App::uses('ResourcesController', 'Controller');
 App::uses('Resource', 'Model');
 App::uses('User', 'Model');

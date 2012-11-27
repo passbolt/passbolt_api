@@ -12,6 +12,7 @@ App::uses('User', 'Model');
 
 class CategoryTest extends CakeTestCase {
 
+	public $autoFixtures = true;
 	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
 
 	public function setUp() {
@@ -75,7 +76,7 @@ class CategoryTest extends CakeTestCase {
 
 	public function testParentExists() {
 		// Test in a normal condition if the id is correct
-		$category = $this->Category->findByName('Anjuna');
+		$category = $this->Category->findByName('cakephp');
 		$result = $this->Category->parentExists($category['Category']);
 		$this->assertEquals(true, $result);
 
@@ -138,11 +139,11 @@ class CategoryTest extends CakeTestCase {
 		$this->assertFalse($this->Category->save($category));
 
 		// Test that a category is added properly if parameters are correct
-		$parent = $this->Category->findByName('Anjuna');
+		$parent = $this->Category->findByName('cakephp');
 		$category = array('Category' => array('name' => 'testAdd', 'parent_id' => $parent['Category']['id']));
 		$this->Category->create();
-		$result = $this->Category->save($category);
-		$this->assertTrue($result['Category']['lft'] == '35');
+		$result = $this->Category->save($category); 
+		$this->assertTrue($result['Category']['lft'] == '20');
 
 		// Test that a category is added properly if parameters are correct and without parent_id
 		$category = array('Category' => array('name' => 'testAdd1', 'parent_id' => null));

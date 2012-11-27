@@ -78,7 +78,6 @@ class TemplateTask extends AppShell {
 
 		$paths[] = $core;
 
-		// TEMPORARY TODO remove when all paths are DS terminated
 		foreach ($paths as $i => $path) {
 			$paths[$i] = rtrim($path, DS) . DS;
 		}
@@ -123,7 +122,7 @@ class TemplateTask extends AppShell {
 			$data = array($one => $two);
 		}
 
-		if ($data == null) {
+		if (!$data) {
 			return false;
 		}
 		$this->templateVars = $data + $this->templateVars;
@@ -166,7 +165,7 @@ class TemplateTask extends AppShell {
  * @return string returns the path to the selected theme.
  */
 	public function getThemePath() {
-		if (count($this->templatePaths) == 1) {
+		if (count($this->templatePaths) === 1) {
 			$paths = array_values($this->templatePaths);
 			return $paths[0];
 		}
