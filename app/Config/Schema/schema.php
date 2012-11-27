@@ -77,6 +77,31 @@ class AppSchema extends CakeSchema {
 		}
 	}
 
+	public function createPermissionCacheView() {
+		$permission = ClassRegistry::init('Permission');
+		$permission->query(
+			"CREATE OR REPLACE ALGORITHM=UNDEFINED 
+			SQL SECURITY DEFINER VIEW `permission_cache` 
+			AS 
+			  (
+			    SELECT 'Category' AS `aco`,`c`.`id` AS `aco_foreign_key`,'Group' AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Category',`c`.`id`) AS `permission` 
+			    FROM (`categories` `c` join `groups` `g`)
+			  ) 
+		  UNION (
+		      SELECT 'Category' AS `aco`,`c`.`id` AS `aco_foreign_key`,'User' AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) AS `permission` 
+		      FROM (`categories` `c` join `users` `u`)
+		    ) 
+		  UNION (
+		      SELECT 'Resource' AS `aco`,`r`.`id` AS `aco_foreign_key`,'Group' AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Resource',`r`.`id`) AS `permission` 
+		      FROM (`resources` `r` join `groups` `g`)
+			  ) 
+		  UNION (
+		      SELECT 'Resource' AS `aco`,`r`.`id` AS `aco_foreign_key`,'User' AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Resource',`r`.`id`) AS `permission` 
+		      FROM (`resources` `r` join `users` `u`)
+			  );"
+		);
+	}
+
 	public function after($event = array()) {
 		if (isset($event['create'])) {
 			switch ($event['create']) {
@@ -142,6 +167,8 @@ class AppSchema extends CakeSchema {
 						$permission->create();
 						$permission->save($p);
 					}
+					$this->createPermissionCacheView();
+			  break;
 
 				case 'roles':
 					array_push(self::$created, 'roles');
