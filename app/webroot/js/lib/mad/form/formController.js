@@ -54,6 +54,10 @@ steal(
 		 * @return {void}
 		 */
 		'load': function (instance) {
+			if (!(instance instanceof mad.model.Model)) {
+				throw new mad.error.WrongParametersException('instance', mad.model.Model.fullName);
+			}
+
 			for (var eltId in this.elements) {
 				var models = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference());
 				var attrPath = '';
