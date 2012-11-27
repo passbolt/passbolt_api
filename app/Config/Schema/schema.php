@@ -81,7 +81,7 @@ class AppSchema extends CakeSchema {
 		$permission = ClassRegistry::init('Permission');
 		$permission->query(
 			"CREATE OR REPLACE ALGORITHM=UNDEFINED 
-			SQL SECURITY DEFINER VIEW `permission_cache` 
+			SQL SECURITY DEFINER VIEW `permissions_cache` 
 			AS 
 			  (
 			    SELECT 'Category' AS `aco`,`c`.`id` AS `aco_foreign_key`,'Group' AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Category',`c`.`id`) AS `permission` 
@@ -168,7 +168,17 @@ class AppSchema extends CakeSchema {
 						$permission->save($p);
 					}
 					$this->createPermissionCacheView();
-			  break;
+				break;
+
+				case 'permission_details':
+					array_push(self::$created, 'permission_details');
+					$permissionDetail = ClassRegistry::init('PermissionDetail');
+					$pds = $this->_getDefaultPermissionDetails();
+					foreach ($pds as $pd) {
+						$permissionDetail->create();
+						$permissionDetail->save($pd);
+					}
+				break; 
 
 				case 'roles':
 					array_push(self::$created, 'roles');
@@ -330,6 +340,16 @@ class AppSchema extends CakeSchema {
 		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+
+	public $permission_details = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
+		'binary' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'_update' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'_create' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'_read' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 	);
 
 	protected function _getDefaultCategories() {
@@ -583,6 +603,156 @@ class AppSchema extends CakeSchema {
 			'_admin' => '1'
 		));
 		return $ps;
+	}
+
+	protected function _getDefaultPermissionDetails() {
+		$pds = array();
+		$pds[] = array(
+			'id' => 1,
+			'binary' => '0000',
+			'_admin' => '0',
+			'_update' => '0',
+			'_create' => '0',
+			'_read' => '0',
+			'active' => '1'
+		);
+		$pds[] = array(
+			'id' => 2,
+			'binary' => '0001',
+			'_admin' => '0',
+			'_update' => '0',
+			'_create' => '0',
+			'_read' => '1',
+			'active' => '1'
+		);
+		$pds[] = array(
+			'id' => 3,
+			'binary' => '0010',
+			'_admin' => '0',
+			'_update' => '0',
+			'_create' => '1',
+			'_read' => '0',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 4,
+			'binary' => '0011',
+			'_admin' => '0',
+			'_update' => '0',
+			'_create' => '1',
+			'_read' => '1',
+			'active' => '1'
+		);
+		$pds[] = array(
+			'id' => 5,
+			'binary' => '0100',
+			'_admin' => '0',
+			'_update' => '1',
+			'_create' => '0',
+			'_read' => '0',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 6,
+			'binary' => '0101',
+			'_admin' => '0',
+			'_update' => '1',
+			'_create' => '0',
+			'_read' => '1',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 7,
+			'binary' => '0110',
+			'_admin' => '0',
+			'_update' => '1',
+			'_create' => '1',
+			'_read' => '0',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 8,
+			'binary' => '0111',
+			'_admin' => '0',
+			'_update' => '1',
+			'_create' => '1',
+			'_read' => '1',
+			'active' => '1'
+		);
+		$pds[] = array(
+			'id' => 9,
+			'binary' => '1000',
+			'_admin' => '1',
+			'_update' => '0',
+			'_create' => '0',
+			'_read' => '0',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 10,
+			'binary' => '1001',
+			'_admin' => '1',
+			'_update' => '0',
+			'_create' => '0',
+			'_read' => '1',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 11,
+			'binary' => '1010',
+			'_admin' => '1',
+			'_update' => '0',
+			'_create' => '1',
+			'_read' => '0',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 12,
+			'binary' => '1011',
+			'_admin' => '1',
+			'_update' => '0',
+			'_create' => '1',
+			'_read' => '1',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 13,
+			'binary' => '1100',
+			'_admin' => '1',
+			'_update' => '1',
+			'_create' => '0',
+			'_read' => '0',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 14,
+			'binary' => '1101',
+			'_admin' => '1',
+			'_update' => '1',
+			'_create' => '0',
+			'_read' => '1',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 15,
+			'binary' => '1110',
+			'_admin' => '1',
+			'_update' => '1',
+			'_create' => '1',
+			'_read' => '0',
+			'active' => '0'
+		);
+		$pds[] = array(
+			'id' => 16,
+			'binary' => '1111',
+			'_admin' => '1',
+			'_update' => '1',
+			'_create' => '1',
+			'_read' => '1',
+			'active' => '1'
+		);
+
+		return $pds;
 	}
 
 	protected function _getDefaultRoles() {
