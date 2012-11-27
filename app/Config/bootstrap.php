@@ -30,6 +30,13 @@
 	require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
 
 /**
+ * API and DOC Plugins
+ */
+	if (Configure::read('debug') > 1) {
+	  CakePlugin::load('ApiGenerator');
+	}
+
+/**
  * Cache Engine Configuration
  * Default settings provided below
  *
