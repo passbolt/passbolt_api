@@ -35,6 +35,10 @@ steal(
 			new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'hidden'});
 		},
 
+		/* ************************************************************** */
+		/* LISTEN TO THE APP EVENTS */
+		/* ************************************************************** */
+
 		/**
 		 * Observe when a resource is unselected
 		 * @param {HTMLElement} el The element the event occured on
@@ -67,7 +71,6 @@ steal(
 		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-
 		'{passbolt.eventBus} resource_selected': function (el, ev, resource) {
 			mad.app.getComponent('js_request_resource_edition_button').setValue(resource).setState('ready');
 			mad.app.getComponent('js_request_resource_deletion_button').setValue(resource).setState('ready');
