@@ -8,26 +8,24 @@ steal(
 	 */
 	mad.view.View.extend('passbolt.view.component.AppFilter', /** @static */ {
 
+		'defaults': {
+			'filter': null
+		}
+
 	}, /** @prototype */ {
 
-		'render': function () {
-			return this._super();
-		},
-
 		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
+		/* LISTEN TO VIEW EVENTS */
 		/* ************************************************************** */
 
 		/**
-		 * The user clicks on details
+		 * Observe when the user want to reset the filter
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'#js_notification_more_button click': function (element, ev) {
-//			$(this.element).find('#js_notification_details').show().one('mouseleave', function () {
-//				$(this).hide();
-//			});
+		'#js_filter_reset click': function (el, ev) {
+			this.element.trigger('reset');
 		}
 
 	});

@@ -152,7 +152,7 @@ steal(
 		// Add static properties to the class to augment
 		var blackListedStaticProperties = ['namespace', 'shortName', 'fullName', 'defaults'];
 		for(var i in Augmentator) {
-
+			// extend the defaults with the augmentator default variable
 			if(typeof $.Class[i] == 'undefined' && $.inArray(i, blackListedStaticProperties) == -1) {
 				this[i] = Augmentator[i];
 			}

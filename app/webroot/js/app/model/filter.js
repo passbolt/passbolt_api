@@ -23,8 +23,8 @@ steal(
 		'validateRules': { },
 
 		'attributes': {
-			'categories': 'passbolt.model.Category.models',
-			'keywords': 'string'
+			'keywords': 'string',
+			'tags': 'passbolt.model.Category.models'
 		}
 
 	}, /** @prototype */ {

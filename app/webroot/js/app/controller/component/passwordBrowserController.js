@@ -295,7 +295,7 @@ steal(
 		 */
 		'{passbolt.eventBus} filter_resources_browser': function (element, evt, filter) {
 			var self = this;
-			var category = filter.categories[0];
+			var category = filter.tags[0];
 			this.crtCategoryId = category.id;
 
 			// override the current list of categories with the categories to display

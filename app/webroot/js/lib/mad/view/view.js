@@ -30,6 +30,7 @@ steal(
 		 * @return {string}
 		 */
 		'render': function (uri, data) {
+			data = data || {};
 			uri = steal.idToUri(uri).toString();
 			return can.view.render(uri, data);
 		}
