@@ -125,6 +125,7 @@ class Resource extends AppModel {
 					)
 				);
 			break;
+			case 'index':
 			case 'viewByCategory':
 				$conditions = array(
 					'conditions' => array(
@@ -135,6 +136,9 @@ class Resource extends AppModel {
 						'Resource.name ASC'
 					)
 				);
+				if(isset($data['Resource.name'])) {
+					$conditions['conditions']['Resource.name LIKE'] = '%' . $data['Resource.name'] . '%';
+				}
 			break;
 			default:
 				$conditions = array(

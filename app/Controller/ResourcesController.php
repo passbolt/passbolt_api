@@ -12,7 +12,84 @@ App::uses('Category', 'Model');
 App::uses('CategoryResource', 'Model');
 
 class ResourcesController extends AppController {
+
 /**
+ * Get all resources
+ * Renders a json object of the resources
+ *
+ * @param uuid $categoryId the id of the category
+ * @param bool recursive, whether we want also the resources of all subcategories
+ * @return void
+ */
+	public function index() {
+		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
+		$categoriesId = isset($this->request->query['categories_id']) ? explode(',', $this->request->query['categories_id']) : array();
+		$recursive = isset($this->request->query['recursive']) ? $this->request->query['recursive'] === 'true' : false;
+		$data = array(
+			'CategoryResource.category_id' => array()
+		);
+		
+		// if categories id are provided check their validity, and build model request with
+		$categoriesIdLength = count($categoriesId);
+		for($i=0; $i<$categoriesIdLength; $i++) {
+			$categoryId = $categoriesId[$i];
+
+			// if a category id is provided check is validity
+			if ($categoryId != null && !Common::isUuid($categoryId)) {
+				$this->Message->error(__('The category id is invalid'));
+				return;
+			}
+
+			// check if the category exists
+			$category = $this->Resource->CategoryResource->Category->findById($categoryId);
+			if (!$category) {
+				$this->Message->error(__('The category doesn\t exist'));
+				return;
+			}
+
+			if ($recursive == false) {
+				$data['CategoryResource.category_id'][] = $categoryId;
+			} else {
+				// If the category has yet been added to the model request, continue
+				if(in_array($categoryId, $data['CategoryResource.category_id'])) {
+					continue;
+				}
+				$cats = $this->Resource->CategoryResource->Category->find(
+					'all',
+					array(
+						'conditions' => array(
+							'Category.lft >=' => $category['Category']['lft'],
+							'Category.rght <=' => $category['Category']['rght']
+							),
+						'order' => array(
+							'Category.lft' => 'ASC'
+							)
+					)
+				);
+				foreach ($cats as $cat) {
+					$data['CategoryResource.category_id'][] = $cat['Category']['id'];
+				}
+			}
+		}
+
+		// if keywords provided build the model request with
+		if(!empty($keywords)) {
+			$data['Resource.name'] = "$keywords";
+		}
+		
+		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
+		$options = $this->Resource->getFindOptions('index', User::get('Role.name'), $data);
+		$resources = $this->Resource->find('all', $options);
+
+		if (!$resources) {
+			$resources = array();
+		}
+
+		$this->set('data', $resources);
+		$this->Message->success();
+	}	
+
+	/**
  * Get a resource
  * Renders a json object of the resource
  *
