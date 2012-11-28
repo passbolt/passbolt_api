@@ -45,7 +45,7 @@ steal(
 			var self = this;
 			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 			return mad.net.Ajax.request({
-				url: APP_URL + '/categories',
+				url: APP_URL + 'categories',
 				type: 'POST',
 				params: params,
 				success: success,
@@ -81,7 +81,7 @@ steal(
 		'findOne': function (params, success, error) {
 			params.children = params.children || false;
 			return mad.net.Ajax.request({
-				url: APP_URL + '/categories/{id}/{children}.json',
+				url: APP_URL + 'categories/{id}.json',
 				type: 'GET',
 				params: params,
 				success: success,
@@ -96,7 +96,7 @@ steal(
 		 */
 		'findAll': function (params, success, error) {
 			return mad.net.Ajax.request({
-				url: APP_URL + '/categories/index/{children}.json',
+				url: APP_URL + 'categories.json',
 				type: 'GET',
 				params: params,
 				success: success,
