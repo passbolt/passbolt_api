@@ -35,9 +35,7 @@ steal(
 			menuCtl.initMenuItems();
 
 			// Add the filter controller
-			var filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {
-
-			});
+			var filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {});
 			filterCtl.render();
 
 			// Add the notification controller
