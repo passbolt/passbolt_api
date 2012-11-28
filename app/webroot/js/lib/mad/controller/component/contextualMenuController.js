@@ -40,7 +40,7 @@ steal(
 			// we make the view's job in the controller
 			// Insert the reference point in the DOM
 			var refPointHtml = '<div id="js_contextual_anchor" style="position:absolute;"></div>'
-			var refPoint = mad.helper.HtmlHelper.create('body', 'first', refPointHtml);
+			var refPoint = mad.helper.HtmlHelper.create($('body'), 'first', refPointHtml);
 			var $refPoint = $(refPoint);
 
 			$refPoint.css({
