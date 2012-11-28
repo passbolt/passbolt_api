@@ -29,7 +29,7 @@ class PermissionTest extends CakeTestCase {
 		$this->PermissionDetail->useDbConfig = 'default';
 	}
 
-	public function testMysqlFunctionGetGroupCategoryPermission() {
+	/*public function testMysqlFunctionGetGroupCategoryPermission() {
 		$testcases = array(
 			array(
 				'aconame' => 'administration',
@@ -119,7 +119,7 @@ class PermissionTest extends CakeTestCase {
 				but should have returned {$testcase['result']}"
 			);
 		}
-	}
+	}*/
 
 	// TODO : manage case where user is owner of the resource
 }
