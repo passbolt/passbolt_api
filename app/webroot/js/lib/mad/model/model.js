@@ -1,4 +1,7 @@
-steal('jquery/model').then(function () {
+steal(
+	'jquery/model',
+	'mad/model/serializer/cakeSerializer.js'
+).then(function () {
 
 	/*
 	 * @class mad.model.Model
@@ -37,13 +40,31 @@ steal('jquery/model').then(function () {
 		},
 
 		/**
+		 * Get attribute description of this model
+		 * @param {string} name The name of the attribute
+		 * @return {mad.model.Attribute}
+		 */
+		'getAttribute': function (name) {
+			var returnValue = null,
+				modelName = this.attributes[name].substr(0, this.attributes[name].lastIndexOf('.')),
+				model = $.String.getObject(modelName);
+			returnValue = new mad.model.Attribute({
+				'name': name,
+				'multiple': this.isMultipleAttribute(name),
+				'modelReference': model
+			});
+			return returnValue;
+		},
+
+		/**
 		 * Extract the models found in given string following the definition of the 
 		 * model layer. Return an array formated like :
 @codestart
 [
 	{
 		model: {mad.net.Model},
-		label: {string}
+		label: {string},
+		multiple: {boolean}
 	},
 	{
 		...
@@ -53,7 +74,7 @@ steal('jquery/model').then(function () {
 		 * @param {string} str The string to work on
 		 * @return {array}
 		 */
-		'getModelReferences': function (str) {
+		'getModelAttributes': function (str) {
 			var returnValue = [],
 				split = str.split('.');
 
@@ -61,33 +82,36 @@ steal('jquery/model').then(function () {
 				// get the top model reference
 				if (!returnValue.length) {
 					// the top model has a upper case first character
+					// it is important to respect the wording (package lowcase, and Class
+					// first char upcase)
 					if (split[i][0] === split[i][0].toUpperCase()) {
 						var modelName = split.slice(0, parseInt(i)+1).join('.');
 						var model = $.String.getObject(modelName);
-						returnValue.push({
-							label: modelName,
-							multiple: false,
-							model: model
-						});
+						returnValue.push(new mad.model.Attribute({
+							'name': modelName,
+							'multiple': false,
+							'modelReference': model
+						}));
 					}
 				} else {
-					// after we found the top model reference, check for sub model
-					var ownerModel = returnValue[returnValue.length - 1].model;
+					// after we found the top model reference, check for sub models
+					var ownerModel = returnValue[returnValue.length - 1].modelReference;
 					// if the current split is a reference to a submodel
 					if (ownerModel.attributes[split[i]]) {
 						var attrName = ownerModel.attributes[split[i]];
 						var modelName = attrName.slice(0,attrName.lastIndexOf('.'));
 						var model = $.String.getObject(modelName);
-						returnValue.push({
-							label: split[i],
-							multiple: /models$/.test(attrName),
-							model: model
-						});
+						returnValue.push(new mad.model.Attribute({
+							'name': split[i],
+							'multiple': /models$/.test(attrName),
+							'modelReference': model
+						}));
 					} else {
 						// else the split is a reference to a scalar attribute
-						returnValue.push({
-							label: split[i]
-						});
+						returnValue.push(new mad.model.Attribute({
+							'name': split[i],
+							'modelReference': null
+						}));
 						break;
 					}
 				}
@@ -132,10 +156,11 @@ steal('jquery/model').then(function () {
 			// if the provided data are formated as ajax server response
 			if (mad.net.Response.isResponse(data)) {
 				data = mad.net.Response.getData(data);
-				data = this.toCan(data);
+				// serialize the data from cake to can format
+				data = mad.model.serializer.CakeSerializer.from(data, this);
 			} else if (data[this.shortName]) {
-				// if provided data are formated as CakePHP
-				data = this.toCan(data);
+				// serialize the data from cake to can format
+				data = mad.model.serializer.CakeSerializer.from(data, this);
 			}
 			return can.Model.model.call(this, data);
 		},
@@ -262,36 +287,6 @@ steal('jquery/model').then(function () {
 			if (searchResults.length) {
 				returnValue = searchResults[0];
 			}
-			return returnValue;
-		},
-		
-		/**
-		 * Format an array to the cakePHP format
-		 * @param {array} data The array of data to format
-		 * @return {array}
-		 */
-		'toCakePHP': function (data) {
-			var returnValue = {};
-			returnValue[this.shortName] = {};
-			for (var name in data) {
-				if (this.isModelAttribute(name)) {
-					returnValue[name] = data[name];
-				} else {
-					returnValue[this.shortName][name] = data[name];
-				}
-			}
-			return returnValue;
-		},
-
-		/**
-		 * Format an array to the canJS format
-		 * @param {array} data The array of data to format
-		 * @return {array}
-		 */
-		'toCan': function (data) {
-			var returnValue = data;
-			returnValue = $.extend(true, {}, returnValue, returnValue[this.shortName]);
-			delete returnValue[this.shortName];
 			return returnValue;
 		},
 

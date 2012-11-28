@@ -24,19 +24,10 @@
 				</h1>
 			</div>
 
-			<div id="search_container" class="search">
+			<div id="js_notificator" class="notificator" />
 
-				<div id="js_notificator" class="notificator" />
-
-				<fieldset> 
-					<legend>Please enter a search keyword</legend> 
-					<div class="input text required">
-						<label for="PasswordSearch">Search</label>
-						<input name="data[Search][password]" class="required" maxlength="50" type="text" id="js_search_field">
-					</div> 
-					<div class="submit"><input type="submit" value="search"></div> 
-				</fieldset>
-
+			<div id="js_filter" class="search">
+				<%== mad.view.View.render('app/view/template/component/appFilter.ejs') %>
 			</div>
 
 <!-----------------------------------------------------------------------------

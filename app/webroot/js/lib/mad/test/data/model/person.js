@@ -45,6 +45,11 @@ steal(
 		},
 
 		'attributes': {
+			'surname': 'string',
+			'name': 'string',
+			'freelancer': 'boolean',
+			'phone': 'string',
+			'email': 'string',
 			'children': 'demo.model.Person.models',
 			'visited': 'demo.model.Country.models'
 		},

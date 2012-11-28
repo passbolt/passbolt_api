@@ -403,8 +403,12 @@ class TranslateBehaviorTest extends CakeTestCase {
 				)
 			)
 		);
-
 		$this->assertEquals($expected, $result);
+
+		$TestModel = new TranslatedItem();
+		$TestModel->locale = array('pt-br');
+		$result = $TestModel->find('all');
+		$this->assertCount(3, $result, '3 records should have been found, no SQL error.');
 	}
 
 /**
@@ -418,7 +422,7 @@ class TranslateBehaviorTest extends CakeTestCase {
 		$TestModel = new TranslatedItem();
 		$TestModel->locale = 'rus';
 		$result = $TestModel->read(null, 1);
-		$this->assertFalse($result);
+		$this->assertSame(array(), $result);
 
 		$TestModel->locale = array('rus');
 		$result = $TestModel->read(null, 1);
@@ -456,10 +460,10 @@ class TranslateBehaviorTest extends CakeTestCase {
 			Configure::write('debug', 0);
 
 			$result = $TestModel->find('list', array('recursive' => 1, 'callbacks' => false));
-			$this->assertEquals(array(), $result);
+			$this->assertSame(array(), $result);
 
 			$result = $TestModel->find('list', array('recursive' => 1, 'callbacks' => 'after'));
-			$this->assertEquals(array(), $result);
+			$this->assertSame(array(), $result);
 			Configure::write('debug', $debug);
 		}
 
@@ -524,6 +528,38 @@ class TranslateBehaviorTest extends CakeTestCase {
 		$result = $TestModel->read();
 		$expected = array('TranslatedItem' => array_merge($data, array('id' => $TestModel->id, 'locale' => 'spa')));
 		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * testSaveAssociatedCreate method
+ *
+ * @return void
+ */
+	public function testSaveAssociatedMultipleLocale() {
+		$this->loadFixtures('Translate', 'TranslatedItem');
+
+		$TestModel = new TranslatedItem();
+		$data = array(
+			'slug' => 'fourth_translated',
+			'title' => array(
+				'eng' => 'Title #4',
+				'spa' => 'Leyenda #4',
+			),
+			'content' => array(
+				'eng' => 'Content #4',
+				'spa' => 'Contenido #4',
+			),
+			'translated_article_id' => 1,
+		);
+		$TestModel->create();
+		$TestModel->saveAssociated($data);
+
+		$translations = array('title' => 'Title', 'content' => 'Content');
+		$TestModel->bindTranslation($translations, false);
+		$TestModel->locale = array('eng', 'spa');
+		$result = $TestModel->read();
+		$this->assertCount(2, $result['Title']);
+		$this->assertCount(2, $result['Content']);
 	}
 
 /**

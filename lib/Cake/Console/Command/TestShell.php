@@ -57,7 +57,7 @@ class TestShell extends Shell {
 			'help' => __d('cake_console', '<file> Log test execution in JUnit XML format to file.'),
 			'default' => false
 		))->addOption('log-json', array(
-			'help' => __d('cake_console', '<file> Log test execution in TAP format to file.'),
+			'help' => __d('cake_console', '<file> Log test execution in JSON format to file.'),
 			'default' => false
 		))->addOption('log-tap', array(
 			'help' => __d('cake_console', '<file> Log test execution in TAP format to file.'),
@@ -114,7 +114,7 @@ class TestShell extends Shell {
 		))->addOption('stop-on-failure', array(
 			'help' => __d('cake_console', 'Stop execution upon first failure.'),
 			'boolean' => true
-		))->addOption('stop-on-skipped ', array(
+		))->addOption('stop-on-skipped', array(
 			'help' => __d('cake_console', 'Stop execution upon first skipped test.'),
 			'boolean' => true
 		))->addOption('stop-on-incomplete', array(
@@ -132,7 +132,7 @@ class TestShell extends Shell {
 		))->addOption('no-globals-backup', array(
 			'help' => __d('cake_console', 'Do not backup and restore $GLOBALS for each test.'),
 			'boolean' => true
-		))->addOption('static-backup ', array(
+		))->addOption('static-backup', array(
 			'help' => __d('cake_console', 'Backup and restore static attributes for each test.'),
 			'boolean' => true
 		))->addOption('syntax-check', array(

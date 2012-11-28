@@ -4,7 +4,7 @@
  *
  * @copyright		 Copyright 2012, Passbolt.com
  * @package			 app.Model.CategoryResource
- * @since				 version 2.12.7
+ * @since				 version 2.12.11
  * @license			 http://www.passbolt.com/license
  */
 

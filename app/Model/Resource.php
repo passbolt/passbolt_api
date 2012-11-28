@@ -8,11 +8,9 @@
  * @since         version 2.12.7
  */
 
-App::uses('User', 'Model');
-
 class Resource extends AppModel {
 
-	public $actsAs = array('Containable', 'Trackable');
+	public $actsAs = array('Trackable');
 
 	public $hasMany = array(
 		'CategoryResource'

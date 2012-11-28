@@ -1,0 +1,306 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# No version information was available in the source files.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2010-01-05 20:15-0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: \controllers\api_classes_controller.php:99
+msgid "No class name was given"
+msgstr ""
+
+#: \controllers\api_classes_controller.php:104;131
+msgid "No class exists in the index with that name"
+msgstr ""
+
+#: \controllers\api_classes_controller.php:119
+msgid "Oops, seems we couldn't get the documentation for that class."
+msgstr ""
+
+#: \controllers\api_classes_controller.php:176;202
+msgid "No class exists with that name"
+msgstr ""
+
+#: \controllers\api_classes_controller.php:195
+msgid "Invalid request."
+msgstr ""
+
+#: \controllers\api_files_controller.php:92
+msgid "No file exists with that name"
+msgstr ""
+
+#: \controllers\api_packages_controller.php:55
+msgid "No package name was given"
+msgstr ""
+
+#: \controllers\api_packages_controller.php:60
+msgid "No package exists in the index with that name"
+msgstr ""
+
+#: \models\api_class.php:319
+msgid "%s is a pseudo class, and cannot have coverage generated"
+msgstr ""
+
+#: \vendors\shells\api_index.php:58
+msgid "Your database configuration was not found. Take a moment to create one."
+msgstr ""
+
+#: \vendors\shells\api_index.php:106
+msgid "Routes file updated"
+msgstr ""
+
+#: \vendors\shells\api_index.php:109
+msgid "Routes file NOT updated"
+msgstr ""
+
+#: \vendors\shells\api_index.php:383
+msgid "You have no users :("
+msgstr ""
+
+#: \views\api_classes\admin_docs_coverage.ctp:1
+msgid "go back"
+msgstr ""
+
+#: \views\api_classes\admin_docs_coverage.ctp:2
+msgid "Docs Coverage for "
+msgstr ""
+
+#: \views\api_classes\admin_docs_coverage.ctp:8
+msgid "Docs analysis:"
+msgstr ""
+
+#: \views\api_classes\admin_docs_coverage.ctp:10
+msgid "Class info:"
+msgstr ""
+
+#: \views\api_classes\admin_index.ctp:2
+msgid "Admin Class Index"
+msgstr ""
+
+#: \views\api_classes\admin_index.ctp:6
+msgid "Classname"
+msgstr ""
+
+#: \views\api_classes\admin_index.ctp:7
+msgid "Coverage"
+msgstr ""
+
+#: \views\api_classes\admin_index.ctp:8
+msgid "Actions"
+msgstr ""
+
+#: \views\api_classes\admin_index.ctp:18
+msgid "Loading.."
+msgstr ""
+
+#: \views\api_classes\admin_index.ctp:23
+msgid "View Coverage"
+msgstr ""
+
+#: \views\api_classes\classes.ctp:6
+msgid "Api Class index"
+msgstr ""
+
+#: \views\api_classes\classes.ctp:54
+msgid "Index"
+msgstr ""
+
+#: \views\api_classes\classes.ctp:76
+msgid "(cont.)"
+msgstr ""
+
+#: \views\api_classes\no_class.ctp:7
+msgid "No classes were found in the requested file"
+msgstr ""
+
+#: \views\api_classes\no_class.ctp:9
+#: \views\api_files\source.ctp:14
+#: \views\elements\sidebar\file_sidebar.ctp:10
+msgid "Up one folder"
+msgstr ""
+
+#: \views\api_classes\search.ctp:8
+msgid "Search Results for \"%s\""
+msgstr ""
+
+#: \views\api_classes\search.ctp:10
+msgid "Your search returned no results"
+msgstr ""
+
+#: \views\api_classes\search.ctp:24
+msgid "public"
+msgstr ""
+
+#: \views\api_files\files.ctp:6
+msgid "All Files"
+msgstr ""
+
+#: \views\api_files\files.ctp:8
+msgid "All files"
+msgstr ""
+
+#: \views\api_files\files.ctp:19
+#: \views\api_files\source.ctp:29
+#: \views\elements\sidebar\file_sidebar.ctp:28
+msgid "No files"
+msgstr ""
+
+#: \views\api_packages\index.ctp:1
+#: \views\elements\api_menu.ctp:25
+msgid "Packages"
+msgstr ""
+
+#: \views\api_packages\view.ctp:5
+msgid "%s Package"
+msgstr ""
+
+#: \views\api_packages\view.ctp:8
+msgid "Parent Package"
+msgstr ""
+
+#: \views\api_packages\view.ctp:15
+msgid "Child Packages"
+msgstr ""
+
+#: \views\api_packages\view.ctp:23
+msgid "Classes in %s"
+msgstr ""
+
+#: \views\elements\api_menu.ctp:4
+msgid "Classes"
+msgstr ""
+
+#: \views\elements\api_menu.ctp:11
+msgid "Source"
+msgstr ""
+
+#: \views\elements\api_menu.ctp:18
+msgid "Files"
+msgstr ""
+
+#: \views\elements\class_info.ctp:10
+msgid "%s Class Info:"
+msgstr ""
+
+#: \views\elements\class_info.ctp:13
+msgid "Class Declaration:"
+msgstr ""
+
+#: \views\elements\class_info.ctp:16
+msgid "File name:"
+msgstr ""
+
+#: \views\elements\class_info.ctp:19
+msgid "Summary:"
+msgstr ""
+
+#: \views\elements\class_info.ctp:23
+msgid "Class Inheritance"
+msgstr ""
+
+#: \views\elements\class_info.ctp:28
+msgid "Interfaces Implemented"
+msgstr ""
+
+#: \views\elements\element_toc.ctp:10
+msgid "Defined Classes"
+msgstr ""
+
+#: \views\elements\element_toc.ctp:24
+msgid "Declared Functions"
+msgstr ""
+
+#: \views\elements\function_summary.ctp:11
+#: \views\elements\method_detail.ctp:18
+msgid "top"
+msgstr ""
+
+#: \views\elements\function_summary.ctp:18
+#: \views\elements\method_detail.ctp:25
+msgid "Parameters:"
+msgstr ""
+
+#: \views\elements\function_summary.ctp:29
+#: \views\elements\method_detail.ctp:36
+msgid "(no default)"
+msgstr ""
+
+#: \views\elements\function_summary.ctp:38
+msgid "Function defined in file:"
+msgstr ""
+
+#: \views\elements\function_summary.ctp:43
+#: \views\elements\method_detail.ctp:53
+msgid " on line "
+msgstr ""
+
+#: \views\elements\header_search.ctp:26
+msgid "Search"
+msgstr ""
+
+#: \views\elements\method_detail.ctp:45
+msgid "Method defined in class:"
+msgstr ""
+
+#: \views\elements\method_detail.ctp:48
+msgid "Method defined in file:"
+msgstr ""
+
+#: \views\elements\method_summary.ctp:8
+msgid "Method Summary:"
+msgstr ""
+
+#: \views\elements\method_summary.ctp:8
+msgid "Methods:"
+msgstr ""
+
+#: \views\elements\method_summary.ctp:16
+msgid "Show/Hide parent methods"
+msgstr ""
+
+#: \views\elements\paging.ctp:9
+msgid "previous"
+msgstr ""
+
+#: \views\elements\paging.ctp:17
+msgid "next"
+msgstr ""
+
+#: \views\elements\properties.ctp:10
+msgid "Properties:"
+msgstr ""
+
+#: \views\elements\properties.ctp:15
+msgid "Show/Hide parent properties"
+msgstr ""
+
+#: \views\elements\sidebar\class_sidebar.ctp:7
+msgid "Class Index"
+msgstr ""
+
+#: \views\elements\sidebar\file_sidebar.ctp:7
+msgid "File browser"
+msgstr ""
+
+#: \views\elements\sidebar\package_sidebar.ctp:7
+msgid "Package Index"
+msgstr ""
+
+#: \views\layouts\default.ctp:25;47
+msgid "CakePHP: API Generator"
+msgstr ""
+
+#: \views\layouts\default.ctp:64
+msgid "CakePHP: the rapid development php framework"
+msgstr ""
+

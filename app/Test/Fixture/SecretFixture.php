@@ -5,7 +5,7 @@
  * @copyright   Copyright 2012, Passbolt.com
  * @license     http://www.passbolt.com/license
  * @package     app.Test.Fixture.ResourceFixture
- * @since       version 2.12.9
+ * @since       version 2.12.11
  */
 App::uses('Secret', 'Model');
 

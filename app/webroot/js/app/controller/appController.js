@@ -5,10 +5,12 @@ steal(
 	'app/controller/peopleWorkspaceController.js',
 
 	'app/controller/component/appMenuController.js',
+	'app/controller/component/appFilterController.js',
 	'app/controller/component/notificationController.js',
 	// the ressources workspace models
 	'app/model/category.js',
 	'app/model/resource.js',
+	'app/model/filter.js',
 	// the application template
 	'app/view/template/app.ejs'
 ).then(function () {
@@ -28,14 +30,20 @@ steal(
 			this.render();
 
 			// Add the app menu controller
-			var menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'))
+			var menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'));
 			menuCtl.render();
 			menuCtl.initMenuItems();
 
-			// Add a notification controller
-			var notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
-				'state': 'hidden'
+			// Add the filter controller
+			var filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {
+
 			});
+			filterCtl.render();
+
+			// Add the notification controller
+//			var notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
+//				'state': 'hidden'
+//			});
 
 			// Add a workspaces container tabs element to the app 
 			var wksCtl = new mad.controller.component.TabController($('#js_workspaces_container'));

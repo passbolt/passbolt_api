@@ -2,7 +2,7 @@
 /**
  * This file is loaded automatically by the app/webroot/index.php file after core.php
  *
- * This file should load/create any application wide configuration settings, such as 
+ * This file should load/create any application wide configuration settings, such as
  * Caching, Logging, loading additional configuration files.
  *
  * You should also use this file to include any files that provide global functions/constants
@@ -28,6 +28,13 @@
  */
 	Configure::load('app'); // Application
 	require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
+
+/**
+ * API and DOC Plugins
+ */
+	if (Configure::read('debug') > 1) {
+	  CakePlugin::load('ApiGenerator');
+	}
 
 /**
  * Cache Engine Configuration

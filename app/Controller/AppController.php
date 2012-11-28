@@ -43,12 +43,16 @@ class AppController extends Controller {
 		}));
 
 		// Set default layout
-		//if ( || $this->request->is('json')) {
+	  if (isset($this->request->params['plugin']) && $this->request->params['plugin'] == 'api_generator') {
+			$this->layout = 'default';
+		} else {
+			//if ( || $this->request->is('json')) {
 			$this->layout = 'json';
 			$this->view = '/Json/default';
-		//} else {
-		//	$this->layout = 'html5';
-		//}
+			//} else {
+			//	$this->layout = 'html5';
+			//}
+		}
 
 		// Set active user Anonymous
 		// or use what is in the session

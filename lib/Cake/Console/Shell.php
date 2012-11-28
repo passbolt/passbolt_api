@@ -154,7 +154,7 @@ class Shell extends Object {
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell
  */
 	public function __construct($stdout = null, $stderr = null, $stdin = null) {
-		if ($this->name == null) {
+		if (!$this->name) {
 			$this->name = Inflector::camelize(str_replace(array('Shell', 'Task'), '', get_class($this)));
 		}
 		$this->Tasks = new TaskCollection($this);
@@ -162,13 +162,13 @@ class Shell extends Object {
 		$this->stdout = $stdout;
 		$this->stderr = $stderr;
 		$this->stdin = $stdin;
-		if ($this->stdout == null) {
+		if (!$this->stdout) {
 			$this->stdout = new ConsoleOutput('php://stdout');
 		}
-		if ($this->stderr == null) {
+		if (!$this->stderr) {
 			$this->stderr = new ConsoleOutput('php://stderr');
 		}
-		if ($this->stdin == null) {
+		if (!$this->stdin) {
 			$this->stdin = new ConsoleInput('php://stdin');
 		}
 		$this->_useLogger();
@@ -325,7 +325,7 @@ class Shell extends Object {
  */
 	public function dispatchShell() {
 		$args = func_get_args();
-		if (is_string($args[0]) && count($args) == 1) {
+		if (is_string($args[0]) && count($args) === 1) {
 			$args = explode(' ', $args[0]);
 		}
 
@@ -361,8 +361,8 @@ class Shell extends Object {
 			array_shift($argv);
 		}
 
+		$this->OptionParser = $this->getOptionParser();
 		try {
-			$this->OptionParser = $this->getOptionParser();
 			list($this->params, $this->args) = $this->OptionParser->parse($argv, $command);
 		} catch (ConsoleException $e) {
 			$this->out($this->OptionParser->help($command));
@@ -686,7 +686,9 @@ class Shell extends Object {
 	protected function _checkUnitTest() {
 		if (class_exists('PHPUnit_Framework_TestCase')) {
 			return true;
+			//@codingStandardsIgnoreStart
 		} elseif (@include 'PHPUnit' . DS . 'Autoload.php') {
+			//@codingStandardsIgnoreEnd
 			return true;
 		} elseif (App::import('Vendor', 'phpunit', array('file' => 'PHPUnit' . DS . 'Autoload.php'))) {
 			return true;

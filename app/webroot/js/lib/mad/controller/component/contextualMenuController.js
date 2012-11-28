@@ -42,7 +42,7 @@ steal(
 			var refPointHtml = '<div id="js_contextual_anchor" style="position:absolute;"></div>'
 			var refPoint = mad.helper.HtmlHelper.create('body', 'first', refPointHtml);
 			var $refPoint = $(refPoint);
-			console.log($refPoint);
+
 			$refPoint.css({
 				left: this.options.mouseX,
 				top: this.options.mouseY

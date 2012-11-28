@@ -95,6 +95,11 @@ steal(
 		 * @return {void}
 		 */
 		'{passbolt.eventBus} category_selected': function (el, ev, category) {
+			var filter =  new passbolt.model.Filter({
+				tags: [category],
+				keywords: null
+			});
+			passbolt.eventBus.trigger('filter_resources_browser', filter);
 		},
 
 		/**

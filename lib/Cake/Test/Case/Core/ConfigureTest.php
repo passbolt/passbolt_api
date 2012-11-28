@@ -178,6 +178,60 @@ class ConfigureTest extends CakeTestCase {
 	}
 
 /**
+ * testCheck method
+ *
+ * @return void
+ */
+	public function testCheck() {
+		Configure::write('ConfigureTestCase', 'value');
+		$this->assertTrue(Configure::check('ConfigureTestCase'));
+
+		$this->assertFalse(Configure::check('NotExistingConfigureTestCase'));
+	}
+
+/**
+ * testCheckingSavedEmpty method
+ *
+ * @return void
+ */
+	public function testCheckingSavedEmpty() {
+		$this->assertTrue(Configure::write('ConfigureTestCase', 0));
+		$this->assertTrue(Configure::check('ConfigureTestCase'));
+
+		$this->assertTrue(Configure::write('ConfigureTestCase', '0'));
+		$this->assertTrue(Configure::check('ConfigureTestCase'));
+
+		$this->assertTrue(Configure::write('ConfigureTestCase', false));
+		$this->assertTrue(Configure::check('ConfigureTestCase'));
+
+		$this->assertTrue(Configure::write('ConfigureTestCase', null));
+		$this->assertFalse(Configure::check('ConfigureTestCase'));
+	}
+
+/**
+ * testCheckKeyWithSpaces method
+ *
+ * @return void
+ */
+	public function testCheckKeyWithSpaces() {
+		$this->assertTrue(Configure::write('Configure Test', "test"));
+		$this->assertTrue(Configure::check('Configure Test'));
+		Configure::delete('Configure Test');
+
+		$this->assertTrue(Configure::write('Configure Test.Test Case', "test"));
+		$this->assertTrue(Configure::check('Configure Test.Test Case'));
+	}
+
+/**
+ * testCheckEmpty
+ *
+ * @return void
+ */
+	public function testCheckEmpty() {
+		$this->assertFalse(Configure::check());
+	}
+
+/**
  * testLoad method
  *
  * @expectedException RuntimeException
@@ -383,7 +437,9 @@ class ConfigureTest extends CakeTestCase {
 		$result = file_get_contents(TMP . 'config_test.php');
 		$this->assertContains('<?php', $result);
 		$this->assertContains('$config = ', $result);
-		@unlink(TMP . 'config_test.php');
+		if (file_exists(TMP . 'config_test.php')) {
+			unlink(TMP . 'config_test.php');
+		}
 	}
 
 /**
@@ -402,7 +458,9 @@ class ConfigureTest extends CakeTestCase {
 		$this->assertContains('Error', $result);
 		$this->assertNotContains('debug', $result);
 
-		@unlink(TMP . 'config_test.php');
+		if (file_exists(TMP . 'config_test.php')) {
+			unlink(TMP . 'config_test.php');
+		}
 	}
 
 }

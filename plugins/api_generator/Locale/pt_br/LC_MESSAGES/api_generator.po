@@ -1,0 +1,311 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: Revision: 7945 \webroot\test.php
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Api Generator\n"
+"POT-Creation-Date: 2010-01-02 02:14-0200\n"
+"PO-Revision-Date: 2010-01-02 02:14-0300\n"
+"Last-Translator: Juan Basso <jrbasso@gmail.com>\n"
+"Language-Team: Juan Basso <jrbasso@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: BRAZIL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: \plugins\api_generator\controllers\api_classes_controller.php:99
+msgid "No class name was given"
+msgstr "Não foi dado um nome a classe"
+
+#: \plugins\api_generator\controllers\api_classes_controller.php:104;131
+msgid "No class exists in the index with that name"
+msgstr "Não existe a classe na lista com este nome"
+
+#: \plugins\api_generator\controllers\api_classes_controller.php:119
+msgid "Oops, seems we couldn't get the documentation for that class."
+msgstr "Oops, parece que não é possível documentar esta classe."
+
+#: \plugins\api_generator\controllers\api_classes_controller.php:176;202
+msgid "No class exists with that name"
+msgstr "Não existe nenhuma classe com este nome"
+
+#: \plugins\api_generator\controllers\api_classes_controller.php:195
+msgid "Invalid request."
+msgstr "Requisição inválida."
+
+#: \plugins\api_generator\controllers\api_files_controller.php:92
+msgid "No file exists with that name"
+msgstr "Não existe nenhum com este nome"
+
+#: \plugins\api_generator\controllers\api_packages_controller.php:55
+msgid "No package name was given"
+msgstr "Não foi dado um nome ao pacote"
+
+#: \plugins\api_generator\controllers\api_packages_controller.php:60
+msgid "No package exists in the index with that name"
+msgstr "Não existe o pacote na lista com este nome"
+
+#: \plugins\api_generator\models\api_class.php:319
+msgid "%s is a pseudo class, and cannot have coverage generated"
+msgstr "%s é uma pseudo classe e não pode ter gerado um coverage"
+
+#: \plugins\api_generator\vendors\shells\api_index.php:58
+msgid "Your database configuration was not found. Take a moment to create one."
+msgstr "O arquivo de configuração do seu banco de dados não foi encontrado. Reserve um tempo para criar."
+
+#: \plugins\api_generator\vendors\shells\api_index.php:106
+msgid "Routes file updated"
+msgstr "Arquivo de rotas atualizado"
+
+#: \plugins\api_generator\vendors\shells\api_index.php:109
+msgid "Routes file NOT updated"
+msgstr "Arquivo de rotas NÃO atualizado"
+
+#: \plugins\api_generator\vendors\shells\api_index.php:383
+msgid "You have no users :("
+msgstr "Você não tem usuários :("
+
+#: \plugins\api_generator\views\api_classes\admin_docs_coverage.ctp:1
+msgid "go back"
+msgstr "voltar"
+
+#: \plugins\api_generator\views\api_classes\admin_docs_coverage.ctp:2
+msgid "Docs Coverage for "
+msgstr "Docs de Coverage para"
+
+#: \plugins\api_generator\views\api_classes\admin_docs_coverage.ctp:8
+msgid "Docs analysis:"
+msgstr "Análise:"
+
+#: \plugins\api_generator\views\api_classes\admin_docs_coverage.ctp:10
+msgid "Class info:"
+msgstr "Informação da classe:"
+
+#: \plugins\api_generator\views\api_classes\admin_index.ctp:2
+msgid "Admin Class Index"
+msgstr "Lista de Classes Administrativas"
+
+#: \plugins\api_generator\views\api_classes\admin_index.ctp:6
+msgid "Classname"
+msgstr "Nome da classe"
+
+#: \plugins\api_generator\views\api_classes\admin_index.ctp:7
+msgid "Coverage"
+msgstr "Coverage"
+
+#: \plugins\api_generator\views\api_classes\admin_index.ctp:8
+msgid "Actions"
+msgstr "Ações"
+
+#: \plugins\api_generator\views\api_classes\admin_index.ctp:18
+msgid "Loading.."
+msgstr "Carregando..."
+
+#: \plugins\api_generator\views\api_classes\admin_index.ctp:23
+msgid "View Coverage"
+msgstr "Ver Coverage"
+
+#: \plugins\api_generator\views\api_classes\classes.ctp:6
+msgid "Api Class index"
+msgstr "Lista de Classe da API"
+
+#: \plugins\api_generator\views\api_classes\classes.ctp:54
+msgid "Index"
+msgstr "Index"
+
+#: \plugins\api_generator\views\api_classes\classes.ctp:76
+msgid "(cont.)"
+msgstr "(cont.)"
+
+#: \plugins\api_generator\views\api_classes\no_class.ctp:7
+msgid "No classes were found in the requested file"
+msgstr "Nenhuma classe encontrada no arquivo"
+
+#: \plugins\api_generator\views\api_classes\no_class.ctp:9
+#: \plugins\api_generator\views\api_files\source.ctp:14
+#: \plugins\api_generator\views\elements\sidebar\file_sidebar.ctp:10
+msgid "Up one folder"
+msgstr "Uma pasta acima"
+
+#: \plugins\api_generator\views\api_classes\search.ctp:8
+msgid "Search Results for \"%s\""
+msgstr "Resultados para \"%s\""
+
+#: \plugins\api_generator\views\api_classes\search.ctp:10
+msgid "Your search returned no results"
+msgstr "Sua busca não retornou nada"
+
+#: \plugins\api_generator\views\api_classes\search.ctp:24
+msgid "public"
+msgstr "público"
+
+#: \plugins\api_generator\views\api_files\files.ctp:6
+msgid "All Files"
+msgstr "Todos Arquivos"
+
+#: \plugins\api_generator\views\api_files\files.ctp:8
+msgid "All files"
+msgstr "Todos arquivos"
+
+#: \plugins\api_generator\views\api_files\files.ctp:19
+#: \plugins\api_generator\views\api_files\source.ctp:29
+#: \plugins\api_generator\views\elements\sidebar\file_sidebar.ctp:28
+msgid "No files"
+msgstr "Nenhum arquivo"
+
+#: \plugins\api_generator\views\api_packages\index.ctp:1
+#: \plugins\api_generator\views\elements\api_menu.ctp:25
+msgid "Packages"
+msgstr "Pacotes"
+
+#: \plugins\api_generator\views\api_packages\view.ctp:5
+msgid "%s Package"
+msgstr "Pacote %s"
+
+#: \plugins\api_generator\views\api_packages\view.ctp:8
+msgid "Parent Package"
+msgstr "Pacote Herdado"
+
+#: \plugins\api_generator\views\api_packages\view.ctp:15
+msgid "Child Packages"
+msgstr "Pacotes filhos"
+
+#: \plugins\api_generator\views\api_packages\view.ctp:23
+msgid "Classes in %s"
+msgstr "Classes em %s"
+
+#: \plugins\api_generator\views\elements\api_menu.ctp:4
+msgid "Classes"
+msgstr "Classes"
+
+#: \plugins\api_generator\views\elements\api_menu.ctp:11
+msgid "Source"
+msgstr "Fontes"
+
+#: \plugins\api_generator\views\elements\api_menu.ctp:18
+msgid "Files"
+msgstr "Arquivos"
+
+#: \plugins\api_generator\views\elements\class_info.ctp:10
+msgid "%s Class Info:"
+msgstr "Informação da Classe %s:"
+
+#: \plugins\api_generator\views\elements\class_info.ctp:13
+msgid "Class Declaration:"
+msgstr "Declaração da classe:"
+
+#: \plugins\api_generator\views\elements\class_info.ctp:16
+msgid "File name:"
+msgstr "Arquivo:"
+
+#: \plugins\api_generator\views\elements\class_info.ctp:19
+msgid "Summary:"
+msgstr "Descrição:"
+
+#: \plugins\api_generator\views\elements\class_info.ctp:23
+msgid "Class Inheritance"
+msgstr "Heranças"
+
+#: \plugins\api_generator\views\elements\class_info.ctp:28
+msgid "Interfaces Implemented"
+msgstr "Interfaces Implementadas"
+
+#: \plugins\api_generator\views\elements\element_toc.ctp:10
+msgid "Defined Classes"
+msgstr "Classes Definidas"
+
+#: \plugins\api_generator\views\elements\element_toc.ctp:24
+msgid "Declared Functions"
+msgstr "Funções Declaradas"
+
+#: \plugins\api_generator\views\elements\function_summary.ctp:11
+#: \plugins\api_generator\views\elements\method_detail.ctp:18
+msgid "top"
+msgstr "topo"
+
+#: \plugins\api_generator\views\elements\function_summary.ctp:18
+#: \plugins\api_generator\views\elements\method_detail.ctp:25
+msgid "Parameters:"
+msgstr "Parâmetros:"
+
+#: \plugins\api_generator\views\elements\function_summary.ctp:29
+#: \plugins\api_generator\views\elements\method_detail.ctp:36
+msgid "(no default)"
+msgstr "(não padrão)"
+
+#: \plugins\api_generator\views\elements\function_summary.ctp:38
+msgid "Function defined in file:"
+msgstr "Função definida no arquivo:"
+
+#: \plugins\api_generator\views\elements\function_summary.ctp:43
+#: \plugins\api_generator\views\elements\method_detail.ctp:53
+msgid " on line "
+msgstr " na linha "
+
+#: \plugins\api_generator\views\elements\header_search.ctp:26
+msgid "Search"
+msgstr "Buscar"
+
+#: \plugins\api_generator\views\elements\method_detail.ctp:45
+msgid "Method defined in class:"
+msgstr "Método definido na classe:"
+
+#: \plugins\api_generator\views\elements\method_detail.ctp:48
+msgid "Method defined in file:"
+msgstr "Método definido no arquivo:"
+
+#: \plugins\api_generator\views\elements\method_summary.ctp:8
+msgid "Method Summary:"
+msgstr "Lista de Métodos:"
+
+#: \plugins\api_generator\views\elements\method_summary.ctp:8
+msgid "Methods:"
+msgstr "Métodos:"
+
+#: \plugins\api_generator\views\elements\method_summary.ctp:16
+msgid "Show/Hide parent methods"
+msgstr "Mostrar/Ocultar métodos herdados"
+
+#: \plugins\api_generator\views\elements\paging.ctp:9
+msgid "previous"
+msgstr "anterior"
+
+#: \plugins\api_generator\views\elements\paging.ctp:17
+msgid "next"
+msgstr "próximo"
+
+#: \plugins\api_generator\views\elements\properties.ctp:10
+msgid "Properties:"
+msgstr "Propriedades:"
+
+#: \plugins\api_generator\views\elements\properties.ctp:15
+msgid "Show/Hide parent properties"
+msgstr "Mostrar/Ocultar propriedades herdadas"
+
+#: \plugins\api_generator\views\elements\sidebar\class_sidebar.ctp:7
+msgid "Class Index"
+msgstr "Lista de classes"
+
+#: \plugins\api_generator\views\elements\sidebar\file_sidebar.ctp:7
+msgid "File browser"
+msgstr "Navegar nos arquivos"
+
+#: \plugins\api_generator\views\elements\sidebar\package_sidebar.ctp:7
+msgid "Package Index"
+msgstr "Lista de Pacotes"
+
+#: \plugins\api_generator\views\layouts\default.ctp:25;47
+msgid "CakePHP: API Generator"
+msgstr "CakePHP: Gerador de API"
+
+#: \plugins\api_generator\views\layouts\default.ctp:64
+msgid "CakePHP: the rapid development php framework"
+msgstr "CakePHP: o framework php de desenvolvimento rápido"
+
+#~ msgid "Debug setting does not allow access to this url."
+#~ msgstr "A opção de debug não permite que você acesse esta url."
+

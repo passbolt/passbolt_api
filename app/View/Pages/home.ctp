@@ -12,3 +12,4 @@
 	$this->Html->script('steal/steal.js?app/passbolt.js', array('block' => 'scriptBottom'));
 ?>
     <div id="js_app_controller" class="container_16"/>
+

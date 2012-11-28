@@ -54,12 +54,16 @@ steal(
 		 * @return {void}
 		 */
 		'load': function (instance) {
-			for (var eltModelRef in this.elements) {
-				var models = mad.model.Model.getModelReferences(eltModelRef);
+			if (!(instance instanceof mad.model.Model)) {
+				throw new mad.error.WrongParametersException('instance', mad.model.Model.fullName);
+			}
+
+			for (var eltId in this.elements) {
+				var models = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference());
 				var attrPath = '';
-				var attrName = models[models.length - 1].label
+				var attrName = models[models.length - 1].name
 				for (var i = 1; i<models.length-1; i++) {
-					attrPath += attrPath.length ? '.' + models[i].label : models[i].label;
+					attrPath += attrPath.length ? '.' + models[i].name : models[i].name;
 				}
 				var modelAttr = can.getObject(attrPath, instance);
 				var leafValue = null;
@@ -72,7 +76,7 @@ steal(
 				} else {
 					leafValue = modelAttr[attrName];
 				}
-				this.elements[eltModelRef].setValue(leafValue);
+				this.elements[eltId].setValue(leafValue);
 			}
 		},
 
@@ -85,15 +89,16 @@ steal(
 		 * @return {void}
 		 */
 		'addElement': function (element, feedback) {
-			if (!element instanceof mad.form.FormElement) {
-				throw new mad.error.WrongParametersException('The function addElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
+			if (!(element instanceof mad.form.FormElement)) {
+				throw new mad.error.WrongParametersException('element', 'mad.form.FormElement');
 			}
 			// store the element with its associated model reference
-			var eltModelRef = element.getModelReference();
-			this.elements[eltModelRef] = element;
+			var eltId = element.getId();
+			this.elements[eltId] = element;
 			if (typeof feedback != 'undefined') {
-				this.feedbackElements[eltModelRef] = feedback;
+				this.feedbackElements[eltId] = feedback;
 			}
+			return element;
 		},
 
 		/**
@@ -103,12 +108,15 @@ steal(
 		 * @return {void}
 		 */
 		'removeElement': function (element) {
-			if (!element instanceof mad.form.FormElement) {
-				throw new mad.error.WrongParametersException('The function removeElement is expecting a mad.form.FormElement object as first parameter, ' + (typeof mad.form.FormElement) + ' given');
+			if (!(element instanceof mad.form.FormElement) || element == null) {
+				throw new mad.error.WrongParametersException('element', 'mad.form.FormElement');
 			}
-			var eltModelRef = element.getModelReference();
-			delete this.elements[eltModelRef];
-			delete this.feedbackElements[eltModelRef];
+			var eltId = element.getId();
+			if (typeof this.elements[eltId] == 'undefined') {
+				throw new mad.error.Exception('The target element to remove does not exist');
+			}
+			delete this.elements[eltId];
+			delete this.feedbackElements[eltId];
 		},
 
 		/**
@@ -118,8 +126,8 @@ steal(
 		 * By exemple for the following form
 		 * @codestart
 &lt;input type="text" id="field_id" name="mad.model.MyModel.id" />
-&lt;input type="text" id="field_id" name="mad.model.MyModel.label" />
-&lt;input type="text" id="field_id" name="mad.model.MyModel2.label" />
+&lt;input type="text" id="field_id" name="mad.model.MyModel.attr1" />
+&lt;input type="text" id="field_id" name="mad.model.MyModel2.attr2" />
 		 * @codeend
 		 * 
 		 * The extract data function will return
@@ -127,10 +135,10 @@ steal(
 {
 	mad.model.MyModel : {
 		id: STRING,
-		label: STRING
+		attr1: STRING
 	},
 	mad.model.MyModel2 : {
-		label: STRING
+		attr2: STRING
 	}
 }
 		 * @codeend
@@ -141,50 +149,69 @@ steal(
 			var returnValue = {};
 
 			// Get the form elements value
-			for (var elementId in this.elements) {
+			for (var eltId in this.elements) {
 				// Get the model references of the current element
-				var modelRefs = mad.model.Model.getModelReferences(this.elements[elementId].getModelReference()),
+				var fieldAttrs = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference()),
 					// the elt value
-					eltValue = this.elements[elementId].getValue(),
+					eltValue = this.elements[eltId].getValue(),
 					// the attr name
-					attrName = modelRefs[modelRefs.length - 1].label;
+					attrName = fieldAttrs[fieldAttrs.length - 1].name;
 
 				// if not exists, create the top model reference 
-				if (!returnValue[modelRefs[0].label]) {
-					returnValue[modelRefs[0].label] = {};
+				if (!returnValue[fieldAttrs[0].name]) {
+					returnValue[fieldAttrs[0].name] = {};
 				}
 
+				// if there is only 2 field attributes and the last one is a scalar attribute
+				if (fieldAttrs.length<=2 && fieldAttrs[fieldAttrs.length-1].modelReference == null) {
+					returnValue[fieldAttrs[0].name][attrName] = eltValue;
+				}
 				// if sub models
-				if (modelRefs.length>2) {
-					var leafSubModelRef = modelRefs[modelRefs.length - 2], // the last one is the field
-						leafValue = null;
+				else {
+					var leafValue = null,
+						subModelPath = '';
 
-					// format the element value following the leaf model multiplicity
-					// * muliplicity
-					if (leafSubModelRef.multiple) {
-						eltValue = can.isArray(eltValue) ? eltValue : [eltValue];
-						leafValue = [];
-						can.each(eltValue, function (val, i) {
-//							console.log('val', val);
-							var obj = {};
-							obj[attrName] = val;
-							leafValue.push(obj);
-						});
+					// if the last field attribute is a reference to a model
+					// no extra transformation, the leaf value is equal to the elt value
+					// the developper as to take care about what the form element is
+					// returning
+					if (fieldAttrs[fieldAttrs.length-1].modelReference!=null) {
+						leafValue = eltValue;
+						// extract the sub models path
+						subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
+							.slice(1, fieldAttrs.length)
+							.join('.');
+						// construct the return format functon of the sub models references
+						can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
+
+					// else the last field attribute is a scalar attribute
 					} else {
-						// single multiplicity
-						leafValue = {};
-						leafValue[attrName] = eltValue;
-					}
+						var leafSubModelRef = fieldAttrs[fieldAttrs.length-2];
 
-					// extract the sub models path
-					var subModelPath = '';
-					for (var i=1; i<(modelRefs.length-1); i++) {
-						subModelPath += subModelPath.length ? '.' + modelRefs[i].label : modelRefs[i].label;
+						// format the element value following the leaf model multiplicity
+						// * muliplicity
+						if (leafSubModelRef.multiple) {
+							eltValue = can.isArray(eltValue) ? eltValue : [eltValue];
+							leafValue = [];
+							can.each(eltValue, function (val, i) {
+								var obj = {};
+								obj[attrName] = val;
+								leafValue.push(obj);
+							});
+						} else {
+							// single multiplicity
+							leafValue = {};
+							leafValue[attrName] = eltValue;
+						}
+
+						// extract the sub models path
+						subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
+							.slice(1, fieldAttrs.length-1)
+							.join('.');
+
+						// construct the return format functon of the sub models references
+						can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
 					}
-					// construct the return format functon of the sub models references
-					can.getObject(subModelPath, returnValue[modelRefs[0].label], true, leafValue);
-				} else {
-					returnValue[modelRefs[0].label][attrName] = eltValue;
 				}
 			}
 
@@ -206,41 +233,39 @@ steal(
 		'validateElement': function (element) {
 			var returnValue = true,
 				// the model references of the element
-				modelRefs = mad.model.Model.getModelReferences(element.getModelReference()),
-				// the root model reference
-				rootModel = modelRefs[0].model,
+				fieldAttrs = mad.model.Model.getModelAttributes(element.getModelReference()),
 				// the leaf model reference
-				model = modelRefs[modelRefs.length-2].model,
+				model = fieldAttrs[fieldAttrs.length-2].modelReference,
 				// the attribute name
-				attrName = modelRefs[modelRefs.length-1].label,
+				attrName = fieldAttrs[fieldAttrs.length-1].name,
 				// the validation result
 				validationResult = true,
-				// the associated model reference
-				eltModelRef = element.getModelReference();
+				// the element's id
+				eltId = element.getId();
 
 			// validate the attribute value
 			if (model.validateAttribute) {
 				var value = element.getValue();
-				
 				validationResult = model.validateAttribute(attrName, element.getValue());
 			}
 
 			if(validationResult !== true) {
 				// switch the state of the element to error
-				this.elements[eltModelRef]
+				this.elements[eltId]
 					.setState('error');
 				// set the feedback message, and switch the feedback element state to error
-				this.feedbackElements[eltModelRef]
-					.setMessage(validationResult)
-					.setState('error');
-
+				if (this.feedbackElements[eltId]){
+					this.feedbackElements[eltId]
+						.setMessage(validationResult)
+						.setState('error');
+				}
 				returnValue = false;
 			} else {
-				this.elements[eltModelRef]
+				this.elements[eltId]
 					.setState('success');
 				// set the feedback message, and switch the feedback element state to success
-				if (this.feedbackElements[eltModelRef]){
-					this.feedbackElements[eltModelRef]
+				if (this.feedbackElements[eltId]){
+					this.feedbackElements[eltId]
 						.setMessage('OK')
 						.setState('success');
 				}

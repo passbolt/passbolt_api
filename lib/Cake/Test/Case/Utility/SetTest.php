@@ -152,6 +152,9 @@ class SetTest extends CakeTestCase {
 		$r = Set::merge('foo', 'bar');
 		$this->assertEquals(array('foo', 'bar'), $r);
 
+		$r = Set::merge(array('foo'), array(), array('bar'));
+		$this->assertEquals(array('foo', 'bar'), $r);
+
 		$r = Set::merge('foo', array('user' => 'bob', 'no-bar'), 'bar');
 		$this->assertEquals(array('foo', 'user' => 'bob', 'no-bar', 'bar'), $r);
 
@@ -1215,21 +1218,21 @@ class SetTest extends CakeTestCase {
 
 		$nonSequential = array(
 			'User' => array(
-				0  => array('id' => 1),
-				2  => array('id' => 2),
-				6  => array('id' => 3),
-				9  => array('id' => 4),
-				3  => array('id' => 5),
+				0 => array('id' => 1),
+				2 => array('id' => 2),
+				6 => array('id' => 3),
+				9 => array('id' => 4),
+				3 => array('id' => 5),
 			),
 		);
 
 		$nonZero = array(
 			'User' => array(
-				2  => array('id' => 1),
-				4  => array('id' => 2),
-				6  => array('id' => 3),
-				9  => array('id' => 4),
-				3  => array('id' => 5),
+				2 => array('id' => 1),
+				4 => array('id' => 2),
+				6 => array('id' => 3),
+				9 => array('id' => 4),
+				3 => array('id' => 5),
 			),
 		);
 
@@ -1687,7 +1690,7 @@ class SetTest extends CakeTestCase {
 
 		$result = Set::remove($a, 'files');
 		$expected = array(
-			'pages'     => array('name' => 'page')
+			'pages' => array('name' => 'page')
 		);
 		$this->assertEquals($expected, $result);
 	}
@@ -1967,7 +1970,7 @@ class SetTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 
 		$result = Set::combine($a, 'fail', 'fail');
-		$this->assertEquals(array(), $result);
+		$this->assertSame(array(), $result);
 	}
 
 /**
@@ -3054,6 +3057,7 @@ class SetTest extends CakeTestCase {
 /**
  * Tests Set::flatten
  *
+ * @see Hash test cases, as Set::flatten() is just a proxy.
  * @return void
  */
 	public function testFlatten() {
@@ -3064,6 +3068,21 @@ class SetTest extends CakeTestCase {
 		$data[9] = 'Shemp';
 		$result = Set::flatten($data);
 		$this->assertEquals($data, $result);
+
+		$data = array(
+			array(
+				'Post' => array('id' => '1', 'author_id' => null, 'title' => 'First Post'),
+				'Author' => array(),
+			)
+		);
+		$result = Set::flatten($data);
+		$expected = array(
+			'0.Post.id' => '1',
+			'0.Post.author_id' => null,
+			'0.Post.title' => 'First Post',
+			'0.Author' => array()
+		);
+		$this->assertEquals($expected, $result);
 	}
 
 /**
