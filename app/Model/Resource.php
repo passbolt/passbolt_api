@@ -156,6 +156,7 @@ class Resource extends AppModel {
 	public static function getFindFields($case = 'view', $role = Role::USER) {
 		switch($case){
 			case 'view':
+			case 'index':
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
