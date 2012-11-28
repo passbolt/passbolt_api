@@ -13,6 +13,17 @@ steal(
 		// 
 		'timeoutBeforeReset': null,
 
+		'init': function (el, options) {
+			this._super(el, options);
+
+			// position the notificator functions of the search field
+			this.element.position({
+				my: "center top",
+				at: "center bottom",
+				of: $('#js_filter_keywords')
+			});
+		},
+
 		'render': function () {
 			var self = this;
 			// A notification is already shown, destroy the current timeout listener
@@ -26,13 +37,6 @@ steal(
 			}, 30000);
 
 			this._super();
-
-			// position the notificator functions of the search field
-			this.element.position({
-				my: "center top",
-				at: "center bottom",
-				of: $('#js_search_field')
-			});
 		},
 
 		/* ************************************************************** */

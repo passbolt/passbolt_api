@@ -47,6 +47,15 @@ steal(
 		},
 
 		/**
+		 * Reset the filter
+		 * @return {void}
+		 */
+		'reset': function () {
+			this.listFormElement.setValue([]);
+			this.keywordsFormElement.setValue('');
+		},
+
+		/**
 		 * Render the application filter
 		 * @see {mad.controller.ComponentController.prototype.render}
 		 */
@@ -67,6 +76,7 @@ steal(
 		 * @return {void}
 		 */
 		'{passbolt.eventBus} category_selected': function (el, ev, category) {
+			this.reset();
 			this.listFormElement.setValue([category]);
 			this.keywordsFormElement.setValue('');
 		},
@@ -83,8 +93,7 @@ steal(
 		 * js_filter_reset
 		 */
 		' reset': function (el, ev) {
-			this.listFormElement.setValue([]);
-			this.keywordsFormElement.setValue('');
+			this.reset();
 			var filter = new passbolt.model.Filter({
 				'keywords': '',
 				'tags': []

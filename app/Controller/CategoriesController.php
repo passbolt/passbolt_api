@@ -16,9 +16,10 @@ class CategoriesController extends AppController {
 /**
  * index - get the list of categories
  */
-	public function index($children = false) {
+	public function index() {
+		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
 		$data = array();
-
+		
 		$o = $this->Category->getFindOptions('getRoots', User::get('Role.name'));
 		$categories = $this->Category->find('threaded', $o);
 
@@ -44,7 +45,9 @@ class CategoriesController extends AppController {
  * @return void
  *
  */
-	public function view($id=null, $children=false) {
+	public function view($id=null) {
+		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
+
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));

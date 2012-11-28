@@ -51,6 +51,7 @@ steal(
 		'setValue': function (tags) {
 			var self = this;
 			this.value = tags;
+			this.treeCtl.reset();
 			can.each(tags, function (tag, i) {
 				if (!(tag instanceof self.options.itemClass)) {
 					throw new mad.error.WrongParametersException('tag', self.options.itemClass.fullName);

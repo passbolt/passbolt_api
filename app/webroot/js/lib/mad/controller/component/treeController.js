@@ -83,6 +83,14 @@ steal(
 		},
 
 		/**
+		 * Reset the component by removing all items
+		 * @return {void}
+		 */
+		'reset': function () {
+			this.view.reset();
+		},
+
+		/**
 		 * Load the tree with the given items
 		 * @param {mad.model.Model.List} items The list of items to load into the tree
 		 * @return {void}

@@ -125,16 +125,22 @@ class Resource extends AppModel {
 					)
 				);
 			break;
+			case 'index':
 			case 'viewByCategory':
 				$conditions = array(
 					'conditions' => array(
-						'CategoryResource.category_id' => $data['CategoryResource.category_id'],
 						'Resource.deleted' => 0
-					),
-					'order' => array(
-						'Resource.name ASC'
 					)
 				);
+				if(isset($data['CategoryResource.category_id'])){
+					$conditions['conditions']['CategoryResource.category_id'] = $data['CategoryResource.category_id'];
+					$conditions['order'] = array(
+						'Resource.name ASC'
+					);
+				}
+				if(isset($data['Resource.name'])) {
+					$conditions['conditions']['Resource.name LIKE'] = '%' . $data['Resource.name'] . '%';
+				}
 			break;
 			default:
 				$conditions = array(
@@ -152,6 +158,7 @@ class Resource extends AppModel {
 	public static function getFindFields($case = 'view', $role = Role::USER) {
 		switch($case){
 			case 'view':
+			case 'index':
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(

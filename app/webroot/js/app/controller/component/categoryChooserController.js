@@ -164,7 +164,9 @@ steal(
 			var self = this;
 			// load categories function of the selected database
 			this.setState('loading');
-			passbolt.model.Category.findAll({},
+			passbolt.model.Category.findAll({
+				'children': true
+			},
 				function (categories, response, request) {
 					// load the tree with the categories
 					self.load(categories);

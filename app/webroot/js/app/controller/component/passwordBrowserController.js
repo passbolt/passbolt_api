@@ -295,13 +295,14 @@ steal(
 		 */
 		'{passbolt.eventBus} filter_resources_browser': function (element, evt, filter) {
 			var self = this;
-			var category = filter.tags[0];
-			this.crtCategoryId = category.id;
+			// store the filter
+			this.filter = filter;
 
-			// override the current list of categories with the categories to display
-			// and its children
-			this.options.categories = category.getSubCategories(true);
-			this.options.categories.push(category);
+			// override the current list of categories displayed with the new ones
+			this.options.categories = [];
+			can.each(filter.tags, function (category, i) {
+				$.merge(self.options.categories, category.getSubCategories(true));
+			});
 
 			// if a resource was selected, inform the system that the resource is no more selected
 			if (this.state.is('resourceSelected')) {
@@ -310,16 +311,40 @@ steal(
 
 			// change the state of the component to loading 
 			this.setState('loading');
-			// load resources of the selected category
+			// load resources for the given filter
 			passbolt.model.Resource.findAll({
-				'category_id': this.crtCategoryId,
+				'categories_id': can.map(filter.tags, function (tag, i) { return tag.id; }).join(','),
+				'keywords': filter.keywords,
 				'recursive': true
 			}, function (resources, response, request) {
-				// The callback is out of date, an other category has been selected
-				if (self.crtCategoryId != request.originParams.category_id) {
-					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
+				// The callback is out of date, an other filter has been performed
+				if (request.originParams.keywords != self.filter.keywords ||
+					request.originParams.categories_id != can.map(self.filter.tags, function (tag, i) { return tag.id; }).join(',')) {
+					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
 					return;
 				}
+				// load the resources in the browser
+				self.load(resources);
+				// change the state to ready
+				self.setState('ready');
+			});
+		},
+
+		/**
+		 * Observe when the application is ready and load the tree with the roots
+		 * categories
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} app_ready': function (ui, event) {
+			var self = this;
+
+			this.setState('loading');
+			// load resources of the given filter
+			passbolt.model.Resource.findAll({
+			}, function (resources, response, request) {
+				// load the resources in the browser
 				self.load(resources);
 				// change the state to ready
 				self.setState('ready');
