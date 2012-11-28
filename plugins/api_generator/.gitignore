@@ -1,0 +1,9 @@
+.DS_Store
+api_config.ini
+errors.err
+*.swp
+*.swo
+*~
+config/core.php
+config/database.php
+tmp/*

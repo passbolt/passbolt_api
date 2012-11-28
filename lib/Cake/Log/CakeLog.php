@@ -67,6 +67,7 @@ App::uses('LogEngineCollection', 'Log');
  * application.  By using scopes you can control logging for each part
  * of your application and still keep standard log levels.
  *
+ *
  * See CakeLog::config() and CakeLog::write() for more information
  * on scopes
  *
@@ -173,7 +174,10 @@ class CakeLog {
  *
  * The above logger will only capture log entries made in the
  * `payment` and `order` scopes. All other scopes including the
- * undefined scope will be ignored.
+ * undefined scope will be ignored. Its important to remember that
+ * when using scopes you must also define the `types` of log messages
+ * that a logger will handle. Failing to do so will result in the logger
+ * catching all log messages even if the scope is incorrect.
  *
  * @param string $key The keyname for this logger, used to remove the
  *    logger later.
@@ -404,7 +408,7 @@ class CakeLog {
  *    or a string matching the recognized levels, then it will
  *    be treated log levels. Otherwise it's treated as scope.
  * @param string $message Message content to log
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -422,24 +426,29 @@ class CakeLog {
 		$logged = false;
 		foreach (self::$_Collection->enabled() as $streamName) {
 			$logger = self::$_Collection->{$streamName};
-			$types = null;
-			$scopes = array();
+			$types = $scopes = $config = array();
 			if ($logger instanceof BaseLog) {
 				$config = $logger->config();
-				if (isset($config['types'])) {
-					$types = $config['types'];
-				}
-				if (isset($config['scopes'])) {
-					$scopes = $config['scopes'];
-				}
 			}
-			if (is_string($scope)) {
-				$inScope = in_array($scope, $scopes);
-			} else {
-				$intersect = array_intersect($scope, $scopes);
-				$inScope = !empty($intersect);
+			if (isset($config['types'])) {
+				$types = $config['types'];
 			}
-			if (empty($types) || in_array($type, $types) || in_array($type, $scopes) && $inScope) {
+			if (isset($config['scopes'])) {
+				$scopes = $config['scopes'];
+			}
+			$inScope = (count(array_intersect((array)$scope, $scopes)) > 0);
+			$correctLevel = in_array($type, $types);
+
+			if (
+				// No config is a catch all (bc mode)
+				(empty($types) && empty($scopes)) ||
+				// BC layer for mixing scope & level
+				(in_array($type, $scopes)) ||
+				// no scopes, but has level
+				(empty($scopes) && $correctLevel) ||
+				// exact scope + level
+				($correctLevel && $inScope)
+			) {
 				$logger->write($type, $message);
 				$logged = true;
 			}
@@ -455,7 +464,7 @@ class CakeLog {
  * Convenience method to log emergency messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -467,7 +476,7 @@ class CakeLog {
  * Convenience method to log alert messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -479,7 +488,7 @@ class CakeLog {
  * Convenience method to log critical messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -491,7 +500,7 @@ class CakeLog {
  * Convenience method to log error messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -503,7 +512,7 @@ class CakeLog {
  * Convenience method to log warning messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -515,7 +524,7 @@ class CakeLog {
  * Convenience method to log notice messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -527,7 +536,7 @@ class CakeLog {
  * Convenience method to log debug messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */
@@ -539,7 +548,7 @@ class CakeLog {
  * Convenience method to log info messages
  *
  * @param string $message log message
- * @param string|array $scope The scope(s) a log messge is being created in.
+ * @param string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
  * @return boolean Success
  */

@@ -1,0 +1,89 @@
+# Api Generator
+
+The Api Generator provides an easy to use always current documentation generation tool.  Api documentation is generated using PHP's reflection API.  A few simple database tables are used to maintain an index of classes, packages and files and provide the ability to search through a project.  Api Generator supports [PHPdoc format docblocks](http://en.wikipedia.org/wiki/PHPDoc) and allows you to use [Markdown](http://en.wikipedia.org/wiki/Markdown) formatting in your documentation blocks.
+
+## Requirements:
+
+- PHP5 - Requires PHP5.2.  If you are on PHP4 too bad, time to upgrade anyways.
+- CakePHP 1.x
+	- The `0.3` tag and `0.3-branch` are compatible with CakePHP 1.2
+	- The `v0.4` tag and the `1.3` branch are compatible with CakePHP 1.3
+	- The `master` branch is compatible with CakePHP 2.0
+
+## Installation
+
+The original installation guide is available here: http://cakephp.lighthouseapp.com/projects/42879/docs-installation
+
+The basic steps for Cake 2.x are:
+* Ensure you have a working Cake console (refer to the [Console section of the book](http://book.cakephp.org/2.0/en/console-and-shells.html))
+* Unzip or clone the files from this repository into `/app/Plugin/ApiGenerator/`
+* Activate the plugin in `/app/Config/bootstrap.php` with either of these lines:<br>
+	`CakePlugin::load('ApiGenerator');`<br>
+	or simply<br>
+	`CakePlugin::loadAll();`
+* Type the following commands from the console to initialise the database, setup config options, and create an initial index:
+  * `cake ApiGenerator.ApiIndex initdb`
+  * `cake ApiGenerator.ApiIndex showfiles`
+  * `cake ApiGenerator.ApiIndex update`
+* The update will display any errors or warnings it encounters
+* Visit `http://mycakeurl/api_generator/api_classes` to display a list of classes found in the index
+
+## Configuration
+
+The `showfiles` console command will prompt the user to provide configuration options (with some sensible defaults), but these will often need to be tweaked.  Configuration is stored inside `/app/Plugin/ApiGenerator/Config/api_config.ini`
+
+An example configuration file:
+
+	[paths]
+	D:\MyCakeApp\app\ = true
+	D:\MyCakeApp\AnotherLibrary\ = true
+	[exclude]
+	properties = n
+	directories = Vendor,webroot,ApiGenerator,Test,tmp
+	files = empty
+	[file]
+	extensions = php,ctp
+	regex = [A-Za-z_\\-0-9]+
+	[users]
+	admin = passwordHere
+
+* properties - can be set to public, private, or protected (or any combination of these, separated by commas) and will exclude these functions from the index
+* directories - names of directories to exclude
+* files - names of files to exclude
+* extensions - the file extensions that should be searched
+* regex - filenames that match the regex should be searched
+
+## Example DocBlock
+
+(Taken from Cake's own Controller class)
+
+	/**
+	 * An array containing the class names of models this controller uses.
+	 *
+	 * Example: `public $uses = array('Product', 'Post', 'Comment');`
+	 *
+	 * Can be set to several values to express different options:
+	 *
+	 * - `true` Use the default inflected model name.
+	 * - `array()` Use only models defined in the parent class.
+	 * - `false` Use no models at all, do not merge with parent class either.
+	 * - `array('Post', 'Comment')` Use only the Post and Comment models. Models
+	 *   Will also be merged with the parent class.
+	 *
+	 * The default value is `true`.
+	 *
+	 * @var mixed A single name as a string or a list of names as an array.
+	 * @link http://book.cakephp.org/2.0/en/controllers.html#components-helpers-and-uses
+	 */
+	public $uses = true;
+
+The backtick can be used to indicate code samples, and various tags such as `@var`, `@param`, `@return` can provide helpful reference information.
+
+## Reporting issues
+
+If you have an issues with Api Generator please open a ticket on lighthouse:<br>
+http://cakephp.lighthouseapp.com/projects/42879-api-generator/overview
+
+## Contributing
+
+If you'd like to contribute to ApiGenerator, you can do so by forking the repository and sending pull requests.  You can also open tickets for features at the [lighthouse](http://cakephp.lighthouseapp.com/projects/42879-api-generator/overview)

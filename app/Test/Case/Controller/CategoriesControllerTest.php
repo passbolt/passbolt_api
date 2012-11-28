@@ -7,6 +7,7 @@
  * @since        version 2.12.7
  * @license      http://www.passbolt.com/license
  */
+App::uses('AppController', 'Controller');
 App::uses('CategoriesController', 'Controller');
 App::uses('Category', 'Model');
 App::uses('CategoryType', 'Model');

@@ -1,0 +1,787 @@
+/* @override http://localhost/cake_api_gen/api_generator/css/base.css */
+/*
+* Base.css
+* @author Mark Story
+**********************/
+
+/*
+Reset
+**********************/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+/* remember to highlight inserts somehow! */
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+.doc-block:after,
+.clearfix:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+* + html .clearfix {
+	display:inline-block;
+}
+* html .clearfix {
+	height:1%;
+}
+/**
+Basic Tags 
+**********************/
+body {
+	font:100 normal 62.5%/1.2 Tahoma, Verdana, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, th, dt {
+	font-weight:100;
+	color: #32270d;
+	margin:1em 0 0;
+}
+h1 {
+	font-size: 24px;
+	line-height: 30px;
+	-webkit-text-shadow: 1px 1px #ccc;
+	text-shadow:1px 1px #ccc;
+}
+h2 {
+	line-height: 30px;
+	color: #333348;
+	font-size:1.6em;
+}
+a {
+	color: #94345A;
+}
+a:hover {
+	text-decoration: none;
+}
+table {
+	border-collapse: collapse;
+	width:100%;
+}
+td, th {
+	padding:0.4em;
+}
+h3 {
+	color: #333348;
+	font-size: 1.4em;
+	margin: 1em 0;
+	-webkit-text-shadow: 1px 1px #ccc;
+	text-shadow:1px 1px #ccc;
+}
+
+/** containers */
+#wrapper {
+	min-width:600px;
+	margin:0 auto;
+	position:relative;
+}
+#header {
+	background:#8BAAB2;
+	font-size:1.5em;
+}
+#content {
+	background: #fff;
+	color:#000;
+	width:95%;
+	padding:14px 2.5%;
+	margin:0 auto;
+}
+/* with and without sidebar content regions */
+.with-sidebar #content-inner {
+	position: relative;
+	width:75%;
+	padding-left:2%;
+	margin-left:1%;
+	float: right;
+	border-left: 1px solid #eee;
+}
+.with-sidebar #sidebar {
+	width: 20%;
+	padding: 0;
+	margin: 0;
+	float: left;
+}
+#footer {
+	background: #fff;
+	padding:1px 0  0 10px;
+}
+
+/** header elements */
+#header h1 {
+	color: #fff;
+	float: left;
+	margin: 1em 0 0 5%;
+	font-size: 20px;
+}
+#header h1 a {
+	color:#fff;
+}
+.api .navigation {
+	padding: 1em 5% 0;
+	height:36px;
+	clear: both;
+}
+.api .navigation li {
+	float: left;
+	margin: 0 2px;
+}
+.api .navigation li a {
+	padding: 10px 3em;
+	line-height: 16px;
+	font-size: 16px;
+	display: block;
+	text-decoration: none;
+	color:#fff;
+}
+.api .navigation li a:hover {
+	text-decoration:underline;
+}
+#header-search {
+	float: right;
+	padding: 1em 5% 0;
+}
+
+.breadcrumb,
+.breadcrumb a {
+	font-family: Monaco, Corsiva, "Courier New", Courier, monospaced;
+	font-size:14px;
+	margin-bottom: 1em;
+}
+/**
+File Browser Styles
+***************************************/
+#file-list,
+#file-browser {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.file span,
+.file a, 
+.folder a {
+	padding: 8px 8px 8px 40px;
+	font-size:14px;
+	background-color: #EFEFEF;
+	margin-bottom:4px;
+	display: block;
+}
+
+/* files and folders in sidebar */
+#sidebar .package span,
+#sidebar .file a,
+#sidebar .folder a,
+#sidebar #classIndex li a {
+	font-size: 10px;
+	line-height: 15px;
+	padding: 4px 4px 4px 24px;
+	display: block;
+}
+
+/**
+Documentation Page Styles
+***************************/
+.doc-block {
+	margin: 16px 0 0;
+	clear:both;
+}
+.doc-block.class-info {
+	margin-top:10px;
+}
+.class-info, 
+.function-info {
+	clear: both;
+}
+.class-info {
+	margin:3em 0 0;
+}
+.class-info .doc-head h2,
+.class-info .doc-head h3 {
+	font-size: 28px;
+	line-height: 32px;
+}
+
+/* doc head */
+.doc-head {
+	position:relative;
+	border-bottom: 1px solid #bbb;
+	clear: both;
+}
+.doc-head a {
+	position:absolute;
+	right:10px;
+	top:8px;
+}
+.doc-head h2,
+.doc-head h3 {
+	color: #333348;
+	margin: 0;
+	padding: 0 0 0 16px;
+	-webkit-text-shadow: 0px 1px #ccc;
+	text-shadow: 0px 1px #ccc;
+	font-size: 18px;
+}
+.parent-method .doc-head {
+	background:#FFFFEF;
+}
+.parent-method h2 {
+	color:#3E4153;
+}
+
+/** body styles */
+.doc-body {
+	padding:14px;
+}
+.doc-body p,
+.doc-body dd {
+	font-size:12px;
+	line-height:1.4em;
+	margin:0 0 1.2em 0;
+}
+.doc-body dd {
+	margin: 0 0 1.2em;
+}
+.doc-body dd table {
+	margin:0;
+}
+.doc-body dt,
+.doc-body h3 {
+	color: #27676E;
+	font-size:16px;
+	line-height:1.4em;
+	margin:1.5em 0 0 0;
+	clear:both;
+	-webkit-text-shadow:1px 0px #ddd;
+	text-shadow:0px 1px #eee;
+}
+.doc-body dt {
+	font-size: 14px;
+}
+.class-info dt:first-child {
+	margin-top:0;
+}
+
+/* Method listing */
+ul.method-summary li {
+	font-size: 16px;
+	line-height: 18px;
+	margin: 0 0 0.75em;
+	list-style-image: none;
+}
+.method-summary li span {
+	display: block;
+	padding-left: 16px;
+}
+
+/* Arguments */
+.argument-list {
+	margin-left: 16px;
+}
+.argument-properties .name {
+	font-family: Monaco, Consolas, "Courier New", Courier;
+	color: #000;
+}
+.argument-properties .type {
+	background: none;
+	color: #5e5e5e;
+	font-size: 12px;
+}
+.argument-list .markdown-block p {
+	color: #333;
+}
+.argument-properties .required,
+.argument-properties .default {
+	background: #f5f5f5;
+	color: #666;
+	padding: 2px 3px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	font-family: Monaco, Consolas, "Courier New", Courier;
+	font-size: 10px;
+}
+
+/* Property list */
+.property-list h3,
+.property-list .markdown-block,
+.property-list .markdown-block p {
+	clear: none;
+}
+ul.property-list li {
+	margin-bottom: 1.5em;
+	list-style-image: none;
+}
+.property-list .property-type {
+	background: none;
+	color: #5e5e5e;
+	font-size: 12px;
+}
+.property-list h3 {
+	margin-top: 0;
+	padding: 0 0 0 16px;
+}
+
+/** Markdown blocks **/
+.markdown-block h2,
+.markdown-block h3 {
+	font-size: 14px;
+	line-height: 20px;
+	margin-bottom: 10px;
+	color: #6e6c6c;
+}
+.markdown-block h4 {
+	font-size: 14px;
+	line-height:20px;
+	margin-bottom:10px;
+}
+.markdown-block pre,
+.markdown-block code {
+	font-family: Monaco, Consolas, "Courier New", Courier;
+	font-size:12px;
+	background: #f5f5f5;
+	border: 1px solid #e4eee4;
+	border-radius:3px;
+	-webkit-border-radius:3px;
+}
+.markdown-block pre {
+	padding: 3px;
+	margin: 0 0 1em 0;
+	color: #333;
+	overflow-x:auto;
+}
+.markdown-block pre code {
+	background:none;
+	border:none;
+}
+.markdown-block strong {
+	font-weight:bold;
+}
+.markdown-block ul,
+.markdown-block ol {
+	list-style-position: outside;
+	margin: 1em 0 1em 1.5em;
+	font-size: 12px;
+	line-height: 14px;
+}
+.markdown-block ol {
+	list-style:decimal;
+}
+.markdown-block ul {
+	list-style: disc;
+}
+.markdown-block li {
+	margin-bottom: 0.5em;
+}
+
+
+
+/** inheritance trees **/
+.inheritance-tree .parent-class {
+	display:block;
+	float:left;
+	clear:left;
+	background: url(../img/inheritance_arrow.png) center bottom no-repeat;
+}
+.inheritance-tree .no-link,
+.inheritance-tree a {
+	min-width:100px;
+	padding:5px 15px;
+	border:1px solid #666;
+	display:block;
+	float:left;
+	margin-bottom:15px;
+	text-align:center;
+}
+.inheritance-tree .last {
+	background:none;
+}
+/** IE 6 collapsing margin bug */
+* html .inheritance-tree .parent-class {
+	padding-bottom: 15px;
+}
+/** IE 7 is also not so smart */
+* + html .inheritance-tree .parent-class {
+	padding-bottom: 15px;
+}
+
+/** visibility controls */
+.doc-controls a {
+	padding:5px;
+	border: 1px solid #DAEBEE;
+	font-size: 12px;
+	color: #333348;
+	border-radius: 9px;
+	-webkit-border-radius:9px;
+	-moz-border-radius: 9px;
+	text-decoration: none;
+	margin-bottom:1em;
+	float: right;
+}
+.doc-controls a.active {
+	background:#DAEBEE;
+}
+
+/** Access icon replacements */
+.access {
+	background-repeat: no-repeat;
+	background-position:left center;
+}
+.public {
+	background-image: url(../img/icon_public.gif);
+}
+.protected {
+	background-image: url(../img/icon_protected.gif);
+}
+.private {
+	background-image: url(../img/icon_private.gif);
+}
+.private.static {
+	background-image: url(../img/icon_private_static.png);
+}
+.protected.static {
+	background-image: url(../img/icon_protected_static.png);
+}
+.public.static {
+	background-image: url(../img/icon_public_static.png);
+}
+.private.abstract {
+	background-image: url(../img/icon_private_abstract.png);
+}
+.protected.abstract {
+	background-image: url(../img/icon_protected_abstract.png);
+}
+.public.abstract {
+	background-image: url(../img/icon_public_abstract.png);
+}
+.parent-method .private,
+.parent-property .private {
+	background-image: url(../img/icon_private_parent.gif);
+}
+.parent-method .protected,
+.parent-property .protected {
+	background-image: url(../img/icon_protected_parent.gif);
+}
+.parent-method .public,
+.parent-property .public {
+	background-image: url(../img/icon_public_parent.gif);
+}
+
+
+/* Element table of contents */
+#element-toc {
+	margin-bottom: 2em;
+	clear:both;
+}
+#element-toc ul {
+	list-style: disc;
+	margin: 0 0 0 20px
+}
+#element-toc li {
+	margin: 0.5em;
+	font-size: 12px;
+}
+#element-toc .functions,
+#element-toc .classes {
+	float: left;
+}
+#element-toc .classes {
+	padding-right: 2em;
+	margin-right: 2em;
+}
+
+/*
+Class Index
+*****************************/
+.letter-links {
+	margin: 3em 0;
+}
+.letter-links a,
+.letter-links span {
+	padding:2px 10px;
+	border-left: 1px solid #ccc;
+}
+.letter-links a:first-child,
+.letter-links span:first-child {
+	border: 0;
+}
+.letter-section {
+	float: left;
+	margin: 0 1%;
+	width: 29%;
+}
+.letter-section h3 {
+	border-bottom: 1px solid #ccc;
+}
+.class-index {
+	list-style: square;
+	list-style-position: inside;
+	color: #8BAAB2;	
+}
+.package-list li,
+.class-index li {
+	margin: 0.6em 0;
+	font-size: 14px;
+	list-style-position: inside;
+}
+
+/*
+Sidebar
+*****************************/
+#sidebar h3 {
+	margin-bottom:0.3em;
+}
+#sidebar .class-index {
+	margin-left: 1em;
+}
+#sidebar .class-index li {
+	font-size: 12px;
+}
+#sidebar .package-tree li {
+	list-style:none;
+	margin: 2px 0px;
+}
+#sidebar .package-tree span {
+	display:block;
+}
+#sidebar .package-tree .package-tree {
+	padding: 0 0 0 15px;
+}
+
+
+/**
+Package Index
+*******************/
+.api-package h3 {
+	font-size:20px;
+	border-bottom:1px solid #ccc;
+	margin-top:1em;
+}
+.package-tree {
+	list-style: none;
+	
+}
+.package-tree li {
+	margin:3px 0;
+	list-style: none;
+}
+.package-tree li span {
+	padding: 8px 8px 8px 40px;
+	display: block;
+	border-top: 2px solid #fff;
+}
+.package-tree .package-tree {
+	background: #fff;
+	padding: 0 0 0 30px;
+}
+.package-tree li {
+	margin: 0;
+}
+
+.package-tree .has-child > span {
+	cursor: pointer;
+}
+.package-tree .has-child > span:after {
+	content: ' [+]';
+	font-family: monaco, courier, monospaced;
+}
+.package-tree .expanded.has-child > span:after {
+	content: ' [-]';
+	font-family: monaco, courier, monospaced;
+}
+
+/**
+Code highlighting
+****************************/
+.code-container {
+	margin: 0;
+	padding: 0;
+	border: 1px solid #d3d3d0;
+}
+.code-block {
+	padding: 0;
+	font-size: 10px;
+	line-height: 1.8em;
+	color: #999999;
+	margin: 0;
+}
+.code-block td {
+	border: 0;
+}
+
+/** Line numbers */
+.code-block th {
+	text-align: right;
+	padding: 0 6px;
+	background: #f5f5f5;
+	color: #555;
+	font: 1.2em courier, monospace;
+	border:0;
+}
+.code-block th a:hover {
+	background:none;
+}
+
+/** Code region */
+.code-block td {
+	padding: 0 0 0 10px;
+	margin: 0;
+	background: #fff;
+	line-height: 1.5em;
+	height: 1.5em;
+	font: 1.2em courier, monospace;
+	color: #c30;
+}
+.code-block .even td { 
+	background: #fbfbfb; 
+}
+.code-block tr:hover td,
+.code-block tr:hover th {
+	background: #FFFEDA;
+}
+.code-block .comment { 
+	color: #838389;
+	white-space:pre;
+}
+.code-block .default { 
+	color: #44c;
+	white-space:pre;
+}
+.code-block .keyword { 
+	color: #373; 
+	white-space:pre;
+}
+.code-block .string { 
+	color: #c30; 
+	white-space:pre;
+}
+
+/**
+Search results
+****************************/
+#search-results {
+	margin: 10px;
+	padding: 4px 0;
+}
+#search-results > li {
+	margin: 30px 10px;
+	list-style-image: none;
+}
+#search-results .function-info div {
+	font-size: 16px;
+	margin: 10px 0px 10px 14px;
+	padding: 0 0 0 16px;
+}
+#search-results .doc-head {
+	border: 0;
+}
+#search-results .doc-body {
+	padding-bottom: 0;
+}
+#search-results .doc-body table {
+	margin: 0;
+}
+#search-results .highlight {
+	background: #C9E2E6;
+}
+#search-results h2 {
+	font-size: 20px;
+	-webkit-text-shadow:1px 0px #ddd;
+	text-shadow:0px 1px #ddd;
+	margin:0.2em 0;
+	border-bottom:1px solid #ddd;
+}
+
+/**
+Docs coverage
+****************************/
+.score-box {
+	border: 1px solid #333;
+	padding: 2px;
+	height: 30px;
+	font-size: 26px;
+	line-height: 30px;
+	background: #efefef;
+}
+.scorebar {
+	background: green;
+}
+.scorebar span {
+	display: block;
+	margin-left: 10px;
+	color: #fff;
+}
+.methods-coverage,
+.properties-coverage {
+	float:left;
+	width:49%;
+}
+.doc-issue {
+	clear: both;
+	margin-bottom: 1em;
+	border-bottom: 1px dotted #ccc;
+}
+.doc-issue h4 {
+	font-size: 16px;
+}
+.doc-issue ul {
+	margin: 0.5em 2em;
+}
+.doc-issue dd {
+	margin: 0;
+}
+
+.coverage .yellow {
+	color:GoldenRod;
+}
+.coverage .green {
+	color:green;
+}
+.coverage .red {
+	color:DarkRed;
+}
+
+
+.cake-debug {
+	background:#fff;
+	color:#000;
+}

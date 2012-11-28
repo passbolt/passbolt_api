@@ -135,8 +135,8 @@ class DebuggerTest extends CakeTestCase {
 			'a' => array(
 				'href' => "javascript:void(0);",
 				'onclick' => "preg:/document\.getElementById\('cakeErr[a-z0-9]+\-trace'\)\.style\.display = " .
-					 "\(document\.getElementById\('cakeErr[a-z0-9]+\-trace'\)\.style\.display == 'none'" .
-					 " \? '' \: 'none'\);/"
+					"\(document\.getElementById\('cakeErr[a-z0-9]+\-trace'\)\.style\.display == 'none'" .
+					" \? '' \: 'none'\);/"
 			),
 			'b' => array(), 'Notice', '/b', ' (8)',
 		));
@@ -165,7 +165,7 @@ class DebuggerTest extends CakeTestCase {
 
 		Debugger::output('xml', array(
 			'error' => '<error><code>{:code}</code><file>{:file}</file><line>{:line}</line>' .
-				 '{:description}</error>',
+				'{:description}</error>',
 			'context' => "<context>{:context}</context>",
 			'trace' => "<stack>{:trace}</stack>",
 		));
@@ -217,7 +217,7 @@ class DebuggerTest extends CakeTestCase {
 
 		Debugger::addFormat('js', array(
 			'traceLine' => '{:reference} - <a href="txmt://open?url=file://{:file}' .
-							 '&line={:line}">{:path}</a>, line {:line}'
+				'&line={:line}">{:path}</a>, line {:line}'
 		));
 		Debugger::outputAs('js');
 
@@ -226,7 +226,7 @@ class DebuggerTest extends CakeTestCase {
 
 		Debugger::addFormat('xml', array(
 			'error' => '<error><code>{:code}</code><file>{:file}</file><line>{:line}</line>' .
-						 '{:description}</error>',
+				'{:description}</error>',
 		));
 		Debugger::outputAs('xml');
 
@@ -268,7 +268,7 @@ class DebuggerTest extends CakeTestCase {
  * Test method for testing addFormat with callbacks.
  */
 	public function customFormat($error, $strings) {
-		return $error['error'] . ': I eated an error ' . $error['path'];
+		return $error['error'] . ': I eated an error ' . $error['file'];
 	}
 
 /**
@@ -277,8 +277,11 @@ class DebuggerTest extends CakeTestCase {
  * @return void
  */
 	public function testTrimPath() {
-		$this->assertEquals(Debugger::trimPath(APP), 'APP' . DS);
-		$this->assertEquals(Debugger::trimPath(CAKE_CORE_INCLUDE_PATH), 'CORE');
+		$this->assertEquals('APP' . DS, Debugger::trimPath(APP));
+		$this->assertEquals('CORE', Debugger::trimPath(CAKE_CORE_INCLUDE_PATH));
+		$this->assertEquals('ROOT', Debugger::trimPath(ROOT));
+		$this->assertEquals('CORE' . DS . 'Cake' . DS, Debugger::trimPath(CAKE));
+		$this->assertEquals('Some/Other/Path', Debugger::trimPath('Some/Other/Path'));
 	}
 
 /**
@@ -354,7 +357,6 @@ TEXT;
 	[protected] _stack => array()
 	[protected] _eventManager => object(CakeEventManager) {}
 	[protected] _eventManagerConfigured => false
-	[private] __viewFileName => null
 
 TEXT;
 		}
@@ -389,6 +391,13 @@ array(
 		[maximum depth reached]
 	)
 )
+TEXT;
+		$this->assertTextEquals($expected, $result);
+
+		$data = false;
+		$result = Debugger::exportVar($data);
+		$expected = <<<TEXT
+false
 TEXT;
 		$this->assertTextEquals($expected, $result);
 	}

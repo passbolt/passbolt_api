@@ -411,14 +411,18 @@ class CakeEmailTest extends CakeTestCase {
  * @return void
  */
 	public function testMessageIdWithDomain() {
-		$result = $this->CakeEmail->getHeaders();
-		$expected = '@' . (env('HTTP_HOST') ? env('HTTP_HOST') : php_uname('n')) . '>';
-		$this->assertTextContains($expected, $result['Message-ID']);
-
 		$this->CakeEmail->domain('example.org');
 		$result = $this->CakeEmail->getHeaders();
 		$expected = '@example.org>';
 		$this->assertTextContains($expected, $result['Message-ID']);
+
+		$_SERVER['HTTP_HOST'] = 'example.org';
+		$result = $this->CakeEmail->getHeaders();
+		$this->assertTextContains('example.org', $result['Message-ID']);
+
+		$_SERVER['HTTP_HOST'] = 'example.org:81';
+		$result = $this->CakeEmail->getHeaders();
+		$this->assertTextNotContains(':81', $result['Message-ID']);
 	}
 
 /**
@@ -1162,8 +1166,12 @@ class CakeEmailTest extends CakeTestCase {
 		$this->CakeEmail->config(array('empty'));
 		$this->CakeEmail->template('image');
 		$this->CakeEmail->emailFormat('html');
-
 		$server = env('SERVER_NAME') ? env('SERVER_NAME') : 'localhost';
+
+		if (env('SERVER_PORT') && env('SERVER_PORT') != 80) {
+			$server .= ':' . env('SERVER_PORT');
+		}
+
 		$expected = '<img src="http://' . $server . '/img/image.gif" alt="cool image" width="100" height="100" />';
 		$result = $this->CakeEmail->send();
 		$this->assertContains($expected, $result['message']);
@@ -1764,9 +1772,9 @@ class CakeEmailTest extends CakeTestCase {
 		$newStyleEmail = $this->_getEmailByNewStyleCharset('iso-2022-jp', null);
 		$newStyleHeaders = $newStyleEmail->getHeaders($checkHeaders);
 
-		$this->assertSame($oldStyleHeaders['From'],    $newStyleHeaders['From']);
-		$this->assertSame($oldStyleHeaders['To'],      $newStyleHeaders['To']);
-		$this->assertSame($oldStyleHeaders['Cc'],      $newStyleHeaders['Cc']);
+		$this->assertSame($oldStyleHeaders['From'], $newStyleHeaders['From']);
+		$this->assertSame($oldStyleHeaders['To'], $newStyleHeaders['To']);
+		$this->assertSame($oldStyleHeaders['Cc'], $newStyleHeaders['Cc']);
 		$this->assertSame($oldStyleHeaders['Subject'], $newStyleHeaders['Subject']);
 
 		// Header Charset : UTF-8
@@ -1777,9 +1785,9 @@ class CakeEmailTest extends CakeTestCase {
 		$newStyleEmail = $this->_getEmailByNewStyleCharset('iso-2022-jp', 'utf-8');
 		$newStyleHeaders = $newStyleEmail->getHeaders($checkHeaders);
 
-		$this->assertSame($oldStyleHeaders['From'],    $newStyleHeaders['From']);
-		$this->assertSame($oldStyleHeaders['To'],      $newStyleHeaders['To']);
-		$this->assertSame($oldStyleHeaders['Cc'],      $newStyleHeaders['Cc']);
+		$this->assertSame($oldStyleHeaders['From'], $newStyleHeaders['From']);
+		$this->assertSame($oldStyleHeaders['To'], $newStyleHeaders['To']);
+		$this->assertSame($oldStyleHeaders['Cc'], $newStyleHeaders['Cc']);
 		$this->assertSame($oldStyleHeaders['Subject'], $newStyleHeaders['Subject']);
 
 		// Header Charset : ISO-2022-JP
@@ -1790,9 +1798,9 @@ class CakeEmailTest extends CakeTestCase {
 		$newStyleEmail = $this->_getEmailByNewStyleCharset('utf-8', 'iso-2022-jp');
 		$newStyleHeaders = $newStyleEmail->getHeaders($checkHeaders);
 
-		$this->assertSame($oldStyleHeaders['From'],    $newStyleHeaders['From']);
-		$this->assertSame($oldStyleHeaders['To'],      $newStyleHeaders['To']);
-		$this->assertSame($oldStyleHeaders['Cc'],      $newStyleHeaders['Cc']);
+		$this->assertSame($oldStyleHeaders['From'], $newStyleHeaders['From']);
+		$this->assertSame($oldStyleHeaders['To'], $newStyleHeaders['To']);
+		$this->assertSame($oldStyleHeaders['Cc'], $newStyleHeaders['Cc']);
 		$this->assertSame($oldStyleHeaders['Subject'], $newStyleHeaders['Subject']);
 	}
 

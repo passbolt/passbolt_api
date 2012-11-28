@@ -7,6 +7,7 @@
  * @package		 app.Test.Case.Controller.UsersControllerTest
  * @since		 version 2.12.9
  */
+App::uses('AppController', 'Controller');
 App::uses('UsersController', 'Controller');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
