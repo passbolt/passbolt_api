@@ -64,6 +64,14 @@ steal(
 		},
 
 		/**
+		 * Reset the view by removing all the items
+		 * @return {void}
+		 */
+		'reset': function () {
+			$('li', this.element).remove();
+		},
+
+		/**
 		 * An item has been selected
 		 * @event item_selected
 		 * @param {mixed} item The selected item instance or its id

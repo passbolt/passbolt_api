@@ -311,7 +311,7 @@ steal(
 
 			// change the state of the component to loading 
 			this.setState('loading');
-			// load resources of the selected categories
+			// load resources for the given filter
 			passbolt.model.Resource.findAll({
 				'categories_id': can.map(filter.tags, function (tag, i) { return tag.id; }).join(','),
 				'keywords': filter.keywords,
@@ -323,6 +323,27 @@ steal(
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
 					return;
 				}
+				// load the resources in the browser
+				self.load(resources);
+				// change the state to ready
+				self.setState('ready');
+			});
+		},
+
+		/**
+		 * Observe when the application is ready and load the tree with the roots
+		 * categories
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @return {void}
+		 */
+		'{passbolt.eventBus} app_ready': function (ui, event) {
+			var self = this;
+
+			this.setState('loading');
+			// load resources of the given filter
+			passbolt.model.Resource.findAll({
+			}, function (resources, response, request) {
 				// load the resources in the browser
 				self.load(resources);
 				// change the state to ready

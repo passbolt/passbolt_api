@@ -358,7 +358,7 @@ steal(
 			}
 			return this;
 		},
-		
+
 		/**
 		 * Refresh the view
 		 * @return {void}

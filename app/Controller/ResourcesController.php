@@ -23,19 +23,21 @@ class ResourcesController extends AppController {
  */
 	public function index() {
 		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
-		$categoriesId = isset($this->request->query['categories_id']) ? explode(',', $this->request->query['categories_id']) : array();
+		$categoriesId = isset($this->request->query['categories_id']) && !empty($this->request->query['categories_id'])
+			? explode(',', $this->request->query['categories_id'])
+			: array();
 		$recursive = isset($this->request->query['recursive']) ? $this->request->query['recursive'] === 'true' : false;
-		$data = array(
-			'CategoryResource.category_id' => array()
-		);
-		
+		$data = array();
+	
 		// if categories id are provided check their validity, and build model request with
-		$categoriesIdLength = count($categoriesId);
-		for($i=0; $i<$categoriesIdLength; $i++) {
+		if(count($categoriesId)) {
+			$data['CategoryResource.category_id'] = array();
+		}
+		for($i=0; $i<count($categoriesId); $i++) {
 			$categoryId = $categoriesId[$i];
 
 			// if a category id is provided check is validity
-			if ($categoryId != null && !Common::isUuid($categoryId)) {
+			if (!Common::isUuid($categoryId)) {
 				$this->Message->error(__('The category id is invalid'));
 				return;
 			}

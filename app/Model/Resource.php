@@ -129,13 +129,15 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$conditions = array(
 					'conditions' => array(
-						'CategoryResource.category_id' => $data['CategoryResource.category_id'],
 						'Resource.deleted' => 0
-					),
-					'order' => array(
-						'Resource.name ASC'
 					)
 				);
+				if(isset($data['CategoryResource.category_id'])){
+					$conditions['conditions']['CategoryResource.category_id'] = $data['CategoryResource.category_id'];
+					$conditions['order'] = array(
+						'Resource.name ASC'
+					);
+				}
 				if(isset($data['Resource.name'])) {
 					$conditions['conditions']['Resource.name LIKE'] = '%' . $data['Resource.name'] . '%';
 				}
