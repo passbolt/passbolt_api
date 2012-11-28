@@ -167,6 +167,7 @@ class AppSchema extends CakeSchema {
 						$permission->create();
 						$permission->save($p);
 					}
+					// Create the permissions_cache view
 					$this->createPermissionCacheView();
 				break;
 
@@ -334,6 +335,7 @@ class AppSchema extends CakeSchema {
 		'_delete' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_editown' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'permission_detail_id' => array('type' => 'integer', 'null' => false, 'default' => null),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -530,6 +532,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cRoot['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gManagement['Group']['id'],
+			'permission_detail_id' => '7',
 			'_create' => '1',
 			'_read' => '1',
 			'_update' => '1',
@@ -541,6 +544,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cAdministration['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gAdministration['Group']['id'],
+			'permission_detail_id' => '7',
 			'_create' => '1',
 			'_read' => '1',
 			'_update' => '1',
@@ -552,6 +556,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cAccounts['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gAdministration['Group']['id'],
+			'permission_detail_id' => '1',
 			'_create' => '0',
 			'_read' => '1',
 			'_update' => '0',
@@ -563,6 +568,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cDrupal['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gDrupal['Group']['id'],
+			'permission_detail_id' => '1',
 			'_read' => '1',
 		));
 		// Group cakephp has access to category cakephp in readonly
@@ -573,6 +579,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cCakephp['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gCakephp['Group']['id'],
+			'permission_detail_id' => '1',
 			'_read' => '1',
 		));
 		// Group Team leads has access to others in modify
@@ -583,6 +590,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cProjects['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gTeamleads['Group']['id'],
+			'permission_detail_id' => '7',
 			'_create' => '1',
 			'_read' => '1',
 			'_update' => '1',
@@ -596,6 +604,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cProjects['Category']['id'],
 			'aro' => 'User',
 			'aro_foreign_key' => $uRemy['User']['id'],
+			'permission_detail_id' => '15',
 			'_create' => '1',
 			'_read' => '1',
 			'_update' => '1',
