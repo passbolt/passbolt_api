@@ -317,12 +317,13 @@ steal(
 				'keywords': filter.keywords,
 				'recursive': true
 			}, function (resources, response, request) {
-				// The callback is out of date, an other set of categories have been selected
-				// check the filter is the current filter
-//				if (can.map(filter.tags, function (tag, i) { return tag.id; }).join(',') != request.originParams.categories_id) {
-//					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
-//					return;
-//				}
+				// The callback is out of date, an other filter has been performed
+				if (request.originParams.keywords != self.filter.keywords ||
+					request.originParams.categories_id != can.map(self.filter.tags, function (tag, i) { return tag.id; }).join(',')) {
+					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
+					return;
+				}
+				// load the resources in the browser
 				self.load(resources);
 				// change the state to ready
 				self.setState('ready');
