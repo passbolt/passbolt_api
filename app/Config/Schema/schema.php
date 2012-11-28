@@ -82,7 +82,7 @@ class AppSchema extends CakeSchema {
 
 	public function createPermissionCacheView() {
 		$permission = ClassRegistry::init('Permission');
-		$permission->query(
+		/*$permission->query(
 			"CREATE OR REPLACE ALGORITHM=UNDEFINED 
 			SQL SECURITY DEFINER VIEW `permissions_cache` 
 			AS 
@@ -102,7 +102,7 @@ class AppSchema extends CakeSchema {
 		      SELECT 'Resource' AS `aco`,`r`.`id` AS `aco_foreign_key`,'User' AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Resource',`r`.`id`) AS `permission` 
 		      FROM (`resources` `r` join `users` `u`)
 			  );"
-		);
+		);*/
 	}
 
 	public function after($event = array()) {
