@@ -44,9 +44,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals('Bolt Softwares Pvt. Ltd.', $result['body'][0]['Category']['name'], "/categories/index.json : \$result['body'][0]['Category']['name'] should return 'Bolt Softwares Pvt. Ltd.' but is returning {$result['body'][0]['Category']['name']}");
 
 		// test with children = true
-		$result = json_decode($this->testAction("/categories/index/1.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index/1.json : The test should return success but is returning {$result['header']['status']}");
-		$this->assertTrue($result['body'][0]['children'] > 0, "/categories/index/1.json : \$result['body'][0]['Category']['name'] should return 'Bolt Softwares Pvt. Ltd.' but is returning {$result['body'][0]['Category']['name']}");
+		$result = json_decode($this->testAction("/categories.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories.json?children=true : The test should return success but is returning {$result['header']['status']}");
+		$this->assertTrue($result['body'][0]['children'] > 0, "/categories.json?children=true : \$result['body'][0]['Category']['name'] should return 'Bolt Softwares Pvt. Ltd.' but is returning {$result['body'][0]['Category']['name']}");
 	}
 
 	public function testView() {
@@ -64,17 +64,17 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/view/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json : The test should return an error but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
-		$result = json_decode($this->testAction("/categories/$id/1.json", array('method' => 'get', 'return' => 'contents')), true);
+		$result = json_decode($this->testAction("/categories/$id.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'],
-			'categories/view/' . $id . '/1.json should return success'
+			'categories/view/' . $id . '.json?children=true should return success'
 		);
 
 		// test it is the expected format
-		$result = json_decode($this->testAction("/categories/$id/1.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertInternalType('array', $result['body'], 'The url categories/view/' . $id . '/1.json should return a json object');
+		$result = json_decode($this->testAction("/categories/$id.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
+		$this->assertInternalType('array', $result['body'], 'The url categories/view/' . $id . '.json?children=true should return a json object');
 
 		// test that content returned are correct
-		$result = json_decode($this->testAction("/categories/$id/1.json", array('method' => 'get', 'return' => 'contents')), true);
+		$result = json_decode($this->testAction("/categories/$id.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
 		$this->assertEquals('accounts', $result['body']['children'][0]['children'][0]['Category']['name'],
 			'The test should return UVBar but is returning ' . $result['body']['children'][0]['children'][0]['Category']['name']
 		);
@@ -85,8 +85,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals('Bolt Softwares Pvt. Ltd.', $result['body']['Category']['name'], "Faileds testing that first child is Bolt Softwares Pvt. Ltd.. It returned '{$result['body']['Category']['name']}'");
 
 		// test an error bad id
-		$result = json_decode($this->testAction("/categories/badid/1.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Failed testing that /categories/view/badid/1.json should return an error. It returned {$result['header']['status']}");
+		$result = json_decode($this->testAction("/categories/badid.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Failed testing that /categories/view/badid.json?children=true should return an error. It returned {$result['header']['status']}");
 	}
 
 	public function testChildren() {

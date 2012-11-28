@@ -76,6 +76,10 @@ class AppController extends Controller {
 		if (isset($this->request->data) && !empty($this->request->data)) {
 			$this->request->data = Sanitize::clean($this->request->data);
 		}
+		// sanitize any get data
+		if (isset($this->request->query) && !empty($this->request->query)) {
+			$this->request->query = Sanitize::clean($this->request->query);
+		}
 	}
 
 /**
