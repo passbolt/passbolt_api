@@ -17,7 +17,23 @@ steal(
 	mad.controller.Controller('mad.view.View', /** @static */ {
 
 		'defaults': {
+			/**
+			 * The associated template uri. If null, the templateUri will be defined on the Class name
+			 * @type {string}
+			 * @hide
+			 */
 			'templateUri': null,
+			/**
+			 * The view is based on a template
+			 * @type {string}
+			 * @hide
+			 */
+			'templateBased': true,
+			/**
+			 * The DOM element associated to this view controller
+			 * @type {HTMLElement}
+			 * @hide
+			 */
 			'element': null
 		},
 
@@ -44,27 +60,10 @@ steal(
 		 */
 		'controller': null,
 
-		/**
-		 * The associated template uri. If null, the templateUri will be defined on the Class name
-		 * @type {string}
-		 * @hide
-		 */
-		'templateUri': null,
-
-		/**
-		 * The view is based on a template
-		 * @type {string}
-		 * @hide
-		 */
-		'templateBased': null,
-
 		// Constructor like 
 		'init': function (element, options) {
 			this._super(element, options);
-
 			this.controller = options.controller;
-			this.templateUri = options.templateUri;
-			this.templateBased = options.templateBased;
 
 			// add the classes to the top element
 			// @todo Hmmmmmmm. Ou pas ici
@@ -147,8 +146,10 @@ steal(
 		 */
 		'render': function (options) {
 			options = options || {};
+			var returnValue = null;
+
 			// if the view does is not template based leave
-			if(!this.templateBased) {
+			if(!this.options.templateBased) {
 				return true;
 			}
 			var display = options.display || true;

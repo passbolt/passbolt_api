@@ -295,13 +295,14 @@ steal(
 		 */
 		'{passbolt.eventBus} filter_resources_browser': function (element, evt, filter) {
 			var self = this;
-			var category = filter.tags[0];
-			this.crtCategoryId = category.id;
+			// store the filter
+			this.filter = filter;
 
-			// override the current list of categories with the categories to display
-			// and its children
-			this.options.categories = category.getSubCategories(true);
-			this.options.categories.push(category);
+			// override the current list of categories displayed with the new ones
+			this.options.categories = [];
+			can.each(filter.tags, function (category, i) {
+				$.merge(self.options.categories, category.getSubCategories(true));
+			});
 
 			// if a resource was selected, inform the system that the resource is no more selected
 			if (this.state.is('resourceSelected')) {
@@ -310,16 +311,18 @@ steal(
 
 			// change the state of the component to loading 
 			this.setState('loading');
-			// load resources of the selected category
+			// load resources of the selected categories
 			passbolt.model.Resource.findAll({
-				'category_id': this.crtCategoryId,
+				'categories_id': can.map(filter.tags, function (tag, i) { return tag.id; }).join(','),
+				'keywords': filter.keywords,
 				'recursive': true
 			}, function (resources, response, request) {
-				// The callback is out of date, an other category has been selected
-				if (self.crtCategoryId != request.originParams.category_id) {
-					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.getByCategory request callback in passbolt.controller.component.PasswordBrowserController');
-					return;
-				}
+				// The callback is out of date, an other set of categories have been selected
+				// check the filter is the current filter
+//				if (can.map(filter.tags, function (tag, i) { return tag.id; }).join(',') != request.originParams.categories_id) {
+//					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
+//					return;
+//				}
 				self.load(resources);
 				// change the state to ready
 				self.setState('ready');

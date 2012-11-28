@@ -67,7 +67,7 @@ steal(
 
 		'findAll': function (params, success, error) {
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources/viewByCategory/{category_id}/{recursive}',
+				url: APP_URL + '/resources',
 				type: 'GET',
 				params: params,
 				success: success,
