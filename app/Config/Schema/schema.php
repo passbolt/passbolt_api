@@ -39,8 +39,11 @@ class AppSchema extends CakeSchema {
 			} else {
 				$resources = $subCategories;
 				foreach ($resources as $value) {
-					$this->Resource->create();
-					$resource = $this->Resource->save($value);
+					$resource = null;
+					if (!($resource = $this->Resource->findByName($value['Resource']['name']))) {
+						$this->Resource->create();
+						$resource = $this->Resource->save($value);
+					}
 					$this->CategoryResource->create();
 					$this->CategoryResource->save(array(
 						'CategoryResource' => array( 'category_id' => $parentCategory['Category']['id'], 'resource_id' => $resource['Resource']['id'] )
@@ -179,7 +182,7 @@ class AppSchema extends CakeSchema {
 						$permissionDetail->create();
 						$permissionDetail->save($pd);
 					}
-				break; 
+				break;
 
 				case 'roles':
 					array_push(self::$created, 'roles');
@@ -448,10 +451,15 @@ class AppSchema extends CakeSchema {
 						'o-project1' => array(
 							'Resources' => array(
 								array('Resource' => array( 'name' => 'op1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'name' => 'op1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
+								array('Resource' => array( 'name' => 'op1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
+								array('Resource' => array( 'name' => 'shared resource', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
 							)
 						),
-						'o-project2' => array()
+						'o-project2' => array(
+							'Resources' => array(
+								array('Resource' => array( 'name' => 'shared resource')),
+							)
+						)
 					)
 				),
 			)
@@ -525,7 +533,7 @@ class AppSchema extends CakeSchema {
 			'Users' => array(
 				'Users' => array(
 					array('User' => array( 'role_id' => $userRoleId, 'username' => 'jean-rene@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'bertrand.lepouce@test.com', 'password' => $defaultPassword, 'active' => '1')),
+					array('User' => array( 'role_id' => $userRoleId, 'username' => 'adminsys@test.com', 'password' => $defaultPassword, 'active' => '1')),
 					array('User' => array( 'role_id' => $userRoleId, 'username' => 'ramesh.kumar@test.com', 'password' => $defaultPassword, 'active' => '1')),
 				),
 			),
@@ -561,56 +569,70 @@ class AppSchema extends CakeSchema {
 
 	protected function _getDefaultPermissions() {
 		$cDrupal = $this->Category->findByName("drupal");
-		$cRoot = $this->Category->findByName("Bolt Softwares Pvt. Ltd.");
 		$cAdministration = $this->Category->findByName("administration");
 		$cAccounts = $this->Category->findByName("accounts");
 		$gDrupal = $this->Group->findByName("developers drupal");
-		$gManagement = $this->Group->findByName("management");
 		$gAdministration = $this->Group->findByName("accounting dpt");
-		// Group Management have modify rights on everything
+
+		$gManagement = $this->Group->findByName("management");
+		$cRoot = $this->Category->findByName("Bolt Softwares Pvt. Ltd.");
+		// Group Management has admin rights on everything
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cRoot['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gManagement['Group']['id'],
-			'permission_detail_id' => '7',
-			'_create' => '1',
-			'_read' => '1',
-			'_update' => '1',
-			'_delete' => '1',
+			'permission_detail_id' => '16',
 		));
-		// Group administration have modify rights on administration
+
+		$gHumanResources = $this->Group->findByName("human resources");
+		$cAdministration = $this->Category->findByName("administration");
+		// Group human resources have read only rights on administration
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cAdministration['Category']['id'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gAdministration['Group']['id'],
-			'permission_detail_id' => '7',
-			'_create' => '1',
-			'_read' => '1',
-			'_update' => '1',
-			'_delete' => '1',
+			'aro_foreign_key' => $gHumanResources['Group']['id'],
+			'permission_detail_id' => '2'
 		));
-		// Group administration have read only rights on administration > accounts
+		// human resources have no rights on accounts
+		$cAccounts = $this->Category->findByName("accounts");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cAccounts['Category']['id'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gAdministration['Group']['id'],
-			'permission_detail_id' => '1',
-			'_create' => '0',
-			'_read' => '1',
-			'_update' => '0',
-			'_delete' => '0',
+			'aro_foreign_key' => $gHumanResources['Group']['id'],
+			'permission_detail_id' => '1'
 		));
-		// Group developers > Drupal have read only rights on Projects > Drupal
+		// Group human resources can modify resource salesforce account
+		$rSalesforce = $this->Resource->findByName("salesforce account");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Resource',
+			'aco_foreign_key' => $rSalesforce['Resource']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gHumanResources['Group']['id'],
+			'permission_detail_id' => '8'
+		));
+
+		// accounting dpt can access administration>accounts in read only
+		$gAccountingDpt = $this->Group->findByName("accounting dpt");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cAccounts['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gAccountingDpt['Group']['id'],
+			'permission_detail_id' => '2',
+		));
+
+		$gDrupal = $this->Group->findByName("developers drupal");
+		$cDrupal = $this->Category->findByName("drupal");
+		// Group developers drupal have read only rights on Projects > Drupal
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cDrupal['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gDrupal['Group']['id'],
-			'permission_detail_id' => '1',
-			'_read' => '1',
+			'permission_detail_id' => '2',
 		));
 		// Group cakephp has access to category cakephp in readonly
 		$cCakephp = $this->Category->findByName("cakephp");
@@ -620,38 +642,82 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cCakephp['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gCakephp['Group']['id'],
-			'permission_detail_id' => '1',
-			'_read' => '1',
+			'permission_detail_id' => '2',
 		));
-		// Group Team leads has access to others in modify
-		$cProjects = $this->Category->findByName("others");
+		// Group developers team leads has access to projects in modify
+		$cProjects = $this->Category->findByName("projects");
 		$gTeamleads = $this->Group->findByName("developers team leads");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cProjects['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gTeamleads['Group']['id'],
-			'permission_detail_id' => '7',
-			'_create' => '1',
-			'_read' => '1',
-			'_update' => '1',
-			'_delete' => '1',
+			'permission_detail_id' => '8',
 		));
-		// Remy Bertot has admin rights on others
-		$cProjects = $this->Category->findByName("others");
+		// Remy Bertot has admin rights on cp-project1
+		$cProject1 = $this->Category->findByName("cp-project1");
 		$uRemy = $this->User->findByUsername("remy.bertot@test.com");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
 			'aco_foreign_key' => $cProjects['Category']['id'],
 			'aro' => 'User',
 			'aro_foreign_key' => $uRemy['User']['id'],
-			'permission_detail_id' => '15',
-			'_create' => '1',
-			'_read' => '1',
-			'_update' => '1',
-			'_delete' => '1',
-			'_admin' => '1'
+			'permission_detail_id' => '16',
 		));
+
+		// Remy Bertot has admin rights on others
+		$cProjects = $this->Category->findByName("others");
+		$uRemy = $this->User->findByUsername("remy.bertot@test.com");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cProject1['Category']['id'],
+			'aro' => 'User',
+			'aro_foreign_key' => $uRemy['User']['id'],
+			'permission_detail_id' => '15',
+		));
+
+		//  Freelancers have read only rights to projects others
+		$gFreelancers = $this->Group->findByName("freelancers");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cProjects['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gFreelancers['Group']['id'],
+			'permission_detail_id' => '2',
+		));
+
+		// Jean René has readonly access rights on cp-project2
+		$cCpProject2 = $this->Category->findByName("cp-project2");
+		$uJeanrene = $this->User->findByUsername("jean-rene@test.com");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cCpProject2['Category']['id'],
+			'aro' => 'User',
+			'aro_foreign_key' => $uJeanrene['User']['id'],
+			'permission_detail_id' => '2',
+		));
+
+		//  company a has read only rights to o-project1
+		$gCompanya = $this->Group->findByName("company a");
+		$cOproject1 = $this->Category->findByName("o-project1");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cOproject1['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gCompanya['Group']['id'],
+			'permission_detail_id' => '2',
+		));
+
+		//  company a has read only rights to o-project1
+		$cOproject2 = $this->Category->findByName("o-project2");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cOproject2['Category']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $gCompanya['Group']['id'],
+			'permission_detail_id' => '8',
+		));
+
 		return $ps;
 	}
 
