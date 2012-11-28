@@ -8,9 +8,7 @@ steal(
 	 */
 	mad.view.View.extend('passbolt.view.component.AppFilter', /** @static */ {
 
-		'defaults': {
-			'filter': null
-		}
+		'defaults': {}
 
 	}, /** @prototype */ {
 

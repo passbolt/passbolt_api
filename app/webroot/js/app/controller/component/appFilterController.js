@@ -1,8 +1,8 @@
 steal(
-    'mad/controller/componentController.js',
-		'mad/form/element/listController.js',
-    'app/view/component/appFilter.js',
-    'app/view/template/component/appFilter.ejs'
+	'mad/controller/componentController.js',
+	'mad/form/element/listController.js',
+	'app/view/component/appFilter.js',
+	'app/view/template/component/appFilter.ejs'
 ).then(function () {
 
 	/*
