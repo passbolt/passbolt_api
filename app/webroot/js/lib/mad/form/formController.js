@@ -98,6 +98,7 @@ steal(
 			if (typeof feedback != 'undefined') {
 				this.feedbackElements[eltId] = feedback;
 			}
+			return element;
 		},
 
 		/**
@@ -161,36 +162,56 @@ steal(
 					returnValue[fieldAttrs[0].name] = {};
 				}
 
-				// if sub models
-				if (fieldAttrs.length>2) {
-					var leafSubModelRef = fieldAttrs[fieldAttrs.length - 2], // the last one is the field
-						leafValue = null;
-
-					// format the element value following the leaf model multiplicity
-					// * muliplicity
-					if (leafSubModelRef.multiple) {
-						eltValue = can.isArray(eltValue) ? eltValue : [eltValue];
-						leafValue = [];
-						can.each(eltValue, function (val, i) {
-							var obj = {};
-							obj[attrName] = val;
-							leafValue.push(obj);
-						});
-					} else {
-						// single multiplicity
-						leafValue = {};
-						leafValue[attrName] = eltValue;
-					}
-
-					// extract the sub models path
-					var subModelPath = '';
-					for (var i=1; i<(fieldAttrs.length-1); i++) {
-						subModelPath += subModelPath.length ? '.' + fieldAttrs[i].name : fieldAttrs[i].name;
-					}
-					// construct the return format functon of the sub models references
-					can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
-				} else {
+				// if there is only 2 field attributes and the last one is a scalar attribute
+				if (fieldAttrs.length<=2 && fieldAttrs[fieldAttrs.length-1].modelReference == null) {
 					returnValue[fieldAttrs[0].name][attrName] = eltValue;
+				}
+				// if sub models
+				else {
+					var leafValue = null,
+						subModelPath = '';
+
+					// if the last field attribute is a reference to a model
+					// no extra transformation, the leaf value is equal to the elt value
+					// the developper as to take care about what the form element is
+					// returning
+					if (fieldAttrs[fieldAttrs.length-1].modelReference!=null) {
+						leafValue = eltValue;
+						// extract the sub models path
+						subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
+							.slice(1, fieldAttrs.length)
+							.join('.');
+						// construct the return format functon of the sub models references
+						can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
+
+					// else the last field attribute is a scalar attribute
+					} else {
+						var leafSubModelRef = fieldAttrs[fieldAttrs.length-2];
+
+						// format the element value following the leaf model multiplicity
+						// * muliplicity
+						if (leafSubModelRef.multiple) {
+							eltValue = can.isArray(eltValue) ? eltValue : [eltValue];
+							leafValue = [];
+							can.each(eltValue, function (val, i) {
+								var obj = {};
+								obj[attrName] = val;
+								leafValue.push(obj);
+							});
+						} else {
+							// single multiplicity
+							leafValue = {};
+							leafValue[attrName] = eltValue;
+						}
+
+						// extract the sub models path
+						subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
+							.slice(1, fieldAttrs.length-1)
+							.join('.');
+
+						// construct the return format functon of the sub models references
+						can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
+					}
 				}
 			}
 

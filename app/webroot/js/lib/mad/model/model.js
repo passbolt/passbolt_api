@@ -108,9 +108,10 @@ steal(
 						}));
 					} else {
 						// else the split is a reference to a scalar attribute
-						returnValue.push({
-							name: split[i]
-						});
+						returnValue.push(new mad.model.Attribute({
+							'name': split[i],
+							'modelReference': null
+						}));
 						break;
 					}
 				}
