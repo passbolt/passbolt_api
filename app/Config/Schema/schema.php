@@ -82,27 +82,168 @@ class AppSchema extends CakeSchema {
 
 	public function createPermissionCacheView() {
 		$permission = ClassRegistry::init('Permission');
-		/*$permission->query(
-			"CREATE OR REPLACE ALGORITHM=UNDEFINED 
-			SQL SECURITY DEFINER VIEW `permissions_cache` 
+		$permission->query(
+			"
+			CREATE OR REPLACE ALGORITHM=UNDEFINED 
+			SQL SECURITY DEFINER VIEW `aro_aco_permissions` 
 			AS 
 			  (
-			    SELECT 'Category' AS `aco`,`c`.`id` AS `aco_foreign_key`,'Group' AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Category',`c`.`id`) AS `permission` 
+			    SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
 			    FROM (`categories` `c` join `groups` `g`)
 			  ) 
 		  UNION (
-		      SELECT 'Category' AS `aco`,`c`.`id` AS `aco_foreign_key`,'User' AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) AS `permission` 
+		      SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
 		      FROM (`categories` `c` join `users` `u`)
 		    ) 
 		  UNION (
-		      SELECT 'Resource' AS `aco`,`r`.`id` AS `aco_foreign_key`,'Group' AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Resource',`r`.`id`) AS `permission` 
+		      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
 		      FROM (`resources` `r` join `groups` `g`)
 			  ) 
 		  UNION (
-		      SELECT 'Resource' AS `aco`,`r`.`id` AS `aco_foreign_key`,'User' AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Resource',`r`.`id`) AS `permission` 
+		      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
 		      FROM (`resources` `r` join `users` `u`)
 			  );"
-		);*/
+		);
+		$permission->query(
+			"
+			CREATE OR REPLACE ALGORITHM=UNDEFINED 
+			SQL SECURITY DEFINER VIEW `permissions_cache` 
+			AS
+			SELECT `aap`.aco, `aap`.aco_foreign_key, `aap`.aro, `aap`.aro_foreign_key, 
+			case 
+	        when  `p`.permission_detail_id IS NULL then " . PermissionDetail::DENY . "
+	        when  `p`.permission_detail_id IS NOT NULL then `p`.permission_detail_id
+	    end as permission_detail_id,
+			case 
+	        when  `p`.permission_detail_id IS NULL then 1
+	        when  `p`.permission_detail_id IS NOT NULL then 0
+	    end as inherited,
+			`p`.created, `p`.modified, `p`.created_by, `p`.modified_by
+			FROM aro_aco_permissions aap
+			LEFT JOIN permissions p ON `p`.id = `aap`.permission_id
+			LEFT JOIN permission_details pd ON `pd`.id = `p`.permission_detail_id
+			");
+	}
+
+	public function createPermissionFunctions() {
+		$permission = ClassRegistry::init('Permission');
+		$getGroupCategoryPermission = "
+		  DROP FUNCTION IF EXISTS getGroupCategoryPermission;
+			CREATE FUNCTION `getGroupCategoryPermission`(`group_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+			    NO SQL
+					BEGIN
+					    DECLARE `permid` VARCHAR(36);
+					    DECLARE `catleft` INT(10);
+					    DECLARE `catright` INT(10);
+					    
+					    SELECT `c`.lft, `c`.rght INTO `catleft`, `catright`
+					    FROM categories c 
+					    WHERE `c`.id = `category_id`;
+					    
+					    SELECT `p`.id INTO `permid`
+					    FROM `passbolt`.permissions p
+					    INNER JOIN (
+					            SELECT * FROM `categories` c 
+					            WHERE `c`.lft <= `catleft` 
+					            AND `c`.rght >= `catright` 
+					            ORDER BY `c`.lft DESC
+					            ) viewcat 
+					    ON `p`.aco_foreign_key=`viewcat`.id 
+					    INNER JOIN groups g ON `p`.aro_foreign_key=`g`.id 
+					    WHERE `p`.aro='Group'
+					    AND `p`.aco='Category'
+					    AND `p`.aro_foreign_key = `group_id` 
+					    ORDER BY `viewcat`.lft DESC
+					    LIMIT 1;
+					    RETURN `permid`;
+					END;";
+		$permission->query($getGroupCategoryPermission);
+
+		$getGroupResourcePermission = "
+			DROP FUNCTION IF EXISTS getGroupResourcePermission;
+			CREATE FUNCTION `getGroupResourcePermission`(`group_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+		    NO SQL
+				BEGIN
+				    DECLARE `permid` VARCHAR(36);
+				    DECLARE `maxperm` INT(10);
+				    SELECT `p`.id INTO `permid`
+				    FROM `passbolt`.permissions p 
+				    WHERE `p`.aro='Group'
+				    AND `p`.aco='Resource'
+				    AND `p`.aco_foreign_key = `resource_id`
+				    AND `p`.aro_foreign_key = `group_id` 
+				    LIMIT 1;
+				    IF (`permid` IS NULL) THEN
+				      SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm` FROM(
+				      	SELECT `passbolt`.getGroupCategoryPermission(`group_id`, `cr`.category_id) AS `permid`
+				        FROM categories_resources `cr`
+				        WHERE `cr`.resource_id = `resource_id`
+				      ) `catview`
+				      INNER JOIN permissions p ON `p`.id=`catview`.permid;
+				      RETURN `permid`;
+				    END IF;
+				    RETURN `permid`;
+				END;";
+			$permission->query($getGroupResourcePermission);
+
+			$getUserCategoryPermission = "
+				DROP FUNCTION IF EXISTS getUserCategoryPermission;
+				CREATE FUNCTION `getUserCategoryPermission`(`user_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+				NO SQL
+				BEGIN
+				  DECLARE `permid` VARCHAR(36);
+				  DECLARE `maxperm` INT(10);
+				  SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm`  
+				  FROM(
+				    SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) AS `permid`
+				    FROM groups_users `gu` 
+				    WHERE `gu`.user_id = `user_id`
+				  ) `groupview`
+				  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid;
+				  RETURN `permid`;
+				END;";
+			$permission->query($getUserCategoryPermission);
+
+			// TODO : manage case where user is owner of the resource. What to do ? What should be the permission then ?
+			$getUserResourcePermission = "
+				DROP FUNCTION IF EXISTS getUserResourcePermission;
+				CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+				NO SQL
+				BEGIN
+				  DECLARE `permid` VARCHAR(36);
+				  DECLARE `maxperm` INT(10);
+				  SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm`  
+				  FROM(
+				    SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) AS `permid`
+				    FROM groups_users `gu` 
+				    WHERE `gu`.user_id = `user_id`
+				  ) `groupview`
+				  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid;
+				  RETURN `permid`;
+				END;";
+			$permission->query($getUserResourcePermission);
+
+			$getPermissions = "
+				DROP FUNCTION IF EXISTS getPermissions;
+				CREATE FUNCTION `getPermissions`(`aro` VARCHAR(50), `aro_foreign_key` VARCHAR(36), `aco` VARCHAR(50), `aco_foreign_key` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+				BEGIN
+				    DECLARE `permid` VARCHAR(36);
+				    IF(`aro` = 'Group' AND `aco` = 'Category') THEN
+				    	SELECT getGroupCategoryPermission(`aro_foreign_key`, `aco_foreign_key`)
+				        INTO `permid`;
+				    ELSEIF(`aro` = 'Group' AND `aco` = 'Resource') THEN
+				    	SELECT getGroupResourcePermission(`aro_foreign_key`, `aco_foreign_key`)
+				        INTO `permid`;
+				    ELSEIF(`aro` = 'User' AND `aco` = 'Category') THEN
+				    	SELECT getUserCategoryPermission(`aro_foreign_key`, `aco_foreign_key`)
+				        INTO `permid`;
+				    ELSEIF(`aro` = 'User' AND `aco` = 'Resource') THEN
+				    	SELECT getUserResourcePermission(`aro_foreign_key`, `aco_foreign_key`)
+				        INTO `permid`;
+				    END IF;
+				    RETURN `permid`;
+				END;";
+			$permission->query($getPermissions);
 	}
 
 	public function after($event = array()) {
@@ -170,6 +311,8 @@ class AppSchema extends CakeSchema {
 						$permission->create();
 						$permission->save($p);
 					}
+					// create necessary mysql functions
+					$this->createPermissionFunctions();
 					// Create the permissions_cache view
 					$this->createPermissionCacheView();
 				break;
@@ -346,6 +489,18 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
+	// TODO : should become permission_types
+	public $permission_details = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
+		'binary' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'_update' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'_create' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'_read' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+
 	public $permissions = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'aco' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 30, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -359,16 +514,6 @@ class AppSchema extends CakeSchema {
 		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
-	);
-
-	public $permission_details = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
-		'binary' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'_update' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'_create' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'_read' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 	);
 
 	public $tags = array(
