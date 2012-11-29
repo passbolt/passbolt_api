@@ -29,10 +29,10 @@ steal(
 		'render': function () {
 			this._super();
 			new mad.controller.component.ButtonController('#js_request_resource_creation_button');
-			new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'hidden'});
-			new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'hidden'});
-			new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'hidden'});
-			new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'hidden'});
+			new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'disabled'});
+			new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'disabled'});
+			new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'disabled'});
+			new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'disabled'});
 		},
 
 		/* ************************************************************** */
@@ -47,10 +47,10 @@ steal(
 		 * @return {void}
 		 */
 		'{passbolt.eventBus} resource_unselected': function (el, ev, resource) {
-			mad.app.getComponent('js_request_resource_edition_button').setState('hidden');
-			mad.app.getComponent('js_request_resource_deletion_button').setState('hidden');
-			mad.app.getComponent('js_request_resource_sharing_button').setState('hidden');
-			mad.app.getComponent('js_request_resource_more_button').setState('hidden');
+			mad.app.getComponent('js_request_resource_edition_button').setState('disabled');
+			mad.app.getComponent('js_request_resource_deletion_button').setState('disabled');
+			mad.app.getComponent('js_request_resource_sharing_button').setState('disabled');
+			mad.app.getComponent('js_request_resource_more_button').setState('disabled');
 		},
 
 		/**

@@ -138,8 +138,11 @@ class Resource extends AppModel {
 						'Resource.name ASC'
 					);
 				}
-				if(isset($data['Resource.name'])) {
-					$conditions['conditions']['Resource.name LIKE'] = '%' . $data['Resource.name'] . '%';
+				if(isset($data['keywords'])) {
+					$keywords = explode(' ', $data['keywords']);
+					foreach($keywords as $keyword) {
+						$conditions['conditions']["AND"][] = array('Resource.name LIKE' => '%' . $keyword . '%');
+					}
 				}
 			break;
 			default:
@@ -147,6 +150,7 @@ class Resource extends AppModel {
 					'conditions' => array()
 				);
 		}
+//			var_dump($conditions);
 		return $conditions;
 	}
 

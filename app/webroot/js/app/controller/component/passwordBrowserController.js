@@ -341,7 +341,7 @@ steal(
 			var self = this;
 
 			this.setState('loading');
-			// load resources of the given filter
+			// load default resources
 			passbolt.model.Resource.findAll({
 			}, function (resources, response, request) {
 				// load the resources in the browser

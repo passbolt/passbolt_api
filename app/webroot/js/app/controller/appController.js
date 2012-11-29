@@ -35,9 +35,7 @@ steal(
 			menuCtl.initMenuItems();
 
 			// Add the filter controller
-			var filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {
-
-			});
+			var filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {});
 			filterCtl.render();
 
 			// Add the notification controller
@@ -71,8 +69,6 @@ steal(
 			this._super();
 			// @todo Il est bien puant ce ready, check the state management pour gerer ca
 			mad.eventBus.trigger('app_ready');
-			// test the exception catcher
-//			throw new mad.error.Exception('Simulated exception to demonstrate the error handler system, and the notification system');
 		},
 
 		/* ************************************************************** */

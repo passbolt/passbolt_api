@@ -76,7 +76,7 @@ class ResourcesController extends AppController {
 
 		// if keywords provided build the model request with
 		if(!empty($keywords)) {
-			$data['Resource.name'] = "$keywords";
+			$data['keywords'] = $keywords;
 		}
 		
 		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
