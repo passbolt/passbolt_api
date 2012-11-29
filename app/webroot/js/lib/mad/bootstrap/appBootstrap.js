@@ -66,13 +66,10 @@ steal(
 
 		'init': function (options) {
 			this.options = {};
-			// the current route
-			this.currentRoute = null;
-			// the event bus controller
-			this.bus = null;
-			// extend default options with args options (merge manually array, extends override)
+			// get config files to apply
 			var configFiles = [];
 			$.merge($.merge(configFiles, mad.bootstrap.AppBootstrap.defaults.config), options.config);
+			// extend default options with args options (merge manually array, extends override)
 			$.extend(true, this.options, mad.bootstrap.AppBootstrap.defaults, options);
 
 			try {
@@ -123,6 +120,7 @@ steal(
 				var ns = can.getObject(mad.Config.read('app.namespace'), window, true);
 
 				// LET'S GO BILOUTE
+				// Load the required component
 
 				var components = mad.Config.read('core.components');
 				for (var i in components) {
