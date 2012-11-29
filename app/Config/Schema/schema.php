@@ -129,7 +129,7 @@ class AppSchema extends CakeSchema {
 		$permission = ClassRegistry::init('Permission');
 		$getGroupCategoryPermission = "
 		  DROP FUNCTION IF EXISTS getGroupCategoryPermission;
-			CREATE FUNCTION `getGroupCategoryPermission`(`group_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+			CREATE FUNCTION `getGroupCategoryPermission`(`group_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
 			    NO SQL
 					BEGIN
 					    DECLARE `permid` VARCHAR(36);
@@ -161,7 +161,7 @@ class AppSchema extends CakeSchema {
 
 		$getGroupResourcePermission = "
 			DROP FUNCTION IF EXISTS getGroupResourcePermission;
-			CREATE FUNCTION `getGroupResourcePermission`(`group_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+			CREATE FUNCTION `getGroupResourcePermission`(`group_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
 		    NO SQL
 				BEGIN
 				    DECLARE `permid` VARCHAR(36);
@@ -175,7 +175,7 @@ class AppSchema extends CakeSchema {
 				    LIMIT 1;
 				    IF (`permid` IS NULL) THEN
 				      SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm` FROM(
-				      	SELECT `passbolt`.getGroupCategoryPermission(`group_id`, `cr`.category_id) AS `permid`
+				      	SELECT `passbolt`.getGroupCategoryPermission(`group_id`, `cr`.category_id) COLLATE utf8_unicode_ci AS `permid`
 				        FROM categories_resources `cr`
 				        WHERE `cr`.resource_id = `resource_id`
 				      ) `catview`
@@ -188,14 +188,14 @@ class AppSchema extends CakeSchema {
 
 			$getUserCategoryPermission = "
 				DROP FUNCTION IF EXISTS getUserCategoryPermission;
-				CREATE FUNCTION `getUserCategoryPermission`(`user_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+				CREATE FUNCTION `getUserCategoryPermission`(`user_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
 				NO SQL
 				BEGIN
 				  DECLARE `permid` VARCHAR(36);
 				  DECLARE `maxperm` INT(10);
 				  SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm`  
 				  FROM(
-				    SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) AS `permid`
+				    SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) COLLATE utf8_unicode_ci AS `permid`
 				    FROM groups_users `gu` 
 				    WHERE `gu`.user_id = `user_id`
 				  ) `groupview`
@@ -207,14 +207,14 @@ class AppSchema extends CakeSchema {
 			// TODO : manage case where user is owner of the resource. What to do ? What should be the permission then ?
 			$getUserResourcePermission = "
 				DROP FUNCTION IF EXISTS getUserResourcePermission;
-				CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+				CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
 				NO SQL
 				BEGIN
 				  DECLARE `permid` VARCHAR(36);
 				  DECLARE `maxperm` INT(10);
 				  SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm`  
 				  FROM(
-				    SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) AS `permid`
+				    SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
 				    FROM groups_users `gu` 
 				    WHERE `gu`.user_id = `user_id`
 				  ) `groupview`
@@ -225,20 +225,20 @@ class AppSchema extends CakeSchema {
 
 			$getPermissions = "
 				DROP FUNCTION IF EXISTS getPermissions;
-				CREATE FUNCTION `getPermissions`(`aro` VARCHAR(50), `aro_foreign_key` VARCHAR(36), `aco` VARCHAR(50), `aco_foreign_key` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
+				CREATE FUNCTION `getPermissions`(`aro` VARCHAR(50), `aro_foreign_key` VARCHAR(36), `aco` VARCHAR(50), `aco_foreign_key` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
 				BEGIN
 				    DECLARE `permid` VARCHAR(36);
 				    IF(`aro` = 'Group' AND `aco` = 'Category') THEN
-				    	SELECT getGroupCategoryPermission(`aro_foreign_key`, `aco_foreign_key`)
+				    	SELECT getGroupCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
 				        INTO `permid`;
 				    ELSEIF(`aro` = 'Group' AND `aco` = 'Resource') THEN
-				    	SELECT getGroupResourcePermission(`aro_foreign_key`, `aco_foreign_key`)
+				    	SELECT getGroupResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
 				        INTO `permid`;
 				    ELSEIF(`aro` = 'User' AND `aco` = 'Category') THEN
-				    	SELECT getUserCategoryPermission(`aro_foreign_key`, `aco_foreign_key`)
+				    	SELECT getUserCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
 				        INTO `permid`;
 				    ELSEIF(`aro` = 'User' AND `aco` = 'Resource') THEN
-				    	SELECT getUserResourcePermission(`aro_foreign_key`, `aco_foreign_key`)
+				    	SELECT getUserResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
 				        INTO `permid`;
 				    END IF;
 				    RETURN `permid`;
