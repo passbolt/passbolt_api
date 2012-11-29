@@ -22,7 +22,7 @@ steal(
 		 */
 		'#js_request_resource_creation_button click': function (el, ev) {
 			var category = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_creation', category);
+			mad.bus.trigger('request_resource_creation', category);
 		},
 
 		/**
@@ -33,7 +33,7 @@ steal(
 		 */
 		'#js_request_resource_edition_button click': function (el, ev) {
 			var resource = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_edition', resource);
+			mad.bus.trigger('request_resource_edition', resource);
 		},
 
 		/**
@@ -44,7 +44,7 @@ steal(
 		 */
 		'#js_request_resource_deletion_button click': function (el, ev) {
 			var resource = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_deletion', resource);
+			mad.bus.trigger('request_resource_deletion', resource);
 		},
 
 		/**
@@ -55,7 +55,7 @@ steal(
 		 */
 		'#js_request_resource_sharing_button click': function (el, ev) {
 			var resource = el.controller().getValue();
-			passbolt.eventBus.trigger('request_resource_sharing', resource);
+			mad.bus.trigger('request_resource_sharing', resource);
 		}
 
 	});

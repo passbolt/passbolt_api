@@ -45,7 +45,7 @@ steal(
 			}
 		}];
 
-		var $grid = testEnv.mad.helper.HtmlHelper.create(testEnv.$('#mad_test_app_controller'), 'inside_replace', '<table></table>');
+		var $grid = testEnv.mad.helper.HtmlHelper.create(testEnv.mad.app.element, 'inside_replace', '<table></table>');
 		var grid = new testEnv.mad.controller.component.GridController($grid, {
 			id: 'test_grid',
 			itemClass: testEnv.demo.model.Person,

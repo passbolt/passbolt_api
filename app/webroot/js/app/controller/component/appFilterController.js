@@ -33,7 +33,7 @@ steal(
 				'callbacks': {
 					'submit': function (data) {
 						var filter = new passbolt.model.Filter(data['passbolt.model.Filter']);
-						mad.eventBus.trigger('filter_resources_browser', filter);
+						mad.bus.trigger('filter_resources_browser', filter);
 					}
 				}
 			});
@@ -75,7 +75,7 @@ steal(
 		 * @param {passbolt.model.Category} category The selected category
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} category_selected': function (el, ev, category) {
+		'{mad.bus} category_selected': function (el, ev, category) {
 			this.reset();
 			this.listFormElement.setValue([category]);
 			this.keywordsFormElement.setValue('');
@@ -98,7 +98,7 @@ steal(
 				'keywords': '',
 				'tags': []
 			});
-			mad.eventBus.trigger('filter_resources_browser', filter);
+			mad.bus.trigger('filter_resources_browser', filter);
 		}
 	});
 });

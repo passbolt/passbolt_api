@@ -26,8 +26,8 @@ steal('jquery/class').then(function () {
 			case 'POST':
 			case 'PUT':
 			case 'DELETE':
-				if (mad.eventBus) {
-					mad.eventBus.trigger('passbolt_notify', {
+				if (mad.bus) {
+					mad.bus.trigger('passbolt_notify', {
 						'status': this.response.getStatus(),
 						'title': this.response.getMessage()
 					});

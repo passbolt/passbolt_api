@@ -6,7 +6,7 @@ steal(
 	var testEnv = null;
 
 	var instanciateMenu  = function (type) {
-		var $menu = testEnv.mad.helper.HtmlHelper.create(testEnv.$('#mad_test_app_controller'), 'inside_replace', '<ul/>');
+		var $menu = testEnv.mad.helper.HtmlHelper.create(testEnv.mad.app.element, 'inside_replace', '<ul/>');
 		var menu = new testEnv.mad.controller.component.MenuController($menu);
 		menu.render();
 		return menu;
@@ -17,7 +17,6 @@ steal(
 		setup: function () {
 			stop();
 			var url = '//lib/mad/test/testEnv/app.html';
-//			var url = steal.idToUri('mad/test/testEnv/app.html').toString(); // sopen does not get full url, it needs relative url
 			S.open(url, function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
@@ -37,26 +36,26 @@ steal(
 	});
 
 	test('MenuController', function () {
-		testEnv.mad.setGlobal('clickedAction', null);
+		var clickedAction = null;
 		var menu = instanciateMenu(),
 			actions = testEnv.mad.model.Action.models([
 				{ id: 'action_1', 'label': 'actions_1',
 					action: function (menu) {
-						testEnv.mad.setGlobal('clickedAction', 'action_1');
+						clickedAction = 'action_1';
 					}},
 				{ id: 'action_2', 'label': 'actions_2',
 					action: function (menu) {
-						testEnv.mad.setGlobal('clickedAction', 'action_2');
+						clickedAction = 'action_2';
 					}},
 				{ id: 'action_3', 'label': 'actions_3',
 					action: function (menu) {
-						testEnv.mad.setGlobal('clickedAction', 'action_3');
+						clickedAction = 'action_3';
 					}}
 			]);
 		menu.load(actions);
 		can.each(actions, function (action, i) {
 			testEnv.$('#' + action.id + ' .label').trigger('click');
-			equal(testEnv.mad.getGlobal('clickedAction'), action.id, '');
+			equal(clickedAction, action.id, '');
 		});
 	});
 

@@ -53,8 +53,8 @@ steal(
 			}
 
 			// propagate : a new controller has been released
-			if (mad.eventBus) {
-				mad.eventBus.trigger(mad.APP_NS_ID + '_controller_released', {
+			if (mad.bus) {
+				mad.bus.trigger(mad.APP_NS_ID + '_controller_released', {
 					'component': this
 				});
 			}
@@ -66,25 +66,6 @@ steal(
 		 */
 		'destroy': function () {
 			this._super();
-		},
-
-		/**
-		 * Get the application controller
-		 * @return {mad.controller.AppController} The application controller
-		 */
-		'getApp': function () {
-			var returnValue = null;
-
-			// the controller is the an App controller
-			if (this instanceof mad.controller.AppController) {
-				returnValue = this;
-			} else {
-				if (mad.app != null) {
-					returnValue = mad.app;
-				}
-			}
-
-			return returnValue;
 		},
 
 		/**

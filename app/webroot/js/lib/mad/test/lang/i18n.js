@@ -6,14 +6,14 @@ steal(
 	module("mad.lang", {
 		// runs before each test
 		setup: function () {
-			mad.controller.AppController.destroy();
-			mad.controller.AppController.setNs(APP_NS_ID);
-			mad.setGlobal('RESPONSE_HANDLER_CLASS', mad.net.ResponseHandler);
+			var boot = new mad.bootstrap.AppBootstrap({
+				'config': [
+					'mad/test/testEnv/config_light.json'
+				]
+			});
 		},
 		// runs after each test
-		teardown: function () {
-			mad.controller.AppController.destroy();
-		}
+		teardown: function () {}
 	});
 
 	// Sample of dictionnary
@@ -29,7 +29,7 @@ steal(
 	// not required but good to know how to use it
 	can.fixture({
 		type: 'get',
-		url: APP_URL + '/dictionaries/fr-FR.json'
+		url: '/dictionaries/fr-FR.json'
 	}, function (original, settings, headers) {
 		return {
 			'header': {
@@ -48,14 +48,13 @@ steal(
 		stop();
 		mad.net.Ajax.request({
 			'type': 'get',
-			'url': APP_URL + '/dictionaries/fr-FR.json',
+			'url': '/dictionaries/fr-FR.json',
 			'async': false,
-			'dataType': 'json',
-			'data': null
+			'dataType': 'json'
 		}).then(function (data, response, request) {
 			var i18n = mad.lang.I18n.singleton();
 			i18n.loadDico(data);
-			for (var key in i18n.dico) {
+			for (var key in data) {
 				equal(dico[key], i18n.dico[key]);
 				start();
 			}
@@ -66,7 +65,7 @@ steal(
 		stop();
 		mad.net.Ajax.request({
 			'type': 'get',
-			'url': APP_URL + '/dictionaries/fr-FR.json',
+			'url': '/dictionaries/fr-FR.json',
 			'async': false,
 			'dataType': 'json'
 		}).then(function (data, response, request) {
@@ -93,7 +92,7 @@ steal(
 		stop();
 		mad.net.Ajax.request({
 			'type': 'get',
-			'url': APP_URL + '/dictionaries/fr-FR.json',
+			'url': '/dictionaries/fr-FR.json',
 			'async': false,
 			'dataType': 'json'
 		}).then(function (data, response, request) {
@@ -145,7 +144,7 @@ steal(
 		stop();
 		mad.net.Ajax.request({
 			'type': 'get',
-			'url': APP_URL + '/dictionaries/fr-FR.json',
+			'url': '/dictionaries/fr-FR.json',
 			'async': false,
 			'dataType': 'json'
 		}).then(function (data, response, request) {
@@ -170,7 +169,7 @@ steal(
 		stop();
 		mad.net.Ajax.request({
 			'type': 'get',
-			'url': APP_URL + '/dictionaries/fr-FR.json',
+			'url': '/dictionaries/fr-FR.json',
 			'async': false,
 			'dataType': 'json'
 		}).then(function (data, response, request) {

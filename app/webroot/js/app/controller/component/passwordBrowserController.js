@@ -139,7 +139,7 @@ steal(
 					// switch to the start state
 					this.setState('ready');
 					// inform the world that the resource is unselected
-					mad.eventBus.trigger('resource_unselected', item);
+					mad.bus.trigger('resource_unselected', item);
 				}
 			}
 			// remove the item to the grid
@@ -261,12 +261,12 @@ steal(
 			// if the resource selected is the same than the previous one unselect
 			if (item.id == this.crtSelectedResourceId) {
 				this.setState('ready');
-				mad.eventBus.trigger('resource_unselected', item);
+				mad.bus.trigger('resource_unselected', item);
 			} else {
 				this.setState('ready');
 				this.crtSelectedResourceId = item.id;
 				this.setState('resourceSelected');
-				mad.eventBus.trigger('resource_selected', item);
+				mad.bus.trigger('resource_selected', item);
 			}
 		},
 
@@ -279,7 +279,7 @@ steal(
 		 */
 		' item_unselected': function (el, ev, item) {
 			this.setState('ready');
-			mad.eventBus.trigger('resource_unselected', item);
+			mad.bus.trigger('resource_unselected', item);
 		},
 
 		/* ************************************************************** */
@@ -293,7 +293,7 @@ steal(
 		 * @param {passbolt.model.Filter} filter The filter to apply
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} filter_resources_browser': function (element, evt, filter) {
+		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
 			var self = this;
 			// store the filter
 			this.filter = filter;
@@ -306,7 +306,7 @@ steal(
 
 			// if a resource was selected, inform the system that the resource is no more selected
 			if (this.state.is('resourceSelected')) {
-				mad.eventBus.trigger('resource_unselected', this.crtSelectedResourceId);
+				mad.bus.trigger('resource_unselected', this.crtSelectedResourceId);
 			}
 
 			// change the state of the component to loading 
@@ -337,7 +337,7 @@ steal(
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} app_ready': function (ui, event) {
+		'{mad.bus} app_ready': function (ui, event) {
 			var self = this;
 
 			this.setState('loading');

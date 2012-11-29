@@ -38,6 +38,7 @@ steal(
 	'mad/view'
 ).then(
 	'mad/bootstrap/appBootstrap.js',
+	'mad/config/config.js',
 	'mad/error/exception.js',
 	'mad/error/errorHandler.js',
 	'mad/controller/appController.js',

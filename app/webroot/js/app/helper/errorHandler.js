@@ -20,8 +20,8 @@ steal(
 		 */
 		'handleException': function (exception) {
 			// send a notification on the events' bus
-			if (mad.eventBus) {
-				mad.eventBus.trigger('passbolt_notify', {
+			if (mad.bus) {
+				mad.bus.trigger('passbolt_notify', {
 					'status': exception.name,
 					'title': exception.title,
 					'message': exception.message
@@ -41,8 +41,8 @@ steal(
 		 */
 		'handleError': function (status, title, message, data) {
 			// send a notification on the events' bus
-			if (mad.eventBus) {
-				mad.eventBus.trigger('passbolt_notify', {
+			if (mad.bus) {
+				mad.bus.trigger('passbolt_notify', {
 					'status': status,
 					'title': title,
 					'message': message,

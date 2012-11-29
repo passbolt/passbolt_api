@@ -43,13 +43,13 @@ steal('funcunit').then(function () {
 	});
 
 	test('ComponentHelper : create', function () {
-		var refElement = S('#mad_test_app_controller'),
+		var refElement = testEnv.mad.app.element,
 			position = 'inside_replace',
 			uid = "uid",
-			component = null,
-			Clazz = testEnv.mad.test.controller.ComponentController;
+			Clazz = testEnv.mad.test.controller.ComponentController,
+			component = null;
 
-		component = mad.helper.ComponentHelper.create(refElement, position, Clazz, {id: uid});
+		component = testEnv.mad.helper.ComponentHelper.create(refElement, position, Clazz, {id: uid});
 		S('#' + uid).exists(1000, null, 'The component controller has been rendered');
 		equal(testEnv.jQuery('#' + uid).controller() instanceof Clazz, true, 'The controller is well associated to the html node');
 	});

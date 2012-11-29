@@ -23,7 +23,7 @@ steal(
 		}
 
 		,
-		'{mad.eventBus} passbolt_password_selected': function (element, evt, data) {
+		'{mad.bus} passbolt_password_selected': function (element, evt, data) {
 			mad.net.Ajax.singleton().request({
 				'url': 'http://getacountdown.local/ajax/action2',
 				'data': {

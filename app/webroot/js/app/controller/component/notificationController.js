@@ -44,7 +44,7 @@ steal(
 		 */
 		// @todo notice that the event has to be writen with a-Z0-1_
 		// create an object Notification
-		'{mad.eventBus} passbolt_notify': function (el, ev, notif) {
+		'{mad.bus} passbolt_notify': function (el, ev, notif) {
 			this.setViewData({
 				'status': notif.status,
 				'title': notif.title,

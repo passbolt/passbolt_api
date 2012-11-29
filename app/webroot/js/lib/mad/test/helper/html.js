@@ -21,7 +21,7 @@ steal('funcunit').then(function () {
 
 	test('HtmlHelper : create exception', function () {
 		// inside replace
-		var refElement = S('#mad_test_app_controller'),
+		var refElement = testEnv.mad.app.element,
 			position = 'inside_replace',
 			uid = "uid",
 			component = '<div id="' + uid + '"/>';
@@ -53,50 +53,50 @@ steal('funcunit').then(function () {
 			$last = null;
 
 		// inside replace
-		refElement = S('#mad_test_app_controller');
+		refElement = testEnv.mad.app.element;
 		position = 'inside_replace';
 		uid = "middle";
 		component = '<div id="' + uid + '"/>';
-		$component = mad.helper.HtmlHelper.create(refElement, position, component);
+		$component = testEnv.mad.helper.HtmlHelper.create(refElement, position, component);
 		S('#' + uid).exists(1000, null, 'inside replace exists');
 		S(refElement).find('#' + uid).exists(1000, null, 'inside replace well positionned');
 
 		// before
-		refElement = S('#middle');
+		refElement = testEnv.$('#middle');
 		position = 'before';
 		uid = "before";
 		component = '<div id="' + uid + '"/>';
-		$component = mad.helper.HtmlHelper.create(refElement, position, component);
+		$component = testEnv.mad.helper.HtmlHelper.create(refElement, position, component);
 		S('#' + uid).exists(1000, null, 'before exists');
 		$previous = S(refElement).prev();
 		equal($previous[0].id == uid, true, 'before well positionned');
 
 		// after
-		refElement = S('#middle');
+		refElement = testEnv.$('#middle');
 		position = 'after';
 		uid = "after";
 		component = '<div id="' + uid + '"/>';
-		$component = mad.helper.HtmlHelper.create(refElement, position, component);
+		$component = testEnv.mad.helper.HtmlHelper.create(refElement, position, component);
 		S('#' + uid).exists(1000, null, 'after exists');
 		$next = S(refElement).next();
 		equal($next[0].id == uid, true, 'after well positionned');
 
 		// first
-		refElement = S('#mad_test_app_controller');
+		refElement = testEnv.mad.app.element;
 		position = 'first';
 		uid = 'first';
 		component = '<div id="' + uid + '"/>';
-		$component = mad.helper.HtmlHelper.create(refElement, position, component);
+		$component = testEnv.mad.helper.HtmlHelper.create(refElement, position, component);
 		S('#' + uid).exists(1000, null, 'first exists');
 		$first = S(refElement).children().first();
 		equal($first[0].id == uid, true, 'first well positionned');
 
 		// last
-		refElement = S('#mad_test_app_controller');
+		refElement = testEnv.mad.app.element;
 		position = 'last';
 		uid = 'last';
 		component = '<div id="' + uid + '"/>';
-		$component = mad.helper.HtmlHelper.create(refElement, position, component);
+		$component = testEnv.mad.helper.HtmlHelper.create(refElement, position, component);
 		S('#' + uid).exists(1000, null, 'last exists');
 		$last = S(refElement).children().last();
 		equal($last[0].id == uid, true, 'last well positionned');

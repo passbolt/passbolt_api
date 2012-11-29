@@ -73,7 +73,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The selected resource instance
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_selected': function (element, event, resource) {
+		'{mad.bus} resource_selected': function (element, event, resource) {
 			this.load(resource);
 		},
 
@@ -84,7 +84,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The selected resource instance
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_unselected': function (element, event, resource) {
+		'{mad.bus} resource_unselected': function (element, event, resource) {
 			// ubind the current resource to avoid any troubles
 			this.options.resource = null;
 			this.on();

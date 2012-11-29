@@ -1,21 +1,21 @@
 // Thers is probably better tool in the jquery lib to work with ajax transaction
 // queue ... check that
 steal(
-	'funcunit'
+	'funcunit',
+	'can/util/fixture'
 ).then( function () {
 
 	module("mad.net", {
 		// runs before each test
 		setup: function () {
-			mad.controller.AppController.destroy();
-			mad.controller.AppController.setNs(APP_NS_ID);
-			mad.setGlobal('RESPONSE_HANDLER_CLASS', mad.net.ResponseHandler);
-			mad.setGlobal('ERROR_HANDLER_CLASS', mad.error.ErrorHandler);
+			var boot = new mad.bootstrap.AppBootstrap({
+				'config': [
+					'mad/test/testEnv/config_light.json'
+				]
+			});
 		},
 		// runs after each test
-		teardown: function () {
-			mad.controller.AppController.destroy();
-		}
+		teardown: function () {}
 	});
 
 	can.fixture({
@@ -34,7 +34,7 @@ steal(
 			'body': 'RESULT REQUEST 1'
 		};
 	});
-	
+
 	can.fixture({
 		type: 'POST',
 		url: '/ajax/server_error'

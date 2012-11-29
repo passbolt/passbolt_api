@@ -57,7 +57,7 @@ steal(
 			break;
 		}
 
-		var $tree = testEnv.mad.helper.HtmlHelper.create(testEnv.$('#mad_test_app_controller'), 'inside_replace', '<ul/>');
+		var $tree = testEnv.mad.helper.HtmlHelper.create(testEnv.mad.app.element, 'inside_replace', '<ul/>');
 		var tree = new testEnv.mad.controller.component.TreeController($tree, {
 			id: 'test_tree',
 			itemClass: testEnv.demo.model.Person,

@@ -35,7 +35,7 @@ steal(
 		 * @return {void}
 		 */
 		'click': function (el, ev) {
-			mad.eventBus.trigger('copy_secret_clipboard', this.value);
+			mad.bus.trigger('copy_secret_clipboard', this.value);
 		},
 
 		/* ************************************************************** */

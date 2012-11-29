@@ -46,7 +46,7 @@ steal(
 			var menuItems = mad.model.Action.models([
 				{ 'id': uuid(), 'label': 'open',
 					'action': function (menu) {
-						passbolt.eventBus.trigger('category_selected', item);
+						mad.bus.trigger('category_selected', item);
 						menu.remove();
 					}},
 				{ 'id': uuid(), 'label': 'create',
@@ -56,23 +56,23 @@ steal(
 					'children': [
 						{ 'id': uuid(), 'label': 'secret',
 							'action': function (menu) {
-								passbolt.eventBus.trigger('request_resource_creation', item);
+								mad.bus.trigger('request_resource_creation', item);
 							menu.remove();
 							}},
 						{ 'id': uuid(), 'label': 'category',
 							'action': function (menu) {
-								passbolt.eventBus.trigger('request_category_creation', item);
+								mad.bus.trigger('request_category_creation', item);
 							menu.remove();
 							}}
 					]},
 				{ 'id': uuid(), 'label': 'rename...',
 					'action': function (menu) {
-						passbolt.eventBus.trigger('category_renamed', item);
+						mad.bus.trigger('category_renamed', item);
 						menu.remove();
 					}},
 				{ 'id': uuid(), 'label': 'remove',
 					'action': function (menu) {
-						passbolt.eventBus.trigger('request_category_deletion', item);
+						mad.bus.trigger('request_category_deletion', item);
 						menu.remove();
 					}
 				}
@@ -107,7 +107,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
-			passbolt.eventBus.trigger('category_selected', item);
+			mad.bus.trigger('category_selected', item);
 		},
 
 		/**
@@ -160,7 +160,7 @@ steal(
 		 * @param {Event} event The jQuery event
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} app_ready': function (ui, event) {
+		'{mad.bus} app_ready': function (ui, event) {
 			var self = this;
 			// load categories function of the selected database
 			this.setState('loading');

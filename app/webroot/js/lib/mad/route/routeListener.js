@@ -44,8 +44,8 @@ steal('mad/core/singleton.js').then(function () {
 				var route = self.getRoute();
 				// if a route has been find, trigger the event on the event bus
 				if (route != null) {
-					if (mad.eventBus) {
-						mad.eventBus.trigger(mad.APP_NS_ID + '_route_change', [route]);
+					if (mad.bus) {
+						mad.bus.trigger(mad.APP_NS_ID + '_route_change', [route]);
 					}
 				}
 			});

@@ -241,7 +241,7 @@ steal(
 			this._super(el, options);
 
 			// reference the controller to the application
-			this.getApp().referenceComponent(this);
+			mad.app.referenceComponent(this);
 
 			// Once the controller is fully released, initialize the component's associated view
 			this.initView();
@@ -250,7 +250,7 @@ steal(
 		// destructor like
 		'destroy': function () {
 			// unreference the component to the app
-			this.getApp().unreferenceComponent(this);
+			mad.app.unreferenceComponent(this);
 			// Unobserve any change on the state's label attribute
 			this.state.unbind('label');
 			this._super();

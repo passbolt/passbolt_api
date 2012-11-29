@@ -12,7 +12,7 @@ steal('funcunit', function () {
 				testEnv.mad.controller.AppController.destroy();
 				testEnv.mad.controller.AppController.setNs(APP_NS_ID); // Create the div element which will embed the event bus controller
 				testEnv.$('body').append('<div id="mad_test_EventBus" />');
-				testEnv.mad.eventBus = new testEnv.mad.event.EventBus(testEnv.$('#mad_test_EventBus'));
+				testEnv.mad.bus = new testEnv.mad.event.EventBus(testEnv.$('#mad_test_EventBus'));
 				start();
 			});
 		},
@@ -27,7 +27,7 @@ steal('funcunit', function () {
 		testEnv.mad.route.RouteListener.singleton();
 		testEnv.$('body').append('<div id="mad_test_EventBus" />');
 		testEnv.$('body').append('<a id="change_hash" href="#!extension/controller/action/p1/p2/p3">change hash : special ninja technique to work with selenium</a>');
-		testEnv.mad.eventBus.bind(testEnv.mad.APP_NS_ID + '_route_change', function () {
+		testEnv.mad.bus.bind(testEnv.mad.APP_NS_ID + '_route_change', function () {
 			ok(true, 'The route listener well detect that the route changed ' + testEnv.location.hash);
 			start();
 		});

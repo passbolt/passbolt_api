@@ -54,15 +54,9 @@ steal(
 	mad.bootstrap.BootstrapInterface.extend('mad.bootstrap.AppBootstrap', /* @static */ {
 
 		'defaults': {
-			'appRootUrl': '',
-			'lang': 'en-EN',
-			'appControllerId': 'app-controller',
-			'appNamespaceId': 'app',
-			'appControllerClass': mad.controller.AppController,
-			'errorHandlerClass': mad.error.ErrorHandler,
-			'responseHandlerClass': mad.net.ResponseHandler,
-			'dispatchOptions': {},
-			'defaultRoute': null,
+			'config': [
+				'mad/config/config.json'
+			],
 			'callbacks': {
 				'ready': null
 			}
@@ -71,106 +65,78 @@ steal(
 	}, /*  @prototype */ {
 
 		'init': function (options) {
+			this.options = {};
 			// the current route
 			this.currentRoute = null;
 			// the event bus controller
 			this.bus = null;
-			// array of options passed by args
-			this.options = {};
-			// extend default options with args options
-			this.options = $.extend(true, {}, mad.bootstrap.AppBootstrap.defaults, options);
+			// extend default options with args options (merge manually array, extends override)
+			var configFiles = [];
+			$.merge($.merge(configFiles, mad.bootstrap.AppBootstrap.defaults.config), options.config);
+			$.extend(true, this.options, mad.bootstrap.AppBootstrap.defaults, options);
 
-			// @todo check resource of this kind of big try catch
 			try {
 
-				// check compulsory options (an option compulsory lol)
-				if ($.trim(this.options.appRootUrl) === '') {
-					throw new mad.error.MissingOptionException('appRootUrl', 'mad.bootstrap.AppBootstrap');
+				// load config files
+				for (var i in configFiles) {
+					mad.Config.load(configFiles[i]);
 				}
 
-				// Reference the application namespace
-				mad.controller.AppController.setNs(this.options.appNamespaceId);
+				// Check the configuration
 
-				// find the controller with the given appControllerId passed by args
-				var $appController = mad.setGlobal('$appController', $('#' + this.options.appControllerId));
-				// if the DOM does not contain a reference to an element with the given appControllerId
-				// throw an Error
-				if (!$appController.length) {
-					throw new Error('AppBootstrap error : Your template must contain a node element with the id (' + this.options.appControllerId + ')');
+				// Define Error Handler Class
+				var ErrorHandlerClass = can.getObject(mad.Config.read('error.ErrorHandlerClassName'));
+				// Has to be a mad.error.ErrorHandler
+				if (!ErrorHandlerClass) {
+					throw new mad.error.WrongConfigException('error.ErrorHandlerClassName');
+				}
+				mad.Config.write('error.ErrorHandlerClass', ErrorHandlerClass);
+
+				// Define Response Handler Class
+				var ResponseHandlerClass = can.getObject(mad.Config.read('net.ResponseHandlerClassName'));
+				// Has to be a mad.net.ResponseHandler
+				if (!ResponseHandlerClass) {
+					throw new mad.error.WrongConfigException('net.ResponseHandlerClassName');
+				}
+				mad.Config.write('net.ResponseHandlerClass', ResponseHandlerClass);
+				
+				// Define App Controller Class
+				var AppControllerClass = can.getObject(mad.Config.read('app.ControllerClassName'));
+				// Has to be a mad.net.ResponseHandler
+				if (!AppControllerClass) {
+					throw new mad.error.WrongConfigException('app.ControllerClassName');
+				}
+				mad.Config.write('app.AppControllerClass', AppControllerClass);
+
+				// The app url has to be defined
+				if ($.trim(mad.Config.read('app.url')) === '') {
+					throw new mad.error.WrongConfigException('app.url');
 				}
 
-				// 
-				// BEGINING OF THE APPLICATION BOOTSTRAP PROCESS
-				// 
+				// The app controller element has to be defined, and to be a reference to
+				// an existing DOM element
+				if (!$(mad.Config.read('app.controllerElt')).length) {
+					throw new mad.error.WrongConfigException('app.controllerElt');
+				}
 
-				// Initialize app globals variables
-				this.initConstants();
+				// Reference the application namespace if it does not exist yet
+				var ns = can.getObject(mad.Config.read('app.namespace'), window, true);
 
-				// Initialize app globals objects
-				this.initGlobals();
+				// LET'S GO BILOUTE
 
-				// Initialize internationalization
-//				this.initInternationalization();
+				var components = mad.Config.read('core.components');
+				for (var i in components) {
+					this['init' + components[i]]();
+				}
 
-				// Initialize the event bus controller
-				this.initEventBus();
-
-				// Initialize the route listener of the application. It will be in charge to listen any changes
-				// on the hash and use the function dispatch to perform the desired action.
-				this.initRouteListener();
-
-				// Initialize the application
-				this.initApplication();
-
-				// Initialize extensions
-				//	                this.initExtensions();
-
-				// Dispatch to the right action
-//				var route = mad.route.RouteListener.singleton().getRoute();
-//				if (route == null && this.options.defaultRoute != null) {
-//					route = this.options.defaultRoute;
-//				}
-//				if (route != null) {
-//					this.dispatch(route);
-//				}
-
-				// Application is ready
-				this.ready();
-
-			} catch (ex) {
-				// Catch any exceptions released by the system
-				this.options.errorHandlerClass.handleException(ex);
+			// Catch any exceptions released by the system
+			} catch (e) {			
+				if (mad.Config.read('error.ErrorHandlerClass')) {
+					mad.Config.read('error.ErrorHandlerClass').handleException(e);
+				} else {
+					throw e;
+				}
 			}
-
-			//
-			// END OF THE APPLICATION BOOTSTRAP PROCESS
-			// 
-		},
-
-		/**
-		 * Init application constants
-		 * @return {void}
-		 */
-		'initConstants': function () {
-			// init globals
-			mad.setGlobal('APP_ROOT_URL', this.options.appRootUrl);
-			mad.setGlobal('LG', this.options.lg);
-			mad.setGlobal('APP_NS_ID', this.options.appNamespaceId);
-			mad.setGlobal('APP_NS', window[mad.controller.AppController.getGlobal('APP_NS_ID')]);
-			mad.setGlobal('APP_CONTROLLER_ID', this.options.appControllerId);
-			mad.setGlobal('EVENTBUS_CONTROLLER_ID', this.options.eventBusControllerId);
-			mad.setGlobal('APP_CONTROLLER_CLASS', this.options.appControllerClass);
-			mad.setGlobal('ERROR_HANDLER_CLASS', this.options.errorHandlerClass);
-			mad.setGlobal('RESPONSE_HANDLER_CLASS', this.options.responseHandlerClass);
-		},
-
-		/**
-		 * Init application globals
-		 * @return {void}
-		 */
-		'initGlobals': function () {
-			mad.setGlobal('eventBus', null);
-			mad.setGlobal('app', null);
 		},
 
 		/** 
@@ -180,8 +146,8 @@ steal(
 		'initInternationalization': function () {
 			// Load the javascript dictionnary
 			mad.net.Ajax.singleton().request({
-				'type': mad.net.Request.METHOD_GET,
-				'url': mad.getGlobal('APP_ROOT_URL') + '/dictionaries/en-EN.json',
+				'type': 'GET',
+				'url': mad.Config.read('app.url') + '/dictionaries/en-EN.json',
 				'async': false,
 				'dataType': 'json',
 				'success': function (request, response, data) {
@@ -198,11 +164,15 @@ steal(
 		 * Init application
 		 * @return {void}
 		 */
-		'initApplication': function () {
-			var appControllerClass = this.options.appControllerClass;
-			var app = appControllerClass.singleton(mad.getGlobal('$appController'));
-			mad.setGlobal('app', app);
-			mad.app = mad.getGlobal('app');
+		'initAppController': function () {
+			var self = this;
+			mad.bus.bind('app_ready', function () {
+				if (self.options.callbacks.ready) {
+					self.options.callbacks.ready();
+				}
+			});
+			var AppControllerClass = can.getObject(mad.Config.read('app.ControllerClassName'));
+			var app = AppControllerClass.singleton($(mad.Config.read('app.controllerElt')));
 		},
 
 		/**
@@ -215,21 +185,18 @@ steal(
 		},
 
 		/**
-		 * Initialize the event bus controller of the application. It will be in charge to centralize
-		 * all events which occur
+		 * Initialize the Application Event Bus Controller
 		 * @return {void}
-		 * @todo change the use to mad.eventBus in mad.$eventBus (because it is a jQuery element)
 		 */
 		'initEventBus': function () {
-			// initialize the event bus of the application
-			var pluginNameController = mad.event.EventBus._fullName;
-			// add the dom element which will be behind the controller
-			mad.getGlobal('$appController').before('<div id="' + mad.getGlobal('EVENTBUS_CONTROLLER_ID') + '"></div>');
-			// instantiate the event bus controller
-			var eventBus = new mad.event.EventBus('#' + mad.getGlobal('EVENTBUS_CONTROLLER_ID'));
-			mad.setGlobal('eventBus', eventBus.element);
-			// Make an alias with the eventBus
-			mad.eventBus = mad.getGlobal('eventBus');
+			var self = this;
+			var elt = mad.helper.HtmlHelper.create(
+				$(mad.Config.read('app.controllerElt')),
+				'before',
+				'<div/>'
+			);
+			var eventBus = new mad.event.EventBus(elt);
+			mad.bus = eventBus;
 		},
 
 		/**
@@ -239,57 +206,43 @@ steal(
 		 */
 		'initRouteListener': function (routes) {
 			var self = this;
-			mad.eventBus.bind(mad.APP_NS_ID + '_route_change', function (event, route) {
+			mad.bus.bind(mad.APP_NS_ID + '_route_change', function (event, route) {
 				self.dispatch(route);
 			});
 			mad.route.RouteListener.singleton();
-		},
-
-		/**
-		 * Dispatch to the right action following the hash url
-		 * @param {mad.route.Route} route The route to dispatch to
-		 * @see core.controller::getDispatcher()
-		 * @return {void}
-		 */
-		'dispatch': function (route) {
-			// check all required parameters are here
-			if (typeof route.extension == 'undefined') {
-				throw new Error('Bootstrap error : the url is not valid, extension missing');
-			} else if (typeof route.controller == 'undefined') {
-				throw new Error('Bootstrap error : the url is not valid, controller missing');
-			} else if (typeof route.action == 'undefined') {
-				throw new Error('Bootstrap error : the url is not valid, action missing');
-			}
-
-			// get the target controller
-			var controllerName = route.controller.charAt(0).toUpperCase() + route.controller.slice(1) + 'Controller';
-			var appNs = mad.getGlobal('APP_NS');
-			var controllerClass = null;
-			if (route.extension == 'passbolt') {
-				controllerClass = appNs.controller[controllerName];
-			} else {
-				controllerClass = appNs[route.extension].controller[controllerName];
-			}
-
-
-			// dispatch to the convenient action
-			steal.dev.log('dispatch to extension:' + route.extension + ' controller:' + controllerName + ' action:' + route.action);
-			this.options.dispatchOptions.ControllerClass = controllerClass;
-			controllerClass.getDispatcher().dispatch(route, this.options.dispatchOptions);
-		},
-
-		/**
-		 * Execute this function at the end of the bootstrap process.
-		 * @return {void}
-		 */
-		'ready': function () {
-			// @todo used by the unit test
-			// The app controller should release this event ?
-			// The app is ready before or after dispatch ?
-			if (this.options.callbacks.ready != null) {
-				this.options.callbacks.ready();
-			}
-			mad.app.ready();
 		}
+
+//		/**
+//		 * Dispatch to the right action following the hash url
+//		 * @param {mad.route.Route} route The route to dispatch to
+//		 * @see core.controller::getDispatcher()
+//		 * @return {void}
+//		 */
+//		'dispatch': function (route) {
+//			// check all required parameters are here
+//			if (typeof route.extension == 'undefined') {
+//				throw new Error('Bootstrap error : the url is not valid, extension missing');
+//			} else if (typeof route.controller == 'undefined') {
+//				throw new Error('Bootstrap error : the url is not valid, controller missing');
+//			} else if (typeof route.action == 'undefined') {
+//				throw new Error('Bootstrap error : the url is not valid, action missing');
+//			}
+//
+//			// get the target controller
+//			var controllerName = route.controller.charAt(0).toUpperCase() + route.controller.slice(1) + 'Controller';
+//			var appNs = mad.getGlobal('APP_NS');
+//			var controllerClass = null;
+//			if (route.extension == 'passbolt') {
+//				controllerClass = appNs.controller[controllerName];
+//			} else {
+//				controllerClass = appNs[route.extension].controller[controllerName];
+//			}
+//
+//
+//			// dispatch to the convenient action
+//			steal.dev.log('dispatch to extension:' + route.extension + ' controller:' + controllerName + ' action:' + route.action);
+//			this.options.dispatchOptions.ControllerClass = controllerClass;
+//			controllerClass.getDispatcher().dispatch(route, this.options.dispatchOptions);
+//		}
 	});
 });

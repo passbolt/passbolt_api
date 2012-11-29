@@ -6,7 +6,8 @@ steal(
 	'mad/error/missingOptionException.js',
 	'mad/error/noConstructorException.js',
 	'mad/error/templateMissingException.js',
-	'mad/error/wrongParametersException.js'
+	'mad/error/wrongParametersException.js',
+	'mad/error/wrongConfigException.js'
 ).then(function () {
 
 	$.String.getObject('mad.error', null, true);

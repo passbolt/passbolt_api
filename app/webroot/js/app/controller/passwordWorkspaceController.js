@@ -94,12 +94,12 @@ steal(
 		 * @param {passbolt.model.Category} category The selected category
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} category_selected': function (el, ev, category) {
+		'{mad.bus} category_selected': function (el, ev, category) {
 			var filter =  new passbolt.model.Filter({
 				tags: [category],
 				keywords: null
 			});
-			passbolt.eventBus.trigger('filter_resources_browser', filter);
+			mad.bus.trigger('filter_resources_browser', filter);
 		},
 
 		/**
@@ -109,7 +109,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The unselected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_unselected': function (el, ev, resource) {
+		'{mad.bus} resource_unselected': function (el, ev, resource) {
 			// The resource is no more selected, reinit the password workspace
 			// component to its intitial state (ready)
 			this.setState('ready');
@@ -122,7 +122,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_selected': function (el, ev, resource) {
+		'{mad.bus} resource_selected': function (el, ev, resource) {
 			// A resource has been selected, change the state of the password Workspace
 			// controller
 			this.setState('resourceSelected');
@@ -135,7 +135,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} copy_login_clipboard': function (el, ev, resource) {
+		'{mad.bus} copy_login_clipboard': function (el, ev, resource) {
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_login_clipboard');
 		},
@@ -147,7 +147,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} copy_secret_clipboard': function (el, ev, resource) {
+		'{mad.bus} copy_secret_clipboard': function (el, ev, resource) {
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_secret_clipboard');
 		},
@@ -158,7 +158,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_category_creation': function (el, ev, data) {
+		'{mad.bus} request_category_creation': function (el, ev, data) {
 			var category = new passbolt.model.Category({
 				parent_id: data.id
 			});
@@ -182,7 +182,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_category_deletion': function (el, ev, category) {
+		'{mad.bus} request_category_deletion': function (el, ev, category) {
 			category.destroy();
 		},
 
@@ -193,7 +193,7 @@ steal(
 		 * @param {passbolt.model.Category} category The target category to insert the resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_resource_creation': function (el, ev, category) {
+		'{mad.bus} request_resource_creation': function (el, ev, category) {
 			var resource = new passbolt.model.Resource({
 				Category: [{ id: category.id }]
 			});
@@ -218,7 +218,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The target resource to edit
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_resource_edition': function (el, ev, resource) {
+		'{mad.bus} request_resource_edition': function (el, ev, resource) {
 			var popup = mad.controller.component.PopupController.getPopup({
 				label: __('Edit a Resource')
 			}, passbolt.controller.form.resource.CreateFormController, {
@@ -240,7 +240,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The target resource to delete
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} request_resource_deletion': function (el, ev, resource) {
+		'{mad.bus} request_resource_deletion': function (el, ev, resource) {
 			resource.destroy();
 		},
 

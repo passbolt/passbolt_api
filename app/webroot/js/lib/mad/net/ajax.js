@@ -88,7 +88,7 @@ steal(
 		 * @return {jQuery.deferred}
 		 */
 		'request': function (request) {
-			var ResponseHandlerClass = mad.getGlobal('RESPONSE_HANDLER_CLASS');
+			var ResponseHandlerClass = mad.Config.read('net.ResponseHandlerClass');
 			// Duplicate and store the original params in a variable
 			request.originParams = $.extend({}, request.params);
 			// Treat templated uri (like /controller/action/{id}

@@ -21,7 +21,6 @@ steal(
 		'defaults': {
 			'label': 'Passwords Actions Menu Controller',
 			'viewClass': passbolt.view.component.PasswordsActionsMenu
-//			'templateUri': 'app/view/html5/template/controller/component/passwordsActionsMenu.ejs'
 		}
 
 	}, /** @prototype */ {
@@ -46,7 +45,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The unselected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_unselected': function (el, ev, resource) {
+		'{mad.bus} resource_unselected': function (el, ev, resource) {
 			mad.app.getComponent('js_request_resource_edition_button').setState('disabled');
 			mad.app.getComponent('js_request_resource_deletion_button').setState('disabled');
 			mad.app.getComponent('js_request_resource_sharing_button').setState('disabled');
@@ -60,7 +59,7 @@ steal(
 		 * @param {passbolt.model.Category} category The selected category
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} category_selected': function (el, ev, category) {
+		'{mad.bus} category_selected': function (el, ev, category) {
 			mad.app.getComponent('js_request_resource_creation_button').setValue(category);
 		},
 
@@ -71,7 +70,7 @@ steal(
 		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{passbolt.eventBus} resource_selected': function (el, ev, resource) {
+		'{mad.bus} resource_selected': function (el, ev, resource) {
 			mad.app.getComponent('js_request_resource_edition_button').setValue(resource).setState('ready');
 			mad.app.getComponent('js_request_resource_deletion_button').setValue(resource).setState('ready');
 			mad.app.getComponent('js_request_resource_sharing_button').setValue(resource).setState('ready');

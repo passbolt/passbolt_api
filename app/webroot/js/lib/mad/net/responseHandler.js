@@ -101,8 +101,10 @@
 		 * @return {void}
 		 */
 		'_error': function () {
+			console.log(mad.config);
 			// notify the error handler
-			mad.getGlobal('ERROR_HANDLER_CLASS').handleError(
+			console.log(mad.Config.read('error.ErrorHandlerClass'));
+			mad.Config.read('error.ErrorHandlerClass').handleError(
 				this.response.getStatus(),
 				this.response.getTitle(),
 				this.response.getMessage(),
@@ -120,7 +122,7 @@
 		 */
 		'_notice': function () {
 			// notify the error handler
-			mad.getGlobal('ERROR_HANDLER_CLASS').handleError(
+			mad.Config.read('error.ErrorHandlerClass').handleError(
 				this.response.getStatus(),
 				this.response.getTitle(),
 				this.response.getMessage(),
@@ -138,7 +140,7 @@
 		 */
 		'_warning': function () {
 			// notify the error handler
-			mad.getGlobal('ERROR_HANDLER_CLASS').handleError(
+			mad.Config.read('error.ErrorHandlerClass').handleError(
 				this.response.getStatus(),
 				this.response.getTitle(),
 				this.response.getMessage(),
