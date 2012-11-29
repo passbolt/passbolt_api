@@ -204,6 +204,7 @@ class AppSchema extends CakeSchema {
 				END;";
 			$permission->query($getUserCategoryPermission);
 
+			// TODO : manage case where user is owner of the resource. What to do ? What should be the permission then ?
 			$getUserResourcePermission = "
 				DROP FUNCTION IF EXISTS getUserResourcePermission;
 				CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8 COLLATE utf8_unicode_ci
