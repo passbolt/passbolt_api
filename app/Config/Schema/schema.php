@@ -13,6 +13,7 @@ App::uses('CategoryType', 'Model');
 App::uses('Resource', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
+App::uses('PermissionType', 'Model');
 
 class AppSchema extends CakeSchema {
 
@@ -111,17 +112,17 @@ class AppSchema extends CakeSchema {
 			AS
 			SELECT `aap`.aco, `aap`.aco_foreign_key, `aap`.aro, `aap`.aro_foreign_key, 
 			case 
-	        when  `p`.permission_detail_id IS NULL then " . PermissionDetail::DENY . "
-	        when  `p`.permission_detail_id IS NOT NULL then `p`.permission_detail_id
-	    end as permission_detail_id,
+	        when  `p`.type IS NULL then " . PermissionType::DENY . "
+	        when  `p`.type IS NOT NULL then `p`.type
+	    end as type,
 			case 
-	        when  `p`.permission_detail_id IS NULL then 1
-	        when  `p`.permission_detail_id IS NOT NULL then 0
+	        when  `p`.type IS NULL then 1
+	        when  `p`.type IS NOT NULL then 0
 	    end as inherited,
 			`p`.created, `p`.modified, `p`.created_by, `p`.modified_by
 			FROM aro_aco_permissions aap
 			LEFT JOIN permissions p ON `p`.id = `aap`.permission_id
-			LEFT JOIN permission_details pd ON `pd`.id = `p`.permission_detail_id
+			LEFT JOIN permissions_types pt ON `pt`.serial = `p`.type
 			");
 	}
 
@@ -174,7 +175,7 @@ class AppSchema extends CakeSchema {
 				    AND `p`.aro_foreign_key = `group_id` 
 				    LIMIT 1;
 				    IF (`permid` IS NULL) THEN
-				      SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm` FROM(
+				      SELECT `p`.id, MAX(`p`.type) AS maxperm INTO `permid`, `maxperm` FROM(
 				      	SELECT `passbolt`.getGroupCategoryPermission(`group_id`, `cr`.category_id) COLLATE utf8_unicode_ci AS `permid`
 				        FROM categories_resources `cr`
 				        WHERE `cr`.resource_id = `resource_id`
@@ -193,7 +194,7 @@ class AppSchema extends CakeSchema {
 				BEGIN
 				  DECLARE `permid` VARCHAR(36);
 				  DECLARE `maxperm` INT(10);
-				  SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm`  
+				  SELECT `p`.id, MAX(`p`.type) AS maxperm INTO `permid`, `maxperm`  
 				  FROM(
 				    SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) COLLATE utf8_unicode_ci AS `permid`
 				    FROM groups_users `gu` 
@@ -212,7 +213,7 @@ class AppSchema extends CakeSchema {
 				BEGIN
 				  DECLARE `permid` VARCHAR(36);
 				  DECLARE `maxperm` INT(10);
-				  SELECT `p`.id, MAX(`p`.permission_detail_id) AS maxperm INTO `permid`, `maxperm`  
+				  SELECT `p`.id, MAX(`p`.type) AS maxperm INTO `permid`, `maxperm`  
 				  FROM(
 				    SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
 				    FROM groups_users `gu` 
@@ -317,13 +318,13 @@ class AppSchema extends CakeSchema {
 					$this->createPermissionCacheView();
 				break;
 
-				case 'permission_details':
-					array_push(self::$created, 'permission_details');
-					$permissionDetail = ClassRegistry::init('PermissionDetail');
-					$pds = $this->_getDefaultPermissionDetails();
-					foreach ($pds as $pd) {
-						$permissionDetail->create();
-						$permissionDetail->save($pd);
+				case 'permissions_types':
+					array_push(self::$created, 'permissions_types');
+					$permissionType = ClassRegistry::init('PermissionType');
+					$pts = $this->_getDefaultPermissionTypes();
+					foreach ($pts as $pt) {
+						$permissionType->create();
+						$permissionType->save($pt);
 					}
 				break;
 
@@ -490,14 +491,18 @@ class AppSchema extends CakeSchema {
 	);
 
 	// TODO : should become permission_types
-	public $permission_details = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
+	public $permissions_types = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'serial' => array('type' => 'integer', 'null' => false, 'default' => null),
+		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'binary' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_update' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_create' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'_read' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'description' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 255, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'SERIAL' => array('column' => 'serial', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
@@ -507,7 +512,7 @@ class AppSchema extends CakeSchema {
 		'aco_foreign_key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'aro' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 30, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'aro_foreign_key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'permission_detail_id' => array('type' => 'integer', 'null' => false, 'default' => null),
+		'type' => array('type' => 'integer', 'null' => false, 'default' => null),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -721,7 +726,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cRoot['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gManagement['Group']['id'],
-			'permission_detail_id' => '16',
+			'type' => PermissionType::ADMIN,
 		));
 
 		$gHumanResources = $this->Group->findByName("human resources");
@@ -732,7 +737,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cAdministration['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gHumanResources['Group']['id'],
-			'permission_detail_id' => '2'
+			'type' => PermissionType::READ
 		));
 		// human resources have no rights on accounts
 		$cAccounts = $this->Category->findByName("accounts");
@@ -741,7 +746,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cAccounts['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gHumanResources['Group']['id'],
-			'permission_detail_id' => '1'
+			'type' => PermissionType::DENY
 		));
 		// Group human resources can modify resource salesforce account
 		$rSalesforce = $this->Resource->findByName("salesforce account");
@@ -750,7 +755,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $rSalesforce['Resource']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gHumanResources['Group']['id'],
-			'permission_detail_id' => '8'
+			'type' => PermissionType::UPDATE
 		));
 
 		// accounting dpt can access administration>accounts in read only
@@ -760,7 +765,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cAccounts['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gAccountingDpt['Group']['id'],
-			'permission_detail_id' => '2',
+			'type' => PermissionType::READ,
 		));
 
 		$gDrupal = $this->Group->findByName("developers drupal");
@@ -771,7 +776,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cDrupal['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gDrupal['Group']['id'],
-			'permission_detail_id' => '2',
+			'type' => PermissionType::READ,
 		));
 		// Group cakephp has access to category cakephp in readonly
 		$cCakephp = $this->Category->findByName("cakephp");
@@ -781,7 +786,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cCakephp['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gCakephp['Group']['id'],
-			'permission_detail_id' => '2',
+			'type' => PermissionType::READ,
 		));
 		// Group developers team leads has access to projects in modify
 		$cProjects = $this->Category->findByName("projects");
@@ -791,7 +796,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cProjects['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gTeamleads['Group']['id'],
-			'permission_detail_id' => '8',
+			'type' => PermissionType::UPDATE,
 		));
 		// Remy Bertot has admin rights on cp-project1
 		$cProject1 = $this->Category->findByName("cp-project1");
@@ -801,7 +806,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cProjects['Category']['id'],
 			'aro' => 'User',
 			'aro_foreign_key' => $uRemy['User']['id'],
-			'permission_detail_id' => '16',
+			'type' => PermissionType::ADMIN,
 		));
 
 		// Remy Bertot has admin rights on others
@@ -812,7 +817,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cProject1['Category']['id'],
 			'aro' => 'User',
 			'aro_foreign_key' => $uRemy['User']['id'],
-			'permission_detail_id' => '15',
+			'type' => PermissionType::ADMIN,
 		));
 
 		//  Freelancers have read only rights to projects others
@@ -822,7 +827,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cProjects['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gFreelancers['Group']['id'],
-			'permission_detail_id' => '2',
+			'type' => PermissionType::READ,
 		));
 
 		// Jean René has readonly access rights on cp-project2
@@ -833,7 +838,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cCpProject2['Category']['id'],
 			'aro' => 'User',
 			'aro_foreign_key' => $uJeanrene['User']['id'],
-			'permission_detail_id' => '2',
+			'type' => PermissionType::READ,
 		));
 
 		//  company a has read only rights to o-project1
@@ -844,7 +849,7 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cOproject1['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gCompanya['Group']['id'],
-			'permission_detail_id' => '2',
+			'type' => PermissionType::READ,
 		));
 
 		//  company a has read only rights to o-project1
@@ -854,16 +859,17 @@ class AppSchema extends CakeSchema {
 			'aco_foreign_key' => $cOproject2['Category']['id'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $gCompanya['Group']['id'],
-			'permission_detail_id' => '8',
+			'type' => PermissionType::UPDATE,
 		));
 
 		return $ps;
 	}
 
-	protected function _getDefaultPermissionDetails() {
+	protected function _getDefaultPermissionTypes() {
 		$pds = array();
 		$pds[] = array(
-			'id' => 1,
+			'serial' => 0,
+			'name' => '----',
 			'binary' => '0000',
 			'_admin' => '0',
 			'_update' => '0',
@@ -872,8 +878,9 @@ class AppSchema extends CakeSchema {
 			'active' => '1'
 		);
 		$pds[] = array(
-			'id' => 2,
+			'serial' => 1,
 			'binary' => '0001',
+			'name' => '---r',
 			'_admin' => '0',
 			'_update' => '0',
 			'_create' => '0',
@@ -881,8 +888,9 @@ class AppSchema extends CakeSchema {
 			'active' => '1'
 		);
 		$pds[] = array(
-			'id' => 3,
+			'serial' => 2,
 			'binary' => '0010',
+			'name' => '--c-',
 			'_admin' => '0',
 			'_update' => '0',
 			'_create' => '1',
@@ -890,8 +898,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 4,
+			'serial' => 3,
 			'binary' => '0011',
+			'name' => '--cr',
 			'_admin' => '0',
 			'_update' => '0',
 			'_create' => '1',
@@ -899,8 +908,9 @@ class AppSchema extends CakeSchema {
 			'active' => '1'
 		);
 		$pds[] = array(
-			'id' => 5,
+			'serial' => 4,
 			'binary' => '0100',
+			'name' => '-u--',
 			'_admin' => '0',
 			'_update' => '1',
 			'_create' => '0',
@@ -908,8 +918,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 6,
+			'serial' => 5,
 			'binary' => '0101',
+			'name' => '-u-r',
 			'_admin' => '0',
 			'_update' => '1',
 			'_create' => '0',
@@ -917,8 +928,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 7,
+			'serial' => 6,
 			'binary' => '0110',
+			'name' => '-uc-',
 			'_admin' => '0',
 			'_update' => '1',
 			'_create' => '1',
@@ -926,8 +938,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 8,
+			'serial' => 7,
 			'binary' => '0111',
+			'name' => '-ucr',
 			'_admin' => '0',
 			'_update' => '1',
 			'_create' => '1',
@@ -935,8 +948,9 @@ class AppSchema extends CakeSchema {
 			'active' => '1'
 		);
 		$pds[] = array(
-			'id' => 9,
+			'serial' => 8,
 			'binary' => '1000',
+			'name' => 'a---',
 			'_admin' => '1',
 			'_update' => '0',
 			'_create' => '0',
@@ -944,8 +958,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 10,
+			'serial' => 9,
 			'binary' => '1001',
+			'name' => 'a--r',
 			'_admin' => '1',
 			'_update' => '0',
 			'_create' => '0',
@@ -953,8 +968,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 11,
+			'serial' => 10,
 			'binary' => '1010',
+			'name' => 'a-c-',
 			'_admin' => '1',
 			'_update' => '0',
 			'_create' => '1',
@@ -962,8 +978,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 12,
+			'serial' => 11,
 			'binary' => '1011',
+			'name' => 'a-cr',
 			'_admin' => '1',
 			'_update' => '0',
 			'_create' => '1',
@@ -971,8 +988,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 13,
+			'serial' => 12,
 			'binary' => '1100',
+			'name' => 'au--',
 			'_admin' => '1',
 			'_update' => '1',
 			'_create' => '0',
@@ -980,8 +998,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 14,
+			'serial' => 13,
 			'binary' => '1101',
+			'name' => 'au-r',
 			'_admin' => '1',
 			'_update' => '1',
 			'_create' => '0',
@@ -989,8 +1008,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 15,
+			'serial' => 14,
 			'binary' => '1110',
+			'name' => 'auc-',
 			'_admin' => '1',
 			'_update' => '1',
 			'_create' => '1',
@@ -998,8 +1018,9 @@ class AppSchema extends CakeSchema {
 			'active' => '0'
 		);
 		$pds[] = array(
-			'id' => 16,
+			'serial' => 15,
 			'binary' => '1111',
+			'name' => 'aucr',
 			'_admin' => '1',
 			'_update' => '1',
 			'_create' => '1',
