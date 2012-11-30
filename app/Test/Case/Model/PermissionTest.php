@@ -106,7 +106,7 @@ class PermissionTest extends CakeTestCase {
 		foreach ($testcases as $testcase) {
 			$group = $this->Group->findByName($testcase['groupname']);
 			$resource = $this->Resource->findByName($testcase['aconame']);
-			echo "<br/>===== trying with group {$group['Group']['name']} and category {$resource['Resource']['name']} grpid:{$group['Group']['id']} catid:{$resource['Resource']['id']} =====<br/>";
+			//echo "<br/>===== trying with group {$group['Group']['name']} and category {$resource['Resource']['name']} grpid:{$group['Group']['id']} catid:{$resource['Resource']['id']} =====<br/>";
 			$query = "SELECT `passbolt`.getGroupResourcePermission('{$group['Group']['id']}', '{$resource['Resource']['id']}') AS permid";
 			$res = $this->Permission->query($query);
 			$permission = $this->Permission->findById($res[0][0]['permid']);
