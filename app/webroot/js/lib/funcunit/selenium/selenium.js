@@ -70,7 +70,7 @@ steal('steal/browser', function(){
 				spawn(function(){
 					var jarCommand = 'java -jar '+
 						'funcunit/selenium/selenium-server-standalone-2.12.0.jar'+
-						' -userExtensions funcunit/selenium/user-extensions.js';
+						' -userExtensions funcunit/selenium/user-extensions.js -';
 					if (java.lang.System.getProperty("os.name").indexOf("Windows") != -1) {
 						var command = 'start "selenium" ' + jarCommand;
 						runCommand("cmd", "/C", command.replace(/\//g, "\\"))
@@ -88,7 +88,7 @@ steal('steal/browser', function(){
 						started = true;
 					} 
 					catch (ex) {
-						if (timeouts > 20) {
+						if (timeouts > 3600) {
 							print("Selenium is not running. Please use js -selenium to start it.")
 							quit();
 						} else {
