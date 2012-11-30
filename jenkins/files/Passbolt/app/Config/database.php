@@ -67,7 +67,7 @@ class DATABASE_CONFIG {
 		'password' => 'theFreedomIsNotAnOption',
 		'database' => 'passbolt',
 		'prefix' => '',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8'
 	);
 
 	public $test = array(
@@ -78,6 +78,6 @@ class DATABASE_CONFIG {
 		'password' => 'theFreedomIsNotAnOption',
 		'database' => 'passboltTest',
 		'prefix' => '',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8'
 	);
 }
