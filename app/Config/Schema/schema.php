@@ -166,7 +166,6 @@ class AppSchema extends CakeSchema {
 		    NO SQL
 				BEGIN
 				    DECLARE `permid` VARCHAR(36);
-				    DECLARE `maxperm` INT(10);
 				    SELECT `p`.id INTO `permid`
 				    FROM `passbolt`.permissions p 
 				    WHERE `p`.aro='Group'
@@ -175,12 +174,14 @@ class AppSchema extends CakeSchema {
 				    AND `p`.aro_foreign_key = `group_id` 
 				    LIMIT 1;
 				    IF (`permid` IS NULL) THEN
-				      SELECT `p`.id, MAX(`p`.type) AS maxperm INTO `permid`, `maxperm` FROM(
+				      SELECT `p`.id INTO `permid` FROM(
 				      	SELECT `passbolt`.getGroupCategoryPermission(`group_id`, `cr`.category_id) COLLATE utf8_unicode_ci AS `permid`
 				        FROM categories_resources `cr`
 				        WHERE `cr`.resource_id = `resource_id`
 				      ) `catview`
-				      INNER JOIN permissions p ON `p`.id=`catview`.permid;
+				      INNER JOIN permissions p ON `p`.id=`catview`.permid
+				      ORDER BY `p`.type DESC
+				      LIMIT 1;
 				      RETURN `permid`;
 				    END IF;
 				    RETURN `permid`;
@@ -192,17 +193,28 @@ class AppSchema extends CakeSchema {
 				CREATE FUNCTION `getUserCategoryPermission`(`user_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
 				NO SQL
 				BEGIN
-				  DECLARE `permid` VARCHAR(36);
-				  DECLARE `maxperm` INT(10);
-				  SELECT `p`.id, MAX(`p`.type) AS maxperm INTO `permid`, `maxperm`  
-				  FROM(
-				    SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) COLLATE utf8_unicode_ci AS `permid`
-				    FROM groups_users `gu` 
-				    WHERE `gu`.user_id = `user_id`
-				  ) `groupview`
-				  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid;
-				  RETURN `permid`;
-				END;";
+			  DECLARE `permid` VARCHAR(36);
+			  SELECT `p`.id INTO `permid`
+			  FROM `passbolt`.permissions p 
+			  WHERE `p`.aro='User'
+			  AND `p`.aco='Category'
+			  AND `p`.aco_foreign_key = `category_id`
+			  AND `p`.aro_foreign_key = `user_id` 
+			  LIMIT 1;
+			  IF (`permid` IS NULL) THEN
+			      SELECT `p`.id  INTO `permid`  
+			      FROM(
+			        SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) COLLATE utf8_unicode_ci AS `permid`
+			        FROM groups_users `gu` 
+			        WHERE `gu`.user_id = `user_id`
+			      ) `groupview`
+			      INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
+			      ORDER BY `p`.type DESC
+				    LIMIT 1;
+			      RETURN `permid`;
+			  END IF;
+			  RETURN `permid`;
+			END;";
 			$permission->query($getUserCategoryPermission);
 
 			// TODO : manage case where user is owner of the resource. What to do ? What should be the permission then ?
@@ -212,15 +224,30 @@ class AppSchema extends CakeSchema {
 				NO SQL
 				BEGIN
 				  DECLARE `permid` VARCHAR(36);
-				  DECLARE `maxperm` INT(10);
-				  SELECT `p`.id, MAX(`p`.type) AS maxperm INTO `permid`, `maxperm`  
-				  FROM(
-				    SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
-				    FROM groups_users `gu` 
-				    WHERE `gu`.user_id = `user_id`
-				  ) `groupview`
-				  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid;
-				  RETURN `permid`;
+				  SELECT `p`.id INTO `permid`
+				  FROM `passbolt`.permissions p 
+				  WHERE `p`.aro='User'
+				  AND `p`.aco='Resource'
+				  AND `p`.aco_foreign_key = `resource_id`
+				  AND `p`.aro_foreign_key = `user_id` 
+				  LIMIT 1;
+				  IF (`permid` IS NULL) THEN
+					  SELECT `p`.id INTO `permid` 
+					  FROM(
+					      (SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
+						    FROM groups_users `gu` 
+						    WHERE `gu`.user_id = `user_id`)
+						    UNION
+						    (SELECT getUserCategoryPermission(`user_id`, cr.`category_id`) COLLATE utf8_unicode_ci AS `permid`
+						    FROM categories_resources `cr` 
+						    WHERE `cr`.resource_id = `resource_id`)
+					  ) `groupview`
+					  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
+					  ORDER BY `p`.type DESC
+				    LIMIT 1;
+					  RETURN `permid`;
+					END IF;
+					RETURN `permid`;
 				END;";
 			$permission->query($getUserResourcePermission);
 
@@ -803,18 +830,17 @@ class AppSchema extends CakeSchema {
 		$uRemy = $this->User->findByUsername("remy.bertot@test.com");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cProjects['Category']['id'],
+			'aco_foreign_key' => $cProject1['Category']['id'],
 			'aro' => 'User',
 			'aro_foreign_key' => $uRemy['User']['id'],
 			'type' => PermissionType::ADMIN,
 		));
 
 		// Remy Bertot has admin rights on others
-		$cProjects = $this->Category->findByName("others");
-		$uRemy = $this->User->findByUsername("remy.bertot@test.com");
+		$cOthers = $this->Category->findByName("others");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cProject1['Category']['id'],
+			'aco_foreign_key' => $cOthers['Category']['id'],
 			'aro' => 'User',
 			'aro_foreign_key' => $uRemy['User']['id'],
 			'type' => PermissionType::ADMIN,
