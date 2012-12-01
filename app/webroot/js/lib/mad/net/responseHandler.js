@@ -101,9 +101,7 @@
 		 * @return {void}
 		 */
 		'_error': function () {
-			console.log(mad.config);
 			// notify the error handler
-			console.log(mad.Config.read('error.ErrorHandlerClass'));
 			mad.Config.read('error.ErrorHandlerClass').handleError(
 				this.response.getStatus(),
 				this.response.getTitle(),
