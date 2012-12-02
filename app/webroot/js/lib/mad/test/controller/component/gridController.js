@@ -1,68 +1,66 @@
-steal(
-	'funcunit'
-).then(function () {
+steal('funcunit').then(function () {
 
 	// Test environnement, the window of the released popup
 	var testEnv = null,
 		treeController = null,
 		map = null;
 
-	var instanciateGrid  = function () {
-		var map = new testEnv.mad.object.Map({
-			'id': 'id',
-			'name': 'name',
-			'surname': 'surname',
-			'freelancer': 'freelancer',
-			'phone': 'phone',
-			'email': 'email',
-			'children': {
-				'key': 'children',
-				'func': mad.object.Map.mapObjects
-			}
-		});
-	var columnNames = ['Name', 'Surname', 'Freelancer', 'Phone', 'Email', 'Children'];
-	var columnModel = [{
-			'name': 'name',
-			'index': 'name'
-		}, {
-			'name': 'surname',
-			'index': 'surname'
-		}, {
-			'name': 'freelancer',
-			'index': 'freelancer'
-		}, {
-			'name': 'phone',
-			'index': 'phone'
-		}, {
-			'name': 'email',
-			'index': 'email'
-		}, {
-			'name': 'children',
-			'index': 'children',
-			'valueAdapter': function (value, item, columnModel, rowNum) {
-				var returnValue = item.children.length;
-				return returnValue;
-			}
-		}];
+	var instanciateGrid = function () {
+			var map = new testEnv.mad.object.Map({
+				'id': 'id',
+				'name': 'name',
+				'surname': 'surname',
+				'freelancer': 'freelancer',
+				'phone': 'phone',
+				'email': 'email',
+				'children': {
+					'key': 'children',
+					'func': mad.object.Map.mapObjects
+				}
+			});
+			var columnNames = ['Name', 'Surname', 'Freelancer', 'Phone', 'Email', 'Children'];
+			var columnModel = [{
+				'name': 'name',
+				'index': 'name'
+			}, {
+				'name': 'surname',
+				'index': 'surname'
+			}, {
+				'name': 'freelancer',
+				'index': 'freelancer'
+			}, {
+				'name': 'phone',
+				'index': 'phone'
+			}, {
+				'name': 'email',
+				'index': 'email'
+			}, {
+				'name': 'children',
+				'index': 'children',
+				'valueAdapter': function (value, item, columnModel, rowNum) {
+					var returnValue = item.children.length;
+					return returnValue;
+				}
+			}];
 
-		var $grid = testEnv.mad.helper.HtmlHelper.create(testEnv.mad.app.element, 'inside_replace', '<table></table>');
-		var grid = new testEnv.mad.controller.component.GridController($grid, {
-			id: 'test_grid',
-			itemClass: testEnv.demo.model.Person,
-			map: map,
-			columnNames: columnNames,
-			columnModel: columnModel
-		});
-		grid.render();
-		return grid;
-	}
+			var $grid = testEnv.mad.helper.HtmlHelper.create(testEnv.mad.app.element, 'inside_replace', '<table></table>');
+			var grid = new testEnv.mad.controller.component.GridController($grid, {
+				id: 'test_grid',
+				itemClass: testEnv.demo.model.Person,
+				map: map,
+				columnNames: columnNames,
+				columnModel: columnModel
+			});
+			grid.render();
+			return grid;
+		};
 
 	module("mad.controller.component", {
 		// runs before each test
 		setup: function () {
 			stop();
 			var url = '//lib/mad/test/testEnv/app.html';
-//			var url = steal.idToUri('mad/test/testEnv/app.html').toString(); // sopen does not get full url, it needs relative url
+			//			var url = steal.idToUri('mad/test/testEnv/app.html').toString(); // sopen does not get full url, it needs relative url
 			S.open(url, function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
@@ -99,7 +97,11 @@ steal(
 		}, testEnv.mad.error.WrongParametersException, 'Wrong parameter [item] expected type is [demo.model.Person]');
 
 		// Try to insert an instance of a wrong type
-		var wrongTypeIns = new testEnv.mad.model.Model({id:'bad_id', 'name':'bad_name', 'surname':'bad_surname'});
+		var wrongTypeIns = new testEnv.mad.model.Model({
+			id: 'bad_id',
+			'name': 'bad_name',
+			'surname': 'bad_surname'
+		});
 		raises(function () {
 			grid.insertItem(wrongTypeIns);
 		}, testEnv.mad.error.WrongParametersException, 'Wrong parameter [item] expected type is [demo.model.Person]');
@@ -146,36 +148,35 @@ steal(
 
 		// Insert an item an check it has been rendered
 		testEnv.demo.model.Person.findAll().then(function (persons, response, request) {
-			var hovered  = 0,
-				selected  = 0,
+			var hovered = 0,
+				selected = 0,
 				rightSelected = 0;
 			grid.load(persons);
 
 			can.each(persons, function (person, i) {
 				// fuck in unit tests, the element is not released in the parameters
 				// listen in item hovered in tree item
-				grid.element.one('item_hovered', function (/*el,*/ ev, item, srcEvent) {
+				grid.element.one('item_hovered', function ( /*el,*/ ev, item, srcEvent) {
 					equal(item.id, person.id, 'The component is well catching the mouse hover event and the returned item is correct');
 					hovered++;
 				});
 				// listen in item selected in tree item
-				grid.element.one('item_selected', function (/*el,*/ ev, item, srcEvent) {
+				grid.element.one('item_selected', function ( /*el,*/ ev, item, srcEvent) {
 					equal(item.id, person.id, 'The component is well catching the mouse click event and the returned item is correct');
 					selected++;
 				});
-//				// listen in item selected in tree item
-//				tree.element.one('item_right_selected', function (/*el,*/ ev, item, srcEvent) {
-//					equal(item.id, person.id, 'The component is well catching the mouse right click event and the returned item is correct');
-//					rightSelected++;
-//				});
-
+				//				// listen in item selected in tree item
+				//				tree.element.one('item_right_selected', function (/*el,*/ ev, item, srcEvent) {
+				//					equal(item.id, person.id, 'The component is well catching the mouse right click event and the returned item is correct');
+				//					rightSelected++;
+				//				});
 				testEnv.$('#' + person.id).trigger('mouseenter');
 				testEnv.$('#' + person.id).trigger('click');
-//				testEnv.$('#' + person.id + ' .label').trigger('contextmenu');
+				//				testEnv.$('#' + person.id + ' .label').trigger('contextmenu');
 			});
 			equal(hovered, persons.length, 'All the items have been hovered');
 			equal(selected, persons.length, 'All the items have been clicked');
-//			equal(rightSelected, listPersons.length, 'All the items have been right clicked');
+			//			equal(rightSelected, listPersons.length, 'All the items have been right clicked');
 		});
 
 	});

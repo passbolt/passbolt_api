@@ -27,11 +27,11 @@ steal(
 
 		'render': function () {
 			this._super();
-			new mad.controller.component.ButtonController('#js_request_resource_creation_button');
-			new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'disabled'});
-			new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'disabled'});
-			new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'disabled'});
-			new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'disabled'});
+			var creationBt = new mad.controller.component.ButtonController('#js_request_resource_creation_button');
+			var editionBt = new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'disabled'});
+			var deletionBt = new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'disabled'});
+			var sharingBt = new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'disabled'});
+			var modeBt = new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'disabled'});
 		},
 
 		/* ************************************************************** */

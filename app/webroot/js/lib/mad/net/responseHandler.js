@@ -1,4 +1,4 @@
-	steal(
+steal(
 	'jquery/class'
 ).then(function () {
 

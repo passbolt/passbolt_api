@@ -37,13 +37,16 @@ steal(
 			this.menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'));
 			this.menuCtl.render();
 			this.menuCtl.initMenuItems();
+
 			// Add the filter controller
 			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {});
 			this.filterCtl.render();
+
 			// Add the notification controller
 			this.notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
 				'state': 'hidden'
 			});
+
 			// Add a workspaces container tabs element to the app 
 			this.workspacesCtl = new mad.controller.component.TabController($('#js_workspaces_container'));
 			this.workspacesCtl.render();
@@ -67,7 +70,6 @@ steal(
 		 * @return {void}
 		 */
 		'ready': function () {
-			console.log('functoin ready');
 			this._super();
 			// @todo Il est bien puant ce ready, check the state management pour gerer ca
 			mad.bus.trigger('app_ready');
