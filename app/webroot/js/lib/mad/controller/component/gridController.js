@@ -63,14 +63,14 @@ steal(
 		},
 
 		/**
-		 * Empty the grid
+		 * Reset the grid
 		 * @return {void}
 		 */
-		'empty': function () {
+		'reset': function () {
 			// @todo Check after this operation if the widget are well destroyed.
 			// The hypothesis let's believe me than the remove function will deeply removed
 			// each element and launch the destroy function of each component controller
-			this.view.empty();
+			this.view.reset();
 		},
 
 		/**
@@ -166,7 +166,6 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (item, refItemId, position) {
-
 			if (this.getItemClass() == null) {
 				throw new mad.error.Exception('The associated itemClass can not be null');
 			}
@@ -218,13 +217,13 @@ steal(
 		},
 
 		/**
-		 * Load items in the grid. If the grid contain items, empty it
+		 * Load items in the grid. If the grid contain items, reset it
 		 * @param {mad.model.Model[]} items The array or list of items to insert in the grid
 		 * @return {void}
 		 */
 		'load': function (items) {
 			var self = this;
-			this.empty();
+			this.reset();
 			can.each(items, function (item, i) {
 				self.insertItem(item);
 			});

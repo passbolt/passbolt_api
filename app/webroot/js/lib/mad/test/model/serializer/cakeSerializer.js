@@ -21,7 +21,7 @@ steal(
 
 	test('mad.model.serializer.CakeSerializer : From', function () {
 		// @todo chech why on then the pipe does not release response and request
-		var persons = testEnv.demo.model.Person.findAll({}, function(persons, response, request){
+		var persons = testEnv.demo.model.Person.findAll({}, function (persons, response, request) {
 			var cakeData = response.body,
 				person1 = cakeData[0],
 				Class = testEnv.demo.model.Person,

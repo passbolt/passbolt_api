@@ -20,7 +20,7 @@ steal(
 		 */
 		'validate': function (rule, value, options) {
 
-			if (typeof rule == 'object'){
+			if (typeof rule == 'object') {
 				options = rule.options || options || {};
 				rule = rule.rule;
 			}
@@ -40,11 +40,11 @@ steal(
 			// An options type has been defined
 			if (type) {
 				switch (type) {
-					case 'ASCII':
-						returnValue = 'a-zA-Z';
-						break;
-					default:
-						returnValue = '\\p{' + type + '}';
+				case 'ASCII':
+					returnValue = 'a-zA-Z';
+					break;
+				default:
+					returnValue = '\\p{' + type + '}';
 				}
 			}
 

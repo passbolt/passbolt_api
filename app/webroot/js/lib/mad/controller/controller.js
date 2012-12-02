@@ -51,13 +51,6 @@ steal(
 				var id = this.options.id || uuid();
 				this.element.attr('id', id);
 			}
-
-			// propagate : a new controller has been released
-			if (mad.bus) {
-				mad.bus.trigger(mad.APP_NS_ID + '_controller_released', {
-					'component': this
-				});
-			}
 		},
 
 		/**

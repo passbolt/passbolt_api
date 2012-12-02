@@ -78,16 +78,12 @@ steal('funcunit', function () {
 	 * Test the augment feature
 	 **************************************************************************** */
 
-	$.Class('mad.test.ClassToAugment',
-	// @static
-	{
+	$.Class('mad.test.ClassToAugment', /** @static */ {
 		'staticVar': null,
 		'staticFunc': function () {
 			return 'I am a simple static function';
 		}
-	},
-	// @prototype
-	{
+	}, /** @prototype */ {
 		'instanceVar1': null,
 		'multipleConstructorCounter': 0,
 		'init': function () {
@@ -98,16 +94,12 @@ steal('funcunit', function () {
 		}
 	});
 
-	$.Class('mad.test.Augmentator',
-	// @static
-	{
+	$.Class('mad.test.Augmentator', /** @static */ {
 		'augmentedStaticVar': 'I am a static variable',
 		'augmentedStaticFunc': function () {
 			return 'I am a simple static function which augments the Class';
 		}
-	},
-	// @prototype
-	{
+	}, /** @prototype */ {
 		'augmentedVar': 'I am an augmented variable',
 		'init': function () {
 			this.multipleConstructorCounter++;
@@ -161,7 +153,7 @@ steal('funcunit', function () {
 		// Augmented function can manipulate instance's functions
 		equal(i1.useInstanceFunc(), 'I am a simple prototype function called from an augmented function', 'Augmented function can manipulate instance\'s functions');
 
-		delete i1;
+		i1 = null;
 	});
 
 	test('Class.augment : Augmented static properties are working like native static properties', function () {

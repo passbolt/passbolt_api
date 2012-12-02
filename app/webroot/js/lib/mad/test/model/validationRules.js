@@ -141,7 +141,7 @@ steal('funcunit', function () {
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////
 		ok(mad.model.ValidationRules.validate('required', samples['null']) !== true, samples['null']);
-		var str = '';
+		str = '';
 		ok(mad.model.ValidationRules.validate('required', str) !== true, 'empty string');
 		str = ' ';
 		ok(mad.model.ValidationRules.validate('required', str) !== true, 'string containing only one space');
@@ -154,12 +154,10 @@ steal('funcunit', function () {
 	});
 
 	test('mad.model.ValidationRules : email', function () {
-		var str = '';
 		////////////////////////////////////////////////////////////////////////
 		// TRUE Excepted
 		////////////////////////////////////////////////////////////////////////
 		ok(mad.model.ValidationRules.validate('email', samples['email']) === true, samples['email']);
-		var str = '';
 		////////////////////////////////////////////////////////////////////////
 		// FALSE Excepted
 		////////////////////////////////////////////////////////////////////////

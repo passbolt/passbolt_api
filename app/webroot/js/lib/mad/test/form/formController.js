@@ -23,21 +23,23 @@ steal(
 	/* ************************************************************** */
 	/* Functions used by unit tests */
 	/* ************************************************************** */
-	function instanciateForm () {
+	function instanciateForm() {
 		var returnValue = testEnv.mad.helper.ComponentHelper.create(testEnv.mad.app.element, 'last', testEnv.mad.form.FormController, {});
 		return returnValue;
 	}
 
-	function loadFormElements (form) {
+	function loadFormElements(form) {
 		var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 			'modelReference': 'demo.model.Person.surname'
 		});
 		form.addElement(element);
-		var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+		element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 			'modelReference': 'demo.model.Person.name'
 		});
 		form.addElement(element);
-		var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+		element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 			'modelReference': 'demo.model.Person.freelancer',
 			'availableValues': {
 				'0': 'No',
@@ -45,14 +47,17 @@ steal(
 			}
 		});
 		form.addElement(element);
-		var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+		element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 			'modelReference': 'demo.model.Person.phone'
 		});
 		form.addElement(element);
-		var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+		element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 			'modelReference': 'demo.model.Person.email'
 		});
 		form.addElement(element);
+
 		// get all available countries
 		var availableCountries = {};
 		testEnv.demo.model.Country.findAll({}, function (countries, response, request) {
@@ -60,7 +65,7 @@ steal(
 				availableCountries[country.id] = country.label;
 			});
 		});
-		var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.CheckboxController, {
+		element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.CheckboxController, {
 			'modelReference': 'demo.model.Person.visited.id',
 			'availableValues': availableCountries
 		});
@@ -131,12 +136,14 @@ steal(
 				'value': person1.surname
 			});
 			form.addElement(element);
-			var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+			element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 				'modelReference': 'demo.model.Person.name',
 				'value': person1.name
 			});
 			form.addElement(element);
-			var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+			element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 				'modelReference': 'demo.model.Person.freelancer',
 				'availableValues': {
 					'0': 'No',
@@ -145,16 +152,19 @@ steal(
 				'value': person1.freelancer
 			});
 			form.addElement(element);
-			var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+			element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 				'modelReference': 'demo.model.Person.phone',
 				'value': person1.phone
 			});
 			form.addElement(element);
-			var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
+
+			element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.TextboxController, {
 				'modelReference': 'demo.model.Person.email',
 				'value': person1.email
 			});
 			form.addElement(element);
+
 			// get all available countries
 			var availableCountries = {};
 			testEnv.demo.model.Country.findAll({}, function (countries, response, request) {
@@ -164,7 +174,7 @@ steal(
 			});
 			var visited = [];
 			can.each(person1.visited, function (item, i) { visited.push(item.id) });
-			var element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.CheckboxController, {
+			element = testEnv.mad.helper.ComponentHelper.create(form.element, 'last', testEnv.mad.form.element.CheckboxController, {
 				'modelReference': 'demo.model.Person.visited.id',
 				'availableValues': availableCountries,
 				'value': visited

@@ -32,7 +32,7 @@ steal(
 				self.controller.setState('hidden');
 			}
 			// hide the notificator after 30 secondes
-			self.timeoutBeforeReset = setTimeout(function(){
+			self.timeoutBeforeReset = setTimeout(function () {
 				self.controller.setState('hidden');
 			}, 30000);
 

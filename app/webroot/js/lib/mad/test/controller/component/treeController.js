@@ -7,7 +7,6 @@ steal(
 		setup: function () {
 			stop();
 			var url = 'lib/mad/test/testEnv/app.html';
-//			var url = steal.idToUri('mad/test/testEnv/app.html').toString(); // sopen does not get full url, it needs relative url
 			S.open(url, function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
@@ -65,7 +64,7 @@ steal(
 		});
 		tree.render();
 		return tree;
-	}
+	};
 
 	test('TreeController.init', function () {
 		var tree = instanciateTree();
@@ -91,7 +90,7 @@ steal(
 		}, testEnv.mad.error.WrongParametersException, 'Wrong parameter [item] expected type is [demo.model.Person]');
 
 		// Try to insert an instance of a wrong type
-		var wrongTypeIns = new testEnv.mad.model.Model({id:'bad_id', 'name':'bad_name', 'surname':'bad_surname'});
+		var wrongTypeIns = new testEnv.mad.model.Model({id: 'bad_id', 'name': 'bad_name', 'surname': 'bad_surname'});
 		raises(function () {
 			tree.insertItem(wrongTypeIns);
 		}, testEnv.mad.error.WrongParametersException, 'Wrong parameter [item] expected type is [demo.model.Person]');

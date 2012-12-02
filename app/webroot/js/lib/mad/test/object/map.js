@@ -12,17 +12,14 @@ steal('funcunit', function () {
 			'key1': 'value1',
 			'key2': 'value2',
 			'key3': 'value3'
-		}
+		};
 		var map = new mad.object.Map({
 			'key1': 'key2',
 			'key2': 'key3',
 			'key3': 'key1'
 		});
 		var mappedObject = map.mapObject(object);
-		ok(
-			mappedObject.key1 == 'value2' && mappedObject.key2 == 'value3' && mappedObject.key3 == 'value1',
-			'The object has well been mapped'
-		);
+		ok(mappedObject.key1 == 'value2' && mappedObject.key2 == 'value3' && mappedObject.key3 == 'value1', 'The object has well been mapped');
 	});
 
 	test('mapObject : map object to another with sub targets', function () {
@@ -30,15 +27,14 @@ steal('funcunit', function () {
 			'key1': 'value1',
 			'key2': 'value2',
 			'key3': 'value3'
-		}
+		};
 		var map = new mad.object.Map({
 			'key1.sub1': 'key2',
 			'key2.sub2.sub21': 'key3',
 			'key3.sub3.sub31.sub32': 'key1'
 		});
 		var mappedObject = map.mapObject(object);
-		ok(
-		mappedObject.key1.sub1 == 'value2' && mappedObject.key2.sub2.sub21 == 'value3' && mappedObject.key3.sub3.sub31.sub32 == 'value1', 'The object has well been mapped');
+		ok(mappedObject.key1.sub1 == 'value2' && mappedObject.key2.sub2.sub21 == 'value3' && mappedObject.key3.sub3.sub31.sub32 == 'value1', 'The object has well been mapped');
 	});
 
 	test('mapObject : map object to another with sub targets and transformation function', function () {
@@ -46,20 +42,19 @@ steal('funcunit', function () {
 			'key1': 'value1',
 			'key2': 'value2',
 			'key3': 'value3'
-		}
+		};
 		var map = new mad.object.Map({
 			'key1.sub1': 'key2',
 			'key2.sub2.sub21': 'key3',
 			'key3.sub3.sub31.sub32': {
 				'key': 'key1',
 				func: function (value) {
-					return value + ' changed'
+					return value + ' changed';
 				}
 			}
 		});
 		var mappedObject = map.mapObject(object);
-		ok(
-		mappedObject.key1.sub1 == 'value2' && mappedObject.key2.sub2.sub21 == 'value3' && mappedObject.key3.sub3.sub31.sub32 == 'value1 changed', 'The object has well been mapped');
+		ok(mappedObject.key1.sub1 == 'value2' && mappedObject.key2.sub2.sub21 == 'value3' && mappedObject.key3.sub3.sub31.sub32 == 'value1 changed', 'The object has well been mapped');
 	});
 
 	test('mapObjects : map array of simple objects to another', function () {
@@ -67,17 +62,16 @@ steal('funcunit', function () {
 			'key1': 'value1',
 			'key2': 'value2',
 			'key3': 'value3'
-		}
+		};
 		var map = new mad.object.Map({
 			'key1': 'key2',
 			'key2': 'key3',
 			'key3': 'key1'
 		});
 
-//		raises(function () {
-//			var mappedObjects = map.mapObjects(object);
-//		}, mad.error.WrongParametersException, mad.error.WrongParametersException.message);
-
+		//		raises(function () {
+		//			var mappedObjects = map.mapObjects(object);
+		//		}, mad.error.WrongParametersException, mad.error.WrongParametersException.message);
 		var arr = [object, object, object];
 		var mappedObjects = map.mapObjects(arr);
 		var mappingAssert = true;

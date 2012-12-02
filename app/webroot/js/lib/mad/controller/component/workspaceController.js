@@ -1,6 +1,7 @@
 steal(
-	'mad/controller/component/containerController.js', 
-	'mad/view/template/component/workspace.ejs').then(function () {
+	'mad/controller/component/containerController.js',
+	'mad/view/template/component/workspace.ejs'
+).then(function () {
 
 	/*
 	 * @class mad.controller.component.WorkspaceController
@@ -16,15 +17,11 @@ steal(
 	 * @param {array} options Optional parameters
 	 * @return {mad.controller.component.WorkspaceController}
 	 */
-	mad.controller.component.ContainerController.extend('mad.controller.component.WorkspaceController',
-	/** @static */
-	{
+	mad.controller.component.ContainerController.extend('mad.controller.component.WorkspaceController', /** @static */ {
 		'defaults': {
 			'label': 'WorkspaceController',
 			'templateUri': 'mad/view/template/component/workspace.ejs'
 		}
-	}
-	/** @prototype */
-	, {});
+	}, /** @prototype */ {});
 
 });
