@@ -45,13 +45,13 @@ steal(
 				params: params,
 				success: success,
 				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				// pipe the result to convert cakephp response format into can format
+				// else the new attribute are not well placed
+				var def = $.Deferred();
+				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+				return def;
 			});
-//			.pipe(function (data, textStatus, jqXHR) {
-//				// pipe the result to convert cakephp response format into can format
-//				var def = $.Deferred();
-//				def.resolveWith(this, [self.toCan(data)]);
-//				return def;
-//			});
 		},
 
 		'destroy' : function (id, success, error) {
@@ -103,7 +103,7 @@ steal(
 			}).pipe(function (data, textStatus, jqXHR) {
 				// pipe the result to convert cakephp response format into can format
 				var def = $.Deferred();
-				def.resolveWith(this, [self.toCan(data)]);
+				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
 				return def;
 			});
 		}

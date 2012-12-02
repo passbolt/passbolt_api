@@ -5,8 +5,7 @@ steal('funcunit').then(function () {
 		// runs before each test
 		setup: function () {
 			stop();
-			var url = '//lib/mad/test/testEnv/app.html';
-//			var url = steal.idToUri('mad/test/testEnv/app.html').toString(); // sopen does not get full url, it needs relative url
+			var url = 'lib/mad/test/testEnv/app.html';
 			S.open(url, function () {
 				// store the env windows in a global var for the following unit tests
 				testEnv = S.win;
@@ -21,7 +20,7 @@ steal('funcunit').then(function () {
 	});
 
 	test('ComponentHelper : create exception', function () {
-		var refElement = S('#mad_test_app_controller'),
+		var refElement = testEnv.mad.app.element,
 			position = 'inside_replace',
 			uid = "uid",
 			Clazz = testEnv.mad.controller.ComponentController;

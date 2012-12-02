@@ -21,10 +21,10 @@ steal(
 		},
 
 		/**
-		 * Empty the grid
+		 * Reset the grid
 		 * @return {void}
 		 */
-		'empty': function () {
+		'reset': function () {
 			$('tbody tr', this.element).remove();
 		},
 

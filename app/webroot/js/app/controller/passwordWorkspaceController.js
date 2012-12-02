@@ -203,7 +203,7 @@ steal(
 				data: resource,
 				callbacks : {
 					submit: function (data) {
-						var instance = new passbolt.model.Resource(data['passbolt.model.Resource'])
+						new passbolt.model.Resource(data['passbolt.model.Resource'])
 							.save();
 						popup.remove();
 					}

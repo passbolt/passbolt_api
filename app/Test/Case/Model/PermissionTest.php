@@ -63,7 +63,7 @@ class PermissionTest extends CakeTestCase {
 			$group = $this->Group->findByName($testcase['groupname']);
 			$category = $this->Category->findByName($testcase['aconame']);
 			//echo "===== trying with group {$group['Group']['name']} and category {$category['Category']['name']} grpid:{$group['Group']['id']} catid:{$category['Category']['id']} =====";
-			$query = "SELECT `passbolt`.getGroupCategoryPermission('{$group['Group']['id']}', '{$category['Category']['id']}') AS permid";
+			$query = "SELECT getGroupCategoryPermission('{$group['Group']['id']}', '{$category['Category']['id']}') AS permid";
 			$res = $this->Permission->query($query);
 			$permission = $this->Permission->findById($res[0][0]['permid']);
 			if($permission)
@@ -107,7 +107,7 @@ class PermissionTest extends CakeTestCase {
 			$group = $this->Group->findByName($testcase['groupname']);
 			$resource = $this->Resource->findByName($testcase['aconame']);
 			//echo "<br/>===== trying with group {$group['Group']['name']} and category {$resource['Resource']['name']} grpid:{$group['Group']['id']} catid:{$resource['Resource']['id']} =====<br/>";
-			$query = "SELECT `passbolt`.getGroupResourcePermission('{$group['Group']['id']}', '{$resource['Resource']['id']}') AS permid";
+			$query = "SELECT getGroupResourcePermission('{$group['Group']['id']}', '{$resource['Resource']['id']}') AS permid";
 			$res = $this->Permission->query($query);
 			$permission = $this->Permission->findById($res[0][0]['permid']);
 			if($permission)
@@ -156,7 +156,7 @@ class PermissionTest extends CakeTestCase {
 			$user = $this->User->findByUsername($testcase['username']);
 			$category = $this->Category->findByName($testcase['aconame']);
 			//echo "<br/>===== trying with group {$group['Group']['name']} and category {$resource['Resource']['name']} grpid:{$group['Group']['id']} catid:{$resource['Resource']['id']} =====<br/>";
-			$query = "SELECT `passbolt`.getUserCategoryPermission('{$user['User']['id']}', '{$category['Category']['id']}') AS permid";
+			$query = "SELECT getUserCategoryPermission('{$user['User']['id']}', '{$category['Category']['id']}') AS permid";
 			$res = $this->Permission->query($query);
 			$permission = $this->Permission->findById($res[0][0]['permid']);
 			if($permission)
@@ -205,7 +205,7 @@ class PermissionTest extends CakeTestCase {
 			$user = $this->User->findByUsername($testcase['username']);
 			$resource = $this->Resource->findByName($testcase['aconame']);
 			//echo "<br/>===== trying with group {$group['Group']['name']} and category {$resource['Resource']['name']} grpid:{$group['Group']['id']} catid:{$resource['Resource']['id']} =====<br/>";
-			$query = "SELECT `passbolt`.getUserResourcePermission('{$user['User']['id']}', '{$resource['Resource']['id']}') AS permid";
+			$query = "SELECT getUserResourcePermission('{$user['User']['id']}', '{$resource['Resource']['id']}') AS permid";
 			$res = $this->Permission->query($query);
 			$permission = $this->Permission->findById($res[0][0]['permid']);
 			if($permission)

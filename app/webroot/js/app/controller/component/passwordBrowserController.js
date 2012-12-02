@@ -120,7 +120,7 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (resource, refResourceId, position) {
-			// add the resource to the list of the observed resources
+			// add the resource to the list of observed resources
 			this.options.resources.push(resource);
 			// remove the item to the grid
 			this._super(resource, refResourceId, position);
@@ -147,16 +147,26 @@ steal(
 		},
 
 		/**
+		 * reset
+		 * @return {void}
+		 */
+		'reset': function () {
+			// reset the list of observed resourced (Bon, make a splice seems to be the only solution)
+			this.options.resources.splice(0, this.options.resources.length);
+		},
+
+		/**
 		 * Load resources in the grid
 		 * @param {passbolt.model.Resource.List} resources The list of resources to
 		 * load into the grid
 		 * @return {void}
 		 */
-		'load': function (resources) {
+		'load': function (resources, reset) {
 			// load the resources
 			this._super(resources);
-			// rebind the controller with the changes on the options
-			this.on();
+			console.dir(this.options.resources);
+//			// rebind the controller with the changes on the options
+//			this.on();
 		},
 
 		/* ************************************************************** */
@@ -319,7 +329,7 @@ steal(
 			}, function (resources, response, request) {
 				// The callback is out of date, an other filter has been performed
 				if (request.originParams.keywords != self.filter.keywords ||
-					request.originParams.categories_id != can.map(self.filter.tags, function (tag, i) { return tag.id; }).join(',')) {
+						request.originParams.categories_id != can.map(self.filter.tags, function (tag, i) { return tag.id; }).join(',')) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
 					return;
 				}

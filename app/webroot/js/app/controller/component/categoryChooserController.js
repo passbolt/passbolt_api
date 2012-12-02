@@ -57,12 +57,12 @@ steal(
 						{ 'id': uuid(), 'label': 'secret',
 							'action': function (menu) {
 								mad.bus.trigger('request_resource_creation', item);
-							menu.remove();
+								menu.remove();
 							}},
 						{ 'id': uuid(), 'label': 'category',
 							'action': function (menu) {
 								mad.bus.trigger('request_category_creation', item);
-							menu.remove();
+								menu.remove();
 							}}
 					]},
 				{ 'id': uuid(), 'label': 'rename...',
@@ -74,8 +74,7 @@ steal(
 					'action': function (menu) {
 						mad.bus.trigger('request_category_deletion', item);
 						menu.remove();
-					}
-				}
+					}}
 			]);
 
 			// Instanciate the menu controller
@@ -166,14 +165,11 @@ steal(
 			this.setState('loading');
 			passbolt.model.Category.findAll({
 				'children': true
-			},
-				function (categories, response, request) {
-					// load the tree with the categories
-					self.load(categories);
-					self.setState('ready');
-				},
-				function (response) { }
-			);
+			}, function (categories, response, request) {
+				// load the tree with the categories
+				self.load(categories);
+				self.setState('ready');
+			}, function (response) { });
 		}
 
 	});
