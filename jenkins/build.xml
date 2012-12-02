@@ -78,7 +78,7 @@
 		</fileset>
 		<pathconvert pathsep=" " property="jsfiles.clean" refid="jsfiles.raw" />
 		<exec executable="java" output="${build}/jslint/jslint.xml">
-			<arg line="-jar ${src}/../../../bin/jslint4java/jslint4java.jar --report xml ${jsfiles.clean} --undef --eqeq --continue --plusplus --regexp --vars --sloppy --es5" />
+			<arg line="-jar ${src}/../../../bin/jslint4java/jslint4java.jar --report xml ${jsfiles.clean} --undef --eqeq --continue --plusplus --regexp --vars --sloppy --es5 --nomen" />
 		</exec>
 	</target>
 	
