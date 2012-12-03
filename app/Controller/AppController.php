@@ -43,7 +43,7 @@ class AppController extends Controller {
 		}));
 
 		// Set default layout
-	  if (isset($this->request->params['plugin']) && $this->request->params['plugin'] == 'api_generator') {
+		if (isset($this->request->params['plugin']) && $this->request->params['plugin'] == 'api_generator') {
 			$this->layout = 'default';
 		} else {
 			//if ( || $this->request->is('json')) {

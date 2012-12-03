@@ -1,11 +1,19 @@
 <?php
+/**
+ * Category Schema
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.Schema.categories
+ * @since        version 2.12.11
+ */
 App::uses('Category', 'Model');
 App::uses('Resource', 'Model');
 App::uses('CategoryResource', 'Model');
 
 class CategorySchema {
 
-	function init() {
+	public function init() {
 		$this->Category = ClassRegistry::init('Category');
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->CategoryResource = ClassRegistry::init('CategoryResource');
@@ -110,4 +118,3 @@ class CategorySchema {
 		return $categories;
 	}
 }
-?>

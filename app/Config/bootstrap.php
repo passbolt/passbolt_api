@@ -26,15 +26,15 @@
 /**
  * Additional App Configuration
  */
-	Configure::load('app'); // Application
-	require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
+Configure::load('app'); // Application
+require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
 
 /**
  * API and DOC Plugins
  */
-	if (Configure::read('debug') > 1) {
-	  CakePlugin::load('ApiGenerator');
-	}
+if (Configure::read('debug') > 1) {
+	CakePlugin::load('ApiGenerator');
+}
 
 /**
  * Cache Engine Configuration

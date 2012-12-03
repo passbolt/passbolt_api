@@ -19,7 +19,7 @@ class CategoriesController extends AppController {
 	public function index() {
 		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
 		$data = array();
-		
+
 		$o = $this->Category->getFindOptions('getRoots', User::get('Role.name'));
 		$categories = $this->Category->find('threaded', $o);
 

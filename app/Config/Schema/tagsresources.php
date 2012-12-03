@@ -1,4 +1,12 @@
 <?php
+/**
+ * Tag Resource Schema
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.Schema.tagsresources
+ * @since        version 2.12.11
+ */
 App::uses('Tag', 'Model');
 App::uses('TagResource', 'Model');
 

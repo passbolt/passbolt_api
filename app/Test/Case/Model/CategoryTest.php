@@ -13,6 +13,7 @@ App::uses('User', 'Model');
 class CategoryTest extends CakeTestCase {
 
 	public $autoFixtures = true;
+
 	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
 
 	public function setUp() {
@@ -142,7 +143,7 @@ class CategoryTest extends CakeTestCase {
 		$parent = $this->Category->findByName('cakephp');
 		$category = array('Category' => array('name' => 'testAdd', 'parent_id' => $parent['Category']['id']));
 		$this->Category->create();
-		$result = $this->Category->save($category); 
+		$result = $this->Category->save($category);
 		$this->assertTrue($result['Category']['lft'] == '20');
 
 		// Test that a category is added properly if parameters are correct and without parent_id

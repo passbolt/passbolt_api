@@ -85,8 +85,8 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /categoriesResources/$id.json : The test should return a success but is returning {$result['header']['status']}");
-		
-		$found = $this->CategoryResource->findById($id);	
+
+		$found = $this->CategoryResource->findById($id);
 		$this->assertEqual(
 			count($found), 0,
 			"delete /categoriesResources/$id.json : This test should have fetched 0 elements from the database but it is not the case. Is the element properly deleted ?"

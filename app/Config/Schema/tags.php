@@ -47,5 +47,4 @@ class TagSchema {
 		));
 		return $ts;
 	}
-
 }

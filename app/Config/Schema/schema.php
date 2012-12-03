@@ -13,7 +13,7 @@ require_once (APP . 'Config' . DS . 'Schema' . DS . 'users.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'groups.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'categories.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'categoriestypes.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissions.php'); 
+require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissions.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissionstypes.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'tags.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'tagsresources.php');
