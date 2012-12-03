@@ -13,7 +13,7 @@ require_once (APP . 'Config' . DS . 'Schema' . DS . 'users.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'groups.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'categories.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'categoriestypes.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissions.php'); 
+require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissions.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissionstypes.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'tags.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'tagsresources.php');
@@ -248,7 +248,6 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
-	// TODO : should become permission_types
 	public $permissions_types = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'serial' => array('type' => 'integer', 'null' => false, 'default' => null),
