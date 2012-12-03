@@ -99,13 +99,28 @@ class CommentTest extends CakeTestCase {
  * @return void
  */
 	public function testForeignIdValidation() {
-		// test with empty 
+		// test with empty for foreign key check 
+		// we do double check test id and model validity 
 		$testcase = array(
 			'Comment' => array(
 				'foreign_id' => '',
 				'foreign_model' => ''
 			)
 		);
+		unset($this->Comment->validate['foreign_id']['uuid']);
+		unset($this->Comment->validate['foreign_model']['inlist']);
+		$this->Comment->set($testcase);
+		$msg = 'comment on empty foreign_id and moel should not be allowed';
+		$this->assertEqual($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
+
+		$testcase = array(
+			'Comment' => array(
+				'foreign_id' => '',
+				'foreign_model' => 'Resource'
+			)
+		);
+		unset($this->Comment->validate['foreign_id']['uuid']);
+		unset($this->Comment->validate['foreign_model']['inlist']);
 		$this->Comment->set($testcase);
 		$msg = 'comment on empty foreign_id and moel should not be allowed';
 		$this->assertEqual($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);

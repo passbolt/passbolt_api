@@ -7,7 +7,7 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright		 Copyright 2012, Passbolt.com
- * @package			 app.Model.role
+ * @package			 app.Model.comment
  * @since				 version 2.12.11
  * @license			 http://www.passbolt.com/license
  */
@@ -24,7 +24,7 @@ class Comment extends AppModel {
 		$default = array(
 			'id' => array(
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'allowEmpty' => true,
 					'required' => false,
 					'message'	=> __('UUID must be in correct format')
@@ -32,12 +32,12 @@ class Comment extends AppModel {
 			),
 			'parent_id' => array(
 				'exist' => array(
-					'rule'		=> array('parentExists', null),
+					'rule' => array('parentExists', null),
 					'allowEmpty' => true,
 					'message' => __('The parent provided does not exist')
 				),
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'allowEmpty' => true,
 					'required' => false,
 					'message'	=> __('UUID must be in correct format')
@@ -45,7 +45,7 @@ class Comment extends AppModel {
 			),
 			'foreign_id' => array(
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('UUID of the foreign key must be in correct format')
@@ -65,7 +65,7 @@ class Comment extends AppModel {
 			),
 			'content' => array(
 				'alphaNumeric' => array(
-					'rule'		 => '/^([\pL\s\.\!\,0-9]){1,256}$/u',
+					'rule' => '/^([\pL\s\.\!\,0-9]){1,256}$/u',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('Alphanumeric only')
@@ -85,6 +85,12 @@ class Comment extends AppModel {
  * @param check
  */
 	public function foreignExists($check) {
+		if ($this->data['Comment']['foreign_model'] == null) {
+			return false;
+		}
+		if ($check['foreign_id'] == null) {
+			return false;
+		}
 		$m = $this->data['Comment']['foreign_model'];
 		$model = Common::getModel($m);
 		$exists = $model->find('count', array(
