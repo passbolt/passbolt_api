@@ -98,4 +98,20 @@ class AppModel extends Model {
 	public static function getFindConditions($case = null, $role=null, &$data = null) {
 		return array('conditions' => array());
 	}
+
+/**
+ * Check if a record with provided parent_id exists
+ * @param check
+ */
+	public function parentExists($check) {
+		if ($check['parent_id'] == null) {
+			return true;
+		} else {
+			$exists = $this->find('count', array(
+				'conditions' => array('id' => $check['parent_id']),
+				 'recursive' => -1
+			));
+			return $exists > 0;
+		}
+	}
 }

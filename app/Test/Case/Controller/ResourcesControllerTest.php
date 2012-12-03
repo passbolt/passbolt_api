@@ -299,4 +299,9 @@ class ResourcesControllerTest extends ControllerTestCase {
 		)), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "delete /resources/$id.json : The test should return a error but is returning {$result['header']['status']}");
 	}
+
+	public function testDeleteAssiociations() {
+		//TODO make sure the associated comments are deleted
+		//TODO make sure the associated tags are deleted
+	}
 }

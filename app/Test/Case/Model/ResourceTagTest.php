@@ -1,25 +1,25 @@
 <?php
 /**
- * TagResource Model Test
+ * ResourceTag Model Test
  *
  * @copyright     Copyright 2012, Passbolt.com
- * @package       app.Test.Case.Model.TagResourceTest
+ * @package       app.Test.Case.Model.ResourceTagTest
  * @since         version 2.12.11
  * @license       http://www.passbolt.com/license
  */
 App::uses('Tag', 'Model');
 App::uses('Resource', 'Model');
-App::uses('TagResource', 'Model');
+App::uses('ResourceTag', 'Model');
 App::uses('User', 'Model');
 
-class TagResourceTest extends CakeTestCase {
+class ResourceTagTest extends CakeTestCase {
 
-	public $fixtures = array('app.tag', 'app.resource', 'app.tagResource', 'app.user', 'app.role');
+	public $fixtures = array('app.tag', 'app.resource', 'app.resourceTag', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
-		$this->TagResource = ClassRegistry::init('TagResource');
-		$this->TagResource->useDb = 'test';
+		$this->ResourceTag = ClassRegistry::init('ResourceTag');
+		$this->ResourceTag->useDb = 'test';
 	}
 
 /**
@@ -28,17 +28,17 @@ class TagResourceTest extends CakeTestCase {
  */
 	public function testUnicityValidation() {
 		$tr = array(
-			'TagResource' => array(
+			'ResourceTag' => array(
 				'tag_id' => 'bbb00001-c5cd-11e1-a0c5-080027796c4c',
 				'resource_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c'
 			)
 		);
-		$this->TagResource->create();
-		$this->TagResource->set($tr);
-		$validation = $this->TagResource->validates(array('fieldList' => array('tag_id', 'resource_id')));
+		$this->ResourceTag->create();
+		$this->ResourceTag->set($tr);
+		$validation = $this->ResourceTag->validates(array('fieldList' => array('tag_id', 'resource_id')));
 		$this->assertEqual($validation, false, 'It should not be possible to associate a resource and a tag twice');
 
-		$validation = $this->TagResource->uniqueCombi();
+		$validation = $this->ResourceTag->uniqueCombi();
 		$this->assertEqual($validation, false, 'It should not be possible to associate a resource and a tag twice');
 	}
 
@@ -47,11 +47,11 @@ class TagResourceTest extends CakeTestCase {
  * @return void
  */
 	public function testTagExist() {
-		$result = $this->TagResource->tagExists(null);
+		$result = $this->ResourceTag->tagExists(null);
 		$this->assertEqual($result, false, 'Tag null should not be found');
-		$result = $this->TagResource->tagExists(array('tag_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
+		$result = $this->ResourceTag->tagExists(array('tag_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEqual($result, false, 'Not existing tag should not be found');
-		$result = $this->TagResource->tagExists(array('tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c'));
+		$result = $this->ResourceTag->tagExists(array('tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEqual($result, true, 'Facebook tag should be found');
 	}
 
@@ -60,11 +60,11 @@ class TagResourceTest extends CakeTestCase {
  * @return void
  */
 	public function testResourceExist() {
-		$result = $this->TagResource->resourceExists(null);
+		$result = $this->ResourceTag->resourceExists(null);
 		$this->assertEqual($result, false, 'Empty ressource should not be found');
-		$result = $this->TagResource->resourceExists(array('resource_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
+		$result = $this->ResourceTag->resourceExists(array('resource_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEqual($result, false, 'Not existing resource should not be found');
-		$result = $this->TagResource->resourceExists(array('resource_id' => '509bb871-5168-49d4-a676-fb098cebc04d'));
+		$result = $this->ResourceTag->resourceExists(array('resource_id' => '509bb871-5168-49d4-a676-fb098cebc04d'));
 		$this->assertEqual($result, true, 'Facebook password should be found');
 	}
 
@@ -80,11 +80,11 @@ class TagResourceTest extends CakeTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => true,
 		);
 		foreach ($testcases as $testcase => $result) {
-			$user = array('TagResource' => array('id' => $testcase));
-			$this->TagResource->set($user);
+			$user = array('ResourceTag' => array('id' => $testcase));
+			$this->ResourceTag->set($user);
 			if($result) $msg = 'validation of the id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->TagResource->validates(array('fieldList' => array('id'))), $result, $msg);
+			$this->assertEqual($this->ResourceTag->validates(array('fieldList' => array('id'))), $result, $msg);
 		}
 	}
 
@@ -100,11 +100,11 @@ class TagResourceTest extends CakeTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => true,
 		);
 		foreach ($testcases as $testcase => $result) {
-			$user = array('TagResource' => array('tag_id' => $testcase));
-			$this->TagResource->set($user);
+			$user = array('ResourceTag' => array('tag_id' => $testcase));
+			$this->ResourceTag->set($user);
 			if($result) $msg = 'validation of the tag_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the tag_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->TagResource->validates(array('fieldList' => array('tag_id'))), $result, $msg);
+			$this->assertEqual($this->ResourceTag->validates(array('fieldList' => array('tag_id'))), $result, $msg);
 		}
 	}
 
@@ -120,13 +120,13 @@ class TagResourceTest extends CakeTestCase {
 			'509bb871-5168-49d4-a676-fb098cebc04d' => true,
 		);
 		// we test unicity separately
-		unset($this->TagResource->validate['resource_id']['uniqueCombi']);
+		unset($this->ResourceTag->validate['resource_id']['uniqueCombi']);
 		foreach ($testcases as $testcase => $result) {
-			$user = array('TagResource' => array('resource_id' => $testcase));
-			$this->TagResource->set($user);
+			$user = array('ResourceTag' => array('resource_id' => $testcase));
+			$this->ResourceTag->set($user);
 			if($result) $msg = 'validation of the resource_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the resource_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->TagResource->validates(array('fieldList' => array('resource_id'))), $result, $msg);
+			$this->assertEqual($this->ResourceTag->validates(array('fieldList' => array('resource_id'))), $result, $msg);
 		}
 	}
 

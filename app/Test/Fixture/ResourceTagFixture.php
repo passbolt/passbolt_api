@@ -4,14 +4,14 @@
  *
  * @copyright   Copyright 2012, Passbolt.com
  * @license     http://www.passbolt.com/license
- * @package     app.Test.Fixture.TagResourceFixture
+ * @package     app.Test.Fixture.ResourceTagFixture
  * @since       version 2.12.11
  */
-class TagResourceFixture extends CakeTestFixture {
+class ResourceTagFixture extends CakeTestFixture {
 
 	public $useDbConfig = 'test';
 
-	public $import = 'TagResource';
+	public $import = 'ResourceTag';
 
 	public function init() {
 		parent::init();
