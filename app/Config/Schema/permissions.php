@@ -252,7 +252,7 @@ class PermissionSchema {
 						    WHERE `c`.id = `category_id`;
 						    
 						    SELECT `p`.id INTO `permid`
-						    FROM `passbolt`.permissions p
+						    FROM permissions p
 						    INNER JOIN (
 						            SELECT * FROM `categories` c 
 						            WHERE `c`.lft <= `catleft` 
@@ -276,7 +276,7 @@ class PermissionSchema {
 					BEGIN
 					    DECLARE `permid` VARCHAR(36);
 					    SELECT `p`.id INTO `permid`
-					    FROM `passbolt`.permissions p 
+					    FROM permissions p 
 					    WHERE `p`.aro='Group'
 					    AND `p`.aco='Resource'
 					    AND `p`.aco_foreign_key = `resource_id`
@@ -284,7 +284,7 @@ class PermissionSchema {
 					    LIMIT 1;
 					    IF (`permid` IS NULL) THEN
 					      SELECT `p`.id INTO `permid` FROM(
-					      	SELECT `passbolt`.getGroupCategoryPermission(`group_id`, `cr`.category_id) COLLATE utf8_unicode_ci AS `permid`
+					      	SELECT getGroupCategoryPermission(`group_id`, `cr`.category_id) COLLATE utf8_unicode_ci AS `permid`
 					        FROM categories_resources `cr`
 					        WHERE `cr`.resource_id = `resource_id`
 					      ) `catview`
@@ -303,7 +303,7 @@ class PermissionSchema {
 					BEGIN
 				  DECLARE `permid` VARCHAR(36);
 				  SELECT `p`.id INTO `permid`
-				  FROM `passbolt`.permissions p 
+				  FROM permissions p 
 				  WHERE `p`.aro='User'
 				  AND `p`.aco='Category'
 				  AND `p`.aco_foreign_key = `category_id`
@@ -331,7 +331,7 @@ class PermissionSchema {
 					BEGIN
 					  DECLARE `permid` VARCHAR(36);
 					  SELECT `p`.id INTO `permid`
-					  FROM `passbolt`.permissions p 
+					  FROM permissions p 
 					  WHERE `p`.aro='User'
 					  AND `p`.aco='Resource'
 					  AND `p`.aco_foreign_key = `resource_id`
