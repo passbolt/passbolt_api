@@ -17,9 +17,9 @@ class CategoryTypeFixture extends CakeTestFixture {
 
 	public function init() {
 		$this->records = array(
-			array('id' => '50152793-9efc-4a7f-b79e-1358b4e000c3', 'name' => 'default'),
-			array('id' => '50152793-52b4-47aa-940d-1358b4e000c3', 'name' => 'ssh'),
-			array('id' => '50152793-aa7c-466d-9934-1358b4e000c3', 'name' => 'database')
+			array('id' => '50bda570-9364-4c41-9504-a7c58cebc04d','name' => 'default','description' => NULL),
+		  array('id' => '50bda570-e3d4-457e-9015-a7c58cebc04d','name' => 'database','description' => NULL),
+		  array('id' => '50bda570-ed2c-455b-aeba-a7c58cebc04d','name' => 'ssh','description' => NULL)
 		);
 		parent::init();
 	}
