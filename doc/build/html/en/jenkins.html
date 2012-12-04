@@ -1,0 +1,360 @@
+
+
+
+<!DOCTYPE html>
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content=".. Jenkins" lang="en" name="title" />
+<meta content="doc jenkins,continuous,integration,ci,test" lang="en" name="keywords" />
+
+    <title>Jenkins &mdash; CakePHP Cookbook 2.x documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/app.js"></script>
+    <script type="text/javascript" src="_static/modernizr.foundation.js"></script>
+    <script type="text/javascript" src="_static/foundation.js"></script>
+    <link rel="top" title="CakePHP Cookbook 2.x documentation" href="index.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="search" type="application/opensearchdescription+xml" title="CakePHP Book 2.x Search" href="_static/opensearchdescription-book-2-x.xml">
+<script type="text/javascript">
+window.lang = "en";
+</script>
+
+  </head>
+  <body>
+
+<div id="container">
+
+<div id="cakephp-global-navigation">
+	<ul>
+		<li class="main"><a href="http://cakephp.org">CakePHP</a></li>
+		<li class="primary"><a href="#" class="empty">Downloads</a>
+			<ul class="second-level">
+				<li><a href="http://github.com/cakephp/cakephp/tags">Releases</a></li>
+				<li><a href="http://pear.cakephp.org">Pear channel</a></li>
+			</ul>
+		</li>
+		<li class="primary"><a href="#" class="empty">Documentation</a>
+			<ul class="second-level">
+				<li class="cake-version"><a href="http://api.cakephp.org">API</a>
+					<ul class="third-level">
+						<li><a href="http://api20.cakephp.org">2.0</a>&nbsp;|</li>
+						<li><a href="http://api13.cakephp.org">1.3</a>&nbsp;|</li>
+						<li><a href="http://api12.cakephp.org">1.2</a>&nbsp;|</li>
+						<li><a href="http://api11.cakephp.org">1.1</a></li>
+					</ul>
+				</li>
+				<li class="cake-version"><a href="http://book.cakephp.org">Book</a>
+					<ul class="third-level">
+						<li><a href="http://book.cakephp.org/2.0/en/">2.x</a>&nbsp;|</li>
+						<li><a href="http://book.cakephp.org/1.3/en/">1.3</a>&nbsp;|</li>
+						<li><a href="http://book.cakephp.org/1.2/en/view/3/The-Manual">1.2</a>&nbsp;|</li>
+						<li><a href="http://book.cakephp.org/1.1/en/view/305/The-Manual">1.1</a></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li class="primary"><a href="#" class="empty">Community</a>
+			<ul class="second-level">
+				<li><a href="http://cakephp.lighthouseapp.com">Issues</a></li>
+				<li><a href="http://bakery.cakephp.org">Bakery</a></li>
+				<li><a href="http://plugins.cakephp.org">Plugins &amp; packages</a></li>
+				<li><a href="http://github.com/cakephp/cakephp/contributors">Contributors</a></li>
+				<li><a href="http://groups.google.com/group/cake-php">Google Groups</a></li>
+				<li><a href="http://cakephp.org/logos">Logo</a></li>
+				<li><a href="http://ask.cakephp.org">Q &amp; A</a></li>
+				<li><a href="http://tv.cakephp.org">TV (Screencasts)</a></li>
+			</ul>
+		</li>
+		<li class="primary"><a href="http://cakephp.org/services">Services</a>
+			<ul class="second-level">
+				<li><a href="http://cakephp.org/services/certification">Certification</a></li>
+				<li><a href="http://cakephp.org/services/consultation">Consultation</a></li>
+				<li><a href="http://cakephp.org/services/support">Support</a></li>
+				<li><a href="http://training.cakephp.org">Training</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div class="masthead">
+	<div class="header-backing"></div>
+	<div class="searchbar row">
+		<div class="columns three phone-one">
+			<a class="logo" href="contents.html">
+			<img src="_static/cake-logo.png" alt="CakePHP" width="70" />
+			</a>
+		</div>
+		
+<div id="searchbox" class="columns nine phone-three">
+
+	<form id="searchform" class="search" action="search.html" method="get">
+		<input class="search-input" autocomplete="off" autofocus="autofocus" type="search" name="q" size="18" />
+		<input class="search-submit search-big button red" type="submit" value="Search" />
+		<input type="hidden" name="check_keywords" value="yes" />
+		<input type="hidden" name="area" value="default" />
+
+		<a href="#" id="tablet-nav" class="show-on-phones pale button small">Nav</a>
+	</form>
+
+</div>
+	</div>
+</div>
+<div class="breadcrumb-header">
+	<div class="related row">
+		<div class="columns three root-link">
+			<a href="contents.html">Cookbook 2.x</a>
+		</div>
+		<div class="columns nine">
+			<ul class="inline breadcrumb">
+			</ul>
+			<ul class='versions inline'>
+				<li><a href="http://book.cakephp.org/1.3/en/">1.3 Book</a></li>
+				<li><a href="http://book.cakephp.org/1.2/en/view/3/">1.2 Book</a></li>
+				<li><a href="http://book.cakephp.org/1.1/en/view/305/">1.1 Book</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="content row">
+	<div class="document columns nine push-three">
+		<div class="body">
+			
+<a href="#" id="page-contents-button" class="red button">Page contents</a>
+<div id="page-contents" class="panel flyout">
+<ul>
+<li><a class="reference internal" href="#">Jenkins</a><ul>
+<li><a class="reference internal" href="#install">Install</a></li>
+<li><a class="reference internal" href="#configure">Configure</a><ul>
+<li><a class="reference internal" href="#jenkins-over-ssl">Jenkins over ssl</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configure-build">Configure Build</a><ul>
+<li><a class="reference internal" href="#github">Github</a></li>
+<li><a class="reference internal" href="#create-the-build-file">Create the build file</a></li>
+<li><a class="reference internal" href="#install-phantom">Install phantom</a></li>
+<li><a class="reference internal" href="#php-unit-tests">PHP unit tests</a></li>
+<li><a class="reference internal" href="#display-unit-tests-results-php-javascript">Display unit tests results (PHP &amp; Javascript)</a></li>
+<li><a class="reference internal" href="#display-php-code-coverage-results">Display PHP code coverage results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+			
+  <div class="section" id="jenkins">
+<h1>Jenkins<a class="headerlink" href="#jenkins" title="Permalink to this headline">¶</a></h1>
+<p>Install and configure jenkins for our project needs.</p>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>Add the repository key to your system</p>
+<blockquote>
+<div>sudo wget -q <a class="reference external" href="http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key">http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key</a> -Onano /etc/apt/sources.list</div></blockquote>
+<p>Add the repository to your sources list (/etc/apt/sources.list)</p>
+<blockquote>
+<div>deb <a class="reference external" href="http://pkg.jenkins-ci.org/debian">http://pkg.jenkins-ci.org/debian</a> binary/</div></blockquote>
+<p>Update your system</p>
+<blockquote>
+<div>sudo apt-get update</div></blockquote>
+<p>Install jenkins</p>
+<blockquote>
+<div>sudo apt-get install jenkins</div></blockquote>
+<p>Reach your application <a class="reference external" href="http://my_domain:8080">http://my_domain:8080</a></p>
+</div>
+<div class="section" id="configure">
+<h2>Configure<a class="headerlink" href="#configure" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="jenkins-over-ssl">
+<h3>Jenkins over ssl<a class="headerlink" href="#jenkins-over-ssl" title="Permalink to this headline">¶</a></h3>
+<p>Use apache as proxy</p>
+<blockquote>
+<div>a2enmod proxy
+a2enmod proxy_http
+SSL certificate</div></blockquote>
+<p>make jenkins reachable with the prefix /jenkins Add this to the jenkins launcher command line</p>
+<blockquote>
+<div>&#8211;prefix=/jenkins in the command line</div></blockquote>
+<p>Configure apache to redirect to jenkins</p>
+<blockquote>
+<div><p>ProxyPass         /jenkins  <a class="reference external" href="http://localhost:8080/jenkins">http://localhost:8080/jenkins</a>
+ProxyPassReverse  /jenkins  <a class="reference external" href="http://localhost:8080/jenkins">http://localhost:8080/jenkins</a>
+ProxyPassReverse  /jenkins  <a class="reference external" href="http://95.142.173.61/jenkins">http://95.142.173.61/jenkins</a>
+Header edit Location ^http://95.142.173.61/jenkins <a class="reference external" href="https://95.142.173.61/jenkins">https://95.142.173.61/jenkins</a>
+ProxyRequests     Off
+ProxyPreserveHost On</p>
+<p># Local reverse proxy authorization override
+# Most unix distribution deny proxy by default (ie /etc/apache2/mods-enabled/proxy.conf in Ubuntu)
+&lt;Proxy <a class="reference external" href="http://localhost:8080">http://localhost:8080</a>&gt;</p>
+<blockquote>
+<div>Order deny,allow
+Allow from all</div></blockquote>
+<p>&lt;/Proxy&gt;</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="configure-build">
+<h2>Configure Build<a class="headerlink" href="#configure-build" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="github">
+<h3>Github<a class="headerlink" href="#github" title="Permalink to this headline">¶</a></h3>
+<p>Add the git plugin (<a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin">https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin</a>)</p>
+<p>Add your public key to your github account (<a class="reference external" href="https://help.github.com/articles/generating-ssh-keys">https://help.github.com/articles/generating-ssh-keys</a>)
+If you encounter any trouble check this article (<a class="reference external" href="https://help.github.com/articles/error-permission-denied-publickey">https://help.github.com/articles/error-permission-denied-publickey</a>)</p>
+<p>In your job configuration, in the source code management subsection enable git and enter the following url <a class="reference external" href="ssh://git&#64;github.com/stripthis/passbolt">ssh://git&#64;github.com/stripthis/passbolt</a></p>
+<p>build your project, the source code will be copied in /my_jenkins_path/jobs/my_project_name/workspace</p>
+</div>
+<div class="section" id="create-the-build-file">
+<h3>Create the build file<a class="headerlink" href="#create-the-build-file" title="Permalink to this headline">¶</a></h3>
+<p>Go to your project configuration, subsection build and add a new step</p>
+<p>Choose the type : invoke ant
+Add a target : main
+Add a build file : jenkins/build.xml (the build is in the repository)
+Javascript unit tests</p>
+</div>
+<div class="section" id="install-phantom">
+<h3>Install phantom<a class="headerlink" href="#install-phantom" title="Permalink to this headline">¶</a></h3>
+<p>Download phantom (<a class="reference external" href="http://code.google.com/p/phantomjs/downloads/list">http://code.google.com/p/phantomjs/downloads/list</a>)</p>
+<blockquote>
+<div>wget <a class="reference external" href="http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-x86_64-dynamic.tar.bz2">http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-x86_64-dynamic.tar.bz2</a></div></blockquote>
+<dl class="docutils">
+<dt>Move phantom to the convenient applications place</dt>
+<dd>sudo mv phantomjs-1.6.0-linux-x86_64-dynamic.tar.bz2 /usr/local/share</dd>
+</dl>
+<p>Uncompress it</p>
+<blockquote>
+<div>sudo tar -xjvf phantomjs-1.6.0-linux-x86_64-dynamic.tar.bz2</div></blockquote>
+<p>Make it accessible frome everywhere</p>
+<blockquote>
+<div>sudo ln -s /usr/local/share/phantomjs-1.6.0-linux-x86_64-dynamic/bin/phantomjs /usr/local/bin/</div></blockquote>
+<p>Write the part dedicated to the javascript jsunit (jenkins/build.xml)</p>
+<p>See the section Display unit tests results to see how to display unit tests results (This part will be common to javascript and PHP)</p>
+</div>
+<div class="section" id="php-unit-tests">
+<h3>PHP unit tests<a class="headerlink" href="#php-unit-tests" title="Permalink to this headline">¶</a></h3>
+<p>Install xdebug</p>
+<blockquote>
+<div>sudo apt-get install php5-xdebug</div></blockquote>
+<p>Install PHPUnit</p>
+<blockquote>
+<div>sudo apt-get install php-pear
+sudo pear config-set auto_discover 1
+sudo pear upgrade PEAR
+sudo pear install pear.phpunit.de/PHPUnit</div></blockquote>
+<p>Write the configuration of phpunit (jenkins/phpunit.xml). This configuration file will
+allow us to filter the files phpunit has to work with. And so we can exlude files from
+cakephp, vendors ...</p>
+<p>Write the part dedicated to the PHP phpunit (jenkins/build.xml)</p>
+<p>See the section Display unit tests results to see how to display unit tests results
+(This part will be common to javascript and PHP) and the section Display PHP code coverage
+results to see how to display code coverage results</p>
+</div>
+<div class="section" id="display-unit-tests-results-php-javascript">
+<h3>Display unit tests results (PHP &amp; Javascript)<a class="headerlink" href="#display-unit-tests-results-php-javascript" title="Permalink to this headline">¶</a></h3>
+<p>Install xUnit Plugin (<a class="reference external" href="https://wiki.jenkins-ci.org/display/JENKINS/xUnit+Plugin">https://wiki.jenkins-ci.org/display/JENKINS/xUnit+Plugin</a>)</p>
+<p>Go to your project configuration, subsection Post-build Actions and add a new step</p>
+<p>Add a Publish xUnit test result report</p>
+<p>Add a jUnit pattern with the following pattern build/<em>unit/</em>.xml</p>
+<p>You will see in the project page a chart which display result of your unit tests</p>
+</div>
+<div class="section" id="display-php-code-coverage-results">
+<h3>Display PHP code coverage results<a class="headerlink" href="#display-php-code-coverage-results" title="Permalink to this headline">¶</a></h3>
+<p>Install Clover PHP Plugin (<a class="reference external" href="http://wiki.jenkins-ci.org/display/JENKINS/Clover+PHP+Plugin">http://wiki.jenkins-ci.org/display/JENKINS/Clover+PHP+Plugin</a>)</p>
+<p>Go to your project configuration, subsection Post-build Actions and add a new step</p>
+<p>Add a Publish Clover PHP Coverage Report</p>
+<p>Add the location of the coverage xml result file build/coverage/coverage.xml</p>
+<p>Add the location of the coverage html result build/coverage/html/</p>
+</div>
+</div>
+</div>
+
+
+		</div>
+	</div>
+
+	<div class="sidebar columns three pull-nine">
+<div id="sidebar-navigation" class="hide-on-phones">
+	<h2 class="hide-on-desktops">Table of Contents</h2>
+	<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Welcome</a></li>
+</ul>
+
+</div>
+
+	</div>
+
+</div>
+
+<div class="content row">
+	<ul class="related-pages inline">
+	<li>
+		<a href="genindex.html" title="General Index" accesskey="I">index</a>
+	</li>
+	</ul>
+</div>
+
+	<div class="footer-push"> </div>
+</div>
+
+
+
+
+
+
+<div class="footer">
+	<div class="row">
+		<div class="columns six offset-by-three contribute">
+			<strong>Found an issue?</strong>
+			Submit a correction on <a href="https://github.com/cakephp/docs">github</a><br />
+			<a href="http://book.cakephp.org/2.0/en/contributing/documentation.html">[ documentation on how to contribute ]</a>
+		</div>
+		<div class="languages columns three">
+			<ul class="languages inline">
+			
+				<li><span class="active">en</span></li>
+			
+				<li><span class="disabled">pt</span></li>
+			
+				<li><span class="disabled">es</span></li>
+			
+				<li><span class="disabled">ja</span></li>
+			
+				<li><span class="disabled">ru</span></li>
+			
+				<li><span class="disabled">fr</span></li>
+			
+			</ul>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="columns nine offset-by-three copyright">
+					&copy; Copyright 2012, Cake Software Foundation, Inc.
+				Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+		</div>
+	</div>
+</div>
+
+<div id="nav-modal" class="reveal-modal"> </div>
+<div id="inline-search-results"></div>
+  </body>
+</html>
