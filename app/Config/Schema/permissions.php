@@ -1,4 +1,12 @@
 <?php
+/**
+ * Permission Schema
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.Schema.permission
+ * @since        version 2.12.11
+ */
 App::uses('Category', 'Model');
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
@@ -15,8 +23,8 @@ class PermissionSchema {
 			$permission->save($p);
 		}
 		// Create the permissions_cache functiona and view
-		$this->createPermissionFunctions();
-		$this->createPermissionCacheView();
+		$this->createFunctions();
+		$this->createViews();
 	}
 
 	protected function _getDefaultPermissions() {
@@ -177,197 +185,214 @@ class PermissionSchema {
 		return $ps;
 	}
 
-	public function createPermissionCacheView() {
-		$permission = ClassRegistry::init('Permission');
-		$permission->query(
-			"
-			CREATE OR REPLACE ALGORITHM=UNDEFINED 
-			SQL SECURITY DEFINER VIEW `aro_aco_permissions` 
-			AS 
-			  (
-			    SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
-			    FROM (`categories` `c` join `groups` `g`)
-			  ) 
-		  UNION (
-		      SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
-		      FROM (`categories` `c` join `users` `u`)
-		    ) 
-		  UNION (
-		      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
-		      FROM (`resources` `r` join `groups` `g`)
-			  ) 
-		  UNION (
-		      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
-		      FROM (`resources` `r` join `users` `u`)
-			  );"
-		);
-		$permission->query(
-			"
-			CREATE OR REPLACE ALGORITHM=UNDEFINED 
-			SQL SECURITY DEFINER VIEW `permissions_cache` 
-			AS
-			SELECT `aap`.aco, `aap`.aco_foreign_key, `aap`.aro, `aap`.aro_foreign_key, 
-			case 
-	        when  `p`.type IS NULL then " . PermissionType::DENY . "
-	        when  `p`.type IS NOT NULL then `p`.type
-	    end as type,
-			case 
-	        when  `p`.type IS NULL then 1
-	        when  `p`.type IS NOT NULL then 0
-	    end as inherited,
-			`p`.created, `p`.modified, `p`.created_by, `p`.modified_by
-			FROM aro_aco_permissions aap
-			LEFT JOIN permissions p ON `p`.id = `aap`.permission_id
-			LEFT JOIN permissions_types pt ON `pt`.serial = `p`.type
-			");
+	public static function getViewsSQL() {
+		return array(
+			"aro_aco_permissions" =>
+				"CREATE OR REPLACE ALGORITHM=UNDEFINED 
+				SQL SECURITY DEFINER VIEW `aro_aco_permissions` 
+				AS 
+				  (
+				    SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+				    FROM (`categories` `c` join `groups` `g`)
+				  ) 
+			  UNION ALL (
+			      SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+			      FROM (`categories` `c` join `users` `u`)
+			    ) 
+			  UNION  ALL(
+			      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+			      FROM (`resources` `r` join `groups` `g`)
+				  ) 
+			  UNION ALL(
+			      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+			      FROM (`resources` `r` join `users` `u`)
+				  );",
+
+			"users_categories_permissions" =>
+				"CREATE OR REPLACE ALGORITHM=UNDEFINED 
+				SQL SECURITY DEFINER VIEW `users_categories_permissions`
+				AS
+	      SELECT `c`.`id` AS `category_id`, `u`.`id` AS `user_id`,`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+	      FROM (`categories` `c` join `users` `u`)",
+
+			"permissions_cache" =>
+				"CREATE OR REPLACE ALGORITHM=UNDEFINED 
+				SQL SECURITY DEFINER VIEW `permissions_cache` 
+				AS
+				SELECT `aap`.aco, `aap`.aco_foreign_key, `aap`.aro, `aap`.aro_foreign_key, 
+				case 
+		        when  `p`.type IS NULL then " . PermissionType::DENY . "
+		        when  `p`.type IS NOT NULL then `p`.type
+		    end as type,
+				case 
+		        when  `p`.type IS NULL then 1
+		        when  `p`.type IS NOT NULL then 0
+		    end as inherited,
+				`p`.created, `p`.modified, `p`.created_by, `p`.modified_by
+				FROM aro_aco_permissions aap
+				LEFT JOIN permissions p ON `p`.id = `aap`.permission_id
+				LEFT JOIN permissions_types pt ON `pt`.serial = `p`.type
+				"
+			);
 	}
 
-	public function createPermissionFunctions() {
+	public function createViews() {
 		$permission = ClassRegistry::init('Permission');
-		$getGroupCategoryPermission = "
-		  DROP FUNCTION IF EXISTS getGroupCategoryPermission;
-			CREATE FUNCTION `getGroupCategoryPermission`(`group_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
+		$views = $this->getViewsSQL();
+		foreach ($views as $view) {
+			$permission->query($view);
+		}
+	}
+
+	public static function getFunctionsSQL() {
+		return array(
+			"getGroupCategoryPermission" =>
+				"DROP FUNCTION IF EXISTS getGroupCategoryPermission;
+				CREATE FUNCTION `getGroupCategoryPermission`(`group_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
+				    NO SQL
+						BEGIN
+						    DECLARE `permid` VARCHAR(36);
+						    DECLARE `catleft` INT(10);
+						    DECLARE `catright` INT(10);
+						    
+						    SELECT `c`.lft, `c`.rght INTO `catleft`, `catright`
+						    FROM categories c 
+						    WHERE `c`.id = `category_id`;
+						    
+						    SELECT `p`.id INTO `permid`
+						    FROM permissions p
+						    INNER JOIN (
+						            SELECT * FROM `categories` c 
+						            WHERE `c`.lft <= `catleft` 
+						            AND `c`.rght >= `catright` 
+						            ORDER BY `c`.lft DESC
+						            ) viewcat 
+						    ON `p`.aco_foreign_key=`viewcat`.id 
+						    INNER JOIN groups g ON `p`.aro_foreign_key=`g`.id 
+						    WHERE `p`.aro='Group'
+						    AND `p`.aco='Category'
+						    AND `p`.aro_foreign_key = `group_id` 
+						    ORDER BY `viewcat`.lft DESC
+						    LIMIT 1;
+						    RETURN `permid`;
+						END;",
+
+			"getGroupResourcePermission" =>
+				"DROP FUNCTION IF EXISTS getGroupResourcePermission;
+				CREATE FUNCTION `getGroupResourcePermission`(`group_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
 			    NO SQL
 					BEGIN
 					    DECLARE `permid` VARCHAR(36);
-					    DECLARE `catleft` INT(10);
-					    DECLARE `catright` INT(10);
-					    
-					    SELECT `c`.lft, `c`.rght INTO `catleft`, `catright`
-					    FROM categories c 
-					    WHERE `c`.id = `category_id`;
-					    
 					    SELECT `p`.id INTO `permid`
-					    FROM `passbolt`.permissions p
-					    INNER JOIN (
-					            SELECT * FROM `categories` c 
-					            WHERE `c`.lft <= `catleft` 
-					            AND `c`.rght >= `catright` 
-					            ORDER BY `c`.lft DESC
-					            ) viewcat 
-					    ON `p`.aco_foreign_key=`viewcat`.id 
-					    INNER JOIN groups g ON `p`.aro_foreign_key=`g`.id 
+					    FROM permissions p 
 					    WHERE `p`.aro='Group'
-					    AND `p`.aco='Category'
+					    AND `p`.aco='Resource'
+					    AND `p`.aco_foreign_key = `resource_id`
 					    AND `p`.aro_foreign_key = `group_id` 
-					    ORDER BY `viewcat`.lft DESC
 					    LIMIT 1;
+					    IF (`permid` IS NULL) THEN
+					      SELECT `p`.id INTO `permid` FROM(
+					      	SELECT getGroupCategoryPermission(`group_id`, `cr`.category_id) COLLATE utf8_unicode_ci AS `permid`
+					        FROM categories_resources `cr`
+					        WHERE `cr`.resource_id = `resource_id`
+					      ) `catview`
+					      INNER JOIN permissions p ON `p`.id=`catview`.permid
+					      ORDER BY `p`.type DESC
+					      LIMIT 1;
+					      RETURN `permid`;
+					    END IF;
 					    RETURN `permid`;
-					END;";
-		$permission->query($getGroupCategoryPermission);
+					END;",
 
-		$getGroupResourcePermission = "
-			DROP FUNCTION IF EXISTS getGroupResourcePermission;
-			CREATE FUNCTION `getGroupResourcePermission`(`group_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
-		    NO SQL
-				BEGIN
-				    DECLARE `permid` VARCHAR(36);
-				    SELECT `p`.id INTO `permid`
-				    FROM `passbolt`.permissions p 
-				    WHERE `p`.aro='Group'
-				    AND `p`.aco='Resource'
-				    AND `p`.aco_foreign_key = `resource_id`
-				    AND `p`.aro_foreign_key = `group_id` 
-				    LIMIT 1;
-				    IF (`permid` IS NULL) THEN
-				      SELECT `p`.id INTO `permid` FROM(
-				      	SELECT `passbolt`.getGroupCategoryPermission(`group_id`, `cr`.category_id) COLLATE utf8_unicode_ci AS `permid`
-				        FROM categories_resources `cr`
-				        WHERE `cr`.resource_id = `resource_id`
-				      ) `catview`
-				      INNER JOIN permissions p ON `p`.id=`catview`.permid
-				      ORDER BY `p`.type DESC
-				      LIMIT 1;
-				      RETURN `permid`;
-				    END IF;
-				    RETURN `permid`;
-				END;";
-			$permission->query($getGroupResourcePermission);
-
-			$getUserCategoryPermission = "
-				DROP FUNCTION IF EXISTS getUserCategoryPermission;
-				CREATE FUNCTION `getUserCategoryPermission`(`user_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
-				NO SQL
-				BEGIN
-			  DECLARE `permid` VARCHAR(36);
-			  SELECT `p`.id INTO `permid`
-			  FROM `passbolt`.permissions p 
-			  WHERE `p`.aro='User'
-			  AND `p`.aco='Category'
-			  AND `p`.aco_foreign_key = `category_id`
-			  AND `p`.aro_foreign_key = `user_id` 
-			  LIMIT 1;
-			  IF (`permid` IS NULL) THEN
-			      SELECT `p`.id  INTO `permid`  
-			      FROM(
-			        SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) COLLATE utf8_unicode_ci AS `permid`
-			        FROM groups_users `gu` 
-			        WHERE `gu`.user_id = `user_id`
-			      ) `groupview`
-			      INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
-			      ORDER BY `p`.type DESC
-				    LIMIT 1;
-			      RETURN `permid`;
-			  END IF;
-			  RETURN `permid`;
-			END;";
-			$permission->query($getUserCategoryPermission);
-
-			// TODO : manage case where user is owner of the resource. What to do ? What should be the permission then ?
-			$getUserResourcePermission = "
-				DROP FUNCTION IF EXISTS getUserResourcePermission;
-				CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
-				NO SQL
-				BEGIN
+			"getUserCategoryPermission" =>
+					"DROP FUNCTION IF EXISTS getUserCategoryPermission;
+					CREATE FUNCTION `getUserCategoryPermission`(`user_id` VARCHAR(36), `category_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
+					NO SQL
+					BEGIN
 				  DECLARE `permid` VARCHAR(36);
 				  SELECT `p`.id INTO `permid`
-				  FROM `passbolt`.permissions p 
+				  FROM permissions p 
 				  WHERE `p`.aro='User'
-				  AND `p`.aco='Resource'
-				  AND `p`.aco_foreign_key = `resource_id`
+				  AND `p`.aco='Category'
+				  AND `p`.aco_foreign_key = `category_id`
 				  AND `p`.aro_foreign_key = `user_id` 
 				  LIMIT 1;
 				  IF (`permid` IS NULL) THEN
-					  SELECT `p`.id INTO `permid` 
-					  FROM(
-					      (SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
-						    FROM groups_users `gu` 
-						    WHERE `gu`.user_id = `user_id`)
-						    UNION
-						    (SELECT getUserCategoryPermission(`user_id`, cr.`category_id`) COLLATE utf8_unicode_ci AS `permid`
-						    FROM categories_resources `cr` 
-						    WHERE `cr`.resource_id = `resource_id`)
-					  ) `groupview`
-					  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
-					  ORDER BY `p`.type DESC
-				    LIMIT 1;
-					  RETURN `permid`;
-					END IF;
-					RETURN `permid`;
-				END;";
-			$permission->query($getUserResourcePermission);
+				      SELECT `p`.id  INTO `permid`  
+				      FROM(
+				        SELECT getGroupCategoryPermission(`gu`.group_id, `category_id`) COLLATE utf8_unicode_ci AS `permid`
+				        FROM groups_users `gu` 
+				        WHERE `gu`.user_id = `user_id`
+				      ) `groupview`
+				      INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
+				      ORDER BY `p`.type DESC
+					    LIMIT 1;
+				      RETURN `permid`;
+			  	 END IF;
+				   RETURN `permid`;
+				 	 END;",
 
-			$getPermissions = "
-				DROP FUNCTION IF EXISTS getPermissions;
-				CREATE FUNCTION `getPermissions`(`aro` VARCHAR(50), `aro_foreign_key` VARCHAR(36), `aco` VARCHAR(50), `aco_foreign_key` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
-				BEGIN
-				    DECLARE `permid` VARCHAR(36);
-				    IF(`aro` = 'Group' AND `aco` = 'Category') THEN
-				    	SELECT getGroupCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-				        INTO `permid`;
-				    ELSEIF(`aro` = 'Group' AND `aco` = 'Resource') THEN
-				    	SELECT getGroupResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-				        INTO `permid`;
-				    ELSEIF(`aro` = 'User' AND `aco` = 'Category') THEN
-				    	SELECT getUserCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-				        INTO `permid`;
-				    ELSEIF(`aro` = 'User' AND `aco` = 'Resource') THEN
-				    	SELECT getUserResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-				        INTO `permid`;
-				    END IF;
-				    RETURN `permid`;
-				END;";
-			$permission->query($getPermissions);
+				"getUserResourcePermission" =>
+					"DROP FUNCTION IF EXISTS getUserResourcePermission;
+					CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
+					NO SQL
+					BEGIN
+					  DECLARE `permid` VARCHAR(36);
+					  SELECT `p`.id INTO `permid`
+					  FROM permissions p 
+					  WHERE `p`.aro='User'
+					  AND `p`.aco='Resource'
+					  AND `p`.aco_foreign_key = `resource_id`
+					  AND `p`.aro_foreign_key = `user_id` 
+					  LIMIT 1;
+					  IF (`permid` IS NULL) THEN
+						  SELECT `p`.id INTO `permid` 
+						  FROM(
+						      (SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
+							    FROM groups_users `gu` 
+							    WHERE `gu`.user_id = `user_id`)
+							    UNION
+							    (SELECT getUserCategoryPermission(`user_id`, cr.`category_id`) COLLATE utf8_unicode_ci AS `permid`
+							    FROM categories_resources `cr` 
+							    WHERE `cr`.resource_id = `resource_id`)
+						  ) `groupview`
+						  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
+						  ORDER BY `p`.type DESC
+					    LIMIT 1;
+						  RETURN `permid`;
+						END IF;
+						RETURN `permid`;
+					END;",
+
+				"getPermissions" =>
+					"DROP FUNCTION IF EXISTS getPermissions;
+					CREATE FUNCTION `getPermissions`(`aro` VARCHAR(50), `aro_foreign_key` VARCHAR(36), `aco` VARCHAR(50), `aco_foreign_key` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
+					BEGIN
+					    DECLARE `permid` VARCHAR(36);
+					    IF(`aro` = 'Group' AND `aco` = 'Category') THEN
+					    	SELECT getGroupCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
+					        INTO `permid`;
+					    ELSEIF(`aro` = 'Group' AND `aco` = 'Resource') THEN
+					    	SELECT getGroupResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
+					        INTO `permid`;
+					    ELSEIF(`aro` = 'User' AND `aco` = 'Category') THEN
+					    	SELECT getUserCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
+					        INTO `permid`;
+					    ELSEIF(`aro` = 'User' AND `aco` = 'Resource') THEN
+					    	SELECT getUserResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
+					        INTO `permid`;
+					    END IF;
+					    RETURN `permid`;
+					END;"
+		);
+	}
+
+	public function createFunctions() {
+		$permission = ClassRegistry::init('Permission');
+		$functions = $this->getFunctionsSQL();
+		foreach ($functions as $f) {
+			$permission->query($f);
+		}
+		// TODO : manage case where user is owner of the resource. What to do ? What should be the permission then ?
 	}
 }
-?>

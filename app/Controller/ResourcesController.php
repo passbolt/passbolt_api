@@ -28,12 +28,13 @@ class ResourcesController extends AppController {
 			: array();
 		$recursive = isset($this->request->query['recursive']) ? $this->request->query['recursive'] === 'true' : false;
 		$data = array();
-	
+
 		// if categories id are provided check their validity, and build model request with
-		if(count($categoriesId)) {
+		if (count($categoriesId)) {
 			$data['CategoryResource.category_id'] = array();
 		}
-		for($i=0; $i<count($categoriesId); $i++) {
+		$maxI = count($categoriesId);
+		for ($i = 0; $i < $maxI; $i++) {
 			$categoryId = $categoriesId[$i];
 
 			// if a category id is provided check is validity
@@ -53,7 +54,7 @@ class ResourcesController extends AppController {
 				$data['CategoryResource.category_id'][] = $categoryId;
 			} else {
 				// If the category has yet been added to the model request, continue
-				if(in_array($categoryId, $data['CategoryResource.category_id'])) {
+				if (in_array($categoryId, $data['CategoryResource.category_id'])) {
 					continue;
 				}
 				$cats = $this->Resource->CategoryResource->Category->find(
@@ -75,10 +76,10 @@ class ResourcesController extends AppController {
 		}
 
 		// if keywords provided build the model request with
-		if(!empty($keywords)) {
+		if (!empty($keywords)) {
 			$data['keywords'] = $keywords;
 		}
-		
+
 		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
 		$options = $this->Resource->getFindOptions('index', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
@@ -89,9 +90,9 @@ class ResourcesController extends AppController {
 
 		$this->set('data', $resources);
 		$this->Message->success();
-	}	
+	}
 
-	/**
+/**
  * Get a resource
  * Renders a json object of the resource
  *

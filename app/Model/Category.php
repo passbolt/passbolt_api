@@ -90,22 +90,6 @@ class Category extends AppModel {
 	}
 
 /**
- * Check if a category with same id exists
- * @param check
- */
-	public function parentExists($check) {
-		if ($check['parent_id'] == null) {
-			return true;
-		} else {
-			$exists = $this->find('count', array(
-				'conditions' => array('Category.id' => $check['parent_id']),
-				 'recursive' => -1
-			));
-			return $exists > 0;
-		}
-	}
-
-/**
  * Check if a category type with same id exists
  * @param check
  */

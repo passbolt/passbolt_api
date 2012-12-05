@@ -10,25 +10,21 @@
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
 
-// TODO : stop using defaut schema and use fixtures instead
 class PermissionTest extends CakeTestCase {
 
-	//public $fixtures = array('app.resource', 'app.user', 'app.role');
+	public $fixtures = array('app.resource', 'app.userPermission', 'app.role', 'app.group', 'app.groupUser', 'app.categoryType', 'app.category', 'app.categoryResource', 'app.permissionType', 'app.permission');
 
 	public function setUp() {
 		parent::setUp();
 		$this->Permission = ClassRegistry::init('Permission');
-		$this->Permission->useDbConfig = 'default';
 		$this->User = ClassRegistry::init('User');
-		$this->User->useDbConfig = 'default';
+		$this->Role = ClassRegistry::init('Role');
 		$this->Category = ClassRegistry::init('Category');
-		$this->Category->useDbConfig = 'default';
 		$this->Resource = ClassRegistry::init('Resource');
-		$this->Resource->useDbConfig = 'default';
 		$this->Group = ClassRegistry::init('Group');
-		$this->Group->useDbConfig = 'default';
-		$this->PermissionDetail = ClassRegistry::init('PermissionDetail');
-		$this->PermissionDetail->useDbConfig = 'default';
+		$this->PermissionType = ClassRegistry::init('PermissionType');
+		$this->PermissionCache = ClassRegistry::init('PermissionCache');
+		$this->UserCategoryPermission = ClassRegistry::init('UserCategoryPermission');
 	}
 
 	public function testMysqlFunctionGetGroupCategoryPermission() {

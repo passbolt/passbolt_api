@@ -3,7 +3,7 @@
  * Tag Resource Model
  *
  * @copyright		 Copyright 2012, Passbolt.com
- * @package			 app.Model.TagResource
+ * @package			 app.Model.ResourceTag
  * @since				 version 2.12.11
  * @license			 http://www.passbolt.com/license
  */
@@ -11,7 +11,7 @@
 App::uses('Tag', 'Model');
 App::uses('Resource', 'Model');
 
-class TagResource extends AppModel {
+class ResourceTag extends AppModel {
 
 	public $useTable = "tags_resources";
 
@@ -28,6 +28,14 @@ class TagResource extends AppModel {
  */
 	public static function getValidationRules($case='default') {
 		$default = array(
+			'id' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'required' => true,
+					'allowEmpty' => true,
+					'message'	=> __('UUID must be in correct format')
+				)
+			),
 			'tag_id' => array(
 				'uuid' => array(
 					'rule' => 'uuid',
@@ -53,7 +61,7 @@ class TagResource extends AppModel {
 				),
 				'uniqueCombi' => array(
 					'rule' => array('uniqueCombi', null),
-					'message' => __('The TagResource entered is a duplicate')
+					'message' => __('The tag and resource combination entered is a duplicate')
 				)
 			)
 		);
@@ -101,10 +109,10 @@ class TagResource extends AppModel {
  * @param check
  */
 	public function uniqueCombi($check = null) {
-		$tr = $this->data['TagResource'];
+		$tr = $this->data['ResourceTag'];
 		$combi = array(
-			'TagResource.Tag_id' => $tr['tag_id'],
-			'TagResource.resource_id' => $tr['resource_id']
+			'ResourceTag.Tag_id' => $tr['tag_id'],
+			'ResourceTag.resource_id' => $tr['resource_id']
 		);
 		$result = $this->Resource->find('count', $combi);
 		return $result == 0;

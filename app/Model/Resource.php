@@ -132,15 +132,15 @@ class Resource extends AppModel {
 						'Resource.deleted' => 0
 					)
 				);
-				if(isset($data['CategoryResource.category_id'])){
+				if (isset($data['CategoryResource.category_id'])) {
 					$conditions['conditions']['CategoryResource.category_id'] = $data['CategoryResource.category_id'];
 					$conditions['order'] = array(
 						'Resource.name ASC'
 					);
 				}
-				if(isset($data['keywords'])) {
+				if (isset($data['keywords'])) {
 					$keywords = explode(' ', $data['keywords']);
-					foreach($keywords as $keyword) {
+					foreach ($keywords as $keyword) {
 						$conditions['conditions']["AND"][] = array('Resource.name LIKE' => '%' . $keyword . '%');
 					}
 				}
@@ -150,7 +150,7 @@ class Resource extends AppModel {
 					'conditions' => array()
 				);
 		}
-//			var_dump($conditions);
+		//var_dump($conditions);
 		return $conditions;
 	}
 

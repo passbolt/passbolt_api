@@ -1,4 +1,12 @@
 <?php
+/**
+ * Role Schema
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.Schema.roles
+ * @since        version 2.12.11
+ */
 App::uses('Role', 'Model');
 
 class RoleSchema {
