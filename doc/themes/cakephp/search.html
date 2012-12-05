@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% set title = _('Search') %}
+{% set script_files = script_files + ['_static/search.js'] %}
+
+{% block body %}
+  <h1 id="search-documentation">{{ _('Search') }}</h1>
+  <div id="fallback" class="admonition warning">
+  <script type="text/javascript">$('#fallback').hide();</script>
+  <p>
+    {% trans %}Please activate JavaScript to enable the search
+    functionality.{% endtrans %}
+  </p>
+  </div>
+
+  <p>
+    {% trans %}From here you can search these documents. Enter your search
+    words into the box below and click "search". Note that the search
+    function will automatically search for all of the words. Pages
+    containing fewer words won't appear in the result list.{% endtrans %}
+  </p>
+
+  <form action="" method="get" class="standalone-search">
+    <input type="search" autocomplete="off" autofocus="autofocus" class="search-input" name="q" value="" />
+	<input type="hidden" name="lang" value="{{ language }}" />
+    <input type="submit" class="search-submit search-big button red" value="{{ _('search') }}" />
+  </form>
+  <div id="search-results">
+    <ul>
+    </ul>
+  </div>
+  <div id="search-pagination"></div>
+{% endblock %}

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Group Schema
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.Schema.groups
+ * @since        version 2.12.11
+ */
 App::uses('User', 'Model');
 App::uses('Group', 'Model');
 App::uses('GroupUser', 'Model');
@@ -113,4 +121,3 @@ class GroupSchema {
 		return $categories;
 	}
 }
-?>

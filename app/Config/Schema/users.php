@@ -1,8 +1,16 @@
 <?php
+/**
+ * User Schema
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.Config.Schema.users
+ * @since        version 2.12.11
+ */
 App::uses('User', 'Model');
 
 class UserSchema {
-	
+
 	public function init() {
 		//array_push($u, 'users');
 		$user = ClassRegistry::init('User');
@@ -39,4 +47,3 @@ class UserSchema {
 		return $us;
 	}
 }
-?>

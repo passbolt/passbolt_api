@@ -1,0 +1,198 @@
+{% extends 'default/layout.html' -%}
+{%- block doctype %}
+<!DOCTYPE html>
+{% endblock -%}
+
+{% block extrahead %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="search" type="application/opensearchdescription+xml" title="CakePHP Book 2.x Search" href="_static/opensearchdescription-book-2-x.xml">
+<script type="text/javascript">
+window.lang = "{{ language }}";
+</script>
+{% endblock %}
+
+{%- set script_files = script_files + ["_static/app.js", "_static/modernizr.foundation.js", "_static/foundation.js"] -%}
+
+{# Use the header block to insert the CSF navbar #}
+{%- block header %}
+{# Outer wrapper for pushing the footer to the bottom #}
+<div id="container">
+
+<div id="cakephp-global-navigation">
+	<ul>
+		<li class="main"><a href="http://cakephp.org">CakePHP</a></li>
+		<li class="primary"><a href="#" class="empty">Downloads</a>
+			<ul class="second-level">
+				<li><a href="http://github.com/cakephp/cakephp/tags">Releases</a></li>
+				<li><a href="http://pear.cakephp.org">Pear channel</a></li>
+			</ul>
+		</li>
+		<li class="primary"><a href="#" class="empty">Documentation</a>
+			<ul class="second-level">
+				<li class="cake-version"><a href="http://api.cakephp.org">API</a>
+					<ul class="third-level">
+						<li><a href="http://api20.cakephp.org">2.0</a>&nbsp;|</li>
+						<li><a href="http://api13.cakephp.org">1.3</a>&nbsp;|</li>
+						<li><a href="http://api12.cakephp.org">1.2</a>&nbsp;|</li>
+						<li><a href="http://api11.cakephp.org">1.1</a></li>
+					</ul>
+				</li>
+				<li class="cake-version"><a href="http://book.cakephp.org">Book</a>
+					<ul class="third-level">
+						<li><a href="http://book.cakephp.org/2.0/en/">2.x</a>&nbsp;|</li>
+						<li><a href="http://book.cakephp.org/1.3/en/">1.3</a>&nbsp;|</li>
+						<li><a href="http://book.cakephp.org/1.2/en/view/3/The-Manual">1.2</a>&nbsp;|</li>
+						<li><a href="http://book.cakephp.org/1.1/en/view/305/The-Manual">1.1</a></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li class="primary"><a href="#" class="empty">Community</a>
+			<ul class="second-level">
+				<li><a href="http://cakephp.lighthouseapp.com">Issues</a></li>
+				<li><a href="http://bakery.cakephp.org">Bakery</a></li>
+				<li><a href="http://plugins.cakephp.org">Plugins &amp; packages</a></li>
+				<li><a href="http://github.com/cakephp/cakephp/contributors">Contributors</a></li>
+				<li><a href="http://groups.google.com/group/cake-php">Google Groups</a></li>
+				<li><a href="http://cakephp.org/logos">Logo</a></li>
+				<li><a href="http://ask.cakephp.org">Q &amp; A</a></li>
+				<li><a href="http://tv.cakephp.org">TV (Screencasts)</a></li>
+			</ul>
+		</li>
+		<li class="primary"><a href="http://cakephp.org/services">Services</a>
+			<ul class="second-level">
+				<li><a href="http://cakephp.org/services/certification">Certification</a></li>
+				<li><a href="http://cakephp.org/services/consultation">Consultation</a></li>
+				<li><a href="http://cakephp.org/services/support">Support</a></li>
+				<li><a href="http://training.cakephp.org">Training</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+{% endblock -%}
+
+
+{%- block relbar1 %}
+<div class="masthead">
+	<div class="header-backing"></div>
+	<div class="searchbar row">
+		<div class="columns three phone-one">
+			<a class="logo" href="{{ pathto(master_doc) }}">
+			<img src="{{ pathto('_static/cake-logo.png', 1) }}" alt="CakePHP" width="70" />
+			</a>
+		</div>
+		{% include 'searchbox.html' %}
+	</div>
+</div>
+<div class="breadcrumb-header">
+	<div class="related row">
+		<div class="columns three root-link">
+			<a href="{{ pathto(master_doc) }}">{{ shorttitle|e }}</a>
+		</div>
+		<div class="columns nine">
+			<ul class="inline breadcrumb">
+			{%- for parent in parents %}
+			<li>
+				<a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title }}</a>
+			</li>
+			{%- endfor %}
+			</ul>
+			<ul class='versions inline'>
+				<li><a href="http://book.cakephp.org/1.3/{{ language }}/">1.3 Book</a></li>
+				<li><a href="http://book.cakephp.org/1.2/{{ language }}/view/3/">1.2 Book</a></li>
+				<li><a href="http://book.cakephp.org/1.1/{{ language }}/view/305/">1.1 Book</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock -%}
+
+
+{%- block content %}
+<div class="content row">
+	<div class="document columns nine push-three">
+		<div class="body">
+			{% include 'localtoc.html' %}
+			{% block body %} {% endblock %}
+		</div>
+	</div>
+
+	<div class="sidebar columns three pull-nine">
+		{%- for sidebartemplate in sidebars %}
+		{%- include sidebartemplate %}
+		{%- endfor %}
+	</div>
+
+</div>
+
+<div class="content row">
+	<ul class="related-pages inline">
+	{%- for rellink in rellinks %}
+	<li>
+		<a href="{{ pathto(rellink[0]) }}" title="{{ rellink[1]|striptags|e }}" {{ accesskey(rellink[2]) }}>
+			{{- rellink[3] -}}
+		</a>
+	</li>
+	{%- endfor %}
+	</ul>
+</div>
+
+	<div class="footer-push"> </div>
+</div>
+{# End of div[id=wrapper] #}
+{% endblock -%}
+
+{%- block relbar2 %}
+{# Empty so links aren't duplicated #}
+{% endblock %}
+
+{%- block footer %}
+{# Push the footer down to the bottom of the page #}
+
+<div class="footer">
+	<div class="row">
+		<div class="columns six offset-by-three contribute">
+			<strong>Found an issue?</strong>
+			Submit a correction on <a href="https://github.com/cakephp/docs">github</a><br />
+			<a href="http://book.cakephp.org/2.0/en/contributing/documentation.html">[ documentation on how to contribute ]</a>
+		</div>
+		<div class="languages columns three">
+			<ul class="languages inline">
+			{% for lang in languages %}
+				<li>
+					{%- if lang == language -%}
+					<span class="active">{{ lang }}</span>
+					{%- elif has_lang(lang, pagename) -%}
+					<a href="{{ lang_link(lang, pagename) }}">{{ lang }}</a>
+					{%- else -%}
+					<span class="disabled">{{ lang }}</span>
+					{%- endif -%}
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="columns nine offset-by-three copyright">
+			{%- if show_copyright %}
+				{%- if hasdoc('copyright') %}
+					{% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}
+				{%- else %}
+					{% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}
+				{%- endif %}
+			{%- endif %}
+			{%- if last_updated %}
+				{% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}
+			{%- endif %}
+			{%- if show_sphinx %}
+				{% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}
+			{%- endif %}
+		</div>
+	</div>
+</div>
+
+<div id="nav-modal" class="reveal-modal"> </div>
+<div id="inline-search-results"></div>
+{%- endblock %}
+
