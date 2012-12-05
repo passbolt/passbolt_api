@@ -12,9 +12,9 @@ class PermissionType extends AppModel {
 
 	public $useTable = "permissions_types";
 
-		const DENY = '0';
-		const READ	= '1';
-		const CREATE	= '3';
-		const UPDATE = '7';
-		const ADMIN	= '15';
+	const DENY = '0';
+	const READ	= '1';
+	const CREATE	= '3';
+	const UPDATE = '7';
+	const ADMIN	= '15';
 }
