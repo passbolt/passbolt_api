@@ -42,8 +42,13 @@ class PermissionBenchmarkTest extends CakeTestCase {
 			'Permission'
 		)));
 		$this->Permission->bindModel(array('belongsTo' => array(
-			'PermissionType'
+			'PermissionType'/* => array(
+				'foreignKey' => false,
+				'conditions' => array(' `Permission`.`type` = `PermissionType`.`serial` ')
+			)*/
 		)));
+		$this->PermissionType->primaryKey = 'serial'; // This line fixes what the options in comments above don't manage to do
+
 		$timeStart = $this->microtimeFloat();
 		$cats  = $this->Category->find('all', array("order" => "Category.lft ASC", "contain" => array(
 			"PermissionCache" => array(
@@ -51,6 +56,7 @@ class PermissionBenchmarkTest extends CakeTestCase {
 				"conditions" => array( "aco" => "Category", "aro" => "User", "aro_foreign_key" => $user['User']['id'])
 			)
 		)));
+
 		$timeEnd = $this->microtimeFloat();
 		$time1 = $timeEnd - $timeStart;
 
@@ -67,6 +73,7 @@ class PermissionBenchmarkTest extends CakeTestCase {
 				)
 			)
 		)));
+		//pr($cats);
 		$timeEnd = $this->microtimeFloat();
 		$time2 = $timeEnd - $timeStart;
 
