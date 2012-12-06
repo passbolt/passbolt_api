@@ -30,14 +30,14 @@ class CategoryResourceTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'509bb871-3878-4ab0-9a7e-fb098cebc04d' => true
+			'50bda570-f870-44e0-b787-a7c58cebc04d' => true
 		);
 
 		foreach ($testcases as $testcase => $result) {
 			$cr = array(
 				'CategoryResource' => array(
 					'category_id' => $testcase,
-					'resource_id' => '509bb871-5168-49d4-a676-fb098cebc04d' // resource_id is passed here because when we don't pass it test fails for obscure reasons
+					'resource_id' => '50bda570-1164-40ee-90d7-a7c58cebc04d' // resource_id is passed here because when we don't pass it test fails for obscure reasons
 				)
 			);
 			$this->CategoryResource->create();
@@ -65,13 +65,13 @@ class CategoryResourceTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'509bb872-f6fc-4cd5-b115-fb098cebc04d' => true
+			'50bda570-1164-40ee-90d7-a7c58cebc04d' => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$cr = array(
 				'CategoryResource' => array(
 					'resource_id' => $testcase,
-					'category_id' => '509bb871-3878-4ab0-9a7e-fb098cebc04d'
+					'category_id' => '50bda570-f870-44e0-b787-a7c58cebc04d'
 				)
 			);
 			$this->CategoryResource->create();
