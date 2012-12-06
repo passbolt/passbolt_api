@@ -48,7 +48,7 @@ class SecretTest extends CakeTestCase {
  */
 	public function testResourceIdValidation() {
 		$testcases = array(
-			'' => false, '?!#' => false, '509bb871-3b14-4877-8a88-fb098cebc04d' => true,
+			'' => false, '?!#' => false, '50bda570-1164-40ee-90d7-a7c58cebc04d' => true,
 			'509bb871-3b14-4877-8a88-fb098cebc04b' => false
 		);
 		foreach ($testcases as $testcase => $result) {
