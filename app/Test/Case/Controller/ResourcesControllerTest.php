@@ -95,8 +95,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals('cpp2-pwd2', $result['body'][4]['Resource']['name'],
 			$url . " test should read 'cpp2-pwd2' but is reading {$result['body'][4]['Resource']['name']}"
 		);
-		$this->assertEquals(11, count($result['body']),
-			$url . " counting the number of elements should return '11' but is reading " . count($result['body'][1]['CategoryResource'])
+		$this->assertEquals(13, count($result['body']),
+			$url . " counting the number of elements should return '13' but is reading " . count($result['body'][1]['CategoryResource'])
 		);
 
 		// Test when the category is empty
