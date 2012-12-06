@@ -395,7 +395,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/type/$id/default.json : The test should return success but returned {$result['header']['status']}");
 
 		$root = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
-		$this->assertEquals("50152793-9efc-4a7f-b79e-1358b4e000c3", $root['Category']['category_type_id'], "The category type id should be 50152793-9efc-4a7f-b79e-1358b4e000c3 but it is {$root['Category']['category_type_id']}");
+		$this->assertEquals("50bda570-9364-4c41-9504-a7c58cebc04d", $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
 
 		$result = json_decode($this->testAction("/categories/type/$id/namedoesntexist.json", array('method' => 'put', 'return' => 'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type/$id/namedoesntexist.json : The test should return error but has returned {$result['header']['status']}");
