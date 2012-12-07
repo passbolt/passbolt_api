@@ -78,7 +78,7 @@ class PermissionBenchmarkTest extends CakeTestCase {
 		$time2 = $timeEnd - $timeStart;
 
 		// Stupid test. We should find a way to display more relevant information in the test
-		$this->assertTrue($time2 < $time1);
+		$this->assertTrue($time2 < $time1, "The first test should have taken longer than the second one ($time2 < $time1)");
 	}
 }
 
