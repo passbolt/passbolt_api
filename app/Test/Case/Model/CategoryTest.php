@@ -45,7 +45,7 @@ class CategoryTest extends CakeTestCase {
  */
 	public function testParentValidation() {
 		$testcases = array(
-			'' => true, 'wrongid' => false, '509bb871-13d0-4d82-b6ea-fb098cebc04d' => true,
+			'' => true, 'wrongid' => false, '50bda570-b5e0-4ca9-8879-a7c58cebc04d' => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -63,7 +63,7 @@ class CategoryTest extends CakeTestCase {
  */
 	public function testCategoryTypeValidation() {
 		$testcases = array(
-			'' => true, 'wrongid' => false, '50152793-52b4-47aa-940d-1358b4e000c3' => true,
+			'' => true, 'wrongid' => false, '50bda570-e3d4-457e-9015-a7c58cebc04d' => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
