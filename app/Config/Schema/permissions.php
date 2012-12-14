@@ -327,6 +327,7 @@ class PermissionSchema {
 			",
 			"users_resources_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW users_resources_permissions AS
+				
 					SELECT u.id AS user_id, r.id as resource_id, IFNULL(
 						direct_permission_id,
 						IF(
@@ -335,6 +336,7 @@ class PermissionSchema {
 							ucp_permission_id
 						)
 					) AS permission_id
+					
 					FROM `users` u, `resources` r, users_resources_permissions_tmp urp_tmp
 					WHERE urp_tmp.user_id = u.id
 					AND urp_tmp.resource_id = r.id
@@ -443,11 +445,29 @@ class PermissionSchema {
 					BEGIN
 					  DECLARE `permid` VARCHAR(36);
 						
-						SELECT `urp`.permission_id INTO `permid`
-						FROM `users_resources_permissions` urp
-						WHERE `urp`.user_id =  `user_id`
-						AND `urp`.resource_id = `resource_id`;
-
+SELECT `p`.id INTO `permid`
+					  FROM permissions p 
+					  WHERE `p`.aro='User'
+					  AND `p`.aco='Resource'
+					  AND `p`.aco_foreign_key = `resource_id`
+					  AND `p`.aro_foreign_key = `user_id` 
+					  LIMIT 1;
+					  IF (`permid` IS NULL) THEN
+						  SELECT `p`.id INTO `permid` 
+						  FROM(
+						      (SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
+							    FROM groups_users `gu` 
+							    WHERE `gu`.user_id = `user_id`)
+							    UNION
+							    (SELECT getUserCategoryPermission(`user_id`, cr.`category_id`) COLLATE utf8_unicode_ci AS `permid`
+							    FROM categories_resources `cr` 
+							    WHERE `cr`.resource_id = `resource_id`)
+						  ) `groupview`
+						  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
+						  ORDER BY `p`.type DESC
+					    LIMIT 1;
+						  RETURN `permid`;
+						END IF;
 						RETURN `permid`;
 					END;",
 
