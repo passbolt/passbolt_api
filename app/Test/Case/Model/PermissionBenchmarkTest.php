@@ -35,20 +35,20 @@ class PermissionBenchmarkTest extends CakeTestCase {
 	public function testCompareViewsExecution() {
 		$user = $this->User->findByUsername('remy.bertot@test.com');
 
-		$this->Category->bindModel(array('hasOne' => array(
-			'PermissionCache'
-		)));
-
-		$timeStart = $this->microtimeFloat();
-		$cats  = $this->Category->find('all', array("order" => "Category.lft ASC", "contain" => array(
-			"PermissionCache" => array(
-				"foreignKey" => "aco_foreign_key",
-				"conditions" => array( "aco" => "Category", "aro" => "User", "aro_foreign_key" => $user['User']['id'])
-			)
-		)));
-
-		$timeEnd = $this->microtimeFloat();
-		$time1 = $timeEnd - $timeStart;
+//		$this->Category->bindModel(array('hasOne' => array(
+//			'PermissionCache'
+//		)));
+//
+//		$timeStart = $this->microtimeFloat();
+//		$cats  = $this->Category->find('all', array("order" => "Category.lft ASC", "contain" => array(
+//			"PermissionCache" => array(
+//				"foreignKey" => "aco_foreign_key",
+//				"conditions" => array( "aco" => "Category", "aro" => "User", "aro_foreign_key" => $user['User']['id'])
+//			)
+//		)));
+//
+//		$timeEnd = $this->microtimeFloat();
+//		$time1 = $timeEnd - $timeStart;
 
 		$this->Category->bindModel(array(
 			'hasOne' => array(
@@ -68,8 +68,26 @@ class PermissionBenchmarkTest extends CakeTestCase {
 
 		$cats  = $this->Category->find('all', array("order" => "Category.lft ASC", "contain" => array("UserCategoryPermission", "Permission")));
 		$timeEnd = $this->microtimeFloat();
-		$time2 = $timeEnd - $timeStart;
-
+//		$time2 = $timeEnd - $timeStart;
+//
+//		$this->Category->bindModel(array(
+//			'hasOne' => array(
+//				'UserCategoryPermission' => array(
+//					"foreignKey" => "category_id",
+//					"conditions" => array( "user_id" => $user['User']['id'])
+//				),
+//				'Permission' => array(
+//					'foreignKey' => false,
+//					'conditions' => array( ' `Permission`.`id` = `UserCategoryPermission`.`permission_id` ' ),
+//					'type' => 'LEFT'
+//				)
+//			),
+//		));
+//
+//		$timeStart = $this->microtimeFloat();
+//
+//		$cats  = $this->Category->find('all', array("order" => "Category.lft ASC", "contain" => array("UserCategoryPermission", "Permission")));
+		
 		// Stupid test. We should find a way to display more relevant information in the test
 		//$this->assertTrue($time2 < $time1, "The first test should have taken longer than the second one ($time2 < $time1)");
 	}
