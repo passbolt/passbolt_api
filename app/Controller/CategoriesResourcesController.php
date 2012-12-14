@@ -27,7 +27,7 @@ class CategoriesResourcesController extends AppController {
 			return;
 		}
 		// check if the id is valid
-		if (!is_int((int)$id)) {
+		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The categoryResource id invalid'));
 			return;
 		}
@@ -56,7 +56,7 @@ class CategoriesResourcesController extends AppController {
 			return;
 		}
 		// check if the id is valid
-		if (!is_int((int)$id)) {
+		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The categoryResource id is invalid'));
 			return;
 		}
