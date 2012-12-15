@@ -204,142 +204,122 @@ class PermissionSchema {
 					AND `p`.aro_foreign_key = `g`.id
 					ORDER BY `g`.id, `cp`.child_id, `cp`.lft DESC
 			",	
-			"groups_resources_permissions_tmp" => "
-				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_resources_permissions_tmp AS
-					SELECT `g`.id AS group_id, `r`.id AS resource_id,
-						(SELECT `p`.id
-							FROM permissions p 
-							WHERE `p`.aro='Group'
-							AND `p`.aco='Resource'
-							AND `p`.aco_foreign_key = `r`.id
-							AND `p`.aro_foreign_key = `g`.id 
-							LIMIT 1
-						) AS direct_permission_id,
-						(SELECT `p`.id
+			"groups_resources_permissions" => "
+				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_resources_permissions AS
+					
+					SELECT 
+						`r`.id AS resource_id,
+						`g`.id AS group_id,
+						`p_direct`.id AS direct_permission_id,
+						`p_inherited`.id AS inherited_permission_id,
+						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id
+					FROM `resources` r
+					LEFT JOIN `groups` g ON ( 1=1 )
+					LEFT JOIN `permissions` p_direct ON (
+						`p_direct`.aro='Group'
+						AND `p_direct`.aco='Resource'
+						AND `p_direct`.aco_foreign_key = `r`.id
+						AND `p_direct`.aro_foreign_key = `g`.id 
+					)
+					LEFT JOIN `permissions` p_inherited ON (
+						p_inherited.id = (
+							SELECT `p`.id
 							FROM `permissions` p,
 								`groups_categories_permissions` gcp,
 								`categories_resources` cr
-							WHERE `gcp`.group_id = `g`.id
+							WHERE cr.resource_id = r.id
+							AND `gcp`.group_id = `g`.id
+							AND `gcp`.category_id = cr.category_id
 							AND `gcp`.permission_id = `p`.id
-							AND `gcp`.category_id = `cr`.category_id
-							AND `cr`.resource_id = `r`.id
 							ORDER BY `p`.type DESC
 							LIMIT 1
-						) AS inherited_permission_id
-					FROM `groups` g, `resources` r
+						)
+					);
 			",
-			"groups_resources_permissions" => "
-				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_resources_permissions AS
-					SELECT `g`.id AS group_id, `r`.id AS resource_id, IFNULL(`grp_tmp`.direct_permission_id, `grp_tmp`.inherited_permission_id) AS permission_id
-					FROM `groups_resources_permissions_tmp` grp_tmp, `groups` g, `resources` r
-					WHERE `grp_tmp`.group_id = `g`.id
-					AND `grp_tmp`.resource_id = `r`.id
-			",	
-			"users_categories_permissions_tmp" => "
-				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW users_categories_permissions_tmp AS
-					SELECT `u`.id AS user_id, `c`.id AS category_id,
-						(SELECT `p`.id
-							FROM permissions p
-							WHERE `p`.aro='User'
-							AND `p`.aco='Category'
-							AND `p`.aco_foreign_key = `c`.id
-							AND `p`.aro_foreign_key = `u`.id
-							LIMIT 1
-						) AS direct_permission_id,
-						(SELECT `p`.id
-							FROM permissions `p`, 
-								`groups_categories_permissions` gcp,
-								`groups_users` gu 
-							WHERE `gcp`.category_id = `c`.id
-								AND `gu`.user_id = `u`.id
-								AND `p`.id = `gcp`.permission_id
-								AND `gu`.group_id = `gcp`.group_id
-							ORDER BY `p`.type DESC
-					    LIMIT 1
-						) AS inherited_permission_id
-					FROM `users` u, `categories` c
-			",		
 			"users_categories_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW users_categories_permissions AS
 					SELECT 
-						`u`.id AS user_id, 
-						`c`.id AS category_id, 
-						IFNULL(`ucp_tmp`.direct_permission_id, `ucp_tmp`.inherited_permission_id) AS permission_id
-					FROM `users_categories_permissions_tmp` ucp_tmp, `users` u, `categories` c
-					WHERE `ucp_tmp`.user_id = `u`.id
-					AND `ucp_tmp`.category_id = `c`.id
-			",
-			"users_resources_permissions_tmp" => "
-				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW users_resources_permissions_tmp AS
-					SELECT 
-						`u`.id AS user_id, 
-						`r`.id AS resource_id,
-						(SELECT `p`.id
-							FROM permissions p
-							WHERE `p`.aro='User'
-								AND `p`.aco='Resource'
-								AND `p`.aco_foreign_key = `r`.id
-								AND `p`.aro_foreign_key = `u`.id
+						`u`.id AS user_id,
+						`c`.id AS category_id,
+						`p_direct`.id AS direct_permission_id,
+						`p_inherited`.id AS inherited_permission_id,
+						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id
+					FROM `categories` c
+					LEFT JOIN `users` u ON ( 1=1 )
+					LEFT JOIN `permissions` p_direct ON (
+						`p_direct`.aro='User'
+						AND `p_direct`.aco='Category'
+						AND `p_direct`.aco_foreign_key = `c`.id
+						AND `p_direct`.aro_foreign_key = `u`.id 
+					)
+					LEFT JOIN `permissions` p_inherited ON (
+						p_inherited.id = (
+							SELECT `p`.id
+							FROM `permissions` p,
+								`groups_categories_permissions` gcp,
+								`groups_users` gu
+							WHERE `gcp`.category_id = `c`.id
+							AND `gu`.user_id = `u`.id
+							AND `gu`.group_id = `gcp`.group_id
+							AND `p`.id = `gcp`.permission_id
+							ORDER BY `p`.type DESC
 							LIMIT 1
-						) AS direct_permission_id,
-						(SELECT `grp`.permission_id AS `permid`
-							FROM `groups_resources_permissions` grp,
-								`groups_users` gu,
-								`permissions` p
-							WHERE `gu`.user_id = `u`.id
-								AND `grp`.resource_id = `r`.id
-								AND `grp`.group_id = `gu`.group_id
-								AND `p`.id = `grp`.permission_id
-							ORDER BY p.type DESC LIMIT 1
-						) AS grp_permission_id,
-						(SELECT `p`.type
-							FROM `groups_resources_permissions` grp,
-								`groups_users` gu,
-								`permissions` p
-							WHERE `gu`.user_id = `u`.id
-								AND `grp`.resource_id = `r`.id
-								AND `grp`.group_id = `gu`.group_id
-								AND `p`.id = `grp`.permission_id
-							ORDER BY p.type DESC LIMIT 1
-						) AS grp_permission_type,
-						(SELECT `ucp`.permission_id AS `permid`
-							FROM `users_categories_permissions` ucp,
-								`categories_resources` cr,
-								`permissions` p
-							WHERE `ucp`.user_id = `u`.id
-								AND `cr`.resource_id = `r`.id
-								AND `ucp`.category_id = `cr`.category_id
-								AND `p`.id = `ucp`.permission_id
-							ORDER BY p.type DESC LIMIT 1
-						) AS ucp_permission_id,
-						(SELECT `p`.type
-							FROM `users_categories_permissions` ucp,
-								`categories_resources` cr,
-								`permissions` p
-							WHERE `ucp`.user_id = `u`.id
-								AND `cr`.resource_id = `r`.id
-								AND `ucp`.category_id = `cr`.category_id
-								AND `p`.id = `ucp`.permission_id
-							ORDER BY p.type DESC LIMIT 1
-						) AS ucp_permission_type
-						
-					FROM `users` u, `resources` r
+						)
+					);
 			",
 			"users_resources_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW users_resources_permissions AS
 				
-					SELECT u.id AS user_id, r.id as resource_id, IFNULL(
-						direct_permission_id,
-						IF(
-							grp_permission_type>ucp_permission_type,
-							grp_permission_id,
-							ucp_permission_id
+					SELECT 
+						`u`.id AS user_id,
+						`r`.id AS resource_id,
+						`p_direct`.id AS direct_permission_id,
+						`pg_inherited`.id AS group_inherited_permission_id,
+						`pu_inherited`.id AS user_inherited_permission_id,
+						IFNULL(
+							`p_direct`.id,
+							IF(
+								`pg_inherited`.type > `pu_inherited`.type,
+								`pg_inherited`.id,
+								`pu_inherited`.id
+							)
+						) AS permission_id
+					FROM `resources` r
+					LEFT JOIN `users` u ON ( 1=1 )
+					LEFT JOIN `permissions` p_direct ON (
+						`p_direct`.aro='User'
+						AND `p_direct`.aco='Resource'
+						AND `p_direct`.aco_foreign_key = `r`.id
+						AND `p_direct`.aro_foreign_key = `u`.id 
+					)
+					LEFT JOIN `permissions` pg_inherited ON (
+						pg_inherited.id = (
+							SELECT `p`.id
+							FROM `permissions` p,
+								`groups_resources_permissions` grp,
+								`groups_users` gu
+							WHERE `grp`.resource_id = `r`.id
+							AND `gu`.user_id = `u`.id
+							AND `gu`.group_id = `grp`.group_id
+							AND `p`.id = `grp`.permission_id
+							ORDER BY `p`.type DESC
+							LIMIT 1
 						)
-					) AS permission_id
-					
-					FROM `users` u, `resources` r, users_resources_permissions_tmp urp_tmp
-					WHERE urp_tmp.user_id = u.id
-					AND urp_tmp.resource_id = r.id
+					)
+					LEFT JOIN `permissions` pu_inherited ON (
+						pu_inherited.id = (
+							SELECT `p`.id
+							FROM `permissions` p,
+								`users_categories_permissions` ucp,
+								`categories_resources` cr
+							WHERE `cr`.resource_id = `r`.id
+							AND `ucp`.category_id = `cr`.category_id
+							AND `ucp`.user_id = `u`.id
+							AND `p`.id = `ucp`.permission_id
+							ORDER BY `p`.type DESC
+							LIMIT 1
+						)
+					);	
 			",
 			"aro_aco_permissions" =>
 				"CREATE OR REPLACE ALGORITHM=UNDEFINED 
@@ -440,36 +420,18 @@ class PermissionSchema {
 
 				"getUserResourcePermission" =>
 					"DROP FUNCTION IF EXISTS getUserResourcePermission;
-					CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
-					NO SQL
-					BEGIN
-					  DECLARE `permid` VARCHAR(36);
-						
-SELECT `p`.id INTO `permid`
-					  FROM permissions p 
-					  WHERE `p`.aro='User'
-					  AND `p`.aco='Resource'
-					  AND `p`.aco_foreign_key = `resource_id`
-					  AND `p`.aro_foreign_key = `user_id` 
-					  LIMIT 1;
-					  IF (`permid` IS NULL) THEN
-						  SELECT `p`.id INTO `permid` 
-						  FROM(
-						      (SELECT getGroupResourcePermission(`gu`.group_id, `resource_id`) COLLATE utf8_unicode_ci AS `permid`
-							    FROM groups_users `gu` 
-							    WHERE `gu`.user_id = `user_id`)
-							    UNION
-							    (SELECT getUserCategoryPermission(`user_id`, cr.`category_id`) COLLATE utf8_unicode_ci AS `permid`
-							    FROM categories_resources `cr` 
-							    WHERE `cr`.resource_id = `resource_id`)
-						  ) `groupview`
-						  INNER JOIN permissions `p` ON `p`.id=`groupview`.permid
-						  ORDER BY `p`.type DESC
-					    LIMIT 1;
-						  RETURN `permid`;
-						END IF;
-						RETURN `permid`;
-					END;",
+						CREATE FUNCTION `getUserResourcePermission`(`user_id` VARCHAR(36), `resource_id` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
+						NO SQL
+						BEGIN
+							DECLARE `permid` VARCHAR(36);
+							
+							SELECT `urp`.permission_id INTO `permid`
+							FROM `users_resources_permissions` urp
+							WHERE `urp`.user_id =  `user_id`
+							AND `urp`.resource_id = `resource_id`;
+
+							RETURN `permid`;
+						END;",
 
 				"getPermissions" =>
 					"DROP FUNCTION IF EXISTS getPermissions;

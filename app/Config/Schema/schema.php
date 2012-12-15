@@ -169,8 +169,8 @@ class AppSchema extends CakeSchema {
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1), 'category_id' => array('column' => array('category_id', 'resource_id'), 'unique' => 0),
-			'categories_resources' => array('column' => array('category_id', 'resource_id'), 'unique' => 0),
-			'resources_categories' => array('column' => array('resource_id', 'category_id'), 'unique' => 0)
+			'categories' => array('column' => array('category_id'), 'unique' => 0),
+			'resources' => array('column' => array('resource_id'), 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
@@ -203,8 +203,8 @@ class AppSchema extends CakeSchema {
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1), 'user_id' => array('column' => array('user_id', 'group_id'), 'unique' => 0),
-			'groups_users' => array('column' => array('group_id', 'user_id'), 'unique' => 0),
-			'users_groups' => array('column' => array('user_id', 'group_id'), 'unique' => 0)
+			'groups' => array('column' => array('group_id'), 'unique' => 0),
+			'users' => array('column' => array('user_id'), 'unique' => 0)
 			),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
@@ -286,7 +286,11 @@ class AppSchema extends CakeSchema {
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'aco' => array('column' => array('aco', 'aro_foreign_key'), 'unique' => 0),
+			'aro' => array('column' => array('aro', 'aro_foreign_key'), 'unique' => 0)
+		),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
