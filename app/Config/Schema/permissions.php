@@ -190,18 +190,23 @@ class PermissionSchema {
 			"categories_parents" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW categories_parents AS
 					SELECT c.id AS child_id, c.lft AS child_lft, c.rght AS child_rght, cp.id AS id, cp.lft AS lft, cp.rght AS rght
-					FROM categories c
-					INNER JOIN categories cp ON cp.lft <= c.lft AND cp.rght >= c.rght;
+					FROM categories c, categories cp
+					WHERE cp.lft <= c.lft 
+						AND cp.rght >= c.rght;
 			",
 			"groups_categories_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_categories_permissions AS
-					SELECT `g`.id AS group_id, `cp`.child_id AS category_id, `p`.id AS permission_id
+					SELECT 
+						`g`.id AS group_id,
+						`cp`.child_id AS category_id,
+						`p`.id AS permission_id,
+						`p`.type AS permission_type
 					FROM permissions p
 					LEFT JOIN `categories_parents` cp ON `p`.aco_foreign_key=`cp`.id
 					INNER JOIN `groups` g ON `p`.aro_foreign_key=`g`.id 
 					WHERE `p`.aro = 'Group'
-					AND `p`.aco = 'Category'
-					AND `p`.aro_foreign_key = `g`.id
+						AND `p`.aco = 'Category'
+						AND `p`.aro_foreign_key = `g`.id
 					ORDER BY `g`.id, `cp`.child_id, `cp`.lft DESC
 			",	
 			"groups_resources_permissions" => "
@@ -212,9 +217,9 @@ class PermissionSchema {
 						`g`.id AS group_id,
 						`p_direct`.id AS direct_permission_id,
 						`p_inherited`.id AS inherited_permission_id,
-						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id
-					FROM `resources` r
-					LEFT JOIN `groups` g ON ( 1=1 )
+						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id,
+						IFNULL(`p_direct`.type, `p_inherited`.type) AS permission_type
+					FROM (`resources` r JOIN `groups` g)
 					LEFT JOIN `permissions` p_direct ON (
 						`p_direct`.aro='Group'
 						AND `p_direct`.aco='Resource'
@@ -223,15 +228,13 @@ class PermissionSchema {
 					)
 					LEFT JOIN `permissions` p_inherited ON (
 						p_inherited.id = (
-							SELECT `p`.id
-							FROM `permissions` p,
-								`groups_categories_permissions` gcp,
+							SELECT `gcp`.permission_id
+							FROM `groups_categories_permissions` gcp,
 								`categories_resources` cr
-							WHERE cr.resource_id = r.id
+							WHERE `cr`.resource_id = `r`.id
 							AND `gcp`.group_id = `g`.id
-							AND `gcp`.category_id = cr.category_id
-							AND `gcp`.permission_id = `p`.id
-							ORDER BY `p`.type DESC
+							AND `gcp`.category_id = `cr`.category_id
+							ORDER BY `gcp`.permission_type DESC
 							LIMIT 1
 						)
 					);
@@ -243,9 +246,9 @@ class PermissionSchema {
 						`c`.id AS category_id,
 						`p_direct`.id AS direct_permission_id,
 						`p_inherited`.id AS inherited_permission_id,
-						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id
-					FROM `categories` c
-					LEFT JOIN `users` u ON ( 1=1 )
+						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id,
+						IFNULL(`p_direct`.type, `p_inherited`.type) AS permission_type
+					FROM (`categories` c JOIN `users` u)
 					LEFT JOIN `permissions` p_direct ON (
 						`p_direct`.aro='User'
 						AND `p_direct`.aco='Category'
@@ -254,15 +257,13 @@ class PermissionSchema {
 					)
 					LEFT JOIN `permissions` p_inherited ON (
 						p_inherited.id = (
-							SELECT `p`.id
-							FROM `permissions` p,
-								`groups_categories_permissions` gcp,
+							SELECT `gcp`.permission_id
+							FROM `groups_categories_permissions` gcp,
 								`groups_users` gu
 							WHERE `gcp`.category_id = `c`.id
 							AND `gu`.user_id = `u`.id
 							AND `gu`.group_id = `gcp`.group_id
-							AND `p`.id = `gcp`.permission_id
-							ORDER BY `p`.type DESC
+							ORDER BY `gcp`.permission_type DESC
 							LIMIT 1
 						)
 					);
@@ -284,8 +285,7 @@ class PermissionSchema {
 								`pu_inherited`.id
 							)
 						) AS permission_id
-					FROM `resources` r
-					LEFT JOIN `users` u ON ( 1=1 )
+					FROM (`resources` r JOIN `users` u)
 					LEFT JOIN `permissions` p_direct ON (
 						`p_direct`.aro='User'
 						AND `p_direct`.aco='Resource'
@@ -294,71 +294,94 @@ class PermissionSchema {
 					)
 					LEFT JOIN `permissions` pg_inherited ON (
 						pg_inherited.id = (
-							SELECT `p`.id
-							FROM `permissions` p,
-								`groups_resources_permissions` grp,
+							SELECT `grp`.permission_id
+							FROM `groups_resources_permissions` grp,
 								`groups_users` gu
 							WHERE `grp`.resource_id = `r`.id
 							AND `gu`.user_id = `u`.id
 							AND `gu`.group_id = `grp`.group_id
-							AND `p`.id = `grp`.permission_id
-							ORDER BY `p`.type DESC
+							ORDER BY `grp`.permission_type DESC
 							LIMIT 1
 						)
 					)
 					LEFT JOIN `permissions` pu_inherited ON (
 						pu_inherited.id = (
-							SELECT `p`.id
-							FROM `permissions` p,
-								`users_categories_permissions` ucp,
+							SELECT `ucp`.permission_id
+							FROM `users_categories_permissions` ucp,
 								`categories_resources` cr
 							WHERE `cr`.resource_id = `r`.id
 							AND `ucp`.category_id = `cr`.category_id
 							AND `ucp`.user_id = `u`.id
-							AND `p`.id = `ucp`.permission_id
-							ORDER BY `p`.type DESC
+							ORDER BY `ucp`.permission_type DESC
 							LIMIT 1
 						)
-					);	
-			",
+					);
+			",	
 			"aro_aco_permissions" =>
-				"CREATE OR REPLACE ALGORITHM=UNDEFINED 
-				SQL SECURITY DEFINER VIEW `aro_aco_permissions` 
-				AS 
+				"CREATE OR REPLACE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `aro_aco_permissions` AS 
+					
 				  (
-				    SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+				    SELECT 
+							'Category' COLLATE utf8_unicode_ci AS `aco`,
+							`c`.`id` AS `aco_foreign_key`,
+							'Group' COLLATE utf8_unicode_ci AS `aro`,
+							`g`.`id` AS `aro_foreign_key`,
+							`gcp`.permission_id AS `permission_id` 
 				    FROM (`categories` `c` join `groups` `g`)
-				  ) 
+						LEFT JOIN `groups_categories_permissions` gcp ON (
+							`gcp`.group_id = `g`.`id`
+							AND `gcp`.category_id = `c`.`id`
+						)
+					)
 			  UNION ALL (
-			      SELECT 'Category' COLLATE utf8_unicode_ci AS `aco`,`c`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+			      SELECT 
+							'Category' COLLATE utf8_unicode_ci AS `aco`,
+							`c`.`id` AS `aco_foreign_key`,
+							'User' COLLATE utf8_unicode_ci AS `aro`,
+							`u`.`id` AS `aro_foreign_key`,
+							`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
 			      FROM (`categories` `c` join `users` `u`)
+						LEFT JOIN `users_categories_permissions` ucp ON (
+							`ucp`.user_id =  `u`.`id`
+							AND `ucp`.category_id = `c`.`id`
+						)
 			    ) 
 			  UNION  ALL(
-			      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'Group' COLLATE utf8_unicode_ci AS `aro`,`g`.`id` AS `aro_foreign_key`,`getPermissions`('Group',`g`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+			      SELECT 
+							'Resource' COLLATE utf8_unicode_ci AS `aco`,
+							`r`.`id` AS `aco_foreign_key`,
+							'Group' COLLATE utf8_unicode_ci AS `aro`,
+							`g`.`id` AS `aro_foreign_key`,
+							`grp`.permission_id AS `permission_id` 
 			      FROM (`resources` `r` join `groups` `g`)
+						LEFT JOIN `groups_resources_permissions` grp ON (
+							`grp`.group_id =  `g`.`id`
+							AND `grp`.resource_id = `r`.`id`
+						)
 				  ) 
 			  UNION ALL(
-			      SELECT 'Resource' COLLATE utf8_unicode_ci AS `aco`,`r`.`id` AS `aco_foreign_key`,'User' COLLATE utf8_unicode_ci AS `aro`,`u`.`id` AS `aro_foreign_key`,`getPermissions`('User',`u`.`id`,'Resource',`r`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
+			      SELECT 
+							'Resource' COLLATE utf8_unicode_ci AS `aco`,
+							`r`.`id` AS `aco_foreign_key`,
+							'User' COLLATE utf8_unicode_ci AS `aro`,
+							`u`.`id` AS `aro_foreign_key`,
+							`urp`.permission_id AS `permission_id` 
 			      FROM (`resources` `r` join `users` `u`)
+						LEFT JOIN `users_resources_permissions` urp ON (
+							`urp`.user_id = `u`.`id`
+							AND `urp`.resource_id = `r`.`id`
+						)
 				  );
 			",
-			"permissions_cache" =>
-				"CREATE OR REPLACE ALGORITHM=UNDEFINED 
-				SQL SECURITY DEFINER VIEW `permissions_cache` 
-				AS
-				SELECT `aap`.aco, `aap`.aco_foreign_key, `aap`.aro, `aap`.aro_foreign_key, 
-				case 
-		        when  `p`.type IS NULL then " . PermissionType::DENY . "
-		        when  `p`.type IS NOT NULL then `p`.type
-		    end as type,
-				case 
-		        when  `p`.type IS NULL then 1
-		        when  `p`.type IS NOT NULL then 0
-		    end as inherited,
-				`p`.created, `p`.modified, `p`.created_by, `p`.modified_by
-				FROM aro_aco_permissions aap
-				LEFT JOIN permissions p ON `p`.id = `aap`.permission_id
-				LEFT JOIN permissions_types pt ON `pt`.serial = `p`.type
+			"permissions_cache" => "
+				CREATE OR REPLACE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `permissions_cache` AS
+					SELECT `aap`.aco, `aap`.aco_foreign_key, `aap`.aro, `aap`.aro_foreign_key, 
+					IFNULL (`p`.type, " . PermissionType::DENY . ") AS type,
+					IF (`p`.type IS NULL, 1, 0) AS inherited,
+					`p`.created, `p`.modified, `p`.created_by, `p`.modified_by
+					FROM aro_aco_permissions aap
+					LEFT JOIN permissions p ON `p`.id = `aap`.permission_id
+					LEFT JOIN permissions_types pt ON `pt`.serial = `p`.type
 				"
 			);
 	}
@@ -431,28 +454,7 @@ class PermissionSchema {
 							AND `urp`.resource_id = `resource_id`;
 
 							RETURN `permid`;
-						END;",
-
-				"getPermissions" =>
-					"DROP FUNCTION IF EXISTS getPermissions;
-					CREATE FUNCTION `getPermissions`(`aro` VARCHAR(50), `aro_foreign_key` VARCHAR(36), `aco` VARCHAR(50), `aco_foreign_key` VARCHAR(36)) RETURNS varchar(36) CHARSET utf8
-					BEGIN
-					    DECLARE `permid` VARCHAR(36);
-					    IF(`aro` = 'Group' AND `aco` = 'Category') THEN
-					    	SELECT getGroupCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-					        INTO `permid`;
-					    ELSEIF(`aro` = 'Group' AND `aco` = 'Resource') THEN
-					    	SELECT getGroupResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-					        INTO `permid`;
-					    ELSEIF(`aro` = 'User' AND `aco` = 'Category') THEN
-					    	SELECT getUserCategoryPermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-					        INTO `permid`;
-					    ELSEIF(`aro` = 'User' AND `aco` = 'Resource') THEN
-					    	SELECT getUserResourcePermission(`aro_foreign_key`, `aco_foreign_key`) COLLATE utf8_unicode_ci
-					        INTO `permid`;
-					    END IF;
-					    RETURN `permid`;
-					END;"
+						END;"
 		);
 	}
 

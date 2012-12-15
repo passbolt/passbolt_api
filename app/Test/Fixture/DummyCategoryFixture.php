@@ -22,14 +22,13 @@ class DummyCategoryFixture extends CategoryFixture {
 
 		$this->Category = ClassRegistry::init('Category');
 		$this->Category->useDbConfig = 'test';
-		$nbCategories = 100;
 	}
 
 	public function insert() {
 		$model = new Category(null, null, 'test');
 		$this->db = $model->getDataSource();
 		parent::insert($this->db);
-		$this->populateCategories(100);
+		$this->populateCategories(1000);
 	}
 
 	public function randomString($length = 10) {
