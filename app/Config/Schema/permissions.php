@@ -28,45 +28,34 @@ class PermissionSchema {
 	}
 
 	protected function _getDefaultPermissions() {
-		$this->Category = ClassRegistry::init('Category');
 		$this->Resource = ClassRegistry::init('Resource');
-		$this->Group = ClassRegistry::init('Group');
-		$this->User = ClassRegistry::init('User');
 
-		$cDrupal = $this->Category->findByName("drupal");
-		$cAdministration = $this->Category->findByName("administration");
-		$cAccounts = $this->Category->findByName("accounts");
-		$gDrupal = $this->Group->findByName("developers drupal");
-		$gAdministration = $this->Group->findByName("accounting dpt");
-
-		$gManagement = $this->Group->findByName("management");
-		$cRoot = $this->Category->findByName("Bolt Softwares Pvt. Ltd.");
+		$users = UserSchema::getAlias();
+		$groups = GroupSchema::getAlias();
+		$cat = CategorySchema::getAlias();
+		
 		// Group Management has admin rights on everything
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cRoot['Category']['id'],
+			'aco_foreign_key' => $cat['root'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gManagement['Group']['id'],
+			'aro_foreign_key' => $groups['man'],
 			'type' => PermissionType::ADMIN,
 		));
-
-		$gHumanResources = $this->Group->findByName("human resources");
-		$cAdministration = $this->Category->findByName("administration");
 		// Group human resources have read only rights on administration
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cAdministration['Category']['id'],
+			'aco_foreign_key' => $cat['adm'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gHumanResources['Group']['id'],
+			'aro_foreign_key' => $groups['hr'],
 			'type' => PermissionType::READ
 		));
 		// human resources have no rights on accounts
-		$cAccounts = $this->Category->findByName("accounts");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cAccounts['Category']['id'],
+			'aco_foreign_key' => $cat['acc'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gHumanResources['Group']['id'],
+			'aro_foreign_key' => $groups['hr'],
 			'type' => PermissionType::DENY
 		));
 		// Group human resources can modify resource salesforce account
@@ -75,110 +64,88 @@ class PermissionSchema {
 			'aco' => 'Resource',
 			'aco_foreign_key' => $rSalesforce['Resource']['id'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gHumanResources['Group']['id'],
+			'aro_foreign_key' => $groups['hr'],
 			'type' => PermissionType::UPDATE
 		));
-
 		// accounting dpt can access administration>accounts in read only
-		$gAccountingDpt = $this->Group->findByName("accounting dpt");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cAccounts['Category']['id'],
+			'aco_foreign_key' => $cat['acc'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gAccountingDpt['Group']['id'],
+			'aro_foreign_key' => $groups['acc'],
 			'type' => PermissionType::READ,
 		));
-
-		$gDrupal = $this->Group->findByName("developers drupal");
-		$cDrupal = $this->Category->findByName("drupal");
 		// Group developers drupal have read only rights on Projects > Drupal
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cDrupal['Category']['id'],
+			'aco_foreign_key' => $cat['dru'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gDrupal['Group']['id'],
+			'aro_foreign_key' => $groups['dru'],
 			'type' => PermissionType::READ,
 		));
 		// Group cakephp has access to category cakephp in readonly
-		$cCakephp = $this->Category->findByName("cakephp");
-		$gCakephp = $this->Group->findByName("developers cakephp");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cCakephp['Category']['id'],
+			'aco_foreign_key' => $cat['cak'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gCakephp['Group']['id'],
+			'aro_foreign_key' => $groups['cak'],
 			'type' => PermissionType::READ,
 		));
 		// Group developers team leads has access to projects in modify
-		$cProjects = $this->Category->findByName("projects");
-		$gTeamleads = $this->Group->findByName("developers team leads");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cProjects['Category']['id'],
+			'aco_foreign_key' => $cat['pro'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gTeamleads['Group']['id'],
+			'aro_foreign_key' => $groups['dtl'],
 			'type' => PermissionType::UPDATE,
 		));
 		// Remy Bertot has admin rights on cp-project1
-		$cProject1 = $this->Category->findByName("cp-project1");
-		$uRemy = $this->User->findByUsername("remy.bertot@test.com");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cProject1['Category']['id'],
+			'aco_foreign_key' => $cat['cp1'],
 			'aro' => 'User',
-			'aro_foreign_key' => $uRemy['User']['id'],
+			'aro_foreign_key' => $users['rem'],
 			'type' => PermissionType::ADMIN,
 		));
 
 		// Remy Bertot has admin rights on others
-		$cOthers = $this->Category->findByName("others");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cOthers['Category']['id'],
+			'aco_foreign_key' => $cat['oth'],
 			'aro' => 'User',
-			'aro_foreign_key' => $uRemy['User']['id'],
+			'aro_foreign_key' => $users['rem'],
 			'type' => PermissionType::ADMIN,
 		));
-
 		//  Freelancers have read only rights to projects others
-		$gFreelancers = $this->Group->findByName("freelancers");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cProjects['Category']['id'],
+			'aco_foreign_key' => $cat['pro'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gFreelancers['Group']['id'],
+			'aro_foreign_key' => $groups['fre'],
 			'type' => PermissionType::READ,
 		));
-
 		// Jean René has readonly access rights on cp-project2
-		$cCpProject2 = $this->Category->findByName("cp-project2");
-		$uJeanrene = $this->User->findByUsername("jean-rene@test.com");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cCpProject2['Category']['id'],
+			'aco_foreign_key' => $cat['cp2'],
 			'aro' => 'User',
-			'aro_foreign_key' => $uJeanrene['User']['id'],
+			'aro_foreign_key' => $users['jea'],
 			'type' => PermissionType::READ,
 		));
-
 		//  company a has read only rights to o-project1
-		$gCompanya = $this->Group->findByName("company a");
-		$cOproject1 = $this->Category->findByName("o-project1");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cOproject1['Category']['id'],
+			'aco_foreign_key' => $cat['op1'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gCompanya['Group']['id'],
+			'aro_foreign_key' => $groups['cpa'],
 			'type' => PermissionType::READ,
 		));
-
 		//  company a has read only rights to o-project1
-		$cOproject2 = $this->Category->findByName("o-project2");
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',
-			'aco_foreign_key' => $cOproject2['Category']['id'],
+			'aco_foreign_key' => $cat['op2'],
 			'aro' => 'Group',
-			'aro_foreign_key' => $gCompanya['Group']['id'],
+			'aro_foreign_key' => $groups['cpa'],
 			'type' => PermissionType::UPDATE,
 		));
 
@@ -202,12 +169,11 @@ class PermissionSchema {
 						`p`.id AS permission_id,
 						`p`.type AS permission_type
 					FROM permissions p
-					LEFT JOIN `categories_parents` cp ON `p`.aco_foreign_key=`cp`.id
-					INNER JOIN `groups` g ON `p`.aro_foreign_key=`g`.id 
+					LEFT JOIN `categories_parents` cp ON `cp`.id=`p`.aco_foreign_key
+					INNER JOIN `groups` g ON `g`.id=`p`.aro_foreign_key
 					WHERE `p`.aro = 'Group'
 						AND `p`.aco = 'Category'
-						AND `p`.aro_foreign_key = `g`.id
-					ORDER BY `g`.id, `cp`.child_id, `cp`.lft DESC
+					ORDER BY `g`.id, `cp`.child_id, `cp`.lft DESC;
 			",	
 			"groups_resources_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_resources_permissions AS
@@ -269,14 +235,11 @@ class PermissionSchema {
 					);
 			",
 			"users_resources_permissions" => "
-				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW users_resources_permissions AS
+				CREATE OR REPLACE ALGORITHM=MERGE VIEW users_resources_permissions AS
 				
 					SELECT 
 						`u`.id AS user_id,
 						`r`.id AS resource_id,
-						`p_direct`.id AS direct_permission_id,
-						`pg_inherited`.id AS group_inherited_permission_id,
-						`pu_inherited`.id AS user_inherited_permission_id,
 						IFNULL(
 							`p_direct`.id,
 							IF(
@@ -293,6 +256,7 @@ class PermissionSchema {
 						AND `p_direct`.aro_foreign_key = `u`.id 
 					)
 					LEFT JOIN `permissions` pg_inherited ON (
+						/* `p_direct`.id IS NULL */
 						pg_inherited.id = (
 							SELECT `grp`.permission_id
 							FROM `groups_resources_permissions` grp,
@@ -305,6 +269,7 @@ class PermissionSchema {
 						)
 					)
 					LEFT JOIN `permissions` pu_inherited ON (
+						/* `p_direct`.id IS NULL */
 						pu_inherited.id = (
 							SELECT `ucp`.permission_id
 							FROM `users_categories_permissions` ucp,
@@ -315,74 +280,7 @@ class PermissionSchema {
 							ORDER BY `ucp`.permission_type DESC
 							LIMIT 1
 						)
-					);
-			",	
-			"aro_aco_permissions" =>
-				"CREATE OR REPLACE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `aro_aco_permissions` AS 
-					
-				  (
-				    SELECT 
-							'Category' COLLATE utf8_unicode_ci AS `aco`,
-							`c`.`id` AS `aco_foreign_key`,
-							'Group' COLLATE utf8_unicode_ci AS `aro`,
-							`g`.`id` AS `aro_foreign_key`,
-							`gcp`.permission_id AS `permission_id` 
-				    FROM (`categories` `c` join `groups` `g`)
-						LEFT JOIN `groups_categories_permissions` gcp ON (
-							`gcp`.group_id = `g`.`id`
-							AND `gcp`.category_id = `c`.`id`
-						)
-					)
-			  UNION ALL (
-			      SELECT 
-							'Category' COLLATE utf8_unicode_ci AS `aco`,
-							`c`.`id` AS `aco_foreign_key`,
-							'User' COLLATE utf8_unicode_ci AS `aro`,
-							`u`.`id` AS `aro_foreign_key`,
-							`getPermissions`('User',`u`.`id`,'Category',`c`.`id`) COLLATE utf8_unicode_ci AS `permission_id` 
-			      FROM (`categories` `c` join `users` `u`)
-						LEFT JOIN `users_categories_permissions` ucp ON (
-							`ucp`.user_id =  `u`.`id`
-							AND `ucp`.category_id = `c`.`id`
-						)
-			    ) 
-			  UNION  ALL(
-			      SELECT 
-							'Resource' COLLATE utf8_unicode_ci AS `aco`,
-							`r`.`id` AS `aco_foreign_key`,
-							'Group' COLLATE utf8_unicode_ci AS `aro`,
-							`g`.`id` AS `aro_foreign_key`,
-							`grp`.permission_id AS `permission_id` 
-			      FROM (`resources` `r` join `groups` `g`)
-						LEFT JOIN `groups_resources_permissions` grp ON (
-							`grp`.group_id =  `g`.`id`
-							AND `grp`.resource_id = `r`.`id`
-						)
-				  ) 
-			  UNION ALL(
-			      SELECT 
-							'Resource' COLLATE utf8_unicode_ci AS `aco`,
-							`r`.`id` AS `aco_foreign_key`,
-							'User' COLLATE utf8_unicode_ci AS `aro`,
-							`u`.`id` AS `aro_foreign_key`,
-							`urp`.permission_id AS `permission_id` 
-			      FROM (`resources` `r` join `users` `u`)
-						LEFT JOIN `users_resources_permissions` urp ON (
-							`urp`.user_id = `u`.`id`
-							AND `urp`.resource_id = `r`.`id`
-						)
-				  );
-			",
-			"permissions_cache" => "
-				CREATE OR REPLACE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `permissions_cache` AS
-					SELECT `aap`.aco, `aap`.aco_foreign_key, `aap`.aro, `aap`.aro_foreign_key, 
-					IFNULL (`p`.type, " . PermissionType::DENY . ") AS type,
-					IF (`p`.type IS NULL, 1, 0) AS inherited,
-					`p`.created, `p`.modified, `p`.created_by, `p`.modified_by
-					FROM aro_aco_permissions aap
-					LEFT JOIN permissions p ON `p`.id = `aap`.permission_id
-					LEFT JOIN permissions_types pt ON `pt`.serial = `p`.type
-				"
+					);"	
 			);
 	}
 

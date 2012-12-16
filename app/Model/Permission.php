@@ -13,5 +13,4 @@ class Permission extends AppModel {
 
 	public $actsAs = array('Containable', 'Trackable');
 
-
 }

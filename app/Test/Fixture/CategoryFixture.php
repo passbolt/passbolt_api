@@ -37,4 +37,24 @@ class CategoryFixture extends CakeTestFixture {
 		);
 		parent::init();
 	}
+	
+	public static function generateCategories($n, $options = array()) {
+		$returnValue = array();
+		
+		$Category = ClassRegistry::init('Category');
+		$Category->useDbConfig = 'test';
+		$Category->Behaviors->load('ModelTestCase');
+		
+		$options = array(
+			'parentCategory' => 'RAND'
+		);
+		
+		for ($i = 0; $i < $n; $i++) {
+			$Category->create();
+			$Category->setTestData($options);
+			$returnValue[] = $Category->save();
+		}
+		
+		return $returnValue;
+	}
 }

@@ -9,6 +9,7 @@
  */
 App::uses('CategoryType', 'Model');
 App::uses('Resource', 'Model');
+App::uses('User', 'Model');
 
 class Category extends AppModel {
 
@@ -16,7 +17,18 @@ class Category extends AppModel {
  * Model behave as a tree with left, right, parent_id
  */
 	public $actsAs = array('Tree', 'Containable', 'Trackable');
-
+	
+	public $hasOne = array(
+		'UserCategoryPermission' => array(
+			'foreignKey' => 'category_id'
+		),
+		'Permission' => array(
+			'foreignKey' => false,
+			'conditions' => array( ' `Permission`.`id` = `UserCategoryPermission`.`permission_id` ' ),
+			'type' => 'LEFT'
+		)
+	);
+	
 	public $hasMany = array(
 		'CategoryResource'
 	);
@@ -223,9 +235,15 @@ class Category extends AppModel {
 					case 'getChildren':
 					case 'addResult':
 					case 'index' :
+					case 'getWithChildren' :
 						$fields = array(
 							'fields' => array(
-								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id'
+								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id',
+								'Permission.id', 'Permission.type'
+							),
+							'contain' => array (
+								'UserCategoryPermission',
+								'Permission'
 							)
 						);
 					break;
@@ -281,7 +299,9 @@ class Category extends AppModel {
 						$c = array(
 							'conditions' => array(
 								'Category.lft >=' => $data['Category']['lft'],
-								'Category.rght <=' => $data['Category']['rght']
+								'Category.rght <=' => $data['Category']['rght'],
+								'UserCategoryPermission.user_id' => User::get('id'),
+								'Permission.type >=' => 1
 							),
 							'order' => 'lft ASC'
 						);

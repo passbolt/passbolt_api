@@ -8,6 +8,7 @@
  * @since       version 2.12.9
  */
 App::uses('Resource', 'Model');
+App::uses('CategoryResource', 'Model');
 
 class ResourceFixture extends CakeTestFixture {
 
@@ -31,5 +32,42 @@ class ResourceFixture extends CakeTestFixture {
 			array('id' => '50bda570-f140-4861-8763-a7c58cebc04d','name' => 'cpp2-pwd1','username' => 'admin','expiry_date' => NULL,'uri' => 'http://ecpat.prod2.enova-tech.net/','description' => 'this is a description test','deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
 			array('id' => '50bda570-f790-4603-ab0c-a7c58cebc04d','name' => 'op1-pwd2','username' => 'admin','expiry_date' => NULL,'uri' => 'http://ecpat.prod2.enova-tech.net/','description' => 'this is a description test','deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')
 		);
+	}
+	
+	public static function generateResources($n, $options = array()) {
+		$returnValue = array();
+		
+		$Resource = ClassRegistry::init('Resource');
+		$Resource->useDbConfig = 'test';
+		$Resource->Behaviors->load('ModelTestCase');
+		
+		$options = array(
+			'category' => 'RAND'
+		);
+		
+		for ($i = 0; $i < $n; $i++) {
+			$Resource->create();
+			$Resource->setTestData($options);
+			$returnValue[] =  $Resource->save();
+			
+			if (isset($options['category'])) {
+				if (is_a($options['category'], 'Category')) {
+					$category = $options['category'];
+				} else if ($options['category'] == 'RAND') {
+					$category = $Resource->CategoryResource->Category->find('first', array('order' => 'rand()'));
+				}
+				
+				$categoryResourceData = array(
+					'CategoryResource' => array(
+						'category_id' => $category['Category']['id'],
+						'resource_id' => $Resource->id
+					)
+				);
+				$Resource->CategoryResource->create();
+				$Resource->CategoryResource->save($categoryResourceData);
+			}
+		}
+		
+		return $returnValue;
 	}
 }

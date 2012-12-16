@@ -12,12 +12,20 @@ class Resource extends AppModel {
 
 	public $actsAs = array('Trackable');
 
+	public $hasOne = array(
+		'Secret',
+		'UserResourcePermission' => array(
+			'foreignKey' => 'resource_id'
+		),
+		'Permission' => array(
+			'foreignKey' => false,
+			'conditions' => array( ' `Permission`.`id` = `UserResourcePermission`.`permission_id` ' ),
+			'type' => 'LEFT'
+		)
+	);
+	
 	public $hasMany = array(
 		'CategoryResource'
-	);
-
-	public $hasOne = array(
-		'Secret'
 	);
 
 	public $hasAndBelongsToMany = array(
@@ -129,7 +137,9 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$conditions = array(
 					'conditions' => array(
-						'Resource.deleted' => 0
+						'Resource.deleted' => 0,
+						'UserResourcePermission.user_id' => User::get('id'),
+						'Permission.type >=' => 1
 					)
 				);
 				if (isset($data['CategoryResource.category_id'])) {
@@ -166,12 +176,16 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified', 'Secret.data', 'created', 'modified'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.modified',
+						'Secret.data', 'created', 'modified',
+						'Permission.id', 'Permission.type'
 					),
 					'contain' => array(
 						'CategoryResource',
 						'Category',
-						'Secret'
+						'Secret',
+						'Permission',
+						'UserResourcePermission'
 					)
 				);
 			break;

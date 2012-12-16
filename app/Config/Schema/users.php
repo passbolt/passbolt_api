@@ -21,6 +21,23 @@ class UserSchema {
 		}
 	}
 
+	public static function getAlias() {
+		$User = ClassRegistry::init('User');
+		$aliases = array (
+			'rem' => $User->findByUsername('remy@passbolt.com'),
+			'aur' => $User->findByUsername('aurelie@passbolt.com'),
+			'myr' => $User->findByUsername('myriam@passbolt.com'),
+			'ism' => $User->findByUsername('ismail@passbolt.com'),
+			'kev' => $User->findByUsername('kevin@passbolt.com'),
+			'ced' => $User->findByUsername('cedric@passbolt.com'),
+			'jea' => $User->findByUsername('jean-rene@test.com')
+		);
+		foreach ($aliases as $name=>$obj){
+			$aliases[$name] = $obj['User']['id'];
+		}
+		return $aliases;
+	}
+	
 	protected function _getDefaultUsers() {
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
@@ -36,6 +53,83 @@ class UserSchema {
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e',
 			'username' => 'test@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdea9c-f214-4549-9807-2f4fd7a10fce',
+			'username' => 'aurelie@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
+			'username' => 'ismail@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdea9c-fa10-47af-aaa8-2f4fd7a10fce',
+			'username' => 'myriam@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdea9c-a34c-406f-a9f1-2f4fd7a10fce',
+			'username' => 'remy@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdea9c-aa88-46cb-a09b-2f4fd7a10fce',
+			'username' => 'kevin@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce',
+			'username' => 'cedric@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
+			'username' => 'jean-rene@test.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
 			'active' => 1,

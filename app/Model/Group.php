@@ -26,13 +26,13 @@ class Group extends AppModel {
 		$default = array(
 			'id' => array(
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'message'	=> __('UUID must be in correct format')
 				)
 			),
 			'name' => array(
 				'alphaNumeric' => array(
-					'rule'		 => '/^[a-zA-Z0-9]{1,64}$/i',
+					'rule' => '/^[a-zA-Z0-9\-_ ]{1,64}$/i',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('Alphanumeric only')

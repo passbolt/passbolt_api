@@ -7,117 +7,98 @@
  * @package      app.Config.Schema.groups
  * @since        version 2.12.11
  */
-App::uses('User', 'Model');
 App::uses('Group', 'Model');
-App::uses('GroupUser', 'Model');
 
 class GroupSchema {
 
 	public function init() {
 		$this->Group = ClassRegistry::init('Group');
-		$this->User = ClassRegistry::init('User');
-		$this->GroupUser = ClassRegistry::init('GroupUser');
 		$this->insertGroups($this->_getDefaultGroups());
 	}
 
 	public function insertGroups ($groups) {
-		foreach ($groups as $groupName => $users) {
-			// Insert group
-			if ($groupName != 'Users') {
-				$this->Group->create();
-				$group = $this->Group->save(array(
-					'Group' => array(
-						'name' => $groupName
-					)
-				));
-			}
-
-			foreach ($users['Users'] as $value) {
-				if (!($user = $this->User->findByUsername($value['User']['username']))) {
-					$this->User->create();
-					$user = $this->User->save($value);
-				}
-				if ($groupName != 'Users') {
-					$this->GroupUser->create();
-					$this->GroupUser->save(array(
-						'GroupUser' => array( 'group_id' => $group['Group']['id'], 'user_id' => $user['User']['id'] )
-					));
-				}
-			}
+		foreach($groups as $g) {
+			$this->Group->create();
+			$this->Group->save($g);
 		}
 	}
 
-	protected function _getDefaultGroups() {
-		$userRoleId = '0208f57a-c5cd-11e1-a0c5-080027796c4c';
-		$defaultPassword = 'test123';
-		$categories = array (
-			'management' => array(
-				'Users' => array(
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'dark.vador@test.com', 'password' => $defaultPassword, 'active' => '1')),
-				)
-			),
-			'accounting dpt' => array(
-				'Users' => array(
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'aurelie.gerhards@test.com', 'password' => $defaultPassword, 'active' => '1')),
-				),
-			),
-			'human resources' => array(
-				'Users' => array(
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'ismail.guennouni@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'myriam.djerouni@test.com', 'password' => $defaultPassword, 'active' => '1'))
-				),
-			),
-			'developers' => array(
-				'Users' => array(
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'remy.bertot@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'cedric.alfonsi@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'kevin.muller@test.com', 'password' => $defaultPassword, 'active' => '1'))
-				),
-			),
-			'developers team leads' => array(
-				'Users' => array(
-					array('User' => array( 'username' => 'remy.bertot@test.com'))
-				),
-			),
-			'developers drupal' => array(
-				'Users' => array(
-					array('User' => array( 'username' => 'cedric.alfonsi@test.com')),
-					array('User' => array( 'username' => 'kevin.muller@test.com'))
-				),
-			),
-			'developers cakephp' => array(
-				'Users' => array(
-					array('User' => array( 'username' => 'remy.bertot@test.com'))
-				),
-			),
-			'freelancers' => array(
-				'Users' => array(
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'a-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user1@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'b-user2@test.com', 'password' => $defaultPassword, 'active' => '1')),
-				),
-			),
-			'company a' => array(
-				'Users' => array(
-					array('User' => array('username' => 'a-user1@test.com')),
-					array('User' => array('username' => 'a-user2@test.com')),
-				),
-			),
-			'company b' => array(
-				'Users' => array(
-					array('User' => array('username' => 'b-user1@test.com')),
-					array('User' => array('username' => 'b-user2@test.com')),
-				),
-			),
-			'Users' => array(
-				'Users' => array(
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'jean-rene@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'adminsys@test.com', 'password' => $defaultPassword, 'active' => '1')),
-					array('User' => array( 'role_id' => $userRoleId, 'username' => 'ramesh.kumar@test.com', 'password' => $defaultPassword, 'active' => '1')),
-				),
-			),
+	public static function getAlias() {
+		$Group = ClassRegistry::init('Group');
+		$aliases = array (
+			'man' => $Group->findByName('management'),
+			'acc' => $Group->findByName('accounting dpt'),
+			'hr' => $Group->findByName('human resources'),
+			'dev' => $Group->findByName('developers'),
+			'dtl' => $Group->findByName('developers team leads'),
+			'dru' => $Group->findByName('developers drupal'),
+			'cak' => $Group->findByName('developers cakephp'),
+			'fre' => $Group->findByName('freelancers'),
+			'cpa' => $Group->findByName("company a"),
+			'cpb' => $Group->findByName("company b")
 		);
-		return $categories;
+		foreach ($aliases as $name=>$obj){
+			$aliases[$name] = $obj['Group']['id'];
+		}
+		return $aliases;
+	}
+
+	protected function _getDefaultGroups() {
+		$g[] = array('Group' => array(
+			'id' => '10ce2d3a-0468-433b-b59f-3053d7a10fce',
+			'name' => 'management',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '20ce3d3a-0468-433b-b59f-3053d7a10fce',
+			'name' => 'accounting dpt',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '30ce2d3a-0468-4334-b59f-3053d7a10fce',
+			'name' => 'human resources',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '40ce2d3a-0468-423b-b59f-3053d7a10fce',
+			'name' => 'developers',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '5ad56042-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'developers team leads',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '6bd58742-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'developers drupal',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '6bd58742-c5cd-11e1-a0c5-080027796ce7',
+			'name' => 'developers cakephp',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '7bd56042-c5cd-11e1-c8c5-080027796c4c',
+			'name' => 'freelancers',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '8bd56042-d9cd-11e1-a0c5-080027796c4c',
+			'name' => 'company a',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '9bd56042-c09d-11e1-a0c5-080027796c4c',
+			'name' => 'company b',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$g[] = array('Group' => array(
+			'id' => '10d56042-c5cd-11e1-a0c5-080877796c4c',
+			'name' => 'Users',
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		return $g;
 	}
 }

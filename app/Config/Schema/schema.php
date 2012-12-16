@@ -11,6 +11,7 @@
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'roles.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'users.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'groups.php');
+require_once (APP . 'Config' . DS . 'Schema' . DS . 'groupsUsers.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'categories.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'categoriestypes.php');
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissions.php');
@@ -20,7 +21,7 @@ require_once (APP . 'Config' . DS . 'Schema' . DS . 'resourcestags.php');
 
 class AppSchema extends CakeSchema {
 
-	public static $created = array();
+	public static $createdTables = array();
 
 	public function before($event = array()) {
 		$db = ConnectionManager::getDataSource($this->connection);
@@ -29,71 +30,27 @@ class AppSchema extends CakeSchema {
 	}
 
 	public function after($event = array()) {
+		
 		if (isset($event['create'])) {
-			switch ($event['create']) {
-				case 'categories':
-					array_push(self::$created, 'categories');
-					if (in_array('resources', self::$created)) {
-						$categoriesSchema = new CategorySchema();
-						$categoriesSchema->init();
+			self::$createdTables[] = $event['create'];
+			
+			// When all table have been created
+			if(count(self::$createdTables) == count($this->tables)) {
+				$createdTables = self::$createdTables;
+				foreach($createdTables as $tbName) {
+					$modelName = '';
+					$slices = explode('_', $tbName);
+					foreach($slices as $slice) {
+						$modelName .= ucFirst(Inflector::singularize($slice));
+					}			
+					$modelSchemaName = $modelName.'Schema';
+					if(class_exists($modelSchemaName)) {
+						echo $modelSchemaName;
+						$modelSchema = new $modelSchemaName();
+						$modelSchema->init();
+						echo " (ok)\n";
 					}
-				break;
-
-				case 'category_types' :
-					array_push(self::$created, 'category_types');
-					$categoryTypeSchema = new CategoryTypeSchema();
-					$categoryTypeSchema->init();
-				break;
-
-				case 'users':
-					array_push(self::$created, 'users');
-					$userSchema = new UserSchema();
-					$userSchema->init();
-				break;
-
-				case 'resources':
-					array_push(self::$created, 'resources');
-					if (in_array('categories', self::$created)) {
-						$categoriesSchema = new CategorySchema();
-						$categoriesSchema->init();
-					}
-				break;
-
-				case 'groups':
-					array_push(self::$created, 'groups');
-					$groupSchema = new GroupSchema();
-					$groupSchema->init();
-				break;
-
-				case 'permissions':
-					array_push(self::$created, 'permissions');
-					$permissionSchema = new PermissionSchema();
-					$permissionSchema->init();
-				break;
-
-				case 'permissions_types':
-					array_push(self::$created, 'permissions_types');
-					$permissionTypeSchema = new PermissionTypeSchema();
-					$permissionTypeSchema->init();
-				break;
-
-				case 'roles':
-					array_push(self::$created, 'roles');
-					$roleSchema = new RoleSchema();
-					$roleSchema->init();
-				break;
-
-				case 'tags':
-					array_push(self::$created, 'tags');
-					$tagSchema = new TagSchema();
-					$tagSchema->init();
-				break;
-
-				case 'resources_tags':
-					array_push(self::$created, 'resources_tags');
-					$resourceTagSchema = new ResourcesTagsSchema();
-					$resourceTagSchema->init();
-				break;
+				}
 			}
 		}
 	}
@@ -192,8 +149,20 @@ class AppSchema extends CakeSchema {
 		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'lft_rght' => array('column' => array('lft', 'rght'), 'unique' => 0)
+			'lft_rght' => array('column' => array('lft', 'rght'), 'unique' => 1)
 		),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+
+	public $groups = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
@@ -208,18 +177,6 @@ class AppSchema extends CakeSchema {
 			'groups' => array('column' => array('group_id')),
 			'users' => array('column' => array('user_id'))
 			),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
-	);
-
-	public $groups = array(
-		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
@@ -262,6 +219,20 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
+	public $comments = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'parent_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'foreign_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'foreign_model' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'content' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 256, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+
 	public $permissions_types = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'serial' => array('type' => 'integer', 'null' => false, 'default' => null),
@@ -290,26 +261,11 @@ class AppSchema extends CakeSchema {
 		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'aco_aro' => array('column' => array('aco', 'aro'), 'unique' => 0),
-			'aro' => array('column' => array('aro'), 'unique' => 0),
-			'aco' => array('column' => array('aco'), 'unique' => 0),
 			'aco_foreign_key' => array('column' => array('aco_foreign_key'), 'unique' => 0),
-			'aro_foreign_key' => array('column' => array('aro_foreign_key'), 'unique' => 0)
+			'aro_foreign_key' => array('column' => array('aro_foreign_key'), 'unique' => 0),
+			'aco_aro' => array('column' => array('aco', 'aro'), 'unique' => 0),
+			'type' => array('column' => array('type'), 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
-	);
-
-	public $comments = array(
-		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'parent_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'foreign_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'foreign_model' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'content' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 256, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
