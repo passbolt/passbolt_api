@@ -13,4 +13,8 @@
  */
 ?><?php
 	echo $this->fetch('content');
+
+	if(isset($this->request->query['debug']) && $this->request->query['debug'] && Configure::read('debug') > 1) {
+		echo $this->element('sql_dump');
+	}
 ?>
