@@ -132,6 +132,15 @@ class PermissionSchema {
 			'aro_foreign_key' => $users['jea'],
 			'type' => PermissionType::READ,
 		));
+		// Jean René has readonly access rights on cpp1-pwd1
+		$rCpp1Pwd1 = $this->Resource->findByName("cpp1-pwd1");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Resource',
+			'aco_foreign_key' => $rCpp1Pwd1['Resource']['id'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['jea'],
+			'type' => PermissionType::READ
+		));
 		//  company a has read only rights to o-project1
 		$ps[] = array('Permission' => array(
 			'aco' => 'Category',

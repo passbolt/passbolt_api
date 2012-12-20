@@ -34,6 +34,12 @@ class GroupUserSchema {
 		
 		$gu[] = array('GroupUser' => array(
 			'id' => 'bbd564542-c5cd-11e1-a345-080027796c4c',
+			'group_id' => $groups['man'],
+			'user_id' => $users['usr'],
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$gu[] = array('GroupUser' => array(
+			'id' => 'bbd564542-c5cd-11e1-a345-080027796c4c',
 			'group_id' => $groups['acc'],
 			'user_id' => $users['aur'],
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'

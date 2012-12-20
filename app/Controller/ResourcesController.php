@@ -182,7 +182,7 @@ class ResourcesController extends AppController {
 		$this->set('data', $resources);
 		$this->Message->success();
 	}
-
+	
 /**
  * Delete a resource
  * @param uuid id the id of the resource to delete
@@ -389,5 +389,6 @@ class ResourcesController extends AppController {
 		$resources = $this->Resource->find('all', $options);
 		$this->set('data', $resources[0]);
 	}
+	
 }
 

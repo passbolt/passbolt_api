@@ -30,7 +30,8 @@ class UserSchema {
 			'ism' => $User->findByUsername('ismail@passbolt.com'),
 			'kev' => $User->findByUsername('kevin@passbolt.com'),
 			'ced' => $User->findByUsername('cedric@passbolt.com'),
-			'jea' => $User->findByUsername('jean-rene@test.com')
+			'jea' => $User->findByUsername('jean-rene@test.com'),
+			'usr' => $User->findByUsername('user@passbolt.com')
 		);
 		foreach ($aliases as $name=>$obj){
 			$aliases[$name] = $obj['User']['id'];
@@ -130,6 +131,17 @@ class UserSchema {
 		$us[] = array('User' => array(
 			'id' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
 			'username' => 'jean-rene@test.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce',
+			'username' => 'user@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
 			'active' => 1,

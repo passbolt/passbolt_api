@@ -14,14 +14,18 @@ class Resource extends AppModel {
 
 	public $hasOne = array(
 		'Secret',
+		'Permission',
 		'UserResourcePermission' => array(
 			'foreignKey' => 'resource_id'
 		),
-		'Permission' => array(
-			'foreignKey' => false,
-			'conditions' => array( ' `Permission`.`id` = `UserResourcePermission`.`permission_id` ' ),
-			'type' => 'LEFT'
-		)
+		'GroupResourcePermission' => array(
+			'foreignKey' => 'resource_id'
+		),
+//		'Permission' => array(
+//			'foreignKey' => false,
+//			'conditions' => array( ' `Permission`.`id` = `UserResourcePermission`.`permission_id` ' ),
+//			'type' => 'LEFT'
+//		)
 	);
 	
 	public $hasMany = array(
@@ -40,50 +44,50 @@ class Resource extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case='default') {
-			$default = array(
-				'id' => array(
-					'uuid' => array(
-						'rule'		 => 'uuid',
-						'message'	=> __('UUID must be in correct format')
-					)
+		$default = array(
+			'id' => array(
+				'uuid' => array(
+					'rule'		 => 'uuid',
+					'message'	=> __('UUID must be in correct format')
+				)
+			),
+			'name' => array(
+				'alphaNumeric' => array(
+					'rule'		 => '/^.{2,64}$/i',
+					'required' => true,
+					'allowEmpty' => false,
+					'message'	=> __('Alphanumeric only')
+				)
+			),
+			'username' => array(
+				'alphaNumeric' => array(
+					'rule'		 => '/^.{2,64}$/i',
+					'required' => true,
+					'message'	=> __('Alphanumeric only')
+				)
+			),
+			'expiry_date' => array(
+				'date' => array(
+					'required' => false,
+					'allowEmpty' => true,
+					'rule' => array('date', 'ymd'),
+					'message' => __('Please indicate a valid date')
 				),
-				'name' => array(
-					'alphaNumeric' => array(
-						'rule'		 => '/^.{2,64}$/i',
-						'required' => true,
-						'allowEmpty' => false,
+				'infuture' => array(
+					'rule' => array('isInFuture'),
+					'message' => __('The date should be in the future.')
+				),
+			),
+			'uri' => array(
+				'alphaNumeric' => array(
+					'rule'		 => '/^.{2,64}$/i',
+					'required' => false,
+					'allowEmpty' => true,
 						'message'	=> __('Alphanumeric only')
-					)
-				),
-				'username' => array(
-					'alphaNumeric' => array(
-						'rule'		 => '/^.{2,64}$/i',
-						'required' => true,
-						'message'	=> __('Alphanumeric only')
-					)
-				),
-				'expiry_date' => array(
-					'date' => array(
-						'required' => false,
-						'allowEmpty' => true,
-						'rule' => array('date', 'ymd'),
-						'message' => __('Please indicate a valid date')
-					),
-					'infuture' => array(
-						'rule' => array('isInFuture'),
-						'message' => __('The date should be in the future.')
-					),
-				),
-				'uri' => array(
-					'alphaNumeric' => array(
-						'rule'		 => '/^.{2,64}$/i',
-						'required' => false,
-						'allowEmpty' => true,
-							'message'	=> __('Alphanumeric only')
-					)
-				),
-				'description' => array(
-					'alphaNumeric' => array(
+				)
+			),
+			'description' => array(
+				'alphaNumeric' => array(
 					'rule'		 => '/^[^<>]*$/i',
 					'required' => false,
 					'allowEmpty' => true,
@@ -120,7 +124,7 @@ class Resource extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'view',  $role = Role::USER, &$data = null) {
+	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
 		$conditions = array();
 		switch ($case) {
 			case 'add':
@@ -160,7 +164,7 @@ class Resource extends AppModel {
 					'conditions' => array()
 				);
 		}
-		//var_dump($conditions);
+
 		return $conditions;
 	}
 
