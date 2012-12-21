@@ -22,10 +22,10 @@ class ModelTestCaseBehavior extends ModelBehavior {
 		// Set Test Data for model Resource
 		if (is_a($model, 'Resource')) {
 			$model->set(array(
-				'name' => RandomTool::randomString(),
-				'username' => RandomTool::randomString(),
-				'uri' => RandomTool::randomString(),
-				'description' => RandomTool::randomString()
+				'name' => RandomTool::string(),
+				'username' => RandomTool::string(),
+				'uri' => RandomTool::string(),
+				'description' => RandomTool::string()
 			));
 		}
 		
@@ -45,7 +45,7 @@ class ModelTestCaseBehavior extends ModelBehavior {
 			}
 			
 			$model->set(array(
-				'name' => RandomTool::randomString(),
+				'name' => RandomTool::string(),
 				'parent_id' => $parent_id
 			));
 		}

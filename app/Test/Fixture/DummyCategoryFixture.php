@@ -58,7 +58,7 @@ class DummyCategoryFixture extends CategoryFixture {
 				'aco_foreign_key' => $randCat['Category']['id'],
 				'aro' => 'Group',
 				'aro_foreign_key' => $randGrp['Group']['id'],
-				'type' => RandomTool::randomPermissionType()
+				'type' => RandomTool::permissionType()
 			));
 		}
 		
@@ -73,7 +73,7 @@ class DummyCategoryFixture extends CategoryFixture {
 				'aco_foreign_key' => $randCat['Category']['id'],
 				'aro' => 'User',
 				'aro_foreign_key' => $randUsr['User']['id'],
-				'type' => RandomTool::randomPermissionType()
+				'type' => RandomTool::permissionType()
 			));
 		}
 	}

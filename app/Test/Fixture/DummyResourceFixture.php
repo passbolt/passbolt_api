@@ -67,7 +67,7 @@ class DummyResourceFixture extends ResourceFixture {
 				'aco_foreign_key' => $randCat['Category']['id'],
 				'aro' => 'Group',
 				'aro_foreign_key' => $randGrp['Group']['id'],
-				'type' => RandomTool::randomPermissionType()
+				'type' => RandomTool::permissionType()
 			));
 		}
 		
@@ -82,7 +82,7 @@ class DummyResourceFixture extends ResourceFixture {
 				'aco_foreign_key' => $randCat['Category']['id'],
 				'aro' => 'User',
 				'aro_foreign_key' => $randUsr['User']['id'],
-				'type' => RandomTool::randomPermissionType()
+				'type' => RandomTool::permissionType()
 			));
 		}
 		
@@ -97,7 +97,7 @@ class DummyResourceFixture extends ResourceFixture {
 				'aco_foreign_key' => $randRes['Resource']['id'],
 				'aro' => 'Group',
 				'aro_foreign_key' => $randGrp['Group']['id'],
-				'type' => RandomTool::randomPermissionType()
+				'type' => RandomTool::permissionType()
 			));
 		}
 		
@@ -112,7 +112,7 @@ class DummyResourceFixture extends ResourceFixture {
 				'aco_foreign_key' => $randRes['Resource']['id'],
 				'aro' => 'User',
 				'aro_foreign_key' => $randUsr['User']['id'],
-				'type' => RandomTool::randomPermissionType()
+				'type' => RandomTool::permissionType()
 			));
 		}
 		
