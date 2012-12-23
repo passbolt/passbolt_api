@@ -1,36 +1,28 @@
 <?php
 /**
- * Group Schema
+ * Insert GroupUser Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.groups
+ * @package      app.plugins.Data.Console.Command.Task.GroupUserTask
  * @since        version 2.12.11
  */
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('User', 'Model');
 App::uses('Group', 'Model');
 App::uses('GroupUser', 'Model');
 
-class GroupUserSchema {
+class GroupUserTask extends ModelTask {
 
-	public function init() {
-		$this->Group = ClassRegistry::init('Group');
-		$this->User = ClassRegistry::init('User');
-		$this->GroupUser = ClassRegistry::init('GroupUser');
-		$this->insertGroupsUsers($this->_getDefaultGroupsUsers());
-	}
-
-	public function insertGroupsUsers ($gus) {
-		foreach($gus as $gu) {
-			$this->GroupUser->create();
-			$this->GroupUser->save($gu);
-		}
-	}
+	public $model = 'GroupUser';
 	
-	protected function _getDefaultGroupsUsers() {
-//		$userRoleId = '0208f57a-c5cd-11e1-a0c5-080027796c4c';
-		$groups = GroupSchema::getAlias();
-		$users = UserSchema::getAlias();
+	protected function getData() {
+		$GroupTask = $this->Tasks->load('Data.Group');
+		$groups = $GroupTask::getAlias();
+		$UserTask = $this->Tasks->load('Data.User');
+		$users = $UserTask::getAlias();
 		
 		$gu[] = array('GroupUser' => array(
 			'id' => 'bbd564542-c5cd-11e1-a345-080027796c4c',

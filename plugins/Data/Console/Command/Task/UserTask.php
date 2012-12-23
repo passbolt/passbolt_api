@@ -1,25 +1,20 @@
 <?php
 /**
- * User Schema
+ * Insert User Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.users
+ * @package      app.plugins.Data.Console.Command.Task.UserTask
  * @since        version 2.12.11
  */
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('User', 'Model');
 
-class UserSchema {
+class UserTask extends ModelTask {
 
-	public function init() {
-		//array_push($u, 'users');
-		$user = ClassRegistry::init('User');
-		$us = $this->_getDefaultUsers();
-		foreach ($us as $u) {
-			$user->create();
-			$user->save($u);
-		}
-	}
+	public $model = 'User';
 
 	public static function getAlias() {
 		$User = ClassRegistry::init('User');
@@ -39,7 +34,7 @@ class UserSchema {
 		return $aliases;
 	}
 	
-	protected function _getDefaultUsers() {
+	protected function getData() {
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'username' => 'anonymous@passbolt.com',

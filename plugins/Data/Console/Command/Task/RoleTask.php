@@ -1,26 +1,22 @@
 <?php
 /**
- * Role Schema
+ * Insert Role Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.roles
+ * @package      app.plugins.Data.Console.Command.Task.RoleTask
  * @since        version 2.12.11
  */
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('Role', 'Model');
 
-class RoleSchema {
+class RoleTask extends ModelTask {
 
-	public function init() {
-		$role = ClassRegistry::init('Role');
-		$rs = $this->_getDefaultRoles();
-		foreach ($rs as $r) {
-			$role->create();
-			$role->save($r);
-		}
-	}
+	public $model = 'Role';
 
-	protected function _getDefaultRoles() {
+	protected function getData() {
 		$rs[] = array('Role' => array(
 			'id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
 			'name' => 'guest',

@@ -1,27 +1,22 @@
 <?php
 /**
- * Tag Resource Schema
+ * Insert ResourceTag Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.tagsresources
+ * @package      app.plugins.Data.Console.Command.Task.ResourceTagTask
  * @since        version 2.12.11
  */
-App::uses('Tag', 'Model');
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('ResourceTag', 'Model');
 
-class ResourcesTagsSchema {
+class ResourceTagTask extends ModelTask {
 
-	public function init() {
-		$ResourceTag = ClassRegistry::init('ResourceTag');
-		$rts = $this->_getDefaultResourceTags();
-		foreach ($rts as $rt) {
-			$ResourceTag->create();
-			$ResourceTag->save($rt);
-		}
-	}
+	public $model = 'ResourceTag';
 
-	protected function _getDefaultResourceTags() {
+	protected function getData() {
 		$rts[] = array('ResourceTag' => array(
 			'id' => 'zzz00001-c5cd-11e1-a0c5-080027796c4c',
 			'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',      // banking

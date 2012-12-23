@@ -1,27 +1,20 @@
 <?php
 /**
- * Group Schema
+ * Insert Group Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.groups
+ * @package      app.plugins.Data.Console.Command.Task.GroupTask
  * @since        version 2.12.11
  */
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('Group', 'Model');
 
-class GroupSchema {
+class GroupTask extends ModelTask {
 
-	public function init() {
-		$this->Group = ClassRegistry::init('Group');
-		$this->insertGroups($this->_getDefaultGroups());
-	}
-
-	public function insertGroups ($groups) {
-		foreach($groups as $g) {
-			$this->Group->create();
-			$this->Group->save($g);
-		}
-	}
+	public $model = "Group";
 
 	public static function getAlias() {
 		$Group = ClassRegistry::init('Group');
@@ -43,7 +36,7 @@ class GroupSchema {
 		return $aliases;
 	}
 
-	protected function _getDefaultGroups() {
+	protected function getData() {
 		$g[] = array('Group' => array(
 			'id' => '10ce2d3a-0468-433b-b59f-3053d7a10fce',
 			'name' => 'management',

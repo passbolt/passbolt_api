@@ -1,18 +1,22 @@
 <?php
+/**
+ * Insert Tag Task
+ *
+ * @copyright    copyright 2012 Passbolt.com
+ * @license      http://www.passbolt.com/license
+ * @package      app.plugins.Data.Console.Command.Task.TagTask
+ * @since        version 2.12.11
+ */
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('Tag', 'Model');
 
-class TagSchema {
+class TagTask extends ModelTask {
 
-	public function init() {
-		$tag = ClassRegistry::init('Tag');
-		$ts = $this->_getDefaultTags();
-		foreach ($ts as $t) {
-			$tag->create();
-			$tag->save($t);
-		}
-	}
+	public $model = 'Tag';
 
-	protected function _getDefaultTags() {
+	protected function getData() {
 		$ts[] = array('Tag' => array(
 			'id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',
 			'name' => 'social',

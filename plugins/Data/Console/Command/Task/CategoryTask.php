@@ -1,26 +1,29 @@
 <?php
 /**
- * Category Schema
+ * Insert Category Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.categories
+ * @package      app.plugins.Data.Console.Command.Task.CategoryTask
  * @since        version 2.12.11
  */
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('Category', 'Model');
 App::uses('Resource', 'Model');
 App::uses('CategoryResource', 'Model');
 
-class CategorySchema {
-
-	public function init() {
+class CategoryTask extends ModelTask {
+	
+	public function execute() {
 		$this->Category = ClassRegistry::init('Category');
 		// Has to disable the hasone relation, the tree behavior wake up it and make 
 		// troubles with the view restriction on update and insert
 		$this->Category->hasOne = array();
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->CategoryResource = ClassRegistry::init('CategoryResource');
-		$this->insertCategories($this->_getDefaultCategories());
+		$this->insertCategories($this->getData());
 	}
 
 	public function insertCategories ($categories, $parentCategory=null) {
@@ -80,7 +83,7 @@ class CategorySchema {
 		return $aliases;
 	}
 	
-	protected function _getDefaultCategories() {
+	protected function getData() {
 		$categories = array (
 			'Bolt Softwares Pvt. Ltd.' => array(
 				'administration' => array(

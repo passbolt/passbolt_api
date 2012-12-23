@@ -16,13 +16,13 @@
 		<symlink link="${src}/app/webroot/js/funcunit" resource="${src}/app/webroot/js/lib/funcunit" failonerror="false" overwrite="true"/>
 	</target>
 
-	<target name="install" description="Passbolt installer : copy config files, deploy db">
+	<target name="install" description="Passbolt installer : copy config files, install passbolt">
 		<copy todir="${www}" overwrite="true">
 			<fileset dir="${config}/files/Passbolt"/>
 		</copy>
 		<exec dir="${src}" executable="bash">
 			<arg value="-c"/>
-			<arg value='printf "y\ny\n" | php app/Console/cake.php schema create'/>
+			<arg value='php app/Console/cake install'/>
 		</exec>
 	</target>
 

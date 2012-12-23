@@ -8,16 +8,8 @@
  * @package      app.Config.Schema.schema
  * @since        version 2.12.7
  */
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'roles.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'users.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'groups.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'groupsUsers.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'categories.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'categoriestypes.php');
+
 require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissions.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'permissionstypes.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'tags.php');
-require_once (APP . 'Config' . DS . 'Schema' . DS . 'resourcestags.php');
 
 class AppSchema extends CakeSchema {
 
@@ -33,20 +25,15 @@ class AppSchema extends CakeSchema {
 		
 		if (isset($event['create'])) {
 			self::$createdTables[] = $event['create'];
+			echo 'Table ' . $event['create'] . " created\n";
 			
 			// When all table have been created
 			if(count(self::$createdTables) == count($this->tables)) {
-				$createdTables = self::$createdTables;
-				foreach($createdTables as $tbName) {
-					$modelName = '';
-					$slices = explode('_', $tbName);
-					foreach($slices as $slice) {
-						$modelName .= ucFirst(Inflector::singularize($slice));
-					}			
-					$modelSchemaName = $modelName.'Schema';
-					if(class_exists($modelSchemaName)) {
-						echo $modelSchemaName;
-						$modelSchema = new $modelSchemaName();
+				foreach(self::$createdTables as $tbName) {
+					$specificSchemaName = Inflector::camelize($tbName) . 'Schema';
+					if(class_exists($specificSchemaName)) {
+						echo 'Execute specific schema ' . $specificSchemaName;
+						$modelSchema = new $specificSchemaName();
 						$modelSchema->init();
 						echo " (ok)\n";
 					}

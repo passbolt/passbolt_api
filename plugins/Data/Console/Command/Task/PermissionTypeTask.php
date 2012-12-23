@@ -1,27 +1,23 @@
 <?php
 /**
- * Permission Type Schema
+ * Insert Permission Type Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.permissionstypes
+ * @package      app.plugins.Data.Console.Command.Task.PermissionTypeTask
  * @since        version 2.12.11
  */
+
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
 
-class PermissionTypeSchema {
+class PermissionTypeTask extends ModelTask {
 
-	public function init() {
-		$permissionType = ClassRegistry::init('PermissionType');
-		$pts = $this->_getDefaultPermissionTypes();
-		foreach ($pts as $pt) {
-			$permissionType->create();
-			$permissionType->save($pt);
-		}
-	}
+	public $model = 'PermissionType';
 
-	protected function _getDefaultPermissionTypes() {
+	protected function getData() {
 		$pds = array();
 		$pds[] = array(
 			'serial' => 0,

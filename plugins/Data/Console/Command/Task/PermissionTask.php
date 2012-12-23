@@ -1,20 +1,156 @@
 <?php
 /**
- * Permission Schema
+ * Insert Permission Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Config.Schema.permission
+ * @package      app.plugins.Data.Console.Command.Task.PermissionTask
  * @since        version 2.12.11
  */
 
-class PermissionsSchema {
+require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
-	public function init() {
-		// Create the permissions functions
-		$this->createFunctions();
-		// Create the permissions views
-		$this->createViews();
+App::uses('Permission', 'Model');
+
+class PermissionTask extends ModelTask {
+
+	public $model = 'Permission';
+
+	protected function getData() {
+		$this->Resource = ClassRegistry::init('Resource');
+
+		$GroupTask = $this->Tasks->load('Data.Group');
+		$groups = $GroupTask::getAlias();
+		$UserTask = $this->Tasks->load('Data.User');
+		$users = $UserTask::getAlias();
+		$CategoryTask = $this->Tasks->load('Data.Category');
+		$cat = $CategoryTask::getAlias();
+		
+		// Group Management has admin rights on everything
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['root'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['man'],
+			'type' => PermissionType::ADMIN,
+		));
+		// Group human resources have read only rights on administration
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['adm'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['hr'],
+			'type' => PermissionType::READ
+		));
+		// human resources have no rights on accounts
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['acc'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['hr'],
+			'type' => PermissionType::DENY
+		));
+		// Group human resources can modify resource salesforce account
+		$rSalesforce = $this->Resource->findByName("salesforce account");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Resource',
+			'aco_foreign_key' => $rSalesforce['Resource']['id'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['hr'],
+			'type' => PermissionType::UPDATE
+		));
+		// accounting dpt can access administration>accounts in read only
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['acc'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['acc'],
+			'type' => PermissionType::READ,
+		));
+		// Group developers drupal have read only rights on Projects > Drupal
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['dru'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['dru'],
+			'type' => PermissionType::READ,
+		));
+		// Group cakephp has access to category cakephp in readonly
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['cak'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['cak'],
+			'type' => PermissionType::READ,
+		));
+		// Group developers team leads has access to projects in modify
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['pro'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['dtl'],
+			'type' => PermissionType::UPDATE,
+		));
+		// Remy Bertot has admin rights on cp-project1
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['cp1'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['rem'],
+			'type' => PermissionType::ADMIN,
+		));
+
+		// Remy Bertot has admin rights on others
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['oth'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['rem'],
+			'type' => PermissionType::ADMIN,
+		));
+		//  Freelancers have read only rights to projects others
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['pro'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['fre'],
+			'type' => PermissionType::READ,
+		));
+		// Jean René has readonly access rights on cp-project2
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['cp2'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['jea'],
+			'type' => PermissionType::READ,
+		));
+		// Jean René has readonly access rights on cpp1-pwd1
+		$rCpp1Pwd1 = $this->Resource->findByName("cpp1-pwd1");
+		$ps[] = array('Permission' => array(
+			'aco' => 'Resource',
+			'aco_foreign_key' => $rCpp1Pwd1['Resource']['id'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['jea'],
+			'type' => PermissionType::READ
+		));
+		//  company a has read only rights to o-project1
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['op1'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['cpa'],
+			'type' => PermissionType::READ,
+		));
+		//  company a has read only rights to o-project1
+		$ps[] = array('Permission' => array(
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['op2'],
+			'aro' => 'Group',
+			'aro_foreign_key' => $groups['cpa'],
+			'type' => PermissionType::UPDATE,
+		));
+
+		return $ps;
 	}
 
 	public static function getViewsSQL() {
