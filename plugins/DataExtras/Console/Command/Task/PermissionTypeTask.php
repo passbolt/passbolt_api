@@ -4,11 +4,11 @@
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.plugins.Data.Console.Command.Task.PermissionTypeTask
+ * @package      app.plugins.DataExtras.Console.Command.Task.PermissionTypeTask
  * @since        version 2.12.11
  */
 
-require_once ('plugins' . DS . 'Data' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once ('plugins' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
