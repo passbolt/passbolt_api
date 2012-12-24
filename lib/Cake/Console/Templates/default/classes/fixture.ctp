@@ -50,7 +50,7 @@ class <?php echo $model; ?>Fixture extends CakeTestFixture {
  *
  * @var array
  */
-	public $fields = <?php echo $schema; ?>;
+	public $fields = <?php echo $schema; ?>
 
 <?php endif; ?>
 <?php if ($records): ?>

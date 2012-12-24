@@ -12,7 +12,7 @@ App::uses('User', 'Model');
 
 class CategoryResourceTest extends CakeTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.categoryResource', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.resource', 'app.categoriesResource', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
@@ -30,14 +30,14 @@ class CategoryResourceTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'50bda570-f870-44e0-b787-a7c58cebc04d' => true
+			'50d77ff9-42d8-43d5-beee-1b63d7a10fce' => true
 		);
 
 		foreach ($testcases as $testcase => $result) {
 			$cr = array(
 				'CategoryResource' => array(
 					'category_id' => $testcase,
-					'resource_id' => '50bda570-1164-40ee-90d7-a7c58cebc04d' // resource_id is passed here because when we don't pass it test fails for obscure reasons
+					'resource_id' => '50d77ff9-c358-4dfb-be34-1b63d7a10fce' // resource_id is passed here because when we don't pass it test fails for obscure reasons
 				)
 			);
 			$this->CategoryResource->create();
@@ -65,13 +65,13 @@ class CategoryResourceTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'50bda570-1164-40ee-90d7-a7c58cebc04d' => true
+			'50d77ffb-afb4-4a73-85fd-1b63d7a10fce' => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$cr = array(
 				'CategoryResource' => array(
 					'resource_id' => $testcase,
-					'category_id' => '50bda570-f870-44e0-b787-a7c58cebc04d'
+					'category_id' => '50d77ff9-42d8-43d5-beee-1b63d7a10fce'
 				)
 			);
 			$this->CategoryResource->create();

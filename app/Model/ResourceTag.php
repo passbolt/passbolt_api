@@ -13,7 +13,7 @@ App::uses('Resource', 'Model');
 
 class ResourceTag extends AppModel {
 
-	public $useTable = "tags_resources";
+	public $useTable = "resources_tags";
 
 	public $belongsTo = array(
 		'Tag', 'Resource'

@@ -1,60 +1,260 @@
 <?php
 /**
- * CategoryResource Fixture
+ * CategoryFixture
  *
- * @copyright   Copyright 2012, Passbolt.com
- * @license     http://www.passbolt.com/license
- * @package     app.Test.Fixture.CategoryFixture
- * @since       version 2.12.11
  */
-App::uses('Category', 'Model');
-
 class CategoryFixture extends CakeTestFixture {
 
-	public $useDbConfig = 'test';
+/**
+ * Fields
+ *
+ * @var array
+ */
+	public $fields = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'parent_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'lft' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'key' => 'index'),
+		'rght' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
+		'name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'category_type_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'comment' => 'type id of the category', 'charset' => 'utf8'),
+		'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'lft_rght' => array('column' => array('lft', 'rght'), 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+/**
+ * Records
+ *
+ * @var array
+ */
+	public $records = array(
+		array(
+			'id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'parent_id' => null,
+			'lft' => '1',
+			'rght' => '34',
+			'name' => 'Bolt Softwares Pvt. Ltd.',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:39',
+			'modified' => '2012-12-24 03:34:39',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'lft' => '2',
+			'rght' => '11',
+			'name' => 'administration',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:39',
+			'modified' => '2012-12-24 03:34:39',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ff8-40ec-451a-b96e-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'lft' => '3',
+			'rght' => '4',
+			'name' => 'accounts',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:40',
+			'modified' => '2012-12-24 03:34:40',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ff8-9084-4f21-bc2f-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'lft' => '5',
+			'rght' => '6',
+			'name' => 'marketing',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:40',
+			'modified' => '2012-12-24 03:34:40',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ff9-42d8-43d5-beee-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'lft' => '7',
+			'rght' => '8',
+			'name' => 'human resource',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:41',
+			'modified' => '2012-12-24 03:34:41',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ff9-98f0-4378-9b7a-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'lft' => '9',
+			'rght' => '10',
+			'name' => 'misc',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:41',
+			'modified' => '2012-12-24 03:34:41',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'lft' => '12',
+			'rght' => '33',
+			'name' => 'projects',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffa-4030-49e1-990d-1b63d7a10fce',
+			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'lft' => '14',
+			'rght' => '15',
+			'name' => 'cp-project1',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'lft' => '13',
+			'rght' => '20',
+			'name' => 'cakephp',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffa-c25c-4d92-aa35-1b63d7a10fce',
+			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'lft' => '16',
+			'rght' => '17',
+			'name' => 'cp-project2',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffb-8008-42d2-8811-1b63d7a10fce',
+			'parent_id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'lft' => '22',
+			'rght' => '23',
+			'name' => 'd-project1',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:43',
+			'modified' => '2012-12-24 03:34:43',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'lft' => '21',
+			'rght' => '26',
+			'name' => 'drupal',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:43',
+			'modified' => '2012-12-24 03:34:43',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffb-d488-4217-9e2f-1b63d7a10fce',
+			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'lft' => '18',
+			'rght' => '19',
+			'name' => 'cp-project3',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:43',
+			'modified' => '2012-12-24 03:34:43',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffc-0414-49dd-9959-1b63d7a10fce',
+			'parent_id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'lft' => '28',
+			'rght' => '29',
+			'name' => 'o-project1',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:44',
+			'modified' => '2012-12-24 03:34:44',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'lft' => '27',
+			'rght' => '32',
+			'name' => 'others',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:44',
+			'modified' => '2012-12-24 03:34:44',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffc-8608-422a-8456-1b63d7a10fce',
+			'parent_id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'lft' => '24',
+			'rght' => '25',
+			'name' => 'd-project2',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:44',
+			'modified' => '2012-12-24 03:34:44',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d77ffd-cf28-460e-b35e-1b63d7a10fce',
+			'parent_id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'lft' => '30',
+			'rght' => '31',
+			'name' => 'o-project2',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:45',
+			'modified' => '2012-12-24 03:34:45',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+	);
 
-	public $import = 'Category';
-
-	public function init() {
-		$this->records = array(
-			array('id' => '50bda570-261c-4ba1-99f8-a7c58cebc04d','parent_id' => '50bda570-f724-4a09-90f6-a7c58cebc04d','lft' => '3','rght' => '4','name' => 'accounts','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-4ac8-4423-8e05-a7c58cebc04d','parent_id' => '50bda570-f724-4a09-90f6-a7c58cebc04d','lft' => '9','rght' => '10','name' => 'misc','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-4d54-4910-acd2-a7c58cebc04d','parent_id' => '50bda570-d59c-4cec-9b9c-a7c58cebc04d','lft' => '30','rght' => '31','name' => 'o-project2','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-6fa4-4abd-9be5-a7c58cebc04d','parent_id' => '50bda570-d59c-4cec-9b9c-a7c58cebc04d','lft' => '28','rght' => '29','name' => 'o-project1','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-7d90-4ed6-8b3d-a7c58cebc04d','parent_id' => '50bda570-8454-4117-a8f2-a7c58cebc04d','lft' => '22','rght' => '23','name' => 'd-project1','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-8454-4117-a8f2-a7c58cebc04d','parent_id' => '50bda570-f320-4a69-86d2-a7c58cebc04d','lft' => '21','rght' => '26','name' => 'drupal','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-8adc-4e4c-9ee3-a7c58cebc04d','parent_id' => '50bda570-f724-4a09-90f6-a7c58cebc04d','lft' => '7','rght' => '8','name' => 'hr','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-b5e0-4ca9-8879-a7c58cebc04d','parent_id' => '50bda570-f724-4a09-90f6-a7c58cebc04d','lft' => '5','rght' => '6','name' => 'marketing','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-c7ec-4245-961d-a7c58cebc04d','parent_id' => '50bda570-f870-44e0-b787-a7c58cebc04d','lft' => '18','rght' => '19','name' => 'cp-project3','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-d474-4700-a0ab-a7c58cebc04d','parent_id' => '50bda570-8454-4117-a8f2-a7c58cebc04d','lft' => '24','rght' => '25','name' => 'd-project2','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-d59c-4cec-9b9c-a7c58cebc04d','parent_id' => '50bda570-f320-4a69-86d2-a7c58cebc04d','lft' => '27','rght' => '32','name' => 'others','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-f300-4729-b9bb-a7c58cebc04d','parent_id' => NULL,'lft' => '1','rght' => '34','name' => 'Bolt Softwares Pvt. Ltd.','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-f320-4a69-86d2-a7c58cebc04d','parent_id' => '50bda570-f300-4729-b9bb-a7c58cebc04d','lft' => '12','rght' => '33','name' => 'projects','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-f724-4a09-90f6-a7c58cebc04d','parent_id' => '50bda570-f300-4729-b9bb-a7c58cebc04d','lft' => '2','rght' => '11','name' => 'administration','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-f870-44e0-b787-a7c58cebc04d','parent_id' => '50bda570-f320-4a69-86d2-a7c58cebc04d','lft' => '13','rght' => '20','name' => 'cakephp','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-f8cc-4b70-850c-a7c58cebc04d','parent_id' => '50bda570-f870-44e0-b787-a7c58cebc04d','lft' => '16','rght' => '17','name' => 'cp-project2','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda570-fb70-4cfc-9d18-a7c58cebc04d','parent_id' => '50bda570-f870-44e0-b787-a7c58cebc04d','lft' => '14','rght' => '15','name' => 'cp-project1','category_type_id' => NULL,'deleted' => '0','created' => '2012-12-04 08:25:36','modified' => '2012-12-04 08:25:36','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')
-		);
-		parent::init();
-	}
-	
-	public static function generateCategories($n, $options = array()) {
-		$returnValue = array();
-		
-		$Category = ClassRegistry::init('Category');
-		$Category->useDbConfig = 'test';
-		$Category->Behaviors->load('ModelTestCase');
-		
-		$options = array(
-			'parentCategory' => 'RAND'
-		);
-		
-		for ($i = 0; $i < $n; $i++) {
-			$Category->create();
-			$Category->setTestData($options);
-			$returnValue[] = $Category->save();
-		}
-		
-		return $returnValue;
-	}
 }

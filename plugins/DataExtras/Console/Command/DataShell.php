@@ -20,12 +20,15 @@ class DataShell extends AppShell {
 		'User',
 		'CategoryType',
 		'Category',
+		'Resource',
+		'CategoryResource',
 		'Group',
 		'GroupUser',
 		'Tag',
 		'ResourceTag',
 		'PermissionType',
 		'Permission',
+		'Comment',
 	);
 
 /**
@@ -83,7 +86,6 @@ class DataShell extends AppShell {
 		$schema = $cakeSchema->load($options);
 		
 		foreach($schema->tables as $name => $table) {
-			var_dump($name);
 			$this->dispatchShell("bake fixture {$name} --count 1000 --records");
 		}
 	}

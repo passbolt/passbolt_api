@@ -14,7 +14,7 @@ class CategoryTest extends CakeTestCase {
 
 	public $autoFixtures = true;
 
-	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.permission', 'app.category_type', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
@@ -45,7 +45,7 @@ class CategoryTest extends CakeTestCase {
  */
 	public function testParentValidation() {
 		$testcases = array(
-			'' => true, 'wrongid' => false, '50bda570-b5e0-4ca9-8879-a7c58cebc04d' => true,
+			'' => true, 'wrongid' => false, '50d77ff7-bcac-4c03-8687-1b63d7a10fce' => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -63,7 +63,7 @@ class CategoryTest extends CakeTestCase {
  */
 	public function testCategoryTypeValidation() {
 		$testcases = array(
-			'' => true, 'wrongid' => false, '50bda570-e3d4-457e-9015-a7c58cebc04d' => true,
+			'' => true, 'wrongid' => false, '0234f3a4-c5cd-11e1-a0c5-080027456c4c' => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -126,6 +126,7 @@ class CategoryTest extends CakeTestCase {
 	public function testAdd() {
 		// Test that a category cannot be added if the parent id doesn't exist
 		$category = array('Category' => array('name' => 'testAdd', 'parent_id' => 'doesntexist'));
+		$this->Category->hasOne = array();
 		$this->Category->create();
 		$this->assertFalse($this->Category->save($category));
 

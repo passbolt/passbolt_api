@@ -327,7 +327,9 @@ class Category extends AppModel {
 					case 'index':
 						$c = array(
 							'conditions' => array(
-								'parent_id' => null
+								'parent_id' => null,
+								'UserCategoryPermission.user_id' => User::get('id'),
+								'Permission.type >=' => 1
 							),
 							'order' => 'lft ASC'
 						);

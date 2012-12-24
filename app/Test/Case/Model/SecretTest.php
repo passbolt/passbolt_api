@@ -27,7 +27,7 @@ class SecretTest extends CakeTestCase {
  */
 	public function testUserIdValidation() {
 		$testcases = array(
-			'' => false, '?!#' => false, 'bbd56042-cccc-11e1-a0c5-080027796c4a' => true,
+			'' => false, '?!#' => false, '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce' => true,
 			'bbd56042-cccc-11e1-a0c5-080027796c4b' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -48,7 +48,7 @@ class SecretTest extends CakeTestCase {
  */
 	public function testResourceIdValidation() {
 		$testcases = array(
-			'' => false, '?!#' => false, '50bda570-1164-40ee-90d7-a7c58cebc04d' => true,
+			'' => false, '?!#' => false, '50d77ffa-7278-41fc-a4bb-1b63d7a10fce' => true,
 			'509bb871-3b14-4877-8a88-fb098cebc04b' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -72,8 +72,8 @@ class SecretTest extends CakeTestCase {
 		);
 		foreach ($testcases as $testcase => $result) {
 			$secret = array('Secret' => array(
-				'resource_id' => '509bb871-3b14-4877-8a88-fb098cebc04d',
-				'user_id' => 'bbd56042-cccc-11e1-a0c5-080027796c4a',
+				'resource_id' => '50d77ffa-7278-41fc-a4bb-1b63d7a10fce',
+				'user_id' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce',
 				'data' => $testcase
 			));
 			$this->Secret->create();

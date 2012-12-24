@@ -19,6 +19,7 @@ class UserTask extends ModelTask {
 	public static function getAlias() {
 		$User = ClassRegistry::init('User');
 		$aliases = array (
+			'dar' => $User->findByUsername('dark.vador@passbolt.com'),
 			'rem' => $User->findByUsername('remy@passbolt.com'),
 			'aur' => $User->findByUsername('aurelie@passbolt.com'),
 			'myr' => $User->findByUsername('myriam@passbolt.com'),
@@ -26,7 +27,8 @@ class UserTask extends ModelTask {
 			'kev' => $User->findByUsername('kevin@passbolt.com'),
 			'ced' => $User->findByUsername('cedric@passbolt.com'),
 			'jea' => $User->findByUsername('jean-rene@test.com'),
-			'usr' => $User->findByUsername('user@passbolt.com')
+			'usr' => $User->findByUsername('user@passbolt.com'),
+			'au1' => $User->findByUsername('a-usr1@companya.com')
 		);
 		foreach ($aliases as $name=>$obj){
 			$aliases[$name] = $obj['User']['id'];
@@ -35,6 +37,17 @@ class UserTask extends ModelTask {
 	}
 	
 	protected function getData() {
+		$us[] = array('User' => array(
+			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c4c',
+			'username' => 'dark.vador@passbolt.com',
+			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'I am your father',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'username' => 'anonymous@passbolt.com',
@@ -138,6 +151,39 @@ class UserTask extends ModelTask {
 			'id' => '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce',
 			'username' => 'user@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdab9c-4380-gege-b4cc-2f4fd7a10fce',
+			'username' => 'guest@passbolt.com',
+			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => '50cdab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'username' => 'admin@passbolt.com',
+			'role_id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1,
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$us[] = array('User' => array(
+			'id' => 'abcdab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'username' => 'a-usr1@companya.com',
+			'role_id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
 			'active' => 1,
 			'created' => '2012-07-04 13:39:25',

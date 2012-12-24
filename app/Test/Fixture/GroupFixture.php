@@ -1,33 +1,133 @@
 <?php
 /**
- * Group Fixture
+ * GroupFixture
  *
- * @copyright   Copyright 2012, Passbolt.com
- * @license     http://www.passbolt.com/license
- * @package     app.Test.Fixture.GroupFixture
- * @since       version 2.12.11
  */
-App::uses('Group', 'Model');
-
 class GroupFixture extends CakeTestFixture {
 
-	public $useDbConfig = 'test';
+/**
+ * Fields
+ *
+ * @var array
+ */
+	public $fields = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'name' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+/**
+ * Records
+ *
+ * @var array
+ */
+	public $records = array(
+		array(
+			'id' => '10ce2d3a-0468-433b-b59f-3053d7a10fce',
+			'name' => 'management',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '10d56042-c5cd-11e1-a0c5-080877796c4c',
+			'name' => 'Users',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '20ce3d3a-0468-433b-b59f-3053d7a10fce',
+			'name' => 'accounting dpt',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '30ce2d3a-0468-4334-b59f-3053d7a10fce',
+			'name' => 'human resources',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '40ce2d3a-0468-423b-b59f-3053d7a10fce',
+			'name' => 'developers',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '5ad56042-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'developers team leads',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '6bd58742-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'developers drupal',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '6bd58742-c5cd-11e1-a0c5-080027796ce7',
+			'name' => 'developers cakephp',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '7bd56042-c5cd-11e1-c8c5-080027796c4c',
+			'name' => 'freelancers',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '8bd56042-d9cd-11e1-a0c5-080027796c4c',
+			'name' => 'company a',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '9bd56042-c09d-11e1-a0c5-080027796c4c',
+			'name' => 'company b',
+			'deleted' => 0,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+	);
 
-	public $import = 'Group';
-
-	public function init() {
-		$this->records = array(
-			array('id' => '50bda571-1268-456d-b792-a7c58cebc04d','name' => 'accounting dpt','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-32e4-4b30-ba9a-a7c58cebc04d','name' => 'management','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-3a00-4788-86f0-a7c58cebc04d','name' => 'developers team leads','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-6cec-45df-a6d1-a7c58cebc04d','name' => 'company a','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-9b40-4c93-b738-a7c58cebc04d','name' => 'developers drupal','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-be50-4553-9920-a7c58cebc04d','name' => 'human resources','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-c404-4575-9935-a7c58cebc04d','name' => 'developers','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-db78-420e-a3e5-a7c58cebc04d','name' => 'freelancers','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-e2e8-4e57-bce2-a7c58cebc04d','name' => 'developers cakephp','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'),
-			array('id' => '50bda571-eae0-40f5-b60a-a7c58cebc04d','name' => 'company b','deleted' => '0','created' => '2012-12-04 08:25:37','modified' => '2012-12-04 08:25:37','created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c','modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c')
-		);
-		parent::init();
-	}
 }

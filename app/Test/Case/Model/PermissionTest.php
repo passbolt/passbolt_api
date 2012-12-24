@@ -12,7 +12,7 @@ App::uses('PermissionType', 'Model');
 
 class PermissionTest extends CakeTestCase {
 
-	public $fixtures = array('app.resource', 'app.userPermission', 'app.role', 'app.group', 'app.groupUser', 'app.categoryType', 'app.category', 'app.categoryResource', 'app.permissionType', 'app.permission');
+	public $fixtures = array('app.resource', 'app.user', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.category', 'app.categoriesResource', 'app.permissionsType', 'app.permission');
 
 	public function setUp() {
 		parent::setUp();
@@ -123,28 +123,28 @@ class PermissionTest extends CakeTestCase {
 		$testcases = array(
 			array(
 				'aconame' => 'marketing',
-				'username' => 'dark.vador@test.com',
+				'username' => 'dark.vador@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
 				'aconame' => 'd-project2',
-				'username' => 'cedric.alfonsi@test.com',
+				'username' => 'cedric@passbolt.com',
 				'result' => PermissionType::READ
 			),
 			array(
 				'aconame' => 'cp-project1',
-				'username' => 'remy.bertot@test.com',
+				'username' => 'remy@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
 				'aconame' => 'cp-project2',
-				'username' => 'remy.bertot@test.com',
+				'username' => 'remy@passbolt.com',
 				'result' => PermissionType::UPDATE
 			),
 			// Test null
 			array(
 				'aconame' => 'marketing',
-				'username' => 'cedric.alfonsi@test.com',
+				'username' => 'cedric@passbolt.com',
 				'result' => null
 			)
 		);
@@ -172,28 +172,28 @@ class PermissionTest extends CakeTestCase {
 		$testcases = array(
 			array(
 				'aconame' => 'facebook account',
-				'username' => 'dark.vador@test.com',
+				'username' => 'dark.vador@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
 				'aconame' => 'dp1-pwd1',
-				'username' => 'cedric.alfonsi@test.com',
+				'username' => 'cedric@passbolt.com',
 				'result' => PermissionType::READ
 			),
 			array(
 				'aconame' => 'cpp1-pwd1',
-				'username' => 'remy.bertot@test.com',
+				'username' => 'remy@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
 				'aconame' => 'cpp2-pwd1',
-				'username' => 'remy.bertot@test.com',
+				'username' => 'remy@passbolt.com',
 				'result' => PermissionType::UPDATE
 			),
 			// Test null
 			array(
 				'aconame' => 'shared resource',
-				'username' => 'a-user1@test.com',
+				'username' => 'a-usr1@companya.com',
 				'result' => PermissionType::UPDATE
 			)
 		);

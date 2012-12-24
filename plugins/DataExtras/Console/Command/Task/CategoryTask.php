@@ -11,48 +11,18 @@
 require_once ('plugins' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Category', 'Model');
-App::uses('Resource', 'Model');
-App::uses('CategoryResource', 'Model');
 
 class CategoryTask extends ModelTask {
 	
-	public function execute() {
-		$this->Category = ClassRegistry::init('Category');
-		// Has to disable the hasone relation, the tree behavior wake up it and make 
-		// troubles with the view restriction on update and insert
-		$this->Category->hasOne = array();
-		$this->Resource = ClassRegistry::init('Resource');
-		$this->CategoryResource = ClassRegistry::init('CategoryResource');
-		$this->insertCategories($this->getData());
-	}
+	public $model = 'Category';
 
-	public function insertCategories ($categories, $parentCategory=null) {
-		foreach ($categories as $categoryId => $subCategories) {
-			// Insert Category
-			if ($categoryId != 'Resources') {
-				
-				$this->Category->create();
-					$category = $this->Category->save(array(
-						'Category' => array(
-							'name' => $categoryId,
-							'parent_id' => isset($parentCategory) ? $parentCategory['Category']['id'] : null
-						)
-					));
-				$this->insertCategories ($subCategories, $category);
-			} else {
-				$resources = $subCategories;
-				foreach ($resources as $value) {
-					$resource = null;
-					if (!($resource = $this->Resource->findByName($value['Resource']['name']))) {
-						$this->Resource->create();
-						$resource = $this->Resource->save($value);
-					}
-					$this->CategoryResource->create();
-					$this->CategoryResource->save(array(
-						'CategoryResource' => array( 'category_id' => $parentCategory['Category']['id'], 'resource_id' => $resource['Resource']['id'] )
-					));
-				}
-			}
+	public function execute() {
+		$Model = ClassRegistry::init($this->model);
+		$Model->hasOne = array();
+		$data = $this->getData();
+		foreach ($data as $item) {
+			$Model->create();
+			$Model->save($item);
 		}
 	}
 
@@ -84,71 +54,193 @@ class CategoryTask extends ModelTask {
 	}
 	
 	protected function getData() {
-		$categories = array (
-			'Bolt Softwares Pvt. Ltd.' => array(
-				'administration' => array(
-					'accounts' => array(
-						'Resources' => array(
-							array('Resource' => array('id' => '509bb871-b964-48ab-94fe-fb098cebc04d','name' => 'bank password', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
-						)
-					),
-					'marketing' => array(
-						'Resources' => array(
-							array('Resource' => array('id' => '509bb871-5168-49d4-a676-fb098cebc04d', 'name' => 'facebook account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
-						)
-					),
-					'human resource' => array(
-						'Resources' => array(
-							array('Resource' => array('name' => 'salesforce account', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
-						)
-					),
-					'misc' => array(
-						'Resources' => array(
-							array('Resource' => array('name' => 'tetris license', 'username' => 'passbolt', 'expiry_date' => null, 'uri' => 'https://95.142.173.61/deploy', 'description' => 'this is a description test' )),
-						)
-					)
-				),
-				'projects' => array(
-					'cakephp' => array(
-						'cp-project1' => array(
-							'Resources' => array(
-								array('Resource' => array( 'name' => 'cpp1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'name' => 'cpp1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
-							)
-						),
-						'cp-project2' => array(
-							'Resources' => array(
-								array('Resource' => array( 'name' => 'cpp2-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'name' => 'cpp2-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
-							)
-						),
-						'cp-project3' => array()
-					),
-					'drupal' => array(
-						'd-project1' => array(
-							'Resources' => array(
-								array('Resource' => array( 'name' => 'dp1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-							)
-						),
-						'd-project2' => array()
-					),
-					'others' => array(
-						'o-project1' => array(
-							'Resources' => array(
-								array('Resource' => array( 'name' => 'op1-pwd1', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'name' => 'op1-pwd2', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' )),
-								array('Resource' => array( 'name' => 'shared resource', 'username' => 'admin', 'expiry_date' => null, 'uri' => 'http://ecpat.prod2.enova-tech.net/', 'description' => 'this is a description test' ))
-							)
-						),
-						'o-project2' => array(
-							'Resources' => array(
-								array('Resource' => array( 'name' => 'shared resource')),
-							)
-						)
-					)
-				),
-			)
-		);
-		return $categories;
+		$c[] = array('Category'=>array(
+			'id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'parent_id' => null,
+			'name' => 'Bolt Softwares Pvt. Ltd.',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:39',
+			'modified' => '2012-12-24 03:34:39',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'name' => 'administration',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:39',
+			'modified' => '2012-12-24 03:34:39',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ff8-40ec-451a-b96e-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'name' => 'accounts',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:40',
+			'modified' => '2012-12-24 03:34:40',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ff8-9084-4f21-bc2f-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'name' => 'marketing',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:40',
+			'modified' => '2012-12-24 03:34:40',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ff9-42d8-43d5-beee-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'name' => 'human resource',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:41',
+			'modified' => '2012-12-24 03:34:41',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ff9-98f0-4378-9b7a-1b63d7a10fce',
+			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'name' => 'misc',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:41',
+			'modified' => '2012-12-24 03:34:41',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'name' => 'projects',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'name' => 'cakephp',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffa-4030-49e1-990d-1b63d7a10fce',
+			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'name' => 'cp-project1',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffa-c25c-4d92-aa35-1b63d7a10fce',
+			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'name' => 'cp-project2',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:42',
+			'modified' => '2012-12-24 03:34:42',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'name' => 'drupal',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:43',
+			'modified' => '2012-12-24 03:34:43',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffb-8008-42d2-8811-1b63d7a10fce',
+			'parent_id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'name' => 'd-project1',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:43',
+			'modified' => '2012-12-24 03:34:43',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffb-d488-4217-9e2f-1b63d7a10fce',
+			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'name' => 'cp-project3',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:43',
+			'modified' => '2012-12-24 03:34:43',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'name' => 'others',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:44',
+			'modified' => '2012-12-24 03:34:44',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffc-0414-49dd-9959-1b63d7a10fce',
+			'parent_id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'name' => 'o-project1',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:44',
+			'modified' => '2012-12-24 03:34:44',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffc-8608-422a-8456-1b63d7a10fce',
+			'parent_id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'name' => 'd-project2',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:44',
+			'modified' => '2012-12-24 03:34:44',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '50d77ffd-cf28-460e-b35e-1b63d7a10fce',
+			'parent_id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'name' => 'o-project2',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:45',
+			'modified' => '2012-12-24 03:34:45',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		return $c;
 	}
 }

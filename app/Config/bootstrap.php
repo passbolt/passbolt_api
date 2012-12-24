@@ -34,6 +34,7 @@ require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Spe
  */
 if (Configure::read('debug') > 1) {
 	CakePlugin::load('ApiGenerator');
+	CakePlugin::load('DataExtras');
 }
 
 /**

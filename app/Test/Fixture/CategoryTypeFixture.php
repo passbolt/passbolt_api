@@ -1,26 +1,45 @@
 <?php
 /**
- * CategoryType Fixture
+ * CategoryTypeFixture
  *
- * @copyright   Copyright 2012, Passbolt.com
- * @license     http://www.passbolt.com/license
- * @package     app.Test.Fixture.CategoryTypeFixture
- * @since       version 2.12.9
  */
-App::uses('CategoryType', 'Model');
-
 class CategoryTypeFixture extends CakeTestFixture {
 
-	public $useDbConfig = 'test';
+/**
+ * Fields
+ *
+ * @var array
+ */
+	public $fields = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'description' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	);
+/**
+ * Records
+ *
+ * @var array
+ */
+	public $records = array(
+		array(
+			'id' => '0234f3a4-c5cd-11e1-a0c5-080027456c4c',
+			'name' => 'ssh',
+			'description' => 'ssh category type description'
+		),
+		array(
+			'id' => '0234f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'name' => 'default',
+			'description' => 'default category type description'
+		),
+		array(
+			'id' => '0234f3a4-c5cd-11e1-a0c5-081127796c4c',
+			'name' => 'database',
+			'description' => 'database category type description'
+		),
+	);
 
-	public $import = 'CategoryType';
-
-	public function init() {
-		$this->records = array(
-			array('id' => '50bda570-9364-4c41-9504-a7c58cebc04d','name' => 'default','description' => NULL),
-		  array('id' => '50bda570-e3d4-457e-9015-a7c58cebc04d','name' => 'database','description' => NULL),
-		  array('id' => '50bda570-ed2c-455b-aeba-a7c58cebc04d','name' => 'ssh','description' => NULL)
-		);
-		parent::init();
-	}
 }

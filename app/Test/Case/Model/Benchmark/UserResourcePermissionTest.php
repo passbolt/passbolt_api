@@ -16,7 +16,7 @@ class UserResourcePermissionTest extends CakeTestCase {
 		'users' => 10,
 	);
 	
-	public $fixtures = array('app.resource', 'app.category', 'app.userPermission', 'app.role', 'app.group', 'app.groupUser', 'app.categoryType', 'app.categoryResource', 'app.permissionType', 'app.permission', 'app.dummyResource');
+	public $fixtures = array('app.resource', 'app.category', 'app.userPermission', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.categoriesResource', 'app.permissionsType', 'app.permission', 'app.dummyResource');
 
 	public function setUp() {
 		parent::setUp();

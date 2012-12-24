@@ -14,7 +14,7 @@ App::uses('User', 'Model');
 
 class ResourceTagTest extends CakeTestCase {
 
-	public $fixtures = array('app.tag', 'app.resource', 'app.resourceTag', 'app.user', 'app.role');
+	public $fixtures = array('app.tag', 'app.resource', 'app.resourcesTag', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
