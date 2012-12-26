@@ -22,10 +22,11 @@ if (!class_exists('CakeSession')) {
 
 class CategoriesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.category', 'app.category_type', 'app.category_resource', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.resource', 'app.category_type', 'app.categoriesResource', 'app.user', 'app.group', 'app.groupsUser', 'app.role', 'app.permission');
 
 	public function setUp() {
 		$this->Category = new Category();
+//		$this->Category->hasOne = array();
 		$this->User = new User();
 		$this->Category->useDbConfig = 'test';
 		$this->User->useDbConfig = 'test';
@@ -34,9 +35,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testIndex() {
 		$category = new Category();
-		$kk = $this->User->findByUsername('user@passbolt.com');
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
 		$this->User->setActive($kk);
-
+		
 		// test when no parameters are provided (default behaviour : children=false)
 		$result = json_decode($this->testAction("/categories/index.json", array('method' => 'get', 'return' => 'contents')), true);
 		$debug = print_r($result, true);
@@ -50,7 +51,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testView() {
-		$kk = $this->User->findByUsername('user@passbolt.com');
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
 		$this->User->setActive($kk);
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$id = $root['Category']['id'];

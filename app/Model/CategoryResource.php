@@ -101,7 +101,7 @@ class CategoryResource extends AppModel {
  * Check if a category with same id exists
  * @param check
  */
-	public function uniqueCombi($check) {
+	public function uniqueCombi($check = false) {
 		$cr = $this->data['CategoryResource'];
 		$combi = array(
 			'CategoryResource.category_id' => $cr['category_id'],

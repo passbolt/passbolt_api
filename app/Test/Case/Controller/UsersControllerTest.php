@@ -89,7 +89,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$result = $this->testAction('/logout',array('return' => 'contents'), true);
 
 		// test with anonymous user
-		$result = json_decode($this->testAction('/users/bbd56042-c5cd-11e1-a0c5-080027796c4a.json',array('return' => 'contents','method' => 'GET'), true));
+		$result = json_decode($this->testAction('/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::ERROR, '/users/view should not be accessible without being logged in');
 
 		// test with normal user
@@ -105,7 +105,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$result = json_decode($this->testAction('/users/bbd56042-0000-0000-0000-000000000000.json',array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::ERROR,'/users/view with user that does not exit should return an error');
 
-		$result = json_decode($this->testAction('/users/bbd56042-c5cd-11e1-a0c5-080027796c4a.json',array('return' => 'contents','method' => 'GET'), true));
+		$result = json_decode($this->testAction('/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS,'/users return something');
 
 		$result = json_decode($this->testAction('/users/' . User::get('id') . '.json',array('return' => 'contents','method' => 'GET'), true));

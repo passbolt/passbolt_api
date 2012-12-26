@@ -34,31 +34,7 @@ class PermissionsTypeFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => '50d79c55-0ab4-4441-bb78-1134d7a10fce',
-			'serial' => '5',
-			'name' => '-u-r',
-			'binary' => '0101',
-			'_admin' => 0,
-			'_update' => 1,
-			'_create' => 0,
-			'_read' => 1,
-			'description' => '',
-			'active' => 0
-		),
-		array(
-			'id' => '50d79c55-0ac8-47c3-b792-1134d7a10fce',
-			'serial' => '3',
-			'name' => '--cr',
-			'binary' => '0011',
-			'_admin' => 0,
-			'_update' => 0,
-			'_create' => 1,
-			'_read' => 1,
-			'description' => '',
-			'active' => 1
-		),
-		array(
-			'id' => '50d79c55-647c-4aab-97a7-1134d7a10fce',
+			'id' => '50d82026-154c-476d-bc60-6dd4d7a10fce',
 			'serial' => '4',
 			'name' => '-u--',
 			'binary' => '0100',
@@ -70,103 +46,7 @@ class PermissionsTypeFixture extends CakeTestFixture {
 			'active' => 0
 		),
 		array(
-			'id' => '50d79c55-66fc-4f19-a3ed-1134d7a10fce',
-			'serial' => '1',
-			'name' => '---r',
-			'binary' => '0001',
-			'_admin' => 0,
-			'_update' => 0,
-			'_create' => 0,
-			'_read' => 1,
-			'description' => '',
-			'active' => 1
-		),
-		array(
-			'id' => '50d79c55-6ca0-4ee7-9c20-1134d7a10fce',
-			'serial' => '12',
-			'name' => 'au--',
-			'binary' => '1100',
-			'_admin' => 1,
-			'_update' => 1,
-			'_create' => 0,
-			'_read' => 0,
-			'description' => '',
-			'active' => 0
-		),
-		array(
-			'id' => '50d79c55-7d70-4a9c-885a-1134d7a10fce',
-			'serial' => '13',
-			'name' => 'au-r',
-			'binary' => '1101',
-			'_admin' => 1,
-			'_update' => 1,
-			'_create' => 0,
-			'_read' => 1,
-			'description' => '',
-			'active' => 0
-		),
-		array(
-			'id' => '50d79c55-8cb8-4893-952c-1134d7a10fce',
-			'serial' => '0',
-			'name' => '----',
-			'binary' => '0000',
-			'_admin' => 0,
-			'_update' => 0,
-			'_create' => 0,
-			'_read' => 0,
-			'description' => '',
-			'active' => 1
-		),
-		array(
-			'id' => '50d79c55-ad30-47bd-87c5-1134d7a10fce',
-			'serial' => '2',
-			'name' => '--c-',
-			'binary' => '0010',
-			'_admin' => 0,
-			'_update' => 0,
-			'_create' => 1,
-			'_read' => 0,
-			'description' => '',
-			'active' => 0
-		),
-		array(
-			'id' => '50d79c55-bea8-4464-9f26-1134d7a10fce',
-			'serial' => '7',
-			'name' => '-ucr',
-			'binary' => '0111',
-			'_admin' => 0,
-			'_update' => 1,
-			'_create' => 1,
-			'_read' => 1,
-			'description' => '',
-			'active' => 1
-		),
-		array(
-			'id' => '50d79c55-d5a4-4c87-826f-1134d7a10fce',
-			'serial' => '10',
-			'name' => 'a-c-',
-			'binary' => '1010',
-			'_admin' => 1,
-			'_update' => 0,
-			'_create' => 1,
-			'_read' => 0,
-			'description' => '',
-			'active' => 0
-		),
-		array(
-			'id' => '50d79c55-e9ec-4338-ae86-1134d7a10fce',
-			'serial' => '8',
-			'name' => 'a---',
-			'binary' => '1000',
-			'_admin' => 1,
-			'_update' => 0,
-			'_create' => 0,
-			'_read' => 0,
-			'description' => '',
-			'active' => 0
-		),
-		array(
-			'id' => '50d79c55-eadc-44ac-b44f-1134d7a10fce',
+			'id' => '50d82026-20ac-4597-ae03-6dd4d7a10fce',
 			'serial' => '9',
 			'name' => 'a--r',
 			'binary' => '1001',
@@ -178,7 +58,31 @@ class PermissionsTypeFixture extends CakeTestFixture {
 			'active' => 0
 		),
 		array(
-			'id' => '50d79c55-eb90-4b0c-b967-1134d7a10fce',
+			'id' => '50d82026-2278-4bd4-ae2f-6dd4d7a10fce',
+			'serial' => '8',
+			'name' => 'a---',
+			'binary' => '1000',
+			'_admin' => 1,
+			'_update' => 0,
+			'_create' => 0,
+			'_read' => 0,
+			'description' => '',
+			'active' => 0
+		),
+		array(
+			'id' => '50d82026-3a24-4355-b04b-6dd4d7a10fce',
+			'serial' => '7',
+			'name' => '-ucr',
+			'binary' => '0111',
+			'_admin' => 0,
+			'_update' => 1,
+			'_create' => 1,
+			'_read' => 1,
+			'description' => '',
+			'active' => 1
+		),
+		array(
+			'id' => '50d82026-44f8-43a8-b3ae-6dd4d7a10fce',
 			'serial' => '6',
 			'name' => '-uc-',
 			'binary' => '0110',
@@ -190,7 +94,31 @@ class PermissionsTypeFixture extends CakeTestFixture {
 			'active' => 0
 		),
 		array(
-			'id' => '50d79c55-f22c-43f2-a700-1134d7a10fce',
+			'id' => '50d82026-63e8-4545-9798-6dd4d7a10fce',
+			'serial' => '1',
+			'name' => '---r',
+			'binary' => '0001',
+			'_admin' => 0,
+			'_update' => 0,
+			'_create' => 0,
+			'_read' => 1,
+			'description' => '',
+			'active' => 1
+		),
+		array(
+			'id' => '50d82026-6724-48e9-b29d-6dd4d7a10fce',
+			'serial' => '10',
+			'name' => 'a-c-',
+			'binary' => '1010',
+			'_admin' => 1,
+			'_update' => 0,
+			'_create' => 1,
+			'_read' => 0,
+			'description' => '',
+			'active' => 0
+		),
+		array(
+			'id' => '50d82026-81b8-4c74-9f51-6dd4d7a10fce',
 			'serial' => '11',
 			'name' => 'a-cr',
 			'binary' => '1011',
@@ -202,19 +130,79 @@ class PermissionsTypeFixture extends CakeTestFixture {
 			'active' => 0
 		),
 		array(
-			'id' => '50d79c55-fe00-425d-a4e0-1134d7a10fce',
-			'serial' => '14',
-			'name' => 'auc-',
-			'binary' => '1110',
-			'_admin' => 1,
-			'_update' => 1,
+			'id' => '50d82026-b338-47aa-922f-6dd4d7a10fce',
+			'serial' => '2',
+			'name' => '--c-',
+			'binary' => '0010',
+			'_admin' => 0,
+			'_update' => 0,
 			'_create' => 1,
 			'_read' => 0,
 			'description' => '',
 			'active' => 0
 		),
 		array(
-			'id' => '50d79c56-9e50-421b-be60-1134d7a10fce',
+			'id' => '50d82026-d764-4979-b4ca-6dd4d7a10fce',
+			'serial' => '5',
+			'name' => '-u-r',
+			'binary' => '0101',
+			'_admin' => 0,
+			'_update' => 1,
+			'_create' => 0,
+			'_read' => 1,
+			'description' => '',
+			'active' => 0
+		),
+		array(
+			'id' => '50d82026-ecb4-41a7-a36f-6dd4d7a10fce',
+			'serial' => '0',
+			'name' => '----',
+			'binary' => '0000',
+			'_admin' => 0,
+			'_update' => 0,
+			'_create' => 0,
+			'_read' => 0,
+			'description' => '',
+			'active' => 1
+		),
+		array(
+			'id' => '50d82026-ed80-4198-b2af-6dd4d7a10fce',
+			'serial' => '3',
+			'name' => '--cr',
+			'binary' => '0011',
+			'_admin' => 0,
+			'_update' => 0,
+			'_create' => 1,
+			'_read' => 1,
+			'description' => '',
+			'active' => 1
+		),
+		array(
+			'id' => '50d82027-3e74-4279-9ab5-6dd4d7a10fce',
+			'serial' => '13',
+			'name' => 'au-r',
+			'binary' => '1101',
+			'_admin' => 1,
+			'_update' => 1,
+			'_create' => 0,
+			'_read' => 1,
+			'description' => '',
+			'active' => 0
+		),
+		array(
+			'id' => '50d82027-57a4-4daf-9785-6dd4d7a10fce',
+			'serial' => '12',
+			'name' => 'au--',
+			'binary' => '1100',
+			'_admin' => 1,
+			'_update' => 1,
+			'_create' => 0,
+			'_read' => 0,
+			'description' => '',
+			'active' => 0
+		),
+		array(
+			'id' => '50d82027-ca5c-4d6e-9787-6dd4d7a10fce',
 			'serial' => '15',
 			'name' => 'aucr',
 			'binary' => '1111',
@@ -224,6 +212,18 @@ class PermissionsTypeFixture extends CakeTestFixture {
 			'_read' => 1,
 			'description' => '',
 			'active' => 1
+		),
+		array(
+			'id' => '50d82027-d0c0-4d44-831a-6dd4d7a10fce',
+			'serial' => '14',
+			'name' => 'auc-',
+			'binary' => '1110',
+			'_admin' => 1,
+			'_update' => 1,
+			'_create' => 1,
+			'_read' => 0,
+			'description' => '',
+			'active' => 0
 		),
 	);
 

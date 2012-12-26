@@ -21,7 +21,7 @@ if (!class_exists('CakeSession')) {
 
 class CategoriesResourcesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.category_resource', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.user', 'app.role');
 
 	public function setUp() {
 		$this->Category = new Category();
@@ -36,10 +36,10 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testView() {
-		$kk = $this->User->findByUsername('user@passbolt.com');
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
 		$this->User->setActive($kk);
 
-		$id = 1;
+		$id = '50d77ffa-45fc-423c-a5b1-1b63d7a10fce';
 
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/categoriesResources.json", array('method' => 'get', 'return' => 'contents')), true);
@@ -51,7 +51,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAdd() {
-		$kk = $this->User->findByUsername('user@passbolt.com');
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
 		$this->User->setActive($kk);
 
 		$cat = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
@@ -79,7 +79,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testDelete() {
-		$id = '1';
+		$id = '50d77ffa-45fc-423c-a5b1-1b63d7a10fce';
 		$result = json_decode($this->testAction("/categoriesResources/$id.json", array(
 			 'method' => 'delete',
 			 'return' => 'contents'

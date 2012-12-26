@@ -10,6 +10,7 @@
 App::uses('CategoryType', 'Model');
 App::uses('Resource', 'Model');
 App::uses('User', 'Model');
+App::uses('PermissionType', 'Model');
 
 class Category extends AppModel {
 
@@ -24,7 +25,7 @@ class Category extends AppModel {
 		),
 		'Permission' => array(
 			'foreignKey' => false,
-			'conditions' => array( ' `Permission`.`id` = `UserCategoryPermission`.`permission_id` ' ),
+			'conditions' => array( ' Permission.id = UserCategoryPermission.permission_id ' ),
 			'type' => 'LEFT'
 		)
 	);
@@ -227,18 +228,19 @@ class Category extends AppModel {
  * @return $condition array
  */
 	public static function getFindFields($case = 'get', $role = Role::USER) {
-		$fields = null;
+		$returnValue = array('fields' => array());
+
 		switch($role){
 			case 'user':
 				switch($case){
-					case 'get':
+					case 'view':
 					case 'getChildren':
 					case 'addResult':
 					case 'index' :
 					case 'getWithChildren' :
-						$fields = array(
+						$returnValue = array(
 							'fields' => array(
-								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id',
+								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id', 'Category.lft', 'Category.rght',
 								'Permission.id', 'Permission.type'
 							),
 							'contain' => array (
@@ -248,7 +250,7 @@ class Category extends AppModel {
 						);
 					break;
 					case 'Resource.viewByCategory':
-						$fields = array(
+						$returnValue = array(
 							'fields' => array(
 								'Category.id', 'Category.name', 'Category.parent_id'
 							),
@@ -258,7 +260,7 @@ class Category extends AppModel {
 						);
 					break;
 					case 'rename':
-						$fields = array(
+						$returnValue = array(
 							'fields' => array(
 								'name'
 							)
@@ -266,20 +268,20 @@ class Category extends AppModel {
 					break;
 					case 'add':
 					case 'edit':
-						$fields = array(
+						$returnValue = array(
 							'fields' => array(
 								'name', 'parent_id', 'category_type_id'
 							)
 						);
 					break;
 					default:
-						$fields = array('fields' => array());
+						$returnValue = array('fields' => array());
 					break;
 				}
 			case 'admin':
 			break;
 		}
-		return $fields;
+		return $returnValue;
 	}
 
 /**
@@ -291,56 +293,58 @@ class Category extends AppModel {
  * @access public
  */
 	public static function getFindConditions($case = 'get', $role = Role::USER, &$data = null) {
-		$c = null;
+		$returnValue = array('conditions' => array());
 		switch($role){
 			case 'user':
 				switch ($case) {
 					case 'getWithChildren':
-						$c = array(
+						$returnValue = array(
 							'conditions' => array(
 								'Category.lft >=' => $data['Category']['lft'],
 								'Category.rght <=' => $data['Category']['rght'],
 								'UserCategoryPermission.user_id' => User::get('id'),
-								'Permission.type >=' => 1
+								'Permission.type >' => PermissionType::DENY
 							),
-							'order' => 'lft ASC'
+							'order' => 'Category.lft ASC'
 						);
 					break;
 					case 'getChildren':
-						$c = array(
+						$returnValue = array(
 							'conditions' => array(
 								'Category.lft >' => $data['Category']['lft'],
-								'Category.rght <' => $data['Category']['rght']
+								'Category.rght <' => $data['Category']['rght'],
+								'UserCategoryPermission.user_id' => User::get('id'),
+								'Permission.type >' => PermissionType::DENY
 							),
-							'order' => 'lft ASC'
+							'order' => 'Category.lft ASC'
 						);
 					break;
 					case 'Resource.viewByCategory':
 					case 'view':
-						$c = array(
+						$returnValue = array(
 							'conditions' => array(
-								'Category.id' => $data['Category.id']
+								'Category.id' => $data['Category.id'],
+								'UserCategoryPermission.user_id' => User::get('id'),
+								'Permission.type >' => PermissionType::DENY
 							)
 						);
 					break;
-					case 'getRoots':
 					case 'index':
-						$c = array(
+						$returnValue = array(
 							'conditions' => array(
 								'parent_id' => null,
 								'UserCategoryPermission.user_id' => User::get('id'),
-								'Permission.type >=' => 1
+								'Permission.type >' => PermissionType::DENY
 							),
 							'order' => 'lft ASC'
 						);
 					break;
-					case 'get':
 					default:
-						$c = array('conditions' => array());
+						$returnValue = array('conditions' => array());
 				}
 			case 'admin':
 			break;
 		}
-		return $c;
+		return $returnValue;
 	}
 }

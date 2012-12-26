@@ -10,6 +10,8 @@
 App::uses('AppController', 'Controller');
 App::uses('ResourcesController', 'Controller');
 App::uses('Resource', 'Model');
+App::uses('CategoryResource', 'Model');
+App::uses('Category', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 
@@ -20,14 +22,14 @@ if (!class_exists('CakeSession')) {
 
 class ResourcesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.resource', 'app.category', 'app.category_resource', 'app.secret', 'app.user', 'app.role');
+	public $fixtures = array('app.resource', 'app.category', 'app.categories_resource', 'app.secret', 'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.permission');
 
 	public function setUp() {
 		parent::setUp();
 		$user = new User();
 
 		$user->useDbConfig = 'test';
-		$kk = $user->findByUsername('user@passbolt.com');
+		$kk = $user->findByUsername('dark.vador@passbolt.com');
 		$user->setActive($kk);
 
 		$this->Resource = new Resource();
@@ -264,7 +266,18 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals("test", $result['Resource']['name'], "update /resources/$id.json : The test should have modified the name into 'test', but name is still {$result['Resource']['name']}");
 
 		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
-		$this->assertEquals($after[0]['CategoryResource']['category_id'], $accountCat['Category']['id'], "update /resources/$id.json : The resource should now belong to category id {$accountCat['Category']['id']} but belongs to {$after[0]['CategoryResource']['resource_id']} instead");
+		
+		$this->assertEquals(count($after), 2, "2 results are expected");
+		$this->Resource->CategoryResource->create();
+		$this->Resource->CategoryResource->set(array('CategoryResource'=>array(
+			'resource_id'=>$id, 'category_id'=>$rootCat['Category']['id']
+		)));
+		$this->assertEquals($this->Resource->CategoryResource->uniqueCombi(), false, "update /resources/$id.json : The resource should now belong to category id {$rootCat['Category']['id']}");
+		$this->Resource->CategoryResource->create();
+		$this->Resource->CategoryResource->set(array('CategoryResource'=>array(
+			'resource_id'=>$id, 'category_id'=>$accountCat['Category']['id']
+		)));
+		$this->assertEquals($this->Resource->CategoryResource->uniqueCombi(), false, "update /resources/$id.json : The resource should now belong to category id {$accountCat['Category']['id']}");
 
 		// Test with a bad format of category
 		$result = json_decode($this->testAction("/resources/$id.json", array(

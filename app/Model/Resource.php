@@ -14,18 +14,14 @@ class Resource extends AppModel {
 
 	public $hasOne = array(
 		'Secret',
-		'Permission',
 		'UserResourcePermission' => array(
 			'foreignKey' => 'resource_id'
 		),
-		'GroupResourcePermission' => array(
-			'foreignKey' => 'resource_id'
-		),
-//		'Permission' => array(
-//			'foreignKey' => false,
-//			'conditions' => array( ' `Permission`.`id` = `UserResourcePermission`.`permission_id` ' ),
-//			'type' => 'LEFT'
-//		)
+		'Permission' => array(
+			'foreignKey' => false,
+			'conditions' => array( ' Permission.id = UserResourcePermission.permission_id ' ),
+			'type' => 'LEFT'
+		)
 	);
 	
 	public $hasMany = array(
