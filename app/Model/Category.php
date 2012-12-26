@@ -17,18 +17,23 @@ class Category extends AppModel {
 /**
  * Model behave as a tree with left, right, parent_id
  */
-	public $actsAs = array('Tree', 'Containable', 'Trackable');
-	
-	public $hasOne = array(
-		'UserCategoryPermission' => array(
-			'foreignKey' => 'category_id'
-		),
-		'Permission' => array(
-			'foreignKey' => false,
-			'conditions' => array( ' Permission.id = UserCategoryPermission.permission_id ' ),
-			'type' => 'LEFT'
-		)
+	public $actsAs = array(
+		'Containable',
+		'Trackable',
+		'Permissionable'=>array('priority' => 1),
+		'Tree'
 	);
+	
+//	public $hasOne = array(
+//		'UserCategoryPermission' => array(
+//			'foreignKey' => 'category_id'
+//		),
+//		'Permission' => array(
+//			'foreignKey' => false,
+//			'conditions' => array(' Permission.id = UserCategoryPermission.permission_id '),
+//			'type' => 'LEFT'
+//		)
+//	);
 	
 	public $hasMany = array(
 		'CategoryResource'
@@ -38,6 +43,13 @@ class Category extends AppModel {
 		'className' => 'CategoryType'
 	));
 
+	public function __construct( $id = false, $table = NULL, $ds = NULL )	{
+		parent::__construct($id, $table, $ds);
+		$this->Behaviors->setPriority(array(
+			'Permissionable' => 1
+		));
+	}
+	
 /**
  * Get the validation rules upon context
  * @param string context
@@ -222,6 +234,29 @@ class Category extends AppModel {
 		return $currentPosition;
 	}
 
+//	public function beforeFind($queryData = array()) {
+//		var_dump('Category beforeFind');
+////		parent::beforeFind($queryData);
+////		var_dump($this->Behaviors->attached());
+////		die();
+////		$this->bindModel(array('hasOne'=>array(
+////			'UserCategoryPermission' => array(
+////				'foreignKey' => 'category_id'
+////			),
+////			'Permission'=> array(
+////				'foreignKey' => false,
+////				'conditions' => array(' Permission.id = UserCategoryPermission.permission_id '),
+////				'type' => 'LEFT'
+////			))), false
+////		);
+//		parent::beforeFind($queryData);
+//	}
+//	
+//	public function afterFind($results, $primary = false) {
+//		$this->unbindModel(array('hasOne'=>array('UserCategoryPermission', 'Permission')));
+//		parent::afterFind($results, $primary);
+//	}
+	
 /**
  * Return the list of field to fetch for given context
  * @param string $case context ex: login, activation
@@ -241,11 +276,10 @@ class Category extends AppModel {
 						$returnValue = array(
 							'fields' => array(
 								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id', 'Category.lft', 'Category.rght',
-								'Permission.id', 'Permission.type'
+								'UserCategoryPermission.permission_id', 'UserCategoryPermission.permission_type'
 							),
 							'contain' => array (
-								'UserCategoryPermission',
-								'Permission'
+								'UserCategoryPermission'
 							)
 						);
 					break;
@@ -303,7 +337,7 @@ class Category extends AppModel {
 								'Category.lft >=' => $data['Category']['lft'],
 								'Category.rght <=' => $data['Category']['rght'],
 								'UserCategoryPermission.user_id' => User::get('id'),
-								'Permission.type >' => PermissionType::DENY
+								'UserCategoryPermission.permission_type >' => PermissionType::DENY
 							),
 							'order' => 'Category.lft ASC'
 						);
@@ -314,29 +348,30 @@ class Category extends AppModel {
 								'Category.lft >' => $data['Category']['lft'],
 								'Category.rght <' => $data['Category']['rght'],
 								'UserCategoryPermission.user_id' => User::get('id'),
-								'Permission.type >' => PermissionType::DENY
+								'UserCategoryPermission.permission_type >' => PermissionType::DENY
 							),
 							'order' => 'Category.lft ASC'
 						);
 					break;
 					case 'Resource.viewByCategory':
 					case 'view':
+					case 'addResult':
 						$returnValue = array(
 							'conditions' => array(
-								'Category.id' => $data['Category.id'],
+								'Category.id' => $data['Category']['id'],
 								'UserCategoryPermission.user_id' => User::get('id'),
-								'Permission.type >' => PermissionType::DENY
+								'UserCategoryPermission.permission_type >' => PermissionType::DENY
 							)
 						);
 					break;
 					case 'index':
 						$returnValue = array(
 							'conditions' => array(
-								'parent_id' => null,
+								'Category.parent_id' => null,
 								'UserCategoryPermission.user_id' => User::get('id'),
-								'Permission.type >' => PermissionType::DENY
+								'UserCategoryPermission.permission_type >' => PermissionType::DENY
 							),
-							'order' => 'lft ASC'
+							'order' => 'Category.lft ASC'
 						);
 					break;
 					default:

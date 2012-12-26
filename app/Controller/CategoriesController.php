@@ -10,9 +10,15 @@
  */
 
 App::uses('CategoryType', 'Model');
+App::uses('Permission', 'Component');
 
 class CategoriesController extends AppController {
-
+	
+	public function __construct($request = NULL, $response = NULL) {
+		parent::__construct($request, $response);
+		$this->PermissionCpt = $this->Components->load('Permission');
+	}
+	
 /**
  * index - get the list of categories
  */
@@ -20,8 +26,8 @@ class CategoriesController extends AppController {
 		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
 		$data = array();
 
-		$o = $this->Category->getFindOptions('getRoots', User::get('Role.name'));
-		$categories = $this->Category->find('threaded', $o);
+		$o = $this->Category->getFindOptions('index', User::get('Role.name'));
+		$categories = $this->Category->find('all', $o);
 
 		if (!$children) {
 			$data = $categories;
@@ -71,7 +77,7 @@ class CategoriesController extends AppController {
 			$data = $this->Category->find('threaded', $o);
 			$this->set('data', $data[0]);
 		} else {
-			$data = array('Category.id' => $id);
+			$data = array('Category'=>array('id' => $id));
 			$o = $this->Category->getFindOptions('view', User::get('Role.name'), $data);
 			$this->set('data', $this->Category->find('first', $o));
 		}
@@ -151,7 +157,7 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category could not be saved'));
 			return;
 		}
-
+		
 		// Manage the position
 		if (isset($catpost['Category']['position']) && $catpost['Category']['position'] > 0) {
 			$nbChildren = $this->Category->childCount($catpost['Category']['parent_id'], true);
@@ -160,8 +166,14 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-		$fields = $this->Category->getFindFields('addResult', User::get('Role.name'));
-		$this->set('data', $this->Category->findById($category['Category']['id'], $fields['fields']));
+		
+		// Manage the permissions
+		$this->PermissionCpt->add('Category', $category, 'User', User::get(), PermissionType::ADMIN);
+		
+		// Get back the category data to return to the client
+		$data = array('Category'=>array('id'=>$category['Category']['id']));
+		$options = $this->Category->getFindOptions('addResult', User::get('Role.name'), $data);
+		$this->set('data', $this->Category->find('first', $options));
 		$this->Message->success(__('The category was sucessfully added'));
 	}
 

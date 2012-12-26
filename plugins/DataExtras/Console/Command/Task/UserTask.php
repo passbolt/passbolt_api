@@ -40,7 +40,7 @@ class UserTask extends ModelTask {
 		$us[] = array('User' => array(
 			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c4c',
 			'username' => 'dark.vador@passbolt.com',
-			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'I am your father',
 			'active' => 1,
 			'created' => '2012-07-04 13:39:25',
@@ -183,7 +183,7 @@ class UserTask extends ModelTask {
 		$us[] = array('User' => array(
 			'id' => 'abcdab9c-4380-adad-b4cc-2f4fd7a10fce',
 			'username' => 'a-usr1@companya.com',
-			'role_id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
 			'active' => 1,
 			'created' => '2012-07-04 13:39:25',

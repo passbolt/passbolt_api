@@ -1,10 +1,10 @@
 <?php
 /**
- * RandomResourceBehavior Behavior - autopopulate created_by, modified_by
+ * Model Test Behavior
  *
  * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Test.Case.Model.Behavior.RandomResourceBehavior
+ * @package      app.Test.Case.Model.Behavior.ModelTestCaseBehavior
  * @since        version 2.12.7
  */
 App::uses('Resource', 'Model');

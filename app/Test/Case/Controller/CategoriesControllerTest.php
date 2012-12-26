@@ -26,7 +26,6 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		$this->Category = new Category();
-//		$this->Category->hasOne = array();
 		$this->User = new User();
 		$this->Category->useDbConfig = 'test';
 		$this->User->useDbConfig = 'test';
@@ -91,8 +90,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testChildren() {
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
+		
 		$category = new Category();
 		$category->useDbConfig = 'test';
+		
 		$root = $category->findByName('Bolt Softwares Pvt. Ltd.');
 		$id = $root['Category']['id'];
 
@@ -123,6 +126,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAdd() {
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
+		
 		// check the response when a category is added (without parent_id)
 		$result = json_decode($this->testAction('/categories.json', array(
 			'data' => array(
@@ -131,6 +137,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			 'method' => 'post',
 			 'return' => 'contents'
 		)), true);
+		
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 
 		// check that category detail is properly returned by the function
@@ -220,6 +227,9 @@ class CategoriesControllerTest extends ControllerTestCase {
  * Test update function
  */
 	public function testEdit() {
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
+		
 		// Error : no data provided
 		$cat = $this->Category->findByName('o-project1');
 		$id = $cat['Category']['id'];
@@ -249,6 +259,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testDelete() {
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
+		
 		$catName = 'cp-project2';
 		$cat = $this->Category->findByName($catName);
 		$id = $cat['Category']['id'];
@@ -299,7 +312,10 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testMove() {
-		$hr = $this->Category->findByName('hr');
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
+		
+		$hr = $this->Category->findByName('human resource');
 		$administration = $this->Category->findByName('administration');
 		$cakephp = $this->Category->findByName('cakephp');
 
@@ -384,6 +400,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testType() {
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
+		
 		$categoryModel = new Category();
 		$categoryModel->useDbConfig = 'test';
 		$categoryTypeModel = new CategoryType();
@@ -396,7 +415,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/type/$id/default.json : The test should return success but returned {$result['header']['status']}");
 
 		$root = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
-		$this->assertEquals("50bda570-9364-4c41-9504-a7c58cebc04d", $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
+		$this->assertEquals("0234f3a4-c5cd-11e1-a0c5-080027796c4c", $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
 
 		$result = json_decode($this->testAction("/categories/type/$id/namedoesntexist.json", array('method' => 'put', 'return' => 'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type/$id/namedoesntexist.json : The test should return error but has returned {$result['header']['status']}");
