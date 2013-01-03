@@ -9,7 +9,7 @@
  */
 
 class InstallShell extends AppShell {
-	
+
 	public function main() {
 		$this->schema();
 		$this->data();
@@ -20,7 +20,7 @@ class InstallShell extends AppShell {
 		$this->dispatchShell('schema create --force_drop --force_create -q');
 		$this->out('schema deployed');
 	}
-	
+
 	public function data() {
 		CakePlugin::load('DataExtras');
 		$this->dispatchShell('DataExtras.Data import');
