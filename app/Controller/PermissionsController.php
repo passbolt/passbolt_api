@@ -6,61 +6,95 @@
  * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.Controller.PermissionsController
- * @since        version 2.12.7
+ * @since        version 2.12.11
  */
 
-App::uses('Permissions', 'Model');
-
+App::uses('Permission', 'Model');
+ 
 class PermissionsController extends AppController  {
 
-
 /**
- * View applied permission on a resource
- * @param uuid resourceId the id of the resource
+ * Add permission on an instance
+ * @param string model the model of the instance
+ * @param uuid id the id of the target instance
  * @return array
  */
-	public function viewResourcePermissions($resourceId = null) {
-		$returnValue = array();
+	public function addAcoPermissions($model = '', $id = null) {
+		var_dump('add', $model, $id);
+		die();
+	}
 
-		$Resource = ClassRegistry::init('Resource');
-		
-		// no resource id given
-		if(is_null($resourceId)) {
-			$this->Message->error(__('The resource id is missing'));
+/**
+ * View applied permissions on an instance
+ * @param string model the model of the instance
+ * @param uuid id the id of the target instance
+ * @return array
+ */
+	public function viewAcoPermissions($model = null, $id = null) {
+		$returnValue = array();
+		// camelize the model parameter
+		$model = Inflector::camelize($model);
+		// The model to use relative to the given model string
+		$Model = null;
+		// The instance relative to the given id string
+		$instance = null;
+
+		// check if the target model is permissionable
+		if(!in_array($model, Permission::getAllowedAcos())) {
+			$this->Message->error(__('The model is not permissionable'));
 			return;
 		}
 		
-		// the resource id is invalid
-		if (!Common::isUuid($resourceId)) {
-			$this->Message->error(__('The resource id invalid'));
+		$Model = ClassRegistry::init($model);
+		
+		// no instance id given
+		if(is_null($id)) {
+			$this->Message->error(__('The id is missing'));
 			return;
 		}
 		
-		// the resource does not exist
-		$resource = $Resource->findById($resourceId);
-		if (!$resource) {
-			$this->Message->error(__('The resource doesn\'t exist'));
+		// the id is invalid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The id is invalid'));
 			return;
 		}
 		
-		// Get user resource permissions
-		$urpData = array(
-			'UserResourcePermission' => array(
-				'resource_id'	=> $resourceId
+		// the instance does not exist
+		$instance = $Model->findById($id);
+		if (!$instance) {
+			$this->Message->error(__('The instance doesn\'t exist'));
+			return;
+		}
+		
+		// case used by find options function
+		$viewCase = 'viewBy' . $model;
+		
+		// get user's permissions for the target instance
+		$viewName = 'User' . $model . 'Permission';
+		$ModelView = ClassRegistry::init($viewName);
+		$foreignKey = strtolower($model) . '_id';
+		$upData = array(
+			$viewName => array(
+				$foreignKey => $id
 			)
 		);
-		$urpOptions = $Resource->UserResourcePermission->getFindOptions('viewByResource', User::get('Role.name'), $urpData);
-		$urp = $Resource->UserResourcePermission->find('all', $urpOptions);
+		$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
+		$ups = $ModelView->find('all', $upOptions);
 		
-		// Get group resource permissions
-		$grpData = array(
-			'GroupResourcePermission' => array(
-				'resource_id'	=> $resourceId
+		// get group's permissions for the target instance
+		$viewName = 'Group' . $model . 'Permission';
+		$ModelView = ClassRegistry::init($viewName);
+		$foreignKey = strtolower($model) . '_id';
+		$gpData = array(
+			$viewName => array(
+				$foreignKey => $id
 			)
 		);
-		$grpOptions = $Resource->GroupResourcePermission->getFindOptions('viewByResource', User::get('Role.name'), $grpData);
-		$grp = $Resource->GroupResourcePermission->find('all', $grpOptions);
-		$returnValue = array_merge($urp, $grp);
+		$gpOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $gpData);
+		$gps = $ModelView->find('all', $gpOptions);
+		
+		// merge user's and group's permissions
+		$returnValue = array_merge($ups, $gps);
 		
 		$this->Message->success();
 		$this->set('data', $returnValue);
