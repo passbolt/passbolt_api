@@ -100,6 +100,12 @@
 	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'view'));
 
 /**
+ * Custom route for permissions::view with parameters
+ */
+	Router::connect('/permissions/resources/add/:id', array('controller' => 'permissions', 'action' => 'addPermissions', 'model'=>'Resource'), array('pass' => array('model', 'id')));
+	Router::connect('/permissions/resources/:id', array('controller' => 'permissions', 'action' => 'viewPermissions', 'model'=>'Resource'), array('pass' => array('model', 'id')));
+
+/**
  * Load all plugin routes.	See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
  */

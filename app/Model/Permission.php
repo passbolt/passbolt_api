@@ -5,7 +5,7 @@
  * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.Model.Permission
- * @since        version 2.12.7
+ * @since        version 2.12.11
  */
 App::uses('User', 'Model');
 

@@ -2,10 +2,10 @@
 /**
  * UserResourcePermission Model
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.Model.UserResourcePermission
- * @since				 version 2.12.9
+ * @copyright		Copyright 2012, Passbolt.com
+ * @license			http://www.passbolt.com/license
+ * @package			app.Model.UserResourcePermission
+ * @since			version 2.12.11
  */
 
 class UserResourcePermission extends AppModel {
