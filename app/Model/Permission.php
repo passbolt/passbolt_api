@@ -12,5 +12,13 @@ App::uses('User', 'Model');
 class Permission extends AppModel {
 
 	public $actsAs = array('Containable', 'Trackable');
+	
+	public static function getAllowedAcos() {
+		return array('Resource', 'Category');
+	}
+	
+	public static function getAllowedAros() {
+		return array('User', 'Group');
+	}
 
 }

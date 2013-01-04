@@ -9,24 +9,9 @@
  * @since        version 2.12.11
  */
 
-App::uses('Permissions', 'Model');
-
+App::uses('Permission', 'Model');
+ 
 class PermissionsController extends AppController  {
-
-/**
- * Permissionnable model
- * @type array 
- */
-	private $whiteList = array('Resource', 'Category');
-
-/**
- * Check that the given model is permissionable
- * @param string model 
- * @return boolean
- */
-	private function isPermissionnable($model) {
-		return in_array($model, $this->whiteList);
-	}
 
 /**
  * Add permission on an instance
@@ -34,7 +19,7 @@ class PermissionsController extends AppController  {
  * @param uuid id the id of the target instance
  * @return array
  */
-	public function addPermissions($model = '', $id = null) {
+	public function addAcoPermissions($model = '', $id = null) {
 		var_dump('add', $model, $id);
 		die();
 	}
@@ -45,15 +30,17 @@ class PermissionsController extends AppController  {
  * @param uuid id the id of the target instance
  * @return array
  */
-	public function viewPermissions($model = null, $id = null) {
+	public function viewAcoPermissions($model = null, $id = null) {
 		$returnValue = array();
+		// camelize the model parameter
+		$model = Inflector::camelize($model);
 		// The model to use relative to the given model string
 		$Model = null;
 		// The instance relative to the given id string
 		$instance = null;
-		
+
 		// check if the target model is permissionable
-		if(!$this->isPermissionnable($model)) {
+		if(!in_array($model, Permission::getAllowedAcos())) {
 			$this->Message->error(__('The model is not permissionable'));
 			return;
 		}
