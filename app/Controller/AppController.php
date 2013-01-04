@@ -18,8 +18,15 @@ class AppController extends Controller {
  * @var $component application wide components 
  */
 	public $components = array(
-		'Session', 'Paginator', 'Cookie', 'Auth', // default
-		'Message', 'Mailer'											  // custom
+		'Session',
+		'Paginator',
+		'Cookie',
+		'Auth' => array(
+			'className' => 'AuthThrottler',
+			'throttle' => array(5, 10, 15, 30, 60)
+		),
+		'Message',
+		'Mailer'
 	);
 
 	public $helpers = array(
