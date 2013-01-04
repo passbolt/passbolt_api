@@ -9,6 +9,8 @@
  */
 class UsersController extends AppController {
 
+	public $helpers = array('AuthThrottle');
+
 /**
  * Login
  * @access public
