@@ -18,7 +18,7 @@ class UserResourcePermission extends AppModel {
 		'Permission'
 	);
 
-	/**
+/**
  * Return the conditions to be used for a given context
  *
  * @param $context string{guest or id}

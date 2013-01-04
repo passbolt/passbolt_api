@@ -66,27 +66,32 @@ class PermissionsController extends AppController  {
 			return;
 		}
 		
+		// case used by find options function
+		$viewCase = 'viewBy' . $model;
+		
 		// get user's permissions for the target instance
 		$viewName = 'User' . $model . 'Permission';
+		$ModelView = ClassRegistry::init($viewName);
 		$foreignKey = strtolower($model) . '_id';
 		$upData = array(
 			$viewName => array(
 				$foreignKey => $id
 			)
 		);
-		$upOptions = $Model->$viewName->getFindOptions('viewByResource', User::get('Role.name'), $upData);
-		$ups = $Model->$viewName->find('all', $upOptions);
+		$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
+		$ups = $ModelView->find('all', $upOptions);
 		
 		// get group's permissions for the target instance
 		$viewName = 'Group' . $model . 'Permission';
+		$ModelView = ClassRegistry::init($viewName);
 		$foreignKey = strtolower($model) . '_id';
 		$gpData = array(
 			$viewName => array(
 				$foreignKey => $id
 			)
 		);
-		$gpOptions = $Model->$viewName->getFindOptions('viewByResource', User::get('Role.name'), $gpData);
-		$gps = $Model->$viewName->find('all', $gpOptions);
+		$gpOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $gpData);
+		$gps = $ModelView->find('all', $gpOptions);
 		
 		// merge user's and group's permissions
 		$returnValue = array_merge($ups, $gps);

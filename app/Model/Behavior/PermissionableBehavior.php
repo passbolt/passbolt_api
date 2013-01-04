@@ -17,6 +17,9 @@ class PermissionableBehavior extends ModelBehavior {
 			'UserCategoryPermission' => array(
 				'foreignKey' => 'category_id'
 			),
+			'GroupCategoryPermission' => array(
+				'foreignKey' => 'resource_id'
+			),
 			'Permission'=> array(
 				'foreignKey' => false,
 				'conditions' => array(' Permission.id = UserCategoryPermission.permission_id '),
@@ -27,7 +30,7 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 	
 	public function afterFind($Model, $results, $primary = false) {
-		$Model->unbindModel(array('hasOne'=>array('UserCategoryPermission', 'Permission')), false);
+		$Model->unbindModel(array('hasOne'=>array('UserCategoryPermission', 'Permission', 'GroupCategoryPermission')), false);
 		return $results;
 	}
 	

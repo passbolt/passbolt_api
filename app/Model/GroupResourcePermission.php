@@ -12,7 +12,7 @@ class GroupResourcePermission extends AppModel {
 
 	public $useTable = "groups_resources_permissions";
 	
-public $belongsTo = array(
+	public $belongsTo = array(
 		'Group',
 		'Resource',
 		'Permission'
