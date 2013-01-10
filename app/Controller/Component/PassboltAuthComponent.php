@@ -6,7 +6,7 @@
  *
  * @copyright		 copyright 2012 Passbolt.com
  * @package			 app.Controller.Common
- * @since				 version 2.12.7
+ * @since				 version 2.12.12
  * @license			 http://www.passbolt.com/license
  */
 class PassboltAuthComponent extends AuthComponent {
