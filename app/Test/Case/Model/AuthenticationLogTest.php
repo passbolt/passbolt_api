@@ -20,6 +20,7 @@ class AuthenticationLogTest extends CakeTestCase {
 	}
 	
 	public function testLog() {
+		//TODO
 	}
 
 	public function testGetFailedAuthenticationCount() {
@@ -85,9 +86,52 @@ class AuthenticationLogTest extends CakeTestCase {
 		// test count for user, ip, and since Timestamp
 		$c = $this->AuthenticationLog->getFailedAuthenticationCount($userTest['User']['username'], '127.0.0.1', strtotime('2012-07-04 13:41:25'));
 		$this->AssertEquals($c, 1, "The test should have returned 1 but returned $c");
+
+		// test with wrong username
+		$c = $this->AuthenticationLog->getFailedAuthenticationCount('whatkindofusernameisthat');
+		$this->AssertEquals($c, false, "The test should have returned false but returned $c");
 	}
 
 	public function testGetLastFailedAuthenticationLog() {
-		
+		$userTest = $this->User->findByUsername('test@passbolt.com');
+		$l3 = array('AuthenticationLog' => array(
+			'user_id' => $userTest['User']['id'],
+			'username' => $userTest['User']['username'],
+			'ip' => '127.0.0.1',
+			'status' => true,
+			'created' => '2012-07-04 13:41:25',
+		));
+		$this->AuthenticationLog->create();
+		$this->AuthenticationLog->save($l3);
+		$l4 = array('AuthenticationLog' => array(
+			'user_id' => $userTest['User']['id'],
+			'username' => $userTest['User']['username'],
+			'ip' => '127.0.0.1',
+			'status' => false,
+			'created' => '2012-07-04 13:42:25',
+		));
+		$this->AuthenticationLog->create();
+		$this->AuthenticationLog->save($l4);
+		$l5 = array('AuthenticationLog' => array(
+			'user_id' => $userTest['User']['id'],
+			'username' => $userTest['User']['username'],
+			'ip' => '192.168.0.1',
+			'status' => false,
+			'created' => '2012-07-04 13:43:25',
+		));
+		$this->AuthenticationLog->create();
+		$this->AuthenticationLog->save($l5);
+
+		// test with login only
+		$a = $this->AuthenticationLog->getLastFailedAuthenticationLog($userTest['User']['username']);
+		$this->AssertEquals($a['AuthenticationLog']['created'], '2012-07-04 13:43:25', "The test has returned the wrong result");
+
+		// test with ip only
+		$a = $this->AuthenticationLog->getLastFailedAuthenticationLog(null, '127.0.0.1');
+		$this->AssertEquals($a['AuthenticationLog']['created'], '2012-07-04 13:42:25', "The test has returned the wrong result");
+
+		// test with fake username
+		$a = $this->AuthenticationLog->getLastFailedAuthenticationLog('whatkindofusernameisthat');
+		$this->AssertEquals($a, null, "The test should have returned null but has returned $a");
 	}
 }
