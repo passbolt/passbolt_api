@@ -39,7 +39,7 @@
       </fieldset>
       <?php echo $this->MyForm->submit(__('login'));?>
 			<span class="forgot"><a href="#">forgot password?</a></span>
-			<?php echo $this->AuthThrottle->get(); ?>
+			<?php echo $this->PassboltAuth->get(); ?>
     <?php echo $this->MyForm->end();?>
     </div>
   </div>
