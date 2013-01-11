@@ -5,7 +5,7 @@
  * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.Model.AuthenticationLog
- * @since        version 2.12.12
+ * @since        version 2.13.03
  */
 App::uses('User', 'Model');
 
