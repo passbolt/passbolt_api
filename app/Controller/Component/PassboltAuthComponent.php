@@ -157,8 +157,13 @@ class PassboltAuthComponent extends AuthComponent {
 /**
  * Override of identify method
  * Throttler functions have been added
+ * @param CakeRequest $request
+ * @param CakeResponse $response
  */
 	public function identify(CakeRequest $request, CakeResponse $response) {
+		// If no parameters are given, we return default value
+		if(empty($request->data)) return parent::identify($request, $response);
+
 		$this->__setContext($request);
 		// if the user is not allowed to attempt to login, we return false
 		if(!$this->__isAuthenticationAllowed())
@@ -166,7 +171,7 @@ class PassboltAuthComponent extends AuthComponent {
 
 		// get the status of authentication
 		$identified = parent::identify($request, $response);
-		if (!empty($request->data)) {
+		if (isset($request->data['User']['username'])) {
 			$status = $identified ? true : false;
 			// Log the attempt
 			$this->AuthenticationLog->log($request->data['User']['username'], $this->ip, $status);
@@ -174,7 +179,7 @@ class PassboltAuthComponent extends AuthComponent {
 		}
 
 		// if there is a failed attempt of login
-		if (!empty($request->data) && !$identified) {
+		if (isset($request->data['User']['username']) && !$identified) {
 			$this->controller->Session->write('Throttle.nextLogin', $this->nextAuthentication());
 			return false;
 		}
