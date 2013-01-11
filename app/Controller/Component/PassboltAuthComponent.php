@@ -10,14 +10,26 @@
  * @license			 http://www.passbolt.com/license
  */
 class PassboltAuthComponent extends AuthComponent {
-
+	
+	public $AuthenticationLog;
+	public $controller;
+	public $ip = null;
+	public $username = null;
+	public $request = null;
+	public $lastSuccessfulAuth = null;
+	public $lastFailedAuth = null;
+	public $authenticationAttempt = 0;
 	public $throttle = array(3, 10, 20, 30, 60);
+	public $throttleStrategies = array(
+
+	);
 
 /**
  * startup function
  */
 	public function startup(&$controller) {
 		$this->controller = $controller;
+		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
 		return parent::startup($controller);
 	}
 
@@ -38,29 +50,55 @@ class PassboltAuthComponent extends AuthComponent {
  * @return int attempt number
  */
 	public function getAttempt() {
-		$attempt = $this->controller->Session->read('Throttle.attempt');
+		$attempt = $this->authenticationAttempt;
 		return ($attempt ? $attempt : 0);
 	}
 
+	private function __setContext($request) {
+		$this->username = isset($request->data['User']['username']) ? $request->data['User']['username'] : null;
+		$this->ip = $this->controller->request->clientIp();
+
+		$this->lastFailedAuth = $this->AuthenticationLog->getLastFailedAuthenticationLog($this->username, $this->ip);
+		// Get last successful authentication for the username
+		$this->lastSuccessfulAuth = $this->AuthenticationLog->find('first', array(
+			'conditions' => array(
+				'username' => $this->username,
+				'status' => true
+			),
+			'order' => array(
+				'created' => 'DESC'
+			)
+		));
+		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
+		$this->authenticationAttempt = $this->AuthenticationLog->getFailedAuthenticationCount($this->username, $this->ip, $sinceTimestamp);
+	}
+
 /**
- * Checks if the authentication can happen
+ * Checks if the authentication can happen according to the known context
+ * (known context is username and ip that have to be set in the object)
  * will return false if it is throttled
  * @return bool true if no throttle is going on or false
  */
-	public function isLoginAllowed() {
-		$lastFailure = $this->controller->Session->read('Throttle.lastFailure');
-		if ($lastFailure) {
-			$interval = $this->getThrottleInterval($this->getAttempt());
-			if (!$interval) {
-				return true;
-			}
-			$now = time();
-			// allowed time is the time when the user will be allowed to attempt to log on
-			// it is equal to the last failure time + the interval time
-			$allowedTime = $lastFailure + $interval;
-			return $now > $allowedTime;
-		}
-		return true;
+	private function __isAuthenticationAllowed() {
+		if($this->authenticationAttempt == 0)
+			return true;
+
+		$now = time();
+		$next = $this->nextAuthentication();
+		return $now > $next;
+	}
+
+	public function nextAuthentication() {
+		if($this->authenticationAttempt == 0)
+			return false;
+
+		$interval = $this->getThrottleInterval($this->authenticationAttempt);
+		$now = time();
+		// allowed time is the time when the user will be allowed to attempt to log on
+		// it is equal to the last failure time + the interval time
+		$lastFailureTimestamp = strtotime($this->lastFailedAuth['AuthenticationLog']['created']);
+		$nextAuth = $lastFailureTimestamp + $interval;
+		return $nextAuth;
 	}
 
 /**
@@ -68,25 +106,26 @@ class PassboltAuthComponent extends AuthComponent {
  * Throttler functions have been added
  */
 	public function identify(CakeRequest $request, CakeResponse $response) {
+		$this->__setContext($request);
 		// if the user is not allowed to attempt to login, we return false
-		if(!$this->isLoginAllowed())
+		if(!$this->__isAuthenticationAllowed())
 			return false;
 
 		// get the status of authentication
 		$identified = parent::identify($request, $response);
+		if (!empty($request->data)) {
+			$status = $identified ? true : false;
+			// Log the attempt
+			$this->AuthenticationLog->log($request->data['User']['username'], $this->ip, $status);
+			$this->__setContext($request); // After logging a new entry, we set the context again
+		}
+
 		// if there is a failed attempt of login
 		if (!empty($request->data) && !$identified) {
-			$attempt = $this->getAttempt();
-			$attempt++;
-			$this->controller->Session->write('Throttle.attempt', $attempt);
-			$lastFailure = $this->controller->Session->read('Throttle.lastFailure');
-			$this->controller->Session->write('Throttle.lastFailure', time());
-			$this->controller->Session->write('Throttle.nextLogin', time() + $this->getThrottleInterval($attempt));
+			$this->controller->Session->write('Throttle.nextLogin', $this->nextAuthentication());
 			return false;
 		}
-		// if login is succesful, we delete all the keys in the session
-		$this->controller->Session->delete('Throttle.lastFailure');
-		$this->controller->Session->delete('Throttle.attempt');
+		$this->controller->Session->delete('Throttle.nextLogin');
 		return $identified;
 	}
 }
