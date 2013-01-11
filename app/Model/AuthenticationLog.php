@@ -63,7 +63,7 @@ class AuthenticationLog extends AppModel {
 			$conditions[] = array("ip" => $ip);
 
 		if ($sinceTimestamp)
-			$conditions[] = array("created >=" => date('Y-m-d h:I:s', $sinceTimestamp));
+			$conditions[] = array("created >=" => date('Y-m-d H:i:s', $sinceTimestamp));
 
 		return $this->find('count', array(
 			'conditions' => $conditions,
