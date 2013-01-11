@@ -93,6 +93,6 @@ class AuthenticationLog extends AppModel {
 			'conditions' => $conditions,
 			'order' => array('created' => 'DESC')
 		));
-		return $attempt;
+		return !empty($attempt) ? $attempt : null;
 	}
 }
