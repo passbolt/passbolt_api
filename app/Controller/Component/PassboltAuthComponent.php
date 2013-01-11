@@ -6,26 +6,66 @@
  *
  * @copyright		 copyright 2012 Passbolt.com
  * @package			 app.Controller.Common
- * @since				 version 2.12.12
+ * @since				 version 2.13.03
  * @license			 http://www.passbolt.com/license
  */
 class PassboltAuthComponent extends AuthComponent {
-	
+
+/**
+ * shortcut to AuthenticationLog model
+ */
 	public $AuthenticationLog;
+
+/**
+ * shortcut to controller
+ */
 	public $controller;
+
+/**
+ * stores ip of user for current authentication (is populated by __setContext)
+ */
 	public $ip = null;
+
+/**
+ * stores current username for authentication (is populated by __setContext)
+ */
 	public $username = null;
+
+/**
+ * stores request object (is populated by __setContext)
+ */
 	public $request = null;
+
+/**
+ * stores last successful authentication object (AuthenticationLog)(is populated by __setContext)
+ */
 	public $lastSuccessfulAuth = null;
+
+/**
+ * stores last failed authentication object (AuthenticationLog)(is populated by __setContext)
+ */
 	public $lastFailedAuth = null;
+
+/**
+ * stores authentication attempt number (is populated by __setContext)
+ */
 	public $authenticationAttempt = 0;
+
+/**
+ * defines the throttle strategy. 
+ */
 	public $throttle = array(3, 10, 20, 30, 60);
+
+/**
+ * defines the throttle strategy. 
+ */
 	public $throttleStrategies = array(
 
 	);
 
 /**
  * startup function
+ * @param Controller $controller. the calling controller
  */
 	public function startup(&$controller) {
 		$this->controller = $controller;
@@ -33,6 +73,11 @@ class PassboltAuthComponent extends AuthComponent {
 		return parent::startup($controller);
 	}
 
+/**
+ * get the throttle time interval corresponding to the attempt number
+ * @param int $attemp, the attempt number
+ * @return int $interval, the interval in seconds
+ */
 	public function getThrottleInterval($attempt) {
 		$n = count($this->throttle);
 		if ($attempt > $n) {
@@ -54,6 +99,10 @@ class PassboltAuthComponent extends AuthComponent {
 		return ($attempt ? $attempt : 0);
 	}
 
+/**
+ * Set the  object context corresponding to the current request
+ * @param Request $request object given by identify
+ */
 	private function __setContext($request) {
 		$this->username = isset($request->data['User']['username']) ? $request->data['User']['username'] : null;
 		$this->ip = $this->controller->request->clientIp();
@@ -88,6 +137,10 @@ class PassboltAuthComponent extends AuthComponent {
 		return $now > $next;
 	}
 
+/**
+ * gets the timestamp when the next authentication can be done
+ * @return int $nextAuth, timestamp of next authentication
+ */
 	public function nextAuthentication() {
 		if($this->authenticationAttempt == 0)
 			return false;
