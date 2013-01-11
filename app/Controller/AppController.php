@@ -23,7 +23,7 @@ class AppController extends Controller {
 		'Cookie',
 		'Auth' => array(
 			'className' => 'PassboltAuth',
-			'throttle' => array(5, 10, 15, 30, 60)
+			'throttle' => array(5, 15, 45)
 		),
 		'Message',
 		'Mailer'
