@@ -1,10 +1,10 @@
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
-/app/tmp/cache/
 /app/tmp/cache/models/*
 /app/tmp/cache/persistent/*
 /app/tmp/cache/views/*
+/app/tmp/gpg/*
 /app/tmp/logs/*
 /app/tmp/sessions/*
 /app/tmp/tests/*
@@ -13,3 +13,7 @@
 /dist
 .DS_Store
 /tags
+/app/webroot/js/lib/mad/docs/
+/app/webroot/js/lib/mad/docs.html
+!empty
+
