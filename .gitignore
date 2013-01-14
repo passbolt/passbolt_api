@@ -1,14 +1,10 @@
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
-/app/tmp/cache/
-/app/tmp/cache/models/*
-/app/tmp/cache/persistent/*
-/app/tmp/cache/views/*
-/app/tmp/logs/*
-/app/tmp/sessions/*
-/app/tmp/tests/*
+/app/tmp
 /lib/Cake/Console/Templates/skel/tmp/
+/plugins
+/vendors
 /build
 /dist
 .DS_Store
