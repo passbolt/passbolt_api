@@ -9,7 +9,7 @@
  */
 class UsersController extends AppController {
 
-	public $helpers = array('AuthThrottle');
+	public $helpers = array('PassboltAuth');
 
 /**
  * Login
