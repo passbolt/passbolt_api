@@ -36,6 +36,7 @@ class IpAddressComponent extends Component {
  * use one of the above 3 formats.
  */
 	public static function inRange($ip, $range) {
+		if($ip == $range) return true;
 		if (strpos($range, '/') !== false) {
 			// $range is in IP/NETMASK format
 			list($range, $netmask) = explode('/', $range, 2);
