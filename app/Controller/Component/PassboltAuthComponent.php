@@ -118,11 +118,11 @@ class PassboltAuthComponent extends AuthComponent {
 	public function getThrottleInterval($attempt) {
 		$n = count($this->throttlingStrategies['throttle']);
 		if ($attempt > $n) {
-			return $this->throttlingStrategies['throttle'][$n - 1]['throttleTime'];
+			return $this->throttlingStrategies['throttle'][$n]['throttleTime'];
 		} elseif ($attempt == 0) {
 			return 0;
 		} else {
-			return $this->throttlingStrategies['throttle'][$attempt - 1]['throttleTime'];
+			return $this->throttlingStrategies['throttle'][$attempt]['throttleTime'];
 		}
 	}
 
