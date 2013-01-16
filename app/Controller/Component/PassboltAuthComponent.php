@@ -54,13 +54,50 @@ class PassboltAuthComponent extends AuthComponent {
 /**
  * defines the throttle strategy. 
  */
-	public $throttle = array(3, 10, 20, 30, 60);
+	public $throttle = array(5, 15, 45, 60);
+
+/**
+ * defines if the current ip should be blacklisted
+ */
+	public $doBlacklist = false;
+
+/**
+ * defines the time during which the current ip should be blacklisted (only if $doBlacklist is true)
+ */
+	public $blacklistTime = null;
 
 /**
  * defines the throttle strategy. 
  */
-	public $throttleStrategies = array(
-
+	public $throttlingStrategies = array(
+		'throttle' => array(
+			1 => array(
+				'throttleTime' => '5'
+			),
+			2 => array(
+				'throttleTime' => '15'
+			),
+			3 => array(
+				'throttleTime' => '45'
+			),
+			4 => array(
+				'throttleTime' => '60'
+			)
+		),
+		'blacklist' => array(
+			20 => array(
+				'interval' => '60',
+				'blacklistTime' => '600'
+			),
+			50 => array(
+				'interval' => '1200',
+				'blacklistTime' => '2400'
+			),
+			100 => array(
+				'interval' => '3600',
+				'blacklistTime' => '7200'
+			)
+		)
 	);
 
 /**
@@ -79,13 +116,13 @@ class PassboltAuthComponent extends AuthComponent {
  * @return int $interval, the interval in seconds
  */
 	public function getThrottleInterval($attempt) {
-		$n = count($this->throttle);
+		$n = count($this->throttlingStrategies['throttle']);
 		if ($attempt > $n) {
-			return $this->throttle[$n - 1];
+			return $this->throttlingStrategies['throttle'][$n - 1]['throttleTime'];
 		} elseif ($attempt == 0) {
 			return 0;
 		} else {
-			return $this->throttle[$attempt - 1];
+			return $this->throttlingStrategies['throttle'][$attempt - 1]['throttleTime'];
 		}
 	}
 
@@ -120,6 +157,24 @@ class PassboltAuthComponent extends AuthComponent {
 		));
 		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
 		$this->authenticationAttempt = $this->AuthenticationLog->getFailedAuthenticationCount($this->username, $this->ip, $sinceTimestamp);
+
+		$i = 0;
+		foreach ($this->throttlingStrategies['blacklist'] as $attempt => $strategy) {
+			$sinceTimestamp = time() - $strategy['interval'];
+			$count = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
+			// No need to continue if first threshold is not even met
+			if ($i == 0 && $count < $attempt) {
+				break;
+			}
+			// if threshold is met (number of failed attempts = threshold)
+			// we apply the blacklisting as defined
+			if ($count == $attempt) {
+				$this->doBlacklist = true;
+				$this->blacklistTime = $strategy['blacklistTime'];
+				break;
+			}
+			$i++;
+		}
 	}
 
 /**
@@ -181,6 +236,16 @@ class PassboltAuthComponent extends AuthComponent {
 		// if there is a failed attempt of login
 		if (isset($request->data['User']['username']) && !$identified) {
 			$this->controller->Session->write('Throttle.nextLogin', $this->nextAuthentication());
+			// manage blacklist
+			if ($this->doBlacklist) {
+				$AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
+				$bl = array(
+					'ip' => $this->ip,
+					'expiry' => date('Y-m-d H:i:s', time() + $this->blacklistTime)
+				);
+				// record blacklisting in database
+				$AuthenticationBlacklist->save($bl);
+			}
 			return false;
 		}
 		$this->controller->Session->delete('Throttle.nextLogin');
