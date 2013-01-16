@@ -16,7 +16,7 @@ App::uses('CakeSession', 'Model/Datasource');
 
 class UsersControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.user', 'app.role', 'app.authenticationLog');
+	public $fixtures = array('app.user', 'app.role', 'app.authenticationLog', 'app.authenticationBlacklist');
 
 	public $user;
 

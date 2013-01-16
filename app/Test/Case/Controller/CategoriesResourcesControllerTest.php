@@ -21,7 +21,7 @@ if (!class_exists('CakeSession')) {
 
 class CategoriesResourcesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.user', 'app.role', 'app.authenticationBlacklist');
 
 	public function setUp() {
 		$this->Category = new Category();

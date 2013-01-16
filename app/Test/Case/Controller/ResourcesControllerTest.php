@@ -22,7 +22,7 @@ if (!class_exists('CakeSession')) {
 
 class ResourcesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.resource', 'app.category', 'app.categories_resource', 'app.secret', 'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.permission');
+	public $fixtures = array('app.resource', 'app.category', 'app.categories_resource', 'app.secret', 'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.permission', 'app.authenticationBlacklist');
 
 	public function setUp() {
 		parent::setUp();
