@@ -28,9 +28,10 @@ class IpAddressComponent extends Component {
  * this function takes 2 arguments, an IP address and a "range" in several
  * different formats
  * Network ranges can be specified as:
- * 1. Wildcard format:     1.2.3.*
- * 2. CIDR format:         1.2.3/24  OR  1.2.3.4/255.255.255.0
- * 3. Start-End IP format: 1.2.3.0-1.2.3.255
+ * 1. Regular ip 					 127.0.0.1
+ * 2. Wildcard format:     1.2.3.*
+ * 3. CIDR format:         1.2.3/24  OR  1.2.3.4/255.255.255.0
+ * 4. Start-End IP format: 1.2.3.0-1.2.3.255
  * The function will return true if the supplied IP is within the range.
  * Note little validation is done on the range inputs - it expects you to
  * use one of the above 3 formats.
