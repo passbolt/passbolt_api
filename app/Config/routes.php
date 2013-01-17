@@ -102,10 +102,22 @@
 /**
  * Custom route for permissions::view with parameters
  */
-	Router::connect('/permissions/resource/add/:id', array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Resource'), array('pass' => array('model', 'id')));
-	Router::connect('/permissions/resource/:id', array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Resource'), array('pass' => array('model', 'id')));
-	Router::connect('/permissions/category/add/:id', array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Category'), array('pass' => array('model', 'id')));
-	Router::connect('/permissions/category/:id', array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Category'), array('pass' => array('model', 'id')));
+	Router::connect(
+		'/permissions/resource/:id',
+		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Resource', "[method]" => "POST"), 
+		array('pass' => array('model', 'id')));
+	Router::connect(
+		'/permissions/resource/:id', 
+		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Resource', "[method]" => "GET"), 
+		array('pass' => array('model', 'id')));
+	Router::connect(
+		'/permissions/category/:id', 
+		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Category', "[method]" => "POST"), 
+		array('pass' => array('model', 'id')));
+	Router::connect(
+		'/permissions/category/:id', 
+		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Category', "[method]" => "GET"), 
+		array('pass' => array('model', 'id')));
 
 /**
  * Load all plugin routes.	See the CakePlugin documentation on
