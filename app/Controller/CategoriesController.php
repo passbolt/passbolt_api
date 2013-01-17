@@ -10,6 +10,7 @@
  */
 
 App::uses('CategoryType', 'Model');
+App::uses('User', 'Model');
 App::uses('Permission', 'Component');
 
 class CategoriesController extends AppController {
@@ -20,22 +21,29 @@ class CategoriesController extends AppController {
 	}
 	
 /**
- * index - get the list of categories
+ * index - get the list of top categories
  */
 	public function index() {
-		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
 		$data = array();
+		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
 
+		// find roots categories
+		// we disable the permissionnable behavior to get all the top categories, that
+		// maybe the user are not allowed to see. But we need the top categories as
+		// access points to get threaded categories
+		$this->Category->Behaviors->disable('Permissionable');
 		$o = $this->Category->getFindOptions('index', User::get('Role.name'));
 		$categories = $this->Category->find('all', $o);
+		$this->Category->Behaviors->enable('Permissionable');
 
+		// foreach roots categories, find its children ! Done with the tree behavior
 		if (!$children) {
 			$data = $categories;
 		} else {
 			foreach ($categories as $category) {
 				$o = $this->Category->getFindOptions('getWithChildren', User::get('Role.name'), $category);
 				$result = $this->Category->find('threaded', $o);
-				$data[] = $result[0];
+				$data = array_merge($data, $result);
 			}
 		}
 		$this->set('data', $data);
@@ -152,7 +160,12 @@ class CategoriesController extends AppController {
 		// try to save
 		$fields = $this->Category->getFindFields("add", User::get('Role.name'));
 		$this->Category->create();
-		$category = $this->Category->save($catpost, true, $fields['fields']);
+		// disable the permissionnable behavior because we need to access other categories to position the new one
+		$this->Category->Behaviors->disable('Permissionable');
+		$category = $this->Category->save($catpost, true, $fields['fields']);	
+		// reenable the permissionnable behavior
+		$this->Category->Behaviors->disable('Permissionable');
+			
 		if ($category === false) {
 			$this->Message->error(__('The category could not be saved'));
 			return;
