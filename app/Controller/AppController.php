@@ -26,7 +26,9 @@ class AppController extends Controller {
 			'throttle' => array(5, 15, 45)
 		),
 		'Message',
-		'Mailer'
+		'Mailer',
+		'IpAddress',
+		'Blacklist'
 	);
 
 	public $helpers = array(

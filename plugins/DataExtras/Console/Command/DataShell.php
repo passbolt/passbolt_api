@@ -77,14 +77,14 @@ class DataShell extends AppShell {
 		
 		$options = array(
 			"name"=>"",
-			"path"=>"/home/cedric/Workspace/passbolt/app/Config/Schema",
+			"path"=> APP . "/Config/Schema",
 			"file"=>"schema",
 			"connection"=>"default",
 			"plugin"=>null
 		);
 		$cakeSchema = new CakeSchema();
 		$schema = $cakeSchema->load($options);
-		
+
 		foreach($schema->tables as $name => $table) {
 			$this->dispatchShell("bake fixture {$name} --count 1000 --records");
 		}

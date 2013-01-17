@@ -17,7 +17,7 @@ App::uses('CakeSession', 'Model/Datasource');
 
 class DictionariesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.user', 'app.role');
+	public $fixtures = array('app.user', 'app.role', 'app.authenticationBlacklist');
 
 	public $user;
 
