@@ -114,4 +114,40 @@ class AppModel extends Model {
 			return $exists > 0;
 		}
 	}
+
+/**
+ * Get path of a target instance in a nested data array
+ * @param string id needle
+ * @param array stack 
+ * @return array the path of the found needle or false
+ */
+	public function inNestedArray ($needle, $data, &$path=array(), &$found=false) {
+		// if data is an array of nested array
+		if(!isset($data[$this->alias])) {
+			foreach($data as $nestedData) {
+				$this->inNestedArray($needle, $nestedData, $path, $found);
+				if ($found){
+					break;					
+				}
+			}
+		} else {
+			// the needle is found
+			if($data[$this->alias]['id'] == $needle) {
+				$found = true;
+				return $path;
+			}
+			// search in the children
+			if(!empty($data['children'])) {
+				foreach($data['children'] as $child) {
+					$this->inNestedArray($needle, $child, $path, $found);
+					if ($found) {
+						array_unshift($path, $data[$this->alias]['id']);
+						break;
+					}
+				}
+			}
+		}
+		
+		return $path;
+	}
 }
