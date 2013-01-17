@@ -21,7 +21,7 @@ if (!class_exists('CakeSession')) {
 
 class CategoriesResourcesControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.group', 'app.user', 'app.groups_user', 'app.role', 'app.permission', 'app.permissions_type');
 
 	public function setUp() {
 		$this->Category = new Category();
@@ -33,12 +33,13 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		$this->Resource->useDbConfig = 'test';
 		$this->User->useDbConfig = 'test';
 		parent::setUp();
+		
+		// log the user as a manager to be able to access all categories
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
 	}
 
 	public function testView() {
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
-		$this->User->setActive($kk);
-
 		$id = '50d77ffa-45fc-423c-a5b1-1b63d7a10fce';
 
 		// test when no parameters are provided
@@ -51,9 +52,6 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAdd() {
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
-		$this->User->setActive($kk);
-
 		$cat = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$res = $this->Resource->findByName('facebook account');
 
