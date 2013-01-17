@@ -71,7 +71,9 @@ class BlacklistComponent extends Component {
  * this action is called when the ip is blacklisted
  */
 	public function blackHole() {
-		$this->controller->redirect('/pages/blackhole');
+		if ($this->controller->request->here != '/pages/blackhole' ) { // avoid loop redirection
+			$this->controller->redirect('/pages/blackhole');
+		}
 		return true;
 	}
 
