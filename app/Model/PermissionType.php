@@ -14,7 +14,7 @@ class PermissionType extends AppModel {
 
 	const DENY = '0';
 	const READ	= '1';
-	const CREATE	= '3';
+	const CREATE = '3';
 	const UPDATE = '7';
 	const ADMIN	= '15';
 }

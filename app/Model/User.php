@@ -203,6 +203,18 @@ class User extends AppModel {
 	}
 
 /**
+ * Check if user is a root - Shortcut Method
+ *
+ * @return bool true if role is root
+ * @access public
+ */
+	public static function isRoot() {
+		Common::getModel('Role');
+		$user = User::get();
+		return $user['Role']['name'] == Role::ROOT;
+	}
+
+/**
  * Return the conditions to be used for a given context
  * for example if you want to activate a User session
  *
@@ -213,48 +225,51 @@ class User extends AppModel {
  */
 	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::USER, &$data = null) {
 		$conditions = array();
-		switch ($case) {
-			/*
-			case 'login':
-				$conditions = array(
-				 'conditions' => array(
-					 'User.password' => $data['User']['password'],
-					 'User.username' => $data['User']['username']
-				 )
-			 );
-			break;
-			case 'forgotPassword':
-				$conditions = array(
-				 'conditions' => array(
-					 'User.username' => $data['User']['username']
-				 )
-				);
-			break;
-			case 'resetPassword':
-			*/
-			case 'userActivation':
-				$conditions = array(
+//		if ($role ==  Role::USER || $role == Role::ROOT) {
+			switch ($case) {
+				/*
+				case 'login':
+					$conditions = array(
 					'conditions' => array(
-						'User.id' => $data['User']['id']
-						//,'User.active' => 1
+						'User.password' => $data['User']['password'],
+						'User.username' => $data['User']['username']
 					)
 				);
-			break;
-			case User::ANONYMOUS:
-			case 'userView':
-			default:
-				$conditions = array(
+				break;
+				case 'forgotPassword':
+					$conditions = array(
 					'conditions' => array(
-						'User.username' => User::ANONYMOUS,
-						'User.active' => 1
+						'User.username' => $data['User']['username']
 					)
-				);
-			break;
-			default:
-				$conditions = array(
-					'conditions' => array()
-				);
-		}
+					);
+				break;
+				case 'resetPassword':
+				*/
+				case 'userActivation':
+					$conditions = array(
+						'conditions' => array(
+							'User.id' => $data['User']['id']
+							//,'User.active' => 1
+						)
+					);
+				break;
+				case User::ANONYMOUS:
+				case 'userView':
+				default:
+					$conditions = array(
+						'conditions' => array(
+							'User.username' => User::ANONYMOUS,
+							'User.active' => 1
+						)
+					);
+				break;
+				default:
+					$conditions = array(
+						'conditions' => array()
+					);
+			}
+//		}
+		
 		return $conditions;
 	}
 
