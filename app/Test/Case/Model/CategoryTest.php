@@ -14,11 +14,12 @@ class CategoryTest extends CakeTestCase {
 
 	public $autoFixtures = true;
 
-	public $fixtures = array('app.category', 'app.permission', 'app.category_type', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
 		$this->Category = ClassRegistry::init('Category');
+		$this->Category->Behaviors->disable('Permissionable');
 	}
 
 /**

@@ -10,21 +10,27 @@
 App::uses('CategoryResource', 'Model');
 App::uses('User', 'Model');
 
+if (!class_exists('CakeSession')) {
+	require CAKE . 'Model/Datasource/CakeSession.php';
+}
+
 class CategoryResourceTest extends CakeTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.categoriesResource', 'app.user', 'app.role');
+	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.user', 'app.role', 'app.groups_user');
 
 	public function setUp() {
 		parent::setUp();
 		$this->CategoryResource = ClassRegistry::init('CategoryResource');
 		$this->CategoryResource->useDb = 'test';
+		// Disable the permissionable behavior, we will test the permissionable behavior in an other unit test
+		$this->CategoryResource->Category->Behaviors->disable('Permissionable');
 	}
 
 /**
  * Test CategoryId Validation
  * @return void
  */
-	public function testCategoryIdValidation() {
+	public function testCategoryIdValidation() {		
 		$testcases = array(
 			'' => false,
 			'?!#' => false,
