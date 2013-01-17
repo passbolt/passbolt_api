@@ -42,7 +42,7 @@ class BlacklistComponent extends Component {
 		// If address is blacklisted, gives a blackhole
 		// http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#handling-blackhole-callbacks
 		if ($this->isBlacklist()) {
-			$this->controller->Security->blackHole($this->controller, "error");
+			//$this->controller->Security->blackHole($this->controller, "error");
 			return;
 		}
 		return parent::startup($controller);
