@@ -23,12 +23,42 @@ class AppController extends Controller {
 		'Cookie',
 		'Auth' => array(
 			'className' => 'PassboltAuth',
-			'throttle' => array(5, 15, 45)
+			'throttlingStrategies' => array(
+				'throttle' => array(
+					1 => array(
+						'throttleTime' => '5'
+					),
+					2 => array(
+						'throttleTime' => '15'
+					),
+					3 => array(
+						'throttleTime' => '45'
+					),
+					4 => array(
+						'throttleTime' => '60'
+					)
+				),
+				'blacklist' => array(
+					20 => array(
+						'interval' => '60',
+						'blacklistTime' => '600'
+					),
+					50 => array(
+						'interval' => '1200',
+						'blacklistTime' => '2400'
+					),
+					100 => array(
+						'interval' => '3600',
+						'blacklistTime' => '7200'
+					)
+				)
+			)
 		),
 		'Message',
 		'Mailer',
 		'IpAddress',
-		'Blacklist'
+		'Blacklist',
+		'Security'
 	);
 
 	public $helpers = array(
