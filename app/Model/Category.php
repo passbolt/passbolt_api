@@ -24,17 +24,6 @@ class Category extends AppModel {
 		'Tree'
 	);
 	
-//	public $hasOne = array(
-//		'UserCategoryPermission' => array(
-//			'foreignKey' => 'category_id'
-//		),
-//		'Permission' => array(
-//			'foreignKey' => false,
-//			'conditions' => array(' Permission.id = UserCategoryPermission.permission_id '),
-//			'type' => 'LEFT'
-//		)
-//	);
-	
 	public $hasMany = array(
 		'CategoryResource'
 	);
@@ -112,6 +101,37 @@ class Category extends AppModel {
 		}*/
 
 		return $rules;
+	}
+
+/**
+ * In the event of ambiguous results returned (multiple top level results, with different parent_ids)
+ * top level results with different parent_ids to the first result will be dropped
+ *
+ * @param string $state
+ * @param mixed $query
+ * @param array $results
+ * @return array Threaded results
+ */
+	protected function _findThreaded($state, $query, $results = array()) {
+		if ($state === 'before') {
+			return $query;
+		} elseif ($state === 'after') {
+			// ATTENTION
+			// results has to be ordered following Category.lft
+			$n = count($results);
+			// build parent hierarchy even if some nodes are missing. Based on left and right
+			for($i=$n-1; $i>=0; $i--) {
+				for($j=$i-1; $j>=0; $j--) {
+					if($results[$i]['Category']['lft'] > $results[$j]['Category']['lft'] &&
+							$results[$i]['Category']['rght'] < $results[$j]['Category']['rght']) {
+						$results[$j]['children'][] = $results[$i];
+						unset($results[$i]);
+						break; 
+					}
+				}
+			}
+			return $results;
+		}
 	}
 
 /**
@@ -233,29 +253,6 @@ class Category extends AppModel {
 		}
 		return $currentPosition;
 	}
-
-//	public function beforeFind($queryData = array()) {
-//		var_dump('Category beforeFind');
-////		parent::beforeFind($queryData);
-////		var_dump($this->Behaviors->attached());
-////		die();
-////		$this->bindModel(array('hasOne'=>array(
-////			'UserCategoryPermission' => array(
-////				'foreignKey' => 'category_id'
-////			),
-////			'Permission'=> array(
-////				'foreignKey' => false,
-////				'conditions' => array(' Permission.id = UserCategoryPermission.permission_id '),
-////				'type' => 'LEFT'
-////			))), false
-////		);
-//		parent::beforeFind($queryData);
-//	}
-//	
-//	public function afterFind($results, $primary = false) {
-//		$this->unbindModel(array('hasOne'=>array('UserCategoryPermission', 'Permission')));
-//		parent::afterFind($results, $primary);
-//	}
 	
 /**
  * Return the list of field to fetch for given context
@@ -275,12 +272,9 @@ class Category extends AppModel {
 					case 'getWithChildren' :
 						$returnValue = array(
 							'fields' => array(
-								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id', 'Category.lft', 'Category.rght',
-								'UserCategoryPermission.permission_id', 'UserCategoryPermission.permission_type'
+								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id', 'Category.lft', 'Category.rght'
 							),
-							'contain' => array (
-								'UserCategoryPermission'
-							)
+							'contain' => array ()
 						);
 					break;
 					case 'Resource.viewByCategory':
@@ -309,7 +303,7 @@ class Category extends AppModel {
 						);
 					break;
 					default:
-						$returnValue = array('fields' => array());
+						$returnValue = array('fields'=>array());
 					break;
 				}
 			case 'admin':
@@ -335,9 +329,7 @@ class Category extends AppModel {
 						$returnValue = array(
 							'conditions' => array(
 								'Category.lft >=' => $data['Category']['lft'],
-								'Category.rght <=' => $data['Category']['rght'],
-								'UserCategoryPermission.user_id' => User::get('id'),
-								'UserCategoryPermission.permission_type >' => PermissionType::DENY
+								'Category.rght <=' => $data['Category']['rght']
 							),
 							'order' => 'Category.lft ASC'
 						);
@@ -346,9 +338,7 @@ class Category extends AppModel {
 						$returnValue = array(
 							'conditions' => array(
 								'Category.lft >' => $data['Category']['lft'],
-								'Category.rght <' => $data['Category']['rght'],
-								'UserCategoryPermission.user_id' => User::get('id'),
-								'UserCategoryPermission.permission_type >' => PermissionType::DENY
+								'Category.rght <' => $data['Category']['rght']
 							),
 							'order' => 'Category.lft ASC'
 						);
@@ -358,18 +348,14 @@ class Category extends AppModel {
 					case 'addResult':
 						$returnValue = array(
 							'conditions' => array(
-								'Category.id' => $data['Category']['id'],
-								'UserCategoryPermission.user_id' => User::get('id'),
-								'UserCategoryPermission.permission_type >' => PermissionType::DENY
+								'Category.id' => $data['Category']['id']
 							)
 						);
 					break;
 					case 'index':
 						$returnValue = array(
 							'conditions' => array(
-								'Category.parent_id' => null,
-								'UserCategoryPermission.user_id' => User::get('id'),
-								'UserCategoryPermission.permission_type >' => PermissionType::DENY
+								'Category.parent_id' => null
 							),
 							'order' => 'Category.lft ASC'
 						);
