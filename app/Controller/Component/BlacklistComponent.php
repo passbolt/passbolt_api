@@ -31,11 +31,6 @@ class BlacklistComponent extends Component {
 
 		$this->ip = $controller->request->clientIp();
 
-		// If address is blacklisted, doesn't return anything and stops all operations
-		if ($this->isBlacklist()) {
-			exit(0);
-		}
-
 		return parent::startup($controller);
 	}
 
@@ -44,11 +39,12 @@ class BlacklistComponent extends Component {
  * @param Controller $controller. the calling controller
  */
 	public function startup(&$controller) {
-		// If address is blacklisted, doesn't return anything and stops all operations
+		// If address is blacklisted, gives a blackhole
+		// http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#handling-blackhole-callbacks
 		if ($this->isBlacklist()) {
-			exit(0);
+			$this->controller->Security->blackHole($this->controller, "error");
+			return;
 		}
-
 		return parent::startup($controller);
 	}
 
