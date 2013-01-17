@@ -8,7 +8,7 @@
  * @since				 version 2.13.03
  * @license			 http://www.passbolt.com/license
  */
-class BlacklistComponent extends AuthComponent {
+class BlacklistComponent extends Component {
 
 /**
  * stores ip of user for current authentication
@@ -16,21 +16,35 @@ class BlacklistComponent extends AuthComponent {
 	public $ip = null;
 
 /**
+ * stores the controller
+ */
+ public $controller = null;
+
+/**
  * startup function
  * @param Controller $controller. the calling controller
  */
-	public function startup(&$controller) {
+	public function initialize(&$controller) {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
 
 		$this->ip = $controller->request->clientIp();
 
-		// If address is blacklisted, doesn't return anything and stops all operations
-		if ($this->isBlacklist()) {
-			exit(0);
-		}
+		return parent::startup($controller);
+	}
 
+/**
+ * startup function
+ * @param Controller $controller. the calling controller
+ */
+	public function startup(&$controller) {
+		// If address is blacklisted, gives a blackhole
+		// http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#handling-blackhole-callbacks
+		if ($this->isBlacklist()) {
+			$this->controller->Security->blackHole($this->controller, "error");
+			return;
+		}
 		return parent::startup($controller);
 	}
 
@@ -43,6 +57,7 @@ class BlacklistComponent extends AuthComponent {
 				'expiry >' => date('Y-m-d H:i:s')
 			)
 		));
+
 		foreach ($bls as $bl) {
 			if ($this->controller->IpAddress->inRange($this->ip, $bl['AuthenticationBlacklist']['ip'])) {
 				return true;
