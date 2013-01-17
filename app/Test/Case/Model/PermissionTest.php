@@ -10,6 +10,10 @@
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
 
+if (!class_exists('CakeSession')) {
+	require CAKE . 'Model/Datasource/CakeSession.php';
+}
+
 class PermissionTest extends CakeTestCase {
 
 	public $fixtures = array('app.resource', 'app.user', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.category', 'app.categoriesResource', 'app.permissionsType', 'app.permission');
@@ -25,6 +29,8 @@ class PermissionTest extends CakeTestCase {
 		$this->PermissionType = ClassRegistry::init('PermissionType');
 		$this->PermissionCache = ClassRegistry::init('PermissionCache');
 		$this->UserCategoryPermission = ClassRegistry::init('UserCategoryPermission');
+		
+		$this->Category->Behaviors->disable('Permissionable');
 	}
 
 	public function testMysqlFunctionGetGroupCategoryPermission() {
