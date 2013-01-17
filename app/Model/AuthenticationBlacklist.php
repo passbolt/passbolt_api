@@ -34,7 +34,7 @@ class AuthenticationBlacklist extends AppModel {
 			),
 			'expiry' => array(
 				'validDate' => array(
-					'rule'    => array('datetime', 'dmy'),
+					'rule'    => array('datetime', 'ymd'),
 					'message' => 'Please enter a valid date and time.'
 				)
 			)
