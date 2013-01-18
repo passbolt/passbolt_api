@@ -17,4 +17,24 @@ class PermissionType extends AppModel {
 	const CREATE = '3';
 	const UPDATE = '7';
 	const ADMIN	= '15';
+
+/**
+ * Check if the given type is a valid permission type
+ * @param string type The type to check
+ * @return boolean
+ */
+	public function isValidSerial($type) {
+		switch($type) {
+			case self::DENY:
+			case self::READ:
+			case self::CREATE:
+			case self::UPDATE:
+			case self::ADMIN:
+				return true;
+			break;
+			default:
+				return false;
+			break;
+		}
+	}
 }

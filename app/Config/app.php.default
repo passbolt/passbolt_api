@@ -45,5 +45,9 @@ $config = array(
 	),
 	'GPG' => array(
 		'trustModel' => 'always'
+	),
+	'Permission' => array(
+		'AcoModels' => array('Resource', 'Category'),
+		'AroModels' => array('User', 'Group')
 	)
 );

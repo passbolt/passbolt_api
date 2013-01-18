@@ -150,4 +150,19 @@ class AppModel extends Model {
 		
 		return $path;
 	}
+	
+/**
+ * Check if an instance is existing functions of a given id and a given model name
+ * @param string id The uuid of the instance to check
+ * @param string modelName The model name the instance belong to
+ * @return boolean
+ */
+	public function isInstanceExisting($id, $modelName) {
+		$model = ClassRegistry::init($modelName);
+		$instance = $model->findById($id);
+		if (!$instance) {
+			return false;
+		}
+		return true;
+	}
 }
