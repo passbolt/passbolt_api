@@ -180,8 +180,9 @@ class CategoriesController extends AppController {
 			}
 		}
 		
-		// Manage the permissions
-		$this->PermissionCpt->add('Category', $category, 'User', User::get(), PermissionType::ADMIN);
+		// Should be done by the after save of the permissionable behavior
+		// // Add the admin right to the just created category for the creator
+		// $this->PermissionCpt->add('Category', $category, 'User', User::get(), PermissionType::ADMIN);
 		
 		// Get back the category data to return to the client
 		$data = array('Category'=>array('id'=>$category['Category']['id']));

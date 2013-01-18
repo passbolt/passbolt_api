@@ -12,6 +12,9 @@ App::uses('Permission', 'Model');
 
 class PermissionableBehavior extends ModelBehavior {
 
+/**
+ * 
+ */
 	public function beforeFind($Model, $queryData = array()) {
 		if (User::get('Role.name') == Role::USER ||
 						User::get('Role.name') == Role::GUEST) {
@@ -59,6 +62,9 @@ class PermissionableBehavior extends ModelBehavior {
 		return $queryData;
 	}
 	
+/**
+ * 
+ */
 	public function afterFind($Model, $results, $primary = false) {
 		if (User::get('Role.name') == Role::USER ||
 						User::get('Role.name') == Role::GUEST) {
@@ -67,5 +73,28 @@ class PermissionableBehavior extends ModelBehavior {
 		}
 		return $results;
 	}
-	
+
+/**
+ * 
+ */
+	public function afterSave($Model, $created) {
+		// make the creator administrator of the created instance
+		if (User::get('Role.name') == Role::USER) {
+			$data = array('Permission'=>array(
+				'aco' => $this->alias,
+				'aco_foreign_key' => $this->id,
+				'aro' => 'User',
+				'aro_foreign_key' => User::get('User.id'),
+				'type' => PermissionType::ADMIN
+			));
+			$this->Permission->create();
+			$this->Permission->set($data);
+			if(!$this->Permission->validates()){
+				$this->Message->error($this->Permission->validationErrors);
+				return;
+			}
+			
+			$permission = $this->Permission->save($data);				
+		}
+	}
 }
