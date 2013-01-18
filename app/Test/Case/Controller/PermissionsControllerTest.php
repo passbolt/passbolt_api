@@ -21,13 +21,15 @@ if (!class_exists('CakeSession')) {
 
 class PermissionsControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.resource', 'app.category', 'app.categories_resource', 'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.permission', 'app.authenticationBlacklist');
+	public $fixtures = array('app.resource', 'app.category', 'app.categories_resource', 'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.permission', 'app.permissions_type', 'app.authenticationBlacklist');
 
 	public function setUp() {
-		$this->User  = ClassRegistry::init('User');
-		$this->Resource  = ClassRegistry::init('Resource');
-		$this->Category  = ClassRegistry::init('Category');
+		$this->User = ClassRegistry::init('User');
+		$this->Resource = ClassRegistry::init('Resource');
+		$this->Category = ClassRegistry::init('Category');
 		parent::setUp();
+		
+		// log the user as a manager to be able to access all categories
 		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
 		$this->User->setActive($kk);
 	}
@@ -37,7 +39,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		
 		// Test model that are not permissionable and allowed to be used as acos foreign key by the permission model	
 		// PERMISSIONABLE MODELS
-		$model = 'resource';
+		$model = 'Resource';
 		$id = '509bb871-5168-49d4-a676-fb098cebc04d'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array(
 			 'method' => 'get',
@@ -45,7 +47,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
-		$model = 'category';
+		$model = 'Category';
 		$id = '50d77ff7-5208-4dc2-94d1-1b63d7a10fce'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array(
 			 'method' => 'get',
@@ -54,7 +56,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		
 		// NOT PERMISSIONABLE MODELS
-		$model = 'user';
+		$model = 'User';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array(
 			 'method' => 'get',
@@ -62,7 +64,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		)), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
-		$model = 'group';
+		$model = 'Group';
 		$id = '10ce2d3a-0468-433b-b59f-3053d7a10fce'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array(
 			 'method' => 'get',
@@ -71,26 +73,18 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// NOT EXISTING MODELS
-		$model = 'not_existing_model';
+		$model = 'NotExistingModel';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
-		$model = 'bad_ass_model';
-		$id = '10ce2d3a-0468-433b-b59f-3053d7a10fce'; // has to exist
-		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array(
-			 'method' => 'get',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
+
 		// Test given model instance id
 		// NULL ID
 		$id = null;
-		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/resource/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/Resource/$id.json", array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		)), true);
@@ -202,11 +196,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 			'User' => array(
 				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // test@passbolt.com
 			)
-		);			
+		);
 		
 		// Test model that are not permissionable and allowed to be used as acos foreign key by the permission model	
 		// PERMISSIONABLE MODELS
-		$model = 'resource';
+		$model = 'Resource';
 		$id = '509bb871-5168-49d4-a676-fb098cebc04d'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
 			 'method' => 'post',
@@ -214,8 +208,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'data'=> $data
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
-
-		$model = 'category';
+		
+		$model = 'Category';
 		$id = '50d77ff7-5208-4dc2-94d1-1b63d7a10fce'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
 			 'method' => 'post',
@@ -225,7 +219,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		
 		// NOT PERMISSIONABLE MODELS
-		$model = 'user';
+		$model = 'User';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
 			 'method' => 'post',
@@ -244,7 +238,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// NOT EXISTING MODELS
-		$model = 'not_existing_model';
+		$model = 'NotExistingModel';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce'; // has to exist
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
 			 'method' => 'post',
@@ -252,19 +246,10 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'data'=> $data
 		)), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
-		$model = 'bad_ass_model';
-		$id = '10ce2d3a-0468-433b-b59f-3053d7a10fce'; // has to exist
-		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
-			 'method' => 'post',
-			 'return' => 'contents',
-			 'data'=> $data
-		)), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
+
 		// Test given model instance id
 		// NULL ID
-		$model = 'resource';
+		$model = 'Resource';
 		$id = null;
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
 			 'method' => 'post',
@@ -275,7 +260,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		
 		// NOT EXISTING MODEL INSTANCE
 		$model = 'resource';
-		$id = '00000000-0000-0000-0000-000000000000';
+		$id = '00000000-0111-0000-0000-000000000000';
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'post',
 			 'return' => 'contents',
@@ -308,19 +293,25 @@ class PermissionsControllerTest extends ControllerTestCase {
 				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // test@passbolt.com
 			)
 		);
+		
+		// check how many permissions are already existing before the new insertion
+		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+			 'method' => 'get',
+			 'return' => 'contents'
+		)), true);
+		$expectedCount = count($srvResult['body']) + 1;
+		// insert the new permission
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'post',
 			 'return' => 'contents',
 			 'data'=> $data
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
-		
 		// check the permission has well been inserted
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		)), true);
-		$expectedCount = 5;
 		$this->assertEquals($expectedCount, count($srvResult['body']), "/permissions/$model/$id.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body']));
 	}
 	
