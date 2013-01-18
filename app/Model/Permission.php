@@ -122,6 +122,20 @@ class Permission extends AppModel {
 	public function validatePermissionType($check) {
 		return $this->PermissionType->isValidSerial($check['type']);
 	}
+	
+/**
+ * Validation Rule : Check if a permission with same parameters already exists
+ * @param array check the data to test
+ * @return boolean
+ */
+	public function validateUnique($check) {
+		return $this->isUniqueByFields(
+			$this->data[$this->alias]['aco'],
+			$this->data[$this->alias]['aco_foreign_key'],
+			$this->data[$this->alias]['aro'],
+			$this->data[$this->alias]['aro_foreign_key'],
+			$this->data[$this->alias]['type']);
+	}
 
 /**
  * Check if the given ACO key is an allowed ACO model
@@ -140,5 +154,24 @@ class Permission extends AppModel {
 	public function isValidAro($aro) {
 		return in_array($aro, Configure::read('Permission.aroModels'));
 	}
-
+	
+/**
+ * Check if a permission with same parameters already exists
+ * @param string aco
+ * @param string aco_foreign_key
+ * @param string aro
+ * @param string aro_foreign_key
+ * @param string type
+ * @return boolean
+ */
+	public function isUniqueByFields($aco, $aco_foreign_key, $aro, $aro_foreign_key, $type) {
+		$combi = array(
+			'Permission.aco' => $aco,
+			'Permission.aco_foreign_key' => $aco_foreign_key,
+			'Permission.aro' => $aro,
+			'Permission.aro_foreign_key' => $aro_foreign_key,
+			'Permission.type' => $type
+		);
+		return $this->isUnique($combi, false);
+	}
 }

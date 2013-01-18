@@ -106,6 +106,12 @@ class PermissionsController extends AppController  {
 			return;
 		}
 		
+		// Check that the permission is not already existing
+		if(!$this->Permission->isUniqueByFields($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType)) {
+			$this->Message->error(__('The permission already exists'));
+			return;
+		}
+		
 		// add the new permission
 		$data = array('Permission'=>array(
 			'aco' => $acoModelName,

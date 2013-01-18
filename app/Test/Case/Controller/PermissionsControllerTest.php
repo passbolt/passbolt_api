@@ -277,6 +277,22 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'data'=> $data
 		)), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		
+		// Check is unique by inserting to times the same permission
+		$model = 'Resource';
+		$id = '50d77ffa-9b04-42e9-9974-1b63d7a10fce'; // has to exist
+		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
+			 'method' => 'post',
+			 'return' => 'contents',
+			 'data'=> $data
+		)), true);
+		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
+			 'method' => 'post',
+			 'return' => 'contents',
+			 'data'=> $data
+		)), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
 	
 	public function testAddAcoPermissionsOnResource() {
@@ -313,8 +329,5 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals($expectedCount, count($srvResult['body']), "/permissions/$model/$id.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body']));
-	}
-	
-	public function testAddAcoPermissionsOnCategory() {
 	}
 }
