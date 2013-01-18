@@ -11,13 +11,11 @@
 
 App::uses('CategoryType', 'Model');
 App::uses('User', 'Model');
-App::uses('Permission', 'Component');
 
 class CategoriesController extends AppController {
 	
 	public function __construct($request = NULL, $response = NULL) {
 		parent::__construct($request, $response);
-		$this->PermissionCpt = $this->Components->load('Permission');
 	}
 	
 /**
