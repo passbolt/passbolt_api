@@ -57,8 +57,7 @@ class AppController extends Controller {
 		'Message',
 		'Mailer',
 		'IpAddress',
-		'Blacklist',
-		//'Security'
+		'Blacklist'
 	);
 
 	public $helpers = array(
