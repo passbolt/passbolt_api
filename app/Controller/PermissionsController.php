@@ -10,14 +10,8 @@
  */
 
 App::uses('Permission', 'Model');
-App::uses('PermissionType', 'Model');
  
 class PermissionsController extends AppController  {
-
-	public function __construct($request = NULL, $response = NULL) {
-		parent::__construct($request, $response);
-		$this->PermissionType = ClassRegistry::init('PermissionType');
-	}
 
 /**
  * Add permission to a target instance of a given model
@@ -26,22 +20,14 @@ class PermissionsController extends AppController  {
  * @return array
  */
 	public function addAcoPermissions($acoModelName = '', $acoInstanceId = null) {
-		// The target ACO Model to use
-		$acoModel = null;
-		// The target instance to add permissions on
-		$acoInstance = null;
 		// The target ARO Model name to use
 		$aroModelName = null;
-		// The target ARO Model to use
-		$aroModel = null;
-		// The target instance to add permissions on
-		$aroInstance = null;
 		// The given permission type
 		$permissionType = isset($this->request->data['Permission']['type']) ? $this->request->data['Permission']['type'] : null; 
 
 		// check if the target ACO model is permissionable
 		if(!$this->Permission->isValidAco($acoModelName)) {
-			$this->Message->error(__('The model (%s) is not permissionable', $acoModelName));
+			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
 			return;
 		}
 		
@@ -53,13 +39,14 @@ class PermissionsController extends AppController  {
 		
 		// the aco instance id is invalid
 		if (!Common::isUuid($acoInstanceId)) {
-			$this->Message->error(__('The id (%s) is invalid', $acoInstanceId));
+			$this->Message->error(__('The id %s is invalid', $acoInstanceId));
 			return;
 		}
 		
 		// the aco instance instance does not exist
-		if (!$this->Permission->isInstanceExisting($acoInstanceId, $acoModelName)) {
-			$this->Message->error(__('The ACO instance (%s) for the model (%s) doesn\'t exist or the user is not allowed to access it', $acoInstanceId, $acoModelName));
+		$this->loadModel($acoModelName);
+		if (!$this->$acoModelName->exists($acoInstanceId)) {
+			$this->Message->error(__('The ACO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $acoInstanceId, $acoModelName));
 			return;
 		}
 		
@@ -85,23 +72,25 @@ class PermissionsController extends AppController  {
 		
 		// the ARO instance id is invalid
 		if (!Common::isUuid($aroInstanceId)) {
-			$this->Message->error(__('The id (%s) is invalid', $id));
+			$this->Message->error(__('The id %s is invalid', $aroInstanceId));
 			return;
 		}		
+		
 		// the ARO instance does not exist
-		if (!$this->Permission->isInstanceExisting($aroInstanceId, $aroModelName)) {
-			$this->Message->error(__('The ARO instance (%s) for the model (%s) doesn\'t exist or the user is not allowed to access it', $aroInstanceId, $aroModelName));
+		$this->loadModel($aroModelName);
+		if (!$this->$aroModelName->exists($aroInstanceId)) {
+			$this->Message->error(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $aroInstanceId, $aroModelName));
 			return;
 		}
 		
-		// Check the given permission
+		// no permission type given
 		if(is_null($permissionType)) {
 			$this->Message->error(__('No permission type given'));
 			return;
 		}
 		
-		// Valid permission type
-		if(!$this->PermissionType->isValidSerial($permissionType)) {
+		// the permission type is invalid
+		if(!$this->Permission->PermissionType->isValidSerial($permissionType)) {
 			$this->Message->error(__('The given permission type is not valid'));
 			return;
 		}
@@ -139,14 +128,10 @@ class PermissionsController extends AppController  {
  */
 	public function viewAcoPermissions($acoModelName = '', $acoInstanceId = null) {
 		$returnValue = array();
-		// The target ACO Model to use
-		$acoModel = null;
-		// The target instance to add permissions on
-		$acoInstance = null;
 
 		// check if the target ACO model is permissionable
 		if(!$this->Permission->isValidAco($acoModelName)) {
-			$this->Message->error(__('The model (%s) is not permissionable', $acoModelName));
+			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
 			return;
 		}
 				
@@ -158,19 +143,22 @@ class PermissionsController extends AppController  {
 		
 		// the aco instance id is invalid
 		if (!Common::isUuid($acoInstanceId)) {
-			$this->Message->error(__('The id (%s) is invalid', $acoInstanceId));
+			$this->Message->error(__('The id %s is invalid', $acoInstanceId));
 			return;
 		}
 		
 		// the aco instance instance does not exist
-		if (!$this->Permission->isInstanceExisting($acoInstanceId, $acoModelName)) {
-			$this->Message->error(__('The ACO instance (%s) for the model (%s) doesn\'t exist or the user is not allowed to access it', $acoInstanceId, $acoModelName));
+		$this->loadModel($acoModelName);
+		if (!$this->$acoModelName->exists($acoInstanceId)) {
+			$this->Message->error(__('The ACO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $acoInstanceId, $acoModelName));
 			return;
 		}
 		
 		// case used by find options functions
 		// this view case has to be defined in model which represent the views
 		$viewCase = 'viewBy' . $acoModelName;
+		
+		// @todo, automatic aro, based on optional parameters !??
 		
 		// get user's permissions for the target instance 
 		// @todo We need a strong use case to check this part. Think about the case, direct user permission on the parent categories !!!  
@@ -183,6 +171,8 @@ class PermissionsController extends AppController  {
 			)
 		);
 		$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
+		// var_dump($upOptions);
+		// die();
 		$ups = $ModelView->find('all', $upOptions);
 		
 		// get group's permissions for the target instance
@@ -199,6 +189,8 @@ class PermissionsController extends AppController  {
 		
 		// merge user's and group's permissions
 		$returnValue = array_merge($ups, $gps);
+		
+		var_dump($returnValue);
 		
 		$this->Message->success();
 		$this->set('data', $returnValue);
