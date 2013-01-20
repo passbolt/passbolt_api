@@ -7,10 +7,12 @@
  * @package			 app.Model.user
  * @since				 version 2.12.7
  */
+ 
 App::uses('AuthComponent', 'Controller/Component');
 App::uses('BcryptFormAuthenticate', 'Controller/Component/Auth');
 App::uses('Common', 'Controller/Component');
 App::uses('Role', 'Model');
+
 class User extends AppModel {
 
 /**
@@ -23,7 +25,7 @@ class User extends AppModel {
  * Model behaviors
  * @access public
  */
-	public $actsAs = array('Trackable');
+	public $actsAs = array('Containable', 'Trackable');
 
 /**
  * Details of belongs to relationships
@@ -249,7 +251,6 @@ class User extends AppModel {
 					$conditions = array(
 						'conditions' => array(
 							'User.id' => $data['User']['id']
-							//,'User.active' => 1
 						)
 					);
 				break;
@@ -282,6 +283,16 @@ class User extends AppModel {
  */
 	public static function getFindFields($case = User::ANONYMOUS, $role = Role::USER) {
 		switch ($case) {
+			case 'userView2':
+				$fields = array(
+					'fields' => array(
+						'User.id', 'User.username', 'User.role_id'
+					),
+					'contain' => array(
+						'Role' => Role::getFindFields('view', $role)
+					)
+				);
+				break;
 			//case 'resetPassword':
 			//case 'forgotPassword':
 			case User::ANONYMOUS:
@@ -291,7 +302,6 @@ class User extends AppModel {
 				$fields = array(
 					'fields' => array(
 						'User.id', 'User.username', 'User.role_id'
-						//, 'User.active'
 					),
 					'contain' => array(
 						'Role(id,name)'
@@ -303,15 +313,9 @@ class User extends AppModel {
 				$fields = array(
 					'fields' => array(
 						'User.id', 'User.username'
-						//'User.active','User.permissions',
 					),
 					'contain' => array(
-						'Role(id,name)',
-						//'Timezone(id,name)',
-						//'Language(id,name,ISO_639-2-alpha2,ISO_639-2-alpha1)',
-						//'Settings(*)',
-						//'Person(id,firstname,lastname)'
-						//'Office(name,acronym,region,type)',
+						'Role(id,name)'
 					)
 				);
 			break;

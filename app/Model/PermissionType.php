@@ -5,12 +5,26 @@
  * @copyright		Copyright 2012, Passbolt.com
  * @license			http://www.passbolt.com/license
  * @package			app.Model.PermissionDetail
- * @since			version 2.12.11
+ * @since			version 2.12.12
  */
 
 class PermissionType extends AppModel {
 
+/**
+ * Custom database table name, or null/false if no table association is desired.
+ *
+ * @var string
+ * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#usetable
+ */
 	public $useTable = "permissions_types";
+
+/**
+ * The name of the primary key field for this model.
+ *
+ * @var string
+ * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#primaryKey
+ */
+	public $primaryKey = 'serial';
 
 	const DENY = '0';
 	const READ	= '1';

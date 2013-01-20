@@ -55,21 +55,29 @@ class GroupCategoryPermission extends AppModel {
  * @return $condition array
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
+		$returnValue = array('fields'=>array());
 		switch($case){
 			case 'viewByCategory':
-				$fields = array(
-					'fields' => array(
-						'GroupCategoryPermission.group_id', 'GroupCategoryPermission.category_id', 'GroupCategoryPermission.permission_id',
-						'Group.id', 'Group.name',
-						'Permission.id', 'Permission.type', 'Permission.aco', 'Permission.aco_foreign_key', 'Permission.aro', 'Permission.aro_foreign_key'
-					),
+				$returnValue = array(
+					'fields' => array('group_id', 'category_id', 'permission_id'),
 					'contain' => array(
-						'Group',
-						'Permission'
+						'Permission' => array(
+							'fields' => array('id', 'type'),
+							'PermissionType' => array(
+								'fields' => array('id', 'serial', 'name')
+							),
+							// Return the elements the permission has been defined for (group, category)
+							'Group' => array(
+								'fields' => array('id', 'name')
+							),
+							'Category' => array(
+								'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght')
+							)
+						)
 					)
 				);
 			break;
 		}
-		return $fields;
+		return $returnValue;
 	}
 }

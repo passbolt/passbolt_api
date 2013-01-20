@@ -271,10 +271,8 @@ class Category extends AppModel {
 					case 'index' :
 					case 'getWithChildren' :
 						$returnValue = array(
-							'fields' => array(
-								'Category.id', 'Category.name', 'Category.parent_id', 'Category.category_type_id', 'Category.lft', 'Category.rght'
-							),
-							'contain' => array ()
+							'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght'),
+							'contain' => array ('CategoryType')
 						);
 					break;
 					case 'Resource.viewByCategory':

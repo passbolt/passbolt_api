@@ -8,11 +8,24 @@
  * @since			version 2.12.11
  */
 
+App::uses('User', 'Model');
+
 class UserCategoryPermission extends AppModel {
 
 	public $useTable = "users_categories_permissions";
 	
+/**
+ * Model behaviors
+ * @access public
+ */
+	public $actsAs = array('Containable');
 
+/**
+ * Details of belongs to relationships
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
 		'User',
 		'Category',
@@ -58,22 +71,30 @@ class UserCategoryPermission extends AppModel {
  * @return $condition array
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
+		$returnValue = array('fields'=>array());
 		switch($case){
 			case 'viewByCategory':
-				$fields = array(
-					'fields' => array(
-						'UserCategoryPermission.user_id', 'UserCategoryPermission.category_id', 'UserCategoryPermission.permission_id',
-						'User.id', 'User.username', 'User.role_id',
-						'Permission.id', 'Permission.type', 'Permission.aco', 'Permission.aco_foreign_key', 'Permission.aro', 'Permission.aro_foreign_key'
-					),
+				$returnValue = array(
+					'fields' => array('user_id', 'category_id', 'permission_id'),
 					'contain' => array(
-						'User',
-						'Permission'
+						'Permission' => array(
+							'fields' => array('id', 'type'),
+							'PermissionType' => array(
+								'fields' => array('id', 'serial', 'name')
+							),
+							// Return the elements the permission has been defined for (user, category)
+							'User' => array(
+								'fields' => array('id', 'username', 'role_id')
+							),
+							'Category' => array(
+								'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght')
+							)
+						)
 					)
 				);
 			break;
 		}
-		return $fields;
+		return $returnValue;
 	}
 
 }

@@ -9,12 +9,33 @@
  */
 class Permission extends AppModel {
 
+/**
+ * Model behaviors
+ * @access public
+ */
 	public $actsAs = array('Containable', 'Trackable');
-
+	
+/**
+ * Details of belongs to relationships
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
 		'PermissionType' => array(
-			'className' => 'PermissionType',
-			'foreign_key' => 'type'
+			'foreignKey' => 'type'
+		),
+		'Category' => array(
+			'foreignKey' => 'aco_foreign_key',
+		),
+		'Resource' => array(
+			'foreignKey' => 'aco_foreign_key',
+		),
+		'User' => array(
+			'foreignKey' => 'aro_foreign_key',
+		),
+		'Group' => array(
+			'foreignKey' => 'aro_foreign_key',
 		)
 	);
 
@@ -69,14 +90,6 @@ class Permission extends AppModel {
 		}
 		return $rules;
 	}
-	
-	public static function getAllowedAcos() {
-		return array('Resource', 'Category');
-	}
-	
-	public static function getAllowedAros() {
-		return array('User', 'Group');
-	}
 
 /**
  * Validation Rule : Check if the given ACO key is an allowed ACO model
@@ -97,12 +110,12 @@ class Permission extends AppModel {
 	}
 	
 /**
- * CValidation Rule : heck if the given aco foreign key is relative to an existing instance
+ * Validation Rule : check if the given aco foreign key is relative to an existing instance
  * @param array check the data to test 
  * @return boolean
  */
 	public function validateAcoForeignKey($check) {
-		return $this->isInstanceExisting($check['aco_foreign_key'], $this->data[$this->alias]['aco']);
+		return $this->validateExists($check, 'aco_foreign_key', $this->data[$this->alias]['aco']);
 	}
 	
 /**
@@ -111,7 +124,7 @@ class Permission extends AppModel {
  * @return boolean
  */
 	public function validateAroForeignKey($check) {
-		return $this->isInstanceExisting($check['aro_foreign_key'], $this->data[$this->alias]['aro']);
+		return $this->validateExists($check, 'aro_foreign_key', $this->data[$this->alias]['aro']);
 	}
 	
 /**
