@@ -152,17 +152,14 @@ class AppModel extends Model {
 	}
 	
 /**
- * Check if an instance is existing functions of a given id and a given model name
- * @param string id The uuid of the instance to check
+ * Validation rule : Check if an instance of a given model exists
+ * @param string check The data to check
+ * @param string key The key to find the uuid
  * @param string modelName The model name the instance belong to
  * @return boolean
  */
-	public function isInstanceExisting($id, $modelName) {
+	public function validateExists($check, $key, $modelName) {
 		$model = ClassRegistry::init($modelName);
-		$instance = $model->findById($id);
-		if (!$instance) {
-			return false;
-		}
-		return true;
+		return $model->exists($check[$key]);
 	}
 }
