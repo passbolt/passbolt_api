@@ -36,7 +36,6 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test view aco permissions action parameters
 	public function testViewAcoPermissionsParameters() {
-		
 		// Test model that are not permissionable and allowed to be used as acos foreign key by the permission model	
 		// PERMISSIONABLE MODELS
 		$model = 'Resource';
@@ -63,15 +62,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
-		$model = 'Group';
-		$id = '10ce2d3a-0468-433b-b59f-3053d7a10fce'; // has to exist
-		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array(
-			 'method' => 'get',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/viewAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
+
 		// NOT EXISTING MODELS
 		$model = 'NotExistingModel';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce'; // has to exist
@@ -227,16 +218,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'data'=> $data
 		)), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
-		$model = 'group';
-		$id = '10ce2d3a-0468-433b-b59f-3053d7a10fce'; // has to exist
-		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array(
-			 'method' => 'post',
-			 'return' => 'contents',
-			 'data'=> $data
-		)), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/addAcoPermissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-		
+
 		// NOT EXISTING MODELS
 		$model = 'NotExistingModel';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce'; // has to exist
