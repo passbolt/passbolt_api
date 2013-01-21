@@ -47,7 +47,10 @@ $config = array(
 		'trustModel' => 'always'
 	),
 	'Permission' => array(
-		'AcoModels' => array('Resource', 'Category'),
-		'AroModels' => array('User', 'Group')
+		'acoModels' => array('Resource', 'Category'),
+		'aroModels' => array('User', 'Group')
+	),
+	'Comment' => array(
+		'foreignModels' => array('Resource')
 	)
 );

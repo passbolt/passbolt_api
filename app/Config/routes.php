@@ -33,6 +33,8 @@
 	Router::mapResources('categories');
 	Router::mapResources('resources');
 	Router::mapResources('secrets');
+	Router::mapResources('permissions');
+	Router::mapResources('comments');
 
 	// God knows why.. the edit mapping is not working for resource. So we redeclare it manually
 	Router::connect(
@@ -82,14 +84,13 @@
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
 /**
-<<<<<<< HEAD
- * Dictionary shortcuts
+ * Custom route for dictionary controller
  */
 	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
 	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'view'));
 
 /**
- * Custom route for category::view with parameters
+ * Custom route for categories controller
  */
 	Router::connect('/categories/index', array('controller' => 'categories', 'action' => 'index'));
 	Router::connect('/categories/index/*', array('controller' => 'categories', 'action' => 'index'));
@@ -100,8 +101,16 @@
 	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'view'));
 
 /**
- * Custom route for permissions::view with parameters
+ * Custom route for permissions controller
  */
+	// Router::connect(
+		// '/permissions/:comment/:id',
+		// array('controller' => 'permissions', 'action' => 'addAcoPermissions', "[method]" => "POST"), 
+		// array('pass' => array('model', 'id')));
+	// Router::connect(
+		// '/permissions/:comment/:id', 
+		// array('controller' => 'permissions', 'action' => 'viewAcoPermissions', "[method]" => "GET"), 
+		// array('pass' => array('model', 'id')));
 	Router::connect(
 		'/permissions/resource/:id',
 		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Resource', "[method]" => "POST"), 
@@ -118,6 +127,20 @@
 		'/permissions/category/:id', 
 		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Category', "[method]" => "GET"), 
 		array('pass' => array('model', 'id')));
+		
+/**
+ * Custom route for comments controller
+ */
+	Router::connect(
+		'/comments/:model/:id',
+		array('controller' => 'comments', 'action' => 'viewForeignComments', "[method]" => "GET"),
+		array('pass' => array('model', 'id')));
+ 	Router::connect(
+		'/comments/:model/:id',
+		array('controller' => 'comments', 'action' => 'addForeignComment', "[method]" => "POST"), 
+		array('pass' => array('model', 'id')));
+ 	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'edit', "[method]" => "PUSH"));
+ 	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
  * Load all plugin routes.	See the CakePlugin documentation on
