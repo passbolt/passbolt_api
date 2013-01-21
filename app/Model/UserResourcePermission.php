@@ -57,22 +57,30 @@ class UserResourcePermission extends AppModel {
  * @return $condition array
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
+		$returnValue = array('fields'=>array());
 		switch($case){
 			case 'viewByResource':
-				$fields = array(
-					'fields' => array(
-						'UserResourcePermission.user_id', 'UserResourcePermission.resource_id', 'UserResourcePermission.permission_id',
-						'User.id', 'User.username', 'User.role_id',
-						'Permission.id', 'Permission.type', 'Permission.aco', 'Permission.aco_foreign_key', 'Permission.aro', 'Permission.aro_foreign_key'
-					),
+				$returnValue = array(
+					'fields' => array('user_id', 'resource_id', 'permission_id'),
 					'contain' => array(
-						'User',
-						'Permission'
+						'Permission' => array(
+							'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
+							'PermissionType' => array(
+								'fields' => array('id', 'serial', 'name')
+							),
+							// Return the elements the permission has been defined for (user, category)
+							'User' => array(
+								'fields' => array('id', 'username', 'role_id')
+							),
+							'Resource' => array(
+								'fields' => array('id', 'name')
+							)
+						)
 					)
 				);
 			break;
 		}
-		return $fields;
+		return $returnValue;
 	}
 
 }

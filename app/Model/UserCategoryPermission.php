@@ -11,7 +11,13 @@
 App::uses('User', 'Model');
 
 class UserCategoryPermission extends AppModel {
-
+	
+/**
+ * Custom database table name, or null/false if no table association is desired.
+ *
+ * @var string
+ * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#usetable
+ */
 	public $useTable = "users_categories_permissions";
 	
 /**
@@ -78,7 +84,7 @@ class UserCategoryPermission extends AppModel {
 					'fields' => array('user_id', 'category_id', 'permission_id'),
 					'contain' => array(
 						'Permission' => array(
-							'fields' => array('id', 'type'),
+							'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
 							'PermissionType' => array(
 								'fields' => array('id', 'serial', 'name')
 							),

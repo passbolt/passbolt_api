@@ -5,7 +5,7 @@
  * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.Model.Permission
- * @since        version 2.12.11
+ * @since        version 2.12.12
  */
 class Permission extends AppModel {
 
@@ -26,10 +26,10 @@ class Permission extends AppModel {
 			'foreignKey' => 'type'
 		),
 		'Category' => array(
-			'foreignKey' => 'aco_foreign_key',
+			'foreignKey' => 'aco_foreign_key'
 		),
 		'Resource' => array(
-			'foreignKey' => 'aco_foreign_key',
+			'foreignKey' => 'aco_foreign_key'
 		),
 		'User' => array(
 			'foreignKey' => 'aro_foreign_key',
@@ -186,5 +186,85 @@ class Permission extends AppModel {
 			'Permission.type' => $type
 		);
 		return $this->isUnique($combi, false);
+	}
+	
+/**
+ * Return the conditions to be used for a given context
+ *
+ * @param $context string{guest or id}
+ * @param $data used in find conditions (such as User.id)
+ * @return $condition array
+ * @access public
+ */
+	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
+		$returnValue = array('conditions' => array());
+		// switch ($case) {
+			// case 'view':
+				// $returnValue = array(
+					// 'conditions' => array(
+						// // not null permissions
+						// 'UserCategoryPermission.permission_id' => $data['Permission']['id']
+					// )
+				// );
+			// break;
+			// default:
+				// $returnValue = array(
+					// 'conditions' => array()
+				// );
+		// }
+
+		return $returnValue;
+	}
+
+/**
+ * Return the list of field to fetch for given context
+ * @param string $case context ex: login, activation
+ * @return $condition array
+ */
+	public static function getFindFields($case = 'view', $role = Role::USER, &$data = null) {
+		$returnValue = array('fields'=>array());
+		return $returnValue;
+		switch($case){
+			case 'view':
+				$returnValue = array(
+					'fields' => array('id', 'type', 'aco_foreign_key', 'aro_foreign_key'),
+					'contain' => array(
+						'PermissionType' => array(
+							'fields' => array('id', 'serial', 'name')
+						),
+						// // Return the elements the permission has been defined for (user, category)
+						// 'Category' => array(
+							// 'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght')
+						// ),
+						// 'Resource' => array(
+							// 'fields' => array('id', 'name', 'username', 'expiry_date', 'uri', 'description', 'modified')
+						// ),
+						// 'Permission' => array(
+							// 'fields' => array('id', 'type'),
+							// 'PermissionType' => array(
+								// 'fields' => array('id', 'serial', 'name')
+							// ),
+							// // Return the elements the permission has been defined for (user, category)
+							// 'User' => array(
+								// 'fields' => array('id', 'username', 'role_id')
+							// ),
+							// 'Category' => array(
+								// 'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght')
+							// ),
+						// )
+					)
+				);
+				// Get data relative to the aco reccord 
+				if($data['aco']) {
+					// var_dump($data['aco']::getEmbeddedFindFields());
+					// $returnValue['contain'][$data['aco']] = null;
+				}
+				// Get data relative to the aro reccord
+				if($data['aro']) {
+					// $returnValue['contain'][$data['aco']] = $data['aco']::getEmbeddedFindFields();
+				}
+			break;
+		}
+		return $returnValue;
 	}
 }

@@ -9,10 +9,27 @@
  */
 
 class GroupCategoryPermission extends AppModel {
-
+	
+/**
+ * Custom database table name, or null/false if no table association is desired.
+ *
+ * @var string
+ * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#usetable
+ */
 	public $useTable = "groups_categories_permissions";
 	
-	
+/**
+ * Model behaviors
+ * @access public
+ */
+	public $actsAs = array('Containable');
+ 
+/**
+ * Details of belongs to relationships
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
 		'Group',
 		'Category',

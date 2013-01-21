@@ -64,7 +64,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$result = json_decode($this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents')), true);
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/view/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json : The test should return an error but is returning {$result['header']['status']}");
 
-		// // test if the object returned is a success one
+		// test if the object returned is a success one
 		$result = json_decode($this->testAction("/categories/$id.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'],
 			'categories/view/' . $id . '.json?children=true should return success'
