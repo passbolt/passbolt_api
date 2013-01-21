@@ -6,7 +6,7 @@
  * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.Controller.PermissionsController
- * @since        version 2.12.11
+ * @since        version 2.12.12
  */
 
 App::uses('Permission', 'Model');
@@ -116,8 +116,21 @@ class PermissionsController extends AppController  {
 			return;
 		}
 		
-		$permission = $this->Permission->save($data);		
-		$this->Message->success();
+		$this->Permission->save($data);
+		
+		// Get back the permission data to return to the client
+		$viewName = $aroModelName . $acoModelName . 'Permission'; // ex: UserCategoryPermission
+		$viewCase = 'viewBy' . $acoModelName; // ex: viewByCategory
+		$foreignKey = Inflector::underscore($acoModelName) . '_id'; // category_id
+		$this->loadModel($viewName);
+		$findData = array(
+			$viewName => array( // UserCategoryPermission
+				$foreignKey => $acoInstanceId // category_id = $acoInstanceId
+			)
+		);
+		$findOptions = $this->$viewName->getFindOptions($viewCase, User::get('Role.name'), $findData);
+		$this->set('data', $this->$viewName->find('first', $findOptions));
+		$this->Message->success(__('The permission was sucessfully added'));
 	}
 
 /**
@@ -147,7 +160,7 @@ class PermissionsController extends AppController  {
 			return;
 		}
 		
-		// the aco instance instance does not exist
+		// the aco instance does not exist
 		$this->loadModel($acoModelName);
 		if (!$this->$acoModelName->exists($acoInstanceId)) {
 			$this->Message->error(__('The ACO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $acoInstanceId, $acoModelName));
@@ -171,8 +184,6 @@ class PermissionsController extends AppController  {
 			)
 		);
 		$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
-		// var_dump($upOptions);
-		// die();
 		$ups = $ModelView->find('all', $upOptions);
 		
 		// get group's permissions for the target instance
@@ -189,8 +200,6 @@ class PermissionsController extends AppController  {
 		
 		// merge user's and group's permissions
 		$returnValue = array_merge($ups, $gps);
-		
-		var_dump($returnValue);
 		
 		$this->Message->success();
 		$this->set('data', $returnValue);

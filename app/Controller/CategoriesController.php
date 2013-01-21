@@ -14,10 +14,6 @@ App::uses('User', 'Model');
 
 class CategoriesController extends AppController {
 	
-	public function __construct($request = NULL, $response = NULL) {
-		parent::__construct($request, $response);
-	}
-	
 /**
  * index - get the list of top categories
  */
@@ -36,6 +32,7 @@ class CategoriesController extends AppController {
 
 		// foreach roots categories, find its children ! Done with the tree behavior
 		if (!$children) {
+			// @todo : yes but no, we return categories that maybe the user is not allowed to see
 			$data = $categories;
 		} else {
 			foreach ($categories as $category) {
@@ -210,8 +207,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 		// check if the category exists
-		$category = $this->Category->findById($id);
-		if (!$category) {
+		if (!$this->Category->exists($id)) {
 			$this->Message->error(__('The category does not exist'));
 			return;
 		}
