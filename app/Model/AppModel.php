@@ -85,6 +85,17 @@ class AppModel extends Model {
 	public static function getFindFields($case = null, $role=null) {
 		return array('fields' => array());
 	}
+	
+/**
+ * Return the list of field to use for a find for given context for an embedded model
+ *
+ * @param string $case context ex: login, activation
+ * @return $condition array
+ * @access public
+ */
+	public static function getEmbeddedFindFields($case = null, $role=null) {
+		return self::getFindFields($case, $role);
+	}
 
 /**
  * Return the conditions to be used for a given context
@@ -134,6 +145,7 @@ class AppModel extends Model {
 			// the needle is found
 			if($data[$this->alias]['id'] == $needle) {
 				$found = true;
+				array_unshift($path, $data[$this->alias]['id']);
 				return $path;
 			}
 			// search in the children
