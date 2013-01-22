@@ -10,6 +10,7 @@
  * @package      app.Model.AppModel
  * @since        version 2.12.7
  */
+
 App::uses('Model', 'Model');
 class AppModel extends Model {
 

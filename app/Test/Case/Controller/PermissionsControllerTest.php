@@ -5,7 +5,7 @@
  * @copyright    Copyright 2012, Passbolt.com
  * @package      app.Test.Case.Controller.PermissionsController
  * @license      http://www.passbolt.com/license
- * @since        version 2.12.11
+ * @since        version 2.12.12
  */
 App::uses('AppController', 'Controller');
 App::uses('PermissionsController', 'Controller');

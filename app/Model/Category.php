@@ -15,7 +15,8 @@ App::uses('PermissionType', 'Model');
 class Category extends AppModel {
 
 /**
- * Model behave as a tree with left, right, parent_id
+ * Model behaviors
+ * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = array(
 		'Containable',
@@ -23,11 +24,19 @@ class Category extends AppModel {
 		'Permissionable'=>array('priority' => 1),
 		'Tree'
 	);
-	
+
+/**
+ * Details of has many relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasMany = array(
 		'CategoryResource'
 	);
 
+/**
+ * Details of belongs relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array('CategoryType' => array(
 		'className' => 'CategoryType'
 	));

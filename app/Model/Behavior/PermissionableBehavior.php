@@ -13,7 +13,11 @@ App::uses('Permission', 'Model');
 class PermissionableBehavior extends ModelBehavior {
 
 /**
+ * Details of before find method
+ * @link http://api20.cakephp.org/class/model#method-ModelbeforeFind
  * 
+ * The permissionnable before find method is used to augment the query to find reccords 
+ * functions of the User and the User[AroModelName]Permission model
  */
 	public function beforeFind($Model, $queryData = array()) {
 		if (User::get('Role.name') == Role::USER ||
@@ -31,6 +35,7 @@ class PermissionableBehavior extends ModelBehavior {
 
 			// Bind the target model to the permissions models
 			$Model->bindModel(array('hasOne'=>array(
+				// @todo automatically bind the [AroModelName][targetAcoModelName]Permission model to the model
 				'UserCategoryPermission' => array(
 					'foreignKey' => 'category_id'
 				),
@@ -63,7 +68,8 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 	
 /**
- * 
+ * Details of after find method
+ * @link http://api20.cakephp.org/class/model#method-ModelafterFind
  */
 	public function afterFind($Model, $results, $primary = false) {
 		if (User::get('Role.name') == Role::USER ||
@@ -75,7 +81,11 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
+ * Details of after save method
+ * @link http://api20.cakephp.org/class/model#method-ModelafterSave
  * 
+ * The permissionnable after save method is used to automatically give to the user
+ * the ADMIN right to the reccords he has just inserted
  */
 	public function afterSave($Model, $created) {
 		// make the creator administrator of the created instance
