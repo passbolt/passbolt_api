@@ -2,10 +2,10 @@
 /**
  * Comment Model Test
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @package			 app.Test.Case.Model.CommentTest
- * @since				 version 2.12.11
- * @license			 http://www.passbolt.com/license
+ * @copyright		Copyright 2012, Passbolt.com
+ * @package			app.Test.Case.Model.CommentTest
+ * @since			version 2.12.12
+ * @license			http://www.passbolt.com/license
  */
 App::uses('Comment', 'Model');
 
