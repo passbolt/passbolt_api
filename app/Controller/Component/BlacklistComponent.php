@@ -51,7 +51,7 @@ class BlacklistComponent extends Component {
 /**
  * detect whether the current address is blacklisted
  */
-	public function isBlacklist() {
+	public function isIpInBlacklist() {
 		$bls = $this->AuthenticationBlacklist->find('all', array(
 			'conditions' => array(
 				'expiry >' => date('Y-m-d H:i:s')
