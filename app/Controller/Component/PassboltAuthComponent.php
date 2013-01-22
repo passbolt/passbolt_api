@@ -136,6 +136,46 @@ class PassboltAuthComponent extends AuthComponent {
 	}
 
 /**
+ * check and tell whether the user should be blacklisted according to what is in the context
+ * @return the blacklist interval as defined in the settings if blacklisting has to be done, false if no blacklisting should happen
+ */
+	public function shouldBlacklist() {
+		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
+
+		$i = 0;
+		$count = array();
+		$strategy = reset($this->throttlingStrategies['blacklist']);
+		$sinceTimestamp = time() - $strategy['interval'];
+		$count[] = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
+		foreach ($this->throttlingStrategies['blacklist'] as $attempt => $strategy) {
+			// No need to continue if first threshold is not even met
+			if ($i == 0 && $count < $attempt) {
+				break;
+			}
+			// if threshold is met (number of failed attempts = threshold)
+			// we apply the blacklisting as defined
+
+			// if last scenario criterias are met, we return
+			if ($count[$i] >= $attempt && $i + 1 == count($this->throttlingStrategies['blacklist'])) {
+				return $strategy['blacklistTime'];
+			}
+			// else, we need to get the data with next scenario, to make sure it belongs here and not in next
+			$nextStrategy = next($this->throttlingStrategies['blacklist']);
+			$sinceTimestamp = time() - $nextStrategy['interval'];
+			$count[$i + 1] = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
+			$nextAttempt = key($this->throttlingStrategies['blacklist']);
+			if ($count[$i] >= $attempt) {
+				if ($count[$i + 1] < $nextAttempt) {
+					return $strategy['blacklistTime'];
+				}
+				prev($this->throttlingStrategies['blacklist']);
+			}
+			$i++;
+		}
+		return false;
+	}
+
+/**
  * Get current attempt number
  * if no attempt was made, return 0
  * @return int attempt number
@@ -149,7 +189,7 @@ class PassboltAuthComponent extends AuthComponent {
  * Set the  object context corresponding to the current request
  * @param Request $request object given by identify
  */
-	private function __setContext($request) {
+	protected function __setContext($request) {
 		$this->username = isset($request->data['User']['username']) ? $request->data['User']['username'] : null;
 		$this->ip = $this->controller->request->clientIp();
 
@@ -167,22 +207,9 @@ class PassboltAuthComponent extends AuthComponent {
 		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
 		$this->authenticationAttempt = $this->AuthenticationLog->getFailedAuthenticationCount($this->username, $this->ip, $sinceTimestamp);
 
-		$i = 0;
-		foreach ($this->throttlingStrategies['blacklist'] as $attempt => $strategy) {
-			$sinceTimestamp = time() - $strategy['interval'];
-			$count = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
-			// No need to continue if first threshold is not even met
-			if ($i == 0 && $count < $attempt) {
-				break;
-			}
-			// if threshold is met (number of failed attempts = threshold)
-			// we apply the blacklisting as defined
-			if ($count == $attempt) {
-				$this->doBlacklist = true;
-				$this->blacklistTime = $strategy['blacklistTime'];
-				break;
-			}
-			$i++;
+		if ($interval = $this->shouldBlacklist()) {
+			$this->doBlacklist = true;
+			$this->blacklistTime = $interval;
 		}
 	}
 
