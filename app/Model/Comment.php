@@ -2,19 +2,22 @@
 /**
  * Comment Model
  *
- * Copyright 2012, Passbolt
- * Passbolt(tm), the simple password management solution 
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright		 Copyright 2012, Passbolt.com
- * @package			 app.Model.comment
- * @since				 version 2.12.11
- * @license			 http://www.passbolt.com/license
+ * @copyright		Copyright 2012, Passbolt.com
+ * @package			app.Model.comment
+ * @since			version 2.12.12
+ * @license			http://www.passbolt.com/license
  */
 class Comment extends AppModel {
-
+/**
+ * Model behaviors
+ * @link http://api20.cakephp.org/class/model#
+ */
 	public $actsAs = array('Trackable');
 
+/**
+ * Details of has many relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasMany = array(
 		'Comment' => array(
 			'className' => 'Comment',
