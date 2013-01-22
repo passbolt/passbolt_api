@@ -71,16 +71,16 @@ class PassboltAuthComponent extends AuthComponent {
  */
 	public $throttlingStrategies = array(
 		'throttle' => array(
-			1 => array(
+			3 => array(
 				'throttleTime' => '5'
 			),
-			2 => array(
+			4 => array(
 				'throttleTime' => '15'
 			),
-			3 => array(
+			5 => array(
 				'throttleTime' => '45'
 			),
-			4 => array(
+			6 => array(
 				'throttleTime' => '60'
 			)
 		),
@@ -112,17 +112,26 @@ class PassboltAuthComponent extends AuthComponent {
 
 /**
  * get the throttle time interval corresponding to the attempt number
- * @param int $attemp, the attempt number
+ * @param int $attempt, the attempt number
  * @return int $interval, the interval in seconds
  */
 	public function getThrottleInterval($attempt) {
-		$n = count($this->throttlingStrategies['throttle']);
-		if ($attempt > $n) {
-			return $this->throttlingStrategies['throttle'][$n]['throttleTime'];
-		} elseif ($attempt == 0) {
+		$attemptMin = min(array_keys($this->throttlingStrategies['throttle']));
+		$attemptMax = max(array_keys($this->throttlingStrategies['throttle']));
+		if ($attempt < $attemptMin) {
 			return 0;
+		}
+		if ($attempt > $attemptMax) {
+			return $this->throttlingStrategies['throttle'][$attemptMax]['throttleTime'];
 		} else {
-			return $this->throttlingStrategies['throttle'][$attempt]['throttleTime'];
+			// check if the attempt number exists in the array, if not return the value lower
+			if (isset($this->throttlingStrategies['throttle'][$attempt]) && !empty($this->throttlingStrategies['throttle'][$attempt])) {
+				return $this->throttlingStrategies['throttle'][$attempt]['throttleTime'];
+			}
+			foreach ($this->throttlingStrategies['throttle'] as $key => $value) {
+				if ($attempt > $key) return prev($this->throttlingStrategies['throttle']);
+			}
+			return end($this->throttlingStrategies['throttle']); // logically this should never happen
 		}
 	}
 
