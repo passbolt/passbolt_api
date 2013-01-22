@@ -59,9 +59,9 @@ class BlacklistComponentTest extends CakeTestCase {
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
 	}
 
-	public function testIsBlackList() {
+	public function testIsIpInBlackList() {
 		// Test when ip is not blacklisted
-		$this->assertFalse($this->BlacklistComponent->isBlacklist(), "isBlacklist should have returned false but returned something else");
+		$this->assertFalse($this->BlacklistComponent->isIpInBlacklist(), "isBlacklist should have returned false but returned something else");
 
 		// Test when ip is blacklisted
 		$this->AuthenticationBlacklist->create();
@@ -69,6 +69,6 @@ class BlacklistComponentTest extends CakeTestCase {
 			'ip' => '127.0.0.1',
 			'expiry' => date('Y-m-d H:i:s', time() + 100)
 		));
-		$this->assertTrue($this->BlacklistComponent->isBlacklist(), "isBlacklist should have returned true but returned something else");
+		$this->assertTrue($this->BlacklistComponent->isIpInBlacklist(), "isBlacklist should have returned true but returned something else");
 	}
 }
