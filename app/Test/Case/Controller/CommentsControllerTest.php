@@ -194,21 +194,20 @@ class CommentsControllerTest extends ControllerTestCase {
 		// NULL ID
 		$id = null;
 		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/edit/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// NOT EXISTING MODEL INSTANCE
 		$id = '00000000-0000-0000-0000-000000000000';
 		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/edit/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// INVALID ID FORMAT
 		$id = 'invalid-id-format';
 		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/edit/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
 
-	// test edit
-	public function testEdit() {
+	public function testEditNotOwner() {
 		$putOptions = array(
 			 'method' => 'put',
 			 'return' => 'contents',
@@ -217,11 +216,41 @@ class CommentsControllerTest extends ControllerTestCase {
 			))
 		);
 
-		// try to edit an existing comment
-		$id = 'aaa00001-cccc-11d1-a0c5-080027796c4c'; // has to exist
-		$srvResult = json_decode($this->testAction("/comments/$id.json", $putOptions), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
-		$this->assertEquals($putOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/edit/$id.json : The server should return a comment which has same content than the posted value");
+		// try to edit an existing comment whose the user is not the owner
+		$id = 'aaa00001-cccc-11d1-a0c5-080027796c4c'; // has to exist, and user has not to be owner
+		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	}
+
+	// test edit
+	public function testEdit() {
+		$commentParentId = 'aaa00001-cccc-11d1-a0c5-080027796c4c';
+		$resourceId = '509bb871-5168-49d4-a676-fb098cebc04d';
+		$commentContent = 'new comment';
+		$commentId = null;
+		
+		// insert a comment
+		$this->Comment->create();
+		$this->Comment->set(array(
+			'foreign_model' => 'Resource',
+			'foreign_id' => $resourceId,
+			'content' => $commentContent,
+			'parent_id' => $commentParentId	
+		));
+		$comment = $this->Comment->save();
+		$commentId = $this->Comment->id;
+
+		// try to edit an existing comment whose the user is not the owner
+		$putOptions = array(
+			 'method' => 'put',
+			 'return' => 'contents',
+			 'data' => array('Comment' => array(
+				'content' => 'new comment edited'
+			))
+		);
+		$srvResult = json_decode($this->testAction("/comments/edit/$commentId.json", $putOptions), true);
+		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");		
+		$this->assertEquals($putOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/edit/$commentId.json : The server should return a comment which has same content than the posted value");
 	}
 
 	// test delete params
@@ -234,46 +263,72 @@ class CommentsControllerTest extends ControllerTestCase {
 		// Test given model instance id
 		// NULL ID
 		$id = null;
-		$srvResult = json_decode($this->testAction("/comments/delete/$id.json", $deleteOptions), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/delete/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $deleteOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// NOT EXISTING MODEL INSTANCE
 		$id = '00000000-0000-0000-0000-000000000000';
-		$srvResult = json_decode($this->testAction("/comments/delete/$id.json", $deleteOptions), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/delete/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $deleteOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// INVALID ID FORMAT
 		$id = 'invalid-id-format';
-		$srvResult = json_decode($this->testAction("/comments/delete/$id.json", $deleteOptions), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/delete/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $deleteOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
 
-	// test delete
-	public function testDelete() {
-		$deleteOptions = array(
+	public function testDeleteNotOwner() {
+		$putOptions = array(
 			 'method' => 'delete',
 			 'return' => 'contents'
 		);
 
+		// try to edit an existing comment whose the user is not the owner
+		$id = 'aaa00001-cccc-11d1-a0c5-080027796c4c'; // has to exist, and user has not to be owner
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $putOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	}
+
+	// test delete
+	public function testDelete() {
+		$commentParentId = 'aaa00001-cccc-11d1-a0c5-080027796c4c';
+		$resourceId = '509bb871-5168-49d4-a676-fb098cebc04d';
+		$commentContent = 'new comment';
+		$commentId = null;
+		
 		// insert a comment
 		$this->Comment->create();
 		$this->Comment->set(array(
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
-			'content' => 'tmp comment',
-			'parent_id' => 'aaa00001-cccc-11d1-a0c5-080027796c4c'		
+			'foreign_id' => $resourceId,
+			'content' => $commentContent,
+			'parent_id' => $commentParentId	
 		));
 		$this->Comment->save();
-		$tmpCommentId = $this->Comment->id;
+		$commentId = $this->Comment->id;
+		
+		// insert a child to the just inserted comment
+		$this->Comment->create();
+		$this->Comment->set(array(
+			'foreign_model' => 'Resource',
+			'foreign_id' => $resourceId,
+			'content' => $commentContent,
+			'parent_id' => $commentId	
+		));
+		$this->Comment->save();
+		$childCommentId = $this->Comment->id;
 
 		// try to delete a comment which has children
-		$id = 'aaa00001-cccc-11d1-a0c5-080027796c4c'; // has to exist
-		$srvResult = json_decode($this->testAction("/comments/$id.json", $deleteOptions), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$deleteOptions = array(
+			 'method' => 'delete',
+			 'return' => 'contents'
+		);
+		$srvResult = json_decode($this->testAction("/comments/$commentId.json", $deleteOptions), true);
+		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		
 		// Check the comment has well been deleted
-		$this->assertFalse($this->Comment->exists($id), "The comment {$id} should not exist");
+		$this->assertFalse($this->Comment->exists($commentId), "The comment {$commentId} should not exist");
 		// Check if the children has well been deleted
-		$this->assertFalse($this->Comment->exists($tmpCommentId), "The child comment should has been delete with its parent");
+		$this->assertFalse($this->Comment->exists($childCommentId), "The child comment should has been delete with its parent");
 	}
 }
