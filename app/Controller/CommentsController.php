@@ -93,6 +93,8 @@ class CommentsController extends AppController {
 		}
 		
 		// the foreign instance does not exist
+		// the authorization to access the record is provided by the permissionable behavior, so if a user is not authorized to
+		// access the instance reccord, the exists method should return false
 		$this->loadModel($foreignModelName);
 		if (!$this->$foreignModelName->exists($foreignId)) {
 			$this->Message->error(__('The foreign instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $foreignId, $foreignModelName));
@@ -126,7 +128,8 @@ class CommentsController extends AppController {
 	}
 
 /**
- * Edit a comment
+ * Edit a comment.
+ * The user who wants to edit a comment has to be the owner of the comment.
  * @param uuid id The uuid of the comment to edit 
  */
 	public function edit($id = null) {
@@ -161,6 +164,12 @@ class CommentsController extends AppController {
 			return;
 		}
 		
+		// check the user is the owner of the comment or it has the role to edit it
+		if(!$this->Comment->isOwner($id)) {
+			$this->Message->error(__('The user is not authorized to edit comments which he is not owner'));
+			return;
+		}
+		
 		// try to save
 		$fields = $this->Comment->getFindFields('edit', User::get('Role.name'));
 		$comment = $this->Comment->save($pushData, true, $fields['fields']);
@@ -176,7 +185,9 @@ class CommentsController extends AppController {
 	}
 
 /**
- * Delete a comment
+ * Delete a comment.
+ * The user who wants to delete a comment has to be the owner of the comment.
+ * By deleteing a comment the children comments are deleted too.
  * @param uuid id The uuid of the comment to delete 
  */
 	public function delete($id = null) {
@@ -195,6 +206,12 @@ class CommentsController extends AppController {
 		// check if the comment exists
 		if (!$this->Comment->exists($id)) {
 			$this->Message->error(__('The comment does not exist'));
+			return;
+		}
+		
+		// check the user is the owner of the comment or it has the role to delete it
+		if(!$this->Comment->isOwner($id)) {
+			$this->Message->error(__('The user is not authorized to delete comments which he is not owner'));
 			return;
 		}
 		

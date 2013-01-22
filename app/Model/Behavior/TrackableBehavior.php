@@ -7,7 +7,9 @@
  * @package      app.Model.Behavior.TrackableBehavior
  * @since        version 2.12.7
  */
+ 
 App::uses('User', 'Model');
+
 class TrackableBehavior extends ModelBehavior {
 
 /**
@@ -22,5 +24,15 @@ class TrackableBehavior extends ModelBehavior {
 		$model->data[$model->alias]['modified_by'] = User::get('id');
 		return true;
 	}
+	
+/**
+ * Check the user is owner of the given reccords
+ * @param uuid id the target reccord to check the user is owner
+ * @return bool
+ * @access public
+ */
+	public function isOwner(&$model, $id) {
+		$result = &$model->findById($id);
+		return $result[$model->alias]['created_by'] == User::get('id');
+	}
 }
-
