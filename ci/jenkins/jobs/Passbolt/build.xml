@@ -2,7 +2,7 @@
 <project default="passbolt_build.xml" xmlns:antcontrib="antlib:net.sf.antcontrib" basedir=".">
 
 	<property environment="env"/>
-	<property name="config" value="${env.WORKSPACE}/jenkins"/>
+	<property name="config" value="${env.WORKSPACE}/ci/jenkins/jobs/Passbolt"/>
 	<property name="src" value="${env.WORKSPACE}"/>
 	<property name="build" value="${src}/build"/>
 
@@ -18,7 +18,7 @@
 
 	<target name="install" description="Passbolt installer : copy config files, install passbolt">
 		<copy todir="${www}" overwrite="true">
-			<fileset dir="${config}/files/Passbolt"/>
+			<fileset dir="${config}/sources"/>
 		</copy>
 		<exec dir="${src}" executable="bash">
 			<arg value="-c"/>
