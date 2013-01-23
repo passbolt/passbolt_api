@@ -10,7 +10,12 @@
 class ModelTask extends AppShell {
 
 	public function execute() {
+		$User = ClassRegistry::init('User');
+		$kk = $User->findByUsername('root@passbolt.com');
+		$User->setActive($kk);
+		
 		$Model = ClassRegistry::init($this->model);
+		
 		$data = $this->getData();
 		foreach ($data as $item) {
 			$Model->create();

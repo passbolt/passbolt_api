@@ -18,8 +18,8 @@ class PermissionTypeTask extends ModelTask {
 	public $model = 'PermissionType';
 
 	protected function getData() {
-		$pds = array();
-		$pds[] = array(
+		$pts = array();
+		$pts[] = array(
 			'serial' => 0,
 			'name' => '----',
 			'binary' => '0000',
@@ -29,7 +29,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '1'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 1,
 			'binary' => '0001',
 			'name' => '---r',
@@ -39,7 +39,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '1',
 			'active' => '1'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 2,
 			'binary' => '0010',
 			'name' => '--c-',
@@ -49,7 +49,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 3,
 			'binary' => '0011',
 			'name' => '--cr',
@@ -59,7 +59,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '1',
 			'active' => '1'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 4,
 			'binary' => '0100',
 			'name' => '-u--',
@@ -69,7 +69,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 5,
 			'binary' => '0101',
 			'name' => '-u-r',
@@ -79,7 +79,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '1',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 6,
 			'binary' => '0110',
 			'name' => '-uc-',
@@ -89,7 +89,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 7,
 			'binary' => '0111',
 			'name' => '-ucr',
@@ -99,7 +99,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '1',
 			'active' => '1'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 8,
 			'binary' => '1000',
 			'name' => 'a---',
@@ -109,7 +109,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 9,
 			'binary' => '1001',
 			'name' => 'a--r',
@@ -119,7 +119,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '1',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 10,
 			'binary' => '1010',
 			'name' => 'a-c-',
@@ -129,7 +129,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 11,
 			'binary' => '1011',
 			'name' => 'a-cr',
@@ -139,7 +139,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '1',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 12,
 			'binary' => '1100',
 			'name' => 'au--',
@@ -149,7 +149,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 13,
 			'binary' => '1101',
 			'name' => 'au-r',
@@ -159,7 +159,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '1',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 14,
 			'binary' => '1110',
 			'name' => 'auc-',
@@ -169,7 +169,7 @@ class PermissionTypeTask extends ModelTask {
 			'_read' => '0',
 			'active' => '0'
 		);
-		$pds[] = array(
+		$pts[] = array(
 			'serial' => 15,
 			'binary' => '1111',
 			'name' => 'aucr',
@@ -180,6 +180,6 @@ class PermissionTypeTask extends ModelTask {
 			'active' => '1'
 		);
 
-		return $pds;
+		return $pts;
 	}
 }

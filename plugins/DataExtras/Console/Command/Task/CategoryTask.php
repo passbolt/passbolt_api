@@ -18,6 +18,7 @@ class CategoryTask extends ModelTask {
 
 	public function execute() {
 		$Model = ClassRegistry::init($this->model);
+		// @todo work on permissionable and save
 		$Model->hasOne = array();
 		$data = $this->getData();
 		foreach ($data as $item) {
