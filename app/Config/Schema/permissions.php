@@ -50,6 +50,7 @@ class PermissionsSchema {
 						`p_inherited`.id AS inherited_permission_id,
 						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id,
 						IFNULL(`p_direct`.type, `p_inherited`.type) AS permission_type
+						/*IF(`p_direct`.id, '1', '0') AS inherited*/
 					FROM (`resources` r JOIN `groups` g)
 					LEFT JOIN `permissions` p_direct ON (
 						`p_direct`.aro='Group'
@@ -79,6 +80,7 @@ class PermissionsSchema {
 						`p_inherited`.id AS inherited_permission_id,
 						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id,
 						IFNULL(`p_direct`.type, `p_inherited`.type) AS permission_type
+						/*IF(`p_direct`.id, '1', '0') AS inherited*/
 					FROM (`categories` c JOIN `users` u)
 					LEFT JOIN `permissions` p_direct ON (
 						`p_direct`.aro='User'
@@ -112,7 +114,16 @@ class PermissionsSchema {
 								`pg_inherited`.id,
 								`pu_inherited`.id
 							)
-						) AS permission_id
+						) AS permission_id,
+						IFNULL(
+							`p_direct`.id,
+							IF(
+								`pg_inherited`.type > `pu_inherited`.type,
+								`pg_inherited`.type,
+								`pu_inherited`.type
+							)
+						) AS permission_type
+						/*IF(`p_direct`.id, '1', '0') AS inherited*/
 					FROM (`resources` r JOIN `users` u)
 					LEFT JOIN `permissions` p_direct ON (
 						`p_direct`.aro='User'

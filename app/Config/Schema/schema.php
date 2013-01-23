@@ -221,8 +221,8 @@ class AppSchema extends CakeSchema {
 	);
 
 	public $permissions_types = array(
-		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'serial' => array('type' => 'integer', 'null' => false, 'default' => null),
+		// 'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'serial' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 2, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'binary' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
@@ -231,7 +231,7 @@ class AppSchema extends CakeSchema {
 		'_read' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'description' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 255, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'SERIAL' => array('column' => 'serial', 'unique' => 1)),
+		'indexes' => array('PRIMARY' => array('column' => 'serial', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
