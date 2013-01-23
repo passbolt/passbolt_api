@@ -11,11 +11,11 @@ $config = array(
 	// General App Details
 	'App.name' => 'Passbolt',
 	'App.punchline' => 'The simple password management system',
-	'App.copyright' => '2012 &copy; Passbolt.com',
+	'App.copyright' => '2013 &copy; Passbolt.com',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.version'	 => array(
-		'number' => '2.12.9',
-		'name' => 'What\'s hapenin\'',
+		'number' => '2.13.3',
+		'name' => 'Sauvage',
 		'song' => 'http://youtu.be/DaRG0ukxYqQ'
 	),
 	// Internationalization
@@ -42,5 +42,15 @@ $config = array(
 			'salt' => 'jdwmlckzlfwsl123wldcaxss',
 			'hmac' => 'odqw1AEN9fskDeWDqwodiqwd213109icjalkdnasdjjqd'
 		)
+	),
+	'GPG' => array(
+		'trustModel' => 'always'
+	),
+	'Permission' => array(
+		'acoModels' => array('Resource', 'Category'),
+		'aroModels' => array('User', 'Group')
+	),
+	'Comment' => array(
+		'foreignModels' => array('Resource')
 	)
 );
