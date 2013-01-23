@@ -41,7 +41,7 @@ class BlacklistComponent extends Component {
 	public function startup(&$controller) {
 		// If address is blacklisted, gives a blackhole
 		// http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#handling-blackhole-callbacks
-		if ($this->isBlacklist()) {
+		if ($this->isIpInBlacklist()) {
 			$this->blackHole();
 			return;
 		}
@@ -51,7 +51,7 @@ class BlacklistComponent extends Component {
 /**
  * detect whether the current address is blacklisted
  */
-	public function isBlacklist() {
+	public function isIpInBlacklist() {
 		$bls = $this->AuthenticationBlacklist->find('all', array(
 			'conditions' => array(
 				'expiry >' => date('Y-m-d H:i:s')

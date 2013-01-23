@@ -71,16 +71,16 @@ class PassboltAuthComponent extends AuthComponent {
  */
 	public $throttlingStrategies = array(
 		'throttle' => array(
-			1 => array(
+			3 => array(
 				'throttleTime' => '5'
 			),
-			2 => array(
+			4 => array(
 				'throttleTime' => '15'
 			),
-			3 => array(
+			5 => array(
 				'throttleTime' => '45'
 			),
-			4 => array(
+			6 => array(
 				'throttleTime' => '60'
 			)
 		),
@@ -112,18 +112,67 @@ class PassboltAuthComponent extends AuthComponent {
 
 /**
  * get the throttle time interval corresponding to the attempt number
- * @param int $attemp, the attempt number
+ * @param int $attempt, the attempt number
  * @return int $interval, the interval in seconds
  */
 	public function getThrottleInterval($attempt) {
-		$n = count($this->throttlingStrategies['throttle']);
-		if ($attempt > $n) {
-			return $this->throttlingStrategies['throttle'][$n]['throttleTime'];
-		} elseif ($attempt == 0) {
+		$attemptMin = min(array_keys($this->throttlingStrategies['throttle']));
+		$attemptMax = max(array_keys($this->throttlingStrategies['throttle']));
+		if ($attempt < $attemptMin) {
 			return 0;
-		} else {
-			return $this->throttlingStrategies['throttle'][$attempt]['throttleTime'];
 		}
+		if ($attempt > $attemptMax) {
+			return $this->throttlingStrategies['throttle'][$attemptMax]['throttleTime'];
+		} else {
+			// check if the attempt number exists in the array, if not return the value lower
+			if (isset($this->throttlingStrategies['throttle'][$attempt]) && !empty($this->throttlingStrategies['throttle'][$attempt])) {
+				return $this->throttlingStrategies['throttle'][$attempt]['throttleTime'];
+			}
+			foreach ($this->throttlingStrategies['throttle'] as $key => $value) {
+				if ($attempt > $key) return prev($this->throttlingStrategies['throttle']);
+			}
+			return end($this->throttlingStrategies['throttle']); // logically this should never happen
+		}
+	}
+
+/**
+ * check and tell whether the user should be blacklisted according to what is in the context
+ * @return the blacklist interval as defined in the settings if blacklisting has to be done, false if no blacklisting should happen
+ */
+	public function shouldBlacklist() {
+		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
+
+		$i = 0;
+		$count = array();
+		$strategy = reset($this->throttlingStrategies['blacklist']);
+		$sinceTimestamp = time() - $strategy['interval'];
+		$count[] = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
+		foreach ($this->throttlingStrategies['blacklist'] as $attempt => $strategy) {
+			// No need to continue if first threshold is not even met
+			if ($i == 0 && $count < $attempt) {
+				break;
+			}
+			// if threshold is met (number of failed attempts = threshold)
+			// we apply the blacklisting as defined
+
+			// if last scenario criterias are met, we return
+			if ($count[$i] >= $attempt && $i + 1 == count($this->throttlingStrategies['blacklist'])) {
+				return $strategy['blacklistTime'];
+			}
+			// else, we need to get the data with next scenario, to make sure it belongs here and not in next
+			$nextStrategy = next($this->throttlingStrategies['blacklist']);
+			$sinceTimestamp = time() - $nextStrategy['interval'];
+			$count[$i + 1] = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
+			$nextAttempt = key($this->throttlingStrategies['blacklist']);
+			if ($count[$i] >= $attempt) {
+				if ($count[$i + 1] < $nextAttempt) {
+					return $strategy['blacklistTime'];
+				}
+				prev($this->throttlingStrategies['blacklist']);
+			}
+			$i++;
+		}
+		return false;
 	}
 
 /**
@@ -140,7 +189,7 @@ class PassboltAuthComponent extends AuthComponent {
  * Set the  object context corresponding to the current request
  * @param Request $request object given by identify
  */
-	private function __setContext($request) {
+	protected function __setContext($request) {
 		$this->username = isset($request->data['User']['username']) ? $request->data['User']['username'] : null;
 		$this->ip = $this->controller->request->clientIp();
 
@@ -158,22 +207,9 @@ class PassboltAuthComponent extends AuthComponent {
 		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
 		$this->authenticationAttempt = $this->AuthenticationLog->getFailedAuthenticationCount($this->username, $this->ip, $sinceTimestamp);
 
-		$i = 0;
-		foreach ($this->throttlingStrategies['blacklist'] as $attempt => $strategy) {
-			$sinceTimestamp = time() - $strategy['interval'];
-			$count = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
-			// No need to continue if first threshold is not even met
-			if ($i == 0 && $count < $attempt) {
-				break;
-			}
-			// if threshold is met (number of failed attempts = threshold)
-			// we apply the blacklisting as defined
-			if ($count == $attempt) {
-				$this->doBlacklist = true;
-				$this->blacklistTime = $strategy['blacklistTime'];
-				break;
-			}
-			$i++;
+		if ($interval = $this->shouldBlacklist()) {
+			$this->doBlacklist = true;
+			$this->blacklistTime = $interval;
 		}
 	}
 
