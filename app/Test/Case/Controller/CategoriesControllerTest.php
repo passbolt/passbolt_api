@@ -24,8 +24,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array('app.category', 'app.resource', 
 		'app.category_type', 'app.categoriesResource', 
-		'app.user', 'app.group', 'app.groupsUser', 
-		'app.role', 'app.permission', 'app.authenticationBlacklist');
+		'app.user', 'app.group', 'app.groupsUser','app.role',  
+		'app.permission', 'app.permissions_type', 'app.permission_view',
+		'app.authenticationBlacklist');
 
 	public function setUp() {
 		$this->Category = new Category();
