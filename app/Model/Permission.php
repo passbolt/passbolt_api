@@ -228,7 +228,7 @@ class Permission extends AppModel {
 					'fields' => array('id', 'type', 'aco_foreign_key', 'aro_foreign_key'),
 					'contain' => array(
 						'PermissionType' => array(
-							'fields' => array('id', 'serial', 'name')
+							'fields' => array('serial', 'name')
 						),
 						// // Return the elements the permission has been defined for (user, category)
 						// 'Category' => array(
@@ -252,15 +252,6 @@ class Permission extends AppModel {
 						// )
 					)
 				);
-				// Get data relative to the aco reccord 
-				if($data['aco']) {
-					// var_dump($data['aco']::getEmbeddedFindFields());
-					// $returnValue['contain'][$data['aco']] = null;
-				}
-				// Get data relative to the aro reccord
-				if($data['aro']) {
-					// $returnValue['contain'][$data['aco']] = $data['aco']::getEmbeddedFindFields();
-				}
 			break;
 		}
 		return $returnValue;

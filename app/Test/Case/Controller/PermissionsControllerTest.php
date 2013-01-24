@@ -113,6 +113,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
+			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a1a09f', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
 			'50e6b4af-ad14-4659-a60d-23a4d7a10fce', // user remy (remy bertot have admin rights on others)
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
@@ -135,6 +136,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Check mix group and user
 		// Check permission on the resource cpp1-pwd1
 		$expectedPermissions = array(
+			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a1a09f', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
 			'50e6b4af-c390-4e5e-a8f8-23a4d7a10fce', // user jean rene (ean rené can access projects > cakephp > cp-project1 > cpp1-pwd1 in readonly)
 			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user remy (remy bertot has admin rights on cakephp > cp-project1)
@@ -164,6 +166,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
+			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a1a09f', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
 			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user remy (remy bertot has admin rights on cakephp > cp-project1)
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
@@ -177,7 +180,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $getOptions), true);
 		
 		// How many results we expect
-		$this->assertEqual(count($srvResult['body']), $expectedCount, 'We expect {$expectedCount} permissions for the category ' . $catName);
+		$this->assertNotEmpty($srvResult['body'], $expectedCount, 'We expect permissions for the category ' . $catName);
 		// All expected permissions are in the server answer
 		foreach($srvResult['body'] as $perm) {
 			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the category {$catName}"); 
