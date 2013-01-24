@@ -168,7 +168,12 @@ class PermissionTest extends CakeTestCase {
 				'aconame' => 'marketing',
 				'username' => 'cedric@passbolt.com',
 				'result' => null
-			)
+			),
+			array(
+				'aconame' => 'cp-project2',
+				'username' => 'frank@passbolt.com',
+				'result' => PermissionType::DENY
+			),
 		);
 		foreach ($testcases as $testcase) {
 			$user = $this->User->findByUsername($testcase['username']);
