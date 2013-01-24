@@ -24,6 +24,7 @@ class CategoryResourceTest extends CakeTestCase {
 		$this->CategoryResource->useDb = 'test';
 		// Disable the permissionable behavior, we will test the permissionable behavior in an other unit test
 		$this->CategoryResource->Category->Behaviors->disable('Permissionable');
+		$this->CategoryResource->Resource->Behaviors->disable('Permissionable');
 	}
 
 /**
