@@ -48,6 +48,7 @@ class CommentsController extends AppController {
 			return;
 		}
 		
+		// find the comments
 		$findData = array(
 			'Comment' => array(
 				'foreign_id' => $foreignId
@@ -121,6 +122,7 @@ class CommentsController extends AppController {
 		$fields = $this->Comment->getFindFields('add', User::get('Role.name'));
 		$this->Comment->save($postData, true, $fields['fields']);
 		
+		// return the just inserted comment
 		$findData = array('Comment' => array('id' => $this->Comment->id));
 		$findOptions = $this->Comment->getFindOptions('view', User::get('Role.name'), $findData);
 		$this->set('data', $this->Comment->find('first', $findOptions));
