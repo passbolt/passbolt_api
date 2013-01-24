@@ -16,7 +16,7 @@ if (!class_exists('CakeSession')) {
 
 class PermissionTest extends CakeTestCase {
 
-	public $fixtures = array('app.resource', 'app.user', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.category', 'app.categoriesResource', 'app.permissionsType', 'app.permission');
+	public $fixtures = array('app.resource', 'app.user', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.category', 'app.categoriesResource', 'app.permissionsType', 'app.permission', 'app.permission_view');
 
 	public function setUp() {
 		parent::setUp();
@@ -31,6 +31,7 @@ class PermissionTest extends CakeTestCase {
 		$this->UserCategoryPermission = ClassRegistry::init('UserCategoryPermission');
 		
 		$this->Category->Behaviors->disable('Permissionable');
+		$this->Resource->Behaviors->disable('Permissionable');
 	}
 
 	public function testMysqlFunctionGetGroupCategoryPermission() {
@@ -59,7 +60,17 @@ class PermissionTest extends CakeTestCase {
 				'aconame' => 'projects',
 				'groupname' => 'developers team leads',
 				'result' => PermissionType::UPDATE
-			)
+			),
+			// array(
+				// 'aconame' => 'projects',
+				// 'groupname' => 'developers team leads junior',
+				// 'result' => PermissionType::UPDATE
+			// ),
+			// array(
+				// 'aconame' => 'cakephp',
+				// 'groupname' => 'developers team leads junior',
+				// 'result' => PermissionType::DENY
+			// )
 		);
 		foreach ($testcases as $testcase) {
 			$group = $this->Group->findByName($testcase['groupname']);
@@ -74,9 +85,9 @@ class PermissionTest extends CakeTestCase {
 				$permission = null;
 
 			$this->assertTrue( $testcase['result'] == $permission,
-												"permissions for group {$group['Group']['name']} and category {$category['Category']['name']} returned {$permission}
-												but should have returned {$testcase['result']}"
-												);
+				"permissions for group {$group['Group']['name']} and category {$category['Category']['name']} returned {$permission}
+				but should have returned {$testcase['result']}"
+			);
 		}
 	}
 
@@ -143,6 +154,11 @@ class PermissionTest extends CakeTestCase {
 				'result' => PermissionType::ADMIN
 			),
 			array(
+				'aconame' => 'cp-project1',
+				'username' => 'manager.nogroup@passbolt.com',
+				'result' => PermissionType::ADMIN
+			),
+			array(
 				'aconame' => 'cp-project2',
 				'username' => 'remy@passbolt.com',
 				'result' => PermissionType::UPDATE
@@ -192,6 +208,11 @@ class PermissionTest extends CakeTestCase {
 				'result' => PermissionType::ADMIN
 			),
 			array(
+				'aconame' => 'cpp1-pwd1',
+				'username' => 'manager.nogroup@passbolt.com',
+				'result' => PermissionType::ADMIN
+			),
+			array(
 				'aconame' => 'cpp2-pwd1',
 				'username' => 'remy@passbolt.com',
 				'result' => PermissionType::UPDATE
@@ -201,6 +222,11 @@ class PermissionTest extends CakeTestCase {
 				'aconame' => 'shared resource',
 				'username' => 'a-usr1@companya.com',
 				'result' => PermissionType::UPDATE
+			),
+			array(
+				'aconame' => 'dp2-pwd1',
+				'username' => 'cedric@passbolt.com',
+				'result' => PermissionType::DENY
 			)
 		);
 		foreach ($testcases as $testcase) {

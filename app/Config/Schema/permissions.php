@@ -126,22 +126,8 @@ class PermissionsSchema {
 					SELECT 
 						`u`.id AS user_id,
 						`r`.id AS resource_id,
-						IFNULL(
-							`p_direct`.id,
-							IF(
-								`pg_inherited`.type > `pu_inherited`.type,
-								`pg_inherited`.id,
-								`pu_inherited`.id
-							)
-						) AS permission_id,
-						IFNULL(
-							`p_direct`.id,
-							IF(
-								`pg_inherited`.type > `pu_inherited`.type,
-								`pg_inherited`.type,
-								`pu_inherited`.type
-							)
-						) AS permission_type
+						IFNULL(`p_direct`.id, IFNULL(`pu_inherited`.id, `pg_inherited`.id)) AS permission_id,
+						IFNULL(`p_direct`.type, IFNULL(`pu_inherited`.type, `pg_inherited`.type)) AS permission_type
 						/*IF(`p_direct`.id, '1', '0') AS inherited*/
 					FROM (`resources` r JOIN `users` u)
 					LEFT JOIN `permissions` p_direct ON (
@@ -163,6 +149,7 @@ class PermissionsSchema {
 							LIMIT 1
 						)
 					)
+					
 					LEFT JOIN `permissions` pu_inherited ON (
 						/* `p_direct`.id IS NULL */
 						pu_inherited.id = (
