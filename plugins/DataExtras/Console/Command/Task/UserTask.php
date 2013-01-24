@@ -19,6 +19,9 @@ class UserTask extends ModelTask {
 	public static function getAlias() {
 		$User = ClassRegistry::init('User');
 		$aliases = array (
+			'mng' => $User->findByUsername('manager.nogroup@passbolt.com'),
+			'utt' => $User->findByUsername('utest@passbolt.com'),
+			'tst' => $User->findByUsername('test@passbolt.com'),
 			'ins' => $User->findByUsername('root@passbolt.com'),
 			'dar' => $User->findByUsername('dark.vador@passbolt.com'),
 			'rem' => $User->findByUsername('remy@passbolt.com'),
@@ -27,9 +30,12 @@ class UserTask extends ModelTask {
 			'ism' => $User->findByUsername('ismail@passbolt.com'),
 			'kev' => $User->findByUsername('kevin@passbolt.com'),
 			'ced' => $User->findByUsername('cedric@passbolt.com'),
+			'fra' => $User->findByUsername('frank@passbolt.com'),
 			'jea' => $User->findByUsername('jean-rene@test.com'),
 			'usr' => $User->findByUsername('user@passbolt.com'),
-			'au1' => $User->findByUsername('a-usr1@companya.com')
+			'au1' => $User->findByUsername('a-usr1@companya.com'),
+			// 'ala' => $User->findByUsername('alan@passbolt.com'),
+			// 'ras' => $User->findByUsername('rasterman@passbolt.com')
 		);
 		foreach ($aliases as $name=>$obj){
 			$aliases[$name] = $obj['User']['id'];
@@ -38,6 +44,13 @@ class UserTask extends ModelTask {
 	}
 	
 	protected function getData() {
+		$us[] = array('User' => array(
+			'id' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
+			'username' => 'utest@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c', // USER
+			'password' => 'notdefined',
+			'active' => 1
+		));
 		$us[] = array('User' => array(
 			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c51',
 			'username' => 'root@passbolt.com',
@@ -50,6 +63,13 @@ class UserTask extends ModelTask {
 			'username' => 'dark.vador@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'I am your father',
+			'active' => 1
+		));
+		$us[] = array('User' => array(
+			'id' => 'abcd6042-c5cd-efef-a0c5-080027796c4c',
+			'username' => 'manager.nogroup@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'nodefined',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
@@ -143,6 +163,28 @@ class UserTask extends ModelTask {
 			'password' => 'password',
 			'active' => 1
 		));
+		$us[] = array('User' => array(
+			'id' => 'fafaab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'username' => 'frank@passbolt.com',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'password' => 'password',
+			'active' => 1
+		));
+		// $us[] = array('User' => array(
+			// 'id' => 'abcdab9c-4380-8888-b4cc-2f4fd7a10fce',
+			// 'username' => 'alan@passbolt.com',
+			// 'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			// 'password' => 'password',
+			// 'active' => 1
+		// ));
+		// $us[] = array('User' => array(
+			// 'id' => 'abcdab9c-4380-7777-b4cc-2f4fd7a10fce',
+			// 'username' => 'rasterman@passbolt.com',
+			// 'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			// 'password' => 'password',
+			// 'active' => 1
+		// ));
+		
 		return $us;
 	}
 }

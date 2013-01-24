@@ -36,7 +36,7 @@ class CategoryResource extends AppModel {
 					'message'	=> __('UUID must be in correct format')
 				),
 				'exist' => array(
-					'rule' => array('categoryExists', null),
+					'rule' => array('validateExists', 'category_id', 'Category'),
 					'message' => __('The category provided does not exist')
 				)
 			),
@@ -48,7 +48,7 @@ class CategoryResource extends AppModel {
 					'message'	=> __('UUID must be in correct format')
 				),
 				'exist' => array(
-					'rule' => array('resourceExists', null),
+					'rule' => array('validateExists', 'resource_id', 'Resource'),
 					'message' => __('The resource provided does not exist')
 				),
 				'uniqueCombi' => array(
@@ -63,38 +63,6 @@ class CategoryResource extends AppModel {
 				$rules = $default;
 		}
 		return $rules;
-	}
-
-/**
- * Check if a category with same id exists
- * @param check
- */
-	public function categoryExists($check) {
-		if ($check['category_id'] == null) {
-			return false;
-		} else {
-			$exists = $this->Category->find('count', array(
-				'conditions' => array('Category.id' => $check['category_id']),
-				 'recursive' => -1
-			));
-			return $exists > 0;
-		}
-	}
-
-/**
- * Check if a category with same id exists
- * @param check
- */
-	public function resourceExists($check) {
-		if ($check['resource_id'] == null) {
-			return false;
-		} else {
-			$exists = $this->Resource->find('count', array(
-				'conditions' => array('Resource.id' => $check['resource_id']),
-				 'recursive' => -1
-			));
-			return $exists > 0;
-		}
 	}
 
 /**

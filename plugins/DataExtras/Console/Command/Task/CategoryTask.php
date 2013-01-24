@@ -30,6 +30,7 @@ class CategoryTask extends ModelTask {
 	public static function getAlias() {
 		$Category = ClassRegistry::init('Category');
 		$aliases = array(
+			// Passbolt case, mainly used to test permission system inheritance
 			'root' => $Category->findByName("Bolt Softwares Pvt. Ltd."),
 			'adm' => $Category->findByName("administration"),
 			'acc' => $Category->findByName("accounts"),
@@ -46,7 +47,10 @@ class CategoryTask extends ModelTask {
 			'dp2' => $Category->findByName("d-project2"),
 			'oth' => $Category->findByName("others"),
 			'op1' => $Category->findByName("o-project1"),
-			'op2' => $Category->findByName("o-project2")
+			'op2' => $Category->findByName("o-project2"),
+			
+			// Unit tests sandbox category
+			'utt' => $Category->findByName("utest")
 		);
 		foreach ($aliases as $name=>$obj){
 			$aliases[$name] = $obj['Category']['id'];
@@ -55,6 +59,7 @@ class CategoryTask extends ModelTask {
 	}
 	
 	protected function getData() {
+		// Passbolt main Use case
 		$c[] = array('Category'=>array(
 			'id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
 			'parent_id' => null,
@@ -242,6 +247,30 @@ class CategoryTask extends ModelTask {
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));
+		
+		// Sand box unit test
+		$c[] = array('Category'=>array(
+			'id' => '10d11ff1-5208-4dc2-94d1-1b63d7a10fce',
+			'parent_id' => null,
+			'name' => 'utest',
+			'category_type_id' => null,
+			'deleted' => 0
+		));
+		$c[] = array('Category'=>array(
+			'id' => '10d11ff2-5208-4dc2-94d1-1b63d7a10fce',
+			'parent_id' => '10d11ff1-5208-4dc2-94d1-1b63d7a10fce',
+			'name' => 'utest1',
+			'category_type_id' => null,
+			'deleted' => 0
+		));
+		$c[] = array('Category'=>array(
+			'id' => '10d11ff3-5208-4dc2-94d1-1b63d7a10fce',
+			'parent_id' => '10d11ff1-5208-4dc2-94d1-1b63d7a10fce',
+			'name' => 'utest2',
+			'category_type_id' => null,
+			'deleted' => 0
+		));
+		
 		return $c;
 	}
 }

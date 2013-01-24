@@ -18,6 +18,15 @@ class ResourceTask extends ModelTask {
 	
 	protected function getData() {
 		$r[] = array('Resource'=>array(
+			'id' => '408bb871-5168-49d4-a676-fb098cebc04d',
+			'name' => 'utest1-pwd1',
+			'username' => 'unitTest1',
+			'expiry_date' => null,
+			'uri' => 'https://unit-test.com',
+			'description' => 'this is a description test',
+			'deleted' => 0
+		));
+		$r[] = array('Resource'=>array(
 			'id' => '509bb871-5168-49d4-a676-fb098cebc04d',
 			'name' => 'facebook account',
 			'username' => 'passbolt',
@@ -134,6 +143,19 @@ class ResourceTask extends ModelTask {
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));
+		$r[] = array('Resource'=>array(
+			'id' => '50d77ffb-d290-49e4-ac86-1b63d7a10fce',
+			'name' => 'dp2-pwd1',
+			'username' => 'admin',
+			'expiry_date' => null,
+			'uri' => 'http://drupal.project1.net/',
+			'description' => 'this is a description test',
+			'deleted' => 0,
+			'created' => '2012-12-24 03:34:43',
+			'modified' => '2012-12-24 03:34:43',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));		
 		$r[] = array('Resource'=>array(
 			'id' => '50d77ffd-3294-4db8-89f6-1b63d7a10fce',
 			'name' => 'op1-pwd2',

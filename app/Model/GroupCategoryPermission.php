@@ -81,7 +81,7 @@ class GroupCategoryPermission extends AppModel {
 						'Permission' => array(
 							'fields' => array('id', 'type'),
 							'PermissionType' => array(
-								'fields' => array('id', 'serial', 'name')
+								'fields' => array('serial', 'name')
 							),
 							// Return the elements the permission has been defined for (group, category)
 							'Group' => array(

@@ -26,6 +26,25 @@ class PermissionTask extends ModelTask {
 		$CategoryTask = $this->Tasks->load('Data.Category');
 		$cat = $CategoryTask::getAlias();
 		
+		// User test@passbolt.com as admin of the root unit test category
+		// Sand box for unit tests
+		$ps[] = array('Permission' => array(
+			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a10dee',
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['utt'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['utt'],
+			'type' => PermissionType::ADMIN
+		));
+		// Manager.nogroup has admin right on everything
+		$ps[] = array('Permission' => array(
+			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a1a09f',
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['root'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['mng'],
+			'type' => PermissionType::ADMIN
+		));
 		// Group Management has admin rights on everything
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce',
@@ -81,6 +100,16 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $groups['dru'],
 			'type' => PermissionType::READ,
 		));
+		// Group human resources can modify resource salesforce account
+		$rDrupalPwd2 = $this->Resource->findByName("dp2-pwd1");
+		$ps[] = array('Permission' => array(
+			'id' => '50e6b4af-7768-45e0-900d-7784d7a10fce',
+			'aco' => 'Resource',
+			'aco_foreign_key' => $rDrupalPwd2['Resource']['id'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['ced'],
+			'type' => PermissionType::DENY
+		));
 		// Group cakephp has access to category cakephp in readonly
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-8ab8-4533-a4b4-23a4d7a10fce',
@@ -108,7 +137,33 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $users['rem'],
 			'type' => PermissionType::ADMIN,
 		));
-
+		// Frank has denied right on cakephp
+		$ps[] = array('Permission' => array(
+			'id' => '50f6b4af-a491-43f5-fac9-23a4d7a10fce',
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['pro'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['fra'],
+			'type' => PermissionType::DENY,
+		));
+		// // Group developers team leads junior has access to projects in modify
+		// $ps[] = array('Permission' => array(
+			// 'id' => '50e6b4af-a491-43f5-9cc9-23a4d7a10fce',
+			// 'aco' => 'Category',
+			// 'aco_foreign_key' => $cat['pro'],
+			// 'aro' => 'Group',
+			// 'aro_foreign_key' => $groups['tlj'],
+			// 'type' => PermissionType::UPDATE,
+		// ));
+		// // Group developers team leads has denied right on cakephp
+		// $ps[] = array('Permission' => array(
+			// 'id' => '50e6b4af-a492-43f5-9cc9-23a4d7a10fce',
+			// 'aco' => 'Category',
+			// 'aco_foreign_key' => $cat['cak'],
+			// 'aro' => 'Group',
+			// 'aro_foreign_key' => $groups['tlj'],
+			// 'type' => PermissionType::DENY,
+		// ));
 		// Remy Bertot has admin rights on others
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-ad14-4659-a60d-23a4d7a10fce',

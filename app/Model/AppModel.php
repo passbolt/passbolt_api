@@ -15,9 +15,8 @@ App::uses('Model', 'Model');
 class AppModel extends Model {
 
 /**
- * Binds to ARO nodes through permissions settings
- *
- * @var array
+ * Model behaviors
+ * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = array('Containable');
 
@@ -131,20 +130,21 @@ class AppModel extends Model {
  * Get path of a target instance in a nested data array
  * @param string id needle
  * @param array stack 
+ * @param key the key which hold the needle value
  * @return array the path of the found needle or false
  */
-	public function inNestedArray ($needle, $data, &$path=array(), &$found=false) {
+	public function inNestedArray ($needle, $data, $key='id', &$path=array(), &$found=false) {
 		// if data is an array of nested array
 		if(!isset($data[$this->alias])) {
 			foreach($data as $nestedData) {
-				$this->inNestedArray($needle, $nestedData, $path, $found);
+				$this->inNestedArray($needle, $nestedData, $key, $path, $found);
 				if ($found){
 					break;					
 				}
 			}
 		} else {
 			// the needle is found
-			if($data[$this->alias]['id'] == $needle) {
+			if($data[$this->alias][$key] == $needle) {
 				$found = true;
 				array_unshift($path, $data[$this->alias]['id']);
 				return $path;
@@ -152,7 +152,7 @@ class AppModel extends Model {
 			// search in the children
 			if(!empty($data['children'])) {
 				foreach($data['children'] as $child) {
-					$this->inNestedArray($needle, $child, $path, $found);
+					$this->inNestedArray($needle, $child, $key, $path, $found);
 					if ($found) {
 						array_unshift($path, $data[$this->alias]['id']);
 						break;

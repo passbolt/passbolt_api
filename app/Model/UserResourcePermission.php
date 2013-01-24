@@ -66,7 +66,7 @@ class UserResourcePermission extends AppModel {
 						'Permission' => array(
 							'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
 							'PermissionType' => array(
-								'fields' => array('id', 'serial', 'name')
+								'fields' => array('serial', 'name')
 							),
 							// Return the elements the permission has been defined for (user, category)
 							'User' => array(

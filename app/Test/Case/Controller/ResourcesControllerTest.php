@@ -26,17 +26,14 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$user = new User();
-
-		$user->useDbConfig = 'test';
-		$kk = $user->findByUsername('dark.vador@passbolt.com');
-		$user->setActive($kk);
+		
+		$this->User = new User();
+		$this->User->useDbConfig = 'test';
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
 
 		$this->Resource = new Resource();
 		$this->Resource->useDbConfig = 'test';
-
-		$this->CategoryResource = new CategoryResource();
-		$this->CategoryResource->useDbConfig = 'test';
 	}
 
 	public function testView() {
@@ -63,10 +60,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewByCategory() {
- 		$categoryModel = new Category();
-		$categoryModel->useDbConfig = 'test';
-		$projectCat = $categoryModel->findByName('cp-project2');
-		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
+		$projectCat = $this->Resource->CategoryResource->Category->findByName('cp-project2');
+		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 
 		$id = $projectCat['Category']['id'];
 
@@ -97,12 +92,12 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals('cpp2-pwd2', $result['body'][4]['Resource']['name'],
 			$url . " test should read 'cpp2-pwd2' but is reading {$result['body'][4]['Resource']['name']}"
 		);
-		$this->assertEquals(13, count($result['body']),
+		$this->assertEquals(14, count($result['body']),
 			$url . " counting the number of elements should return '13' but is reading " . count($result['body'][1]['CategoryResource'])
 		);
 
 		// Test when the category is empty
-		$mapusaCat = $categoryModel->findByName('cp-project3');
+		$mapusaCat = $this->Resource->CategoryResource->Category->findByName('cp-project3');
 		$id = $mapusaCat['Category']['id'];
 		// should return success
 		$result = json_decode($this->testAction("/resources/viewByCategory/$id.json", array('return' => 'contents')), true);
@@ -113,9 +108,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAdd() {
-		$categoryModel = new Category();
-		$categoryModel->useDbConfig = 'test';
-		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
+		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
@@ -137,7 +130,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
 		// check that Categories were properly saved
 		$resource = $this->Resource->findByName("test1");
-		$catres = $this->CategoryResource->find('all', array(
+		$catres = $this->Resource->CategoryResource->find('all', array(
 			'conditions' => array(
 				'resource_id' => $resource["Resource"]["id"]
 			)
@@ -205,9 +198,7 @@ class ResourcesControllerTest extends ControllerTestCase {
  * Test adding a resource with a secret 
  */
 	public function testAddWithSecret() {
-		$categoryModel = new Category();
-		$categoryModel->useDbConfig = 'test';
-		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
+		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
@@ -236,10 +227,9 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testEdit() {
-		$categoryModel = new Category();
-		$categoryModel->useDbConfig = 'test';
-		$rootCat = $categoryModel->findByName('Bolt Softwares Pvt. Ltd.');
-		$accountCat = $categoryModel->findByName('accounts');
+
+		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
+		$accountCat = $this->Resource->CategoryResource->Category->findByName('accounts');
 		$resource = $this->Resource->findByName("facebook account");
 		$id = $resource['Resource']['id'];
 
@@ -261,6 +251,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'method' => 'put',
 			 'return' => 'contents'
 		)), true);
+
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "update /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
 		$result = $this->Resource->findById($id);
 		$this->assertEquals("test", $result['Resource']['name'], "update /resources/$id.json : The test should have modified the name into 'test', but name is still {$result['Resource']['name']}");

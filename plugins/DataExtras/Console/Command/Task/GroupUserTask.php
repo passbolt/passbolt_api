@@ -96,6 +96,24 @@ class GroupUserTask extends ModelTask {
 			'user_id' => $users['au1'],
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		));
+		$gu[] = array('GroupUser' => array(
+			'id' => 'bbe560fa-c5cd-11e1-a345-080927796cfa',
+			'group_id' => $groups['cak'],
+			'user_id' => $users['fra'],
+			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		));
+		// $gu[] = array('GroupUser' => array(
+			// 'id' => 'bbd5a042-c5cd-11e1-a345-080027046c4c',
+			// 'group_id' => $groups['tlj'],
+			// 'user_id' => $users['ras'],
+			// 'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		// ));
+		// $gu[] = array('GroupUser' => array(
+			// 'id' => 'bbd5a042-c5cd-11e1-a345-080027046c4c',
+			// 'group_id' => $groups['tlj'],
+			// 'user_id' => $users['ala'],
+			// 'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
+		// ));
 //		$gu[] = array('GroupUser' => array(
 //			'id' => 'bbd5a042-c5cd-11e1-a345-080027046c4c',
 //			'group_id' => $groups[''],

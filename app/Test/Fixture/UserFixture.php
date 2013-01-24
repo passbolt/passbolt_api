@@ -38,9 +38,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'user@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:15',
+			'modified' => '2013-01-24 10:03:15',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -49,9 +49,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'admin@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:15',
+			'modified' => '2013-01-24 10:03:15',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -60,9 +60,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'guest@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:15',
+			'modified' => '2013-01-24 10:03:15',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -71,9 +71,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'jean-rene@test.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -82,9 +82,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'cedric@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -93,9 +93,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'remy@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -104,9 +104,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'kevin@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -115,9 +115,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'ismail@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -126,9 +126,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'aurelie@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -137,10 +137,21 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'myriam@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => 'abcd6042-c5cd-efef-a0c5-080027796c4c',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'username' => 'manager.nogroup@passbolt.com',
+			'password' => '$2a$04$79b58df64165554f7ec93u40w4eEgwRJDM.pKQui7rRLkgvVYry8G',
+			'active' => '1',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
+			'modified_by' => ''
 		),
 		array(
 			'id' => 'abcdab9c-4380-adad-b4cc-2f4fd7a10fce',
@@ -148,9 +159,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'a-usr1@companya.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:15',
+			'modified' => '2013-01-24 10:03:15',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -159,9 +170,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'anonymous@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ujxNGKAH26vrXfyhnrDdzoKPamfKtyLO',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => ''
 		),
 		array(
@@ -170,9 +181,9 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'test@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -181,10 +192,43 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'dark.vador@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93uRhvp4LzyYR6kbXJcuiCVQcQEbRZ3ycm',
 			'active' => '1',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
 			'modified_by' => ''
+		),
+		array(
+			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c51',
+			'role_id' => '142c1340-c5cd-11e1-a0c5-080027796c4c',
+			'username' => 'root@passbolt.com',
+			'password' => '$2a$04$79b58df64165554f7ec93urgzH5Gj3aDSDISd8AtPi9qEf86z.Yqi',
+			'active' => '1',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
+			'modified_by' => ''
+		),
+		array(
+			'id' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'username' => 'utest@passbolt.com',
+			'password' => '$2a$04$79b58df64165554f7ec93urgzH5Gj3aDSDISd8AtPi9qEf86z.Yqi',
+			'active' => '1',
+			'created' => '2013-01-24 10:03:14',
+			'modified' => '2013-01-24 10:03:14',
+			'created_by' => '',
+			'modified_by' => ''
+		),
+		array(
+			'id' => 'fafaab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'username' => 'frank@passbolt.com',
+			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
+			'active' => '1',
+			'created' => '2013-01-24 10:03:15',
+			'modified' => '2013-01-24 10:03:15',
+			'created_by' => '',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 	);
 

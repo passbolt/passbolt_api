@@ -10,32 +10,59 @@
 
 class Resource extends AppModel {
 
-	public $actsAs = array('Trackable');
+/**
+ * Model behaviors
+ * @link http://api20.cakephp.org/class/model#
+ */
+	public $actsAs = array(
+		'Containable',
+		'Trackable',
+		'Permissionable'=>array('priority' => 1)
+	);
 
+/**
+ * Details of has one relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasOne = array(
 		'Secret',
-		'UserResourcePermission' => array(
-			'foreignKey' => 'resource_id'
-		),
-		'GroupResourcePermission' => array(
-			'foreignKey' => 'resource_id'
-		),
-		'Permission' => array(
-			'foreignKey' => false,
-			'conditions' => array( ' Permission.id = UserResourcePermission.permission_id ' ),
-			'type' => 'LEFT'
-		)
+		// 'UserResourcePermission' => array(
+			// 'foreignKey' => 'resource_id'
+		// ),
+		// 'GroupResourcePermission' => array(
+			// 'foreignKey' => 'resource_id'
+		// ),
+		// 'Permission' => array(
+			// 'foreignKey' => false,
+			// 'conditions' => array( ' Permission.id = UserResourcePermission.permission_id ' ),
+			// 'type' => 'LEFT'
+		// )
 	);
-	
+
+/**
+ * Details of has many relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasMany = array(
 		'CategoryResource'
 	);
 
+/**
+ * Details of has and belongs to many relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasAndBelongsToMany = array(
 		'Category' => array (
 			'className' => 'Category'
 		)
 	);
+
+	public function __construct( $id = false, $table = NULL, $ds = NULL )	{
+		parent::__construct($id, $table, $ds);
+		$this->Behaviors->setPriority(array(
+			'Permissionable' => 1
+		));
+	}
 
 /**
  * Get the validation rules upon context
@@ -141,8 +168,8 @@ class Resource extends AppModel {
 				$conditions = array(
 					'conditions' => array(
 						'Resource.deleted' => 0,
-						'UserResourcePermission.user_id' => User::get('id'),
-						'Permission.type >=' => 1
+						// 'UserResourcePermission.user_id' => User::get('id'),
+						// 'Permission.type >=' => 1
 					)
 				);
 				if (isset($data['CategoryResource.category_id'])) {
@@ -180,15 +207,12 @@ class Resource extends AppModel {
 				$fields = array(
 					'fields' => array(
 						'id', 'name', 'username', 'expiry_date', 'uri', 'description', 'modified',
-						'Secret.data', 'created', 'modified',
-						'Permission.id', 'Permission.type'
+						'Secret.data', 'created', 'modified'
 					),
 					'contain' => array(
 						'CategoryResource',
 						'Category',
-						'Secret',
-						'Permission',
-						'UserResourcePermission'
+						'Secret'
 					)
 				);
 			break;

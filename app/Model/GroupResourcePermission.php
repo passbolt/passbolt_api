@@ -53,22 +53,30 @@ class GroupResourcePermission extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+ 	public static function getFindFields($case = 'view', $role = Role::USER) {
+		$returnValue = array('fields'=>array());
 		switch($case){
 			case 'viewByResource':
-				$fields = array(
-					'fields' => array(
-						'GroupResourcePermission.group_id', 'GroupResourcePermission.resource_id', 'GroupResourcePermission.permission_id',
-						'Group.id', 'Group.name',
-						'Permission.id', 'Permission.type', 'Permission.aco', 'Permission.aco_foreign_key', 'Permission.aro', 'Permission.aro_foreign_key'
-					),
+				$returnValue = array(
+					'fields' => array('group_id', 'resource_id', 'permission_id'),
 					'contain' => array(
-						'Group',
-						'Permission'
+						'Permission' => array(
+							'fields' => array('id', 'type'),
+							'PermissionType' => array(
+								'fields' => array('serial', 'name')
+							),
+							// Return the elements the permission has been defined for (group, category)
+							'Group' => array(
+								'fields' => array('id', 'name')
+							),
+							'Resource' => array(
+								'fields' => array('id', 'name')
+							)
+						)
 					)
 				);
 			break;
 		}
-		return $fields;
+		return $returnValue;
 	}
 }

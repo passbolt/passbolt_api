@@ -121,6 +121,20 @@ class CategoriesResourceFixture extends CakeTestFixture {
 			'created' => '2012-12-24 03:34:45',
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
+		array(
+			'id' => '50d88eed-f31c-44be-b36e-1b63d7a10fce',
+			'category_id' => '50d77ffc-8608-422a-8456-1b63d7a10fce',
+			'resource_id' => '50d77ffb-d290-49e4-ac86-1b63d7a10fce',
+			'created' => '2013-01-24 03:34:45',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50d99ef8-3fd4-4e62-8159-1b63d7a10fce',
+			'category_id' => '10d11ff2-5208-4dc2-94d1-1b63d7a10fce',
+			'resource_id' => '408bb871-5168-49d4-a676-fb098cebc04d',
+			'created' => '2013-01-24 10:03:21',
+			'created_by' => ''
+		),
 	);
 
 }

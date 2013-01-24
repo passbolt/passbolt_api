@@ -21,20 +21,12 @@ class AuthenticationBlacklistFixture extends CakeTestFixture {
 		),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
-
 /**
  * Records
  *
  * @var array
  */
 	public $records = array(
-		/*array(
-			'id' => '50f402e8-a638-47ea-acc9-f2718cebc04d',
-			'ip' => 'Lorem ipsum dolor sit amet',
-			'expiry' => '2013-01-14 14:06:48',
-			'created' => '2013-01-14 14:06:48',
-			'modified' => '2013-01-14 14:06:48'
-		),*/
 	);
 
 }
