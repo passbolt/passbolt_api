@@ -39,7 +39,7 @@ class PermissionsSchema {
 					WHERE `p`.aro = 'Group'
 						AND `p`.aco = 'Category'
 					ORDER BY `g`.id, `cp`.child_id, `cp`.lft DESC;
-			",	
+			",
 			"groups_resources_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_resources_permissions AS
 					
@@ -77,19 +77,38 @@ class PermissionsSchema {
 						`u`.id AS user_id,
 						`c`.id AS category_id,
 						`p_direct`.id AS direct_permission_id,
-						`p_inherited`.id AS inherited_permission_id,
-						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id,
-						IFNULL(`p_direct`.type, `p_inherited`.type) AS permission_type
-						/*IF(`p_direct`.id, '1', '0') AS inherited*/
+						`pg_inherited`.id AS inherited_permission_id,
+						IFNULL(`p_direct`.id, IFNULL(`pu_inherited`.id, `pg_inherited`.id)) AS permission_id,
+						IFNULL(`p_direct`.type, IFNULL(`pu_inherited`.type, `pg_inherited`.type)) AS permission_type
+						
 					FROM (`categories` c JOIN `users` u)
+					
+					/*  Get the direct permission for a given user */
 					LEFT JOIN `permissions` p_direct ON (
 						`p_direct`.aro='User'
 						AND `p_direct`.aco='Category'
 						AND `p_direct`.aco_foreign_key = `c`.id
 						AND `p_direct`.aro_foreign_key = `u`.id 
 					)
-					LEFT JOIN `permissions` p_inherited ON (
-						p_inherited.id = (
+					
+					/* Get inherited permissions functions of user's permissions applied to parent categories */
+					LEFT JOIN `permissions` pu_inherited ON (
+						pu_inherited.id = (
+							SELECT `pu_pc`.id
+							FROM `permissions` pu_pc, /* user's permissions applied to parent categories */
+								`categories_parents` cp
+							WHERE `pu_pc`.aro = 'User'
+								AND `pu_pc`.aro_foreign_key = `u`.id
+								AND `pu_pc`.aco_foreign_key = `cp`.id
+								AND `cp`.child_id = `c`.id
+							ORDER BY `cp`.lft DESC
+							LIMIT 1
+						)
+					)
+					
+					/* Get inherited permissions functions of user's groups */
+					LEFT JOIN `permissions` pg_inherited ON (
+						pg_inherited.id = (
 							SELECT `gcp`.permission_id
 							FROM `groups_categories_permissions` gcp,
 								`groups_users` gu
@@ -156,7 +175,7 @@ class PermissionsSchema {
 							ORDER BY `ucp`.permission_type DESC
 							LIMIT 1
 						)
-					);"	
+					);"
 			);
 	}
 
