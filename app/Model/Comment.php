@@ -15,6 +15,16 @@ class Comment extends AppModel {
 	public $actsAs = array('Trackable');
 
 /**
+ * Details of belongs to relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
+	public $belongsTo = array(
+		'Resource' => array(
+			'foreignId' => 'aco_foreign_key'
+		)
+	);
+
+/**
  * Details of has many relationships
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */

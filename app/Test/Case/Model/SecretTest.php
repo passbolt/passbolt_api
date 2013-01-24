@@ -7,8 +7,7 @@
  * @since         version 2.12.7
  * @license       http://www.passbolt.com/license
  */
-App::uses('Resource', 'Model');
-App::uses('User', 'Model');
+App::uses('Secret', 'Model');
 
 class SecretTest extends CakeTestCase {
 
@@ -16,9 +15,8 @@ class SecretTest extends CakeTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->Resource = ClassRegistry::init('Resource');
-		$this->User = ClassRegistry::init('User');
 		$this->Secret = ClassRegistry::init('Secret');
+		$this->Secret->Resource->Behaviors->disable('Permissionable');
 	}
 
 /**

@@ -22,6 +22,7 @@ class CommentTest extends CakeTestCase {
 	public function setup() {
 		parent::setUp();
 		$this->Comment = ClassRegistry::init('Comment');
+		$this->Comment->Resource->Behaviors->disable('Permissionable');
 	}
 
 /**

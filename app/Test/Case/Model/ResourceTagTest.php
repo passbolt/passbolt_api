@@ -20,6 +20,7 @@ class ResourceTagTest extends CakeTestCase {
 		parent::setUp();
 		$this->ResourceTag = ClassRegistry::init('ResourceTag');
 		$this->ResourceTag->useDb = 'test';
+		$this->ResourceTag->Resource->Behaviors->disable('Permissionable');
 	}
 
 /**
