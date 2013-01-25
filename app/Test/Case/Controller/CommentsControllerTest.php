@@ -197,17 +197,17 @@ class CommentsControllerTest extends ControllerTestCase {
 		// Test given model instance id
 		// NULL ID
 		$id = null;
-		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $putOptions), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// NOT EXISTING MODEL INSTANCE
 		$id = '00000000-0000-0000-0000-000000000000';
-		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $putOptions), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 		
 		// INVALID ID FORMAT
 		$id = 'invalid-id-format';
-		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $putOptions), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
 
@@ -222,7 +222,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 		// try to edit an existing comment whose the user is not the owner
 		$id = 'aaa00001-cccc-11d1-a0c5-080027796c4c'; // has to exist, and user has not to be owner
-		$srvResult = json_decode($this->testAction("/comments/edit/$id.json", $putOptions), true);
+		$srvResult = json_decode($this->testAction("/comments/$id.json", $putOptions), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/comments/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
 
@@ -252,7 +252,7 @@ class CommentsControllerTest extends ControllerTestCase {
 				'content' => 'new comment edited'
 			))
 		);
-		$srvResult = json_decode($this->testAction("/comments/edit/$commentId.json", $putOptions), true);
+		$srvResult = json_decode($this->testAction("/comments/$commentId.json", $putOptions), true);
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");		
 		$this->assertEquals($putOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/edit/$commentId.json : The server should return a comment which has same content than the posted value");
 	}
