@@ -316,4 +316,140 @@ class PermissionsControllerTest extends ControllerTestCase {
 		)), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
+
+	// test edit permission action parameters
+	public function testEditParameters() {
+		$postOptions = array(
+			'method' => 'put',
+			'return' => 'contents',
+			'data'=> array(
+				'Permission' => array(
+					'type' => PermissionType::DENY
+				)
+			)
+		);
+		
+		// NOT EXISTING MODEL INSTANCE
+		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fcf';
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+
+		// INVALID ID FORMAT
+		$id = 'invalididformat';
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		
+		// INVALID PERMISSION TYPE
+		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		$postOptionsCopy = $postOptions;
+		$postOptionsCopy['data']['Permission']['type'] = 3500;
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptionsCopy), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	}
+
+	// test add aco permissions action user not allowed
+	public function testEditUserNotAllowed() {	
+		// try to get permissions on a Resource with a not allowed user
+		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		
+		// log the user who is not allowed to access the category
+		$kk = $this->User->findByUsername('test@passbolt.com');
+		$this->User->setActive($kk);
+		
+		$postOptions = array(
+			'method' => 'put',
+			'return' => 'contents',
+			'data'=> array(
+				'Permission' => array(
+					'type' => PermissionType::DENY
+				)
+			)
+		);		
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		// message should be : The user is not allowed to edit the permission
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	}
+	
+	public function testEdit() {
+		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		$postOptions = array(
+			'method' => 'put',
+			'return' => 'contents',
+			'data'=> array(
+				'Permission' => array(
+					'type' => PermissionType::DENY
+				)
+			)
+		);
+		
+		// switch the permission of human resource on the category administration to deny
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		print_r(json_encode($srvResult['body']));
+		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		
+		// log the user with a user who belongs to the human resource group
+		$kk = $this->User->findByUsername('ismail@passbolt.com');
+		$this->User->setActive($kk);
+		
+		// try to access to the category administration
+		$category = $this->Category->findByName('administration');
+		$this->assertEmpty($category, "The user " . User::get('name') . " should not be able to see the category administration");
+	}
+
+	// test delete permission action parameters
+	public function testDeleteParameters() {
+		$postOptions = array(
+			'method' => 'delete',
+			'return' => 'contents'
+		);
+		
+		// NOT EXISTING MODEL INSTANCE
+		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fcf';
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+
+		// INVALID ID FORMAT
+		$id = 'invalididformat';
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	}
+
+	// test delete aco permissions action user not allowed
+	public function testDeleteUserNotAllowed() {	
+		// try to get permissions on a Resource with a not allowed user
+		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		
+		// log the user who is not allowed to access the category
+		$kk = $this->User->findByUsername('test@passbolt.com');
+		$this->User->setActive($kk);
+		
+		$postOptions = array(
+			'method' => 'delete',
+			'return' => 'contents'
+		);	
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		// message should be : The user is not allowed to delete the permission
+		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	}
+	
+	// test delete
+	public function testDelete() {
+		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		$postOptions = array(
+			'method' => 'delete',
+			'return' => 'contents'
+		);	
+		
+		// switch the permission of human resource on the category administration to deny
+		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		
+		// log the user with a user who belongs to the human resource group
+		$kk = $this->User->findByUsername('ismail@passbolt.com');
+		$this->User->setActive($kk);
+		
+		// try to access to the category administration
+		$category = $this->Category->findByName('administration');
+		$this->assertEmpty($category, "The user " . User::get('name') . " should not be able to see the category administration");
+	}
 }

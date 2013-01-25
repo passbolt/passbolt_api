@@ -61,16 +61,6 @@ class PermissionTest extends CakeTestCase {
 				'groupname' => 'developers team leads',
 				'result' => PermissionType::UPDATE
 			),
-			// array(
-				// 'aconame' => 'projects',
-				// 'groupname' => 'developers team leads junior',
-				// 'result' => PermissionType::UPDATE
-			// ),
-			// array(
-				// 'aconame' => 'cakephp',
-				// 'groupname' => 'developers team leads junior',
-				// 'result' => PermissionType::DENY
-			// )
 		);
 		foreach ($testcases as $testcase) {
 			$group = $this->Group->findByName($testcase['groupname']);
