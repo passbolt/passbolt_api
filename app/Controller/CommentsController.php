@@ -19,7 +19,7 @@ class CommentsController extends AppController {
 		
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
-			$this->Message->error(__('Invalid request method, should be PUT'));
+			$this->Message->error(__('Invalid request method, should be GET'));
 			return;
 		}
 		
@@ -162,7 +162,7 @@ class CommentsController extends AppController {
 		
 		// check if the data is valid
 		if(!$this->Comment->validates()){
-			$this->Message->error($this->Comment->validationErrors);
+			$this->Message->error(__('Unable to validate the pushed data'));
 			return;
 		}
 		

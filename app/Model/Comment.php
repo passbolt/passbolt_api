@@ -86,7 +86,7 @@ class Comment extends AppModel {
 			),
 			'content' => array(
 				'alphaNumeric' => array(
-					'rule' => '/^([\pL\s\.\!\,0-9]){1,256}$/u',
+					'rule' => '/^([\pL\s\.\!\,0-9]){1,255}$/u',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('Alphanumeric only')
