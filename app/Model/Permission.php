@@ -82,9 +82,13 @@ class Permission extends AppModel {
 			),
 		);
 		switch ($case) {
+			case 'edit':
+				$rules['type'] = $default['type'];
+			break;
 			default:
 			case 'default' :
 				$rules = $default;
+			break;
 		}
 		return $rules;
 	}
@@ -223,9 +227,14 @@ class Permission extends AppModel {
 		$returnValue = array('fields'=>array());
 		return $returnValue;
 		switch($case){
+			case 'edit':
+				$returnValue = array(
+					'fields' => array('type')
+				);
+			break;
 			case 'view':
 				$returnValue = array(
-					'fields' => array('id', 'type', 'aco_foreign_key', 'aro_foreign_key'),
+					'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
 					'contain' => array(
 						'PermissionType' => array(
 							'fields' => array('serial', 'name')

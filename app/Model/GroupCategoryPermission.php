@@ -76,7 +76,7 @@ class GroupCategoryPermission extends AppModel {
 		switch($case){
 			case 'viewByCategory':
 				$returnValue = array(
-					'fields' => array('group_id', 'category_id', 'permission_id'),
+					'fields' => array('group_id', 'category_id', 'permission_id', 'permission_type'),
 					'contain' => array(
 						'Permission' => array(
 							'fields' => array('id', 'type'),

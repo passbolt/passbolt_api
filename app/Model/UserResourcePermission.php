@@ -61,7 +61,7 @@ class UserResourcePermission extends AppModel {
 		switch($case){
 			case 'viewByResource':
 				$returnValue = array(
-					'fields' => array('user_id', 'resource_id', 'permission_id'),
+					'fields' => array('user_id', 'resource_id', 'permission_id', 'permission_type'),
 					'contain' => array(
 						'Permission' => array(
 							'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
@@ -73,6 +73,9 @@ class UserResourcePermission extends AppModel {
 								'fields' => array('id', 'username', 'role_id')
 							),
 							'Resource' => array(
+								'fields' => array('id', 'name')
+							),
+							'Category' => array(
 								'fields' => array('id', 'name')
 							)
 						)

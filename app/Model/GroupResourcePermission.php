@@ -58,7 +58,7 @@ class GroupResourcePermission extends AppModel {
 		switch($case){
 			case 'viewByResource':
 				$returnValue = array(
-					'fields' => array('group_id', 'resource_id', 'permission_id'),
+					'fields' => array('group_id', 'resource_id', 'permission_id', 'permission_type'),
 					'contain' => array(
 						'Permission' => array(
 							'fields' => array('id', 'type'),
@@ -70,6 +70,9 @@ class GroupResourcePermission extends AppModel {
 								'fields' => array('id', 'name')
 							),
 							'Resource' => array(
+								'fields' => array('id', 'name')
+							),
+							'Category' => array(
 								'fields' => array('id', 'name')
 							)
 						)

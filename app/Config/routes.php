@@ -127,7 +127,9 @@
 		'/permissions/category/:id', 
 		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Category', "[method]" => "GET"), 
 		array('pass' => array('model', 'id')));
-		
+ 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'edit', "[method]" => "PUT"));
+ 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'delete', "[method]" => "DELETE"));
+
 /**
  * Custom route for comments controller
  */
@@ -139,7 +141,7 @@
 		'/comments/:model/:id',
 		array('controller' => 'comments', 'action' => 'addForeignComment', "[method]" => "POST"), 
 		array('pass' => array('model', 'id')));
- 	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'edit', "[method]" => "PUSH"));
+ 	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'edit', "[method]" => "PUT"));
  	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
