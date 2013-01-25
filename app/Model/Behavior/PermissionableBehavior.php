@@ -119,7 +119,7 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 	
 /**
- * Check a user is authorized to allowed to access a reccord
+ * Check a user is authorized to access a reccord
  * @param uuid id Id of the record
  * @param integer permissionType The permission type
  * @return bool
