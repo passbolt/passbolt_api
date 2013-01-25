@@ -19,9 +19,9 @@
 	},
 	"route": {
 		"defaultRoute": {
-				"extension": "passbolt",
-				"controller": "passwordWorkspace",
-				"action": "index"
-			}
+			"extension": "passbolt",
+			"controller": "passwordWorkspace",
+			"action": "index"
+		}
 	}
 }
