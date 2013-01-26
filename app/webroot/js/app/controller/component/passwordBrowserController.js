@@ -301,7 +301,6 @@ steal(
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
-			item.test();
 			// if the resource selected is the same than the previous one unselect
 			if (item.id == this.crtSelectedResourceId) {
 				this.setState('ready');
