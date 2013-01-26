@@ -27,7 +27,8 @@ steal(
 			// the list of resources displayed by the grid
 			resources: new passbolt.model.Resource.List(),
 			// the list of displayed categories
-			categories: new passbolt.model.Category.List()
+			// categories: new passbolt.model.Category.List()
+			categories: []
 		}
 
 	}, /** @prototype */ {
@@ -122,7 +123,7 @@ steal(
 		'insertItem': function (resource, refResourceId, position) {
 			// add the resource to the list of observed resources
 			this.options.resources.push(resource);
-			// remove the item to the grid
+			// insert the item to the grid
 			this._super(resource, refResourceId, position);
 		},
 
@@ -145,6 +146,35 @@ steal(
 			// remove the item to the grid
 			this._super(item);
 		},
+		
+		/**
+		 * Refresh item
+		 * @param {mad.model.Model} item The item to refresh
+		 * @return {void}
+		 */
+		'refreshItem': function (resource) {
+			var self = this;
+			
+			// if the password browser is filter by category
+			if(this.options.categories.length) {
+				var belongToDisplayedCat = false;
+			
+				// check if the resource belongs to a displayed category
+				can.each(resource.Category, function (resourceCategory, i) {
+					// the resource belongs to a destroy categories
+					if (self.options.categories.indexOf(resourceCategory.id) != -1) {
+						belongToDisplayedCat = true;
+					}
+				});
+				// remove the resource if it does not belong to a displayed categories
+				if(!belongToDisplayedCat) {
+					this.removeItem(resource);
+					return;
+				}
+			}
+			
+			this._super(resource);
+		},
 
 		/**
 		 * reset
@@ -164,9 +194,6 @@ steal(
 		'load': function (resources, reset) {
 			// load the resources
 			this._super(resources);
-			console.dir(this.options.resources);
-//			// rebind the controller with the changes on the options
-//			this.on();
 		},
 
 		/* ************************************************************** */
@@ -184,16 +211,14 @@ steal(
 		'{passbolt.model.Resource} created': function (model, ev, resource) {
 			var self = this;
 
-			// check that the new resource is tagged by a category displayed by the 
-			// password browser.
-			// too costly, but indexOf does not work in the lists, maybe the test is not
-			// done on id of model but on another data. Take a look, maybe relative to model
-			// binding
+			// If the new resource belongs to one of the categories displayed by the resource
+			// browser -> Insert it
+			// @todo an indexOf function will be very usefull here
 			can.each(this.options.categories, function (category, i) {
 				can.each(resource.Category, function (rsCategory, j) {
 					if (category.id == rsCategory.id) {
 						self.insertItem(resource, null, 'first');
-						self.on();
+						return false; // break
 					}
 				});
 			});
@@ -229,30 +254,38 @@ steal(
 		},
 
 		/**
-		 * Observe when categories are removed to the list. And remove resources
-		 * which own this categories.
+		 * Observe when a category is removed. And remove from the grid all the resources
+		 * which are not belonging to a displayed Category.
 		 * @param {mad.model.Model} model The model reference
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Category} categories The removed categories
+		 * @param {passbolt.model.Category} category The removed category
 		 * @return {void}
 		 */
-		'{categories} remove': function (model, ev, categories) {
+		'{passbolt.model.Category} destroyed': function (model, ev, category) {
 			var self = this;
 
-			// remove all the resource which are tagged by one of the deleted categories
-			// and remove them to the password browser.
-			// too costly, but indexOf does not work in the lists, maybe the test is not
-			// done on id of model but on another data. Take a look, maybe relative to model
-			// binding
-			can.each(categories, function (categoryRemoved, i) {
-				can.each(self.options.resources, function (resource, j) {
-					can.each(resource.Category, function (category, h) {
-						if (category.id == categoryRemoved.id) {
-							self.removeItem(resource);
-						}
-					});
-				});
+			// remove from the list of categories which are displayed the just deleted categories
+			// and its children
+			var destroyedCategories = mad.model.Model.nestedToList(category, 'children');
+			var destroyedCategoriesIds = [];
+			can.each(destroyedCategories, function(destroyedCategory, h) {
+				var indexof = self.options.categories.indexOf (destroyedCategory.id);
+				if (indexof != -1) {
+					// remove the destroyed categories from the display categories array
+					self.options.categories.splice(indexof, 1);
+				}
+				destroyedCategoriesIds.push(destroyedCategory.id);
 			});
+			
+			// // update the resource which belong to a destroyed category
+			// can.each(this.options.resources, function (resource, i) {
+				// can.each(resource.Category, function (resourceCategory, j) {
+					// // the resource belongs to a destroy categories
+					// if (destroyedCategoriesIds.indexOf(resourceCategory.id) != -1) {
+						// self.refreshItem(resource);
+					// }
+				// });
+			// });
 		},
 
 		/* ************************************************************** */
@@ -268,6 +301,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
+			item.test();
 			// if the resource selected is the same than the previous one unselect
 			if (item.id == this.crtSelectedResourceId) {
 				this.setState('ready');
@@ -307,11 +341,17 @@ steal(
 			var self = this;
 			// store the filter
 			this.filter = filter;
+			// reset the state variables
+			this.options.categories = [];
+			// this.options.categories = new can.Observe.List([]); // with an observable list, it would be great, but it is not working properly with event !
 
 			// override the current list of categories displayed with the new ones
-			this.options.categories = [];
 			can.each(filter.tags, function (category, i) {
-				$.merge(self.options.categories, category.getSubCategories(true));
+				var subCategories = category.getSubCategories(true);
+				can.each(subCategories, function(subCategory, i){
+					self.options.categories.push(subCategory.id);
+				});
+				// $.merge(self.options.categories, category.getSubCategories(true));
 			});
 
 			// if a resource was selected, inform the system that the resource is no more selected
@@ -328,6 +368,7 @@ steal(
 				'recursive': true
 			}, function (resources, response, request) {
 				// The callback is out of date, an other filter has been performed
+				// @todo do something like filter.isRelativeTo(dataBrol) => bool
 				if (request.originParams.keywords != self.filter.keywords ||
 						request.originParams.categories_id != can.map(self.filter.tags, function (tag, i) { return tag.id; }).join(',')) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
