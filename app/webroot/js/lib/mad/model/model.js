@@ -198,14 +198,22 @@ steal(
 		 * Transform a nested model instance in flat list
 		 * @param {mad.model.Model} instance The target model instance to transform
 		 * @param {string} attrName The name of the attribute which store the nested data
+		 * @param {string} key (optional) If the key is defined the result will be filled with
+		 * the properties named with the key, else the result will be filled with the instance
 		 * @return {mad.model.Model.List} 
 		 */
-		'nestedToList': function (instance, attrName, _loop) {
+		'nestedToList': function (instance, attrName, key, _loop) {
 			var returnValue = [];
-
-			returnValue.push(instance);
+			key = (typeof key == 'undefined') ? null : key;
+			
+			if (key != null){
+				returnValue.push(instance.attr(key));
+			} else {
+				returnValue.push(instance);
+			}
+			
 			can.each(instance[attrName], function (subInstance, i) {
-				$.merge(returnValue, mad.model.Model.nestedToList(subInstance, attrName, true));
+				$.merge(returnValue, mad.model.Model.nestedToList(subInstance, attrName, key, true));
 			});
 
 			if (!_loop) {
