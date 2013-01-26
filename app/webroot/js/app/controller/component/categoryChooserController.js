@@ -118,7 +118,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_right_selected': function (el, ev, item, srcEvent) {
-			this._super(el, event, ev);
+			this._super(el, ev, item, srcEvent);
 			this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
 		},
 
