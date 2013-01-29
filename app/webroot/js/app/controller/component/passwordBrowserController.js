@@ -33,15 +33,15 @@ steal(
 
 	}, /** @prototype */ {
 		/**
-		 * The current selected resource id
+		 * The current selected resources
 		 * @type {string}
 		 */
-		'crtSelectedResourceId': null,
+		'selectedResources': {},
 		/**
-		 * The current focused resource id
+		 * The current focused resource
 		 * @type {string}
 		 */
-		'crtFocusedResourceId': null,
+		'focusedResource': null,
 
 		// Constructor like
 		'init': function (el, options) {
@@ -58,10 +58,28 @@ steal(
 			});
 
 			// the columns names
-			options.columnNames = ['Name', 'Username', 'Uri', 'Modified', '', ''];
+			options.columnNames = ['', 'Name', 'Username', 'Uri', 'Modified', '', ''];
 
 			// the columns model
 			options.columnModel = [{
+				'name': 'multipleSelect',
+				'index': 'multipleSelect',
+				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+					var availableValues = [];
+					availableValues[item.id] = '';
+					var checkbox = mad.helper.ComponentHelper.create(
+						cellElement,
+						'inside_replace',
+						mad.form.element.CheckboxController, {
+							'id': 'multiple_select_checkbox_' + item.id, 
+							'name': 'test',
+							'cssClasses': ['js_checkbox_multiple_select'],
+						 	'availableValues': availableValues
+						}
+					);
+					checkbox.render();
+				}
+			}, {
 				'name': 'name',
 				'index': 'name',
 				'valueAdapter': function (value, item, columnModel, rowNum) {
@@ -134,7 +152,7 @@ steal(
 		 */
 		'removeItem': function (item) {
 			// if the grid is in the selected state, check that the resource to delete is not selected
-			if (this.state.is('resourceSelected')) {
+			if (this.state.is('selected')) {
 				// if the resource deleted is the currently selected item
 				if (item.id == this.crtSelectedResourceId) {
 					// switch to the start state
@@ -195,6 +213,15 @@ steal(
 			// load the resources
 			this._super(resources);
 		},
+
+		// /**
+		 // * Select a resource
+		 // * @param {Model} resource The target selected resource
+		 // * @return {void}
+		 // */
+		// 'select': function (resource) {
+			// //
+		// },
 
 		/* ************************************************************** */
 		/* LISTEN TO THE MODEL EVENTS */
@@ -277,7 +304,8 @@ steal(
 				destroyedCategoriesIds.push(destroyedCategory.id);
 			});
 			
-			// // update the resource which belong to a destroyed category
+			// update the resource which belong to a destroyed category
+			// commented because of the last work on the resource model instances updated and trigerring an update event
 			// can.each(this.options.resources, function (resource, i) {
 				// can.each(resource.Category, function (resourceCategory, j) {
 					// // the resource belongs to a destroy categories
@@ -292,8 +320,52 @@ steal(
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
 
+		'unselect': function (item) {
+			// if in multiple selected state
+			// the component will allow multiple select
+			if (this.state.is('multipleSelected')) {
+				// remove the resource from the previously selected resources
+				delete this.selectedResources[item.id];
+				// unselect the item in grid
+				this.view.unselectItem(item);
+			} else {
+				// remove the resource from the previously selected resources
+				delete this.selectedResources[item.id];
+				// uncheck the associated checkbox
+				var chkBxComponent = mad.app.getComponent('multiple_select_checkbox_' + item.id);
+				chkBxComponent.reset();
+				// unselect the item in grid
+				this.view.unselectItem(item);
+				// notice the app about the just unselected resource
+				mad.bus.trigger('resource_unselected', item);
+			}
+		},
+		
+		'select': function (item) {
+			// if in multiple selected state
+			// the component will allow multiple select
+			if (this.state.is('multipleSelected')) {
+				// save the new selected resource
+				this.selectedResources[item.id] = item;
+				// select the item in grid
+				this.view.selectItem(item);
+				
+			// else 
+			} else {
+				this.selectedResources[item.id] = item;
+				// check the associated checkbox
+				var chkBxComponent = mad.app.getComponent('multiple_select_checkbox_' + item.id);
+				chkBxComponent.setValue([item.id]);
+				// select the item in grid
+				this.view.selectItem(item);
+
+				// notice the application about this selection
+				mad.bus.trigger('resource_selected', item);
+			}
+		},
+
 		/**
-		 * Observe when an item is selected
+		 * Observe when an item is selected in the grid
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {mixed} item The selected item instance or its id
@@ -301,28 +373,94 @@ steal(
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
-			// if the resource selected is the same than the previous one unselect
-			if (item.id == this.crtSelectedResourceId) {
-				this.setState('ready');
-				mad.bus.trigger('resource_unselected', item);
+			// if the component is already in selected state & the resource is currently selected 
+			// -> unselect it
+			if (this.state.is('selected')
+				&& typeof this.selectedResources[item.id] != 'undefined') {
+				this.unselect(item);
+			// unselect all the previously selected resource
+			// and select the given resource
 			} else {
-				this.setState('ready');
-				this.crtSelectedResourceId = item.id;
-				this.setState('resourceSelected');
-				mad.bus.trigger('resource_selected', item);
+				
+				// if the grid is not in selected state, force it to switch into
+				if (!this.state.is('selected')) {
+					this.setState('selected');
+				}
+				
+				// unselect the currently selected resources
+				if (!$.isEmptyObject(this.selectedResources)) {
+					for (var i in this.selectedResources){
+						this.unselect(this.selectedResources[i]);						
+					}
+				}
+				
+				// select the resource
+				this.select(item);
 			}
 		},
 
 		/**
-		 * Observe when a resource is unselected
+		 * Listen to the check event on any checkbox form element components. 
+		 * 
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mixed} item The selected item instance or its id
+		 * @param {mixed} data The id of the resource which has been checked
 		 * @return {void}
 		 */
-		' item_unselected': function (el, ev, item) {
-			this.setState('ready');
-			mad.bus.trigger('resource_unselected', item);
+		' checkbox.checked': function (el, ev, data) {
+			var self = this;
+			
+			// if the grid is in initial state, switch it to selected
+			if (this.state.is('ready')) {
+				this.setState('selected');
+			}
+			// if the grid is already in selected state, switch to multipleSelected
+			// to allow multiple selection
+			else if (this.state.is('selected')) {
+				can.each(this.selectedResources, function (resource, i) {
+					// notice the app about the unselected resource
+					// ok this is not the best way to do it
+					mad.bus.trigger('resource_unselected', resource);
+				});
+				this.setState('multipleSelected');
+			}
+			
+			// find the resource functions of its id in the displayed resources array
+			// and select it
+			// @todo check to use maybe the search function, check the already done function search, and check what have been done on the server side
+			can.each(this.options.resources, function (resource, i) {
+				if (resource.id == data) {
+					self.select(resource);
+					return false; // break
+				}
+			});
+		},
+
+		/**
+		 * Listen to the uncheck event on any checkbox form element components. 
+		 * 
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} data The id of the resource which has been unchecked
+		 * @return {void}
+		 */
+		' checkbox.unchecked': function (el, ev, data) {
+			var self = this;
+			
+			// find the resource functions of its id in the displayed resources array
+			// and unselect it
+			// @todo check to use maybe the search function, check the already done function search, and check what have been done on the server side
+			can.each(this.options.resources, function (resource, i) {
+				if (resource.id == data) {
+					self.unselect(resource);
+					return false; // break
+				}
+			});
+			
+			// if there is no more selected resources, switch the grid to its initial state
+			if ($.isEmptyObject(this.selectedResources)) {
+				this.setState('ready');
+			}
 		},
 
 		/* ************************************************************** */
@@ -354,7 +492,7 @@ steal(
 			});
 
 			// if a resource was selected, inform the system that the resource is no more selected
-			if (this.state.is('resourceSelected')) {
+			if (this.state.is('selected')) {
 				mad.bus.trigger('resource_unselected', this.crtSelectedResourceId);
 			}
 
@@ -412,28 +550,42 @@ steal(
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
-			if (go) {
-				this.crtSelectedResourceId = null;
-				this.crtFocusedResourceId = null;
-			}
+			// nothing to do
 		},
 
 		/**
-		 * Listen to the change relative to the state ResourceSelected
+		 * Listen to the change relative to the state selected
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateResourceSelected': function (go) {
+		'stateSelected': function (go) {
 			if (go) {
 				this.view.hideColumn('modified');
 				this.view.hideColumn('copyLogin');
 				this.view.hideColumn('copySecret');
-				this.view.selectItem(this.crtSelectedResourceId);
 			} else {
 				this.view.showColumn('modified');
 				this.view.showColumn('copyLogin');
 				this.view.showColumn('copySecret');
-				this.view.unselectItem(this.crtSelectedResourceId);
+			}
+		},
+
+		/**
+		 * Listen to the change relative to the state multipleSelected
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateMultipleSelected': function (go) {
+			if (go) {
+				//
+			} else {
+				// unckeck all the previously checked checkboxes
+				// get all the checkbox controller
+				// @todo find a way to get component controller from their class name
+				// var controllers = $('.js_checkbox_multiple_select', this.element).controllers("checkbox_controller");
+				// for (var i = 0; i<controllers.length; i++) {
+					// controllers[i].reset();
+				// }
 			}
 		}
 
