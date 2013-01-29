@@ -46,6 +46,21 @@ steal(
 			this.view.setAvailableValues(this.availableValues);
 		},
 
+		/**
+		 * Render the component
+		 * @see {mad.view.View}
+		 * @param {array} options Associative array of options
+		 * @param {boolean} options.display Display the rendered component. If true
+		 * the rendered component will be push in the DOM else the rendered component
+		 * will be stored in the instance's variable renderedView
+		 * @return {mixed} Return true if the method does not encountered troubles else
+		 * return false. If the option display is set to false, return the rendered view
+		 */
+		'render': function (options) {
+			this.setAvailableValues(this.options.availableValues);
+			this._super();
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */
@@ -56,9 +71,6 @@ steal(
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
-			if (go) {
-				this.setAvailableValues(this.options.availableValues);
-			}
 			this._super(go);
 		}
 
