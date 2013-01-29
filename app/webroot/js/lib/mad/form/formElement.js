@@ -60,6 +60,32 @@ steal(
 		},
 
 		/**
+		 * Render the component
+		 * @see {mad.view.View}
+		 * @param {array} options Associative array of options
+		 * @param {boolean} options.display Display the rendered component. If true
+		 * the rendered component will be push in the DOM else the rendered component
+		 * will be stored in the instance's variable renderedView
+		 * @return {mixed} Return true if the method does not encountered troubles else
+		 * return false. If the option display is set to false, return the rendered view
+		 */
+		'render': function (options) {
+			this.setValue(this.options.value);
+			this._super();
+		},
+
+		/**
+		 * Switch the component to its initial state
+		 * @return {void}
+		 */
+		'reset': function () {
+			console.log('is reseting ' + this.getClass().fullName);
+			this.setState('reset');
+			this.setValue(this.options.value);
+			this.setState('ready');
+		},
+
+		/**
 		 * Set the value of the form element
 		 * @param {mixed} value The value to set
 		 * @return {mad.form.FormElement}
@@ -75,17 +101,21 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Listen to the change relative to the state Reset
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateReset': function (go) {
+			this.setState('ready');
+		},
+
+		/**
 		 * Listen to the change relative to the state Ready
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
-			if (go) {
-				// set the value of the form element
-				if (this.options.value) {
-					this.setValue(this.options.value);
-				}
-			}
+			// override the function to catch the state switch to ready
 		},
 
 		/**
