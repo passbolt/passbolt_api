@@ -84,6 +84,30 @@ steal(
 		 */
 		'remove': function () {
 			this.element.remove();
+		},
+		
+		/**
+		 * Get controller alias
+		 * ex: PasswordBrowserController -> password_browser
+		 * @param {String} format The return format [camel, under], by default camel for camelcased
+		 * @return string
+		 */
+		'getAlias': function (type) {
+			type = (typeof type == 'undefined') ? 'camel' : type;
+			var returnValue = '';
+			var alias = this.constructor.shortName.replace(/Controller$/, '');
+			
+			switch (type) {
+				case 'under':
+					returnValue = jQuery.String.underscore(alias);
+				break;
+				case 'camel':
+				default:
+					returnValue = alias;
+				break;
+			}
+			
+			return returnValue;
 		}
 
 	});
