@@ -45,7 +45,11 @@ class BlacklistComponentTest extends CakeTestCase {
 		$this->BlacklistComponent = new BlacklistComponent($Collection);
 
 		// create request/response and init controller
-		$CakeRequest = new CakeRequest();
+		//$CakeRequest = new CakeRequest();
+		$CakeRequest = $this->getMock('CakeRequest');
+		$CakeRequest->expects($this->any())->method('clientIp')
+									->with()
+									->will($this->returnValue('127.0.0.1'));
 		$CakeResponse = new CakeResponse();
 		$this->Controller = new TestBlacklistController($CakeRequest, $CakeResponse);
 
