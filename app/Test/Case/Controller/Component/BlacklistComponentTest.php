@@ -69,6 +69,7 @@ class BlacklistComponentTest extends CakeTestCase {
 			'ip' => '127.0.0.1',
 			'expiry' => date('Y-m-d H:i:s', time() + 100)
 		));
-		$this->assertTrue($this->BlacklistComponent->isIpInBlacklist(), "isBlacklist should have returned true but returned something else");
+		$ipAddress = $this->Controller->request->clientIp();
+		$this->assertTrue($this->BlacklistComponent->isIpInBlacklist(), "isBlacklist with ip $ipAddress should have returned true but returned something else");
 	}
 }
