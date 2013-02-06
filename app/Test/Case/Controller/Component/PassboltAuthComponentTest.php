@@ -91,7 +91,10 @@ class PassboltAuthComponentTest extends CakeTestCase {
 		$Session = new CakeSession();
 		$this->Session = new CakeSession();
 		// create request/response and init controller
-		$CakeRequest = new CakeRequest();
+		$CakeRequest = $this->getMock('CakeRequest');
+		$CakeRequest->expects($this->any())->method('clientIp')
+									->with()
+									->will($this->returnValue('127.0.0.1'));
 		$CakeResponse = new CakeResponse();
 		$this->Controller = new TestUsersController($CakeRequest, $CakeResponse);
 		if ($complete) {
