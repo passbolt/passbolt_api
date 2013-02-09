@@ -19,11 +19,16 @@ class CategoryTask extends ModelTask {
 	public function execute() {
 		$Model = ClassRegistry::init($this->model);
 		// @todo work on permissionable and save
-		$Model->hasOne = array();
+		//$Model->hasOne = array();
+		$Model->Behaviors->disable('Permissionable');
 		$data = $this->getData();
 		foreach ($data as $item) {
 			$Model->create();
-			$Model->save($item);
+			if (!$m = $Model->save($item)) {
+				pr($Model->invalidFields());
+				$error_msg = mysql_error(); 
+        echo $error_msg; 
+			}
 		}
 	}
 

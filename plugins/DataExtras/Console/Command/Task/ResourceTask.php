@@ -16,6 +16,18 @@ class ResourceTask extends ModelTask {
 	
 	public $model = 'Resource';
 	
+	public function execute() {
+		$Model = ClassRegistry::init($this->model);
+		// @todo work on permissionable and save
+		//$Model->hasOne = array();
+		$Model->Behaviors->disable('Permissionable');
+		$data = $this->getData();
+		foreach ($data as $item) {
+			$Model->create();
+			$Model->save($item);
+		}
+	}
+	
 	protected function getData() {
 		$r[] = array('Resource'=>array(
 			'id' => '408bb871-5168-49d4-a676-fb098cebc04d',
