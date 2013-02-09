@@ -130,10 +130,10 @@ steal(
 					can.trigger(passbolt.model.Resource,'updated', self);
 				}
 			});
-		}
+		},
 		
 		'destroy': function () {
-			
+			// @todo unbind the passbolt.model.Category destroyed event
 		}
 	});
 });
