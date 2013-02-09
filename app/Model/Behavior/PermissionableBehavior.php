@@ -95,11 +95,11 @@ class PermissionableBehavior extends ModelBehavior {
  * the ADMIN right to the reccords he has just inserted
  */
 	public function afterSave(&$model, $created) {
-		if($created) {
+		if ($created) {
 			$Permission = Common::getModel('Permission');
 			// make the creator administrator of the created instance
 			if (User::get('Role.name') == Role::USER) {
-				$data = array('Permission'=>array(
+				$data = array('Permission' => array (
 					'aco' => $model->alias,
 					'aco_foreign_key' => $model->id,
 					'aro' => 'User',
@@ -108,16 +108,16 @@ class PermissionableBehavior extends ModelBehavior {
 				));
 				$Permission->create();
 				$Permission->set($data);
-				if(!$Permission->validates()){
+				if (!$Permission->validates()) {
 					$this->Message->error($Permission->validationErrors);
 					return;
 				}
-				
-				$permission = $Permission->save($data);				
-			}	
+
+				$permission = $Permission->save($data);
+			}
 		}
 	}
-	
+
 /**
  * Check a user is authorized to access a reccord
  * @param uuid id Id of the record
