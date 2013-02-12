@@ -53,6 +53,9 @@ font-style: normal;
 .icon.edit:before  {
   content: '\270E';
 }
+.icon.close:before  {
+  content: '\274C';
+}
 .icon.login:before  {
   content: '\E740';
 }
