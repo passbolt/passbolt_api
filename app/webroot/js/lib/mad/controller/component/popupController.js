@@ -1,5 +1,6 @@
 steal(
-	'mad/controller/component/containerController.js'
+	'mad/controller/component/containerController.js',
+	'mad/view/component/popup.js'
 ).then(function () {
 
 	/*
@@ -19,6 +20,7 @@ steal(
 
 		'defaults': {
 			'label': 'Popup Container Controller',
+			'viewClass': mad.view.component.Popup,
 			'cssClasses': ['popup'],
 			'tag': 'div'
 		},
@@ -47,35 +49,6 @@ steal(
 		}
 
 	}, /** @prototype */ {
-
-
-		/**
-		 * Render the component
-		 * @see {mad.controller.componentController}
-		 */
-		'render': function (options) {
-			var returnValue = this._super();
-			this.element.find('.js_popup_content_container').position({
-				my: "center center",
-				at: "center center",
-				of: this.element
-			});
-			return returnValue;
-		},
-
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * Listen to the user interaction click with the close button
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'.js_popup_close click': function (el, ev) {
-			this.element.remove();
-		}
 
 	});
 });

@@ -15,8 +15,7 @@
 	background-color:#FFF;
 	opacity: 0.55;
 }
-.js_popup_content_container { 
-	padding:30px 42px; 
+.popup_box { 
 	position: absolute; 
 	box-shadow: 0 4px 16px rgba(0, 0, 0, .2); 
 	background: #FFF; 
@@ -24,8 +23,17 @@
 	border: 1px solid #ACACAC; 
 	outline: 0; 
 }
-.popup_header { 
-	margin-bottom: 16px; 
+.popup_header {
+  padding:3px 14px; 
+  position:relative;
+  border-bottom:1px solid #000;
+}
+.popup .popup_close {
+  position:absolute;
+  top:-3px;
+  right:24px; 
+  width:16px; 
+  height:16px;
 }
 .popup_title { 
 	color: black; 
@@ -34,8 +42,6 @@
 	font-weight: normal; 
 	line-height: 24px; 
 }
-.js_popup_close { 
-	width:16px; 
-	height:16px; 
-	float:right; 
+.popup .popup_content {
+  padding:30px 42px; 
 }
