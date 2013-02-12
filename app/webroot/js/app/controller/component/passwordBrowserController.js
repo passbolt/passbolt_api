@@ -25,18 +25,16 @@ steal(
 			// the type of the item rendered by the grid
 			itemClass: passbolt.model.Resource,
 			// the list of resources displayed by the grid
-			resources: new passbolt.model.Resource.List(),
+			resources: new can.Model.List(),
 			// the list of displayed categories
 			// categories: new passbolt.model.Category.List()
-			categories: []
+			categories: [],
+			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
+			selectedRs: new can.Model.List()
 		}
 
 	}, /** @prototype */ {
-		/**
-		 * The current selected resources
-		 * @type {string}
-		 */
-		'selectedResources': {},
+		
 		/**
 		 * The current focused resource
 		 * @type {string}
@@ -124,7 +122,7 @@ steal(
 					);
 				}
 			}];
-
+			
 			this._super(el, options);
 		},
 
@@ -151,16 +149,6 @@ steal(
 		 * @return {void}
 		 */
 		'removeItem': function (item) {
-			// if the grid is in the selected state, check that the resource to delete is not selected
-			if (this.state.is('selected')) {
-				// if the resource deleted is the currently selected item
-				if (item.id == this.crtSelectedResourceId) {
-					// switch to the start state
-					this.setState('ready');
-					// inform the world that the resource is unselected
-					mad.bus.trigger('resource_unselected', item);
-				}
-			}
 			// remove the item to the grid
 			this._super(item);
 		},
@@ -175,6 +163,7 @@ steal(
 			
 			// if the password browser is filter by category
 			if(this.options.categories.length) {
+				// Is the resource belonging to a displayed category
 				var belongToDisplayedCat = false;
 			
 				// check if the resource belongs to a displayed category
@@ -184,13 +173,14 @@ steal(
 						belongToDisplayedCat = true;
 					}
 				});
-				// remove the resource if it does not belong to a displayed categories
+				// remove the resource if it does not belong to a displayed category
 				if(!belongToDisplayedCat) {
 					this.removeItem(resource);
 					return;
 				}
 			}
 			
+			// if the resource has not been removed from the grid, update it
 			this._super(resource);
 		},
 
@@ -199,7 +189,9 @@ steal(
 		 * @return {void}
 		 */
 		'reset': function () {
-			// reset the list of observed resourced (Bon, make a splice seems to be the only solution)
+			// reset the list of observed resources
+			// by removing a resource from the resources list stored in options, the Browser will
+			// update itself (check "{resources} remove" listener)
 			this.options.resources.splice(0, this.options.resources.length);
 		},
 
@@ -209,27 +201,102 @@ steal(
 		 * load into the grid
 		 * @return {void}
 		 */
-		'load': function (resources, reset) {
+		'load': function (resources) {
 			// load the resources
 			this._super(resources);
 		},
 
-		// /**
-		 // * Select a resource
-		 // * @param {Model} resource The target selected resource
-		 // * @return {void}
-		 // */
-		// 'select': function (resource) {
-			// //
-		// },
+		/**
+		 * Before selecting an item
+		 * @param {mad.model.Model} item The item to select
+		 * @return {void}
+		 */
+		'beforeSelect': function (item) {
+			var self = this,
+				returnValue = true;
+			
+			if (this.state.is('selection')) {
+				// if an item has already been selected
+				// if the item is already selected, unselect it
+				if (this.options.selectedRs.length > 0 && this.options.selectedRs[0].id == item.id) {
+					this.unselect(item);
+					this.setState('ready');
+					returnValue = false;
+				} else {
+					for (var i = this.options.selectedRs.length - 1; i > -1; i--) {
+						this.unselect(this.options.selectedRs[i]);
+					}
+				}
+			}
+			
+			return returnValue;
+		},
+
+		/**
+		 * Before unselecting an item
+		 * @param {mad.model.Model} item The item to unselect
+		 * @return {void}
+		 */
+		'beforeUnselect': function (item) {
+			var returnValue = true;
+			return returnValue;
+		},
+
+		/**
+		 * Select an item
+		 * @param {mad.model.Model} item The item to select
+		 * @param {boolean} silent Do not propagate any event (default:false)
+		 * @return {void}
+		 */
+		'select': function (item, silent) {
+			var self = this;
+			silent = typeof silent == 'undefined' ? false : silent;
+			
+			// add the resource to the list of selected items
+			this.options.selectedRs.push(item);
+			// check the checkbox (if it is not already done)
+			mad.app.getComponent('multiple_select_checkbox_' + item.id)
+				.setValue([item.id]);
+			// make the item selected in the view
+			this.view.selectItem(item);
+			
+			// notice the application about this selection
+			if (!silent) {
+				mad.bus.trigger('resource_selected', item);
+			}
+		},
+
+		/**
+		 * Unselect an item
+		 * @param {mad.model.Model} item The item to unselect
+		 * @param {boolean} silent Do not propagate any event (default:false)
+		 * @return {void}
+		 */
+		'unselect': function (item, silent) {
+			silent = typeof silent == 'undefined' ? false : silent;
+			
+			// uncheck the associated checkbox (if it is not already done)
+			mad.app.getComponent('multiple_select_checkbox_' + item.id)
+				.reset();
+			// unselect the item in grid
+			this.view.unselectItem(item);
+			
+			// remove the resource from the previously selected resources
+			mad.model.List.remove(this.options.selectedRs, item);
+			
+			// notice the app about the just unselected resource
+			if (!silent) {
+				mad.bus.trigger('resource_unselected', item);
+			}
+		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE MODEL EVENTS */
 		/* ************************************************************** */
 
 		/**
-		 * Observe when a resource is created. If the resource is created in a category
-		 * displayed by the grid. Add the new resource a the top of the grid
+		 * Observe when a resource is created. 
+		 * If the created resource belong to a displayed category, add the resource to the grid.
 		 * @param {mad.model.Model} model The model reference
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {passbolt.model.Resource} resource The created resource
@@ -252,8 +319,9 @@ steal(
 		},
 
 		/**
-		 * Observe when a resource is updated. If the resource is rendered by the grid
-		 * refresh its content. We listen the model directly, listening on changes on
+		 * Observe when a resource is updated. 
+		 * If the resource is displayed by he grid, refresh it.
+		 * note : We listen the model directly, listening on changes on
 		 * a list seems too much here (one event for each updated attribute)
 		 * @param {mad.model.Model} model The model reference
 		 * @param {HTMLEvent} ev The event which occured
@@ -267,7 +335,8 @@ steal(
 		},
 
 		/**
-		 * Observe when resources are removed to the list
+		 * Observe when resources are removed from the list of displayed resources and 
+		 * remove it from the grid
 		 * @param {mad.model.Model} model The model reference
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {passbolt.model.Resource} resources The removed resource
@@ -291,8 +360,7 @@ steal(
 		'{passbolt.model.Category} destroyed': function (model, ev, category) {
 			var self = this;
 
-			// remove from the list of categories which are displayed the just deleted categories
-			// and its children
+			// remove from the list of displayed categories the given deleted category and its children
 			var destroyedCategories = mad.model.Model.nestedToList(category, 'children');
 			var destroyedCategoriesIds = [];
 			can.each(destroyedCategories, function(destroyedCategory, h) {
@@ -301,71 +369,17 @@ steal(
 					// remove the destroyed categories from the display categories array
 					self.options.categories.splice(indexof, 1);
 				}
-				destroyedCategoriesIds.push(destroyedCategory.id);
+				// destroyedCategoriesIds.push(destroyedCategory.id);
 			});
-			
-			// update the resource which belong to a destroyed category
-			// commented because of the last work on the resource model instances updated and trigerring an update event
-			// can.each(this.options.resources, function (resource, i) {
-				// can.each(resource.Category, function (resourceCategory, j) {
-					// // the resource belongs to a destroy categories
-					// if (destroyedCategoriesIds.indexOf(resourceCategory.id) != -1) {
-						// self.refreshItem(resource);
-					// }
-				// });
-			// });
 		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
 
-		'unselect': function (item) {
-			// if in multiple selected state
-			// the component will allow multiple select
-			if (this.state.is('multipleSelected')) {
-				// remove the resource from the previously selected resources
-				delete this.selectedResources[item.id];
-				// unselect the item in grid
-				this.view.unselectItem(item);
-			} else {
-				// remove the resource from the previously selected resources
-				delete this.selectedResources[item.id];
-				// uncheck the associated checkbox
-				var chkBxComponent = mad.app.getComponent('multiple_select_checkbox_' + item.id);
-				chkBxComponent.reset();
-				// unselect the item in grid
-				this.view.unselectItem(item);
-				// notice the app about the just unselected resource
-				mad.bus.trigger('resource_unselected', item);
-			}
-		},
-		
-		'select': function (item) {
-			// if in multiple selected state
-			// the component will allow multiple select
-			if (this.state.is('multipleSelected')) {
-				// save the new selected resource
-				this.selectedResources[item.id] = item;
-				// select the item in grid
-				this.view.selectItem(item);
-				
-			// else 
-			} else {
-				this.selectedResources[item.id] = item;
-				// check the associated checkbox
-				var chkBxComponent = mad.app.getComponent('multiple_select_checkbox_' + item.id);
-				chkBxComponent.setValue([item.id]);
-				// select the item in grid
-				this.view.selectItem(item);
-
-				// notice the application about this selection
-				mad.bus.trigger('resource_selected', item);
-			}
-		},
-
 		/**
-		 * Observe when an item is selected in the grid
+		 * Observe when an item is selected in the grid.
+		 * This event comes from the grid view
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {mixed} item The selected item instance or its id
@@ -373,28 +387,12 @@ steal(
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
-			// if the component is already in selected state & the resource is currently selected 
-			// -> unselect it
-			if (this.state.is('selected')
-				&& typeof this.selectedResources[item.id] != 'undefined') {
-				this.unselect(item);
-			// unselect all the previously selected resource
-			// and select the given resource
-			} else {
-				
-				// if the grid is not in selected state, force it to switch into
-				if (!this.state.is('selected')) {
-					this.setState('selected');
-				}
-				
-				// unselect the currently selected resources
-				if (!$.isEmptyObject(this.selectedResources)) {
-					for (var i in this.selectedResources){
-						this.unselect(this.selectedResources[i]);						
-					}
-				}
-				
-				// select the resource
+			var self = this;
+			
+			// switch to select state
+			this.setState('selection');
+			
+			if (this.beforeSelect(item)) {
 				this.select(item);
 			}
 		},
@@ -404,36 +402,28 @@ steal(
 		 * 
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mixed} data The id of the resource which has been checked
+		 * @param {mixed} rsId The id of the resource which has been checked
 		 * @return {void}
 		 */
-		' checkbox.checked': function (el, ev, data) {
+		'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
 			var self = this;
 			
 			// if the grid is in initial state, switch it to selected
 			if (this.state.is('ready')) {
-				this.setState('selected');
+				this.setState('selection');
 			}
 			// if the grid is already in selected state, switch to multipleSelected
-			// to allow multiple selection
-			else if (this.state.is('selected')) {
-				can.each(this.selectedResources, function (resource, i) {
-					// notice the app about the unselected resource
-					// ok this is not the best way to do it
-					mad.bus.trigger('resource_unselected', resource);
-				});
-				this.setState('multipleSelected');
+			else if (this.state.is('selection')) {
+				this.setState('multipleSelection');
 			}
 			
-			// find the resource functions of its id in the displayed resources array
-			// and select it
-			// @todo check to use maybe the search function, check the already done function search, and check what have been done on the server side
-			can.each(this.options.resources, function (resource, i) {
-				if (resource.id == data) {
-					self.select(resource);
-					return false; // break
-				}
-			});
+			// find the resource to select functions of its id
+			var i = mad.model.List.indexOf(this.options.resources, rsId);
+			var resource = this.options.resources[i];
+			
+			if (this.beforeSelect(resource)) {
+				this.select(resource);
+			}
 		},
 
 		/**
@@ -441,25 +431,27 @@ steal(
 		 * 
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {mixed} data The id of the resource which has been unchecked
+		 * @param {mixed} rsId The id of the resource which has been unchecked
 		 * @return {void}
 		 */
-		' checkbox.unchecked': function (el, ev, data) {
+		'.js_checkbox_multiple_select unchecked': function (el, ev, rsId) {
 			var self = this;
 			
-			// find the resource functions of its id in the displayed resources array
-			// and unselect it
-			// @todo check to use maybe the search function, check the already done function search, and check what have been done on the server side
-			can.each(this.options.resources, function (resource, i) {
-				if (resource.id == data) {
-					self.unselect(resource);
-					return false; // break
-				}
-			});
+			// find the resource to select functions of its id
+			var i = mad.model.List.indexOf(this.options.resources, rsId);
+			var resource = this.options.resources[i];
+			
+			if (this.beforeUnselect()) {
+				self.unselect(resource);
+			}
 			
 			// if there is no more selected resources, switch the grid to its initial state
-			if ($.isEmptyObject(this.selectedResources)) {
+			if (!this.options.selectedRs.length) {
 				this.setState('ready');
+			
+			// else if only one resource is selected
+			} else if (this.options.selectedRs.length == 1) {
+				this.setState('selection');
 			}
 		},
 
@@ -488,16 +480,11 @@ steal(
 				can.each(subCategories, function(subCategory, i){
 					self.options.categories.push(subCategory.id);
 				});
-				// $.merge(self.options.categories, category.getSubCategories(true));
 			});
-
-			// if a resource was selected, inform the system that the resource is no more selected
-			if (this.state.is('selected')) {
-				mad.bus.trigger('resource_unselected', this.crtSelectedResourceId);
-			}
 
 			// change the state of the component to loading 
 			this.setState('loading');
+			
 			// load resources for the given filter
 			passbolt.model.Resource.findAll({
 				'categories_id': can.map(filter.tags, function (tag, i) { return tag.id; }).join(','),
@@ -530,8 +517,7 @@ steal(
 
 			this.setState('loading');
 			// load default resources
-			passbolt.model.Resource.findAll({
-			}, function (resources, response, request) {
+			passbolt.model.Resource.findAll({}, function (resources, response, request) {
 				// load the resources in the browser
 				self.load(resources);
 				// change the state to ready
@@ -549,7 +535,7 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateReady': function (go) {
+		'stateReady': function (go) { 
 			// nothing to do
 		},
 
@@ -558,7 +544,7 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateSelected': function (go) {
+		'stateSelection': function (go) {
 			if (go) {
 				this.view.hideColumn('modified');
 				this.view.hideColumn('copyLogin');
@@ -575,18 +561,8 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateMultipleSelected': function (go) {
-			if (go) {
-				//
-			} else {
-				// unckeck all the previously checked checkboxes
-				// get all the checkbox controller
-				// @todo find a way to get component controller from their class name
-				// var controllers = $('.js_checkbox_multiple_select', this.element).controllers("checkbox_controller");
-				// for (var i = 0; i<controllers.length; i++) {
-					// controllers[i].reset();
-				// }
-			}
+		'stateMultipleSelection': function (go) { 
+			// nothing to do
 		}
 
 	});

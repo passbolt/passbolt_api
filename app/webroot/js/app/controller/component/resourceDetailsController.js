@@ -20,23 +20,21 @@ steal(
 
 		'defaults': {
 			'label': 'Resource Details Controller',
+			'viewClass': passbolt.view.component.ResourceDetails,
 			// the resource to bind the component on
 			'resource': null,
-			'viewClass': passbolt.view.component.ResourceDetails
+			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
+			'selectedRs': new can.Model.List()
 		}
 
 	}, /** @prototype */ {
-
+		
 		/**
 		 * Load details of a resource
 		 * @param {passbolt.model.Resource} resource The resource to load
 		 * @return {void}
 		 */
 		'load': function (resource) {
-			if (this.state.is('hidden')) {
-				this.setState('ready');
-			}
-
 			// push the new resource in the options to be able to listen the resource
 			// change in the function name
 			this.options.resource = resource;
@@ -44,8 +42,8 @@ steal(
 			this.setViewData('resource', resource);
 			// refresh the view
 			this.refresh();
-			// rebind the controller listeners
-			this.on();
+			// // on
+			// this.on();
 		},
 
 		/* ************************************************************** */
@@ -64,30 +62,48 @@ steal(
 
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * Observe when an resource is selected
+		/* ************************************************************** *//**
+		 * Observe when a resource is selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The selected resource instance
+		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{mad.bus} resource_selected': function (element, event, resource) {
-			this.load(resource);
+		'{selectedRs} add': function (el, ev, resource) {
+			// if more than one resource selected, or no resource selected
+			if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
+				this.options.resource = null;
+				this.setState('hidden');
+				
+			// else if only 1 resource selected show the details
+			} else {
+				// load the only one resource
+				this.options.resource = this.options.selectedRs[0];
+				this.load(this.options.resource);
+				this.setState('ready');
+			}
 		},
 
 		/**
-		 * Observe when an resource is unselected
+		 * Observe when a resource is unselected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The selected resource instance
+		 * @param {passbolt.model.Resource} resource The unselected resource
 		 * @return {void}
 		 */
-		'{mad.bus} resource_unselected': function (element, event, resource) {
-			// ubind the current resource to avoid any troubles
-			this.options.resource = null;
-			this.on();
+		'{selectedRs} remove': function (el, ev, resource) {
+			// if more than one resource selected, or no resource selected
+			if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
+				this.options.resource = null;
+				this.setState('hidden');
+				
+			// else if only 1 resource selected show the details
+			} else {
+				// load the only one resource
+				this.options.resource = this.options.selectedRs[0];
+				this.load(this.options.resource);
+				this.setState('ready');
+			}
 		}
 
 	});

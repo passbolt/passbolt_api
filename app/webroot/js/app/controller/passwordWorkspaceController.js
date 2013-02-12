@@ -25,7 +25,8 @@ steal(
 
 		'defaults': {
 			'label': 'Password',
-			'templateUri': 'app/view/template/passwordWorkspace.ejs'
+			'templateUri': 'app/view/template/passwordWorkspace.ejs',
+			'selectedRs': new can.Model.List()
 		}
 
 	}, /** @prototype */ {
@@ -39,7 +40,8 @@ steal(
 			// User menu area
 			// *************************************************************
 			var userMenu = this.addComponent(passbolt.controller.component.PasswordsActionsMenuController, {
-				'id': 'js_passbolt_password_actions_menu'
+				'id': 'js_passbolt_password_actions_menu',
+				'selectedRs': this.options.selectedRs
 			}, 'workspace_actions_container');
 			userMenu.render();
 
@@ -57,7 +59,8 @@ steal(
 			// *************************************************************
 			// Add the Password browser component
 			var passwordBrowserController = this.addComponent(passbolt.controller.component.PasswordBrowserController, {
-				'id': 'js_passbolt_password_browser'
+				'id': 'js_passbolt_password_browser',
+				'selectedRs': this.options.selectedRs
 			}, 'js_workspace_main');
 			// passwordBrowserController = passwordBrowserController.decorate('mad.helper.component.BoxDecorator'); // decorator sample, oh yeah
 			passwordBrowserController.render();
@@ -69,9 +72,9 @@ steal(
 			// Add vertical container to the second side area
 			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_workspace_sidebar_second', this.element), {
 				'id': 'js_passbolt_password_sidebar_second',
+				'selectedRs': this.options.selectedRs,
 				'readyState': 'hidden'
 			});
-//			resourceDetails.render();
 		},
 
 		/**
@@ -79,8 +82,8 @@ steal(
 		 * @dev
 		 */
 		'index': function (a, b, c) {
-//			console.log('Execute function index of the password workspace controller, with the following arguments');
-//			console.dir(arguments);
+			console.log('Execute function index of the password workspace controller, with the following arguments');
+			console.dir(arguments);
 		},
 
 		/* ************************************************************** */
@@ -95,6 +98,10 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} category_selected': function (el, ev, category) {
+			
+			// reset the selected resources
+			this.options.selectedRs.splice(0, this.options.selectedRs.length);
+			// Set the new filter and propagate the information on bus
 			var filter =  new passbolt.model.Filter({
 				tags: [category],
 				keywords: null
@@ -103,29 +110,47 @@ steal(
 		},
 
 		/**
-		 * Observe when a resource is unselected
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The unselected resource
-		 * @return {void}
-		 */
-		'{mad.bus} resource_unselected': function (el, ev, resource) {
-			// The resource is no more selected, reinit the password workspace
-			// component to its intitial state (ready)
-			this.setState('ready');
-		},
-
-		/**
-		 * Observe when a resource is selected
+		 * Observe when a resource is selected and adapt the workspace view functions of
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {passbolt.model.Resource} resource The selected resource
 		 * @return {void}
 		 */
-		'{mad.bus} resource_selected': function (el, ev, resource) {
-			// A resource has been selected, change the state of the password Workspace
-			// controller
-			this.setState('resourceSelected');
+		'{selectedRs} add': function (el, ev, resource) {
+			// if more than one resource selected, hide the right sidebar
+			if (this.options.selectedRs.length > 1) {
+				// this view interaction, but for now it will be like that
+				$('.js_workspace_main', this.element).removeClass('middle').addClass('full');
+				$('.js_workspace_sidebar_second', this.element).hide();
+				
+			// else if only 1 resource selected show the right sidebar
+			} else {
+				// this view interaction, but for now it will be like that
+				$('.js_workspace_main', this.element).removeClass('full').addClass('middle');
+				$('.js_workspace_sidebar_second', this.element).show();
+			}
+		},
+
+		/**
+		 * Observe when a resource is unselected and adapt the workspace view functions of
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The unselected resource
+		 * @return {void}
+		 */
+		'{selectedRs} remove': function (el, ev, resource) {
+			// if more just one resource selected, show the right sidebar
+			if (this.options.selectedRs.length == 1) {
+				// this view interaction, but for now it will be like that
+				$('.js_workspace_main', this.element).removeClass('full').addClass('middle');
+				$('.js_workspace_sidebar_second', this.element).show();
+			
+			// else if no resource selected or more than once, hide the right sidebar
+			} else {
+				// this view interaction, but for now it will be like that
+				$('.js_workspace_main', this.element).removeClass('middle').addClass('full');
+				$('.js_workspace_sidebar_second', this.element).hide();
+			}
 		},
 
 		/**
@@ -237,11 +262,18 @@ steal(
 		 * Observe when the user requests a resource deletion
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The target resource to delete
+		 * @param {passbolt.model.Resource} rs1 A target resource to delete
+		 * @param {passbolt.model.Resource} [rs2 ...] Other resources to delete
 		 * @return {void}
 		 */
-		'{mad.bus} request_resource_deletion': function (el, ev, resource) {
-			resource.destroy();
+		'{mad.bus} request_resource_deletion': function (el, ev) {
+			for (var i=2; i<arguments.length; i++) {
+				var rs = arguments[i];
+				if (!(rs instanceof passbolt.model.Resource)) {
+					throw new mad.error.Exception('The parameter ' + i + ' should be an instance of passbolt.model.Resource');
+				}
+				rs.destroy();
+			}
 		},
 
 		/* ************************************************************** */
@@ -254,24 +286,7 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateReady': function (go) {
-			if (go) {
-				$('.js_workspace_main', this.element).removeClass('middle').addClass('right');
-				$('.js_workspace_sidebar_second', this.element).hide();
-			}
-		},
-
-		/**
-		 * Listen to the change relative to the state ResourceSelected
-		 * @param {boolean} go Enter or leave the state
-		 * @return {void}
-		 */
-		'stateResourceSelected': function (go) {
-			if (go) {
-				$('.js_workspace_main', this.element).removeClass('right').addClass('middle');
-				$('.js_workspace_sidebar_second', this.element).show();
-			}
-		}
+		'stateReady': function (go) { },
 
 	});
 

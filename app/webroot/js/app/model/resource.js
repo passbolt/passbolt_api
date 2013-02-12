@@ -127,13 +127,14 @@ steal(
 					}
 				});
 				if (toUpdate) {
-					can.trigger(passbolt.model.Resource,'updated', self);
+					can.trigger(passbolt.model.Resource, 'updated', self);
 				}
 			});
 		},
 		
 		'destroy': function () {
-			// @todo unbind the passbolt.model.Category destroyed event
+			// @todo unbind the passbolt.model.Category destroyed event, if it does not done automatically
+			this._super();
 		}
 	});
 });
