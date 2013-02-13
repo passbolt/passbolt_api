@@ -71,9 +71,9 @@ steal(
 			// ev.preventDefault();
 			
 			if (el.attr('checked')) {
-				mad.event.trigger(this.controller, 'checked', el.val());
+				this.element.trigger('checked', el.val());
 			} else {
-				mad.event.trigger(this.controller, 'unchecked', el.val());
+				this.element.trigger('unchecked', el.val());
 			}
 		},
 
@@ -87,7 +87,7 @@ steal(
 			ev.stopPropagation();
 			// ev.preventDefault();
 			
-			mad.event.trigger(this.controller, 'changed', {value: this.getValue()});
+			this.element.trigger('changed', {value: this.getValue()});
 		}
 
 	});
