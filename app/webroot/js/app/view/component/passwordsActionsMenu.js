@@ -32,8 +32,8 @@ steal(
 		 * @return {void}
 		 */
 		'#js_request_resource_edition_button click': function (el, ev) {
-			var resource = el.controller().getValue();
-			mad.bus.trigger('request_resource_edition', resource);
+			var resources = el.controller().getValue();
+			mad.bus.trigger('request_resource_edition', resources);
 		},
 
 		/**
@@ -43,8 +43,8 @@ steal(
 		 * @return {void}
 		 */
 		'#js_request_resource_deletion_button click': function (el, ev) {
-			var resource = el.controller().getValue();
-			mad.bus.trigger('request_resource_deletion', resource);
+			var resources = el.controller().getValue();
+			mad.bus.trigger('request_resource_deletion', resources);
 		},
 
 		/**
@@ -54,8 +54,8 @@ steal(
 		 * @return {void}
 		 */
 		'#js_request_resource_sharing_button click': function (el, ev) {
-			var resource = el.controller().getValue();
-			mad.bus.trigger('request_resource_sharing', resource);
+			var resources = el.controller().getValue();
+			mad.bus.trigger('request_resource_sharing', resources);
 		}
 
 	});

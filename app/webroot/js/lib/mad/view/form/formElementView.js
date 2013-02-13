@@ -29,8 +29,14 @@ steal(
 		 * @return {void}
 		 */
 		'setValue': function (value) {
-			steal.dev.warn('The setValue function has not been implemented for the class ' + this.Class.fullName);
+			steal.dev.warn('The setValue function has not been implemented for the class ' + this.getClass().fullName);
+		},
+		
+		/**
+		 * Reset the form element view
+		 */
+		'reset': function () {
+			steal.dev.warn('The reset function has not been implemented for the class ' + this.getClass().fullName);
 		}
-
 	});
 });

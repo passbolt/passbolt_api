@@ -7,7 +7,7 @@
  * @package      app.View.Pages.Home
  * @since        version 2.12.7
  */
-	$this->assign('title',  __('Password Workspace'));
+	$this->assign('title', __('Passbolt - The simple password management system'));
 	$this->Html->script('lib/moment/moment.min.js', array('block' => 'scriptBottom'));
 	$this->Html->script('steal/steal.js?app/passbolt.js', array('block' => 'scriptBottom'));
 ?>

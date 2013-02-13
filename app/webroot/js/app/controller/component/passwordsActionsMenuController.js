@@ -20,7 +20,9 @@ steal(
 
 		'defaults': {
 			'label': 'Passwords Actions Menu Controller',
-			'viewClass': passbolt.view.component.PasswordsActionsMenu
+			'viewClass': passbolt.view.component.PasswordsActionsMenu,
+			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
+			'selectedRs': new can.Model.List()
 		}
 
 	}, /** @prototype */ {
@@ -37,6 +39,28 @@ steal(
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
+		
+		/**
+		 * Observe when a resource is selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} resource The selected resource
+		 * @return {void}
+		 */
+		'{selectedRs} add': function (el, ev, resource) {
+			// if more than one resource selected, or no resource selected
+			if (this.options.selectedRs.length == 0) {
+				this.setState('ready');
+			
+			// else if only 1 resource selected show the details
+			} else if (this.options.selectedRs.length == 1) {
+				this.setState('selection');
+			
+			// else if more than one resource have been selected
+			} else {
+				this.setState('multiSelection');
+			}
+		},
 
 		/**
 		 * Observe when a resource is unselected
@@ -45,36 +69,88 @@ steal(
 		 * @param {passbolt.model.Resource} resource The unselected resource
 		 * @return {void}
 		 */
-		'{mad.bus} resource_unselected': function (el, ev, resource) {
-			mad.app.getComponent('js_request_resource_edition_button').setState('disabled');
-			mad.app.getComponent('js_request_resource_deletion_button').setState('disabled');
-			mad.app.getComponent('js_request_resource_sharing_button').setState('disabled');
-			mad.app.getComponent('js_request_resource_more_button').setState('disabled');
+		'{selectedRs} remove': function (el, ev, resource) {
+			// if more than one resource selected, or no resource selected
+			if (this.options.selectedRs.length == 0) {
+				this.setState('ready');
+			
+			// else if only 1 resource selected show the details
+			} else if (this.options.selectedRs.length == 1) {
+				this.setState('selection');
+			
+			// else if more than one resource have been selected
+			} else {
+				this.setState('multiSelection');
+			}
+		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE STATE CHANGES */
+		/* ************************************************************** */
+
+		/**
+		 * Listen to the change relative to the state selected
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateSelection': function (go) {
+			if (go) {
+				mad.app.getComponent('js_request_resource_edition_button')
+					.setValue(this.options.selectedRs[0])
+					.setState('ready');
+				mad.app.getComponent('js_request_resource_deletion_button')
+					.setValue(this.options.selectedRs)
+					.setState('ready');
+				mad.app.getComponent('js_request_resource_sharing_button')
+					.setValue(this.options.selectedRs)
+					.setState('ready');
+				mad.app.getComponent('js_request_resource_more_button')
+					.setValue(this.options.selectedRs[0])
+					.setState('ready');
+			} else {
+				mad.app.getComponent('js_request_resource_edition_button')
+					.setValue(null)
+					.setState('disabled');
+				mad.app.getComponent('js_request_resource_deletion_button')
+					.setValue(null)
+					.setState('disabled');
+				mad.app.getComponent('js_request_resource_sharing_button')
+					.setValue(null)
+					.setState('disabled');
+				mad.app.getComponent('js_request_resource_more_button')
+					.setValue(null)
+					.setState('disabled');
+			}
 		},
 
 		/**
-		 * Observe when category is selected
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Category} category The selected category
+		 * Listen to the change relative to the state multiSelection
+		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'{mad.bus} category_selected': function (el, ev, category) {
-			mad.app.getComponent('js_request_resource_creation_button').setValue(category);
-		},
-
-		/**
-		 * Observe when a resource is selected
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The selected resource
-		 * @return {void}
-		 */
-		'{mad.bus} resource_selected': function (el, ev, resource) {
-			mad.app.getComponent('js_request_resource_edition_button').setValue(resource).setState('ready');
-			mad.app.getComponent('js_request_resource_deletion_button').setValue(resource).setState('ready');
-			mad.app.getComponent('js_request_resource_sharing_button').setValue(resource).setState('ready');
-			mad.app.getComponent('js_request_resource_more_button').setValue(resource).setState('ready');
+		'stateMultiSelection': function (go) {
+			if (go) {
+				mad.app.getComponent('js_request_resource_edition_button')
+					.setState('disabled');
+				mad.app.getComponent('js_request_resource_deletion_button')
+					.setValue(this.options.selectedRs)
+					.setState('ready');
+				mad.app.getComponent('js_request_resource_sharing_button')
+					.setValue(this.options.selectedRs)
+					.setState('ready');
+				mad.app.getComponent('js_request_resource_more_button')
+					.setState('disabled');
+			} else {
+				mad.app.getComponent('js_request_resource_edition_button')
+					.setValue(null)
+					.setState('disabled');
+				mad.app.getComponent('js_request_resource_deletion_button')
+					.setValue(null)
+					.setState('disabled');
+				mad.app.getComponent('js_request_resource_sharing_button')
+					.setValue(null)
+					.setState('disabled');
+			}
 		}
 
 	});

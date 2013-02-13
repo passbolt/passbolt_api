@@ -1,5 +1,6 @@
 steal(
 	'jquery/model',
+	'mad/model/list.js',
 	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 

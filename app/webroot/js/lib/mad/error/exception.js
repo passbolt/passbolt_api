@@ -4,6 +4,7 @@ steal(
 	'mad/error/callInterfaceFunctionException.js',
 	'mad/error/callPrivateFunctionException.js',
 	'mad/error/missingOptionException.js',
+	'mad/error/missingParameterException.js',
 	'mad/error/noConstructorException.js',
 	'mad/error/templateMissingException.js',
 	'mad/error/wrongParametersException.js',

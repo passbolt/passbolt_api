@@ -48,20 +48,20 @@ steal(
 
 		/**
 		 * Select an item
-		 * @param {string} itemId The item to select
+		 * @param {mixed} item The selected item instance or its id
 		 * @return {void}
 		 */
-		'selectItem': function (itemId) {
-			$('#' + itemId, this.element).addClass('selected');
+		'selectItem': function (item) {
+			$('#' + item.id, this.element).addClass('selected');
 		},
 
 		/**
 		 * Unselect an item
-		 * @param {string} itemId The item to unselect
+		 * @param {mixed} item The unselected item instance or its id
 		 * @return {void}
 		 */
-		'unselectItem': function (itemId) {
-			$('#' + itemId, this.element).removeClass('selected');
+		'unselectItem': function (item) {
+			$('#' + item.id, this.element).removeClass('selected');
 		},
 
 		/**
