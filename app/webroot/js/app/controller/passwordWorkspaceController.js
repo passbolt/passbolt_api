@@ -5,7 +5,8 @@ steal(
 	'app/controller/component/resourceDetailsController.js',
 	'app/controller/component/passwordsActionsMenuController.js',
 	'app/controller/form/category/createFormController.js',
-	'app/controller/form/resource/createFormController.js'
+	'app/controller/form/resource/createFormController.js',
+	'app/controller/form/permission/grantFormController.js'
 ).then(function () {
 
 	/*
@@ -274,6 +275,23 @@ steal(
 				}
 				rs.destroy();
 			}
+		},
+		
+		/**
+		 * Observe when the user requests a resource deletion
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} rs1 A target resource to delete
+		 * @param {passbolt.model.Resource} [rs2 ...] Other resources to delete
+		 * @return {void}
+		 */
+		'{mad.bus} request_resource_sharing': function (el, ev, resource) {
+			var popup = mad.controller.component.PopupController.getPopup({
+				label: __('Share with people')
+			}, passbolt.controller.form.permission.GrantFormController, {
+				data : resource
+				
+			});
 		},
 
 		/* ************************************************************** */
