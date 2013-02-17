@@ -1,29 +1,29 @@
 steal(
-	//'app/view/component/resourceDetails.js'
+	'app/view/component/permissions.js'
 ).then(function () {
 
 	/*
-	 * @class passbolt.controller.PermissionController
+	 * @class passbolt.controller.PermissionsController
 	 * @inherits mad.controller.component.ComponentController
 	 * @parent index 
 	 * 
 	 * @constructor
-	 * Creates a new Permission Controller
+	 * Creates a new Permissions Controller
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable 
-	 * @return {passbolt.controller.PermissionController}
+	 * @return {passbolt.controller.PermissionsController}
 	 */
-	mad.controller.ComponentController.extend('passbolt.controller.component.PermissionController', /** @static */ {
+	mad.controller.ComponentController.extend('passbolt.controller.component.PermissionsController', /** @static */ {
 
 		'defaults': {
-			'label': 'Permission Controller',
-			'viewClass': passbolt.view.component.Permission,
+			'label': 'Permissions Controller',
+			'viewClass': passbolt.view.component.Permissions,
 			// the resource to bind the component on
 			'resource': null,
 			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-			'selectedRs': new can.Model.List()
+			//'selectedRs': new can.Model.List()
 		}
 
 	}, /** @prototype */ {

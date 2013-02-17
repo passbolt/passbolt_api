@@ -1,26 +1,14 @@
-<input type="hidden" name="passbolt.model.Resource.Category.id" id="js_field_category_id" class="form_field" />
+<input type="hidden" name="passbolt.model.Resource.id" id="js_field_resource_id" class="form_field" />
 
 <div class="input">
-	<label>Resource name</label>
-	<input type="text" name="passbolt.model.Resource.name" id="js_field_name" class="form_field" />
-	<div id="js_field_name_feedback" class="message"/>
-</div>
-
-<div class="input">
-	<label>Resource username</label>
-	<input type="text" name="passbolt.model.Resource.username" id="js_field_username" class="form_field" />
-	<div id="js_field_username_feedback" class="message"/>
-</div>
-
-<div class="input">
-	<label>Resource uri</label>
-	<input type="text" name="passbolt.model.Resource.uri" id="js_field_uri" class="form_field" />
-	<div id="js_field_uri_feedback" class="message"/>
-</div>
-
-<div class="input">
-	<label>Resource description</label>
-	<textarea name="passbolt.model.Resource.description" id="js_field_description" class="form_field"></textarea>
+	<label>Share with a person or a group</label>
+	<input name="passbolt.model.Permission.aco" id="js_field_aco" class="form_field" type="text">
+	<select name="">
+	 <option value="create">create</option>
+	 <option value="create">read</option>
+	 <option value="create">update</option>
+	 <option value="create">delete</option>
+	</select>
 	<div id="js_field_description_feedback" class="message"/>
 </div>
 

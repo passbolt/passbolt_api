@@ -289,8 +289,14 @@ steal(
 			var popup = mad.controller.component.PopupController.getPopup({
 				label: __('Share with people')
 			}, passbolt.controller.form.permission.GrantFormController, {
-				data : resource
-				
+				data : resource,
+				callbacks : {
+					submit: function (data) {
+						resource.attr(data['passbolt.model.Resource'])
+						.save();
+						popup.remove();
+					}
+				}
 			});
 		},
 
