@@ -6,7 +6,7 @@ steal(
 	'app/controller/component/passwordsActionsMenuController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
-	'app/controller/component/permissions/permission.js'
+	'app/controller/component/permissions/permissionsListController.js'
 ).then(function () {
 
 	/*
@@ -288,7 +288,7 @@ steal(
 		'{mad.bus} request_resource_sharing': function (el, ev, resource) {
 			var popup = mad.controller.component.PopupController.getPopup({
 				label: __('Share with people')
-			}, passbolt.controller.component.permissions.Permission, {
+			}, passbolt.controller.component.permissions.PermissionsListController, {
 				data : resource,
 				callbacks : {
 					submit: function (data) {
