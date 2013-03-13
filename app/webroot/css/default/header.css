@@ -38,6 +38,7 @@
   max-width:100%;
   max-height:2.5em; /* 4.5 - 2 */
 }
+
 /* search */
 .search {
   margin-top:1em;
@@ -55,7 +56,7 @@
 .search .submit {
   float:left;
 }
-.search .submit input {
+.search button {
   background: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 57%, #ededed 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(57%,#f0f0f0), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Chrome10+,Safari5.1+ */
@@ -63,8 +64,14 @@
   background: -ms-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* IE10+ */
   background: linear-gradient(to bottom, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
-
+	height:2.3em;
+  min-width:4.8em;
 }
+.search button .icon {
+	font-size:1.1em;
+}
+
+/* tag */
 .tag {
   float:left;
   font-size:.9em;
@@ -116,10 +123,11 @@ h1.workspace-title {
 .actions-wrapper {
   margin-top:.35em;
 }
+.actions button {
+  font-size:.85em;
+}
 .actions li {
   display:inline;
 }
-.actions-wrapper button {
-  font-size:.85em;
+.actions icons {
 }
-

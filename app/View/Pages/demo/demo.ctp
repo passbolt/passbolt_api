@@ -19,6 +19,7 @@
 	<base href="<?php echo Router::url('/',true);?>">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
 	<link href="css/default/reset.css" rel="stylesheet" type="text/css" >
+	<link href="css/default/helpers.css" rel="stylesheet" type="text/css" >
 	<link href="css/default/typo.css" rel="stylesheet" type="text/css">
 	<link href="css/default/colors.css" rel="stylesheet" type="text/css">
 	<link href="css/default/icons.css" rel="stylesheet" type="text/css">
@@ -52,13 +53,14 @@
 		</div>
 	</div>
 	<div class="footer">
-    <div class="context-info">
+		<div class="context-info">
 			last seen from 127.0.0.1 <a href="#">(more)</a>
 		</div>
 		<div class="footnotes">
-		  <span class="copyright">2012-2013 &copy; bolt software pvt. ltd.</span> &bullet; 
-		  <a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a></div>
+			<span class="copyright">2012-2013 &copy; bolt software pvt. ltd.</span> &bullet; 
+			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a></div>
 		</div>
+	</div>
 </div>
 </body>
 </html>

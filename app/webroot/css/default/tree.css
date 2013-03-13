@@ -6,9 +6,11 @@
   padding:.5em .5em .5em .5em;
   margin-bottom:.5em;
 }
+.panel .navigation.last {
+  padding-right:.5em;
+}
 .panel .navigation a {
   color:#333;
-  padding-left:.5em;
 }
 .panel .navigation a:hover {
   color:#111;
@@ -25,13 +27,57 @@
 }
 
 /* tree */
-.tree {
+.tree a{
 }
 .tree ul {
 	padding-left:.5em;
 }
-.tree ul .more {
+.tree .row {
+	float:left;
+	width:100%;
+}
+
+
+.tree .node-ctrl a {
+  background:#DDD;
+	width:1em;
+	height:1em;
+	display:block;
+  margin-top:.15em;
+	opacity:0.5;
+	filter:alpha(opacity=50);
+}
+.tree .node-ctrl a:hover {
+	opacity:.9;
+	filter:alpha(opacity=90);
+}
+.tree .node.open .node-ctrl a {
+	background: transparent url('../../img/controls/tree-ctrl.png') center -9px no-repeat;
+}
+.tree .node.close .node-ctrl a {
+	background: transparent url('../../img/controls/tree-ctrl.png') center 4px no-repeat;
+}
+.more-ctrl span,
+.node-ctrl span {
 	display:none;
 }
-.tree .open {
+
+/* row layout: fixed fluid fixed */
+.tree .main-cell-wrapper {
+	float: left;
+	width: 100%;
+}
+.tree .main-cell {
+	margin: 0 1em 0 1em ;
+  padding-left:.25em;
+}
+.tree .left-cell {
+	float: left;
+	width: 1em ;
+	margin-left: -100%;
+}
+.tree .right-cell {
+	float: left;
+	width: 1em ;
+	margin-left: -1em;
 }
