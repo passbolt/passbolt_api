@@ -1,0 +1,111 @@
+/*
+	3.1.1 Generic button
+
+	Description  : We support <input[submit]>, <input.button>, <button> and <a.button>
+	Compatible   : IE6+, Firefox 2+, Safari 4+, Chrome 1+, Opera 11+
+	Since        : version 3.0
+
+	:hover       - Subtle hover highlight and box shadow
+	:active      - Inset box shadow and 1px offset
+	.disabled    - Dims the button to indicate it cannot be used
+*/
+input[type=submit],
+input.button,
+button,
+a.button {
+	position:relative;
+  font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-size:100%;
+  display: inline-block;
+  zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+  *display: inline;
+  vertical-align: baseline;
+  margin: 0 2px;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  padding: .5em 2em .55em;
+  border:1px solid #CCC;
+  color:#333;
+  font-weight:bold;
+  text-shadow: 0 0 3px #FFF;
+  -webkit-border-radius: .3em; 
+  -moz-border-radius: .3em;
+  border-radius: .3em;
+  background:#EDEDED;
+}
+
+/* size and position adjustments */
+.submit {
+  display: inline-block; /* in case there is a div wrapper */
+}
+a.button {
+  padding: .45em 2em .45em; /* @todo .5em height difference accross ff and cr */
+}
+
+/* hover */
+input[type=submit]:hover,
+input.button:hover,
+button:hover,
+a.button:hover {
+  text-decoration: none;
+	border:1px solid #bbb; /*
+  -webkit-box-shadow: 0 1px 2px rgba(255,255,255,.2);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,.2); */
+  background: #ededed; /* Old browsers */
+  background: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 57%, #ededed 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(57%,#f0f0f0), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+}
+
+/* focus */
+input[type=submit]:focus,
+input.button:focus,
+button:focus,
+a.button:focus {
+	border:1px solid #bbb;
+}
+
+/* active */
+input[type=submit]:active,
+input.button:active,
+button:active,
+a.button:active {
+  position: relative;
+  top: 1px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(255,255,255,.2);
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+	border:1px solid #bbb;
+}
+input[type=submit].disabled,
+input.button.disabled,
+button.disabled,
+a.button.disabled {
+  cursor:default;
+  color:#888;
+  background:white;
+}
+
+/* inactive */
+input[type=submit].disabled:hover,
+input.button.disabled:hover,
+button.disabled:hover,
+a.button.disabled:hover,
+input[type=submit].disabled:active,
+input.button.disabled:active,
+button.disabled:active,
+a.button.disabled:active {
+  -webkit-box-shadow:0 0 0;
+  -moz-box-shadow:0 0 0;
+  box-shadow:0 0 0;
+  top:0;
+  border:1px solid #CCC;
+}
+

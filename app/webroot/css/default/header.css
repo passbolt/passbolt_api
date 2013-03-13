@@ -1,0 +1,125 @@
+/* top navigation */
+.header .navigation.primary ul {
+}
+.header .navigation.primary li {
+	padding:.5em 1em 0 .25em;
+	height:1.75em;
+  float:left;
+}
+.header .navigation.primary li a {
+  color:#FFF;
+	text-decoration:none;
+  font-weight:bold;
+  display:inline-block;
+	zoom: 1;
+	filter: alpha(opacity=90);
+	opacity: 0.9;
+}
+.header .navigation.primary li a:hover {
+	filter: alpha(opacity=100);
+	opacity: 1;
+}
+/* home button is special */
+.header .navigation.primary .home {
+  margin-left:1em;
+	width:22px;
+  height:22px;
+	background:transparent url(../../img/logo_key_white.png) 0 0 no-repeat;
+}
+.header .navigation.primary .home span {
+	display:none;
+}
+
+/* logo */
+.logo {
+  margin:1em 1em 0 1em;
+}
+.logo img {
+  max-width:100%;
+  max-height:2.5em; /* 4.5 - 2 */
+}
+/* search */
+.search {
+  margin-top:1em;
+}
+.search legend,
+.search label {
+  display:none;
+  width:10em;
+}
+.search input[type=text] {
+  float:left;
+  width:70%;
+  margin-right:.5em;
+}
+.search .submit {
+  float:left;
+}
+.search .submit input {
+  background: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 57%, #ededed 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(57%,#f0f0f0), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+
+}
+.tag {
+  float:left;
+  font-size:.9em;
+  background:#DDD;
+  border:1px solid #CCC;
+  padding:.3em .6em;
+}
+
+/* profile */
+.profile-wrapper {
+  margin-top:.5em;
+}
+.user.profile {
+  float:right;
+  border:1px solid #CCC;
+  top:.5em;
+  background:#EEE;
+}
+.user.profile .picture{
+  float:left;
+  width:45px;
+  height:45px;
+  padding:3px;
+}
+.user.profile .details{
+  float:left;
+  width:200px;
+  height:45px;
+  font-size:.9em;
+  overflow:hidden;
+  padding:5px 5px 1px 5px;
+}
+.user.profile .details .name {
+  font-weight:bold;
+}
+
+/* workspace title */
+.workspace-title-wrapper {
+}
+
+h1.workspace-title {
+	color:#666;
+  font-weight:normal;
+  padding:.25em .5em 0 .5em;
+  display:none;
+}
+
+/* actions */
+.actions-wrapper {
+  margin-top:.35em;
+}
+.actions li {
+  display:inline;
+}
+.actions-wrapper button {
+  font-size:.85em;
+}
+
