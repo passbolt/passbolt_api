@@ -1,0 +1,84 @@
+.page,
+.header,
+.panel,
+.footer {
+	position:absolute;
+	overflow:auto;
+	width:100%;
+}
+.header,
+.footer {
+	overflow:hidden;
+}
+.page {
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+}
+/* headers */
+.header.first {
+	height:2.4em;
+	background-color:#333;
+}
+.header.second {
+	top:2.4em;
+	height:4.5em;
+	background-color:#E4E4E4;
+}
+.header.third {
+	top:7em;
+	height:3em;
+}
+/* main workspace panels */
+.panel {
+	height:100%;
+}
+.panel.main {
+  border-top:1px solid #DDD;
+	top:10em;
+	bottom:2.0em;
+  height:auto;
+  padding:0;
+}
+.col1, .col2, .col2_3, .col3 {
+	position:absolute;
+}
+.col1,
+.panel.left {
+	width:19.5%;
+}
+.col2_3,
+.panel.middle {
+	width:80%; 
+	left:20%;
+}
+.col2 {
+	width:54.5%; 
+	left:20%;
+}
+.col3,
+.panel.right {
+	width:24%; 
+	left:75%;
+}
+
+/* shadow on scrolling */
+.panel.left,
+.panel.middle {
+	background: 
+		-webkit-linear-gradient(white 30%, hsla(0,0%,100%,0)), 
+		-webkit-linear-gradient(hsla(0,0%,100%,0), white 70%) bottom, 
+		-webkit-radial-gradient(50% 0, rgba(0,0,0,.2), transparent 70%), 
+		-webkit-radial-gradient(50% 100%, rgba(0,0,0,.2), transparent 70%) bottom;
+	background-repeat: no-repeat;
+	background-size: 100% 40px, 100% 40px, 100% 5px, 100% 5px;
+	background-attachment: local, local, scroll, scroll;
+}
+
+/* footer */
+.footer {
+  border-top:1px solid #DDD;
+	height:2em;;
+	bottom:0;
+}

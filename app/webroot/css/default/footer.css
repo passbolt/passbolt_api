@@ -1,0 +1,11 @@
+.footer .footnotes,
+.footer .context-info {
+  font-size:.8em;
+  padding:.75em 1.5em 0 1.5em;
+}
+.footer .footnotes {
+	float:right;
+}
+.footer .context-info {
+	float:left;
+}

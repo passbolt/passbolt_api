@@ -1,0 +1,37 @@
+.panel .navigation {
+  font-size:.95em;
+}
+.panel .navigation.first {
+  border-bottom:1px dotted #CCC;
+  padding:.5em .5em .5em .5em;
+  margin-bottom:.5em;
+}
+.panel .navigation a {
+  color:#333;
+  padding-left:.5em;
+}
+.panel .navigation a:hover {
+  color:#111;
+	text-decoration:none;
+}
+.panel .navigation .row {
+  padding:.1em;
+}
+.panel .navigation .row:hover {
+  background:#EEE;
+}
+.panel .navigation .row.selected {
+  font-weight:bold;
+}
+
+/* tree */
+.tree {
+}
+.tree ul {
+	padding-left:.5em;
+}
+.tree ul .more {
+	display:none;
+}
+.tree .open {
+}
