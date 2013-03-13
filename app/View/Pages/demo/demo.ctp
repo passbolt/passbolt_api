@@ -16,7 +16,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Password Workspace Static Demo</title>
-	<base href="<?php echo Router::url('/',true);?> ">
+	<base href="<?php echo Router::url('/',true);?>">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
 	<link href="css/default/reset.css" rel="stylesheet" type="text/css" >
 	<link href="css/default/typo.css" rel="stylesheet" type="text/css">
