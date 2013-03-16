@@ -28,14 +28,15 @@
 .icon.social:before {
   font-family: "entypo";
   font-size:2em;
-	line-height:1;
+	line-height:1.1em;
   height:1em;
   font-weight: normal;
   font-style: normal;
   position:absolute;
-	left:.7em;
+	left:.5em;
 	top:0;
   -webkit-font-smoothing: antialiased;
+	width:1em;
 }
 .icon + .text {
   margin-left:1em;
@@ -63,7 +64,7 @@
   content: '\E741';
 }
 .icon.search:before  {
-  content: '\F50D';
+  content: '\1F50D';
 }
 .icon.share:before  {
   content: '\1F53F';
@@ -73,6 +74,12 @@
 }
 .icon.more:before  {
   content: '\E003';
+}
+.icon.fav:before  {
+  content: '\E2606';
+}
+.icon.unfav:before  {
+  content: '\E2605';
 }
 /* social */
 .icon.social.facebook:before {

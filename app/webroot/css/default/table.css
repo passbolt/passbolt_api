@@ -22,6 +22,7 @@
 }
 
 /* tbody */
+.main.panel table tbody tr.selected,
 .main.panel table tbody tr:hover {
 	background:#fffcee;
 }

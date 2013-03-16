@@ -34,6 +34,7 @@ a.button {
   -moz-border-radius: .3em;
   border-radius: .3em;
   background:#EDEDED;
+  min-width:8em;
 }
 
 /* size and position adjustments */
