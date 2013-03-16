@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project default="passbolt_build.xml" xmlns:antcontrib="antlib:net.sf.antcontrib" basedir=".">
+
+        <property environment="env" />
+        <property name="config" value="${env.WORKSPACE}/ci/jenkins/jobs/Passbolt_Deploy" />
+        <property name="src" value="${env.WORKSPACE}" />
+        <property name="www" value="${env.WORKSPACE}/deploy" />
+
+        <target name="main" depends="clean, import, configure, install" />
+
+        <target name="clean" description="Cleanup build artifacts">
+                <delete includeEmptyDirs="true">
+                        <fileset dir="${www}" includes="**/*" defaultexcludes="no"/>
+                </delete>
+        </target>
+
+        <target name="import">
+                <copy todir="${www}" >
+                        <fileset dir="${src}"/>
+                </copy>
+                <mkdir dir="${www}/app/tmp/cache/persistent" />
+                <mkdir dir="${www}/app/tmp/cache/models" />
+        </target>
+
+        <target name="configure">
+                <chmod file="${www}/app/tmp" perm="g+s" />
+                <chmod file="${www}/app/tmp/*" perm="g+w" type="both" />
+                <chmod file="${www}/app/Console/cake" perm="+x" />
+        </target>
+
+        <target name="install" description="Passbolt installer : copy config files, deploy db">
+                <copy todir="${www}" overwrite="true">
+                        <fileset dir="${config}/sources"/>
+                </copy>
+                <exec dir="${www}" executable="bash">
+			    	<arg value="-c"/>
+					<arg value='php app/Console/cake install'/>
+				</exec>
+                <chmod file="${www}/app/tmp/**" perm="g+w" type="both" />
+        </target>
+
+</project>
