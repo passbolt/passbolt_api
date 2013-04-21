@@ -5,7 +5,7 @@
 }
 .breadcrumbs li {
 	display:inline;
-	font-size:.75em;
+	font-size:.8em; /* 12px/base16>15 */
 	margin-left:.250em;
 }
 .breadcrumbs li:before {

@@ -9,7 +9,7 @@
 		-webkit-radial-gradient(50% 0, rgba(0,0,0,.2), transparent 70%), 
 		-webkit-radial-gradient(50% 100%, rgba(0,0,0,.2), transparent 70%) bottom;
 	background-repeat: no-repeat;
-	background-size: 100% 40px, 100% 40px, 100% 5px, 100% 5px;
+	background-size: 100% 2.5em, 100% 2.5em, 100% .31250em, 100% .31250em;
 	background-attachment: local, local, scroll, scroll;
 }
 
@@ -17,7 +17,7 @@
  * Scrollbar styling with native webkit support
  */
 .cssscrollbar ::-webkit-scrollbar {
-	width:.625em;
+	width:.625em; /* 10px */
 }
 .cssscrollbar ::-webkit-scrollbar-track {
 	background:#FFF;
