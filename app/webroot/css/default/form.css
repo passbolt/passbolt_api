@@ -17,7 +17,7 @@ textarea, select {
 	background:#FFF;
 	border:1px solid #CCC;
 	width:14em; /* 20 char (default input length) x .7em (average char length) */
-	padding:.3em .5em .3em .5em;
+	padding:.278em .5em .278em .5em; /* 5px 9px */
 	display:inline-block;
   zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
   *display: inline;
@@ -37,14 +37,15 @@ textarea, select {
 */
 label {
 	font-weight:bold;
-	font-size:1.1em;
+	font-size:1.125em; /* 18px */
   padding:.2em;
 	display:block;
 }
 textarea,
 .password input[type=password],
 .text input[type=text] {
-	font-size:1.1em;
+	font-size:1.125em; /* 18px */
+	line-height:1em; /* 20px */
   border-top:1px solid #999;
 }
 textarea,

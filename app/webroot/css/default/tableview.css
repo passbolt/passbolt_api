@@ -1,0 +1,54 @@
+/*
+ * Main Workspace - Table View
+ */
+.tableview-header {
+	height:3.75em;
+}
+.tableview-header table {
+	margin-right:.625em;
+}
+.no-cssscrollbar .tableview-header table {
+	margin-right:1em; /* 16px fallback */
+}
+.tableview-content {
+	top:3.75em;
+	bottom:0;
+	padding:0;
+	position:absolute;
+	width:100%;
+	border-top:1px solid #DDD;
+}
+
+/* table and rows */
+.tableview table	{
+	font-size:.95em;
+	width:99%;
+}
+.main.panel table th,
+.main.panel table td {
+	text-align:left;
+	padding:.25em 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.main.panel table th {
+	font-weight:bold;
+}
+.main.panel table .s-cell {
+	width:20px;
+	max-width:20px;
+}
+.main.panel table .m-cell {
+	width:10em;
+	max-width:10em;
+}
+.main.panel table .l-cell {
+	width:20em;
+	max-width:20em;
+}
+.main.panel table tbody tr.selected,
+.main.panel table tbody tr:hover {
+	background:#ffffcc;
+}
+

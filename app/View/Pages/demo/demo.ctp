@@ -18,20 +18,8 @@
 	<title>Password Workspace Static Demo</title>
 	<base href="<?php echo Router::url('/',true);?>">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-	<link href="css/default/reset.css" rel="stylesheet" type="text/css" >
-	<link href="css/default/helpers.css" rel="stylesheet" type="text/css" >
-	<link href="css/default/typo.css" rel="stylesheet" type="text/css">
-	<link href="css/default/colors.css" rel="stylesheet" type="text/css">
-	<link href="css/default/icons.css" rel="stylesheet" type="text/css">
-	<link href="css/default/buttons.css" rel="stylesheet" type="text/css">
-	<link href="css/default/layout.css" rel="stylesheet" type="text/css">
-	<link href="css/default/form.css" rel="stylesheet" type="text/css">
-	<link href="css/default/header.css" rel="stylesheet" type="text/css">
-	<link href="css/default/tree.css" rel="stylesheet" type="text/css">
-	<link href="css/default/table.css" rel="stylesheet" type="text/css">
-	<link href="css/default/footer.css" rel="stylesheet" type="text/css">
-	<link href="css/default/scrollbar.css" rel="stylesheet" type="text/css">
- </style>
+	<link href="css/default/aa1d4fae-7dec-11d0-a765-00a0c91e6bf6.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="js/lib/compat/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
 <div id="container" class="page">
@@ -62,5 +50,26 @@
 		</div>
 	</div>
 </div>
+<script>
+	// if there is not css styling for scrollbar
+	// uses jScrollPane with mousewheel
+	Modernizr.load({
+		test: Modernizr.cssscrollbar,
+		nope: [
+			'js/lib/jquery/jquery-1.8.2.min.js',
+			'js/lib/compat/jquery.mousewheel.js',
+			'js/lib/compat/jquery.jscrollpane.min.js'
+		],
+		complete : function() {
+			if (!Modernizr.cssscrollbar) {
+				var settings = {
+					showArrows: false,
+					autoReinitialise: true
+				};
+				$('.scroll').jScrollPane(settings);
+			}
+		}
+	});
+</script>
 </body>
 </html>

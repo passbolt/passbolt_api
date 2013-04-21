@@ -25,24 +25,22 @@ a.button {
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  padding: .5em 2em .55em;
+  padding:.3125em .625em; /* 5/10px */
   border:1px solid #CCC;
   color:#333;
   font-weight:bold;
   text-shadow: 0 0 3px #FFF;
-  -webkit-border-radius: .3em; 
-  -moz-border-radius: .3em;
-  border-radius: .3em;
+  -webkit-border-radius: .3125em; 
+  -moz-border-radius: .3125em;
+  border-radius: .3125em;
   background:#EDEDED;
-  min-width:8em;
+  min-width:7.5em;
+	height:2.5em; /* 40px */
 }
 
 /* size and position adjustments */
 .submit {
   display: inline-block; /* in case there is a div wrapper */
-}
-a.button {
-  padding: .45em 2em .45em; /* @todo .5em height difference accross ff and cr */
 }
 
 /* hover */
@@ -51,7 +49,7 @@ input.button:hover,
 button:hover,
 a.button:hover {
   text-decoration: none;
-	border:1px solid #bbb; /*
+	border:1px solid #CCC; /*
   -webkit-box-shadow: 0 1px 2px rgba(255,255,255,.2);
   -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
   box-shadow: 0 1px 2px rgba(0,0,0,.2); */
@@ -70,7 +68,7 @@ input[type=submit]:focus,
 input.button:focus,
 button:focus,
 a.button:focus {
-	border:1px solid #bbb;
+	border:1px solid #CCC;
 }
 
 /* active */

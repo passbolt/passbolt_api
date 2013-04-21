@@ -28,12 +28,17 @@
 	</div>
 	<div class="col3 profile-wrapper">
 		<div class="user profile">
-		  <div class="picture">
-				<img src="img/user.png" width="45" height="45" />
+			<div class="center-cell-wrapper">
+				<div class="details center-cell">
+					<span class="name">Mr Splashy Pants</span>
+					<span class="email">splashy@passbolt.com</span>
+				</div>
 			</div>
-		  <div class="details">
-				<span class="name">Mr Splashy Pants</span>
-				<span class="email">splashy@passbolt.com</span>
+		  <div class="picture left-cell">
+				<img src="img/user.png" /> 
+			</div>
+		  <div class="more right-cell">
+				<a href="#"><span>more</span></a>
 			</div>
 		</div>
 	</div>

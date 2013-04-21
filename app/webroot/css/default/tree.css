@@ -1,23 +1,23 @@
 .panel .navigation {
-  font-size:.95em;
+  font-size:.938em;
 }
 .panel .navigation.first {
   border-bottom:1px dotted #CCC;
-  padding:.5em .5em .5em .5em;
-  margin-bottom:.5em;
+  padding:.625em;
+  margin-bottom:.625em;
 }
 .panel .navigation.last {
-  padding-right:.5em;
+  padding-right:.625em; /* 10px */
 }
 .panel .navigation a {
   color:#333;
+	display:block;
 }
 .panel .navigation a:hover {
   color:#111;
 	text-decoration:none;
 }
 .panel .navigation .row {
-  padding:.1em;
 }
 .panel .navigation .row:hover {
   background:#EEE;
@@ -25,19 +25,20 @@
 .panel .navigation .row.selected {
   font-weight:bold;
 }
-
+/* shortcut */
+.panel .navigation.shortcuts a {
+	padding:.125em .313em; /* 2px 5px */
+}
 /* tree */
 .tree a{
 }
 .tree ul {
-	padding-left:.5em;
+	padding-left:.625em; /* 10px */
 }
 .tree .row {
 	float:left;
 	width:100%;
 }
-
-
 .tree .node-ctrl a {
   background:#DDD;
 	width:1em;
@@ -46,6 +47,7 @@
   margin-top:.15em;
 	opacity:0.5;
 	filter:alpha(opacity=50);
+  padding-left:.625em;
 }
 .tree .node-ctrl a:hover {
 	opacity:.9;
@@ -69,7 +71,7 @@
 }
 .tree .main-cell {
 	margin: 0 1em 0 1em ;
-  padding-left:.25em;
+  padding-left:.625em;
 }
 .tree .left-cell {
 	float: left;

@@ -22,9 +22,12 @@
 /* home button is special */
 .header .navigation.primary .home {
   margin-left:1em;
-	width:22px;
-  height:22px;
+	width:1.250em;
+	height:1.250em;
 	background:transparent url(../../img/logo_key_white.png) 0 0 no-repeat;
+}
+.header .navigation.primary .home:hover {
+	background:transparent url(../../img/logo_key_red.png) 0 0 no-repeat;
 }
 .header .navigation.primary .home span {
 	display:none;
@@ -32,11 +35,11 @@
 
 /* logo */
 .logo {
-  margin:1em 1em 0 1em;
+  margin:4% 0 0 .5em;
 }
 .logo img {
   max-width:100%;
-  max-height:2.5em; /* 4.5 - 2 */
+	max-height:55px;
 }
 
 /* search */
@@ -80,38 +83,85 @@
   padding:.3em .6em;
 }
 
-/* profile */
-.profile-wrapper {
-  margin-top:.5em;
-}
+/* profile user card */
 .user.profile {
-  float:right;
-  border:1px solid #CCC;
-  top:.5em;
+	max-width:18em;
+	width:80%;
+	float:right;
+	border:1px solid #CCC;
+  margin-top:.5em;
   background:#EEE;
+	overflow: hidden;
 }
-.user.profile .picture{
-  float:left;
-  width:45px;
-  height:45px;
-  padding:3px;
+/* fixed fluid fixed layout */
+.user.profile .left-cell, 
+.user.profile .right-cell, 
+.user.profile .center-cell-wrapper {
+	float:left;
+	height:3.125em; /* 50px */
+}
+.user.profile .center-cell-wrapper {
+	width: 100%;
+}
+.user.profile .center-cell {
+	margin: 0 1.75em 0 3.125em;
+	overflow: hidden;
+}
+.user.profile .left-cell {
+	width:3.125em;
+	margin-left: -100%;
+}
+.user.profile .right-cell {
+	width: 1.6875em;
+	margin-left: -1.75em;
+}
+/* remaing user card styling */
+.user.profile .picture img {
+	width:2.875em;    /* 46px */
+	padding:0.1250em; /*  2px */
 }
 .user.profile .details{
   float:left;
-  width:200px;
-  height:45px;
+  height:2.8125em;
   font-size:.9em;
-  overflow:hidden;
-  padding:5px 5px 1px 5px;
+  padding:.3125em .625em; /* 5/10px */
 }
 .user.profile .details .name {
   font-weight:bold;
+  padding-top:.0625em;
 }
-
+.user.profile .details .name, 
+.user.profile .details .email {
+	width:100%;
+	float:left;
+	clear:both;
+	text-overflow:clip;
+	word-wrap:break-word;
+	overflow: hidden;
+	height:1.25em;
+	float:left;
+	display:inline-block;
+}
+.user.profile .more {
+	background:#EEE;
+	border-left:1px dotted #CCC;
+}
+.user.profile .more a {
+	background:blue;
+	display:block;
+	background: transparent url('../../img/controls/tree-ctrl.png') center -9px no-repeat;
+  margin-top:1em;
+	opacity:.5;
+	filter:alpha(opacity=50);
+}
+.user.profile .more a:hover {
+	opacity:.9;
+	filter:alpha(opacity=90);
+}
+.user.profile .more a span {
+	visibility:hidden;
+}
 /* workspace title */
-.workspace-title-wrapper {
-}
-
 h1.workspace-title {
 	color:#666;
   font-weight:normal;
@@ -124,7 +174,7 @@ h1.workspace-title {
   margin-top:.35em;
 }
 .actions button {
-  font-size:.85em;
+  font-size:.875em;
 }
 .actions li {
   display:inline;

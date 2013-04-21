@@ -34,3 +34,13 @@ a:link, a:visited, a:hover {
 .header .second {
   background:#EFEFEF;
 }
+
+/* links */
+.main.panel a:link, 
+.main.panel a:visited {
+	color:#000;
+}
+.main.panel a:hover {
+	color:#12C;
+}
+

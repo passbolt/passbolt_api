@@ -1,0 +1,22 @@
+.breadcrumbs {
+	padding:.1875em 0 .1875em 0;
+	margin-bottom:.1875em;
+	border-bottom:1px solid #DDD;
+}
+.breadcrumbs li {
+	display:inline;
+	font-size:.75em;
+	margin-left:.250em;
+}
+.breadcrumbs li:before {
+	content:"›";
+	margin-right:.5em;
+}
+
+.breadcrumbs li:first-child {
+	margin-left:0;
+}
+.breadcrumbs li:first-child:before {
+ content:"";
+}
+
