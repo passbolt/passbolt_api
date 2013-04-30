@@ -1,1 +1,0 @@
-needsFoo = true;
