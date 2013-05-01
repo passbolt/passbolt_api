@@ -18,10 +18,10 @@
 		<copy todir="${src}" overwrite="true">
 			<fileset dir="${config}/sources"/>
 		</copy>
-		<copy todir="${src}/app/webroot/js" overwrite="true">
+		<copy todir="${src}/app/webroot/js/documentjs" overwrite="true">
 			<fileset dir="${src}/app/webroot/js/lib/documentjs"/>
 		</copy>
-		<copy todir="${src}/app/webroot/js" overwrite="true">
+		<copy todir="${src}/app/webroot/js/funcunit" overwrite="true">
 			<fileset dir="${src}/app/webroot/js/lib/funcunit"/>
 		</copy>
 		<exec dir="${src}" executable="bash">
