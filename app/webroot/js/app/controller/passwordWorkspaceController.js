@@ -27,7 +27,8 @@ steal(
 		'defaults': {
 			'label': 'Password',
 			'templateUri': 'app/view/template/passwordWorkspace.ejs',
-			'selectedRs': new can.Model.List()
+			'selectedRs': new can.Model.List(),
+			'filter': new passbolt.model.Filter()
 		}
 
 	}, /** @prototype */ {
@@ -99,15 +100,16 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} category_selected': function (el, ev, category) {
-			
 			// reset the selected resources
 			this.options.selectedRs.splice(0, this.options.selectedRs.length);
-			// Set the new filter and propagate the information on bus
-			var filter =  new passbolt.model.Filter({
-				tags: [category],
-				keywords: null
+			// Set the new filter
+			this.options.filter.attr({
+				'tags': [category],
+				'keywords': null
 			});
-			mad.bus.trigger('filter_resources_browser', filter);
+			// propagate a special event on bus
+			// @todo not the best way to do ! call an event like that is like calling a function directly, useless
+			mad.bus.trigger('filter_resources_browser', this.options.filter);
 		},
 
 		/**
@@ -220,17 +222,25 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_creation': function (el, ev, category) {
-			var resource = new passbolt.model.Resource({
-				Category: [{ id: category.id }]
+			// get the category from the filter
+			var categories = [];
+			this.options.filter.tags.each(function(val, i){
+				categories.push({
+					'id': val.id
+				});
 			});
+			// create the resource which will be used by the form builder to populate the fields
+			var resource = new passbolt.model.Resource({ Category: categories });
+			// open the popup
 			var popup = mad.controller.component.PopupController.getPopup({
 				label: __('Create a new Resource')
 			}, passbolt.controller.form.resource.CreateFormController, {
 				data: resource,
 				callbacks : {
 					submit: function (data) {
-						new passbolt.model.Resource(data['passbolt.model.Resource'])
-							.save();
+						// console.log(data['passbolt.model.Resource']);
+						var rs = new passbolt.model.Resource(data['passbolt.model.Resource']);
+						rs.save();
 						popup.remove();
 					}
 				}

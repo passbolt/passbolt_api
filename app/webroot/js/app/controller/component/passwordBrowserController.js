@@ -307,14 +307,11 @@ steal(
 
 			// If the new resource belongs to one of the categories displayed by the resource
 			// browser -> Insert it
-			// @todo an indexOf function will be very usefull here
-			can.each(this.options.categories, function (category, i) {
-				can.each(resource.Category, function (rsCategory, j) {
-					if (category.id == rsCategory.id) {
-						self.insertItem(resource, null, 'first');
-						return false; // break
-					}
-				});
+			resource.Category.each(function(category, i) {
+				if(self.options.categories.indexOf(category.id) != -1) {
+					self.insertItem(resource, null, 'first');
+					return false; // break
+				}
 			});
 		},
 
@@ -364,7 +361,7 @@ steal(
 			var destroyedCategories = mad.model.Model.nestedToList(category, 'children');
 			var destroyedCategoriesIds = [];
 			can.each(destroyedCategories, function(destroyedCategory, h) {
-				var indexof = self.options.categories.indexOf (destroyedCategory.id);
+				var indexof = self.options.categories.indexOf(destroyedCategory.id);
 				if (indexof != -1) {
 					// remove the destroyed categories from the display categories array
 					self.options.categories.splice(indexof, 1);
