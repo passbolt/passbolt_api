@@ -15,14 +15,14 @@
 
 	<target name="install" description="Passbolt installer : copy config files, install passbolt">
 		<mkdir dir="${build}"/>
-		<copy todir="${www}" overwrite="true">
+		<copy todir="${src}" overwrite="true">
 			<fileset dir="${config}/sources"/>
 		</copy>
-		<copy todir="${www}/app/webroot/js" overwrite="true">
-			<fileset dir="${www}/app/webroot/js/lib/documentjs"/>
+		<copy todir="${src}/app/webroot/js" overwrite="true">
+			<fileset dir="${src}/app/webroot/js/lib/documentjs"/>
 		</copy>
-		<copy todir="${www}/app/webroot/js" overwrite="true">
-			<fileset dir="${www}/app/webroot/js/lib/funcunit"/>
+		<copy todir="${src}/app/webroot/js" overwrite="true">
+			<fileset dir="${src}/app/webroot/js/lib/funcunit"/>
 		</copy>
 		<exec dir="${src}" executable="bash">
 			<arg value="-c"/>
