@@ -20,6 +20,12 @@
 		<copy todir="${www}" overwrite="true">
 			<fileset dir="${config}/sources"/>
 		</copy>
+		<copy todir="${www}/app/webroot/js" overwrite="true">
+			<fileset dir="${www}/app/webroot/js/lib/documentjs"/>
+		</copy>
+		<copy todir="${www}/app/webroot/js" overwrite="true">
+			<fileset dir="${www}/app/webroot/js/lib/funcunit"/>
+		</copy>
 		<exec dir="${src}" executable="bash">
 			<arg value="-c"/>
 			<arg value='php app/Console/cake install'/>
