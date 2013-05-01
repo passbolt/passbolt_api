@@ -1,35 +1,34 @@
 .popup {
-	position:absolute; 
-	top:0; 
-	left:0; 
-	width:100%; 
-	height:100%;
-	z-index:1;
+  position:absolute; 
+  top:0; 
+  left:0; 
+  width:100%; 
+  height:100%;
+  z-index:1;
 }
 .fog {
-	position:absolute;
-	top:0;
-	left:0;
-	width: 100%;
-	height: 100%;
-	background-color:#FFF;
-	opacity: 0.55;  /* TODO : put transparent pixel instead */
-}
-.js_popup_content_container { 
   position:absolute;
-	box-shadow: 0 4px 16px rgba(0, 0, 0, .2); 
-	background: #FFF; 
-	background-clip: padding-box; 
-	border: 1px solid #ACACAC; 
-	outline: 0;
-	left:40%;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background-color:#FFF;
+  opacity: 0.55;
+}
+.popup_box { 
+  position: absolute; 
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .2); 
+  background: #FFF; 
+  background-clip: padding-box; 
+  border: 1px solid #ACACAC; 
+  outline: 0; 
 }
 .popup_header {
   padding:3px 14px; 
   position:relative;
   border-bottom:1px solid #000;
 }
-.js_popup_close {
+.popup .popup_close {
   position:absolute;
   top:-3px;
   right:24px; 
@@ -40,12 +39,12 @@
   cursor:pointer;
 }
 .popup_title { 
-	color: black; 
-	cursor: default; 
-	font-size: 16px; 
-	font-weight: normal; 
-	line-height: 24px; 
+  color: black; 
+  cursor: default; 
+  font-size: 16px; 
+  font-weight: normal; 
+  line-height: 24px; 
 }
-.js_popup_content {
+.popup .popup_content {
   padding:30px 42px; 
 }
