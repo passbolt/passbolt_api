@@ -21,7 +21,7 @@
 		<copy todir="${src}/app/webroot/js/documentjs" overwrite="true">
 			<fileset dir="${src}/app/webroot/js/lib/documentjs"/>
 		</copy>
-		<chmod file="${src}/app/webroot/js/lib/documentjs/doc" perm="+x"/>
+		<chmod file="${src}/app/webroot/js/documentjs/doc" perm="+x"/>
 		<copy todir="${src}/app/webroot/js/funcunit" overwrite="true">
 			<fileset dir="${src}/app/webroot/js/lib/funcunit"/>
 		</copy>
