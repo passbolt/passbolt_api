@@ -15,7 +15,7 @@
  */
 
 steal(
-	'lib/jquery/jquery-1.8.2.min.js',
+	'lib/jquery/jquery-1.8.3.js',
 	// usefull to position element, and does not require other dependancies than 
 	// the jQuery core lib
 	'lib/xregexp/xregexp-all-min.js'
@@ -55,6 +55,7 @@ steal(
 	'mad/controller/component/treeController.js',
 	'mad/controller/component/dynamicTreeController.js',
 	'mad/core/singleton.js',
+	'mad/event/event.js',
 	'mad/event/eventBus.js',
 	'mad/form/feedbackController.js',
 	'mad/form/formController.js',

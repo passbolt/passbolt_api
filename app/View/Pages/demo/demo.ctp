@@ -56,7 +56,7 @@
 	Modernizr.load({
 		test: Modernizr.cssscrollbar,
 		nope: [
-			'js/lib/jquery/jquery-1.8.2.min.js',
+			'js/lib/jquery/jquery-1.8.3.js',
 			'js/lib/compat/jquery.mousewheel.js',
 			'js/lib/compat/jquery.jscrollpane.min.js'
 		],

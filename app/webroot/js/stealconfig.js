@@ -1,19 +1,22 @@
 steal.config({
 	map: {
 		"*": {
-			"jquery/jquery.js": "jquery",
-			"can": "lib/can",
-			"lib/can/util/util.js": "lib/can/util/jquery/jquery.js",
+			"jquerypp/": "lib/jquerypp/",
+			"jquery/jquery.js" : "jquery",
+			"can/": "lib/can/",
+			"can/util/util.js": "can/util/jquery/jquery.js",
 			"jquery/": "lib/jquerypp/",
-			"jquery": "lib/jquerypp/empty.js",
-			"funcunit": "lib/funcunit",
-			"mad": "lib/mad"
+			"mad/": "lib/mad/"
 		}
 	},
 	paths: {
-		// it will be used by our view class to fix a bug of the can view class which
-		// does not used the stealconfig file right now
-		"mad/": "lib/mad/"
+		"mad/": "lib/mad/",
+		"jquery/": "jquerypp/",
+		"jquery": "lib/can/lib/jquery.1.8.3.js",
+		"mootools/mootools.js" : "can/lib/mootools-core-1.4.5.js",
+		"dojo/dojo.js" : "can/util/dojo/dojo-1.8.1.js",
+		"yui/yui.js" : "can/lib/yui-3.7.3.js",
+		"zepto/zepto.js" : "can/lib/zepto.1.0rc1.js"
 	},
 	shim : {
 		jquery: {
@@ -22,8 +25,23 @@ steal.config({
 	},
 	ext: {
 		js: "js",
-		json: "json",
 		css: "css",
-		ejs: "can/view/ejs/ejs.js"
+		less: "steal/less/less.js",
+		coffee: "steal/coffee/coffee.js",
+		ejs: "can/view/ejs/ejs.js",
+		mustache: "can/view/mustache/mustache.js"
 	}
-});
+})
+
+	// map: {
+		// "*": {
+			// "jquery/jquery.js": "jquery",
+			// "can": "lib/can",
+			// "lib/can/util/util.js": "lib/can/util/jquery/jquery.js",
+			// "jquery/": "lib/jquerypp/",
+			// "jquery": "lib/jquerypp/empty.js",
+			// "funcunit": "lib/funcunit",
+			// "mad": "lib/mad"
+		// }
+	// },
+

@@ -1,0 +1,18 @@
+[submodule "app/webroot/js/steal"]
+	path = app/webroot/js/steal
+	url = git://github.com/cedricalfonsi/steal.git
+[submodule "app/webroot/js/lib/can"]
+	path = app/webroot/js/lib/can
+	url = git://github.com/cedricalfonsi/canjs.git
+[submodule "app/webroot/js/lib/jmvc"]
+	path = app/webroot/js/lib/jmvc
+	url = git://github.com/cedricalfonsi/jmvc-generators.git
+[submodule "app/webroot/js/lib/documentjs"]
+	path = app/webroot/js/lib/documentjs
+	url = git://github.com/cedricalfonsi/documentjs.git
+[submodule "app/webroot/js/lib/jquerypp"]
+	path = app/webroot/js/lib/jquerypp
+	url = git://github.com/cedricalfonsi/jquerypp.git
+[submodule "app/webroot/js/lib/funcunit"]
+	path = app/webroot/js/lib/funcunit
+	url = git://github.com/cedricalfonsi/funcunit.git

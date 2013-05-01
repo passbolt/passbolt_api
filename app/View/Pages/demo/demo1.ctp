@@ -41,7 +41,7 @@
 	<link href="css/workspace.password.css" rel="stylesheet" type="text/css">
 	<link href="css/menu.dropdown.css" rel="stylesheet" type="text/css">
 	<link href="css/scrollbar.css" rel="stylesheet" type="text/css"/>
-	<script src="js/lib/compat/modernizr-2.5.3.min.js"></script>
+	<script src="js/lib/compat/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
 <div id="container">

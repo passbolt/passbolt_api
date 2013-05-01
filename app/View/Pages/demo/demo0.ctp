@@ -40,7 +40,7 @@
   <link rel="stylesheet" type="text/css" href="css/search.css">
   <link rel="stylesheet" type="text/css" href="css/workspace.password.css">
   <link rel="stylesheet" type="text/css" href="css/menu.dropdown.css">
-  <script src="js/lib/compat/modernizr-2.5.3.min.js"></script>
+  <script src="js/lib/compat/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
 <!-- main -->

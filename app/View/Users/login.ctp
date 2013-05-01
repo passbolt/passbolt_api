@@ -10,7 +10,7 @@
 	$this->assign('title',  __('Login'));
 	$this->Html->css('960/960_16_col.css', null, array('block' => 'css'));
 	$this->Html->css('login.css', null, array('block' => 'css'));
-	$this->Html->script('lib/jquery/jquery-1.8.2.min.js', array('inline' => false, 'block'=>'scriptHeader'));
+	$this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'block'=>'scriptHeader'));
 	$this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));
 ?>
   <div class="grid_9 information">
