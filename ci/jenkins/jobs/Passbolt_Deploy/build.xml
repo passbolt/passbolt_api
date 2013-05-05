@@ -34,7 +34,7 @@
                 </copy>
                 <exec dir="${www}" executable="bash">
 			    	<arg value="-c"/>
-					<arg value='php app/Console/cake install'/>
+					<arg value='app/Console/cake install'/>
 				</exec>
                 <chmod file="${www}/app/tmp/**" perm="g+w" type="both" />
         </target>
