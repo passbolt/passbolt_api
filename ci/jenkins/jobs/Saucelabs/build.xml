@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project default="saucelabs_build.xml" xmlns:antcontrib="antlib:net.sf.antcontrib" basedir=".">
+
+	<property environment="env"/>
+	<property name="config" value="${env.WORKSPACE}/ci/jenkins/jobs/Passbolt"/>
+	<property name="src" value="${env.WORKSPACE}"/>
+	<property name="build" value="${src}/build"/>
+
+	<target name="main" depends="sauce-qunit" />
+
+	<target name="sauce-qunit" description="Run unit tests with funcunit and phantomjs">
+		<exec dir="${src}/app/webroot/js/" executable="grunt">
+			<arg line=" remote-test"/>
+		</exec>
+	</target>
+	
+</project>
