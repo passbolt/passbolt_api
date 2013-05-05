@@ -65,19 +65,9 @@ class DATABASE_CONFIG {
 		'host' => 'localhost',
 		'login' => 'root',
 		'password' => 'theFreedomIsNotAnOption',
-		'database' => 'passbolt',
+		'database' => 'passbolt_deploy',
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
 
-	public $test = array(
-		'datasource' => 'Database/Mysql',
-		'persistent' => false,
-		'host' => 'localhost',
-		'login' => 'root',
-		'password' => 'theFreedomIsNotAnOption',
-		'database' => 'passboltTest',
-		'prefix' => '',
-		//'encoding' => 'utf8',
-	);
 }
