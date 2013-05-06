@@ -4,7 +4,7 @@
         <property environment="env" />
         <property name="config" value="${env.WORKSPACE}/ci/jenkins/jobs/Passbolt_Deploy" />
         <property name="src" value="${env.WORKSPACE}" />
-        <property name="www" value="${env.WORKSPACE}/deploy" />
+        <property name="www" value="/var/www/passbolt" />
 
         <target name="main" depends="clean, import, configure, install" />
 
