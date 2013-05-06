@@ -16,7 +16,7 @@
 
         <target name="import">
                 <copy todir="${www}" >
-                        <fileset dir="${src}/*"/>
+                        <fileset dir="${src}" includes="**/*"/>
                 </copy>
         </target>
 
