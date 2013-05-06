@@ -6,7 +6,7 @@
         <property name="src" value="${env.WORKSPACE}" />
         <property name="www" value="/var/www/passbolt" />
 
-        <target name="main" depends="clean, import, configure, install" />
+        <target name="main" depends="import, configure, install" />
 
         <target name="clean" description="Cleanup build artifacts">
                 <delete includeEmptyDirs="true">
@@ -16,10 +16,8 @@
 
         <target name="import">
                 <copy todir="${www}" >
-                        <fileset dir="${src}"/>
+                        <fileset dir="${src}/*"/>
                 </copy>
-                <mkdir dir="${www}/app/tmp/cache/persistent" />
-                <mkdir dir="${www}/app/tmp/cache/models" />
         </target>
 
         <target name="configure">
