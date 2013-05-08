@@ -22,7 +22,7 @@ steal(
 	 * @param {array} map The mapping to use
 	 * @return {mad.object.Map}
 	 */
-	$.Class('mad.object.Map', /** @static */ {
+	can.Construct('mad.object.Map', /** @static */ {
 
 		/**
 		 * @see mad.object.Map.prototype.mapObject

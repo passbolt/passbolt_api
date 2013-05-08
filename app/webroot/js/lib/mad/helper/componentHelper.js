@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -7,7 +7,7 @@ steal(
 	 * @inherits {mad.Class}
 	 * @parent utilities
 	 */
-	$.Class('mad.helper.ComponentHelper', /** @static */ {
+	can.Construct('mad.helper.ComponentHelper', /** @static */ {
 
 		/**
 		 * Create a new component controller function of the given parameters

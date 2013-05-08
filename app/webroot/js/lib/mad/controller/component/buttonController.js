@@ -9,10 +9,9 @@ steal(
 	 * @parent mad.controller.component
 	 * 
 	 * The Button class Controller is our implementation of the UI component button.
-	 *	<p>
-	 *		<h2>Example</h2>
-	 *		@demo ./mad/demo/controller/component/simple_button.html
-	 *	</p>
+	 * 
+	 * ## Example
+	 * @demo lib/mad/demo/controller/component/simple_button.html
 	 * 
 	 * @constructor
 	 * Creates a new Button Controller Component

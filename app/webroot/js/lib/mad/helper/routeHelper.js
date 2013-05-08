@@ -1,8 +1,8 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
-	$.Class('mad.helper.routeHelper', {
+	can.Construct('mad.helper.routeHelper', {
 
 		'getClassController': function () {
 

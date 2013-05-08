@@ -7,7 +7,7 @@ steal(
 	/**
 	 * @class mad.controller.component.DropDownMenuController
 	 * @inherits {mad.controller.component.MenuController}
-	 * @parent index
+	 * @parent mad.controller.component
 	 * 
 	 * @constructor
 	 * Instanciate a Drop Down Menu Controller

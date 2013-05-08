@@ -1,5 +1,6 @@
 steal(
 	'jquery/model',
+	'can/model',
 	'mad/model/list.js',
 	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
@@ -21,7 +22,7 @@ steal(
 	 * creates a new model
 	 * @return {mad.model.Model}
 	 */
-	$.Model('mad.model.Model', /** @static */ {
+	can.Model('mad.model.Model', /** @static */ {
 
 		/**
 		 * The options to use to validate the model attributes.
@@ -322,7 +323,7 @@ steal(
 
 		/**
 		* Get the Class of the instance
-		* @return {$.Class}
+		* @return {can/construct}
 		*/
 		'getClass': function () {
 			return this.constructor;

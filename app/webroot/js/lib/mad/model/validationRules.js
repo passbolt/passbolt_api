@@ -1,5 +1,5 @@
 steal(
-	'jquery/model'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -8,7 +8,7 @@ steal(
 	 * 
 	 * Our validation rules library. 
 	 */
-	$.Class('mad.model.ValidationRules', /** @static */ {
+	can.Construct('mad.model.ValidationRules', /** @static */ {
 
 		/**
 		 * Validate a value following a given rule. This model helper is used by the

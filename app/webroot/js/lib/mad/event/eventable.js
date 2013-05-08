@@ -1,9 +1,9 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 
-	$.Class('mad.event.Eventable', /** @static */ {
+	can.Construct('mad.event.Eventable', /** @static */ {
 		//
 	}, /** @prototype */ {
 

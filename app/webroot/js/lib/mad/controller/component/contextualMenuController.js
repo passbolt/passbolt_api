@@ -5,7 +5,7 @@ steal(
 	/**
 	 * @class mad.controller.component.ContextualMenuController
 	 * @inherits {mad.controller.component.DropDownMenuController}
-	 * @parent index
+	 * @parent mad.controller.component
 	 * 
 	 * @constructor
 	 * Instanciate a Contextual Menu Controller

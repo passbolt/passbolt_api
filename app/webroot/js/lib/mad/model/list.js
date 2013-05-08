@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -7,7 +7,7 @@ steal(
 	 * @inherits jQuery.Class
 	 * @parent mad.model
 	 */
-	$.Class('mad.model.List', /** @static */ {
+	can.Construct('mad.model.List', /** @static */ {
 		
 		/**
 		 * IndexOf a reccord

@@ -1,11 +1,11 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/**
 	 * The controller class helper offers to the developper tools arround controllers
 	 */
-	$.Class('mad.helper.ControllerHelper', /** @static */ {
+	can.Construct('mad.helper.ControllerHelper', /** @static */ {
 
 		/**
 		 * Get view path of a controller.

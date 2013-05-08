@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -32,7 +32,7 @@ steal(
 	MyClass.singleton([CLASS_PARAMS]);
 	 * @codeend
 	 */
-	$.Class('mad.core.Singleton', /** @static */ {
+	can.Construct('mad.core.Singleton', /** @static */ {
 		/**
 		 * Singleton instance
 		 * @type {jQuery.Class}

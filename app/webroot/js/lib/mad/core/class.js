@@ -1,5 +1,5 @@
 steal(
-	'jquery/class',
+	'can/construct',
 	'jquery/lang/string'
 ).then(function () {
 
@@ -26,7 +26,7 @@ steal(
 	 * 
 	 * <h2>Example</h2>
 	 * @codestart
-	$.Class('MyClass',{
+	can.Construct('MyClass',{
 		'funcToDecorate': function() {
 				return 'I am the function to decorate';
 		},
@@ -54,7 +54,7 @@ steal(
 	 * @param {String} decoratorName The name of the object to use as decorator
 	 * @return {Object} Returns the decorated instance
 	 */
-	$.Class.prototype.decorate = function (decoratorName) {
+	can.Construct.prototype.decorate = function (decoratorName) {
 		var Decorator = $.String.getObject(decoratorName),
 			lvl = null;
 
@@ -104,9 +104,9 @@ steal(
 
 	/**
 	 * Get the Class of the instance
-	 * @return {$.Class}
+	 * @return {can.Construct}
 	 */
-	$.Class.prototype.getClass = function () {
+	can.Construct.prototype.getClass = function () {
 		return this.constructor;
 	}
 
@@ -120,14 +120,14 @@ steal(
 	 * 
 	 * <h2>Example</h2>
 	 * @codestart
-	$.Class('MyClass',{
+	can.Construct('MyClass',{
 		'myVar':0,
 		'init':function(){
 				this.myVar++;
 		},
 	});
 
-	$.Class('MyAugmentator',{
+	can.Construct('MyAugmentator',{
 		'init':function(){
 				this.myVar++;
 		},
@@ -146,14 +146,14 @@ steal(
 	 * @param  {String} objectName The name of the object to use as augmentator
 	 * @return  {void}
 	 */
-	$.Class.augment = function (objectName) {
+	can.Construct.augment = function (objectName) {
 		var Augmentator = $.String.getObject(objectName);
 
 		// Add static properties to the class to augment
 		var blackListedStaticProperties = ['namespace', 'shortName', 'fullName', 'defaults'];
 		for(var i in Augmentator) {
 			// extend the defaults with the augmentator default variable
-			if(typeof $.Class[i] == 'undefined' && $.inArray(i, blackListedStaticProperties) == -1) {
+			if(typeof can.Construct[i] == 'undefined' && $.inArray(i, blackListedStaticProperties) == -1) {
 				this[i] = Augmentator[i];
 			}
 		}
@@ -161,7 +161,7 @@ steal(
 		// Add prototype properties to the class to augment
 		var blackListedPrototypeProperties = ['Class'];
 		for(var i in Augmentator.prototype) {
-			if(typeof $.Class.prototype[i] == 'undefined' && $.inArray(i, blackListedPrototypeProperties) == -1) {
+			if(typeof can.Construct.prototype[i] == 'undefined' && $.inArray(i, blackListedPrototypeProperties) == -1) {
 
 				// augment a constructor, try something closed to multiple inheritance
 				if(i == 'init') {

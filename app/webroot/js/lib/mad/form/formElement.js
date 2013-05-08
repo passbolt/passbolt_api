@@ -39,6 +39,16 @@ steal(
 		 */
 		'value': null,
 
+		// Constructor like
+		'init': function (el, options) {
+			this._super(el, options);
+			// if a default value has been given
+			// do it after the component has been rendered
+			if(options.value != null) {
+				this.setValue(options.value);
+			}
+		},
+
 		/**
 		 * Get the associated model.attribute
 		 * @return {string}

@@ -11,11 +11,13 @@ steal(
 	 * @class mad.controller.component.TreeController
 	 * @inherits mad.controller.ComponentController
 	 * @parent mad.controller.component
-	 * @demo ./mad/demo/controller/tree_controller.html
 	 * @see mad.view.component.Tree
 	 * 
 	 * The Tree class Controller is our implementation of the UI component tree.
 	 * The common view works upon the jstree plugin.
+	 * 
+	 * ## Example
+	 * @demo lib/mad/demo/controller/component/tree_controller.html
 	 * 
 	 * @constructor
 	 * Creates a new Tree Controller Component
@@ -39,7 +41,7 @@ steal(
 			// the itemClass which represents the items managed by the component
 			'itemClass': null,
 			// the associated map, which will be used to map the model data to the
-		  // expected view format
+		  	// expected view format
 			'map': null,
 			// the top tag of the grid
 			'tag': 'ul',

@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -7,7 +7,7 @@ steal(
 	 * @inherits jQuery.Class
 	 * @parent mad.core
 	 */
-	$.Class('mad.model.serializer.Serializer', /** @static */ {
+	can.Construct('mad.model.serializer.Serializer', /** @static */ {
 		'from': function (data) {
 			// override this function to support the format to serialize from
 		},

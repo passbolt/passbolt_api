@@ -10,15 +10,9 @@ steal(
 	 * 
 	 * The core class Controller is an extension of the JavascriptMVC Controller. This
 	 * class allow us to easily hook common behavior, such as :
-	 * <ul>
-	 *	<li>
-	 *		referencing automatically newly created controllers with the 
-	 *		[mad.controller.AppController|Application Controller]
-	 *	</li>
-	 *	<li>
-	 *		set automatically an id to the DOM element if no id has been provided
-	 *	</li>
-	 * </ul>
+	 * 
+	 * * referencing automatically newly created controllers with the [mad.controller.AppController|Application Controller]
+	 * * set automatically an id to the DOM element if no id has been provided
 	 * 
 	 * @constructor
 	 * Creates a new controller

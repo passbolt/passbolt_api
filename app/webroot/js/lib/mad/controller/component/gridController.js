@@ -9,18 +9,19 @@ steal(
 	 * @class mad.controller.component.GridController
 	 * @inherits mad.controller.ComponentController
 	 * @parent mad.controller.component
-	 * @demo ./mad/demo/controller/grid_controller.html
 	 * @see mad.view.component.Grid
-	 * 
+	 *
 	 * The Grid class Controller is our implementation of the UI component grid.
+	 * 
+	 * ## Example
+	 * @demo ./lib/mad/demo/controller/component/grid_controller.html
 	 * 
 	 * @constructor
 	 * Creates a new Grid Controller Component
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
-	 * this.options and merged with defaults static variable 
-	 * @return {mad.controller.component.GridController}
+	 * this.options and merged with defaults static variable
 	 */
 	mad.controller.ComponentController.extend('mad.controller.component.GridController', /** @static */	{
 

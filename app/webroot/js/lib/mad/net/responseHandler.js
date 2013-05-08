@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -17,7 +17,7 @@ steal(
 	 * @param {object} callbacks The optional callbacks to push on if existing
 	 * @return {mad.net.ResponseHandler}
 	 */
-	$.Class('mad.net.ResponseHandler', /** @static */ {
+	can.Construct('mad.net.ResponseHandler', /** @static */ {
 
 	}, /** @prototype */ {
 

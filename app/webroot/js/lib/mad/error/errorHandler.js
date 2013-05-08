@@ -1,4 +1,4 @@
-steal('jquery/class').then(function () {
+steal('can/construct').then(function () {
 
 	/*
 	 * @class mad.error.ErrorHandler
@@ -8,7 +8,7 @@ steal('jquery/class').then(function () {
 	 * Common error handler.
 	 * Use the console as logger.
 	 */
-	$.Class('mad.error.ErrorHandler', /** @static */ {
+	can.Construct('mad.error.ErrorHandler', /** @static */ {
 
 		/**
 		 * Log the error or exception

@@ -6,7 +6,10 @@ steal(
 	/**
 	 * @class mad.controller.component.MenuController
 	 * @inherits {mad.controller.component.TreeController}
-	 * @parent index
+	 * @parent mad.controller.component
+	 * 
+	 * ## Example
+	 * @demo lib/mad/demo/controller/component/menu_controller.html
 	 * 
 	 * @constructor
 	 * Instanciate a Menu Controller

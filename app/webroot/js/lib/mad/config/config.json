@@ -3,8 +3,8 @@
 		"components": ["EventBus", "Internationalization", "AppController", "RouteListener"]
 	},
 	"app": {
-		"url": "http://localhost",
-		"controllerElt": "#js_app_controller",	
+		"url": "http://passbolt.local",
+		"controllerElt": "body",	
 		"namespace": "app",
 		"ControllerClassName": "mad.controller.AppController"
 	},

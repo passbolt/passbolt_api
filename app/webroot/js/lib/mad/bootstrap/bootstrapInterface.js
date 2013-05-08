@@ -1,10 +1,10 @@
-steal('jquery/class').then(function () {
+steal('can/construct').then(function () {
 
 	/*
 	 * @class mad.bootstrap.BootstrapInterface
 	 * The core Interface Bootstrap is a representation of a Bootstrap process
 	 */
-	$.Class('mad.bootstrap.BootstrapInterface', /** @prototype */	{
+	can.Construct('mad.bootstrap.BootstrapInterface', /** @prototype */	{
 		/**
 		 * Constructor of the Bootstrap Class
 		 */

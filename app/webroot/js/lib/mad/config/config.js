@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	// create the config namespace
@@ -8,7 +8,7 @@ steal(
 	/*
 	 * @class mad.config.Config
 	 */
-	$.Class('mad.Config', /** @static */ {
+	can.Construct('mad.Config', /** @static */ {
 
 		/**
 		 * Load a config file
@@ -45,7 +45,6 @@ steal(
 		'write': function (name, value) {
 			can.getObject(name, mad.config, true, value);
 		}
-	}, /** @prototype */ {
-	});
+	}, /** @prototype */ { });
 
 });

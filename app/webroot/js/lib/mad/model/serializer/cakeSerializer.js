@@ -1,4 +1,5 @@
 steal(
+	'can/construct',
 	'mad/model/serializer/serializer.js'
 ).then(function () {
 
@@ -7,7 +8,7 @@ steal(
 	 * @inherits jQuery.Class
 	 * @parent mad.core
 	 */
-	$.Class('mad.model.serializer.CakeSerializer', /** @static */ {
+	can.Construct('mad.model.serializer.CakeSerializer', /** @static */ {
 		'from': function (data, Class) {
 			var returnValue = {};
 			returnValue = $.extend(true, {}, data, data[Class.shortName]);

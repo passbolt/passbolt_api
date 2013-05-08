@@ -37,7 +37,7 @@ steal('funcunit').then(function () {
 
 		// The class reference is not a Component Controller
 //		raises(function () {
-//			mad.helper.ComponentHelper.create($('#refElement'), position, $.Class, {id: uid});
+//			mad.helper.ComponentHelper.create($('#refElement'), position, can.Construct, {id: uid});
 //		}, mad.error.WrongParametersException, mad.error.WrongParametersException.message);
 	});
 

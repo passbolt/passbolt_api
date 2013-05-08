@@ -1,4 +1,4 @@
-steal('funcunit', function () {
+steal('can/construct', 'funcunit', function () {
 
 	module("mad.core", {
 		// runs before each test
@@ -11,7 +11,7 @@ steal('funcunit', function () {
 	 * Test the decorator feature
 	 **************************************************************************** */
 
-	$.Class('mad.test.ClassUnitToDecorateTest', {
+	can.Construct('mad.test.ClassUnitToDecorateTest', {
 		'staticVar': null,
 		'staticFunc': function () {
 			return 'I am a simple static function';
@@ -78,7 +78,7 @@ steal('funcunit', function () {
 	 * Test the augment feature
 	 **************************************************************************** */
 
-	$.Class('mad.test.ClassToAugment', /** @static */ {
+	can.Construct('mad.test.ClassToAugment', /** @static */ {
 		'staticVar': null,
 		'staticFunc': function () {
 			return 'I am a simple static function';
@@ -94,7 +94,7 @@ steal('funcunit', function () {
 		}
 	});
 
-	$.Class('mad.test.Augmentator', /** @static */ {
+	can.Construct('mad.test.Augmentator', /** @static */ {
 		'augmentedStaticVar': 'I am a static variable',
 		'augmentedStaticFunc': function () {
 			return 'I am a simple static function which augments the Class';

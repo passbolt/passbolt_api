@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -11,7 +11,7 @@ steal(
 	 * will help developper to customize the way to dispatch the routes. It will be used
 	 * by the bootstrap to dispatch route to convenent actions.
 	 */
-	$.Class('mad.route.DispatcherInterface', /** @static */ {
+	can.Construct('mad.route.DispatcherInterface', /** @static */ {
 
 		/**
 		 * Implement this function to dispatch the given route to the convenient action

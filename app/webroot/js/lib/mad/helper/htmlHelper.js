@@ -1,5 +1,5 @@
 steal(
-	'jquery/class'
+	'can/construct'
 ).then(function () {
 
 	/*
@@ -7,7 +7,7 @@ steal(
 	 * @inherits {mad.Class}
 	 * @parent utilities
 	 */
-	$.Class('mad.helper.HtmlHelper', /** @static */ {
+	can.Construct('mad.helper.HtmlHelper', /** @static */ {
 
 		/**
 		 * Insert an html content functions of a given position and a reference element
