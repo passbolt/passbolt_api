@@ -3,8 +3,6 @@
 <html lang="en">
 	<head>
 		<title>Controller Example</title>
-		<script type='text/javascript' src='../../../../steal/steal.js'></script>
-		<style type='text/css'></style>
 	</head>
 	<body>
 		
@@ -20,9 +18,10 @@
 <!-- -----------------------------------------------------------------------
 												DEMO JAVASCRIPT BLOCK
  -------------------------------------------------------------------------->
-<script type='text/javascript'>
+<div style='clear:both'></div>
+<script type='text/javascript' src='../../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
 steal('mad/demo/init.js').then(function() {
-	
 	var newButton = new mad.controller.component.ButtonController($('#js_simple_button', this.element), {
 		'value': 'The value of the simple button',
 		'events': {

@@ -3,7 +3,6 @@
 <html lang="en">
 	<head>
 		<title>Component Tree Controller Example</title>
-		<script type='text/javascript' src='../../../../steal/steal.js'></script>
 		<link rel="stylesheet" type="text/css" href="../../../../../../css/icons.css">
 		<link rel="stylesheet" type="text/css" href="../../../../../../css/tree.css">
 		<style type='text/css'></style>
@@ -27,12 +26,14 @@
 <!-- -----------------------------------------------------------------------
 												DEMO JAVASCRIPT BLOCK
  -------------------------------------------------------------------------->
-<script type='text/javascript'>
+<div style='clear:both'></div>
+<script type='text/javascript' src='../../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
 steal(
 	'mad/demo/init.js',
 	'mad/test/data/model/person.js'
 ).then(function() {
-
+return;
 	var map = new mad.object.Map({
 		'id': 'id',
 		'label': {

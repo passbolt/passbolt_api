@@ -3,7 +3,6 @@
 <html lang="en">
 	<head>
 		<title>Controller Example</title>
-		<script type='text/javascript' src='../../../steal/steal.js'></script>
 		<style type='text/css'></style>
 	</head>
 	<body>
@@ -20,14 +19,16 @@
 <!-- -----------------------------------------------------------------------
 												DEMO JAVASCRIPT BLOCK
  -------------------------------------------------------------------------->
-<script type='text/javascript'>
+
+<script type='text/javascript' src='../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
 steal('mad/demo/init.js').then(function() {
 	
 	mad.controller.ComponentController.extend('demo.controller.DemoComponentController', 
 	/** @static */
 	{
 		'defaults': {
-			'templateUri': '//mad/demo/view/template/component/demoComponent.ejs'
+			'templateUri': 'mad/demo/view/template/component/demoComponent.ejs'
 		}
 	},
 	/** @prototype */

@@ -3,10 +3,6 @@
 <html lang="en">
 	<head>
 		<title>Component Menu Controller Example</title>
-		<script type='text/javascript' src='../../../../steal/steal.js'></script>
-		<style type='text/css'>
-			
-		</style>
 	</head>
 	<body>
 		
@@ -15,35 +11,33 @@
  -------------------------------------------------------------------------->
 <div id="demo-html">
 <div id="js_demo_app_controller">
-	<h3>Menu representation</h3>
-	<button>click to deploy the menu</button>
+	<h3>Simple Menu</h3>
+	<ul id="js_demo_menu_controller"></ul>
 </div>
 </div>
 
 <!-- -----------------------------------------------------------------------
 												DEMO JAVASCRIPT BLOCK
  -------------------------------------------------------------------------->
-<script type='text/javascript'>
+<script type='text/javascript' src='../../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
 steal(
 	'mad/demo/init.js'
 ).then(function() {
 	
-	var data = new Array(
-		{ 'MenuItem': new mad.model.MenuItem({ 'id': uuid(), 'label': 'open', 'action': function() { console.log('Menu Open')} }) },
-		{ 'MenuItem': new mad.model.MenuItem({ 'id': uuid(), 'label': 'create', 'action': function() { console.log('Menu Create')} }),
+	var data = mad.model.Action.models([
+		{'id': uuid(), 'label': 'open', 'action': function() { alert('Menu Open')}},
+		{'id': uuid(), 'label': 'create', 'action': function() { alert('Menu Create')},
 			'children' : [
-				{ 'MenuItem': new mad.model.MenuItem({ 'id': uuid(), 'label': 'secret', 'action': function() { console.log('Menu Create Secret')} }) },
-				{ 'MenuItem': new mad.model.MenuItem({ 'id': uuid(), 'label': 'category', 'action': function() { console.log('Menu Create Category')} }) }
+				{'id': uuid(), 'label': 'secret', 'action': function() { alert('Menu Create Secret')}},
+				{'id': uuid(), 'label': 'category', 'action': function() { alert('Menu Create Category')}} 
 			]
 		}
-	);
+	]);
 	// Instanciate the menu controller
-	$('button').click(function(){
-		var $menu = $('<ul id="js_demo_menu_controller"></ul>');
-		$(this).after($menu);
+		var $menu = $('#js_demo_menu_controller');
 		var list = new mad.controller.component.MenuController($menu, {}, {});
-		list.load(data);	
-	});
+		list.load(data);
 });
 </script>
 

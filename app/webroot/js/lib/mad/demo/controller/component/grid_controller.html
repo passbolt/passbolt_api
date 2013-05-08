@@ -3,32 +3,32 @@
 <html lang="en">
 	<head>
 		<title>Component Tree Controller Example</title>
-		<script type='text/javascript' src='../../../../steal/steal.js'></script>
-		<link rel="stylesheet" type="text/css" href="../../../../../../css/table.css">
-		<style type='text/css'></style>
+		<link rel="stylesheet" type="text/css" href="../../../../../../css/table.css">>
 	</head>
 	<body>
-		
 <!-- -----------------------------------------------------------------------
 												DEMO HTML BLOCK
  -------------------------------------------------------------------------->
 <div id="demo-html">
 <div id="js_demo_app_controller">
 	<h3>Grid representation</h3>
-	<table id="js_demo_grid_controller"></table>
+	<table id="js_demo_grid_controller">
+	</table>
 </div>
 </div>
-
 <!-- -----------------------------------------------------------------------
 												DEMO JAVASCRIPT BLOCK
  -------------------------------------------------------------------------->
-<script type='text/javascript'>
+<div style='clear:both'></div>
+<script type='text/javascript'
+	src='../../../../../steal/steal.js'>
+</script>
+<script type='text/javascript' id="demo-source">
 steal(
 	'mad/demo/init.js'
 ).then(
 	'mad/test/data/model/person.js'
 ).then(function() {
-
 	var map = new mad.object.Map({
 		'id': 'id',
 		'name': 'name',
@@ -94,6 +94,5 @@ steal(
 
 });
 </script>
-
 	</body>
 </html>
