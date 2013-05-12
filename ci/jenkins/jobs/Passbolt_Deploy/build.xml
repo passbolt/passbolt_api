@@ -6,7 +6,7 @@
         <property name="src" value="${env.WORKSPACE}" />
         <property name="www" value="/var/www/passbolt" />
 
-        <target name="main" depends="import, configure, install" />
+        <target name="main" depends="import, configure, build, install" />
 
         <target name="clean" description="Cleanup build artifacts">
                 <delete includeEmptyDirs="true">
@@ -19,6 +19,12 @@
                         <fileset dir="${src}" includes="**/*"/>
                 </copy>
         </target>
+
+		<target name="build" description="Build the front-end application">
+			<exec dir="${src}/app/webroot/js/" executable="xvfb-run" output="jsunit_mad_output">
+				<arg line=" -a ./js steal/buildjs app/passbolt.html"/>
+			</exec>
+		</target>
 
         <target name="configure">
                 <chmod file="${www}/app/tmp" perm="g+s" />
