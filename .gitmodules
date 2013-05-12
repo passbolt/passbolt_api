@@ -3,7 +3,7 @@
 	url = git://github.com/passbolt/steal.git
 [submodule "app/webroot/js/lib/can"]
 	path = app/webroot/js/lib/can
-	url = git://github.com/cedricalfonsi/canjs.git
+	url = git://github.com/passbolt/canjs.git
 [submodule "app/webroot/js/lib/jmvc"]
 	path = app/webroot/js/lib/jmvc
 	url = git://github.com/passbolt/jmvc-generators.git
