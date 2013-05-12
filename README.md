@@ -1,13 +1,26 @@
-CakePHP
-=======
+	      ____                  __          ____
+	     / __ \____  _____ ____/ /_  ____  / / /_
+	    / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
+	   / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
+	  /_/    \__,_/____/____/_.___/\____/_/\__/
+	
+	The password management solution
+	(c) 2012-2013 passbolt.com
 
-[![CakePHP](http://cakephp.org/img/cake-logo.png)](http://www.cakephp.org)
+
+Credits
+=========
+
+Team Rocket
+------
+Kevin, Cedric, Remy, Aurelie, Ismael & Myriam
+
+
+CakePHP
+--------
 
 CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC.
 Our primary goal is to provide a structured framework that enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility.
-
-Some Handy Links
-----------------
 
 [CakePHP](http://www.cakephp.org) - The rapid development PHP framework
 
@@ -22,9 +35,6 @@ Some Handy Links
 [CakePHP TV](http://tv.cakephp.org) - Screen casts from events and video tutorials
 
 [The Cake Software Foundation](http://cakefoundation.org/) - promoting development related to CakePHP
-
-Get Support!
-------------
 
 [Our Google Group](http://groups.google.com/group/cake-php) - community mailing list and forum
 
