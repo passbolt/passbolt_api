@@ -1,6 +1,5 @@
 steal(
 	'mad/controller/componentController.js',
-	'mad/core/singleton.js',
 	'app/view/component/notification.js'
 ).then(function () {
 
@@ -9,14 +8,10 @@ steal(
 	 * @inherits mad.controller.ComponentController
 	 * @parent index
 	 * @see {mad.view.View}
-	 * @see {mad.core.Singleton}
 	 * 
 	 * @constructor
 	 * The Notification class Controller will be used to display to users 
 	 * application' messages.
-	 * </br>
-	 * The notification class Controller is a singleton, use the function .singleton()
-	 * to instanciate or get it.
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
@@ -56,8 +51,4 @@ steal(
 		}
 
 	});
-
-	// Augment the notification controller with the Singleton Object
-	// @todo move this feature in the extend function, override the extend function of the class Class
-	passbolt.controller.component.NotificationController.augment('mad.core.Singleton');
 });

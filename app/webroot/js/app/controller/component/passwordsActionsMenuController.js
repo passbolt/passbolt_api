@@ -1,6 +1,7 @@
 steal(
 	'mad/view/component/tree.js',
-	'app/view/component/passwordsActionsMenu.js'
+	'app/view/component/passwordsActionsMenu.js',
+	'app/view/template/component/passwordsActionsMenu.ejs'
 ).then(function () {
 
 	/*

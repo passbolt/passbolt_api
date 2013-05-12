@@ -21,14 +21,18 @@ steal(
 		'handleException': function (exception) {
 			// send a notification on the events' bus
 			if (mad.bus) {
+				console.log('A');
+				console.log(exception);
 				mad.bus.trigger('passbolt_notify', {
 					'status': exception.name,
 					'title': exception.title,
 					'message': exception.message
 				});
+				console.log('B');
 			}
 			// call the parent which is displaying in the console
 			mad.error.ErrorHandler.handleException(exception);
+				console.log('C');
 		},
 
 		/**

@@ -17,7 +17,7 @@ steal(
 
 	/*
 	 * @class passbolt.controller.AppController
-	 * @inherits [mad.controller.AppController,mad.core.Singleton]
+	 * @inherits mad.controller.AppController
 	 * @parent index
 	 * 
 	 * The passbolt application controller.
@@ -43,7 +43,7 @@ steal(
 			this.filterCtl.render();
 
 			// Add the notification controller
-			this.notifCtl = passbolt.controller.component.NotificationController.singleton($('#js_notificator'), {
+			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
 				'state': 'hidden'
 			});
 

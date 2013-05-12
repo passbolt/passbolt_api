@@ -9,7 +9,6 @@ steal(
 	 * @parent mad.core
 	 * 
 	 * The main application controller.
-	 * This class is by definition a singleton.
 	 */
 	mad.controller.ComponentController.extend('mad.controller.AppController', /** @static */ {
 
@@ -99,7 +98,4 @@ steal(
 		}
 
 	});
-
-	// Bon a la fin de la classe comme ca, c'est un peu laid
-	mad.controller.AppController.augment('mad.core.Singleton');
 });

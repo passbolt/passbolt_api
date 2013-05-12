@@ -6,7 +6,8 @@ steal(
 	'app/controller/component/passwordsActionsMenuController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
-	'app/controller/component/permissions/permissionsListController.js'
+	'app/controller/component/permissions/permissionsListController.js',
+	'app/model/filter.js'
 ).then(function () {
 
 	/*
@@ -302,8 +303,7 @@ steal(
 				data : resource,
 				callbacks : {
 					submit: function (data) {
-						resource.attr(data['passbolt.model.Resource'])
-						.save();
+						resource.attr(data['passbolt.model.Resource']).save();
 						popup.remove();
 					}
 				}
@@ -320,7 +320,7 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateReady': function (go) { },
+		'stateReady': function (go) { }
 
 	});
 

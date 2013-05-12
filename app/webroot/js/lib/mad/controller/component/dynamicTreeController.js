@@ -2,7 +2,9 @@ steal(
 	'jquery/controller',
 	'mad/controller/component/treeController.js',
 	'mad/view/component/tree/dynamicTree.js',
-	'mad/object/map.js'
+	'mad/object/map.js',
+	'mad/view/template/component/tree.ejs',
+	'mad/view/template/component/tree/dynamicTree.ejs'
 ).then(function () {
 
 	/*

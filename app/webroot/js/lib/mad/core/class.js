@@ -147,31 +147,47 @@ steal(
 	 * @return  {void}
 	 */
 	can.Construct.augment = function (objectName) {
-		var Augmentator = $.String.getObject(objectName);
+		console.log(objectName);
+		var Augmentator =  can.getObject(objectName);
+		console.log(2);
 
 		// Add static properties to the class to augment
 		var blackListedStaticProperties = ['namespace', 'shortName', 'fullName', 'defaults'];
+		console.log(3);
 		for(var i in Augmentator) {
+			
+		console.log(4);
 			// extend the defaults with the augmentator default variable
 			if(typeof can.Construct[i] == 'undefined' && $.inArray(i, blackListedStaticProperties) == -1) {
+				
+		console.log(5);
 				this[i] = Augmentator[i];
 			}
 		}
 
+		console.log(51);
 		// Add prototype properties to the class to augment
 		var blackListedPrototypeProperties = ['Class'];
+		console.log(6);
+		console.log(Augmentator);
 		for(var i in Augmentator.prototype) {
+		console.log(7);
 			if(typeof can.Construct.prototype[i] == 'undefined' && $.inArray(i, blackListedPrototypeProperties) == -1) {
 
+		console.log(8);
 				// augment a constructor, try something closed to multiple inheritance
 				if(i == 'init') {
+		console.log(9);
 					if(typeof this.prototype.__inits == 'undefined') {
 						// List of constructors
+		console.log(10);
 						this.prototype.__inits = [];
 						this.prototype.__inits.push(this.prototype[i]);
+		console.log(11);
 						// replace the init function, with a function which will execute all the init function
 						this.prototype[i] = (function (clazz, fn) {
 							return function (el, options, test) {
+		console.log(12);
 								//                                    var returnValue = null;
 								for(var i in this.__inits) {
 									var initResult = this.__inits[i].apply(this, arguments);
@@ -179,14 +195,18 @@ steal(
 							}
 						})(this, 'init');
 					}
+		console.log(13);
 					// Add the init function of the Augmentator to the list of init function to execute when creating an instance of the class
 					this.prototype.__inits.push(Augmentator.prototype[i]);
+		console.log(14);
 				}
 				// add the function to the brol
 				else {
+		console.log(15);
 					this.prototype[i] = Augmentator.prototype[i];
 				}
 			}
 		}
+		console.log(16);
 	}
 });

@@ -14,7 +14,7 @@ __('Hello the %s world', 'mad')
  */
 
 steal(
-	'mad/core/singleton.js'
+	'can/construct'
 ).then(function () {
 
 	/**
@@ -36,14 +36,12 @@ steal(
 			variables.push(args[i]);
 		}
 
-		var i18n = mad.lang.I18n.singleton();
-		translation = i18n.translate(str, variables.slice(1));
-		return translation;
+		return mad.lang.I18n.translate(str, variables.slice(1));
 	};
 
 	/*
 	 * @class mad.lang.I18n
-	 * @inherits mad.core.Singleton
+	 * @inherits can.Construct
 	 * Our implementation of the I18n system.
 	 * @parent mad.lang
 	 * 
@@ -51,7 +49,7 @@ steal(
 	 * Create a I18n object to manage translation
 	 * @return {mad.lang.I18n}
 	 */
-	mad.core.Singleton.extend('mad.lang.I18n', /** @prototype */ {
+	can.Construct.extend('mad.lang.I18n', /** @static */ {
 
 		/**
 		 * The current dictionnary to use
@@ -67,7 +65,7 @@ steal(
 		 */
 		'translate': function (str, vars) {
 			var vars = typeof vars != 'undefined' ? vars : [];
-			return this.replaceHooks(this.getEntry(str), vars);
+			return mad.lang.I18n.replaceHooks(this.getEntry(str), vars);
 		},
 
 		/**
@@ -77,7 +75,7 @@ steal(
 		 */
 		'loadDico': function (dico) {
 			for(var i in dico) {
-				this.dico[i] = dico[i]; //make a copy of the data to be sure there will be existing in the app scope
+				mad.lang.I18n.dico[i] = dico[i]; //make a copy of the data to be sure there will be existing in the app scope
 			}
 		},
 
@@ -123,11 +121,11 @@ steal(
 		 */
 		'getEntry': function (str) {
 			var returnValue = str;
-			if(typeof this.dico[str] != 'undefined' && this.dico[str] != '') {
-				returnValue = this.dico[str];
+			if(typeof mad.lang.I18n.dico[str] != 'undefined' && this.dico[str] != '') {
+				returnValue = mad.lang.I18n.dico[str];
 			}
 			return returnValue;
 		}
-	});
+	}, /** @prototype */ { });
 
 });

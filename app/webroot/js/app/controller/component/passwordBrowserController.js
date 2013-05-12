@@ -1,5 +1,7 @@
 steal(
 	'mad/controller/component/gridController.js',
+	'app/model/resource.js',
+	'app/model/category.js',
 	'app/controller/component/copyLoginButtonController.js',
 	'app/controller/component/copySecretButtonController.js'
 ).then(function () {

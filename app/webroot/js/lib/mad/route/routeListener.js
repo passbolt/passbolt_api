@@ -8,22 +8,20 @@
  * 
  */
 
-steal('mad/core/singleton.js').then(function () {
+steal('can/construct').then(function () {
 
 	/*
 	 * @class mad.route.RouteListener
-	 * @inherits mad.core.Singleton
+	 * @inherits can.Construct
 	 * @parent mad.route
 	 * 
 	 * The route listener will be one of the stone reference of the application.
 	 * It will be the guarantor of the route change
 	 * 
 	 */
-	mad.core.Singleton.extend('mad.route.RouteListener', /** @static */ {
+	can.Construct('mad.route.RouteListener', /** @static */ {
 	}, /** @prototype */ {
 		'init': function () {
-			this._super();
-
 			var self = this;
 
 			// load the routes to listen

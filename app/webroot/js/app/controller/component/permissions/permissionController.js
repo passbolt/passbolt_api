@@ -21,7 +21,7 @@ steal(
 			'label': 'Permission Controller',
 			'viewClass': passbolt.view.component.permissions.Permission,
 			// the resource to bind the component on
-			'resource': null,
+			'resource': null
 			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
 			//'selectedRs': new can.Model.List()
 		}
@@ -43,7 +43,7 @@ steal(
 			this.refresh();
 			// // on
 			// this.on();
-		},
+		}
 	});
 
 });

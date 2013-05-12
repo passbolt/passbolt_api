@@ -1,5 +1,6 @@
 steal(
-	'mad/view'
+	'mad/view',
+	'app/view/template/component/appFilter.ejs'
 ).then(function () {
 
 	/*

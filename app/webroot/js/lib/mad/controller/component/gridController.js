@@ -2,7 +2,9 @@ steal(
 	'jquery/controller',
 	'mad/controller/componentController.js',
 	'mad/view/component/grid.js',
-	'mad/object/map.js'
+	'mad/object/map.js',
+	'mad/view/template/component/grid.ejs',
+	'mad/view/template/component/grid/gridItem.ejs'
 ).then(function () {
 
 	/*
