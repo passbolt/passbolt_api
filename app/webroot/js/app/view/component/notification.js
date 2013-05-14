@@ -36,7 +36,7 @@ steal(
 				self.controller.setState('hidden');
 			}, 30000);
 
-			this._super();
+			return this._super();
 		},
 
 		/* ************************************************************** */

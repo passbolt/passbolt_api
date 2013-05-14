@@ -27,6 +27,17 @@ steal(
 
 	}, /** @prototype */ {
 
+
+		'beforeRender': function() {
+			this._super();
+			this.setViewData({
+				'status': '',
+				'title': '',
+				'message': '',
+				'data': ''
+			});
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
@@ -37,16 +48,21 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {array} notif
 		 */
-		// @todo notice that the event has to be writen with a-Z0-1_
 		// create an object Notification
 		'{mad.bus} passbolt_notify': function (el, ev, notif) {
+			
+			// The component is not already started, start it
+			if(this.view == null) {
+				this.start();
+			}
+			// Pass the data to the view
 			this.setViewData({
 				'status': notif.status,
 				'title': notif.title,
 				'message': notif.message,
 				'data': notif.data
 			});
-			this.render();
+			this.refresh();
 			this.setState('ready');
 		}
 

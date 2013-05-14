@@ -27,7 +27,12 @@ steal(
 
 	}, /** @prototype */ {
 
-		'init': function (el, options) {
+		/**
+		 * After start hook.
+		 * Init the embedded components
+		 */
+		'afterStart': function (options) {
+			// Instantiate the filter form
 			var filterForm = new mad.form.FormController('#js_filter_form', {
 				'callbacks': {
 					'submit': function (data) {
@@ -36,13 +41,17 @@ steal(
 					}
 				}
 			});
+			filterForm.start();
+			// Instantiate the textbox which will get the user search
 			this.keywordsFormElement = filterForm.addElement(new mad.form.element.TextboxController('#js_filter_keywords', {
 				modelReference: 'passbolt.model.Filter.keywords'
 			}));
+			this.keywordsFormElement.start();
+			// Instantiate the list which will carry the filter tags
 			this.listFormElement = filterForm.addElement(new mad.form.element.ListController('#js_filter_tags', {
 				modelReference: 'passbolt.model.Filter.tags'
 			}));
-			this._super(el, options);
+			this.listFormElement.start();
 		},
 
 		/**
@@ -52,15 +61,6 @@ steal(
 		'reset': function () {
 			this.listFormElement.setValue([]);
 			this.keywordsFormElement.setValue('');
-		},
-
-		/**
-		 * Render the application filter
-		 * @see {mad.controller.ComponentController.prototype.render}
-		 */
-		'render': function (options) {
-			this._super(options);
-			this.listFormElement.render();
 		},
 
 		/* ************************************************************** */

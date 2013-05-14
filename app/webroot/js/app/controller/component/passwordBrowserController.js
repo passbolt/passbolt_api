@@ -77,7 +77,7 @@ steal(
 						 	'availableValues': availableValues
 						}
 					);
-					checkbox.render();
+					checkbox.start();
 				}
 			}, {
 				'name': 'name',
@@ -105,23 +105,25 @@ steal(
 				'name': 'copyLogin',
 				'index': 'copyLogin',
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
-					mad.helper.ComponentHelper.create(
+					var copyLogin = mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',
 						passbolt.controller.component.CopyLoginButtonController,
 						{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 					);
+					copyLogin.start();
 				}
 			}, {
 				'name': 'copySecret',
 				'index': 'copySecret',
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
-					mad.helper.ComponentHelper.create(
+					var copyPwd = mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',
 						passbolt.controller.component.CopySecretButtonController,
 						{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 					);
+					copyPwd.start();
 				}
 			}];
 			

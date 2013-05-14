@@ -31,7 +31,7 @@ steal(
 		 * The current enabled tab id
 		 * @type {string}
 		 */
-		'crtEnabledTabId': null,
+		'enabledTabId': null,
 
 		/**
 		 * Enable a tab
@@ -39,11 +39,18 @@ steal(
 		 * @return {void}
 		 */
 		'enableTab': function (tabId) {
-			if (this.crtEnabledTabId) {
-				this.getComponent(this.crtEnabledTabId).setState('hidden');
+			// if a previous tab is enabled, disable it
+			if (this.enabledTabId) {
+				this.getComponent(this.enabledTabId).setState('hidden');
 			}
-			this.crtEnabledTabId = tabId;
-			this.getComponent(this.crtEnabledTabId).setState('ready');
+			
+			this.enabledTabId = tabId;
+			var tab = this.getComponent(this.enabledTabId);
+			// if the tab to enable is not already rendered, render it
+			if(tab.state.is(null)){
+				tab.start();
+			}
+			tab.setState('ready');
 		},
 
 		/**
@@ -53,14 +60,9 @@ steal(
 		 * @param {string} area The area to add the component. Default : mad-container-main
 		 */
 		'addComponent': function (ComponentClass, componentOptions, area) {
-			var component = null,
-				$component = null;
-
-			$component = this.view.addComponent(componentOptions);
-			component = new ComponentClass($component, componentOptions);
+			var $component = this.view.addComponent(componentOptions);
+			var component = new ComponentClass($component, componentOptions);
 			this.components[componentOptions.id] = component;
-			component.setState('hidden');
-
 			return component;
 		}
 	});

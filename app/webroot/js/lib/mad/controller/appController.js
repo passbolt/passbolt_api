@@ -13,7 +13,7 @@ steal(
 	mad.controller.ComponentController.extend('mad.controller.AppController', /** @static */ {
 
 		'defaults': {
-			'templateBased': false
+			// 'templateBased': false
 		},
 
 		/**

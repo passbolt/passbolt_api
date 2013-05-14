@@ -17,37 +17,29 @@ steal(
 	 * @return {passbolt.controller.form.category.CreateFormController}
 	 */
 	mad.form.FormController.extend('passbolt.controller.form.category.CreateFormController', /** @static */ {
-
+		'defaults': {
+			'templateBased': true
+		}
 	}, /** @prototype */ {
 
 		/**
-		 * Init the form elements
-		 * @todo Think about a common form controller function initFormElement
+		 * After start hook.
+		 * Create the form elements
+		 * 
 		 * @return {void}
 		 */
-		'initFormElement': function () {
+		'afterStart': function () {
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_parent_id'), {
 					modelReference: 'passbolt.model.Category.parent_id'
-				})
+				}).start()
 			);
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_name'), {
 					modelReference: 'passbolt.model.Category.name'
-				}),
-				new mad.form.FeedbackController($('#js_field_name_feedback'))
+				}).start(),
+				new mad.form.FeedbackController($('#js_field_name_feedback')).start()
 			);
-		},
-
-		/**
-		 * Render the form and init the form elements
-		 * @return {void}
-		 * @todo Think about a common form controller function initFormElement
-		 */
-		'render': function () {
-			this._super();
-			this.initFormElement();
-			this.load(this.options.data);
 		}
 
 	});

@@ -39,16 +39,6 @@ steal(
 		 */
 		'value': null,
 
-		// Constructor like
-		'init': function (el, options) {
-			this._super(el, options);
-			// if a default value has been given
-			// do it after the component has been rendered
-			if(options.value != null) {
-				this.setValue(options.value);
-			}
-		},
-
 		/**
 		 * Get the associated model.attribute
 		 * @return {string}
@@ -69,20 +59,6 @@ steal(
 			return this.value;
 		},
 
-		/**
-		 * Render the component
-		 * @see {mad.view.View}
-		 * @param {array} options Associative array of options
-		 * @param {boolean} options.display Display the rendered component. If true
-		 * the rendered component will be push in the DOM else the rendered component
-		 * will be stored in the instance's variable renderedView
-		 * @return {mixed} Return true if the method does not encountered troubles else
-		 * return false. If the option display is set to false, return the rendered view
-		 */
-		'render': function (options) {
-			this.setValue(this.options.value);
-			this._super();
-		},
 
 		/**
 		 * Switch the component to its initial state
@@ -104,6 +80,13 @@ steal(
 			this.value = value;
 			this.view.setValue(this.value);
 			return this;
+		},
+
+
+		'afterStart': function() {
+			if(this.options.value != null) {
+				this.setValue(this.options.value);
+			}
 		},
 
 		/* ************************************************************** */

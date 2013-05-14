@@ -26,29 +26,55 @@ steal(
 		},
 
 		/**
+		 * Instance of the popup
+		 */
+		'singleton': null,
+
+		/**
 		 * Get a new popup container
 		 * @param {array} options Options to pass to the popup constructor
 		 * @return {mad.controller.component.PopupController}
 		 */
-		'getPopup': function (popupOptions, ComponentClass, componentOptions) {
-			// create the popup component just behind the app controller tag
-			var popup = mad.helper.ComponentHelper.create(
+		'getPopup': function (options) {
+			if(mad.controller.component.PopupController.singleton != null) {
+				return mad.controller.component.PopupController.singleton;
+			}
+			// create the DOM entry point for the popup
+			var $el = mad.helper.HtmlHelper.create(
 				mad.app.element,
 				'first',
-				mad.controller.component.PopupController,
-				popupOptions
+				'<div id="js_popup" />'
 			);
-			// render the popup
-			popup.render();
-			// If a component class is given add it to the popup
-			if (ComponentClass) {
-				var component = popup.addComponent(ComponentClass, componentOptions, 'js_popup_content');
-				component.render();
-			}
-			return popup;
+			// instantiate the popup
+			mad.controller.component.PopupController.singleton = new mad.controller.component.PopupController($el, options);
+			return mad.controller.component.PopupController.singleton;
 		}
 
 	}, /** @prototype */ {
-
+		
+		// constructor like
+		'init': function(el, options) {
+			// if an instance of popup already exist return this instance
+			if(mad.controller.component.PopupController.singleton != null) {
+				return mad.controller.component.PopupController.singleton;
+			}
+			this._super(el, options);
+		},
+		
+		// destructor like
+		'destroy': function() {
+			delete mad.controller.component.PopupController.singleton;
+			this._super();
+		},
+		
+		/**
+		 * Add a component to the popup container
+		 * @param {Object} Class The class of the component to add
+		 * @param {Object} options Option of the component
+		 */
+		'add': function(Class, options) {
+			return this.addComponent(Class, options, 'js_popup_content')
+				.start();
+		}
 	});
 });

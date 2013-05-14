@@ -76,14 +76,12 @@ steal(
 			$.extend(true, this.options, mad.bootstrap.AppBootstrap.defaults, options);
 
 			try {
-			console.log(1);
 
 				// load config files
 				for (var i in configFiles) {
 					mad.Config.load(configFiles[i]);
 				}
 
-			console.log(2);
 				// Check the configuration
 
 				// Define Error Handler Class
@@ -92,7 +90,6 @@ steal(
 				if (!ErrorHandlerClass) {
 					throw new mad.error.WrongConfigException('error.ErrorHandlerClassName');
 				}
-			console.log(3);
 				mad.Config.write('error.ErrorHandlerClass', ErrorHandlerClass);
 
 				// Define Response Handler Class
@@ -101,7 +98,6 @@ steal(
 				if (!ResponseHandlerClass) {
 					throw new mad.error.WrongConfigException('net.ResponseHandlerClassName');
 				}
-			console.log(4);
 				mad.Config.write('net.ResponseHandlerClass', ResponseHandlerClass);
 				
 				// Define App Controller Class
@@ -112,7 +108,6 @@ steal(
 				}
 				mad.Config.write('app.AppControllerClass', AppControllerClass);
 
-			console.log(5);
 				// The app url has to be defined
 				if ($.trim(mad.Config.read('app.url')) === '') {
 					throw new mad.error.WrongConfigException('app.url');
@@ -124,29 +119,22 @@ steal(
 					throw new mad.error.WrongConfigException('app.controllerElt');
 				}
 
-			console.log(6);
 				// Reference the application namespace if it does not exist yet
 				var ns = can.getObject(mad.Config.read('app.namespace'), window, true);
 
 				// LET'S GO BILOUTE
 				// Load the required component
 
-			console.log(7);
 				var components = mad.Config.read('core.components');
 				for (var i in components) {
-					console.log('init' + components[i]);
 					this['init' + components[i]]();
 				}
 
 			// Catch any exceptions released by the system
-			} catch (e) {		
-			console.log(8);	
+			} catch (e) {	
 				if (mad.Config.read('error.ErrorHandlerClass')) {
-					console.log(mad.Config.read('error.ErrorHandlerClass'));
 					mad.Config.read('error.ErrorHandlerClass').handleException(e);
-			console.log(9);
 				} else {
-			console.log(10);
 					throw e;
 				}
 			}
@@ -186,6 +174,7 @@ steal(
 			});
 			var AppControllerClass = can.getObject(mad.Config.read('app.ControllerClassName'));
 			var app = new AppControllerClass($(mad.Config.read('app.controllerElt')));
+			app.start();
 		},
 
 		/**

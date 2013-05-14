@@ -17,15 +17,18 @@ steal(
 	 * @return {passbolt.controller.form.resource.CreateFormController}
 	 */
 	mad.form.FormController.extend('passbolt.controller.form.resource.CreateFormController', /** @static */ {
-
+		'defaults': {
+			'templateBased': true
+		}
 	}, /** @prototype */ {
 
 		/**
-		 * Init the form elements
-		 * @todo Think about a common form controller function initFormElement
+		 * After start hook.
+		 * Create the form elements
+		 * 
 		 * @return {void}
 		 */
-		'initFormElement': function () {
+		'afterStart': function () {
 			// temporary for update demonstration
 			this.options.data.Resource = this.options.data.Resource || {};
 
@@ -33,48 +36,37 @@ steal(
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_category_id'), {
 					modelReference: 'passbolt.model.Resource.Category.id'
-				})
+				}).start()
 			);
 			// Add resource name field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_name'), {
 					modelReference: 'passbolt.model.Resource.name'
-				}),
-				new mad.form.FeedbackController($('#js_field_name_feedback'), {})
+				}).start(),
+				new mad.form.FeedbackController($('#js_field_name_feedback'), {}).start()
 			);
 			// Add resource username field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_username'), {
 					modelReference: 'passbolt.model.Resource.username'
-				}),
-				new mad.form.FeedbackController($('#js_field_username_feedback'), {})
+				}).start(),
+				new mad.form.FeedbackController($('#js_field_username_feedback'), {}).start()
 			);
 			// Add resource uri field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_uri'), {
 					modelReference: 'passbolt.model.Resource.uri'
-				}),
-				new mad.form.FeedbackController($('#js_field_uri_feedback'), {})
+				}).start(),
+				new mad.form.FeedbackController($('#js_field_uri_feedback'), {}).start()
 			);
 			// Add resource description field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_description'), {
 					modelReference: 'passbolt.model.Resource.description'
-				}),
-				new mad.form.FeedbackController($('#js_field_description_feedback'), {})
+				}).start(),
+				new mad.form.FeedbackController($('#js_field_description_feedback'), {}).start()
 			);
 		},
-
-		/**
-		 * Render the form and init the form elements
-		 * @return {void}
-		 * @todo Think about a common form controller function initFormElement
-		 */
-		'render': function () {
-			this._super();
-			this.initFormElement();
-			this.load(this.options.data);
-		}
 
 	});
 });

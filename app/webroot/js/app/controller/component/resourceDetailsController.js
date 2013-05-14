@@ -29,6 +29,12 @@ steal(
 
 	}, /** @prototype */ {
 		
+		'beforeRender': function() {
+			this._super();
+			// pass the new resource to the view
+			this.setViewData('resource', this.options.resource);
+		},
+		
 		/**
 		 * Load details of a resource
 		 * @param {passbolt.model.Resource} resource The resource to load
@@ -38,10 +44,14 @@ steal(
 			// push the new resource in the options to be able to listen the resource
 			// change in the function name
 			this.options.resource = resource;
-			// pass the new resource to the view
-			this.setViewData('resource', resource);
-			// refresh the view
-			this.refresh();
+			// if the component is not started, start it
+			if(this.state.is(null)) {
+				this.start();
+			// otherwise refresh the component
+			} else {
+				// refresh the view
+				this.refresh();	
+			}
 			// // on
 			// this.on();
 		},

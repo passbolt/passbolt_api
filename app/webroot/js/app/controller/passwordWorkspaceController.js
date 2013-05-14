@@ -4,6 +4,7 @@ steal(
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
 	'app/controller/component/passwordsActionsMenuController.js',
+	'app/controller/component/resourceActionsTabController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
 	'app/controller/component/permissions/permissionsListController.js',
@@ -34,11 +35,7 @@ steal(
 
 	}, /** @prototype */ {
 
-		// constructor like
-		'init': function (el, options) {
-			this._super();
-			this.render(); // render the component to be used by the others
-
+		'afterStart': function() {
 			// *************************************************************
 			// User menu area
 			// *************************************************************
@@ -46,8 +43,8 @@ steal(
 				'id': 'js_passbolt_password_actions_menu',
 				'selectedRs': this.options.selectedRs
 			}, 'workspace_actions_container');
-			userMenu.render();
-
+			userMenu.start();
+			
 			// *************************************************************
 			// First side area
 			// *************************************************************
@@ -55,7 +52,7 @@ steal(
 			var categoryChooser = this.addComponent(passbolt.controller.component.CategoryChooserController, {
 				'id': 'js_passbolt_password_category_chooser'
 			}, 'js_workspace_sidebar_first');
-			categoryChooser.render();
+			categoryChooser.start();
 
 			// *************************************************************
 			// Main area
@@ -65,8 +62,7 @@ steal(
 				'id': 'js_passbolt_password_browser',
 				'selectedRs': this.options.selectedRs
 			}, 'js_workspace_main');
-			// passwordBrowserController = passwordBrowserController.decorate('mad.helper.component.BoxDecorator'); // decorator sample, oh yeah
-			passwordBrowserController.render();
+			passwordBrowserController.start();
 
 			// *************************************************************
 			// Second side area - create a container to be able to add other tool after
@@ -79,7 +75,7 @@ steal(
 				'readyState': 'hidden'
 			});
 		},
-
+		
 		/**
 		 * Demonstration function to prove the dispatcher
 		 * @dev
@@ -188,12 +184,14 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_category_creation': function (el, ev, data) {
-			var category = new passbolt.model.Category({
-				parent_id: data.id
-			});
-			var popup = mad.controller.component.PopupController.getPopup({
-				label: __('Create a new Category')
-			}, passbolt.controller.form.category.CreateFormController, {
+			var category = new passbolt.model.Category({ parent_id: data.id });
+			
+			// get the popup
+			var popup = mad.controller.component.PopupController.getPopup({label: __('Create a new Category')})
+				.start();
+			
+			// attach the component to the popup
+			var form = popup.add(passbolt.controller.form.category.CreateFormController, {
 				data: category,
 				callbacks : {
 					submit: function (data) {
@@ -203,6 +201,35 @@ steal(
 					}
 				}
 			});
+			
+			form.load(category);
+		},
+
+		/**
+		 * Observe when the user requests a category edition
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_category_edition': function (el, ev, category) {
+			
+			// get the popup
+			var popup = mad.controller.component.PopupController.getPopup({label: __('Edit a Category')})
+				.start();
+			
+			// attach the component to the popup
+			var form = popup.add(passbolt.controller.form.category.CreateFormController, {
+				data: category,
+				callbacks : {
+					submit: function (data) {
+						category.attr(data['passbolt.model.Category'])
+							.save();
+						popup.remove();
+					}
+				}
+			});
+			
+			form.load(category);
 		},
 
 		/**
@@ -230,22 +257,26 @@ steal(
 					'id': val.id
 				});
 			});
+			
 			// create the resource which will be used by the form builder to populate the fields
 			var resource = new passbolt.model.Resource({ Category: categories });
-			// open the popup
-			var popup = mad.controller.component.PopupController.getPopup({
-				label: __('Create a new Resource')
-			}, passbolt.controller.form.resource.CreateFormController, {
+			
+			// get the popup
+			var popup = mad.controller.component.PopupController.getPopup({label: __('Create a new Resource')})
+				.start();
+			
+			// attach the component to the popup
+			var form = popup.add(passbolt.controller.form.resource.CreateFormController, {
 				data: resource,
 				callbacks : {
 					submit: function (data) {
-						// console.log(data['passbolt.model.Resource']);
 						var rs = new passbolt.model.Resource(data['passbolt.model.Resource']);
 						rs.save();
 						popup.remove();
 					}
 				}
 			});
+			form.load(resource);
 		},
 
 		/**
@@ -256,10 +287,13 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_edition': function (el, ev, resource) {
-			var popup = mad.controller.component.PopupController.getPopup({
-				label: __('Edit a Resource')
-			}, passbolt.controller.form.resource.CreateFormController, {
-				data : resource,
+			// get the popup
+			var popup = mad.controller.component.PopupController.getPopup({label: __('Edit a Resource')})
+				.start();
+			
+			// attach the component to the popup
+			var form = popup.add(passbolt.controller.form.resource.CreateFormController, {
+				data: resource,
 				callbacks : {
 					submit: function (data) {
 						resource.attr(data['passbolt.model.Resource'])
@@ -268,6 +302,7 @@ steal(
 					}
 				}
 			});
+			form.load(resource);
 		},
 
 		/**

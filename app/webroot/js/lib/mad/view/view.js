@@ -137,38 +137,24 @@ steal(
 		/**
 		 * The render method renders the view based on its template.
 		 * @see {getTemplate}
-		 * @param {array} options Optional parameters	
-		 * @param {boolean} options.display Display the rendered component. If true
-		 * the rendered component will be push in the DOM else the rendered component
-		 * will be stored in the instance's variable renderedView
-		 * @return {mixed} Return true if the method does not encountered troubles else
-		 * return false. If the option display is set to false, return the rendered view
+		 * @return {string} The rendered view
 		 */
-		'render': function (options) {
-			options = options || {};
-			var returnValue = null;
-
+		'render': function () {
 			// if the view does is not template based leave
-			if(!this.options.templateBased) {
-				return true;
-			}
-			var display = options.display || true;
+			// if(!this.options.templateBased) {
+				// console.log('test');
+				// return true;
+			// }
+			return mad.view.View.render(this.getTemplate(), this.controller.viewData);
+		},
 
-			// render the view
-			var render = mad.view.View.render(this.getTemplate(), this.controller.viewData);
-
-			// display the rendered view
-			if (display) {
-				this.element.html(render);
-				returnValue = true;
-			}
-			// return the rendered view
-			else {
-				this.renderedView = render;
-				returnValue = render;
-			}
-
-			return returnValue;
+		/**
+		 * Insert the given string in the dom
+		 * @param {string} html The html to insert in the DOM element the view is build upon
+		 * @return {void}
+		 */
+		'insertInDom': function(html) {
+			this.element.html(html);
 		},
 
 		/**

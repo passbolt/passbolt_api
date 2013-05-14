@@ -3,11 +3,6 @@ steal(
 	'app/helper/errorHandler.js'
 ).then( function () {
 
-	mad.bootstrap.AppBootstrap.extend('passbolt.bootstrap.AppBootstrap', {
-
-		'init': function (options) {
-			this._super(options);
-		}
-	});
+	mad.bootstrap.AppBootstrap.extend('passbolt.bootstrap.AppBootstrap', {});
 
 });

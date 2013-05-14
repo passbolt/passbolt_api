@@ -69,6 +69,7 @@ steal(
 		 * @todo oula la the function should get id from the associated component controller model
 		 */
 		'getId': function () {
+			// console.log(this.element);
 			return this.element[0].id;
 		},
 

@@ -22,7 +22,8 @@ steal(
 
 		'defaults': {
 			'label': 'Feedback Component Controller',
-			'message': null
+			'message': null,
+			'templateBased': false
 		}
 
 	}, /** @prototype */ {

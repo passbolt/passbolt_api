@@ -28,13 +28,12 @@ steal(
 
 	}, /** @prototype */ {
 
-		'render': function () {
-			this._super();
-			var creationBt = new mad.controller.component.ButtonController('#js_request_resource_creation_button');
-			var editionBt = new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'disabled'});
-			var deletionBt = new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'disabled'});
-			var sharingBt = new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'disabled'});
-			var modeBt = new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'disabled'});
+		'afterStart': function () {
+			new mad.controller.component.ButtonController('#js_request_resource_creation_button').start();
+			new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'disabled'}).start();
+			new mad.controller.component.ButtonController('#js_request_resource_deletion_button', {'state': 'disabled'}).start();
+			new mad.controller.component.ButtonController('#js_request_resource_sharing_button', {'state': 'disabled'}).start();
+			new mad.controller.component.ButtonController('#js_request_resource_more_button', {'state': 'disabled'}).start();
 		},
 
 		/* ************************************************************** */

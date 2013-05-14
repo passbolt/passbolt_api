@@ -25,28 +25,32 @@ steal(
 				'submit': function (data) { }
 			},
 			'tag': 'form',
-			'validateOnChange': true
+			'validateOnChange': true,
+			'templateBased': false
 		}
 
 	}, /** @prototype */ {
 
-		/**
-		 * The form elements
-		 * @type mad.form.element.FormElement[]
-		 */
-		'elements': {},
-
-		/**
-		 * The feedbacks elements associated to the form elements
-		 * @type mad.form.element.FeedbackInterface[]
-		 */
-		'feedbackElements': {},
-
-		/**
-		 * The form data
-		 * @type {mad.model.Model}
-		 */
-		'data': {},
+		// constructor like
+		'init': function(el, options) {
+			/**
+			 * The form elements
+			 * @type mad.form.element.FormElement[]
+			 */
+			this.elements = {};
+			/**
+			 * The feedbacks elements associated to the form elements
+			 * @type mad.form.element.FeedbackInterface[]
+			 */
+			this.feedbackElements = {};
+			/**
+			 * The form data
+			 * @type {mad.model.Model}
+			 */
+			this.data = {};
+			
+			this._super(el, options);
+		},
 
 		/**
 		 * Load the form with the instance' data
@@ -59,6 +63,7 @@ steal(
 			}
 
 			for (var eltId in this.elements) {
+				// get models associated to the field (by instance passbolt.model.Resource / Category / id)
 				var models = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference());
 				var attrPath = '';
 				var attrName = models[models.length - 1].name

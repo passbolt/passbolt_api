@@ -1,9 +1,9 @@
 steal(
 	'mad/controller/appController.js',
-
+	// the main workspaces of the application
 	'app/controller/passwordWorkspaceController.js',
 	'app/controller/peopleWorkspaceController.js',
-
+	// common components of the application
 	'app/controller/component/appMenuController.js',
 	'app/controller/component/appFilterController.js',
 	'app/controller/component/notificationController.js',
@@ -26,33 +26,31 @@ steal(
 
 	}, /** @prototype */ {
 
-		// constructor of the Class
-		'init': function (el, options) {
-			this._super(el, options);
-
-			var appRender = mad.view.View.render(this.view.getTemplate());
-			this.element.html(appRender);
-
-			// Add the app menu controller
+		/**
+		 * After start hook.
+		 * Initialise component of the application
+		 * @return {void}
+		 */
+		'afterStart': function() {
+			// Instantiate the app menu controller
 			this.menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'));
-			this.menuCtl.render();
-			this.menuCtl.initMenuItems();
+			this.menuCtl.start();
 
-			// Add the filter controller
+			// Instantiate the filter controller
 			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {});
-			this.filterCtl.render();
+			this.filterCtl.start();
 
-			// Add the notification controller
+			// Instantiate the notification controller
 			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
 				'state': 'hidden'
 			});
+			this.notifCtl.start();
 
-			// Add a workspaces container tabs element to the app 
+			// Instantiate workspaces container tabs element to the app 
 			this.workspacesCtl = new mad.controller.component.TabController($('#js_workspaces_container'));
-			this.workspacesCtl.render();
+			this.workspacesCtl.start();
 
-			// Add the password workspace component to the workspaces container
-			// @todo addComponent is our factory, maybe more proper to do
+			// Instantiate the password workspace component to the workspaces container
 			var passwordWk = this.workspacesCtl.addComponent(passbolt.controller.PasswordWorkspaceController, {
 				'id': 'js_passbolt_passwordWorkspace_controller',
 				'label': 'password'
@@ -62,6 +60,7 @@ steal(
 				'label': 'people'
 			});
 
+			// @todo move this into ready state
 			this.workspacesCtl.enableTab('js_passbolt_passwordWorkspace_controller');
 		},
 

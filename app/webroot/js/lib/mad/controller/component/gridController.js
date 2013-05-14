@@ -53,18 +53,6 @@ steal(
 
 	}, /** @prototype */ {
 
-		// Construcor like
-		'init': function (el, options) {
-			this._super(el, options);
-			if (options.columnModel) {
-				this.setColumnModel(options.columnModel);
-			}
-			if (options.columnNames) {
-				this.setColumnNames(options.columnNames);
-			}
-			this.setViewData('items', []);
-		},
-
 		/**
 		 * Reset the grid
 		 * @return {void}
@@ -77,21 +65,21 @@ steal(
 		},
 
 		/**
+		 * Before render.
+		 */
+		'beforeRender': function() {
+			this._super();
+			this.setViewData('columnNames', this.options.columnNames);
+			this.setViewData('columnModel', this.options.columnModel);
+			this.setViewData('items', []);
+		},
+
+		/**
 		 * Get the column names of the grid
 		 * @return {array}
 		 */
 		'getColumnNames': function () {
 			return this.options.columnName;
-		},
-
-		/**
-		 * Set the column names of the grid
-		 * @params {array} columnName
-		 * @return {void}
-		 */
-		'setColumnNames': function (columnName) {
-			this.options.columnName = columnName;
-			this.setViewData('columnNames', this.options.columnNames);
 		},
 
 		/**
@@ -102,15 +90,6 @@ steal(
 			return this.options.columnModel;
 		},
 
-		/**
-		 * Set the column model of the grid
-		 * @params {array} columnModel
-		 * @return {void}
-		 */
-		'setColumnModel': function (columnModel) {
-			this.options.columnModel = columnModel;
-			this.setViewData('columnModel', this.options.columnModel);
-		},
 
 		/**
 		 * Get the itemClass which represents the items managed by the component

@@ -28,8 +28,13 @@ steal(
 
 	}, /** @prototype */ {
 
-		// Constructor like
-		'init': function (el, options) {
+		// // Constructor like
+		// 'init': function (el, options) {
+// 			
+			// // this._super(el, options);
+		// },
+		
+		'afterStart': function() {
 			// We use a tree to represent the list of tags ;) easy
 			this.treeCtl = new mad.controller.component.TreeController(this.element, {
 				'itemClass': this.options.itemClass,
@@ -39,7 +44,7 @@ steal(
 					'label': 'name'
 				})
 			});
-			this._super(el, options);
+			this.treeCtl.start();
 		},
 
 		/**

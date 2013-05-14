@@ -1,7 +1,7 @@
 steal(
 	'mad/form/formElement.js',
 	'mad/view/form/element/radiobuttonView.js',
-	'mad/view/template/component/input.ejs'
+	'mad/view/template/form/element/radiobutton.ejs'
 ).then(function () {
 
 	/*
@@ -23,7 +23,8 @@ steal(
 
 		'defaults': {
 			'label': 'Radiobutton Form Element Controller',
-			'templateUri': '//' + 'mad/view/template/component/input.ejs',
+			'templateBased': true,
+			'templateUri': 'mad/view/template/form/element/radiobutton.ejs',
 			'viewClass': mad.view.form.element.RadiobuttonView
 		}
 

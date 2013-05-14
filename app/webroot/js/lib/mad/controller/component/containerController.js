@@ -31,12 +31,7 @@ steal(
 		 * @todo
 		 */
 		'components': [],
-
-		// Constructor like
-		'init': function (el, options) {
-			this._super(el, options);
-		},
-
+		
 		/**
 		 * Get a component
 		 * @param {string} id The component id to get
@@ -55,8 +50,8 @@ steal(
 		 */
 		'addComponent': function (ComponentClass, componentOptions, area) {
 			area = area || 'mad-container-main';
-			var returnValue = null,
-				$area = this.element.find('.' + area);
+			var returnValue = null;
+			var $area = $('.' + area, this.element);
 			returnValue = mad.helper.ComponentHelper.create($area, 'inside_replace', ComponentClass, componentOptions);
 			this.components[returnValue.getId()] = returnValue;
 			return returnValue;

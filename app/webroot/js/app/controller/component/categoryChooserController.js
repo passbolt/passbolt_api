@@ -54,7 +54,7 @@ steal(
 						console.log('Menu Create');
 					},
 					'children': [
-						{ 'id': uuid(), 'label': 'secret',
+						{ 'id': uuid(), 'label': 'resource',
 							'action': function (menu) {
 								mad.bus.trigger('request_resource_creation', item);
 								menu.remove();
@@ -67,7 +67,7 @@ steal(
 					]},
 				{ 'id': uuid(), 'label': 'rename...',
 					'action': function (menu) {
-						mad.bus.trigger('category_renamed', item);
+						mad.bus.trigger('request_category_edition', item);
 						menu.remove();
 					}},
 				{ 'id': uuid(), 'label': 'remove',
@@ -89,7 +89,7 @@ steal(
 				'mouseX': x,
 				'mouseY': y
 			});
-			contextualMenu.render();
+			contextualMenu.start();
 			contextualMenu.load(menuItems);
 		},
 

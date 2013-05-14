@@ -9,11 +9,7 @@ steal(
 	 * @parent mad.controller.component
 	 * @see mad.model.ComponentState
 	 *
-	 * The class Component controller is our representation of controllers which take
-	 * care of UI Components.
-	 * <br/>
-	 * The class Component controller is associated to its own view which takes to
-	 * display data to users.
+	 * The class Component controller is our representation of widget component.
 	 *
 	 * @constructor
 	 * Creates a new Component Controller
@@ -64,26 +60,26 @@ steal(
 		// Override the init and render functions to be sure the component is fully 
 		// initialized before calling the ready state
 		'setup': function () {
-			var oldInit = this.init,
-				oldRender = this.render;
+			var orgInit = this.init,
+				orgRender = this.render;
 
 			// override the init function
 			this.init = function () {
-				oldInit.apply(this, arguments);
+				orgInit.apply(this, arguments);
 				// If the component is not based on a template, switch to its init state
 				// define by the optional parameter state
 				if (!this.options.templateBased) {
-					this.setState(this.options.state);
+					// this.setState(this.options.state);
 				}
 			};
 
 			// override the render function
 			this.render = function () {
-				oldRender.apply(this, arguments);
+				orgRender.apply(this, arguments);
 				// If the component is  based on a template, switch to its init state
 				// define by the optional parameter state
 				if (this.options.templateBased) {
-					this.setState(this.options.state);
+					// this.setState(this.options.state);
 				}
 			};
 
@@ -99,7 +95,7 @@ steal(
 				throw new mad.error.WrongParametersException('options.viewClass', 'mad.view.View');
 			}
 
-			// Initialize the associated state instance
+			// Initialize the associated state instance. By default position it to
 			this.state = new mad.model.State();
 			// Observe any change on the state's label attribute
 			this.state.bind('label', function (event, newStateName) {
@@ -110,9 +106,6 @@ steal(
 
 			// reference the controller to the application
 			mad.app.referenceComponent(this);
-
-			// Once the controller is fully released, initialize the component's associated view
-			this.initView();
 		},
 
 		// destructor like
@@ -127,13 +120,13 @@ steal(
 		/**
 		 * Listen to any state change and dispatch to the dedicated state 
 		 * listener.
-		 * <br/>
+		 * 
 		 * A state listener is represented as a function in your controller.
 		 * This function should respect the following writing : state[Statename].
-		 * <br/>
+		 * 
 		 * The listener will get in parameter a boolean "go" which indicate to the function
 		 * if the controller is entering or leaving the state.
-		 * <br/>
+		 * 
 		 * Of course with the inheritance concept you can call the parent listener state
 		 * if this one is declared with the function "_super"
 		 * 
@@ -158,35 +151,10 @@ steal(
 			// add the new state class
 			this.view.addClass('js_state_' + newState);
 			// enter in the new state
-
 			var newStateListener = this['state' + $.String.capitalize(newState)];
 			if (newStateListener) {
 				newStateListener.call(this, true);
 			}
-		},
-
-		/**
-		 * Initialize the associated component's view
-		 * <ul>
-		 *	<li>Instanciate the view with the given options.viewClass (default : mad.view.View)</li>
-		 *	<li>Set the common view data : controller (to be able to access to the associated controller), icon, label ...</li>
-		 *	<li>Switch the component to the ready state if it is not based on a template, else the render function will do the transition</li>
-		 * </ul>
-		 * @return {void}
-		 */
-		'initView': function () {
-			// Init the associated view
-			this.view = new this.options.viewClass(this.element, {
-				'templateUri': this.options.templateUri,
-				'cssClasses': this.options.cssClasses,
-				'templateBased': this.options.templateBased,
-				'controller': this
-			});
-
-			// Set the common view data
-			this.setViewData('controller', this);
-			this.setViewData('icon', this.options.icon);
-			this.setViewData('label', this.options.label);
 		},
 
 		/**
@@ -233,7 +201,73 @@ steal(
 		 */
 		'refresh': function () {
 			this.element.empty();
-			this.render();
+			if(this.options.templateBased) {
+				this.beforeRender();
+				var render = this.view.render();
+				render = this.afterRender(render);
+				this.view.insertInDom(render);
+			}
+		},
+
+		/**
+		 * Start the component
+		 * @return {void}
+		 */
+		'start': function() {
+			this.initView();
+			// if the component is template based, render it
+			if(this.options.templateBased) {
+				this.beforeRender();
+				var render = this.view.render();
+				render = this.afterRender(render);
+				this.view.insertInDom(render);
+			}
+			this.afterStart();
+			// Switch the element in its default state
+			this.setState(this.options.state);
+
+			return this;
+		},
+
+		'initView': function() {
+			// Init the associated view
+			this.view = new this.options.viewClass(this.element, {
+				'templateUri': this.options.templateUri,
+				'cssClasses': this.options.cssClasses,
+				'templateBased': this.options.templateBased,
+				'controller': this
+			});
+			// Set the common view data
+			this.setViewData('controller', this);
+			this.setViewData('icon', this.options.icon);
+			this.setViewData('label', this.options.label);
+			this.setViewData('view', this.view);
+		},
+
+		/**
+		 * Called right after the start function
+		 * @return {void}
+		 */
+		'afterStart': function() { },
+
+		/**
+		 * Execute this function before render each component.
+		 * 
+		 * By default the beforeRender function is : 
+		 * 
+		 * * instantiating the associated view ;
+		 * * setting the common view data : controller (to be able to access to the associated controller), icon, label ...
+		 * 
+		 * @return {void}
+		 */
+		'beforeRender': function() { },
+
+		/**
+		 * Execute this function after render the component
+		 * @return {void}
+		 */
+		'afterRender': function(render) { 
+			return render;
 		},
 
 		/**
@@ -245,8 +279,11 @@ steal(
 		 * will be stored in the instance's variable renderedView
 		 * @return {mixed} Return true if the method does not encountered troubles else
 		 * return false. If the option display is set to false, return the rendered view
+		 * @deprecated
 		 */
 		'render': function (options) {
+			this.start();
+			return;
 			options = options || {}
 			var returnValue = false;
 			returnValue = this.view.render(options);

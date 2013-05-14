@@ -21,11 +21,11 @@ steal(
 
 	}, /** @prototype */ {
 
-		'init': function (el, options) {
-			this._super(el, options);
-		},
-
-		'initMenuItems': function () {
+		/**
+		 * After start. Init the menu items
+		 * @return {void}
+		 */
+		'afterStart': function () {
 			var menuItems = [
 				new mad.model.Action({
 					'id': uuid(),

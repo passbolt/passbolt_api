@@ -21,45 +21,52 @@ steal(
 	 */
 	mad.form.FormElement.extend('mad.form.FormChoiceElement', /** @static */ {
 
-		'defaults': { }
+		'defaults': {
+			'availableValues': []
+		}
 
 	},/** @prototype */ {
 
-		/**
-		 * Available values
-		 * @type {array}
-		 */
-		'availableValues': { },
-
-		/**
-		 * Set the dropdown's available values
-		 * @param {array} options The available values of the dropdown
-		 * {
-		 *	value1: value1Label,
-		 *	value2: value2Label,
-		 *	value3: value3Label
-		 * }
-		 * @return {void}
-		 */
-		'setAvailableValues': function (availableValues) {
-			this.availableValues = availableValues;
-			this.view.setAvailableValues(this.availableValues);
-		},
-
-		/**
-		 * Render the component
-		 * @see {mad.view.View}
-		 * @param {array} options Associative array of options
-		 * @param {boolean} options.display Display the rendered component. If true
-		 * the rendered component will be push in the DOM else the rendered component
-		 * will be stored in the instance's variable renderedView
-		 * @return {mixed} Return true if the method does not encountered troubles else
-		 * return false. If the option display is set to false, return the rendered view
-		 */
-		'render': function (options) {
-			this.setAvailableValues(this.options.availableValues);
+		'beforeRender': function() {
 			this._super();
+			this.setViewData('availableValues', this.options.availableValues);
 		},
+
+		// /**
+		 // * Available values
+		 // * @type {array}
+		 // */
+		// 'availableValues': { },
+// 
+		// /**
+		 // * Set the dropdown's available values
+		 // * @param {array} options The available values of the dropdown
+		 // * {
+		 // *	value1: value1Label,
+		 // *	value2: value2Label,
+		 // *	value3: value3Label
+		 // * }
+		 // * @return {void}
+		 // */
+		// 'setAvailableValues': function (availableValues) {
+			// this.availableValues = availableValues;
+			// this.view.setAvailableValues(this.availableValues);
+		// },
+// 
+		// /**
+		 // * Render the component
+		 // * @see {mad.view.View}
+		 // * @param {array} options Associative array of options
+		 // * @param {boolean} options.display Display the rendered component. If true
+		 // * the rendered component will be push in the DOM else the rendered component
+		 // * will be stored in the instance's variable renderedView
+		 // * @return {mixed} Return true if the method does not encountered troubles else
+		 // * return false. If the option display is set to false, return the rendered view
+		 // */
+		// 'render': function (options) {
+			// this.setAvailableValues(this.options.availableValues);
+			// return this._super();
+		// },
 
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
