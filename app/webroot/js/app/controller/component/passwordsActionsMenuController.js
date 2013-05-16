@@ -9,6 +9,8 @@ steal(
 	 * @inherits mad.controller.component.TreeController
 	 * @parent index 
 	 * 
+	 * Our password workspace menu of actions.
+	 * 
 	 * @constructor
 	 * Creates a new passwords actions menu controller
 	 * 
@@ -28,6 +30,10 @@ steal(
 
 	}, /** @prototype */ {
 
+		/**
+		 * after start hook.
+		 * @return {void}
+		 */
 		'afterStart': function () {
 			new mad.controller.component.ButtonController('#js_request_resource_creation_button').start();
 			new mad.controller.component.ButtonController('#js_request_resource_edition_button', {'state': 'disabled'}).start();

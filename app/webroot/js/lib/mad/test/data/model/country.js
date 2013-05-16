@@ -46,7 +46,7 @@ steal(
 
 		/**
 		 * Find a country following the given parameter
-		 * @params {array} params Optional parameters
+		 * @param {array} params Optional parameters
 		 * @return {jQuery.Deferred)
 		 */
 		'findOne': function (params, success, error) {
@@ -61,7 +61,7 @@ steal(
 
 		/**
 		 * Find a bunch of countries following the given parameters
-		 * @params {array} params Optional parameters
+		 * @param {array} params Optional parameters
 		 * @return {jQuery.Deferred)
 		 */
 		'findAll': function (params, success, error) {

@@ -29,6 +29,10 @@ steal(
 
 	}, /** @prototype */ {
 		
+		/**
+		 * before start hook.
+		 * @return {void}
+		 */
 		'beforeRender': function() {
 			this._super();
 			// pass the new resource to the view

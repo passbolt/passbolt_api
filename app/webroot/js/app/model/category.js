@@ -38,7 +38,7 @@ steal(
 
 		/**
 		 * Create a new category
-		 * @params {array} attrs Attributes of the new category
+		 * @param {array} attrs Attributes of the new category
 		 * @return {jQuery.Deferred)
 		 */
 		'create' : function (attrs, success, error) {
@@ -77,7 +77,7 @@ steal(
 
 		/**
 		 * Find a category following the given parameter
-		 * @params {array} params Optional parameters
+		 * @param {array} params Optional parameters
 		 * @return {jQuery.Deferred)
 		 */
 		'findOne': function (params, success, error) {
@@ -93,7 +93,7 @@ steal(
 
 		/**
 		 * Find a bunch of categories following the given parameters
-		 * @params {array} params Optional parameters
+		 * @param {array} params Optional parameters
 		 * @return {jQuery.Deferred)
 		 */
 		'findAll': function (params, success, error) {

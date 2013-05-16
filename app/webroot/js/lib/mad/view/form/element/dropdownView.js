@@ -19,17 +19,6 @@ steal(
 	mad.view.form.FormElementView.extend('mad.view.form.element.DropdownView', /** @static */ {
 
 	}, /** @prototype */ {
-
-		// 'setAvailableValues': function (availableValues) {
-			// var html = '';
-			// if (this.controller.options.emptyValue) {
-				// html += '<option value="">' + __('select a value') + '</option>';
-			// }
-			// for (var value in availableValues) {
-				// html += '<option value="' + value + '">' + availableValues[value] + '</option>';
-			// }
-			// this.element.append(html);
-		// },
 		
 		/**
 		 * Set the value of the dropdown form element

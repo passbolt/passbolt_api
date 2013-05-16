@@ -23,17 +23,15 @@ steal(
 			'templateBased': false,
 			'itemClass': passbolt.model.Category,
 			'itemTemplateUri': 'app/view/template/component/tagFilterItem.ejs',
-			'tag': 'ul'
+			'tag': 'ul',
+			'value' : []
 		}
 
 	}, /** @prototype */ {
-
-		// // Constructor like
-		// 'init': function (el, options) {
-// 			
-			// // this._super(el, options);
-		// },
 		
+		/**
+		 * after start hook.
+		 */
 		'afterStart': function() {
 			// We use a tree to represent the list of tags ;) easy
 			this.treeCtl = new mad.controller.component.TreeController(this.element, {
@@ -63,18 +61,7 @@ steal(
 				}
 				self.treeCtl.insertItem(tag);
 			});
-		},
-
-		/**
-		 * Render the list form element
-		 * @see {mad.form.FormElement.prototype.render}
-		 */
-		'render': function (options) {
-			this._super(options);
-			this.treeCtl.render();
 		}
 	});
-
-//	mad.form.element.ListController.augment('mad.controller.component.TreeController');
 
 });

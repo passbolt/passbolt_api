@@ -60,7 +60,7 @@ steal(
 
 		/**
 		 * Find a person following the given parameter
-		 * @params {array} params Optional parameters
+		 * @param {array} params Optional parameters
 		 * @return {jQuery.Deferred)
 		 */
 		'findOne': function (params, success, error) {
@@ -75,7 +75,7 @@ steal(
 
 		/**
 		 * Find a bunch of persons following the given parameters
-		 * @params {array} params Optional parameters
+		 * @param {array} params Optional parameters
 		 * @return {jQuery.Deferred)
 		 */
 		'findAll': function (params, success, error) {

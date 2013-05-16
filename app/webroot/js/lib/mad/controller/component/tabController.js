@@ -1,12 +1,12 @@
 steal(
-	'mad/controller/component/containerController.js',
+	'mad/controller/component/compositeController.js',
 	'mad/view/component/tab.js',
 	'mad/view/template/component/tab.ejs'
 ).then(function () {
 
 	/*
 	 * @class mad.controller.component.TabController
-	 * @inherits mad.controller.ComponentController
+	 * @inherits mad.controller.CompositeController
 	 * @see mad.view.component.Tab
 	 * @parent mad.component
 	 * 
@@ -18,7 +18,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {mad.controller.component.TabController}
 	 */
-	mad.controller.component.ContainerController.extend('mad.controller.component.TabController', /** @static */ {
+	mad.controller.component.CompositeController.extend('mad.controller.component.TabController', /** @static */ {
 
 		'defaults': {
 			'label': 'Tab Controller',
@@ -27,11 +27,16 @@ steal(
 
 	}, /** @prototype */ {
 
-		/**
-		 * The current enabled tab id
-		 * @type {string}
-		 */
-		'enabledTabId': null,
+		// constructor like
+		'init': function(el, opts) {
+			/**
+			 * The current enabled tab id
+			 * @type {string}
+			 */
+			this.enabledId = null;
+			
+			this._super(el, opts);
+		},
 
 		/**
 		 * Enable a tab
@@ -55,14 +60,17 @@ steal(
 
 		/**
 		 * Add a component to the container
-		 * @param {string} ComponentClass The component class to use to instantiate the component
-		 * @param {array} componentOptions The optional data to pass to the component constructor
+		 * @param {string} Class The component class to use to instantiate the component
+		 * @param {array} options The optional data to pass to the component constructor
 		 * @param {string} area The area to add the component. Default : mad-container-main
 		 */
-		'addComponent': function (ComponentClass, componentOptions, area) {
-			var $component = this.view.addComponent(componentOptions);
-			var component = new ComponentClass($component, componentOptions);
-			this.components[componentOptions.id] = component;
+		'addComponent': function (Class, options, area) {
+			// insert the element which will carries the component in the DOM
+			var $component = this.view.add(Class, options);
+			// instantiate the component
+			var component = new Class($component, options);
+			// add the component to the internal list
+			this._components[options.id] = component;
 			return component;
 		}
 	});

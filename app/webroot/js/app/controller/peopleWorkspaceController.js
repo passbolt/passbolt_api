@@ -1,5 +1,5 @@
 steal(
-	'mad/controller/component/workspaceController.js'
+	'mad/controller/component/freeCompositeController.js'
 ).then(function () {
 
 	/*
@@ -15,7 +15,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.PeopleWorkspaceController}
 	 */
-	mad.controller.component.WorkspaceController.extend('passbolt.controller.PeopleWorkspaceController', /** @static */ {
+	mad.controller.component.FreeCompositeController.extend('passbolt.controller.PeopleWorkspaceController', /** @static */ {
 
 		'defaults': {
 			'label': 'People',

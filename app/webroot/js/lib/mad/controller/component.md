@@ -84,7 +84,7 @@ By default all Component Controllers have the following states :
 ## Mad provides the following components out of the box :
 
 * [mad.controller.component.ButtonController|Button]
-* [mad.controller.component.ContainerController|Container]
+* [mad.controller.component.CompositeController|Composite]
 * [mad.controller.component.GridController|Grid]
 * [mad.controller.component.PopupController|Popup]
 * [mad.controller.component.TabController|Tab]

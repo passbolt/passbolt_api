@@ -101,7 +101,7 @@ steal(
 
 		/**
 		 * Set the itemClass which represents the items managed by the component
-		 * @params {mad.model.Model} itemClass The item class
+		 * @param {mad.model.Model} itemClass The item class
 		 * @return {void}
 		 */
 		'setItemClass': function (itemClass) {

@@ -36,15 +36,10 @@ steal(
 		}
 
 	}, /** @prototype */ {
-		
-		/**
-		 * The current focused resource
-		 * @type {string}
-		 */
-		'focusedResource': null,
 
 		// Constructor like
 		'init': function (el, options) {
+			
 			// The map to use to make jstree working with our category model
 			options.map = new mad.object.Map({
 				'id': 'id',

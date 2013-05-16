@@ -18,18 +18,71 @@ steal(
 	mad.controller.ComponentController.extend('passbolt.controller.component.ResourceActionsTabController', /** @static */ {
 
 		'defaults': {
-			'label': 'Resource Actions Tab Controller',
-			// 'viewClass': passbolt.view.component.ResourceDetails,
-			// the resource to bind the component on
+			'label': null,
 			'resource': null
 		}
 
 	}, /** @prototype */ {
 		
+		'afterStart': function() {
+			var self = this;
+			this.menu = new mad.controller.component.MenuController($('#js_resource_actions_tab_menu'));
+			this.menu.start();
+			
+			var menuItems = [
+				new mad.model.Action({
+					'id': uuid(),
+					'label': 'edit',
+					'action': function () {
+						mad.bus.trigger('workspace_selected', 'js_resource_create');
+					}
+				}), new mad.model.Action({
+					'id': uuid(),
+					'label': 'share',
+					'action': function () {
+						mad.bus.trigger('workspace_selected', 'js_resource_create');
+					}
+				}), new mad.model.Action({
+					'id': uuid(),
+					'label': 'organize',
+					'action': function () {
+						mad.bus.trigger('workspace_selected', 'js_resource_create');
+					}
+				}), new mad.model.Action({
+					'id': uuid(),
+					'label': 'logs',
+					'action': function () {
+						mad.bus.trigger('workspace_selected', 'js_category_create');
+					}
+				})
+			];
+			this.menu.load(menuItems);
+			
+			// Instantiate workspaces container tabs element to the app 
+			this.container = new mad.controller.component.TabController($('#js_resource_actions_tab_container'));
+			this.container.start();
+
+			var cp1 = this.container.addComponent(passbolt.controller.form.resource.CreateFormController, {
+				'id': 'js_resource_create',
+				'data': this.options.resource,
+				// 'state': 'hidden',
+				'callbacks' : {
+					'submit': function (data) {
+						self.options.resource.attr(data['passbolt.model.Resource'])
+							.save();
+						// popup.remove();
+					}
+				}
+			});
+			cp1.start();
+			cp1.load(this.options.resource);
+		},
+		
 		// Constructor like
 		'init': function (el, options) {
 			this._super(el, options);
-			this.render();
+			
+			
 return;
 			// Add the app menu controller
 			this.menuCtl = new mad.controller.component.MenuController($('#js_menu'));

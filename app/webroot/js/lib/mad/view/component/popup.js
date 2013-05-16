@@ -46,7 +46,7 @@ steal(
 		 * @return {void}
 		 */
 		' keypress': function (el, ev) {
-			console.log(ev.which);
+			// console.log(ev.which);
 		}
 
 	});

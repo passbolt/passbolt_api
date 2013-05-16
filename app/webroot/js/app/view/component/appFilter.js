@@ -25,7 +25,17 @@ steal(
 		 */
 		'#js_filter_reset click': function (el, ev) {
 			this.element.trigger('reset');
+		},
+		
+		/**
+		 * Observe when the user update the filter
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'#js_filter_form submit': function(el, ev) {
+			this.element.trigger('update');
 		}
-
+		
 	});
 });

@@ -1,38 +1,58 @@
 steal(
-	'mad/controller/componentController.js',
-	'mad/helper/controllerHelper.js'
+	'mad/controller/componentController.js'
 ).then(function () {
 
 	/*
-	 * @class mad.controller.CompositeController
-	 * @inherits mad.controller.componentController
+	 * @class mad.controller.component.CompositeController
+	 * @inherits mad.controller.ComponentController
 	 * @parent mad.controller.component
-	 *
-	 * The class Composite controller is our representation of controllers which take
-	 * care of UI Components.
-	 * <br/>
-	 * The class Component controller is associated to its own view which takes to
-	 * display data to users.
-	 *
+	 * 
+	 * Our implementation of the Composite Component
+	 * 
 	 * @constructor
-	 * Creates a new Composite Controller
+	 * Create a composite controller
+	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable 
-	 * @return {passbolt.controller.ResourceActionsTabController}
+	 * @return {mad.controller.component.CompositeController}
 	 */
-	mad.controller.Controller.extend('mad.controller.CompositeController', /** @static */ {
+	mad.controller.ComponentController.extend('mad.controller.component.CompositeController', /** @static */ {
 
 		'defaults': {
-			// the default component label
-			'label': 'CompositeController'
+			'label': 'Composite Component Controller'
 		}
 
 	}, /** @prototype */ {
 
-		// Constructor like
-		'init': function (el, options) {
+		// constructor like
+		'init': function(el, options) {
+			/**
+			 * Components carried by the composite
+			 * @type {Array}
+			 */
+			this._components = [];
+			
 			this._super(el, options);
+		},
+		
+		/**
+		 * Get a component
+		 * @param {string} id Id of the target component
+		 * @return {mad.controller.ComponentController}
+		 */
+		'getComponent': function (id) {
+			return this._components[id];
+		},
+
+		/**
+		 * Add a component to the container
+		 * @param {mad.controller.ComponentController} component The component to add to the composite
+		 * @return {{mad.controller.ComponentController}} the added component
+		 */
+		'addComponent': function (component) {
+			this._components[component.getId()] = component;
+			return component;
 		}
 
 	});

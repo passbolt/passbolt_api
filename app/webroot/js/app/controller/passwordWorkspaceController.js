@@ -1,5 +1,5 @@
 steal(
-	'mad/controller/component/workspaceController.js',
+	'mad/controller/component/freeCompositeController.js',
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
@@ -13,7 +13,7 @@ steal(
 
 	/*
 	 * @class passbolt.controller.PasswordWorkspaceController
-	 * @inherits {mad.controller.component.WorkspaceController}
+	 * @inherits {mad.controller.component.ComponentController}
 	 * @parent index 
 	 * 
 	 * @constructor
@@ -24,7 +24,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.PasswordWorkspaceController}
 	 */
-	mad.controller.component.WorkspaceController.extend('passbolt.controller.PasswordWorkspaceController', /** @static */ {
+	mad.controller.component.FreeCompositeController.extend('passbolt.controller.PasswordWorkspaceController', /** @static */ {
 
 		'defaults': {
 			'label': 'Password',
@@ -187,7 +187,7 @@ steal(
 			var category = new passbolt.model.Category({ parent_id: data.id });
 			
 			// get the popup
-			var popup = mad.controller.component.PopupController.getPopup({label: __('Create a new Category')})
+			var popup = new mad.controller.component.PopupController({label: __('Create a new Category')})
 				.start();
 			
 			// attach the component to the popup
@@ -214,7 +214,7 @@ steal(
 		'{mad.bus} request_category_edition': function (el, ev, category) {
 			
 			// get the popup
-			var popup = mad.controller.component.PopupController.getPopup({label: __('Edit a Category')})
+			var popup = new mad.controller.component.PopupController({label: __('Edit a Category')})
 				.start();
 			
 			// attach the component to the popup
@@ -257,13 +257,13 @@ steal(
 					'id': val.id
 				});
 			});
-			
 			// create the resource which will be used by the form builder to populate the fields
 			var resource = new passbolt.model.Resource({ Category: categories });
 			
 			// get the popup
-			var popup = mad.controller.component.PopupController.getPopup({label: __('Create a new Resource')})
-				.start();
+			var popup = new mad.controller.component.PopupController(null, {label: __('Create a new Resource')});
+			popup.start();
+				// .start();
 			
 			// attach the component to the popup
 			var form = popup.add(passbolt.controller.form.resource.CreateFormController, {
@@ -288,7 +288,7 @@ steal(
 		 */
 		'{mad.bus} request_resource_edition': function (el, ev, resource) {
 			// get the popup
-			var popup = mad.controller.component.PopupController.getPopup({label: __('Edit a Resource')})
+			var popup = new mad.controller.component.PopupController({label: __('Edit a Resource')})
 				.start();
 			
 			// attach the component to the popup
@@ -332,16 +332,13 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_sharing': function (el, ev, resource) {
-			var popup = mad.controller.component.PopupController.getPopup({
-				label: __('Share with people')
-			}, passbolt.controller.component.permissions.PermissionsListController, {
-				data : resource,
-				callbacks : {
-					submit: function (data) {
-						resource.attr(data['passbolt.model.Resource']).save();
-						popup.remove();
-					}
-				}
+			// get the popup
+			var popup = new mad.controller.component.PopupController({label: ''})
+				.start();
+
+			// attach the component to the popup
+			var tab = popup.add(passbolt.controller.component.ResourceActionsTabController, {
+				resource: resource
 			});
 		},
 

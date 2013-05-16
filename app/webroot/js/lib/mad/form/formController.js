@@ -186,7 +186,7 @@ steal(
 						subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
 							.slice(1, fieldAttrs.length)
 							.join('.');
-						// construct the return format functon of the sub models references
+						// construct the return format functions of the sub models references
 						can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
 
 					// else the last field attribute is a scalar attribute
@@ -304,7 +304,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'submit': function (el, ev) {
+		' submit': function (el, ev) {
 			ev.preventDefault();
 			// Form data are valid
 			if (this.validate()) {

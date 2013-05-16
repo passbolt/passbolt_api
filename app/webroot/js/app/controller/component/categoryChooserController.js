@@ -7,6 +7,9 @@ steal(
 	 * @inherits mad.controller.component.TreeController
 	 * @parent index 
 	 * 
+	 * Our category chooser component.
+	 * It will allow user to select a category.
+	 * 
 	 * @constructor
 	 * Creates a new Category Chooser Controller.
 	 * 

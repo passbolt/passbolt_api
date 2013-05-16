@@ -20,12 +20,15 @@ steal(
 		 * @param {Array} componentOptions The options of the component to add
 		 * @return {jQuery} the just added jQuery element
 		 */
-		'addComponent': function (componentOptions) {
+		'add': function (Class, options) {
+			// get the tag to use
+			var tag = 'div';
+			if(typeof options.tag != 'undefined') tag = options.tag;
+			else if(typeof Class.defaults.tag) tag = Class.defaults.tag;
+			// render the component tag
+			var html = '<' + tag + ' id="' + options.id + '"></' + tag + '>';
 			// add a tag for the component to add
-			var $component = $('<div id="' + componentOptions.id + '"></div>').appendTo(this.element);
-			// Add the tab with the jquery tabs API
-			//this.element.tabs('add', '#' + componentOptions.id, componentOptions.label);
-			return $component;
+			return mad.helper.HtmlHelper.create(this.element, 'last', html);
 		}
 	});
 

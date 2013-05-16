@@ -7,17 +7,19 @@ steal(
 	 * @inherits {mad.controller.component.MenuController}
 	 * @parent index
 	 * 
+	 * Our main Application Menu.
 	 * 
 	 * @constructor
-	 * Instanciate the application menu controller
+	 * Instantiate the application menu controller
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.component.AppMenuController}
-	 * @todo pas propre mais separe les boutons du workspace, think to something cleaner
 	 */
 	mad.controller.component.MenuController.extend('passbolt.controller.component.AppMenuController', /** @static */ {
+
+		'defaults': {}
 
 	}, /** @prototype */ {
 

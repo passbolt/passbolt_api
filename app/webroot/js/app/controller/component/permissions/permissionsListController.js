@@ -6,7 +6,7 @@ steal(
 
 	/*
 	 * @class passbolt.controller.PermissionsController
-	 * @inherits mad.controller.component.ComponentController
+	 * @inherits mad.controller.component.CompositeController
 	 * @parent index 
 	 * 
 	 * @constructor
@@ -17,7 +17,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.PermissionsController}
 	 */
-	mad.controller.component.ContainerController.extend('passbolt.controller.component.permissions.PermissionsListController', /** @static */ {
+	mad.controller.component.CompositeController.extend('passbolt.controller.component.permissions.PermissionsListController', /** @static */ {
 
 		'defaults': {
 			'viewClass': passbolt.view.component.permissions.PermissionList,
@@ -28,7 +28,7 @@ steal(
 		}
 
 	}, /** @prototype */ {
-		
+
 		// constructor like
 		'init': function (el, options) {
 			this._super();
@@ -39,7 +39,7 @@ steal(
 			}, 'passbolt_view_component_permissions_permission_list');
 			permission.render();
 		},
-		
+
 		/**
 		 * Load details of a resource
 		 * @param {passbolt.model.Resource} resource The resource to load
@@ -56,6 +56,7 @@ steal(
 			// // on
 			this.on();
 		}
+
 	});
 
 });

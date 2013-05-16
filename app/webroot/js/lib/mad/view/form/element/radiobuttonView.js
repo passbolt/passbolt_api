@@ -19,13 +19,6 @@ steal(
 
 	}, /** @prototype */ {
 
-		// 'setAvailableValues': function (availableValues) {
-			// for (var value in availableValues) {
-				// var html = '<input type="radio" name="' + this.getName() + '" value="' + value + '" />' + availableValues[value];
-				// this.element.append(html);
-			// }
-		// },
-
 		/**
 		 * Get the value of the readiobutton form element
 		 * @return {string}

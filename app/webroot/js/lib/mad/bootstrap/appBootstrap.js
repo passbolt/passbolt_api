@@ -12,33 +12,56 @@ steal(
 	 * @inherits mad.bootstrap.BootstrapInterface
 	 * @parent mad.core
 	 * 
-	 * The framework AppBoostrap class is our application launcher. It performs several task to setup the 
-	 * application environment :
-	 * <ul>
-	 *	<li>Initialize the application namespace</li>
-	 *	<li>Set the global variables</li>
-	 *	<li>Initialize the event bus</li>
-	 *	<li>Initialize the route listener</li>
-	 *	<li>Initialize the translation engine</li>
-	 *	<li>Initialize the application</li>
-	 *	<li>Dispatch to the conveniant action following the route</li>
-	 * </ul>
+	 * The AppBoostrap class is the application launcher. It takes care of :
 	 * 
-	 * <p>
-	 *	<h2>Example</h2>
+	 * * Initialise the application namespace
+	 * * Set the global variables
+	 * * Initialise the event bus
+	 * * Initialise the route listener
+	 * * Initialise the translation engine
+	 * * Initialise the application
+	 * * Dispatch to the convenient action following the route
+	 * 
+	 *	##Example
 	 *	The bootstrap use by the demo found in the documentation
 	 *	
 	 *	@codestart
-	var boot = new mad.bootstrap.AppBootstrap({
-		'appRootUrl': 'http://passbolt.local', // Application root url
-		'lg': 'en-EN', // The langue of the application
-		'appNamespaceId': 'demo', // Application namespace
-		'appControllerId': 'js_demo_app_controller', // Application controller DOM node id
-		'appControllerClass': mad.controller.AppController, // Application controller class
-		'eventBusControllerId': 'mad_test_event_bus_controller' // Event bus controller DOM node id
-	});
+	// Launch the application and its master pieces
+	var boot = new passbolt.bootstrap.AppBootstrap({ 'config': [ 'app/config/config.json' ] });
 	 *	@codeend
-	 * </p>
+	 * 
+	 * 
+	 * ##Config Example
+	 * 
+	 *	@codestart
+	{
+		"app": {
+			"url": "http://passbolt.local",
+			"controllerElt": "#js_app_controller",	
+			"namespace": "passbolt",
+			"ControllerClassName": "passbolt.controller.AppController"
+		},
+		"error": {
+			"ErrorHandlerClassName": "passbolt.helper.ErrorHandler"
+		},
+		"event": {
+			"eventBusControllerElt": "#js_bus_controller"
+		},
+		"i18n": {
+			"lang": "EN-en"
+		},
+		"net": {
+			"ResponseHandlerClassName": "passbolt.net.ResponseHandler"
+		},
+		"route": {
+			"defaultRoute": {
+				"extension": "passbolt",
+				"controller": "passwordWorkspace",
+				"action": "index"
+			}
+		}
+	}
+	 *	@codeend
 	 * 
 	 * @constructor
 	 * Creates a Application Bootstrap
@@ -51,15 +74,13 @@ steal(
 	 * @param {String} defaultRoute.controller The default controller
 	 * @param {String} defaultRoute.action The default action
 	 * @return {mad.bootstrap.AppBootstrap}
-	 * 
-	 * @todo write states schema of the application
 	 */	
 	mad.bootstrap.BootstrapInterface.extend('mad.bootstrap.AppBootstrap', /* @static */ {
 
 		'defaults': {
-			'config': [
-				'mad/config/config.json'
-			],
+			// config files uri
+			'config': [ 'mad/config/config.json' ],
+			// callbacks
 			'callbacks': {
 				'ready': null
 			}
@@ -67,16 +88,19 @@ steal(
 
 	}, /*  @prototype */ {
 
+		// constructor like
 		'init': function (options) {
 			this.options = {};
-			// get config files to apply
+			
+			// Define the config variable by merging the config given in options widht the default configuration of mad
 			var configFiles = [];
 			$.merge($.merge(configFiles, mad.bootstrap.AppBootstrap.defaults.config), options.config);
 			// extend default options with args options (merge manually array, extends override)
 			$.extend(true, this.options, mad.bootstrap.AppBootstrap.defaults, options);
 
+			// Encapsulate the application execution in a try catch in order to intercept properly
+			// any errors which could occured
 			try {
-
 				// load config files
 				for (var i in configFiles) {
 					mad.Config.load(configFiles[i]);

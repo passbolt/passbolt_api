@@ -33,11 +33,15 @@ steal(
 
 	},/** @prototype */ {
 
-		/**
-		 * The value of the Form Element
-		 * @type {mixed}
-		 */
-		'value': null,
+		// constructor like
+		'init': function(el, options) {
+			/**
+			 * The value of the Form Element
+			 * @type {mixed}
+			 */
+			this.value = options.value;
+			this._super(el, options);
+		},
 
 		/**
 		 * Get the associated model.attribute
@@ -58,7 +62,6 @@ steal(
 		'getValue': function () {
 			return this.value;
 		},
-
 
 		/**
 		 * Switch the component to its initial state
@@ -82,11 +85,12 @@ steal(
 			return this;
 		},
 
-
+		/**
+		 * After start hook
+		 */
 		'afterStart': function() {
-			if(this.options.value != null) {
-				this.setValue(this.options.value);
-			}
+			// set the value after the component 
+			this.setValue(this.options.value);
 		},
 
 		/* ************************************************************** */
