@@ -93,7 +93,13 @@ class PermissionTest extends CakeTestCase {
 				'groupname' => 'developers',
 				'result' => null
 			),
-			// Test direct permission
+      // Test direct permission DENY
+      array(
+        'aconame' => 'facebook account',
+        'groupname' => 'human resources',
+        'result' => PermissionType::DENY
+      ),
+			// Test direct permission Update
 			array(
 				'aconame' => 'salesforce account',
 				'groupname' => 'human resources',
@@ -187,11 +193,16 @@ class PermissionTest extends CakeTestCase {
 
 	public function testMysqlFunctionGetUserResourcePermission() {
 		$testcases = array(
-			array(
-				'aconame' => 'facebook account',
-				'username' => 'dark.vador@passbolt.com',
-				'result' => PermissionType::ADMIN
-			),
+      array(
+        'aconame' => 'facebook account',
+        'username' => 'dark.vador@passbolt.com',
+        'result' => PermissionType::ADMIN
+      ),
+      array(
+        'aconame' => 'facebook account',
+        'username' => 'myriam@passbolt.com',
+        'result' => PermissionType::DENY
+      ),
 			array(
 				'aconame' => 'dp1-pwd1',
 				'username' => 'cedric@passbolt.com',

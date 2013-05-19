@@ -21,7 +21,13 @@ class PermissionsSchema {
 		return array(
 			"categories_parents" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW categories_parents AS
-					SELECT c.id AS child_id, c.lft AS child_lft, c.rght AS child_rght, cp.id AS id, cp.lft AS lft, cp.rght AS rght
+					SELECT 
+					   c.id AS child_id,                     /* Category id */
+					   c.lft AS child_lft,                   /* Category left */
+					   c.rght AS child_rght,                 /* Category right */
+					   cp.id AS id,                          /* Parent category id */
+					   cp.lft AS lft,                        /* Parent Category left */
+					   cp.rght AS rght                       /* Parent Category right */
 					FROM categories c, categories cp
 					WHERE cp.lft <= c.lft 
 						AND cp.rght >= c.rght;
@@ -29,8 +35,8 @@ class PermissionsSchema {
 			"groups_categories_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_categories_permissions AS
 					SELECT 
-						`g`.id AS group_id,
-						`cp`.child_id AS category_id,
+						`g`.id AS group_id,                    /* Group */
+						`cp`.child_id AS category_id,          /* */
 						`p`.id AS permission_id,
 						`p`.type AS permission_type
 					FROM permissions p
@@ -44,22 +50,31 @@ class PermissionsSchema {
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_resources_permissions AS
 					
 					SELECT 
-						`r`.id AS resource_id,
-						`g`.id AS group_id,
-						`p_direct`.id AS direct_permission_id,
-						`p_inherited`.id AS inherited_permission_id,
-						IFNULL(`p_direct`.id, `p_inherited`.id) AS permission_id,
-						IFNULL(`p_direct`.type, `p_inherited`.type) AS permission_type
-						/*IF(`p_direct`.id, '1', '0') AS inherited*/
+            `g`.id AS group_id,                     /* Group */
+						`r`.id AS resource_id,                  /* Resource */
+						`dir_grp_cat_perm`.id AS dir_perm_id,        /* Direct permission id */
+						`inh_grp_cat_perm`.id AS inh_grp_perm_id,    /* Inherited Group Cat Perm : a group has a direct permissions on a parent category */
+						
+					  /* The result permission is following the priority : 
+              1. direct User Perm; 
+              2. Inherited Group Perm; 
+            */ 						
+            IFNULL(`dir_grp_cat_perm`.id, `inh_grp_cat_perm`.id) AS permission_id,
+						IFNULL(`dir_grp_cat_perm`.type, `inh_grp_cat_perm`.type) AS permission_type
+						
 					FROM (`resources` r JOIN `groups` g)
-					LEFT JOIN `permissions` p_direct ON (
-						`p_direct`.aro='Group'
-						AND `p_direct`.aco='Resource'
-						AND `p_direct`.aco_foreign_key = `r`.id
-						AND `p_direct`.aro_foreign_key = `g`.id 
+          
+          /* 1. direct User Perm */
+					LEFT JOIN `permissions` dir_grp_cat_perm ON (
+						`dir_grp_cat_perm`.aro='Group'
+						AND `dir_grp_cat_perm`.aco='Resource'
+						AND `dir_grp_cat_perm`.aco_foreign_key = `r`.id
+						AND `dir_grp_cat_perm`.aro_foreign_key = `g`.id 
 					)
-					LEFT JOIN `permissions` p_inherited ON (
-						p_inherited.id = (
+          
+          /* Inherited Group Perm */
+					LEFT JOIN `permissions` inh_grp_cat_perm ON (
+						inh_grp_cat_perm.id = (
 							SELECT `gcp`.permission_id
 							FROM `groups_categories_permissions` gcp,
 								`categories_resources` cr
@@ -74,26 +89,33 @@ class PermissionsSchema {
 			"users_categories_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW users_categories_permissions AS
 					SELECT 
-						`u`.id AS user_id,
-						`c`.id AS category_id,
-						`p_direct`.id AS direct_permission_id,
-						`pg_inherited`.id AS inherited_permission_id,
-						IFNULL(`p_direct`.id, IFNULL(`pu_inherited`.id, `pg_inherited`.id)) AS permission_id,
-						IFNULL(`p_direct`.type, IFNULL(`pu_inherited`.type, `pg_inherited`.type)) AS permission_type
+						`u`.id AS user_id,                      /* User */
+						`c`.id AS category_id,                  /* Category */
+						`dir_usr_cat_perm`.id AS dir_perm_id,   /* Direct permission id */
+            `inh_usr_cat_perm`.id AS inh_usr_perm_id,   /* Inherited User Cat Perm : the user has a direct permission on a parent category */
+            `inh_grp_cat_perm`.id AS inh_grp_perm_id,   /* Inherited Group Cat Perm : a group has a direct permissions on a parent category */
+            
+            /* The result permission is following the priority : 
+              1. direct User Cat Perm; 
+              2. Inherited User Cat Perm; 
+              3. Inherited Group Cat Perm; 
+            */ 
+						IFNULL(`dir_usr_cat_perm`.id, IFNULL(`inh_usr_cat_perm`.id, `inh_grp_cat_perm`.id)) AS permission_id,
+						IFNULL(`dir_usr_cat_perm`.type, IFNULL(`inh_usr_cat_perm`.type, `inh_grp_cat_perm`.type)) AS permission_type
 						
 					FROM (`categories` c JOIN `users` u)
 					
-					/*  Get the direct permission for a given user */
-					LEFT JOIN `permissions` p_direct ON (
-						`p_direct`.aro='User'
-						AND `p_direct`.aco='Category'
-						AND `p_direct`.aco_foreign_key = `c`.id
-						AND `p_direct`.aro_foreign_key = `u`.id 
+					/* 1. direct User Cat Perm;  */
+					LEFT JOIN `permissions` dir_usr_cat_perm ON (
+						`dir_usr_cat_perm`.aro='User'
+						AND `dir_usr_cat_perm`.aco='Category'
+						AND `dir_usr_cat_perm`.aco_foreign_key = `c`.id
+						AND `dir_usr_cat_perm`.aro_foreign_key = `u`.id 
 					)
 					
-					/* Get inherited permissions functions of user's permissions applied to parent categories */
-					LEFT JOIN `permissions` pu_inherited ON (
-						pu_inherited.id = (
+					/* 2. Inherited User Cat Perm */
+					LEFT JOIN `permissions` inh_usr_cat_perm ON (
+						inh_usr_cat_perm.id = (
 							SELECT `pu_pc`.id
 							FROM `permissions` pu_pc, /* user's permissions applied to parent categories */
 								`categories_parents` cp
@@ -106,9 +128,9 @@ class PermissionsSchema {
 						)
 					)
 					
-					/* Get inherited permissions functions of user's groups */
-					LEFT JOIN `permissions` pg_inherited ON (
-						pg_inherited.id = (
+					/* 3. Inherited Group Cat Perm */
+					LEFT JOIN `permissions` inh_grp_cat_perm ON (
+						inh_grp_cat_perm.id = (
 							SELECT `gcp`.permission_id
 							FROM `groups_categories_permissions` gcp,
 								`groups_users` gu
@@ -124,21 +146,46 @@ class PermissionsSchema {
 				CREATE OR REPLACE ALGORITHM=MERGE VIEW users_resources_permissions AS
 				
 					SELECT 
-						`u`.id AS user_id,
-						`r`.id AS resource_id,
-						IFNULL(`p_direct`.id, IFNULL(`pu_inherited`.id, `pg_inherited`.id)) AS permission_id,
-						IFNULL(`p_direct`.type, IFNULL(`pu_inherited`.type, `pg_inherited`.type)) AS permission_type
-						/*IF(`p_direct`.id, '1', '0') AS inherited*/
+						`u`.id AS user_id,                      /* User */
+						`r`.id AS resource_id,                  /* Resource */
+						
+            /* The result permission is following the priority : 
+              1. direct User Rs Perm; 
+              2. Inherited User Cat Perm; 
+              3. Inherited Group Rs Perm;
+              4. Inherited Group Cat Perm; 
+            */ 
+						IFNULL(`dir_usr_rs_perm`.id, IFNULL(`inh_usr_cat_perm`.id, `inh_grp_cat_perm`.id)) AS permission_id,
+						IFNULL(`dir_usr_rs_perm`.type, IFNULL(`inh_usr_cat_perm`.type, `inh_grp_cat_perm`.type)) AS permission_type
+
 					FROM (`resources` r JOIN `users` u)
-					LEFT JOIN `permissions` p_direct ON (
-						`p_direct`.aro='User'
-						AND `p_direct`.aco='Resource'
-						AND `p_direct`.aco_foreign_key = `r`.id
-						AND `p_direct`.aro_foreign_key = `u`.id 
+          
+          /* 1. direct User Rs Perm  */
+					LEFT JOIN `permissions` dir_usr_rs_perm ON (
+						`dir_usr_rs_perm`.aro='User'
+						AND `dir_usr_rs_perm`.aco='Resource'
+						AND `dir_usr_rs_perm`.aco_foreign_key = `r`.id
+						AND `dir_usr_rs_perm`.aro_foreign_key = `u`.id 
 					)
-					LEFT JOIN `permissions` pg_inherited ON (
-						/* `p_direct`.id IS NULL */
-						pg_inherited.id = (
+          
+          /* 2. Inherited User Cat Perm */
+          LEFT JOIN `permissions` inh_usr_cat_perm ON (
+            inh_usr_cat_perm.id = (
+              SELECT IFNULL(`ucp`.dir_perm_id, `ucp`.inh_usr_perm_id) AS id
+              FROM `users_categories_permissions` ucp,
+                `categories_resources` cr
+              WHERE `cr`.resource_id = `r`.id
+              AND `ucp`.category_id = `cr`.category_id
+              AND `ucp`.user_id = `u`.id
+              ORDER BY `ucp`.permission_type DESC
+              LIMIT 1
+            )
+          )
+          
+          /* 3. Inherited Group Rs Perm
+             4. Inherited Group Cat Perm  */
+					LEFT JOIN `permissions` inh_grp_cat_perm ON (
+						inh_grp_cat_perm.id = (
 							SELECT `grp`.permission_id
 							FROM `groups_resources_permissions` grp,
 								`groups_users` gu
@@ -146,20 +193,6 @@ class PermissionsSchema {
 							AND `gu`.user_id = `u`.id
 							AND `gu`.group_id = `grp`.group_id
 							ORDER BY `grp`.permission_type DESC
-							LIMIT 1
-						)
-					)
-					
-					LEFT JOIN `permissions` pu_inherited ON (
-						/* `p_direct`.id IS NULL */
-						pu_inherited.id = (
-							SELECT `ucp`.permission_id
-							FROM `users_categories_permissions` ucp,
-								`categories_resources` cr
-							WHERE `cr`.resource_id = `r`.id
-							AND `ucp`.category_id = `cr`.category_id
-							AND `ucp`.user_id = `u`.id
-							ORDER BY `ucp`.permission_type DESC
 							LIMIT 1
 						)
 					);"

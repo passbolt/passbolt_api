@@ -72,16 +72,26 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $groups['hr'],
 			'type' => PermissionType::DENY
 		));
-		// Group human resources can modify resource salesforce account
-		$rSalesforce = $this->Resource->findByName("salesforce account");
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-7768-45e0-890d-23a4d7a10fce',
-			'aco' => 'Resource',
-			'aco_foreign_key' => $rSalesforce['Resource']['id'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['hr'],
-			'type' => PermissionType::UPDATE
-		));
+    // Group human resources can modify resource salesforce account
+    $rSalesforce = $this->Resource->findByName("salesforce account");
+    $ps[] = array('Permission' => array(
+      'id' => '50e6b4af-7768-45e0-890d-23a4d7a10fce',
+      'aco' => 'Resource',
+      'aco_foreign_key' => $rSalesforce['Resource']['id'],
+      'aro' => 'Group',
+      'aro_foreign_key' => $groups['hr'],
+      'type' => PermissionType::UPDATE
+    ));
+    // Group human resources cannot access resource facebook account
+    $rFacebook = $this->Resource->findByName("facebook account");
+    $ps[] = array('Permission' => array(
+      'id' => '50e234af-7768-7890-890d-23a4d7a10fce',
+      'aco' => 'Resource',
+      'aco_foreign_key' => $rFacebook['Resource']['id'],
+      'aro' => 'Group',
+      'aro_foreign_key' => $groups['hr'],
+      'type' => PermissionType::DENY
+    ));
 		// accounting dpt can access administration>accounts in read only
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-832c-44bf-8a49-23a4d7a10fce',
