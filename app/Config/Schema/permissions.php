@@ -35,8 +35,8 @@ class PermissionsSchema {
 			"groups_categories_permissions" => "
 				CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_categories_permissions AS
 					SELECT 
-						`g`.id AS group_id,                    /* Group */
-						`cp`.child_id AS category_id,          /* */
+						`g`.id AS group_id,
+						`cp`.child_id AS category_id,
 						`p`.id AS permission_id,
 						`p`.type AS permission_type
 					FROM permissions p

@@ -42,7 +42,7 @@ steal(
 				'<div id="js_popup" />'
 			);
 			
-			// Changing the element force us to recall setup which is called befor all init functions
+			// Changing the element force us to recall setup which is called before all init functions
 			// and make the magic things (bind event ...)
 			this.setup($el);
 			this._super($el, options);

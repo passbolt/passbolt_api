@@ -7,7 +7,6 @@ steal(
 	'app/controller/component/resourceActionsTabController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
-	'app/controller/component/permissions/permissionsListController.js',
 	'app/model/filter.js'
 ).then(function () {
 

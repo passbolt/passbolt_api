@@ -135,6 +135,22 @@ steal(
 		},
 
 		/**
+		 * Position an element in absolute
+		 * @param {array} options Array of options
+		 * @param {array} options.mouse (optional) Position the element functions of a mouse position
+		 * @param {string} options.mouse.x (At x pixels from the left first relative element found
+		 * @param {string} options.mouse.y At y pixels from the top first relative element found
+		 * @param {array} options.reference (optional) Position the element functions of a reference element
+		 * @param {HTMLElement} options.reference.element The reference element
+		 * @param {array} options.reference.my As per Jquery position plugin, the target corner of my element ("top left" by instance)
+		 * @param {array} option.reference.at As per Jquery position plugin, the target corner of the reference element ("bottom left" by instance)
+		 * @return {void}
+		 */
+		'position': function(options) {
+			mad.helper.HtmlHelper.position(this.element, options);
+		},
+
+		/**
 		 * The render method renders the view based on its template.
 		 * @see {getTemplate}
 		 * @return {string} The rendered view

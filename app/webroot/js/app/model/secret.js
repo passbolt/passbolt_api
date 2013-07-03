@@ -1,51 +1,31 @@
 steal(
 	'jquery/model',
-	'app/model/category.js',
 	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
 	/*
-	 * @class passbolt.model.Permission
+	 * @class passbolt.model.Secret
 	 * @inherits {mad.model.Model}
 	 * @parent index
 	 * 
-	 * The permission model
+	 * The secret model
 	 * 
 	 * @constructor
-	 * Creates a resource
+	 * Creates a secret
 	 * @param {array} data 
-	 * @return {passbolt.model.Permission}
+	 * @return {passbolt.model.Resource}
 	 */
-	mad.model.Model('passbolt.model.Permission', /** @static */ {
-
-		'validateRules': {
-			
-		},
+	mad.model.Model('passbolt.model.Secret', /** @static */ {
 
 		attributes: {
-			'id': 'string',
-			'type': 'string',
-			'aco': 'string',
-			'aco_foreign_key': 'string',
-			'aro': 'string',
-			'aro_foreign_key': 'string',
-			'PermissionType': 'passbolt.model.PermissionType.model',
-			'Resource': 'passbolt.model.Resource.model',
-			'Category': 'passbolt.model.Category.model',
-			'User': 'passbolt.model.User.model',
-			'Group': 'passbolt.model.Group.model'
+			'id': 'string'
 		},
 
 		'create' : function (attrs, success, error) {
 			var self = this;
-			// build the uri functions of the aco instance
-			var uri = 'permissions/' + attrs['aco'].toLowerCase() + '/' + attrs['aco_foreign_key'];
-			delete attrs['aco'], attrs['aco_foreign_key'];
-			// format the data to send to be understable by cake
 			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-			// call the server
 			return mad.net.Ajax.request({
-				url: APP_URL + uri,
+				url: APP_URL + '/resources',
 				type: 'POST',
 				params: params,
 				success: success,
@@ -62,7 +42,7 @@ steal(
 		'destroy' : function (id, success, error) {
 			var params = {id:id};
 			return mad.net.Ajax.request({
-				url: APP_URL + 'permissions/{id}',
+				url: APP_URL + '/resources/{id}',
 				type: 'DELETE',
 				params: params,
 				success: success,
@@ -71,12 +51,8 @@ steal(
 		},
 
 		'findAll': function (params, success, error) {
-			var uri = 'permissions';
-			if(typeof params.aco != 'undefined' && typeof params.aco_foreign_key != 'undefined') {
-				uri += '/' + params.aco.toLowerCase() + '/' + params.aco_foreign_key;
-			}
 			return mad.net.Ajax.request({
-				url: APP_URL + uri,
+				url: APP_URL + '/resources',
 				type: 'GET',
 				params: params,
 				success: success,
@@ -86,7 +62,7 @@ steal(
 
 		'findOne': function (params, success, error) {
 			return mad.net.Ajax.request({
-				url: APP_URL + '/permissions/{id}',
+				url: APP_URL + '/resources/{id}',
 				type: 'GET',
 				params: params,
 				success: success,
@@ -104,7 +80,7 @@ steal(
 			// add the root of the params, it will be used in the url template
 			params.id = id;
 			return mad.net.Ajax.request({
-				url: APP_URL + '/permissions/{id}',
+				url: APP_URL + '/resources/{id}',
 				type: 'PUT',
 				params: params,
 				success: success,
@@ -117,20 +93,5 @@ steal(
 			});
 		}
 
-	}, /** @prototype */ {
-		
-		/**
-		 * Check if the permission is a direct permission for the given aco and aro instances.
-		 * @param {mad.model.Model} obj The target instance to test if the permission is direct for it. The instance
-		 * can be of whatever type (Resource, Category ...)
-		 * @return {boolean}
-		 */
-		'isDirect': function(acoInstance) {
-			var permAcoModel = can.getObject('passbolt.model.' + this.aco);
-			if(acoInstance instanceof permAcoModel && acoInstance.id === this.aco_foreign_key)
-				return true;
-			return false;
-		}
-		
-	});
+	}, /** @prototype */ { });
 });

@@ -19,40 +19,37 @@ steal(
 
 	}, /** @prototype */ {
 
-		'destroy': function () {
-			$('#js_contextual_anchor', this.element).remove();
+		// constructor like
+		'init': function(el, options) {
+			// if no element given
+			if(el == null || !el.length) {
+				// if a previous contextual menu is still displayed, remove it
+				if($('#js_contextual_menu').length != 0) {
+					$('#js_contextual_menu').remove();
+				}
+
+				// create the DOM entry point for the popup
+				var $el = mad.helper.HtmlHelper.create(
+					mad.app.element,
+					'first',
+					'<div id="js_contextual_menu" />'
+				);
+
+				// Changing the element force us to recall setup which is called before all init functions
+				// and make the magic things happen (bind events ...)
+				this.setup($el);
+			}
+
+			this._super($el, options); 
 		},
 
 		/**
-		 * Render the component. Override the parent behavior to automatically position
-		 * the contextual menu functons of optional parameters mouseX and mouseY.
-		 * @see {mad.view.View}
-		 * @param {array} options Associative array of options
-		 * @param {boolean} options.display Display the rendered component. If true
-		 * the rendered component will be push in the DOM else the rendered component
-		 * will be stored in the instance's variable renderedView
-		 * @return {mixed} Return true if the method does not encountered troubles else
-		 * return false. If the option display is set to false, return the rendered view
+		 * After start hook.
+		 * Position the contextual menu functions of the given mouse position
 		 */
-		'render': function () {
+		'afterStart': function () {
 			this._super();
-
-			// we make the view's job in the controller
-			// Insert the reference point in the DOM
-			var refPointHtml = '<div id="js_contextual_anchor" style="position:absolute;"></div>'
-			var refPoint = mad.helper.HtmlHelper.create($('body'), 'first', refPointHtml);
-			var $refPoint = $(refPoint);
-
-			$refPoint.css({
-				left: this.options.mouseX,
-				top: this.options.mouseY
-			});
-			// Position the contextual menu functions of the reference point and the given options
-			this.element.position({
-				my: "left top",
-				at: "right bottom",
-				of: $refPoint
-			});
+			this.view.position({'mouse': {'x':this.options.mouseX-5, 'y':this.options.mouseY-5}});
 		},
 
 		/* ************************************************************** */

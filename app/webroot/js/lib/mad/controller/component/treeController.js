@@ -3,6 +3,7 @@ steal(
 	'mad/controller/componentController.js',
 	'mad/view/component/tree.js',
 	'mad/object/map.js',
+	'mad/error/exception.js',
 	'mad/view/template/component/tree.ejs',
 	'mad/view/template/component/tree/treeItem.ejs'
 ).then(function () {
@@ -66,6 +67,7 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (item, refItemId, position) {
+			console.log(item);
 			if (this.getItemClass() == null) {
 				throw new mad.error.Exception('The associated itemClass can not be null');
 			}

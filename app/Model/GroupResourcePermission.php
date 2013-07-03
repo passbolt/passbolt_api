@@ -61,7 +61,7 @@ class GroupResourcePermission extends AppModel {
 					'fields' => array('group_id', 'resource_id', 'permission_id', 'permission_type'),
 					'contain' => array(
 						'Permission' => array(
-							'fields' => array('id', 'type'),
+              'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
 							'PermissionType' => array(
 								'fields' => array('serial', 'name')
 							),

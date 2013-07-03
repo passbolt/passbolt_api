@@ -20,7 +20,8 @@ steal(
 	// the jQuery core lib
 	'lib/xregexp/xregexp-all-min.js'
 ).then(
-	'lib/jquery/jquery.ui.position.js',
+	// 'lib/jquery/jquery.ui.position.js',
+	'lib/jquery/jquery-ui-1.10.3.custom.js',
 	'jquery/class',
 	// override the jmvc Class class
 	// loaded in a different block because the jquerypp libs inherit to the jquery
@@ -61,9 +62,10 @@ steal(
 	'mad/form/formController.js',
 	'mad/form/formElement.js',
 	'mad/form/formChoiceElement.js',
+	'mad/form/element/checkboxController.js',
 	'mad/form/element/dateController.js',
 	'mad/form/element/dropdownController.js',
-	'mad/form/element/checkboxController.js',
+	'mad/form/element/freeElementController.js',
 	'mad/form/element/radiobuttonController.js',
 	'mad/form/element/textboxController.js',
 	'mad/helper/controllerHelper.js',

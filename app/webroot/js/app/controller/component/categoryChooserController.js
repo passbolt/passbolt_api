@@ -80,18 +80,8 @@ steal(
 					}}
 			]);
 
-			// Instanciate the menu controller
-			// @todo An html helper to insert component should be solve the view problem is this code part
-			if ($('#js_category_chooser_contextual_menu').length) {
-				$('#js_category_chooser_contextual_menu').remove();
-			}
-
-			var $menu = $('<ul id="js_category_chooser_contextual_menu" class="contextual_menu"/>');
-			mad.app.element.prepend($menu);
-			var contextualMenu = new mad.controller.component.ContextualMenuController($menu, {
-				'mouseX': x,
-				'mouseY': y
-			});
+			// Contextual menu
+			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {'mouseX': x, 'mouseY': y});	
 			contextualMenu.start();
 			contextualMenu.load(menuItems);
 		},
@@ -105,7 +95,7 @@ steal(
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {passbolt.model.Category} item The selected item instance or its id
-		 * @param {HTMLEvent} ev The source event which occured
+		 * @param {HTMLEvent} srcEvent The source event which occured
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
@@ -117,7 +107,7 @@ steal(
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {passbolt.model.Category} item The right selected item instance or its id
-		 * @param {HTMLEvent} ev The source event which occured
+		 * @param {HTMLEvent} srcEvent The source event which occured
 		 * @return {void}
 		 */
 		' item_right_selected': function (el, ev, item, srcEvent) {
