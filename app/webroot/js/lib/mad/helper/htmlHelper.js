@@ -30,8 +30,6 @@ steal(
 					'top': options.mouse.y + 'px'
 				});
 			} else if(typeof options.reference != 'undefined') {
-				console.log(el);
-				console.log(options.reference.of);
 				el.position({
 					'my': options.reference.my,
 					'at': options.reference.at,
