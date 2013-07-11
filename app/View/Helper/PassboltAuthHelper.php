@@ -15,8 +15,15 @@ class PassboltAuthHelper extends AppHelper {
 		if ($nextLogin < time()) {
 			return null;
 		}
+
+        // Calculate the delay
+        $now = time();
+        $loginAllowed = $nextLogin;
+        $diff = $loginAllowed - $now;
+
+        // Creates the html
 		$html .= '<input type="hidden" id="nextLogin" name="nextLogin" value="' . $nextLogin . '" />';
-		$html .= '<div class="auththrottler"><span class="countdown"></span> seconds before next login</div>';
+		$html .= '<div class="auththrottler"><span class="countdown">'. $diff .'</span> seconds before next login</div>';
 		return $html;
 	}
 }
