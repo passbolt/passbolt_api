@@ -56,6 +56,14 @@ steal(
 		},
 
 		/**
+		 * Set the associated model.attribute
+		 * @param {string} modelReference
+		 */
+		'setModelReference': function (modelReference) {
+			this.options.modelReference = modelReference;
+		},
+
+		/**
 		 * Get the value of the form element
 		 * @return {mixed} value The value of the form element
 		 */

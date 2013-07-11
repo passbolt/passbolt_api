@@ -67,7 +67,6 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (item, refItemId, position) {
-			console.log(item);
 			if (this.getItemClass() == null) {
 				throw new mad.error.Exception('The associated itemClass can not be null');
 			}
