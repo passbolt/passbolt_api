@@ -57,16 +57,15 @@ class PermissionsController extends AppController  {
 			$this->Message->error(__('The user is not allowed to add a permission to the %s:%s', $acoInstanceId, $acoModelName));
 			return;
 		}
-		
+
 		// Treat the posted data
 		// Get the target ARO model and instance id
-		$dataAroModelNames = array_keys($this->request->data);
-		foreach($dataAroModelNames as $dataAroModelName) {
+		foreach($this->request->data as $key => $val) {
 			// if the current data key is an allowed ARO model
-			if($this->Permission->isValidAro($dataAroModelName)) {
-				$aroModelName = $dataAroModelName;
-				if(isset($this->request->data[$aroModelName]['id'])) {
-					$aroInstanceId = $this->request->data[$aroModelName]['id'];
+			if($this->Permission->isValidAro($key)) {
+				$aroModelName = $key;
+				if(isset($val['id'])) {
+					$aroInstanceId = $val['id'];
 				}
 				break;
 			}

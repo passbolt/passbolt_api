@@ -47,7 +47,7 @@ steal(
 					'id': 'id',
 					'aro': 'aro',
 					'aco': 'aco',
-					'permLabel': 'PermissionType.name', 
+					'permLabel': 'PermissionType.name',
 					// {
 						// 'key': 'PermissionType',
 						// 'func': function(permType, map, obj) {
@@ -97,70 +97,8 @@ steal(
 			);
 			
 			this.addFormController.addElement(
-				new mad.form.element.TextboxController($('#js_permission_aro_autocomplete', this.element), {
-					'callbacks': {
-						'changed': function(value) {
-							
-							// server return
-							var users = [],
-								groups = [];
-								
-							// @todo several options : 1. aggregate ajax request; 2. one controller which manage this operation;
-							passbolt.model.User.findAll({
-								'keywords': value
-							}, function (data, response, request) {
-								users = data;
-								passbolt.model.Group.findAll({
-									'keywords': value
-								}, function (data, response, request) {
-									groups = data;
-									
-									// aggregate users & groups in a format that the list will understand 
-									var aggregateData = [];
-									groups.each(function(group, i){
-										aggregateData.push(new mad.model.Model({
-											id: group.id,
-											label: group.name
-										}));
-									});
-									users.each(function(user, i){
-										aggregateData.push(new mad.model.Model({
-											id: user.id,
-											label: user.username
-										}));
-									});
-									// create the DOM entry point for the autocomplete component
-									var $el = mad.helper.HtmlHelper.create(
-										self.addFormController.element,
-										'last',
-										'<div id="js_autcomplete" style="position:absolute; border:1px solid red;"></div>'
-									);
-									var autocompleteList = new mad.controller.component.TreeController($el, {
-										'viewClass': mad.view.component.tree.List,
-										'itemClass': mad.model.Model,
-										'templateUri': 'mad/view/template/component/tree.ejs',
-										// The map to use to make jstree working with our category model
-										'map': new mad.object.Map({
-											'id': 'id',
-											'label': 'label'
-										})
-									});
-									autocompleteList.start();
-									autocompleteList.view.position({
-										'reference': {
-											'my': 'left top',
-											'at': 'left bottom',
-											'of': $('#js_permission_aro_autocomplete')
-										}
-									});
-									autocompleteList.load(aggregateData);
-								});
-							})
-							
-							// self.addFormController.getElement('js_permission_aro').setValue(value);
-						}
-					}
-				}).start()
+				new mad.form.element.TextboxController($('#js_permission_aro_autocomplete', this.element))
+					.start()
 			);
 			
 			// Add permission type
@@ -176,6 +114,85 @@ steal(
 					}
 				}).start()
 			);
+		},
+		
+		/**
+		 * Show the autcomplete list functions of received users and groups
+		 * @param {string} value String to launche the autocomplete with
+		 * @return {void}
+		 */
+		'showAutocomplete': function(value) {
+			var self = this;
+			// server return
+			var users = [],
+				groups = [];
+			
+		    // instanciate the list component
+		    // create the DOM entry point for the autocomplete component
+			var $el = mad.helper.HtmlHelper.create(
+				this.addFormController.element,
+				'last',
+				'<div id="js_autcomplete" style="position:absolute; border:1px solid red;"></div>'
+			);
+			var autocompleteList = new mad.controller.component.TreeController($el, {
+				'viewClass': mad.view.component.tree.List,
+				'itemClass': mad.model.Model,
+				'templateUri': 'mad/view/template/component/tree.ejs',
+				// The map to use to make jstree working with our category model
+				'map': new mad.object.Map({
+					'id': 'id',
+					'label': 'label'
+				})
+			});
+			autocompleteList.start();
+			var rect = $('#js_permission_aro_autocomplete')[0].getBoundingClientRect();
+			autocompleteList.element.css({
+				'top': (rect.top + rect.height) + 'px',
+				'left': rect.left + 'px'
+			});
+			// does not work
+			// autocompleteList.view.position({
+				// 'reference': {
+					// 'my': 'left top',
+					// 'at': 'left bottom',
+					// 'of': $('#js_permission_aro_autocomplete')
+				// }
+			// });
+			
+			// @todo several options : 1. aggregate ajax request; 2. one controller which manage this operation;
+			// get all the users and then get all the groups in the query callback
+			passbolt.model.User.findAll({
+				'keywords': value
+			}, function (dataUsers, response, request) {
+				users = dataUsers;
+				
+				// get all the grousp
+				passbolt.model.Group.findAll({
+					'keywords': value
+				}, function (dataGroups, response, request) {
+					groups = dataGroups;
+					
+					// aggregate users & groups in a format that the list will understand
+					// oulala c'est bien de la merde ça ou je rêve, un mapper serait bien 
+					var aggregatedData = [];
+					groups.each(function(group, i){
+						aggregatedData.push(new mad.model.Model({
+							id: group.id,
+							label: group.name
+						}));
+					});
+					users.each(function(user, i){
+						aggregatedData.push(new mad.model.Model({
+							id: user.id,
+							label: user.username
+						}));
+					});
+					// Load the autocomplete list
+					autocompleteList.load(aggregatedData);
+				});
+			})
+			
+			// self.addFormController.getElement('js_permission_aro').setValue(value);
 		},
 		
 		/**
@@ -212,6 +229,11 @@ steal(
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
+
+		'#js_permission_aro_autocomplete changed': function(el, ev, data) {
+			// show the autocomplete list functions of the given entered string
+			this.showAutocomplete(data.value);
+		},
 
 		/**
 		 * 
