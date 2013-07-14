@@ -21,11 +21,11 @@
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden {
+.hidden,
+.no-text span {
 	display: none !important;
 	visibility: hidden;
 }
-
 /*
  * Hide only visually, but have it available for screenreaders: h5bp.com/v
  */
@@ -99,4 +99,12 @@
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+}
+
+/* position shortcuts */
+.left {
+  float:left;
+}
+.right {
+  float:right;
 }

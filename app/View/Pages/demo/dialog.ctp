@@ -20,7 +20,6 @@
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
 	<link href="css/default/aa1d4fae-7dec-11d0-a765-00a0c91e6bf6.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="js/lib/compat/modernizr-2.6.2.min.js"></script>
-	<script type="text/javascript" src="js/lib/jquery/jquery-1.8.3.js"></script>
 </head>
 <body>
 <div id="container" class="page">
@@ -50,6 +49,7 @@
 			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a></div>
 		</div>
 	</div>
+<?php echo $this->element('demo/dialog'); ?>
 </div>
 <script>
 	// if there is not css styling for scrollbar
@@ -70,29 +70,6 @@
 				$('.scroll').jScrollPane(settings);
 			}
 		}
-	});
-	// if there is support for html5 input placeholder
-	// TODO polyfill for html5 placeholder
-  
-	// TODO This is for demo only
-	$(function() {
-		$('.dropdown .button').click(function(c){
-			var button = $(this);
-			var content = $(this).next();
-			
-			button.toggleClass('pressed');
-			if(button.hasClass('pressed')){
-			  content.addClass('visible');
-			} else {
-				content.removeClass('visible'); 
-			}
-			$('body').click(function () {
-				content.removeClass('visible'); 
-				button.removeClass('pressed');
-			});
-
-			return false;
-		});
 	});
 </script>
 </body>

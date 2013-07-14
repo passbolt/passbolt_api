@@ -11,6 +11,7 @@
 */
 input[type=text],
 input[type=password],
+input[type=search],
 textarea, select {
 	font-family:'Lato',Verdana, Geneva, Arial, Helvetica, sans-serif;
   color:#333;
@@ -22,6 +23,7 @@ textarea, select {
   zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
   *display: inline;
   margin-bottom:.5em;
+	-webkit-appearance:none;
 }
 
 /*
@@ -43,18 +45,20 @@ label {
 }
 textarea,
 .password input[type=password],
+.search input[type=search],
 .text input[type=text] {
 	font-size:1.125em; /* 18px */
-	line-height:1em; /* 20px */
   border-top:1px solid #999;
 }
 textarea,
 .password input[type=password]:hover,
+.search input[type=search]:hover
 .text input[type=text]:hover {
   border:1px solid #999;
 }
 textarea:focus,
 .password input[type=password]:focus,
+.search input[type=search]:focus,
 .text input[type=text]:focus {
   -webkit-box-shadow: inset 1px 1px 2px rgba(255,255,255,.2);
   -moz-box-shadow: inset 1px 1px 2px rgba(0,0,0,.2);
@@ -67,6 +71,9 @@ textarea:focus,
 .input.disabled input[type=password],
 .input.password.disabled input[type=password]:hover,
 .input.password.disabled input[type=password]:focus,
+.input.disabled input[type=search],
+.input.search.disabled input[type=search]:hover,
+.input.search.disabled input[type=search]:focus,
 .input.disabled input[type=text],
 .input.text.disabled input[type=text]:hover,
 .input.text.disabled input[type=text]:focus {
@@ -159,11 +166,11 @@ textarea {
 	Description  : 
 	Compatible   : ?
 	Since        : version 3.0
-*/
+
 .checkboxlist label,
 .radiolist label {
 	font-size:1.25em;
-}
+}*/
 .checkboxlist .input.checkbox label,
 .radiolist .input.radio label {
   font-weight:normal;

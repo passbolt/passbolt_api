@@ -25,22 +25,37 @@ a.button {
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  padding:.3125em .625em; /* 5/10px */
+  padding: .5em 1.5em .5em 1.5em;
   border:1px solid #CCC;
   color:#333;
   font-weight:bold;
-  text-shadow: 0 0 3px #FFF;
-  -webkit-border-radius: .3125em; 
-  -moz-border-radius: .3125em;
-  border-radius: .3125em;
-  background:#EDEDED;
-  min-width:7.5em;
-	height:2.5em; /* 40px */
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  -webkit-border-radius: .25em; 
+  -moz-border-radius: .25em;
+  border-radius: .25em;
+	background-color: #f5f5f5;
+	background-image: -moz-linear-gradient(top, #fafafa, #ededed);
+	background-image: -ms-linear-gradient(top, #fafafa, #ededed);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#ededed));
+	background-image: -webkit-linear-gradient(top, #fafafa, #ededed);
+	background-image: -o-linear-gradient(top, #fafafa, #ededed);
+	background-image: linear-gradient(top, #fafafa, #ededed);
+
 }
 
 /* size and position adjustments */
 .submit {
   display: inline-block; /* in case there is a div wrapper */
+}
+a.button {
+	font-size:0.875em;   /*  14px */
+	padding: .429em 1.286em .429em 1.286em ; /* 6px 20px */
+	height:1.429em;
+	float:left;
+  margin-right:.5em;
+	-webkit-border-radius: .286em; 
+  -moz-border-radius: .286em;
+  border-radius: .286em;
 }
 
 /* hover */
@@ -49,17 +64,12 @@ input.button:hover,
 button:hover,
 a.button:hover {
   text-decoration: none;
-	border:1px solid #CCC; /*
-  -webkit-box-shadow: 0 1px 2px rgba(255,255,255,.2);
-  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-  box-shadow: 0 1px 2px rgba(0,0,0,.2); */
-  background: #ededed; /* Old browsers */
-  background: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 57%, #ededed 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(57%,#f0f0f0), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* W3C */
+  background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
 }
 
@@ -68,7 +78,7 @@ input[type=submit]:focus,
 input.button:focus,
 button:focus,
 a.button:focus {
-	border:1px solid #CCC;
+	border:1px solid #bbb;
 }
 
 /* active */
@@ -76,8 +86,8 @@ input[type=submit]:active,
 input.button:active,
 button:active,
 a.button:active {
+  backgroun:#ededed;
   position: relative;
-  top: 1px;
   -webkit-box-shadow: inset 0 1px 2px rgba(255,255,255,.2);
   -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
   box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
@@ -90,6 +100,7 @@ a.button.disabled {
   cursor:default;
   color:#888;
   background:white;
+  border:1px solid #DDD;
 }
 
 /* inactive */
@@ -105,6 +116,85 @@ a.button.disabled:active {
   -moz-box-shadow:0 0 0;
   box-shadow:0 0 0;
   top:0;
-  border:1px solid #CCC;
 }
 
+/* toggle selected */
+.toggle.button.selected {
+	background:#E0E0E0;
+	-webkit-box-shadow: inset 0 1px 2px rgba(255,255,255,.2);
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+	border:1px solid #bbb;
+}
+
+/* duo */
+.button.duo:nth-child(1) {
+  margin-right:0;
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius:0;
+  -moz-border-radius-topright:0;
+  -moz-border-radius-bottomright:0;
+  border-top-right-radius:0;
+  border-bottom-right-radius:0;
+}
+.button.duo:nth-child(2) {
+  margin-left:0;
+	border-left:0;
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius:0;
+  -moz-border-radius-topleft:0;
+  -moz-border-radius-bottomleft:0;
+  border-top-left-radius:0;
+  border-bottom-left-radius:0;
+}
+
+/* dropdown */
+.dropdown {
+	float:left;
+}
+
+.dropdown .button.pressed {
+	background:#FFF;
+	z-index:999;
+	border-bottom:0;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius:0;
+  -moz-border-radius-bottomright:0;
+  -moz-border-radius-bottomleft:0;
+  border-bottom-right-radius:0;
+  border-bottom-left-radius:0;
+}
+.dropdown-content {
+	border:1px solid #CCC;
+	background:#FFF;
+	float:left;
+	position:absolute;
+	min-width:10em;
+	z-index:998;
+}
+.button + .dropdown-content {
+  margin-top:1.99em;
+	margin-left:2px;
+	padding-top:.3em;
+}
+.button + .dropdown-content.right {
+	right:0;
+	margin-right:7px;
+}
+.dropdown-content li a {
+	display:block;
+	min-width:9em;
+	padding:0.1em .5em;
+}
+.dropdown-content li a:hover {
+	background:#EFEFEF;
+}
+.dropdown-content li a.separator {
+	border-bottom:1px solid #CCC;
+}
+.dropdown-content {
+	display:none;
+}
+.dropdown-content.visible {
+	display:block;
+}

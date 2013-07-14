@@ -16,9 +16,9 @@
 	</div>
 	<div class="col2 search-wrapper">
 		<form class="search">
-			<div class="input text required">
+			<div class="input search required">
 				<label for="search">Search</label>
-				<input id="search" class="required js_search" maxlength="50" type="text" value="search">
+				<input id="search" class="required js_search" maxlength="50" type="search" placeholder="search">
 			</div>
 			<button type="text" value="search">
 				<i class="icon search"></i>

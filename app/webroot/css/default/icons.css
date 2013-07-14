@@ -23,28 +23,49 @@
   font-weight: normal;
   font-style: normal;
 }
-.icon-inline,
+
 .icon:before,
 .icon.social:before {
   font-family: "entypo";
-  font-size:2em;
+  font-size:2em; /* 28px */
 	line-height:1.1em;
-  height:1em;
+  height:1.1em;
   font-weight: normal;
   font-style: normal;
   position:absolute;
-	left:.5em;
+	left:.357em;
 	top:0;
   -webkit-font-smoothing: antialiased;
 	width:1em;
 }
-.icon + .text {
-  margin-left:1em;
+.icon.after:before {
+	left:auto;
+	right:.286em;
+	top:0;
 }
-
-.icon-inline.social,
 .icon.social:before {
   font-family: "entypo-social";
+}
+
+/* sometimes they are too small */
+.icon.big:before {
+	font-size:3em;
+	margin:0;
+	top:-0.2em;
+	left:0.1em;
+}
+
+/* text / no text positioning */
+.icon + .text,
+.icon + span {
+  margin-left:1.357em;
+}
+span + .icon  {
+  margin-right:1.357em;
+}
+.button.no-text {
+	padding-right:.357em;
+	width:2em;
 }
 
 /* actions */
@@ -76,11 +97,28 @@
   content: '\E003';
 }
 .icon.fav:before  {
-  content: '\E2606';
+  content: '\2605';
 }
 .icon.unfav:before  {
-  content: '\E2605';
+  content: '\2606';
 }
+.icon.cog:before  {
+  content: '\2699';
+}
+.icon.arrowdown:before  {
+  content: '\25BE';
+}
+
+.icon.layout {
+	font-size:1.07em;
+}
+.icon.layout.grid:before  {
+  content: '\E005';
+}
+.icon.layout.box:before  {
+  content: '\268F';
+}
+
 /* social */
 .icon.social.facebook:before {
   content: '\f30e';

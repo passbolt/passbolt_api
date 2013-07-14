@@ -51,27 +51,41 @@
   display:none;
   width:10em;
 }
-.search input[type=text] {
+.search input[type=search] {
   float:left;
   width:70%;
-  margin-right:.5em;
+  margin-right:.25em;
 }
 .search .submit {
   float:left;
 }
 .search button {
-  background: -moz-linear-gradient(top, #ffffff 0%, #f0f0f0 57%, #ededed 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(57%,#f0f0f0), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #ffffff 0%,#f0f0f0 57%,#ededed 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
-	height:2.3em;
-  min-width:4.8em;
+ 	height:2.2em;
+  min-width:4em;
 }
 .search button .icon {
 	font-size:1.1em;
+}
+.search button .icon:before {
+	margin-top:-0.05em;
+}
+
+/* fallback placeholder */
+.placeholder {
+	color: #bbb;
+}
+/* webkit placeholder */
+::-webkit-input-placeholder {
+	color: #bbb;
+}
+/* moz placeholder */
+:-moz-placeholder {
+	color: #bbb;
+}
+/* remove webkit search input decoration and cancel button */
+input[type="search"]::-webkit-search-decoration, 
+input[type="search"]::-webkit-search-cancel-button {
+	display: none;
 }
 
 /* tag */
@@ -93,6 +107,18 @@
   background:#EEE;
 	overflow: hidden;
 }
+.user.profile, /*look like a button */
+.user.profile .more {
+	border-left:1px dotted #CCC;
+  background-color: #f5f5f5;
+	background-image: -moz-linear-gradient(top, #fafafa, #ededed);
+	background-image: -ms-linear-gradient(top, #fafafa, #ededed);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#ededed));
+	background-image: -webkit-linear-gradient(top, #fafafa, #ededed);
+	background-image: -o-linear-gradient(top, #fafafa, #ededed);
+	background-image: linear-gradient(top, #fafafa, #ededed);
+}
+
 /* fixed fluid fixed layout */
 .user.profile .left-cell, 
 .user.profile .right-cell, 
@@ -142,10 +168,7 @@
 	float:left;
 	display:inline-block;
 }
-.user.profile .more {
-	background:#EEE;
-	border-left:1px dotted #CCC;
-}
+
 .user.profile .more a {
 	background:blue;
 	display:block;
@@ -171,7 +194,7 @@ h1.workspace-title {
 
 /* actions */
 .actions-wrapper {
-  margin-top:.35em;
+  margin-top:.5em;
 }
 .actions button {
   font-size:.875em;
@@ -180,4 +203,7 @@ h1.workspace-title {
   display:inline;
 }
 .actions icons {
+}
+.actions.secondary {
+	float:right;
 }

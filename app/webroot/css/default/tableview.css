@@ -43,6 +43,10 @@
 	width:20px;
 	max-width:20px;
 }
+.main.panel table .s2-cell {
+	width:40px;
+	max-width:40px;
+}
 .main.panel table .m-cell {
 	width:10em;
 	max-width:10em;
@@ -55,4 +59,10 @@
 .main.panel table tbody tr:hover {
 	background:#ffffcc;
 }
-
+.main.panel table .checkbox label {
+	display:none;
+}
+.main.panel table .checkbox input{
+	border:1px solid blue;
+	margin:0; padding:0;
+}

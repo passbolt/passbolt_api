@@ -2,12 +2,16 @@
  * Page layout
  */
 .page,
+.panel,
 .header,
+.footer {
+	width:100%;
+}
+.page,
 .panel,
 .footer {
 	position:absolute;
 	overflow:auto;
-	width:100%;
 }
 .header,
 .footer {
@@ -45,7 +49,7 @@
   padding:0;
 }
 .panel,
-.col1, .col2, .col3 {
+.col1, .col2, .col3, .col2_3 {
 	position:absolute;
 }
 .col1,
@@ -64,6 +68,10 @@
 .panel.right {
 	width:24%; 
 	left:75%;
+}
+.col2_3 {
+	width:84.5%; 
+	left:15%;
 }
 .panel.middle {
 	overflow:hidden;

@@ -1,0 +1,112 @@
+.dialog-wrapper {
+	position:absolute;
+	width:100%;
+	height:100%;
+	z-index:999;
+	background:rgba(255,255,255,0.9);
+}
+.dialog {
+	width:30%;
+	border:1px solid #CCC;
+	background:#FFF;
+	margin:auto;
+	margin-top:5%;
+  padding:1.5% 2% 2% 2%;
+}
+
+/* header */
+.dialog .dialog-header h2 {
+	margin:0;
+}
+.dialog .dialog-header .close:before {
+	position:relative;
+	float:right;
+	margin:-1.5em -0.3em 0 0;
+	width:1em;
+	text-align:center;
+}
+.dialog .dialog-header .close {
+}
+
+/* inputs */
+.dialog input[type=text] {
+	width:89%;
+}
+
+/* tabs */
+.dialog .tabs {
+	border-bottom:1px solid #CCC;
+	clear:both;
+	float:left;
+	width:100%;
+	margin:1em 0;
+}
+.dialog .tabs li {
+	display:inline;
+	float:left;
+}
+.dialog .tabs li a {
+	float:left;
+	display:inline-block;
+	padding:.25em 1.5em;
+}
+.dialog .tabs li a.selected {
+	border:1px solid #CCC;
+	border-bottom:1px solid #FFF;
+	margin-bottom:-1px;
+}
+.dialog .dialog-tabs-content {
+	padding:10px;
+}
+
+.password-actions {
+	display:none;
+}
+.submit-wrapper {
+	margin-top:1em;
+	
+}
+
+/* complexity and progress bar */
+.dialog .progress {
+	width:80%;
+	border:1px solid #CCC;
+	height:7px;
+	display:block;
+	clear:both;
+}
+.dialog .progress-bar {
+	height:5px;
+	margin:1px;
+	display:block;
+}
+
+.dialog .complexity-text {
+	float:right;
+	clear:right;
+	display:none;
+}
+.dialog .password-complexity.very-bad .progress-bar {
+	background:#000;
+	width:10%;
+}
+.dialog .password-complexity.bad .progress-bar {
+	background:#ef2929;
+	width:20%;
+}
+.dialog .password-complexity.not-so-good .progress-bar {
+	background:#f57900;
+	width:40%;
+}
+.dialog .password-complexity.fair .progress-bar {
+	background:#fce94f;
+	width:60%;
+}
+.dialog .password-complexity.good .progress-bar {
+	background:#73d216;
+	width:80%;
+}
+.dialog .password-complexity.very-good .progress-bar {
+	background:#4e9a06;
+	width:100%;
+}
