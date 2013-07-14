@@ -3,6 +3,7 @@ steal(
 	'mad/controller/componentController.js',
 	'mad/view/component/tree.js',
 	'mad/object/map.js',
+	'mad/error/exception.js',
 	'mad/view/template/component/tree.ejs',
 	'mad/view/template/component/tree/treeItem.ejs'
 ).then(function () {

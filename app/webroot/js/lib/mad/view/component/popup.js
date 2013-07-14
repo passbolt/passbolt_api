@@ -8,20 +8,24 @@ steal(
 	 */
 	mad.view.View.extend('mad.view.component.Popup', /** @static */ {
 
-	}, /** @prototype */ {
+		'defaults': {}
 
+	}, /** @prototype */ {
+		
 		/**
-		 * Render the popup
-		 * @see {mad.view.View}
+		 * Override parent function, to position the component 
+		 * @return {void}
 		 */
-		'render': function (options) {
-			var returnValue = this._super(options);
+		'insertInDom': function (html) {
+			var returnValue = this._super(html);
 			// position the popup on the center of the screen
-			this.element.find('.js_popup_box').position({
+			$('.js_popup_box', this.element).position({
+				of: this.element,
 				my: "center center",
-				at: "center center",
-				of: this.element
+				at: "center center"
+				// collision: "none none"
 			});
+			
 			return returnValue;
 		},
 
@@ -37,16 +41,6 @@ steal(
 		 */
 		'.js_popup_close click': function (el, ev) {
 			this.element.remove();
-		},
-		
-		/**
-		 * listen when the user click on the escape key
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		' keypress': function (el, ev) {
-			// console.log(ev.which);
 		}
 
 	});

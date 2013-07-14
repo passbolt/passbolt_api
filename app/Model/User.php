@@ -264,6 +264,17 @@ class User extends AppModel {
 						)
 					);
 				break;
+        case 'index':
+          $conditions = array(
+            'conditions' => array()
+          );
+          if (isset($data['keywords'])) {
+            $keywords = explode(' ', $data['keywords']);
+            foreach ($keywords as $keyword) {
+              $conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
+            }
+          }
+        break;
 				default:
 					$conditions = array(
 						'conditions' => array()
@@ -297,7 +308,7 @@ class User extends AppModel {
 			//case 'forgotPassword':
 			case User::ANONYMOUS:
 			case 'userView':
-			case 'userIndex':
+			case 'index':
 			default:
 				$fields = array(
 					'fields' => array(

@@ -6,7 +6,7 @@ steal(
 
 	/*
 	 * @class passbolt.controller.component.PasswordsActionsMenuController
-	 * @inherits mad.controller.component.TreeController
+	 * @inherits mad.controller.component.ComponentController
 	 * @parent index 
 	 * 
 	 * Our password workspace menu of actions.

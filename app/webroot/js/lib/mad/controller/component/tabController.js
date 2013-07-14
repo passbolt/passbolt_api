@@ -69,9 +69,7 @@ steal(
 			var $component = this.view.add(Class, options);
 			// instantiate the component
 			var component = new Class($component, options);
-			// add the component to the internal list
-			this._components[options.id] = component;
-			return component;
+			return this._super(component);
 		}
 	});
 

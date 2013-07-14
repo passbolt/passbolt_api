@@ -22,7 +22,7 @@ steal(
 		 * @type {Object}
 		 */
 		attributes: {
-			'label': 'string',
+			'name': 'string',
 			'type': 'string',
 			'modelReference': 'string',
 			'multiple': 'string'

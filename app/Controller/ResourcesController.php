@@ -80,7 +80,7 @@ class ResourcesController extends AppController {
 			$data['keywords'] = $keywords;
 		}
 
-		$this->Resource->bindModel(array('hasOne' => array('CategoryResource')));
+		$this->Resource->bindModel(array('hasMany' => array('CategoryResource')));
 		$options = $this->Resource->getFindOptions('index', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
 

@@ -10,6 +10,35 @@ steal(
 	can.Construct('mad.helper.HtmlHelper', /** @static */ {
 
 		/**
+		 * Position an element in absolute
+		 * @param {HTMLElement} el The element to position
+		 * @param {array} options Array of options
+		 * @param {array} options.mouse (optional) Position the element functions of a mouse position
+		 * @param {string} options.mouse.x (At x pixels from the left first relative element found
+		 * @param {string} options.mouse.y At y pixels from the top first relative element found
+		 * @param {array} options.reference (optional) Position the element functions of a reference element
+		 * @param {HTMLElement} options.reference.element The reference element
+		 * @param {array} options.reference.my As per Jquery position plugin, the target corner of my element ("top left" by instance)
+		 * @param {array} option.reference.at As per Jquery position plugin, the target corner of the reference element ("bottom left" by instance)
+		 * @return {void}
+		 */
+		'position': function(el, options) {
+			if (typeof options.mouse != 'undefined') {
+				el.css({
+					'position': 'absolute',
+					'left': options.mouse.x + 'px',
+					'top': options.mouse.y + 'px'
+				});
+			} else if(typeof options.reference != 'undefined') {
+				el.position({
+					'my': options.reference.my,
+					'at': options.reference.at,
+					'of': options.reference.of
+				});
+			}
+		},
+
+		/**
 		 * Insert an html content functions of a given position and a reference element
 		 * @param {HTMLElement} refElement The reference element.
 		 * @param {string} position The position about the reference element. The available

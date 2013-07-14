@@ -1,4 +1,5 @@
 steal(
+	'app/controller/component/permissionsController.js'
 	// 'app/view/template/component/resourceActionsTab.ejs'
 ).then(function () {
 
@@ -26,46 +27,27 @@ steal(
 		
 		'afterStart': function() {
 			var self = this;
+			
+			// Instantiate the menu which will rule the tab container
 			this.menu = new mad.controller.component.MenuController($('#js_resource_actions_tab_menu'));
 			this.menu.start();
-			
 			var menuItems = [
-				new mad.model.Action({
-					'id': uuid(),
-					'label': 'edit',
-					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_resource_create');
-					}
-				}), new mad.model.Action({
-					'id': uuid(),
-					'label': 'share',
-					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_resource_create');
-					}
-				}), new mad.model.Action({
-					'id': uuid(),
-					'label': 'organize',
-					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_resource_create');
-					}
-				}), new mad.model.Action({
-					'id': uuid(),
-					'label': 'logs',
-					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_category_create');
-					}
-				})
+				new mad.model.Action({ 'id': uuid(), 'label': __('edit'), 'action': function() { self.container.enableTab('js_resource_create'); } }),
+				new mad.model.Action({ 'id': uuid(), 'label': __('share'), 'action': function() { self.container.enableTab('js_permission'); } }),
+				new mad.model.Action({ 'id': uuid(), 'label': __('organize'), 'action': function() { self.container.enableTab('js_resource_create'); } }),
+				new mad.model.Action({ 'id': uuid(), 'label': __('logs'), 'action': function() { self.container.enableTab('js_resource_create'); } })
 			];
 			this.menu.load(menuItems);
 			
-			// Instantiate workspaces container tabs element to the app 
+			// Instantiate tab container which will contain the resource's tools
 			this.container = new mad.controller.component.TabController($('#js_resource_actions_tab_container'));
 			this.container.start();
 
-			var cp1 = this.container.addComponent(passbolt.controller.form.resource.CreateFormController, {
+			// Add the edition form controller to the tab
+			var editFormCtl = this.container.addComponent(passbolt.controller.form.resource.CreateFormController, {
 				'id': 'js_resource_create',
 				'data': this.options.resource,
-				// 'state': 'hidden',
+				'state': 'hidden',
 				'callbacks' : {
 					'submit': function (data) {
 						self.options.resource.attr(data['passbolt.model.Resource'])
@@ -74,39 +56,17 @@ steal(
 					}
 				}
 			});
-			cp1.start();
-			cp1.load(this.options.resource);
-		},
-		
-		// Constructor like
-		'init': function (el, options) {
-			this._super(el, options);
+			editFormCtl.start();
+			editFormCtl.load(this.options.resource);
 			
-			
-return;
-			// Add the app menu controller
-			this.menuCtl = new mad.controller.component.MenuController($('#js_menu'));
-			this.menuCtl.render();
-			this.menuCtl.initMenuItems();
-			
-			// Add a workspaces container tabs element to the app 
-			this.workspacesCtl = new mad.controller.component.TabController($('#js_workspaces_container'));
-			this.workspacesCtl.render();
-
-			// Add the password workspace component to the workspaces container
-			// @todo addComponent is our factory, maybe more proper to do
-			var passwordWk = this.workspacesCtl.addComponent(passbolt.controller.PasswordWorkspaceController, {
-				'id': 'js_passbolt_passwordWorkspace_controller',
-				'label': 'password'
+			// Add the permission controller to the tab
+			var permCtl = this.container.addComponent(passbolt.controller.component.PermissionsController, {
+				'id': 'js_permission',
+				'resource': this.options.resource
+				// 'state': 'hidden'
 			});
-			var peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
-				'id': 'js_passbolt_peopleWorkspace_controller',
-				'label': 'people'
-			});
-			// select the default tab
-			this.workspacesCtl.enableTab('js_passbolt_passwordWorkspace_controller');
-			
-			this._super(el, options);
+			permCtl.start();
+			permCtl.load(this.options.resource);
 		},
 		
 		/**

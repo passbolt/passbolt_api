@@ -32,6 +32,45 @@ steal(
 		'validateRules': {},
 
 		/**
+		 * Get deep attribute value(s) functions of a string which defines the full path
+		 * of the attribute. By instance : ns.MyModel.MySubmodel.myAttribute
+		 * @param {string} modelRef A string which defines the full path of the attribute
+		 * @param {mad.model.Model} instance The instance to work on it
+		 * @return {mixed}
+		 */
+		'getModelAttributeValue': function(modelRef, instance) {
+			/*
+			 * Get models referenced by the model reference
+			 * by instance ns.model.submodels.attribute, you will get an array of 3 mad.model.Attribute
+			 * object which will carry data about the reference models
+			 */
+			var models = mad.model.Model.getModelAttributes(modelRef),
+				// Path of the attribute in the parent model
+				attrPath = '',
+				// Attribute name
+				attrName = models[models.length - 1].name,
+				// Value of the attribute
+				returnValue = null;
+
+			// build the attribute path
+			for (var i = 1; i<models.length-1; i++) {
+				attrPath += attrPath.length ? '.' + models[i].name : models[i].name;
+			}
+			// extract the model attribute
+			var modelAttr = can.getObject(attrPath, instance);
+			// if multiple association
+			if (modelAttr.length) {
+				returnValue = [];
+				can.each(modelAttr, function(attr, i) {
+					returnValue.push(attr[attrName]);
+				});
+			} else {
+				returnValue = modelAttr[attrName];
+			}
+			return returnValue;
+		},
+
+		/**
 		 * Check if an attribute is multiple or not. A multiple attribute is by definition
 		 * a multiple association to another model
 		 * @param {string} attrName The name of the attribute to test
@@ -59,22 +98,30 @@ steal(
 		},
 
 		/**
-		 * Extract the models found in given string following the definition of the 
-		 * model layer. Return an array formated like :
-@codestart
+		 * Extract the model attributes functions of the given string following the definition of the 
+		 * models and submodels.
+		 * By instance for ns.Model.Submodels.attribute you will get :
+		 * @codestart
 [
 	{
-		model: {mad.net.Model},
-		label: {string},
-		multiple: {boolean}
-	},
+		name: ns.Model,
+		label: 'ns.Model',
+		multiple: false
+	}, 
 	{
-		...
+		name: ns.SubModels,
+		label: 'subModels',
+		multiple: true
+	}, 
+	{
+		name: attribute,
+		multiple: false
 	}
 ]
-@codeend
+		 * @codeend 
+		 * 
 		 * @param {string} str The string to work on
-		 * @return {array}
+		 * @return {array} Array of mad.model.Attribute
 		 */
 		'getModelAttributes': function (str) {
 			var returnValue = [],
@@ -138,7 +185,6 @@ steal(
 		 * [mad.model.Model.model].
 		 */
 		'models': function (data) {
-			//console.log('call models ', data);
 			// if the provided data are formated as ajax server response
 			if (mad.net.Response.isResponse(data)) {
 				return can.Model.models.call(this, mad.net.Response.getData(data));

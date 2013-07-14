@@ -34,6 +34,15 @@ steal(
 		},
 	}, /** @prototype */ {
 		
+		'format': function(format) {
+			switch(format) {
+				case 'short':
+					console.log(this);
+					return 'can edit';
+				break;
+			}
+		},
+		
 		'destroy': function () {
 			// @todo unbind the passbolt.model.Category destroyed event
 		}

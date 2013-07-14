@@ -53,36 +53,53 @@ steal(
 		},
 
 		/**
-		 * Load the form with the instance' data
-		 * @param {mad.model.Mode} instance The instance to use to populate the form
+		 * Load the form with the given data
+		 * @param {mixed} data The data to load the form element with
 		 * @return {void}
 		 */
-		'load': function (instance) {
-			if (!(instance instanceof mad.model.Model)) {
-				throw new mad.error.WrongParametersException('instance', mad.model.Model.fullName);
-			}
-
+		'load': function (data) {
+			// load each element with the given data
 			for (var eltId in this.elements) {
-				// get models associated to the field (by instance passbolt.model.Resource / Category / id)
-				var models = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference());
-				var attrPath = '';
-				var attrName = models[models.length - 1].name
-				for (var i = 1; i<models.length-1; i++) {
-					attrPath += attrPath.length ? '.' + models[i].name : models[i].name;
-				}
-				var modelAttr = can.getObject(attrPath, instance);
-				var leafValue = null;
-				// if multiple association
-				if (modelAttr.length) {
-					leafValue = [];
-					can.each(modelAttr, function(attr, i) {
-						leafValue.push(attr[attrName]);
-					});
+				/* 
+				 * the form element is driven by an associated model reference :
+				 * - The validation of the field will be automatically operated through the model reference
+				 *   validation rule
+				 * - The form will return its data formated following the associated model reference, by instance
+				 *   for the associated model mad.model.MyModel.MyAssociatedModel.myFieldName, the form will return
+				 *   {
+				 * 	   mad.model.MyModel: {
+				 * 	     MyAssociatedModel: {
+				 * 	       myFieldName: MIXED // VALUE OF THE FORM ELEMENT
+				 *       }
+				 *     }
+				 *   }
+				 */
+				var eltModelRef = this.elements[eltId].getModelReference(),
+					value = null;
+				
+				// if a model reference has been associated to the form element
+				if(eltModelRef != null) {
+					// data has to be a model instance
+					if (!(data instanceof mad.model.Model)) {
+						throw new mad.error.WrongParametersException('data', mad.model.Model.fullName);
+					}
+					value = mad.model.Model.getModelAttributeValue(eltModelRef, data);
 				} else {
-					leafValue = modelAttr[attrName];
+					value = data[eltId];
 				}
-				this.elements[eltId].setValue(leafValue);
+				
+				// set the element value
+				this.elements[eltId].setValue(value);
 			}
+		},
+
+		/**
+		 * Get an element
+		 * @param {string} eltId The element Id
+		 * @return the form element
+		 */
+		'getElement': function(eltId) {
+			return this.elements[eltId];
 		},
 
 		/**
@@ -155,68 +172,79 @@ steal(
 
 			// Get the form elements value
 			for (var eltId in this.elements) {
+				
 				// Get the model references of the current element
-				var fieldAttrs = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference()),
-					// the elt value
-					eltValue = this.elements[eltId].getValue(),
-					// the attr name
-					attrName = fieldAttrs[fieldAttrs.length - 1].name;
-
-				// if not exists, create the top model reference 
-				if (!returnValue[fieldAttrs[0].name]) {
-					returnValue[fieldAttrs[0].name] = {};
-				}
-
-				// if there is only 2 field attributes and the last one is a scalar attribute
-				if (fieldAttrs.length<=2 && fieldAttrs[fieldAttrs.length-1].modelReference == null) {
-					returnValue[fieldAttrs[0].name][attrName] = eltValue;
-				}
-				// if sub models
-				else {
-					var leafValue = null,
-						subModelPath = '';
-
-					// if the last field attribute is a reference to a model
-					// no extra transformation, the leaf value is equal to the elt value
-					// the developper as to take care about what the form element is
-					// returning
-					if (fieldAttrs[fieldAttrs.length-1].modelReference!=null) {
-						leafValue = eltValue;
-						// extract the sub models path
-						subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
-							.slice(1, fieldAttrs.length)
-							.join('.');
-						// construct the return format functions of the sub models references
-						can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
-
-					// else the last field attribute is a scalar attribute
-					} else {
-						var leafSubModelRef = fieldAttrs[fieldAttrs.length-2];
-
-						// format the element value following the leaf model multiplicity
-						// * muliplicity
-						if (leafSubModelRef.multiple) {
-							eltValue = can.isArray(eltValue) ? eltValue : [eltValue];
-							leafValue = [];
-							can.each(eltValue, function (val, i) {
-								var obj = {};
-								obj[attrName] = val;
-								leafValue.push(obj);
-							});
-						} else {
-							// single multiplicity
-							leafValue = {};
-							leafValue[attrName] = eltValue;
-						}
-
-						// extract the sub models path
-						subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
-							.slice(1, fieldAttrs.length-1)
-							.join('.');
-
-						// construct the return format functon of the sub models references
-						can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
+				var eltModelRef = this.elements[eltId].getModelReference(),
+					// the element value
+					eltValue = this.elements[eltId].getValue();
+					
+				// If a model reference is associated to the current form element
+				if (eltModelRef != null) {
+					var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
+						// the field attribute name
+						attrName = fieldAttrs[fieldAttrs.length - 1].name;
+					
+						// if not exists, create the top model reference 
+					if (!returnValue[fieldAttrs[0].name]) {
+						returnValue[fieldAttrs[0].name] = {};
 					}
+		
+					// if there is only 2 field attributes 
+					// and the last one is a scalar attribute
+					if (fieldAttrs.length<=2 && fieldAttrs[fieldAttrs.length-1].modelReference == null) {
+						returnValue[fieldAttrs[0].name][attrName] = eltValue;
+					}
+					// if sub models
+					else {
+						var leafValue = null,
+							subModelPath = '';
+		
+						// if the last field attribute is a reference to a model
+						// no extra transformation, the leaf value is equal to the elt value
+						// the developper as to take care about what the form element is
+						// returning
+						if (fieldAttrs[fieldAttrs.length-1].modelReference!=null) {
+							leafValue = eltValue;
+							// extract the sub models path
+							subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
+								.slice(1, fieldAttrs.length)
+								.join('.');
+							// construct the return format functions of the sub models references
+							can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
+		
+						// else the last field attribute is a scalar attribute
+						} else {
+							var leafSubModelRef = fieldAttrs[fieldAttrs.length-2];
+		
+							// format the element value following the leaf model multiplicity
+							// * muliplicity
+							if (leafSubModelRef.multiple) {
+								eltValue = can.isArray(eltValue) ? eltValue : [eltValue];
+								leafValue = [];
+								can.each(eltValue, function (val, i) {
+									var obj = {};
+									obj[attrName] = val;
+									leafValue.push(obj);
+								});
+							} else {
+								// single multiplicity
+								leafValue = {};
+								leafValue[attrName] = eltValue;
+							}
+		
+							// extract the sub models path
+							subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
+								.slice(1, fieldAttrs.length-1)
+								.join('.');
+		
+							// construct the return format functon of the sub models references
+							can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
+						}
+					}
+				}
+					// else if the element is not associated to a model attribute
+				else {
+					returnValue[eltId] = eltValue;
 				}
 			}
 
@@ -237,23 +265,30 @@ steal(
 		 */
 		'validateElement': function (element) {
 			var returnValue = true,
-				// the model references of the element
-				fieldAttrs = mad.model.Model.getModelAttributes(element.getModelReference()),
-				// the leaf model reference
-				model = fieldAttrs[fieldAttrs.length-2].modelReference,
-				// the attribute name
-				attrName = fieldAttrs[fieldAttrs.length-1].name,
+				// the element value is driven by an associated model
+				eltModelRef = element.getModelReference(),
 				// the validation result
 				validationResult = true,
 				// the element's id
 				eltId = element.getId();
 
-			// validate the attribute value
-			if (model.validateAttribute) {
-				var value = element.getValue();
-				validationResult = model.validateAttribute(attrName, element.getValue());
+			// if the element is associated to a model reference
+			if (eltModelRef != null) {
+				// the model references of the element
+				var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
+					// the leaf model reference
+					model = fieldAttrs[fieldAttrs.length-2].modelReference,
+					// the attribute name
+					attrName = fieldAttrs[fieldAttrs.length-1].name;
+
+				// validate the attribute value
+				if (model.validateAttribute) {
+					var value = element.getValue();
+					validationResult = model.validateAttribute(attrName, element.getValue());
+				}
 			}
 
+			// the validation of the element failed
 			if(validationResult !== true) {
 				// switch the state of the element to error
 				this.elements[eltId]
@@ -265,6 +300,8 @@ steal(
 						.setState('error');
 				}
 				returnValue = false;
+				
+			// otherwise the validation is successful
 			} else {
 				this.elements[eltId]
 					.setState('success');

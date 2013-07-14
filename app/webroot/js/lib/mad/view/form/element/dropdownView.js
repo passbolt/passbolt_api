@@ -21,6 +21,14 @@ steal(
 	}, /** @prototype */ {
 		
 		/**
+		 * Get the value of the dropdown form element
+		 * @return {mixed} The value of the component
+		 */
+		'getValue': function (value) {
+			return this.element.val();
+		},
+		
+		/**
 		 * Set the value of the dropdown form element
 		 * @param {mixed} value The value to set
 		 * @return {void}

@@ -11,11 +11,12 @@ function throttleCountdown() {
 }
 
 function throttleInit() {
+    //alert("test");
 	var d = new Date();
 	var now = d.getTime() / 1000;
 	var loginAllowed = $("#nextLogin").val();
 	var diff = loginAllowed - now;
-	if(diff > 0) {
+	if(diff >= 0) {
 		$('.auththrottler .countdown').text(parseInt(diff));
 		setTimeout(throttleCountdown, 1000);
 		$('.login.form input[type=submit]').attr("disabled", "disabled").addClass('disabled');

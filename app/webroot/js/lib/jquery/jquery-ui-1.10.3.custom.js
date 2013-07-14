@@ -1,13 +1,8 @@
-/*!
- * jQuery UI Position 1.10.3
- * http://jqueryui.com
- *
- * Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- *
- * http://api.jqueryui.com/position/
- */
+/*! jQuery UI - v1.10.3 - 2013-05-16
+* http://jqueryui.com
+* Includes: jquery.ui.position.js
+* Copyright 2013 jQuery Foundation and other contributors Licensed MIT */
+
 (function( $, undefined ) {
 
 $.ui = $.ui || {};

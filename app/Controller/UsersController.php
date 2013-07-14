@@ -48,11 +48,23 @@ class UsersController extends AppController {
  * @access public
  */
 	public function index() {
-		$o = $this->User->getFindOptions('userIndex', User::get('Role.name'));
-		$data = $this->User->find('all', $o);
+	  $keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
+    // $groupsId = isset($this->request->query['groups_id']) && !empty($this->request->query['groups_id'])
+      // ? explode(',', $this->request->query['groups_id'])
+      // : array();
+    
+    
+    $data = array();
+    // if keywords provided build the model request with
+    if (!empty($keywords)) {
+      $data['keywords'] = $keywords;
+    }
+     
+		$o = $this->User->getFindOptions('index', User::get('Role.name'), $data);
+		$returnVal = $this->User->find('all', $o);
 		if (!empty($data)) {
 			$this->Message->success();
-			$this->set('data', $data);
+			$this->set('data', $returnVal);
 		} else {
 			$this->Message->notice(__('There is no user to display'));
 		}

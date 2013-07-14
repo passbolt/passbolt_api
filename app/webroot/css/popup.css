@@ -16,12 +16,12 @@
   opacity: 0.55;
 }
 .popup_box { 
-  position: absolute; 
+  position: absolute;
   box-shadow: 0 4px 16px rgba(0, 0, 0, .2); 
   background: #FFF; 
   background-clip: padding-box; 
   border: 1px solid #ACACAC; 
-  outline: 0; 
+  /*outline: 0; */
 }
 .popup_header {
   padding:3px 14px; 

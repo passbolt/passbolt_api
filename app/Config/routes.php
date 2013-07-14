@@ -29,7 +29,8 @@
  */
  	Router::parseExtensions('json');
 	Router::mapResources('dictionaries');
-	Router::mapResources('users');
+  Router::mapResources('users');
+  Router::mapResources('groups');
 	Router::mapResources('categories');
 	Router::mapResources('resources');
 	Router::mapResources('secrets');

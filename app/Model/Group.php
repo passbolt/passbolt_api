@@ -70,6 +70,16 @@ class Group extends AppModel {
 				);
 			break;
 			case 'index':
+          $conditions = array(
+            'conditions' => array()
+          );
+          if (isset($data['keywords'])) {
+            $keywords = explode(' ', $data['keywords']);
+            foreach ($keywords as $keyword) {
+              $conditions['conditions']["AND"][] = array('Group.name LIKE' => '%' . $keyword . '%');
+            }
+          }
+      break;
 			default:
 				$conditions = array(
 					'conditions' => array()

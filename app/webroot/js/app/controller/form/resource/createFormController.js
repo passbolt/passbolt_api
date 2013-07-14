@@ -66,7 +66,7 @@ steal(
 				}).start(),
 				new mad.form.FeedbackController($('#js_field_description_feedback'), {}).start()
 			);
-		},
+		}
 
 	});
 });
