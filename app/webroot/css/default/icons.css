@@ -33,7 +33,7 @@ a.no-text {
   font-weight: normal;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
-	width:1em;
+
 	padding:0;
 	margin:0;
   height:1em;
@@ -50,6 +50,7 @@ button .icon:before,
 .button .icon:before,
 .button .icon.social:before {
 	left:.357em;
+	width:1em;
   height:1.1em;
 	line-height:1.1em;
 	top:0;
