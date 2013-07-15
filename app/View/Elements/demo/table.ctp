@@ -24,12 +24,18 @@
 	<table cellspacing="0">
 		<thead>
 			<tr>
-				<th class="selections s2-cell" collspan="2">
-					<div class="checkbox">
+				<th class="selections s-cell">
+					<div class="input checkbox">
 						<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all">
 						<label for="checkbox-select-all">select all</label>
 					</div>
 				</th>
+				<td class="favorites s-cell">
+					<a href="#" class="no-text">
+						<i class="icon fav"></i>
+						<span>fav</span>
+					</a>
+				</td>
 				<th class="resource m-cell"><a href="#"><span>Resource</span></a></th>
 				<th class="username m-cell"><a href="#"><span>Username</span></a></th>
 				<th class="uri l-cell"><a href="#"><span>URI</span></a></th>
@@ -44,15 +50,20 @@
 <div class="tableview-content scroll">
 	<table cellspacing="0">
 		<tbody>
-<?php foreach($secrets as $secret): ?>
+<?php $i = 0; foreach($secrets as $secret): ++$i; ?>
 			<tr>
 				<td class="selections s-cell">
-					<div class="checkbox">
+					<div class="input checkbox">
 						<input type="checkbox" name="select" id="checkbox-50d77ffa-7278-41fc-a4bb-1b63d7a10fce">
 						<label for="checkbox-50d77ffa-7278-41fc-a4bb-1b63d7a10fce">select <?php echo $secret['name']; ?></label>
 					</div>
 				</td>
-				<td class="favorites s-cell"><a href="#"><span>☆</span></a></td>
+				<td class="favorites s-cell">
+					<a href="#" class="no-text">
+						<i class="icon <?php if($i%5) echo 'fav'; else echo 'unfav';?>"></i>
+						<span><?php if($i%5) echo 'fav'; else echo 'unfav';?></span>
+					</a>
+				</td>
 				<td class="resource m-cell"><span><?php echo $secret['name']; ?></span></td>
 				<td class="username m-cell"><a href="#"><span>Remy</span></a></td>
 				<td class="uri l-cell"><a href="#"><span><?php echo $secret['uri']; ?></span></a></td>

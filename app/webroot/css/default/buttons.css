@@ -152,7 +152,6 @@ a.button.disabled:active {
 .dropdown {
 	float:left;
 }
-
 .dropdown .button.pressed {
 	background:#FFF;
 	z-index:999;
@@ -184,10 +183,13 @@ a.button.disabled:active {
 .dropdown-content li a {
 	display:block;
 	min-width:9em;
-	padding:0.1em .5em;
+	padding:.313em .626em; /* 5px */
+	font-size:.938em;
 }
 .dropdown-content li a:hover {
 	background:#EFEFEF;
+	text-decoration:none;
+	color:#000;
 }
 .dropdown-content li a.separator {
 	border-bottom:1px solid #CCC;

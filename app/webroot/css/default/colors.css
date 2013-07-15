@@ -3,8 +3,11 @@ body {
 }
 
 /* links */
-a:link, a:visited, a:hover {
- color:#12C;
+a:link, a:visited {
+	color:#333;
+}
+a:hover {
+	color:#d40101;
 }
 
 /* colors for messages */
@@ -35,12 +38,4 @@ a:link, a:visited, a:hover {
   background:#EFEFEF;
 }
 
-/* links */
-.main.panel a:link, 
-.main.panel a:visited {
-	color:#000;
-}
-.main.panel a:hover {
-	color:#12C;
-}
 

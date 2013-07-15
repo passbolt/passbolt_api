@@ -23,31 +23,44 @@
   font-weight: normal;
   font-style: normal;
 }
-
+a.no-text {
+  text-decoration:none;
+}
 .icon:before,
 .icon.social:before {
   font-family: "entypo";
-  font-size:2em; /* 28px */
-	line-height:1.1em;
-  height:1.1em;
+	font-size:2em; /* 28px */
   font-weight: normal;
   font-style: normal;
-  position:absolute;
-	left:.357em;
-	top:0;
   -webkit-font-smoothing: antialiased;
 	width:1em;
-}
-.icon.after:before {
-	left:auto;
-	right:.286em;
-	top:0;
+	padding:0;
+	margin:0;
+  height:1em;
+	line-height:1em;
+  position:absolute;
+	margin-top:-.2em;
 }
 .icon.social:before {
   font-family: "entypo-social";
 }
 
-/* sometimes they are too small */
+/* positioning */
+button .icon:before,
+.button .icon:before,
+.button .icon.social:before {
+	left:.357em;
+  height:1.1em;
+	line-height:1.1em;
+	top:0;
+	margin-top:0;
+}
+.icon.after:before {
+	left:auto;
+	right:.286em;
+}
+
+/* never too small */
 .icon.big:before {
 	font-size:3em;
 	margin:0;
@@ -98,9 +111,11 @@ span + .icon  {
 }
 .icon.fav:before  {
   content: '\2605';
+	color:#CCC;
 }
 .icon.unfav:before  {
-  content: '\2606';
+  content: '\2605';
+	color:#d40101;
 }
 .icon.cog:before  {
   content: '\2699';

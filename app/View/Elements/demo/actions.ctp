@@ -66,7 +66,7 @@
 				</a>
 				<ul class="dropdown-content right">
 					<li><a href="#">my profile</a></li>
-					<li><a href="#">manage keys</a></li>
+					<li><a href="#">manage or generate new keys</a></li>
 					<li><a href="#" class="separator">manage people</a></li>
 					<li><a href="#">logout</a></li>
 				</ul>

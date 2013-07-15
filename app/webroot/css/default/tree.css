@@ -25,10 +25,12 @@
 .panel .navigation .row.selected {
   font-weight:bold;
 }
+
 /* shortcut */
 .panel .navigation.shortcuts a {
 	padding:.125em .313em; /* 2px 5px */
 }
+
 /* tree */
 .tree a{
 }
