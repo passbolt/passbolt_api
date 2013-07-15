@@ -15,12 +15,12 @@
 
 /* header */
 .tableview-header {
-	height:3.75em;
+	height:4em;
 }
 
 /* main content */
 .tableview-content {
-	top:3.75em;
+	top:4em;
 	bottom:0;
 	padding:0;
 	position:absolute;
@@ -66,4 +66,9 @@
 }
 .main.panel table .checkbox label {
 	display:none;
+}
+
+.main.panel table th span,
+.main.panel table td span {
+	vertical-align:6%;
 }
