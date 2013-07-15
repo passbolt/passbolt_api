@@ -33,13 +33,11 @@ a.no-text {
   font-weight: normal;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
-
 	padding:0;
 	margin:0;
   height:1em;
-	line-height:1em;
-  position:absolute;
-	margin-top:-.2em;
+	line-height:0;
+	margin-top:-0.2em;
 }
 .icon.social:before {
   font-family: "entypo-social";
@@ -49,6 +47,7 @@ a.no-text {
 button .icon:before,
 .button .icon:before,
 .button .icon.social:before {
+  position:absolute;
 	left:.357em;
 	width:1em;
   height:1.1em;
@@ -59,6 +58,7 @@ button .icon:before,
 .icon.after:before {
 	left:auto;
 	right:.286em;
+	margin:1px -2px 0 0;
 }
 
 /* never too small */

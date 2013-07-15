@@ -44,8 +44,9 @@
 	width:20px;
 	max-width:20px;
 }
-.main.panel table .s-cell.favorites a {
-	float:left;
+.main.panel table .s-cell.favorites {
+	width:25px;
+	max-width:25px;
 }
 .main.panel table .s2-cell {
 	width:40px;
