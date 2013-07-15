@@ -12,9 +12,9 @@
 	margin:auto;
 	margin-top:5%;
   padding:1.5% 2% 2% 2%;
-	-moz-box-shadow:    0px 0px 10px 0px #ccc;
-  -webkit-box-shadow: 0px 0px 10px 0px #ccc;
-  box-shadow:         0px 0px 10px 0px #ccc;
+	-moz-box-shadow:    0px 0px 10px 0px #ddd;
+  -webkit-box-shadow: 0px 0px 10px 0px #ddd;
+  box-shadow:         0px 0px 10px 0px #ddd;
 }
 
 /* header */
