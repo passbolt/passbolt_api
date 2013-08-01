@@ -18,20 +18,20 @@ class GroupsController extends AppController {
 	public function index() {
 	  $keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';   
 
-    $data = array();
-    // if keywords provided build the model request with
-    if (!empty($keywords)) {
-      $data['keywords'] = $keywords;
-    }
-     
-		$o = $this->Group->getFindOptions('index', User::get('Role.name'), $data);
-		$returnVal = $this->Group->find('all', $o);
-		if (!empty($data)) {
-			$this->Message->success();
-			$this->set('data', $returnVal);
-		} else {
-			$this->Message->notice(__('There is no group to display'));
-		}
+      $data = array();
+      // if keywords provided build the model request with
+      if (!empty($keywords)) {
+        $data['keywords'] = $keywords;
+      }
+
+      $o = $this->Group->getFindOptions('index', User::get('Role.name'), $data);
+      $returnVal = $this->Group->find('all', $o);
+      if (!empty($data)) {
+          $this->Message->success();
+          $this->set('data', $returnVal);
+      } else {
+          $this->Message->notice(__('There is no group to display'));
+      }
 	}
 
 /**
@@ -54,7 +54,7 @@ class GroupsController extends AppController {
 		// if (User::get('id') == $id) {
 			// $resource = User::get();
 		// } else {
-			// $o = $this->User->getFindFields('userView', User::get('Role.name'));
+			// $o = $this->User->getFindFields('User::view', User::get('Role.name'));
 			// $resource = $this->User->findById($id, $o['fields']);
 			// if (!$resource) {
 				// $this->Message->error(__('The user does not exist'));

@@ -2,12 +2,12 @@
 /**
  * User Model
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.Model.user
- * @since				 version 2.12.7
+ * @copyright     Copyright 2012, Passbolt.com
+ * @license       http://www.passbolt.com/license
+ * @package       app.Model.user
+ * @since         version 2.12.7
  */
- 
+
 App::uses('AuthComponent', 'Controller/Component');
 App::uses('BcryptFormAuthenticate', 'Controller/Component/Auth');
 App::uses('Common', 'Controller/Component');
@@ -15,62 +15,65 @@ App::uses('Role', 'Model');
 
 class User extends AppModel {
 
-/**
- * Model Name
- * @access public
- */
-	public $name   = 'User';
+	/**
+	 * Model Name
+	 *
+	 * @access public
+	 */
+	public $name = 'User';
 
-/**
- * Model behaviors
- * @access public
- */
+	/**
+	 * Model behaviors
+	 *
+	 * @access public
+	 */
 	public $actsAs = array('Containable', 'Trackable');
 
-/**
- * Details of belongs to relationships
- *
- * @var array
- * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
- */
+	/**
+	 * Details of belongs to relationships
+	 *
+	 * @var array
+	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+	 */
 	public $belongsTo = array('Role');
 
-/**
- * They are legions
- */
+	/**
+	 * They are legions
+	 */
 	const ANONYMOUS = 'anonymous@passbolt.com';
 
-/**
- * Get the validation rules upon context
- *
- * @param string context
- * @return array validation rules
- * @throws exception if case is undefined
- * @access public
- */
+	/**
+	 * Get the validation rules upon context
+	 *
+	 * @param string context
+	 *
+	 * @return array validation rules
+	 * @throws exception if case is undefined
+	 * @access public
+	 */
 	public static function getValidationRules($case = 'default') {
 		$default = array(
 			'username' => array(
 				'required' => array(
-					'required' => true,
+					'required'   => true,
 					'allowEmpty' => false,
-					'rule' => array('notEmpty'),
-					'message' => __('A username is required')
+					'rule'       => array('notEmpty'),
+					'message'    => __('A username is required')
 				),
-				'email' => array(
-					'rule' => array('email'),
+				'email'    => array(
+					'rule'    => array('email'),
 					'message' => __('The username should be a valid email address')
 				)
 			),
 			'password' => array(
-				'required' => array(
-					'required' => true,
+				'required'  => array(
+					'required'   => true,
 					'allowEmpty' => false,
-					'rule' => array('notEmpty'),
-					'message' => __('A password is required')
+					'rule'       => array('notEmpty'),
+					'message'    => __('A password is required')
 				),
 				'minLength' => array(
-					'rule' => array('minLength',5),
+					'rule'    => array('minLength', 5),
 					'message' => __('Your password should be at least composed of 5 characters')
 				)
 			)
@@ -80,16 +83,17 @@ class User extends AppModel {
 			case 'default' :
 				$rules = $default;
 		}
+
 		return $rules;
 	}
 
-/**
- * Before Save callback
- *
- * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
- * @return bool, if true proceed with save
- * @access public
- */
+	/**
+	 * Before Save callback
+	 *
+	 * @link   http://api20.cakephp.org/class/app-model#method-AppModel__construct
+	 * @return bool, if true proceed with save
+	 * @access public
+	 */
 	public function beforeSave() {
 		// encrypt the password
 		// @todo use bcrypt instead #PASSBOLT-157
@@ -97,23 +101,26 @@ class User extends AppModel {
 			//$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
 			$this->data['User']['password'] = BcryptFormAuthenticate::hash($this->data['User']['password']);
 		}
+
 		return true;
 	}
 
-/**
- * Get the current user
- *
- * @return array the current user or an anonymous user, false if error
- * @param string field
- * @access public
- */
+	/**
+	 * Get the current user
+	 *
+	 * @return array the current user or an anonymous user, false if error
+	 *
+	 * @param string field
+	 *
+	 * @access public
+	 */
 	public static function get($path = null) {
 		// Get the user from the session
 		Common::getModel('Role');
-		$u = &AuthComponent::user();
+		$u = & AuthComponent::user();
 		// otherwise use a anonymous / guest one
 		if ($u == null) {
-			$u = &User::setActive(User::ANONYMOUS);
+			$u = & User::setActive(User::ANONYMOUS);
 		}
 		// truth is a land without path
 		if (!isset($path)) {
@@ -129,17 +136,19 @@ class User extends AppModel {
 		if (!$value) {
 			return false;
 		}
+
 		return $value[0];
 	}
 
-/**
- * Set the user as current
- * It always perform a search on id to avoid abuse (such as using a crafted/fake user)
- *
- * @param mixed UUID, User::ANONYMOUS, or user array with id specified
- * @return array the desired user or an ANONYMOUS user, false if error in find
- * @access public
- */
+	/**
+	 * Set the user as current
+	 * It always perform a search on id to avoid abuse (such as using a crafted/fake user)
+	 *
+	 * @param mixed UUID, User::ANONYMOUS, or user array with id specified
+	 *
+	 * @return array the desired user or an ANONYMOUS user, false if error in find
+	 * @access public
+	 */
 	public static function setActive($user = null) {
 		// Instantiate the mode as we are in a static/singleton context
 		$_this = Common::getModel('User');
@@ -153,7 +162,7 @@ class User extends AppModel {
 			if (is_string($user) && Common::isUuid($user)) {
 				$user = array('User' => array('id' => $user));
 			}
-			$u = $_this->find('first', User::getFindOptions('userActivation', Role::USER, $user) );
+			$u = $_this->find('first', User::getFindOptions('User::activation', Role::USER, $user));
 		}
 
 		if (empty($u)) {
@@ -169,202 +178,212 @@ class User extends AppModel {
 		return $u;
 	}
 
-/**
- * Check if user is an admin (use role)
- *
- * @return bool true if role is admin
- * @access public
- */
+	/**
+	 * Check if user is an admin (use role)
+	 *
+	 * @return bool true if role is admin
+	 * @access public
+	 */
 	public static function isAdmin() {
 		Common::getModel('Role');
 		$user = User::get();
+
 		return $user['Role']['name'] == Role::ADMIN;
 	}
 
-/**
- * Check if user is admin role
- *
- * @return bool true if role is admin
- * @access public
- */
+	/**
+	 * Check if user is admin role
+	 *
+	 * @return bool true if role is admin
+	 * @access public
+	 */
 	public static function isAnonymous() {
 		$user = User::get();
+
 		return $user['User']['username'] == User::ANONYMOUS;
 	}
 
-/**
- * Check if user is a guest - Shortcut Method
- *
- * @return bool true if role is guest
- * @access public
- */
+	/**
+	 * Check if user is a guest - Shortcut Method
+	 *
+	 * @return bool true if role is guest
+	 * @access public
+	 */
 	public static function isGuest() {
 		Common::getModel('Role');
 		$user = User::get();
+
 		return $user['Role']['name'] == Role::GUEST;
 	}
 
-/**
- * Check if user is a root - Shortcut Method
- *
- * @return bool true if role is root
- * @access public
- */
+	/**
+	 * Check if user is a root - Shortcut Method
+	 *
+	 * @return bool true if role is root
+	 * @access public
+	 */
 	public static function isRoot() {
 		Common::getModel('Role');
 		$user = User::get();
+
 		return $user['Role']['name'] == Role::ROOT;
 	}
 
-/**
- * Return the conditions to be used for a given context
- * for example if you want to activate a User session
- *
- * @param $context string{guest or id}
- * @param $data used in find conditions (such as User.id)
- * @return $condition array
- * @access public
- */
-	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::USER, &$data = null) {
+	/**
+	 * Return the conditions to be used for a given context
+	 * for example if you want to activate a User session
+	 *
+	 * @param $context string{guest or id}
+	 * @param $data    used in find conditions (such as User.id)
+	 *
+	 * @return $condition array
+	 * @access public
+	 */
+	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::GUEST, &$data = null) {
 		$conditions = array();
-//		if ($role ==  Role::USER || $role == Role::ROOT) {
-			switch ($case) {
-				case 'userActivation':
-					$conditions = array(
-						'conditions' => array(
-							'User.id' => $data['User']['id']
-						)
-					);
-				break;
-				case User::ANONYMOUS:
-				default:
-					$conditions = array(
-						'conditions' => array(
-							'User.username' => User::ANONYMOUS,
-							'User.active' => true
-						)
-					);
-				break;
+		switch ($role) {
+			case Role::USER :
+			case Role::ADMIN :
+				switch ($case) {
+					case 'User::activation':
+						$conditions = array(
+							'conditions' => array(
+								'User.id' => $data['User']['id']
+							)
+						);
+						break;
+					case User::ANONYMOUS:
+					default:
+						$conditions = array(
+							'conditions' => array(
+								'User.username' => User::ANONYMOUS,
+								'User.active'   => true
+							)
+						);
+						break;
 
-                case 'userView':
-                  $conditions = array(
-                    'conditions' => array(
-                      'User.active' => true,
-                      'User.deleted' => false
-                    )
-                  );
-                  if (isset($data['User.id'])) {
-                    $conditions['conditions']['User.id'] = $data['User.id'];
-                  }
-                break;
-                case 'index':
-                  $conditions = array(
-                    'conditions' => array(
-                      'User.active' => true,
-                      'User.deleted' => false
-                    )
-                  );
-                  if (isset($data['keywords'])) {
-                    $keywords = explode(' ', $data['keywords']);
-                    foreach ($keywords as $keyword) {
-                      $conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
-                    }
-                  }
-                break;
-				default:
-					$conditions = array(
-						'conditions' => array()
-					);
-			}
-//		}
-		
+					case 'User::view':
+						$conditions = array(
+							'conditions' => array(
+								'User.active'  => true,
+								'User.deleted' => false
+							)
+						);
+						if (isset($data['User.id'])) {
+							$conditions['conditions']['User.id'] = $data['User.id'];
+						}
+						break;
+					case 'User::index':
+						$conditions = array(
+							'conditions' => array(
+								'User.active'  => true,
+								'User.deleted' => false
+							)
+						);
+						if (isset($data['keywords'])) {
+							$keywords = explode(' ', $data['keywords']);
+							foreach ($keywords as $keyword) {
+								$conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
+							}
+						}
+						break;
+					default:
+						$conditions = array(
+							'conditions' => array()
+						);
+				}
+				break;
+			default :
+				switch ($case) {
+					case User::ANONYMOUS:
+					default:
+						$conditions = array(
+							'conditions' => array(
+								'User.username' => User::ANONYMOUS,
+								'User.active'   => true
+							)
+						);
+						break;
+				}
+				break;
+		}
+
 		return $conditions;
 	}
 
-/**
- * Return the list of field to fetch for given context
- *
- * @param string $case context ex: login, activation
- * @return $condition array
- * @access public
- */
+	/**
+	 * Return the list of field to fetch for given context
+	 *
+	 * @param string $case context ex: login, activation
+	 *
+	 * @return $condition array
+	 * @access public
+	 */
 	public static function getFindFields($case = User::ANONYMOUS, $role = Role::USER) {
 		switch ($case) {
-			case 'userView2':
-				$fields = array(
-					'fields' => array(
-						'User.id', 'User.username', 'User.role_id'
-					),
-					'contain' => array(
-						'Role' => Role::getFindFields('view', $role)
-					)
-				);
-				break;
-			//case 'resetPassword':
-			//case 'forgotPassword':
 			case User::ANONYMOUS:
-			case 'userView':
-			case 'index':
+			case 'User::view':
+			case 'User::index':
 			default:
 				$fields = array(
-					'fields' => array(
+					'fields'  => array(
 						'User.id',
-                        'User.username',
-                        'User.role_id',
+						'User.username',
+						'User.role_id',
 					),
 					'contain' => array(
 						'Role' => array(
-                          'fields' => array(
-                            'Role.id',
-                            'Role.name'
-                          )
-                        )
+							'fields' => array(
+								'Role.id',
+								'Role.name'
+							)
+						)
 					)
 				);
-			break;
-			/* case 'login': */
-			case 'userActivation':
+				break;
+			case 'User::activation':
 				$fields = array(
-					'fields' => array(
-						'User.id', 'User.username'
+					'fields'  => array(
+						'User.id',
+						'User.username'
 					),
 					'contain' => array(
-                        'Role' => array(
-                          'fields' => array(
-                            'Role.id',
-                            'Role.name'
-                          )
-                      )
-                    )
+						'Role' => array(
+							'fields' => array(
+								'Role.id',
+								'Role.name'
+							)
+						)
+					)
 				);
-			break;
-          case 'userSave':
-            $fields = array(
-              'fields' => array(
-                'username',
-                'role_id',
-                'password',
-                'active'
-              )
-            );
-          break;
-          case 'userEdit':
-            $fields = array(
-              'fields' => array(
-                'username',
-                'role_id',
-                'password',
-                'active'
-              )
-            );
-            break;
-          case 'userDelete':
-            $fields = array(
-              'fields' => array(
-                'deleted'
-              )
-            );
-            break;
+				break;
+			case 'User::save':
+				$fields = array(
+					'fields' => array(
+						'username',
+						'role_id',
+						'password',
+						'active'
+					)
+				);
+				break;
+			case 'User::edit':
+				$fields = array(
+					'fields' => array(
+						'username',
+						'role_id',
+						'password',
+						'active'
+					)
+				);
+				break;
+			case 'User::delete':
+				$fields = array(
+					'fields' => array(
+						'deleted'
+					)
+				);
+				break;
 		}
 		return $fields;
 	}

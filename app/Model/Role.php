@@ -12,7 +12,6 @@
  * @license			http://www.passbolt.com/license
  */
 class Role extends AppModel {
-	
 	const GUEST = 'guest';
 	const USER	= 'user';
 	const ADMIN = 'admin';
