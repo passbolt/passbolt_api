@@ -1,5 +1,5 @@
 /*
-	3.0.0 Generic Form Item
+	Generic Form Item
 
 	Description  : labels and input are wrapped in a <div.text>
 	Compatible   : FF2+, Chrome1+, IE?, Opera?, Safari?
@@ -27,7 +27,7 @@ textarea, select {
 }
 
 /*
-	3.2.1 TextField
+	TextField
 
 	Description  : labels and input are wrapped in a div with the type of the class
 	Compatible   : FF2+, Chrome1+,
@@ -44,22 +44,22 @@ label {
 	display:block;
 }
 textarea,
-.password input[type=password],
-.search input[type=search],
-.text input[type=text] {
+input[type=password],
+input[type=search],
+input[type=text] {
 	font-size:1.125em; /* 18px */
   border-top:1px solid #999;
 }
-textarea,
-.password input[type=password]:hover,
-.search input[type=search]:hover
-.text input[type=text]:hover {
+textarea:hover,
+input[type=password]:hover,
+input[type=search]:hover,
+input[type=text]:hover {
   border:1px solid #999;
 }
 textarea:focus,
-.password input[type=password]:focus,
-.search input[type=search]:focus,
-.text input[type=text]:focus {
+input[type=password]:focus,
+input[type=search]:focus,
+input[type=text]:focus {
   -webkit-box-shadow: inset 1px 1px 2px rgba(255,255,255,.2);
   -moz-box-shadow: inset 1px 1px 2px rgba(0,0,0,.2);
   box-shadow: inset 1px 1px 2px rgba(0,0,0,.2);
@@ -86,7 +86,7 @@ textarea:focus,
 }
 
 /*
-	3.2.2 Required Textfield
+	Required Textfield
 
 	Description  : Label and input are wrapped in <div.text.required>. Additional <span> with a star is included. Input also get the required class.
 	Compatible   : FF2+, Chrome1+, IE?, Opera?, Safari?
@@ -101,7 +101,7 @@ textarea:focus,
 }
 
 /*
-	3.2.3 Large textarea Textfield
+	Large textarea Textfield
 
 	Description  : textarea.textarea is pretty much the same than div.input.text.
 	Compatible   : FF2+, Chrome1+, IE?, Opera?, Safari?
@@ -119,7 +119,7 @@ textarea {
 }
 
 /*
-	3.3 Messages for validation error and example
+	Messages for validation error and example
 
 	Description  : <div.text.error>, <div.text.success>, can be used to add status messages or example. 
 								 Additional messages are wrapped in <.error-message>, <.success-messages>
@@ -131,13 +131,12 @@ textarea {
 	.error       - error messages used for validation issues
 */
 .message {
-	font-size:.8em;
 	font-weight:bold;
-	border-bottom:1px solid;
-  padding:.8em;
+  padding:0;
 }
 .input .message {
-	padding:.3em;
+	padding-left:.25em;
+	margin-bottom:.25em;
 	background-color:transparent;
   border:0;
 }
@@ -161,7 +160,7 @@ textarea {
   display:none; 
 }
 /*
-	3.4.1 Radio
+	Radio
 
 	Description  : 
 	Compatible   : ?
@@ -184,6 +183,21 @@ textarea {
   #cssrulefilter is a rule filter to block browsers that don't support that selector 
   http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
 */
+input[type="checkbox"] {
+  position:absolute;
+  margin-left:0;
+  margin-top:.35em;
+}
+input[type="checkbox"] + label {
+	font-size:.9375em;
+	font-weight:normal;
+  margin-left:1.25em;
+	padding:0;
+}
+input[type="checkbox"]:hover,
+input[type="checkbox"] + label:hover {
+	cursor: pointer;
+}
 /*#cssrulefilter:checked,
 input[type="checkbox"] {
   position:absolute;
@@ -209,7 +223,7 @@ input[type="checkbox"] {
   background: url('../img/controls/checkbox-checked-active.png') left center no-repeat;
 }*/
 /*
-	3.4.2 Select
+	Select
 
 	Description  : ?
 	Compatible   : ?

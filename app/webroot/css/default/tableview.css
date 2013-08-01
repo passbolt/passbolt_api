@@ -67,7 +67,9 @@
 .main.panel table .checkbox label {
 	display:none;
 }
-
+.main.panel table input[type="checkbox"] {
+  margin-top:.25em;
+}
 .main.panel table th span,
 .main.panel table td span {
 	vertical-align:6%;

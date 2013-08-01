@@ -9,88 +9,154 @@
 	background:rgba(255,255,255,0.9);
 }
 .dialog {
-	width:30%;
+	position:relative;
+	width:30em;
 	border:1px solid #CCC;
-	background:#FFF;
+	background:#F3F3F3;
 	margin:auto;
-	margin-top:5%;
-  padding:1.5% 2% 2% 2%;
+	margin-top:1.5%;
 	-moz-box-shadow: 0px 0px 10px 0px #ddd;
   -webkit-box-shadow: 0px 0px 10px 0px #ddd;
   box-shadow: 0px 0px 10px 0px #ddd;
 }
 
 /* header */
+.dialog .dialog-header {
+	padding:0.5em 1em 0 1em;
+}
 .dialog .dialog-header h2 {
-	margin:0;
+	margin:.25em 0 .33em .25em;
+	font-size:1.625em;
 }
-.dialog .dialog-header .close:before {
-	position:relative;
+.dialog .dialog-close {
 	float:right;
-	margin:-1.5em -0.3em 0 0;
-	width:1em;
-	text-align:center;
-}
-.dialog .dialog-header .close {
-}
-
-/* inputs */
-.dialog input[type=text] {
-	width:89%;
+	right:1em;
+	margin-top:-2.5em;
 }
 
 /* tabs */
 .dialog .tabs {
 	border-bottom:1px solid #CCC;
-	clear:both;
-	float:left;
 	width:100%;
-	margin:1em 0;
 }
 .dialog .tabs li {
 	display:inline;
-	float:left;
 }
 .dialog .tabs li a {
-	float:left;
 	display:inline-block;
-	padding:.25em 1.5em;
+	padding:.25em 1.75em;
+	margin-left:1.25em;
 }
 .dialog .tabs li a.selected {
 	border:1px solid #CCC;
 	border-bottom:1px solid #FFF;
 	margin-bottom:-1px;
-}
-.dialog .dialog-tabs-content {
-	padding:10px;
+	background:#FFF;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius:0;
+  -moz-border-radius-bottomleft:0;
+  -moz-border-radius-bottomright:0;
+  border-bottom-left-radius:0;
+  border-bottom-right-radius:0;
 }
 
-.password-actions {
+/* tab content */
+.dialog-tab-content {
 	display:none;
 }
-.submit-wrapper {
-	margin-top:1em;
-	
+.dialog-tab-content.selected {
+	display:block;
 }
+
+/* inputs */
+.dialog .form-content {
+	background:#FFF;
+	font-size:.813em;
+	padding:1em 1.5em 1em 2em;
+}
+.dialog label {
+	clear:both;
+}
+.dialog input[type=text] {
+	width:92%;
+	float:left;
+}
+.dialog .short input {
+	width:64%;
+	float:left;
+}
+.dialog textarea {
+	width:92%;
+}
+.dialog .actions.inline {
+	float:right;
+	margin-right:.5em;
+	width:28%;
+}
+.dialog .actions.inline .button {
+	float:left;
+}
+.dialog .error {
+	display:block;
+	width:100%;
+	clear:both;
+}
+/* submit / cancel */
+.submit-wrapper {
+	border-top:1px solid #CCC;
+	clear:both;
+	width:100%;
+	padding:1em 0;
+}
+
+.submit-wrapper .cancel,
+.submit-wrapper input {
+	float:right;
+}
+.submit-wrapper .cancel,
+.submit-wrapper  input {
+	margin:0 2.25em 0 0;
+	padding-left:2em;
+	padding-right:2em;
+	min-width:3em;
+}
+.submit-wrapper .cancel,
+.submit-wrapper .cancel:hover {
+	font-size:16px;
+	margin-right:1em;
+	padding-bottom: .5em;
+	padding-left: 2em;
+	padding-right: 2em;
+	padding-top:.5em;
+	line-height:19px;
+	height:19px;
+}
+
 
 /* complexity and progress bar */
 .dialog .progress {
-	width:80%;
+	width:67.8%;
 	border:1px solid #CCC;
 	height:7px;
 	display:block;
 	clear:both;
+	margin:.25em 0 .5em 0;
+	float:left;
 }
 .dialog .progress-bar {
 	height:5px;
 	margin:1px;
 	display:block;
+	float:left;
 }
-
 .dialog .complexity-text {
 	float:right;
 	clear:right;
-	display:none;
+	width:28%;
+	font-size:11px;
 }
 .dialog .password-complexity.very-bad .progress-bar {
 	background:#000;

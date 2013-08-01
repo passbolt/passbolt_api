@@ -1,8 +1,13 @@
+/**
+ * Sidebar
+ */
 .panel.aside {
 	border:1px solid #DDD;
 	background:#FFF;
+	-moz-box-shadow: 0px 0px 10px 0px #ddd;
+  -webkit-box-shadow: 0px 0px 10px 0px #ddd;
+  box-shadow: 0px 0px 10px 0px #ddd;
 }
-
 .panel.aside .resource .dialog-close {
 	position:absolute;
 	right:1em;

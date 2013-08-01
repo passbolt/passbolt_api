@@ -50,7 +50,7 @@
 		</div>
 		<div class="footnotes">
 			<span class="copyright">2012-2013 &copy; bolt software pvt. ltd.</span> &bullet; 
-			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a></div>
+			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a>
 		</div>
 	</div>
 </div>
@@ -79,23 +79,33 @@
   
 	// TODO This is for demo only
 	$(function() {
-		$('.dropdown .button').click(function(c){
+		$('.dropdown a').click(function(c) {
 			var button = $(this);
-			var content = $(this).next();
-			
-			button.toggleClass('pressed');
-			if(button.hasClass('pressed')){
+			var dropdown = $(this).closest('.dropdown');
+			var content;
+
+			// take the next item after the link as dropdown content
+			// if data-dropdown-content-id attribute is empty
+			if ($(this).attr('data-dropdown-content-id') == undefined) {
+				content = $(this).next();
+			} else {
+				content = $("#"+$(this).attr('data-dropdown-content-id'));
+			}
+
+			dropdown.toggleClass('pressed');
+			if(dropdown.hasClass('pressed')) {
 			  content.addClass('visible');
 			} else {
 				content.removeClass('visible'); 
 			}
 			$('body').click(function () {
 				content.removeClass('visible'); 
-				button.removeClass('pressed');
+				dropdown.removeClass('pressed');
 			});
-
 			return false;
 		});
+
+		
 	});
 </script>
 </body>

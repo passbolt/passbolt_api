@@ -229,24 +229,6 @@ class User extends AppModel {
 		$conditions = array();
 //		if ($role ==  Role::USER || $role == Role::ROOT) {
 			switch ($case) {
-				/*
-				case 'login':
-					$conditions = array(
-					'conditions' => array(
-						'User.password' => $data['User']['password'],
-						'User.username' => $data['User']['username']
-					)
-				);
-				break;
-				case 'forgotPassword':
-					$conditions = array(
-					'conditions' => array(
-						'User.username' => $data['User']['username']
-					)
-					);
-				break;
-				case 'resetPassword':
-				*/
 				case 'userActivation':
 					$conditions = array(
 						'conditions' => array(
@@ -255,26 +237,40 @@ class User extends AppModel {
 					);
 				break;
 				case User::ANONYMOUS:
-				case 'userView':
 				default:
 					$conditions = array(
 						'conditions' => array(
 							'User.username' => User::ANONYMOUS,
-							'User.active' => 1
+							'User.active' => true
 						)
 					);
 				break;
-        case 'index':
-          $conditions = array(
-            'conditions' => array()
-          );
-          if (isset($data['keywords'])) {
-            $keywords = explode(' ', $data['keywords']);
-            foreach ($keywords as $keyword) {
-              $conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
-            }
-          }
-        break;
+
+                case 'userView':
+                  $conditions = array(
+                    'conditions' => array(
+                      'User.active' => true,
+                      'User.deleted' => false
+                    )
+                  );
+                  if (isset($data['User.id'])) {
+                    $conditions['conditions']['User.id'] = $data['User.id'];
+                  }
+                break;
+                case 'index':
+                  $conditions = array(
+                    'conditions' => array(
+                      'User.active' => true,
+                      'User.deleted' => false
+                    )
+                  );
+                  if (isset($data['keywords'])) {
+                    $keywords = explode(' ', $data['keywords']);
+                    foreach ($keywords as $keyword) {
+                      $conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
+                    }
+                  }
+                break;
 				default:
 					$conditions = array(
 						'conditions' => array()
@@ -312,10 +308,17 @@ class User extends AppModel {
 			default:
 				$fields = array(
 					'fields' => array(
-						'User.id', 'User.username', 'User.role_id'
+						'User.id',
+                        'User.username',
+                        'User.role_id',
 					),
 					'contain' => array(
-						'Role(id,name)'
+						'Role' => array(
+                          'fields' => array(
+                            'Role.id',
+                            'Role.name'
+                          )
+                        )
 					)
 				);
 			break;
@@ -326,10 +329,42 @@ class User extends AppModel {
 						'User.id', 'User.username'
 					),
 					'contain' => array(
-						'Role(id,name)'
-					)
+                        'Role' => array(
+                          'fields' => array(
+                            'Role.id',
+                            'Role.name'
+                          )
+                      )
+                    )
 				);
 			break;
+          case 'userSave':
+            $fields = array(
+              'fields' => array(
+                'username',
+                'role_id',
+                'password',
+                'active'
+              )
+            );
+          break;
+          case 'userEdit':
+            $fields = array(
+              'fields' => array(
+                'username',
+                'role_id',
+                'password',
+                'active'
+              )
+            );
+            break;
+          case 'userDelete':
+            $fields = array(
+              'fields' => array(
+                'deleted'
+              )
+            );
+            break;
 		}
 		return $fields;
 	}

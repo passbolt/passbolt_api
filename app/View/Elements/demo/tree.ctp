@@ -26,7 +26,7 @@
 				<div class="row">
 					<div class="main-cell-wrapper">
 						<div class="main-cell">
-							<a href="#"><span>Category<span></a>
+							<a href="#"><span>Category</span></a>
 						</div>
 					</div>
 					<div class="left-cell node-ctrl">
@@ -40,8 +40,8 @@
 					<li class="close node">
 						<div class="row">
 							<div class="main-cell-wrapper">
-								<div class="main-cell"><a href="#">
-									<span>Category<span></a>
+								<div class="main-cell">
+									<a href="#"><span>Category</span></a>
 								</div>
 							</div>
 							<div class="left-cell node-ctrl">

@@ -1,0 +1,73 @@
+/* dropdown */
+.dropdown {
+	float:left;
+}
+.dropdown.pressed .button {
+	background:#FFF;
+	z-index:999;
+	border-bottom:0;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius:0;
+  -moz-border-radius-bottomright:0;
+  -moz-border-radius-bottomleft:0;
+  border-bottom-right-radius:0;
+  border-bottom-left-radius:0;
+}
+.dropdown-content {
+	border:1px solid #CCC;
+	background:#FFF;
+	float:left;
+	position:absolute;
+	min-width:13em;
+	z-index:998;
+	padding-top:.25em;
+}
+.button + .dropdown-content {
+  margin-top:1.99em;
+	margin-left:2px;
+	margin-right:7px;
+}
+.dropdown-content.right {
+	right:0;
+}
+.dropdown-content li a {
+	display:block;
+	min-width:9em;
+	font-size:.938em;
+}
+.dropdown-content li a,
+.dropdown-content li .checkbox {
+	padding:.313em .626em; /* 5px */
+}
+.dropdown-content li .checkbox label {
+	padding:0;
+}
+.dropdown-content li .checkbox:hover,
+.dropdown-content li a:hover {
+	background:#EFEFEF;
+	text-decoration:none;
+	color:#000;
+}
+.dropdown-content li .top-separator {
+	border-top:1px solid #CCC;
+}
+.dropdown-content li .separator {
+	border-bottom:1px solid #CCC;
+}
+.dropdown-content {
+	display:none;
+}
+.dropdown-content.visible {
+	display:block;
+}
+.user.profile.dropdown.pressed,
+.user.profile.dropdown.pressed .more {
+	background:#FFF;
+}
+.user.profile.dropdown.pressed .more {
+	border:0;
+}
+.user.profile.dropdown.pressed .dropdown-content {
+	border-top:1px dotted #DDD;
+	background:#FFF;
+}

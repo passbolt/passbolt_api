@@ -74,7 +74,6 @@ i.no-text + span {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-
 .clearfix:before,
 .clearfix:after {
 	content: " "; /* 1 */
