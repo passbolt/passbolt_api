@@ -1,0 +1,52 @@
+/* tags */
+.tags .tag {
+	padding:.2em .5em;
+}
+.tags li {
+	float:left;
+}
+
+
+/* tag as a link */
+.tags a.tag {
+	float:left;
+	height:1em;
+	line-height:1em;
+	position:relative;
+	padding-left:.8em;
+	margin-left:1em;
+	margin-bottom:.25em;
+	background:#0089e0;
+	color:#fff;
+	text-decoration:none;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+}
+/* left triangle */
+.tags a.tag:before{
+	content:"";
+	float:left;
+	position:absolute;
+	top:0;
+	left:-0.575em;
+	width:0;
+	height:0;
+	border-color:transparent #0089e0 transparent transparent;
+	border-style:solid;
+	border-width:.75em .75em .75em 0;
+}
+/* left dot */
+.tags a.tag:after{
+	content:"";
+	position:absolute;
+	top:.55em;
+	left:.1em;
+	float:left;
+	width:5px;
+	height:5px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	background:#fff;
+}
