@@ -70,16 +70,17 @@ button .icon:before,
 }
 
 /* text / no text positioning */
-.icon + .text,
+/* icon then text */
 .icon + span {
   margin-left:1.357em;
 }
+/* icon after text */
 span + .icon  {
   margin-right:1.357em;
 }
-.button.no-text {
-	padding-right:.357em;
-	width:2em;
+/* no text */
+.button .icon.no-text {
+	padding-right:.9em;
 }
 
 /* actions */

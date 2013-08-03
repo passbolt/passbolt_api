@@ -40,6 +40,9 @@
 		<div class="panel middle">
 <?php echo $this->element('demo/table'); ?>
 		</div>
+		<div class="panel aside">
+<?php echo $this->element('demo/sidebar'); ?>
+		</div>
 	</div>
 	<div class="footer">
 		<div class="context-info">

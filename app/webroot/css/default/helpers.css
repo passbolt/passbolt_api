@@ -22,10 +22,11 @@
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
 .hidden,
-.no-text span {
+i.no-text + span {
 	display: none !important;
 	visibility: hidden;
 }
+
 /*
  * Hide only visually, but have it available for screenreaders: h5bp.com/v
  */

@@ -31,8 +31,8 @@
 					</div>
 				</th>
 				<td class="favorites s-cell">
-					<a href="#" class="no-text">
-						<i class="icon fav"></i>
+					<a href="#">
+						<i class="icon fav no-text"></i>
 						<span>fav</span>
 					</a>
 				</td>
@@ -59,8 +59,8 @@
 					</div>
 				</td>
 				<td class="favorites s-cell">
-					<a href="#" class="no-text">
-						<i class="icon <?php if($i%5) echo 'fav'; else echo 'unfav';?>"></i>
+					<a href="#">
+						<i class="icon no-text <?php if($i%5) echo 'fav'; else echo 'unfav';?>"></i>
 						<span><?php if($i%5) echo 'fav'; else echo 'unfav';?></span>
 					</a>
 				</td>

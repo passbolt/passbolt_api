@@ -5,6 +5,7 @@
 @import url("colors.css");
 @import url("icons.css");
 @import url("buttons.css");
+@import url("tag.css");
 @import url("form.css");
 @import url("layout.css");
 @import url("header.css");
@@ -13,6 +14,7 @@
 @import url("tableview.css");
 @import url("scrollbar.css");
 @import url("layout.css");
+@import url("sidebar.css");
 @import url("dialog.css");
 @import url("footer.css");
 

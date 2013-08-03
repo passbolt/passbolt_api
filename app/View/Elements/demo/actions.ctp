@@ -49,19 +49,19 @@
 	</ul>
 	<ul class="actions secondary">
 		<li>
-			<a href="#" class="button selected toggle duo no-text">
-				<i class="icon layout grid big"></i>
+			<a href="#" class="button selected toggle duo">
+				<i class="icon layout grid big no-text"></i>
 				<span>grid layout</span>
 			</a>
-			<a href="#" class="button toggle duo no-text">
-				<i class="icon layout box big"></i>
+			<a href="#" class="button toggle duo">
+				<i class="icon layout box big no-text"></i>
 				<span>box layout</span>
 			</a>
 		</li>
 		<li>
 			<div class="dropdown">
-				<a href="http://localhost/passbolt/demo/#" class="button no-text">
-				<i class="icon cog big"></i>
+				<a href="http://localhost/passbolt/demo/#" class="button">
+				<i class="icon cog big no-text"></i>
 					<span>config</span>
 				</a>
 				<ul class="dropdown-content right">

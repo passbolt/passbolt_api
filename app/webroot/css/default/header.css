@@ -88,15 +88,6 @@ input[type="search"]::-webkit-search-cancel-button {
 	display: none;
 }
 
-/* tag */
-.tag {
-  float:left;
-  font-size:.9em;
-  background:#DDD;
-  border:1px solid #CCC;
-  padding:.3em .6em;
-}
-
 /* profile user card */
 .user.profile {
 	max-width:18em;
