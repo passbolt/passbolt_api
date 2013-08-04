@@ -1,0 +1,101 @@
+/*
+ * Comment thread with add/edit form
+ */
+
+.comments .comment-wrapper {
+	clear:both;
+	float:left;
+	margin:.5em 0;
+	width:100%;
+}
+.comments .comment.reply {
+	clear:both;
+	float:left;
+	margin-left:2.5em;
+}
+
+/* content */
+.comments .comment p {
+	float:left;
+	margin-left:3em;
+	margin-top:-2.3em;
+}
+
+/* picture */
+.comments .comment .author.picture {
+	float:left;
+	width:2em;
+	height:2em;
+}
+.comments .comment .author.picture img{
+	float:left;
+	width:2em;
+	height:2em;
+}
+
+/* username and date */
+.comments .comment .metadata {
+	float:left;
+	margin-left:3em;
+	font-size:.875em;
+	font-style:italic;
+	width:74%;
+}
+.comments .comment .metadata .author.username {
+	max-width:48%;
+	overflow:hidden;
+	text-overflow: ellipsis;
+  display:inline-block;
+  white-space: nowrap;
+	padding-right:2px;
+}
+.comments .comment .metadata .author.username:after {
+	content:", ";
+}
+.comments .comment .metadata .modified {
+	max-width:48%;
+	overflow:hidden;
+	text-overflow: ellipsis;
+  display:inline-block;
+  white-space: nowrap;
+	padding-right:2px;
+	color:#777;
+}
+
+/* actions */
+.comments .actions {
+	float:right;
+	margin:0;
+}
+
+/* add / edit comment */
+.comments .comment.edit label,
+.comments .comment.add label {
+	display:none;
+}
+.comments .comment.edit textarea,
+.comments .comment.add textarea {
+	height:2.3em;
+	float:left;
+	margin-left:3em;
+	margin-top:-2.3em;
+	font-size:.875em;
+	min-width:18.5em;
+	border:1px solid #DDD;
+}
+.comments .comment.add textarea:focus {
+	border: 1px solid #2a9ceb;
+}
+.comments .comment .button {
+	float:right;
+	margin:0;
+	padding:.125em .5em 0em .5em;
+	margin-top:-1.5em;
+}
+.comments .comment .button span,
+.comments .comment .button span {
+	float:right;
+	margin:0;
+	font-size:.875em;
+	width:auto;
+}

@@ -1,44 +1,43 @@
 .panel.aside {
-	position:absolute;
-	right:2em;
-	width:18em;
-	bottom:0;
-	height:100%;
 	border:1px solid #DDD;
 	background:#FFF;
 }
 
-.resource-details {
-	padding:1em;
+.panel.aside .resource .dialog-close {
+	position:absolute;
+	right:1em;
+	top:1em;
 }
 
-.resource-details li,
-.resource-details p {
+/* general resource information */
+.panel.aside .resource {
+	padding:.5em 1em 1em 1em;
+}
+.panel.aside .resource li,
+.panel.aside .resource p {
 	font-size:.875em;
 }
-
-.resource-details li .label {
+.panel.aside .resource li .label {
 	width:30%;
 	color:#000;
 	display:inline-block;
 	margin-right:10%;
 }
-
-.resource-details li .value {
+.panel.aside .resource li .value {
 	width:50%;
 	display:inline-block;
 }
-
-.resource-details h3 {
+.panel.aside .resource h3 {
 	margin-top:.5em;
 }
-.resource-details h4 {
+.panel.aside .resource h4 {
 	margin-bottom:.626em;
 	padding-bottom:.313em;
 	border-bottom:1px dotted #DDD;
 }
-.resource-details .edit-section {
+.panel.aside .resource .section-action {
 	float:right;
 	margin-top:-2.2em;
 	padding:0;
 }
+

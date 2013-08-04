@@ -84,6 +84,7 @@ span + .icon  {
 }
 
 /* actions */
+.icon.add:before,
 .icon.create:before {
   content: '\2295';
 }
@@ -92,6 +93,9 @@ span + .icon  {
 }
 .icon.close:before  {
   content: '\274C';
+}
+.icon.reply:before  {
+  content: '\E712';
 }
 .icon.login:before  {
   content: '\E740';

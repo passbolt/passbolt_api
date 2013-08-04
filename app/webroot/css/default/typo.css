@@ -1,3 +1,6 @@
+/*
+ * Typography
+ */
 body {
   font-family:'Lato', Helvetica, Verdana, Geneva, Arial, sans-serif;
   font-size: 100%;
@@ -17,7 +20,7 @@ a {
   text-decoration:none;
 }
 a:hover {
-  text-decoration:underline;
+  text-decoration:none;
 }
 a:focus {
   border:1px dotted #777;

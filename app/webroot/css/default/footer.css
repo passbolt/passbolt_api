@@ -1,3 +1,11 @@
+/*
+ * Footer
+ */
+/* footer */
+.footer {
+	background:#FFF;
+  border-top:1px solid #DDD;
+}
 .footer .footnotes,
 .footer .context-info {
   font-size:.8em;

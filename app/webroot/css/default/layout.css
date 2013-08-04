@@ -26,12 +26,10 @@
 /* headers */
 .header.first {
 	height:2.375em;
-	background-color:#333;
 }
 .header.second {
 	top:2.375em;
 	height:4.5em;
-	background-color:#E4E4E4;
 }
 .header.third {
 	top:7em;
@@ -42,7 +40,6 @@
 	height:100%;
 }
 .panel.main {
-  border-top:1px solid #DDD;
 	top:10em;
 	bottom:2.0em;
   height:auto;
@@ -76,11 +73,16 @@
 .panel.middle {
 	overflow:hidden;
 }
+.panel.aside {
+	position:absolute;
+	right:2em;
+	width:20em;
+	bottom:0;
+	height:100%;
+}
 
 /* footer */
 .footer {
-	background:#FFF;
-  border-top:1px solid #DDD;
-	height:2em;;
+	height:2em;
 	bottom:0;
 }

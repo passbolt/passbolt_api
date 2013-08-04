@@ -1,3 +1,14 @@
+/* headers */
+.header.first {
+	background-color:#333;
+}
+.header.second {
+	background-color:#E4E4E4;
+}
+.panel.main {
+  border-top:1px solid #DDD;
+}
+
 /* top navigation */
 .header .navigation.primary ul {
 }
