@@ -1,4 +1,3 @@
-
 /* dropdown */
 .dropdown {
 	float:left;
@@ -69,6 +68,6 @@
 	border:0;
 }
 .user.profile.dropdown.pressed .dropdown-content {
-	border-top:0;
+	border-top:1px dotted #DDD;
 	background:#FFF;
 }
