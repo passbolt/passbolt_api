@@ -184,6 +184,21 @@ textarea {
   #cssrulefilter is a rule filter to block browsers that don't support that selector 
   http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
 */
+input[type="checkbox"] {
+  position:absolute;
+  margin-left:0;
+  margin-top:.35em;
+}
+input[type="checkbox"] + label {
+	font-size:.9375em;
+	font-weight:normal;
+  margin-left:1.25em;
+	padding:0;
+}
+input[type="checkbox"]:hover,
+input[type="checkbox"] + label:hover {
+	cursor: pointer;
+}
 /*#cssrulefilter:checked,
 input[type="checkbox"] {
   position:absolute;

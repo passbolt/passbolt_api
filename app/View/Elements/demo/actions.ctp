@@ -49,6 +49,11 @@
 	</ul>
 	<ul class="actions secondary">
 		<li>
+			<a href="#" class="button selected toggle">
+				<i class="icon layout eye big no-text"></i>
+				<span>view sidebar</span>
+			</a>
+		<li>
 			<a href="#" class="button selected toggle duo">
 				<i class="icon layout grid big no-text"></i>
 				<span>grid layout</span>
@@ -65,10 +70,56 @@
 					<span>config</span>
 				</a>
 				<ul class="dropdown-content right">
-					<li><a href="#">my profile</a></li>
-					<li><a href="#">manage or generate new keys</a></li>
-					<li><a href="#" class="separator">manage people</a></li>
-					<li><a href="#">logout</a></li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-00d77ffa-7278-41fc-a4bb-1b63d7a10fee" checked>
+						<label for="checkbox-00d77ffa-7278-41fc-a4bb-1b63d7a10fee">resource name</label>
+					</div>
+					</li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-10d77ffa-7278-41fc-a4bb-1b63d7a10fee" checked>
+						<label for="checkbox-10d77ffa-7278-41fc-a4bb-1b63d7a10fee">username</label>
+					</div>
+					</li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-20d77ffa-7278-41fc-a4bb-1b63d7a10fee" checked>
+						<label for="checkbox-20d77ffa-7278-41fc-a4bb-1b63d7a10fee">password</label>
+					</div>
+					</li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-30d77ffa-7278-41fc-a4bb-1b63d7a10fde" checked>
+						<label for="checkbox-30d77ffa-7278-41fc-a4bb-1b63d7a10fde">URL</label>
+					</div>
+					</li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-40d77ffa-7278-41fc-a4bb-1b63d7a10fee">
+						<label for="checkbox-40d77ffa-7278-41fc-a4bb-1b63d7a10fee">owner</label>
+					</div>
+					</li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-50d77ffa-7278-41fc-a4bb-1b63d7a10fee">
+						<label for="checkbox-50d77ffa-7278-41fc-a4bb-1b63d7a10fee">expire</label>
+					</div>
+					</li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-70d77ffa-7278-41fc-a4bb-1b63d7a10fee">
+						<label for="checkbox-60d77ffa-7278-41fc-a4bb-1b63d7a10fee">modified</label>
+					</div>
+					</li>
+					<li>
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-70d77ffa-7278-41fc-a4bb-1b63d7a10fee">
+						<label for="checkbox-70d77ffa-7278-41fc-a4bb-1b63d7a10fee">created</label>
+					</div>
+					</li>
+					<li><a href="#" class="top-separator">save this settings</a></li>
+					<li><a href="#">reset to default setting</a></li>
 				</ul>
 			</di>
 		</li>

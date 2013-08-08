@@ -115,19 +115,14 @@ span + .icon  {
 .icon.more:before  {
   content: '\E003';
 }
-.icon.fav:before  {
-  content: '\2605';
-	color:#CCC;
-}
-.icon.unfav:before  {
-  content: '\2605';
-	color:#d40101;
-}
 .icon.cog:before  {
   content: '\2699';
 }
 .icon.arrowdown:before  {
   content: '\25BE';
+}
+.icon.eye:before  {
+  content: '\E70A';
 }
 
 .icon.layout {
@@ -138,6 +133,16 @@ span + .icon  {
 }
 .icon.layout.box:before  {
   content: '\268F';
+}
+
+/* favorites */
+.icon.fav:before  {
+  content: '\2605';
+	color:#CCC;
+}
+.icon.unfav:before  {
+  content: '\2605';
+	color:#d40101;
 }
 
 /* social */

@@ -27,7 +27,7 @@
 		</form>
 	</div>
 	<div class="col3 profile-wrapper">
-		<div class="user profile">
+		<div class="user profile dropdown">
 			<div class="center-cell-wrapper">
 				<div class="details center-cell">
 					<span class="name">Mr Splashy Pants</span>
@@ -38,7 +38,15 @@
 				<img src="img/user.png" /> 
 			</div>
 		  <div class="more right-cell">
-				<a href="#"><span>more</span></a>
+				<a href="#" data-dropdown-content-id="cc1d4fae-7dec-11d0-a765-00a0c91e6bf6"><span>more</span></a>
+			</div>
+			<div class="dropdown-content right" id="cc1d4fae-7dec-11d0-a765-00a0c91e6bf6">
+				<ul>
+					<li><a href="#">my profile</a></li>
+					<li><a href="#">manage or generate new keys</a></li>
+					<li><a href="#" class="separator">manage people</a></li>
+					<li><a href="#">logout</a></li>
+				</ul>
 			</div>
 		</div>
 	</div>
