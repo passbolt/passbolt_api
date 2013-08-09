@@ -31,7 +31,7 @@ class ResourcesController extends AppController {
 
 		// if categories id are provided check their validity, and build model request with
 		if (count($categoriesId)) {
-			$data['CategoryResource.category_id'] = array();
+			$data['Category.id'] = array();
 		}
 		$maxI = count($categoriesId);
 		for ($i = 0; $i < $maxI; $i++) {
@@ -51,10 +51,10 @@ class ResourcesController extends AppController {
 			}
 
 			if ($recursive == false) {
-				$data['CategoryResource.category_id'][] = $categoryId;
+				$data['Category.id'][] = $categoryId;
 			} else {
 				// If the category has yet been added to the model request, continue
-				if (in_array($categoryId, $data['CategoryResource.category_id'])) {
+				if (in_array($categoryId, $data['Category.id'])) {
 					continue;
 				}
 				$cats = $this->Resource->CategoryResource->Category->find(
@@ -70,7 +70,7 @@ class ResourcesController extends AppController {
 					)
 				);
 				foreach ($cats as $cat) {
-					$data['CategoryResource.category_id'][] = $cat['Category']['id'];
+					$data['Category.id'][] = $cat['Category']['id'];
 				}
 			}
 		}
@@ -80,7 +80,6 @@ class ResourcesController extends AppController {
 			$data['keywords'] = $keywords;
 		}
 
-		$this->Resource->bindModel(array('hasMany' => array('CategoryResource')));
 		$options = $this->Resource->getFindOptions('index', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
 

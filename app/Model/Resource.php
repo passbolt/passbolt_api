@@ -15,6 +15,7 @@ class Resource extends AppModel {
  * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = array(
+		'SuperJoin',
 		'Containable',
 		'Trackable',
 		'Permissionable'=>array('priority' => 1)
@@ -168,12 +169,10 @@ class Resource extends AppModel {
 				$conditions = array(
 					'conditions' => array(
 						'Resource.deleted' => 0,
-						// 'UserResourcePermission.user_id' => User::get('id'),
-						// 'Permission.type >=' => 1
 					)
 				);
-				if (isset($data['CategoryResource.category_id'])) {
-					$conditions['conditions']['CategoryResource.category_id'] = $data['CategoryResource.category_id'];
+				if (isset($data['Category.id'])) {
+					$conditions['conditions']['Category.id'] = $data['Category.id'];
 					$conditions['order'] = array(
 						'Resource.name ASC'
 					);
@@ -208,6 +207,9 @@ class Resource extends AppModel {
 					'fields' => array(
 						'id', 'name', 'username', 'expiry_date', 'uri', 'description', 'modified',
 						'Secret.data', 'created', 'modified'
+					),
+					'superjoin' => array(
+						'Category'
 					),
 					'contain' => array(
 						'CategoryResource',
