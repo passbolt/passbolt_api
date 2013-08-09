@@ -48,27 +48,22 @@ class UsersController extends AppController {
  * @access public
  */
 	public function index() {
-	  $keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
-    // $groupsId = isset($this->request->query['groups_id']) && !empty($this->request->query['groups_id'])
-      // ? explode(',', $this->request->query['groups_id'])
-      // : array();
+	    $keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
     
-    
-    $data = array();
-    // if keywords provided build the model request with
-    if (!empty($keywords)) {
-      $data['keywords'] = $keywords;
+        $data = array();
+        // if keywords provided build the model request with
+        if (!empty($keywords)) {
+          $data['keywords'] = $keywords;
+        }
+        $o = $this->User->getFindOptions('index', User::get('Role.name'), $data);
+        $returnVal = $this->User->find('all', $o);
+        if (empty($returnVal)) {
+            $this->Message->notice(__('There is no user to display'));
+            return;
+        }
+        $this->set('data', $returnVal);
+        $this->Message->success();
     }
-     
-		$o = $this->User->getFindOptions('index', User::get('Role.name'), $data);
-		$returnVal = $this->User->find('all', $o);
-		if (!empty($data)) {
-			$this->Message->success();
-			$this->set('data', $returnVal);
-		} else {
-			$this->Message->notice(__('There is no user to display'));
-		}
-	}
 
 /**
  * View
@@ -100,5 +95,55 @@ class UsersController extends AppController {
 		$this->set('data', $resource);
 		$this->Message->success();
 	}
+
+    public function add(){
+      // First of all, check if the user is an administrator
+      $role = $this->Auth->user('Role.name');
+      if($role != Role::ADMIN){
+        $this->Message->error(__('You are not allowed to access this entry point'));
+        return;
+      }
+
+      // check the HTTP request method
+      if (!$this->request->is('post')) {
+        $this->Message->error(__('Invalid request method, should be POST'));
+        return;
+      }
+      // check if data was provided
+      if (!isset($this->request->data['User'])) {
+        $this->Message->error(__('No data were provided'));
+        return;
+      }
+
+      // set the data for validation and save
+      $userData = $this->request->data;
+      $this->User->set($userData);
+
+      $fields = $this->User->getFindFields('userSave', User::get('Role.name'));
+
+      // check if the data is valid
+      if (!$this->User->validates()) {
+        $this->Message->error(__('Could not validate user data'));
+        return;
+      }
+
+      //$this->User->begin();
+      $user = $this->User->save($userData, false, $fields['fields']);
+
+      if ($user == false) {
+        $this->User->rollback();
+        $this->Message->error(__('The user could not be saved'));
+        return;
+      }
+      $this->User->commit();
+
+      $data = array('User.id' => $this->User->id);
+      $options = $this->User->getFindOptions('userView', User::get('Role.name'), $data);
+      $users = $this->User->find('all', $options);
+
+      $this->Message->success(__("The user has been saved successfully"));
+      $this->set('data', $users[0]);
+      return;
+    }
 
 }
