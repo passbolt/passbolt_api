@@ -46,11 +46,11 @@
 		</div>
 		<div class="footnotes">
 			<span class="copyright">2012-2013 &copy; bolt software pvt. ltd.</span> &bullet; 
-			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a></div>
+			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a>
 		</div>
 	</div>
-<?php echo $this->element('demo/dialog'); ?>
 </div>
+<?php echo $this->element('demo/dialog'); ?>
 <script>
 	// if there is not css styling for scrollbar
 	// uses jScrollPane with mousewheel

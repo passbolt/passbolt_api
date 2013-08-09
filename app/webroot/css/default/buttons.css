@@ -78,7 +78,7 @@ input[type=submit]:focus,
 input.button:focus,
 button:focus,
 a.button:focus {
-	border:1px solid #bbb;
+	border:1px solid #2a9ceb;
 }
 
 /* active */
@@ -86,12 +86,12 @@ input[type=submit]:active,
 input.button:active,
 button:active,
 a.button:active {
-  backgroun:#ededed;
+  background:#ededed;
   position: relative;
   -webkit-box-shadow: inset 0 1px 2px rgba(255,255,255,.2);
   -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
   box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
-	border:1px solid #bbb;
+	border:1px solid #CCC;
 }
 input[type=submit].disabled,
 input.button.disabled,
