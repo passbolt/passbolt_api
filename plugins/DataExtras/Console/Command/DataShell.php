@@ -39,22 +39,10 @@ class DataShell extends AppShell {
  */
 	public function execute() {
 		parent::execute();
-		var_dump($this->Model);
-//		if (empty($this->args)) {
-//			$this->_interactive();
-//		}
-//
-//		if (isset($this->args[0])) {
-			$this->interactive = false;
-			if (!isset($this->connection)) {
-				$this->connection = 'default';
-			}
-//			if (strtolower($this->args[0]) == 'all') {
-//				return $this->all();
-//			}
-//			$model = $this->_modelName($this->args[0]);
-//			$this->bake($model);
-//		}
+        $this->interactive = false;
+        if (!isset($this->connection)) {
+            $this->connection = 'default';
+        }
 	}
 	
 /**
@@ -64,7 +52,13 @@ class DataShell extends AppShell {
 	public function import() {
 		foreach($this->dataModels as $dataModel){
 			$Task = $this->Tasks->load('DataExtras.' . $dataModel);
+            if(method_exists($Task, "beforeExecute")) {
+                $Task->beforeExecute();
+            }
 			$Task->execute();
+            if(method_exists($Task, "afterExecute")) {
+                $Task->afterExecute();
+            }
 			$this->out('Data for model ' . $dataModel . ' inserted');
 		}
 	}

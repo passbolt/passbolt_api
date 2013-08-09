@@ -277,36 +277,6 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertTrue(empty($cat), "The category Drug places should have been deleted but is not");
 	}
 
-	public function testRename() {
-		// Error : no data provided
-		$category = new Category();
-		$category->useDbConfig = 'test';
-		$cat = $category->findByName('cp-project2');
-		$id = $cat['Category']['id'];
-		$newName = 'cp-project2-renamed';
-
-		$result = json_decode($this->testAction("/categories/rename.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/rename : The test should return error but is returning {$result['header']['status']}");
-
-		$result = json_decode($this->testAction("/categories/rename/$id/$newName.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/rename/$id/$newName.json : The test should return success but is returning {$result['header']['status']}");
-
-		$result = json_decode($this->testAction("/categories/rename/badid/$newName.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/rename/badid/$newName.json : The test should return error but is returning {$result['header']['status']}");
-
-		// test with id doesnt exist
-		$result = json_decode($this->testAction("/categories/rename/4ff6111b-efb8-4a26-aab4-2184cbdd56ca/$newName.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/rename/4ff6111b-efb8-4a26-aab4-2184cbdd56ca/$newName.json : The test should return error but is returning {$result['header']['status']}");
-
-		// check that the previous name doesn't exist anymore
-		$cat = $category->findByName('cp-project2');
-		$this->assertTrue(empty($cat), "Failed to check that cp-project2 has been renamed into something else.");
-
-		 // check that the new name is there
-		$cat = $category->findByName('cp-project2-renamed');
-		$this->assertFalse(empty($cat), "Failed to test that cp-project2 has been renamed into cp-project2-renamed");
-	}
-
 	public function testMove() {		
 		$hr = $this->Category->findByName('human resource');
 		$administration = $this->Category->findByName('administration');

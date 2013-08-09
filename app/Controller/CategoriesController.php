@@ -254,54 +254,6 @@ class CategoriesController extends AppController {
 	}
 
 /**
- * Rename a category
- * @param $id, the id of the category
- * @param $name, the name of the category
- * @return void
- */
-	public function rename($id=null, $name="") {
-		// check if the category id is provided
-		if (!isset($id)) {
-			$this->Message->error(__('The category id is not provided'));
-			return;
-		}
-		// check if the id is valid
-		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The category id invalid'));
-			return;
-		}
-
-		// check if the category exist
-		$category = $this->Category->findById($id);
-		if (empty($category)) {
-			$this->Message->error(__('The category could not be found'));
-			return;
-		}
-
-		// save the new name only
-		$c['Category'] = array(
-			'id'		=> $id,
-			'name'	=> $name
-		);
-
-		// sanitize the data
-		$c['Category'] = Sanitize::clean($c['Category']);
-
-		$this->Category->set($c);
-		if (!$this->Category->validates()) {
-			$this->Message->error(__('Could not validate category data'));
-			return;
-		}
-
-		$fields = $this->Category->getFindFields("rename", User::get('Role.name'));
-		if ($this->Category->save($c, true, $fields['fields'])) {
-			$this->Message->success(__('The category have been renamed'));
-		} else {
-			$this->Message->error(__('The category could not be saved'));
-		}
-	}
-
-/**
  * Move a category in the tree
  * @param $id, the id of the category to move
  * @param $position, the position among the sieblings

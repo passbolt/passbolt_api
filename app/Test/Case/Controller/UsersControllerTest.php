@@ -122,4 +122,104 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testLogout() {
 		$result = $this->testAction('/logout',array('return' => 'contents'), true);
 	}
+
+    public function testAdd() {
+      // test with normal user
+      $kk = $this->user->findByUsername('user@passbolt.com');
+      $this->user->setActive($kk);
+
+      $result = json_decode($this->testAction('/users.json', array(
+        'data' => array(
+          'User' => array(
+            'username' => 'testadd1@passbolt.com',
+            'password' => 'test1',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'active' => 1
+            ),
+          ),
+          'method' => 'post',
+          'return' => 'contents'
+        )), true
+      );
+
+      $this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /users.json : The test should return an error but is returning " . print_r($result, true));
+
+      $kk = $this->user->findByUsername('admin@passbolt.com');
+      $this->user->setActive($kk);
+      $result = json_decode($this->testAction('/users.json', array(
+            'data' => array(
+              'User' => array(
+                'username' => 'testadd1@passbolt.com',
+                'password' => 'test1',
+                'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+                'active' => 1
+              ),
+            ),
+            'method' => 'post',
+            'return' => 'contents'
+          )), true
+      );
+      $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /users.json : The test should return sucess but is returning " . print_r($result, true));
+
+      // check that User was properly saved
+      $user = $this->user->findByUsername("testadd1@passbolt.com");
+      $this->assertEquals(1, count($user), "Add : /users.json : The number of users returned should be 1, but actually is " . count($user));
+      $this->assertEquals($user['User']['username'], $result['body']['User']['username'], "Add : /users.json : the email of the user inserted should be test1@passbolt.com but is {$result['body']['User']['username']}");
+
+      // Add without Category
+      /*$result = json_decode($this->testAction('/resources.json', array(
+            'data' => array(
+              'Resource' => array(
+                'name' => 'test2',
+                'username' => 'test2',
+                'uri' => 'http://www.google.com',
+                'description' => 'this is a description'
+              )
+            ),
+            'method' => 'post',
+            'return' => 'contents'
+          )), true);
+      $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
+
+      // Test with a bad format of category
+      $result = json_decode($this->testAction('/resources.json', array(
+            'data' => array(
+              'Resource' => array(
+                'name' => 'test3',
+                'username' => 'test3',
+                'uri' => 'http://www.google.com',
+                'description' => 'this is a description'
+              ),
+              'Category' => array(
+                0 => array(
+                  'id' => '8u7'
+                )
+              )
+            ),
+            'method' => 'post',
+            'return' => 'contents'
+          )), true);
+      $this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+
+      // Test with wrong id for category
+      $result = json_decode($this->testAction('/resources.json', array(
+            'data' => array(
+              'Resource' => array(
+                'name' => 'test3',
+                'username' => 'test3',
+                'uri' => 'http://www.google.com',
+                'description' => 'this is a description'
+              ),
+              'Category' => array(
+                0 => array(
+                  'id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56hg'
+                )
+              )
+            ),
+            'method' => 'post',
+            'return' => 'contents'
+          )), true);
+      $this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));*/
+
+    }
 }
