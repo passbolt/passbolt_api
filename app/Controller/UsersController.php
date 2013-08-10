@@ -83,23 +83,28 @@ class UsersController extends AppController {
 		}
 		// not sql needed if a user is asking for his own data
 		if (User::get('id') == $id) {
-			$resource = User::get();
+			$user = User::get();
 		} else {
-			$o = $this->User->getFindFields('userView', User::get('Role.name'));
-			$resource = $this->User->findById($id, $o['fields']);
-			if (!$resource) {
-				$this->Message->error(__('The user does not exist'));
-				return;
-			}
+            $data = array('User.id' => $id);
+            $o = $this->User->getFindOptions('userView', User::get('Role.name'), $data);
+			$user = $this->User->find('all', $o);
+            $user = isset($user[0]) ? $user[0] : null;
 		}
-		$this->set('data', $resource);
+
+        if (!$user) {
+          $this->Message->error(__('The user does not exist'));
+          return;
+        }
+
+		$this->set('data', $user);
 		$this->Message->success();
 	}
 
     public function add(){
+      // TODO : add associations management
+
       // First of all, check if the user is an administrator
-      $role = $this->Auth->user('Role.name');
-      if($role != Role::ADMIN){
+      if(User::get('Role.name') != Role::ADMIN){
         $this->Message->error(__('You are not allowed to access this entry point'));
         return;
       }
@@ -144,6 +149,108 @@ class UsersController extends AppController {
       $this->Message->success(__("The user has been saved successfully"));
       $this->set('data', $users[0]);
       return;
+    }
+
+    /**
+     * edit entry point for users
+     * @param null $id
+     */
+    public function edit($id = null) {
+        // First of all, check if the user is an administrator
+        if(User::get('Role.name') != Role::ADMIN){
+          $this->Message->error(__('You are not allowed to access this entry point'));
+          return;
+        }
+
+        // check the HTTP request method
+        if (!$this->request->is('put')) {
+          $this->Message->error(__('Invalid request method, should be PUT'));
+          return;
+        }
+
+        // check if data was provided
+        if (!isset($this->request->data['User'])) {
+          $this->Message->error(__('No data were provided'));
+          return;
+        }
+
+        // set the data for validation and save
+        $userData = $this->request->data;
+
+        if (isset($userData['User'])) {
+
+            $this->User->id = $id;
+
+            // check if the id is valid
+            if (!Common::isUuid($id)) {
+              $this->Message->error(__('The user id invalid'));
+              return;
+            }
+            // get the resource id
+            $resource = $this->User->findById($id);
+            if (!$resource) {
+              $this->Message->error(__('The user doesn\'t exist'));
+              return;
+            }
+
+            $this->User->set($userData);
+            if (!$this->User->validates()) {
+              $this->Message->error(__('Could not validate User'));
+              return;
+            }
+
+            $fields = $this->User->getFindFields('userEdit', User::get('Role.name'));
+            $save = $this->User->save($userData, false, $fields['fields']);
+            if (!$save) {
+              $this->Message->error(__('The user could not be updated'));
+              return;
+            }
+
+            $data = array('User.id' => $this->User->id);
+            $options = $this->User->getFindOptions('userView', User::get('Role.name'), $data);
+            $users = $this->User->find('all', $options);
+
+            $this->Message->success(__("The user has been updated successfully"));
+            $this->set('data', $save);
+            return;
+        }
+      }
+
+    /**
+     * Delete a user
+     * @param uuid id the id of the user to delete
+     */
+    public function delete($id = null) {
+      // First of all, check if the user is an administrator
+      if(User::get('Role.name') != Role::ADMIN){
+        $this->Message->error(__('You are not allowed to access this entry point'));
+        return;
+      }
+
+      // check if the category id is provided
+      if (!isset($id)) {
+        $this->Message->error(__('The user id is missing'));
+        return;
+      }
+      // check if the id is valid
+      if (!Common::isUuid($id)) {
+        $this->Message->error(__('The user id invalid'));
+        return;
+      }
+      $user = $this->User->findById($id);
+      if (!$user) {
+        $this->Message->error(__('The user doesn\'t exist'));
+        return;
+      }
+      $this->User->id = $id;
+      $user['User']['deleted'] = true;
+
+      $fields = $this->User->getFindFields('userDelete', User::get('Role.name'));
+      if (!$this->User->save($user, true, $fields['fields'])) {
+        $this->Message->error(__('Error while deleting user'));
+        return;
+      }
+      $this->Message->success(__('The user was sucessfully deleted'));
     }
 
 }

@@ -60,6 +60,7 @@ class AppSchema extends CakeSchema {
 		'username' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'key' => 'unique', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'password' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'active' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),
+        'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),

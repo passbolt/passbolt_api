@@ -241,7 +241,7 @@ class User extends AppModel {
 					$conditions = array(
 						'conditions' => array(
 							'User.username' => User::ANONYMOUS,
-							'User.active' => 1
+							'User.active' => true
 						)
 					);
 				break;
@@ -249,7 +249,8 @@ class User extends AppModel {
                 case 'userView':
                   $conditions = array(
                     'conditions' => array(
-                      'User.active' => 1
+                      'User.active' => true,
+                      'User.deleted' => false
                     )
                   );
                   if (isset($data['User.id'])) {
@@ -259,7 +260,8 @@ class User extends AppModel {
                 case 'index':
                   $conditions = array(
                     'conditions' => array(
-                      'User.active' => 1
+                      'User.active' => true,
+                      'User.deleted' => false
                     )
                   );
                   if (isset($data['keywords'])) {
@@ -306,7 +308,9 @@ class User extends AppModel {
 			default:
 				$fields = array(
 					'fields' => array(
-						'User.id', 'User.username', 'User.role_id'
+						'User.id',
+                        'User.username',
+                        'User.role_id',
 					),
 					'contain' => array(
 						'Role' => array(
@@ -344,6 +348,23 @@ class User extends AppModel {
               )
             );
           break;
+          case 'userEdit':
+            $fields = array(
+              'fields' => array(
+                'username',
+                'role_id',
+                'password',
+                'active'
+              )
+            );
+            break;
+          case 'userDelete':
+            $fields = array(
+              'fields' => array(
+                'deleted'
+              )
+            );
+            break;
 		}
 		return $fields;
 	}
