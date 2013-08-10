@@ -64,6 +64,7 @@ button .icon:before,
 /* never too small */
 .icon.big:before {
 	font-size:3em;
+	line-height:1.15em;
 	margin:0;
 	top:-0.2em;
 	left:0.1em;
@@ -124,7 +125,14 @@ span + .icon  {
 .icon.eye:before  {
   content: '\E70A';
 }
+.icon.clock:before {
+	content: '\1F554';
+}
+.icon.key:before  {
+  content: '\1F511';
+}
 
+/* layout */
 .icon.layout {
 	font-size:1.07em;
 }

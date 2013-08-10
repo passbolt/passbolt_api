@@ -15,7 +15,7 @@
 	padding-left:.8em;
 	margin-left:1em;
 	margin-bottom:.25em;
-	background:#0089e0;
+	background:#2a9ceb;
 	color:#fff;
 	text-decoration:none;
 	-moz-border-radius:4px;
@@ -31,7 +31,7 @@
 	left:-0.575em;
 	width:0;
 	height:0;
-	border-color:transparent #0089e0 transparent transparent;
+	border-color:transparent #2a9ceb transparent transparent;
 	border-style:solid;
 	border-width:.75em .75em .75em 0;
 }

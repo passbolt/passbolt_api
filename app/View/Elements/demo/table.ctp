@@ -21,7 +21,7 @@
 			<li><a href="#">another one</a></li>
 		</ul>
 	</div>
-	<table cellspacing="0">
+	<table>
 		<thead>
 			<tr>
 				<th class="selections s-cell">
@@ -48,14 +48,14 @@
 	</table>
 </div>
 <div class="tableview-content scroll">
-	<table cellspacing="0">
+	<table>
 		<tbody>
-<?php $i = 0; foreach($secrets as $secret): ++$i; ?>
+<?php $i = 0; foreach($secrets as $secret): ++$i;?>
 			<tr>
 				<td class="selections s-cell">
 					<div class="input checkbox">
-						<input type="checkbox" name="select" id="checkbox-50d77ffa-7278-41fc-a4bb-1b63d7a10fce">
-						<label for="checkbox-50d77ffa-7278-41fc-a4bb-1b63d7a10fce">select <?php echo $secret['name']; ?></label>
+						<input type="checkbox" name="select" id="checkbox-<?php echo $secret['id']; ?>">
+						<label for="checkbox-<?php echo $secret['id']; ?>">select <?php echo $secret['name']; ?></label>
 					</div>
 				</td>
 				<td class="favorites s-cell">

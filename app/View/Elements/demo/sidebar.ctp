@@ -126,7 +126,7 @@
 			<li class="comment-wrapper">
 				<div class="comment add">
 					<div class="author profile picture"><a href="#"><img src="img/user.png"/></a></div>
-					<div class="input text required">
+					<div class="input textarea required">
 						<label for="Comment">Add a comment</label>
 						<input name="data[comment][parent_id]" class="required" maxlength="36" type="hidden" id="CommentParentId"/>
 						<input name="data[comment][foreign_id]" class="required" maxlength="36" type="hidden" id="CommentForeignId"/>
@@ -144,5 +144,4 @@
 			</li>
 		</ul>
 	</div>
-
 </div>

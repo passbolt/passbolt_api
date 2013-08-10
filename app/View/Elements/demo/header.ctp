@@ -20,7 +20,7 @@
 				<label for="search">Search</label>
 				<input id="search" class="required js_search" maxlength="50" type="search" placeholder="search">
 			</div>
-			<button type="text" value="search">
+			<button value="search">
 				<i class="icon search"></i>
 				<span class="text visuallyhidden">search</span>
 			</button>
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 		  <div class="picture left-cell">
-				<img src="img/user.png" /> 
+				<img src="img/user.png" alt="your picture"/> 
 			</div>
 		  <div class="more right-cell">
 				<a href="#" data-dropdown-content-id="cc1d4fae-7dec-11d0-a765-00a0c91e6bf6"><span>more</span></a>

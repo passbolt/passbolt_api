@@ -50,7 +50,7 @@
 		</div>
 		<div class="footnotes">
 			<span class="copyright">2012-2013 &copy; bolt software pvt. ltd.</span> &bullet; 
-			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a></div>
+			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a>
 		</div>
 	</div>
 </div>
