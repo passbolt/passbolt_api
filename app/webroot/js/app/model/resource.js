@@ -34,7 +34,8 @@ steal(
 			'modified': 'date',
 			'created': 'date',
 			'description': 'string',
-			'Category': 'passbolt.model.Category.models'
+			'Category': 'passbolt.model.Category.models',
+			'Favorite': 'passbolt.model.Favorite.model'
 		},
 
 		'create' : function (attrs, success, error) {
@@ -131,6 +132,18 @@ steal(
 					can.trigger(passbolt.model.Resource, 'updated', self);
 				}
 			});
+		},
+		
+		/**
+		 * Is favorite
+		 * @return {boolean} 
+		 */
+		'isFavorite': function () {
+			if (this.Favorite && this.Favorite.id) {
+				return true;
+			} else {
+				return false;
+			}
 		},
 		
 		'destroy': function () {

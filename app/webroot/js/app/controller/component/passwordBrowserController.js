@@ -3,7 +3,8 @@ steal(
 	'app/model/resource.js',
 	'app/model/category.js',
 	'app/controller/component/copyLoginButtonController.js',
-	'app/controller/component/copySecretButtonController.js'
+	'app/controller/component/copySecretButtonController.js',
+	'app/controller/component/favoriteController.js'
 ).then(function () {
 
 	/*
@@ -53,7 +54,7 @@ steal(
 			});
 
 			// the columns names
-			options.columnNames = ['', 'Name', 'Username', 'Uri', 'Modified', '', ''];
+			options.columnNames = ['', '', 'Name', 'Username', 'Uri', 'Modified', '', ''];
 
 			// the columns model
 			options.columnModel = [{
@@ -73,6 +74,23 @@ steal(
 						}
 					);
 					checkbox.start();
+				}
+			}, {
+				'name': 'favorite',
+				'index': 'favorite',
+				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+					var availableValues = [];
+					availableValues[item.id] = '';
+					var favorite = mad.helper.ComponentHelper.create(
+						cellElement,
+						'inside_replace',
+						passbolt.controller.component.FavoriteController, {
+							'id': 'favorite_' + item.id, 
+							'name': 'test2',
+							'instance': item
+						}
+					);
+					favorite.start();
 				}
 			}, {
 				'name': 'name',

@@ -341,6 +341,43 @@ steal(
 			});
 		},
 
+		/**
+		 * Observe when the user requests to set an instance as favorite
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Model} instance The target instance to set as favorite
+		 * @return {void}
+		 */
+		'{mad.bus} request_favorite': function (el, ev, instance) {
+			// gather the data to create a new favorite
+			var data = {
+				'foreign_model': 'resource',
+				'foreign_id': instance.id
+			};
+			
+			// create a new permission
+			new passbolt.model.Favorite(data)
+				.save(function(favorite){
+					instance.Favorite = favorite;
+					can.trigger(passbolt.model.Resource, 'updated', instance);
+				});
+		},
+
+		/**
+		 * Observe when the user requests to unset an instance as favorite
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Model} instance The target instance to unset as favorite
+		 * @return {void}
+		 */
+		'{mad.bus} request_unfavorite': function (el, ev, instance) {
+			console.log(instance.Favorite);
+			instance.Favorite.destroy(function() {
+				instance.Favorite = null;
+				can.trigger(passbolt.model.Resource, 'updated', instance);
+			});
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */
