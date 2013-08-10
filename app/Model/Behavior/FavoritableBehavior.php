@@ -29,7 +29,7 @@ class FavoritableBehavior extends ModelBehavior {
 			'Favorite' => array(
 				'dependent' => true,
 				'foreignKey' => 'foreign_id',
-				'conditions' => array('user_id' => User::get('id'))
+				'conditions' => array('Favorite.user_id' => User::get('id'))
 			)
 		)), false);
 	}

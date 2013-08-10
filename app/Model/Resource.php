@@ -15,8 +15,10 @@ class Resource extends AppModel {
  * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = array(
+		'SuperJoin',
 		'Containable',
 		'Trackable',
+		'Favoritable',
 		'Permissionable'=>array('priority' => 1)
 	);
 
@@ -168,12 +170,10 @@ class Resource extends AppModel {
 				$conditions = array(
 					'conditions' => array(
 						'Resource.deleted' => 0,
-						// 'UserResourcePermission.user_id' => User::get('id'),
-						// 'Permission.type >=' => 1
 					)
 				);
-				if (isset($data['CategoryResource.category_id'])) {
-					$conditions['conditions']['CategoryResource.category_id'] = $data['CategoryResource.category_id'];
+				if (isset($data['Category.id'])) {
+					$conditions['conditions']['Category.id'] = $data['Category.id'];
 					$conditions['order'] = array(
 						'Resource.name ASC'
 					);
@@ -206,12 +206,17 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'id', 'name', 'username', 'expiry_date', 'uri', 'description', 'modified',
-						'Secret.data', 'created', 'modified'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.created', 'Resource.modified',
+						'Secret.data', 'Secret.created', 'Secret.modified',
+						'Favorite.id', 'Favorite.user_id', 'Favorite.created',
+					),
+					'superjoin' => array(
+						'Category'
 					),
 					'contain' => array(
-						'CategoryResource',
 						'Category',
+						'CategoryResource',
+						'Favorite',
 						'Secret'
 					)
 				);

@@ -9,6 +9,7 @@ steal(
 	'app/controller/component/notificationController.js',
 	// the ressources workspace models
 	'app/model/category.js',
+	'app/model/favorite.js',
 	'app/model/resource.js',
 	'app/model/filter.js',
 	// the application template
