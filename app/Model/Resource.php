@@ -18,6 +18,7 @@ class Resource extends AppModel {
 		'SuperJoin',
 		'Containable',
 		'Trackable',
+		'Favoritable',
 		'Permissionable'=>array('priority' => 1)
 	);
 
@@ -205,15 +206,17 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'id', 'name', 'username', 'expiry_date', 'uri', 'description', 'modified',
-						'Secret.data', 'created', 'modified'
+						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.created', 'Resource.modified',
+						'Secret.data', 'Secret.created', 'Secret.modified',
+						'Favorite.id', 'Favorite.user_id', 'Favorite.created',
 					),
 					'superjoin' => array(
 						'Category'
 					),
 					'contain' => array(
-						'CategoryResource',
 						'Category',
+						'CategoryResource',
+						'Favorite',
 						'Secret'
 					)
 				);

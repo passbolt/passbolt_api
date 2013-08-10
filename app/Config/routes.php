@@ -32,6 +32,7 @@
   Router::mapResources('users');
   Router::mapResources('groups');
 	Router::mapResources('categories');
+	Router::mapResources('favorites');
 	Router::mapResources('resources');
 	Router::mapResources('secrets');
 	Router::mapResources('permissions');
@@ -145,6 +146,19 @@
 		array('pass' => array('model', 'id')));
  	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'edit', "[method]" => "PUT"));
  	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'delete', "[method]" => "DELETE"));
+
+/**
+ * Custom route for favorites controller
+ */
+	// Router::connect(
+		// '/favorites/:model/:id',
+		// array('controller' => 'favorites', 'action' => 'viewForeignComments', "[method]" => "GET"),
+		// array('pass' => array('model', 'id')));
+ 	Router::connect(
+		'/favorites/:model/:id',
+		array('controller' => 'favorites', 'action' => 'add', "[method]" => "POST"), 
+		array('pass' => array('model', 'id')));
+ 	Router::connect('/favorites/*', array('controller' => 'favorites', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
  * Load all plugin routes.	See the CakePlugin documentation on
