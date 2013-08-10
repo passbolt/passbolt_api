@@ -196,6 +196,36 @@ steal(
 		 */
 		'refreshItem': function (item) {
 			this.view.refreshItem(item);
+			
+			var self = this,
+				mappedItem = this.getMap().mapObject(item),
+				columnModels = this.getColumnModel();
+
+			// apply a widget to cells following the columns model
+			for(var j in columnModels) {
+				var columnModel = columnModels[j];
+
+				if(columnModel.cellAdapter) {
+					var itemId = mappedItem.id;
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var cellValue = mappedItem[columnModel.name];
+					columnModel.cellAdapter($cell, cellValue, mappedItem, item, columnModel);
+				}
+				// @todo Cell adapter replace widget, remove this part if not usefull
+				if(columnModel.widget) {
+					var widgetClass = columnModel.widget.clazz,
+						widgetJQueryPlugin = widgetClass._fullName,
+						widgetOptions = columnModel.widget.options;
+
+					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
+					// part to insert the items and render widget if there is
+					var itemId = mappedItem[i].id;
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					widgetOptions.value = mappedItem[i][columnModel.name];
+					$cell[widgetJQueryPlugin](widgetOptions);
+					$cell[widgetJQueryPlugin]('render');
+				}
+			}
 		},
 
 		/**
