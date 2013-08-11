@@ -23,7 +23,7 @@ if (!class_exists('CakeSession')) {
 class ResourcesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.resource', 'app.category', 'app.categories_resource', 'app.secret', 
+		'app.resource', 'app.category', 'app.categories_resource', 'app.secret', 'app.favorite',
 		'app.user', 'app.group', 'app.groups_user', 'app.role', 
 		'app.permission', 'app.permissions_type', 'app.permission_view',
 		'app.authenticationBlacklist');
@@ -63,52 +63,43 @@ class ResourcesControllerTest extends ControllerTestCase {
 		);
 	}
 
-	public function testViewByCategory() {
-		$projectCat = $this->Resource->CategoryResource->Category->findByName('cp-project2');
+	public function testIndex() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
-
-		$id = $projectCat['Category']['id'];
+		$cpCat2 = $this->Resource->CategoryResource->Category->findByName('cp-project2');
+		$cpCat3 = $this->Resource->CategoryResource->Category->findByName('cp-project3');
 
 		// test when no parameters are provided
-		$result = json_decode($this->testAction("/resources/viewByCategory.json", array('return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/resources/viewByCategory.json : The test should return an error but is returning {$result['header']['status']}");
+		$url = '/resources/index.json';
+		$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return an error but is returning {$result['header']['status']}");
+		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
 
-		// test when a wrong id is provided
-		$result = json_decode($this->testAction("/resources/viewByCategory/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/resources/viewByCategory/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json : The test should return an error but is returning {$result['header']['status']}");
-
-		// test if the object returned is a success one
-		$url = "/resources/viewByCategory/" . $id . ".json";
+		// test when a wrong category id
+		$catId = '4ff6111b-efb8-4a26-aab4-2184cbdd56ca';
+		$url = '/resources/index.json?categories_id=' . $catId;
 		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'],
-			$url . " should return success but returned {$result['header']['status']}"
-		);
-		$this->assertEquals('cpp2-pwd2', $result['body'][1]['Resource']['name'],
-			$url . " test should read 'festival du cinema' but is reading {$result['body'][1]['Resource']['name']}"
-		);
-		$this->assertEquals(2, count($result['body']),
-			$url . " counting the number of elements should return '2' but is reading " . count($result['body'])
-		);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "{$url} : The test should return an error but is returning {$result['header']['status']}");
 
-		$id = $rootCat['Category']['id'];
-		$url = "/resources/viewByCategory/" . $id . "/1.json";
+		// test with category parameter specified which does not contain resources
+		$url = '/resources/index.json?categories_id=' . $rootCat['Category']['id'];
 		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
-		$this->assertEquals('cpp2-pwd2', $result['body'][4]['Resource']['name'],
-			$url . " test should read 'cpp2-pwd2' but is reading {$result['body'][4]['Resource']['name']}"
-		);
-		$this->assertEquals(14, count($result['body']),
-			$url . " counting the number of elements should return '13' but is reading " . count($result['body'][1]['CategoryResource'])
-		);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
+		$this->assertTrue(empty($result['body']), "{$url} : should not contain result");
+		
+		// test with category parameter specified which contains resources
+		$url = "/resources/index.json?categories_id=" . $cpCat2['Category']['id'];
+		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
+		$this->assertEquals(2, count($result['body']), "{$url} : counting the number of elements should return '2' but is reading " . count($result['body']));
+		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
+		$this->assertTrue(!empty($path),"{$url} : test should contain 'cpp2-pwd2' resource");
 
-		// Test when the category is empty
-		$mapusaCat = $this->Resource->CategoryResource->Category->findByName('cp-project3');
-		$id = $mapusaCat['Category']['id'];
-		// should return success
-		$result = json_decode($this->testAction("/resources/viewByCategory/$id.json", array('return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/resources/viewByCategory/$id.json : The test should return sucess but is returning {$result['header']['status']}");
-		// should return an empty array
-		$result = json_decode($this->testAction("/resources/viewByCategory/$id.json", array('return' => 'contents')), true);
-		$this->assertEquals(0, count($result['body']), "/resources/viewByCategory/$id.json : The test should count 0 elements but is actually counting " . count($result['body']));
+		// test with recursive parameter on the top category
+		$url = "/resources/index.json?categories_id=" . $rootCat['Category']['id'] . "&recursive=true";
+		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
+		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
+		$this->assertTrue(!empty($path),"{$url} : test should contain 'cpp2-pwd2' resource");
+		$this->assertEquals(14, count($result['body']), "{$url} : counting the number of elements should return '14' but is reading " . count($result['body']));
 	}
 
 	public function testAdd() {
@@ -308,8 +299,4 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::ERROR, $result['header']['status'], "delete /resources/$id.json : The test should return a error but is returning {$result['header']['status']}");
 	}
 
-	public function testDeleteAssiociations() {
-		//TODO make sure the associated comments are deleted
-		//TODO make sure the associated tags are deleted
-	}
 }
