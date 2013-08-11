@@ -123,122 +123,122 @@ class UsersControllerTest extends ControllerTestCase {
 		$result = $this->testAction('/logout',array('return' => 'contents'), true);
 	}
 
-    public function testAdd() {
-      // test with normal user
-      $kk = $this->user->findByUsername('user@passbolt.com');
-      $this->user->setActive($kk);
+  public function testAdd() {
+    // test with normal user
+    $kk = $this->user->findByUsername('user@passbolt.com');
+    $this->user->setActive($kk);
 
-      $result = json_decode($this->testAction('/users.json', array(
-        'data' => array(
-          'User' => array(
-            'username' => 'testadd1@passbolt.com',
-            'password' => 'test1',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-            'active' => 1
+    $result = json_decode($this->testAction('/users.json', array(
+      'data' => array(
+        'User' => array(
+          'username' => 'testadd1@passbolt.com',
+          'password' => 'test1',
+          'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+          'active' => 1
+          ),
+        ),
+        'method' => 'post',
+        'return' => 'contents'
+      )), true
+    );
+
+    $this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /users.json : The test should return an error but is returning " . print_r($result, true));
+
+    $kk = $this->user->findByUsername('admin@passbolt.com');
+    $this->user->setActive($kk);
+    $result = json_decode($this->testAction('/users.json', array(
+          'data' => array(
+            'User' => array(
+              'username' => 'testadd1@passbolt.com',
+              'password' => 'test1',
+              'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+              'active' => 1
             ),
           ),
           'method' => 'post',
           'return' => 'contents'
         )), true
-      );
+    );
+    $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /users.json : The test should return sucess but is returning " . print_r($result, true));
 
-      $this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /users.json : The test should return an error but is returning " . print_r($result, true));
+    // check that User was properly saved
+    $user = $this->user->findByUsername("testadd1@passbolt.com");
+    $this->assertEquals(1, count($user), "Add : /users.json : The number of users returned should be 1, but actually is " . count($user));
+    $this->assertEquals($user['User']['username'], $result['body']['User']['username'], "Add : /users.json : the email of the user inserted should be test1@passbolt.com but is {$result['body']['User']['username']}");
+  }
 
-      $kk = $this->user->findByUsername('admin@passbolt.com');
-      $this->user->setActive($kk);
-      $result = json_decode($this->testAction('/users.json', array(
-            'data' => array(
-              'User' => array(
-                'username' => 'testadd1@passbolt.com',
-                'password' => 'test1',
-                'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-                'active' => 1
-              ),
+  public function testUpdate() {
+    // test with normal user
+    $kk = $this->user->findByUsername('user@passbolt.com');
+    $this->user->setActive($kk);
+
+    $id = $kk['User']['id'];
+
+    $result = json_decode($this->testAction("/users/$id.json", array(
+          'data' => array(
+            'User' => array(
+              'id' => $kk['User']['id'],
+              'username' => 'user-modified@passbolt.com',
+              'password' => 'test1',
+              'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+              'active' => 1
             ),
-            'method' => 'post',
-            'return' => 'contents'
-          )), true
-      );
-      $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /users.json : The test should return sucess but is returning " . print_r($result, true));
+          ),
+          'method' => 'put',
+          'return' => 'contents'
+        )), true
+    );
 
-      // check that User was properly saved
-      $user = $this->user->findByUsername("testadd1@passbolt.com");
-      $this->assertEquals(1, count($user), "Add : /users.json : The number of users returned should be 1, but actually is " . count($user));
-      $this->assertEquals($user['User']['username'], $result['body']['User']['username'], "Add : /users.json : the email of the user inserted should be test1@passbolt.com but is {$result['body']['User']['username']}");
-    }
+    $this->assertEquals(Message::ERROR, $result['header']['status'], "Edit : /users.json : The test should return an error but is returning " . print_r($result, true));
 
-    public function testUpdate() {
-      // test with normal user
-      $kk = $this->user->findByUsername('user@passbolt.com');
-      $this->user->setActive($kk);
+    $ad = $this->user->findByUsername('admin@passbolt.com');
+    $this->user->setActive($ad);
 
-      $id = $kk['User']['id'];
+    $kk['User']['username'] = 'user-modified@passbolt.com';
+    $result = json_decode($this->testAction("/users/$id.json", array(
+          'data' => $kk,
+          'method' => 'put',
+          'return' => 'contents'
+        )), true
+    );
+    $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Edit : /users.json : The test should return sucess but is returning " . print_r($result, true));
 
-      $result = json_decode($this->testAction("/users/$id.json", array(
-            'data' => array(
-              'User' => array(
-                'id' => $kk['User']['id'],
-                'username' => 'user-modified@passbolt.com',
-                'password' => 'test1',
-                'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-                'active' => 1
-              ),
-            ),
-            'method' => 'put',
-            'return' => 'contents'
-          )), true
-      );
+    // check that User was properly saved
+    $user = $this->user->findByUsername("user-modified@passbolt.com");
+    $this->assertEquals(1, count($user), "Edit : /users.json : The number of users returned should be 1, but actually is " . count($user));
+    $this->assertEquals($user['User']['id'], $kk['User']['id'], "Edit : /users.json : the id of the retrieved user  should be {$kk['User']['id']} but is {$user['User']['id']}");
+  }
 
-      $this->assertEquals(Message::ERROR, $result['header']['status'], "Edit : /users.json : The test should return an error but is returning " . print_r($result, true));
+  public function testDelete() {
+    $u = $this->user->findByUsername('user@passbolt.com');
+    $this->user->setActive($u);
+    $id = $u['User']['id'];
+    $result = json_decode($this->testAction("/users/$id.json", array(
+          'method' => 'delete',
+          'return' => 'contents'
+        )), true);
+    $this->assertEquals(Message::ERROR, $result['header']['status'], "delete /users/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
-      $ad = $this->user->findByUsername('admin@passbolt.com');
-      $this->user->setActive($ad);
-
-      $kk['User']['username'] = 'user-modified@passbolt.com';
-      $result = json_decode($this->testAction("/users/$id.json", array(
-            'data' => $kk,
-            'method' => 'put',
-            'return' => 'contents'
-          )), true
-      );
-      $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Edit : /users.json : The test should return sucess but is returning " . print_r($result, true));
-
-      // check that User was properly saved
-      $user = $this->user->findByUsername("user-modified@passbolt.com");
-      $this->assertEquals(1, count($user), "Edit : /users.json : The number of users returned should be 1, but actually is " . count($user));
-      $this->assertEquals($user['User']['id'], $kk['User']['id'], "Edit : /users.json : the id of the retrieved user  should be {$kk['User']['id']} but is {$user['User']['id']}");
-    }
-
-    public function testDelete() {
-      $u = $this->user->findByUsername('user@passbolt.com');
-      $this->user->setActive($u);
-      $id = $u['User']['id'];
-      $result = json_decode($this->testAction("/users/$id.json", array(
-            'method' => 'delete',
-            'return' => 'contents'
-          )), true);
-      $this->assertEquals(Message::ERROR, $result['header']['status'], "delete /users/$id.json : The test should return a success but is returning {$result['header']['status']}");
-
-      $id = 1;
-      $result = json_decode($this->testAction("/users/$id.json", array(
-            'method' => 'delete',
-            'return' => 'contents'
-          )), true);
-      $this->assertEquals(Message::ERROR, $result['header']['status'], "delete /users/$id.json : The test should return a error but is returning {$result['header']['status']}");
+    $id = 1;
+    $result = json_decode($this->testAction("/users/$id.json", array(
+          'method' => 'delete',
+          'return' => 'contents'
+        )), true);
+    $this->assertEquals(Message::ERROR, $result['header']['status'], "delete /users/$id.json : The test should return a error but is returning {$result['header']['status']}");
 
 
-      $adm = $this->user->findByUsername('admin@passbolt.com');
-      $this->user->setActive($adm);
-      $result = json_decode($this->testAction("/users/{$u['User']['id']}.json", array(
-            'method' => 'delete',
-            'return' => 'contents'
-          )), true);
-      $this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /users/$id.json : The test should return a success but is returning {$result['header']['status']}");
+    $adm = $this->user->findByUsername('admin@passbolt.com');
+    $this->user->setActive($adm);
+    $result = json_decode($this->testAction("/users/{$u['User']['id']}.json", array(
+          'method' => 'delete',
+          'return' => 'contents'
+        )), true);
+    $this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /users/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
-      $deleted = $this->user->findByUsername('user@passbolt.com');
-      $this->assertEqual(1, $deleted['User']['deleted'], "delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}");
+    $deleted = $this->user->findByUsername('user@passbolt.com');
+    $this->assertEqual(1, $deleted['User']['deleted'], "delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}");
 
-      $result = json_decode($this->testAction('/users/' . $u['User']['id'] . '.json',array('return' => 'contents','method' => 'GET'), true));
-      $this->assertEqual($result->header->status, Message::ERROR,'/users/delete after delete, no result should be returned');
-    }
+    $result = json_decode($this->testAction('/users/' . $u['User']['id'] . '.json',array('return' => 'contents','method' => 'GET'), true));
+    $this->assertEqual($result->header->status, Message::ERROR,'/users/delete after delete, no result should be returned');
+  }
 }
