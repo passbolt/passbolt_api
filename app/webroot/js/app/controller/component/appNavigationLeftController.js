@@ -3,21 +3,21 @@ steal(
 ).then(function () {
 
 	/*
-	 * @class passbolt.controller.component.AppMenuController
+	 * @class passbolt.controller.component.AppNavigationLeftController
 	 * @inherits {mad.controller.component.MenuController}
 	 * @parent index
 	 * 
-	 * Our main Application Menu.
+	 * Navigation left controller
 	 * 
 	 * @constructor
-	 * Instantiate the application menu controller
+	 * Instantiate the application navigation left controller
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable 
-	 * @return {passbolt.controller.component.AppMenuController}
+	 * @return {passbolt.controller.component.AppNavigationLeftController}
 	 */
-	mad.controller.component.MenuController.extend('passbolt.controller.component.AppMenuController', /** @static */ {
+	mad.controller.component.MenuController.extend('passbolt.controller.component.AppNavigationLeftController', /** @static */ {
 
 		'defaults': {}
 
@@ -31,26 +31,29 @@ steal(
 			var menuItems = [
 				new mad.model.Action({
 					'id': uuid(),
-					'label': 'home',
+					'label': __('home'),
 					'cssClasses': ['home'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
 					}
 				}), new mad.model.Action({
 					'id': uuid(),
-					'label': 'passwords',
+					'label': __('passwords'),
+					'cssClasses': ['passwords'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
 					}
 				}), new mad.model.Action({
 					'id': uuid(),
-					'label': 'people',
+					'label': __('users'),
+					'cssClasses': ['users'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'js_passbolt_peopleWorkspace_controller');
 					}
 				}), new mad.model.Action({
 					'id': uuid(),
-					'label': 'help',
+					'label': __('help'),
+					'cssClasses': ['help'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
 					}
