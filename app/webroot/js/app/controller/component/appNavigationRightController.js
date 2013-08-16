@@ -35,7 +35,6 @@ steal(
 					'cssClasses': ['logout'],
 					'action': function () {
 						document.location.href = '/logout';
-						//mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
 					}
 				})
 			];

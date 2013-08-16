@@ -1,51 +1,64 @@
-<header>
-	<div class="header first">
+<div class="header first">
 
-		<nav>
-			<div class="primary navigation top">
-				<ul id="js_app_navigation_left" class="left" />
-				<ul id="js_app_navigation_right" class="right"/>
-			</div>
-		</nav>
-	
-	</div>
-	
-	<div class="header second">
+    <nav>
+        <div class="primary navigation top">
+            <ul id="js_app_navigation_left" class="left">
+            </ul>
+            <ul id="js_app_navigation_right" class="right">
+            </ul>
+        </div>
+    </nav>
 
-		<div id="userbar" class="second">
+</div>
 
-			<div class="logo">
-				<h1>
-					<a href="#">
-						<span>Passbolt</span>
-					</a>
-				</h1>
-			</div>
+<div class="header second">
 
-			<div id="js_notificator" class="notificator" />
+    <div class="col1">
+        <div class="logo">
+            <img src="img/logo/acme.png" alt="passbolt"/>
+        </div>
+    </div>
 
-			<div id="js_filter" class="search">
-				<%== mad.view.View.render('app/view/template/component/appFilter.ejs') %>
-			</div>
+    <div class="col2 search-wrapper">
+        <div id="js_app_filter"></div>
+    </div>
 
-<!-----------------------------------------------------------------------------
-	Login control
- ----------------------------------------------------------------------------->
-			<!--
-			<div id="login_container">
-				<div id="login_button" class="button_icon menu_button_dropdown_icon">
-					<span>biloute@gmail.com</span>
-				</div>
-			</div>
-			-->
+    <div class="col3 profile-wrapper">
+        <div class="user profile dropdown">
+            <div class="center-cell-wrapper">
+                <div class="details center-cell">
+                    <span class="name">Mr Splashy Pants</span>
+                    <span class="email">splashy@passbolt.com</span>
+                </div>
+            </div>
+            <div class="picture left-cell">
+                <img src="img/user.png" alt="your picture"/>
+            </div>
+            <div class="more right-cell">
+                <a href="#" data-dropdown-content-id="cc1d4fae-7dec-11d0-a765-00a0c91e6bf6"><span>more</span></a>
+            </div>
+            <div class="dropdown-content right" id="cc1d4fae-7dec-11d0-a765-00a0c91e6bf6">
+                <ul>
+                    <li>
+                        <a href="#">my profile</a>
+                    </li>
+                    <li>
+                        <a href="#">manage or generate new keys</a>
+                    </li>
+                    <li>
+                        <a href="#" class="separator">manage people</a>
+                    </li>
+                    <li>
+                        <a href="#">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
-		</div>
+<div class="header third">
+</div>
 
-	</div>
-</header>
-
-<!-----------------------------------------------------------------------------
-  Workspaces Container
- ----------------------------------------------------------------------------->
-
-<div id="js_workspaces_container"/>
+<div id="js_app_panel_main" class="panel main">
+</div>

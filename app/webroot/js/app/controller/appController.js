@@ -43,17 +43,17 @@ steal(
 			this.navRightCtl.start();
 
 			// Instantiate the filter controller
-			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {});
+			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_app_filter'), {});
 			this.filterCtl.start();
 
 			// Instantiate the notification controller
-			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
-				'state': 'hidden'
-			});
-			this.notifCtl.start();
+			// this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
+				// 'state': 'hidden'
+			// });
+			// this.notifCtl.start();
 
 			// Instantiate workspaces container tabs element to the app 
-			this.workspacesCtl = new mad.controller.component.TabController($('#js_workspaces_container'));
+			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'));
 			this.workspacesCtl.start();
 
 			// Instantiate the password workspace component to the workspaces container
