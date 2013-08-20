@@ -3,8 +3,9 @@ steal(
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
-	'app/controller/component/passwordsActionsMenuController.js',
 	'app/controller/component/resourceActionsTabController.js',
+	'app/controller/component/workspaceMenuController.js',
+	'app/controller/component/workspaceSecondaryMenuController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
 	'app/model/filter.js'
@@ -35,14 +36,16 @@ steal(
 	}, /** @prototype */ {
 
 		'afterStart': function() {
-			// *************************************************************
-			// User menu area
-			// *************************************************************
-			var userMenu = this.addComponent(passbolt.controller.component.PasswordsActionsMenuController, {
-				'id': 'js_passbolt_password_actions_menu',
+
+			// Instantiate the primary workspace menu controller
+			this.menu = new passbolt.controller.component.WorkspaceMenuController('#js_workspace_menu', {
 				'selectedRs': this.options.selectedRs
-			}, 'workspace_actions_container');
-			userMenu.start();
+			});
+			this.menu.start();
+
+			// Instantiate the secondary workspace menu controller
+			this.menu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_workspace_secondary_menu', {});
+			this.menu.start();
 			
 			// *************************************************************
 			// First side area

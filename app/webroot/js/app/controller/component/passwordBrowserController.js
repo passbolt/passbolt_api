@@ -118,6 +118,7 @@ steal(
 				'name': 'copyLogin',
 				'index': 'copyLogin',
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+					return;
 					var copyLogin = mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',
@@ -130,6 +131,7 @@ steal(
 				'name': 'copySecret',
 				'index': 'copySecret',
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+					return;
 					var copyPwd = mad.helper.ComponentHelper.create(
 						cellElement,
 						'inside_replace',

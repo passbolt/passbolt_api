@@ -43,7 +43,7 @@ steal(
 
 		// Construcor like
 		'init': function (el, options) {
-			this._super();
+			this._super(el, options);
 			this.value = options.value;
 		},
 
@@ -74,6 +74,7 @@ steal(
 		 * @return {void}
 		 */
 		'click': function (el, ev) {
+			// if callbacks associated to the button
 			if (this.options.events.click) {
 				this.options.events.click(this.element, ev, this.value);
 			}
