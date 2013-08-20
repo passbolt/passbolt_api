@@ -1,8 +1,15 @@
 <li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
-	<span class="label">
-		<%== label %>
-	</span>
+	<div class="row">
+		<div class="main-cell-wrapper">
+			<div class="main-cell">
+				<a href="#"><span><%= label %></span></a>
+			</div>
+		</div>
+	</row>
+	
 <% if(hasChildren) { %>
-	<ul />
+	<ul>
+	</ul>
 <% } %>
+
 </li>

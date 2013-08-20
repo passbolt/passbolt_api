@@ -38,23 +38,18 @@ steal(
 		'afterStart': function() {
 
 			// Instantiate the primary workspace menu controller
-			this.menu = new passbolt.controller.component.WorkspaceMenuController('#js_workspace_menu', {
+			this.primMenu = new passbolt.controller.component.WorkspaceMenuController('#js_wsp_primary_menu', {
 				'selectedRs': this.options.selectedRs
 			});
-			this.menu.start();
+			this.primMenu.start();
 
 			// Instantiate the secondary workspace menu controller
-			this.menu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_workspace_secondary_menu', {});
-			this.menu.start();
+			this.secMenu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_wsp_secondary_menu', {});
+			this.secMenu.start();
 			
-			// *************************************************************
-			// First side area
-			// *************************************************************
-			// Add the Category Chooser component
-			var categoryChooser = this.addComponent(passbolt.controller.component.CategoryChooserController, {
-				'id': 'js_passbolt_password_category_chooser'
-			}, 'js_workspace_sidebar_first');
-			categoryChooser.start();
+			// Instanciate the categories chooser controller
+			this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
+			this.catChooser.start();
 
 			// *************************************************************
 			// Main area

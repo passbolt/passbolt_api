@@ -1,5 +1,5 @@
 steal(
-	'jquery/model'
+	'mad/model'
 ).then(function () {
 
 	/*
@@ -14,7 +14,7 @@ steal(
 	 * @param {array} options
 	 * @return {mad.model.Action}
 	 */
-	$.Model('mad.model.Action', /** @static */ {
+	mad.model.Model('mad.model.Action', /** @static */ {
 
 		/**
 		 * Define attributes of the model
