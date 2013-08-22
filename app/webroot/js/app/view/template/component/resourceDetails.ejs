@@ -1,6 +1,6 @@
 <div class="resource">
 	<h3><%= __('Linked In') %></h3>
-	<a href="close" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
+	<a href="close" class="dialog-close todo"><i class="icon close no-text"></i><span>close</span></a>
 
 	<div class="detailed-information">
 	<h4><%= __('Information') %></h4>
@@ -17,7 +17,7 @@
 			<span class="label"><%= __('Expire') %></span>
 			<span class="value"><%= resource.expiry_date != null ? moment(resource.expiry_date).fromNow() : __('never') %></span>
 		</li>
-		<li class="strength">
+		<li class="strength todo">
 			<span class="label"><%= __('Strength') %></span>
 			<span>
 				good
@@ -28,11 +28,11 @@
 
 	<div class="description">
 		<h4><%= __('Description') %></h4>
-		<a href="#editdesc" class="section-action"><i class="icon edit no-text"></i><span>edit</span></a>
+		<a href="#editdesc" class="section-action todo"><i class="icon edit no-text"></i><span>edit</span></a>
 		<p><%= resource.description %></p>
 	</div>
 
-	<div class="tags clearfix">
+	<div class="tags clearfix todo">
 		<h4><%= __('Tags') %></h4>
 		<a href="#edittags" class="section-action"><i class="icon edit no-text"></i><span>edit</span></a>
 		<ul class="tags">
@@ -69,7 +69,7 @@
 		</ul>
 	</div>
 
-	<div class="comments clearfix">
+	<div class="comments clearfix todo">
 		<h4><%= __('Comments') %></h4>
 		<a href="#createcomment" class="section-action"><i class="icon create no-text"></i><span>create</span></a>
 		<ul>

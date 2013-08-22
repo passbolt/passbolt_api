@@ -46,14 +46,14 @@ steal(
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('users'),
-					'cssClasses': ['users'],
+					'cssClasses': ['users todo'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'js_passbolt_peopleWorkspace_controller');
 					}
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('help'),
-					'cssClasses': ['help'],
+					'cssClasses': ['help todo'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
 					}
