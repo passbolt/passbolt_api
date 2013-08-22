@@ -4,7 +4,7 @@ steal(
 
 	/*
 	 * @class mad.model.Action
-	 * @inherits jQuery.Model
+	 * @inherits mad.model.Model
 	 * @parent mad.controller.component
 	 * 
 	 * The Action model will carry actions used by other component

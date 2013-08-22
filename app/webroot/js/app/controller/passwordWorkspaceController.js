@@ -51,10 +51,7 @@ steal(
 			this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
 			this.catChooser.start();
 
-			// *************************************************************
-			// Main area
-			// *************************************************************
-			// Add the Password browser component
+			// Instanciate the passwords browser controller
 			var passwordBrowserController = this.addComponent(passbolt.controller.component.PasswordBrowserController, {
 				'id': 'js_passbolt_password_browser',
 				'selectedRs': this.options.selectedRs
@@ -104,50 +101,6 @@ steal(
 			// propagate a special event on bus
 			// @todo not the best way to do ! call an event like that is like calling a function directly, useless
 			mad.bus.trigger('filter_resources_browser', this.options.filter);
-		},
-
-		/**
-		 * Observe when a resource is selected and adapt the workspace view functions of
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The selected resource
-		 * @return {void}
-		 */
-		'{selectedRs} add': function (el, ev, resource) {
-			// if more than one resource selected, hide the right sidebar
-			if (this.options.selectedRs.length > 1) {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('middle').addClass('full');
-				$('.js_workspace_sidebar_second', this.element).hide();
-				
-			// else if only 1 resource selected show the right sidebar
-			} else {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('full').addClass('middle');
-				$('.js_workspace_sidebar_second', this.element).show();
-			}
-		},
-
-		/**
-		 * Observe when a resource is unselected and adapt the workspace view functions of
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The unselected resource
-		 * @return {void}
-		 */
-		'{selectedRs} remove': function (el, ev, resource) {
-			// if more just one resource selected, show the right sidebar
-			if (this.options.selectedRs.length == 1) {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('full').addClass('middle');
-				$('.js_workspace_sidebar_second', this.element).show();
-			
-			// else if no resource selected or more than once, hide the right sidebar
-			} else {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('middle').addClass('full');
-				$('.js_workspace_sidebar_second', this.element).hide();
-			}
 		},
 
 		/**

@@ -1,10 +1,10 @@
 <tr id="<%= id %>" <%= (el) -> el.data(item.constructor.fullName, item) %>>
 
-<% for (var i in cells) { %>
+<% for (var i in columnModels) { %>
 
-	<td class="js_grid_column_<%= cells[i].columnName %>">
+	<td class="js_grid_column_<%= columnModels[i].name %> <%= columnModels[i].header.css.join(' ') %>">
 		<span>
-			<%== cells[i].value %>
+			<%== values[columnModels[i].name] %>
 		</span>
 	</td>
 

@@ -35,7 +35,9 @@ steal(
 			'created': 'date',
 			'description': 'string',
 			'Category': 'passbolt.model.Category.models',
-			'Favorite': 'passbolt.model.Favorite.model'
+			'Favorite': 'passbolt.model.Favorite.model',
+			'Creator': 'passbolt.model.User.model',
+			'Modifier': 'passbolt.model.User.model'
 		},
 
 		'create' : function (attrs, success, error) {

@@ -27,7 +27,7 @@ class Resource extends AppModel {
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
 	public $hasOne = array(
-		'Secret',
+		'Secret'
 		// 'UserResourcePermission' => array(
 			// 'foreignKey' => 'resource_id'
 		// ),
@@ -39,6 +39,17 @@ class Resource extends AppModel {
 			// 'conditions' => array( ' Permission.id = UserResourcePermission.permission_id ' ),
 			// 'type' => 'LEFT'
 		// )
+	);
+
+	public $belongsTo = array(
+		'Creator' => array(
+			'className' => 'User',
+			'foreignKey' => 'created_by'
+		),
+		'Modifier' => array(
+			'className' => 'User',
+			'foreignKey' => 'modified_by'
+		)
 	);
 
 /**
@@ -209,6 +220,8 @@ class Resource extends AppModel {
 						'Resource.id', 'Resource.name', 'Resource.username', 'Resource.expiry_date', 'Resource.uri', 'Resource.description', 'Resource.created', 'Resource.modified',
 						'Secret.data', 'Secret.created', 'Secret.modified',
 						'Favorite.id', 'Favorite.user_id', 'Favorite.created',
+						'Creator.id', 'Creator.username',
+						'Modifier.id', 'Modifier.username'
 					),
 					'superjoin' => array(
 						'Category'
@@ -217,7 +230,9 @@ class Resource extends AppModel {
 						'Category',
 						'CategoryResource',
 						'Favorite',
-						'Secret'
+						'Secret',
+						'Creator',
+						'Modifier'
 					)
 				);
 			break;

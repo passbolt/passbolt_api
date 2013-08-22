@@ -1,6 +1,7 @@
 steal(
 	'jquery/controller',
 	'mad/controller/componentController.js',
+	'mad/model/grid/column.js',
 	'mad/view/component/grid.js',
 	'mad/object/map.js',
 	'mad/view/template/component/grid.ejs',
@@ -36,8 +37,6 @@ steal(
 
 			// The class of the item
 			'itemClass': null,
-			// the grid column names
-			'columnNames': [],
 			// the grid column model
 			'columnModel': [],
 			// the map to use to map JMVC model to the grid data model
@@ -69,17 +68,8 @@ steal(
 		 */
 		'beforeRender': function() {
 			this._super();
-			this.setViewData('columnNames', this.options.columnNames);
 			this.setViewData('columnModel', this.options.columnModel);
 			this.setViewData('items', []);
-		},
-
-		/**
-		 * Get the column names of the grid
-		 * @return {array}
-		 */
-		'getColumnNames': function () {
-			return this.options.columnName;
 		},
 
 		/**

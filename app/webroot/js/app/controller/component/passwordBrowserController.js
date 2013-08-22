@@ -41,25 +41,31 @@ steal(
 		// Constructor like
 		'init': function (el, options) {
 			
-			// The map to use to make jstree working with our category model
+			// The map to use to make our grid working with our resource model
 			options.map = new mad.object.Map({
 				'id': 'id',
 				'name': 'name',
 				'username': 'username',
 				'uri': 'uri',
 				'modified': 'modified',
+				'expires': 'expiry_date',
+				'owner': 'Creator.username',
 				'copyLogin': 'id',
 				'copySecret': 'id',
 				'Category': 'Category'
 			});
-
-			// the columns names
-			options.columnNames = ['', '', 'Name', 'Username', 'Uri', 'Modified', '', ''];
-
+			
 			// the columns model
 			options.columnModel = [{
 				'name': 'multipleSelect',
 				'index': 'multipleSelect',
+				'header': {
+					'css': ['selections s-cell'],
+					'label': '<div class="input checkbox"> \
+							<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all"> \
+							<label for="checkbox-select-all">select all</label> \
+						</div>'
+				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 					var availableValues = [];
 					availableValues[item.id] = '';
@@ -78,6 +84,13 @@ steal(
 			}, {
 				'name': 'favorite',
 				'index': 'favorite',
+				'header': {
+					'css': ['selections s-cell'],
+					'label': '<a href="#"> \
+							<i class="icon fav no-text"></i> \
+							<span>fav</span> \
+						</a>'
+				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 					var availableValues = [];
 					availableValues[item.id] = '';
@@ -95,6 +108,10 @@ steal(
 			}, {
 				'name': 'name',
 				'index': 'name',
+				'header': {
+					'css': ['m-cell'],
+					'label': __('Resource')
+				},
 				'valueAdapter': function (value, item, columnModel, rowNum) {
 					var returnValue = value;
 					can.each(item.Category, function (category, i) {
@@ -104,19 +121,52 @@ steal(
 				}
 			}, {
 				'name': 'username',
-				'index': 'username'
+				'index': 'username',
+				'header': {
+					'css': ['m-cell'],
+					'label': __('Username')
+				}
 			}, {
 				'name': 'uri',
-				'index': 'uri'
+				'index': 'uri',
+				'header': {
+					'css': ['l-cell'],
+					'label': __('URI')
+				}
 			}, {
 				'name': 'modified',
 				'index': 'modified',
+				'header': {
+					'css': ['m-cell'],
+					'label': __('Modified')
+				},
 				'valueAdapter': function (value, item, columnModel, rowNum) {
 					return moment(value).fromNow();
 				}
 			}, {
+				'name': 'expires',
+				'index': 'expires',
+				'header': {
+					'css': ['m-cell'],
+					'label': __('Expires')
+				},
+				'valueAdapter': function (value, item, columnModel, rowNum) {
+					return moment(value).fromNow();
+				}
+			}, {
+				'name': 'owner',
+				'index': 'owner',
+				'header': {
+					'css': ['m-cell'],
+					'label': __('Owner')
+				}
+			}, {
 				'name': 'copyLogin',
 				'index': 'copyLogin',
+				'header': {
+					'css': ['s-cell'],
+					'label': ''
+				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 					return;
 					var copyLogin = mad.helper.ComponentHelper.create(
@@ -130,6 +180,10 @@ steal(
 			}, {
 				'name': 'copySecret',
 				'index': 'copySecret',
+				'header': {
+					'css': ['s-cell'],
+					'label': ''
+				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 					return;
 					var copyPwd = mad.helper.ComponentHelper.create(
@@ -561,15 +615,7 @@ steal(
 		 * @return {void}
 		 */
 		'stateSelection': function (go) {
-			if (go) {
-				this.view.hideColumn('modified');
-				this.view.hideColumn('copyLogin');
-				this.view.hideColumn('copySecret');
-			} else {
-				this.view.showColumn('modified');
-				this.view.showColumn('copyLogin');
-				this.view.showColumn('copySecret');
-			}
+			// nothing to do
 		},
 
 		/**
