@@ -12,17 +12,18 @@
 <div class="dialog">
 	<div class="dialog-header">
 		<h2>Edit Password</h2>
-		<a href="close" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
+		<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
 	</div>
-	<div class="dialog-tabs">
-		<ul class="tabs">
+	<div class="dialog-content">
+	<div class="tabs">
+		<ul class="tabs-nav">
 			<li><a href="#" class="selected" data-item-selected="b2164540-ea43-11e2-ac0e-0002a5d5c51b">edit</a></li>
 			<li><a href="#">share</a></li>
 			<li><a href="#">organize</a></li>
 		</ul>
-		<ul class="dialog-tabs-content">
+		<ul class="tabs-content">
 			<!-- edit -->
-			<li class="dialog-tab-content selected" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
+			<li class="tab-content selected" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
 				<form>
 				<div class="form-content">
 					<div class="input text required error">
@@ -88,6 +89,7 @@
 				</form>
 			</li>
 		</ul>
+	</div>
 	</div>
 </div>
 </div>

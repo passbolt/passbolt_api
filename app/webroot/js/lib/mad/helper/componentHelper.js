@@ -18,7 +18,7 @@ steal(
 		 */
 		'create': function (refElement, position, Clazz, options) {
 			var returnValue = null,
-				component = '<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>',
+				componentHtml = '<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>',
 				$component = null;
 
 			if (refElement.length == 0) {
@@ -26,7 +26,7 @@ steal(
 			}
 
 			// insert the component in the DOM
-			$component = mad.helper.HtmlHelper.create(refElement, position, component);
+			$component = mad.helper.HtmlHelper.create(refElement, position, componentHtml);
 
 			// Instanciate the component
 			if (typeof Clazz.singleton != 'undefined') {

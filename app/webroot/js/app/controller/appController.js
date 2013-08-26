@@ -53,15 +53,18 @@ steal(
 			// this.notifCtl.start();
 
 			// Instantiate workspaces container tabs element to the app 
-			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'));
+			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'), {
+				'generateMenu': false // do not generate the associated tab nav
+			});
 			this.workspacesCtl.start();
 
-			// Instantiate the password workspace component to the workspaces container
-			var passwordWk = this.workspacesCtl.addComponent(passbolt.controller.PasswordWorkspaceController, {
+			// Instantiate the password workspace component and add it to the workspaces container
+			this.passwordWk = this.workspacesCtl.addComponent(passbolt.controller.PasswordWorkspaceController, {
 				'id': 'js_passbolt_passwordWorkspace_controller',
 				'label': 'password'
 			});
-			var peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
+			// Instantiate the people workspace component and add it to the workspaces container
+			this.peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
 				'id': 'js_passbolt_peopleWorkspace_controller',
 				'label': 'people'
 			});

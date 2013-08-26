@@ -137,7 +137,7 @@ steal(
 			var category = new passbolt.model.Category({ parent_id: data.id });
 			
 			// get the popup
-			var popup = new mad.controller.component.PopupController({label: __('Create a new Category')})
+			var popup = new mad.controller.component.DialogController({label: __('Create a new Category')})
 				.start();
 			
 			// attach the component to the popup
@@ -164,7 +164,7 @@ steal(
 		'{mad.bus} request_category_edition': function (el, ev, category) {
 			
 			// get the popup
-			var popup = new mad.controller.component.PopupController({label: __('Edit a Category')})
+			var popup = new mad.controller.component.DialogController({label: __('Edit a Category')})
 				.start();
 			
 			// attach the component to the popup
@@ -211,7 +211,7 @@ steal(
 			var resource = new passbolt.model.Resource({ Category: categories });
 			
 			// get the popup
-			var popup = new mad.controller.component.PopupController(null, {label: __('Create a new Resource')});
+			var popup = new mad.controller.component.DialogController(null, {label: __('Create a new Resource')});
 			popup.start();
 				// .start();
 			
@@ -238,7 +238,7 @@ steal(
 		 */
 		'{mad.bus} request_resource_edition': function (el, ev, resource) {
 			// get the popup
-			var popup = new mad.controller.component.PopupController({label: __('Edit a Resource')})
+			var popup = new mad.controller.component.DialogController({label: __('Edit a Resource')})
 				.start();
 			
 			// attach the component to the popup
@@ -283,11 +283,11 @@ steal(
 		 */
 		'{mad.bus} request_resource_sharing': function (el, ev, resource) {
 			// get the popup
-			var popup = new mad.controller.component.PopupController({label: ''})
+			var dialog = new mad.controller.component.DialogController({label: ''})
 				.start();
 
-			// attach the component to the popup
-			var tab = popup.add(passbolt.controller.component.ResourceActionsTabController, {
+			// Instanciate the Resource Actions Tab Controller into the popup
+			dialog.add(passbolt.controller.component.ResourceActionsTabController, {
 				resource: resource
 			});
 		},

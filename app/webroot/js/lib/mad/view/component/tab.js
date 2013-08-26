@@ -13,6 +13,8 @@ steal(
 	 */
 	mad.view.View.extend('mad.view.component.Tab', /** @static */ {
 
+		'templateUri': 'mad/view/template/component/tab.ejs',
+
 	}, /** @prototype */ {
 
 		/**
@@ -28,7 +30,7 @@ steal(
 			// render the component tag
 			var html = '<' + tag + ' id="' + options.id + '"></' + tag + '>';
 			// add a tag for the component to add
-			return mad.helper.HtmlHelper.create(this.element, 'last', html);
+			return mad.helper.HtmlHelper.create($('.js_tabs_content', this.element), 'last', html);
 		}
 	});
 

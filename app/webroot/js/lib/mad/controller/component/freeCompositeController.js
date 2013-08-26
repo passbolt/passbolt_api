@@ -35,8 +35,7 @@ steal(
 			var returnValue = null;
 			var $area = $('.' + area, this.element);
 			var component = mad.helper.ComponentHelper.create($area, 'inside_replace', ComponentClass, componentOptions);
-			this._super(component);
-			return component;
+			return this._super(component);
 		}
 		
 	});

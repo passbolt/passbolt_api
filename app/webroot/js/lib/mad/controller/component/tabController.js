@@ -22,7 +22,9 @@ steal(
 
 		'defaults': {
 			'label': 'Tab Controller',
-			'viewClass': mad.view.component.Tab
+			'viewClass': mad.view.component.Tab,
+			// enable or not the embedded menu
+			'generateMenu': true
 		}
 
 	}, /** @prototype */ {
@@ -37,6 +39,18 @@ steal(
 			
 			this._super(el, opts);
 		},
+		
+		/**
+		 * After start
+		 */
+		'afterStart': function() {
+			var self = this;
+			// Instantiate the menu which will rule the tabs container
+			if (this.options.generateMenu) {
+				this.menu = new mad.controller.component.MenuController($('.js_tabs_nav', this.element));
+				this.menu.start();
+			}
+		},
 
 		/**
 		 * Enable a tab
@@ -48,27 +62,51 @@ steal(
 			if (this.enabledTabId) {
 				this.getComponent(this.enabledTabId).setState('hidden');
 			}
-			
 			this.enabledTabId = tabId;
+			
+			// get the component defined by the tabId
 			var tab = this.getComponent(this.enabledTabId);
-			// if the tab to enable is not already rendered, render it
+
+			// if the tab to enable is not already started => start it
 			if(tab.state.is(null)){
 				tab.start();
 			}
-			tab.setState('ready');
+			
+			// add the selected class to the tab
+			tab.view.addClass('selected');
+			// add the selected class to the menu entry
+			// @todo move that code into the view
+			$('#js_tab_nav_' + tabId).find('a').addClass('selected');
 		},
 
 		/**
 		 * Add a component to the container
 		 * @param {string} Class The component class to use to instantiate the component
 		 * @param {array} options The optional data to pass to the component constructor
-		 * @param {string} area The area to add the component. Default : mad-container-main
 		 */
-		'addComponent': function (Class, options, area) {
-			// insert the element which will carries the component in the DOM
-			var $component = this.view.add(Class, options);
-			// instantiate the component
-			var component = new Class($component, options);
+		'addComponent': function (Class, options) {
+			// default tab content css
+			var defaultTabCss = ['tab-content'];
+			// get the component if or create it
+			options.id = typeof options.id != 'undefined' ? options.id: uuid();
+
+			// insert the associated menu entry
+			if (this.options.generateMenu) {
+				var menuEntry = new mad.model.Action({
+					'id': 'js_tab_nav_' + options.id,
+					'label': options.label
+				});
+				this.menu.insertItem(menuEntry);
+			}
+
+			// Add the default css classes to the new tab
+			if ($.isArray(options.cssClasses)) {
+				$.merge(options.cssClasses, defaultTabCss);
+			} else {
+				options.cssClasses = defaultTabCss;
+			}
+
+			var component = mad.helper.ComponentHelper.create($('.js_tabs_content', this.element), 'last', Class, options);
 			return this._super(component);
 		}
 	});
