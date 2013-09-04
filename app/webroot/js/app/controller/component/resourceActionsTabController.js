@@ -36,7 +36,6 @@ steal(
 		// after start
 		'afterStart': function() {
 			this._super();
-			// return;
 			var self = this;
 			
 			// Instantiate the menu which will rule the tab container

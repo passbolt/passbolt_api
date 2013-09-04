@@ -18,25 +18,30 @@ steal('funcunit').then(function () {
 					'func': mad.object.Map.mapObjects
 				}
 			});
-			var columnNames = ['Name', 'Surname', 'Freelancer', 'Phone', 'Email', 'Children'];
 			var columnModel = [{
 				'name': 'name',
-				'index': 'name'
+				'index': 'name',
+				'label': 'name'
 			}, {
 				'name': 'surname',
-				'index': 'surname'
+				'index': 'surname',
+				'label': 'surname'
 			}, {
 				'name': 'freelancer',
-				'index': 'freelancer'
+				'index': 'freelancer',
+				'label': 'freelancer'
 			}, {
 				'name': 'phone',
-				'index': 'phone'
+				'index': 'phone',
+				'label': 'phone'
 			}, {
 				'name': 'email',
-				'index': 'email'
+				'index': 'email',
+				'label': 'email'
 			}, {
 				'name': 'children',
 				'index': 'children',
+				'label': 'children',
 				'valueAdapter': function (value, item, columnModel, rowNum) {
 					var returnValue = item.children.length;
 					return returnValue;
@@ -48,7 +53,6 @@ steal('funcunit').then(function () {
 				id: 'test_grid',
 				itemClass: testEnv.demo.model.Person,
 				map: map,
-				columnNames: columnNames,
 				columnModel: columnModel
 			});
 			grid.render();

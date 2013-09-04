@@ -42,7 +42,7 @@
 					<div class="input-password-wrapper">
 						<div class="input password required short">
 							<label for="SecretData">Password</label>
-							<input name="data[Secret][data]" class="required" maxlength="50" type="password" id="SecretData" placeholder="username"/>
+							<input name="data[Secret][data]" class="required" maxlength="50" type="password" id="SecretData" placeholder="password"/>
 						</div>
 						<div class="actions inline">
 							<a href="#" class="button toggle">

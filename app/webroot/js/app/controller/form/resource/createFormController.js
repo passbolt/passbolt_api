@@ -45,6 +45,13 @@ steal(
 				}).start(),
 				new mad.form.FeedbackController($('#js_field_name_feedback'), {}).start()
 			);
+			// Add resource uri field
+			this.addElement(
+				new mad.form.element.TextboxController($('#js_field_uri'), {
+					modelReference: 'passbolt.model.Resource.uri'
+				}).start(),
+				new mad.form.FeedbackController($('#js_field_uri_feedback'), {}).start()
+			);
 			// Add resource username field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_username'), {
@@ -52,12 +59,19 @@ steal(
 				}).start(),
 				new mad.form.FeedbackController($('#js_field_username_feedback'), {}).start()
 			);
-			// Add resource uri field
+			// Add secret id field
 			this.addElement(
-				new mad.form.element.TextboxController($('#js_field_uri'), {
-					modelReference: 'passbolt.model.Resource.uri'
-				}).start(),
-				new mad.form.FeedbackController($('#js_field_uri_feedback'), {}).start()
+				new mad.form.element.TextboxController($('#js_field_secret_id'), {
+					modelReference: 'passbolt.model.Resource.Secret.id'
+				}).start()
+				// new mad.form.FeedbackController($('#js_field_secret_feedback'), {}).start()
+			);
+			// Add secret data field
+			this.addElement(
+				new mad.form.element.TextboxController($('#js_field_secret'), {
+					modelReference: 'passbolt.model.Resource.Secret.data'
+				}).start()
+				// new mad.form.FeedbackController($('#js_field_secret_feedback'), {}).start()
 			);
 			// Add resource description field
 			this.addElement(

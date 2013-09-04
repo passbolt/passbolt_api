@@ -35,6 +35,7 @@ steal(
 			'created': 'date',
 			'description': 'string',
 			'Category': 'passbolt.model.Category.models',
+			'Secret': 'passbolt.model.Secret.model',
 			'Favorite': 'passbolt.model.Favorite.model',
 			'Creator': 'passbolt.model.User.model',
 			'Modifier': 'passbolt.model.User.model'

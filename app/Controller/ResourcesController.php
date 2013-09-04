@@ -287,6 +287,22 @@ class ResourcesController extends AppController {
 				return;
 			}
 		}
+		// Save the associated secret
+		if (isset($resourcepost['Secret'])) {
+			$resourcepost['Secret']['resource_id'] = isset($resourcepost['Secret']['resource_id']) ? $resourcepost['Secret']['resource_id'] : $resource['Resource']['id'];
+			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : User::get('User.id');
+			$this->Resource->Secret->set($resourcepost['Secret']);
+			if (!$this->Resource->Secret->validates()) {
+				$this->Message->error(__('Could not validate secret model'));
+				return;
+			}
+			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
+			// TODO : Encrypt data and save it once per user
+			if (!$this->Resource->Secret->save($resourcepost['Secret'], false, $fields['fields'])) {
+				$this->Message->error(__('Could not save secret'));
+				return;
+			}
+		}
 		// Save the relations
 		if (isset($resourcepost['Category'])) {
 			// If relations are given with the resource
