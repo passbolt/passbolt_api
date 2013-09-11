@@ -58,11 +58,7 @@ steal(
 			}, 'js_workspace_main');
 			passwordBrowserController.start();
 
-			// *************************************************************
-			// Second side area - create a container to be able to add other tool after
-			// *************************************************************
-
-			// Add vertical container to the second side area
+			// Instanciate the resource details controller
 			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_workspace_sidebar_second', this.element), {
 				'id': 'js_passbolt_password_sidebar_second',
 				'selectedRs': this.options.selectedRs,
@@ -246,6 +242,8 @@ steal(
 				data: resource,
 				callbacks : {
 					submit: function (data) {
+						alert('test');
+						console.log(data);
 						resource.attr(data['passbolt.model.Resource'])
 							.save();
 						popup.remove();
@@ -322,7 +320,6 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_unfavorite': function (el, ev, instance) {
-			console.log(instance.Favorite);
 			instance.Favorite.destroy(function() {
 				instance.Favorite = null;
 				can.trigger(passbolt.model.Resource, 'updated', instance);

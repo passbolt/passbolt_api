@@ -64,14 +64,19 @@ steal(
 				new mad.form.element.TextboxController($('#js_field_secret_id'), {
 					modelReference: 'passbolt.model.Resource.Secret.id'
 				}).start()
-				// new mad.form.FeedbackController($('#js_field_secret_feedback'), {}).start()
 			);
 			// Add secret data field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_secret'), {
 					modelReference: 'passbolt.model.Resource.Secret.data'
 				}).start()
-				// new mad.form.FeedbackController($('#js_field_secret_feedback'), {}).start()
+			);
+			// Add secret data in clear field
+			this.options.passwordClear = this.addElement(
+				new mad.form.element.TextboxController($('#js_field_secret_clear'), {
+					// modelReference: 'passbolt.model.Resource.Secret.data'
+					'state': 'hidden'
+				}).start()
 			);
 			// Add resource description field
 			this.addElement(
@@ -80,6 +85,61 @@ steal(
 				}).start(),
 				new mad.form.FeedbackController($('#js_field_description_feedback'), {}).start()
 			);
+			
+			// Show/Hide the password
+			this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_password_button'))
+				.start();
+
+			// Rebind controller events
+			this.on();
+		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE VIEW EVENTS */
+		/* ************************************************************** */
+
+		/**
+		 * Observe when the user is changing the password through the unscrumbeld field
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Category} category The selected category
+		 * @return {void}
+		 */
+		'{passwordClear} change': function(el, ev) {
+			var value = this.getElement('js_field_secret_clear').getValue();
+			this.getElement('js_field_secret')
+				.setValue(value);
+		},
+
+		/**
+		 * Observe when the user wants to see the password unscrumbled
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Category} category The selected category
+		 * @return {void}
+		 */
+		'{showPwdButton} click': function(el, ev) {
+			var password = this.getElement('js_field_secret');
+			var passwordClear = this.getElement('js_field_secret_clear');
+			
+			// if the password is already hidden
+			if (password.state.is('hidden')) {
+				// hide the unscrambled password
+				passwordClear.setState('hidden');
+				// show the password field
+				password.setState('ready');
+				// unpush the button
+				this.options.showPwdButton.view.removeClass('selected');
+			}
+			else {
+				// hide the password field
+				password.setState('hidden');
+				// display the unscrambled password
+				passwordClear.setState('ready');
+				passwordClear.setValue(password.getValue());
+				// push the button
+				this.options.showPwdButton.view.addClass('selected');
+			}
 		}
 
 	});

@@ -1,5 +1,5 @@
 steal(
-    'mad/controller/componentController.js',
+	'mad/controller/componentController.js',
 	'app/view/template/component/workspaceSecondaryMenu.ejs'
 ).then(function () {
 

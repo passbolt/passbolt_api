@@ -27,18 +27,23 @@
 		<div class="input password required short">
 			<label for="js_field_secret"><%= __('Password') %></label>
 			<input type="hidden" name="passbolt.model.Resource.Secret.id" id="js_field_secret_id" class="form_field" />
-			<input name="passbolt.model.Resource.Secret.data" class="required todo" maxlength="50" type="text" id="js_field_secret" placeholder="password"/>
+			<input name="passbolt.model.Resource.Secret.data" class="required" maxlength="50" type="password" id="js_field_secret" placeholder="password"/>
+			<input class="required" maxlength="50" type="text" id="js_field_secret_clear" placeholder="password"/>
 		</div>
-		<div class="actions inline">
-			<a href="#" class="button toggle todo">
-				<i class="icon eye big no-text"></i>
-				<span>view</span>
-			</a>
-			<a href="#" class="button todo">
-				<i class="icon key big no-text"></i>
-				<span>generate</span>
-			</a>
-		</div>
+		<ul class="actions inline">
+			<li>
+				<a href="#" id="js_show_password_button" class="button toggle">
+					<i class="icon eye big no-text"></i>
+					<span>view</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="button todo">
+					<i class="icon key big no-text"></i>
+					<span>generate</span>
+				</a>
+			</li>
+		</ul>
 		<div class="password-complexity good">
 			<span class="progress"><span class="progress-bar"></span></span>
 			<span class="complexity-text">complexity: <strong>good</strong></span>
