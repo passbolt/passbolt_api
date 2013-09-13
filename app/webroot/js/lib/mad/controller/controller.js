@@ -38,6 +38,10 @@ steal(
 
 		// Class constructor
 		'init': function (el, options) {
+			// the el should exist
+			if(!$(el).length) {
+				throw new mad.error.Exception('The parameter "el" (' + el + ') should refer to an existing DOM node.');
+			}
 			// set the options
 			this.options = $.extend(true, {}, this.options, options);
 			// if the element does not carry the id, use the id given in options or generate a new one

@@ -23,7 +23,7 @@ steal(
 	mad.controller.ComponentController.extend('passbolt.controller.component.AppFilterController', /** @static */ {
 
 		'defaults': {
-			'templateBased': false,
+			// 'templateBased': false,
 			'viewClass': passbolt.view.component.AppFilter
 		}
 
@@ -35,20 +35,20 @@ steal(
 		 */
 		'afterStart': function (options) {
 			// Instantiate the filter form
-			this.filterForm = new mad.form.FormController('#js_filter_form', {});
+			this.filterForm = new mad.form.FormController('#js_app_filter_form', {});
 			this.filterForm.start();
 			
 			// Instantiate the textbox which will get the user search
-			this.keywordsFormElement = this.filterForm.addElement(new mad.form.element.TextboxController('#js_filter_keywords', {
+			this.keywordsFormElement = this.filterForm.addElement(new mad.form.element.TextboxController('#js_app_filter_keywords', {
 				modelReference: 'passbolt.model.Filter.keywords'
 			}));
 			this.keywordsFormElement.start();
 			
 			// Instantiate the list which will carry the filter tags
-			this.listFormElement = this.filterForm.addElement(new mad.form.element.ListController('#js_filter_tags', {
-				modelReference: 'passbolt.model.Filter.tags'
-			}));
-			this.listFormElement.start();
+			// this.listFormElement = this.filterForm.addElement(new mad.form.element.ListController('#js_filter_tags', {
+				// modelReference: 'passbolt.model.Filter.tags'
+			// }));
+			// this.listFormElement.start();
 		},
 
 		/**
@@ -56,8 +56,8 @@ steal(
 		 * @return {void}
 		 */
 		'reset': function () {
-			this.listFormElement.setValue([]);
 			this.keywordsFormElement.setValue('');
+			// this.listFormElement.setValue([]);
 		},
 
 		/* ************************************************************** */
@@ -73,7 +73,7 @@ steal(
 		 */
 		'{mad.bus} category_selected': function (el, ev, category) {
 			this.reset();
-			this.listFormElement.setValue([category]);
+			// this.listFormElement.setValue([category]);
 		},
 
 		/* ************************************************************** */

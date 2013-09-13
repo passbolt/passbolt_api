@@ -22,7 +22,9 @@ steal(
 
 		'defaults': {
 			'label': 'Tab Controller',
-			'viewClass': mad.view.component.Tab
+			'viewClass': mad.view.component.Tab,
+			// enable or not the embedded menu
+			'generateMenu': true
 		}
 
 	}, /** @prototype */ {
@@ -37,6 +39,32 @@ steal(
 			
 			this._super(el, opts);
 		},
+		
+		/**
+		 * After start
+		 */
+		'afterStart': function() {
+			var self = this;
+			// Instantiate the menu which will rule the tabs container
+			if (this.options.generateMenu) {
+				this.options.menu = new mad.controller.component.MenuController($('.js_tabs_nav', this.element));
+				this.options.menu.start();
+			}
+			
+			this.on();
+		},
+		
+		/**
+		 * A tab has been selected
+		 * @return {void}
+		 */
+		'{menu} item_selected': function (el, ev, item) {
+			// If the tab controller generate is own menu to drive itself
+			if(this.options.generateMenu) {
+				var tabId = item.id.replace('js_tab_nav_', '');
+				this.enableTab(tabId);
+			}
+		},
 
 		/**
 		 * Enable a tab
@@ -44,31 +72,65 @@ steal(
 		 * @return {void}
 		 */
 		'enableTab': function (tabId) {
-			// if a previous tab is enabled, disable it
+			// if a previous tab is enabled
+			// -> unselect it
 			if (this.enabledTabId) {
 				this.getComponent(this.enabledTabId).setState('hidden');
+				this.view.unselect(this.enabledTabId);
 			}
-			
+
+			// get the component defined by the tabId
 			this.enabledTabId = tabId;
 			var tab = this.getComponent(this.enabledTabId);
-			// if the tab to enable is not already rendered, render it
+
+			// if the tab to select is not already started
+			// -> start it
 			if(tab.state.is(null)){
 				tab.start();
 			}
-			tab.setState('ready');
+			// if the tab is hidden
+			// -> display it
+			else if(tab.state.is('hidden')) {
+				tab.setState('ready');
+			}
+			
+			this.view.select(this.enabledTabId)
+
+			// // add the selected class to the tab
+			// tab.view.addClass('selected');
+			// // add the selected class to the menu entry
+			// // @todo move that code into the view
+			// $('#js_tab_nav_' + tabId).find('a').addClass('selected');
 		},
 
 		/**
 		 * Add a component to the container
 		 * @param {string} Class The component class to use to instantiate the component
 		 * @param {array} options The optional data to pass to the component constructor
-		 * @param {string} area The area to add the component. Default : mad-container-main
 		 */
-		'addComponent': function (Class, options, area) {
-			// insert the element which will carries the component in the DOM
-			var $component = this.view.add(Class, options);
-			// instantiate the component
-			var component = new Class($component, options);
+		'addComponent': function (Class, options) {
+			// default tab content css
+			var defaultTabCss = ['tab-content'];
+			// get the component if or create it
+			options.id = typeof options.id != 'undefined' ? options.id: uuid();
+
+			// insert the associated menu entry
+			if (this.options.generateMenu) {
+				var menuEntry = new mad.model.Action({
+					'id': 'js_tab_nav_' + options.id,
+					'label': options.label
+				});
+				this.options.menu.insertItem(menuEntry);
+			}
+
+			// Add the default css classes to the new tab
+			if ($.isArray(options.cssClasses)) {
+				$.merge(options.cssClasses, defaultTabCss);
+			} else {
+				options.cssClasses = defaultTabCss;
+			}
+
+			var component = mad.helper.ComponentHelper.create($('.js_tabs_content', this.element), 'last', Class, options);
 			return this._super(component);
 		}
 	});

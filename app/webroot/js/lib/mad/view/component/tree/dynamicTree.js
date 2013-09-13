@@ -28,11 +28,8 @@ steal(
 		 */
 		'open': function (item) {
 			var li = $('#' + item.id, this.element);
-			li.removeClass('closed')
-				.addClass('opened');
-			var control = $('.control:first', li);
-			control.removeClass('open')
-				.addClass('close');
+			li.removeClass('close')
+				.addClass('open');
 		},
 
 		/**
@@ -42,11 +39,8 @@ steal(
 		 */
 		'close': function (item) {
 			var li = $('#' + item.id, this.element);
-			li.removeClass('opened')
-				.addClass('closed');
-			var control = $('.control:first', li);
-			control.removeClass('close')
-				.addClass('open');
+			li.removeClass('open')
+				.addClass('close');
 		},
 
 		/* ************************************************************** */
@@ -54,12 +48,12 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Uncollapse an item
+		 * Collapse / Uncollapse an item
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'a.control.open click': function (el, ev) {
+		'div.node-ctrl a click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			var data = null,
@@ -71,28 +65,14 @@ steal(
 				data = li[0].id;
 			}
 
-			this.element.trigger('item_opened', data);
-		},
-
-		/**
-		 * Colapse an item
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'a.control.close click': function (el, ev) {
-			ev.stopPropagation();
-			ev.preventDefault();
-			var data = null,
-				li = el.parents('li');
-
-			if (this.controller.getItemClass()) {
-				data = li.data(this.controller.getItemClass().fullName);
-			} else {
-				data = li[0].id;
+			// if the element is closed, open it
+			if(li.hasClass('close')) {
+				this.element.trigger('item_opened', data);
 			}
-
-			this.element.trigger('item_closed', data);
+			// otherwise close it
+			else {
+				this.element.trigger('item_closed', data);
+			}
 		}
 
 	});

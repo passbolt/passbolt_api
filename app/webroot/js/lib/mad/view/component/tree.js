@@ -116,7 +116,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li .label click': function (el, ev) {
+		'li .main-cell-wrapper click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
@@ -138,7 +138,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li .label contextmenu': function (el, ev) {
+		'li .main-cell-wrapper contextmenu': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
@@ -162,7 +162,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li .label hover': function (el, ev) {
+		'li .main-cell-wrapper hover': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 

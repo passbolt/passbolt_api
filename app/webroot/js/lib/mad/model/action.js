@@ -1,10 +1,10 @@
 steal(
-	'jquery/model'
+	'mad/model'
 ).then(function () {
 
 	/*
 	 * @class mad.model.Action
-	 * @inherits jQuery.Model
+	 * @inherits mad.model.Model
 	 * @parent mad.controller.component
 	 * 
 	 * The Action model will carry actions used by other component
@@ -14,7 +14,7 @@ steal(
 	 * @param {array} options
 	 * @return {mad.model.Action}
 	 */
-	$.Model('mad.model.Action', /** @static */ {
+	mad.model.Model('mad.model.Action', /** @static */ {
 
 		/**
 		 * Define attributes of the model
@@ -27,6 +27,16 @@ steal(
 			'action': 'string'
 		}
 
-	}, /** @prototype */ {});
+	}, /** @prototype */ {
+		
+		/**
+		 * Get the associated action
+		 * @return {function}
+		 */
+		'getAction': function () {
+			return (typeof this.action != 'undefined') ? this.action : null;
+		}
+		
+	});
 
 });

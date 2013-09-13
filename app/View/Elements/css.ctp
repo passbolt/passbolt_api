@@ -7,12 +7,12 @@
  * @package       app.View.Elements.css
  * @since         version 2.12.6
  */
-  $css = array('reset','grid','font','colors','icons','form','buttons','navigation','popup','tree','breadcrumb','table','footer');
+$css = array('default/aa1d4fae-7dec-11d0-a765-00a0c91e6bf6');
   if (Configure::read('debug') > 1) {
     $css[] = 'debug';
   }
   if (!User::isAnonymous()) {
-    $css = array_merge($css,array('notificator','header','search','workspace.password','menu.dropdown'));
+    // $css = array_merge($css,array('notificator','header','search','workspace.password','menu.dropdown'));
   }
 ?>
 <!--  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato" />-->

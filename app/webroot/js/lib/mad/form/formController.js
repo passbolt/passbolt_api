@@ -177,7 +177,7 @@ steal(
 				var eltModelRef = this.elements[eltId].getModelReference(),
 					// the element value
 					eltValue = this.elements[eltId].getValue();
-					
+
 				// If a model reference is associated to the current form element
 				if (eltModelRef != null) {
 					var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
@@ -198,7 +198,7 @@ steal(
 					else {
 						var leafValue = null,
 							subModelPath = '';
-		
+
 						// if the last field attribute is a reference to a model
 						// no extra transformation, the leaf value is equal to the elt value
 						// the developper as to take care about what the form element is
@@ -215,7 +215,11 @@ steal(
 						// else the last field attribute is a scalar attribute
 						} else {
 							var leafSubModelRef = fieldAttrs[fieldAttrs.length-2];
-		
+							// extract the sub models path
+							var subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
+								.slice(1, fieldAttrs.length-1)
+								.join('.');
+
 							// format the element value following the leaf model multiplicity
 							// * muliplicity
 							if (leafSubModelRef.multiple) {
@@ -226,19 +230,12 @@ steal(
 									obj[attrName] = val;
 									leafValue.push(obj);
 								});
+								// construct the return format functon of the sub models references
+								can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
 							} else {
-								// single multiplicity
-								leafValue = {};
-								leafValue[attrName] = eltValue;
+								// construct the return format functon of the sub models references
+								can.getObject(subModelPath + '.' + attrName , returnValue[fieldAttrs[0].name], true, eltValue);
 							}
-		
-							// extract the sub models path
-							subModelPath = can.map(fieldAttrs, function (val, prop) { return val.name; })
-								.slice(1, fieldAttrs.length-1)
-								.join('.');
-		
-							// construct the return format functon of the sub models references
-							can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
 						}
 					}
 				}

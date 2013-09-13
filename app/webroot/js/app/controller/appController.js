@@ -4,7 +4,8 @@ steal(
 	'app/controller/passwordWorkspaceController.js',
 	'app/controller/peopleWorkspaceController.js',
 	// common components of the application
-	'app/controller/component/appMenuController.js',
+	'app/controller/component/appNavigationLeftController.js',
+	'app/controller/component/appNavigationRightController.js',
 	'app/controller/component/appFilterController.js',
 	'app/controller/component/notificationController.js',
 	// the ressources workspace models
@@ -33,30 +34,37 @@ steal(
 		 * @return {void}
 		 */
 		'afterStart': function() {
-			// Instantiate the app menu controller
-			this.menuCtl = new passbolt.controller.component.AppMenuController($('#js_menu'));
-			this.menuCtl.start();
+			// Instantiate the app navigation left controller
+			this.navLeftCtl = new passbolt.controller.component.AppNavigationLeftController($('#js_app_navigation_left'));
+			this.navLeftCtl.start();
+			
+			// Instantiate the app navigation right controller
+			this.navRightCtl = new passbolt.controller.component.AppNavigationRightController($('#js_app_navigation_right'));
+			this.navRightCtl.start();
 
 			// Instantiate the filter controller
-			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_filter'), {});
+			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_app_filter'), {});
 			this.filterCtl.start();
 
 			// Instantiate the notification controller
-			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
-				'state': 'hidden'
-			});
-			this.notifCtl.start();
+			// this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
+				// 'state': 'hidden'
+			// });
+			// this.notifCtl.start();
 
 			// Instantiate workspaces container tabs element to the app 
-			this.workspacesCtl = new mad.controller.component.TabController($('#js_workspaces_container'));
+			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'), {
+				'generateMenu': false // do not generate the associated tab nav
+			});
 			this.workspacesCtl.start();
 
-			// Instantiate the password workspace component to the workspaces container
-			var passwordWk = this.workspacesCtl.addComponent(passbolt.controller.PasswordWorkspaceController, {
+			// Instantiate the password workspace component and add it to the workspaces container
+			this.passwordWk = this.workspacesCtl.addComponent(passbolt.controller.PasswordWorkspaceController, {
 				'id': 'js_passbolt_passwordWorkspace_controller',
 				'label': 'password'
 			});
-			var peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
+			// Instantiate the people workspace component and add it to the workspaces container
+			this.peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
 				'id': 'js_passbolt_peopleWorkspace_controller',
 				'label': 'people'
 			});

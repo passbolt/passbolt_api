@@ -83,15 +83,15 @@ steal(
 			var returnValue = null,
 				// the mapped item
 				mappedItem = this.controller.getMap().mapObject(item),
-				// the cells data (columnName, value)
-				cells = [],
+				// the cells data (columnName -> value)
+				values = [],
 				// the grid column models
 				columnModels = this.controller.getColumnModel();
 
 			// insert column data
-			for(var j in columnModels) {
+			for(var i in columnModels) {
 				// the column model which describe the current column
-				var columnModel = columnModels[j],
+				var columnModel = columnModels[i],
 					// the cell value
 					cellValue = null;
 
@@ -105,17 +105,16 @@ steal(
 					// Else, use the mapped item value as it is as cell value
 					cellValue = mappedItem[columnModel.name];
 				}
-				cells.push({
-					'columnName' : columnModel.name,
-					'value': cellValue
-				});
+				
+				values[columnModel.name] = cellValue;
 			}
 			
 			// render the row item
 			returnValue = mad.view.View.render(this.controller.options.itemTemplateUri, {
 				'item': item,
 				'id': mappedItem.id,
-				'cells': cells
+				'columnModels': columnModels, 
+				'values': values
 			});
 			
 			return returnValue;

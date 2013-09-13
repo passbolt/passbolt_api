@@ -29,6 +29,28 @@ steal(
 
 	}, /** @prototype */ {
 
+		/**
+		 * Get filter keywords
+		 * @return {array}
+		 */
+		'getKeywords': function() {
+			if(typeof this.keywords != 'undefined') {
+				return this.keywords;
+			}
+			return '';
+		},
+
+		/**
+		 * Get filter tags
+		 * @return {array}
+		 */
+		'getTags': function() {
+			if(typeof this.tags != 'undefined') {
+				return this.tags;
+			}
+			return [];
+		}
+
 	});
 
 });

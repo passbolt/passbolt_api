@@ -15,7 +15,17 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Observe when the user clicks on the h2 event, rolldown the following p tag
+		 * Observe when the user clicks on the close button
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'.icon.close click': function(el, ev) {
+			this.controller.setState('hidden');
+		},
+
+		/**
+		 * Observe when the user clicks on any h2 element, rolldown the following p tag
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}

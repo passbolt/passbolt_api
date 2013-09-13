@@ -149,7 +149,7 @@ class UsersController extends AppController {
 			return;
 		}
 
-		//$this->User->begin();
+		$this->User->begin();
 		$user = $this->User->save($userData, false, $fields['fields']);
 
 		if ($user == false) {
@@ -237,10 +237,10 @@ class UsersController extends AppController {
 
 			$data = array('User.id' => $this->User->id);
 			$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-			$users = $this->User->find('all', $options);
+			$user = $this->User->find('all', $options);
 
 			$this->Message->success(__("The user has been updated successfully"));
-			$this->set('data', $save);
+			$this->set('data', $user);
 
 			return;
 		}

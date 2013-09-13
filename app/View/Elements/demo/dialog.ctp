@@ -12,17 +12,42 @@
 <div class="dialog">
 	<div class="dialog-header">
 		<h2>Edit Password</h2>
-		<a href="close" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
+		<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
 	</div>
-	<div class="dialog-tabs">
-		<ul class="tabs">
-			<li><a href="#" class="selected" data-item-selected="b2164540-ea43-11e2-ac0e-0002a5d5c51b">edit</a></li>
-			<li><a href="#">share</a></li>
-			<li><a href="#">organize</a></li>
+	<div class="dialog-content">
+	<div class="tabs">
+		<ul class="tabs-nav">
+			<li>
+				<div class="row">
+					<div class="main-cell-wrapper">
+						<div class="main-cell">
+							<a href="#" class="selected"><span>Edit</span></a>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="row">
+					<div class="main-cell-wrapper">
+						<div class="main-cell">
+							<a href="#"><span>Share</span></a>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="row">
+					<div class="main-cell-wrapper">
+						<div class="main-cell">
+							<a href="#"><span>Organize</span></a>
+						</div>
+					</div>
+				</div>
+			</li>
 		</ul>
-		<ul class="dialog-tabs-content">
+		<ul class="tabs-content">
 			<!-- edit -->
-			<li class="dialog-tab-content selected" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
+			<li class="tab-content selected" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
 				<form>
 				<div class="form-content">
 					<div class="input text required error">
@@ -41,7 +66,7 @@
 					<div class="input-password-wrapper">
 						<div class="input password required short">
 							<label for="SecretData">Password</label>
-							<input name="data[Secret][data]" class="required" maxlength="50" type="password" id="SecretData" placeholder="username"/>
+							<input name="data[Secret][data]" class="required" maxlength="50" type="password" id="SecretData" placeholder="password"/>
 						</div>
 						<div class="actions inline">
 							<a href="#" class="button toggle">
@@ -88,6 +113,7 @@
 				</form>
 			</li>
 		</ul>
+	</div>
 	</div>
 </div>
 </div>

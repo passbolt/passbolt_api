@@ -1,29 +1,83 @@
-<input type="hidden" name="passbolt.model.Resource.Category.id" id="js_field_category_id" class="form_field" />
+<div class="form-content">
+	
+	<input type="hidden" name="passbolt.model.Resource.Category.id" id="js_field_category_id" class="form_field" />
+	
+	<div class="input text required error">
+		<label for="js_field_name"><%= __('Name') %></label>
+		<input name="passbolt.model.Resource.name" class="required" maxlength="50" type="text" id="js_field_name" placeholder="name"/>
+		<div id="js_field_name_feedback" class="message error">
+		</div>
+	</div>
+	
+	<div class="input text">
+		<label for="js_field_uri"><%= __('URL') %></label>
+		<input name="passbolt.model.Resource.uri" maxlength="50" type="text" id="js_field_uri" placeholder="https://example.com/login"/>
+		<div id="js_field_uri_feedback" class="message">
+		</div>
+	</div>
+	
+	<div class="input text required">
+		<label for="js_field_username"><%= __('Username') %></label>
+		<input name="passbolt.model.Resource.username" class="required" maxlength="50" type="text" id="js_field_username" placeholder="name"/>
+		<div id="js_field_username_feedback" class="message error">
+		</div>
+	</div>
 
-<div class="input">
-	<label>Resource name</label>
-	<input type="text" name="passbolt.model.Resource.name" id="js_field_name" class="form_field" />
-	<div id="js_field_name_feedback" class="message"/>
-</div>
+	<div class="input-password-wrapper">
+		<div class="input password required short">
+			<label for="js_field_secret"><%= __('Password') %></label>
+			<input type="hidden" name="passbolt.model.Resource.Secret.id" id="js_field_secret_id" class="form_field" />
+			<input name="passbolt.model.Resource.Secret.data" class="required" maxlength="50" type="password" id="js_field_secret" placeholder="password"/>
+			<input class="required" maxlength="50" type="text" id="js_field_secret_clear" placeholder="password"/>
+		</div>
+		<ul class="actions inline">
+			<li>
+				<a href="#" id="js_show_password_button" class="button toggle">
+					<i class="icon eye big no-text"></i>
+					<span>view</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="button todo">
+					<i class="icon key big no-text"></i>
+					<span>generate</span>
+				</a>
+			</li>
+		</ul>
+		<div class="password-complexity good">
+			<span class="progress"><span class="progress-bar"></span></span>
+			<span class="complexity-text">complexity: <strong>good</strong></span>
+		</div>
+	</div>
+	<div class="input-datetime-wrapper">
+		<div class="input text datetime short">
+			<label for="ResourceExpire"><%= __('Expiracy date') %></label>
+			<input name="data[Resource][expire]" class="required todo" type="text" id="ResourceExpire" data-format="YYYY-MM-DD HH:mm" data-template="D MMM YYYY HH:mm" placeholder="DD/MM/YYYY HH:MM">
+			<div class="actions inline dropdown">
+				<a href="#" class="button todo">
+					<i class="clock icon big no-text"></i>
+					<span>pick a date and time</span>
+				</a>
+				<ul class="dropdown-content">
+					<li><a href="#">copy login to clipboard</a></li>
+					<li><a href="#">copy password to clipboard</a></li>
+					<li><a href="#">organize</a></li>
+					<li><a href="#">review logs</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 
-<div class="input">
-	<label>Resource username</label>
-	<input type="text" name="passbolt.model.Resource.username" id="js_field_username" class="form_field" />
-	<div id="js_field_username_feedback" class="message"/>
-</div>
+	<div class="input textarea required">
+		<label for="js_field_description"><%= __('Description') %></label>
+		<textarea name="passbolt.model.Resource.description" class="required" maxlength="150" id="js_field_description" placeholder="add a description">
+		</textarea>
+		<div id="js_field_description_feedback" class="message">
+		</div>
+	</div>
+	
+	<div>
+		<input type="submit" value="submit" />
+	</div>
 
-<div class="input">
-	<label>Resource uri</label>
-	<input type="text" name="passbolt.model.Resource.uri" id="js_field_uri" class="form_field" />
-	<div id="js_field_uri_feedback" class="message"/>
-</div>
-
-<div class="input">
-	<label>Resource description</label>
-	<textarea name="passbolt.model.Resource.description" id="js_field_description" class="form_field"></textarea>
-	<div id="js_field_description_feedback" class="message"/>
-</div>
-
-<div>
-	<input type="submit" value="submit" />
 </div>

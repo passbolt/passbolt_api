@@ -18,15 +18,33 @@ steal(
 		 */
 		'create': function (refElement, position, Clazz, options) {
 			var returnValue = null,
-				component = '<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"/>',
-				$component = null;
+				// our DOM component
+				$component = null,
+				// the rendered html
+				html = '',
+				// the component id
+				id = (options.id || ''),
+				// attributes to add to the tag
+				attributes = $.extend({}, Clazz.defaults.attributes, options.attributes);
 
 			if (refElement.length == 0) {
 				throw new mad.error.WrongParametersException('refElement');
 			}
 
+			// build the tag
+			html = '<' + Clazz.defaults.tag + ' id="' + (options.id || '') + '"';
+			
+			// add attributes
+			for(var attrName in attributes) {
+				html += ' ' + attrName + '="' + attributes[attrName] + '"';
+			}
+			
+			// close our tag
+			html += '/>';
+
+
 			// insert the component in the DOM
-			$component = mad.helper.HtmlHelper.create(refElement, position, component);
+			$component = mad.helper.HtmlHelper.create(refElement, position, html);
 
 			// Instanciate the component
 			if (typeof Clazz.singleton != 'undefined') {

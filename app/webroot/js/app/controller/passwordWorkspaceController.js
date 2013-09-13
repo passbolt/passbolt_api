@@ -3,8 +3,9 @@ steal(
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/resourceDetailsController.js',
-	'app/controller/component/passwordsActionsMenuController.js',
 	'app/controller/component/resourceActionsTabController.js',
+	'app/controller/component/workspaceMenuController.js',
+	'app/controller/component/workspaceSecondaryMenuController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
 	'app/model/filter.js'
@@ -35,39 +36,29 @@ steal(
 	}, /** @prototype */ {
 
 		'afterStart': function() {
-			// *************************************************************
-			// User menu area
-			// *************************************************************
-			var userMenu = this.addComponent(passbolt.controller.component.PasswordsActionsMenuController, {
-				'id': 'js_passbolt_password_actions_menu',
-				'selectedRs': this.options.selectedRs
-			}, 'workspace_actions_container');
-			userMenu.start();
-			
-			// *************************************************************
-			// First side area
-			// *************************************************************
-			// Add the Category Chooser component
-			var categoryChooser = this.addComponent(passbolt.controller.component.CategoryChooserController, {
-				'id': 'js_passbolt_password_category_chooser'
-			}, 'js_workspace_sidebar_first');
-			categoryChooser.start();
 
-			// *************************************************************
-			// Main area
-			// *************************************************************
-			// Add the Password browser component
+			// Instantiate the primary workspace menu controller
+			this.primMenu = new passbolt.controller.component.WorkspaceMenuController('#js_wsp_primary_menu', {
+				'selectedRs': this.options.selectedRs
+			});
+			this.primMenu.start();
+
+			// Instantiate the secondary workspace menu controller
+			this.secMenu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_wsp_secondary_menu', {});
+			this.secMenu.start();
+			
+			// Instanciate the categories chooser controller
+			this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
+			this.catChooser.start();
+
+			// Instanciate the passwords browser controller
 			var passwordBrowserController = this.addComponent(passbolt.controller.component.PasswordBrowserController, {
 				'id': 'js_passbolt_password_browser',
 				'selectedRs': this.options.selectedRs
 			}, 'js_workspace_main');
 			passwordBrowserController.start();
 
-			// *************************************************************
-			// Second side area - create a container to be able to add other tool after
-			// *************************************************************
-
-			// Add vertical container to the second side area
+			// Instanciate the resource details controller
 			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_workspace_sidebar_second', this.element), {
 				'id': 'js_passbolt_password_sidebar_second',
 				'selectedRs': this.options.selectedRs,
@@ -109,50 +100,6 @@ steal(
 		},
 
 		/**
-		 * Observe when a resource is selected and adapt the workspace view functions of
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The selected resource
-		 * @return {void}
-		 */
-		'{selectedRs} add': function (el, ev, resource) {
-			// if more than one resource selected, hide the right sidebar
-			if (this.options.selectedRs.length > 1) {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('middle').addClass('full');
-				$('.js_workspace_sidebar_second', this.element).hide();
-				
-			// else if only 1 resource selected show the right sidebar
-			} else {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('full').addClass('middle');
-				$('.js_workspace_sidebar_second', this.element).show();
-			}
-		},
-
-		/**
-		 * Observe when a resource is unselected and adapt the workspace view functions of
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Resource} resource The unselected resource
-		 * @return {void}
-		 */
-		'{selectedRs} remove': function (el, ev, resource) {
-			// if more just one resource selected, show the right sidebar
-			if (this.options.selectedRs.length == 1) {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('full').addClass('middle');
-				$('.js_workspace_sidebar_second', this.element).show();
-			
-			// else if no resource selected or more than once, hide the right sidebar
-			} else {
-				// this view interaction, but for now it will be like that
-				$('.js_workspace_main', this.element).removeClass('middle').addClass('full');
-				$('.js_workspace_sidebar_second', this.element).hide();
-			}
-		},
-
-		/**
 		 * Observe when the user want to copy the login to the clipboard
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
@@ -185,18 +132,18 @@ steal(
 		'{mad.bus} request_category_creation': function (el, ev, data) {
 			var category = new passbolt.model.Category({ parent_id: data.id });
 			
-			// get the popup
-			var popup = new mad.controller.component.PopupController({label: __('Create a new Category')})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Create a new Category')})
 				.start();
 			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.category.CreateFormController, {
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.category.CreateFormController, {
 				data: category,
 				callbacks : {
 					submit: function (data) {
 						var instance = new passbolt.model.Category(data['passbolt.model.Category'])
 							.save();
-						popup.remove();
+						dialog.remove();
 					}
 				}
 			});
@@ -212,18 +159,18 @@ steal(
 		 */
 		'{mad.bus} request_category_edition': function (el, ev, category) {
 			
-			// get the popup
-			var popup = new mad.controller.component.PopupController({label: __('Edit a Category')})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Edit a Category')})
 				.start();
 			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.category.CreateFormController, {
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.category.CreateFormController, {
 				data: category,
 				callbacks : {
 					submit: function (data) {
 						category.attr(data['passbolt.model.Category'])
 							.save();
-						popup.remove();
+						dialog.remove();
 					}
 				}
 			});
@@ -259,19 +206,18 @@ steal(
 			// create the resource which will be used by the form builder to populate the fields
 			var resource = new passbolt.model.Resource({ Category: categories });
 			
-			// get the popup
-			var popup = new mad.controller.component.PopupController(null, {label: __('Create a new Resource')});
-			popup.start();
-				// .start();
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Create Password')})
+				.start();
 			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.resource.CreateFormController, {
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.resource.CreateFormController, {
 				data: resource,
 				callbacks : {
 					submit: function (data) {
 						var rs = new passbolt.model.Resource(data['passbolt.model.Resource']);
 						rs.save();
-						popup.remove();
+						dialog.remove();
 					}
 				}
 			});
@@ -286,22 +232,15 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_edition': function (el, ev, resource) {
-			// get the popup
-			var popup = new mad.controller.component.PopupController({label: __('Edit a Resource')})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit Password')})
 				.start();
-			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.resource.CreateFormController, {
-				data: resource,
-				callbacks : {
-					submit: function (data) {
-						resource.attr(data['passbolt.model.Resource'])
-							.save();
-						popup.remove();
-					}
-				}
+
+			// Instanciate the Resource Actions Tab Controller into the dialog
+			var tab = dialog.add(passbolt.controller.component.ResourceActionsTabController, {
+				resource: resource
 			});
-			form.load(resource);
+			tab.enableTab('js_rs_edit');
 		},
 
 		/**
@@ -331,14 +270,15 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_sharing': function (el, ev, resource) {
-			// get the popup
-			var popup = new mad.controller.component.PopupController({label: ''})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Share Password')})
 				.start();
 
-			// attach the component to the popup
-			var tab = popup.add(passbolt.controller.component.ResourceActionsTabController, {
+			// Instanciate the Resource Actions Tab Controller into the dialog
+			var tab = dialog.add(passbolt.controller.component.ResourceActionsTabController, {
 				resource: resource
 			});
+			tab.enableTab('js_rs_permission');
 		},
 
 		/**
@@ -371,7 +311,6 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_unfavorite': function (el, ev, instance) {
-			console.log(instance.Favorite);
 			instance.Favorite.destroy(function() {
 				instance.Favorite = null;
 				can.trigger(passbolt.model.Resource, 'updated', instance);

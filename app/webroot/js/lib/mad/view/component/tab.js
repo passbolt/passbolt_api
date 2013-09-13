@@ -13,23 +13,42 @@ steal(
 	 */
 	mad.view.View.extend('mad.view.component.Tab', /** @static */ {
 
+		'templateUri': 'mad/view/template/component/tab.ejs',
+
 	}, /** @prototype */ {
 
 		/**
-		 * Add a component to the container. Add its dom element
-		 * @param {Array} componentOptions The options of the component to add
-		 * @return {jQuery} the just added jQuery element
+		 * Select a tab
+		 * @param {string} tabId The target tab id
+		 * @return {void}
 		 */
-		'add': function (Class, options) {
-			// get the tag to use
-			var tag = 'div';
-			if(typeof options.tag != 'undefined') tag = options.tag;
-			else if(typeof Class.defaults.tag) tag = Class.defaults.tag;
-			// render the component tag
-			var html = '<' + tag + ' id="' + options.id + '"></' + tag + '>';
-			// add a tag for the component to add
-			return mad.helper.HtmlHelper.create(this.element, 'last', html);
+		'select': function(tabId) {
+			// add the selected class to the tab
+			this.controller.getComponent(tabId)
+				.view
+				.addClass('selected');
+			// add the selected class to the menu entry
+			$('#js_tab_nav_' + tabId, this.element)
+				.find('a')
+				.addClass('selected');
+		},
+		
+		/**
+		 * Unselect a tab
+		 * @param {string} tabId The target tab id
+		 * @return {void}
+		 */
+		'unselect': function(tabId) {
+			// remove the selected class to the tab
+			this.controller.getComponent(tabId)
+				.view
+				.removeClass('selected');
+			// remove the selected class to the menu entry
+			$('#js_tab_nav_' + tabId, this.element)
+				.find('a')
+				.removeClass('selected');
 		}
+
 	});
 
 });
