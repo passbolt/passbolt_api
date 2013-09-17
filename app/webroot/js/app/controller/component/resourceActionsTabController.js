@@ -54,7 +54,6 @@ steal(
 			// this.container.start();
 
 			// Add the edition form controller to the tab
-
 			var editFormCtl = this.addComponent(passbolt.controller.form.resource.CreateFormController, {
 				'id': 'js_rs_edit',
 				'label': __('Edit'),
@@ -70,17 +69,14 @@ steal(
 					}
 				}
 			});
-			
-			// editFormCtl.start();
-			this.enableTab('js_rs_edit');
-			editFormCtl.load(this.options.resource);	
+			editFormCtl.start();
+			editFormCtl.load(this.options.resource);
 
 			// Add the permission controller to the tab
 			var permCtl = this.addComponent(passbolt.controller.component.PermissionsController, {
-				'id': 'js_permission',
+				'id': 'js_rs_permission',
 				'label': 'Share',
-				'resource': this.options.resource
-				// 'state': 'hidden'
+				'resource': this.options.resources
 			});
 			permCtl.start();
 			permCtl.load(this.options.resource);

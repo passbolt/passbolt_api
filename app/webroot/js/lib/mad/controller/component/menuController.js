@@ -56,8 +56,10 @@ steal(
 		 */
 		' item_selected': function (el, ev, item) {
 			this._super(el, ev, item);
-			// execute the associated action
-			item.action(this);
+			// if an executed action is associated, execute it
+			if(action = item.getAction()) {
+				item.action(this);
+			}
 		}
 
 	});

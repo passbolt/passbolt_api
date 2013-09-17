@@ -6,6 +6,9 @@
 .tabs-nav li {
     display: inline;
 }
+.tabs-nav li div {
+    display: inline-block;
+}
 .tabs-nav li a {
     display: inline-block;
     padding: .25em 1.75em;

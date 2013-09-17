@@ -27,6 +27,16 @@ steal(
 			'action': 'string'
 		}
 
-	}, /** @prototype */ {});
+	}, /** @prototype */ {
+		
+		/**
+		 * Get the associated action
+		 * @return {function}
+		 */
+		'getAction': function () {
+			return (typeof this.action != 'undefined') ? this.action : null;
+		}
+		
+	});
 
 });

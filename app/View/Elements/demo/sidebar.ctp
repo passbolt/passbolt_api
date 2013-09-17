@@ -2,7 +2,7 @@
 ?>
 <div class="resource">
 	<h3>Linked In</h3>
-	<a href="close" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
+	<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
 
 	<div class="detailed-information">
 	<h4>Information</h4>

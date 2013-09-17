@@ -132,18 +132,18 @@ steal(
 		'{mad.bus} request_category_creation': function (el, ev, data) {
 			var category = new passbolt.model.Category({ parent_id: data.id });
 			
-			// get the popup
-			var popup = new mad.controller.component.DialogController({label: __('Create a new Category')})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Create a new Category')})
 				.start();
 			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.category.CreateFormController, {
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.category.CreateFormController, {
 				data: category,
 				callbacks : {
 					submit: function (data) {
 						var instance = new passbolt.model.Category(data['passbolt.model.Category'])
 							.save();
-						popup.remove();
+						dialog.remove();
 					}
 				}
 			});
@@ -159,18 +159,18 @@ steal(
 		 */
 		'{mad.bus} request_category_edition': function (el, ev, category) {
 			
-			// get the popup
-			var popup = new mad.controller.component.DialogController({label: __('Edit a Category')})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Edit a Category')})
 				.start();
 			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.category.CreateFormController, {
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.category.CreateFormController, {
 				data: category,
 				callbacks : {
 					submit: function (data) {
 						category.attr(data['passbolt.model.Category'])
 							.save();
-						popup.remove();
+						dialog.remove();
 					}
 				}
 			});
@@ -206,19 +206,18 @@ steal(
 			// create the resource which will be used by the form builder to populate the fields
 			var resource = new passbolt.model.Resource({ Category: categories });
 			
-			// get the popup
-			var popup = new mad.controller.component.DialogController(null, {label: __('Create a new Resource')});
-			popup.start();
-				// .start();
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Create Password')})
+				.start();
 			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.resource.CreateFormController, {
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.resource.CreateFormController, {
 				data: resource,
 				callbacks : {
 					submit: function (data) {
 						var rs = new passbolt.model.Resource(data['passbolt.model.Resource']);
 						rs.save();
-						popup.remove();
+						dialog.remove();
 					}
 				}
 			});
@@ -233,24 +232,15 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_edition': function (el, ev, resource) {
-			// get the popup
-			var popup = new mad.controller.component.DialogController({label: __('Edit a Resource')})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit Password')})
 				.start();
-			
-			// attach the component to the popup
-			var form = popup.add(passbolt.controller.form.resource.CreateFormController, {
-				data: resource,
-				callbacks : {
-					submit: function (data) {
-						alert('test');
-						console.log(data);
-						resource.attr(data['passbolt.model.Resource'])
-							.save();
-						popup.remove();
-					}
-				}
+
+			// Instanciate the Resource Actions Tab Controller into the dialog
+			var tab = dialog.add(passbolt.controller.component.ResourceActionsTabController, {
+				resource: resource
 			});
-			form.load(resource);
+			tab.enableTab('js_rs_edit');
 		},
 
 		/**
@@ -280,14 +270,15 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_sharing': function (el, ev, resource) {
-			// get the popup
-			var dialog = new mad.controller.component.DialogController({label: ''})
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Share Password')})
 				.start();
 
-			// Instanciate the Resource Actions Tab Controller into the popup
-			dialog.add(passbolt.controller.component.ResourceActionsTabController, {
+			// Instanciate the Resource Actions Tab Controller into the dialog
+			var tab = dialog.add(passbolt.controller.component.ResourceActionsTabController, {
 				resource: resource
 			});
+			tab.enableTab('js_rs_permission');
 		},
 
 		/**

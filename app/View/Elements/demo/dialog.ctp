@@ -17,9 +17,33 @@
 	<div class="dialog-content">
 	<div class="tabs">
 		<ul class="tabs-nav">
-			<li><a href="#" class="selected" data-item-selected="b2164540-ea43-11e2-ac0e-0002a5d5c51b">edit</a></li>
-			<li><a href="#">share</a></li>
-			<li><a href="#">organize</a></li>
+			<li>
+				<div class="row">
+					<div class="main-cell-wrapper">
+						<div class="main-cell">
+							<a href="#" class="selected"><span>Edit</span></a>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="row">
+					<div class="main-cell-wrapper">
+						<div class="main-cell">
+							<a href="#"><span>Share</span></a>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="row">
+					<div class="main-cell-wrapper">
+						<div class="main-cell">
+							<a href="#"><span>Organize</span></a>
+						</div>
+					</div>
+				</div>
+			</li>
 		</ul>
 		<ul class="tabs-content">
 			<!-- edit -->

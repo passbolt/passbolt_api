@@ -47,8 +47,22 @@ steal(
 			var self = this;
 			// Instantiate the menu which will rule the tabs container
 			if (this.options.generateMenu) {
-				this.menu = new mad.controller.component.MenuController($('.js_tabs_nav', this.element));
-				this.menu.start();
+				this.options.menu = new mad.controller.component.MenuController($('.js_tabs_nav', this.element));
+				this.options.menu.start();
+			}
+			
+			this.on();
+		},
+		
+		/**
+		 * A tab has been selected
+		 * @return {void}
+		 */
+		'{menu} item_selected': function (el, ev, item) {
+			// If the tab controller generate is own menu to drive itself
+			if(this.options.generateMenu) {
+				var tabId = item.id.replace('js_tab_nav_', '');
+				this.enableTab(tabId);
 			}
 		},
 
@@ -58,25 +72,35 @@ steal(
 		 * @return {void}
 		 */
 		'enableTab': function (tabId) {
-			// if a previous tab is enabled, disable it
+			// if a previous tab is enabled
+			// -> unselect it
 			if (this.enabledTabId) {
 				this.getComponent(this.enabledTabId).setState('hidden');
+				this.view.unselect(this.enabledTabId);
 			}
-			this.enabledTabId = tabId;
-			
+
 			// get the component defined by the tabId
+			this.enabledTabId = tabId;
 			var tab = this.getComponent(this.enabledTabId);
 
-			// if the tab to enable is not already started => start it
+			// if the tab to select is not already started
+			// -> start it
 			if(tab.state.is(null)){
 				tab.start();
 			}
+			// if the tab is hidden
+			// -> display it
+			else if(tab.state.is('hidden')) {
+				tab.setState('ready');
+			}
 			
-			// add the selected class to the tab
-			tab.view.addClass('selected');
-			// add the selected class to the menu entry
-			// @todo move that code into the view
-			$('#js_tab_nav_' + tabId).find('a').addClass('selected');
+			this.view.select(this.enabledTabId)
+
+			// // add the selected class to the tab
+			// tab.view.addClass('selected');
+			// // add the selected class to the menu entry
+			// // @todo move that code into the view
+			// $('#js_tab_nav_' + tabId).find('a').addClass('selected');
 		},
 
 		/**
@@ -96,7 +120,7 @@ steal(
 					'id': 'js_tab_nav_' + options.id,
 					'label': options.label
 				});
-				this.menu.insertItem(menuEntry);
+				this.options.menu.insertItem(menuEntry);
 			}
 
 			// Add the default css classes to the new tab

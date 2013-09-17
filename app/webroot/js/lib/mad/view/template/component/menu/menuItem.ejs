@@ -1,11 +1,15 @@
-<%
-var cssClasses = cssClasses || [];
-%>
+<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
+	<div class="row">
+		<div class="main-cell-wrapper">
+			<div class="main-cell">
+				<a href="#"><span><%= label %></span></a>
+			</div>
+		</div>
+	</row>
+	
+<% if(hasChildren) { %>
+	<ul>
+	</ul>
+<% } %>
 
-<li id="<%= id %>" class="<%= cssClasses.join(' ') %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
-	<a href="#">
-		<span class="label">
-			<%= label %>
-		</span>
-	</a>
 </li>

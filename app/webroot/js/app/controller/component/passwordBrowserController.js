@@ -545,7 +545,7 @@ steal(
 			// this.options.categories = new can.Observe.List([]); // with an observable list, it would be great, but it is not working properly with event !
 
 			// override the current list of categories displayed with the new ones
-			can.each(filter.tags, function (category, i) {
+			can.each(filter.getTags(), function (category, i) {
 				var subCategories = category.getSubCategories(true);
 				can.each(subCategories, function(subCategory, i){
 					self.options.categories.push(subCategory.id);
@@ -556,15 +556,16 @@ steal(
 			this.setState('loading');
 			
 			// load resources for the given filter
+			var filterTagsParam = can.map(filter.getTags(), function (tag, i) { return tag.id; }).join(',');
 			passbolt.model.Resource.findAll({
-				'categories_id': can.map(filter.tags, function (tag, i) { return tag.id; }).join(','),
-				'keywords': filter.keywords,
+				'categories_id': filterTagsParam,
+				'keywords': filter.getKeywords(),
 				'recursive': true
 			}, function (resources, response, request) {
 				// The callback is out of date, an other filter has been performed
 				// @todo do something like filter.isRelativeTo(dataBrol) => bool
-				if (request.originParams.keywords != self.filter.keywords ||
-						request.originParams.categories_id != can.map(self.filter.tags, function (tag, i) { return tag.id; }).join(',')) {
+				if (request.originParams.keywords != self.filter.getKeywords() ||
+						request.originParams.categories_id != can.map(self.filter.getTags(), function (tag, i) { return tag.id; }).join(',')) {
 					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
 					return;
 				}

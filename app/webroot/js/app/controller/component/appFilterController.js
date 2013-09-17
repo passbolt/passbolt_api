@@ -44,7 +44,7 @@ steal(
 			}));
 			this.keywordsFormElement.start();
 			
-			// // Instantiate the list which will carry the filter tags
+			// Instantiate the list which will carry the filter tags
 			// this.listFormElement = this.filterForm.addElement(new mad.form.element.ListController('#js_filter_tags', {
 				// modelReference: 'passbolt.model.Filter.tags'
 			// }));
