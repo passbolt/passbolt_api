@@ -122,14 +122,34 @@ span + .icon  {
 .icon.arrowdown:before  {
   content: '\25BE';
 }
+.icon.arrowright:before  {
+    content: '\E4AE';
+}
 .icon.eye:before  {
   content: '\E70A';
 }
 .icon.clock:before {
-	content: '\1F554';
+    content: '\1F554';
 }
 .icon.key:before  {
   content: '\1F511';
+}
+.icon.user:before  {
+  content: '\1F464';
+}
+.icon.group:before  {
+  content: '\1F465';
+}
+.icon.plus:before {
+  content: '\2795';
+}
+.icon.plusplain:before {
+    content: '\229E';
+}
+
+.icon.avatar.user:before,
+.icon.avatar.group:before {
+    line-height: 0.62em;
 }
 
 /* layout */
@@ -141,6 +161,11 @@ span + .icon  {
 }
 .icon.layout.box:before  {
   content: '\268F';
+}
+
+/* Avatar */
+.icon.avatar {
+  font-size: 1.5em;
 }
 
 /* favorites */
