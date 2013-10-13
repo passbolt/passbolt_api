@@ -1,6 +1,7 @@
 steal(
 	'mad/view/component/tree.js',
-	'app/view/component/resourceDetails.js'
+	'app/view/component/resourceDetails.js',
+    'app/controller/component/commentsController.js'
 ).then(function () {
 
 	/*
@@ -38,6 +39,14 @@ steal(
 			// pass the new resource to the view
 			this.setViewData('resource', this.options.resource);
 		},
+
+
+        'afterStart': function() {
+            // Instantiate the comments controller
+            var commentsController = new passbolt.controller.component.CommentsController($('.js_workspace_sidebar_second_comments', this.element));
+            commentsController.start();
+            console.log($('.js_workspace_sidebar_second_comments', this.element));
+        },
 		
 		/**
 		 * Load details of a resource
