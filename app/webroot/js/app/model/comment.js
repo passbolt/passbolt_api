@@ -62,7 +62,7 @@ steal(
 
             'findAll': function (params, success, error) {
                 return mad.net.Ajax.request({
-                    url: APP_URL + '/comments',
+                    url: APP_URL + 'comments/viewForeignComments/Resource/{id}',
                     type: 'GET',
                     params: params,
                     success: success,
@@ -72,7 +72,7 @@ steal(
 
             'findOne': function (params, success, error) {
                 return mad.net.Ajax.request({
-                    url: APP_URL + '/comments/{id}',
+                    url: APP_URL + 'comments/viewForeignComments/Resource/' + params.id,
                     type: 'GET',
                     params: params,
                     success: success,

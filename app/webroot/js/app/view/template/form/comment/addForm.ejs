@@ -1,0 +1,21 @@
+<ul>
+	<li class="comment-wrapper">
+		<div class="comment add">
+			<div class="author profile picture"><a href="#"><img src="img/user.png"></a></div>
+			<div class="input textarea required">
+				<label for="Comment">Add a comment</label>
+				<input name="data[comment][parent_id]" class="required" maxlength="36" type="hidden" id="CommentParentId">
+				<input name="data[comment][foreign_id]" class="required" maxlength="36" type="hidden" id="CommentForeignId">
+				<input name="data[comment][foreign_model]" class="required" maxlength="36" type="hidden" id="CommentForeignModel">
+				<textarea name="data[comment][content]" class="required" maxlength="150" id="js_rs_details_comment_content" placeholder="add a comment"></textarea>
+			</div>
+			<div class="metadata">
+				<span class="author username"><a href="#">You</a></span>
+				<span class="modified">right now</span>
+			</div>
+			<div class="actions">
+				<a href="#" class="button"><span>send</span></a>
+			</div>
+		</div>
+	</li>
+</ul>

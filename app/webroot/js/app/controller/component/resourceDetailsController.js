@@ -1,7 +1,7 @@
 steal(
 	'mad/view/component/tree.js',
 	'app/view/component/resourceDetails.js',
-    'app/controller/component/commentsController.js'
+  'app/controller/component/commentsController.js'
 ).then(function () {
 
 	/*

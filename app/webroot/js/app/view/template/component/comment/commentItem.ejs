@@ -1,0 +1,16 @@
+<li class="comment-wrapper">
+	<div class="comment">
+		<div class="author profile picture"><a href="#"><img src="img/user.png"/></a></div>
+		<p><%= content %></p>
+		<div class="metadata">
+			<span class="author username"><a href="#">you</a></span>
+			<span class="modified"><%= moment(modified).fromNow(); %></span>
+		</div>
+		<div class="actions">
+			<ul>
+				<!-- <li><a href="#"><i class="icon reply no-text"></i><span>reply</span></a></li>-->
+				<li><a href="#"><i class="icon delete no-text"></i><span>delete</span></a></li>
+			</ul>
+		</div>
+	</div>
+</li>

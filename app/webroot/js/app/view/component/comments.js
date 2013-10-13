@@ -4,7 +4,7 @@ steal(
 ).then(function () {
 
         /*
-         * @class passbolt.view.component.ResourceDetails
+         * @class passbolt.view.component.Comments
          * @inherits mad.view.View
          */
         mad.view.View.extend('passbolt.view.component.Comments', /** @static */ {
@@ -13,11 +13,22 @@ steal(
 
             'init': function(el, options) {
                 this._super(el, options);
-            }
+            },
 
             /* ************************************************************** */
             /* LISTEN TO THE VIEW EVENTS */
             /* ************************************************************** */
 
+
+						/**
+						 * Observe when the user clicks on the plus button, to add a comment
+						 * @param {HTMLElement} el The element the event occured on
+						 * @param {HTMLEvent} ev The event which occured
+						 * @return {void}
+						 */
+						'.icon.create click': function (el, ev) {
+							// Displays the add comment form
+							this.controller.addFormController.setState('ready');
+						}
         });
     });
