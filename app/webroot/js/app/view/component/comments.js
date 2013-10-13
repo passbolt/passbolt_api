@@ -11,9 +11,8 @@ steal(
 
         }, /** @prototype */ {
 
-            'init' : function(el, options){
+            'init': function(el, options) {
                 this._super(el, options);
-                console.log("test");
             }
 
             /* ************************************************************** */

@@ -207,6 +207,10 @@ steal(
 				render = this.afterRender(render);
 				this.view.insertInDom(render);
 			}
+			this.afterStart();
+			// Switch the element in its default state
+			this.setState(this.options.state);
+			return this
 		},
 
 		/**

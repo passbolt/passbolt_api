@@ -40,13 +40,18 @@ steal(
 			this.setViewData('resource', this.options.resource);
 		},
 
-
-        'afterStart': function() {
-            // Instantiate the comments controller
-            var commentsController = new passbolt.controller.component.CommentsController($('.js_workspace_sidebar_second_comments', this.element));
-            commentsController.start();
-            console.log($('.js_workspace_sidebar_second_comments', this.element));
-        },
+		/**
+		 * Called right after the start function
+		 * @return {void}
+		 * @see {mad.controller.ComponentController}
+		 */
+		'afterStart': function() {
+			// Instantiate the comments controller
+			var commentsController = new passbolt.controller.component.CommentsController($('#js_rs_details_comments', this.element), {
+				'resource': this.options.resource
+			});
+			commentsController.start();
+		},
 		
 		/**
 		 * Load details of a resource
@@ -57,16 +62,15 @@ steal(
 			// push the new resource in the options to be able to listen the resource
 			// change in the function name
 			this.options.resource = resource;
-			// if the component is not started, start it
+			// If the component has not been already started
 			if(this.state.is(null)) {
 				this.start();
-			// otherwise refresh the component
 			} else {
-				// refresh the view
-				this.refresh();	
+				// refresh the component -> afterStart
+				this.refresh();
 			}
-			// // on
-			// this.on();
+			// Some options changed, make the controller able to listen changes on this new options
+			this.on();
 		},
 
 		/* ************************************************************** */
