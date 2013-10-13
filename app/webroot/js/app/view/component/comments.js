@@ -29,6 +29,10 @@ steal(
 						'.icon.create click': function (el, ev) {
 							// Displays the add comment form
 							this.controller.addFormController.setState('ready');
+						},
+
+						'a.button.comment-submit click': function (el, ev) {
+							el.trigger('submit');
 						}
         });
     });

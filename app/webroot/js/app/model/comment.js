@@ -18,7 +18,10 @@ steal(
         mad.model.Model('passbolt.model.Comment', /** @static */ {
 
             'validateRules': {
-                'content': ['text']
+								'parent_id': ['text'],
+								'foreign_model': ['text'],
+								'foreign_id': ['text'],
+								'content': ['text']
             },
 
             attributes: {
@@ -34,8 +37,9 @@ steal(
             'create' : function (attrs, success, error) {
                 var self = this;
                 var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+								console.log(attrs);
                 return mad.net.Ajax.request({
-                    url: APP_URL + '/comments',
+                    url: APP_URL + 'comments/' + attrs.foreign_model + '/' + attrs.foreign_id,
                     type: 'POST',
                     params: params,
                     success: success,
