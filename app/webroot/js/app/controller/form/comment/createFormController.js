@@ -50,28 +50,28 @@ steal(
 			'afterStart': function () {
 				// parent_id hidden field
 				this.addElement(
-					new mad.form.element.TextboxController($('#js_rs_details_comment_parent_id', this.element), {
+					new mad.form.element.TextboxController($('.comment_parent_id', this.element), {
 						modelReference: 'passbolt.model.Comment.parent_id'
 					}).start()
 				);
 
 				// foreign_model hidden field
 				this.addElement(
-					new mad.form.element.TextboxController($('#js_rs_details_comment_foreign_model', this.element), {
+					new mad.form.element.TextboxController($('.comment_foreign_model', this.element), {
 						modelReference: 'passbolt.model.Comment.foreign_model'
 					}).start().setValue('Resource')
 				);
 
 				// foreign_id hidden field
 				this.addElement(
-					new mad.form.element.TextboxController($('#js_rs_details_comment_foreign_id', this.element), {
+					new mad.form.element.TextboxController($('.comment_foreign_id', this.element), {
 						modelReference: 'passbolt.model.Comment.foreign_id'
 					}).start().setValue(this.options.foreignId)
 				);
 
 				//
 				this.addElement(
-					new mad.form.element.TextboxController($('#js_rs_details_comment_content', this.element), {
+					new mad.form.element.TextboxController($('.comment_content', this.element), {
 						modelReference: 'passbolt.model.Comment.content'
 					}).start()
 				);
