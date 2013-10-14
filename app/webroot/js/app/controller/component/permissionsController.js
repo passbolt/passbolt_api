@@ -225,7 +225,7 @@ steal(
 			var fieldAttrs = mad.model.Model.getModelAttributes(this.textboxPermAro.getModelReference());
 			var modelAttr = fieldAttrs[0];
 			var aro = modelAttr.modelReference.shortName;
-			var type = formData['passbolt.model.Permission'].serial;
+			var type = formData['passbolt.model.Permission'].type;
 
 			// gather the data to create a new permission
 			var data = {
@@ -234,7 +234,7 @@ steal(
 				'type': type
 			};
 			data[aro] = formData[modelAttr.modelReference.fullName];
-			
+
 			// create a new permission
 			new passbolt.model.Permission(data)
 				.save(function(newPermission){
