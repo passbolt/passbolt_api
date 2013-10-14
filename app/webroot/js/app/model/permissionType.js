@@ -19,7 +19,16 @@ steal(
 	mad.model.Model('passbolt.model.PermissionType', /** @static */ {
 
 		'validateRules': {
-			
+			'serial': [
+				{
+					'rule': 'choice',
+					'options': {
+						'callback': function() {
+							return $.map(passbolt.model.PermissionType.PERMISSION_TYPES, function(element,index) {return index});
+						}
+					}
+				}
+			]
 		},
 
 		attributes: {

@@ -1,6 +1,7 @@
 steal(
 	'jquery/model',
 	'app/model/category.js',
+	'app/model/permissionType.js',
 	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
@@ -19,7 +20,19 @@ steal(
 	mad.model.Model('passbolt.model.Permission', /** @static */ {
 
 		'validateRules': {
-			'aro_foreign_label': ['required', 'email']
+			'aco_foreign_key': ['required', 'uid'],
+			'aro_foreign_key': ['required', 'uid'],
+			'aro_foreign_label': ['required', 'email'],
+			'type': [
+				'required', 
+				{
+					'rule': 'foreignRule',
+					'options': {
+						'model': passbolt.model.PermissionType,
+						'attribute': 'serial'
+					}
+				}
+			]
 		},
 
 		attributes: {

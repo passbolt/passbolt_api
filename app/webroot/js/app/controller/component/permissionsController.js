@@ -84,6 +84,9 @@ steal(
 				}
 			});
 			this.addFormController.start();
+			
+			// Form feedback controller
+			var permCreateFormFeedback = new mad.form.FeedbackController($('#js_perm_create_form_feedback'), {}).start();
 
 			// Add an hidden element to the form to carry the aco id 
 			this.addFormController.addElement(
@@ -102,15 +105,14 @@ steal(
 			this.textboxPermAroAutocomplete = new mad.form.element.TextboxController($('#js_permission_aro_autocomplete', this.element), {
 				modelReference: 'passbolt.model.Permission.aro_foreign_label'
 			}).start();
-			this.addFormController.addElement(this.textboxPermAroAutocomplete, new mad.form.FeedbackController($('#js_field_perm_aro_label'), {}).start());
+			this.addFormController.addElement(this.textboxPermAroAutocomplete, permCreateFormFeedback);
 
 			// Add a selectbox element to the form to carry permission type
-			this.addFormController.addElement(
-				new mad.form.element.DropdownController($('#js_permission_type', this.element), {
-					modelReference: 'passbolt.model.Permission.serial',
+			var permTypeCtl = new mad.form.element.DropdownController($('#js_permission_type', this.element), {
+					modelReference: 'passbolt.model.Permission.type',
 					availableValues: passbolt.model.PermissionType.PERMISSION_TYPES
-				}).start()
-			);
+				}).start();
+			this.addFormController.addElement(permTypeCtl, permCreateFormFeedback);
 
 	    // instanciate the list component
 			this.permAroAutocompleteList = new mad.controller.component.TreeController($('#js_permission_aro_autocomplete_list', this.element), {
