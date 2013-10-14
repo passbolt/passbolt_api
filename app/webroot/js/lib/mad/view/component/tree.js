@@ -45,7 +45,13 @@ steal(
 			mappedItem.itemClass = this.controller.getItemClass();
 
 			var itemRender = mad.view.View.render(this.controller.options.itemTemplateUri, mappedItem);
-			var $child = $(itemRender).appendTo($refList);
+			var $child = null;
+			if(position == 'first') {
+				$child = $(itemRender).prependTo($refList);
+			}
+			else {
+				$child = $(itemRender).appendTo($refList);
+			}
 
 			if (mappedItem.hasChildren) {
 				can.each(item.children, function (item, i) {
