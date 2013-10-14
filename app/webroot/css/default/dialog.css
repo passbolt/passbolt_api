@@ -145,3 +145,98 @@
 	background:#4e9a06;
 	width:100%;
 }
+
+
+
+/** permissions **/
+
+.dialog .permissions{
+    height: 21.5em;
+    overflow-y: scroll;
+}
+
+.dialog .permissions .row{
+    border: 1px solid #ddd;
+    margin: 0 0 0.5em 0;
+    width: 97%;
+    -webkit-border-radius: .286em;
+    -moz-border-radius: .286em;
+    border-radius: .286em;
+}
+.dialog .permissions .row:hover{
+    background-color: #FAFAFA;
+}
+
+.dialog .permissions .row .avatar,
+.dialog .permissions .row .details{
+    float: left;
+}
+.dialog .permissions .row .actions{
+    float: right;
+    padding: 1em 1em 0 0;
+}
+
+.dialog .permissions .row > .avatar{
+    width: 3em;
+    height: 3em;
+    background-color: #eee;
+}
+.dialog .permissions .row > .avatar div.image-icon{
+    padding: 0.17em;
+}
+.dialog .permissions .row > .avatar div.image-file img{
+    width: 3em;
+    height: 3em;
+    -webkit-border-top-left-radius: .286em;
+    -webkit-border-bottom-left-radius: .286em;
+    -moz-border-radius-topleft: .286em;
+    -moz-border-radius-bottomleft: .286em;
+    border-top-left-radius: .286em;
+    border-bottom-left-radius: .286em;
+}
+
+.dialog .permissions .row .details{
+    margin: 0 0 0 1em;
+}
+
+.dialog .permissions .row .details span.name,
+.dialog .permissions .row .details span.rights{
+    display: block;
+}
+.dialog .permissions .row .details span.name{
+    text-overflow: clip;
+    word-wrap: break-word;
+    overflow: hidden;
+    height: 1.25em;
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+.dialog .perm-actions{
+    margin: 20px 0 0 0;
+}
+
+.dialog  .perm-actions input[type=text]{
+    width: 56%;
+}
+.dialog  .perm-actions input[type=text].loading{
+    background: url(../../img/loading.gif) no-repeat 99% center;
+    padding-right: 5%;
+}
+
+.dialog  .perm-actions .actions.inline{
+    width: 31%;
+    margin-right: 1.1em;
+}
+
+.dialog  .perm-actions .actions select.permission{
+    width: 6em;
+    -webkit-appearance: menulist;
+    height: 2.2em;
+    /* todo : make a generic fix for select fields. maybe chosen ? */
+}
+
+.dialog  .perm-actions .actions a.button{
+    float: right;
+}
+
