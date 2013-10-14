@@ -19,7 +19,7 @@ steal(
 	mad.model.Model('passbolt.model.Permission', /** @static */ {
 
 		'validateRules': {
-			
+			'aro_foreign_label': ['required', 'email']
 		},
 
 		attributes: {
@@ -29,6 +29,7 @@ steal(
 			'aco_foreign_key': 'string',
 			'aro': 'string',
 			'aro_foreign_key': 'string',
+			'aro_foreign_label': 'string',
 			'PermissionType': 'passbolt.model.PermissionType.model',
 			'Resource': 'passbolt.model.Resource.model',
 			'Category': 'passbolt.model.Category.model',

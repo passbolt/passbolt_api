@@ -23,7 +23,7 @@ steal(
 		},
 
 		attributes: {
-			'serial': 'integer',
+			'serial': 'string',
 			'name': 'string',
 			'binary': 'string',
 			'_admin': 'boolean',
@@ -32,17 +32,34 @@ steal(
 			'_read': 'boolean',
 			'description': 'string'
 		},
+
+		PERMISSION_TYPES: {
+			0: __('deny'),
+			1: __('read'),
+			3: __('create'),
+			7: __('update'),
+			15: __('admin')
+		}
+
 	}, /** @prototype */ {
-		
-		'format': function(format) {
+
+		'toString': function(format) {
+			var returnValue;
 			switch(format) {
+				case 'long':
+					returnValue = passbolt.model.PermissionType.PERMISSION_TYPES[this.serial];
+					if(this.serial !== '0') {
+						returnValue = __('can %s', returnValue);
+					}
+					break;
+
 				case 'short':
-					console.log(this);
-					return 'can edit';
-				break;
+				default:
+					returnValue = passbolt.model.PermissionType.PERMISSION_TYPES[this.serial];
 			}
+			return returnValue;
 		},
-		
+
 		'destroy': function () {
 			// @todo unbind the passbolt.model.Category destroyed event
 		}

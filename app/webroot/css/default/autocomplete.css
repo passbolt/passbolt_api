@@ -1,0 +1,15 @@
+/* autocomplete */
+.autocomplete-content {
+    border: 1px solid #CCC;
+    background: #FFF;
+    float: left;
+    position: absolute;
+    min-width: 13em;
+    z-index: 998;
+    padding-top: .25em;
+}
+.autocomplete-content {
+    margin-top: 1.99em;
+    margin-left: 2px;
+    margin-right: 7px;
+}

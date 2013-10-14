@@ -1,17 +1,30 @@
 <input id="js_permission_aco" type="hidden" />
 <input id="js_permission_aro" type="hidden" />
 
-<label>Share with a person or a group</label>
+<div id="js_field_perm_aro_label" class="message">
+</div>
+<div class="input text short">
+	<label for="UserName">Share with a person or a group</label>
 
-<input id="js_permission_aro_autocomplete" type="text" />
+	<div class="autocomplete">
+		<input class="loading" name="data[User][name]" maxlength="50" type="text" id="js_permission_aro_autocomplete" placeholder="start typing a person or a group"/>
+		<ul id="js_permission_aro_autocomplete_list" class="autocomplete-content">
+		</ul>
+	</div>
 
-<select id="js_permission_type">
-	<option value="create">create</option>
-	<option value="create">read</option>
-	<option value="create">update</option>
-	<option value="create">delete</option>
-</select>
+	<div class="actions inline dropdown">
+		<select class="permission" id="js_permission_type">
+			<option value>choose</option>
+			<option value="create">create</option>
+			<option value="read">read</option>
+			<option value="update">update</option>
+			<option value="admin">admin</option>
+		</select>
 
-<div id="js_permission_feedback" class="message"/>
-
-<input type="submit" value="submit" />
+		<a href="#" id="js_permission_add_button" class="button">
+			<i class="plus icon big no-text"></i>
+			<span>add permission</span>
+		</a>
+	</div>
+</div>
+<div class="clearfix"></div>

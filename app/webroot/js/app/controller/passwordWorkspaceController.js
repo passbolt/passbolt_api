@@ -131,11 +131,11 @@ steal(
 		 */
 		'{mad.bus} request_category_creation': function (el, ev, data) {
 			var category = new passbolt.model.Category({ parent_id: data.id });
-			
+
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController({label: __('Create a new Category')})
 				.start();
-			
+
 			// attach the component to the dialog
 			var form = dialog.add(passbolt.controller.form.category.CreateFormController, {
 				data: category,
@@ -147,7 +147,7 @@ steal(
 					}
 				}
 			});
-			
+
 			form.load(category);
 		},
 

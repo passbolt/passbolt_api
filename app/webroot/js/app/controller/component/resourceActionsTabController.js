@@ -37,21 +37,6 @@ steal(
 		'afterStart': function() {
 			this._super();
 			var self = this;
-			
-			// Instantiate the menu which will rule the tab container
-			// this.menu = new mad.controller.component.MenuController($('.js_tabs_nav', this.element));
-			// this.menu.start();
-			// var menuItems = [
-				// new mad.model.Action({ 'id': uuid(), 'label': __('edit'), 'action': function() { self.container.enableTab('js_resource_create'); } }),
-				// new mad.model.Action({ 'id': uuid(), 'label': __('share'), 'action': function() { self.container.enableTab('js_permission'); } }),
-				// new mad.model.Action({ 'id': uuid(), 'label': __('organize'), 'action': function() { self.container.enableTab('js_resource_create'); } }),
-				// new mad.model.Action({ 'id': uuid(), 'label': __('logs'), 'action': function() { self.container.enableTab('js_resource_create'); } })
-			// ];
-			// this.menu.load(menuItems);
-			
-			// Instantiate tab container which will contain the resource's tools
-			// this.container = new mad.controller.component.TabController($('.js_tabs_content', this.element));
-			// this.container.start();
 
 			// Add the edition form controller to the tab
 			var editFormCtl = this.addComponent(passbolt.controller.form.resource.CreateFormController, {
@@ -76,7 +61,8 @@ steal(
 			var permCtl = this.addComponent(passbolt.controller.component.PermissionsController, {
 				'id': 'js_rs_permission',
 				'label': 'Share',
-				'resource': this.options.resources
+				'resource': this.options.resources,
+				'cssClasses': ['form-content']
 			});
 			permCtl.start();
 			permCtl.load(this.options.resource);
