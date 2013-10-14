@@ -75,7 +75,7 @@ steal(
 			// form add permission
 			this.addFormController = new mad.form.FormController($('#js_permission_add_form', this.element), {
 				'templateBased': true,
-				'cssClasses': ['perm-actions'],
+				'cssClasses': ['perm-create-form'],
 				'templateUri': 'app/view/template/form/permission/addForm.ejs',
 				'callbacks': {
 					'submit': function(data) {
