@@ -54,6 +54,12 @@ class ItemTag extends AppModel {
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('Alphanumeric only')
+				),
+				'inList' => array(
+					'required' => true,
+					'allowEmpty' => false,
+					'rule' => 'validateForeignModel',
+					'message' => __('Please enter a valid model name')
 				)
 			),
 			'foreign_id' => array(
@@ -130,6 +136,91 @@ class ItemTag extends AppModel {
 		$result = $this->find('count', array('conditions' => $combi));
 		//var_dump($result);
 		return $result == 0;
+	}
+
+	/**
+	 * Check if the given foreign model is allowed
+	 * @param string foreignModel The foreign model key to test
+	 * @return boolean
+	 */
+	public function isValidForeignModel($foreignModel) {
+		return in_array($foreignModel, Configure::read('ItemTag.foreignModels'));
+	}
+
+	/**
+	 * Validation Rule : Check if the given foreign model is allowed
+	 * @param array check the data to test
+	 * @return boolean
+	 */
+	public function validateForeignModel($check) {
+		return $this->isValidForeignModel($check['foreign_model']);
+	}
+
+	/**
+	 * Return the conditions to be used for a given context
+	 *
+	 * @param $context string{guest or id}
+	 * @param $data used in find conditions (such as User.id)
+	 * @return $condition array
+	 * @access public
+	 */
+	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
+		$returnValue = array();
+		switch ($case) {
+			case 'ItemTag.viewByForeignModel':
+				$returnValue = array(
+					'conditions' => array(
+						'ItemTag.foreign_id' => $data['ItemTag']['foreign_id']
+						// @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
+					),
+					'order' => array(
+						'ItemTag.created desc'
+					)
+				);
+				break;
+			case 'ItemTag.view':
+				$returnValue = array(
+					'conditions' => array(
+						'ItemTag.id' => $data['ItemTag']['id']
+						// @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
+					)
+				);
+				break;
+			default:
+				$returnValue = array(
+					'conditions' => array()
+				);
+		}
+
+		return $returnValue;
+	}
+
+	/**
+	 * Return the list of field to fetch for given context
+	 * @param string $case context ex: login, activation
+	 * @return $condition array
+	 */
+	public static function getFindFields($case = 'view', $role = Role::USER) {
+		$returnValue = array('fields'=>array());
+		switch($case){
+			case 'ItemTag.view':
+			case 'ItemTag.viewByForeignModel':
+				$returnValue = array(
+					'fields' => array('ItemTag.id', 'ItemTag.tag_id', 'ItemTag.foreign_model', 'ItemTag.foreign_id', 'ItemTag.created', 'ItemTag.created_by')
+				);
+				break;
+			case 'ItemTag.add':
+				$returnValue = array(
+					'fields' => array('ItemTag.foreign_model', 'ItemTag.foreign_id', 'ItemTag.tag_id')
+				);
+				break;
+			case 'ItemTag.edit':
+				$returnValue = array(
+					'fields' => array('content')
+				);
+				break;
+		}
+		return $returnValue;
 	}
 
 }

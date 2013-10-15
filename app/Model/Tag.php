@@ -52,4 +52,44 @@ class Tag extends AppModel {
 		return $rules;
 	}
 
+	/**
+	 * Return the conditions to be used for a given context
+	 *
+	 * @param $context string{guest or id}
+	 * @param $data used in find conditions (such as User.id)
+	 * @return $condition array
+	 * @access public
+	 */
+	public static function getFindConditions($case = 'Tag.view', $role = Role::USER, &$data = null) {
+		$returnValue = array();
+		switch ($case) {
+			case 'TagItem.viewByForeignModel':
+				$returnValue = array(
+					'conditions' => array(
+						'Tag.id' => $data['Tag']['id']
+					)
+				);
+				break;
+		}
+
+		return $returnValue;
+	}
+
+	/**
+	 * Return the list of field to fetch for given context
+	 * @param string $case context ex: login, activation
+	 * @return $condition array
+	 */
+	public static function getFindFields($case = 'view', $role = Role::USER) {
+		$returnValue = array('fields'=>array());
+		switch($case){
+			case 'ItemTag.viewByForeignModel':
+				$returnValue = array(
+					'fields' => array('Tag.id', 'Tag.name', 'Tag.created', 'Tag.modified', 'Tag.created_by', 'Tag.modified_by')
+				);
+				break;
+		}
+		return $returnValue;
+	}
+
 }
