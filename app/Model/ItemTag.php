@@ -11,9 +11,9 @@
 App::uses('Tag', 'Model');
 App::uses('Resource', 'Model');
 
-class ResourceTag extends AppModel {
+class ItemTag extends AppModel {
 
-	public $useTable = "resources_tags";
+	public $useTable = "items_tags";
 
 	public $belongsTo = array(
 		'Tag', 'Resource'
@@ -31,7 +31,7 @@ class ResourceTag extends AppModel {
 			'id' => array(
 				'uuid' => array(
 					'rule' => 'uuid',
-					'required' => true,
+					'required' => false,
 					'allowEmpty' => true,
 					'message'	=> __('UUID must be in correct format')
 				)
@@ -48,7 +48,15 @@ class ResourceTag extends AppModel {
 					'message' => __('The Tag provided does not exist')
 				)
 			),
-			'resource_id' => array(
+			'foreign_model' => array(
+				'alphaNumeric' => array(
+					'rule'		 => '/^.{2,36}$/i',
+					'required' => true,
+					'allowEmpty' => false,
+					'message'	=> __('Alphanumeric only')
+				)
+			),
+			'foreign_id' => array(
 				'uuid' => array(
 					'rule' => 'uuid',
 					'required' => true,
@@ -56,7 +64,7 @@ class ResourceTag extends AppModel {
 					'message'	=> __('UUID must be in correct format')
 				),
 				'exist' => array(
-					'rule' => array('resourceExists', null),
+					'rule' => array('itemExists', null),
 					'message' => __('The resource provided does not exist')
 				),
 				'uniqueCombi' => array(
@@ -89,15 +97,17 @@ class ResourceTag extends AppModel {
 	}
 
 /**
- * Check if a resource with same id exists
+ * Check if an item with same id exists
  * @param check
  */
-	public function resourceExists($check) {
-		if ($check['resource_id'] == null) {
+	public function itemExists($check) {
+		$tr = $this->data['ItemTag'];
+		if ($check['foreign_id'] == null) {
 			return false;
 		} else {
-			$exists = $this->Resource->find('count', array(
-				'conditions' => array('Resource.id' => $check['resource_id']),
+			$Item = ClassRegistry::init($tr['foreign_model']);
+			$exists = $Item->find('count', array(
+				'conditions' => array($tr['foreign_model'] . '.id' => $check['foreign_id']),
 				 'recursive' => -1
 			));
 			return $exists > 0;
@@ -105,16 +115,20 @@ class ResourceTag extends AppModel {
 	}
 
 /**
- * Check if a Tag / Resource association don't already exist
+ * Check if a Tag / Item association don't already exist
  * @param check
  */
 	public function uniqueCombi($check = null) {
-		$tr = $this->data['ResourceTag'];
+		$tr = $this->data['ItemTag'];
 		$combi = array(
-			'ResourceTag.Tag_id' => $tr['tag_id'],
-			'ResourceTag.resource_id' => $tr['resource_id']
+			'ItemTag.tag_id' => $tr['tag_id'],
+			'ItemTag.foreign_model' => $tr['foreign_model'],
+			'ItemTag.foreign_id' => $check['foreign_id']
 		);
-		$result = $this->Resource->find('count', $combi);
+		//pr($combi);
+		//pr($this->find('all'));
+		$result = $this->find('count', array('conditions' => $combi));
+		//var_dump($result);
 		return $result == 0;
 	}
 

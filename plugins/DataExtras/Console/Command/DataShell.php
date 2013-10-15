@@ -25,7 +25,7 @@ class DataShell extends AppShell {
 		'Group',
 		'GroupUser',
 		'Tag',
-		'ResourceTag',
+		'ItemTag',
 		'PermissionType',
 		'Permission',
 		'Comment',
