@@ -1,7 +1,9 @@
 steal(
 	'mad/view/component/tree.js',
 	'app/view/component/resourceDetails.js',
-	'app/controller/component/commentsController.js'
+	'app/controller/component/commentsController.js',
+	'app/controller/component/sidebarSectionController.js',
+	'app/controller/component/sidebarSections/sidebarSectionTagsController.js'
 ).then(function () {
 
 		/*
@@ -53,6 +55,14 @@ steal(
 					'foreignId': this.options.resource.id
 				});
 				commentsController.start();
+
+				// Instantiate the comments controller for the current resource
+				var sidebarTagsController = new passbolt.controller.component.SidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
+					'resource': this.options.resource,
+					'foreignModel': 'Resource',
+					'foreignId': this.options.resource.id
+				});
+				sidebarTagsController.start();
 			},
 
 			/**

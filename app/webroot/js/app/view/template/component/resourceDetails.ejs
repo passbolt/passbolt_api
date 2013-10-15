@@ -1,5 +1,5 @@
 <div class="resource">
-	<h3><%= __('Linked In') %></h3>
+	<h3><%= resource.name %></h3>
 	<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
 
 	<div class="detailed-information">
@@ -32,42 +32,8 @@
 		<p><%= resource.description %></p>
 	</div>
 
-	<div class="tags clearfix todo">
-		<h4><%= __('Tags') %></h4>
-		<a href="#edittags" class="section-action"><i class="icon edit no-text"></i><span>edit</span></a>
-		<ul class="tags">
-			<li>
-				<a class="tag link" href="#">
-					<span>a</span>
-				</a>
-			</li>
-			<li>
-				<a class="tag link" href="#">
-					<span>bunch</span>
-				</a>
-			</li>
-			<li>
-				<a class="tag link" href="#">
-					<span>of</span>
-				</a>
-			</li>
-			<li>
-				<a class="tag link" href="#">
-					<span>tags</span>
-				</a>
-			</li>
-			<li>
-				<a class="tag link" href="#">
-					<span>another long one</span>
-				</a>
-			</li>
-			<li>
-				<a class="tag link" href="#">
-					<span>another</span>
-				</a>
-			</li>
-		</ul>
-	</div>
+	<!-- Tags management -->
+	<div class="tags clearfix" id="js_rs_details_tags"></div>
 
 	<!-- Comments management -->
 	<div class="comments clearfix" id="js_rs_details_comments"></div>
