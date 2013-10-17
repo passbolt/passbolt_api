@@ -43,7 +43,11 @@ steal(
 					'foreignId'		: this.options.foreignId
 				});
 				this.tagsController.start();
-			}
+			},
+
+            ' enter_edit_mode': function() {
+                this.tagsController.editMode(1);
+            }
 
 		});
 

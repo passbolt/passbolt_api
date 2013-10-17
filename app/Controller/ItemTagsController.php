@@ -73,6 +73,120 @@ class ItemTagsController extends AppController {
 		$this->Message->success();
 	}
 
+	public function updateBulk($foreignModelName = null, $foreignId = null) {
+		$foreignModelName = Inflector::camelize($foreignModelName);
+		$postData = $this->request->data;
+
+		// TODO : make sure that the user is allowed to modify these tags (in case of resource)
+
+		// check the HTTP request method
+		if (!$this->request->is('post')) {
+			$this->Message->error(__('Invalid request method, should be POST'));
+			return;
+		}
+
+		// check if the target foreign model is commentable
+		if(!$this->ItemTag->isValidForeignModel($foreignModelName)) {
+			$this->Message->error(__('The model %s is not taggable', $foreignModelName));
+			return;
+		}
+
+		// no instance id given
+		if(is_null($foreignId)) {
+			$this->Message->error(__('The id parameter is missing'));
+			return;
+		}
+
+		// the instance id is invalid
+		if (!Common::isUuid($foreignId)) {
+			$this->Message->error(__('The id %s is invalid', $foreignId));
+			return;
+		}
+
+		// the foreign instance does not exist
+		$this->loadModel($foreignModelName);
+		if (!$this->$foreignModelName->exists($foreignId)) {
+			$this->Message->error(__('The foreign instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $foreignId, $foreignModelName));
+			return;
+		}
+
+		$this->ItemTag->begin();
+
+		$this->ItemTag->deleteAll(array(
+				'ItemTag.foreign_model' => $foreignModelName,
+				'ItemTag.foreign_id' => $foreignId
+			),
+			false
+		);
+
+		$tagList = $postData['ItemTag']['tag_list'];
+		$tagList = trim($tagList, " ,");
+		$tags = explode(',', $tagList);
+		$Tag = Common::getModel('Tag');
+		foreach($tags as $tagName) {
+			$tag = $Tag->findByName(trim($tagName));
+			if(!$tag) {
+				$t = array(
+					'name' => $tagName
+				);
+				$Tag->create();
+				$Tag->set($t);
+				if(!$Tag->validates()) {
+					$this->Message->error(__('The tag named %s is not valid', $tagName));
+					$this->ItemTag->rollback();
+					return;
+				}
+				if(!($tag = $Tag->save($t))) {
+					$this->Message->error(__('There was a problem while saving tag %s', $tagName));
+					$this->ItemTag->rollback();
+					return;
+				}
+			}
+			// Create new Item Tag
+			$itemTag = array(
+				'foreign_model' => $foreignModelName,
+				'foreign_id'    => $foreignId,
+				'tag_id'        => $tag['Tag']['id']
+			);
+			$this->ItemTag->create();
+			$this->ItemTag->set($itemTag);
+			if(!$this->ItemTag->validates()) {
+				$Resource = ClassRegistry::init('Resource');
+				$this->Message->error(__('The ItemTag is not valid', $tagName));
+				$this->ItemTag->rollback();
+				return;
+			}
+			if(!$this->ItemTag->save($itemTag)) {
+				$this->Message->error(__('There was a problem while saving ItemTag', $tagName));
+				$this->ItemTag->rollback();
+				return;
+			}
+		}
+		$this->ItemTag->commit();
+
+		// find the tags
+		$findData = array(
+			'ItemTag' => array(
+				'foreign_id' => $foreignId,
+				'foreign_model' => $foreignModelName
+			)
+		);
+		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
+
+		$itemTags = $this->ItemTag->find('all', $findOptions);
+
+		// Add the tag object to each entry
+		$Tag = Common::getModel('Tag');
+		foreach($itemTags as $k => $it) {
+			$findData = array('Tag' => array('id' => $it['ItemTag']['tag_id']));
+			$tagFindOptions = $Tag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
+			$tag = $Tag->find('first', $findData);
+			$itemTags[$k]['Tag'] = $tag['Tag'];
+		}
+		$this->set('data', $itemTags);
+		$this->Message->success();
+	}
+
 	/**
 	 * Add a tag to a target taggable model instance
 	 * @param string foreignModelName The target foreign model

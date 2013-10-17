@@ -45,18 +45,15 @@ steal(
 				this._super(el, opts);
 				var self = this;
 				//this.setState('loading');
+			},
 
-				// load the comments for the given context
-				passbolt.model.ItemTag.findAll({
-					'foreignModel'	: this.options.foreignModel,
-					'foreignId'		: this.options.foreignId
-				}, function (itemTags, response, request) {
-					// load the tree with the comments
-					self.load(itemTags);
-					//self.setState('ready');
-				}, function (response) {
-				});
+			/**
+			 * Set the tags to the list
+			 * @param tags
+			 */
+			'setTags': function(tags) {
+				this.reset();
+				this.load(tags);
 			}
-
 		});
 	});

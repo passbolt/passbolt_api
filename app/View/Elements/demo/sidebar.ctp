@@ -41,6 +41,10 @@
 			<li>
 				<a class="tag link" href="#">
 					<span>a</span>
+                    <span class="actions">
+                      <i class="icon close no-text"></i>
+                      <span>delete</span>
+                    </span>
 				</a>
 			</li>
 			<li>

@@ -52,6 +52,26 @@ steal(
 					});
 			},
 
+			'createBulk': function (attrs, success, error) {
+				var self = this;
+				var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+				return mad.net.Ajax.request({
+					url: APP_URL + 'itemTags/updateBulk/' + attrs.foreign_model + '/' + attrs.foreign_id,
+					type: 'POST',
+					params: params,
+					success: success,
+					error: error
+				}).pipe(function (data, textStatus, jqXHR) {
+						//console.log("pipe");
+						//ddconsole.log(data);
+						// pipe the result to convert cakephp response format into can format
+						// else the new attribute are not well placed
+						var def = $.Deferred();
+						def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+						return def;
+					});
+			},
+
 			'destroy': function (id, success, error) {
 				var params = {id: id};
 				return mad.net.Ajax.request({
