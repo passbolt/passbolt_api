@@ -147,7 +147,8 @@ textarea {
 	color: #D40000;
 }
 .input input.error,
-.input textarea.error {
+.textarea textarea.error,
+.select select.error {
 	border:1px solid #D40000;
 }
 .input .inline.message {

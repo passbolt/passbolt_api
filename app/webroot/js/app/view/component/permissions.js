@@ -38,7 +38,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'#js_permission_add_button click': function(el, ev) {
+		'#js_perm_create_form_add_btn click': function(el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 

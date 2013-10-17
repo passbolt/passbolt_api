@@ -8,7 +8,7 @@ steal(
 	 * @inherits mad.form.FormElement
 	 * @parent mad.form.element
 	 * 
-	 * The Input Form Element Controller is our implementation of the UI component input
+	 * The Textbox Form Element Controller is our implementation of the UI component input
 	 * 
 	 * @constructor
 	 * Creates a new Textbox Form Element Controller
@@ -23,9 +23,14 @@ steal(
 		'defaults': {
 			'label': 'Textbox Form Element Controller',
 			'viewClass': mad.view.form.element.TextboxView,
-			'tag': 'input'
+			'tag': 'input',
+			'keypressTimeout': 400
 		}
 
-	}, /** @prototype */ { });
+	}, /** @prototype */ {
+		
+		
+		
+	});
 
 });

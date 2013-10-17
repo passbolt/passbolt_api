@@ -226,19 +226,19 @@
 }
 
 .dialog .perm-create-form .perm-type {
-    width: 5.775em;
-	padding-top:2.1em;
+	padding-top:2.075em;
 	padding-right:0.375em;
 }
 
 .dialog .perm-create-form select.permission{
     -webkit-appearance: menulist;
-    height: 2.2em;
+    height:2.2em;
+    width:5.775em;
     /* todo : make a generic fix for select fields. maybe chosen ? */
 }
 
 .dialog .perm-create-form .perm-actions {
     height: 2.2em;
-	padding-top:2.1em;
+	padding-top:2.075em;
 }
 
