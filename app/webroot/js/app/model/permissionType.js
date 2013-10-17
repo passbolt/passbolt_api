@@ -24,6 +24,7 @@ steal(
 					'rule': 'choice',
 					'options': {
 						'callback': function() {
+							// return the available serials (array_keys in js style)
 							return $.map(passbolt.model.PermissionType.PERMISSION_TYPES, function(element,index) {return index});
 						}
 					}
