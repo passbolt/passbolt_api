@@ -1,15 +1,20 @@
 /* autocomplete */
-.autocomplete-content {
-    border: 1px solid #CCC;
-    background: #FFF;
-    float: left;
-    position: absolute;
-    min-width: 13em;
-    z-index: 998;
-    padding-top: .25em;
+.autocomplete {
+	position: relative;
 }
-.autocomplete-content {
+.autocomplete .autocomplete-content {
+	max-height: 12em;
+	overflow: auto;
+    position: absolute;
+    background: #FFF;
+    width:100%;
+    min-width: 13em;
     margin-top: 1.99em;
-    margin-left: 2px;
-    margin-right: 7px;
+    border: 1px solid #CCC;
+    z-index: 998;
+}
+.autocomplete .autocomplete-content li {
+	font-size: 1.25em;
+	height: 1.25em;
+	padding: 4px 4px 4px 4px;
 }

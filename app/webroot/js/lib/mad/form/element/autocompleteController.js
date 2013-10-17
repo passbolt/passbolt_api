@@ -35,6 +35,7 @@ steal(
 			var listOpts = {
 				'viewClass': mad.view.component.tree.List,
 				'itemClass': mad.model.Model,
+				'cssClasses': ['autocomplete-content'],
 				'templateUri': 'mad/view/template/component/tree.ejs',
 				'state': 'hidden',
 				// The map to use to make jstree working with our category model
