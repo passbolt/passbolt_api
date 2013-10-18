@@ -163,7 +163,6 @@ class Resource extends AppModel {
         $conditions = array('conditions' => array('Resource.deleted' => 0, ));
         if (isset($data['Category.id'])) {
           $conditions['conditions']['Category.id'] = $data['Category.id'];
-          $conditions['order'] = array('Resource.name ASC');
         }
         if (isset($data['keywords'])) {
           $keywords = explode(' ', $data['keywords']);
@@ -171,6 +170,33 @@ class Resource extends AppModel {
             $conditions['conditions']["AND"][] = array('Resource.name LIKE' => '%' . $keyword . '%');
           }
         }
+        if (isset($data['filter'])) {
+        	switch($data['filter']) {
+						case 'favorite':
+							$conditions['conditions']["AND"][] = array('Favorite.id IS NOT NULL');
+							break;
+						case 'own':
+							$conditions['conditions']["AND"][] = array('Resource.created_by' => User::get('User.id'));
+							break;
+						case 'shared':
+							$conditions['conditions']["AND"][] = array('Resource.created_by <>' => User::get('User.id'));
+							break;
+        	}
+        }
+				if (isset($data['order'])) {
+					switch ($data['order']) {
+						case 'modified':
+							$conditions['order'] = array('Resource.modified DESC');
+							break;
+						case 'expiry':
+							$conditions['order'] = array('Resource.expiry_date DESC');
+							break;
+					}
+				} 
+				// By default order by created date
+				else {
+					$conditions['order'] = array('Resource.modified DESC');
+				}
         break;
       default:
         $conditions = array('conditions' => array());
