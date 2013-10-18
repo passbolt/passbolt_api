@@ -10,6 +10,7 @@
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
 App::uses('Tag', 'Model');
+App::uses('Resource', 'Model');
 App::uses('ItemTag', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
@@ -30,10 +31,13 @@ class GroupsControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->User = new User();
+		$this->User->useDbConfig = 'test';
 		$this->Tag = new Tag();
 		$this->Tag->useDbConfig = 'test';
 		$this->ItemTag = new ItemTag();
 		$this->ItemTag->useDbConfig = 'test';
+		$this->Resource = new Resource();
+		$this->Resource->useDbConfig = 'test';
 		$this->session = new CakeSession();
 		$this->session->init();
 	}
@@ -42,20 +46,25 @@ class GroupsControllerTest extends ControllerTestCase {
 		parent::tearDown();
 	}
 
-	public function testAdd() {
+	public function testUpdateBulk() {
 		// make sure there is no active session
 		$result = $this->testAction('/logout',array('return' => 'contents'), true);
 
 		// test with normal user
-		$kk = $this->User->findByUsername('user@passbolt.com');
+		$kk = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($kk);
+
+		$items = $this->Resource->find('all');
+
+		$tagList = array("tag1", "tag2", "tag3");
+		$tagListStr = implode(',', $tagList);
 		$id = '509bb871-5168-49d4-a676-fb098cebc04d';
 		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", array(
 					'data' => array(
 						'ItemTag' => array(
 							'foreign_model' => 'test1',
-							'foreign_id' => '408bb871-5168-49d4-a676-fb098cebc04d',
-							'tag_list' => 'tag1, tag2, tag3'
+							'foreign_id' => $id,
+							'tag_list' => $tagListStr
 						),
 					),
 					'method' => 'post',
@@ -64,28 +73,43 @@ class GroupsControllerTest extends ControllerTestCase {
 		);
 
 
-		print_r($result);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "updateBulk : function should have returned success");
 
-		/*$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /groups.json : The test should return an error but is returning " . print_r($result, true));
+		$tag1 = $this->Tag->findByName('tag1');
+		$tagsCount = $this->Tag->find('count');
 
-		$kk = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($kk);
-		$result = json_decode($this->testAction('/groups.json', array(
+		$tagList = array("tag1", "tag2", "tag3", "newTag");
+		$tagListStr = implode(',', $tagList);
+		$id = '509bb871-5168-49d4-a676-fb098cebc04d';
+		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", array(
 					'data' => array(
-						'Group' => array(
-							'name' => 'test1'
+						'ItemTag' => array(
+							'foreign_model' => 'test1',
+							'foreign_id' => $id,
+							'tag_list' => $tagListStr
 						),
 					),
 					'method' => 'post',
 					'return' => 'contents'
 				)), true
 		);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /groups.json : The test should return sucess but is returning " . print_r($result, true));
 
-		// check that User was properly saved
-		$group = $this->Group->findByName("test1");
-		$this->assertEquals(1, count($group), "Add : /groups.json : The number of groups returned should be 1, but actually is " . count($group));
-		$this->assertEquals($group['Group']['name'], $result['body']['Group']['name'], "Add : /groups.json : the name of the group should be test1 but is {$result['body']['Group']['name']}");*/
+
+		$tagsCountAfter = $this->Tag->find('count');
+		$this->assertEqual($tagsCount + 1, $tagsCountAfter);
+
+		// Check that id of tag1 didn't change
+		$oldTag1Id = $tag1['Tag']['id'];
+		$newTag1Id = null;
+
+		$itemTags = $result['body'];
+		foreach($itemTags as $it) {
+			if($it['Tag']['name'] == 'tag1') {
+				$newTag1Id = $it['Tag']['id'];
+				break;
+			}
+		}
+		$this->assertEqual($oldTag1Id, $newTag1Id, "The old tag id and new tag id should be same");
 	}
 
 }

@@ -66,7 +66,7 @@ class ItemTagsController extends AppController {
 		foreach($itemTags as $k => $it) {
 			$findData = array('Tag' => array('id' => $it['ItemTag']['tag_id']));
 			$tagFindOptions = $Tag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
-			$tag = $Tag->find('first', $findData);
+			$tag = $Tag->find('first', $tagFindOptions);
 			$itemTags[$k]['Tag'] = $tag['Tag'];
 		}
 		$this->set('data', $itemTags);
@@ -180,7 +180,8 @@ class ItemTagsController extends AppController {
 		foreach($itemTags as $k => $it) {
 			$findData = array('Tag' => array('id' => $it['ItemTag']['tag_id']));
 			$tagFindOptions = $Tag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
-			$tag = $Tag->find('first', $findData);
+
+			$tag = $Tag->find('first', $tagFindOptions);
 			$itemTags[$k]['Tag'] = $tag['Tag'];
 		}
 		$this->set('data', $itemTags);

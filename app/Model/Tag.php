@@ -63,7 +63,7 @@ class Tag extends AppModel {
 	public static function getFindConditions($case = 'Tag.view', $role = Role::USER, &$data = null) {
 		$returnValue = array();
 		switch ($case) {
-			case 'TagItem.viewByForeignModel':
+			case 'ItemTag.viewByForeignModel':
 				$returnValue = array(
 					'conditions' => array(
 						'Tag.id' => $data['Tag']['id']
