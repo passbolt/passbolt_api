@@ -188,7 +188,7 @@ class Resource extends AppModel {
 						case 'modified':
 							$conditions['order'] = array('Resource.modified DESC');
 							break;
-						case 'expiry':
+						case 'expiry_date':
 							$conditions['order'] = array('Resource.expiry_date DESC');
 							break;
 					}

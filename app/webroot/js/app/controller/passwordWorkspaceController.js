@@ -1,9 +1,10 @@
 steal(
 	'mad/controller/component/freeCompositeController.js',
-	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/categoryChooserController.js',
-	'app/controller/component/resourceDetailsController.js',
+	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/resourceActionsTabController.js',
+	'app/controller/component/resourceDetailsController.js',
+	'app/controller/component/resourceShortcutsController.js',
 	'app/controller/component/workspaceMenuController.js',
 	'app/controller/component/workspaceSecondaryMenuController.js',
 	'app/controller/form/category/createFormController.js',
@@ -46,7 +47,11 @@ steal(
 			// Instantiate the secondary workspace menu controller
 			this.secMenu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_wsp_secondary_menu', {});
 			this.secMenu.start();
-			
+
+			// Instanciate the passwords filter controller
+			var rsShortcut = new passbolt.controller.component.ResourceShortcutsController('#js_wsp_pwd_rs_shortcuts', {});
+			rsShortcut.start();
+
 			// Instanciate the categories chooser controller
 			this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
 			this.catChooser.start();

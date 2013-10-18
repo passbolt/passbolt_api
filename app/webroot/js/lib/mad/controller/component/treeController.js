@@ -37,6 +37,7 @@ steal(
 			'viewClass': mad.view.component.Tree,
 			'templateUri': 'mad/view/template/component/tree.ejs',
 			'itemTemplateUri': 'mad/view/template/component/tree/treeItem.ejs',
+			'templateBased': false,
 			'cssClasses': ['tree'],
 
 			// the itemClass which represents the items managed by the component
