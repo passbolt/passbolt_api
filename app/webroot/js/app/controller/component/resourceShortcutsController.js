@@ -45,11 +45,11 @@ steal(
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
-				}), new mad.model.Action({
-					'id': uuid(),
-					'label': __('Most used'),
-					'action': function () {
-					}
+				// }), new mad.model.Action({
+					// 'id': uuid(),
+					// 'label': __('Most used'),
+					// 'action': function () {
+					// }
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('Recently modified'),
