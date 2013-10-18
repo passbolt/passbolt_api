@@ -35,6 +35,8 @@ steal(
 			/* ************************************************************** */
 
 			'afterStart': function () {
+				this.myState = 'ready';
+
 				// Instantiate the comments List controller
 				// It will take care of listing the comments
 				this.tagsController = new passbolt.controller.component.TagsController($('#js_rs_details_tags_wrapper', this.element), {
@@ -45,9 +47,25 @@ steal(
 				this.tagsController.start();
 			},
 
-            ' enter_edit_mode': function() {
-                this.tagsController.editMode(1);
-            }
+            'toggleEdit': function() {
+				if(this.myState == 'ready') {
+					this.myState = "edit";
+					this.setState('edit');
+
+				}
+				else{
+					this.myState = "ready";
+					this.setState('ready');
+				}
+            },
+
+			'stateEdit':function() {
+				this.tagsController.setState("edit");
+			},
+
+			'stateReady':function() {
+				this.tagsController.setState("ready");
+			}
 
 		});
 

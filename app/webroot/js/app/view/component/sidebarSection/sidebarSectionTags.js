@@ -27,8 +27,7 @@ steal(
 			 * @return {void}
 			 */
 			'a.edit-action click': function (el, ev) {
-				console.log("edition mode");
-                this.element.trigger('enter_edit_mode');
+                this.controller.toggleEdit();
 			}
 
 		});

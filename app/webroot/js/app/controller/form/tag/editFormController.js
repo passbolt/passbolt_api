@@ -61,11 +61,13 @@ steal(
             },
 
 			'setTags': function(tags) {
-				var tagsStr = "";
+				var tagsA = new Array();
+				var i = 0;
 				tags.each(function(tag){
-					tagsStr += (tag.Tag.name + ", ");
+					tagsA[i] = tag.Tag.name;
+					i++;
 				});
-				this.tagList.setValue(tagsStr);
+				this.tagList.setValue(tagsA.join(','));
 			}
 
             /* ************************************************************** */

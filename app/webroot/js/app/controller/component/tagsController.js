@@ -48,8 +48,12 @@ steal(
 						'submit'	: function (data) {
 							// TODO : validate
 							passbolt.model.ItemTag.createBulk(data['passbolt.model.ItemTag'], function(data) {
-								self.itemTags = data;
+								var itemTags = passbolt.model.ItemTag.models(data);
+								self.itemTags = itemTags;
 								self.reloadTags();
+								// TODO : user feedback
+								self.setState('ready');
+								//self.controller.setState('ready');
 							});
 						}
 					}
@@ -57,7 +61,7 @@ steal(
 				//this.addFormController.setViewData({'resource' : this.options.resource}); // This doesn't work. why ?
 				this.editFormController.start();
 				// Hide the comment add form by default
-				//this.editFormController.setState('hidden');
+				this.editFormController.setState('hidden');
 
 				// Instantiate the comments List controller
 				// It will take care of listing the comments
@@ -87,9 +91,15 @@ steal(
 				this.editFormController.setTags(this.itemTags);
 			},
 
-            'editMode': function(state) {
-                this.tagsListController.setState('hidden');
-            }
+			'stateEdit': function() {
+				this.tagsListController.setState('hidden');
+				this.editFormController.setState('ready');
+			},
+
+			'stateReady': function() {
+				this.tagsListController.setState('ready');
+				this.editFormController.setState('hidden');
+			}
 
 		});
 

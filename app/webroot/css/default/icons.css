@@ -92,6 +92,10 @@ span + .icon  {
 .icon.edit:before  {
   content: '\270E';
 }
+/* icon edit looks different if element is in edit state */
+.js_state_edit .icon.edit:before  {
+	content: '\E712';
+}
 .icon.close:before  {
   content: '\274C';
 }

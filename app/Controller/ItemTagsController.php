@@ -124,7 +124,8 @@ class ItemTagsController extends AppController {
 		$tags = explode(',', $tagList);
 		$Tag = Common::getModel('Tag');
 		foreach($tags as $tagName) {
-			$tag = $Tag->findByName(trim($tagName));
+			$tagName = trim($tagName);
+			$tag = $Tag->findByName($tagName);
 			if(!$tag) {
 				$t = array(
 					'name' => $tagName
