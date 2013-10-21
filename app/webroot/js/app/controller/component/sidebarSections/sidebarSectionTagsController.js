@@ -28,25 +28,32 @@ steal(
 
 		}, /** @prototype */ {
 
-
-
 			/* ************************************************************** */
 			/* LISTEN TO THE MODEL EVENTS */
 			/* ************************************************************** */
 
+			/**
+			 * Hook After Start
+			 * Will basically launch a generic tagsController
+			 */
 			'afterStart': function () {
 				this.myState = 'ready';
+				var self = this;
 
 				// Instantiate the comments List controller
 				// It will take care of listing the comments
 				this.tagsController = new passbolt.controller.component.TagsController($('#js_rs_details_tags_wrapper', this.element), {
-					'resource'		: this.options.resource,
-					'foreignModel'	: this.options.foreignModel,
-					'foreignId'		: this.options.foreignId
+					'resource'			: this.options.resource,
+					'foreignModel'		: this.options.foreignModel,
+					'foreignId'			: this.options.foreignId,
+					'wrapperController' : self
 				});
 				this.tagsController.start();
 			},
 
+			/**
+			 * Toggle the edit mode
+			 */
             'toggleEdit': function() {
 				if(this.myState == 'ready') {
 					this.myState = "edit";
@@ -59,10 +66,16 @@ steal(
 				}
             },
 
+			/**
+			 * State edit catcher
+			 */
 			'stateEdit':function() {
 				this.tagsController.setState("edit");
 			},
 
+			/**
+			 * State ready catcher
+			 */
 			'stateReady':function() {
 				this.tagsController.setState("ready");
 			}
