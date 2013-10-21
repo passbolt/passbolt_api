@@ -17,8 +17,8 @@ class ResourcesController extends AppController {
  * Get all resources
  * Renders a json object of the resources
  *
- * @param uuid $categoryId the id of the category
- * @param bool recursive, whether we want also the resources of all subcategories
+ * @param array categories_id (optional) Ids of the categories to filter on
+ * @param bool recursive (optional) Whether we want also the resources of all subcategories
  * @return void
  */
 	public function index() {
@@ -27,6 +27,8 @@ class ResourcesController extends AppController {
 			? explode(',', $this->request->query['categories_id'])
 			: array();
 		$recursive = isset($this->request->query['recursive']) ? $this->request->query['recursive'] === 'true' : false;
+		$filter = isset($this->request->query['filter']) ? $this->request->query['filter'] : null;
+		$order = isset($this->request->query['order']) ? $this->request->query['order'] : null;
 		$data = array();
 
 		// if categories id are provided check their validity, and build model request with
@@ -78,6 +80,16 @@ class ResourcesController extends AppController {
 		// if keywords provided build the model request with
 		if (!empty($keywords)) {
 			$data['keywords'] = $keywords;
+		}
+
+		// if filter provided build the model request with
+		if (!empty($filter)) {
+			$data['filter'] = $filter;
+		}
+
+		// if order provided build the model request with
+		if (!empty($order)) {
+			$data['order'] = $order;
 		}
 
 		$options = $this->Resource->getFindOptions('index', User::get('Role.name'), $data);

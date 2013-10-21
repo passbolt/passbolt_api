@@ -135,8 +135,7 @@ steal(
 		 * @param {string} stateName The new state name
 		 */
 		'goNextState': function (newState) {
-			var previousState = this.state.attr('previous'),
-				debugMsg = this.getId() + ' switching';
+			var previousState = this.state.attr('previous');
 
 			if (previousState) {
 				// remove the previous state class
@@ -179,7 +178,7 @@ steal(
 
 		/**
 		 * The set method allows developper to set data to the view
-		 * @param {string} name the variable's name or the array of data to add to the view
+		 * @param {mixed} name the variable's name or the array of data to add to the view
 		 * @param {mixed} value the variable's value or null if the name is an array
 		 * @return {void}
 		 */
