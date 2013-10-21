@@ -68,7 +68,6 @@ steal(
 				if (resource.foreign_id == this.options.resource.id) {
 					self.commentsListController.insertItem(resource, null, 'first');
 					self.addFormController.setState('hidden');
-					self.on();
 					return false; // break
 				}
 			},
