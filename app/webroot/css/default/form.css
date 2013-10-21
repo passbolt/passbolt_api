@@ -14,15 +14,15 @@ input[type=password],
 input[type=search],
 textarea, select {
 	font-family:'Lato',Verdana, Geneva, Arial, Helvetica, sans-serif;
-  color:#333;
+	color:#333;
 	background:#FFF;
 	border:1px solid #CCC;
 	width:14em; /* 20 char (default input length) x .7em (average char length) */
 	padding:.278em .5em .278em .5em; /* 5px 9px */
 	display:inline-block;
-  zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
-  *display: inline;
-  margin-bottom:.5em;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	*display: inline;
+	margin-bottom:.5em;
 	-webkit-appearance:none;
 }
 
@@ -78,11 +78,11 @@ input[type=text]:focus {
 .input.text.disabled input[type=text]:hover,
 .input.text.disabled input[type=text]:focus {
 	border:1px solid #CCC;
-  -webkit-box-shadow: 0 0 0 0;
-  -moz-box-shadow: 0 0 0 0;
-  box-shadow: 0 0 0 0;
-  cursor:normal;
-  background:#F3F3F3;
+	-webkit-box-shadow: 0 0 0 0;
+	-moz-box-shadow: 0 0 0 0;
+	box-shadow: 0 0 0 0;
+	cursor:normal;
+	background:#F3F3F3;
 }
 
 /*
@@ -132,13 +132,13 @@ textarea {
 */
 .message {
 	font-weight:bold;
-  padding:0;
+	padding:0;
 }
 .input .message {
 	padding-left:.25em;
 	margin-bottom:.25em;
 	background-color:transparent;
-  border:0;
+	border:0;
 }
 .input.error label {
 	color: #D40000;
@@ -147,7 +147,8 @@ textarea {
 	color: #D40000;
 }
 .input input.error,
-.input textarea.error {
+.textarea textarea.error,
+.select select.error {
 	border:1px solid #D40000;
 }
 .input .inline.message {
@@ -191,7 +192,7 @@ input[type="checkbox"] {
 input[type="checkbox"] + label {
 	font-size:.9375em;
 	font-weight:normal;
-  margin-left:1.25em;
+	margin-left:1.25em;
 	padding:0;
 }
 input[type="checkbox"]:hover,
@@ -230,8 +231,8 @@ input[type="checkbox"] {
 	Since        : version 3.0
 */
 select {
-  padding-left:.2em;
+	padding-left:.2em;
 }
 select:hover {
-  padding-left:.2em;
+	padding-left:.2em;
 }

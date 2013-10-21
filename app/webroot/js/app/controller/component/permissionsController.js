@@ -26,18 +26,20 @@ steal(
 			'viewClass': passbolt.view.component.Permissions,
 			// the instance to bind the component on
 			'acoInstance': null,
-			// 'templateBased': false
-			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-			//'selectedRs': new can.Model.List()
+			// the autocomplete textbox
+			'permAroAutocpltTxtbx': null,
+			// the autocomplete list
+			'permAroAutocpltList': null
 		}
 
 	}, /** @prototype */ {
-		
+
 		'afterStart': function() {
 			var self = this;
 			
 			// List defined permissions
 			this.permList = new mad.controller.component.TreeController($('#js_permissions_list'), {
+				'cssClasses': ['permissions'],
 				'viewClass': mad.view.component.Tree,
 				'itemClass': passbolt.model.Permission,
 				'templateUri': 'mad/view/template/component/tree.ejs',
@@ -45,158 +47,119 @@ steal(
 				// The map to use to make jstree working with our category model
 				'map': new mad.object.Map({
 					'id': 'id',
-					'aro': 'aro',
-					'aco': 'aco',
-					'permLabel': 'PermissionType.name',
-					// {
-						// 'key': 'PermissionType',
-						// 'func': function(permType, map, obj) {
-							// return __('can %s', permType.format('short'));
-						// }
-					// },
-					'label': {
-						'key': 'aro',
-						'func': function(data, map, obj) {
-							switch(data) {
-								case 'User':
-									return obj.User.username;
-								break;
+					'permTarget': {
+						'key': 'aco_foreign_key',
+						'func': function(aco_foreign_key, map, obj) {
+							switch(obj.aro) {
 								case 'Group':
-									return obj.Group.name;
+									return obj['Group'].name;
+								break;
+								case 'User':
+									return obj['User'].username;
 								break;
 							}
+						}
+					},
+					'permType': {
+						'key': 'aro',
+						'func': function(aro, map, obj) {
+							return aro.toLowerCase();
+						}
+					},
+					'permLabel': {
+						'key': 'PermissionType',
+						'func': function(permType, map, obj) {
+							return permType.toString('long');
 						}
 					}
 				})
 			});
 			this.permList.start();
-			
+
 			// form add permission
 			this.addFormController = new mad.form.FormController($('#js_permission_add_form', this.element), {
 				'templateBased': true,
-				'templateUri': 'app/view/template/form/permission/addForm.ejs'
+				'cssClasses': ['perm-create-form', 'clearfix'],
+				'templateUri': 'app/view/template/form/permission/addForm.ejs',
+				'validateOnChange': false,
+				'callbacks': {
+					'submit': function(data) {
+						self.addPermission(data);
+					}
+				}
 			});
 			this.addFormController.start();
 			
-			// Add resource id hidden field
-			this.addFormController.addElement(
-				new mad.form.element.TextboxController($('#js_permission_aco', this.element), {
-					modelReference: 'passbolt.model.Resource.id'
-				}).start()
-			);
-			
-			// Add aro selector
-			// autocomplete ! 
-			// fct of the autocomplete
-			// model
-			// mapping
-			this.textboxPermAro = new mad.form.element.TextboxController($('#js_permission_aro', this.element), {}).start();
-			this.addFormController.addElement(
-				this.textboxPermAro
-			);
-			
-			this.addFormController.addElement(
-				new mad.form.element.TextboxController($('#js_permission_aro_autocomplete', this.element))
-					.start()
-			);
-			
-			// Add permission type
-			this.addFormController.addElement(
-				new mad.form.element.DropdownController($('#js_permission_type', this.element), {
-					modelReference: 'passbolt.model.Permission.serial',
-					availableValues: {
-						0: 'deny',
-						1: 'read',
-						3: 'create',
-						7: 'update',
-						15: 'admin'
+			// Form feedback controller
+			var permCreateFormFeedback = new mad.form.FeedbackController($('#js_perm_create_form_feedback'), {}).start();
+
+			// Add an hidden element to the form to carry the aro id 
+			this.permAroHiddenTxtbx = new mad.form.element.TextboxController($('#js_perm_create_form_aro', this.element), {
+				modelReference: 'passbolt.model.Permission.aro_foreign_key'
+			}).start();
+			this.addFormController.addElement(this.permAroHiddenTxtbx);
+
+			// Add an autocomplete element to the form to search the target aro
+			this.options.permAroAutocpltTxtbx = new mad.form.element.AutocompleteController($('#js_perm_create_form_aro_auto_cplt', this.element), {
+				modelReference: 'passbolt.model.Permission.aro_foreign_label',
+				callbacks: {
+					ajax: function(value) {
+						return self.autocompleteAro(value);
 					}
-				}).start()
-			);
+				}
+			}).start();
+			this.addFormController.addElement(this.options.permAroAutocpltTxtbx, permCreateFormFeedback);
+	
+			// Add a selectbox element to the form to carry permission type
+			var permTypeCtl = new mad.form.element.DropdownController($('#js_perm_create_form_type', this.element), {
+					modelReference: 'passbolt.model.Permission.type',
+					availableValues: passbolt.model.PermissionType.PERMISSION_TYPES
+				}).start();
+			this.addFormController.addElement(permTypeCtl, permCreateFormFeedback);		
+
+			// rebind the just created elements, so the controller will be able to listen events which occured on them.
+			this.on();
 		},
-		
+
 		/**
 		 * Show the autcomplete list functions of received users and groups
 		 * @param {string} value String to launche the autocomplete with
 		 * @return {void}
 		 */
-		'showAutocomplete': function(value) {
-			var self = this;
-			// server return
-			var users = [],
-				groups = [];
-			
-		    // instanciate the list component
-		    // create the DOM entry point for the autocomplete component
-			var $el = mad.helper.HtmlHelper.create(
-				this.addFormController.element,
-				'last',
-				'<div id="js_autcomplete" style="position:absolute; border:1px solid red;"></div>'
-			);
-			var autocompleteList = new mad.controller.component.TreeController($el, {
-				'viewClass': mad.view.component.tree.List,
-				'itemClass': mad.model.Model,
-				'templateUri': 'mad/view/template/component/tree.ejs',
-				// The map to use to make jstree working with our category model
-				'map': new mad.object.Map({
-					'id': 'id',
-					'label': 'label',
-					'model': 'model'
-				})
-			});
-			autocompleteList.start();
-			var rect = $('#js_permission_aro_autocomplete')[0].getBoundingClientRect();
-			autocompleteList.element.css({
-				'top': (rect.top + rect.height) + 'px',
-				'left': rect.left + 'px'
-			});
-			// does not work
-			// autocompleteList.view.position({
-				// 'reference': {
-					// 'my': 'left top',
-					// 'at': 'left bottom',
-					// 'of': $('#js_permission_aro_autocomplete')
-				// }
-			// });
-			
-			// @todo several options : 1. aggregate ajax request; 2. one controller which manage this operation;
-			// get all the users and then get all the groups in the query callback
-			passbolt.model.User.findAll({
+		'autocompleteAro': function(value) {
+			// get all the users and groups functions of the given string
+			// start by getting all the users
+			var request = passbolt.model.User.findAll({
 				'keywords': value
-			}, function (dataUsers, response, request) {
-				users = dataUsers;
-				
-				// get all the grousp
-				passbolt.model.Group.findAll({
+			}).then(function(users) {
+				// get all the groups
+				return passbolt.model.Group.findAll({
 					'keywords': value
-				}, function (dataGroups, response, request) {
-					groups = dataGroups;
-					
+				}).then(function(groups) {
 					// aggregate users & groups in a format that the list will understand
-					// oulala c'est bien de la merde ça ou je rêve, un mapper serait bien 
-					var aggregatedData = [];
+					var returnValue = [];
 					groups.each(function(group, i){
-						aggregatedData.push(new mad.model.Model({
+						returnValue.push(new mad.model.Model({
 							id: group.id,
 							label: group.name,
 							model: 'passbolt.model.Group'
 						}));
 					});
 					users.each(function(user, i){
-						aggregatedData.push(new mad.model.Model({
+						returnValue.push(new mad.model.Model({
 							id: user.id,
 							label: user.username,
 							model: 'passbolt.model.User'
 						}));
 					});
-					// Load the autocomplete list
-					autocompleteList.load(aggregatedData);
+
+					return returnValue;
 				});
-			})
+			});
 			
-			// self.addFormController.getElement('js_permission_aro').setValue(value);
+			return request;
 		},
-		
+
 		/**
 		 * load permission for a given instance
 		 * @param {mad.model.Model} obj The target instance
@@ -216,7 +179,7 @@ steal(
 				self.addFormController.load(self.options.acoInstance);
 			});
 		},
-		
+
 		/**
 		 * Refresh
 		 * @return {void}
@@ -227,34 +190,6 @@ steal(
 			// reload the component with the updated permissions
 			this.load(this.options.acoInstance);
 		},
-		
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-		
-		/**
-		 * An item has been selected in the autocomplete list
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.User || passbolt.model.Group} permission The permission to remove
-		 * @return {void}
-		 */
-		'#js_autcomplete item_selected': function(el, ev, data) {
-			this.textboxPermAro.setModelReference(data.model + '.id');
-			this.textboxPermAro.setValue(data.id);
-		},
-		
-		/**
-		 * The user want to remove a permission
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Permission} permission The permission to remove
-		 * @return {void}
-		 */
-		'#js_permission_aro_autocomplete changed': function(el, ev, data) {
-			// show the autocomplete list functions of the given entered string
-			this.showAutocomplete(data.value);
-		},
 
 		/**
 		 * The user want to remove a permission
@@ -263,13 +198,12 @@ steal(
 		 * @param {passbolt.model.Permission} permission The permission to remove
 		 * @return {void}
 		 */
-		' add_permission': function(el, ev) {
+		'addPermission': function(formData) {
 			var self = this;
-			var formData = this.addFormController.getData();
-			var fieldAttrs = mad.model.Model.getModelAttributes(this.textboxPermAro.getModelReference());
+			var fieldAttrs = mad.model.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference());
 			var modelAttr = fieldAttrs[0];
 			var aro = modelAttr.modelReference.shortName;
-			var type = formData['passbolt.model.Permission'].serial;
+			var type = formData['passbolt.model.Permission'].type;
 
 			// gather the data to create a new permission
 			var data = {
@@ -278,16 +212,18 @@ steal(
 				'type': type
 			};
 			data[aro] = formData[modelAttr.modelReference.fullName];
-			
+
 			// create a new permission
 			new passbolt.model.Permission(data)
 				.save(function(newPermission){
-					// refresh the component with the update permissions
+					// refresh the component with the updated permissions
 					self.refresh()
-					// self.permLists.removeItem(permission);
-					// self.permLists.insertItem(newPermission);
 				});
 		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE COMPONENT EVENTS */
+		/* ************************************************************** */
 
 		/**
 		 * The user want to remove a permission
@@ -327,12 +263,36 @@ steal(
 					.save(function(newPermission){
 						// refresh the component with the update permissions
 						self.refresh()
-						// self.permLists.removeItem(permission);
-						// self.permLists.insertItem(newPermission);
 					});
 			}
+		},
+
+		/**
+		 * The user is typing in the autocomplete box
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {array} data The data typed in the autocomplete box
+		 * @return {void}
+		 */
+		'{permAroAutocpltTxtbx} changed': function(el, ev, data) {
+			// reset aro foreign key txtbx
+			this.permAroHiddenTxtbx.setValue(null);
+		},
+
+		/**
+		 * An item has been selected in the autocomplete list
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.User || passbolt.model.Group} permission The permission to remove
+		 * @return {void}
+		 */
+		'{permAroAutocpltList} item_selected': function(el, ev, data) {
+			// update the field model reference functions of the given autocomplete result (can be a User or a Group)
+			this.permAroHiddenTxtbx.setModelReference(data.model + '.id');
+			// set the value of the hidden field aro_foreign_key
+			this.permAroHiddenTxtbx.setValue(data.id);
 		}
-		
+
 	});
 
 });

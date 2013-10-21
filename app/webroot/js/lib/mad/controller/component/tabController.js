@@ -76,7 +76,7 @@ steal(
 			// -> unselect it
 			if (this.enabledTabId) {
 				this.getComponent(this.enabledTabId).setState('hidden');
-				this.view.unselect(this.enabledTabId);
+				this.view.unselectTab(this.enabledTabId);
 			}
 
 			// get the component defined by the tabId
@@ -94,13 +94,7 @@ steal(
 				tab.setState('ready');
 			}
 			
-			this.view.select(this.enabledTabId)
-
-			// // add the selected class to the tab
-			// tab.view.addClass('selected');
-			// // add the selected class to the menu entry
-			// // @todo move that code into the view
-			// $('#js_tab_nav_' + tabId).find('a').addClass('selected');
+			this.view.selectTab(this.enabledTabId)
 		},
 
 		/**

@@ -26,7 +26,7 @@ steal(
 			}
 
 			if (typeof mad.model.ValidationRules[rule] == 'undefined') {
-				throw new Exception('The rule ' + rule + 'does not exist');
+				throw new mad.error.Exception('The rule ' + rule + 'does not exist');
 			}
 			return mad.model.ValidationRules[rule](value, options);
 		},
@@ -285,13 +285,53 @@ steal(
 
 			if (min) {
 				if (value.length < min) {
-					returnValue = __("A least ") + min + __(" characters");
+					returnValue = __("A least %s characters", min);
 				}
 			}
 			if (max) {
 				if (value.length > max) {
-					returnValue = __("Cannot exceed ") + max + __(" characters");
+					returnValue = __("Cannot exceed %s characters", max);
 				}
+			}
+
+			return returnValue;
+		},
+		
+		/**
+		 * 
+		 */
+		'foreignRule': function(value, options) {
+			// alert('foregi');
+			var returnValue = true;
+			if(options.model && options.model.validateRules && options.attribute) {
+				for(var i in options.model.validateRules[options.attribute]) {
+					var rule = options.model.validateRules[options.attribute][i];
+					var foreignReturnValue = mad.model.ValidationRules.validate(rule, value);
+					if(foreignReturnValue !== true) {
+						returnValue = foreignReturnValue;
+						break;
+					}
+				}
+			}
+			return returnValue;
+		},
+		
+		/**
+		 * 
+		 */
+		'choice': function(value, options) {
+			var returnValue = true,
+				choices = [];
+			value = (typeof value == 'undefined') ? null : value;
+
+			if(options.choices) {
+				choices = options.choices;
+			} else if(options.callback) {
+				choices = options.callback.apply(this);
+			}
+
+			if(choices.indexOf(value) == -1) {
+				returnValue = __("%s is not a valid value", value);
 			}
 
 			return returnValue;

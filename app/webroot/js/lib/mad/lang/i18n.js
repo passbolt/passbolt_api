@@ -104,7 +104,7 @@ steal(
 			var j;
 			for(var i in vars) {
 				j = parseInt(i);
-				if(typeof vars[j] != 'string' && typeof vars[j] != 'number' && typeof vars[j] != 'boolean') {
+				if(typeof vars[j] != 'string' && typeof vars[j] != 'number' && typeof vars[j] != 'boolean' && vars[j] !== null) {
 					throw new mad.error.WrongParametersException('I18n Error : Variables has to be a scalar');
 				}
 				returnValue += split[i] + vars[j];

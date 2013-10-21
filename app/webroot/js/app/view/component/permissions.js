@@ -23,21 +23,27 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'.js_delete click': function(el, ev) {
+		' .js_perm_delete click': function(el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+
 			var li = el.parents('li');
 			var permission = li.data('passbolt.model.Permission');
 			this.element.trigger('delete', [permission]);
 		},
-		
+
 		/**
 		 * Observe when the user want to reset the filter
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'#js_permission_add_form submit': function(el, ev) {
-			this.element.trigger('add_permission');
+		'#js_perm_create_form_add_btn click': function(el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+
+			el.trigger('submit');
 		}
-		
+
 	});
 });

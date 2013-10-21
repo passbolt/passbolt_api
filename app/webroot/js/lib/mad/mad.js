@@ -62,6 +62,7 @@ steal(
 	'mad/form/formController.js',
 	'mad/form/formElement.js',
 	'mad/form/formChoiceElement.js',
+	'mad/form/element/autocompleteController.js',
 	'mad/form/element/checkboxController.js',
 	'mad/form/element/dateController.js',
 	'mad/form/element/dropdownController.js',
