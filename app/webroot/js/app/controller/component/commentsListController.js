@@ -1,5 +1,6 @@
 steal(
 	'mad/controller/component/treeController.js',
+	'app/view/component/commentsList.js',
 	'app/view/component/comments.js',
 	'app/model/comment.js'
 ).then(function () {
@@ -22,9 +23,9 @@ steal(
 		mad.controller.component.TreeController.extend('passbolt.controller.component.CommentsListController', /** @static */ {
 			'defaults': {
 				'label': 'Comments List Controller',
-				'viewClass': mad.view.component.tree.List,
+				'viewClass': passbolt.view.component.CommentsList,
 				'itemClass': passbolt.model.Comment,
-				//'templateUri': 'mad/view/template/component/tree.ejs',
+				'templateUri': 'mad/view/template/component/tree.ejs',
 				'itemTemplateUri': 'app/view/template/component/comment/commentItem.ejs',
 				'foreignModel':null,
 				'foreignId':null,
@@ -56,7 +57,12 @@ steal(
 					//self.setState('ready');
 				}, function (response) {
 				});
-			}
+			},
 
+			' request_delete_comment': function() {
+				console.log('commentsListController : received event');
+				console.log('commentsListController : sending event');
+				mad.bus.trigger('request_delete_comment1');
+			}
 		});
 	});

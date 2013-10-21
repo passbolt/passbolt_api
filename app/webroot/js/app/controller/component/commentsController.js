@@ -27,7 +27,9 @@ steal(
 				// the resource to bind the component on
 				'resource'		: this.options.resource,
 				'foreignModel' 	: null,
-				'foreignId' 	: null
+				'foreignId' 	: null,
+
+				'commentsListController' : null
 			}
 
 		}, /** @prototype */ {
@@ -52,22 +54,28 @@ steal(
 
 				// Instantiate the comments List controller
 				// It will take care of listing the comments
-				this.commentsListController = new passbolt.controller.component.CommentsListController($('#js_rs_details_comments_list', this.element), {
+				this.options.commentsListController = new passbolt.controller.component.CommentsListController($('#js_rs_details_comments_list', this.element), {
 					'resource'		: this.options.resource,
 					'foreignModel'	: this.options.foreignModel,
 					'foreignId'		: this.options.foreignId
 				});
-				this.commentsListController.start();
+				this.options.commentsListController.start();
+				this.on();
 			},
 
 			'{passbolt.model.Comment} created': function (model, ev, resource) {
 				var self = this;
 				// If the new resource belongs to one of the categories displayed by the resource
 				if (resource.foreign_id == this.options.resource.id) {
-					self.commentsListController.insertItem(resource, null, 'first');
+					self.options.commentsListController.insertItem(resource, null, 'first');
 					self.addFormController.setState('hidden');
+					self.on();
 					return false; // break
 				}
+			},
+
+			'{mad.bus} request_delete_comment1' : function (model, ev, resource) {
+				console.log('controller received event request_delete_comment');
 			}
 
 		});
