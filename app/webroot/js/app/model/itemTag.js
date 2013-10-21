@@ -52,6 +52,14 @@ steal(
 					});
 			},
 
+			/**
+			 * Create/Edit ItemTags in bulk
+			 * @param attrs
+			 * 	- for this action, a new param tag_list can be passed. It is a list of tags separated by commas.
+			 * @param success
+			 * @param error
+			 * @returns {*}
+			 */
 			'createBulk': function (attrs, success, error) {
 				var self = this;
 				var params = mad.model.serializer.CakeSerializer.to(attrs, this);
@@ -62,10 +70,6 @@ steal(
 					success: success,
 					error: error
 				}).pipe(function (data, textStatus, jqXHR) {
-						//console.log("pipe");
-						//ddconsole.log(data);
-						// pipe the result to convert cakephp response format into can format
-						// else the new attribute are not well placed
 						var def = $.Deferred();
 						def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
 						return def;
@@ -103,7 +107,6 @@ steal(
 			},
 
 			'destroy': function () {
-				// @todo unbind the passbolt.model.Category destroyed event, if it does not done automatically
 				this._super();
 			}
 		});
