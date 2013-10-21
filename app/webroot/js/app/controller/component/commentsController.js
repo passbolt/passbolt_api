@@ -54,28 +54,47 @@ steal(
 
 				// Instantiate the comments List controller
 				// It will take care of listing the comments
-				this.options.commentsListController = new passbolt.controller.component.CommentsListController($('#js_rs_details_comments_list', this.element), {
+				this.commentsListController = new passbolt.controller.component.CommentsListController($('#js_rs_details_comments_list', this.element), {
 					'resource'		: this.options.resource,
 					'foreignModel'	: this.options.foreignModel,
 					'foreignId'		: this.options.foreignId
 				});
-				this.options.commentsListController.start();
-				this.on();
+				this.commentsListController.start();
 			},
 
 			'{passbolt.model.Comment} created': function (model, ev, resource) {
 				var self = this;
 				// If the new resource belongs to one of the categories displayed by the resource
 				if (resource.foreign_id == this.options.resource.id) {
-					self.options.commentsListController.insertItem(resource, null, 'first');
+					self.commentsListController.insertItem(resource, null, 'first');
 					self.addFormController.setState('hidden');
 					self.on();
 					return false; // break
 				}
 			},
 
-			'{mad.bus} request_delete_comment1' : function (model, ev, resource) {
-				console.log('controller received event request_delete_comment');
+			/**
+			 * Catches event request_delete_comment, and proceed with deleting a comment
+			 * @param model
+			 * @param ev
+			 * @param resource
+			 */
+			'{mad.bus} request_delete_comment' : function (model, ev, resource) {
+				resource.destroy(function(){
+					mad.bus.trigger('comment_deleted', resource);
+				});
+			},
+
+			/**
+			 * catches a comment_deleted event. (when a comment is successfully deleted)
+			 * @param model
+			 * @param ev
+			 * @param resource
+			 */
+			'{mad.bus} comment_deleted' : function (model, ev, resource) {
+				// Todo : user feedback
+				// Todo : nice animation on remove
+				this.commentsListController.removeItem(resource);
 			}
 
 		});

@@ -1,4 +1,4 @@
-<li class="comment-wrapper">
+<li class="comment-wrapper" id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
 	<div class="comment">
 		<div class="author profile picture"><a href="#"><img src="img/user.png"/></a></div>
 		<div class="content-wrapper">
@@ -10,7 +10,12 @@
 			<div class="actions">
 				<ul>
 					<!-- <li><a href="#"><i class="icon reply no-text"></i><span>reply</span></a></li>-->
-					<li><a href="#"><i class="icon delete no-text"></i><span>delete</span></a></li>
+					<li>
+						<a href="#">
+							<i class="icon delete no-text"></i>
+							<span>delete</span>
+						</a>
+					</li>
 				</ul>
 			</div>
 		</div>

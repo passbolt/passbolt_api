@@ -90,11 +90,6 @@ steal(
 			 */
 			'init': function () {
 				var self = this;
-			},
-
-			'destroy': function () {
-				// @todo unbind the passbolt.model.Category destroyed event, if it does not done automatically
-				this._super();
 			}
 		});
 	});

@@ -59,10 +59,15 @@ steal(
 				});
 			},
 
-			' request_delete_comment': function() {
-				console.log('commentsListController : received event');
-				console.log('commentsListController : sending event');
-				mad.bus.trigger('request_delete_comment1');
+			/**
+			 * Catches a request_delete_comment coming from an item in the list
+			 * then redistribute on mad bus
+			 * @param elt
+			 * @param evt
+			 * @param data
+			 */
+			' request_delete_comment': function(elt, evt, data) {
+				mad.bus.trigger('request_delete_comment', data);
 			}
 		});
 	});
