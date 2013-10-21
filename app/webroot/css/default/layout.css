@@ -81,6 +81,11 @@
 	height:100%;
 }
 
+/* app */
+#js_app_controller{
+	height: 100%;
+}
+
 /* footer */
 .footer {
 	height:2em;
