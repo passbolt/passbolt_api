@@ -5,7 +5,7 @@ steal(
 ).then(function () {
 
 		/*
-		 * @class passbolt.controller.SidebarSectionTagsController
+		 * @class passbolt.controller.sidebarSection.SidebarSectionTagsController
 		 * @inherits mad.controller.component.SidebarSectionController
 		 * @parent index
 		 *
@@ -15,13 +15,13 @@ steal(
 		 * @param {HTMLElement} element the element this instance operates on.
 		 * @param {Object} [options] option values for the controller.  These get added to
 		 * this.options and merged with defaults static variable
-		 * @return {passbolt.controller.SidebarSectionTagsController}
+		 * @return {passbolt.controller.sidebarSection.SidebarSectionTagsController}
 		 */
-		passbolt.controller.component.SidebarSectionController.extend('passbolt.controller.component.SidebarSection.SidebarSectionTagsController', /** @static */ {
+		passbolt.controller.component.SidebarSectionController.extend('passbolt.controller.component.sidebarSection.SidebarSectionTagsController', /** @static */ {
 
 			'defaults': {
 				'label': 'Sidebar Section Tags Controller',
-				'viewClass': passbolt.view.component.SidebarSection.SidebarSectionTags,
+				'viewClass': passbolt.view.component.sidebarSection.SidebarSectionTags,
 				// the resource to bind the component on
 				'resource': null
 			}

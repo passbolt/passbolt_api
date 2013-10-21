@@ -57,7 +57,7 @@ steal(
 				commentsController.start();
 
 				// Instantiate the comments controller for the current resource
-				var sidebarTagsController = new passbolt.controller.component.SidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
+				var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
 					'resource': this.options.resource,
 					'foreignModel': 'Resource',
 					'foreignId': this.options.resource.id
