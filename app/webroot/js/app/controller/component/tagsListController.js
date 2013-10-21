@@ -4,26 +4,25 @@ steal(
 ).then(function () {
 
 		/*
-		 * @class passbolt.controller.component.CommentsListController
+		 * @class passbolt.controller.component.TagsListController
 		 * @inherits mad.controller.component.TreeController
 		 * @parent index
 		 *
 		 * @constructor
-		 * Creates a new Comments List Controller
+		 * Creates a new Tags List Controller
 		 *
 		 * @param {HTMLElement} element the element this instance operates on.
 		 * @param {Object} [options] option values for the controller.  These get added to
 		 * this.options and merged with defaults static variable
-		 * 	 - foreignModel : the model the comment list system will be plugged to
-		 * 	 - foreign Id : the resource id (foreign key) the comment list system will be plugged to
-		 * @return {passbolt.controller.component.CommentsListsController}
+		 * 	 - foreignModel : the model the tag list system will be plugged to
+		 * 	 - foreign Id : the resource id (foreign key) the  tag list system will be plugged to
+		 * @return {passbolt.controller.component.TagsListsController}
 		 */
 		mad.controller.component.TreeController.extend('passbolt.controller.component.TagsListController', /** @static */ {
 			'defaults': {
 				'label': 'Tags List Controller',
 				'viewClass': mad.view.component.tree.List,
 				'itemClass': passbolt.model.ItemTag,
-				//'templateUri': 'mad/view/template/component/tree.ejs',
 				'itemTemplateUri': 'app/view/template/component/tag/tagItem.ejs',
 				'foreignModel':null,
 				'foreignId':null,

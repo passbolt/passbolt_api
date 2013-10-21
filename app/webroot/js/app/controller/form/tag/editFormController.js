@@ -5,17 +5,19 @@ steal(
 ).then(function () {
 
         /**
-         * @class passbolt.controller.form.resource.CreateFormController
+         * @class passbolt.controller.form.tag.EditFormController
          * @inherits {mad.form.FormController}
          * @parent index
          *
          * @constructor
-         * Instanciate a Resource Create Form Controller
+         * Instanciate a Tag Edit Form Controller
          *
          * @param {HTMLElement} element the element this instance operates on.
          * @param {Object} [options] option values for the controller.  These get added to
          * this.options and merged with defaults static variable
-         * @return {passbolt.controller.form.resource.CreateFormController}
+		 * 	- foreignModel : name of the model this controller operates on (polymorphic behavior)
+		 * 	- foreignId : Id of the object this controller will perform operations on (polymorphic behavior)
+         * @return {passbolt.controller.form.tag.EditFormController}
          */
         mad.form.FormController.extend('passbolt.controller.form.tag.EditFormController', /** @static */ {
             'defaults': {
@@ -52,7 +54,7 @@ steal(
 					}).start().setValue(this.options.foreignId)
 				);
 
-
+				// this textbox will contain the list of tags separated with a comma
                 this.tagList = this.addElement(
                     new mad.form.element.TextboxController($('.tag_list', this.element), {
                         modelReference: 'passbolt.model.ItemTag.tag_list'
@@ -60,6 +62,10 @@ steal(
                 );
             },
 
+			/**
+			 * Helper function to populate the textbox element with a list of tags
+			 * @param tags
+			 */
 			'setTags': function(tags) {
 				var tagsA = new Array();
 				var i = 0;
@@ -73,8 +79,6 @@ steal(
             /* ************************************************************** */
             /* LISTEN TO THE VIEW EVENTS */
             /* ************************************************************** */
-
-
 
         });
     });
