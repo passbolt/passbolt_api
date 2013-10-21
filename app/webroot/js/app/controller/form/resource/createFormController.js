@@ -1,5 +1,6 @@
 steal(
 	'mad/form/formController.js',
+	'app/controller/component/secretStrengthController.js',
 	'app/view/template/form/resource/createForm.ejs'
 ).then(function () {
 
@@ -18,7 +19,8 @@ steal(
 	 */
 	mad.form.FormController.extend('passbolt.controller.form.resource.CreateFormController', /** @static */ {
 		'defaults': {
-			'templateBased': true
+			'templateBased': true,
+			'secretField': null
 		}
 	}, /** @prototype */ {
 
@@ -66,11 +68,10 @@ steal(
 				}).start()
 			);
 			// Add secret data field
-			this.addElement(
-				new mad.form.element.TextboxController($('#js_field_secret'), {
+			this.options.secretField = new mad.form.element.TextboxController($('#js_field_secret'), {
 					modelReference: 'passbolt.model.Resource.Secret.data'
-				}).start()
-			);
+				}).start();
+			this.addElement(this.options.secretField);
 			// Add secret data in clear field
 			this.options.passwordClear = this.addElement(
 				new mad.form.element.TextboxController($('#js_field_secret_clear'), {
@@ -90,8 +91,28 @@ steal(
 			this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_password_button'))
 				.start();
 
+			// The secret strenght compone nt
+			var secretStrength = null;
+			if(this.options.data) {
+				secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.data.Secret.data);
+			}
+			this.options.secretStrength = new passbolt.controller.component.SecretStrengthController($('#js_rs_pwd_strength'), {
+				secretStrength: secretStrength
+			})
+				.start();
+
 			// Rebind controller events
 			this.on();
+		},
+
+		/**
+		 * Update the secret entropy
+		 * @param {string} pwd The password to use to mesure the entropy
+		 * @return {void}
+		 */
+		'updateSecretEntropy': function(pwd) {
+			var secretStrength = passbolt.model.SecretStrength.getSecretStrength(pwd);
+			this.options.secretStrength.load(secretStrength);
 		},
 
 		/* ************************************************************** */
@@ -99,10 +120,19 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Observe when the user is changing the password
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{secretField} changed': function(el, ev) {
+			this.updateSecretEntropy(this.options.secretField.getValue());
+		},
+
+		/**
 		 * Observe when the user is changing the password through the unscrumbeld field
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Category} category The selected category
 		 * @return {void}
 		 */
 		'{passwordClear} change': function(el, ev) {

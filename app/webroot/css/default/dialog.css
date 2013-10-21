@@ -121,32 +121,26 @@
 	width:28%;
 	font-size:11px;
 }
-.dialog .password-complexity.very-bad .progress-bar {
+.dialog .password-complexity .progress-bar.very_weak {
 	background:#000;
-	width:10%;
-}
-.dialog .password-complexity.bad .progress-bar {
-	background:#ef2929;
 	width:20%;
 }
-.dialog .password-complexity.not-so-good .progress-bar {
-	background:#f57900;
+.dialog .password-complexity .progress-bar.weak {
+	background:#ef2929;
 	width:40%;
 }
-.dialog .password-complexity.fair .progress-bar {
+.dialog .password-complexity .progress-bar.fair {
 	background:#fce94f;
 	width:60%;
 }
-.dialog .password-complexity.good .progress-bar {
+.dialog .password-complexity .progress-bar.strong {
 	background:#73d216;
 	width:80%;
 }
-.dialog .password-complexity.very-good .progress-bar {
+.dialog .password-complexity .progress-bar.very_strong {
 	background:#4e9a06;
 	width:100%;
 }
-
-
 
 /** permissions **/
 
