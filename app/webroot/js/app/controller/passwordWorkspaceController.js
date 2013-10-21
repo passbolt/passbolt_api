@@ -36,6 +36,11 @@ steal(
 
 	}, /** @prototype */ {
 
+		/**
+		 * Called right after the start function
+		 * @return {void}
+		 * @see {mad.controller.ComponentController}
+		 */
 		'afterStart': function() {
 
 			// Instantiate the primary workspace menu controller
@@ -64,10 +69,8 @@ steal(
 			passwordBrowserController.start();
 
 			// Instanciate the resource details controller
-			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_workspace_sidebar_second', this.element), {
-				'id': 'js_passbolt_password_sidebar_second',
+			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_wsp_pwd_sidebar_second', this.element), {
 				'selectedRs': this.options.selectedRs,
-				'readyState': 'hidden'
 			});
 		},
 		

@@ -162,6 +162,9 @@ class Comment extends AppModel {
 					'conditions' => array(
 						'Comment.foreign_id' => $data['Comment']['foreign_id']
 						// @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
+					),
+					'order' => array(
+						'Comment.modified desc'
 					)
 				);
 			break;

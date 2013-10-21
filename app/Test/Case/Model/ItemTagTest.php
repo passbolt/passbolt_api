@@ -1,26 +1,26 @@
 <?php
 /**
- * ResourceTag Model Test
+ * ItemTag Model Test
  *
  * @copyright     Copyright 2012, Passbolt.com
- * @package       app.Test.Case.Model.ResourceTagTest
+ * @package       app.Test.Case.Model.ItemTagTest
  * @since         version 2.12.11
  * @license       http://www.passbolt.com/license
  */
 App::uses('Tag', 'Model');
 App::uses('Resource', 'Model');
-App::uses('ResourceTag', 'Model');
+App::uses('ItemTag', 'Model');
 App::uses('User', 'Model');
 
-class ResourceTagTest extends CakeTestCase {
+class ItemTagTest extends CakeTestCase {
 
-	public $fixtures = array('app.tag', 'app.resource', 'app.resourcesTag', 'app.user', 'app.role');
+	public $fixtures = array('app.tag', 'app.resource', 'app.itemsTag', 'app.user', 'app.role');
 
 	public function setUp() {
 		parent::setUp();
-		$this->ResourceTag = ClassRegistry::init('ResourceTag');
-		$this->ResourceTag->useDb = 'test';
-		$this->ResourceTag->Resource->Behaviors->disable('Permissionable');
+		$this->ItemTag = ClassRegistry::init('ItemTag');
+		$this->ItemTag->useDb = 'test';
+		$this->ItemTag->Resource->Behaviors->disable('Permissionable');
 	}
 
 /**
@@ -29,17 +29,20 @@ class ResourceTagTest extends CakeTestCase {
  */
 	public function testUnicityValidation() {
 		$tr = array(
-			'ResourceTag' => array(
-				'tag_id' => 'bbb00001-c5cd-11e1-a0c5-080027796c4c',
-				'resource_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c'
+			'ItemTag' => array(
+				'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
+				'foreign_model' => 'Resource',
+				'foreign_id' => '408bb871-5168-49d4-a676-fb098cebc04d'
 			)
 		);
-		$this->ResourceTag->create();
-		$this->ResourceTag->set($tr);
-		$validation = $this->ResourceTag->validates(array('fieldList' => array('tag_id', 'resource_id')));
+		$this->ItemTag->create();
+		$this->ItemTag->set($tr);
+		$save = $this->ItemTag->save($tr);
+		$validation = $this->ItemTag->validates(array('fieldList' => array('tag_id', 'foreign_model', 'foreign_id')));
 		$this->assertEqual($validation, false, 'It should not be possible to associate a resource and a tag twice');
 
-		$validation = $this->ResourceTag->uniqueCombi();
+		$this->ItemTag->set($tr);
+		$validation = $this->ItemTag->uniqueCombi(array('foreign_id' => '408bb871-5168-49d4-a676-fb098cebc04d'));
 		$this->assertEqual($validation, false, 'It should not be possible to associate a resource and a tag twice');
 	}
 
@@ -48,11 +51,11 @@ class ResourceTagTest extends CakeTestCase {
  * @return void
  */
 	public function testTagExist() {
-		$result = $this->ResourceTag->tagExists(null);
+		$result = $this->ItemTag->tagExists(null);
 		$this->assertEqual($result, false, 'Tag null should not be found');
-		$result = $this->ResourceTag->tagExists(array('tag_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
+		$result = $this->ItemTag->tagExists(array('tag_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEqual($result, false, 'Not existing tag should not be found');
-		$result = $this->ResourceTag->tagExists(array('tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c'));
+		$result = $this->ItemTag->tagExists(array('tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEqual($result, true, 'Facebook tag should be found');
 	}
 
@@ -61,11 +64,12 @@ class ResourceTagTest extends CakeTestCase {
  * @return void
  */
 	public function testResourceExist() {
-		$result = $this->ResourceTag->resourceExists(null);
+		$this->ItemTag->data['ItemTag']['foreign_model'] = 'Resource';
+		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource','foreign_id' => ''));
 		$this->assertEqual($result, false, 'Empty ressource should not be found');
-		$result = $this->ResourceTag->resourceExists(array('resource_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
+		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource','foreign_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEqual($result, false, 'Not existing resource should not be found');
-		$result = $this->ResourceTag->resourceExists(array('resource_id' => '509bb871-5168-49d4-a676-fb098cebc04d'));
+		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource', 'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d'));
 		$this->assertEqual($result, true, 'Facebook password should be found');
 	}
 
@@ -81,11 +85,11 @@ class ResourceTagTest extends CakeTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => true,
 		);
 		foreach ($testcases as $testcase => $result) {
-			$user = array('ResourceTag' => array('id' => $testcase));
-			$this->ResourceTag->set($user);
+			$itemTag = array('ItemTag' => array('foreign_model' => 'Resource', 'id' => $testcase));
+			$this->ItemTag->set($itemTag);
 			if($result) $msg = 'validation of the id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->ResourceTag->validates(array('fieldList' => array('id'))), $result, $msg);
+			$this->assertEqual($this->ItemTag->validates(array('fieldList' => array('id'))), $result, $msg);
 		}
 	}
 
@@ -101,11 +105,11 @@ class ResourceTagTest extends CakeTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => true,
 		);
 		foreach ($testcases as $testcase => $result) {
-			$user = array('ResourceTag' => array('tag_id' => $testcase));
-			$this->ResourceTag->set($user);
+			$itemTag = array('ItemTag' => array('foreign_model' => 'Resource', 'tag_id' => $testcase));
+			$this->ItemTag->set($itemTag);
 			if($result) $msg = 'validation of the tag_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the tag_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->ResourceTag->validates(array('fieldList' => array('tag_id'))), $result, $msg);
+			$this->assertEqual($this->ItemTag->validates(array('fieldList' => array('tag_id'))), $result, $msg);
 		}
 	}
 
@@ -113,7 +117,7 @@ class ResourceTagTest extends CakeTestCase {
  * Test ResourceId Validation
  * @return void
  */
-	public function testResourceIdValidation() {
+	public function testForeignIdValidation() {
 		$testcases = array(
 			'' => false, '?!#' => false, 'test' => false,
 			'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
@@ -121,13 +125,13 @@ class ResourceTagTest extends CakeTestCase {
 			'509bb871-5168-49d4-a676-fb098cebc04d' => true,
 		);
 		// we test unicity separately
-		unset($this->ResourceTag->validate['resource_id']['uniqueCombi']);
+		unset($this->ItemTag->validate['foreign_id']['uniqueCombi']);
 		foreach ($testcases as $testcase => $result) {
-			$user = array('ResourceTag' => array('resource_id' => $testcase));
-			$this->ResourceTag->set($user);
+			$itemTag = array('ItemTag' => array('foreign_model' => 'Resource', 'foreign_id' => $testcase));
+			$this->ItemTag->set($itemTag);
 			if($result) $msg = 'validation of the resource_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the resource_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->ResourceTag->validates(array('fieldList' => array('resource_id'))), $result, $msg);
+			$this->assertEqual($this->ItemTag->validates(array('fieldList' => array('foreign_id'))), $result, $msg);
 		}
 	}
 

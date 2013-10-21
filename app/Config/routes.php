@@ -148,6 +148,19 @@
  	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
+ * Custom route for tags controller
+ */
+Router::connect(
+	'/itemTags/:model/:id',
+	array('controller' => 'itemTags', 'action' => 'viewForeignItemTags', "[method]" => "GET"),
+	array('pass' => array('model', 'id')));
+Router::connect(
+	'/itemTags/:model/:id',
+	array('controller' => 'itemTags', 'action' => 'addForeignItemTag', "[method]" => "POST"),
+	array('pass' => array('model', 'id')));
+Router::connect('/itemTags/*', array('controller' => 'itemTags', 'action' => 'delete', "[method]" => "DELETE"));
+
+/**
  * Custom route for favorites controller
  */
 	// Router::connect(
