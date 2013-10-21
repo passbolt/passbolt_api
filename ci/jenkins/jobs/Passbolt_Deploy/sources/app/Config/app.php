@@ -52,5 +52,11 @@ $config = array(
   ),
   'Comment' => array(
     'foreignModels' => array('Resource')
-  )
+  ),
+	'Favorite' => array(
+		'foreignModels' => array('Resource')
+	),
+	'ItemTag' => array(
+		'foreignModels' => array('Resource')
+	)
 );
