@@ -560,6 +560,8 @@ steal(
 			passbolt.model.Resource.findAll({
 				'categories_id': filterTagsParam,
 				'keywords': filter.getKeywords(),
+				'filter': filter.getFilter(),
+				'order': filter.getOrder(),
 				'recursive': true
 			}, function (resources, response, request) {
 				// The callback is out of date, an other filter has been performed

@@ -24,14 +24,16 @@ steal(
 
 		'attributes': {
 			'keywords': 'string',
-			'tags': 'passbolt.model.Category.models'
+			'tags': 'passbolt.model.Category.models',
+			'filter': 'string',
+			'order': 'string'
 		}
 
 	}, /** @prototype */ {
 
 		/**
 		 * Get filter keywords
-		 * @return {array}
+		 * @return {string}
 		 */
 		'getKeywords': function() {
 			if(typeof this.keywords != 'undefined') {
@@ -49,6 +51,28 @@ steal(
 				return this.tags;
 			}
 			return [];
+		},
+
+		/**
+		 * Get filter 
+		 * @return {string}
+		 */
+		'getFilter': function() {
+			if(typeof this.filter != 'undefined') {
+				return this.filter;
+			}
+			return '';
+		},
+
+		/**
+		 * Get order
+		 * @return {string}
+		 */
+		'getOrder': function() {
+			if(typeof this.order != 'undefined') {
+				return this.order;
+			}
+			return '';
 		}
 
 	});
