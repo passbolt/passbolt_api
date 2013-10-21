@@ -7,6 +7,13 @@
 	margin:.5em 0;
 	width:100%;
 }
+
+.comments .content-wrapper{
+	float: left;
+	width: 85.7%;
+	margin-left: 4%;
+}
+
 .comments .comment.reply {
 	clear:both;
 	float:left;
@@ -15,9 +22,7 @@
 
 /* content */
 .comments .comment p {
-	float:left;
-	margin-left:3em;
-	margin-top:-2.3em;
+	margin: -0.3em 0 0.3em 0;
 }
 
 /* picture */
@@ -34,11 +39,10 @@
 
 /* username and date */
 .comments .comment .metadata {
-	float:left;
-	margin-left:3em;
 	font-size:.875em;
 	font-style:italic;
-	width:74%;
+	float: left;
+	width: 75%;
 }
 .comments .comment .metadata .author.username {
 	max-width:48%;
@@ -76,8 +80,6 @@
 .comments .comment.add textarea {
 	height:2.3em;
 	float:left;
-	margin-left:3em;
-	margin-top:-2.3em;
 	font-size:.875em;
 	min-width:18.5em;
 	border:1px solid #DDD;
@@ -89,7 +91,6 @@
 	float:right;
 	margin:0;
 	padding:.125em .5em 0em .5em;
-	margin-top:-1.5em;
 }
 .comments .comment .button span,
 .comments .comment .button span {

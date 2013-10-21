@@ -27,7 +27,9 @@ steal(
 				// the resource to bind the component on
 				'resource'		: this.options.resource,
 				'foreignModel' 	: null,
-				'foreignId' 	: null
+				'foreignId' 	: null,
+
+				'commentsListController' : null
 			}
 
 		}, /** @prototype */ {
@@ -68,6 +70,30 @@ steal(
 					self.addFormController.setState('hidden');
 					return false; // break
 				}
+			},
+
+			/**
+			 * Catches event request_delete_comment, and proceed with deleting a comment
+			 * @param model
+			 * @param ev
+			 * @param resource
+			 */
+			'{mad.bus} request_delete_comment' : function (model, ev, resource) {
+				resource.destroy(function(){
+					mad.bus.trigger('comment_deleted', resource);
+				});
+			},
+
+			/**
+			 * catches a comment_deleted event. (when a comment is successfully deleted)
+			 * @param model
+			 * @param ev
+			 * @param resource
+			 */
+			'{mad.bus} comment_deleted' : function (model, ev, resource) {
+				// Todo : user feedback
+				// Todo : nice animation on remove
+				this.commentsListController.removeItem(resource);
 			}
 
 		});
