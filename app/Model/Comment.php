@@ -201,7 +201,7 @@ class Comment extends AppModel {
 			break;
 			case 'add':
 				$returnValue = array(
-					'fields' => array('content', 'parent_id', 'foreign_model', 'foreign_id')
+					'fields' => array('content', 'parent_id', 'foreign_model', 'foreign_id', 'created_by', 'modified_by')
 				);
 			break;
 			case 'edit':
