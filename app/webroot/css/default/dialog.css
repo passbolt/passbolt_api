@@ -212,31 +212,33 @@
     font-size: 1.25em;
 }
 
-.dialog .perm-actions{
+.dialog .perm-create-form {
     margin: 20px 0 0 0;
 }
 
-.dialog  .perm-actions input[type=text]{
-    width: 56%;
+.dialog .perm-create-form .perm-aro {
+	width:22em;
+	padding-right:0.375em;
 }
-.dialog  .perm-actions input[type=text].loading{
+
+.dialog .perm-create-form input[type=text].loading{
     background: url(../../img/loading.gif) no-repeat 99% center;
-    padding-right: 5%;
 }
 
-.dialog  .perm-actions .actions.inline{
-    width: 31%;
-    margin-right: 1.1em;
+.dialog .perm-create-form .perm-type {
+	padding-top:2.075em;
+	padding-right:0.375em;
 }
 
-.dialog  .perm-actions .actions select.permission{
-    width: 6em;
+.dialog .perm-create-form select.permission{
     -webkit-appearance: menulist;
-    height: 2.2em;
+    height:2.2em;
+    width:5.775em;
     /* todo : make a generic fix for select fields. maybe chosen ? */
 }
 
-.dialog  .perm-actions .actions a.button{
-    float: right;
+.dialog .perm-create-form .perm-actions {
+    height: 2.2em;
+	padding-top:2.075em;
 }
 

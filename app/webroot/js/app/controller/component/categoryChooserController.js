@@ -1,5 +1,6 @@
 steal(
-	'mad/controller/component/dynamicTreeController.js'
+	'mad/controller/component/dynamicTreeController.js',
+	'app/model/category.js'
 ).then(function () {
 
 	/*

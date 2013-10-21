@@ -22,7 +22,7 @@ steal(
 		 * @param {string} tabId The target tab id
 		 * @return {void}
 		 */
-		'select': function(tabId) {
+		'selectTab': function(tabId) {
 			// add the selected class to the tab
 			this.controller.getComponent(tabId)
 				.view
@@ -38,7 +38,7 @@ steal(
 		 * @param {string} tabId The target tab id
 		 * @return {void}
 		 */
-		'unselect': function(tabId) {
+		'unselectTab': function(tabId) {
 			// remove the selected class to the tab
 			this.controller.getComponent(tabId)
 				.view

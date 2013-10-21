@@ -17,7 +17,16 @@ steal(
 	 */
 	mad.view.form.FormElementView.extend('mad.view.form.element.TextboxView', /** @static */ {
 
+		'defaults': { }
+
 	}, /** @prototype */ {
+
+		// Constructor like
+		'init': function(el, opts) {
+			this._super(el, opts);
+			this._keypressTimeout = null;
+			this.keypressTimeout = this.controller.options.keypressTimeout;
+		},
 
 		/**
 		 * Get the value of the textbox form element
@@ -46,11 +55,43 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'change': function (el, event) {
-			el.trigger('changed', {
-				value: this.getValue()
-			});
-		}
+		' keypress': function (el, ev) {
+			var self = this;
 
+			if(this._keypressTimeout != null) {
+				clearTimeout(this._keypressTimeout);
+			}
+
+			if(this.getValue().length >= 2) {
+				this._keypressTimeout = setTimeout(function() {
+					el.trigger('changed', {
+						value: self.getValue()
+					});
+				}, this.keypressTimeout);
+			}
+		},
+
+		/**
+		 * Listen to the view event change
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		' keydown': function (el, ev) {
+			var self = this;
+
+			// catch backspace
+			if(ev.which == 8) {
+				if(this._keypressTimeout != null) {
+					clearTimeout(this._keypressTimeout);
+				}
+				
+				this._keypressTimeout = setTimeout(function() {
+					el.trigger('changed', {
+						value: self.getValue()
+					});
+				}, this.keypressTimeout);
+			}
+		}
 	});
 });

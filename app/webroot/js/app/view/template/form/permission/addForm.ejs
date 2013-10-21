@@ -1,18 +1,26 @@
-<input id="js_permission_aco" type="hidden" />
-<input id="js_permission_aro" type="hidden" />
+<input id="js_perm_create_form_aro" type="hidden" />
 
-<label>Share with a person or a group</label>
-
-<input id="js_permission_aro_autocomplete" type="text" />
-
-<select id="js_permission_type">
-	<option value="create">create</option>
-	<option value="create">read</option>
-	<option value="create">update</option>
-	<option value="create">delete</option>
-</select>
-
-<div id="js_permission_feedback" class="message">
+<div class="input text left perm-aro">
+	<label for="js_perm_create_form_aro_auto_cplt">Share with a person or a group</label>
+	<div class="autocomplete">
+		<input class="loading" maxlength="50" type="text" id="js_perm_create_form_aro_auto_cplt" placeholder="start typing a person or a group"/>
+	</div>
 </div>
 
-<input type="submit" value="submit" />
+<div class="select left perm-type">
+	<select id="js_perm_create_form_type" class="permission">
+	</select>
+</div>
+
+<div class="left perm-actions">
+	<a href="#" id="js_perm_create_form_add_btn" class="button">
+		<i class="plus icon big no-text"></i>
+		<span>add permission</span>
+	</a>
+</div>
+
+<div class="clearfix">
+</div>
+
+<div id="js_perm_create_form_feedback" class="message ">
+</div>
