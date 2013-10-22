@@ -31,16 +31,16 @@
 	opacity: 1;
 }
 /* home button is special */
-.header .navigation.primary .home {
+.header .navigation.primary .home  a {
   margin-left:1em;
 	width:1.250em;
 	height:1.250em;
 	background:transparent url(../../img/logo_key_white.png) 0 0 no-repeat;
 }
-.header .navigation.primary .home:hover {
+.header .navigation.primary .home:hover a {
 	background:transparent url(../../img/logo_key_red.png) 0 0 no-repeat;
 }
-.header .navigation.primary .home span {
+.header .navigation.primary .home a span {
 	display:none;
 }
 
