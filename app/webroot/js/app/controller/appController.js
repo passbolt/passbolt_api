@@ -95,7 +95,7 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} workspace_selected': function (el, event, workspaceId) {
-			var workspacesContainer = mad.app.getComponent('js_workspaces_container');
+			var workspacesContainer = mad.app.getComponent('js_app_panel_main');
 			workspacesContainer.enableTab(workspaceId);
 		}
 
