@@ -33,7 +33,11 @@ steal(
 				 * The controller that called us, if any
 				 * We use it only to inform about the current mode (edit / ready)
 				 */
-				'wrapperController' : null
+				'wrapperController' : null,
+				/**
+				 * list of itemTags
+				 */
+				'itemTags' 		: null
 			}
 
 		}, /** @prototype */ {
@@ -58,10 +62,7 @@ steal(
 							// TODO : validate
 							passbolt.model.ItemTag.createBulk(data['passbolt.model.ItemTag'], function(data) {
 								var itemTags = passbolt.model.ItemTag.models(data);
-								self.itemTags = itemTags;
-								self.reloadTags();
-								// TODO : user feedback
-								self.setState('ready');
+								self.setItemTags(itemTags);
 								self.options.wrapperController.setState('ready');
 							});
 						}
@@ -87,20 +88,46 @@ steal(
 					'foreignModel'	: this.options.foreignModel,
 					'foreignId'		: this.options.foreignId
 				}, function (itemTags, response, request) {
-					// load the tree with the comments
-					self.itemTags = itemTags;
-					self.reloadTags();
-					self.setState('ready');
+					self.setItemTags(itemTags);
 				}, function (response) {
 				});
+			},
+
+
+			/**
+			 * Set ItemTags for the current controller, and inform all the other components about it
+			 * @param ItemTag itemTags
+			 */
+			'setItemTags':function(itemTags){
+				self.options.itemTags = itemTags;
+				self.dispatchTags();
+				if(self.options.wrapperController != null) {
+					self.options.wrapperController.onChange();
+				}
+				self.refresh();
+				// TODO : user feedback
+				self.setState('ready');
+			},
+
+			/**
+			 * Refresh the display depending on the context
+			 */
+			'refresh':function(){
+				this.tagsListController.setState('ready');
+				if(this.options.itemTags != null && this.options.itemTags.length > 0){
+					this.editFormController.setState('hidden');
+				}
+				else{
+					this.editFormController.setState('ready');
+				}
 			},
 
 			/**
 			 * reload the tags for all the connected controllers, as per itemTags
 			 */
-			'reloadTags': function() {
-				this.tagsListController.setTags(this.itemTags);
-				this.editFormController.setTags(this.itemTags);
+			'dispatchTags': function() {
+				this.tagsListController.setTags(this.options.itemTags);
+				this.editFormController.setTags(this.options.itemTags);
 			},
 
 			/**
@@ -115,8 +142,7 @@ steal(
 			 * Catch event ready
 			 */
 			'stateReady': function() {
-				this.tagsListController.setState('ready');
-				this.editFormController.setState('hidden');
+				this.refresh();
 			}
 
 		});

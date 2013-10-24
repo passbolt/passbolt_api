@@ -46,9 +46,13 @@ steal(
 					'resource'			: this.options.resource,
 					'foreignModel'		: this.options.foreignModel,
 					'foreignId'			: this.options.foreignId,
-					'wrapperController' : self
+					'wrapperController' : self,
+					'changeEventCallback': self.onChange
 				});
 				this.tagsController.start();
+
+				// Hide edit button
+				$('.edit-action', this.element).hide();
 			},
 
 			/**
@@ -65,6 +69,15 @@ steal(
 					this.setState('ready');
 				}
             },
+
+			'onChange':function(){
+				if(this.tagsController.options.itemTags.length == 0){
+					$('.edit-action', this.element).hide();
+				}
+				else {
+					$('.edit-action', this.element).show();
+				}
+			},
 
 			/**
 			 * State edit catcher
