@@ -33,7 +33,16 @@ steal(
 			'map': new mad.object.Map({
 				'id': 'id',
 				'label': 'label',
-				'cssClasses': 'cssClasses',
+				'cssClasses': {
+					'key': 'cssClasses',
+					'func': function(value, map) {
+						var returnValue = '';
+						$.each(value, function(i, rowValue) {
+							returnValue += rowValue + ' ';
+						});
+						return returnValue;
+					}
+				},
 				'children': {
 					'key': 'children',
 					'func': mad.object.Map.mapObjects

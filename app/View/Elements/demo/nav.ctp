@@ -12,12 +12,12 @@
 	<nav>
 		<div class="primary navigation top">
 			<ul class="left">
-				<li><a href="#home" class="home"><span>home</span></a></li>
-				<li><a href="#passwords" class="passwords"><span>passwords</span></a></li>
-				<li><a href="#users" class="users"><span>users</span></a></li>
+				<li class="home"><a href="#home"><span>home</span></a></li>
+				<li class="passwords"><a href="#passwords"><span>passwords</span></a></li>
+				<li class="users"><a href="#users"><span>users</span></a></li>
 			</ul>
 			<ul class="right">
-				<li><a href="logout" class="logout"><span>logout</span></a></li>
+				<li class="logout"><a href="logout"><span>logout</span></a></li>
 			</ul>
 		</div>
 	</nav>
