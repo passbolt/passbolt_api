@@ -3,56 +3,76 @@ steal(
 	'mad/controller/component/treeController.js'
 ).then(function () {
 
-		/*
-		 * @class passbolt.controller.component.TagsListController
-		 * @inherits mad.controller.component.TreeController
-		 * @parent index
-		 *
-		 * @constructor
-		 * Creates a new Tags List Controller
-		 *
-		 * @param {HTMLElement} element the element this instance operates on.
-		 * @param {Object} [options] option values for the controller.  These get added to
-		 * this.options and merged with defaults static variable
-		 * 	 - foreignModel : the model the tag list system will be plugged to
-		 * 	 - foreign Id : the resource id (foreign key) the  tag list system will be plugged to
-		 * @return {passbolt.controller.component.TagsListsController}
+	/*
+	 * @class passbolt.controller.component.TagsListController
+	 * @inherits mad.controller.component.TreeController
+	 * @parent index
+	 *
+	 * @constructor
+	 * Creates a new Tags List Controller
+	 *
+	 * @param {HTMLElement} element the element this instance operates on.
+	 * @param {Object} [options] option values for the controller.  These get added to
+	 * this.options and merged with defaults static variable
+	 * @return {passbolt.controller.component.TagsListsController}
+	 */
+	mad.controller.component.TreeController.extend('passbolt.controller.component.TagsListController', /** @static */ {
+		'defaults': {
+			'label': 'Tags List Controller',
+			'viewClass': mad.view.component.tree.List,
+			'itemClass': passbolt.model.ItemTag,
+			'itemTemplateUri': 'app/view/template/component/tag/tagItem.ejs',
+			// The list of tags to take care
+			'tags': null,
+			// The map to use to make jstree working with our category model
+			'map': new mad.object.Map({
+				'id': 'id',
+				'Tag':'Tag'
+			})
+		}
+
+	}, /** @prototype */ {
+
+		/**
+		 * after start
 		 */
-		mad.controller.component.TreeController.extend('passbolt.controller.component.TagsListController', /** @static */ {
-			'defaults': {
-				'label': 'Tags List Controller',
-				'viewClass': mad.view.component.tree.List,
-				'itemClass': passbolt.model.ItemTag,
-				'itemTemplateUri': 'app/view/template/component/tag/tagItem.ejs',
-				'foreignModel':null,
-				'foreignId':null,
-				// The map to use to make jstree working with our category model
-				'map': new mad.object.Map({
-					'id': 'id',
-					'foreign_id': 'foreign_id',
-					'foreign_model': 'foreign_model',
-					'created_by': 'created_by',
-					'created': 'created',
-					'Tag':'Tag'
-				})
+		'afterStart': function() {
+			if(this.options.tags != null) {
+				this.load(this.options.tags);
 			}
+		},
 
-		}, /** @prototype */ {
+		/* ************************************************************** */
+		/* LISTEN TO THE MODEL EVENTS */
+		/* ************************************************************** */
 
-			// Constructor like
-			'init': function (el, opts) {
-				this._super(el, opts);
-				var self = this;
-				//this.setState('loading');
-			},
+		/**
+		 * Observe when item tags are added to the observed instance
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.ItemTag} itemTags The added item tags
+		 * @return {void}
+		 */
+		'{tags} add': function (model, ev, itemTags) {
+			var self = this;
+			for(var i in itemTags) {
+				self.insertItem(itemTags[i]);
+			};
+		},
 
-			/**
-			 * Set the tags to the list
-			 * @param tags
-			 */
-			'setTags': function(tags) {
-				this.reset();
-				this.load(tags);
-			}
-		});
+		/**
+		 * Observe when item tags are removed to the observed instance
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.ItemTag} itemTags The removed item tags
+		 * @return {void}
+		 */
+		'{tags} remove': function (model, ev, itemTags) {
+			var self = this;
+			for(var i in itemTags) {
+				self.removeItem(itemTags[i]);
+			};
+		}
+
 	});
+});

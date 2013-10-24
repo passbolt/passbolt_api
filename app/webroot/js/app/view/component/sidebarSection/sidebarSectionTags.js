@@ -12,22 +12,18 @@ steal(
 
 		}, /** @prototype */ {
 
-			'init': function (el, options) {
-				this._super(el, options);
-			},
-
 			/* ************************************************************** */
 			/* LISTEN TO THE VIEW EVENTS */
 			/* ************************************************************** */
 
 			/**
-			 * Observe when the user clicks on the plus button, to add a comment
+			 * Observe when the user clicks on the plus button, to add a tag
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured
 			 * @return {void}
 			 */
 			'a.edit-action click': function (el, ev) {
-				this.controller.toggleEdit();
+				this.element.trigger('request_tags_edit');
 			}
 
 		});
