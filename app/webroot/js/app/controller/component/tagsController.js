@@ -71,8 +71,7 @@ steal(
 				'foreignModel': this.options.foreignModel,
 				'foreignId': this.options.foreignId
 			}, function (itemTags, response, request) {
-				self.options.instance.ItemTag.splice(0);
-				self.options.instance.ItemTag.push.apply(self.options.instance.ItemTag, itemTags);
+				self.refreshInstanceTags(itemTags);
 			}, function (response) {
 			});
 		},
