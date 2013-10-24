@@ -1,4 +1,22 @@
 /* tags */
+
+.tags .tags-edit-wrapper textarea{
+	height: 2.3em;
+	float: left;
+	font-size: .775em;
+	min-width: 21.5em;
+	border: 1px solid #DDD;
+}
+
+.tags .tags-edit-wrapper input[type=submit] {
+	float: right;
+	margin: 0;
+	font-size: .700em;
+	width: auto;
+	margin: 0;
+	padding: .300em .6em .300em .6em;
+}
+
 .tags .tag {
 	padding:.2em .5em;
 }
