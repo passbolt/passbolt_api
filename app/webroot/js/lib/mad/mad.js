@@ -56,6 +56,7 @@ steal(
 	'mad/controller/component/treeController.js',
 	'mad/controller/component/dynamicTreeController.js',
 	'mad/core/singleton.js',
+	'mad/crypto/random.js',
 	'mad/event/event.js',
 	'mad/event/eventBus.js',
 	'mad/form/feedbackController.js',

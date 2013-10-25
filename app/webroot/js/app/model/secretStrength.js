@@ -33,34 +33,6 @@ steal(
 		},
 	};
 
-
-	/**
-	 * The different masks used to mesure the entropy
-	 */
-	var ENTROPY_MASK = {
-		'alpha': {
-			size:26,
-			data: 'abcdefghijklmnopqrstuvwxyz',
-			pattern: /[a-z]/
-		},
-		'uppercase': {
-			size:26, 
-			data: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-			pattern: /[A-Z]/
-		},
-		'digit': {
-			size:10, 
-			data: '0123456789',
-			pattern: /[0-9]/
-		},
-		'special': {
-			size:32,
-			// ASCII Code = 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 95, 96, 123, 124, 125, 126
-			data: '!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~',
-			pattern: /[!"#$%&\'\(\)*+,\-./:;<=>?@\[\\\]^_`{|}~]/
-		}
-	};
-
 	/*
 	 * @class passbolt.model.SecretStrength
 	 * @inherits {mad.model.Model}
@@ -110,11 +82,11 @@ steal(
 		getEntropy: function(pwd) {
 			var pwdLen = pwd.length;
 			var pwdMasksSize = 0;
-			for (var i in ENTROPY_MASK) {
-				if(pwd.match(ENTROPY_MASK[i].pattern)) {
-					pwdMasksSize += ENTROPY_MASK[i].size;
+			for (var i in passbolt.model.Secret.MASKS) {
+				if(pwd.match(passbolt.model.Secret.MASKS[i].pattern)) {
+					pwdMasksSize += passbolt.model.Secret.MASKS[i].size;
 				}
-			}
+			}	
 			var entropy = pwdLen * (Math.log(pwdMasksSize) / Math.log(2));
 			return entropy;
 		}

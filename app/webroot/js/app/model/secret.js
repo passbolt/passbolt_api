@@ -23,36 +23,52 @@ steal(
 			'data': 'string'
 		},
 
-		/**
-		 * Get the entropy level functions of the entropy bits
-		 * @param {int} entropy The entropy bits
-		 * @return {string} The entropy level VERY_WEAK, WEAK, MODERATE, STRONG, VERY_STRONG
-		 */
-		entropyLevel: function(entropy) {
-			var returnValue = null;
-			for(var level in passbolt.model.Secret.ENTROPY) {
-				if(entropy >= passbolt.model.Secret.ENTROPY[level].start) {
-					returnValue = level;
-				}
+		// The masks used to generate a password
+		MASKS: {
+			'alpha': {
+				size:26,
+				data: 'abcdefghijklmnopqrstuvwxyz',
+				pattern: /[a-z]/
+			},
+			'uppercase': {
+				size:26, 
+				data: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+				pattern: /[A-Z]/
+			},
+			'digit': {
+				size:10, 
+				data: '0123456789',
+				pattern: /[0-9]/
+			},
+			'special': {
+				size:32,
+				// ASCII Code = 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 95, 96, 123, 124, 125, 126
+				data: '!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~',
+				pattern: /[!"#$%&\'\(\)*+,\-./:;<=>?@\[\\\]^_`{|}~]/
 			}
-			return returnValue;
 		},
 
 		/**
-		 * Mesure the entropy of a password, following the mathematical rule Entropy = Pwd Length 
-		 * @param {srtring} pwd The password to test the entropy
-		 * @return {int}
+		 * Generate a password following the system configuration 
+		 * @return {string}
 		 */
-		entropy: function(pwd) {
-			var pwdLen = pwd.length;
-			var pwdMasksSize = 0;
-			for (var i in passbolt.model.Secret._masks) {
-				if(pwd.match(passbolt.model.Secret._masks[i].pattern)) {
-					pwdMasksSize += passbolt.model.Secret._masks[i].size;
-				}
+		generate: function() {
+			var secret = '',
+				secretMasks = mad.Config.read('secret.generator.masks'),
+				secretLength = mad.Config.read('secret.generator.length'),
+				mask = [];
+
+			// build the mask to use to generate a pwd
+			for (var i in secretMasks) {
+				mask = $.merge(mask, passbolt.model.Secret.MASKS[secretMasks[i]].data);
 			}
-			var entropy = pwdLen * (Math.log(pwdMasksSize) / Math.log(2));
-			return entropy;
+
+			// generate a pwd
+			for (var i=0; i<secretLength; i++) {
+				secret += mask[Math.randomRange(0, mask.length)];
+			}
+
+			return secret;
 		}
 
 	}, /** @prototype */ { });
