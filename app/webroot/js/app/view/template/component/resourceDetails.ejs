@@ -17,7 +17,7 @@
 			<span class="label"><%= __('Expire') %></span>
 			<span class="value"><%= resource.expiry_date != null ? moment(resource.expiry_date).fromNow() : __('never') %></span>
 		</li>
-		<li class="strength todo">
+		<li class="strength">
 			<span class="label"><%= __('Strength') %></span>
 			<span>
 				<%= secretStrength ? secretStrength.label : '-' %>
