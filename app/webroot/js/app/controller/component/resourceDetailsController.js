@@ -40,6 +40,9 @@ steal(
 				this._super();
 				// pass the new resource to the view
 				this.setViewData('resource', this.options.resource);
+				// pass the secret strength label
+				var secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.resource.Secret.data);
+				this.setViewData('secretStrength', secretStrength);
 			},
 
 			/**
@@ -47,7 +50,7 @@ steal(
 			 * @return {void}
 			 * @see {mad.controller.ComponentController}
 			 */
-			'afterStart': function () {
+			'afterStart': function () {				
 				// Instantiate the comments controller for the current resource
 				var commentsController = new passbolt.controller.component.CommentsController($('#js_rs_details_comments', this.element), {
 					'resource': this.options.resource,
