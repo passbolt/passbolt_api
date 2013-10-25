@@ -92,6 +92,36 @@ steal(
 					});
 				}, this.keypressTimeout);
 			}
+		},
+
+		/**
+		 * Listen to the view event paste
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		' paste': function (el, ev) {
+			var self = this;
+			setTimeout(function() {
+	        el.trigger('changed', {
+						value: self.getValue()
+					});
+	    }, 0); // note the 0 milliseconds
+		},
+
+		/**
+		 * Listen to the view event cut
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		' cut': function (el, ev) {
+			var self = this;
+			setTimeout(function() {
+	        el.trigger('changed', {
+						value: self.getValue()
+					});
+	    }, 0); // note the 0 milliseconds
 		}
 	});
 });
