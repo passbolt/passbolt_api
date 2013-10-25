@@ -43,8 +43,8 @@ steal(
 			'special': {
 				size:32,
 				// ASCII Code = 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 95, 96, 123, 124, 125, 126
-				data: '!"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~',
-				pattern: /[!"#$%&\'\(\)*+,\-./:;<=>?@\[\\\]^_`{|}~]/
+				data: '!"#$%&\'()*+,-./:;<=>?@[:]^_`{|}~',
+				pattern: /[!"#$%&\'\(\)*+,\-./:;<=>?@\[\]^_`{|}~]/
 			}
 		},
 
@@ -56,17 +56,26 @@ steal(
 			var secret = '',
 				secretMasks = mad.Config.read('secret.generator.masks'),
 				secretLength = mad.Config.read('secret.generator.length'),
-				mask = [];
+				mask = [],
+				expectedEntropy;
 
 			// build the mask to use to generate a pwd
 			for (var i in secretMasks) {
 				mask = $.merge(mask, passbolt.model.Secret.MASKS[secretMasks[i]].data);
 			}
 
+			// Calculate the expected entropy
+			// expectedEntropy = passbolt.model.SecretStrength.mesureEntropy(secretLength, mask.length)
 			// generate a pwd
-			for (var i=0; i<secretLength; i++) {
-				secret += mask[Math.randomRange(0, mask.length)];
-			}
+			var j = 0;
+			do {
+				secret = '';
+				expectedEntropy = passbolt.model.SecretStrength.mesureEntropy(secretLength, mask.length)
+				for (var i=0; i<secretLength; i++) {
+					secret += mask[Math.randomRange(0, mask.length-1)];
+				}
+				// console.log(expectedEntropy, passbolt.model.SecretStrength.mesurePwdEntropy(secret));
+			} while (expectedEntropy != passbolt.model.SecretStrength.mesurePwdEntropy(secret) && j<10	);
 
 			return secret;
 		}

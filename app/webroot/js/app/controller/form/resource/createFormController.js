@@ -139,9 +139,10 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{passwordClear} change': function(el, ev) {
+		'{passwordClear} changed': function(el, ev) {
 			var value = this.getElement('js_field_secret_clear').getValue();
 			this.getElement('js_field_secret').setValue(value);
+			this.updateSecretEntropy(value);
 		},
 
 		/**
@@ -183,6 +184,8 @@ steal(
 		'{genPwdButton} click': function(el, ev) {
 			var value = passbolt.model.Secret.generate();
 			this.getElement('js_field_secret').setValue(value);
+			this.getElement('js_field_secret_clear').setValue(value);
+			this.updateSecretEntropy(value);
 		}
 
 	});

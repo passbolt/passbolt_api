@@ -61,7 +61,7 @@ steal(
 			}
 			
 			// Mesure the entropy of the password
-			var entropy = passbolt.model.SecretStrength.getEntropy(pwd);
+			var entropy = passbolt.model.SecretStrength.mesurePwdEntropy(pwd);
 
 			// Functions of the entropy return secret strength information
 			for(var level in STRENGTH) {
@@ -75,20 +75,28 @@ steal(
 		},
 
 		/**
-		 * Mesure the entropy of a password, following the mathematical rule Entropy = Pwd Length 
+		 * Calculate the entropy functions of the given primitive 
+		 * @param {int} length The number of characters
+		 * @param {int} maskSize The number of possibility for each character
+		 * @return {int}
+		 */
+		mesureEntropy: function(length, maskSize) {
+			return length * (Math.log(maskSize) / Math.log(2));
+		},
+
+		/**
+		 * Mesure the entropy of a password
 		 * @param {srtring} pwd The password to test the entropy
 		 * @return {int}
 		 */
-		getEntropy: function(pwd) {
-			var pwdLen = pwd.length;
-			var pwdMasksSize = 0;
+		mesurePwdEntropy: function(pwd) {
+			var maskSize = 0;
 			for (var i in passbolt.model.Secret.MASKS) {
 				if(pwd.match(passbolt.model.Secret.MASKS[i].pattern)) {
-					pwdMasksSize += passbolt.model.Secret.MASKS[i].size;
+					maskSize += passbolt.model.Secret.MASKS[i].size;
 				}
 			}	
-			var entropy = pwdLen * (Math.log(pwdMasksSize) / Math.log(2));
-			return entropy;
+			return passbolt.model.SecretStrength.mesureEntropy(pwd.length, maskSize);
 		}
 
 	}, /** @prototype */ { });
