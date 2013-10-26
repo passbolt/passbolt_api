@@ -47,9 +47,8 @@ steal(
 			this.filterCtl.start();
 
 			// Instantiate the notification controller
-			// this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
-				// 'state': 'hidden'
-			// });
+			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {
+			});
 			// this.notifCtl.start();
 
 			// Instantiate workspaces container tabs element to the app 
