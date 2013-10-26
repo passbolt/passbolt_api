@@ -2,6 +2,7 @@ steal(
 	'jquery/model',
 	'app/model/category.js',
 	'app/model/secret.js',
+	'app/model/itemTag.js',
 	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
@@ -37,6 +38,7 @@ steal(
 			'Category': 'passbolt.model.Category.models',
 			'Secret': 'passbolt.model.Secret.model',
 			'Favorite': 'passbolt.model.Favorite.model',
+			'ItemTag': 'passbolt.model.ItemTag.models',
 			'Creator': 'passbolt.model.User.model',
 			'Modifier': 'passbolt.model.User.model'
 		},

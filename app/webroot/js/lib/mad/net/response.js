@@ -104,10 +104,15 @@ steal(
 		 * @return {boolean}
 		 */
 		'isResponse': function (data) {
-			if (data.header && data.body) {
-				return true;
+			var returnValue = false;
+
+			if(typeof data != 'undefined' && data != null) {
+				if (data.header && data.body) {
+					returnValue = true
+				}
 			}
-			return false;
+
+			return returnValue;
 		},
 
 		/**

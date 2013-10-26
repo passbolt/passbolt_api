@@ -20,8 +20,8 @@ steal(
 
 			'validateRules': {
 				'foreign_model': ['text'],
-				'foreign_id': ['text'],
-				'tag_id': ['text']
+				'foreign_id': ['uid'],
+				'tag_id': ['uid']
 			},
 
 			attributes: {
@@ -58,7 +58,7 @@ steal(
 			 * 	- for this action, a new param tag_list can be passed. It is a list of tags separated by commas.
 			 * @param success
 			 * @param error
-			 * @returns {*}
+			 * @returns {jQuery.Deferred}
 			 */
 			'createBulk': function (attrs, success, error) {
 				var self = this;
@@ -98,16 +98,5 @@ steal(
 			}
 		}, /** @prototype */ {
 
-			/**
-			 * Override the constructor function
-			 * Listen change on Category, and update the model when a category has been destroyed
-			 */
-			'init': function () {
-				var self = this;
-			},
-
-			'destroy': function () {
-				this._super();
-			}
 		});
 	});

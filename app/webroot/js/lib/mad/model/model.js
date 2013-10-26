@@ -185,6 +185,10 @@ steal(
 		 * [mad.model.Model.model].
 		 */
 		'models': function (data) {
+			// if no data provided, make the models function returning an empty list of the target model
+			if(typeof data == 'undefined' || data == null) {
+				data = [];
+			}
 			// if the provided data are formated as ajax server response
 			if (mad.net.Response.isResponse(data)) {
 				return can.Model.models.call(this, mad.net.Response.getData(data));
