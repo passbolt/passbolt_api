@@ -70,6 +70,10 @@ steal(
 
 			// @todo move this into ready state
 			this.workspacesCtl.enableTab('js_passbolt_passwordWorkspace_controller');
+			mad.bus.trigger('passbolt_notify', {
+				'status': 'sucess',
+				'title': 'this.response.getMessage()'
+			});
 		},
 
 		/**
