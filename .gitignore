@@ -17,4 +17,5 @@
 /app/webroot/js/lib/mad/docs/
 /app/webroot/js/lib/mad/docs.html
 !empty
+/.idea/*
 
