@@ -32,7 +32,7 @@ steal(
 				.find('a')
 				.addClass('selected');
 		},
-		
+
 		/**
 		 * Unselect a tab
 		 * @param {string} tabId The target tab id
