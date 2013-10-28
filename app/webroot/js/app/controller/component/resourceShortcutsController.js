@@ -41,7 +41,7 @@ steal(
 					'label': __('Favorite'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
-							'filter': 'favorite'
+							'case': 'favorite'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -73,7 +73,7 @@ steal(
 					'label': __('Shared with me'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
-							'filter': 'shared'
+							'case': 'shared'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -82,7 +82,7 @@ steal(
 					'label': __('Items I own'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
-							'filter': 'own'
+							'case': 'own'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}

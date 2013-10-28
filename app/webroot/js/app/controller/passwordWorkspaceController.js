@@ -100,8 +100,9 @@ steal(
 			this.options.selectedRs.splice(0, this.options.selectedRs.length);
 			// Set the new filter
 			this.options.filter.attr({
-				'tags': [category],
-				'keywords': null
+				'foreignModels': {
+					'Category': new can.List([category])
+				}
 			});
 			// propagate a special event on bus
 			// @todo not the best way to do ! call an event like that is like calling a function directly, useless
