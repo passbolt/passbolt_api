@@ -230,9 +230,70 @@ input[type="checkbox"] {
 	Compatible   : ?
 	Since        : version 3.0
 */
+
+/** Added by Kevin - custom select **/
 select {
-	padding-left:.2em;
+	font-size: 1.125em;
+	padding: .278em .5em .278em .5em;
+	margin: 0;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	background: #f8f8f8;
+	color:#888;
+	border:none;
+	outline:none;
+	display: inline-block;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	cursor:pointer;
+	background: -o-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -ms-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+	border: 1px solid #CCC;
+	width: 100%;
 }
-select:hover {
-	padding-left:.2em;
+
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	select {padding-right:18px}
+}
+
+span.select-box {
+	position:relative;
+}
+
+span.select-box:after {
+	content:'<>';
+	font:11px "Consolas", monospace;
+	color:#aaa;
+	-webkit-transform:rotate(90deg);
+	-moz-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg);
+	right:8px;
+	top:0px;
+	padding:0 0 2px;
+	border-bottom:1px solid #ddd;
+	position:absolute;
+	pointer-events:none;
+}
+
+span.select-box:before {
+	content:'';
+	right:6px;
+	top:0px;
+	width:20px;
+	height:20px;
+	background:#f8f8f8;
+	position:absolute;
+	pointer-events:none;
+	display:block;
+	background: -o-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -ms-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+	border-bottom: 1px solid #ccc;
 }
