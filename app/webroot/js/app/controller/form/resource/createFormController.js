@@ -91,15 +91,13 @@ steal(
 			this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_password_button'))
 				.start();
 
-			// The secret strenght compone nt
-			var secretStrength = null;
-			if(this.options.data) {
-				secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.data.Secret.data);
-			}
+			// The secret strength compone nt
+			var secret = can.getObject('data.Secret.data', this.options);
+			var secretStrength = passbolt.model.SecretStrength.getSecretStrength(secret);
+
 			this.options.secretStrength = new passbolt.controller.component.SecretStrengthController($('#js_rs_pwd_strength'), {
 				secretStrength: secretStrength
-			})
-				.start();
+			}).start();
 
 			// Rebind controller events
 			this.on();
