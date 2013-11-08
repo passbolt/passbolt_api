@@ -88,7 +88,11 @@ steal(
 			);
 			
 			// Show/Hide the password
-			this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_password_button'))
+			this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_pwd_button'))
+				.start();
+
+			// generate a password
+			this.options.genPwdButton = new mad.controller.component.ButtonController($('#js_gen_pwd_button'))
 				.start();
 
 			// The secret strength compone nt
@@ -133,17 +137,16 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{passwordClear} change': function(el, ev) {
+		'{passwordClear} changed': function(el, ev) {
 			var value = this.getElement('js_field_secret_clear').getValue();
-			this.getElement('js_field_secret')
-				.setValue(value);
+			this.getElement('js_field_secret').setValue(value);
+			this.updateSecretEntropy(value);
 		},
 
 		/**
 		 * Observe when the user wants to see the password unscrumbled
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Category} category The selected category
 		 * @return {void}
 		 */
 		'{showPwdButton} click': function(el, ev) {
@@ -168,6 +171,19 @@ steal(
 				// push the button
 				this.options.showPwdButton.view.addClass('selected');
 			}
+		},
+
+		/**
+		 * Observe when the user wants to generate a password
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{genPwdButton} click': function(el, ev) {
+			var value = passbolt.model.Secret.generate();
+			this.getElement('js_field_secret').setValue(value);
+			this.getElement('js_field_secret_clear').setValue(value);
+			this.updateSecretEntropy(value);
 		}
 
 	});

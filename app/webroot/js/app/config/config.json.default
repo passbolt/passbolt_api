@@ -14,6 +14,12 @@
 	"i18n": {
 		"lang": "EN-en"
 	},
+	"secret": {
+		"generator": {
+			"masks": ["alpha", "uppercase", "digit", "special"],
+			"length": 13
+		}
+	},
 	"net": {
 		"ResponseHandlerClassName": "passbolt.net.ResponseHandler"
 	},

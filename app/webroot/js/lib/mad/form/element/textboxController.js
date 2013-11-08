@@ -24,7 +24,7 @@ steal(
 			'label': 'Textbox Form Element Controller',
 			'viewClass': mad.view.form.element.TextboxView,
 			'tag': 'input',
-			'keypressTimeout': 400
+			'onChangeTimeout': 0
 		}
 
 	}, /** @prototype */ {
