@@ -25,31 +25,31 @@ class DictionariesControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->user = new User();
-		$this->user->useDbConfig = 'test';
-		$u = $this->user->GET();
+		$this->User = new User();
+		$this->User->useDbConfig = 'test';
+		$u = $this->User->get();
 		$this->session = new CakeSession();
 		$this->session->init();
+		
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($kk);
+	}
+
+	public function testViewNoAllowed() {
+		// Anonymous user should not be able to access
+		$result = $this->testAction('/logout', array('return' => 'contents'), true);
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$result = json_decode($this->testAction('/dictionaries/en-EN.json', array('return' => 'contents', 'method' => 'GET'), true));
+	}
+
+	public function testViewDictionnaryDoesNotExist() {
+		$this->expectException('HttpException', 'Sorry the dictory could not be found');
+		$result = json_decode($this->testAction('/dictionaries/00-00.json', array('return' => 'contents', 'method' => 'GET'), true));
 	}
 
 	public function testView() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-
-		// test with anonymous user
-		$result = json_decode($this->testAction('/dictionaries/en-EN.json',array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR, '/dictionaries should not be accessible without being logged in');
-
-		// login with keke
-		$kk = $this->user->findByUsername('user@passbolt.com');
-		$this->user->setActive($kk);
-
-		// test bogus dictionary
-		$result = json_decode($this->testAction('/dictionaries/00-00.json',array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR, '/dictionaries/00-00.json should return an error');
-
 		// test english dictionary
-		$result = json_decode($this->testAction('/dictionaries/en-EN.json',array('return' => 'contents', 'method' => 'GET'), true));
+		$result = json_decode($this->testAction('/dictionaries/en-EN.json', array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS, '/dictionaries/en-EN.json should return something');
 
 		// test french dictionary

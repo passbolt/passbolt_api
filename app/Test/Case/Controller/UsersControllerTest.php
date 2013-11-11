@@ -10,6 +10,7 @@
 App::uses('AppController', 'Controller');
 App::uses('UsersController', 'Controller');
 App::uses('User', 'Model');
+App::uses('Group', 'Model');
 App::uses('Role', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
@@ -24,23 +25,33 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->user = new User();
-		$this->user->useDbConfig = 'test';
-		$u = $this->user->get();
+		$this->User = new User();
+		$this->User->useDbConfig = 'test';
+		$u = $this->User->get();
 		$this->session = new CakeSession();
 		$this->session->init();
 	}
 
 	public function tearDown() {
 		parent::tearDown();
+		// Make sure there is no session active after each test
+		$this->User->setInactive();
+	}
+
+	public function testLoginWrongUser() {
+		// Make sure there is no session active after each test
+		$this->User->setInactive();
+		$data = array( 'User' => array(
+			'username' => 'biloute@passbolt.com',
+			'password' => 'ouaich mec'
+		));
+		$this->expectException('HttpException', 'Invalid username or password, try again');
+		$result = $this->testAction('/users/login', array('return' => 'view','method' => 'POST', 'data' => $data), true);
 	}
 
 	public function testLogin() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-
 		// check if we get form
-		$result = $this->testAction('/users/login', array('return' => 'view','method' => 'GET'), true);
+		$result = $this->testAction('/login', array('return' => 'view','method' => 'GET'), true);
 		$this->assertEqual(preg_match('/(<form)/',$result), true,'/users/login with no data sent should return a form');
 
 		// check logging in with a good user
@@ -51,84 +62,82 @@ class UsersControllerTest extends ControllerTestCase {
 
 		// Test that the user is returned properly in the session (authentication has done its job)
 		$result = $this->testAction('/users/login', array('return' => 'vars','method' => 'POST', 'data' => $data), true);
-		$this->assertEqual($this->user->get('User.username'), 'test@passbolt.com', "login test should have returned test@passbolt.com but has returned {$this->user->get('User.username')}");
+		$this->assertEqual($this->User->get('User.username'), 'test@passbolt.com', "login test should have returned test@passbolt.com but has returned {$this->User->get('User.username')}");
 
 		// Test that the redirection is there as it should
 		$result = $this->testAction('/users/login', array('return' => 'view','method' => 'POST', 'data' => $data), true);
 		$this->assertEqual($this->headers['Location'], Router::url('/', true), "Login should have redirected to / but has not");
+	}
 
-		// Log out
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-
-		// check with bogus user
-		$data = array( 'User' => array(
-			'username' => 'biloute@passbolt.com',
-			'password' => 'ouaich mec'
-		));
-		$result = $this->testAction('/users/login', array('return' => 'view','method' => 'POST', 'data' => $data), true);
-		$this->assertEqual(preg_match('/(<form)/',$result), true,'/users/login with wrong data should have returned a form');
+	public function testIndexNoAllowed() {
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		// test with anonymous user
+		$result = json_decode($this->testAction('/users.json',array('return' => 'contents','method' => 'GET'), true));
 	}
 
 	public function testIndex() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-
-		// test with anonymous user
-		$result = json_decode($this->testAction('/users.json',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR, '/users should not be accessible without being logged in');
-
 		// test with normal user
-		$kk = $this->user->findByUsername('user@passbolt.com');
- 		$this->user->setActive($kk);
+		$kk = $this->User->findByUsername('user@passbolt.com');
+ 		$this->User->setActive($kk);
 
 		$result = json_decode($this->testAction('/users.json',array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS,'/users return something');
 
 		// @todo empty database and test if index throws warning for no
- 		$this->user->deleteAll(array('active' => '1'));
- 		$this->user->deleteAll(array('active' => '0'));
+ 		$this->User->deleteAll(array('active' => '1'));
+ 		$this->User->deleteAll(array('active' => '0'));
 		$result = json_decode($this->testAction('/users.json',array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::NOTICE,'/users return a warning');
 	}
 
-	public function testView() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-
+	public function testViewNoAllowed() {
+		$this->expectException('HttpException', 'You are not authorized to access that location');
 		// test with anonymous user
-		$result = json_decode($this->testAction('/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR, '/users/view should not be accessible without being logged in');
+		$result = json_decode($this->testAction('/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',array('return' => 'contents', 'method' => 'GET'), true));
+	}
 
+	public function testViewUserIdIsMissing() {
+		// Unable to test missing id param because of route
+	}
+
+	public function testViewUserIdNotValid() {
 		// test with normal user
-		$kk = $this->user->findByUsername('user@passbolt.com');
- 		$this->user->setActive($kk);
+		$kk = $this->User->findByUsername('user@passbolt.com');
+ 		$this->User->setActive($kk);
+		
+		$this->expectException('HttpException', 'The user id is invalid');
+		$result = json_decode($this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'GET'), true));
+	}
 
-		$result = json_decode($this->testAction('/users/view',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR,'/users/view with missing UUID should return an error');
+	public function testViewUserDoesNotExist() {
+		// test with normal user
+		$kk = $this->User->findByUsername('user@passbolt.com');
+ 		$this->User->setActive($kk);
+		
+		$this->expectException('HttpException', 'The user does not exist');
+		$result = json_decode($this->testAction('/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json', array('return' => 'contents', 'method' => 'GET'), true));
+	}
+	
+	public function testView() {
+		// test with normal user
+		$kk = $this->User->findByUsername('user@passbolt.com');
+ 		$this->User->setActive($kk);
 
-		$result = json_decode($this->testAction('/users/view/0000-0000-0000-000000000000.json',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR,'/users/view with wrong UUID format should return an error');
-
-		$result = json_decode($this->testAction('/users/bbd56042-0000-0000-0000-000000000000.json',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR,'/users/view with user that does not exit should return an error');
-
-		$result = json_decode($this->testAction('/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',array('return' => 'contents','method' => 'GET'), true));
+		$result = json_decode($this->testAction('/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS,'/users return something');
 
-		$result = json_decode($this->testAction('/users/' . User::get('id') . '.json',array('return' => 'contents','method' => 'GET'), true));
+		$result = json_decode($this->testAction('/users/' . User::get('id') . '.json', array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS,'/users/view asking for self should return something');
 	}
 
-	public function testLogout() {
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-	}
-
-  public function testAdd() {
-    // test with normal user
-    $kk = $this->user->findByUsername('user@passbolt.com');
-    $this->user->setActive($kk);
-
-    $result = json_decode($this->testAction('/users.json', array(
+	public function testAddNoAllowed() {
+    // normal user don't have the right to add user
+    $kk = $this->User->findByUsername('user@passbolt.com');
+    $this->User->setActive($kk);
+		
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		// test with anonymous user
+		$result = json_decode($this->testAction('/users.json', array(
       'data' => array(
         'User' => array(
           'username' => 'testadd1@passbolt.com',
@@ -141,11 +150,11 @@ class UsersControllerTest extends ControllerTestCase {
         'return' => 'contents'
       )), true
     );
+	}
 
-    $this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /users.json : The test should return an error but is returning " . print_r($result, true));
-
-    $kk = $this->user->findByUsername('admin@passbolt.com');
-    $this->user->setActive($kk);
+  public function testAdd() {
+    $kk = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($kk);
     $result = json_decode($this->testAction('/users.json', array(
           'data' => array(
             'User' => array(
@@ -162,37 +171,79 @@ class UsersControllerTest extends ControllerTestCase {
     $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /users.json : The test should return sucess but is returning " . print_r($result, true));
 
     // check that User was properly saved
-    $user = $this->user->findByUsername("testadd1@passbolt.com");
+    $user = $this->User->findByUsername("testadd1@passbolt.com");
     $this->assertEquals(1, count($user), "Add : /users.json : The number of users returned should be 1, but actually is " . count($user));
     $this->assertEquals($user['User']['username'], $result['body']['User']['username'], "Add : /users.json : the email of the user inserted should be test1@passbolt.com but is {$result['body']['User']['username']}");
   }
 
-  public function testUpdate() {
-    // test with normal user
-    $kk = $this->user->findByUsername('user@passbolt.com');
-    $this->user->setActive($kk);
+	public function testUpdateNoAllowed() {
+    // normal user don't have the right to add user
+    $kk = $this->User->findByUsername('user@passbolt.com');
+    $this->User->setActive($kk);
+    $id = $kk['User']['id'];
+		
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		// test with anonymous user
+    $result = json_decode($this->testAction("/users/$id.json", array(
+      'data' => array(
+        'User' => array(
+          'id' => $kk['User']['id'],
+          'username' => 'user-modified@passbolt.com',
+          'password' => 'test1',
+          'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+          'active' => 1
+        ),
+      ),
+      'method' => 'put',
+      'return' => 'contents'
+    )), true);
+	}
 
+	public function testUpdateUserIdIsMissing() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+		
+		$this->expectException('HttpException', 'The user id is missing');
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'put'), true));
+	}
+
+	public function testUpdateUserIdNotValid() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+		
+		$this->expectException('HttpException', 'The user id is invalid');
+		$result = json_decode($this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'put'), true));
+	}
+
+	public function testUpdateUserDoesNotExist() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+		
+		$this->expectException('HttpException', 'The user does not exist');
+		$result = json_decode($this->testAction('/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json', array('return' => 'contents', 'method' => 'put'), true));
+	}
+
+	public function testUpdateNoDataProvided() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'No data were provided');
+    $kk = $this->User->findByUsername('user@passbolt.com');
     $id = $kk['User']['id'];
 
+    $kk['User']['username'] = 'user-modified@passbolt.com';
     $result = json_decode($this->testAction("/users/$id.json", array(
-          'data' => array(
-            'User' => array(
-              'id' => $kk['User']['id'],
-              'username' => 'user-modified@passbolt.com',
-              'password' => 'test1',
-              'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-              'active' => 1
-            ),
-          ),
           'method' => 'put',
           'return' => 'contents'
         )), true
     );
+	}
 
-    $this->assertEquals(Message::ERROR, $result['header']['status'], "Edit : /users.json : The test should return an error but is returning " . print_r($result, true));
-
-    $ad = $this->user->findByUsername('admin@passbolt.com');
-    $this->user->setActive($ad);
+  public function testUpdate() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+    $kk = $this->User->findByUsername('user@passbolt.com');
+    $id = $kk['User']['id'];
 
     $kk['User']['username'] = 'user-modified@passbolt.com';
     $result = json_decode($this->testAction("/users/$id.json", array(
@@ -204,41 +255,73 @@ class UsersControllerTest extends ControllerTestCase {
     $this->assertEquals(Message::SUCCESS, $result['header']['status'], "Edit : /users.json : The test should return sucess but is returning " . print_r($result, true));
 
     // check that User was properly saved
-    $user = $this->user->findByUsername("user-modified@passbolt.com");
+    $user = $this->User->findByUsername("user-modified@passbolt.com");
     $this->assertEquals(1, count($user), "Edit : /users.json : The number of users returned should be 1, but actually is " . count($user));
     $this->assertEquals($user['User']['id'], $kk['User']['id'], "Edit : /users.json : the id of the retrieved user  should be {$kk['User']['id']} but is {$user['User']['id']}");
   }
 
+	public function testDeleteNoAllowed() {
+    // normal user don't have the right to delete user
+    $u = $this->User->findByUsername('user@passbolt.com');
+    $this->User->setActive($u);
+		
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		// test with anonymous user
+    $result = json_decode($this->testAction("/users/{$u['User']['id']}.json", array(
+      'method' => 'delete',
+      'return' => 'contents'
+    )), true);
+	}
+
+	public function testDeleteUserIdIsMissing() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+		
+		$this->expectException('HttpException', 'The user id is missing');
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'delete'), true));
+	}
+
+	public function testDeleteUserIdNotValid() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+		
+		$this->expectException('HttpException', 'The user id is invalid');
+		$result = json_decode($this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'delete'), true));
+	}
+
+	public function testDeleteUserDoesNotExist() {
+    $ad = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($ad);
+		
+		$this->expectException('HttpException', 'The user does not exist');
+		$result = json_decode($this->testAction('/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json', array('return' => 'contents', 'method' => 'delete'), true));
+	}
+	
   public function testDelete() {
-    $u = $this->user->findByUsername('user@passbolt.com');
-    $this->user->setActive($u);
-    $id = $u['User']['id'];
-    $result = json_decode($this->testAction("/users/$id.json", array(
-          'method' => 'delete',
-          'return' => 'contents'
-        )), true);
-    $this->assertEquals(Message::ERROR, $result['header']['status'], "delete /users/$id.json : The test should return a success but is returning {$result['header']['status']}");
-
-    $id = 1;
-    $result = json_decode($this->testAction("/users/$id.json", array(
-          'method' => 'delete',
-          'return' => 'contents'
-        )), true);
-    $this->assertEquals(Message::ERROR, $result['header']['status'], "delete /users/$id.json : The test should return a error but is returning {$result['header']['status']}");
-
-
-    $adm = $this->user->findByUsername('admin@passbolt.com');
-    $this->user->setActive($adm);
+    $adm = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($adm);
+    $u = $this->User->findByUsername('user@passbolt.com');
     $result = json_decode($this->testAction("/users/{$u['User']['id']}.json", array(
           'method' => 'delete',
           'return' => 'contents'
         )), true);
-    $this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /users/$id.json : The test should return a success but is returning {$result['header']['status']}");
+    $this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /users/{$u['User']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
 
-    $deleted = $this->user->findByUsername('user@passbolt.com');
+    $deleted = $this->User->findByUsername('user@passbolt.com');
     $this->assertEqual(1, $deleted['User']['deleted'], "delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}");
+  }
 
-    $result = json_decode($this->testAction('/users/' . $u['User']['id'] . '.json',array('return' => 'contents','method' => 'GET'), true));
-    $this->assertEqual($result->header->status, Message::ERROR,'/users/delete after delete, no result should be returned');
+  public function testDelete2() {
+    $adm = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($adm);
+    $u = $this->User->findByUsername('user@passbolt.com');
+    $result = json_decode($this->testAction("/users/{$u['User']['id']}.json", array(
+          'method' => 'delete',
+          'return' => 'contents'
+        )), true);
+    $this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /users/{$u['User']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+
+    $deleted = $this->User->findByUsername('user@passbolt.com');
+    $this->assertEqual(1, $deleted['User']['deleted'], "delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}");
   }
 }

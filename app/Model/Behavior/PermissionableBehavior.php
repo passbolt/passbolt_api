@@ -131,6 +131,7 @@ class PermissionableBehavior extends ModelBehavior {
 			'fields' => array('permission_id', 'permission_type'),
 			'conditions' =>	 array(
 				$userPermissionModelName . '.user_id' => User::get('id'),
+				$userPermissionModelName . '.' . Inflector::underscore($model->alias) . '_id'  => $id,
 				$userPermissionModelName . '.permission_type >=' => $permissionType		
 			)
 		);

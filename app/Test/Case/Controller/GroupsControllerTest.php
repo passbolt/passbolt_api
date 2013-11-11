@@ -1,6 +1,6 @@
 <?php
 /**
- * Users Controller Tests
+ * Groups Controller Tests
  *
  * @copyright   Copyright 2012, Passbolt.com
  * @license     http://www.passbolt.com/license
@@ -8,9 +8,9 @@
  * @since       version 2.12.9
  */
 App::uses('AppController', 'Controller');
-App::uses('UsersController', 'Controller');
-App::uses('User', 'Model');
+App::uses('GroupsController', 'Controller');
 App::uses('Group', 'Model');
+App::uses('User', 'Model');
 App::uses('Role', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
@@ -26,10 +26,16 @@ class GroupsControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->User = new User();
+		$this->User->useDbConfig = 'test';
+		$u = $this->User->get();
 		$this->Group = new Group();
 		$this->Group->useDbConfig = 'test';
 		$this->session = new CakeSession();
 		$this->session->init();
+		
+		// log the user as a manager to be able to access all features
+		$kk = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($kk);
 	}
 
 	public function tearDown() {
@@ -38,23 +44,8 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	/**
 	 * Index entry point
-	 */
+	 // */
 	public function testIndex() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout', array('return' => 'contents'), true);
-
-		// test with anonymous user
-		$result = json_decode($this->testAction('/groups.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEqual(
-			$result->header->status,
-			Message::ERROR,
-			'/groups.json should not be accessible without being logged in'
-		);
-
-		// test with normal user
-		$kk = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($kk);
-
 		$result = json_decode($this->testAction('/groups.json', array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS, '/groups.json return something');
 
@@ -63,38 +54,32 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->assertEqual($result->header->status, Message::NOTICE, '/groups.json return a warning');
 	}
 
+	public function testViewGroupIdIsMissing() {
+		// Unable to test missing id param because of route
+	}
+
+	public function testViewGroupIdNotValid() {
+		$this->expectException('HttpException', 'The group id is invalid');
+		$this->testAction("/groups/badid.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testViewGroupDoesNotExist() {
+		$this->expectException('HttpException', 'The group does not exist');
+		$this->testAction("/groups/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
 	public function testView() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-
-		$id = "20ce3d3a-0468-433b-b59f-3053d7a10fce";
-
-		// test with anonymous user
-		$result = json_decode($this->testAction("/groups/$id.json",array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR, "/groups/$id.json should not be accessible without being logged in");
-
-		// test with normal user
-		$kk = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($kk);
-
-		$result = json_decode($this->testAction('/groups/view/0000-0000-0000-000000000000.json',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR,'/groups/view with wrong UUID format should return an error');
-
-		$result = json_decode($this->testAction('/groups/bbd56042-0000-0000-0000-000000000000.json',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR,'/group/view with group that does not exit should return an error');
-
-		$result = json_decode($this->testAction("/groups/$id.json",array('return' => 'contents','method' => 'GET'), true));
+		$group = $this->Group->findByName('accounting dpt');
+		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json",array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::SUCCESS,'/groups return something');
 	}
 
-	public function testAdd() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
+	public function testAddNoAllowed() {
+		// test with a not allowed user
+		$u = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($u);
 
-		// test with normal user
-		$kk = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($kk);
-
+		$this->expectException('HttpException', 'You are not authorized to access that location');
 		$result = json_decode($this->testAction('/groups.json', array(
 					'data' => array(
 						'Group' => array(
@@ -105,9 +90,10 @@ class GroupsControllerTest extends ControllerTestCase {
 					'return' => 'contents'
 				)), true
 		);
+	}
 
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /groups.json : The test should return an error but is returning " . print_r($result, true));
-
+	public function testAdd() {
+		// log the user as a manager to be able to access all features
 		$kk = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($kk);
 		$result = json_decode($this->testAction('/groups.json', array(
@@ -128,15 +114,15 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->assertEquals($group['Group']['name'], $result['body']['Group']['name'], "Add : /groups.json : the name of the group should be test1 but is {$result['body']['Group']['name']}");
 	}
 
-	public function testUpdate() {
-		// test with normal user
-		$kk = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($kk);
+	public function testUpdateNoAllowed() {
+		// test with a not allowed user
+		$u = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($u);
 
 		$group = $this->Group->findByName('accounting dpt');
-
 		$id = $group['Group']['id'];
 
+		$this->expectException('HttpException', 'You are not authorized to access that location');
 		$result = json_decode($this->testAction("/groups/$id.json", array(
 					'data' => array(
 						'Group' => array(
@@ -147,19 +133,44 @@ class GroupsControllerTest extends ControllerTestCase {
 					'return' => 'contents'
 				)), true
 		);
+	}
 
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Edit : /groups.json : The test should return an error but is returning " . print_r($result, true));
+	public function testUpdateGroupIdIsMissing() {
+		$this->expectException('HttpException', 'The group id is missing');
+		$this->testAction("/groups.json", array('method' => 'put', 'return' => 'contents'));
+	}
 
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+	public function testUpdateGroupIdIsNotValid() {
+		$this->expectException('HttpException', 'The group id is invalid');
+		$this->testAction("/groups/badId.json", array('method' => 'put', 'return' => 'contents'));
+	}
 
+	public function testUpdateGroupDoesNotExist() {
+		$id = '00000000-1111-1111-1111-000000000000';
+
+		$this->expectException('HttpException', 'The group does not exist');
+		$this->testAction("/groups/$id.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testUpdateNoDataProvided() {
+		$model = 'resource';
+		$group = $this->Group->findByName('accounting dpt');
+		$this->expectException('HttpException', 'No data were provided');
+		$this->testAction("/groups/{$group['Group']['id']}.json", array(
+			 'method' => 'put',
+			 'return' => 'contents'
+		));
+	}
+
+	public function testUpdate() {
+		$group = $this->Group->findByName('accounting dpt');
+		$id = $group['Group']['id'];
 		$group['Group']['name'] = 'modified name';
 		$result = json_decode($this->testAction("/groups/$id.json", array(
-					'data' => $group,
-					'method' => 'put',
-					'return' => 'contents'
-				)), true
-		);
+			'data' => $group,
+			'method' => 'put',
+			'return' => 'contents'
+		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Edit : /groups.json : The test should return sucess but is returning " . print_r($result, true));
 
 		// check that User was properly saved
@@ -168,40 +179,42 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->assertEquals($gr['Group']['id'], $group['Group']['id'], "Edit : /groups.json : the id of the retrieved group  should be {$group['Group']['id']} but is {$gr['Group']['id']}");
 	}
 
-
-	public function testDelete() {
-		$u = $this->User->findByUsername('User@passbolt.com');
+	public function testDeleteNoAllowed() {
+		// test with a not allowed user
+		$u = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($u);
 
 		$group = $this->Group->findByName('accounting dpt');
 
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json", array('method' => 'delete','return' => 'contents')), true);
+	}
+
+	public function testDeleteGroupIdIsMissing() {
+		$this->expectException('HttpException', 'The group id is missing');
+		$this->testAction("/groups.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+
+	public function testDeleteGroupIdIsNotValid() {
+		$this->expectException('HttpException', 'The group id is invalid');
+		$this->testAction("/groups/badId.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+
+	public function testDeleteGroupDoesNotExist() {
+		$id = '00000000-1111-1111-1111-000000000000';
+
+		$this->expectException('HttpException', 'The group does not exist');
+		$this->testAction("/groups/$id.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+	
+	public function testDelete() {
+		$group = $this->Group->findByName('accounting dpt');
 		$id = $group['Group']['id'];
-		$result = json_decode($this->testAction("/groups/$id.json", array(
-					'method' => 'delete',
-					'return' => 'contents'
-				)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "delete /groups/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
-		$id = 1;
-		$result = json_decode($this->testAction("/groups/$id.json", array(
-					'method' => 'delete',
-					'return' => 'contents'
-				)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "delete /groups/$id.json : The test should return a error but is returning {$result['header']['status']}");
-
-
-		$adm = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($adm);
-		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json", array(
-					'method' => 'delete',
-					'return' => 'contents'
-				)), true);
+		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json", array('method' => 'delete','return' => 'contents')), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /groups/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
 		$deleted = $this->Group->findByName('accounting dpt');
 		$this->assertEqual(1, $deleted['Group']['deleted'], "delete /groups/{$group['Group']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['Group']['deleted']}");
-
-		$result = json_decode($this->testAction('/groups/' . $deleted['Group']['deleted'] . '.json',array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::ERROR,'/groups/delete after delete, no result should be returned');
 	}
 }

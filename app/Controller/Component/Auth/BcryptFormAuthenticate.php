@@ -25,10 +25,15 @@ class BcryptFormAuthenticate extends FormAuthenticate {
 		);
 		$this->settings['fields'] = array(
 			'username' => 'username',
-			'password' => 'password'
+			'password' => 'password',
 		);
 		$this->settings['contain'] = array(
-			'Role(id,name)'
+			'Role' => array(
+				'fields' => array(
+					'Role.id',
+					'Role.name'
+				)
+			)
 		);
 		$this->settings['recursive'] = -1;
 		$u = parent::_findUser($username, $password);

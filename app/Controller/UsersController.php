@@ -26,7 +26,6 @@ class UsersController extends AppController {
 				$this->request->data['User']['password'] = null;
 				$this->Message->error(__('Invalid username or password, try again'));
 			}
-
 			return;
 		}
 		// avoid looping if the requested URL is logout
@@ -63,7 +62,6 @@ class UsersController extends AppController {
 		$returnVal = $this->User->find('all', $o);
 		if (empty($returnVal)) {
 			$this->Message->notice(__('There is no user to display'));
-
 			return;
 		}
 		$this->set('data', $returnVal);
@@ -81,13 +79,11 @@ class UsersController extends AppController {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The user id is missing'));
-
 			return;
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The user id invalid'));
-
+			$this->Message->error(__('The user id is invalid'));
 			return;
 		}
 		// not sql needed if a user is asking for his own data
@@ -101,8 +97,7 @@ class UsersController extends AppController {
 		}
 
 		if (!$user) {
-			$this->Message->error(__('The user does not exist'));
-
+			$this->Message->error(__('The user does not exist'), array('code' => 404));
 			return;
 		}
 
@@ -118,21 +113,18 @@ class UsersController extends AppController {
 
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
-			$this->Message->error(__('You are not allowed to access this entry point'));
-
+			$this->Message->error(__('You are not authorized to access that location'));
 			return;
 		}
 
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
-
 			return;
 		}
 		// check if data was provided
 		if (!isset($this->request->data['User'])) {
 			$this->Message->error(__('No data were provided'));
-
 			return;
 		}
 
@@ -145,7 +137,6 @@ class UsersController extends AppController {
 		// check if the data is valid
 		if (!$this->User->validates()) {
 			$this->Message->error(__('Could not validate user data'));
-
 			return;
 		}
 
@@ -155,7 +146,6 @@ class UsersController extends AppController {
 		if ($user == false) {
 			$this->User->rollback();
 			$this->Message->error(__('The user could not be saved'));
-
 			return;
 		}
 		$this->User->commit();
@@ -177,22 +167,38 @@ class UsersController extends AppController {
 	public function edit($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
-			$this->Message->error(__('You are not allowed to access this entry point'));
+			$this->Message->error(__('You are not authorized to access that location'));
+			return;
+		}
 
+		// check if the id is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The user id is missing'));
+			return;
+		}
+		
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The user id is invalid'));
+			return;
+		}
+		
+		// get the resource id
+		$resource = $this->User->findById($id);
+		if (!$resource) {
+			$this->Message->error(__('The user does not exist'), array('code' => 404));
 			return;
 		}
 
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
-
 			return;
 		}
 
 		// check if data was provided
 		if (!isset($this->request->data['User'])) {
 			$this->Message->error(__('No data were provided'));
-
 			return;
 		}
 
@@ -200,27 +206,11 @@ class UsersController extends AppController {
 		$userData = $this->request->data;
 
 		if (isset($userData['User'])) {
-
 			$this->User->id = $id;
-
-			// check if the id is valid
-			if (!Common::isUuid($id)) {
-				$this->Message->error(__('The user id invalid'));
-
-				return;
-			}
-			// get the resource id
-			$resource = $this->User->findById($id);
-			if (!$resource) {
-				$this->Message->error(__('The user doesn\'t exist'));
-
-				return;
-			}
 
 			$this->User->set($userData);
 			if (!$this->User->validates()) {
 				$this->Message->error(__('Could not validate User'));
-
 				return;
 			}
 
@@ -230,7 +220,6 @@ class UsersController extends AppController {
 			if (!$save) {
 				$this->User->rollback();
 				$this->Message->error(__('The user could not be updated'));
-
 				return;
 			}
 			$this->User->commit();
@@ -254,29 +243,28 @@ class UsersController extends AppController {
 	public function delete($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
-			$this->Message->error(__('You are not allowed to access this entry point'));
-
+			$this->Message->error(__('You are not authorized to access that location'));
 			return;
 		}
 
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The user id is missing'));
-
 			return;
 		}
+		
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The user id invalid'));
-
+			$this->Message->error(__('The user id is invalid'));
 			return;
 		}
+		
 		$user = $this->User->findById($id);
 		if (!$user) {
-			$this->Message->error(__('The user doesn\'t exist'));
-
+			$this->Message->error(__('The user does not exist'), array('code' => 404));
 			return;
 		}
+
 		$this->User->id = $id;
 		$user['User']['deleted'] = true;
 
@@ -285,7 +273,6 @@ class UsersController extends AppController {
 		if (!$this->User->save($user, true, $fields['fields'])) {
 			$this->User->rollback();
 			$this->Message->error(__('Error while deleting user'));
-
 			return;
 		}
 		$this->User->commit();

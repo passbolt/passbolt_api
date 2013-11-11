@@ -7,10 +7,6 @@
  * @package      app.View.json
  * @since        version 2.12.7
  */
-foreach ($flashMessages as $message) {
-  $json = $message;
-  break;
-}
 if(!isset($json)){
 	$json = array(); // @todo error message
 }

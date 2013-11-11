@@ -278,7 +278,7 @@ class ItemTagsController extends AppController {
 
 		// check if the comment exists
 		if (!$this->ItemTag->exists($id)) {
-			$this->Message->error(__('The item tag does not exist'));
+			$this->Message->error(__('The item tag does not exist'), array('code' => 404));
 			return;
 		}
 
