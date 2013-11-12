@@ -36,6 +36,16 @@ steal('jquery/class').then(function () {
 			}
 
 			this._super();
+		},
+		
+		'_error': function() {
+			// If the user is not logged in to the application.
+			// Redirect the user to the front page.
+			if(this.response.getStatus() == mad.net.Response.STATUS_ERROR
+				&& this.response.getMessage() == __('You need to log on to access this location')) {
+				location.href = mad.Config.read('app.url');
+			}
+			this._super();
 		}
 	});
 
