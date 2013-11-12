@@ -37,39 +37,15 @@
 	Router::mapResources('secrets');
 	Router::mapResources('permissions');
 	Router::mapResources('comments');
-
-	// God knows why.. the edit mapping is not working for resource. So we redeclare it manually
-	Router::connect(
-		"/resources/*",
-		array("controller" => 'resources', "action" => "edit", "[method]" => "PUT")
-	);
-	Router::connect(
-		"/resources/*",
-		array("controller" => 'resources', "action" => "delete", "[method]" => "DELETE")
-	);
+	
 	// The line below doesn't seem to work
 	// Router::mapResources('categoriesResources');
 	// So we declare the routes mapping for this function manually
-	Router::connect(
-		"/categoriesResources",
-		array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET")
-	);
-	Router::connect(
-		"/categoriesResources/*",
-		array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET")
-	);
-	Router::connect(
-		"/categoriesResources/*",
-		array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT")
-	);
-	Router::connect(
-		"/categoriesResources/*",
-		array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST")
-	);
-	Router::connect(
-		"/categoriesResources/*",
-		array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE")
-	);
+	Router::connect("/categoriesResources", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE"));
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
@@ -101,19 +77,40 @@
 	Router::connect('/categories/move/*', array('controller' => 'categories', 'action' => 'move'));
 	Router::connect('/categories/rename/*', array('controller' => 'categories', 'action' => 'rename'));
 	Router::connect('/categories/children/*', array('controller' => 'categories', 'action' => 'children'));
-	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'view'));
+	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'delete', '[method]' => "DELETE"));
+	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'edit', '[method]' => "PUT"));
+	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'view', '[method]' => "GET"));
+
+/**
+ * Custom route for resources controller
+ */
+	Router::connect('/resources/index', array('controller' => 'resources', 'action' => 'index'));
+	Router::connect('/resources/index/*', array('controller' => 'resources', 'action' => 'index'));
+	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'delete', '[method]' => "DELETE"));
+	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'edit', '[method]' => "PUT"));
+	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'view', '[method]' => "GET"));
+
+/**
+ * Custom route for groups controller
+ */
+	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index'));
+	Router::connect('/groups/index/*', array('controller' => 'groups', 'action' => 'index'));
+	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => "DELETE"));
+	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'edit', '[method]' => "PUT"));
+	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'view', '[method]' => "GET"));
+
+/**
+ * Custom route for users controller
+ */
+	Router::connect('/users/index', array('controller' => 'users', 'action' => 'index'));
+	Router::connect('/users/index/*', array('controller' => 'users', 'action' => 'index'));
+	Router::connect('/users/*', array('controller' => 'users', 'action' => 'delete', '[method]' => "DELETE"));
+	Router::connect('/users/*', array('controller' => 'users', 'action' => 'edit', '[method]' => "PUT"));
+	Router::connect('/users/*', array('controller' => 'users', 'action' => 'view', '[method]' => "GET"));
 
 /**
  * Custom route for permissions controller
  */
-	// Router::connect(
-		// '/permissions/:comment/:id',
-		// array('controller' => 'permissions', 'action' => 'addAcoPermissions', "[method]" => "POST"), 
-		// array('pass' => array('model', 'id')));
-	// Router::connect(
-		// '/permissions/:comment/:id', 
-		// array('controller' => 'permissions', 'action' => 'viewAcoPermissions', "[method]" => "GET"), 
-		// array('pass' => array('model', 'id')));
 	Router::connect(
 		'/permissions/resource/:id',
 		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Resource', "[method]" => "POST"), 
@@ -150,15 +147,15 @@
 /**
  * Custom route for tags controller
  */
-Router::connect(
-	'/itemTags/:model/:id',
-	array('controller' => 'itemTags', 'action' => 'viewForeignItemTags', "[method]" => "GET"),
-	array('pass' => array('model', 'id')));
-Router::connect(
-	'/itemTags/:model/:id',
-	array('controller' => 'itemTags', 'action' => 'addForeignItemTag', "[method]" => "POST"),
-	array('pass' => array('model', 'id')));
-Router::connect('/itemTags/*', array('controller' => 'itemTags', 'action' => 'delete', "[method]" => "DELETE"));
+	Router::connect(
+		'/itemTags/:model/:id',
+		array('controller' => 'itemTags', 'action' => 'viewForeignItemTags', "[method]" => "GET"),
+		array('pass' => array('model', 'id')));
+	Router::connect(
+		'/itemTags/:model/:id',
+		array('controller' => 'itemTags', 'action' => 'addForeignItemTag', "[method]" => "POST"),
+		array('pass' => array('model', 'id')));
+	Router::connect('/itemTags/*', array('controller' => 'itemTags', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
  * Custom route for favorites controller

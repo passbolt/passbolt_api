@@ -179,6 +179,19 @@ class User extends AppModel {
 	}
 
 	/**
+	 * Make the current user inactive
+	 * @access public
+	 */
+	public static function setInactive() {
+		// Store current user data in session
+		App::import('Model', 'CakeSession');
+		$Session = new CakeSession();
+
+		$Session->delete(AuthComponent::$sessionKey);
+		$Session->delete('Auth.redirect');
+		$Session->renew();
+	}
+	/**
 	 * Check if user is an admin (use role)
 	 *
 	 * @return bool true if role is admin
@@ -188,7 +201,7 @@ class User extends AppModel {
 		Common::getModel('Role');
 		$user = User::get();
 
-		return $user['Role']['name'] == Role::ADMIN;
+		return isset($user['Role']['name']) && $user['Role']['name'] == Role::ADMIN;
 	}
 
 	/**
@@ -199,8 +212,8 @@ class User extends AppModel {
 	 */
 	public static function isAnonymous() {
 		$user = User::get();
-
-		return $user['User']['username'] == User::ANONYMOUS;
+		$return = isset($user['User']['username']) && $user['User']['username'] == User::ANONYMOUS;
+		return $return;
 	}
 
 	/**
@@ -213,7 +226,7 @@ class User extends AppModel {
 		Common::getModel('Role');
 		$user = User::get();
 
-		return $user['Role']['name'] == Role::GUEST;
+		return isset($user['Role']['name']) && $user['Role']['name'] == Role::GUEST;
 	}
 
 	/**
@@ -226,7 +239,7 @@ class User extends AppModel {
 		Common::getModel('Role');
 		$user = User::get();
 
-		return $user['Role']['name'] == Role::ROOT;
+		return isset($user['Role']['name']) && $user['Role']['name'] == Role::ROOT;
 	}
 
 	/**
@@ -345,7 +358,7 @@ class User extends AppModel {
 				$fields = array(
 					'fields'  => array(
 						'User.id',
-						'User.username'
+						'User.username',
 					),
 					'contain' => array(
 						'Role' => array(

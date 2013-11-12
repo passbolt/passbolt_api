@@ -33,24 +33,32 @@ class ResourcesControllerTest extends ControllerTestCase {
 		
 		$this->User = new User();
 		$this->User->useDbConfig = 'test';
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
-		$this->User->setActive($kk);
-
 		$this->Resource = new Resource();
 		$this->Resource->useDbConfig = 'test';
+		
+		$kk = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($kk);
+	}
+
+	public function testViewResourceIdIsMissing() {
+		// Unable to test missing id param because of route
+	}
+
+	public function testViewResourceIdNotValid() {
+		// test an error bad id
+		$this->expectException('HttpException', 'The resource id is invalid');
+		$result = json_decode($this->testAction("/resources/badid.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
+	}
+
+	public function testViewResourceDoesNotExist() {
+		// test when a wrong id is provided
+		$this->expectException('HttpException', 'The resource does not exist');
+		$result = json_decode($this->testAction("/resources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
 
 	public function testView() {
 		$festival = $this->Resource->findByName('facebook account');
 		$id = $festival['Resource']['id'];
-
-		// test when no parameters are provided
-		$result = json_decode($this->testAction("/resources/view.json", array('return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/resources/view.json : The test should return an error but is returning {$result['header']['status']}");
-
-		// test when a wrong id is provided
-		$result = json_decode($this->testAction("/resources/view/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/resources/view/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json : The test should return an error but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
 		$result = json_decode($this->testAction("/resources/view/$id.json", array('return' => 'contents')), true);
@@ -63,6 +71,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 		);
 	}
 
+	// TODO Test filter
+
 	public function testIndex() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$cpCat2 = $this->Resource->CategoryResource->Category->findByName('cp-project2');
@@ -73,12 +83,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return an error but is returning {$result['header']['status']}");
 		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
-
-		// test when a wrong category id
-		$catId = '4ff6111b-efb8-4a26-aab4-2184cbdd56ca';
-		$url = '/resources/index.json?categories_id=' . $catId;
-		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "{$url} : The test should return an error but is returning {$result['header']['status']}");
 
 		// test with category parameter specified which does not contain resources
 		$url = '/resources/index.json?categories_id=' . $rootCat['Category']['id'];
@@ -100,6 +104,49 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
 		$this->assertTrue(!empty($path),"{$url} : test should contain 'cpp2-pwd2' resource");
 		$this->assertEquals(14, count($result['body']), "{$url} : counting the number of elements should return '14' but is reading " . count($result['body']));
+	}
+
+	public function testAddWithCategoryBadId() {
+		$this->expectException('HttpException', 'Could not validate CategoryResource');
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test3',
+					'username' => 'test3',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				),
+				'Category' => array(
+					 0 => array(
+						'id' => 'BadId'
+					 )
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
+	}
+	
+	public function testAddWithCategoryDoesNotExist() {
+		$this->expectException('HttpException', 'Could not validate CategoryResource');
+		// Test with wrong id for category
+		$result = json_decode($this->testAction('/resources.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'test3',
+					'username' => 'test3',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				),
+				'Category' => array(
+					 0 => array(
+						'id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56hg'
+					 )
+				)
+			 ),
+			 'method' => 'post',
+			 'return' => 'contents'
+		)), true);
 	}
 
 	public function testAdd() {
@@ -147,46 +194,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
-
-		// Test with a bad format of category
-		$result = json_decode($this->testAction('/resources.json', array(
-			'data' => array(
-				'Resource' => array(
-					'name' => 'test3',
-					'username' => 'test3',
-					'uri' => 'http://www.google.com',
-					'description' => 'this is a description'
-				),
-				'Category' => array(
-					 0 => array(
-						'id' => '8u7'
-					 )
-				)
-			 ),
-			 'method' => 'post',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
-
-		// Test with wrong id for category
-		$result = json_decode($this->testAction('/resources.json', array(
-			'data' => array(
-				'Resource' => array(
-					'name' => 'test3',
-					'username' => 'test3',
-					'uri' => 'http://www.google.com',
-					'description' => 'this is a description'
-				),
-				'Category' => array(
-					 0 => array(
-						'id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56hg'
-					 )
-				)
-			 ),
-			 'method' => 'post',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
 	}
 
 /**
@@ -221,8 +228,28 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
 	}
 
-	public function testEdit() {
+	public function testEditWithCategoryBadId() {
+		$resource = $this->Resource->findByName("facebook account");
+		$id = $resource['Resource']['id'];
+		$this->expectException('HttpException', 'Could not validate CategoryResource');
+		// Test with a bad format of category
+		$result = json_decode($this->testAction("/resources/$id.json", array(
+			'data' => array(
+				'Category' => array(
+					 0 => array(
+						'id' => '8u7'
+					 )
+				)
+			 ),
+			 'method' => 'put',
+			 'return' => 'contents'
+		)), true);
+		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
+		$this->assertTrue(count($after) == 0, "update /resources/$id.json : After this test, there should be no categories associated to the resource anymore.");
+	}
 
+	public function testEdit() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$accountCat = $this->Resource->CategoryResource->Category->findByName('accounts');
 		$resource = $this->Resource->findByName("facebook account");
@@ -264,24 +291,23 @@ class ResourcesControllerTest extends ControllerTestCase {
 			'resource_id'=>$id, 'category_id'=>$accountCat['Category']['id']
 		)));
 		$this->assertEquals($this->Resource->CategoryResource->uniqueCombi(), false, "update /resources/$id.json : The resource should now belong to category id {$accountCat['Category']['id']}");
-
-		// Test with a bad format of category
-		$result = json_decode($this->testAction("/resources/$id.json", array(
-			'data' => array(
-				'Category' => array(
-					 0 => array(
-						'id' => '8u7'
-					 )
-				)
-			 ),
-			 'method' => 'put',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
-		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
-		$this->assertTrue(count($after) == 0, "update /resources/$id.json : After this test, there should be no categories associated to the resource anymore.");
 	}
 
+	public function testDeleteResourceIdIsMissing() {
+		$this->expectException('HttpException', 'The resource id is missing');
+		$result = json_decode($this->testAction("/resources.json", array('method' => 'delete', 'return' => 'contents')), true);
+	}
+
+	public function testDeleteResourceIdNotValid() {
+		$this->expectException('HttpException', 'The resource id is invalid');
+		$result = json_decode($this->testAction("/resources/badid.json", array('method' => 'delete', 'return' => 'contents')), true);
+	}
+
+	public function testDeleteResourceDoesNotExist() {
+		$this->expectException('HttpException', 'The resource does not exist');
+		$result = json_decode($this->testAction("/resources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents')), true);
+	}
+	
 	public function testDelete() {
 		$res = $this->Resource->findByName('facebook account');
 		$id = $res['Resource']['id'];
@@ -290,13 +316,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
-
-		$id = 1;
-		$result = json_decode($this->testAction("/resources/$id.json", array(
-			 'method' => 'delete',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "delete /resources/$id.json : The test should return a error but is returning {$result['header']['status']}");
 	}
 
 }

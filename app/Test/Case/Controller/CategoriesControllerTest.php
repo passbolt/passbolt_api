@@ -53,6 +53,22 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertTrue($result['body'][0]['children'] > 0, "/categories.json?children=true : \$result['body'][0]['Category']['name'] should return 'Bolt Softwares Pvt. Ltd.' but is returning {$result['body'][0]['Category']['name']}");
 	}
 
+	public function testViewCategoryIdIsMissing() {
+		// Unable to test missing id param because of route
+	}
+
+	public function testViewCategoryIdNotValid() {
+		// test an error bad id
+		$this->expectException('HttpException', 'The category id is invalid');
+		$result = json_decode($this->testAction("/categories/badid.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
+	}
+
+	public function testViewCategoryDoesNotExist() {
+		// test when a wrong id is provided
+		$this->expectException('HttpException', 'The category does not exist');
+		$result = json_decode($this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents')), true);
+	}
+
 	public function testView() {
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$id = $root['Category']['id'];
@@ -60,10 +76,6 @@ class CategoriesControllerTest extends ControllerTestCase {
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/categories.json", array('method' => 'get', 'return' => 'contents')), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories.json : The test should return success but is returning {$result['header']['status']}");
-
-		// test when a wrong id is provided
-		$result = json_decode($this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/view/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json : The test should return an error but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
 		$result = json_decode($this->testAction("/categories/$id.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
@@ -88,10 +100,21 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$result = json_decode($this->testAction("/categories/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 		$this->assertFalse(empty($result['body']));
 		$this->assertEquals('Bolt Softwares Pvt. Ltd.', $result['body']['Category']['name'], "Faileds testing that first child is Bolt Softwares Pvt. Ltd.. It returned '{$result['body']['Category']['name']}'");
+	}
 
-		// test an error bad id
-		$result = json_decode($this->testAction("/categories/badid.json?children=true", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Failed testing that /categories/view/badid.json?children=true should return an error. It returned {$result['header']['status']}");
+	public function testChildrenCategoryIdIsMissing() {
+		$this->expectException('HttpException', 'The category id is missing');
+		$this->testAction("/categories/children.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testChildrenCategoryDoesNotExist() {
+		$this->expectException('HttpException', 'The category does not exist');
+		$this->testAction("/categories/children/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testChildrenCategoryIdNotValid() {
+		$this->expectException('HttpException', 'The category id is invalid');
+		$this->testAction("/categories/children/badid.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testChildren() {
@@ -101,13 +124,6 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$root = $category->findByName('Bolt Softwares Pvt. Ltd.');
 		$id = $root['Category']['id'];
 
-		// test when no parameters are provided
-		$result = json_decode($this->testAction("/categories/children.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/children.json : The test should return error but is returning {$result['header']['status']}");
-
-		// test when a wrong id is provided
-		$result = json_decode($this->testAction("/categories/children/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/children/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json : The test should return error but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
 		$result = json_decode($this->testAction("/categories/children/$id.json", array('method' => 'get', 'return' => 'contents')), true);
@@ -123,10 +139,28 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$accounts = $this->Category->findByName('accounts');
 		$path = $this->Category->inNestedArray($accounts['Category']['id'], $result['body']);
 		$this->assertTrue(!empty($path), 'The result should contain the category "accounts", but it is not found.');
+	}
 
-		// test an error
-		$result = json_decode($this->testAction("/categories/children/badid.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/children/b adid.json : The test should return error but is returning {$result['header']['status']}");
+	public function testAddNoDataProvided() {
+		$this->expectException('HttpException', 'No data were provided');
+		$this->testAction('/categories.json', array(
+			 'method' => 'post',
+			 'return' => 'contents'
+		));
+	}
+
+	public function testAddInvalidDataProvided() {
+		// Error : name is empty
+		$this->expectException('HttpException', 'Could not validate category data');
+		$result = json_decode($this->testAction('/categories/add.json', array(
+			'data' => array(
+				'Category' => array(
+					'name' => ''
+				)
+			 ),
+			 'method' => 'Post',
+			 'return' => 'contents'
+		)), true);
 	}
 
 	public function testAdd() {
@@ -140,22 +174,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		)), true);
 		
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
-
-		// check that category detail is properly returned by the function
 		$this->assertEquals('Aramboooool', $result['body']['Category']['name'], "The test should return Aramboooool but is returning {$result['body']['Category']['name']}");
-
-		// check the response when a category is added (without parent_id)
-		// @todo No data added, the test will return an error, but this error does not match the comment 
-		$result = json_decode($this->testAction('/categories.json', array(
-			 'method' => 'post',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "The test should return error but is returning {$result['header']['status']}");
-
-		// check that the category has been added in the database
-		// @todo What is checked here
-		// $cat = $this->Category->findByName('cp-project2');
-		// $this->assertTrue($cat['Category']['lft'] == 16, "Checking lft of added Category should see 16, but sees {$cat['Category']['lft']}");
 
 		// test insertion with parameter parent_id, and position 1
 		$parent = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
@@ -207,43 +226,42 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$catTest2 = $this->Category->findById($result['body']['Category']['id']);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		// $this->assertEquals(38, $catTest2['Category']['lft'], "Checking the lft attribute : should be 38 but is {$catTest2['Category']['lft']}");
+	}
 
-		// Error : name is empty
-		$result = json_decode($this->testAction('/categories/add.json', array(
-			'data' => array(
-				'Category' => array(
-					'name' => ''
-				)
-			 ),
-			 'method' => 'Post',
-			 'return' => 'contents'
-		)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "The test should return error but is returning {$result['header']['status']}");
+	public function testEditCategoryIdIsMissing() {
+		$this->expectException('HttpException', 'The category id is missing');
+		$this->testAction("/categories.json", array('method' => 'put', 'return' => 'contents'));
+	}
 
+	public function testEditCategoryIdNotValid() {
+		$this->expectException('HttpException', 'The category id is invalid');
+		$this->testAction("/categories/badid.json", array('method' => 'put', 'return' => 'contents'));
+	}	
+
+	public function testEditCategoryDoesNotExist() {
+		$this->expectException('HttpException', 'The category does not exist');
+		$this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'put', 'return' => 'contents'));
+	}	
+
+	public function testEditNoDataProvided() {
 		// Error : no data provided
-		$result = json_decode($this->testAction('/categories.json', array('method' => 'Post', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "add without data should return error but is returning {$result['header']['status']}");
+		$cat = $this->Category->findByName('o-project1');
+		$id = $cat['Category']['id'];
+
+		// without parameters
+		$this->expectException('HttpException', 'No data were provided');
+		$this->testAction("/categories/$id.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 /**
  * Test update function
  */
-	public function testEdit() {		
-		// Error : no data provided
+	public function testEdit() {
 		$cat = $this->Category->findByName('o-project1');
 		$id = $cat['Category']['id'];
-
-		// without id
-		$result = json_decode($this->testAction("/categories.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories.json : update without id should return error but is returning {$result['header']['status']}");
-
-		// without parameters
-		$result = json_decode($this->testAction("/categories/$id.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/$id.json : update without put parameters should return error but is returning {$result['header']['status']}");
-
-		// with parameters
-		$newName = 'o-project1-transformed';
-		$cat['Category']['name'] = $newName;
+		// Modify the name of the category
+		$catNewName = 'o-project1-transformed';
+		$cat['Category']['name'] = $catNewName;
 		$params = array(
 			'data' => $cat,
 			 'method' => 'put',
@@ -254,30 +272,59 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 		// test that the category has been modified properly in db
 		$cat = $this->Category->findById($id);
-		$this->assertEquals($cat['Category']['name'], $newName, "test edit : name should be updated to $newName but it returned {$cat['Category']['name']}");
+		$this->assertEquals($cat['Category']['name'], $catNewName, "test edit : name should be updated to $catNewName but it returned {$cat['Category']['name']}");
 	}
+
+	public function testDeleteCategoryIdIsMissing() {
+		$this->expectException('HttpException', 'The category id is missing');
+		$this->testAction("/categories.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+
+	public function testDeleteCategoryIdNotValid() {
+		$this->expectException('HttpException', 'The category id is invalid');
+		$this->testAction("/categories/badid.json", array('method' => 'delete', 'return' => 'contents'));
+	}	
 
 	public function testDelete() {
 		$catName = 'cp-project2';
 		$cat = $this->Category->findByName($catName);
 		$id = $cat['Category']['id'];
 
-		// without parameters
-		$result = json_decode($this->testAction("/categories.json", array('method' => 'delete', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/delete : The test should return success but is returning {$result['header']['status']}");
-
 		$result = json_decode($this->testAction("/categories/$id.json", array('method' => 'delete', 'return' => 'contents')), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/delete/$id : The test should return success but is returning {$result['header']['status']}");
-
-		$result = json_decode($this->testAction("/categories/badid.json", array('method' => 'delete', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/delete/badid : The test should return error but is returning {$result['header']['status']}");
-
 		// check that the category was properly deleted
 		$cat = $this->Category->findByName($catName);
 		$this->assertTrue(empty($cat), "The category Drug places should have been deleted but is not");
 	}
 
-	public function testMove() {		
+	public function testMoveCategoryIdIsMissing() {
+		$this->expectException('HttpException', 'The category id is missing');
+		$this->testAction("/categories/move.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testMoveCategoryIdNotValid() {
+		$this->expectException('HttpException', 'The category id is invalid');
+		$this->testAction("/categories/move/badid.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testMoveCategoryDoesNotExist() {
+		$this->expectException('HttpException', 'The category does not exist');
+		$this->testAction("/categories/move/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testMoveParentCategoryIdNotValid() {
+		$hr = $this->Category->findByName('human resource');
+		$this->expectException('HttpException', 'The parent category id invalid');
+		$this->testAction("/categories/move/{$hr['Category']['id']}/1/badParentId.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testMoveParentCategoryDoesNotExist() {
+		$hr = $this->Category->findByName('human resource');
+		$this->expectException('HttpException', 'The parent category does not exist');
+		$this->testAction("/categories/move/{$hr['Category']['id']}/1/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testMove() {
 		$hr = $this->Category->findByName('human resource');
 		$administration = $this->Category->findByName('administration');
 		$cakephp = $this->Category->findByName('cakephp');
@@ -288,9 +335,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'lastPosition' => array('id' => $hr['Category']['id'], 'position' => '4'),
 			'positionMiddle' => array('id' => $hr['Category']['id'], 'position' => '3'),
 			'minusPosition' => array('id' => $hr['Category']['id'], 'position' => '-1'),
-			'differentParent' => array('id' => $hr['Category']['id'], 'position' => '1', 'parent_id' => $cakephp['Category']['id']),
-			'wrongId' => array('id' => 'badid', 'position' => '1'),
-			'idNotExist' => array('id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56ca', 'position' => '1')
+			'differentParent' => array('id' => $hr['Category']['id'], 'position' => '1', 'parent_id' => $cakephp['Category']['id'])
 		);
 
 		$this->Category->Behaviors->disable('Permissionable');
@@ -300,12 +345,6 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->Category->create();
 		$this->Category->save(array('Category' => array('name' => 'cat-test2', 'parent_id' => $administration['Category']['id'])));
 		// $this->Category->Behaviors->enable('Permissionable');
-
-		// test without parameters
-		// test firstPosition
-		$url = "/categories/move.json";
-		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "$url : The test should return error but is returning {$result['header']['status']}"); // test if response is a success
 
 		// test firstPosition
 		$url = "/categories/move/{$testCases['firstPosition']['id']}/{$testCases['firstPosition']['position']}.json";
@@ -339,11 +378,6 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$afterSave = $this->Category->findById($hr['Category']['id']);
 		$this->assertEquals($afterSave['Category']['lft'], $administration['Category']['lft'] + 5, "$url : The test failed to verify that Mapusa is now positionne the middle. lft should be " . ($administration['Category']['lft'] + 5) . " but is {$afterSave['Category']['lft']}");
 
-		// test minusPosition
-		$url = "/categories/move/{$testCases['minusPosition']['id']}/{$testCases['minusPosition']['position']}.json";
-		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "$url : The test should return error but is returning {$result['header']['status']}"); // test if response is an error
-
 		// test differentParent
 		$url = "/categories/move/{$testCases['differentParent']['id']}/{$testCases['differentParent']['position']}/{$testCases['differentParent']['parent_id']}.json";
 		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
@@ -352,18 +386,29 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$afterSave = $this->Category->findById($hr['Category']['id']);
 		$cakephp = $this->Category->findById($cakephp['Category']['id']);
 		$this->assertEquals($afterSave['Category']['lft'], $cakephp['Category']['lft'] + 1, "$url : Failed to test that 'hr' is now first child of 'cakephp'");
-
-		// test bad uuid
-		$url = "/categories/move/{$testCases['wrongId']['id']}/{$testCases['wrongId']['position']}.json";
-		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "The test should return error but is returning {$result['header']['status']}"); // test if response is an error
-
-		// test id doesnt exist
-		$url = "/categories/move/{$testCases['idNotExist']['id']}/{$testCases['idNotExist']['position']}.json";
-		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "The test should return error but is returning {$result['header']['status']}"); // test if response is an error
 	}
 
+	public function testTypeCategoryIdIsMissing() {
+		$this->expectException('HttpException', 'The category id is missing');
+		$this->testAction("/categories/type.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testTypeCategoryIdNotValid() {
+		$this->expectException('HttpException', 'The category id is invalid');
+		$this->testAction("/categories/type/badid.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testTypeCategoryDoesNotExist() {
+		$this->expectException('HttpException', 'The category does not exist');
+		$this->testAction("/categories/type/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'put', 'return' => 'contents'));
+	}
+
+	public function testTypeNameDoesNotExist() {
+		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
+		$this->expectException('HttpException', 'The type does not exist');
+		$this->testAction("/categories/type/{$root['Category']['id']}/badname.json", array('method' => 'put', 'return' => 'contents'));
+	}
+	
 	public function testType() {
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$id = $root['Category']['id'];
@@ -373,18 +418,6 @@ class CategoriesControllerTest extends ControllerTestCase {
 		
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$this->assertEquals("0234f3a4-c5cd-11e1-a0c5-080027796c4c", $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
-
-		$result = json_decode($this->testAction("/categories/type/$id/namedoesntexist.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type/$id/namedoesntexist.json : The test should return error but has returned {$result['header']['status']}");
-
-		$result = json_decode($this->testAction("/categories/type/50152793-9efc-4a7f-b79e-1358b4e000c3/default.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type/50152793-9efc-4a7f-b79e-1358b4e000c3/default.json : The test should return error but has returned {$result['header']['status']}");
-
-		$result = json_decode($this->testAction("/categories/type/badid/default.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type/badid/default.json : The test should return error but has returned {$result['header']['status']}");
-
-		$result = json_decode($this->testAction("/categories/type.json", array('method' => 'put', 'return' => 'contents')), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "/categories/type.json : The test should return error but has returned {$result['header']['status']}");
 	}
 
 	public function testXSS() {

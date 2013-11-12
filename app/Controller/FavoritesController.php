@@ -33,7 +33,7 @@ class FavoritesController extends AppController {
 
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
-			$this->Message->error(__('The id %s is invalid', $foreignId));
+			$this->Message->error(__('The %s id is invalid', $foreignModelName));
 			return;
 		}
 
@@ -42,7 +42,7 @@ class FavoritesController extends AppController {
 		// access the instance reccord, the exists method should return false
 		$this->loadModel($foreignModelName);
 		if (!$this->$foreignModelName->exists($foreignId)) {
-			$this->Message->error(__('The foreign instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $foreignId, $foreignModelName));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
 			return;
 		}
 
@@ -75,9 +75,6 @@ class FavoritesController extends AppController {
 	 * @return void
 	 */
 	function delete($id) {
-		$favorite = $this->Favorite->findById($id);
-		$userId = User::get('id');
-
 		// check the HTTP request method
 		if (!$this->request->is('delete')) {
 			$this->Message->error(__('Invalid request method, should be DELETE'));
@@ -86,23 +83,24 @@ class FavoritesController extends AppController {
 
 		// the id is invalid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The id %s is invalid', $id));
+			$this->Message->error(__('The starred id is not valid', $id));
 			return;
 		}
 
 		// no favorite found
+		$favorite = $this->Favorite->findById($id);
 		if (empty($favorite)) {
-			$this->Message->error(__('Oops, This record was not starred in the first place!'));
+			$this->Message->error(__('The record is not in your starred item list'), array('code' => 404));
 			return;
 		}
 		
 		// if the current user is not the owner of the favorite
-		if($favorite['Favorite']['user_id'] != $userId) {
-			$this->Message->error(__('Oops, This star is not yours!'));
+		if($favorite['Favorite']['user_id'] != User::get('id')) {
+			$this->Message->error(__('Your are not allowed to remove this record from your starred item list'), array('code' => 403));
 			return;
 		}
 		
 		$this->Favorite->delete($favorite['Favorite']['id']);
-		$this->Message->success(__('This record was removed from your starred item list.'));
+		$this->Message->success(__('This record was removed from your starred item list'));
 	}
 }

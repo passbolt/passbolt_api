@@ -119,7 +119,7 @@ class ResourcesController extends AppController {
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The resource id invalid'));
+			$this->Message->error(__('The resource id is invalid'));
 			return;
 		}
 		// check if it exists
@@ -129,7 +129,7 @@ class ResourcesController extends AppController {
 		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
 		if (!count($resources)) {
-			$this->Message->error(__('The resource does not exist'));
+			$this->Message->error(__('The resource does not exist'), array('code' => 404));
 			return;
 		}
 		$this->set('data', $resources[0]);
@@ -148,12 +148,12 @@ class ResourcesController extends AppController {
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The resource id invalid'));
+			$this->Message->error(__('The resource id is invalid'));
 			return;
 		}
 		$resource = $this->Resource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The resource doesn\'t exist'));
+			$this->Message->error(__('The resource does not exist'), array('code' => 404));
 			return;
 		}
 		$resource['Resource']['deleted'] = '1';
@@ -219,12 +219,12 @@ class ResourcesController extends AppController {
 		// Save the relations
 		if (isset($resourcepost['Category'])) {
 			foreach ($resourcepost['Category'] as $cat) {
-					$crdata = array(
-						'CategoryResource' => array(
-							'category_id' => $cat['id'],
-							'resource_id' => $resource['Resource']['id']
-						)
-					);
+				$crdata = array(
+					'CategoryResource' => array(
+						'category_id' => $cat['id'],
+						'resource_id' => $resource['Resource']['id']
+					)
+				);
 				$this->Resource->CategoryResource->create();
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);

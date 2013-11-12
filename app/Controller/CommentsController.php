@@ -31,20 +31,20 @@ class CommentsController extends AppController {
 		
 		// no instance id given
 		if(is_null($foreignId)) {
-			$this->Message->error(__('The id parameter is missing'));
+			$this->Message->error(__('The %s id is missing', $foreignModelName));
 			return;
 		}
 		
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
-			$this->Message->error(__('The id %s is invalid', $foreignId));
+			$this->Message->error(__('The %s id is invalid', $foreignModelName));
 			return;
 		}
 		
 		// the foreign instance does not exist
 		$this->loadModel($foreignModelName);
 		if (!$this->$foreignModelName->exists($foreignId)) {
-			$this->Message->error(__('The foreign instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $foreignId, $foreignModelName));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
 			return;
 		}
 		
@@ -83,13 +83,13 @@ class CommentsController extends AppController {
 		
 		// no instance id given
 		if(is_null($foreignId)) {
-			$this->Message->error(__('The id parameter is missing'));
+			$this->Message->error(__('The %s id is missing', $foreignModelName));
 			return;
 		}
 		
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
-			$this->Message->error(__('The id %s is invalid', $foreignId));
+			$this->Message->error(__('The %s id is invalid', $foreignModelName));
 			return;
 		}
 		
@@ -98,7 +98,7 @@ class CommentsController extends AppController {
 		// access the instance reccord, the exists method should return false
 		$this->loadModel($foreignModelName);
 		if (!$this->$foreignModelName->exists($foreignId)) {
-			$this->Message->error(__('The foreign instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $foreignId, $foreignModelName));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
 			return;
 		}
 		
@@ -115,7 +115,7 @@ class CommentsController extends AppController {
 		$this->Comment->set($postData);
 		// check if the data is valid
 		if(!$this->Comment->validates()){
-			$this->Message->error($this->Comment->validationErrors);
+			$this->Message->error(__('Could not validate data'));
 			return;
 		}
 		
@@ -140,16 +140,22 @@ class CommentsController extends AppController {
 			$this->Message->error(__('Invalid request method, should be PUT'));
 			return;
 		}
-		
+
+		// check if the is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The comment id is missing'));
+			return;
+		}
+
 		// the instance id is invalid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The id %s is invalid', $id));
+			$this->Message->error(__('The comment id is invalid'));
 			return;
 		}
 		
 		// check if the comment exists
 		if (!$this->Comment->exists($id)) {
-			$this->Message->error(__('The comment does not exist'));
+			$this->Message->error(__('The comment does not exist'), array('code' => 404));
 			return;
 		}
 		
@@ -168,7 +174,7 @@ class CommentsController extends AppController {
 		
 		// check the user is the owner of the comment or it has the role to edit it
 		if(!$this->Comment->isOwner($id)) {
-			$this->Message->error(__('The user is not authorized to edit comments which he is not owner'));
+			$this->Message->error(__('Your are not allowed to edit this comment'), array('code' => 403));
 			return;
 		}
 		
@@ -199,21 +205,27 @@ class CommentsController extends AppController {
 			return;
 		}
 		
+		// check if the is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The comment id is missing'));
+			return;
+		}
+
 		// the instance id is invalid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The id %s is invalid', $id));
+			$this->Message->error(__('The comment id is invalid'));
 			return;
 		}
 		
 		// check if the comment exists
 		if (!$this->Comment->exists($id)) {
-			$this->Message->error(__('The comment does not exist'));
+			$this->Message->error(__('The comment does not exist'), array('code' => 404));
 			return;
 		}
 		
 		// check the user is the owner of the comment or it has the role to delete it
 		if(!$this->Comment->isOwner($id)) {
-			$this->Message->error(__('The user is not authorized to delete comments which he is not owner'));
+			$this->Message->error(__('Your are not allowed to delete this comment'), array('code' => 403));
 			return;
 		}
 		

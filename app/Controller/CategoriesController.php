@@ -70,7 +70,7 @@ class CategoriesController extends AppController {
 		// check if it exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
-			$this->Message->error(__('The category does not exist'));
+			$this->Message->error(__('The category does not exist'), array('code' => 404));
 			return;
 		}
 
@@ -101,13 +101,13 @@ class CategoriesController extends AppController {
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The category id invalid'));
+			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
 		// check if the category exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
-			$this->Message->error(__('The category does not exist'));
+			$this->Message->error(__('The category does not exist'), array('code' => 404));
 			return;
 		}
 		// find children thread and return
@@ -189,28 +189,37 @@ class CategoriesController extends AppController {
 /**
  * Edit a category
  */
-	public function edit($id) {
+	public function edit($id=null) {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
 			return;
 		}
+
+		// check if the id is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The category id is missing'));
+			return;
+		}
+
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The category id is invalid'));
+			return;
+		}
+
+		// check if the category exists
+		if (!$this->Category->exists($id)) {
+			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			return;
+		}
+		
 		// check if data was provided
 		if (!isset($this->request->data['Category'])) {
 			$this->Message->error(__('No data were provided'));
 			return;
 		}
 
-		// check if the id is valid
-		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The category id invalid'));
-			return;
-		}
-		// check if the category exists
-		if (!$this->Category->exists($id)) {
-			$this->Message->error(__('The category does not exist'));
-			return;
-		}
 		$this->Category->set($this->request->data);
 		// check if the data is valid
 		if (!$this->Category->validates()) {
@@ -242,7 +251,7 @@ class CategoriesController extends AppController {
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The category id invalid'));
+			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
 		// delete
@@ -260,26 +269,41 @@ class CategoriesController extends AppController {
  * @param $parentId, the new parent
  * @return void
  */
-	public function move($id=null, $position=null, $parentId=null) {
+	public function move($id = null, $position = null, $parentId = null) {
 		$position = Sanitize::clean($position);
 		$parentId = Sanitize::clean($parentId);
+
 		// check if the category is provided
 		if (!isset($id)) {
-			$this->Message->error(__('The category id is not provided'));
+			$this->Message->error(__('The category id is missing'));
 			return;
 		}
 
-		// check if the id is valid
+		// check if the category id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The category id invalid'));
+			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
 
-		// check if it exist
-		$category = $this->Category->findById($id);
-		if (!$category) {
-			$this->Message->error(__('The category does not exist'));
+		// check if the category exists
+		if (!$this->Category->exists($id)) {
+			$this->Message->error(__('The category does not exist'), array('code' => 404));
 			return;
+		}
+
+		// if a parent id is provided
+		if (!is_null($parentId)) {
+			// check if the parent category id is valid
+			if (!Common::isUuid($parentId)) {
+				$this->Message->error(__('The parent category id invalid'));
+				return;
+			}
+	
+			// check if the parent category exists
+			if (!$this->Category->exists($parentId)) {
+				$this->Message->error(__('The parent category does not exist'), array('code' => 404));
+				return;
+			}
 		}
 
 		// check if the position is ok
@@ -301,31 +325,31 @@ class CategoriesController extends AppController {
  * Set the type of a category
  * @param uuid $id the id of the category
  * @param varchar $typeName, the name of the type
- * @return 1 if success, 0 if failure
  */
 	public function type($id=null, $typeName=null) {
 		$typeName = Sanitize::clean($typeName);
+
 		// check if the category is provided
 		if (!isset($id)) {
-			$this->Message->error(__('The category id is not provided'));
+			$this->Message->error(__('The category id is missing'));
 			return;
 		}
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The category id invalid'));
-			return;
-		}
-
-		$type = $this->Category->CategoryType->findByName($typeName);
-		if (!$type) {
-			$this->Message->error(__('The type does not exist'));
+			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
 
 		$category = $this->Category->findById($id);
 		if (!$category) {
-			$this->Message->error(__('The category does not exist'));
+			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			return;
+		}
+
+		$type = $this->Category->CategoryType->findByName($typeName);
+		if (!$type) {
+			$this->Message->error(__('The type does not exist'), array('code' => 404));
 			return;
 		}
 
