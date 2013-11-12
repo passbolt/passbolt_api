@@ -378,14 +378,22 @@ steal(
 		'{passbolt.model.Resource} created': function (model, ev, resource) {
 			var self = this;
 
-			// If the new resource belongs to one of the categories displayed by the resource
-			// browser -> Insert it
-			resource.Category.each(function(category, i) {
-				if(self.options.categories.indexOf(category.id) != -1) {
-					self.insertItem(resource, null, 'first');
-					return false; // break
-				}
-			});
+			// If the resourcs belongs to one or several categories
+			if (resource.Category.length) {
+				// If the new resource belongs to one of the categories displayed by the resource
+				// browser -> Insert it
+				resource.Category.each(function(category, i) {
+					if(self.options.categories.indexOf(category.id) != -1) {
+						self.insertItem(resource, null, 'first');
+						return false; // break
+					}
+				});	
+			}
+			// Else insert it whatever the applied filter.
+			// TODO Discuss this behavior with the team
+			else {
+				self.insertItem(resource, null, 'first');
+			}
 		},
 
 		/**
@@ -545,7 +553,7 @@ steal(
 
 			// override the current list of categories displayed with the new ones
 			// and the relative sub-categories
-			var filteredCategory = filter.getForeignModel('Category');
+			var filteredCategory = filter.getForeignModels('Category');
 			if(filteredCategory) {
 				can.each(filteredCategory, function (category, i) {
 					var subCategories = category.getSubCategories(true);

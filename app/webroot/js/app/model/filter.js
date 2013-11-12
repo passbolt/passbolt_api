@@ -75,10 +75,10 @@ steal(
 		 * @param {string} name The condition name
 		 * @return {string}
 		 */
-		'getForeignModel': function(name) {
-			var returnValue = null;
-			if(typeof this.foreign_models != 'undefined' && typeof this.foreign_models[name] != 'undefined') {
-				returnValue = this.foreign_models[name];
+		'getForeignModels': function(name) {
+			var returnValue = [];
+			if(typeof this.foreignModels != 'undefined' && typeof this.foreignModels[name] != 'undefined') {
+				returnValue = this.foreignModels[name];
 			}
 			return returnValue;
 		}

@@ -202,17 +202,15 @@ steal(
 		 * Observe when the user requests a resource creation
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {passbolt.model.Category} category The target category to insert the resource
+		 * @param {passbolt.model.Category} categories The target categories to insert the resource
 		 * @return {void}
 		 */
-		'{mad.bus} request_resource_creation': function (el, ev, category) {
-			// get the category from the filter
-			var categories = [];
-			this.options.filter.tags.each(function(val, i){
-				categories.push({
-					'id': val.id
-				});
-			});
+		'{mad.bus} request_resource_creation': function (el, ev, categories) {
+			if(typeof categories == 'undefined') {
+				categories = [];
+			} else if (!$.isArray(categories)) {
+				categories = [categories];
+			}
 			// create the resource which will be used by the form builder to populate the fields
 			var resource = new passbolt.model.Resource({ Category: categories });
 			

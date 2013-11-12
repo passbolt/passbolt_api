@@ -58,15 +58,19 @@ steal(
 			}
 			// extract the model attribute
 			var modelAttr = can.getObject(attrPath, instance);
-			// if multiple association
-			if (modelAttr.length) {
-				returnValue = [];
-				can.each(modelAttr, function(attr, i) {
-					returnValue.push(attr[attrName]);
-				});
-			} else {
-				returnValue = modelAttr[attrName];
+
+			if (typeof modelAttr != 'undefined') {
+				// if multiple association
+				if (modelAttr.length) {
+					returnValue = [];
+					can.each(modelAttr, function(attr, i) {
+						returnValue.push(attr[attrName]);
+					});
+				} else {
+					returnValue = modelAttr[attrName];
+				}
 			}
+
 			return returnValue;
 		},
 

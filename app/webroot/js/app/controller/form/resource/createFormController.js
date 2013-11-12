@@ -93,7 +93,7 @@ steal(
 
 			// The secret strenght compone nt
 			var secretStrength = null;
-			if(this.options.data) {
+			if(this.options.data && this.options.data.Secret && this.options.data.Secret.data) {
 				secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.data.Secret.data);
 			}
 			this.options.secretStrength = new passbolt.controller.component.SecretStrengthController($('#js_rs_pwd_strength'), {
