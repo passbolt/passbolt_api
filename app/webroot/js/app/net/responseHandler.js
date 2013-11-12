@@ -42,7 +42,7 @@ steal('jquery/class').then(function () {
 			// If the user is not logged in to the application.
 			// Redirect the user to the front page.
 			if(this.response.getStatus() == mad.net.Response.STATUS_ERROR
-				&& this.response.getMessage() == __('You need to log on to access this location')) {
+				&& this.response.getMessage() == __('You need to login to access this location')) {
 				location.href = mad.Config.read('app.url');
 			}
 			this._super();
