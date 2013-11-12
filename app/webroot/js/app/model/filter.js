@@ -53,8 +53,8 @@ steal(
 			var self = this;
 			var returnValue = {};
 
-			if(this.keyworkds != null) {
-				returnValue[this.requestPrefix + 'keyworkds'] = this.keyworkds;
+			if(this.keywords != null) {
+				returnValue[this.requestPrefix + 'keywords'] = this.keywords;
 			}
 			if(this.case != null) {
 				returnValue[this.requestPrefix + 'case'] = this.case;
