@@ -53,6 +53,7 @@ steal(
 	'mad/controller/component/dropDownMenuController.js',
 	'mad/controller/component/menuController.js',
 	'mad/controller/component/tabController.js',
+	'mad/controller/component/toggleButtonController.js',
 	'mad/controller/component/treeController.js',
 	'mad/controller/component/dynamicTreeController.js',
 	'mad/core/singleton.js',

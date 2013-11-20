@@ -32,8 +32,10 @@ steal(
 		 */
 		'afterStart': function () {
 			// Manage the display of the sidebar
-			this.options.viewSidebarButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_view_sidebar_button'))
-				.start();
+			var showSidebar = mad.Config.read('ui.workspace.showSidebar');
+			this.options.viewSidebarButton = new mad.controller.component.ToggleButtonController($('#js_wk_secondary_menu_view_sidebar_button'), {
+				state: showSidebar ? 'selected' : 'ready'
+			}).start();
 			
 			// Manage the layout as grid action
 			this.options.gridLayoutButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_grid_layout_button'))
@@ -64,7 +66,9 @@ steal(
 		 * @return {void}
 		 */
 		'{viewSidebarButton} click': function (el, ev) {
-			console.log('viewSidebarButton');
+			var showSidebar = !mad.Config.read('ui.workspace.showSidebar');
+			mad.Config.write('ui.workspace.showSidebar', showSidebar);
+			mad.bus.trigger('workspace_showSidebar', showSidebar);
 		},
 
 		/**
