@@ -37,6 +37,14 @@ class User extends AppModel {
 	 */
 	public $belongsTo = array('Role');
 
+  /**
+   * Details of the hasOne relationships
+   * @var array
+   */
+  public $hasOne = array(
+    'Profile'
+  );
+
 	/**
 	 * They are legions
 	 */
