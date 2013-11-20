@@ -192,10 +192,11 @@ class MessageComponent extends Component {
 			}
 		}
 
-		// Save the messages into the session anyway
-		// Otherwise we are unable to get it from the exception handler
+		// If the session has been lost, save the messages into the new session
 		// @see AppExceptionRenderer
-		// $this->Session->write($this->sessionKey, $this->messages);
+		if(is_null($this->Session->read($this->sessionKey))) {
+			$this->Session->write($this->sessionKey, $this->messages);
+		}
 	}
 
 /**
