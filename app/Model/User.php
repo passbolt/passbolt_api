@@ -358,6 +358,13 @@ class User extends AppModel {
 								'Role.id',
 								'Role.name'
 							)
+						),
+						'Profile' => array(
+							'fields' => array(
+								'Profile.id',
+								'Profile.first_name',
+								'Profile.last_name'
+							)
 						)
 					)
 				);
