@@ -1,6 +1,6 @@
 steal(
 	'jquery/model',
-	// 'app/model/group.js',
+	'app/model/profile.js',
 	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
@@ -26,7 +26,8 @@ steal(
 		attributes: {
 			'id': 'string',
 			'username': 'string',
-			'email': 'string'
+			'email': 'string',
+			'Profile': 'passbolt.model.Profile.model'
 		},
 
 		// 'create' : function (attrs, success, error) {
