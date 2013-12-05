@@ -31,7 +31,7 @@ steal(
                 // categories: new passbolt.model.Category.List()
                 groups: [],
                 // the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-                selectedUser: new can.Model.List()
+                selectedUsers: new can.Model.List()
             }
 
         }, /** @prototype */ {
@@ -156,6 +156,90 @@ steal(
                 this._super(users);
             },
 
+			/**
+			 * Before selecting an item
+			 * @param {mad.model.Model} item The item to select
+			 * @return {void}
+			 */
+			'beforeSelect': function (item) {
+				var self = this,
+					returnValue = true;
+
+				if (this.state.is('selection')) {
+					// if an item has already been selected
+					// if the item is already selected, unselect it
+					if (this.options.selectedUsers.length > 0 && this.options.selectedUsers[0].id == item.id) {
+						this.unselect(item);
+						this.setState('ready');
+						returnValue = false;
+					} else {
+						for (var i = this.options.selectedUsers.length - 1; i > -1; i--) {
+							this.unselect(this.options.selectedUsers[i]);
+						}
+					}
+				}
+
+				return returnValue;
+			},
+
+			/**
+			 * Select an item
+			 * @param {mad.model.Model} item The item to select
+			 * @param {boolean} silent Do not propagate any event (default:false)
+			 * @return {void}
+			 */
+			'select': function (item, silent) {
+				var self = this;
+				silent = typeof silent == 'undefined' ? false : silent;
+
+				// add the resource to the list of selected items
+				this.options.selectedUsers.push(item);
+				// check the checkbox (if it is not already done)
+				mad.app.getComponent('multiple_select_checkbox_' + item.id)
+					.setValue([item.id]);
+				// make the item selected in the view
+				this.view.selectItem(item);
+
+				// notice the application about this selection
+				if (!silent) {
+					mad.bus.trigger('user_selected', item);
+				}
+			},
+
+			/**
+			 * Before unselecting an item
+			 * @param {mad.model.Model} item The item to unselect
+			 * @return {void}
+			 */
+			'beforeUnselect': function (item) {
+				var returnValue = true;
+				return returnValue;
+			},
+
+			/**
+			 * Unselect an item
+			 * @param {mad.model.Model} item The item to unselect
+			 * @param {boolean} silent Do not propagate any event (default:false)
+			 * @return {void}
+			 */
+			'unselect': function (item, silent) {
+				silent = typeof silent == 'undefined' ? false : silent;
+
+				// uncheck the associated checkbox (if it is not already done)
+				mad.app.getComponent('multiple_select_checkbox_' + item.id)
+					.reset();
+				// unselect the item in grid
+				this.view.unselectItem(item);
+
+				// remove the resource from the previously selected resources
+				mad.model.List.remove(this.options.selectedUsers, item);
+
+				// notice the app about the just unselected resource
+				if (!silent) {
+					mad.bus.trigger('user_unselected', item);
+				}
+			},
+
             /* ************************************************************** */
             /* LISTEN TO THE MODEL EVENTS */
             /* ************************************************************** */
@@ -251,6 +335,7 @@ steal(
              */
             ' item_selected': function (el, ev, item, srcEvent) {
                 var self = this;
+				console.log("selected");
 
                 // switch to select state
                 this.setState('selection');
@@ -268,7 +353,7 @@ steal(
              * @param {mixed} rsId The id of the resource which has been checked
              * @return {void}
              */
-            /*'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
+            '.js_checkbox_multiple_select checked': function (el, ev, userId) {
                 var self = this;
 
                 // if the grid is in initial state, switch it to selected
@@ -281,13 +366,13 @@ steal(
                 }
 
                 // find the resource to select functions of its id
-                var i = mad.model.List.indexOf(this.options.resources, rsId);
-                var resource = this.options.resources[i];
+                var i = mad.model.List.indexOf(this.options.users, userId);
+                var user = this.options.users[i];
 
-                if (this.beforeSelect(resource)) {
-                    this.select(resource);
+                if (this.beforeSelect(user)) {
+                    this.select(user);
                 }
-            },*/
+            },
 
             /**
              * Listen to the uncheck event on any checkbox form element components.
