@@ -335,7 +335,10 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateReady': function (go) { }
+		'stateReady': function (go) {
+			// @TODO : is triggered no matter what workspace is displayed.. to fix
+			console.log("password workspace ready");
+		}
 
 	});
 

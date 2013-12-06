@@ -20,33 +20,34 @@ steal(
 	mad.model.Model('passbolt.model.User', /** @static */ {
 
 		'validateRules': {
-			'username': ['alphanum', 'required']
+			'username': ['email', 'required']
 		},
 
 		attributes: {
 			'id': 'string',
 			'username': 'string',
 			'email': 'string',
+			'active' : 'string',
 			'Profile': 'passbolt.model.Profile.model'
 		},
 
-		// 'create' : function (attrs, success, error) {
-			// var self = this;
-			// var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-			// return mad.net.Ajax.request({
-				// url: APP_URL + '/user',
-				// type: 'POST',
-				// params: params,
-				// success: success,
-				// error: error
-			// }).pipe(function (data, textStatus, jqXHR) {
-				// // pipe the result to convert cakephp response format into can format
-				// // else the new attribute are not well placed
-				// var def = $.Deferred();
-				// def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-				// return def;
-			// });
-		// },
+		'create' : function (attrs, success, error) {
+			var self = this;
+			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+			return mad.net.Ajax.request({
+				url: APP_URL + 'users',
+				type: 'POST',
+				params: params,
+				success: success,
+				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+					// pipe the result to convert cakephp response format into can format
+					// else the new attribute are not well placed
+					var def = $.Deferred();
+					def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+					return def;
+				});
+		},
 
 		// 'destroy' : function (id, success, error) {
 			// var params = {id:id};

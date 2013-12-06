@@ -157,9 +157,11 @@ class UsersController extends AppController {
 		$this->User->commit();
 		$data = array('User.id' => $this->User->id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
+		print_r($options);
 		$users = $this->User->find('all', $options);
 
 		$this->Message->success(__("The user has been saved successfully"));
+		print_r($users);
 		$this->set('data', $users[0]);
 
 		return;

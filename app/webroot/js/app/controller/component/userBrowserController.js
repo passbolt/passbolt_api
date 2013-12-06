@@ -6,19 +6,19 @@ steal(
 ).then(function () {
 
         /*
-         * @class passbolt.controller.component.PasswordBrowserController
+         * @class passbolt.controller.component.UserBrowserController
          * @inherits {mad.controller.component.GridController}
          * @parent index
          *
          * Our password grid controller
          *
          * @constructor
-         * Creates a new Password Browser Controller
+         * Creates a new User Browser Controller
          *
          * @param {HTMLElement} element the element this instance operates on.
          * @param {Object} [options] option values for the controller.  These get added to
          * this.options and merged with defaults static variable
-         * @return {passbolt.controller.component.PasswordBrowserController}
+         * @return {passbolt.controller.component.UserBrowserController}
          */
         mad.controller.component.GridController.extend('passbolt.controller.component.UserBrowserController', /** @static */ {
 
@@ -103,6 +103,8 @@ steal(
                         return moment(value).fromNow();
                     }
                 }];
+
+				//this.createUser();
 
                 this._super(el, options);
             },
@@ -238,6 +240,35 @@ steal(
 				if (!silent) {
 					mad.bus.trigger('user_unselected', item);
 				}
+			},
+
+			'createUser': function(){
+				// get the category from the filter
+				/*var categories = [];
+				this.options.filter.tags.each(function(val, i){
+					categories.push({
+						'id': val.id
+					});
+				});*/
+				// create the resource which will be used by the form builder to populate the fields
+				var user = new passbolt.model.User();
+
+				// get the dialog
+				var dialog = new mad.controller.component.DialogController(null, {label: __('Add User')})
+					.start();
+
+				// attach the component to the dialog
+				var form = dialog.add(passbolt.controller.form.user.CreateFormController, {
+					data: user,
+					callbacks : {
+						submit: function (data) {
+							var user = new passbolt.model.User(data['passbolt.model.User']);
+							user.save();
+							dialog.remove();
+						}
+					}
+				});
+				form.load(user);
 			},
 
             /* ************************************************************** */
