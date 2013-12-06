@@ -135,11 +135,9 @@ class UsersController extends AppController {
 		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
 			$userData['User']['role_id'] = $this->User->Role->field('Role.id', array('name' => Role::USER));
 		}
-
+		// Validates user information
 		$this->User->set($userData);
-
 		$fields = $this->User->getFindFields('User::save', User::get('Role.name'));
-
 		// check if the data is valid
 		if (!$this->User->validates()) {
 			$this->Message->error(__('Could not validate user data'));
@@ -148,20 +146,37 @@ class UsersController extends AppController {
 
 		$this->User->begin();
 		$user = $this->User->save($userData, false, $fields['fields']);
-
 		if ($user == false) {
 			$this->User->rollback();
 			$this->Message->error(__('The user could not be saved'));
 			return;
 		}
+
+		if(isset($userData['Profile']) && !empty($userData['Profile'])) {
+			// Validates profile information
+			$userData['Profile']['user_id'] = $this->User->id;
+			$this->User->Profile->set($userData);
+			if (!$this->User->Profile->validates()) {
+				$this->Message->error(__('Could not validate profile data'));
+				return;
+			}
+
+			$fields = $this->User->Profile->getFindFields('User::save', User::get('Role.name'));
+			$profile = $this->User->Profile->save($userData['Profile'], false, $fields['fields']);
+			if ($profile == false) {
+				$this->User->rollback();
+				$this->Message->error(__('The profile could not be saved'));
+				return;
+			}
+		}
+
 		$this->User->commit();
 		$data = array('User.id' => $this->User->id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-		print_r($options);
+
 		$users = $this->User->find('all', $options);
 
 		$this->Message->success(__("The user has been saved successfully"));
-		print_r($users);
 		$this->set('data', $users[0]);
 
 		return;
