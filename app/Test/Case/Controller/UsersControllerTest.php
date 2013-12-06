@@ -312,6 +312,51 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 	}
 
+	public function testAddWithProfileInfo() {
+		$kk = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($kk);
+		$result = json_decode(
+			$this->testAction(
+				'/users.json',
+				array(
+					'data'   => array(
+						'User' => array(
+							'username' => 'testprofile@passbolt.com',
+							'password' => 'test1',
+							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+							'active'   => 1
+						),
+						'Profile' => array(
+							'first_name' => 'jean',
+							'last_name' => 'gabin'
+						)
+					),
+					'method' => 'post',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$result['header']['status'],
+			"Add : /users.json : The test should return sucess but is returning " . print_r($result, true)
+		);
+
+		// check that User was properly saved
+		$user = $this->User->findByUsername("testprofile@passbolt.com");
+		$this->assertEquals(
+			1,
+			count($user),
+			"Add : /users.json : The number of users returned should be 1, but actually is " . count($user)
+		);
+		$this->assertEquals(
+			'jean',
+			$result['body']['Profile']['first_name'],
+			"Add : /users.json : the first name of the added user should be jean but is {$result['body']['Profile']['first_name']}"
+		);
+	}
+
 	public function testUpdateNoAllowed() {
 		// normal user don't have the right to add user
 		$kk = $this->User->findByUsername('user@passbolt.com');
