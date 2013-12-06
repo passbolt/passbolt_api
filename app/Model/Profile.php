@@ -32,6 +32,15 @@ class Profile extends AppModel {
 					)
 				);
 				break;
+			case 'User::save':
+				$returnValue = array(
+					'fields' => array(
+						'user_id',
+						'first_name',
+						'last_name',
+					)
+				);
+				break;
 			default:
 				$returnValue = array(
 					'fields' => array()
