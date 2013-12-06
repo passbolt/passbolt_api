@@ -130,6 +130,12 @@ class UsersController extends AppController {
 
 		// set the data for validation and save
 		$userData = $this->request->data;
+
+		// If role id is not provided, we assign a default one
+		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
+			$userData['User']['role_id'] = $this->User->Role->field('Role.id', array('name' => Role::USER));
+		}
+
 		$this->User->set($userData);
 
 		$fields = $this->User->getFindFields('User::save', User::get('Role.name'));
