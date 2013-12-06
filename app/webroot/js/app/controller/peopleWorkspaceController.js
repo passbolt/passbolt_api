@@ -75,7 +75,7 @@ steal(
 			 });
 			 });*/
 			// create the resource which will be used by the form builder to populate the fields
-			var user = new passbolt.model.User();
+			var user = new passbolt.model.User({active:1});
 
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Add User')})

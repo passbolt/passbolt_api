@@ -276,25 +276,27 @@ steal(
             /* ************************************************************** */
 
             /**
-             * Observe when a resource is created.
+             * Observe when a user is created.
              * If the created resource belong to a displayed category, add the resource to the grid.
              * @param {mad.model.Model} model The model reference
              * @param {HTMLEvent} ev The event which occured
              * @param {passbolt.model.Resource} resource The created resource
              * @return {void}
              */
-            /*'{passbolt.model.User} created': function (model, ev, resource) {
+            '{passbolt.model.User} created': function (model, ev, user) {
                 var self = this;
 
                 // If the new resource belongs to one of the categories displayed by the resource
                 // browser -> Insert it
-                resource.Category.each(function(category, i) {
+                /*user.Category.each(function(category, i) {
                     if(self.options.categories.indexOf(category.id) != -1) {
                         self.insertItem(resource, null, 'first');
                         return false; // break
                     }
-                });
-            },*/
+                });*/
+				self.insertItem(user, null, 'first');
+				return false;
+            },
 
             /**
              * Observe when a resource is updated.

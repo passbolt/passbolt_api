@@ -43,7 +43,7 @@ steal(
 
 				var activeField = this.addElement(
 				 new mad.form.element.TextboxController($('#js_field_user_active'), {
-					 //modelReference: 'passbolt.model.User.active'
+					 modelReference: 'passbolt.model.User.active'
 					 }).start()
 				 );
 				activeField.setValue("test");
@@ -51,14 +51,14 @@ steal(
 				// Add user first name field
 				this.addElement(
 					new mad.form.element.TextboxController($('#js_field_first_name'), {
-						modelReference: 'passbolt.model.User.first_name'
+						modelReference: 'passbolt.model.User.Profile.first_name'
 					}).start(),
 					new mad.form.FeedbackController($('#js_field_first_name_feedback'), {}).start()
 				);
 				// Add user last name field
 				this.addElement(
 					new mad.form.element.TextboxController($('#js_field_last_name'), {
-						modelReference: 'passbolt.model.User.last_name'
+						modelReference: 'passbolt.model.User.Profile.last_name'
 					}).start(),
 					new mad.form.FeedbackController($('#js_field_last_name_feedback'), {}).start()
 				);
