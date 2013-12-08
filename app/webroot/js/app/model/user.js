@@ -80,28 +80,28 @@ steal(
 			// });
 		// },
 
-		// 'update' : function(id, attrs, success, error) {
-			// var self = this;
-			// // remove not desired attributes
-			// delete attrs.created;
-			// delete attrs.modified;
-			// // format data as expected by cakePHP
-			// var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-			// // add the root of the params, it will be used in the url template
-			// params.id = id;
-			// return mad.net.Ajax.request({
-				// url: APP_URL + '/resources/{id}',
-				// type: 'PUT',
-				// params: params,
-				// success: success,
-				// error: error
-			// }).pipe(function (data, textStatus, jqXHR) {
-				// // pipe the result to convert cakephp response format into can format
-				// var def = $.Deferred();
-				// def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-				// return def;
-			// });
-		// }
+		'update' : function(id, attrs, success, error) {
+			var self = this;
+			// remove not desired attributes
+			delete attrs.created;
+			delete attrs.modified;
+			// format data as expected by cakePHP
+			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+			// add the root of the params, it will be used in the url template
+			params.id = id;
+			return mad.net.Ajax.request({
+				url: APP_URL + 'users/{id}',
+				type: 'PUT',
+				params: params,
+				success: success,
+				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				//pipe the result to convert cakephp response format into can format
+				var def = $.Deferred();
+				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+				return def;
+			});
+		}
 
 	}, /** @prototype */ { });
 });

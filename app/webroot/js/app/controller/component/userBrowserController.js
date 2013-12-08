@@ -299,20 +299,20 @@ steal(
             },
 
             /**
-             * Observe when a resource is updated.
-             * If the resource is displayed by he grid, refresh it.
+             * Observe when a user is updated.
+             * If the user is displayed by he grid, refresh it.
              * note : We listen the model directly, listening on changes on
              * a list seems too much here (one event for each updated attribute)
              * @param {mad.model.Model} model The model reference
              * @param {HTMLEvent} ev The event which occured
-             * @param {passbolt.model.Resource} resource The updated resource
+             * @param {passbolt.model.User} user The updated user
              * @return {void}
              */
-            /*'{passbolt.model.Resource} updated': function (model, ev, resource) {
-                if (this.options.resources.indexOf(resource) != -1) {
-                    this.refreshItem(resource);
+            '{passbolt.model.User} updated': function (model, ev, user) {
+                if (this.options.users.indexOf(user) != -1) {
+                    this.refreshItem(user);
                 }
-            },*/
+            },
 
             /**
              * Observe when resources are removed from the list of displayed resources and

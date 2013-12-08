@@ -51,7 +51,7 @@ steal(
             // Instanciate the passwords browser controller
             var userBrowserController = this.addComponent(passbolt.controller.component.UserBrowserController, {
                 'id': 'js_passbolt_user_browser',
-                'selectedRs': this.options.selectedRs
+                'selectedUsers': this.options.selectedUsers
             }, 'js_workspace_users_main');
             userBrowserController.start();
         },
@@ -88,6 +88,35 @@ steal(
 					submit: function (data) {
 						var user = new passbolt.model.User(data['passbolt.model.User']);
 						user.save();
+						dialog.remove();
+						// TODO : remove only in case of success
+					}
+				}
+			});
+			form.load(user);
+		},
+
+		/**
+		 * Observe when the user requests a user edition
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.User} resource The target user to edit
+		 * @return {void}
+		 */
+		'{mad.bus} request_user_edition': function (el, ev, user) {
+			var self = this;
+			// Retrieve the selected user
+			user = this.options.selectedUsers[0];
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit User')})
+				.start();
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.user.CreateFormController, {
+				data: user,
+				callbacks : {
+					submit: function (data) {
+						//var user = new passbolt.model.User(data['passbolt.model.User']);
+						user.attr(data['passbolt.model.User']).save();
 						dialog.remove();
 						// TODO : remove only in case of success
 					}

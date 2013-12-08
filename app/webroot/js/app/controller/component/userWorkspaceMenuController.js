@@ -124,7 +124,7 @@ steal(
 			 * @param {passbolt.model.User} resource The unselected user
 			 * @return {void}
 			 */
-			'{selectedRs} remove': function (el, ev, user) {
+			'{selectedUsers} remove': function (el, ev, user) {
 				// if more than one resource selected, or no resource selected
 				if (this.options.selectedUsers.length == 0) {
 					this.setState('ready');
@@ -182,9 +182,6 @@ steal(
 					this.options.editionButton
 						.setState('disabled');
 					this.options.deletionButton
-						.setValue(this.options.selectedUsers)
-						.setState('ready');
-					this.options.sharingButton
 						.setValue(this.options.selectedUsers)
 						.setState('ready');
 					this.options.moreButton
