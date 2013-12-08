@@ -10,7 +10,7 @@ steal(
          * @inherits {mad.controller.component.GridController}
          * @parent index
          *
-         * Our password grid controller
+         * Our user grid controller
          *
          * @constructor
          * Creates a new User Browser Controller
@@ -103,8 +103,6 @@ steal(
                         return moment(value).fromNow();
                     }
                 }];
-
-				//this.createUser();
 
                 this._super(el, options);
             },
@@ -242,35 +240,6 @@ steal(
 				}
 			},
 
-			'createUser': function(){
-				// get the category from the filter
-				/*var categories = [];
-				this.options.filter.tags.each(function(val, i){
-					categories.push({
-						'id': val.id
-					});
-				});*/
-				// create the resource which will be used by the form builder to populate the fields
-				var user = new passbolt.model.User();
-
-				// get the dialog
-				var dialog = new mad.controller.component.DialogController(null, {label: __('Add User')})
-					.start();
-
-				// attach the component to the dialog
-				var form = dialog.add(passbolt.controller.form.user.CreateFormController, {
-					data: user,
-					callbacks : {
-						submit: function (data) {
-							var user = new passbolt.model.User(data['passbolt.model.User']);
-							user.save();
-							dialog.remove();
-						}
-					}
-				});
-				form.load(user);
-			},
-
             /* ************************************************************** */
             /* LISTEN TO THE MODEL EVENTS */
             /* ************************************************************** */
@@ -285,15 +254,6 @@ steal(
              */
             '{passbolt.model.User} created': function (model, ev, user) {
                 var self = this;
-
-                // If the new resource belongs to one of the categories displayed by the resource
-                // browser -> Insert it
-                /*user.Category.each(function(category, i) {
-                    if(self.options.categories.indexOf(category.id) != -1) {
-                        self.insertItem(resource, null, 'first');
-                        return false; // break
-                    }
-                });*/
 				self.insertItem(user, null, 'first');
 				return false;
             },
@@ -329,29 +289,6 @@ steal(
                 });
             },
 
-            /**
-             * Observe when a category is removed. And remove from the grid all the resources
-             * which are not belonging to a displayed Category.
-             * @param {mad.model.Model} model The model reference
-             * @param {HTMLEvent} ev The event which occured
-             * @param {passbolt.model.Category} category The removed category
-             * @return {void}
-             */
-            /*'{passbolt.model.Category} destroyed': function (model, ev, category) {
-                var self = this;
-
-                // remove from the list of displayed categories the given deleted category and its children
-                var destroyedCategories = mad.model.Model.nestedToList(category, 'children');
-                var destroyedCategoriesIds = [];
-                can.each(destroyedCategories, function(destroyedCategory, h) {
-                    var indexof = self.options.categories.indexOf(destroyedCategory.id);
-                    if (indexof != -1) {
-                        // remove the destroyed categories from the display categories array
-                        self.options.categories.splice(indexof, 1);
-                    }
-                    // destroyedCategoriesIds.push(destroyedCategory.id);
-                });
-            },*/
 
             /* ************************************************************** */
             /* LISTEN TO THE VIEW EVENTS */
