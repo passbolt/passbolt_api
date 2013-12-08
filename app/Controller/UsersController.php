@@ -309,6 +309,11 @@ class UsersController extends AppController {
 			$this->Message->error(__('The user id is invalid'));
 			return;
 		}
+
+		if (User::get('id') == $id) {
+			$this->Message->error(__('You are not allowed to delete yourself'));
+			return;
+		}
 		
 		$user = $this->User->findById($id);
 		if (!$user) {
