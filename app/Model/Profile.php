@@ -33,6 +33,7 @@ class Profile extends AppModel {
 				);
 				break;
 			case 'User::save':
+			case 'User::edit':
 				$returnValue = array(
 					'fields' => array(
 						'user_id',
