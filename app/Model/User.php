@@ -77,8 +77,9 @@ class User extends AppModel {
 				'required'  => array(
 					'required'   => true,
 					'allowEmpty' => false,
+					'on'         => 'create',
 					'rule'       => array('notEmpty'),
-					'message'    => __('A password is required')
+					'message'    => __('A password is required'),
 				),
 				'minLength' => array(
 					'rule'    => array('minLength', 5),

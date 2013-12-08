@@ -245,17 +245,45 @@ class UsersController extends AppController {
 				$this->Message->error(__('The user could not be updated'));
 				return;
 			}
-			$this->User->commit();
-
-			$data = array('User.id' => $this->User->id);
-			$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-			$user = $this->User->find('all', $options);
-
-			$this->Message->success(__("The user has been updated successfully"));
-			$this->set('data', $user);
-
-			return;
 		}
+
+		if (isset($userData['Profile'])) {
+			$profile = $this->User->Profile->findByUserId($id);
+			if(!$profile) {
+				$this->User->rollback();
+				$this->Message->error(__('Could not retrieve profile'));
+				return;
+			}
+			$profile['Profile'] = array_merge($profile['Profile'], $userData['Profile']);
+			// Reformat date of birth properly to pass validation
+			$profile['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profile['Profile']['date_of_birth']));
+
+			$this->User->Profile->set($profile);
+			if (!$this->User->Profile->validates()) {
+				$this->User->rollback();
+				$this->Message->error(__('Could not validate Profile'));
+				return;
+			}
+
+			$fields = $this->User->Profile->getFindFields('User::edit', User::get('Role.name'));
+			$save = $this->User->Profile->save($profile, false, $fields['fields']);
+			if (!$save) {
+				$this->User->rollback();
+				$this->Message->error(__('The profile could not be updated'));
+				return;
+			}
+		}
+
+		$this->User->commit();
+
+		$data = array('User.id' => $this->User->id);
+		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
+		$user = $this->User->find('all', $options);
+
+		$this->Message->success(__("The user has been updated successfully"));
+		$this->set('data', $user);
+
+		return;
 	}
 
 	/**
