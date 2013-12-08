@@ -49,16 +49,16 @@ steal(
 				});
 		},
 
-		// 'destroy' : function (id, success, error) {
-			// var params = {id:id};
-			// return mad.net.Ajax.request({
-				// url: APP_URL + '/resources/{id}',
-				// type: 'DELETE',
-				// params: params,
-				// success: success,
-				// error: error
-			// });
-		// },
+		'destroy' : function (id, success, error) {
+			var params = {id:id};
+			return mad.net.Ajax.request({
+				url: APP_URL + '/users/{id}',
+				type: 'DELETE',
+				params: params,
+				success: success,
+				error: error
+			});
+		},
 
 		'findAll': function (params, success, error) {
 			return mad.net.Ajax.request({

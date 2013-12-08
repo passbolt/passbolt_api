@@ -91,8 +91,8 @@ steal(
 			 * @return {void}
 			 */
 			'{deletionButton} click': function (el, ev) {
-				/*var category = this.options.deletionButton.getValue();*/
-				mad.bus.trigger('request_user_deletion'/*, category*/);
+				var users = this.options.selectedUsers;
+				mad.bus.trigger('request_user_deletion', users);
 			},
 
 			/**
@@ -191,9 +191,6 @@ steal(
 						.setValue(null)
 						.setState('disabled');
 					this.options.deletionButton
-						.setValue(null)
-						.setState('disabled');
-					this.options.sharingButton
 						.setValue(null)
 						.setState('disabled');
 				}

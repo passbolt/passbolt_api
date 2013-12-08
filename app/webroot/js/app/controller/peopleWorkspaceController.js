@@ -123,9 +123,25 @@ steal(
 				}
 			});
 			form.load(user);
+		},
+
+		/**
+		 * Observe when the user requests a user deletion
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.User} user1 A target user to delete
+		 * @param {passbolt.model.User} [user2 ...] Other users to delete
+		 * @return {void}
+		 */
+		'{mad.bus} request_user_deletion': function (el, ev) {
+			for (var i=2; i<arguments.length; i++) {
+				var user = arguments[i];
+				if (!(user instanceof passbolt.model.User)) {
+					throw new mad.error.Exception('The parameter ' + i + ' should be an instance of passbolt.model.User');
+				}
+				user.destroy();
+			}
 		}
-
-
 	});
 
 });

@@ -315,19 +315,19 @@ steal(
             },
 
             /**
-             * Observe when resources are removed from the list of displayed resources and
+             * Observe when users are removed from the list of displayed users and
              * remove it from the grid
              * @param {mad.model.Model} model The model reference
              * @param {HTMLEvent} ev The event which occured
-             * @param {passbolt.model.Resource} resources The removed resource
+             * @param {passbolt.model.User} users The removed user
              * @return {void}
              */
-            /*'{resources} remove': function (model, ev, resources) {
+            '{users} remove': function (model, ev, users) {
                 var self = this;
-                can.each(resources, function (resource, i) {
-                    self.removeItem(resource);
+                can.each(users, function (user, i) {
+                    self.removeItem(user);
                 });
-            },*/
+            },
 
             /**
              * Observe when a category is removed. And remove from the grid all the resources
@@ -412,29 +412,29 @@ steal(
              *
              * @param {HTMLElement} el The element the event occured on
              * @param {HTMLEvent} ev The event which occured
-             * @param {mixed} rsId The id of the resource which has been unchecked
+             * @param {mixed} userId The id of the user which has been unchecked
              * @return {void}
              */
-            /*'.js_checkbox_multiple_select unchecked': function (el, ev, rsId) {
+            '.js_checkbox_multiple_select unchecked': function (el, ev, userId) {
                 var self = this;
 
                 // find the resource to select functions of its id
-                var i = mad.model.List.indexOf(this.options.resources, rsId);
-                var resource = this.options.resources[i];
+                var i = mad.model.List.indexOf(this.options.users, userId);
+                var user = this.options.users[i];
 
                 if (this.beforeUnselect()) {
-                    self.unselect(resource);
+                    self.unselect(user);
                 }
 
                 // if there is no more selected resources, switch the grid to its initial state
-                if (!this.options.selectedRs.length) {
+                if (!this.options.selectedUsers.length) {
                     this.setState('ready');
 
                     // else if only one resource is selected
-                } else if (this.options.selectedRs.length == 1) {
+                } else if (this.options.selectedUsers.length == 1) {
                     this.setState('selection');
                 }
-            },*/
+            },
 
             /* ************************************************************** */
             /* LISTEN TO THE APP EVENTS */
