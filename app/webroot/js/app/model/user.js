@@ -70,16 +70,6 @@ steal(
 			});
 		},
 
-		// 'findOne': function (params, success, error) {
-			// return mad.net.Ajax.request({
-				// url: APP_URL + '/resources/{id}',
-				// type: 'GET',
-				// params: params,
-				// success: success,
-				// error: error
-			// });
-		// },
-
 		'update' : function(id, attrs, success, error) {
 			var self = this;
 			// remove not desired attributes
