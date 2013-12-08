@@ -67,13 +67,6 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_user_creation': function (el, ev, data) {
-			// get the category from the filter
-			/*var categories = [];
-			 this.options.filter.tags.each(function(val, i){
-			 categories.push({
-			 'id': val.id
-			 });
-			 });*/
 			// create the resource which will be used by the form builder to populate the fields
 			var user = new passbolt.model.User({active:1});
 
