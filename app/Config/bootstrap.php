@@ -28,6 +28,7 @@
  */
 Configure::load('app'); // Application
 require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
+require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Exceptions
 
 /**
  * API and DOC Plugins
@@ -193,3 +194,8 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+/**
+ * Load our custom Exception renderer
+ */
+App::uses('AppExceptionRenderer', 'Lib/Error');

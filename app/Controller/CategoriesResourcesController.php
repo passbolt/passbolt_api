@@ -28,7 +28,7 @@ class CategoriesResourcesController extends AppController {
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The categoryResource id invalid'));
+			$this->Message->error(__('The categoryResource id is invalid'));
 			return;
 		}
 		// check if it exists
@@ -38,7 +38,7 @@ class CategoriesResourcesController extends AppController {
 		$options = $this->CategoryResource->getFindOptions('view', User::get('Role.name'), $data);
 		$cr = $this->CategoryResource->find('all', $options);
 		if (!count($cr)) {
-			$this->Message->error(__('The CategoryResource does not exist'));
+			$this->Message->error(__('The categoryResource does not exist'), array('code' => 404));
 			return;
 		}
 		$this->set('data', $cr[0]);
@@ -62,7 +62,7 @@ class CategoriesResourcesController extends AppController {
 		}
 		$resource = $this->CategoryResource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The categoryResource doesn\'t exist'));
+			$this->Message->error(__('The categoryResource does not exist'), array('code' => 404));
 			return;
 		}
 
@@ -98,7 +98,7 @@ class CategoriesResourcesController extends AppController {
 
 		// check if the data is valid
 		if (!$this->CategoryResource->validates()) {
-			$this->Message->error(__('Could not validate resource data'));
+			$this->Message->error(__('Could not validate data'));
 			return;
 		}
 

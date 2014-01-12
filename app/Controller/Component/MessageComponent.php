@@ -9,6 +9,14 @@
  * @package      app.Controller.MessageComponent
  * @since        version 2.12.7
  */
+
+// Translation
+__('Error', true);
+__('Notice', true);
+__('Warning', true);
+__('Success', true);
+__('Debug', true);
+
 class Message {
 	const ERROR = 'error';
 	const SUCCESS = 'success';
@@ -16,10 +24,11 @@ class Message {
 	const NOTICE = 'notice';
 	const DEBUG = 'debug';
 }
+
 class MessageComponent extends Component {
 
 	// key used to store messages in controller/view data
-	public $controllerVar = 'flashMessages';
+	public $controllerVar = 'json';
 
 	// key used to store message in sessions
 	public $sessionKey = 'Messages';
@@ -61,22 +70,36 @@ class MessageComponent extends Component {
 	}
 
 /**
- * Add an error message in the message queue
- * @param string $code error code
+ * Add an error message in the message queue. And throw an HttpException to deliver the error
+ * to the client.
+ * 
  * @param string $message
- * @param mixed $options['redirect'] url, string or array
- * @param boolean $fatal
+ * @param array $options
+ * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * to redirect to the controler referer
+ * @param integer $options['code'] the code to use as http status code
+ * @param boolean $options['throw'] throw of not an Http Exception, by default true
  * @return void
  * @access public
  */
 	public function error($message, $options=array()) {
-		$this->__add(Message::ERROR,$message,$options);
+		$this->__add(Message::ERROR, $message, $options);
+
+		// If we throw an http exception
+		if(!isset($options['throw']) || (isset($options['throw']) && $options['throw'] === true)) {
+			$code = 400;
+			if(isset($options['code'])) {
+				$code = $options['code'];
+			}
+			throw new HttpException($message, $code);
+		}
 	}
 
 /**
  * Add a warning message to the queue
  * @param string $message
- * @param mixed $options['redirect'] url, string or array
+ * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * to redirect to the controler referer
  * @access public
  */
 	public function warning($message, $options=array()) {
@@ -86,7 +109,8 @@ class MessageComponent extends Component {
 /**
  * Add a debug message to the queue
  * @param string $message
- * @param mixed $options['redirect'] url, string or array
+ * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * to redirect to the controler referer
  * @access public
  */
 	public function debug($message, $options=array()) {
@@ -96,7 +120,8 @@ class MessageComponent extends Component {
 /**
  * Add a notice/info message to the queue
  * @param string $message
- * @param mixed $options['redirect'] url, string or array
+ * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * to redirect to the controler referer
  * @access public
  */
 	public function notice($message, $options=array()) {
@@ -106,69 +131,57 @@ class MessageComponent extends Component {
 /**
  * Add a success message to the queue
  * @param string $message
- * @param mixed $options['redirect'] url, string or array
+ * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * to redirect to the controler referer
  * @access public
  */
 	public function success($message='', $options=array()) {
-		$this->__add(Message::SUCCESS,$message,$options);
+		$this->__add(Message::SUCCESS, $message, $options);
 	}
 
 /**
  * Add a message to the queue
  * @param mixed $message
  * @param string $type {error, notice, etc.}
- * @param mixed $options['redirect'] array, or string, or bollean
- * @param bollean die
+ * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * to redirect to the controler referer
  * @access private
  */
-	private function __add($type = Message::ERROR, $message=null, $options=null) {
-		$die = false;
-		$title = '';
+	private function __add($type = Message::ERROR, $message = null, $options = null) {
+		// The response message
+		$response = array(
+			'header' => array(),
+			'body' => array()
+		); 
 		$type = strtolower($type);
-		// Cosmetics
-		switch ($type) {
-			case Message::ERROR :
-				$title = __('Error',true);
-				//$this->controller->statusCode(400); // bad request
-			break;
-			case Message::NOTICE :
-				$title = __('Notice',true);
-			break;
-			case Message::WARNING :
-				$title = __('Warning',true);
-			break;
-			case Message::SUCCESS :
-				$title = __('Success',true);
-				//$this->controller->statusCode(200); // OK
-			break;
-			case Message::DEBUG :
-				$title = __('Debug',true);
-			break;
-		}
-		if (!isset($options['code'])) {
-			$options['code'] = String::uuid($message);
-		}
-		// message object for the view
-		// header
-		$m = array(
-			'header' => array(
-				// UUID is predictable
-				'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
-				'status' => ((empty($code)) ? $type : $type . ' ' . $code ),
-				'title' => $title,
-				'message' => $message,
-				'controller' => $this->Controller->name,
-				'action' => $this->Controller->action
-			)
+		$title = __($type, true);
+
+		// Set the header of the message
+		$response['header'] = array(
+			// UUID is predictable
+			'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
+			'status' => ((empty($code)) ? $type : $type . ' ' . $code ),
+			'title' => $title,
+			'message' => $message,
+			'controller' => $this->Controller->name,
+			'action' => $this->Controller->action
 		);
-		// optional body (see also beforeRender)
+
+		// Set the body of the message
+		// An optional body as been passed as an option
 		if (isset($options['body'])) {
-			$m['body'] = $options['body'];
-		} else {
-			$m['body'] = array();
+			$response['body'] = $options['body'];
+		} 
+		// Or the controller views data has been set
+		else if(isset($this->Controller->viewVars['data'])) {
+			$response['body'] = $this->Controller->viewVars['data'];
+		}  
+		else {
+			$response['body'] = array();
 		}
 
-		$this->messages[] = $m;
+		// Add the message to the queue of messages
+		$this->messages[] = $response;
 
 		// Need some directions?
 		if (isset($options['redirect'])) {
@@ -177,6 +190,12 @@ class MessageComponent extends Component {
 			} elseif (is_string($options['redirect']) || is_array($options['redirect'])) {
 				return $this->Controller->redirect($options['redirect']);
 			}
+		}
+
+		// If the session has been lost, save the messages into the new session
+		// @see AppExceptionRenderer
+		if(is_null($this->Session->read($this->sessionKey))) {
+			$this->Session->write($this->sessionKey, $this->messages);
 		}
 	}
 
@@ -191,7 +210,7 @@ class MessageComponent extends Component {
 		if ($body == null || $nbMessages == 0) {
 			return false;
 		}
-		$this->messages[count($this->messages) - 1]['body'] = &$body;
+		$this->messages[$nbMessages - 1]['body'] = &$body;
 		return true;
 	}
 
@@ -218,10 +237,14 @@ class MessageComponent extends Component {
  * @access public
  */
 	public function beforeRender(&$controller) {
+		// In case where the body will be updated between the call of the messageComponent function (success or whatever)
+		// and the moment the view is rendered
 		if (isset($this->Controller->viewVars['data'])) {
 			$this->setBody($this->Controller->viewVars['data']);
 		}
-		$this->Controller->set($this->controllerVar, $this->messages);
+		// As messages are saved into session, pop the messages array and respond to the client with the last one
+		$message = array_pop($this->messages);
+		$this->Controller->set($this->controllerVar, $message);
 	}
 
 }

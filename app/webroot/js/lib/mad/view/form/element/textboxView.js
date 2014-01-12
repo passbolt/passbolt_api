@@ -24,8 +24,8 @@ steal(
 		// Constructor like
 		'init': function(el, opts) {
 			this._super(el, opts);
-			this._keypressTimeout = null;
-			this.keypressTimeout = this.controller.options.keypressTimeout;
+			this._changeTimeout = null;
+			this.changeTimeout = this.controller.options.changeTimeout;
 		},
 
 		/**
@@ -58,16 +58,16 @@ steal(
 		' keypress': function (el, ev) {
 			var self = this;
 
-			if(this._keypressTimeout != null) {
-				clearTimeout(this._keypressTimeout);
+			if(this._changeTimeout != null) {
+				clearTimeout(this._changeTimeout);
 			}
 
 			if(this.getValue().length >= 2) {
-				this._keypressTimeout = setTimeout(function() {
+				this._changeTimeout = setTimeout(function() {
 					el.trigger('changed', {
 						value: self.getValue()
 					});
-				}, this.keypressTimeout);
+				}, this.changeTimeout);
 			}
 		},
 
@@ -82,15 +82,15 @@ steal(
 
 			// catch backspace
 			if(ev.which == 8) {
-				if(this._keypressTimeout != null) {
-					clearTimeout(this._keypressTimeout);
+				if(this._changeTimeout != null) {
+					clearTimeout(this._changeTimeout);
 				}
 				
-				this._keypressTimeout = setTimeout(function() {
+				this._changeTimeout = setTimeout(function() {
 					el.trigger('changed', {
 						value: self.getValue()
 					});
-				}, this.keypressTimeout);
+				}, this.changeTimeout);
 			}
 		},
 

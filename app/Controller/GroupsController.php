@@ -17,9 +17,9 @@ class GroupsController extends AppController {
 	 * @access public
 	 */
 	public function index() {
+		$data = array();
 		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
 
-		$data = array();
 		// if keywords provided build the model request with
 		if (!empty($keywords)) {
 			$data['keywords'] = $keywords;
@@ -47,11 +47,12 @@ class GroupsController extends AppController {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The group id is missing'));
-		return;
+			return;
 		}
+
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The group id invalid'));
+			$this->Message->error(__('The group id is invalid'));
 			return;
 		}
 
@@ -59,7 +60,7 @@ class GroupsController extends AppController {
 		$o = $this->Group->getFindOptions('view', User::get('Role.name'), $data);
 		$group = $this->Group->find('first', $o);
 		if (!$group) {
-			$this->Message->error(__('The group does not exist'));
+			$this->Message->error(__('The group does not exist'), array('code' => 404));
 			return;
 		}
 		$this->set('data', $group);
@@ -70,24 +71,20 @@ class GroupsController extends AppController {
 	 * group add entry point
 	 */
 	public function add() {
-
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
-			$this->Message->error(__('You are not allowed to access this entry point'));
-
+			$this->Message->error(__('You are not authorized to access that location'));
 			return;
 		}
 
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
-
 			return;
 		}
 		// check if data was provided
 		if (!isset($this->request->data['Group'])) {
 			$this->Message->error(__('No data were provided'));
-
 			return;
 		}
 
@@ -100,7 +97,6 @@ class GroupsController extends AppController {
 		// check if the data is valid
 		if (!$this->Group->validates()) {
 			$this->Message->error(__('Could not validate group data'));
-
 			return;
 		}
 
@@ -110,7 +106,6 @@ class GroupsController extends AppController {
 		if ($group == false) {
 			$this->Group->rollback();
 			$this->Message->error(__('The group could not be saved'));
-
 			return;
 		}
 		$this->Group->commit();
@@ -132,22 +127,38 @@ class GroupsController extends AppController {
 	public function edit($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
-			$this->Message->error(__('You are not allowed to access this entry point'));
-
+			$this->Message->error(__('You are not authorized to access that location'));
 			return;
 		}
 
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
+			return;
+		}
 
+		// check if the category id is provided
+		if (!isset($id)) {
+			$this->Message->error(__('The group id is missing'));
+			return;
+		}
+
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The group id is invalid'));
+			return;
+		}
+		
+		// get the resource id
+		$resource = $this->Group->findById($id);
+		if (!$resource) {
+			$this->Message->error(__('The group does not exist'), array('code' => 404));
 			return;
 		}
 
 		// check if data was provided
 		if (!isset($this->request->data['Group'])) {
 			$this->Message->error(__('No data were provided'));
-
 			return;
 		}
 
@@ -155,27 +166,11 @@ class GroupsController extends AppController {
 		$groupData = $this->request->data;
 
 		if (isset($groupData['Group'])) {
-
 			$this->Group->id = $id;
-
-			// check if the id is valid
-			if (!Common::isUuid($id)) {
-				$this->Message->error(__('The group id invalid'));
-
-				return;
-			}
-			// get the resource id
-			$resource = $this->Group->findById($id);
-			if (!$resource) {
-				$this->Message->error(__('The group doesn\'t exist'));
-
-				return;
-			}
 
 			$this->Group->set($groupData);
 			if (!$this->Group->validates()) {
 				$this->Message->error(__('Could not validate group'));
-
 				return;
 			}
 
@@ -185,7 +180,6 @@ class GroupsController extends AppController {
 			if (!$save) {
 				$this->Group->rollback();
 				$this->Message->error(__('The user could not be updated'));
-
 				return;
 			}
 			$this->Group->commit();
@@ -196,7 +190,6 @@ class GroupsController extends AppController {
 
 			$this->Message->success(__("The group has been updated successfully"));
 			$this->set('data', $group);
-
 			return;
 		}
 	}
@@ -209,29 +202,28 @@ class GroupsController extends AppController {
 	public function delete($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
-			$this->Message->error(__('You are not allowed to access this entry point'));
-
+			$this->Message->error(__('You are not authorized to access that location'));
 			return;
 		}
 
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The group id is missing'));
-
 			return;
 		}
+		
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The group id invalid'));
-
+			$this->Message->error(__('The group id is invalid'));
 			return;
 		}
+		
 		$group = $this->Group->findById($id);
 		if (!$group) {
-			$this->Message->error(__('The group doesn\'t exist'));
-
+			$this->Message->error(__('The group does not exist'), array('code' => 404));
 			return;
 		}
+		
 		$this->Group->id = $id;
 		$group['Group']['deleted'] = true;
 
@@ -240,7 +232,6 @@ class GroupsController extends AppController {
 		if (!$this->Group->save($group, true, $fields['fields'])) {
 			$this->Group->rollback();
 			$this->Message->error(__('Error while deleting group'));
-
 			return;
 		}
 		$this->Group->commit();

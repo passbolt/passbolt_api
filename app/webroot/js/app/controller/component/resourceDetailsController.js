@@ -40,7 +40,7 @@ steal(
 				this._super();
 				// pass the new resource to the view
 				this.setViewData('resource', this.options.resource);
-				// pass the secret strength label
+				// pass the secret strength label to the view
 				var secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.resource.Secret.data);
 				this.setViewData('secretStrength', secretStrength);
 			},
@@ -61,7 +61,7 @@ steal(
 
 				// Instantiate the comments controller for the current resource
 				var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
-					'resource': this.options.resource,
+					'instance': this.options.resource,
 					'foreignModel': 'Resource',
 					'foreignId': this.options.resource.id
 				});
@@ -88,6 +88,43 @@ steal(
 				this.on();
 			},
 
+			/**
+			 * Check if the component is disabled or it is planned to disable it right after
+			 * its start
+			 * @return {boolean}
+			 */
+			'isDisabled': function() {
+				// if the component is disabled
+				if(this.state.is('disabled') ||
+					// OR the component is not started AND it will be disabled right after its start
+					(this.state.is(null) && 
+						(this.options.state == 'disabled' || 
+							($.isArray(this.options.state) && this.options.state.indexOf('disabled') != -1)
+						)
+					)
+				) {
+					return true;
+				}
+				return false; 
+			},
+
+			/* ************************************************************** */
+			/* LISTEN TO THE STATE CHANGES */
+			/* ************************************************************** */
+
+			/**
+			 * Listen to the change relative to the state Ready
+			 * @param {boolean} go Enter or leave the state
+			 * @return {void}
+			 */
+			'stateReady': function(go) {
+				if(go) {
+					// because by default the component is hidden (see associated ejs)
+					this.view.show();
+				}
+				this._super(go);
+			},
+
 			/* ************************************************************** */
 			/* LISTEN TO THE MODEL EVENTS */
 			/* ************************************************************** */
@@ -99,12 +136,41 @@ steal(
 			 */
 			'{resource} updated': function (resource) {
 				// The reference of the resource does not change, refresh the component
-				this.refresh();
+				if(!this.isDisabled()) {
+					this.refresh();
+				}
 			},
 
 			/* ************************************************************** */
 			/* LISTEN TO THE APP EVENTS */
-			/* ************************************************************** *//**
+			/* ************************************************************** */
+
+			/**
+			 * Observe when the user desire to hide the sidebar
+			 * @param {passbolt.model.Resource} resource The updated resource
+			 * @return {void}
+			 */
+			'{mad.bus} workspace_showSidebar': function(el, ev, show) {
+				if(show) {
+					if(this.state.is(null)) {
+						this.options.state = 'ready';
+					} else {
+						this.setState('ready');
+						// and if one resource has been selected
+						if (this.options.selectedRs.length == 1) {
+							this.refresh();
+						}
+					}
+				} else {
+					if(this.state.is(null)) {
+						this.options.state = ['hidden', 'disabled'];
+					} else {
+						this.setState(['hidden', 'disabled']);
+					}
+				}
+			},
+
+			/**
 			 * Observe when a resource is selected
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured
@@ -115,14 +181,18 @@ steal(
 				// if more than one resource selected, or no resource selected
 				if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
 					this.options.resource = null;
-					this.setState('hidden');
+					if(!this.isDisabled()) {
+						this.setState('hidden');
+					}
 
-					// else if only 1 resource selected show the details
+				// else if only 1 resource selected show the details
 				} else {
 					// load the only one resource
 					this.options.resource = this.options.selectedRs[0];
-					this.load(this.options.resource);
-					this.setState('ready');
+					if(!this.isDisabled()) {
+						this.load(this.options.resource);
+						this.setState('ready');
+					}
 				}
 			},
 
@@ -137,14 +207,21 @@ steal(
 				// if more than one resource selected, or no resource selected
 				if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
 					this.options.resource = null;
-					this.setState('hidden');
+					// if the component is not disabled, hide it
+					// and the component has already been started
+					if(!this.isDisabled() && !this.state.is(null)) {
+						this.setState('hidden');
+					}
 
 					// else if only 1 resource selected show the details
 				} else {
 					// load the only one resource
 					this.options.resource = this.options.selectedRs[0];
-					this.load(this.options.resource);
-					this.setState('ready');
+					// if the component is not disabled, load the resource and display the component
+					if(!this.isDisabled()) {
+						this.load(this.options.resource);
+						this.setState('ready');
+					}
 				}
 			}
 

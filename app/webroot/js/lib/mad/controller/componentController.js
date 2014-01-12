@@ -95,11 +95,14 @@ steal(
 				throw new mad.error.WrongParametersException('options.viewClass', 'mad.view.View');
 			}
 
-			// Initialize the associated state instance. By default position it to
+			// Initialize the associated state instance. Byt default use the stateName defined in 
+			// the options.state
 			this.state = new mad.model.State();
-			// Observe any change on the state's label attribute
-			this.state.bind('label', function (event, newStateName) {
-				self.goNextState(newStateName);
+			// Observe any change on the state's current attribute
+			this.state.current.bind('change', function (ev, row, eventName, statesName) {
+				if(eventName == 'add') {
+					self.goNextStates(statesName);
+				}
 			});
 
 			this._super(el, options);
@@ -118,8 +121,7 @@ steal(
 		},
 
 		/**
-		 * Listen to any state change and dispatch to the dedicated state 
-		 * listener.
+		 * Listen to any state change and dispatch to the dedicated states listener.
 		 * 
 		 * A state listener is represented as a function in your controller.
 		 * This function should respect the following writing : state[Statename].
@@ -130,14 +132,16 @@ steal(
 		 * Of course with the inheritance concept you can call the parent listener state
 		 * if this one is declared with the function "_super"
 		 * 
-		 * @param {mad.model.ComponentState} State The component state class
+		 * @param {mad.model.ComponentState} statesName The states 
 		 * @param {event} event The jQuery event
 		 * @param {string} stateName The new state name
 		 */
-		'goNextState': function (newState) {
-			var previousState = this.state.attr('previous');
+		'goNextStates': function (statesName) {
+			var previousStates = this.state.previous.attr();
+			var currentStates = this.state.current.attr();
 
-			if (previousState) {
+			for(var i in previousStates) {
+				var previousState = previousStates[i];
 				// remove the previous state class
 				this.view.removeClass('js_state_' + previousState);
 				// leave the previous state
@@ -147,12 +151,16 @@ steal(
 				}
 			}
 
-			// add the new state class
-			this.view.addClass('js_state_' + newState);
-			// enter in the new state
-			var newStateListener = this['state' + $.String.capitalize(newState)];
-			if (newStateListener) {
-				newStateListener.call(this, true);
+			for(var i in currentStates) {
+				var currentState = currentStates[i];
+				// add the new state class
+				// console.log(this.getId() + ' add class ' + currentState);
+				this.view.addClass('js_state_' + currentState);
+				// enter in the new state
+				var newStateListener = this['state' + $.String.capitalize(currentState)];
+				if (newStateListener) {
+					newStateListener.call(this, true);
+				}
 			}
 		},
 
@@ -166,14 +174,13 @@ steal(
 		},
 
 		/**
-		 * Set the current element state. The component is listening on state.label
-		 * attribute changes.
-		 * @see {mad.controller.ComponentController.prototype.gotNextState}
-		 * @param {string} name the state name to switch on
+		 * Set the component current state(s)
+		 * @see {mad.controller.ComponentController.prototype.gotNextStates}
+		 * @param {string|array} statesName the new state name or an array of states name 
 		 * @return {void}
 		 */
-		'setState': function (stateName) {
-			this.state.setState(stateName);
+		'setState': function (statesName) {
+			this.state.setState(statesName);
 		},
 
 		/**
@@ -209,7 +216,7 @@ steal(
 			this.afterStart();
 			// Switch the element in its default state
 			this.setState(this.options.state);
-			return this
+			return this;
 		},
 
 		/**

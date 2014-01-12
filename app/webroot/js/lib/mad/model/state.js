@@ -20,12 +20,17 @@ steal(
 
 		'attributes': {
 			// previous state name
-			'previous': 'string',
-			// current state name
-			'label': 'string'
+			'previous': 'can.List',
+			// current states
+			'current': 'can.List'
 		}
 
 	}, /** @prototype */ {
+
+		'init': function(){
+			this.previous = new can.List([]);
+			this.current = new can.List([]);
+		},
 
 		/**
 		 * Check if the current state is equal to the given state
@@ -33,18 +38,22 @@ steal(
 		 * @return {boolean}
 		 */
 		'is': function (stateName) {
-			return this.attr('label') == stateName;
+			// stateName is null, check that the current states list is null
+			if(stateName == null && !this.current.length) {
+				return true;
+			}
+			return this.current.indexOf(stateName) != -1 ? true : false;
 		},
 
 		/**
-		 * Set the current state, store the previous state in the variable
-		 * previous
-		 * @param {string} stateName the new state
+		 * Set the current states, store the previous states in the variable previous
+		 * @param {string|array} statesName the new state name or an array of states name 
 		 * @return {void}
 		 */
-		'setState': function (stateName) {
-			this.attr('previous', this.attr('label'));
-			this.attr('label', stateName);
+		'setState': function (statesName) {
+			statesName = $.isArray(statesName) ? statesName : [statesName];
+			this.previous.replace(this.current.attr());
+			this.current.replace(statesName);
 		},
 
 		/**

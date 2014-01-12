@@ -102,6 +102,7 @@ steal(
 			// Add an autocomplete element to the form to search the target aro
 			this.options.permAroAutocpltTxtbx = new mad.form.element.AutocompleteController($('#js_perm_create_form_aro_auto_cplt', this.element), {
 				modelReference: 'passbolt.model.Permission.aro_foreign_label',
+				changeTimeout: 400,
 				callbacks: {
 					ajax: function(value) {
 						return self.autocompleteAro(value);

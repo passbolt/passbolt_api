@@ -20,6 +20,8 @@ class PermissionsController extends AppController  {
  * @return array
  */
 	public function addAcoPermissions($acoModelName = '', $acoInstanceId = null) {
+		// Should be capitalized
+		$acoModelName = ucfirst($acoModelName);
 		// The target ARO Model name to use
 		$aroModelName = null;
 		// The given permission type
@@ -38,23 +40,23 @@ class PermissionsController extends AppController  {
 			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
 			return;
 		}
-		
+				
 		// no aco instance id given
 		if(is_null($acoInstanceId)) {
-			$this->Message->error(__('The ACO instance id parameter is missing'));
+			$this->Message->error(__('The %s id is missing', $acoModelName));
 			return;
 		}
 		
 		// the aco instance id is invalid
 		if (!Common::isUuid($acoInstanceId)) {
-			$this->Message->error(__('The id %s is invalid', $acoInstanceId));
+			$this->Message->error(__('The %s id is invalid', $acoModelName));
 			return;
 		}
 		
 		// the aco instance instance does not exist
 		$this->loadModel($acoModelName);
 		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::ADMIN)) {
-			$this->Message->error(__('The user is not allowed to add a permission to the %s:%s', $acoInstanceId, $acoModelName));
+			$this->Message->error(__('Your are not allowed to add a permission to the %s', $acoModelName), array('code' => 403));
 			return;
 		}
 
@@ -165,13 +167,13 @@ class PermissionsController extends AppController  {
 				
 		// no aco instance id given
 		if(is_null($acoInstanceId)) {
-			$this->Message->error(__('The ACO instance id parameter is missing'));
+			$this->Message->error(__('The %s id is missing', $acoModelName));
 			return;
 		}
 		
 		// the aco instance id is invalid
 		if (!Common::isUuid($acoInstanceId)) {
-			$this->Message->error(__('The id %s is invalid', $acoInstanceId));
+			$this->Message->error(__('The %s id is invalid', $acoModelName));
 			return;
 		}
 		
@@ -181,7 +183,8 @@ class PermissionsController extends AppController  {
 		// not allowed => Permission.type < PermissionType::READ
 		$acoInstance = $this->$acoModelName->findById($acoInstanceId);
 		if (empty($acoInstance)) {
-			$this->Message->error(__('The ACO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $acoInstanceId, $acoModelName));
+			// If the user is not allowed to access an instance, this instance is simply hidden to him
+			$this->Message->error(__('The %s does not exist', $acoModelName), array('code' => 404));
 			return;
 		}
 		
@@ -246,22 +249,22 @@ class PermissionsController extends AppController  {
 			return;
 		}
 		
-		// the instance id is invalid
-		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The id %s is invalid', $id));
+		// the permission id is missing
+		if(is_null($id)) {
+			$this->Message->error(__('The permission id is missing', $acoModelName));
 			return;
 		}
-
-		// check if the permission exists
-		if (!$this->Permission->exists($id)) {
-			$this->Message->error(__('The permission does not exist'));
+		
+		// the permission id is invalid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The permission id is invalid', $id));
 			return;
 		}
 		
 		// find the permission
 		$permission = $this->Permission->findById($id);
-		if(is_null($permission)) {
-			$this->Message->error(__('The user is not allowed to access the permission %s', $id));
+		if(empty($permission)) {
+			$this->Message->error(__('The permission does not exist'), array('code' => 404));
 		}
 		$acoModelName = $permission['Permission']['aco'];
 		$acoInstanceId = $permission['Permission']['aco_foreign_key'];
@@ -270,10 +273,10 @@ class PermissionsController extends AppController  {
 		
 		// check the user has ADMIN right on the aco foreign instance
 		$this->loadModel($acoModelName);
-		if(!$this->$acoModelName->isAuthorized($id, PermissionType::ADMIN)) {
-			$this->Message->error(__('The user is not allowed to edit the permission %', $id));
+		if(!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::ADMIN)) {
+			$this->Message->error(__('You are not allowed to edit this permission'));
 		}
-		
+		// print_r($this->request->data);
 		// Treat the posted data
 		$pushData = $this->request->data;
 		$pushData['Permission']['id'] = $id;
@@ -341,30 +344,30 @@ class PermissionsController extends AppController  {
 			$this->Message->error(__('Invalid request method, should be DELETE'));
 			return;
 		}
-		
-		// the instance id is invalid
-		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The id %s is invalid', $id));
+
+		// the permission id is missing
+		if(is_null($id)) {
+			$this->Message->error(__('The permission id is missing', $acoModelName));
 			return;
 		}
 
-		// check if the permission exists
-		if (!$this->Permission->exists($id)) {
-			$this->Message->error(__('The permission does not exist'));
+		// the instance id is invalid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The permission id is invalid', $id));
 			return;
 		}
 		
 		// find the permission
 		$permission = $this->Permission->findById($id);
-		if(is_null($permission)) {
-			$this->Message->error(__('The user is not allowed to access the permission %s', $id));
+		if(empty($permission)) {
+			$this->Message->error(__('The permission does not exist', $id), array('code' => 404));
 		}
 		$acoModelName = $permission['Permission']['aco'];
 		
 		// check the user has ADMIN right on the aco foreign instance
 		$this->loadModel($acoModelName);
 		if(!$this->$acoModelName->isAuthorized($id, PermissionType::ADMIN)) {
-			$this->Message->error(__('The user is not allowed to delete the permission %', $id));
+			$this->Message->error(__('You are not allowed to delete this permission', $id));
 		}
 		
 		// Delete the target permission

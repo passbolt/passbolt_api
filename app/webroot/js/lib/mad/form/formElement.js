@@ -76,7 +76,6 @@ steal(
 		 * @return {void}
 		 */
 		'reset': function () {
-			console.log('is reseting ' + this.getClass().fullName);
 			this.setState('reset');
 			this.setValue(this.options.value);
 			this.setState('ready');

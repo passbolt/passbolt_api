@@ -70,8 +70,7 @@ steal(
 
 			// Instanciate the resource details controller
 			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_wsp_pwd_sidebar_second', this.element), {
-				'selectedRs': this.options.selectedRs,
-				'state': 'hidden'
+				'selectedRs': this.options.selectedRs
 			});
 		},
 		

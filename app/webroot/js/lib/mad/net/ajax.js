@@ -95,7 +95,25 @@ mad.net.Ajax.request({
 
 					// the request has not been performed
 					function (jqXHR, textStatus, data) {
-						var response = mad.net.Response.getResponse('unreachable');
+						var jsonData = null;
+						var response = null;
+						// In case of error the reponse is not automatically parsed.
+						// Try to parse it, in case the server return an understable message.
+						try{
+							if(typeof jqXHR.responseText != undefined) {
+								jsonData = $.parseJSON(jqXHR.responseText);
+							}
+						} catch(e) {}
+
+						// In case we've been able to parse the server answer.
+						if (jsonData != null && mad.net.Response.isResponse(jsonData)) {
+							response = new mad.net.Response(jsonData);
+						}
+						// Otherwise treat a default unreacheable server answer.
+						else {
+							response = mad.net.Response.getResponse('unreachable');
+						}
+
 						var deferred = $.Deferred();
 						deferred.rejectWith(this, [jqXHR, response.getStatus(), response, request]);
 						return deferred;

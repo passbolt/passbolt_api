@@ -15,7 +15,7 @@ App::uses('ItemTag', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
 
-class GroupsControllerTest extends ControllerTestCase {
+class TagsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.resource', 'app.category', 'app.categories_resource',
