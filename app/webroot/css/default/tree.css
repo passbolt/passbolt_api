@@ -89,3 +89,8 @@
 .tree .node.close ul{
 	display:none;
 }
+
+/* Events */
+.tree .row.drop-over {
+	background-color: #eee;
+}
