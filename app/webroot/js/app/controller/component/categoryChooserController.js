@@ -1,6 +1,8 @@
 steal(
 	'mad/controller/component/dynamicTreeController.js',
-	'app/model/category.js'
+	'app/view/component/categoryChooser.js',
+	'app/model/category.js',
+	'app/model/categoryResource.js'
 ).then(function () {
 
 	/*
@@ -23,7 +25,7 @@ steal(
 
 		'defaults': {
 			'label': 'Category Chooser',
-			'viewClass': mad.view.component.tree.List,
+			'viewClass': passbolt.view.component.categoryChooser,
 			'itemClass': passbolt.model.Category,
 			'templateUri': 'mad/view/template/component/tree.ejs',
 			// The map to use to make jstree working with our category model
@@ -101,6 +103,49 @@ steal(
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
 			mad.bus.trigger('category_selected', item);
+		},
+
+		/**
+		 * A category has been dropped over
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {jQuery.Drop} drop The drop object
+		 * @param {jQuery.Drag} drag The drag object
+		 * @param {HTMLEvent} srcEvent
+		 */
+		' category_dropover': function(el, ev, drop, drag, srcEvent) {
+
+		},
+
+		/**
+		 * A category has been dropped out
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {jQuery.Drop} drop The drop object
+		 * @param {jQuery.Drag} drag The drag object
+		 * @param {HTMLEvent} srcEvent
+		 */
+		' category_dropout': function(el, ev, drop, drag, srcEvent) {
+
+		},
+
+		/**
+		 * A resource has been dragged and dropped on a category
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {jQuery.Drop} drop The drop object
+		 * @param {jQuery.Drag} drag The drag object
+		 * @param {HTMLEvent} srcEvent
+		 */
+		' category_dropon': function(el, ev, drop, drag, srcEvent) {
+			var categoryId = drop.element.parent().attr("id");
+			var resourceId = drag.element.attr("id");
+			new passbolt.model.CategoryResource({
+					category_id : categoryId,
+					resource_id : resourceId
+				})
+				.save();
+			// TODO : get result and show notification
 		},
 
 		/**
