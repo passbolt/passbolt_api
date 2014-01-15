@@ -151,6 +151,20 @@ span + .icon  {
     content: '\229E';
 }
 
+/** notification messages **/
+.notification_status .icon.success:before {
+	content: '\2713';
+	line-height: 10px;
+}
+.notification_status .icon.info:before {
+	content: '\E705';
+	line-height: 10px;
+}
+.notification_status .icon.error:before {
+	content: '\2716';
+	line-height: 10px;
+}
+
 .icon.avatar.user:before,
 .icon.avatar.group:before {
     line-height: 0.62em;
