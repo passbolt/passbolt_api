@@ -58,6 +58,7 @@ steal(
 					self.insertItem(item, mappedItem.id, 'last');
 				});
 			}
+			return $child;
 		},
 
 		/**
