@@ -1,4 +1,6 @@
-<span class="notification_status"><%= status %></span>&nbsp;&nbsp;
+<span class="notification_status">
+	<i class="icon <%= status %> big no-text"></i>
+</span>&nbsp;&nbsp;
 <span class="notification_title"><%= title %></span>&nbsp;&nbsp;
 <% if (message) { %>
 	<span class="js_notification_more_button"><%= __('see details') %></span>
