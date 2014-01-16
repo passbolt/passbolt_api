@@ -14,7 +14,6 @@ steal(
 
 			'init': function (el, options) {
 				this._super(el, options);
-				console.log("init comments List");
 			},
 
 			/* ************************************************************** */

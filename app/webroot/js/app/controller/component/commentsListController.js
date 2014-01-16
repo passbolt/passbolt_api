@@ -44,8 +44,6 @@ steal(
 			'init': function (el, opts) {
 				this._super(el, opts);
 				var self = this;
-				// load categories function of the selected database
-				//this.setState('loading');
 
 				// load the comments for the given context
 				passbolt.model.Comment.findAll({
@@ -54,8 +52,6 @@ steal(
 				}, function (comments, response, request) {
 					// load the tree with the comments
 					self.load(comments);
-					//self.setState('ready');
-				}, function (response) {
 				});
 			},
 
