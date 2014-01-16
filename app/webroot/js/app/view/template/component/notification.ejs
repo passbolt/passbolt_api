@@ -1,13 +1,23 @@
+<% if (persistent) { %>
+<span class="notification_close" id="js_notification_close">
+	<a href="#" id="js_notification_close_button">
+		<i class="icon close big no-text"></i>
+		<span>close</span>
+	</a>
+</span>
+<% } %>
 <span class="notification_status">
 	<i class="icon <%= status %> big no-text"></i>
 </span>&nbsp;&nbsp;
-<span class="notification_title"><%= title %></span>&nbsp;&nbsp;
-<% if (message) { %>
-	<span class="js_notification_more_button"><%= __('see details') %></span>
-<% } %>
-<div class="js_notification_details_container">
+<span class="notification_title"><%= title %></span>
+<div class="js_notification_details_container" id="js_notification_details_container">
 	<div class="js_notification_details">
-		<div><%= message %></div>
-		<div><%= data %></div>
+		<div class="message"><%= message %></div>
+		<div class="data"><%= data %></div>
 	</div>
 </div>
+<% if (message) { %>
+<div class="notification_see_details">
+	<a class="js_notification_more_button" id="js_notification_more_button" href="#"><%= __('see details') %></a>
+</div>
+<% } %>

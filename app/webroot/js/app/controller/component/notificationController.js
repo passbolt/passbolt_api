@@ -34,7 +34,8 @@ steal(
 					'status': '',
 					'title': '',
 					'message': '',
-					'data': ''
+					'data': '',
+					'persistent': false
 				});
 			}
 		},
@@ -59,10 +60,13 @@ steal(
 				'status': notif.status,
 				'title': notif.title,
 				'message': notif.message,
-				'data': notif.data
+				'data': notif.data,
+				'persistent': notif.persistent
 			});
+			$.extend( this.view.params, notif );
 			this.setState('ready');
 			this.refresh();
+			this.view.reset();
 		}
 
 	});

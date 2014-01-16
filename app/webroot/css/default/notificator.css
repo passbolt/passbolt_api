@@ -44,3 +44,16 @@
 	border-radius:2px; 
 	box-shadow:0 2px 4px rgba(0, 0, 0, 0.2);
 }*/
+.notificator .notification_close {
+	float: right;
+	margin: 0 10px 0 0;
+}
+.notificator .notification_close i.icon.close:before{
+	line-height: 10px;
+}
+.notificator a {
+	color: #aaa;
+}
+.notificator a:hover {
+	color: #bbb;
+}

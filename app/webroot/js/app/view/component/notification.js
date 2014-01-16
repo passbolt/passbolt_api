@@ -12,6 +12,14 @@ steal(
 
 		// 
 		'timeoutBeforeReset': null,
+		'params': {
+			'status': '',
+			'title': '',
+			'message': '',
+			'data': '',
+			'persistent': false,
+			'timeout': 2500
+		},
 
 		'init': function (el, options) {
 			this._super(el, options);
@@ -31,12 +39,20 @@ steal(
 				clearTimeout(this.timeoutBeforeReset);
 				self.controller.setState('hidden');
 			}
-			// hide the notificator after 30 secondes
-			self.timeoutBeforeReset = setTimeout(function () {
-				self.controller.setState('hidden');
-			}, 30000);
+
+			if(!this.params.persistent) {
+				// hide the notificator after timeout value
+				self.timeoutBeforeReset = setTimeout(function () {
+					self.controller.setState('hidden');
+				}, self.params.timeout);
+			}
 
 			return this._super();
+		},
+
+		'reset': function () {
+			$(this.element).find('.js_notification_details_container').hide();
+			$(this.element).find('.js_notification_more_button').text(__('see details'));
 		},
 
 		/* ************************************************************** */
@@ -50,9 +66,25 @@ steal(
 		 * @return {void}
 		 */
 		'#js_notification_more_button click': function (element, ev) {
-			$(this.element).find('#js_notification_details').show().one('mouseleave', function () {
-				$(this).hide();
-			});
+			var detailsVisible = $(this.element).find('#js_notification_details_container').is(':visible');
+			if (detailsVisible) {
+				$(this.element).find('#js_notification_details_container').hide();
+				$(this.element).find('#js_notification_more_button').text(__('see details'));
+			}
+			else {
+				$(this.element).find('#js_notification_details_container').show();
+				$(this.element).find('#js_notification_more_button').text(__('hide details'));
+			}
+		},
+
+		/**
+		 * The user clicks on close
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'#js_notification_close_button click': function (element, ev) {
+			this.controller.setState('hidden');
 		}
 
 	});
