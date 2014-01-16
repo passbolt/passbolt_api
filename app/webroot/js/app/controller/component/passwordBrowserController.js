@@ -378,14 +378,22 @@ steal(
 		'{passbolt.model.Resource} created': function (model, ev, resource) {
 			var self = this;
 
-			// If the new resource belongs to one of the categories displayed by the resource
-			// browser -> Insert it
-			resource.Category.each(function(category, i) {
-				if(self.options.categories.indexOf(category.id) != -1) {
-					self.insertItem(resource, null, 'first');
-					return false; // break
-				}
-			});
+			// If the resourcs belongs to one or several categories
+			if (resource.Category.length) {
+				// If the new resource belongs to one of the categories displayed by the resource
+				// browser -> Insert it
+				resource.Category.each(function(category, i) {
+					if(self.options.categories.indexOf(category.id) != -1) {
+						self.insertItem(resource, null, 'first');
+						return false; // break
+					}
+				});	
+			}
+			// Else insert it whatever the applied filter.
+			// TODO Discuss this behavior with the team
+			else {
+				self.insertItem(resource, null, 'first');
+			}
 		},
 
 		/**
@@ -542,35 +550,28 @@ steal(
 			this.filter = filter;
 			// reset the state variables
 			this.options.categories = [];
-			// this.options.categories = new can.Observe.List([]); // with an observable list, it would be great, but it is not working properly with event !
 
 			// override the current list of categories displayed with the new ones
-			can.each(filter.getTags(), function (category, i) {
-				var subCategories = category.getSubCategories(true);
-				can.each(subCategories, function(subCategory, i){
-					self.options.categories.push(subCategory.id);
+			// and the relative sub-categories
+			var filteredCategory = filter.getForeignModels('Category');
+			if(filteredCategory) {
+				can.each(filteredCategory, function (category, i) {
+					var subCategories = category.getSubCategories(true);
+					can.each(subCategories, function(subCategory, i){
+						self.options.categories.push(subCategory.id);
+					});
 				});
-			});
+			}
 
 			// change the state of the component to loading 
 			this.setState('loading');
-			
-			// load resources for the given filter
-			var filterTagsParam = can.map(filter.getTags(), function (tag, i) { return tag.id; }).join(',');
+
+			// load resources functions of the filter
 			passbolt.model.Resource.findAll({
-				'categories_id': filterTagsParam,
-				'keywords': filter.getKeywords(),
-				'filter': filter.getFilter(),
-				'order': filter.getOrder(),
+				'filter': this.filter,
 				'recursive': true
 			}, function (resources, response, request) {
-				// The callback is out of date, an other filter has been performed
-				// @todo do something like filter.isRelativeTo(dataBrol) => bool
-				if (request.originParams.keywords != self.filter.getKeywords() ||
-						request.originParams.categories_id != can.map(self.filter.getTags(), function (tag, i) { return tag.id; }).join(',')) {
-					steal.dev.log('(OutOfDate) Cancel passbolt.model.Resource.findAll request callback in passbolt.controller.component.PasswordBrowserController');
-					return;
-				}
+				// TODO The callback is out of date, an other filter has been performed
 				// load the resources in the browser
 				self.load(resources);
 				// change the state to ready

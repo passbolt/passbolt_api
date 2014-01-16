@@ -7,7 +7,13 @@ steal(
 	 * @inherits {mad.model.Model}
 	 * @parent index
 	 * 
-	 * The Filter model
+	 * The Filter model used for the search
+	 * 
+	 * target : Resource / User
+	 * keywords : string
+	 * conditions : Category = *, Group = *
+	 * order : conditions of order,
+	 * script: 
 	 * 
 	 * @constructor
 	 * Creates a filter
@@ -16,63 +22,65 @@ steal(
 	 */
 	mad.model.Model('passbolt.model.Filter', /** @static */	{
 
-/* ************************************************************** */
-/* MODEL DEFINITION */
-/* ************************************************************** */
-
-		'validateRules': { },
-
 		'attributes': {
+			// Filter by keywords
 			'keywords': 'string',
-			'tags': 'passbolt.model.Category.models',
-			'filter': 'string',
-			'order': 'string'
+			// Filter on a specific case (modified ... )
+			'case': 'string',
+			// Filter functions of a foreign model
+			'foreignModels': 'array',
+			// Order by
+			'order': 'array',
+			// Prefix the filter param by
+			'requestPrefix': 'string'
 		}
 
 	}, /** @prototype */ {
 
-		/**
-		 * Get filter keywords
-		 * @return {string}
-		 */
-		'getKeywords': function() {
-			if(typeof this.keywords != 'undefined') {
-				return this.keywords;
+		'init':function(attrs) {
+			if(typeof attrs == 'undefined' || typeof attrs['requestPrefix'] == 'undefined') {
+				this.requestPrefix = 'fltr_';
 			}
-			return '';
+			if(typeof attrs == 'undefined' || typeof attrs['foreignModels'] == 'undefined') {
+				this.foreignModels = new can.List([]);
+			}
 		},
 
 		/**
-		 * Get filter tags
-		 * @return {array}
+		 * Format the filter to be passed in an ajax request
 		 */
-		'getTags': function() {
-			if(typeof this.tags != 'undefined') {
-				return this.tags;
+		'toRequest': function() {
+			var self = this;
+			var returnValue = {};
+
+			if(this.keywords != null) {
+				returnValue[this.requestPrefix + 'keywords'] = this.keywords;
 			}
-			return [];
+			if(this.case != null) {
+				returnValue[this.requestPrefix + 'case'] = this.case;
+			}
+			if(this.order != null) {
+				returnValue[this.requestPrefix + 'order'] = this.order;
+			}
+			var foreignModels = this.foreignModels.attr();
+			for(var foreignModel in foreignModels) {
+				returnValue[this.requestPrefix + 'model_' + [foreignModel.toLowerCase()]] = can.map(this.foreignModels[foreignModel], function (instance, i) { return instance.id; }).join(',');
+			};
+
+			return returnValue;
 		},
 
 		/**
-		 * Get filter 
+		 * Get the foreign model which will apply to the filter
+		 * @param {string} name The condition name
 		 * @return {string}
 		 */
-		'getFilter': function() {
-			if(typeof this.filter != 'undefined') {
-				return this.filter;
+		'getForeignModels': function(name) {
+			var returnValue = [];
+			if(typeof this.foreignModels != 'undefined' && typeof this.foreignModels[name] != 'undefined') {
+				returnValue = this.foreignModels[name];
 			}
-			return '';
-		},
-
-		/**
-		 * Get order
-		 * @return {string}
-		 */
-		'getOrder': function() {
-			if(typeof this.order != 'undefined') {
-				return this.order;
-			}
-			return '';
+			return returnValue;
 		}
 
 	});

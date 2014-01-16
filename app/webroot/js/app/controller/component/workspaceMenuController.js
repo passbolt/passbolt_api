@@ -72,8 +72,8 @@ steal(
 		 * @return {void}
 		 */
 		'{creationButton} click': function (el, ev) {
-			var category = this.options.creationButton.getValue();
-			mad.bus.trigger('request_resource_creation', category);	
+			var categories = this.options.creationButton.getValue();
+			mad.bus.trigger('request_resource_creation', categories);	
 		},
 
 		/**
@@ -151,6 +151,22 @@ steal(
 			} else {
 				this.setState('multiSelection');
 			}
+		},
+
+		/**
+		 * Observe when a filter is applied on the wsp
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Filter} filter The unselected resource
+		 * @return {void}
+		 */
+		'{mad.bus} filter_resources_browser': function(el, ev, filter) {
+			var categories = can.List([]);
+			var filterCategories = filter.getForeignModels('Category');
+			if(filterCategories) {
+				categories = filterCategories;
+			}
+			this.options.creationButton.setValue(categories);
 		},
 
 		/* ************************************************************** */

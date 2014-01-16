@@ -161,8 +161,8 @@ class Resource extends AppModel {
       case 'index':
       case 'viewByCategory':
         $conditions = array('conditions' => array('Resource.deleted' => 0, ));
-        if (isset($data['Category.id'])) {
-          $conditions['conditions']['Category.id'] = $data['Category.id'];
+        if (isset($data['foreignModels']['Category.id'])) {
+          $conditions['conditions']['Category.id'] = $data['foreignModels']['Category.id'];
         }
         if (isset($data['keywords'])) {
           $keywords = explode(' ', $data['keywords']);
@@ -170,8 +170,8 @@ class Resource extends AppModel {
             $conditions['conditions']["AND"][] = array('Resource.name LIKE' => '%' . $keyword . '%');
           }
         }
-        if (isset($data['filter'])) {
-        	switch($data['filter']) {
+        if (isset($data['case'])) {
+        	switch($data['case']) {
 						case 'favorite':
 							$conditions['conditions']["AND"][] = array('Favorite.id IS NOT NULL');
 							break;
@@ -192,7 +192,7 @@ class Resource extends AppModel {
 							$conditions['order'] = array('Resource.expiry_date DESC');
 							break;
 					}
-				} 
+				}
 				// By default order by created date
 				else {
 					$conditions['order'] = array('Resource.modified DESC');

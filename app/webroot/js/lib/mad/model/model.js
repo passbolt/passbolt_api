@@ -58,7 +58,7 @@ steal(
 			}
 			// extract the model attribute
 			var modelAttr = can.getObject(attrPath, instance);
-			if(typeof modelAttr != 'undefined') {
+			if (typeof modelAttr != 'undefined') {
 				// if multiple association
 				if (modelAttr.length) {
 					returnValue = [];

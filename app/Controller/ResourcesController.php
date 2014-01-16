@@ -14,6 +14,13 @@ App::uses('CategoryResource', 'Model');
 class ResourcesController extends AppController {
 
 /**
+ * @var $component application wide components 
+ */
+	public $components = array(
+		'Filter'
+	);
+
+/**
  * Get all resources
  * Renders a json object of the resources
  *
@@ -22,74 +29,61 @@ class ResourcesController extends AppController {
  * @return void
  */
 	public function index() {
-		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
-		$categoriesId = isset($this->request->query['categories_id']) && !empty($this->request->query['categories_id'])
-			? explode(',', $this->request->query['categories_id'])
-			: array();
-		$recursive = isset($this->request->query['recursive']) ? $this->request->query['recursive'] === 'true' : false;
-		$filter = isset($this->request->query['filter']) ? $this->request->query['filter'] : null;
-		$order = isset($this->request->query['order']) ? $this->request->query['order'] : null;
+		// The additional information to pass to the model request
 		$data = array();
-
-		// if categories id are provided check their validity, and build model request with
-		if (count($categoriesId)) {
-			$data['Category.id'] = array();
+		// Extract the filter from the request
+		$filter = $this->Filter->fromRequest($this->request->query);
+		// Merge the filter into the additional information to pass to the model request
+		$data = array_merge($data, $filter);
+		// Whether we want also the resources of all subcategories
+		$recursive = false;
+		if(isset($this->request->query['recursive']) && $this->request->query['recursive'] === 'true') {
+			$recursive = true;
 		}
-		$maxI = count($categoriesId);
-		for ($i = 0; $i < $maxI; $i++) {
-			$categoryId = $categoriesId[$i];
 
-			// if a category id is provided check is validity
-			if (!Common::isUuid($categoryId)) {
-				$this->Message->error(__('The category id is invalid'));
-				return;
-			}
+		// if filtered categories are provided
+		// - check the valildity of the given uids
+		// - if recursive, filter also on sub-categories 
+		if(isset($data['foreignModels']['Category.id'])) {
+			// Tmp array to store the target categories and subcategories (if recursive provided)
+			$categories = array();//$data['foreignModels']['Category.id'];
 
-			// check if the category exists
-			$category = $this->Resource->CategoryResource->Category->findById($categoryId);
-			if (!$category) {
-				$this->Message->error(__('The category doesn\t exist'));
-				return;
-			}
-
-			if ($recursive == false) {
-				$data['Category.id'][] = $categoryId;
-			} else {
-				// If the category has yet been added to the model request, continue
-				if (in_array($categoryId, $data['Category.id'])) {
-					continue;
+			foreach($data['foreignModels']['Category.id'] as $categoryId) {
+				// if a category id is provided check it is well an uid
+				if (!Common::isUuid($categoryId)) {
+					$this->Message->error(__('The category id is invalid'));
+					return;
 				}
-				$cats = $this->Resource->CategoryResource->Category->find(
-					'all',
-					array(
-						'conditions' => array(
-							'Category.lft >=' => $category['Category']['lft'],
-							'Category.rght <=' => $category['Category']['rght']
-							),
-						'order' => array(
-							'Category.lft' => 'ASC'
-							)
-					)
-				);
-				foreach ($cats as $cat) {
-					$data['Category.id'][] = $cat['Category']['id'];
+				// check if the category exists
+				$category = $this->Resource->CategoryResource->Category->findById($categoryId);
+				if (!$category) {
+					$this->Message->error(__('The category doesn\t exist'));
+					return;
+				}
+
+				// The request is not a recursive request
+				if(!$recursive) {
+					$categories[] = $categoryId;
+				} 
+				// Else get the sub categories and add them to the target categories to filter on
+				else {
+					// If the category has yet been added to the additional parameters
+					if (in_array($categoryId, $categories)) {
+						continue;
+					} 
+					// Get the subcategories of the current category
+					else {
+						$subCategories = $this->Resource->CategoryResource->Category->getSubCategories($category);
+						// Add the subcategories to the request conditions
+						foreach ($subCategories as $subCategory) {
+							$categories[] = $subCategory['Category']['id'];
+						}
+					}
 				}
 			}
-		}
 
-		// if keywords provided build the model request with
-		if (!empty($keywords)) {
-			$data['keywords'] = $keywords;
-		}
-
-		// if filter provided build the model request with
-		if (!empty($filter)) {
-			$data['filter'] = $filter;
-		}
-
-		// if order provided build the model request with
-		if (!empty($order)) {
-			$data['order'] = $order;
+			// replace the categories to filter on with the computed array of categories & subcategories
+			$data['foreignModels']['Category.id'] = $categories;
 		}
 
 		$options = $this->Resource->getFindOptions('index', User::get('Role.name'), $data);

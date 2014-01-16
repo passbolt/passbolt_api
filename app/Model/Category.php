@@ -144,6 +144,30 @@ class Category extends AppModel {
 	}
 
 /**
+ * Get the subcategories of a given category
+ * @param {Category} category The target category
+ * @return {array}
+ */
+	public function getSubCategories($category = null) {
+		$returnValue = array();
+		if(!is_null($category)) {
+			$returnValue = $this->find(
+				'all',
+				array(
+					'conditions' => array(
+						'Category.lft >=' => $category['Category']['lft'],
+						'Category.rght <=' => $category['Category']['rght']
+						),
+					'order' => array(
+						'Category.lft' => 'ASC'
+						)
+				)
+			);
+		}
+		return $returnValue;
+	}
+ 
+/**
  * Check if a category type with same id exists
  * @param check
  */

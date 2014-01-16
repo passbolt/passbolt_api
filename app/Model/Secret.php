@@ -26,12 +26,6 @@ class Secret extends AppModel {
  */
 	public static function getValidationRules($case='default') {
 		$default = array(
-			'id' => array(
-				'uuid' => array(
-					'rule'		 => 'uuid',
-					'message'	=> __('UUID must be in correct format')
-				)
-			),
 			'user_id' => array(
 				'uuid' => array(
 					'rule'		 => 'uuid',
