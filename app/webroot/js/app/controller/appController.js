@@ -71,8 +71,11 @@ steal(
 			// @todo move this into ready state
 			this.workspacesCtl.enableTab('js_passbolt_passwordWorkspace_controller');
 			mad.bus.trigger('passbolt_notify', {
-				'status': 'info',
-				'title': "Your action was successful"
+				'status': 'success',
+				'title': "Your action was successful",
+				//'message' : 'this is a test message',
+				//'data' : 'bla bla bla',
+				'persistent' : true
 			});
 		},
 
