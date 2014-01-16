@@ -150,6 +150,9 @@ span + .icon  {
 .icon.plusplain:before {
     content: '\229E';
 }
+.icon.eye:before {
+	content: '\E70A';
+}
 
 /** notification messages **/
 .notification_status .icon.success:before {
