@@ -1,0 +1,59 @@
+.notificator {
+	font-size:13px;
+	font-family:arial;
+	position:absolute;
+	line-height:20px;
+	min-width:200px;
+	padding:1em 0;
+	border:1px solid transparent;
+	border-radius:5px;
+	background-color: #000;
+	color: #fff;
+	text-align: center;
+	box-shadow:0 2px 4px rgba(0, 0, 0, 0.2);
+	/* center it */
+	left: 50%;
+	width: 30%;
+	margin-left: -15%;
+	top:3.5em;
+	z-index: 10000;
+}
+.notificator .notification_status { 
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+}
+/*.notificator .js_notification_more_button {
+	font-weight:bold;
+	color:#C0C0C0;
+	font-size:11px;
+}
+.notificator .js_notification_details_container {
+	position:absolute; 
+	top:20px; 
+	left:-1px; 
+	width:100%; 
+	z-index:2; 
+}
+.notificator .js_notification_details {
+	display:none; 
+	width:100%; 
+	position:absolute; 
+	background-color: #F9EDBE; 
+	border:1px solid transparent; 
+	border-radius:2px; 
+	box-shadow:0 2px 4px rgba(0, 0, 0, 0.2);
+}*/
+.notificator .notification_close {
+	float: right;
+	margin: 0 10px 0 0;
+}
+.notificator .notification_close i.icon.close:before{
+	line-height: 10px;
+}
+.notificator a {
+	color: #aaa;
+}
+.notificator a:hover {
+	color: #bbb;
+}

@@ -47,10 +47,9 @@ steal(
 			this.filterCtl.start();
 
 			// Instantiate the notification controller
-			// this.notifCtl = new passbolt.controller.component.NotificationController($('#js_notificator'), {
-				// 'state': 'hidden'
-			// });
-			// this.notifCtl.start();
+			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {
+			});
+			this.notifCtl.start();
 
 			// Instantiate workspaces container tabs element to the app 
 			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'), {
@@ -71,6 +70,13 @@ steal(
 
 			// @todo move this into ready state
 			this.workspacesCtl.enableTab('js_passbolt_passwordWorkspace_controller');
+			mad.bus.trigger('passbolt_notify', {
+				'status': 'success',
+				'title': "Your action was successful",
+				//'message' : 'this is a test message',
+				//'data' : 'bla bla bla',
+				'persistent' : true
+			});
 		},
 
 		/**

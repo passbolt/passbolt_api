@@ -27,15 +27,17 @@ steal(
 
 	}, /** @prototype */ {
 
-
 		'beforeRender': function() {
 			this._super();
-			this.setViewData({
-				'status': '',
-				'title': '',
-				'message': '',
-				'data': ''
-			});
+			if(this.state.label != 'ready') {
+				this.setViewData({
+					'status': '',
+					'title': '',
+					'message': '',
+					'data': '',
+					'persistent': false
+				});
+			}
 		},
 
 		/* ************************************************************** */
@@ -43,14 +45,12 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Listen the event passbolt_notify and display any 
+		 * Listen the event passbolt_notify and display any notification
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {array} notif
 		 */
-		// create an object Notification
 		'{mad.bus} passbolt_notify': function (el, ev, notif) {
-			
 			// The component is not already started, start it
 			if(this.view == null) {
 				this.start();
@@ -60,10 +60,13 @@ steal(
 				'status': notif.status,
 				'title': notif.title,
 				'message': notif.message,
-				'data': notif.data
+				'data': notif.data,
+				'persistent': notif.persistent
 			});
-			this.refresh();
+			$.extend( this.view.params, notif );
 			this.setState('ready');
+			this.refresh();
+			this.view.reset();
 		}
 
 	});
