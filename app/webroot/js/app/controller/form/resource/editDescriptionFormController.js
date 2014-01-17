@@ -22,7 +22,9 @@ steal(
 			'defaults' : {
 				'templateBased' : true,
 				// The current resource
-				'resource': null
+				'resource': null,
+				// Description field.
+				'descriptionField': null
 			}
 
 		}, /** @prototype */ {
@@ -40,12 +42,12 @@ steal(
 				}).start().setValue(this.options.resource.id));
 
 				// this textbox will contain the list of tags separated with a comma
-				this.descriptionField = this.addElement(new mad.form.element.TextboxController($('.resource_description', this.element), {
+				this.options.descriptionField = this.addElement(new mad.form.element.TextboxController($('.resource_description', this.element), {
 					modelReference : 'passbolt.model.Resource.description'
 				}).start());
 
 				// Update the resource description with current value
-				this.descriptionField.setValue(this.options.resource.description);
+				this.options.descriptionField.setValue(this.options.resource.description);
 
 				// Force event submit event (not thrown by default)
 				// TODO : understand why we need to do that... weird
@@ -53,6 +55,5 @@ steal(
 					$(this).trigger('submit');
 				});
 			}
-
 		});
 	});
