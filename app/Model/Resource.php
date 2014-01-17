@@ -81,13 +81,13 @@ class Resource extends AppModel {
         )),
       'name' => array('alphaNumeric' => array(
           'rule' => '/^.{2,64}$/i',
-          'required' => true,
+          'required' => 'create',
           'allowEmpty' => false,
           'message' => __('Alphanumeric only')
         )),
       'username' => array('alphaNumeric' => array(
           'rule' => '/^.{2,64}$/i',
-          'required' => true,
+          'required' => 'create',
           'message' => __('Alphanumeric only')
         )),
       'expiry_date' => array(
