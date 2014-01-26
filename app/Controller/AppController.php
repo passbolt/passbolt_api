@@ -8,6 +8,7 @@
  * @since        version 2.12.7
  * @license      http://www.passbolt.com/license
  */
+
 App::uses('Sanitize', 'Utility');
 App::uses('Controller', 'Controller');
 App::import('Model','User');

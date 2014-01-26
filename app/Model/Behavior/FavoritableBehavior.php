@@ -24,7 +24,7 @@ class FavoritableBehavior extends ModelBehavior {
 	 * @param array $settings Settings to override for model.
 	 * @access public
 	 */
-	function setup(&$Model, $settings = array()){
+	function setup(Model $Model, $settings = array()){
 		$Model->bindModel(array('hasOne' => array(
 			'Favorite' => array(
 				'dependent' => true,

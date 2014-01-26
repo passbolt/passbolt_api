@@ -94,7 +94,7 @@ class User extends AppModel {
 	 * @return bool, if true proceed with save
 	 * @access public
 	 */
-	public function beforeSave() {
+	public function beforeSave($options=null) {
 		// encrypt the password
 		// @todo use bcrypt instead #PASSBOLT-157
 		if (isset($this->data['User']['password'])) {
@@ -117,10 +117,10 @@ class User extends AppModel {
 	public static function get($path = null) {
 		// Get the user from the session
 		Common::getModel('Role');
-		$u = & AuthComponent::user();
+		$u = AuthComponent::user();
 		// otherwise use a anonymous / guest one
 		if ($u == null) {
-			$u = & User::setActive(User::ANONYMOUS);
+			$u = User::setActive(User::ANONYMOUS);
 		}
 		// truth is a land without path
 		if (!isset($path)) {
@@ -239,7 +239,7 @@ class User extends AppModel {
 	 * @return $condition array
 	 * @access public
 	 */
-	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::GUEST, &$data = null) {
+	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::GUEST, $data = null) {
 		$conditions = array();
 		switch ($role) {
 			case Role::USER :

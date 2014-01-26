@@ -24,7 +24,7 @@ class BlacklistComponent extends Component {
  * startup function
  * @param Controller $controller. the calling controller
  */
-	public function initialize(&$controller) {
+	public function initialize(Controller $controller) {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
@@ -38,7 +38,7 @@ class BlacklistComponent extends Component {
  * startup function
  * @param Controller $controller. the calling controller
  */
-	public function startup(&$controller) {
+	public function startup(Controller $controller) {
 		// If address is blacklisted, gives a blackhole
 		// http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#handling-blackhole-callbacks
 		if ($this->isIpInBlacklist()) {

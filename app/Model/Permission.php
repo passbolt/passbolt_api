@@ -198,7 +198,7 @@ class Permission extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
+	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
 		$returnValue = array('conditions' => array());
 		// switch ($case) {
 			// case 'view':
@@ -223,7 +223,7 @@ class Permission extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'view', $role = Role::USER, &$data = null) {
+	public static function getFindFields($case = 'view', $role = Role::USER, $data = null) {
 		$returnValue = array('fields'=>array());
 		return $returnValue;
 		switch($case){

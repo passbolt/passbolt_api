@@ -104,7 +104,7 @@ class PassboltAuthComponent extends AuthComponent {
  * startup function
  * @param Controller $controller. the calling controller
  */
-	public function startup(&$controller) {
+	public function startup(Controller $controller) {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
 		return parent::startup($controller);
@@ -265,7 +265,7 @@ class PassboltAuthComponent extends AuthComponent {
 		if (isset($request->data['User']['username'])) {
 			$status = $identified ? true : false;
 			// Log the attempt
-			$this->AuthenticationLog->log($request->data['User']['username'], $this->ip, $status);
+			$this->AuthenticationLog->add($request->data['User']['username'], $this->ip, $status);
 			$this->__setContext($request); // After logging a new entry, we set the context again
 		}
 

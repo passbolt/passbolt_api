@@ -26,11 +26,11 @@ class MyFormHelper extends FormHelper {
 		return parent::input($fieldName, $options) . "\n";
 	}
 
-	public function submit($label,$options=array()) {
-		return parent::submit($label, $options) . "\n";
+	public function submit($caption = NULL, $options = array()) {
+		return parent::submit($caption, $options) . "\n";
 	}
 
-	public function end() {
+	public function end($options = NULL) {
 		return parent::end() . "\n";
 	}
 

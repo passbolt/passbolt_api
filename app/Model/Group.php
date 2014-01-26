@@ -56,7 +56,7 @@ class Group extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'view',  $role = Role::ANONYMOUS, &$data = null) {
+	public static function getFindConditions($case = 'view',  $role = Role::ANONYMOUS, $data = null) {
 		$conditions = array();
 		switch ($case) {
 			case 'add':

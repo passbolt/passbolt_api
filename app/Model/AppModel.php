@@ -68,9 +68,9 @@ class AppModel extends Model {
  * @param array data
  * @return array
  */
-	public static function getFindOptions($case, $role=null, &$data = null) {
+	public static function getFindOptions($case, $role=null, $data = null) {
 		return array_merge(
-			static::getFindConditions($case, $role, &$data),
+			static::getFindConditions($case, $role, $data),
 			static::getFindFields($case, $role)
 		);
 	}
@@ -106,7 +106,7 @@ class AppModel extends Model {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = null, $role=null, &$data = null) {
+	public static function getFindConditions($case = null, $role=null, $data = null) {
 		return array('conditions' => array());
 	}
 
@@ -133,7 +133,7 @@ class AppModel extends Model {
  * @param key the key which hold the needle value
  * @return array the path of the found needle or false
  */
-	public function inNestedArray ($needle, $data, $key='id', &$path=array(), &$found=false) {
+	public function inNestedArray ($needle, $data, $key='id', $path=array(), $found=false) {
 		// if data is an array of nested array
 		if(!isset($data[$this->alias])) {
 			foreach($data as $nestedData) {
