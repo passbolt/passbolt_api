@@ -29,6 +29,7 @@ class DataShell extends AppShell {
 		'PermissionType',
 		'Permission',
 		'Comment',
+		'Profile'
 	);
 
 /**

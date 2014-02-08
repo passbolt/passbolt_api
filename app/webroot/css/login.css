@@ -24,6 +24,7 @@
 }
 .login form fieldset {
   margin:.5em 0;
+  border: 0px;
 }
 .login form .forgot {
   margin-left:.8em;

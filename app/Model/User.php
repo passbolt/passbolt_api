@@ -37,6 +37,14 @@ class User extends AppModel {
 	 */
 	public $belongsTo = array('Role');
 
+  /**
+   * Details of the hasOne relationships
+   * @var array
+   */
+  public $hasOne = array(
+    'Profile'
+  );
+
 	/**
 	 * They are legions
 	 */
@@ -69,8 +77,9 @@ class User extends AppModel {
 				'required'  => array(
 					'required'   => true,
 					'allowEmpty' => false,
+					'on'         => 'create',
 					'rule'       => array('notEmpty'),
-					'message'    => __('A password is required')
+					'message'    => __('A password is required'),
 				),
 				'minLength' => array(
 					'rule'    => array('minLength', 5),
@@ -349,6 +358,13 @@ class User extends AppModel {
 							'fields' => array(
 								'Role.id',
 								'Role.name'
+							)
+						),
+						'Profile' => array(
+							'fields' => array(
+								'Profile.id',
+								'Profile.first_name',
+								'Profile.last_name'
 							)
 						)
 					)
