@@ -20,7 +20,8 @@ class BcryptFormAuthenticate extends FormAuthenticate {
  */
 	protected function _findUser($username, $password) {
 		$this->settings['scope'] = array(
-			'active' => 1,
+			'active' => '1',
+			'deleted' => '0',
 			'NOT' => array('Role.name' => 'guest')
 		);
 		$this->settings['fields'] = array(
