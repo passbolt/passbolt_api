@@ -3,7 +3,8 @@ steal(
 	'app/view/component/resourceDetails.js',
 	'app/controller/component/commentsController.js',
 	'app/controller/component/sidebarSectionController.js',
-	'app/controller/component/sidebarSections/sidebarSectionTagsController.js'
+	'app/controller/component/sidebarSections/sidebarSectionTagsController.js',
+	'app/controller/component/sidebarSections/sidebarSectionDescriptionController.js'
 ).then(function () {
 
 		/*
@@ -50,8 +51,14 @@ steal(
 			 * @return {void}
 			 * @see {mad.controller.ComponentController}
 			 */
-			'afterStart': function () {				
-				// Instantiate the comments controller for the current resource
+			'afterStart': function () {
+				// Instantiate the description controller for the current resource.
+				var descriptionController = new passbolt.controller.component.sidebarSection.SidebarSectionDescriptionController($('#js_rs_details_description', this.element), {
+					'resource': this.options.resource
+				});
+				descriptionController.start();
+
+				// Instantiate the comments controller for the current resource.
 				var commentsController = new passbolt.controller.component.CommentsController($('#js_rs_details_comments', this.element), {
 					'resource': this.options.resource,
 					'foreignModel': 'Resource',
@@ -59,7 +66,7 @@ steal(
 				});
 				commentsController.start();
 
-				// Instantiate the comments controller for the current resource
+				// Instantiate the comments controller for the current resource.
 				var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
 					'instance': this.options.resource,
 					'foreignModel': 'Resource',
