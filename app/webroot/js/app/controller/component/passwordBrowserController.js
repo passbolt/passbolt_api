@@ -4,7 +4,8 @@ steal(
 	'app/model/category.js',
 	'app/controller/component/copyLoginButtonController.js',
 	'app/controller/component/copySecretButtonController.js',
-	'app/controller/component/favoriteController.js'
+	'app/controller/component/favoriteController.js',
+	'app/view/component/passwordBrowser.js'
 ).then(function () {
 
 	/*
@@ -27,6 +28,8 @@ steal(
 		'defaults': {
 			// the type of the item rendered by the grid
 			itemClass: passbolt.model.Resource,
+			// the view class to use. Overriden so we can put our own logic.
+			viewClass: passbolt.view.component.passwordBrowser,
 			// the list of resources displayed by the grid
 			resources: new can.Model.List(),
 			// the list of displayed categories

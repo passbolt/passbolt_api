@@ -142,7 +142,7 @@ steal(
 			row = this._renderRow(item);
 
 			// insert the raw html fragment in the grid
-			mad.helper.HtmlHelper.create($ref, position, row);
+			return mad.helper.HtmlHelper.create($ref, position, row);
 		},
 
 		/**
