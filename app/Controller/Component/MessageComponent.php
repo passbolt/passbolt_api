@@ -205,12 +205,12 @@ class MessageComponent extends Component {
  * @return bool true if success
  * @access public
  */
-	public function setBody(&$body = null) {
+	public function setBody($body = null) {
 		$nbMessages = count($this->messages);
 		if ($body == null || $nbMessages == 0) {
 			return false;
 		}
-		$this->messages[$nbMessages - 1]['body'] = &$body;
+		$this->messages[$nbMessages - 1]['body'] = $body;
 		return true;
 	}
 
@@ -236,7 +236,7 @@ class MessageComponent extends Component {
  * @return void
  * @access public
  */
-	public function beforeRender(&$controller) {
+	public function beforeRender(Controller $controller) {
 		// In case where the body will be updated between the call of the messageComponent function (success or whatever)
 		// and the moment the view is rendered
 		if (isset($this->Controller->viewVars['data'])) {

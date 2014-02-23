@@ -24,7 +24,7 @@ class BlacklistComponent extends Component {
  * startup function
  * @param Controller $controller. the calling controller
  */
-	public function initialize(Controller $controller) {
+	public function initialize(Controller $controller, $settings=array()) {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');

@@ -68,7 +68,7 @@ class AppModel extends Model {
  * @param array data
  * @return array
  */
-	public static function getFindOptions($case, $role=null, $data = null) {
+	public static function getFindOptions($case, $role = null, $data = null) {
 		return array_merge(
 			static::getFindConditions($case, $role, $data),
 			static::getFindFields($case, $role)
@@ -82,7 +82,7 @@ class AppModel extends Model {
  * @return $condition array
  * @access public
  */
-	public static function getFindFields($case = null, $role=null) {
+	public static function getFindFields($case = null, $role = null) {
 		return array('fields' => array());
 	}
 	
@@ -93,7 +93,7 @@ class AppModel extends Model {
  * @return $condition array
  * @access public
  */
-	public static function getEmbeddedFindFields($case = null, $role=null) {
+	public static function getEmbeddedFindFields($case = null, $role = null) {
 		return self::getFindFields($case, $role);
 	}
 
@@ -106,7 +106,7 @@ class AppModel extends Model {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = null, $role=null, $data = null) {
+	public static function getFindConditions($case = null, $role = null, $data = null) {
 		return array('conditions' => array());
 	}
 
