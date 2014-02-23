@@ -60,14 +60,14 @@ class SuperJoinBehavior extends ModelBehavior{
 	/*
 	 * Configure the options
 	 */
-	public function setup(&$model, $settings = array()){
+	public function setup(Model $model, $settings = array()){
 		$this->options = Set::merge($this->_defaultOptions, $settings);
 	}
 
 	/*
 	 * Called before find to change the joins
 	 */
-	public function beforeFind(&$model, $query){
+	public function beforeFind(Model $model, $query){
 		if(isset($query["superjoin"])){
 			$this->setModels($query["superjoin"]);
 			foreach($this->targets as $target){

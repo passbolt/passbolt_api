@@ -17,7 +17,7 @@ class TrackableBehavior extends ModelBehavior {
  * @return bool success
  * @access public
  */
-	public function beforeValidate(&$model) {
+	public function beforeValidate(Model $model) {
 		if (empty($model->data[$model->alias]['id'])) {
 			$model->data[$model->alias]['created_by'] = User::get('id');
 		}
@@ -31,8 +31,8 @@ class TrackableBehavior extends ModelBehavior {
  * @return bool
  * @access public
  */
-	public function isOwner(&$model, $id) {
-		$result = &$model->findById($id);
+	public function isOwner(Model $model, $id) {
+		$result = $model->findById($id);
 		return $result[$model->alias]['created_by'] == User::get('id');
 	}
 }

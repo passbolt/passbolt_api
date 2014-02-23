@@ -44,7 +44,7 @@ class GroupCategoryPermission extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
+	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
 		$conditions = array();
 		switch ($case) {
 			case 'viewByCategory':

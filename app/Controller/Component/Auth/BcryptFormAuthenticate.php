@@ -14,11 +14,14 @@ class BcryptFormAuthenticate extends FormAuthenticate {
 /**
  * Find a user record using the standard options.
  *
- * @param string $username The username/identifier.
- * @param string $password The unhashed password.
+ * The $conditions parameter can be a (string)username or an array containing conditions for Model::find('first'). If
+ * the password field is not included in the conditions the password will be returned.
+ *
+ * @param Mixed $conditions The username/identifier, or an array of find conditions.
+ * @param Mixed $password The password, only use if passing as $conditions = 'username'.
  * @return Mixed Either false on failure, or an array of user data.
  */
-	protected function _findUser($username, $password) {
+	protected function _findUser($conditions, $password = NULL) {
 		$this->settings['scope'] = array(
 			'active' => '1',
 			'deleted' => '0',
@@ -37,7 +40,7 @@ class BcryptFormAuthenticate extends FormAuthenticate {
 			)
 		);
 		$this->settings['recursive'] = -1;
-		$u = parent::_findUser($username, $password);
+		$u = parent::_findUser($conditions, $password);
 
 		if ($u == false) {
 			return $u;

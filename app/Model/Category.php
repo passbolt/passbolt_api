@@ -351,7 +351,7 @@ class Category extends AppModel {
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'get', $role = Role::USER, &$data = null) {
+	public static function getFindConditions($case = 'get', $role = Role::USER, $data = null) {
 		$returnValue = array('conditions' => array());
 		switch($role){
 			case 'user':

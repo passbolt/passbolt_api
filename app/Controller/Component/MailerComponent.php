@@ -21,8 +21,8 @@ class MailerComponent extends Component {
  * @param object $controller Controller using this component
  * @return boolean Proceed with component usage (true), or fail (false)
  */
-	public function initialize(&$controller, $settings=array()) {
-		$this->Controller = &$controller;
+	public function initialize(Controller $controller, $settings=array()) {
+		$this->Controller = $controller;
 		return true;
 	}
 

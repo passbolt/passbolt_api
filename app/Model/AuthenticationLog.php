@@ -16,14 +16,14 @@ class AuthenticationLog extends AppModel {
 	);
 
 /**
- * logs an authentication attempt
+ * create a log of an authentication attempt
  * @param string $username, the username passed in the request. We want to store it to know what was tried
  * @param string $ip, the provenance ip
  * @param bool $status, the status of the authentication. 
  * @param string $data optional data that we'd like to store
  * @return bool true if the log was succesful, false otherwise
  */
-	public function log ($username, $ip, $status, $data=null) {
+	public function add ($username, $ip, $status, $data=null) {
 		$u = $this->User->findByUsername($username);
 		$log = array(
 			'user_id' => $u ? $u['User']['id'] : null,

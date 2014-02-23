@@ -52,14 +52,14 @@ class MessageComponent extends Component {
  * @throws exception is Session component is missing
  * @access public
  */
-	public function initialize(&$controller, $settings=array()) {
-		$this->Controller = &$controller;
+	public function initialize(Controller $controller, $settings=array()) {
+		$this->Controller = $controller;
 		if (!isset($this->Controller->Session)) {
 			throw new exception('Session component not found (Message::initilize)');
 		}
 		// get an existing message from the session if any
 		// this is used to display messages after a redirection
-		$this->Session = &$controller->Session;
+		$this->Session = $controller->Session;
 		if ($this->Session->check($this->sessionKey)) {
 			$this->messages = $this->Session->read($this->sessionKey);
 			$this->Session->delete($this->sessionKey);
@@ -223,7 +223,7 @@ class MessageComponent extends Component {
  * @return void
  * @access public
  */
-	public function beforeRedirect(&$controller, $url, $status=null, $exit=true) {
+	public function beforeRedirect(Controller $controller, $url, $status=null, $exit=true) {
 		// save pending messages in session to display next
 		if (isset($this->messages) && !empty($this->messages)) {
 			$this->Session->write($this->sessionKey, $this->messages);

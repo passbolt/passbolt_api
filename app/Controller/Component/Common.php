@@ -18,9 +18,9 @@ class Common extends Object {
  */
 	public static function &getModel($model,$create=false) {
 		if (ClassRegistry::isKeySet($model) && !$create) {
-			$ModelObj =& ClassRegistry::getObject($model);
+			$ModelObj = ClassRegistry::getObject($model);
 		} else {
-			$ModelObj =& ClassRegistry::init($model);
+			$ModelObj = ClassRegistry::init($model);
 		}
 		return $ModelObj;
 	}
