@@ -120,7 +120,7 @@ class AppModel extends Model {
 		} else {
 			$exists = $this->find('count', array(
 				'conditions' => array('id' => $check['parent_id']),
-				 'recursive' => -1
+				'recursive' => -1
 			));
 			return $exists > 0;
 		}

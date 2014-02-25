@@ -18,17 +18,33 @@ steal(
 		 * @param {mixed} value The value to validate
 		 * @param {array} options Optional parameters
 		 */
-		'validate': function (rule, value, options) {
+		'validate': function (rule, value, values, options) {
 
 			if (typeof rule == 'object') {
-				options = rule.options || options || {};
-				rule = rule.rule;
+				options = rule;
+
+				// The target rule has not been defined.
+				if (typeof rule.rule == 'undefined') {
+					throw new mad.error.Exception('The target rule has not been defined. Define the rule attribute.');
+				}
+				// The rule is a regex (based on the cakephp structure).
+				if (rule.rule.indexOf('/') == '0') {
+					rule = 'regex';
+				}
+				// The rule is an array as defined by CakePHP ex: rule => array(between, 3, 64)
+				else if ($.isArray(rule.rule)) {
+					options.params = rule.rule.slice(1);
+					rule = rule.rule[0];
+				}
+				else {
+					rule = rule.rule;
+				}
 			}
 
 			if (typeof mad.model.ValidationRules[rule] == 'undefined') {
-				throw new mad.error.Exception('The rule ' + rule + 'does not exist');
+				throw new mad.error.Exception('The rule ' + rule + ' does not exist');
 			}
-			return mad.model.ValidationRules[rule](value, options);
+			return mad.model.ValidationRules[rule](value, values, options);
 		},
 
 		// get alpha condition
@@ -51,10 +67,56 @@ steal(
 			return returnValue;
 		},
 
+		'regex': function (value, values, options) {
+			options = options || {};
+			var returnValue = true,
+				regexp = options.rule,
+				not = options.not || false;
+
+			// XRegExp expects an expresion without starting/ending slashes.
+			if (regexp.indexOf('/') == 0) {
+				regexp = regexp.substr(1);
+				if (regexp.lastIndexOf('/') == regexp.length - 1) {
+					regexp = regexp.substr(0, regexp.length - 1);
+				} else {
+					regexp = regexp.substr(0, regexp.length - 2);
+				}
+			}
+
+			var xregexp = new XRegExp(regexp);
+			var match = xregexp.test(value);
+
+    		if ((not && match) || (!not && !match)) {
+    			returnValue = options.message || __('The regex is not validated');
+			}
+			return returnValue;
+		},
+
+        'notEmpty': function (value, values, options) {
+            if (typeof value == 'undefined'
+                || value == null
+                || ($.isArray(value) && !value.length)
+                || $.trim(value) == '') {
+                return options.message || __('Should not be empty');
+            }
+            return true;
+        },
+
+        'uuid': function (value, values, options) {
+            options = options || {};
+            var regexp = "^[abcdef0-9]{8}-[abcdef0-9]{4}-[abcdef0-9]{4}-[abcdef0-9]{4}-[abcdef0-9]{12}$";
+            var xregexp = new XRegExp(regexp);
+
+            if (!xregexp.test(value)) {
+                return __('Not valid uuid');
+            }
+            return true;
+        },
+
 		/**
 		 * 
 		 */
-		'alphanum': function (value, options) {
+		'alphaNumeric': function (value, values, options) {
 			options = options || {};
 			var alphaRegExp = mad.model.ValidationRules._getAlphaRegExp(options.type);
 			var xregexp = new XRegExp("^[" + alphaRegExp + " \'0-9]*$");
@@ -68,7 +130,7 @@ steal(
 		/**
 		 * 
 		 */
-		'alpha': function (value, options) {
+		'alpha': function (value, values, options) {
 			options = options || {};
 			var alphaRegExp = mad.model.ValidationRules._getAlphaRegExp(options.type);
 
@@ -95,7 +157,7 @@ steal(
 		 */
 		'required': function (value) {
 			var xregexp = XRegExp("^[\s\n\t ]*$");
-			if (value === null || xregexp.test(value)) {
+			if (typeof value == 'undefined' || value === null || xregexp.test(value)) {
 				return __('Required');
 			}
 			return true;
@@ -185,7 +247,7 @@ steal(
 		/**
 		 * 
 		 */
-		'date': function (value, options) {
+		'date': function (value, values, options) {
 			value = value || '';
 			options = options || {};
 			var format = options.format || 'dd/mm/yyyy',
@@ -242,9 +304,9 @@ steal(
 			if (!dateParts) {
 				returnValue = __('The date format is incorect, expected : ') + format;
 			} else {
-				year = dateParts[yearPos] * 1;
-				month = dateParts[monthPos] * 1;
-				day = dateParts[dayPos] * 1;
+				var year = dateParts[yearPos] * 1;
+				var month = dateParts[monthPos] * 1;
+				var day = dateParts[dayPos] * 1;
 
 				// check date numbers
 				if (day < 1 || day > days[month] ||
@@ -269,29 +331,15 @@ steal(
 		/**
 		 * 
 		 */
-		'uid': function (value, options) {
-			return true;
-		},
-
-		/**
-		 * 
-		 */
-		'size': function (value, options) {
+		'between': function (value, values, options) {
 			value = value || '';
-			options = options || {};
+			options = options || [];
 			var returnValue = true,
-				min = options.min || null,
-				max = options.max || null;
+				min = options.params[0] || null,
+				max = options.params[1] || null;
 
-			if (min) {
-				if (value.length < min) {
-					returnValue = __("A least %s characters", min);
-				}
-			}
-			if (max) {
-				if (value.length > max) {
-					returnValue = __("Cannot exceed %s characters", max);
-				}
+			if (value.length < min || value.length > max) {
+				returnValue = options.message ? __(options.message, min, max) : __('Must be between %s and %s characters long', min, max);
 			}
 
 			return returnValue;

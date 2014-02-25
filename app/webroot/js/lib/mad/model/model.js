@@ -25,11 +25,25 @@ steal(
 	can.Model('mad.model.Model', /** @static */ {
 
 		/**
-		 * The options to use to validate the model attributes.
+		 * The model attributes validation rules.
 		 * @type array
 		 * @protected
 		 */
-		'validateRules': {},
+		'validationRules': {},
+
+		/**
+		 * The model attributes validation rules defined on the server.
+		 * @type array
+		 * @protected
+		 */
+		'serverValidationRules': {},
+
+		/**
+		 * Check the server validation rules.
+		 * @type boolean
+		 * @protected
+		 */
+		'checkServerRules': true,
 
 		/**
 		 * Get deep attribute value(s) functions of a string which defines the full path
@@ -206,7 +220,6 @@ steal(
 		 * @return {mad.model.Model}
 		 */
 		'model': function (data) {
-			//console.log('call model ', data);
 			data = data || {};
 			// if the provided data are formated as ajax server response
 			if (mad.net.Response.isResponse(data)) {
@@ -221,29 +234,133 @@ steal(
 		},
 
 		/**
+		 * Get the model validation rules
+		 * @param {string} validationCase (optional) The target validation case.
+		 * @return {array}
+		 */
+		'getValidationRules': function (validationCase) {
+			var rules = {},
+				self = this;
+
+            // Validation case.
+            if (typeof validationCase == 'undefined'
+                || validationCase == null) {
+                validationCase = 'default';
+            }
+
+			// The model contains its own validation rules.
+			if (this.validationRules.length > 0) {
+				rules = this.validationRules;
+			}
+			// Else check if some server rules have been defined.
+			else if (this.checkServerRules) {
+                // If no rules have been defined for the current model.
+                if(typeof this.serverValidationRules[this.shortName] == 'undefined') {
+                    this.serverValidationRules[this.shortName] = {};
+                }
+				// If no rules have been defined for the given case.
+				if (typeof this.serverValidationRules[this.shortName][validationCase] == 'undefined') {
+                    // Build the url.
+                    var url = '/validation/' + this.shortName + '/' + validationCase;
+                    // Get the rules from the server.
+					mad.net.Ajax.request({
+						'async': false,
+						'type': 'GET',
+						'url': url
+					}).then(function(data) {
+						self.serverValidationRules[self.shortName][validationCase] = data;
+					});
+				}
+				rules = this.serverValidationRules[this.shortName][validationCase];
+			}
+
+			return rules;
+		},
+
+		/**
+		 * Is the field required
+		 * @param {string} attrName The name of the attribute to check for
+		 * @param {string} validationCase The validation case to check if the attribute is required
+		 * @return {bool}
+		 */
+		'isRequired': function (attrName, validationCase) {
+			var required = false;
+			var rules = this.getValidationRules(validationCase);
+
+			// The rule is not define as "fieldName" => "ruleName"
+			if (!$.isArray(rules[attrName])) {
+				// One rule defined.
+				if (typeof rules[attrName]['rule'] != 'undefined') {
+					// The case is specifically given as per the cakePHP style.
+					if (typeof(rules[attrName]['required']) != 'undefined'
+						&& (typeof(rules[attrName]['required']) === true
+							|| rules[attrName]['required'] === validationCase)) {
+						required = true;
+					}
+				}
+				// Multiple rules defined.
+				else {
+					for (var ruleLabel in rules[attrName]) {
+						// The case is specifically given as per the cakePHP style.
+						if (typeof(rules[attrName][ruleLabel]['required']) != 'undefined'
+							&& (typeof(rules[attrName][ruleLabel]['required']) === true
+								|| rules[attrName][ruleLabel]['required'] === validationCase)) {
+							required = true;
+						}
+					}
+				}
+			}
+
+			return required;
+		},
+
+		/**
 		 * Validate an attribute
 		 * @param {string} attrName The attribute name
 		 * @param {mixed} value The attribute value
-		 * @param {array} modelValues The model attributes values
+		 * @param {array} values The model attributes values
+		 * @param {string} case The case to validate the attribute for
 		 * @return {boolean}
 		 */
-		'validateAttribute': function (attrName, value, modelValues) {
+		'validateAttribute': function (attrName, value, values, validationCase) {
 			var returnValue = true;
-			if (this.validateRules[attrName]) {
-				var rules = this.validateRules[attrName];
-				if ($.isArray(rules)) {
-					for (var i in rules) {
-						var validateResult = mad.model.ValidationRules.validate(rules[i], value, modelValues);
-						if (validateResult !== true) {
-							if (returnValue === true) {
-								returnValue = '';
-							}
-							returnValue += validateResult;
-						}
-					}
-				} else {
-					returnValue = mad.model.ValidationRules.validate(rules, value, modelValues);
+
+			if(typeof validationCase == 'undefined') {
+				validationCase = 'default';
+			}
+
+			var rules = this.getValidationRules(validationCase);
+			if (rules[attrName]) {
+				// Is the field required?
+				var required = this.isRequired(attrName, validationCase);
+				// Is the field passing the required validation.
+				var requiredValidation = mad.model.ValidationRules.validate('required', value);
+
+				// If the field is required & doesn't pass the required validation return an error.
+				if (required && requiredValidation !== true) {
+					return requiredValidation;
 				}
+				// If the filed is not required and doesn't pass the required the validation
+				// the system won't process the other constraints.
+				else if (!required && requiredValidation !== true) {
+					return true;
+				}
+
+				// Otherwise execute all the constraints.
+				var attributeRules = rules[attrName];
+				// if ($.isArray(attributeRules)) {
+				for (var i in attributeRules) {
+					var validateResult = mad.model.ValidationRules.validate(attributeRules[i], value, values);
+					if (validateResult !== true) {
+						if (returnValue === true) {
+							returnValue = '';
+						}
+						returnValue += validateResult;
+					}
+				}
+				// } else {
+				// 	returnValue = mad.model.ValidationRules.validate(attributeRules, value, modelValues);
+				// }
 			}
 
 			return returnValue;

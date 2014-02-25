@@ -11,7 +11,7 @@ steal(
 		 * @parent index
 		 *
 		 * @constructor
-		 * Creates a new Sidebar Section Description Controller
+		 * Creates a new Sidebar Section Description Controller.
 		 *
 		 * @param {HTMLElement} element the element this instance operates on.
 		 * @param {Object} [options] option values for the controller.  These get added to
@@ -32,15 +32,6 @@ steal(
 		}, /** @prototype */ {
 
 			/**
-			 * Defines whether we are in edition mode or read mode.
-			 */
-			'edition' : false,
-
-			/* ************************************************************** */
-			/* LISTEN TO THE MODEL EVENTS */
-			/* ************************************************************** */
-
-			/**
 			 * Hook After Start
 			 * Will basically instantiate the form to edit the description
 			 */
@@ -52,44 +43,42 @@ steal(
 					'templateBased': true,
 					'templateUri': 'app/view/template/form/resource/editDescriptionForm.ejs',
 					'resource': this.options.resource,
+                    'state': 'hidden',
 					'data': {
 						'Resource': this.options.resource
 					},
 					'callbacks': {
 						'submit': function (data) {
-							// TODO : validate
-							passbolt.model.Resource.update(
-								data['passbolt.model.Resource'].id,
-								data['passbolt.model.Resource'],
-								function(data) {
-									self.setState('ready');
-								}
-							);
+                            self.options.resource.update({
+                                'description': data['passbolt.model.Resource']['description']
+                            }, function () {
+                                // No callback required, the parent controller will refresh itself,
+                                // and its children components while the current resource is
+                                // updated with success.
+                            });
 						}
 					}
 				}).start();
-				this.options.editDescriptionFormCtrl.setState("hidden");
 			},
 
-			/**
-			 * Switch to edit mode
-			 * @param {boolean} go Go or leave the state
-			 */
-			'stateReady': function(go) {
-				if (go) {
-					this.edition = false;
-				}
-			},
+            /**
+             * Observe when the user want to edit the instance's resource description
+             * @param {HTMLElement} el The element
+             * @param {HTMLEvent} ev The event which occured
+             * @return {void}
+             */
+            ' request_resource_description_edit' : function(el, ev) {
+                if(!this.state.is('edit')) {
+                    this.setState('edit');
+                }
+                else {
+                    this.setState('ready');
+                }
+            },
 
-			/**
-			 * Listen to changes in resource and update the view.
-			 *
-			 * @param {passbolt.model.Resource} resource
-			 */
-			'{resource} change': function(resource) {
-				this.setViewData('resource', resource);
-				this.refresh();
-			},
+            /* ************************************************************** */
+            /* LISTEN TO THE STATE CHANGES */
+            /* ************************************************************** */
 
 			/**
 			 * Switch to edit mode
@@ -99,28 +88,10 @@ steal(
 				if (go) {
 					this.options.editDescriptionFormCtrl.setState('ready');
 					this.view.showDescription(false);
-					this.edition = true;
 				}
 				else {
 					this.options.editDescriptionFormCtrl.setState('hidden');
 					this.view.showDescription(true);
-					this.edition = false;
-				}
-			},
-
-			/**
-			 * Observe when the user want to edit the instance's resource description
-			 * @param {HTMLElement} el The element
-			 * @param {HTMLEvent} ev The event which occured
-			 * @return {void}
-			 */
-			' request_resource_description_edit' : function(el, ev) {
-				if(this.edition == false) {
-					this.setState('edit');
-				}
-				else {
-					this.setState('ready');
-					this.stateEdit(false);
 				}
 			}
 
