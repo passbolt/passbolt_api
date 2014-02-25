@@ -65,7 +65,7 @@ class Profile extends AppModel {
 		$default = array(
 			'user_id' => array(
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('UUID must be in correct format')
@@ -76,39 +76,39 @@ class Profile extends AppModel {
 				),
 			),
 			'gender' => array(
-				'required'  => array(
+				'required' => array(
 					'allowEmpty' => false,
-					'rule'       => array('notEmpty'),
-					'message'    => __('Gender cannot be empty')
+					'rule' => array('notEmpty'),
+					'message' => __('Gender cannot be empty')
 				),
 				'inList' => array(
-					'rule'    => array('inList', array('m', 'f')),
+					'rule' => array('inList', array('m', 'f')),
 					'message' => __('Gender can be only "m" or "f"')
 				)
 			),
 			'date_of_birth' => array(
 				'date' => array(
-					'rule'       => array('date', 'ymd'),
-					'message'    => 'Enter a valid date of birth in YY-MM-DD format.',
+					'rule' => array('date', 'ymd'),
+					'message' => 'Enter a valid date of birth in YY-MM-DD format.',
 					'allowEmpty' => false
 				)
 			),
 			'title' => array(
 				'inList' => array(
-					'rule'    => array('inList', array('Mr', 'Ms', 'Mrs', 'Dr')),
+					'rule' => array('inList', array('Mr', 'Ms', 'Mrs', 'Dr')),
 					'message' => __('A valid title has to be provided'),
 					'allowEmpty' => false
 				)
 			),
 			'first_name' => array(
-				'rule'    => '/^[a-zA-Z]+$/i',
+				'rule' => '/^[a-zA-Z]+$/i',
 				'required' => true,
 				'allowEmpty' => false,
 				'message'	=> __('First name must be provided')
 			),
 			'last_name' => array(
 				'alphaNumeric' => array(
-					'rule'    => '/^[a-zA-Z]+$/i',
+					'rule' => '/^[a-zA-Z]+$/i',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('Last name must be provided')

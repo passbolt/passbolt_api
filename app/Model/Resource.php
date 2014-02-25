@@ -83,10 +83,10 @@ class Resource extends AppModel {
         )
       ),
       'name' => array(
-        'alphaNumeric' => array(
-          'rule' => 'alphaNumeric',
+        'alphaNumericAndSpecial' => array(
+          'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
           'allowEmpty' => false,
-          'message' => __('Name should contain alphabets and numbers only'),
+          'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \''),
 	      'required' => 'create',
         ),
 	    'size' => array(

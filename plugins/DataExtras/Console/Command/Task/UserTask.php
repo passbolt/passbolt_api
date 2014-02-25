@@ -143,7 +143,7 @@ class UserTask extends ModelTask {
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => '50cdab9c-4380-gege-b4cc-2f4fd7a10fce',
+			'id' => '50cdab9c-4380-fafa-b4cc-2f4fd7a10fce',
 			'username' => 'guest@passbolt.com',
 			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
