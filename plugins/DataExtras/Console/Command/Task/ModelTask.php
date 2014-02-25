@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Insert Model Task
  *
@@ -9,18 +10,25 @@
  */
 class ModelTask extends AppShell {
 
-  public function execute() {
-    $User = ClassRegistry::init('User');
-    $kk = $User->findByUsername('root@passbolt.com');
-    $User->setActive($kk);
+	public function execute() {
+		$User = ClassRegistry::init('User');
+		$kk = $User->findByUsername('root@passbolt.com');
+		$User->setActive($kk);
 
-    $Model = ClassRegistry::init($this->model);
+		$Model = ClassRegistry::init($this->model);
 
-    $data = $this->getData();
-    foreach ($data as $item) {
-      $Model->create();
-      $Model->save($item);
-    }
-  }
+		$data = $this->getData();
+		foreach ($data as $item) {
+			$Model->create();
+			$Model->set($item);
+			if (!$Model->validates()) {
+				var_dump($Model->validationErrors);
+			}
+			$instance = $Model->save();
+			if (!$instance) {
+				$this->out('<error>Unable to insert ' . $item[$this->model]['id'] . '</error>');
+			}
+		}
+	}
 
 }

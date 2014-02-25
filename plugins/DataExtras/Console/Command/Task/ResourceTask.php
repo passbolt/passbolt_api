@@ -24,10 +24,17 @@ class ResourceTask extends ModelTask {
 		$data = $this->getData();
 		foreach ($data as $item) {
 			$Model->create();
-			$Model->save($item);
+			$Model->set($item);
+			if (!$Model->validates()) {
+				var_dump($Model->validationErrors);
+			}
+			$instance = $Model->save();
+			if (!$instance) {
+				$this->out('<error>Unable to insert ' . $item[$this->model]['name'] . '</error>');
+			}
 		}
 	}
-	
+
 	protected function getData() {
 		$r[] = array('Resource'=>array(
 			'id' => '408bb871-5168-49d4-a676-fb098cebc04d',
