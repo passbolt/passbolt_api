@@ -55,5 +55,10 @@ $config = array(
 	),
 	'ItemTag' => array(
 		'foreignModels' => array('Resource')
-	)
+	),
+    'Validation' => array(
+        'shared' => array(
+            'Resource', 'Secret'
+        )
+    )
 );

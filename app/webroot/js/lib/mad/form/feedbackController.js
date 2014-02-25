@@ -39,32 +39,32 @@ steal(
 		},
 
 		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ****	********************************************************** */
-
-		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */
 
 		/**
 		 * Listen to the change relative to the state Success
 		 * @param {boolean} go Enter or leave the state
+		 * @todo clean what should be moved in view
 		 * @return {void}
 		 */
 		'stateSuccess': function (go) {
 			if (go) {
 				this.element.html(this.message);
+				this.element.removeClass('error');
 			}
 		},
 
 		/**
 		 * Listen to the change relative to the state Error
 		 * @param {boolean} go Enter or leave the state
+		 * @todo clean what should be moved in view
 		 * @return {void}
 		 */
 		'stateError': function (go) {
 			if (go) {
 				this.element.html(this.message);
+				this.element.addClass('error');
 			}
 		}
 

@@ -2,28 +2,28 @@
 	
 	<input type="hidden" name="passbolt.model.Resource.Category.id" id="js_field_category_id" class="form_field" />
 	
-	<div class="input text required error">
+	<div class="input text required js_form_element_wrapper">
 		<label for="js_field_name"><%= __('Name') %></label>
 		<input name="passbolt.model.Resource.name" class="required" maxlength="50" type="text" id="js_field_name" placeholder="name"/>
-		<div id="js_field_name_feedback" class="message error">
+		<div id="js_field_name_feedback" class="message">
 		</div>
 	</div>
 	
-	<div class="input text">
+	<div class="input text js_form_element_wrapper">
 		<label for="js_field_uri"><%= __('URL') %></label>
 		<input name="passbolt.model.Resource.uri" maxlength="50" type="text" id="js_field_uri" placeholder="https://example.com/login"/>
 		<div id="js_field_uri_feedback" class="message">
 		</div>
 	</div>
 	
-	<div class="input text required">
+	<div class="input text required js_form_element_wrapper">
 		<label for="js_field_username"><%= __('Username') %></label>
 		<input name="passbolt.model.Resource.username" class="required" maxlength="50" type="text" id="js_field_username" placeholder="name"/>
-		<div id="js_field_username_feedback" class="message error">
+		<div id="js_field_username_feedback" class="message">
 		</div>
 	</div>
 
-	<div class="input-password-wrapper">
+	<div class="js_form_element_wrapper">
 		<div class="input password required short">
 			<label for="js_field_secret"><%= __('Password') %></label>
 			<input type="hidden" name="passbolt.model.Resource.Secret.id" id="js_field_secret_id" class="form_field" />
@@ -46,8 +46,10 @@
 		</ul>
 		<div id="js_rs_pwd_strength" class="password-complexity">
 		</div>
+		<div id="js_field_password_feedback" class="message">
+		</div>
 	</div>
-	<div class="input-datetime-wrapper">
+	<div class="input-datetime-wrapper js_form_element_wrapper">
 		<div class="input text datetime short">
 			<label for="ResourceExpire"><%= __('Expiracy date') %></label>
 			<input name="data[Resource][expire]" class="required todo" type="text" id="ResourceExpire" data-format="YYYY-MM-DD HH:mm" data-template="D MMM YYYY HH:mm" placeholder="DD/MM/YYYY HH:MM">
@@ -66,7 +68,7 @@
 		</div>
 	</div>
 
-	<div class="input textarea required">
+	<div class="input textarea js_form_element_wrapper">
 		<label for="js_field_description"><%= __('Description') %></label>
 		<textarea name="passbolt.model.Resource.description" class="required" maxlength="150" id="js_field_description" placeholder="add a description">
 		</textarea>

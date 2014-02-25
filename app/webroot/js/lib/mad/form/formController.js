@@ -1,5 +1,6 @@
 steal(
 	'mad/controller',
+	'mad/view/form/formView.js',
 	'mad/form/formElement.js'
 ).then(function () {
 
@@ -25,8 +26,10 @@ steal(
 				'submit': function (data) { }
 			},
 			'tag': 'form',
+            'action': null,
 			'validateOnChange': true,
-			'templateBased': false
+			'templateBased': false,
+			'viewClass': mad.view.form.FormView
 		}
 
 	}, /** @prototype */ {
@@ -269,44 +272,58 @@ steal(
 				// the element's id
 				eltId = element.getId();
 
-			// if the element is associated to a model reference
-			if (eltModelRef != null) {
-				// the model references of the element
-				var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
-					// the leaf model reference
-					model = fieldAttrs[fieldAttrs.length-2].modelReference,
-					// the attribute name
-					attrName = fieldAttrs[fieldAttrs.length-1].name;
+			// The element requires a validation.
+			if (element.requireValidation()) {
 
-				// validate the attribute value
-				if (model.validateAttribute) {
-					var value = element.getValue();
-					validationResult = model.validateAttribute(attrName, element.getValue());
-				}
-			}
+				// if the element is associated to a model reference
+				if (eltModelRef != null) {
+					// the model references of the element
+					var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
+						// the leaf model reference
+						model = fieldAttrs[fieldAttrs.length-2].modelReference,
+						// the attribute name
+						attrName = fieldAttrs[fieldAttrs.length-1].name;
 
-			// the validation of the element failed
-			if(validationResult !== true) {
-				// switch the state of the element to error
-				this.elements[eltId]
-					.setState('error');
-				// set the feedback message, and switch the feedback element state to error
-				if (this.feedbackElements[eltId]){
-					this.feedbackElements[eltId]
-						.setMessage(validationResult)
-						.setState('error');
+					// validate the attribute value
+					if (model.validateAttribute) {
+						var value = element.getValue();
+						validationResult = model.validateAttribute(attrName, value, {}, this.options.action);
+					}
 				}
-				returnValue = false;
-				
-			// otherwise the validation is successful
-			} else {
-				this.elements[eltId]
-					.setState('success');
-				// set the feedback message, and switch the feedback element state to success
-				if (this.feedbackElements[eltId]){
-					this.feedbackElements[eltId]
-						.setMessage('OK')
-						.setState('success');
+
+				// the validation of the element failed
+				if(validationResult !== true) {
+					var eltStates = ['error'];
+					if (this.elements[eltId].state.is('hidden')) {
+						eltStates.push('hidden');
+					}
+					// switch the state of the element to error
+					this.elements[eltId].setState(eltStates);
+					// set the feedback message, and switch the feedback element state to error
+					if (this.feedbackElements[eltId]){
+						this.feedbackElements[eltId]
+							.setMessage(validationResult)
+							.setState('error');
+					}
+					// Update the view.
+					this.view.setElementState(this.elements[eltId], 'error');
+					returnValue = false;
+
+					// otherwise the validation is successful
+				} else {
+					var eltStates = ['success'];
+					if (this.elements[eltId].state.is('hidden')) {
+						eltStates.push('hidden');
+					}
+					this.elements[eltId].setState(eltStates);
+					// set the feedback message, and switch the feedback element state to success
+					if (this.feedbackElements[eltId]){
+						this.feedbackElements[eltId]
+							.setMessage('')
+							.setState('success');
+					}
+					// Update the view.
+					this.view.setElementState(this.elements[eltId], 'success');
 				}
 			}
 

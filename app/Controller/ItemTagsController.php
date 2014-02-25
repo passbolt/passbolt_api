@@ -121,46 +121,50 @@ class ItemTagsController extends AppController {
 
 		$tagList = $postData['ItemTag']['tag_list'];
 		$tagList = trim($tagList, " ,");
-		$tags = explode(',', $tagList);
-		$Tag = Common::getModel('Tag');
-		foreach($tags as $tagName) {
-			$tagName = trim($tagName);
-			$tag = $Tag->findByName($tagName);
-			if(!$tag) {
-				$t = array(
-					'name' => $tagName
+
+		// If new tags have been given.
+		if (!empty($tagList)) {
+			$tags = explode(',', $tagList);
+			$Tag = Common::getModel('Tag');
+			foreach($tags as $tagName) {
+				$tagName = trim($tagName);
+				$tag = $Tag->findByName($tagName);
+				if(!$tag) {
+					$t = array(
+						'name' => $tagName
+					);
+					$Tag->create();
+					$Tag->set($t);
+					if(!$Tag->validates()) {
+						$this->Message->error(__('The tag named %s is not valid', $tagName));
+						$this->ItemTag->rollback();
+						return;
+					}
+					if(!($tag = $Tag->save($t))) {
+						$this->Message->error(__('There was a problem while saving tag %s', $tagName));
+						$this->ItemTag->rollback();
+						return;
+					}
+				}
+				// Create new Item Tag
+				$itemTag = array(
+					'foreign_model' => $foreignModelName,
+					'foreign_id'    => $foreignId,
+					'tag_id'        => $tag['Tag']['id']
 				);
-				$Tag->create();
-				$Tag->set($t);
-				if(!$Tag->validates()) {
-					$this->Message->error(__('The tag named %s is not valid', $tagName));
+				$this->ItemTag->create();
+				$this->ItemTag->set($itemTag);
+				if(!$this->ItemTag->validates()) {
+					$Resource = ClassRegistry::init('Resource');
+					$this->Message->error(__('The ItemTag is not valid', $tagName));
 					$this->ItemTag->rollback();
 					return;
 				}
-				if(!($tag = $Tag->save($t))) {
-					$this->Message->error(__('There was a problem while saving tag %s', $tagName));
+				if(!$this->ItemTag->save($itemTag)) {
+					$this->Message->error(__('There was a problem while saving ItemTag', $tagName));
 					$this->ItemTag->rollback();
 					return;
 				}
-			}
-			// Create new Item Tag
-			$itemTag = array(
-				'foreign_model' => $foreignModelName,
-				'foreign_id'    => $foreignId,
-				'tag_id'        => $tag['Tag']['id']
-			);
-			$this->ItemTag->create();
-			$this->ItemTag->set($itemTag);
-			if(!$this->ItemTag->validates()) {
-				$Resource = ClassRegistry::init('Resource');
-				$this->Message->error(__('The ItemTag is not valid', $tagName));
-				$this->ItemTag->rollback();
-				return;
-			}
-			if(!$this->ItemTag->save($itemTag)) {
-				$this->Message->error(__('There was a problem while saving ItemTag', $tagName));
-				$this->ItemTag->rollback();
-				return;
 			}
 		}
 		$this->ItemTag->commit();

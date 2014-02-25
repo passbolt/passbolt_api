@@ -20,13 +20,6 @@ steal(
 	 */
 	mad.model.Model('passbolt.model.Resource', /** @static */ {
 
-		'validateRules': {
-			'name': ['alphanum', 'required'],
-			'username': ['alphanum', 'required', 'nospace'],
-//			'uri': ['required', 'uri'],
-			'description': ['text']
-		},
-
 		attributes: {
 			'id': 'string',
 			'name': 'string',

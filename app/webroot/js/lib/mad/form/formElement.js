@@ -23,8 +23,10 @@ steal(
 		'defaults': {
 			'viewClass': mad.view.form.FormElementView,
 			'templateBased': false,
-			// the model representing this element
+			// The model representing this element.
 			'modelReference': null,
+			// The element should be validated.
+			'validate': true,
 			'value': null,
 			'callbacks': {
 				'changed': function (el, ev, value) {}
@@ -51,6 +53,18 @@ steal(
 			var returnValue = null;
 			if (this.options.modelReference) {
 				returnValue = this.options.modelReference;
+			}
+			return returnValue;
+		},
+
+		/**
+		 * Check if the element has to be validated.
+		 * @return {bool}
+		 */
+		'requireValidation': function () {
+			var returnValue = false;
+			if (this.options.validate) {
+				returnValue = this.options.validate;
 			}
 			return returnValue;
 		},

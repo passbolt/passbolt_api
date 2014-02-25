@@ -17,7 +17,9 @@ steal(
 	 */
 	mad.view.form.FormElementView.extend('mad.view.form.element.TextboxView', /** @static */ {
 
-		'defaults': { }
+		'defaults': {
+            'blackKeys': [13]
+        }
 
 	}, /** @prototype */ {
 
@@ -57,6 +59,12 @@ steal(
 		 */
 		' keypress': function (el, ev) {
 			var self = this;
+
+            // Escape the following keys.
+            if ($.inArray(event.which, this.options.blackKeys) != -1) {
+                console.log('alors');
+                return;
+            }
 
 			if(this._changeTimeout != null) {
 				clearTimeout(this._changeTimeout);

@@ -182,6 +182,7 @@ class ResourcesController extends AppController {
 
 		// check if the data is valid
 		if (!$this->Resource->validates()) {
+			var_dump($this->Resource->validationErrors);
 			$this->Message->error(__('Could not validate resource data'));
 			return;
 		}
