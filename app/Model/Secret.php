@@ -24,11 +24,11 @@ class Secret extends AppModel {
  * @param string context
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case='default') {
+	public static function getValidationRules($case = 'default') {
 		$default = array(
 			'user_id' => array(
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('UUID must be in correct format')
@@ -40,7 +40,7 @@ class Secret extends AppModel {
 			),
 			'resource_id' => array(
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
 					'message'	=> __('UUID must be in correct format')
@@ -52,9 +52,9 @@ class Secret extends AppModel {
 			),
 			'data' => array(
 				'isNotEmpty' => array(
+					'required' => 'create',
 					'rule' => 'notEmpty',
-					'required' => true,
-					'message'	=> __('data must be provided')
+					'message' => __('The secret must me provided')
 				)
 			),
 		);

@@ -27,7 +27,7 @@
  * @see http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
  * @see http://book.cakephp.org/2.0/en/development/rest.html
  */
- 	Router::parseExtensions('json');
+	Router::parseExtensions('json');
 	Router::mapResources('dictionaries');
 	Router::mapResources('users');
 	Router::mapResources('groups');
@@ -37,7 +37,7 @@
 	Router::mapResources('secrets');
 	Router::mapResources('permissions');
 	Router::mapResources('comments');
-	
+
 	// The line below doesn't seem to work
 	// Router::mapResources('categoriesResources');
 	// So we declare the routes mapping for this function manually
@@ -60,13 +60,29 @@
  * ...and connect the rest of 'Pages' controller's urls.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-	Router::connect('/demo', array('controller' => 'pages', 'action' => 'display', 'demo','demo'));
+	Router::connect('/demo', array('controller' => 'pages', 'action' => 'display', 'demo', 'demo'));
 
 /**
  * Custom route for dictionary controller
  */
 	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
 	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'view'));
+
+/**
+ * Custom route for validation rules controller
+ */
+	Router::connect('/validation/:model', array(
+		'controller' => 'ValidationRules',
+		'action' => 'view'
+	), array(
+		'pass' => array('model')
+	));
+	Router::connect('/validation/:model/:case', array(
+		'controller' => 'ValidationRules',
+		'action' => 'view'
+	), array(
+		'pass' => array('model', 'case')
+	));
 
 /**
  * Custom route for categories controller
@@ -113,22 +129,22 @@
  */
 	Router::connect(
 		'/permissions/resource/:id',
-		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Resource', "[method]" => "POST"), 
+		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Resource', "[method]" => "POST"),
 		array('pass' => array('model', 'id')));
 	Router::connect(
-		'/permissions/resource/:id', 
-		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Resource', "[method]" => "GET"), 
+		'/permissions/resource/:id',
+		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model' => 'Resource', "[method]" => "GET"),
 		array('pass' => array('model', 'id')));
 	Router::connect(
-		'/permissions/category/:id', 
-		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model'=>'Category', "[method]" => "POST"), 
+		'/permissions/category/:id',
+		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Category', "[method]" => "POST"),
 		array('pass' => array('model', 'id')));
 	Router::connect(
-		'/permissions/category/:id', 
-		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model'=>'Category', "[method]" => "GET"), 
+		'/permissions/category/:id',
+		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model' => 'Category', "[method]" => "GET"),
 		array('pass' => array('model', 'id')));
- 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'edit', "[method]" => "PUT"));
- 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'delete', "[method]" => "DELETE"));
+	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'edit', "[method]" => "PUT"));
+	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
  * Custom route for comments controller
@@ -137,12 +153,12 @@
 		'/comments/:model/:id',
 		array('controller' => 'comments', 'action' => 'viewForeignComments', "[method]" => "GET"),
 		array('pass' => array('model', 'id')));
- 	Router::connect(
+	Router::connect(
 		'/comments/:model/:id',
-		array('controller' => 'comments', 'action' => 'addForeignComment', "[method]" => "POST"), 
+		array('controller' => 'comments', 'action' => 'addForeignComment', "[method]" => "POST"),
 		array('pass' => array('model', 'id')));
- 	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'edit', "[method]" => "PUT"));
- 	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'delete', "[method]" => "DELETE"));
+	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'edit', "[method]" => "PUT"));
+	Router::connect('/comments/*', array('controller' => 'comments', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
  * Custom route for tags controller
@@ -164,11 +180,11 @@
 		// '/favorites/:model/:id',
 		// array('controller' => 'favorites', 'action' => 'viewForeignComments', "[method]" => "GET"),
 		// array('pass' => array('model', 'id')));
- 	Router::connect(
+	Router::connect(
 		'/favorites/:model/:id',
-		array('controller' => 'favorites', 'action' => 'add', "[method]" => "POST"), 
+		array('controller' => 'favorites', 'action' => 'add', "[method]" => "POST"),
 		array('pass' => array('model', 'id')));
- 	Router::connect('/favorites/*', array('controller' => 'favorites', 'action' => 'delete', "[method]" => "DELETE"));
+	Router::connect('/favorites/*', array('controller' => 'favorites', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
  * Load all plugin routes.	See the CakePlugin documentation on

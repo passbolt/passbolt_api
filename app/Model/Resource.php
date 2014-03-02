@@ -71,25 +71,44 @@ class Resource extends AppModel {
   /**
    * Get the validation rules upon context
    * @param string context
-   * @return array cakephp validation rules
+   * @return array CakePHP validation rules
    */
   public static function getValidationRules($case = 'default') {
-    $default = array(
-      'id' => array('uuid' => array(
+	$default = array(
+      'id' => array(
+	    'uuid' => array(
           'rule' => 'uuid',
-          'message' => __('UUID must be in correct format')
-        )),
-      'name' => array('alphaNumeric' => array(
-          'rule' => '/^.{2,64}$/i',
-          'required' => 'create',
+          'message' => __('UUID must be in correct format'),
+		  'required' => 'update',
+        )
+      ),
+      'name' => array(
+        'alphaNumericAndSpecial' => array(
+          'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
           'allowEmpty' => false,
-          'message' => __('Alphanumeric only')
-        )),
-      'username' => array('alphaNumeric' => array(
-          'rule' => '/^.{2,64}$/i',
-          'required' => 'create',
-          'message' => __('Alphanumeric only')
-        )),
+          'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \''),
+	      'required' => 'create',
+        ),
+	    'size' => array(
+			'rule' => array('between', 3, 64),
+			'message' => __('Name should be between %s and %s characters long'),
+	    )
+      ),
+      'username' => array(
+        'alphaNumeric' => array(
+          'rule' => 'alphaNumeric',
+          'message' => __('Username should contain alphabets and numbers only'),
+		  'required' => 'create',
+        ),
+        'nospace' => array(
+          'rule' => '/^[^\s]+$/i',
+          'message' => __('Username should not contain space')
+        ),
+	      'size' => array(
+		      'rule'    => array('between', 3, 64),
+		      'message' => __('Username should be between %s and %s characters long'),
+	      )
+      ),
       'expiry_date' => array(
         'date' => array(
           'required' => false,
@@ -105,12 +124,13 @@ class Resource extends AppModel {
           'message' => __('The date should be in the future.')
         ),
       ),
-      'uri' => array('alphaNumeric' => array(
-          'rule' => '/^.{2,64}$/i',
-          'required' => false,
-          'allowEmpty' => true,
-          'message' => __('Alphanumeric only')
-        )),
+      'uri' => array(
+	      'size' => array(
+		      'rule'    => array('between', 3, 64),
+		      'message' => __('Uri should be between %s and %s characters long'),
+		      'allowEmpty' => true,
+	      ),
+      ),
       'description' => array('alphaNumeric' => array(
           'rule' => '/^[^<>]*$/i',
           'required' => false,

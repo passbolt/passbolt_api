@@ -206,6 +206,12 @@ steal(
 		 * @return {void}
 		 */
 		'refresh': function () {
+            // If the element is null don't refresh it and release a warning.
+            // It could happened when components embed other components.
+            if (this.element == null) {
+                console.warn('Try to refresh a component which doesn\'t have a DOM element.')
+                return;
+            }
 			this.element.empty();
 			if(this.options.templateBased) {
 				this.beforeRender();

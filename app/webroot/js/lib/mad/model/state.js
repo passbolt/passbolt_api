@@ -46,6 +46,19 @@ steal(
 		},
 
 		/**
+		 * Check if the previous state is equal to the given state
+		 * @param {string} stateName The state to check
+		 * @return {boolean}
+		 */
+		'was': function (stateName) {
+			// stateName is null, check that the current states list is null
+			if(stateName == null && !this.previous.length) {
+				return true;
+			}
+			return this.previous.indexOf(stateName) != -1 ? true : false;
+		},
+
+		/**
 		 * Set the current states, store the previous states in the variable previous
 		 * @param {string|array} statesName the new state name or an array of states name 
 		 * @return {void}

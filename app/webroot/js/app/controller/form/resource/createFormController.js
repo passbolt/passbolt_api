@@ -20,7 +20,9 @@ steal(
 	mad.form.FormController.extend('passbolt.controller.form.resource.CreateFormController', /** @static */ {
 		'defaults': {
 			'templateBased': true,
-			'secretField': null
+			'secretField': null,
+			// @todo should be dynamic functions of creation or update
+			'action': 'create'
 		}
 	}, /** @prototype */ {
 
@@ -37,7 +39,8 @@ steal(
 			// Add category id hidden field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_category_id'), {
-					modelReference: 'passbolt.model.Resource.Category.id'
+					modelReference: 'passbolt.model.Resource.Category.id',
+                    validate: false
 				}).start()
 			);
 			// Add resource name field
@@ -71,12 +74,16 @@ steal(
 			this.options.secretField = new mad.form.element.TextboxController($('#js_field_secret'), {
 					modelReference: 'passbolt.model.Resource.Secret.data'
 				}).start();
-			this.addElement(this.options.secretField);
+			this.addElement(
+                this.options.secretField,
+                new mad.form.FeedbackController($('#js_field_password_feedback'), {}).start()
+            );
 			// Add secret data in clear field
 			this.options.passwordClear = this.addElement(
 				new mad.form.element.TextboxController($('#js_field_secret_clear'), {
 					// modelReference: 'passbolt.model.Resource.Secret.data'
-					'state': 'hidden'
+					'state': 'hidden',
+					'validate': false
 				}).start()
 			);
 			// Add resource description field
