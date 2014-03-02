@@ -9,47 +9,25 @@
  */
   if(User::isGuest()) {
 		$menu = array(
-			'home' => array(
-				'url' => '#', 'class' => 'home', 'wrapper' => true
-			),
-			'discover' => array(
-				'url' => '#', 'class' => 'left'
-			),
-			'pricing' => array(
-				'url' => '#', 'class' => 'left'
-			),
-			'register' => array(
-				'url' => '#', 'class' => 'left'
-			),
-			'faq' => array(
-				'url' => '#', 'class' => 'left'
-			),
-			'help' => array(
-				'url' => '#', 'class' => 'left'
-			)
+			'home' => array('url' => '#', 'class' => 'home'),
+			'download' => array( 'url' => '#', 'class' => 'left'),
+			'about' => array( 'url' => '#', 'class' => 'left' ),
+			'login' => array( 'url' => '#', 'class' => 'right' )
 		);
 	} else {
 		$menu = array(
-			'home' => array(
-				'url' => '#', 'class' => 'home', 'wrapper' => true
-			),
-			'passwords' => array(
-				'url' => '#', 'class' => 'left'
-			),
-			'people' => array(
-				'url' => '#', 'class' => 'left'
-			),
-			'help' => array(
-				'url' => '#', 'class' => 'left'
-			)
+			'home' => array( 'url' => '#', 'class' => 'home' ),
+			'passwords' => array( 'url' => '#', 'class' => 'left'),
+			'people' => array( 'url' => '#', 'class' => 'left' ),
+			'help' => array( 'url' => '#', 'class' => 'left')
 		);
 	}
 ?>
   <nav>
-  <div class="top navigation">
+  <div class="top navigation primary">
     <ul>
 <?php foreach($menu as $name => $link) : ?>
-      <li><a href="<?php echo $link['url'] ?>" class="<?php echo $link['class'] ?>"><?php if(isset($link['wrapper']) && $link['wrapper'])  : ?><span><?php echo $name; ?></span><?php else: echo $name; endif; ?></a></li>
+      <li class="<?php echo $link['class'] ?>"><a href="<?php echo $link['url'] ?>"><span><?php echo $name; ?></span></a></li>
 <?php endforeach; ?>
     </ul>
   </div>

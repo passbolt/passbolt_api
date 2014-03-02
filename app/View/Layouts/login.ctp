@@ -21,18 +21,17 @@
 <?php echo $this->element('css'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
-<body class="login layout">
+<body>
+<div class="container login page">
 <?php echo $this->element('disclaimers'); ?>
 <!-- header -->
 <header>
-<div class="header">
-<?php echo $this->element('login/header'); ?>
+<div class="header first ">
+<?php echo $this->element('header/topNavigation'); ?>
 </div>
 </header>
 <!-- main -->
-<div role="main" id="container" class="container_16">
 <?php echo $this->fetch('content'); ?>
-</div>
 <!-- footer -->
 <footer>
 <div class="footer">
@@ -41,6 +40,6 @@
 </footer>
 </div>
 <?php echo $this->fetch('scriptBottom'); ?>
-<?php echo $this->element('sql_dump')."\n"; ?>
+<?php //echo $this->element('debug');?>
 </body>
 </html>

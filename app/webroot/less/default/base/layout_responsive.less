@@ -1,0 +1,73 @@
+/*
+	One% CSS Grid - 12 Columns Fluid CSS Grid System
+
+	Why One% ? Let’s count ...
+		we have 12 columns (magic number divided by 2, 3, 4, 6)
+		for 12 columns we need 11 margins
+		so if we count margin 3%, then 3% * 11 margins = 33%
+		and if we count width of 1 column 5.5%, than 5.5% * 12 columns = 66%
+		in the end we have 33% + 66% = 99% aaand ???
+		1% is still here so that's the name - One%
+
+	1200px - perfectly fits 1280 screens
+			12 columns
+			margin 3% / 36px (full-width)
+			col1 5.5% / 66px (full-width)
+*/
+/*
+ * Main container for all
+ */
+.grid {
+	margin: 0 auto;
+	padding: 0 0 0 1%;
+	max-width: 1220px;
+}
+.row {
+	clear: both;
+	padding: 0 10px;
+}
+.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11 {
+	float: none;
+	width: 99%;
+}
+
+.col1 img, .col2 img, .col3 img, .col4 img, .col5 img, .col6 img, .col7 img, .col8 img, .col9 img, .col10 img, .col11 img, .col12 img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+/*
+ * large devices
+ */
+@media all and (min-width: 768px) {
+
+	/*
+	 * Common columns definitions
+	 */
+	.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+		float: left;
+		margin: 0 3% 0 0;
+	}
+
+	.last {
+		margin-right: 0;
+	}
+
+	.col1 { width: 5.5%; }
+	.col2 { width: 14%; }
+	.col3 { width: 22.5%; }
+	.col4 { width: 31%; }
+	.col5 { width: 39.5%; }
+	.col6 { width: 48%; }
+	.col7 { width: 56.5%; }
+	.col8 { width: 65%; }
+	.col9 { width: 73.5%; }
+	.col10 { width: 82%; }
+	.col11 { width: 90.5%; }
+	.col12 { width: 99%; margin: 0; }
+
+	.push1 { margin-left:5.5%; }
+	.push2 { margin-left:14%; }
+
+}

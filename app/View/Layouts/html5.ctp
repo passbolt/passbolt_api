@@ -46,6 +46,6 @@
 </div>
 </footer>
 <?php echo $this->fetch('scriptBottom'); ?>
-<?php echo $this->element('sql_dump'); ?>
+<?php echo $this->element('debug');?>
 </body>
 </html>

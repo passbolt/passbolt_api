@@ -1,9 +1,0 @@
-.breadcrumb li {
-  display:inline;
-}
-.breadcrumb li:after {
-  content:' >';
-}
-.breadcrumb li:last-child:after {
-  content:'';
-}

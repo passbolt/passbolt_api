@@ -18,7 +18,7 @@
 	<title>Password Workspace Static Demo</title>
 	<base href="<?php echo Router::url('/',true);?>">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-	<link href="css/default/aa1d4fae-7dec-11d0-a765-00a0c91e6bf6.css" rel="stylesheet" type="text/css">
+	<link href="css/default/main.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="js/lib/compat/modernizr-2.6.2.min.js"></script>
 	<script type="text/javascript" src="js/lib/jquery/jquery-1.8.3.js"></script>
 </head>

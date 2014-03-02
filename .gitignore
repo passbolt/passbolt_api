@@ -18,4 +18,4 @@
 /app/webroot/js/lib/mad/docs.html
 !empty
 /.idea/*
-
+/node_modules/
