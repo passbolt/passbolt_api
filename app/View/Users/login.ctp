@@ -12,6 +12,7 @@
 	$this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'block'=>'scriptHeader'));
 	$this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));
 ?>
+<div class="grid">
 <div class="row">
 	<div class="col5 push1 information">
 		<h2>Welcome back!</h2>
@@ -44,4 +45,5 @@
 		<?php echo $this->MyForm->end();?>
 		</div>
 	</div>
+</div>
 </div>
