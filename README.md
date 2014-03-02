@@ -12,18 +12,22 @@ Install
 =========
 
 Copy the core configuration file
+```
 	cp app/Config/core.php.default app/Config/core.php
-
+```
 Copy the database configuration file and edit the credentials
+```
 	cp app/Config/database.php.default app/Config/database.php
 	nano app/Config/database.php
-
+```
 Copy the app configuration file
+```
 	cp app/Config/app.php.default app/Config/app.php
-
+```
 Run the install script
+```
 	./app/Console/cake install
-
+```
 Check if it works!
 
 
@@ -31,14 +35,17 @@ How to edit the LESS/CSS files?
 =========
 
 Install grunt
+```
 	npm install -g grunt-cli
-
+```
 Install the needed modules defined in the grunt config
+```
 	npm install
-
+```
 Make sure Grunt watch for less changes and compile them into CSS
+```
 	grunt watch
-
+```
 Edit one LESS file to see if it works!
 
 
