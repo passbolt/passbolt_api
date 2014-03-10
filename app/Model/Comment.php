@@ -8,6 +8,7 @@
  * @license			http://www.passbolt.com/license
  */
 class Comment extends AppModel {
+
 /**
  * Model behaviors
  * @link http://api20.cakephp.org/class/model#
@@ -38,10 +39,10 @@ class Comment extends AppModel {
 
 /**
  * Get the validation rules upon context
- * @param string context
+ * @param string $case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case='default') {
+	public static function getValidationRules($case = 'default') {
 		$default = array(
 			'id' => array(
 				'uuid' => array(
@@ -96,8 +97,8 @@ class Comment extends AppModel {
 		switch ($case) {
 			case 'edit':
 				$rules = array(
-					'id'=> $default['id'],
-					'content'=> $default['content'],
+					'id' => $default['id'],
+					'content' => $default['content'],
 				);
 			break;
 			default:
@@ -141,7 +142,7 @@ class Comment extends AppModel {
 		$model = Common::getModel($m);
 		$exists = $model->find('count', array(
 				'conditions' => array('id' => $check['foreign_id']),
-				 'recursive' => -1
+				'recursive' => -1
 		));
 		return $exists > 0;
 	}
@@ -191,7 +192,7 @@ class Comment extends AppModel {
  * @return $condition array
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
-		$returnValue = array('fields'=>array());
+		$returnValue = array('fields' => array());
 		switch($case){
 			case 'view':
 			case 'viewByForeignModel':

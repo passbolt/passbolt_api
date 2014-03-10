@@ -93,7 +93,7 @@ steal(
 				}).start(),
 				new mad.form.FeedbackController($('#js_field_description_feedback'), {}).start()
 			);
-			
+
 			// Show/Hide the password
 			this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_pwd_button'))
 				.start();

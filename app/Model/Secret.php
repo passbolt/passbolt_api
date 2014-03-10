@@ -21,7 +21,8 @@ class Secret extends AppModel {
 
 /**
  * Get the validation rules upon context
- * @param string context
+ *
+ * @param string case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
@@ -31,11 +32,11 @@ class Secret extends AppModel {
 					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('UUID must be in correct format')
+					'message'	=> __('The resource uid must be in correct format')
 				),
 				'exist' => array(
 					'rule' => array('userExists', null),
-					'message' => __('The resource provided does not exist')
+					'message' => __('The user provided does not exist')
 				),
 			),
 			'resource_id' => array(
@@ -43,7 +44,7 @@ class Secret extends AppModel {
 					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('UUID must be in correct format')
+						'message'	=> __('The resource uid must be in correct format')
 				),
 				'exist' => array(
 					'rule' => array('resourceExists', null),
@@ -77,7 +78,7 @@ class Secret extends AppModel {
 		} else {
 			$exists = $this->Resource->find('count', array(
 				'conditions' => array('Resource.id' => $check['resource_id']),
-				 'recursive' => -1
+				'recursive' => -1
 			));
 			return $exists > 0;
 		}
@@ -93,7 +94,7 @@ class Secret extends AppModel {
 		} else {
 			$exists = $this->User->find('count', array(
 				'conditions' => array('User.id' => $check['user_id']),
-				 'recursive' => -1
+				'recursive' => -1
 			));
 			return $exists > 0;
 		}
