@@ -72,6 +72,7 @@ class Category extends AppModel {
 				'exist' => array(
 					'rule'		=> array('parentExists', null),
 					'allowEmpty' => true,
+					'shared' => false,
 					'message' => __('The parent provided does not exist')
 				),
 				'uuid' => array(

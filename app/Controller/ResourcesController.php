@@ -253,7 +253,7 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('Invalid request method, should be PUT'));
 			return;
 		}
-		
+
 		// check if data was provided
 		if ($id == null) {
 			$this->Message->error(__('No valid id was provided'));
