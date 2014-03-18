@@ -23,10 +23,10 @@ class CategoryResource extends AppModel {
 
 /**
  * Get the validation rules upon context
- * @param string context
+ * @param string $case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case='default') {
+	public static function getValidationRules($case = 'default') {
 		$default = array(
 			'category_id' => array(
 				'uuid' => array(

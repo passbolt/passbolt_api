@@ -74,15 +74,10 @@ steal(
 				not = options.not || false;
 
 			// XRegExp expects an expresion without starting/ending slashes.
+			// It's a little dirty now because we don't take care of flags.
 			if (regexp.indexOf('/') == 0) {
-				regexp = regexp.substr(1);
-				if (regexp.lastIndexOf('/') == regexp.length - 1) {
-					regexp = regexp.substr(0, regexp.length - 1);
-				} else {
-					regexp = regexp.substr(0, regexp.length - 2);
-				}
+				regexp = regexp.substr(1, regexp.length - (regexp.length - regexp.lastIndexOf('/') + 1));
 			}
-
 			var xregexp = new XRegExp(regexp);
 			var match = xregexp.test(value);
 
@@ -175,11 +170,11 @@ steal(
 		},
 
 		/**
-		 * 
+		 * Based on the cakephp url validator code
+		 * http://api.cakephp.org/2.3/class-Validation.html#_url
 		 */
-		'uri': function (value) {
-//			var regexUri = /^([a-z0-9+.-]+):(?://(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)(?::(\d*))?(/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?|(/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?$/g;
-			var	regexUri = "^\
+		'url': function (value) {
+			var	regex = "^\
 				([a-z0-9+.-]+):\
 					(?:\
 						(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?\
@@ -196,28 +191,10 @@ steal(
 					#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*)\
 				)?\
 			$";
-			//^
-			//#scheme								([a-z0-9+.-]+):
-			//(?:
-			//	#it has an authority:
-			//	#userinfo						(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?
-			//	#host								((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)
-			//	#port								(?::(\d*))?
-			//	#path								(/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?
-			//	|
-			//	#it doesn't have an authority:
-			//	#path								(/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?
-			//)
-			//(?:
-			//	#query string				\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*)
-			//)?
-			//(?:
-			//	#fragment						#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*)
-			//)?
-			//$
-			var xregexp = XRegExp(regexUri);
-			if (!xregexp.test(value)) {
-				return __('Only URI format is allowed');
+
+			var xregexp = XRegExp(regex);
+			if (xregexp.test(value)) {
+				return __('Not valid url.');
 			}
 			return true;
 		},

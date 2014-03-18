@@ -1,6 +1,6 @@
 <?php
 /**
- * ResourcesTagFixture
+ * ItemsTagFixture
  *
  */
 class ItemsTagFixture extends CakeTestFixture {
@@ -29,6 +29,30 @@ class ItemsTagFixture extends CakeTestFixture {
  * @var array
  */
 	public $records = array(
+		array(
+			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
+			'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
+			'foreign_model' => 'Resource',
+			'foreign_id' => '509bb871-b964-48ab-94fe-fb098cebc04d',
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '10be2d3a-0468-432b-b59f-3153d7a82fce',
+			'tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',
+			'foreign_model' => 'Resource',
+			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
+			'tag_id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',
+			'foreign_model' => 'Resource',
+			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
 	);
 
 }

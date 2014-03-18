@@ -13,7 +13,7 @@ App::uses('CategoryType', 'Model');
 App::uses('User', 'Model');
 
 class CategoriesController extends AppController {
-	
+
 /**
  * index - get the list of top categories
  */
@@ -54,7 +54,7 @@ class CategoriesController extends AppController {
  * @return void
  *
  */
-	public function view($id=null) {
+	public function view($id = null) {
 		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
 
 		// check if the category id is provided
@@ -80,20 +80,21 @@ class CategoriesController extends AppController {
 			$data = $this->Category->find('threaded', $o);
 			$this->set('data', $data[0]);
 		} else {
-			$data = array('Category'=>array('id' => $id));
+			$data = array('Category' => array('id' => $id));
 			$o = $this->Category->getFindOptions('view', User::get('Role.name'), $data);
 			$this->set('data', $this->Category->find('first', $o));
 		}
 		$this->Message->success();
 	}
 
-/**	
+/**
  * get the children for a corresponding category
- * @param $id, the id of the parent category
+ *
+ * @param $id , the id of the parent category
  * @return void
  * @todo Rest mapping in routes
  */
-	public function children($id=null) {
+	public function children($id = null) {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -124,13 +125,15 @@ class CategoriesController extends AppController {
  *   $name, the name of the category
  *   $position (optional), the position of the category from the parent (Counting starts from 1, not from 0)
  *     if position is not available (example : position 2 when there are no children,
- *			the category will be inserted in last)
+ *            the category will be inserted in last)
  *     if position is 0, it will not be handled. Count starts from 1.
  *   $type (optional), the type of the category (default is set is missing)
  *
  * @return void
  */
 	public function add() {
+//		var_dump($this->request->data);die();
+
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
@@ -156,16 +159,16 @@ class CategoriesController extends AppController {
 		$fields = $this->Category->getFindFields("add", User::get('Role.name'));
 		$this->Category->create();
 		// disable the permissionnable behavior because we need to access other categories to position the new one
-		$this->Category->Behaviors->disable('Permissionable');
-		$category = $this->Category->save($catpost, true, $fields['fields']);	
+		//		$this->Category->Behaviors->disable('Permissionable');
+		$category = $this->Category->save($catpost, true, $fields['fields']);
 		// reenable the permissionnable behavior
-		$this->Category->Behaviors->disable('Permissionable');
-			
+		//		$this->Category->Behaviors->disable('Permissionable');
+
 		if ($category === false) {
 			$this->Message->error(__('The category could not be saved'));
 			return;
 		}
-		
+
 		// Manage the position
 		if (isset($catpost['Category']['position']) && $catpost['Category']['position'] > 0) {
 			$nbChildren = $this->Category->childCount($catpost['Category']['parent_id'], true);
@@ -174,13 +177,13 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-		
+
 		// Should be done by the after save of the permissionable behavior
 		// // Add the admin right to the just created category for the creator
 		// $this->PermissionCpt->add('Category', $category, 'User', User::get(), PermissionType::ADMIN);
-		
+
 		// Get back the category data to return to the client
-		$data = array('Category'=>array('id'=>$category['Category']['id']));
+		$data = array('Category' => array('id' => $category['Category']['id']));
 		$options = $this->Category->getFindOptions('addResult', User::get('Role.name'), $data);
 		$this->set('data', $this->Category->find('first', $options));
 		$this->Message->success(__('The category was sucessfully added'));
@@ -189,7 +192,7 @@ class CategoriesController extends AppController {
 /**
  * Edit a category
  */
-	public function edit($id=null) {
+	public function edit($id = null) {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
@@ -213,7 +216,7 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category does not exist'), array('code' => 404));
 			return;
 		}
-		
+
 		// check if data was provided
 		if (!isset($this->request->data['Category'])) {
 			$this->Message->error(__('No data were provided'));
@@ -238,12 +241,13 @@ class CategoriesController extends AppController {
 		$this->Message->success(__('The category was sucessfully updated'));
 	}
 
-/**	
+/**
  * Delete a category in the tree
- * @param $id, the Category id
+ *
+ * @param $id , the Category id
  * @return void
  */
-	public function delete($id=null) {
+	public function delete($id = null) {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -264,9 +268,10 @@ class CategoriesController extends AppController {
 
 /**
  * Move a category in the tree
- * @param $id, the id of the category to move
- * @param $position, the position among the sieblings
- * @param $parentId, the new parent
+ *
+ * @param $id , the id of the category to move
+ * @param $position , the position among the sieblings
+ * @param $parentId , the new parent
  * @return void
  */
 	public function move($id = null, $position = null, $parentId = null) {
@@ -298,7 +303,7 @@ class CategoriesController extends AppController {
 				$this->Message->error(__('The parent category id invalid'));
 				return;
 			}
-	
+
 			// check if the parent category exists
 			if (!$this->Category->exists($parentId)) {
 				$this->Message->error(__('The parent category does not exist'), array('code' => 404));
@@ -323,10 +328,11 @@ class CategoriesController extends AppController {
 
 /**
  * Set the type of a category
+ *
  * @param uuid $id the id of the category
- * @param varchar $typeName, the name of the type
+ * @param varchar $typeName , the name of the type
  */
-	public function type($id=null, $typeName=null) {
+	public function type($id = null, $typeName = null) {
 		$typeName = Sanitize::clean($typeName);
 
 		// check if the category is provided
@@ -357,8 +363,8 @@ class CategoriesController extends AppController {
 		$category = $this->Category->save($category);
 
 		if (!$category) {
-			 $this->Message->error(__('The type could not be changed'));
-				return;
+			$this->Message->error(__('The type could not be changed'));
+			return;
 		}
 		$this->Message->success(__('The type was succesfully set'));
 	}

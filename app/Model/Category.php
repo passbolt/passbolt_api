@@ -16,99 +16,96 @@ class Category extends AppModel {
 
 /**
  * Model behaviors
+ *
  * @link http://api20.cakephp.org/class/model#
  */
-	public $actsAs = array(
-		'Containable',
-		'Trackable',
-		'Permissionable'=>array('priority' => 1),
-		'Tree'
-	);
+	public $actsAs = array('Containable', 'Trackable', 'Permissionable' => array('priority' => 1), 'Tree');
 
 /**
  * Details of has many relationships
+ *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasMany = array(
-		'CategoryResource'
-	);
+	public $hasMany = array('CategoryResource');
 
 /**
  * Details of belongs relationships
+ *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $belongsTo = array('CategoryType' => array(
-		'className' => 'CategoryType'
-	));
+	public $belongsTo = array('CategoryType' => array('className' => 'CategoryType'));
 
-	public function __construct( $id = false, $table = NULL, $ds = NULL )	{
+	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
-		$this->Behaviors->setPriority(array(
-			'Permissionable' => 1
-		));
+		$this->Behaviors->setPriority(array('Permissionable' => 1));
 	}
-	
+
 /**
  * Get the validation rules upon context
- * @param string context
+ *
+ * @param string case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($context='default') {
-		$rules = array(
+	public static function getValidationRules($case = 'default') {
+		$default = array(
 			'id' => array(
 				'uuid' => array(
-					'rule'		 => 'uuid',
-					'message'	=> __('UUID must be in correct format')
+					'rule' => 'uuid',
+					'required' => 'update',
+					'message' => __('Id must be in correct format')
 				)
 			),
 			'name' => array(
 				'alphaNumeric' => array(
-					'rule'		 => '/^.{2,64}$/i',
-					'required' => true,
-					'message'	=> __('Alphanumeric only')
+					'rule' => "/^[\p{L}\d ,.:;!?\-_\(\[\)\]'&\/]*$/u",
+					'required' => 'create',
+					'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \'')
+				),
+				'size' => array(
+					'rule' => array('between', 3, 64),
+					'message' => __('Name should be between %s and %s characters long'),
 				)
 			),
 			'parent_id' => array(
 				'exist' => array(
-					'rule'		=> array('parentExists', null),
+					'rule' => array('parentExists', null),
 					'allowEmpty' => true,
 					'message' => __('The parent provided does not exist')
 				),
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'allowEmpty' => true,
 					'required' => false,
-					'message'	=> __('UUID must be in correct format')
+					'message' => __('UUID must be in correct format')
 				)
 			),
 			'position' => array(
 				'number' => array(
-					'rule'		=> 'numeric',
+					'rule' => 'numeric',
 					'message' => __('The position must be a number')
 				)
 			),
 			'category_type_id' => array(
 				'exist' => array(
-					'rule'		=> array('categoryTypeExists', null),
+					'rule' => array('categoryTypeExists', null),
 					'allowEmpty' => true,
 					'message' => __('The category type provided does not exist')
-					),
+				),
 				'uuid' => array(
-					'rule'		 => 'uuid',
+					'rule' => 'uuid',
 					'allowEmpty' => true,
 					'required' => false,
-					'message'	=> __('UUID must be in correct format')
+					'message' => __('The category type id must be in correct format')
 				)
 			)
 		);
 
-		/* a context switch if needed
-		switch ($context) {
+		switch ($case) {
 			default:
-				unset($rules['rule']);
-			break;
-		}*/
-
+			case 'default':
+				$rules = $default;
+				break;
+		}
 		return $rules;
 	}
 
@@ -129,13 +126,12 @@ class Category extends AppModel {
 			// results has to be ordered following Category.lft
 			$n = count($results);
 			// build parent hierarchy even if some nodes are missing. Based on left and right
-			for($i=$n-1; $i>=0; $i--) {
-				for($j=$i-1; $j>=0; $j--) {
-					if($results[$i]['Category']['lft'] > $results[$j]['Category']['lft'] &&
-							$results[$i]['Category']['rght'] < $results[$j]['Category']['rght']) {
+			for ($i = $n - 1; $i >= 0; $i--) {
+				for ($j = $i - 1; $j >= 0; $j--) {
+					if ($results[$i]['Category']['lft'] > $results[$j]['Category']['lft'] && $results[$i]['Category']['rght'] < $results[$j]['Category']['rght']) {
 						$results[$j]['children'][] = $results[$i];
 						unset($results[$i]);
-						break; 
+						break;
 					}
 				}
 			}
@@ -145,30 +141,27 @@ class Category extends AppModel {
 
 /**
  * Get the subcategories of a given category
+ *
  * @param {Category} category The target category
  * @return {array}
  */
 	public function getSubCategories($category = null) {
 		$returnValue = array();
-		if(!is_null($category)) {
-			$returnValue = $this->find(
-				'all',
-				array(
-					'conditions' => array(
-						'Category.lft >=' => $category['Category']['lft'],
-						'Category.rght <=' => $category['Category']['rght']
-						),
-					'order' => array(
-						'Category.lft' => 'ASC'
-						)
-				)
-			);
+		if (!is_null($category)) {
+			$returnValue = $this->find('all', array(
+				'conditions' => array(
+					'Category.lft >=' => $category['Category']['lft'],
+					'Category.rght <=' => $category['Category']['rght']
+				),
+				'order' => array('Category.lft' => 'ASC')
+			));
 		}
 		return $returnValue;
 	}
- 
+
 /**
  * Check if a category type with same id exists
+ *
  * @param check
  */
 	public function categoryTypeExists($check) {
@@ -177,7 +170,7 @@ class Category extends AppModel {
 		} else {
 			$exists = $this->CategoryType->find('count', array(
 				'conditions' => array('CategoryType.id' => $check['category_type_id']),
-				 'recursive' => -1
+				'recursive' => -1
 			));
 			return $exists > 0;
 		}
@@ -186,8 +179,9 @@ class Category extends AppModel {
 /**
  * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
  * Useful when parsing an array of results
- * @param $elt, the element to check
- * @param $parent, the parent
+ *
+ * @param $elt , the element to check
+ * @param $parent , the parent
  * @return true if element is a child, false otherwise
  */
 	public function isChild($elt, $parent) {
@@ -196,7 +190,8 @@ class Category extends AppModel {
 
 /**
  * Check if an element is a leaf (no more children)
- * @param $category, the category
+ *
+ * @param $category , the category
  * @return true if the category is a leaf. false otherwise.
  */
 	public function isLeaf($category) {
@@ -208,7 +203,8 @@ class Category extends AppModel {
 
 /**
  * Check if an element is at the top level of the given branch
- * @param $objectType, the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
+ *
+ * @param $objectType , the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
  */
 	public function isTopLevelElement($category, $categories) {
 		$parentId = $category['Category']['parent_id'];
@@ -223,13 +219,14 @@ class Category extends AppModel {
 /**
  * move an element from a position to another in the tree
  * can be moved among its sieblings, can also change parent
+ *
  * @param uuid $id the if of the category
  * @param int $position the position from 1 to n
  * @param uuid $parentId the parent Id (if we wish to change it)
  * @return bool true or false
- * 
+ *
  */
-	public function move($id, $position, $parentId=null) {
+	public function move($id, $position, $parentId = null) {
 		// First, manage the parent
 		$category = $this->findById($id);
 		if (!$category) {
@@ -264,6 +261,7 @@ class Category extends AppModel {
 
 /**
  * get the current position of a category among its sieblings, starting from 1
+ *
  * @param uuid $id the id of the category
  * @return the current position starting from 1, false if category doesnt exist
  */
@@ -275,70 +273,65 @@ class Category extends AppModel {
 		}
 		$parent = $this->findById($category['Category']['parent_id']);
 		// calculate the current position
-		$children = $this->children(
-			$parent['Category']['id'], true, null,
-			array('Category.lft' => 'ASC')
-		);
+		$children = $this->children($parent['Category']['id'], true, null, array('Category.lft' => 'ASC'));
 		$currentPosition = 0;
 		foreach ($children as $child) {
 			$currentPosition++;
-			if ($child['Category']['id'] == $id) break;
+			if ($child['Category']['id'] == $id) {
+				break;
+			}
 		}
 		return $currentPosition;
 	}
-	
+
 /**
  * Return the list of field to fetch for given context
+ *
  * @param string $case context ex: login, activation
  * @return $condition array
  */
 	public static function getFindFields($case = 'get', $role = Role::USER) {
 		$returnValue = array('fields' => array());
 
-		switch($role){
+		switch ($role) {
 			case 'user':
-				switch($case){
+				switch ($case) {
 					case 'view':
 					case 'getChildren':
 					case 'addResult':
 					case 'index' :
 					case 'getWithChildren' :
 						$returnValue = array(
-							'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght'),
-							'contain' => array ('CategoryType')
+							'fields' => array(
+								'id',
+								'name',
+								'parent_id',
+								'category_type_id',
+								'lft',
+								'rght'
+							),
+							'contain' => array('CategoryType')
 						);
-					break;
+						break;
 					case 'Resource.viewByCategory':
 						$returnValue = array(
-							'fields' => array(
-								'Category.id', 'Category.name', 'Category.parent_id'
-							),
-							'contain' => array(
-								'Resource' => Resource::getFindFields('view')
-							)
+							'fields' => array('Category.id', 'Category.name', 'Category.parent_id'),
+							'contain' => array('Resource' => Resource::getFindFields('view'))
 						);
-					break;
+						break;
 					case 'rename':
-						$returnValue = array(
-							'fields' => array(
-								'name'
-							)
-						);
-					break;
+						$returnValue = array('fields' => array('name'));
+						break;
 					case 'add':
 					case 'edit':
-						$returnValue = array(
-							'fields' => array(
-								'name', 'parent_id', 'category_type_id'
-							)
-						);
-					break;
+						$returnValue = array('fields' => array('name', 'parent_id', 'category_type_id'));
+						break;
 					default:
-						$returnValue = array('fields'=>array());
-					break;
+						$returnValue = array('fields' => array());
+						break;
 				}
 			case 'admin':
-			break;
+				break;
 		}
 		return $returnValue;
 	}
@@ -353,7 +346,7 @@ class Category extends AppModel {
  */
 	public static function getFindConditions($case = 'get', $role = Role::USER, $data = null) {
 		$returnValue = array('conditions' => array());
-		switch($role){
+		switch ($role) {
 			case 'user':
 				switch ($case) {
 					case 'getWithChildren':
@@ -364,7 +357,7 @@ class Category extends AppModel {
 							),
 							'order' => 'Category.lft ASC'
 						);
-					break;
+						break;
 					case 'getChildren':
 						$returnValue = array(
 							'conditions' => array(
@@ -373,29 +366,23 @@ class Category extends AppModel {
 							),
 							'order' => 'Category.lft ASC'
 						);
-					break;
+						break;
 					case 'Resource.viewByCategory':
 					case 'view':
 					case 'addResult':
-						$returnValue = array(
-							'conditions' => array(
-								'Category.id' => $data['Category']['id']
-							)
-						);
-					break;
+						$returnValue = array('conditions' => array('Category.id' => $data['Category']['id']));
+						break;
 					case 'index':
 						$returnValue = array(
-							'conditions' => array(
-								'Category.parent_id' => null
-							),
+							'conditions' => array('Category.parent_id' => null),
 							'order' => 'Category.lft ASC'
 						);
-					break;
+						break;
 					default:
 						$returnValue = array('conditions' => array());
 				}
 			case 'admin':
-			break;
+				break;
 		}
 		return $returnValue;
 	}
