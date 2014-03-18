@@ -1,17 +1,15 @@
-<%
-var cssClasses = cssClasses || [];
-var classes = hasChildren ? ['root', 'closed'] : ['leaf'];
-classes = $.merge(classes, cssClasses);
-var classesControl = hasChildren ? ['with_icon', 'triangle_right'] : [];
-%>
-
-<li id="<%= id %>" class="<%= classes.join(' ') %> node" <%= (el) -> el.data( itemClass.fullName, item ) %>>
-
-	<div>
-		<a href="#" class="label"><%= label %></a>
-		<a href="#" class="control <%= classesControl.join(' ') %>">
-			<span>more</span>
-		</a>
+<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= typeof cssClasses != 'undefined' ? cssClasses : '' %>">
+	<div class="row">
+		<div class="main-cell-wrapper">
+			<div class="main-cell">
+				<a href="#"><span><%= label %></span></a>
+			</div>
+		</div>
 	</div>
+
+<% if(hasChildren) { %>
+	<ul>
+	</ul>
+<% } %>
 
 </li>

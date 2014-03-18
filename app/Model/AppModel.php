@@ -12,10 +12,13 @@
  */
 
 App::uses('Model', 'Model');
+App::uses('AppValidation', 'Model/Utility');
+
 class AppModel extends Model {
 
 /**
  * Model behaviors
+ *
  * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = array('Containable');
@@ -42,19 +45,19 @@ class AppModel extends Model {
 /**
  * Set the validation rules upon context
  *
- * @param string context
+ * @param string case (optional) The target validation case if any.
  * @return bool true if success
  * @access public
  */
-	public function setValidationRules($context = 'default') {
-		$this->validate = $this->getValidationRules($context);
+	public function setValidationRules($case = 'default') {
+		$this->validate = $this->getValidationRules($case);
 		return true;
 	}
 
 /**
  * Get the validation rules upon context
  *
- * @param string context
+ * @param string case (optional) The target validation case if any.
  * @return array validation rules
  * @access public
  */
@@ -64,15 +67,13 @@ class AppModel extends Model {
 
 /**
  * Return the find options (felds and conditions) for a given context
- * @param string context
+ *
+ * @param string case The target case.
  * @param array data
  * @return array
  */
 	public static function getFindOptions($case, $role = null, $data = null) {
-		return array_merge(
-			static::getFindConditions($case, $role, $data),
-			static::getFindFields($case, $role)
-		);
+		return array_merge(static::getFindConditions($case, $role, $data), static::getFindFields($case, $role));
 	}
 
 /**
@@ -85,7 +86,7 @@ class AppModel extends Model {
 	public static function getFindFields($case = null, $role = null) {
 		return array('fields' => array());
 	}
-	
+
 /**
  * Return the list of field to use for a find for given context for an embedded model
  *
@@ -112,46 +113,45 @@ class AppModel extends Model {
 
 /**
  * Check if a record with provided parent_id exists
+ *
  * @param check
  */
 	public function parentExists($check) {
 		if ($check['parent_id'] == null) {
 			return true;
 		} else {
-			$exists = $this->find('count', array(
-				'conditions' => array('id' => $check['parent_id']),
-				'recursive' => -1
-			));
+			$exists = $this->find('count', array('conditions' => array('id' => $check['parent_id']), 'recursive' => -1));
 			return $exists > 0;
 		}
 	}
 
 /**
  * Get path of a target instance in a nested data array
+ *
  * @param string id needle
- * @param array stack 
+ * @param array stack
  * @param key the key which hold the needle value
  * @return array the path of the found needle or false
  */
-	public function inNestedArray ($needle, $data, $key='id', $path=array(), $found=false) {
+	public function inNestedArray($needle, $data, $key = 'id', &$path = array(), &$found = false) {
 		// if data is an array of nested array
-		if(!isset($data[$this->alias])) {
-			foreach($data as $nestedData) {
+		if (!isset($data[$this->alias])) {
+			foreach ($data as $nestedData) {
 				$this->inNestedArray($needle, $nestedData, $key, $path, $found);
-				if ($found){
-					break;					
+				if ($found) {
+					break;
 				}
 			}
 		} else {
 			// the needle is found
-			if($data[$this->alias][$key] == $needle) {
+			if ($data[$this->alias][$key] == $needle) {
 				$found = true;
 				array_unshift($path, $data[$this->alias]['id']);
 				return $path;
 			}
 			// search in the children
-			if(!empty($data['children'])) {
-				foreach($data['children'] as $child) {
+			if (!empty($data['children'])) {
+				foreach ($data['children'] as $child) {
 					$this->inNestedArray($needle, $child, $key, $path, $found);
 					if ($found) {
 						array_unshift($path, $data[$this->alias]['id']);
@@ -160,12 +160,13 @@ class AppModel extends Model {
 				}
 			}
 		}
-		
+
 		return $path;
 	}
-	
+
 /**
  * Validation rule : Check if an instance of a given model exists
+ *
  * @param string check The data to check
  * @param string key The key to find the uuid
  * @param string modelName The model name the instance belong to

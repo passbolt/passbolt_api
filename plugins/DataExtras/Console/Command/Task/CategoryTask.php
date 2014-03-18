@@ -77,6 +77,17 @@ class CategoryTask extends ModelTask {
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));
 		$c[] = array('Category'=>array(
+			'id' => '50d77ff7-bcac-eeee-eeee-1b63d7a10fce',
+			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'name' => 'empty',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2014-03-18 03:34:39',
+			'modified' => '2014-03-18 03:34:39',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
 			'id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
 			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
 			'name' => 'administration',

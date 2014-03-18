@@ -8,17 +8,17 @@ steal(
 	/*
 	 * @class passbolt.controller.CategoryChooserController
 	 * @inherits mad.controller.component.DynamicTreeController
-	 * @parent index 
-	 * 
+	 * @parent index
+	 *
 	 * Our category chooser component.
 	 * It will allow the user to select a category.
-	 * 
+	 *
 	 * @constructor
 	 * Creates a new Category Chooser Controller.
-	 * 
+	 *
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
-	 * this.options and merged with defaults static variable 
+	 * this.options and merged with defaults static variable
 	 * @return {passbolt.controller.CategoryChooserController}
 	 */
 	mad.controller.component.DynamicTreeController.extend('passbolt.controller.component.CategoryChooserController', /** @static */ {
@@ -50,41 +50,46 @@ steal(
 		 */
 		'showContextualMenu': function (item, x, y) {
 			var menuItems = mad.model.Action.models([
-				{ 'id': uuid(), 'label': 'open',
+				{
+					'id': uuid(),
+					'label': 'Open',
 					'action': function (menu) {
 						mad.bus.trigger('category_selected', item);
 						menu.remove();
-					}},
-				{ 'id': uuid(), 'label': 'create',
+					}
+				}, {
+					'id': uuid(),
+					'label': 'Create resource',
 					'action': function (menu) {
-						console.log('Menu Create');
-					},
-					'children': [
-						{ 'id': uuid(), 'label': 'resource',
-							'action': function (menu) {
-								mad.bus.trigger('request_resource_creation', item);
-								menu.remove();
-							}},
-						{ 'id': uuid(), 'label': 'category',
-							'action': function (menu) {
-								mad.bus.trigger('request_category_creation', item);
-								menu.remove();
-							}}
-					]},
-				{ 'id': uuid(), 'label': 'rename...',
+						mad.bus.trigger('request_resource_creation', item);
+						menu.remove();
+					}},
+				{
+					'id': uuid(),
+					'label': 'Create category',
+					'action': function (menu) {
+						mad.bus.trigger('request_category_creation', item);
+						menu.remove();
+					}
+				}, {
+					'id': uuid(),
+					'label': 'Rename...',
 					'action': function (menu) {
 						mad.bus.trigger('request_category_edition', item);
 						menu.remove();
-					}},
-				{ 'id': uuid(), 'label': 'remove',
+					}
+				}, {
+					'id': uuid(),
+					'label': 'Remove',
 					'action': function (menu) {
 						mad.bus.trigger('request_category_deletion', item);
 						menu.remove();
-					}}
+					}
+				}
 			]);
 
 			// Contextual menu
-			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {'mouseX': x, 'mouseY': y});	
+			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {'mouseX': x, 'mouseY': y});
 			contextualMenu.start();
 			contextualMenu.load(menuItems);
 		},

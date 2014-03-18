@@ -148,8 +148,7 @@ class Permission extends AppModel {
 			$this->data[$this->alias]['aco'],
 			$this->data[$this->alias]['aco_foreign_key'],
 			$this->data[$this->alias]['aro'],
-			$this->data[$this->alias]['aro_foreign_key'],
-			$this->data[$this->alias]['type']);
+			$this->data[$this->alias]['aro_foreign_key']);
 	}
 
 /**
@@ -176,16 +175,14 @@ class Permission extends AppModel {
  * @param string aco_foreign_key
  * @param string aro
  * @param string aro_foreign_key
- * @param string type
  * @return boolean
  */
-	public function isUniqueByFields($aco, $aco_foreign_key, $aro, $aro_foreign_key, $type) {
+	public function isUniqueByFields($aco, $aco_foreign_key, $aro, $aro_foreign_key) {
 		$combi = array(
 			'Permission.aco' => $aco,
 			'Permission.aco_foreign_key' => $aco_foreign_key,
 			'Permission.aro' => $aro,
-			'Permission.aro_foreign_key' => $aro_foreign_key,
-			'Permission.type' => $type
+			'Permission.aro_foreign_key' => $aro_foreign_key
 		);
 		return $this->isUnique($combi, false);
 	}
