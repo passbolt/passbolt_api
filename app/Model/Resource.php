@@ -96,34 +96,30 @@ class Resource extends AppModel {
 				),
 				'username' => array(
 					'alphaNumeric' => array(
-						'rule' => 'alphaNumeric',
+						'rule' => '/^[a-zA-Z0-9\-_]*$/',
 						'required' => 'create',
-						'message' => __('Username should contain alphabets and numbers only'),
-					),
-					'nospace' => array(
-						'rule' => '/^[^\s]+$/i',
-						'message' => __('Username should not contain space')
+						'message' => __('Username should only contain alphabets, numbers only and the special characters : - _'),
 					),
 					'size' => array(
 						'rule' => array('between', 3, 64),
 						'message' => __('Username should be between %s and %s characters long'),
 					)
 				),
-//			'expiry_date' => array(
-//				'date' => array(
-//					'required' => false,
-//					'allowEmpty' => true,
-//					'rule' => array(
-//						'date',
-//						'ymd'
-//					),
-//					'message' => __('Please indicate a valid date')
-//				),
-//				'infuture' => array(
-//					'rule' => array('isInFuture'),
-//					'message' => __('The date should be in the future.')
-//				),
-//			),
+			'expiry_date' => array(
+				'date' => array(
+					'required' => false,
+					'allowEmpty' => true,
+					'rule' => array(
+						'date',
+						'ymd'
+					),
+					'message' => __('Please indicate a valid date')
+				),
+				'infuture' => array(
+					'rule' => array('isInFuture'),
+					'message' => __('The date should be in the future.')
+				),
+			),
 			'uri' => array(
 				'url' => array(
 					'rule' => AppValidation::getVadalidationUrlRegex(),
@@ -137,6 +133,10 @@ class Resource extends AppModel {
 					'required' => false,
 					'allowEmpty' => true,
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? !')
+				),
+				'size' => array(
+					'rule' => array('between', 3, 256),
+					'message' => __('Username should be between %s and %s characters long'),
 				)
 			),
 		);

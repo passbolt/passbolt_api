@@ -1,7 +1,7 @@
 <?php
 /**
  * Message Component
- * This class replace $session->flash and offers more functionalities to qualify 
+ * This class replace $session->flash and offers more functionalities to qualify
  * the messages that will be displayed to the user or returned as part of the JSON response
  *
  * @copyright    Copyright 2012, Passbolt.com
@@ -47,12 +47,13 @@ class MessageComponent extends Component {
 
 /**
  * Initialize
+ *
  * @param object $controller Controller using this component
  * @return boolean Proceed with component usage (true), or fail (false)
  * @throws exception is Session component is missing
  * @access public
  */
-	public function initialize(Controller $controller, $settings=array()) {
+	public function initialize(Controller $controller, $settings = array()) {
 		$this->Controller = $controller;
 		if (!isset($this->Controller->Session)) {
 			throw new exception('Session component not found (Message::initilize)');
@@ -70,25 +71,34 @@ class MessageComponent extends Component {
 	}
 
 /**
+ * Reset the message component.
+ * @return {void}
+ */
+	public function reset() {
+		unset($this->messages);
+		$this->messages = array();
+	}
+
+	/**
  * Add an error message in the message queue. And throw an HttpException to deliver the error
  * to the client.
- * 
+ *
  * @param string $message
  * @param array $options
- * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
  * to redirect to the controler referer
- * @param integer $options['code'] the code to use as http status code
- * @param boolean $options['throw'] throw of not an Http Exception, by default true
+ * @param integer $options ['code'] the code to use as http status code
+ * @param boolean $options ['throw'] throw of not an Http Exception, by default true
  * @return void
  * @access public
  */
-	public function error($message, $options=array()) {
+	public function error($message, $options = array()) {
 		$this->__add(Message::ERROR, $message, $options);
 
 		// If we throw an http exception
-		if(!isset($options['throw']) || (isset($options['throw']) && $options['throw'] === true)) {
+		if (!isset($options['throw']) || (isset($options['throw']) && $options['throw'] === true)) {
 			$code = 400;
-			if(isset($options['code'])) {
+			if (isset($options['code'])) {
 				$code = $options['code'];
 			}
 			throw new HttpException($message, $code);
@@ -97,53 +107,58 @@ class MessageComponent extends Component {
 
 /**
  * Add a warning message to the queue
+ *
  * @param string $message
- * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
  * to redirect to the controler referer
  * @access public
  */
-	public function warning($message, $options=array()) {
+	public function warning($message, $options = array()) {
 		$this->__add(Message::WARNING, $message, $options);
 	}
 
 /**
  * Add a debug message to the queue
+ *
  * @param string $message
- * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
  * to redirect to the controler referer
  * @access public
  */
-	public function debug($message, $options=array()) {
+	public function debug($message, $options = array()) {
 		$this->__add(Message::DEBUG, $message, $options);
 	}
 
 /**
  * Add a notice/info message to the queue
+ *
  * @param string $message
- * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
  * to redirect to the controler referer
  * @access public
  */
-	public function notice($message, $options=array()) {
+	public function notice($message, $options = array()) {
 		$this->__add(Message::NOTICE, $message, $options);
 	}
 
 /**
  * Add a success message to the queue
+ *
  * @param string $message
- * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
  * to redirect to the controler referer
  * @access public
  */
-	public function success($message='', $options=array()) {
+	public function success($message = '', $options = array()) {
 		$this->__add(Message::SUCCESS, $message, $options);
 	}
 
 /**
  * Add a message to the queue
+ *
  * @param mixed $message
  * @param string $type {error, notice, etc.}
- * @param mixed $options['redirect'] url(s), string or array to redirect to, or boolean if true 
+ * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
  * to redirect to the controler referer
  * @access private
  */
@@ -152,7 +167,7 @@ class MessageComponent extends Component {
 		$response = array(
 			'header' => array(),
 			'body' => array()
-		); 
+		);
 		$type = strtolower($type);
 		$title = __($type, true);
 
@@ -160,7 +175,7 @@ class MessageComponent extends Component {
 		$response['header'] = array(
 			// UUID is predictable
 			'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
-			'status' => ((empty($code)) ? $type : $type . ' ' . $code ),
+			'status' => ((empty($code)) ? $type : $type . ' ' . $code),
 			'title' => $title,
 			'message' => $message,
 			'controller' => $this->Controller->name,
@@ -171,12 +186,10 @@ class MessageComponent extends Component {
 		// An optional body as been passed as an option
 		if (isset($options['body'])) {
 			$response['body'] = $options['body'];
-		} 
-		// Or the controller views data has been set
-		else if(isset($this->Controller->viewVars['data'])) {
+		} // Or the controller views data has been set
+		else if (isset($this->Controller->viewVars['data'])) {
 			$response['body'] = $this->Controller->viewVars['data'];
-		}  
-		else {
+		} else {
 			$response['body'] = array();
 		}
 
@@ -194,14 +207,15 @@ class MessageComponent extends Component {
 
 		// If the session has been lost, save the messages into the new session
 		// @see AppExceptionRenderer
-		if(is_null($this->Session->read($this->sessionKey))) {
+		if (is_null($this->Session->read($this->sessionKey))) {
 			$this->Session->write($this->sessionKey, $this->messages);
 		}
 	}
 
 /**
  * Set body to the last message set
- * @param text/json $body the content to append. Usually in json format
+ *
+ * @param text /json $body the content to append. Usually in json format
  * @return bool true if success
  * @access public
  */
@@ -216,6 +230,7 @@ class MessageComponent extends Component {
 
 /**
  * Before redirect callback
+ *
  * @param object $controller
  * @param mixed $url
  * @param string $status
@@ -223,7 +238,7 @@ class MessageComponent extends Component {
  * @return void
  * @access public
  */
-	public function beforeRedirect(Controller $controller, $url, $status=null, $exit=true) {
+	public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true) {
 		// save pending messages in session to display next
 		if (isset($this->messages) && !empty($this->messages)) {
 			$this->Session->write($this->sessionKey, $this->messages);
@@ -232,6 +247,7 @@ class MessageComponent extends Component {
 
 /**
  * Before render callback
+ *
  * @param object $controller
  * @return void
  * @access public

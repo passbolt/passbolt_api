@@ -14,7 +14,7 @@ App::uses('CategoryResource', 'Model');
 class ResourcesController extends AppController {
 
 /**
- * @var $component application wide components 
+ * @var $component application wide components
  */
 	public $components = array(
 		'Filter'
@@ -37,18 +37,18 @@ class ResourcesController extends AppController {
 		$data = array_merge($data, $filter);
 		// Whether we want also the resources of all subcategories
 		$recursive = false;
-		if(isset($this->request->query['recursive']) && $this->request->query['recursive'] === 'true') {
+		if (isset($this->request->query['recursive']) && $this->request->query['recursive'] === 'true') {
 			$recursive = true;
 		}
 
 		// if filtered categories are provided
 		// - check the valildity of the given uids
 		// - if recursive, filter also on sub-categories 
-		if(isset($data['foreignModels']['Category.id'])) {
+		if (isset($data['foreignModels']['Category.id'])) {
 			// Tmp array to store the target categories and subcategories (if recursive provided)
-			$categories = array();//$data['foreignModels']['Category.id'];
+			$categories = array(); //$data['foreignModels']['Category.id'];
 
-			foreach($data['foreignModels']['Category.id'] as $categoryId) {
+			foreach ($data['foreignModels']['Category.id'] as $categoryId) {
 				// if a category id is provided check it is well an uid
 				if (!Common::isUuid($categoryId)) {
 					$this->Message->error(__('The category id is invalid'));
@@ -62,16 +62,14 @@ class ResourcesController extends AppController {
 				}
 
 				// The request is not a recursive request
-				if(!$recursive) {
+				if (!$recursive) {
 					$categories[] = $categoryId;
-				} 
-				// Else get the sub categories and add them to the target categories to filter on
+				} // Else get the sub categories and add them to the target categories to filter on
 				else {
 					// If the category has yet been added to the additional parameters
 					if (in_array($categoryId, $categories)) {
 						continue;
-					} 
-					// Get the subcategories of the current category
+					} // Get the subcategories of the current category
 					else {
 						$subCategories = $this->Resource->CategoryResource->Category->getSubCategories($category);
 						// Add the subcategories to the request conditions
@@ -104,8 +102,7 @@ class ResourcesController extends AppController {
  * @param uuid $id the id of the resource
  * @return void
  */
-
-	public function view($id=null) {
+	public function view($id = null) {
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The resource id is missing'));
@@ -132,6 +129,7 @@ class ResourcesController extends AppController {
 
 /**
  * Delete a resource
+ *
  * @param uuid id the id of the resource to delete
  */
 	public function delete($id = null) {
@@ -253,7 +251,7 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('Invalid request method, should be PUT'));
 			return;
 		}
-		
+
 		// check if data was provided
 		if ($id == null) {
 			$this->Message->error(__('No valid id was provided'));
@@ -314,11 +312,9 @@ class ResourcesController extends AppController {
 		if (isset($resourcepost['Category'])) {
 			// If relations are given with the resource
 			// we start by deleting previous associations
-			$delete = $this->Resource->CategoryResource->deleteAll(
-				array (
-					'resource_id' => $id
-				)
-			);
+			$delete = $this->Resource->CategoryResource->deleteAll(array(
+				'resource_id' => $id
+			));
 			if (!$delete) {
 				$this->Message->error(__('Could not delete Categories'));
 				return;
@@ -355,6 +351,6 @@ class ResourcesController extends AppController {
 		$resources = $this->Resource->find('all', $options);
 		$this->set('data', $resources[0]);
 	}
-	
+
 }
 

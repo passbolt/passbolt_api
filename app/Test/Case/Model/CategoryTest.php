@@ -9,8 +9,9 @@
  */
 App::uses('Category', 'Model');
 App::uses('User', 'Model');
+App::uses('AppTestCase', 'Test');
 
-class CategoryTest extends CakeTestCase {
+class CategoryTest extends AppTestCase {
 
 	public $autoFixtures = true;
 
@@ -24,54 +25,100 @@ class CategoryTest extends CakeTestCase {
 
 /**
  * Test Name Validation
+ *
  * @return void
  */
 	public function testNameValidation() {
+		$len = 64;
 		$testcases = array(
-			'' => false, '?!#' => true, 'test' => true,
-			'test@test.com' => true, '1test' => true
+			// Not empty
+			'' => false,
+			// Email
+			'test@test.com' => false,
+			// too short
+			'sh' => false,
+			// too long
+			'toolong' . self::randString($len - 6, self::getMask('alphaASCII')) => false,
+			// Short but enough
+			'sho' => true,
+			// Long but not too long
+			'long' . self::randString($len - 4, self::getMask('alphaASCII')) => true,
+			// Languages
+			'ASCII' . self::randString($len - 5, self::getMask('alphaASCII')) => true,
+			'ASCIIUPPER' . self::randString($len - 10, self::getMask('alphaASCIIUpper')) => true,
+			'ACCENT' . self::randString($len - 6, self::getMask('alphaAccent')) => true,
+			'LATIN' . self::randString($len - 5, self::getMask('alphaLatin')) => true,
+			'CHINESE' . self::randString($len - 7, self::getMask('alphaChinese')) => true,
+			'ARABIC' . self::randString($len - 6, self::getMask('alphaArabic')) => true,
+			'RUSSIAN' . self::randString($len - 7, self::getMask('alphaRussian')) => true,
+			// Spaces
+			'txt with spaces' => true,
+			"txt\twith\ttabs" => false,
+			"txt\nwith\nnew\nlines" => false,
+			// Special characters
+			',.-_([)]\'' => true,
+			'?!#' => false,
+			// Digit accepted
+			'0123456789' => true,
+			// Html
+			'<strong>test</strong>' => false,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$category = array('Category' => array('name' => $testcase));
 			$this->Category->set($category);
-			if($result) $msg = 'validation of the category name with ' . $testcase . ' should validate';
-			else $msg = 'validation of the category name with ' . $testcase . ' should not validate';
+			if ($result) {
+				$msg = 'validation of the category name with ' . $testcase . ' should validate';
+			} else {
+				$msg = 'validation of the category name with ' . $testcase . ' should not validate';
+			}
 			$this->assertEqual($this->Category->validates(array('fieldList' => array('name'))), $result, $msg);
 		}
 	}
 
 /**
  * Test Parent Validation
+ *
  * @return void
  */
 	public function testParentValidation() {
 		$testcases = array(
-			'' => true, 'wrongid' => false, '50d77ff7-bcac-4c03-8687-1b63d7a10fce' => true,
+			'' => true,
+			'wrongid' => false,
+			'50d77ff7-bcac-4c03-8687-1b63d7a10fce' => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
 			$category = array('Category' => array('parent_id' => $testcase));
 			$this->Category->set($category);
-			if($result) $msg = 'validation of the category parent with ' . $testcase . ' should validate';
-			else $msg = 'validation of the category parent with ' . $testcase . ' should not validate';
+			if ($result) {
+				$msg = 'validation of the category parent with ' . $testcase . ' should validate';
+			} else {
+				$msg = 'validation of the category parent with ' . $testcase . ' should not validate';
+			}
 			$this->assertEqual($this->Category->validates(array('fieldList' => array('parent_id'))), $result, $msg);
 		}
 	}
 
 /**
  * Test Category type Validation
+ *
  * @return void
  */
 	public function testCategoryTypeValidation() {
 		$testcases = array(
-			'' => true, 'wrongid' => false, '0234f3a4-c5cd-11e1-a0c5-080027456c4c' => true,
+			'' => true,
+			'wrongid' => false,
+			'0234f3a4-c5cd-11e1-a0c5-080027456c4c' => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
 			$category = array('Category' => array('category_type_id' => $testcase));
 			$this->Category->set($category);
-			if ($result) $msg = 'validation of the category type with ' . $testcase . ' should validate';
-			else $msg = 'validation of the category type with ' . $testcase . ' should not validate';
+			if ($result) {
+				$msg = 'validation of the category type with ' . $testcase . ' should validate';
+			} else {
+				$msg = 'validation of the category type with ' . $testcase . ' should not validate';
+			}
 			$this->assertEqual($this->Category->validates(array('fieldList' => array('category_type_id'))), $result, $msg);
 		}
 	}

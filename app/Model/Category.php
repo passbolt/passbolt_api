@@ -51,13 +51,13 @@ class Category extends AppModel {
 			'id' => array(
 				'uuid' => array(
 					'rule' => 'uuid',
-					'required' => 'create',
+					'required' => 'update',
 					'message' => __('Id must be in correct format')
 				)
 			),
 			'name' => array(
 				'alphaNumeric' => array(
-					'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
+					'rule' => "/^[\p{L}\d ,.:;!?\-_\(\[\)\]'&\/]*$/u",
 					'required' => 'create',
 					'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \'')
 				),

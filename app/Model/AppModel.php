@@ -133,7 +133,7 @@ class AppModel extends Model {
  * @param key the key which hold the needle value
  * @return array the path of the found needle or false
  */
-	public function inNestedArray($needle, $data, $key = 'id', $path = array(), $found = false) {
+	public function inNestedArray($needle, $data, $key = 'id', &$path = array(), &$found = false) {
 		// if data is an array of nested array
 		if (!isset($data[$this->alias])) {
 			foreach ($data as $nestedData) {

@@ -62,7 +62,6 @@ steal(
 
             // Escape the following keys.
             if ($.inArray(event.which, this.options.blackKeys) != -1) {
-                console.log('alors');
                 return;
             }
 

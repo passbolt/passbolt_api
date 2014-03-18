@@ -79,7 +79,6 @@ steal(
 				regexp = regexp.substr(1, regexp.length - (regexp.length - regexp.lastIndexOf('/') + 1));
 			}
 			var xregexp = new XRegExp(regexp);
-			console.log(regexp);
 			var match = xregexp.test(value);
 
     		if ((not && match) || (!not && !match)) {
