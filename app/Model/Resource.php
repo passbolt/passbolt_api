@@ -129,10 +129,10 @@ class Resource extends AppModel {
 			),
 			'description' => array(
 				'alphaNumericAndSpecial' => array(
-					'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]'\"?!]*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?!\-_\(\[\)\]'\"\/]*$/u",
 					'required' => false,
 					'allowEmpty' => true,
-					'message' => __('Description should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? !')
+					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! - _ ( ) [ ] \' " /')
 				),
 				'size' => array(
 					'rule' => array('between', 3, 256),
