@@ -31,7 +31,9 @@
 		</p>
 	</div>
 	<div class="col4 push2 last">
-<?php echo $this->element('header/title'); ?>
+		<div class="logo">
+			<h1><a href="#"><span>Passbolt</span></a></h1>
+		</div>
 		<div class="users login form">
 		<?php echo $this->MyForm->create('User');?>
 			<fieldset>

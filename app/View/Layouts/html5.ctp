@@ -24,15 +24,13 @@
        /_/    \__,_/____/____/_.___/\____/_/\__/
 
        The password management solution
-       (c) 2013 passbolt.com
+       (c) 2014 passbolt.com
 
    -->
   <base href="<?php echo Router::url('/',true);?>">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
 <?php echo $this->element('css'); ?>
 <?php echo $this->element('scriptHeader'); ?>
-	<script type="text/javascript" src="js/lib/compat/modernizr-2.6.2.min.js"></script>
-	<script type="text/javascript" src="js/lib/jquery/jquery-1.8.3.js"></script>
 </head>
 <body>
 <!-- main -->
