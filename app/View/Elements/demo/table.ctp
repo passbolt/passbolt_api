@@ -73,6 +73,29 @@
 				<!--td class="controls"><a href="#"><span>Controls</span></a></td-->
 			</tr>
 <?php endforeach; ?>
+<?php $i = 0; foreach($secrets as $secret): ++$i;?>
+			<tr>
+				<td class="selections s-cell">
+					<div class="input checkbox">
+						<input type="checkbox" name="select" id="checkbox-<?php echo $secret['id']; ?>">
+						<label for="checkbox-<?php echo $secret['id']; ?>">select <?php echo $secret['name']; ?></label>
+					</div>
+				</td>
+				<td class="favorites s-cell">
+					<a href="#">
+						<i class="icon no-text <?php if($i%5) echo 'fav'; else echo 'unfav';?>"></i>
+						<span><?php if($i%5) echo 'fav'; else echo 'unfav';?></span>
+					</a>
+				</td>
+				<td class="resource m-cell"><span><?php echo $secret['name']; ?></span></td>
+				<td class="username m-cell"><a href="#"><span>Remy</span></a></td>
+				<td class="uri l-cell"><a href="#"><span><?php echo $secret['uri']; ?></span></a></td>
+				<td class="modified m-cell"><span><?php echo $secret['modified']; ?></span></td>
+				<td class="expire m-cell"><span><?php echo $secret['modified']; ?></span></td>
+				<td class="owner m-cell"><a href="#"><span>Kevin</span></a></td>
+				<!--td class="controls"><a href="#"><span>Controls</span></a></td-->
+			</tr>
+<?php endforeach; ?>
 		</tbody>
 	</table>
 </div>

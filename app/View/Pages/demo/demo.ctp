@@ -19,11 +19,14 @@
 	<base href="<?php echo Router::url('/',true);?>">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
 	<link href="css/default/main.css" rel="stylesheet" type="text/css">
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="js/lib/compat/modernizr-2.6.2.min.js"></script>
-	<script type="text/javascript" src="js/lib/jquery/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="js/lib/jquery/jquery-1.11.0.min.js"></script>
 </head>
 <body>
 <div id="container" class="page">
+<?php echo $this->element('demo/loading-screen'); ?>
+<?php echo $this->element('demo/loading-bar'); ?>
 	<div class="header first">
 <?php echo $this->element('demo/nav'); ?>
 	</div>
@@ -60,7 +63,7 @@
 	Modernizr.load({
 		test: Modernizr.cssscrollbar,
 		nope: [
-			'js/lib/jquery/jquery-1.8.3.js',
+			'js/lib/jquery/jquery-1.11.0.min.js',
 			'js/lib/compat/jquery.mousewheel.js',
 			'js/lib/compat/jquery.jscrollpane.min.js'
 		],
@@ -105,7 +108,26 @@
 			return false;
 		});
 
-		
+		/* update loading bar */
+		$( ".header.first" ).click(function() {
+			$('.update-loading-bar .progress-bar span').animate({width:'100%'},function(){
+				$('.update-loading-bar .progress-bar span').css('width','0%');
+			});
+		});
+
+		/* faking initial loading screen */
+		$( ".loading-screen" ).click(function() {
+			$('.initial-loading-bar .progress-bar span').animate({width:'20%'},function(){
+				$('.loading-screen .details').html('doing something else');
+				$('.initial-loading-bar .progress-bar span').animate({width:'100%'},function(){
+					$('.loading-screen .details').html('and we\'re done!');
+					$(".loading-screen").fadeTo( "slow" , 0, function() {
+						$(".loading-screen").css( "display",'none');
+					});
+				});
+			});
+		});
+
 	});
 </script>
 </body>

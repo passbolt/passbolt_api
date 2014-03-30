@@ -637,12 +637,41 @@ i.no-text + span {
 /*
  * Typography
  */
+/* lato
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(../../fonts/lato-regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url(../../fonts/lato-bold.woff) format('woff');
+}
+*/
+/* opensans */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(../../fonts/opensans-regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(../../fonts/opensans-bold.woff) format('woff');
+}
 body {
-  font-family: 'Lato', Helvetica, Verdana, Geneva, Arial, sans-serif;
+  font-family: 'Open Sans', Verdana, sans-serif;
   font-size: 100%;
   line-height: 1.42;
   color: #666;
+  font-weight: 400;
 }
+/* titles */
 h1 {
   font-size: 1.6em;
 }
@@ -652,6 +681,7 @@ h2 {
 p {
   margin: .2em 0;
 }
+/* links */
 a {
   text-decoration: none;
 }
@@ -661,13 +691,14 @@ a:hover {
 a:focus {
   border: 1px dotted #777;
 }
+/* palette */
 body {
-  color: #333;
+  color: #333333;
 }
 /* links */
 a:link,
 a:visited {
-  color: #333;
+  color: #333333;
 }
 a:hover {
   color: #d40101;
@@ -693,7 +724,7 @@ a:hover {
 }
 /* page sections */
 .header .navigation.top {
-  background: #333;
+  background: #333333;
 }
 .header .second {
   background: #EFEFEF;
@@ -1330,10 +1361,10 @@ a.button.disabled:active {
   margin-left: 1em;
   width: 1.250em;
   height: 1.250em;
-  background: transparent url(../../img/logo_key_white.png) 0 0 no-repeat;
+  background: transparent url(../../img/icon20_white.png) 0 0 no-repeat;
 }
 .header .navigation.primary .home:hover a {
-  background: transparent url(../../img/logo_key_red.png) 0 0 no-repeat;
+  background: transparent url(../../img/icon20.png) 0 0 no-repeat;
 }
 .header .navigation.primary .home a span {
   display: none;
@@ -1370,6 +1401,7 @@ h1.workspace-title {
     padding: 0.833em .5% 0 .5%;
     font-size: .75em;
     /* 12px */
+    z-index: 990;
   }
   .footer .footnotes,
   .footer .context-info {
