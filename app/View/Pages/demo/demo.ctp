@@ -26,6 +26,7 @@
 <div id="container" class="page">
 <?php echo $this->element('demo/loading-screen'); ?>
 <?php echo $this->element('demo/loading-bar'); ?>
+<?php echo $this->element('demo/notification'); ?>
 	<div class="header first">
 <?php echo $this->element('demo/nav'); ?>
 	</div>
@@ -47,13 +48,7 @@
 		</div>
 	</div>
 	<div class="footer">
-		<div class="context-info">
-			last seen from 127.0.0.1 <a href="#">(more)</a>
-		</div>
-		<div class="footnotes">
-			<span class="copyright">2012-2013 &copy; bolt software pvt. ltd.</span> &bullet; 
-			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a>
-		</div>
+<?php echo $this->element('demo/footer'); ?>
 	</div>
 </div>
 <script>
@@ -108,14 +103,25 @@
 		});
 
 		/* update loading bar */
+		var count = 0;
 		$( ".header.first" ).click(function() {
+			if (count < 1) {
+				$('.notification').html('<span class="message success animated fadeInUp"><strong>Success!</strong> yeah, looks pretty good</span>');
+				count++;
+			} else if (count < 2) {
+				$('.notification').html('<span class="message error animated fadeInUp"><strong>Oops</strong>, something went wrong and here is a pretty long message to example what.</span>');
+				count++;
+			} else {
+				$('.notification').html('<span class="message warning animated fadeInUp"><strong>warning</strong>, does not look that good</span>');
+				count=0;
+			}
 			$('.update-loading-bar .progress-bar span').animate({width:'100%'},function(){
 				$('.update-loading-bar .progress-bar span').css('width','0%');
 			});
 		});
 
 		/* faking initial loading screen */
-		$( ".loading-screen" ).click(function() {
+		//$( ".loading-screen" ).click(function() {
 			$('.initial-loading-bar .progress-bar span').animate({width:'20%'},function(){
 				$('.loading-screen .details').html('doing something else');
 				$('.initial-loading-bar .progress-bar span').animate({width:'100%'},function(){
@@ -125,7 +131,7 @@
 					});
 				});
 			});
-		});
+		//});
 
 	});
 </script>

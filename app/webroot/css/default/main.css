@@ -635,6 +635,49 @@ i.no-text + span {
   float: right;
 }
 /*
+ * Animate.css - http://daneden.me/animate
+ * Licensed under the MIT license
+ * Copyright (c) 2013 Daniel Eden
+ */
+.animated {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  position: fixed;
+}
+/* fadeinup */
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+/*
  * Typography
  */
 /* lato
@@ -705,7 +748,7 @@ a:hover {
 }
 /* colors for messages */
 .message.error {
-  color: #D8000C;
+  color: #d40101;
   background-color: #FFBABA;
 }
 .message.success {
@@ -1251,15 +1294,12 @@ textarea {
   border: 0;
 }
 .input.error label {
-  color: #D40000;
-}
-.input .message.error {
-  color: #D40000;
+  color: #d40101;
 }
 .input input.error,
 .textarea textarea.error,
 .select select.error {
-  border: 1px solid #D40000;
+  border: 1px solid #d40101;
 }
 .input .inline.message {
   display: inline-block;
@@ -1822,11 +1862,30 @@ input[type="search"]::-webkit-search-cancel-button {
   position: absolute;
   display: block;
   width: 100%;
-  bottom: 1.95em;
-  margin-bottom: 1px;
+  bottom: 2em;
   z-index: 991;
 }
 /* initial loading state bar */
+/*
+ * Notification
+ */
+@media all and (min-width: 768px) {
+  .notification-container {
+    bottom: 0;
+    position: absolute;
+    z-index: 992;
+    width: 100%;
+    height: 2em;
+    margin: 0;
+    padding-top: 0.833em;
+    font-size: .75em;
+    /* 12px */
+  }
+  .notification .message {
+    background: transparent;
+    font-weight: normal;
+  }
+}
 /*
  * Dialog
  */
@@ -2665,71 +2724,12 @@ input[type="search"]::-webkit-search-cancel-button {
 .main.panel table td span {
   vertical-align: 6%;
 }
-.notificator {
-  font-size: 13px;
-  font-family: arial;
-  position: absolute;
-  line-height: 20px;
-  min-width: 200px;
-  padding: 1em 0;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  /* center it */
-  left: 50%;
-  width: 30%;
-  margin-left: -15%;
-  top: 3.5em;
-  z-index: 10000;
-}
-.notificator .notification_status {
-  font-weight: bold;
-  position: relative;
-  top: 5px;
-}
-/*.notificator .js_notification_more_button {
-	font-weight:bold;
-	color:#C0C0C0;
-	font-size:11px;
-}
-.notificator .js_notification_details_container {
-	position:absolute; 
-	top:20px; 
-	left:-1px; 
-	width:100%; 
-	z-index:2; 
-}
-.notificator .js_notification_details {
-	display:none; 
-	width:100%; 
-	position:absolute; 
-	background-color: #F9EDBE; 
-	border:1px solid transparent; 
-	border-radius:2px; 
-	box-shadow:0 2px 4px rgba(0, 0, 0, 0.2);
-}*/
-.notificator .notification_close {
-  float: right;
-  margin: 0 10px 0 0;
-}
-.notificator .notification_close i.icon.close:before {
-  line-height: 10px;
-}
-.notificator a {
-  color: #aaa;
-}
-.notificator a:hover {
-  color: #bbb;
-}
 /*
  * Footer
  */
 .footer {
   margin-top: 0em;
-  width: 99%;
+  width: 98%;
   height: 2em;
   background: #FFF;
   border-top: 1px solid #DDD;
@@ -2738,20 +2738,11 @@ input[type="search"]::-webkit-search-cancel-button {
   .footer {
     bottom: 0;
     position: absolute;
-    padding: 0.833em .5% 0 .5%;
+    padding: 0.833em 1.5% 0 .5%;
     font-size: .75em;
     /* 12px */
     z-index: 990;
-  }
-  .footer .footnotes,
-  .footer .context-info {
-    padding: 0 1.5em 0 1.5em;
-  }
-  .footer .footnotes {
-    float: right;
-  }
-  .footer .context-info {
-    float: left;
+    text-align: right;
   }
 }
 table#js_passbolt_user_browser {
