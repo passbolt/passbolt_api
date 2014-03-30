@@ -17,17 +17,9 @@
 	<div class="col5 push1 information">
 		<h2>Welcome back!</h2>
 		<p>
-			You will need to login to access your passwords.
-			Your organization have decided of the following access rules:
-		</p>
-		<ul>
-			<li>Accounts are created by administrators.</li>
-			<li>Your password does not expire automatically.</li>
-			<li>No certificate required.</li>
-			<li>No second factor authentication.</li>
-		</ul>
-		<p>
-			Do you have problems loging in? <a href="#">Contact an administrator</a>.
+			Passbolt is a simple password manager that allow you to easily share passwords within your team!
+			Passwords are encrypted in the browser using <a href="http://openpgpjs.org/">OpenGPG.js</a>.
+			Passbolt is a zero-knowledge application, this means we will never see your password.
 		</p>
 	</div>
 	<div class="col4 push2 last">
@@ -47,5 +39,28 @@
 		<?php echo $this->MyForm->end();?>
 		</div>
 	</div>
+</div>
+<div class="row" style="padding-top:1em;">
+<div class="col3 push1 chrome-plugin">
+	<h3>Chrome Extension</h3>
+	<p>Passbolt requires a plugin that can be installed from the Chrome Web Store.</p>
+	<p>
+		<a href="#TODO" target="_blank">
+		<img src="img/ChromeWebStore_Badge_v2_340x96.png" style="width: 225px; margin-top:10px;">
+		</a>
+	</p>
+</div>
+<div class="col3 push1 firefox-plugin">
+	<h3>Firefox Plugin</h3>
+	<p>A Firefox version of the Passbolt extension is currently in development. Stay tuned!</p>
+	<p><img src="img/firefox_logo_disabled.png" style="width: 150px; margin-top:10px;"></p>
+</div>
+<div class="col4">
+	<h3>Donate</h3>
+	<p>Do you like Passbolt? Passbolt is <a href="#TODO">free and open source</a>. We need your help to continue the development.</p>
+	<a href="#TODO" class="button primary" style="margin-top:20px;">Donate</a>
+</div>
+</div>
+</div>
 </div>
 </div>
