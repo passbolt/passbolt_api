@@ -13,37 +13,21 @@ class Group extends AppModel {
 
 	public $actsAs = array('Trackable');
 
-	public $hasMany = array(
-		'GroupUser'
-	);
+	public $hasMany = array('GroupUser');
 
 /**
  * Get the validation rules upon context
- * @param string context
+ *
+ * @param string $case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case='default') {
-		$default = array(
-			'id' => array(
-				'uuid' => array(
-					'rule' => 'uuid',
-					'message'	=> __('UUID must be in correct format')
-				)
-			),
-			'name' => array(
-				'alphaNumeric' => array(
-					'rule' => '/^[a-zA-Z0-9\-_ ]{1,64}$/i',
-					'required' => true,
-					'allowEmpty' => false,
-					'message'	=> __('Alphanumeric only')
-				)
-			)
-		);
+	public static function getValidationRules($case = 'default') {
+		$default = array('id' => array('uuid' => array('rule' => 'uuid', 'message' => __('UUID must be in correct format'))), 'name' => array('alphaNumeric' => array('rule' => '/^[a-zA-Z0-9\-_ ]{1,64}$/i', 'required' => true, 'allowEmpty' => false, 'message' => __('Alphanumeric only'))));
 		switch ($case) {
 			default:
 			case 'default':
 				$rules = $default;
-			break;
+				break;
 		}
 		return $rules;
 	}
@@ -51,39 +35,30 @@ class Group extends AppModel {
 /**
  * Return the conditions to be used for a given context
  *
- * @param $context string{guest or id}
+ * @param $case string{guest or id}
  * @param $data used in find conditions (such as Group.id)
  * @return $condition array
  * @access public
  */
-	public static function getFindConditions($case = 'view',  $role = Role::ANONYMOUS, $data = null) {
+	public static function getFindConditions($case = 'view', $role = Role::ANONYMOUS, $data = null) {
 		$conditions = array();
 		switch ($case) {
 			case 'add':
 			case 'edit':
 			case 'view':
-				$conditions = array(
-					'conditions' => array(
-						'Group.deleted' => 0,
-						'Group.id' => $data['Group.id']
-					)
-				);
-			break;
+				$conditions = array('conditions' => array('Group.deleted' => 0, 'Group.id' => $data['Group.id']));
+				break;
 			case 'index':
-          $conditions = array(
-            'conditions' => array()
-          );
-          if (isset($data['keywords'])) {
-            $keywords = explode(' ', $data['keywords']);
-            foreach ($keywords as $keyword) {
-              $conditions['conditions']["AND"][] = array('Group.name LIKE' => '%' . $keyword . '%');
-            }
-          }
-      break;
+				$conditions = array('conditions' => array());
+				if (isset($data['keywords'])) {
+					$keywords = explode(' ', $data['keywords']);
+					foreach ($keywords as $keyword) {
+						$conditions['conditions']["AND"][] = array('Group.name LIKE' => '%' . $keyword . '%');
+					}
+				}
+				break;
 			default:
-				$conditions = array(
-					'conditions' => array()
-				);
+				$conditions = array('conditions' => array());
 		}
 		//var_dump($conditions);
 		return $conditions;
@@ -91,30 +66,25 @@ class Group extends AppModel {
 
 /**
  * Return the list of field to fetch for given context
+ *
  * @param string $case context ex: login, activation
  * @return $condition array
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
-		switch($case){
+		switch ($case) {
 			case 'view':
 			case 'index':
-				$fields = array(
-					'fields' => array(
-						'id', 'name', 'created', 'modified'
-					)
-				);
-			break;
+				$fields = array('fields' => array('id', 'name', 'created', 'modified'));
+				break;
 			case 'delete':
 				$fields = array('fields' => array('deleted'));
-			break;
+				break;
 			case 'save':
 				$fields = array('fields' => array('name', 'created', 'modified', 'created_by', 'modified_by', 'deleted'));
-			break;
+				break;
 			default:
-				$fields = array(
-					'fields' => array()
-				);
-			break;
+				$fields = array('fields' => array());
+				break;
 		}
 		return $fields;
 	}

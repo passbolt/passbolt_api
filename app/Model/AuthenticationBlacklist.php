@@ -12,10 +12,10 @@ class AuthenticationBlacklist extends AppModel {
 
 /**
  * Get the validation rules upon context
- * @param string context
+ * @param string $case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case='default') {
+	public static function getValidationRules($case = 'default') {
 		$default = array(
 			'id' => array(
 				'uuid' => array(
@@ -34,7 +34,7 @@ class AuthenticationBlacklist extends AppModel {
 			),
 			'expiry' => array(
 				'validDate' => array(
-					'rule'    => array('datetime', 'ymd'),
+					'rule' => array('datetime', 'ymd'),
 					'message' => 'Please enter a valid date and time.'
 				)
 			)

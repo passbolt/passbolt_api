@@ -25,7 +25,8 @@ if (!class_exists('CakeSession')) {
 class TestMessageController extends Controller {
 
 	public $components = array(
-		'Session','Message'
+		'Session',
+		'Message'
 	);
 }
 
@@ -36,7 +37,7 @@ class MessageComponentTest extends CakeTestCase {
 
 	public $Controller = null;
 
-	public function setUp($complete=true) {
+	public function setUp($complete = true) {
 		parent::setUp();
 		// Setup our component and fake test controller
 		$Collection = new ComponentCollection();
@@ -54,11 +55,13 @@ class MessageComponentTest extends CakeTestCase {
 			$this->MessageComponent->initialize(&$this->Controller);
 		}
 		$this->MessageComponent->startup($this->Controller);
+		$this->MessageComponent->reset();
 	}
 
 	public function tearDown() {
 		parent::tearDown();
-		// Clean up after we're done
+		// Clean up after we're done.
+		$this->MessageComponent->reset();
 		unset($this->MessageComponent);
 		unset($this->Controller);
 	}
@@ -69,7 +72,7 @@ class MessageComponentTest extends CakeTestCase {
 		try {
 			$this->MessageComponent->initialize($this->Controller);
 			$this->assertEqual(true, false, 'Initialize should trow an exception');
-		} catch(Exception $e) {
+		} catch (Exception $e) {
 			$this->assertEqual(true, true, 'Initialize should trow an exception');
 		}
 		$this->setup();
@@ -81,8 +84,8 @@ class MessageComponentTest extends CakeTestCase {
 		$this->MessageComponent->error('error test', array('throw' => false));
 		$this->MessageComponent->beforeRedirect($this->Controller, '/');
 		$msg = $this->Controller->Session->read($this->MessageComponent->sessionKey);
-		$this->assertEqual($msg[0]['header']['message'],'error test','there should be a message carried over using Session');
-		$this->assertEqual(count($this->MessageComponent->messages), 1 ,'there should be a message carried over using Session');
+		$this->assertEqual($msg[0]['header']['message'], 'error test', 'there should be a message carried over using Session');
+		$this->assertEqual(count($this->MessageComponent->messages), 1, 'there should be a message carried over using Session');
 	}
 
 	public function testError() {
@@ -98,7 +101,7 @@ class MessageComponentTest extends CakeTestCase {
 		$this->MessageComponent->error('error test2', array('throw' => false));
 		$this->assertEqual(count($this->MessageComponent->messages), 2, 'there should be two messages present');
 	}
-	
+
 	public function testErrorWithBody() {
 		$this->MessageComponent->error('error test3', array('throw' => false, 'body' => 'body test'));
 		$this->assertEqual($this->MessageComponent->messages[0]['body'], 'body test', 'body should be allowed to set using __add() $options parameter');

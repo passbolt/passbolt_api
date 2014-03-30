@@ -18,7 +18,8 @@ steal(
 	 */
 	mad.form.FormController.extend('passbolt.controller.form.category.CreateFormController', /** @static */ {
 		'defaults': {
-			'templateBased': true
+			'templateBased': true,
+			'action': 'create'
 		}
 	}, /** @prototype */ {
 
