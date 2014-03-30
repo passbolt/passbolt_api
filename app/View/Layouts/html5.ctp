@@ -40,7 +40,7 @@
 <!-- footer -->
 <footer>
 <div class="footer">
-<?php echo $this->element('footer'); ?>
+<?php echo $this->element('public/footer'); ?>
 </div>
 </footer>
 <?php echo $this->fetch('scriptBottom'); ?>
