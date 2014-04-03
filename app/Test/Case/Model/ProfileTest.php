@@ -47,7 +47,7 @@ class ProfileTest extends CakeTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
 			'zzz00003-c5cd-11e1-a0c5-080027796c4c' => false,
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => false,
-			'fafaab9c-4380-adad-b4cc-2f4fd7a10fce' => true,
+			'533d2064-a644-4bbe-8218-1221c0a895dc' => true,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$profile = array('Profile' => array('user_id' => $testcase));
