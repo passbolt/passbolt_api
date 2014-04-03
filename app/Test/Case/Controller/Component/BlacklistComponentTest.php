@@ -57,7 +57,7 @@ class BlacklistComponentTest extends CakeTestCase {
 		$this->Controller->IpAddress = new IpAddressComponent($Collection);
 
 		if ($complete) {
-			$this->BlacklistComponent->initialize(&$this->Controller);
+			$this->BlacklistComponent->initialize($this->Controller);
 		}
 		//$this->BlacklistComponent->startup($this->Controller);
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
