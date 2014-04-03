@@ -99,7 +99,7 @@ class CategoryFixture extends CakeTestFixture {
 			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
 		),
 		array(
-			'id' => '50d77ff7-bcac-eeee-eeee-1b63d7a10fce',
+			'id' => '533d3a6b-fc74-4fde-b19f-0aafc0a895dc',
 			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
 			'lft' => '2',
 			'rght' => '3',
