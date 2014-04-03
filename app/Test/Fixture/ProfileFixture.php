@@ -278,7 +278,7 @@ class ProfileFixture extends CakeTestFixture {
 		),
 		array(
 			'id' => '528c2dab-ccco-416d-802b-71668cebc04d',
-			'user_id' => '50cdab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'user_id' => '533d2064-a644-4bbe-8218-1221c0a895dc',
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14 00:00:00',
 			'title' => 'Mr',

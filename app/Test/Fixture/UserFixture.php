@@ -46,7 +46,7 @@ class UserFixture extends CakeTestFixture {
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
-			'id' => '50cdab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'id' => '533d2064-a644-4bbe-8218-1221c0a895dc',
 			'role_id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
 			'username' => 'admin@passbolt.com',
 			'password' => '$2a$04$79b58df64165554f7ec93ux9U4IVP4nQUr491cMKGJnLqaFR28Jda',
