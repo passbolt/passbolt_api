@@ -66,7 +66,8 @@ class UserTask extends ModelTask {
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => 'abcd6042-c5cd-efef-a0c5-080027796c4c',
+			//533d32c0-1f30-438c-8f26-1768c0a895dc
+			'id' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
 			'username' => 'manager.nogroup@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'nodefined',
@@ -143,14 +144,14 @@ class UserTask extends ModelTask {
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => '50cdab9c-4380-fafa-b4cc-2f4fd7a10fce',
+			'id' => '533d3564-03e8-4963-94a7-178cc0a895dc',
 			'username' => 'guest@passbolt.com',
 			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => '50cdab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'id' => '533d37a0-bc80-4945-9b11-1663c0a895dc',
 			'username' => 'admin@passbolt.com',
 			'role_id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
@@ -164,7 +165,8 @@ class UserTask extends ModelTask {
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => 'fafaab9c-4380-adad-b4cc-2f4fd7a10fce',
+			// 533d346d-d378-4acc-affd-1663c0a895dc
+			'id' => '533d346d-d378-4acc-affd-1663c0a895dc',
 			'username' => 'frank@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',

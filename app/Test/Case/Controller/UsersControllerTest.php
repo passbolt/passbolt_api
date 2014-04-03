@@ -79,6 +79,8 @@ class UsersControllerTest extends ControllerTestCase {
 			)
 		);
 
+		echo String::uuid(); die();
+
 		// Test that the user is returned properly in the session (authentication has done its job)
 		$result = $this->testAction(
 			'/users/login',

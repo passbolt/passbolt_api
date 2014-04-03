@@ -38,7 +38,7 @@ class PermissionTask extends ModelTask {
 		));
 		// Manager.nogroup has admin right on everything
 		$ps[] = array('Permission' => array(
-			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a1a09f',
+			'id' => '533d2ecb-3ec8-4437-9ca5-0aafc0a895dc',
 			'aco' => 'Category',
 			'aco_foreign_key' => $cat['root'],
 			'aro' => 'User',

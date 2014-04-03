@@ -86,7 +86,7 @@ class ProfileFixture extends CakeTestFixture {
 		),
 		array(
 			'id' => '528c2dab-cccc-416d-802b-71668cebc04d',
-			'user_id' => 'abcd6042-c5cd-efef-a0c5-080027796c4c',
+			'user_id' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14 00:00:00',
 			'title' => 'Mr',
@@ -261,8 +261,8 @@ class ProfileFixture extends CakeTestFixture {
 			'modified_by' => ''
 		),
 		array(
-			'id' => '528c2dab-cccn-416d-802b-71668cebc04d',
-			'user_id' => '50cdab9c-4380-fafa-b4cc-2f4fd7a10fce',
+			'id' => '533d3505-a170-4f57-b14b-1768c0a895dc',
+			'user_id' => '533d3564-03e8-4963-94a7-178cc0a895dc',
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14 00:00:00',
 			'title' => 'Mr',
@@ -294,7 +294,7 @@ class ProfileFixture extends CakeTestFixture {
 		),
 		array(
 			'id' => '528c2dab-cccp-416d-802b-71668cebc04d',
-			'user_id' => 'fafaab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'user_id' => '533d346d-d378-4acc-affd-1663c0a895dc',
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14 00:00:00',
 			'title' => 'Mr',
