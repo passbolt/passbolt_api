@@ -11,7 +11,7 @@
 class FavoritesController extends AppController {
 
 /**
- * Add a foavorite for a target model instance
+ * Add a favorite for a target model instance
  * @param string foreignModelName The target foreign model
  * @param uuid foreignId The uuid of the target instance to get comments for 
  */
