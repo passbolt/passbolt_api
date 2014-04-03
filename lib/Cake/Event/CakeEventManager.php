@@ -1,19 +1,19 @@
 <?php
 /**
  *
- * PHP 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright	  Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright	  Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link		  http://cakephp.org CakePHP(tm) Project
  * @package		  Cake.Event
  * @since		  CakePHP(tm) v 2.1
- * @license		  MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('CakeEventListener', 'Event');
@@ -31,7 +31,7 @@ class CakeEventManager {
 /**
  * The default priority queue value for new, attached listeners
  *
- * @var int
+ * @var integer
  */
 	public static $defaultPriority = 10;
 
@@ -72,7 +72,7 @@ class CakeEventManager {
 			self::$_generalManager = $manager;
 		}
 		if (empty(self::$_generalManager)) {
-			self::$_generalManager = new CakeEventManager;
+			self::$_generalManager = new CakeEventManager();
 		}
 
 		self::$_generalManager->_isGlobal = true;
@@ -122,7 +122,7 @@ class CakeEventManager {
  * @return void
  */
 	protected function _attachSubscriber(CakeEventListener $subscriber) {
-		foreach ($subscriber->implementedEvents() as $eventKey => $function) {
+		foreach ((array)$subscriber->implementedEvents() as $eventKey => $function) {
 			$options = array();
 			$method = $function;
 			if (is_array($function) && isset($function['callable'])) {
@@ -163,6 +163,7 @@ class CakeEventManager {
  * Removes a listener from the active listeners.
  *
  * @param callback|CakeEventListener $callable any valid PHP callback type or an instance of CakeEventListener
+ * @param string $eventKey The event unique identifier name with which the callback has been associated
  * @return void
  */
 	public function detach($callable, $eventKey = null) {
@@ -196,7 +197,7 @@ class CakeEventManager {
  * @return void
  */
 	protected function _detachSubscriber(CakeEventListener $subscriber, $eventKey = null) {
-		$events = $subscriber->implementedEvents();
+		$events = (array)$subscriber->implementedEvents();
 		if (!empty($eventKey) && empty($events[$eventKey])) {
 			return;
 		} elseif (!empty($eventKey)) {
@@ -251,7 +252,6 @@ class CakeEventManager {
 			if ($result !== null) {
 				$event->result = $result;
 			}
-			continue;
 		}
 	}
 

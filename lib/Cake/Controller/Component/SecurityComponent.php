@@ -2,19 +2,18 @@
 /**
  * Security Component
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Controller.Component
  * @since         CakePHP(tm) v 0.10.8.2156
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Component', 'Controller');
@@ -48,6 +47,7 @@ class SecurityComponent extends Component {
  * List of controller actions for which a POST request is required
  *
  * @var array
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @see SecurityComponent::requirePost()
  */
 	public $requirePost = array();
@@ -56,6 +56,7 @@ class SecurityComponent extends Component {
  * List of controller actions for which a GET request is required
  *
  * @var array
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @see SecurityComponent::requireGet()
  */
 	public $requireGet = array();
@@ -64,6 +65,7 @@ class SecurityComponent extends Component {
  * List of controller actions for which a PUT request is required
  *
  * @var array
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @see SecurityComponent::requirePut()
  */
 	public $requirePut = array();
@@ -72,6 +74,7 @@ class SecurityComponent extends Component {
  * List of controller actions for which a DELETE request is required
  *
  * @var array
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @see SecurityComponent::requireDelete()
  */
 	public $requireDelete = array();
@@ -130,14 +133,16 @@ class SecurityComponent extends Component {
 	public $unlockedFields = array();
 
 /**
- * Actions to exclude from any security checks
+ * Actions to exclude from CSRF and POST validation checks.
+ * Other checks like requireAuth(), requireSecure(),
+ * requirePost(), requireGet() etc. will still be applied.
  *
  * @var array
  */
 	public $unlockedActions = array();
 
 /**
- * Whether to validate POST data.  Set to false to disable for data coming from 3rd party
+ * Whether to validate POST data. Set to false to disable for data coming from 3rd party
  * services, etc.
  *
  * @var boolean
@@ -145,7 +150,7 @@ class SecurityComponent extends Component {
 	public $validatePost = true;
 
 /**
- * Whether to use CSRF protected forms.  Set to false to disable CSRF protection on forms.
+ * Whether to use CSRF protected forms. Set to false to disable CSRF protection on forms.
  *
  * @var boolean
  * @see http://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
@@ -156,15 +161,15 @@ class SecurityComponent extends Component {
 /**
  * The duration from when a CSRF token is created that it will expire on.
  * Each form/page request will generate a new token that can only be submitted once unless
- * it expires.  Can be any value compatible with strtotime()
+ * it expires. Can be any value compatible with strtotime()
  *
  * @var string
  */
 	public $csrfExpires = '+30 minutes';
 
 /**
- * Controls whether or not CSRF tokens are use and burn.  Set to false to not generate
- * new tokens on each request.  One token will be reused until it expires. This reduces
+ * Controls whether or not CSRF tokens are use and burn. Set to false to not generate
+ * new tokens on each request. One token will be reused until it expires. This reduces
  * the chances of users getting invalid requests because of token consumption.
  * It has the side effect of making CSRF less secure, as tokens are reusable.
  *
@@ -174,7 +179,7 @@ class SecurityComponent extends Component {
 
 /**
  * Control the number of tokens a user can keep open.
- * This is most useful with one-time use tokens.  Since new tokens
+ * This is most useful with one-time use tokens. Since new tokens
  * are created on each request, having a hard limit on the number of open tokens
  * can be useful in controlling the size of the session file.
  *
@@ -219,11 +224,15 @@ class SecurityComponent extends Component {
 		$this->_secureRequired($controller);
 		$this->_authRequired($controller);
 
-		$isPost = ($this->request->is('post') || $this->request->is('put'));
+		$isPost = $this->request->is(array('post', 'put'));
 		$isNotRequestAction = (
 			!isset($controller->request->params['requested']) ||
 			$controller->request->params['requested'] != 1
 		);
+
+		if ($this->_action == $this->blackHoleCallback) {
+			return $this->blackHole($controller, 'auth');
+		}
 
 		if (!in_array($this->_action, (array)$this->unlockedActions) && $isPost && $isNotRequestAction) {
 			if ($this->validatePost && $this->_validatePost($controller) === false) {
@@ -243,6 +252,7 @@ class SecurityComponent extends Component {
  * Sets the actions that require a POST request, or empty for all actions
  *
  * @return void
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#SecurityComponent::requirePost
  */
 	public function requirePost() {
@@ -253,6 +263,7 @@ class SecurityComponent extends Component {
 /**
  * Sets the actions that require a GET request, or empty for all actions
  *
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @return void
  */
 	public function requireGet() {
@@ -263,6 +274,7 @@ class SecurityComponent extends Component {
 /**
  * Sets the actions that require a PUT request, or empty for all actions
  *
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @return void
  */
 	public function requirePut() {
@@ -273,6 +285,7 @@ class SecurityComponent extends Component {
 /**
  * Sets the actions that require a DELETE request, or empty for all actions
  *
+ * @deprecated Use CakeRequest::onlyAllow() instead.
  * @return void
  */
 	public function requireDelete() {
@@ -292,7 +305,11 @@ class SecurityComponent extends Component {
 	}
 
 /**
- * Sets the actions that require an authenticated request, or empty for all actions
+ * Sets the actions that require whitelisted form submissions.
+ *
+ * Adding actions with this method will enforce the restrictions
+ * set in SecurityComponent::$allowedControllers and
+ * SecurityComponent::$allowedActions.
  *
  * @return void
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#SecurityComponent::requireAuth
@@ -331,7 +348,7 @@ class SecurityComponent extends Component {
 		if (isset($actions[0]) && is_array($actions[0])) {
 			$actions = $actions[0];
 		}
-		$this->{'require' . $method} = (empty($actions)) ? array('*'): $actions;
+		$this->{'require' . $method} = (empty($actions)) ? array('*') : $actions;
 	}
 
 /**
@@ -543,7 +560,7 @@ class SecurityComponent extends Component {
 
 /**
  * Validate that the controller has a CSRF token in the POST data
- * and that the token is legit/not expired.  If the token is valid
+ * and that the token is legit/not expired. If the token is valid
  * it will be removed from the list of valid tokens.
  *
  * @param Controller $controller A controller to check

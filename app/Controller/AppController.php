@@ -1,8 +1,8 @@
 <?php
 /**
  * Application Controller
- * Application-wide methods, all controllers inherit them.
- *
+ * Application-wide methods, all controllers inherit them
+ * 
  * @copyright    copyright 2012 Passbolt.com
  * @package      app.Controller.AppController
  * @since        version 2.12.7
@@ -13,11 +13,20 @@ App::uses('Sanitize', 'Utility');
 App::uses('Controller', 'Controller');
 App::import('Model','User');
 
+/**
+ * Application Controller
+ *
+ * Add your application-wide methods in the class below, your controllers
+ * will inherit them.
+ *
+ * @package		app.Controller
+ * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
+ */
 class AppController extends Controller {
 
-/**
- * @var $component application wide components 
- */
+	/**
+	 * @var $component application wide components
+	 */
 	public $components = array(
 		'Session',
 		'Paginator',
@@ -66,20 +75,20 @@ class AppController extends Controller {
 		'MyForm'				// custom
 	);
 
-/**
- * Called before the controller action.	You can use this method to configure and customize components
- * or perform logic that needs to happen before each controller action.
- * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
- * @return void 
- */
+	/**
+	 * Called before the controller action.	You can use this method to configure and customize components
+	 * or perform logic that needs to happen before each controller action.
+	 * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
+	 * @return void
+	 */
 	public function beforeFilter() {
 		// Paranoia - Hidding PHP version number
 		$this->response->header('X-Powered-By', 'PHP');
 
 		// Add a callback detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
-			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
-		}));
+					return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
+				}));
 
 		// Set default layout
 		if (isset($this->request->params['plugin']) && $this->request->params['plugin'] == 'api_generator') {
@@ -121,13 +130,13 @@ class AppController extends Controller {
 		}
 	}
 
-/**
- * Authorization check main callback
- * @link http://api20.cakephp.org/class/auth-component#method-AuthComponentisAuthorized
- * @param mixed $user The user to check the authorization of. If empty the user in the session will be used.
- * @return boolean True if $user is authorized, otherwise false
- * @access public
- */
+	/**
+	 * Authorization check main callback
+	 * @link http://api20.cakephp.org/class/auth-component#method-AuthComponentisAuthorized
+	 * @param mixed $user The user to check the authorization of. If empty the user in the session will be used.
+	 * @return boolean True if $user is authorized, otherwise false
+	 * @access public
+	 */
 	public function isAuthorized($user) {
 		if ($this->isWhitelisted()) {
 			return true;
@@ -142,13 +151,13 @@ class AppController extends Controller {
 		return true;
 	}
 
-/**
- * Is the controller:action pair whitelisted in config? (see. App.auth.whitelist) 
- * @param string $controller, current is used if null
- * @param string $action, current is used if null
- * @return bool true if the controller action pair is whitelisted
- * @access public
- */
+	/**
+	 * Is the controller:action pair whitelisted in config? (see. App.auth.whitelist)
+	 * @param string $controller, current is used if null
+	 * @param string $action, current is used if null
+	 * @return bool true if the controller action pair is whitelisted
+	 * @access public
+	 */
 	public function isWhitelisted($controller=null, $action=null) {
 		if ($controller == null) {
 			$controller = strtolower($this->name);

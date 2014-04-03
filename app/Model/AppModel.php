@@ -15,107 +15,106 @@ App::uses('Model', 'Model');
 App::uses('AppValidation', 'Model/Utility');
 
 class AppModel extends Model {
-
-/**
- * Model behaviors
- *
- * @link http://api20.cakephp.org/class/model#
- */
+	/**
+	 * Model behaviors
+	 *
+	 * @link http://api20.cakephp.org/class/model#
+	 */
 	public $actsAs = array('Containable');
 
-/**
- * Never fetch any recursive data from associated models
- * Use containable for any assocs
- *
- * @var integer
- */
+	/**
+	 * Never fetch any recursive data from associated models
+	 * Use containable for any assocs
+	 *
+	 * @var integer
+	 */
 	public $recursive = -1;
 
-/**
- * Constructor
- *
- * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
- * @access public
- */
+	/**
+	 * Constructor
+	 *
+	 * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
+	 * @access public
+	 */
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 		$this->setValidationRules();
 	}
 
-/**
- * Set the validation rules upon context
- *
- * @param string case (optional) The target validation case if any.
- * @return bool true if success
- * @access public
- */
+	/**
+	 * Set the validation rules upon context
+	 *
+	 * @param string case (optional) The target validation case if any.
+	 * @return bool true if success
+	 * @access public
+	 */
 	public function setValidationRules($case = 'default') {
 		$this->validate = $this->getValidationRules($case);
 		return true;
 	}
 
-/**
- * Get the validation rules upon context
- *
- * @param string case (optional) The target validation case if any.
- * @return array validation rules
- * @access public
- */
+	/**
+	 * Get the validation rules upon context
+	 *
+	 * @param string case (optional) The target validation case if any.
+	 * @return array validation rules
+	 * @access public
+	 */
 	public static function getValidationRules($case = null) {
 		return array();
 	}
 
-/**
- * Return the find options (felds and conditions) for a given context
- *
- * @param string case The target case.
- * @param array data
- * @return array
- */
+	/**
+	 * Return the find options (felds and conditions) for a given context
+	 *
+	 * @param string case The target case.
+	 * @param array data
+	 * @return array
+	 */
 	public static function getFindOptions($case, $role = null, $data = null) {
 		return array_merge(static::getFindConditions($case, $role, $data), static::getFindFields($case, $role));
 	}
 
-/**
- * Return the list of field to use for a find for given context
- *
- * @param string $case context ex: login, activation
- * @return $condition array
- * @access public
- */
+	/**
+	 * Return the list of field to use for a find for given context
+	 *
+	 * @param string $case context ex: login, activation
+	 * @return $condition array
+	 * @access public
+	 */
 	public static function getFindFields($case = null, $role = null) {
 		return array('fields' => array());
 	}
 
-/**
- * Return the list of field to use for a find for given context for an embedded model
- *
- * @param string $case context ex: login, activation
- * @return $condition array
- * @access public
- */
+	/**
+	 * Return the list of field to use for a find for given context for an embedded model
+	 *
+	 * @param string $case context ex: login, activation
+	 * @return $condition array
+	 * @access public
+	 */
 	public static function getEmbeddedFindFields($case = null, $role = null) {
 		return self::getFindFields($case, $role);
 	}
 
-/**
- * Return the conditions to be used for a given context
- * for example if you want to activate a User session
- *
- * @param $context string{guest or id}
- * @param $data used in find conditions (such as User.id)
- * @return $condition array
- * @access public
- */
+	/**
+	 * Return the conditions to be used for a given context
+	 * for example if you want to activate a User session
+	 *
+	 * @param $context string{guest or id}
+	 * @param $data used in find conditions (such as User.id)
+	 * @return $condition array
+	 * @access public
+	 */
 	public static function getFindConditions($case = null, $role = null, $data = null) {
 		return array('conditions' => array());
 	}
 
-/**
- * Check if a record with provided parent_id exists
- *
- * @param check
- */
+	/**
+	 * Check if a record with provided parent_id exists
+	 *
+	 * @param check
+	 */
 	public function parentExists($check) {
 		if ($check['parent_id'] == null) {
 			return true;
@@ -125,14 +124,14 @@ class AppModel extends Model {
 		}
 	}
 
-/**
- * Get path of a target instance in a nested data array
- *
- * @param string id needle
- * @param array stack
- * @param key the key which hold the needle value
- * @return array the path of the found needle or false
- */
+	/**
+	 * Get path of a target instance in a nested data array
+	 *
+	 * @param string id needle
+	 * @param array stack
+	 * @param key the key which hold the needle value
+	 * @return array the path of the found needle or false
+	 */
 	public function inNestedArray($needle, $data, $key = 'id', &$path = array(), &$found = false) {
 		// if data is an array of nested array
 		if (!isset($data[$this->alias])) {
@@ -164,14 +163,14 @@ class AppModel extends Model {
 		return $path;
 	}
 
-/**
- * Validation rule : Check if an instance of a given model exists
- *
- * @param string check The data to check
- * @param string key The key to find the uuid
- * @param string modelName The model name the instance belong to
- * @return boolean
- */
+	/**
+	 * Validation rule : Check if an instance of a given model exists
+	 *
+	 * @param string check The data to check
+	 * @param string key The key to find the uuid
+	 * @param string modelName The model name the instance belong to
+	 * @return boolean
+	 */
 	public function validateExists($check, $key, $modelName) {
 		$model = ClassRegistry::init($modelName);
 		return $model->exists($check[$key]);

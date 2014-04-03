@@ -2,19 +2,18 @@
 /**
  * Cookie Component
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Controller.Component
  * @since         CakePHP(tm) v 1.2.0.4213
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Component', 'Controller');
@@ -61,7 +60,7 @@ class CookieComponent extends Component {
  * $this->Cookie->path = '/';
  *
  * The path on the server in which the cookie will be available on.
- * If  public $cookiePath is set to '/foo/', the cookie will only be available
+ * If public $cookiePath is set to '/foo/', the cookie will only be available
  * within the /foo/ directory and all sub-directories such as /foo/bar/ of domain.
  * The default value is the entire domain.
  *
@@ -110,8 +109,8 @@ class CookieComponent extends Component {
 /**
  * HTTP only cookie
  *
- * Set to true to make HTTP only cookies.  Cookies that are HTTP only
- * are not accessible in Javascript.
+ * Set to true to make HTTP only cookies. Cookies that are HTTP only
+ * are not accessible in JavaScript.
  *
  * @var boolean
  */
@@ -208,7 +207,8 @@ class CookieComponent extends Component {
  * @param string|array $key Key for the value
  * @param mixed $value Value
  * @param boolean $encrypt Set to true to encrypt value, false otherwise
- * @param integer|string $expires Can be either Unix timestamp, or date string
+ * @param integer|string $expires Can be either the number of seconds until a cookie
+ *   expires, or a strtotime compatible time offset.
  * @return void
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/cookie.html#CookieComponent::write
  */
@@ -217,7 +217,7 @@ class CookieComponent extends Component {
 			$this->read();
 		}
 
-		if (is_null($encrypt)) {
+		if ($encrypt === null) {
 			$encrypt = true;
 		}
 		$this->_encrypted = $encrypt;
@@ -228,17 +228,27 @@ class CookieComponent extends Component {
 		}
 
 		foreach ($key as $name => $value) {
-			if (strpos($name, '.') === false) {
-				$this->_values[$this->name][$name] = $value;
-				$this->_write("[$name]", $value);
-			} else {
+			$names = array($name);
+			if (strpos($name, '.') !== false) {
 				$names = explode('.', $name, 2);
-				if (!isset($this->_values[$this->name][$names[0]])) {
-					$this->_values[$this->name][$names[0]] = array();
-				}
-				$this->_values[$this->name][$names[0]] = Hash::insert($this->_values[$this->name][$names[0]], $names[1], $value);
-				$this->_write('[' . implode('][', $names) . ']', $value);
 			}
+			$firstName = $names[0];
+			$isMultiValue = (is_array($value) || count($names) > 1);
+
+			if (!isset($this->_values[$this->name][$firstName]) && $isMultiValue) {
+				$this->_values[$this->name][$firstName] = array();
+			}
+
+			if (count($names) > 1) {
+				$this->_values[$this->name][$firstName] = Hash::insert(
+					$this->_values[$this->name][$firstName],
+					$names[1],
+					$value
+				);
+			} else {
+				$this->_values[$this->name][$firstName] = $value;
+			}
+			$this->_write('[' . $firstName . ']', $this->_values[$this->name][$firstName]);
 		}
 		$this->_encrypted = true;
 	}
@@ -260,7 +270,7 @@ class CookieComponent extends Component {
 		if (empty($this->_values[$this->name])) {
 			$this->_values[$this->name] = array();
 		}
-		if (is_null($key)) {
+		if ($key === null) {
 			return $this->_values[$this->name];
 		}
 
@@ -295,10 +305,16 @@ class CookieComponent extends Component {
  * Delete a cookie value
  *
  * Optional [Name.], required key
- * $this->Cookie->read('Name.key);
+ * $this->Cookie->delete('Name.key);
  *
  * You must use this method before any output is sent to the browser.
  * Failure to do so will result in header already sent errors.
+ *
+ * This method will delete both the top level and 2nd level cookies set.
+ * For example assuming that $name = App, deleting `User` will delete
+ * both `App[User]` and any other cookie values like `App[User][email]`
+ * This is done to clean up cookie storage from before 2.4.3, where cookies
+ * were stored inconsistently.
  *
  * @param string $key Key of the value to be deleted
  * @return void
@@ -385,20 +401,20 @@ class CookieComponent extends Component {
  * @return integer Unix timestamp
  */
 	protected function _expire($expires = null) {
-		$now = time();
-		if (is_null($expires)) {
+		if ($expires === null) {
 			return $this->_expires;
 		}
 		$this->_reset = $this->_expires;
-
 		if (!$expires) {
 			return $this->_expires = 0;
 		}
+		$now = new DateTime();
 
 		if (is_int($expires) || is_numeric($expires)) {
-			return $this->_expires = $now + intval($expires);
+			return $this->_expires = $now->format('U') + intval($expires);
 		}
-		return $this->_expires = strtotime($expires, $now);
+		$now->modify($expires);
+		return $this->_expires = $now->format('U');
 	}
 
 /**
@@ -419,7 +435,7 @@ class CookieComponent extends Component {
 			'httpOnly' => $this->httpOnly
 		));
 
-		if (!is_null($this->_reset)) {
+		if (!empty($this->_reset)) {
 			$this->_expires = $this->_reset;
 			$this->_reset = null;
 		}
@@ -447,7 +463,6 @@ class CookieComponent extends Component {
  * Encrypts $value using public $type method in Security class
  *
  * @param string $value Value to encrypt
- * @return string encrypted string
  * @return string Encoded values
  */
 	protected function _encrypt($value) {
@@ -517,7 +532,7 @@ class CookieComponent extends Component {
 		$first = substr($string, 0, 1);
 		if ($first === '{' || $first === '[') {
 			$ret = json_decode($string, true);
-			return ($ret) ? $ret : $string;
+			return ($ret !== null) ? $ret : $string;
 		}
 		$array = array();
 		foreach (explode(',', $string) as $pair) {
@@ -530,4 +545,3 @@ class CookieComponent extends Component {
 		return $array;
 	}
 }
-

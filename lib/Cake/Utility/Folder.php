@@ -1,16 +1,17 @@
 <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Utility
  * @since         CakePHP(tm) v 0.2.9
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -25,7 +26,7 @@ class Folder {
  * Default scheme for Folder::copy
  * Recursively merges subfolders with the same name
  *
- * @constant MERGE
+ * @var string
  */
 	const MERGE = 'merge';
 
@@ -33,7 +34,7 @@ class Folder {
  * Overwrite scheme for Folder::copy
  * subfolders with the same name will be replaced
  *
- * @constant OVERWRITE
+ * @var string
  */
 	const OVERWRITE = 'overwrite';
 
@@ -41,7 +42,7 @@ class Folder {
  * Skip scheme for Folder::copy
  * if a subfolder with the same name exists it will be skipped
  *
- * @constant SKIP
+ * @var string
  */
 	const SKIP = 'skip';
 
@@ -211,7 +212,7 @@ class Folder {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#Folder::find
  */
 	public function find($regexpPattern = '.*', $sort = false) {
-		list($dirs, $files) = $this->read($sort);
+		list(, $files) = $this->read($sort);
 		return array_values(preg_grep('/^' . $regexpPattern . '$/i', $files));
 	}
 
@@ -266,7 +267,7 @@ class Folder {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#Folder::isWindowsPath
  */
 	public static function isWindowsPath($path) {
-		return (preg_match('/^[A-Z]:\\\\/i', $path) || substr($path, 0, 2) == '\\\\');
+		return (preg_match('/^[A-Z]:\\\\/i', $path) || substr($path, 0, 2) === '\\\\');
 	}
 
 /**
@@ -277,7 +278,7 @@ class Folder {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#Folder::isAbsolute
  */
 	public static function isAbsolute($path) {
-		return !empty($path) && ($path[0] === '/' || preg_match('/^[A-Z]:\\\\/i', $path) || substr($path, 0, 2) == '\\\\');
+		return !empty($path) && ($path[0] === '/' || preg_match('/^[A-Z]:\\\\/i', $path) || substr($path, 0, 2) === '\\\\');
 	}
 
 /**
@@ -459,7 +460,7 @@ class Folder {
 		foreach ($iterator as $itemPath => $fsIterator) {
 			if ($skipHidden) {
 				$subPathName = $fsIterator->getSubPathname();
-				if ($subPathName{0} == '.' || strpos($subPathName, DS . '.') !== false) {
+				if ($subPathName{0} === '.' || strpos($subPathName, DS . '.') !== false) {
 					continue;
 				}
 			}
@@ -515,11 +516,10 @@ class Folder {
 					umask($old);
 					$this->_messages[] = __d('cake_dev', '%s created', $pathname);
 					return true;
-				} else {
-					umask($old);
-					$this->_errors[] = __d('cake_dev', '%s NOT created', $pathname);
-					return false;
 				}
+				umask($old);
+				$this->_errors[] = __d('cake_dev', '%s NOT created', $pathname);
+				return false;
 			}
 		}
 		return false;
@@ -809,9 +809,8 @@ class Folder {
 				if (!empty($newparts)) {
 					array_pop($newparts);
 					continue;
-				} else {
-					return false;
 				}
+				return false;
 			}
 			$newparts[] = $part;
 		}

@@ -4,21 +4,20 @@
  *
  * In this file, you set up routes to your controllers and their actions.
  * Routes are very important mechanism that allows you to freely connect
- * different urls to chosen controllers and their actions (functions).
- *
- * PHP 5
+ * different URLs to chosen controllers and their actions (functions).
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright		Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link			http://cakephp.org CakePHP(tm) Project
- * @package			app.Config
- * @since			CakePHP(tm) v 0.2.9
- * @license			MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       app.Config
+ * @since         CakePHP(tm) v 0.2.9
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -27,25 +26,26 @@
  * @see http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
  * @see http://book.cakephp.org/2.0/en/development/rest.html
  */
-	Router::parseExtensions('json');
-	Router::mapResources('dictionaries');
-	Router::mapResources('users');
-	Router::mapResources('groups');
-	Router::mapResources('categories');
-	Router::mapResources('favorites');
-	Router::mapResources('resources');
-	Router::mapResources('secrets');
-	Router::mapResources('permissions');
-	Router::mapResources('comments');
+Router::parseExtensions('json');
+Router::mapResources('dictionaries');
+Router::mapResources('users');
+Router::mapResources('groups');
+Router::mapResources('categories');
+Router::mapResources('favorites');
+Router::mapResources('resources');
+Router::mapResources('secrets');
+Router::mapResources('permissions');
+Router::mapResources('comments');
 
-	// The line below doesn't seem to work
-	// Router::mapResources('categoriesResources');
-	// So we declare the routes mapping for this function manually
-	Router::connect("/categoriesResources", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
-	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
-	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT"));
-	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST"));
-	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE"));
+// The line below doesn't seem to work
+// Router::mapResources('categoriesResources');
+// So we declare the routes mapping for this function manually
+Router::connect("/categoriesResources", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
+Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
+Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT"));
+Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST"));
+Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE"));
+
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
@@ -57,12 +57,13 @@
 	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
 
 /**
- * ...and connect the rest of 'Pages' controller's urls.
+ * ...and connect the rest of 'Pages' controller's URLs.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 	Router::connect('/demo', array('controller' => 'pages', 'action' => 'display', 'demo', 'demo'));
 
 /**
+ * Load all plugin routes. See the CakePlugin documentation on
  * Custom route for dictionary controller
  */
 	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));

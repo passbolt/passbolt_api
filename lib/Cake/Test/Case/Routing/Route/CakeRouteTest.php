@@ -2,19 +2,18 @@
 /**
  * CakeRequest Test case file.
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Test.Case.Routing.Route
  * @since         CakePHP(tm) v 2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('CakeRoute', 'Routing/Route');
@@ -24,7 +23,7 @@ App::uses('Router', 'Routing');
  * Test case for CakeRoute
  *
  * @package       Cake.Test.Case.Routing.Route
- **/
+ */
 class CakeRouteTest extends CakeTestCase {
 
 /**
@@ -41,7 +40,7 @@ class CakeRouteTest extends CakeTestCase {
  * Test the construction of a CakeRoute
  *
  * @return void
- **/
+ */
 	public function testConstruction() {
 		$route = new CakeRoute('/:controller/:action/:id', array(), array('id' => '[0-9]+'));
 
@@ -55,7 +54,7 @@ class CakeRouteTest extends CakeTestCase {
  * test Route compiling.
  *
  * @return void
- **/
+ */
 	public function testBasicRouteCompiling() {
 		$route = new CakeRoute('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 		$result = $route->compile();
@@ -107,7 +106,7 @@ class CakeRouteTest extends CakeTestCase {
  * test compiling routes with keys that have patterns
  *
  * @return void
- **/
+ */
 	public function testRouteCompilingWithParamPatterns() {
 		$route = new CakeRoute(
 			'/:controller/:action/:id',
@@ -119,7 +118,7 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertRegExp($result, '/posts/view/518098');
 		$this->assertNotRegExp($result, '/posts/edit/name-of-post');
 		$this->assertNotRegExp($result, '/posts/edit/4/other:param');
-		$this->assertEquals(array('controller', 'action', 'id'), $route->keys);
+		$this->assertEquals(array('id', 'controller', 'action'), $route->keys);
 
 		$route = new CakeRoute(
 			'/:lang/:controller/:action/:id',
@@ -131,7 +130,7 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertRegExp($result, '/cze/articles/view/1');
 		$this->assertNotRegExp($result, '/language/articles/view/2');
 		$this->assertNotRegExp($result, '/eng/articles/view/name-of-article');
-		$this->assertEquals(array('lang', 'controller', 'action', 'id'), $route->keys);
+		$this->assertEquals(array('lang', 'id', 'controller', 'action'), $route->keys);
 
 		foreach (array(':', '@', ';', '$', '-') as $delim) {
 			$route = new CakeRoute('/posts/:id' . $delim . ':title');
@@ -142,7 +141,7 @@ class CakeRouteTest extends CakeTestCase {
 			$this->assertNotRegExp($result, '/posts/11!nameofarticle');
 			$this->assertNotRegExp($result, '/posts/11');
 
-			$this->assertEquals(array('id', 'title'), $route->keys);
+			$this->assertEquals(array('title', 'id'), $route->keys);
 		}
 
 		$route = new CakeRoute(
@@ -156,7 +155,7 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertNotRegExp($result, '/posts/hey_now:nameofarticle');
 		$this->assertNotRegExp($result, '/posts/:nameofarticle/2009');
 		$this->assertNotRegExp($result, '/posts/:nameofarticle/01');
-		$this->assertEquals(array('id', 'title', 'year'), $route->keys);
+		$this->assertEquals(array('year', 'title', 'id'), $route->keys);
 
 		$route = new CakeRoute(
 			'/posts/:url_title-(uuid::id)',
@@ -205,7 +204,7 @@ class CakeRouteTest extends CakeTestCase {
 
 		$this->assertRegExp($result, '/some_extra/page/this_is_the_slug');
 		$this->assertRegExp($result, '/page/this_is_the_slug');
-		$this->assertEquals(array('extra', 'slug'), $route->keys);
+		$this->assertEquals(array('slug', 'extra'), $route->keys);
 		$this->assertEquals(array('extra' => '[a-z1-9_]*', 'slug' => '[a-z1-9_]+', 'action' => 'view'), $route->options);
 		$expected = array(
 			'controller' => 'pages',
@@ -235,7 +234,7 @@ class CakeRouteTest extends CakeTestCase {
  * test that routes match their pattern.
  *
  * @return void
- **/
+ */
 	public function testMatchBasic() {
 		$route = new CakeRoute('/:controller/:action/:id', array('plugin' => null));
 		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null));
@@ -308,6 +307,11 @@ class CakeRouteTest extends CakeTestCase {
 		);
 		$result = $route->match($url);
 		$expected = '/admin/subscriptions/edit_admin_e/1';
+		$this->assertEquals($expected, $result);
+
+		$url = array('controller' => 'subscribe', 'admin' => true, 'action' => 'admin_edit', 1);
+		$result = $route->match($url);
+		$expected = '/admin/subscriptions/edit/1';
 		$this->assertEquals($expected, $result);
 	}
 
@@ -481,6 +485,40 @@ class CakeRouteTest extends CakeTestCase {
 		$result = $route->persistParams($url, $params);
 		$this->assertEquals('en', $result['lang']);
 		$this->assertEquals('red', $result['color']);
+	}
+
+/**
+ * test persist with a non array value
+ *
+ * @return void
+ */
+	public function testPersistParamsNonArray() {
+		$url = array('controller' => 'posts', 'action' => 'index');
+		$params = array('lang' => 'en', 'color' => 'blue');
+
+		$route = new CakeRoute(
+			'/:lang/:color/blog/:action',
+			array('controller' => 'posts')
+			// No persist options
+		);
+		$result = $route->persistParams($url, $params);
+		$this->assertEquals($url, $result);
+
+		$route = new CakeRoute(
+			'/:lang/:color/blog/:action',
+			array('controller' => 'posts'),
+			array('persist' => false)
+		);
+		$result = $route->persistParams($url, $params);
+		$this->assertEquals($url, $result);
+
+		$route = new CakeRoute(
+			'/:lang/:color/blog/:action',
+			array('controller' => 'posts'),
+			array('persist' => 'derp')
+		);
+		$result = $route->persistParams($url, $params);
+		$this->assertEquals($url, $result);
 	}
 
 /**
@@ -818,6 +856,24 @@ class CakeRouteTest extends CakeTestCase {
 	}
 
 /**
+ * Test matching of parameters where one parameter name starts with another parameter name
+ *
+ * @return void
+ */
+	public function testMatchSimilarParameters() {
+		$route = new CakeRoute('/:thisParam/:thisParamIsLonger');
+
+		$url = array(
+			'thisParamIsLonger' => 'bar',
+			'thisParam' => 'foo',
+		);
+
+		$result = $route->match($url);
+		$expected = '/foo/bar';
+		$this->assertEquals($expected, $result);
+	}
+
+/**
  * test restructuring args with pass key
  *
  * @return void
@@ -869,7 +925,7 @@ class CakeRouteTest extends CakeTestCase {
  * @return void
  */
 	public function testParseTrailingUTF8() {
-		$route = new CakeRoute('/category/**', array('controller' => 'categories','action' => 'index'));
+		$route = new CakeRoute('/category/**', array('controller' => 'categories', 'action' => 'index'));
 		$result = $route->parse('/category/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84');
 		$expected = array(
 			'controller' => 'categories',
@@ -877,6 +933,30 @@ class CakeRouteTest extends CakeTestCase {
 			'pass' => array('موبایل'),
 			'named' => array()
 		);
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * test that utf-8 patterns work for :section
+ *
+ * @return void
+ */
+	public function testUTF8PatternOnSection() {
+		$route = new CakeRoute(
+			'/:section',
+			array('plugin' => 'blogs', 'controller' => 'posts', 'action' => 'index'),
+			array(
+				'persist' => array('section'),
+				'section' => 'آموزش|weblog'
+			)
+		);
+
+		$result = $route->parse('/%D8%A2%D9%85%D9%88%D8%B2%D8%B4');
+		$expected = array('section' => 'آموزش', 'plugin' => 'blogs', 'controller' => 'posts', 'action' => 'index', 'pass' => array(), 'named' => array());
+		$this->assertEquals($expected, $result);
+
+		$result = $route->parse('/weblog');
+		$expected = array('section' => 'weblog', 'plugin' => 'blogs', 'controller' => 'posts', 'action' => 'index', 'pass' => array(), 'named' => array());
 		$this->assertEquals($expected, $result);
 	}
 
