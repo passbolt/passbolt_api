@@ -19,21 +19,34 @@ class Category extends AppModel {
  *
  * @link http://api20.cakephp.org/class/model#
  */
-	public $actsAs = array('Containable', 'Trackable', 'Permissionable' => array('priority' => 1), 'Tree');
+	public $actsAs = array(
+		'Containable',
+		'Trackable',
+		'Permissionable' => array(
+			'priority' => 1
+		),
+		'Tree'
+	);
 
 /**
  * Details of has many relationships
  *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasMany = array('CategoryResource');
+	public $hasMany = array(
+		'CategoryResource'
+	);
 
 /**
  * Details of belongs relationships
  *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $belongsTo = array('CategoryType' => array('className' => 'CategoryType'));
+	public $belongsTo = array(
+		'CategoryType' => array(
+			'className' => 'CategoryType'
+		)
+	);
 
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
