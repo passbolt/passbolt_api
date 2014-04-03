@@ -17,7 +17,7 @@ class TrackableBehavior extends ModelBehavior {
  * @return bool success
  * @access public
  */
-	public function beforeValidate(Model $model) {
+	public function beforeValidate(Model $model, $options = Array()) {
 		if (empty($model->data[$model->alias]['id'])) {
 			$model->data[$model->alias]['created_by'] = User::get('id');
 		}
