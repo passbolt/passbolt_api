@@ -24,7 +24,7 @@ class UsersController extends AppController {
 			$this->view = '/Users/login';
 			if ($this->request->is('post')) {
 				$this->request->data['User']['password'] = null;
-				$this->Message->error(__('Invalid username or password, try again'));
+				$this->Message->error(__('Invalid username or password, try again'), array('throw' => false));
 			}
 			return;
 		}
