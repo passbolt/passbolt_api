@@ -11,13 +11,13 @@
 .dialog {
 	position:relative;
 	width:30em;
-	border:1px solid #CCC;
+	border:1px solid @border-default;
 	background:#F3F3F3;
 	margin:auto;
 	margin-top:1.5%;
 	-moz-box-shadow: 0px 0px 10px 0px #ddd;
-  -webkit-box-shadow: 0px 0px 10px 0px #ddd;
-  box-shadow: 0px 0px 10px 0px #ddd;
+	-webkit-box-shadow: 0px 0px 10px 0px #ddd;
+	box-shadow: 0px 0px 10px 0px #ddd;
 }
 
 /* header */
@@ -69,7 +69,7 @@
 }
 /* submit / cancel */
 .submit-wrapper {
-	border-top:1px solid #CCC;
+	border-top:1px solid @border-default;
 	clear:both;
 	width:100%;
 	padding:1em 0;
@@ -80,7 +80,7 @@
 	float:right;
 }
 .submit-wrapper .cancel,
-.submit-wrapper  input {
+.submit-wrapper	input {
 	margin:0 2.25em 0 0;
 	padding-left:2em;
 	padding-right:2em;
@@ -102,7 +102,7 @@
 /* complexity and progress bar */
 .dialog .progress {
 	width:67.8%;
-	border:1px solid #CCC;
+	border:1px solid @border-default;
 	height:7px;
 	display:block;
 	clear:both;
@@ -145,69 +145,69 @@
 /** permissions **/
 
 .dialog .permissions{
-    height: 21.5em;
-    overflow-y: scroll;
+		height: 21.5em;
+		overflow-y: scroll;
 }
 
 .dialog .permissions .row{
-    border: 1px solid #ddd;
-    margin: 0 0 0.5em 0;
-    width: 97%;
-    -webkit-border-radius: .286em;
-    -moz-border-radius: .286em;
-    border-radius: .286em;
+		border: 1px solid #ddd;
+		margin: 0 0 0.5em 0;
+		width: 97%;
+		-webkit-border-radius: .286em;
+		-moz-border-radius: .286em;
+		border-radius: .286em;
 }
 .dialog .permissions .row:hover{
-    background-color: #FAFAFA;
+		background-color: #FAFAFA;
 }
 
 .dialog .permissions .row .avatar,
 .dialog .permissions .row .details{
-    float: left;
+		float: left;
 }
 .dialog .permissions .row .actions{
-    float: right;
-    padding: 1em 1em 0 0;
+		float: right;
+		padding: 1em 1em 0 0;
 }
 
 .dialog .permissions .row > .avatar{
-    width: 3em;
-    height: 3em;
-    background-color: #eee;
+		width: 3em;
+		height: 3em;
+		background-color: #eee;
 }
 .dialog .permissions .row > .avatar div.image-icon{
-    padding: 0.17em;
+		padding: 0.17em;
 }
 .dialog .permissions .row > .avatar div.image-file img{
-    width: 3em;
-    height: 3em;
-    -webkit-border-top-left-radius: .286em;
-    -webkit-border-bottom-left-radius: .286em;
-    -moz-border-radius-topleft: .286em;
-    -moz-border-radius-bottomleft: .286em;
-    border-top-left-radius: .286em;
-    border-bottom-left-radius: .286em;
+		width: 3em;
+		height: 3em;
+		-webkit-border-top-left-radius: .286em;
+		-webkit-border-bottom-left-radius: .286em;
+		-moz-border-radius-topleft: .286em;
+		-moz-border-radius-bottomleft: .286em;
+		border-top-left-radius: .286em;
+		border-bottom-left-radius: .286em;
 }
 
 .dialog .permissions .row .details{
-    margin: 0 0 0 1em;
+		margin: 0 0 0 1em;
 }
 
 .dialog .permissions .row .details span.name,
 .dialog .permissions .row .details span.rights{
-    display: block;
+		display: block;
 }
 .dialog .permissions .row .details span.name{
-    text-overflow: clip;
-    word-wrap: break-word;
-    overflow: hidden;
-    height: 1.25em;
-    font-weight: bold;
-    font-size: 1.25em;
+		text-overflow: clip;
+		word-wrap: break-word;
+		overflow: hidden;
+		height: 1.25em;
+		font-weight: bold;
+		font-size: 1.25em;
 }
 
 .dialog .perm-create-form {
-    margin: 20px 0 0 0;
+		margin: 20px 0 0 0;
 }
 
 .dialog .perm-create-form .perm-aro {
@@ -216,7 +216,7 @@
 }
 
 .dialog .perm-create-form input[type=text].loading{
-    background: url(../../img/loading.gif) no-repeat 99% center;
+		background: url(../../img/loading.gif) no-repeat 99% center;
 }
 
 .dialog .perm-create-form .perm-type {
@@ -225,14 +225,14 @@
 }
 
 .dialog .perm-create-form select.permission{
-    -webkit-appearance: menulist;
-    height:2.2em;
-    width:5.775em;
-    /* todo : make a generic fix for select fields. maybe chosen ? */
+		-webkit-appearance: menulist;
+		height:2.2em;
+		width:5.775em;
+		/* todo : make a generic fix for select fields. maybe chosen ? */
 }
 
 .dialog .perm-create-form .perm-actions {
-    height: 2.2em;
+		height: 2.2em;
 	padding-top:2.075em;
 }
 
@@ -250,7 +250,7 @@
 	width: 39%;
 }
 .dialog .logs ul{
-	border: 1px solid #ccc;
+	border: 1px solid @border-default;
 	max-height: 21.5em;
 	overflow-y: scroll;
 }

@@ -24,7 +24,7 @@
 </head>
 <body>
 <div id="container" class="page">
-<?php echo $this->element('demo/loading-screen'); ?>
+<?php //echo $this->element('demo/loading-screen'); ?>
 <?php echo $this->element('demo/loading-bar'); ?>
 <?php echo $this->element('demo/notification'); ?>
 	<div class="header first">
@@ -120,7 +120,7 @@
 			});
 		});
 
-		/* faking initial loading screen */
+		/* faking initial loading screen 
 		//$( ".loading-screen" ).click(function() {
 			$('.initial-loading-bar .progress-bar span').animate({width:'20%'},function(){
 				$('.loading-screen .details').html('doing something else');
@@ -130,7 +130,7 @@
 						$(".loading-screen").css( "display",'none');
 					});
 				});
-			});
+			});*/
 		//});
 
 	});

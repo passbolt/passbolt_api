@@ -46,23 +46,18 @@
 }
 .comments .comment .metadata .author.username {
 	max-width:48%;
-	overflow:hidden;
-	text-overflow: ellipsis;
-  display:inline-block;
-  white-space: nowrap;
+	display:inline-block;
 	padding-right:2px;
+	.ellipsis();
 }
 .comments .comment .metadata .author.username:after {
 	content:", ";
 }
 .comments .comment .metadata .modified {
 	max-width:48%;
-	overflow:hidden;
-	text-overflow: ellipsis;
-  display:inline-block;
-  white-space: nowrap;
 	padding-right:2px;
 	color:#777;
+	.ellipsis();
 }
 
 /* actions */

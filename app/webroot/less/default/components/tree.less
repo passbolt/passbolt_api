@@ -1,29 +1,29 @@
+/* tree.less */
 .panel .navigation {
-  font-size:.938em;
+	font-size:.938em;
 }
 .panel .navigation.first {
-  border-bottom:1px dotted #CCC;
-  padding:.625em;
-  margin-bottom:.625em;
+	border-bottom:1px dotted @border-default;
+	padding:.625em;
+	margin-bottom:.625em;
 }
 .panel .navigation.last {
-  padding-right:.625em; /* 10px */
+	padding-right:.625em; /* 10px */
 }
 .panel .navigation a {
-  color:#333;
+	color:@font-default;
 	display:block;
 }
 .panel .navigation a:hover {
-  color:#111;
 	text-decoration:none;
 }
 .panel .navigation .row {
 }
 .panel .navigation .row:hover {
-  background:#EEE;
+	background:@background-lighter;
 }
 .panel .navigation .row.selected {
-  font-weight:bold;
+	font-weight:bold;
 }
 
 /* shortcut */
@@ -42,14 +42,14 @@
 	width:100%;
 }
 .tree .node-ctrl a {
-  background:#DDD;
+	background:#DDD;
 	width:1em;
 	height:1em;
 	display:block;
-  margin-top:.15em;
+	margin-top:.15em;
 	opacity:0.5;
 	filter:alpha(opacity=50);
-  padding-left:.625em;
+	padding-left:.625em;
 }
 .tree .node-ctrl a:hover {
 	opacity:.9;
@@ -73,7 +73,7 @@
 }
 .tree .main-cell {
 	margin: 0 1em 0 1em ;
-  padding-left:.625em;
+	padding-left:.625em;
 }
 .tree .left-cell {
 	float: left;
@@ -81,16 +81,33 @@
 	margin-left: -100%;
 }
 .tree .right-cell {
-	float: left;
+	float: right;
 	width: 1em ;
 	margin-left: -1em;
 }
 
+/* don't show nodes if parent is closed */
 .tree .node.close ul{
 	display:none;
 }
 
+/* ellipsis on long node text */
+.tree .main-cell span {
+	.ellipsis();
+	display:block;
+}
+
+/* row action is a button */
+.tree .right-cell a {
+	height:.9em;
+	margin-top:.2em;
+}
+.tree .right-cell a:hover {
+	border:1px solid @background-lighter;
+	background:@white;
+}
+
 /* Events */
 .tree .row.drop-over {
-	background-color: #eee;
+	background-color:@background-lighter;
 }

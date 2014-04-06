@@ -20,13 +20,13 @@
 	width:.625em; /* 10px */
 }
 .cssscrollbar ::-webkit-scrollbar-track {
-	background:#FFF;
+	background:@scrollbar-background;
 }
 .cssscrollbar ::-webkit-scrollbar-thumb {
-	background:#777;
+	background:@scrollbar;
 }
 .cssscrollbar ::-webkit-scrollbar-thumb:window-inactive {
-	background:#FFF;
+	background:@scrollbar-background;
 }
 
 /*
@@ -65,11 +65,11 @@
 	float: left;
 }
 .no-cssscrollbar .jspTrack {
-	background: #FFF;
+	background: @scrollbar-background;
 	position: relative;
 }
 .no-cssscrollbar .jspDrag {
-	background: #777;
+	background:@scrollbar;
 	position: relative;
 	top: 0;
 	left: 0;
