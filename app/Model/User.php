@@ -9,9 +9,9 @@
  */
 
 App::uses('AuthComponent', 'Controller/Component');
-App::uses('BcryptFormAuthenticate', 'Controller/Component/Auth');
 App::uses('Common', 'Controller/Component');
 App::uses('Role', 'Model');
+App::uses('Security', 'Utility');
 
 class User extends AppModel {
 
@@ -104,13 +104,10 @@ class User extends AppModel {
 	 * @access public
 	 */
 	public function beforeSave($options=null) {
-		// encrypt the password
-		// @todo use bcrypt instead #PASSBOLT-157
+		// Encrypt the password.
 		if (isset($this->data['User']['password'])) {
-			//$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
-			$this->data['User']['password'] = BcryptFormAuthenticate::hash($this->data['User']['password']);
+			$this->data['User']['password'] = Security::hash($this->data['User']['password'], Configure::read('HashType'), false);
 		}
-
 		return true;
 	}
 
