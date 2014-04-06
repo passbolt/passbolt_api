@@ -11,19 +11,17 @@ class PassboltAuthHelper extends AppHelper {
 
 	public function get() {
 		$html = '';
-		$nextLogin = $this->_View->Session->read("Throttle.nextLogin");
-		if ($nextLogin < time()) {
+		$nextLoginTime = $this->_View->Session->read("Throttle.nextLoginTime");
+		if (gmdate('U') >= $nextLoginTime) {
 			return null;
 		}
+		// Calculate diff
+		$nbSecondsDiff = $nextLoginTime - gmdate('U');
 
-        // Calculate the delay
-        $now = time();
-        $loginAllowed = $nextLogin;
-        $diff = $loginAllowed - $now;
 
         // Creates the html
-		$html .= '<input type="hidden" id="nextLogin" name="nextLogin" value="' . $nextLogin . '" />';
-		$html .= '<div class="auththrottler"><span class="countdown">'. $diff .'</span> seconds before next login</div>';
+		$html .= '<input type="hidden" id="nextLogin" name="nextLogin" value="' . $nbSecondsDiff . '" />';
+		$html .= '<div class="auththrottler"><span class="countdown">'. $nbSecondsDiff .'</span> seconds before next login</div>';
 		return $html;
 	}
 }
