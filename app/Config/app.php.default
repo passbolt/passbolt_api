@@ -28,9 +28,12 @@ $config = array(
 	// Authentication & Authorisation
 	'HashType' => 'blowfish',
 	'Auth' => array(
-    'authenticate' => array(
-			'BcryptForm', // good encryption
-		  //'Form' // bad encryption
+    	'authenticate' => array(
+			'Form' => array(
+            	'passwordHasher' => array(
+            		'className' => 'Blowfish'
+            	)
+            )
 		),
 		'loginRedirect' => '/login',
 		'logoutRedirect' => '/login',
