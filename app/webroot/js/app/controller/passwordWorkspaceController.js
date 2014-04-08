@@ -73,7 +73,7 @@ steal(
 				'selectedRs': this.options.selectedRs
 			});
 		},
-		
+
 		/**
 		 * Demonstration function to prove the dispatcher
 		 * @dev
@@ -104,7 +104,6 @@ steal(
 				}
 			});
 			// propagate a special event on bus
-			// @todo not the best way to do ! call an event like that is like calling a function directly, useless
 			mad.bus.trigger('filter_resources_browser', this.options.filter);
 		},
 
@@ -212,11 +211,11 @@ steal(
 			}
 			// create the resource which will be used by the form builder to populate the fields
 			var resource = new passbolt.model.Resource({ Category: categories });
-			
+
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Create Password')})
 				.start();
-			
+
 			// attach the component to the dialog
 			var form = dialog.add(passbolt.controller.form.resource.CreateFormController, {
 				data: resource,
@@ -267,7 +266,7 @@ steal(
 				rs.destroy();
 			}
 		},
-		
+
 		/**
 		 * Observe when the user requests a resource deletion
 		 * @param {HTMLElement} el The element the event occured on
@@ -301,7 +300,7 @@ steal(
 				'foreign_model': 'resource',
 				'foreign_id': instance.id
 			};
-			
+
 			// create a new permission
 			new passbolt.model.Favorite(data)
 				.save(function(favorite){

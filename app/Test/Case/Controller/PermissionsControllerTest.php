@@ -26,7 +26,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.resource', 'app.category', 'app.categories_resource', 
-		'app.user', 'app.group', 'app.groups_user', 'app.role', 
+		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile',
 		'app.permission', 'app.permissions_type', 'app.permission_view',
 		'app.authenticationLog', 'app.authenticationBlacklist');
 
@@ -354,7 +354,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 
-		$this->expectException('HttpException', "The permission already exists");
+		$this->expectException('HttpException', "A direct permission already exists");
 		// try to insert a second time the same permission should return an error
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'post',

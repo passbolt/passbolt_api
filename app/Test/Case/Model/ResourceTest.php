@@ -181,7 +181,7 @@ class ResourceTest extends AppTestCase {
  * @return void
  */
 	public function testDescriptionValidation() {
-		$len = 256;
+		$len = 255;
 		$testcases = array(
 			// Not empty
 			'' => true,

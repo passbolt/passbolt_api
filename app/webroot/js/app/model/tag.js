@@ -15,7 +15,7 @@ steal(
 		 * @param {array} data
 		 * @return {passbolt.model.ItemTag}
 		 */
-		mad.model.Model('passbolt.model.tag', /** @static */ {
+		mad.model.Model('passbolt.model.Tag', /** @static */ {
 
 			'validateRules': {
 				'name': ['text']
@@ -67,7 +67,8 @@ steal(
 					success: success,
 					error: error
 				});
-			}
+			},
+
 		}, /** @prototype */ {
 
 			/**

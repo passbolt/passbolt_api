@@ -27,6 +27,8 @@ steal(
 			'modelReference': null,
 			// The element should be validated.
 			'validate': true,
+			// The element should be validated following the given function. Priority max.
+			'validateFunction': null,
 			'value': null,
 			'callbacks': {
 				'changed': function (el, ev, value) {}
