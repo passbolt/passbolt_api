@@ -41,6 +41,7 @@ class CategoriesController extends AppController {
 				$data = array_merge($data, $result);
 			}
 		}
+
 		$this->set('data', $data);
 		$this->Message->success();
 	}

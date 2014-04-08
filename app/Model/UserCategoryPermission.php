@@ -11,7 +11,7 @@
 App::uses('User', 'Model');
 
 class UserCategoryPermission extends AppModel {
-	
+
 /**
  * Custom database table name, or null/false if no table association is desired.
  *
@@ -19,7 +19,7 @@ class UserCategoryPermission extends AppModel {
  * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#usetable
  */
 	public $useTable = "users_categories_permissions";
-	
+
 /**
  * Model behaviors
  * @access public
@@ -39,15 +39,16 @@ class UserCategoryPermission extends AppModel {
 	);
 
 /**
- * Return the conditions to be used for a given context
+ * Return the find conditions to be used for a given context.
  *
- * @param $context string{guest or id}
- * @param $data used in find conditions (such as User.id)
- * @return $condition array
- * @access public
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
 		$conditions = array();
+
 		switch ($case) {
 			case 'viewByCategory':
 				$conditions = array(
@@ -62,6 +63,7 @@ class UserCategoryPermission extends AppModel {
 					)
 				);
 			break;
+
 			default:
 				$conditions = array(
 					'conditions' => array()

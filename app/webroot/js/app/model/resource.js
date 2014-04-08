@@ -40,7 +40,7 @@ steal(
 			var self = this;
 			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources',
+				url: mad.Config.read("app.url") + '/resources',
 				type: 'POST',
 				params: params,
 				success: success,
@@ -57,7 +57,7 @@ steal(
 		'destroy' : function (id, success, error) {
 			var params = {id:id};
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources/{id}',
+				url: mad.Config.read("app.url") + '/resources/{id}',
 				type: 'DELETE',
 				params: params,
 				success: success,
@@ -76,7 +76,7 @@ steal(
 			}
 
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources',
+				url: mad.Config.read("app.url") + '/resources',
 				type: 'GET',
 				params: params,
 				success: success,
@@ -86,7 +86,7 @@ steal(
 
 		'findOne': function (params, success, error) {
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources/{id}',
+				url: mad.Config.read("app.url") + '/resources/{id}',
 				type: 'GET',
 				params: params,
 				success: success,
@@ -104,7 +104,7 @@ steal(
 			// add the root of the params, it will be used in the url template
 			params.id = id;
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources/{id}',
+				url: mad.Config.read("app.url") + '/resources/{id}',
 				type: 'PUT',
 				params: params,
 				success: success,

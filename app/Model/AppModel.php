@@ -99,13 +99,13 @@ class AppModel extends Model {
 	}
 
 /**
- * Return the conditions to be used for a given context
- * for example if you want to activate a User session
+ * Return the find conditions to be used for a given context.
+ * Use it if you want to activate a User session by instance.
  *
- * @param $context string{guest or id}
- * @param $data used in find conditions (such as User.id)
- * @return $condition array
- * @access public
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
  */
 	public static function getFindConditions($case = null, $role = null, $data = null) {
 		return array('conditions' => array());
