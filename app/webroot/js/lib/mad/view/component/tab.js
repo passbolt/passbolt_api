@@ -24,7 +24,7 @@ steal(
 		 */
 		'selectTab': function(tabId) {
 			// add the selected class to the tab
-			this.controller.getComponent(tabId)
+			this.getController().getComponent(tabId)
 				.view
 				.addClass('selected');
 			// add the selected class to the menu entry
@@ -40,7 +40,7 @@ steal(
 		 */
 		'unselectTab': function(tabId) {
 			// remove the selected class to the tab
-			this.controller.getComponent(tabId)
+			this.getController().getComponent(tabId)
 				.view
 				.removeClass('selected');
 			// remove the selected class to the menu entry

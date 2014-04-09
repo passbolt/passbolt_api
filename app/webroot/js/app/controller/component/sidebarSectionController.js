@@ -26,29 +26,6 @@ steal(
 
 		}, /** @prototype */ {
 
-			/**
-			 * before start hook.
-			 * @return {void}
-			 */
-			'beforeRender': function () {
-				this._super();
-			},
-
-			/**
-			 * Called right after the start function
-			 * @return {void}
-			 * @see {mad.controller.ComponentController}
-			 */
-			'afterStart': function () {
-
-			}
-
-
-			/* ************************************************************** */
-			/* LISTEN TO THE MODEL EVENTS */
-			/* ************************************************************** */
-
-
 		});
 
 	});

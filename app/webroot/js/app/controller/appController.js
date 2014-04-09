@@ -8,6 +8,7 @@ steal(
 	'app/controller/component/appNavigationRightController.js',
 	'app/controller/component/appFilterController.js',
 	'app/controller/component/notificationController.js',
+	'app/controller/component/loadingBarController.js',
 	// the ressources workspace models
 	'app/model/category.js',
 	'app/model/favorite.js',
@@ -47,9 +48,11 @@ steal(
 			this.filterCtl.start();
 
 			// Instantiate the notification controller
-			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {
-			});
-			this.notifCtl.start();
+			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {});
+
+			// Instantiate the laoding bar controller
+			this.loadingBarCtl = new passbolt.controller.component.LoadingBarController($('#js_app_loading_bar'), {});
+			this.loadingBarCtl.start();
 
 			// Instantiate workspaces container tabs element to the app 
 			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'), {
@@ -68,15 +71,8 @@ steal(
 				'label': 'people'
 			});
 
-			// @todo move this into ready state
+			// @todo move this into ready state ??
 			this.workspacesCtl.enableTab('js_passbolt_passwordWorkspace_controller');
-			mad.bus.trigger('passbolt_notify', {
-				'status': 'success',
-				'title': "Your action was successful",
-				//'message' : 'this is a test message',
-				//'data' : 'bla bla bla',
-				'persistent' : true
-			});
 		},
 
 		/**

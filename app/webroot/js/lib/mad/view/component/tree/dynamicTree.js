@@ -59,8 +59,8 @@ steal(
 			var data = null,
 				li = el.parents('li');
 
-			if (this.controller.getItemClass()) {
-				data = li.data(this.controller.getItemClass().fullName);
+			if (this.getController().getItemClass()) {
+				data = li.data(this.getController().getItemClass().fullName);
 			} else {
 				data = li[0].id;
 			}

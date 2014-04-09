@@ -64,8 +64,8 @@ steal(
 			ev.preventDefault();
 
 			var data = null;
-			if (this.controller.getItemClass()) {
-				data = el.data(this.controller.getItemClass().fullName);
+			if (this.getController().getItemClass()) {
+				data = el.data(this.getController().getItemClass().fullName);
 			} else {
 				data = el[0].id;
 			}
@@ -84,8 +84,8 @@ steal(
 			ev.preventDefault();
 			var data = null;
 
-			if (this.controller.getItemClass()) {
-				data = el.data(this.controller.getItemClass().fullName);
+			if (this.getController().getItemClass()) {
+				data = el.data(this.getController().getItemClass().fullName);
 			} else {
 				data = el[0].id;
 			}

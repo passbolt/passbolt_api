@@ -32,6 +32,16 @@ steal(
 		}, /** @prototype */ {
 
 			/**
+			 * before start hook.
+			 * @return {void}
+			 */
+			'beforeRender': function () {
+				this._super();
+				// pass the new resource to the view
+				this.setViewData('resource', this.options.resource);
+			},
+
+			/**
 			 * Hook After Start
 			 * Will basically instantiate the form to edit the description
 			 */

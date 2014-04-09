@@ -39,7 +39,9 @@ steal(
 			// the default tags to associate to the top component DOM HTMLElement
 			'cssClasses': ['js_component'],
 			// the default top component DOM HTMLElement
-			'tag': 'div'
+			'tag': 'div',
+			// the data used by the view
+			'viewData': {}
 		}
 
 	}, /** @prototype */ {
@@ -49,13 +51,6 @@ steal(
 		 * @type {mad.model.State}
 		 */
 		'state': null,
-
-		/**
-		 * Data to pass to the view
-		 * @type {array}
-		 * @hide
-		 */
-		'viewData': [],
 
 		// Override the init and render functions to be sure the component is fully 
 		// initialized before calling the ready state
@@ -154,7 +149,6 @@ steal(
 			for(var i in currentStates) {
 				var currentState = currentStates[i];
 				// add the new state class
-				// console.log(this.getId() + ' add class ' + currentState);
 				this.view.addClass('js_state_' + currentState);
 				// enter in the new state
 				var newStateListener = this['state' + $.String.capitalize(currentState)];
@@ -196,9 +190,22 @@ steal(
 					this.setViewData(i, viewDataZ[i]);
 				}
 			} else {
-				this.viewData[name] = value;
+				this.options.viewData[name] = value;
 			}
 			return this;
+		},
+
+		/**
+		 * The get method allows developper to get view data
+		 * @param {mixed} name the variable's name or the array of data to add to the view.
+		 *  If empty return all.
+		 * @return {mixed}
+		 */
+		'getViewData': function (name) {
+			if (typeof name == 'undefined') {
+				return this.options.viewData;
+			}
+			return this.options.viewData[name];
 		},
 
 		/**
@@ -253,6 +260,7 @@ steal(
 				'templateBased': this.options.templateBased,
 				'controller': this
 			});
+
 			// Set the common view data
 			this.setViewData('controller', this);
 			this.setViewData('icon', this.options.icon);

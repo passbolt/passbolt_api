@@ -1,5 +1,6 @@
 steal(
 	'mad/controller/componentController.js',
+	'app/model/notification.js',
 	'app/view/component/notification.js'
 ).then(function () {
 
@@ -22,21 +23,30 @@ steal(
 
 		'defaults': {
 			'label': 'Notification Controller',
-			'viewClass': passbolt.view.component.Notification
+			'viewClass': passbolt.view.component.Notification,
+			// The notification to display
+			'notification': null,
+			'status': 'hidden'
 		}
 
 	}, /** @prototype */ {
 
-		'beforeRender': function() {
-			this._super();
-			if(this.state.label != 'ready') {
-				this.setViewData({
-					'status': '',
-					'title': '',
-					'message': '',
-					'data': '',
-					'persistent': false
-				});
+		/**
+		 * Load a notification
+		 * @param {passbolt.model.Notification} notification
+		 */
+		'load': function (notification) {
+			this.options.notification = notification;
+			this.setViewData(this.options.notification);
+
+			// The component is not already started, start it
+			if(this.view == null) {
+				this.start();
+			}
+			// Otherwise refresh it
+			else {
+				this.refresh();
+				this.setState('ready');
 			}
 		},
 
@@ -51,22 +61,7 @@ steal(
 		 * @param {array} notif
 		 */
 		'{mad.bus} passbolt_notify': function (el, ev, notif) {
-			// The component is not already started, start it
-			if(this.view == null) {
-				this.start();
-			}
-			// Pass the data to the view
-			this.setViewData({
-				'status': notif.status,
-				'title': notif.title,
-				'message': notif.message,
-				'data': notif.data,
-				'persistent': notif.persistent
-			});
-			$.extend( this.view.params, notif );
-			this.setState('ready');
-			this.refresh();
-			this.view.reset();
+			this.load(new passbolt.model.Notification(notif));
 		}
 
 	});

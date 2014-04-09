@@ -82,11 +82,11 @@ steal(
 		'_renderRow': function (item) {
 			var returnValue = null,
 				// the mapped item
-				mappedItem = this.controller.getMap().mapObject(item),
+				mappedItem = this.getController().getMap().mapObject(item),
 				// the cells data (columnName -> value)
 				values = [],
 				// the grid column models
-				columnModels = this.controller.getColumnModel();
+				columnModels = this.getController().getColumnModel();
 
 			// insert column data
 			for(var i in columnModels) {
@@ -110,7 +110,7 @@ steal(
 			}
 			
 			// render the row item
-			returnValue = mad.view.View.render(this.controller.options.itemTemplateUri, {
+			returnValue = mad.view.View.render(this.getController().options.itemTemplateUri, {
 				'item': item,
 				'id': mappedItem.id,
 				'columnModels': columnModels, 
@@ -134,7 +134,7 @@ steal(
 			// the reference HTML Element to use to position the new one
 			var $ref = refItemId ? $('#' + refItemId, this.element) : $('tbody', this.element),
 				// the mapped item
-				mappedItem = this.controller.getMap().mapObject(item),
+				mappedItem = this.getController().getMap().mapObject(item),
 				// the row html fragment to insert
 				row = '';
 
@@ -152,7 +152,7 @@ steal(
 		 */
 		'refreshItem': function (item) {
 			// the mapped item
-			var mappedItem = this.controller.getMap().mapObject(item),
+			var mappedItem = this.getController().getMap().mapObject(item),
 				// the row html fragment to insert
 				row = '',
 				// the current row
@@ -178,8 +178,8 @@ steal(
 		 */
 		'tbody tr click': function (el, ev) {
 			var data = null;
-			if (this.controller.getItemClass()) {
-				data = el.data(this.controller.getItemClass().fullName);
+			if (this.getController().getItemClass()) {
+				data = el.data(this.getController().getItemClass().fullName);
 			} else {
 				data = el[0].id;
 			}
@@ -194,8 +194,8 @@ steal(
 		 */
 		'tbody tr hover': function (el, ev) {
 			var data = null;
-			if (this.controller.getItemClass()) {
-				data = el.data(this.controller.getItemClass().fullName);
+			if (this.getController().getItemClass()) {
+				data = el.data(this.getController().getItemClass().fullName);
 			} else {
 				data = el[0].id;
 			}
