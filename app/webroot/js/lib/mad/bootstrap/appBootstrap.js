@@ -172,7 +172,7 @@ steal(
 			// Load the javascript dictionnary
 			mad.net.Ajax.request({
 				'type': 'GET',
-				'url': mad.Config.read('app.url') + '/dictionaries/en-EN.json',
+				'url': APP_URL + 'dictionaries/en-EN.json',
 				'async': false,
 				'dataType': 'json',
 				'success': function (request, response, data) {

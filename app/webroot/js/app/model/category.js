@@ -45,7 +45,7 @@ steal(
 			var self = this;
 			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 			return mad.net.Ajax.request({
-				url: APP_URL + 'categories',
+				url: APP_URL + 'categories.json',
 				type: 'POST',
 				params: params,
 				success: success,
@@ -116,7 +116,7 @@ steal(
 			// add the root of the params, it will be used in the url template
 			params.id = id;
 			return mad.net.Ajax.request({
-				url: APP_URL + '/categories/{id}',
+				url: APP_URL + 'categories/{id}.json',
 				type: 'PUT',
 				params: params,
 				success: success,
