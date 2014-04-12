@@ -29,7 +29,7 @@
    -->
   <base href="<?php echo Router::url('/',true);?>">
 	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-<?php echo $this->element('css'); ?>
+<?php echo $this->fetch('css'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>

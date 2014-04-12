@@ -30,7 +30,7 @@
   <title><?php echo $this->fetch('title'); ?></title>
   <title><?php echo $this->fetch('description'); ?></title>
   <meta name="viewport" content="width=device-width">
-<?php echo $this->element('css'); ?>
+  <?php echo $this->fetch('css'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>
