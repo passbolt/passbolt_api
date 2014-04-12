@@ -45,7 +45,7 @@
 					<li><a href="#">my profile</a></li>
 					<li><a href="#">manage or generate new keys</a></li>
 					<li><a href="#" class="separator">manage people</a></li>
-					<li><a href="#">logout</a></li>
+					<li><a href="logout">logout</a></li>
 				</ul>
 			</div>
 		</div>
