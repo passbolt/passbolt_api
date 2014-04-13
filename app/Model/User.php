@@ -137,6 +137,12 @@ class User extends AppModel {
 		if (strpos($path, '/') === false) {
 			$path = sprintf('User/%s', $path);
 		}
+		// If User is a part of path, and doesn't exist in Authentication object, we remove it from path.
+		// This is to match new CakePHP auth format, and to avoid side effects with existing passbolt code.
+		if (preg_match('/^User\//', $path)  && !isset($u['User'])) {
+			// We remove User from path.
+			$path = str_replace('User/', '', $path);
+		}
 		$path = '/' . $path;
 		$value = Set::extract($path, $u);
 		if (!$value) {
