@@ -98,22 +98,59 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
 
 		// test with category parameter specified which does not contain resources
-		$url = '/resources/index.json?fltr_model_category=' . $emptyCat['Category']['id'];
-		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
+		$url = '/resources/index.json';
+		$result = json_decode(
+			$this->testAction(
+				$url,
+				array(
+					'method' => 'get',
+					'return' => 'contents',
+					'data' => array(
+						'fltr_model_category' => $emptyCat['Category']['id']
+					)
+				)
+			),
+			true
+		);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
 		$this->assertTrue(empty($result['body']), "{$url} : should not contain result");
 
 		// test with category parameter specified which contains resources
-		$url = "/resources/index.json?fltr_model_category=" . $cpCat2['Category']['id'];
-		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
+		$url = "/resources/index.json";
+		$result = json_decode(
+			$this->testAction(
+				$url,
+				array(
+					'method' => 'get',
+					'return' => 'contents',
+					'data' => array(
+						'fltr_model_category' => $cpCat2['Category']['id']
+					)
+				)
+			),
+			true
+		);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
 		$this->assertEquals(2, count($result['body']), "{$url} : counting the number of elements should return '2' but is reading " . count($result['body']));
 		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
 		$this->assertTrue(!empty($path), "{$url} : test should contain 'cpp2-pwd2' resource");
 
 		// test with recursive parameter on the top category
-		$url = "/resources/index.json?fltr_model_category=" . $rootCat['Category']['id'] . "&recursive=true";
-		$result = json_decode($this->testAction($url, array('return' => 'contents')), true);
+		$url = "/resources/index.json";
+		$result = json_decode(
+			$this->testAction(
+				$url,
+				array(
+					'method' => 'get',
+					'return' => 'contents',
+					'data' => array(
+						'fltr_model_category' => $rootCat['Category']['id'],
+						'recursive' => 'true'
+					)
+				)
+			),
+			true
+		);
 		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
 		$this->assertTrue(!empty($path), "{$url} : test should contain 'cpp2-pwd2' resource");
 		$this->assertEquals(14, count($result['body']), "{$url} : counting the number of elements should return '14' but is reading " . count($result['body']));
