@@ -100,30 +100,33 @@ class ItemTag extends AppModel {
 		return $this->isValidForeignModel($check['foreign_model']);
 	}
 
-	/**
-	 * Return the conditions to be used for a given context
-	 *
-	 * @param $context string{guest or id}
-	 * @param $data used in find conditions (such as User.id)
-	 * @return $condition array
-	 * @access public
-	 */
+/**
+ * Return the find conditions to be used for a given context.
+ *
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
+ */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$returnValue = array();
+		$conditions = array();
+
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
-				$returnValue = array('conditions' => array('ItemTag.foreign_id' => $data['ItemTag']['foreign_id'] // @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
+				$conditions = array('conditions' => array('ItemTag.foreign_id' => $data['ItemTag']['foreign_id'] // @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
 				), 'order' => array('ItemTag.created desc'));
 				break;
+
 			case 'ItemTag.view':
-				$returnValue = array('conditions' => array('ItemTag.id' => $data['ItemTag']['id'] // @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
+				$conditions = array('conditions' => array('ItemTag.id' => $data['ItemTag']['id'] // @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
 				));
 				break;
+
 			default:
-				$returnValue = array('conditions' => array());
+				$conditions = array('conditions' => array());
 		}
 
-		return $returnValue;
+		return $conditions;
 	}
 
 	/**

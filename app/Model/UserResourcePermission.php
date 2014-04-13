@@ -11,7 +11,7 @@
 class UserResourcePermission extends AppModel {
 
 	public $useTable = "users_resources_permissions";
-	
+
 	public $belongsTo = array(
 		'User',
 		'Resource',
@@ -19,15 +19,16 @@ class UserResourcePermission extends AppModel {
 	);
 
 /**
- * Return the conditions to be used for a given context
+ * Return the find conditions to be used for a given context.
  *
- * @param $context string{guest or id}
- * @param $data used in find conditions (such as User.id)
- * @return $condition array
- * @access public
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
 		$conditions = array();
+
 		switch ($case) {
 			case 'viewByResource':
 				$conditions = array(
@@ -42,6 +43,7 @@ class UserResourcePermission extends AppModel {
 					)
 				);
 			break;
+
 			default:
 				$conditions = array(
 					'conditions' => array()

@@ -130,33 +130,32 @@ class PermissionableBehavior extends ModelBehavior {
 		if ($created) {
 			$Permission = Common::getModel('Permission');
 			// make the creator administrator of the created instance
-			if (User::get('Role.name') == Role::USER) {
-				$data = array(
-					'Permission' => array(
-						'aco' => $model->alias,
-						'aco_foreign_key' => $model->id,
-						'aro' => 'User',
-						'aro_foreign_key' => User::get('User.id'),
-						'type' => PermissionType::ADMIN
-					)
-				);
-				$Permission->create();
-				$Permission->set($data);
-				if (!$Permission->validates()) {
-					$this->Message->error($Permission->validationErrors);
-					return;
-				}
-
-				$permission = $Permission->save($data);
+			$data = array(
+				'Permission' => array(
+					'aco' => $model->alias,
+					'aco_foreign_key' => $model->id,
+					'aro' => 'User',
+					'aro_foreign_key' => User::get('User.id'),
+					'type' => PermissionType::ADMIN
+				)
+			);
+			$Permission->create();
+			$Permission->set($data);
+			if (!$Permission->validates()) {
+				$this->Message->error($Permission->validationErrors);
+				return;
 			}
+
+			$Permission->save($data);
 		}
 	}
 
 /**
  * Check a user is authorized to access a reccord
  *
- * @param uuid id Id of the record
- * @param integer permissionType The permission type
+ * @param $model The type of record
+ * @param $id Id of the record
+ * @param string $permissionType The permission type to verify
  * @return bool
  */
 	public function isAuthorized(&$model, $id, $permissionType = PermissionType::READ) {

@@ -338,17 +338,18 @@ class Category extends AppModel {
 	}
 
 /**
- * Return the find conditions to be used for a given context
+ * Return the find conditions to be used for a given context.
  *
- * @param $context string
- * @param $data that will be used in find conditions
- * @return $condition array
- * @access public
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
  */
 	public static function getFindConditions($case = 'get', $role = Role::USER, $data = null) {
 		$returnValue = array('conditions' => array());
 		switch ($role) {
 			case 'user':
+			case 'admin':
 				switch ($case) {
 					case 'getWithChildren':
 						$returnValue = array(
@@ -382,7 +383,6 @@ class Category extends AppModel {
 					default:
 						$returnValue = array('conditions' => array());
 				}
-			case 'admin':
 				break;
 		}
 		return $returnValue;

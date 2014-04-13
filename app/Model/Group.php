@@ -33,15 +33,16 @@ class Group extends AppModel {
 	}
 
 /**
- * Return the conditions to be used for a given context
+ * Return the find conditions to be used for a given context.
  *
- * @param $case string{guest or id}
- * @param $data used in find conditions (such as Group.id)
- * @return $condition array
- * @access public
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::ANONYMOUS, $data = null) {
 		$conditions = array();
+
 		switch ($case) {
 			case 'add':
 			case 'edit':
@@ -60,7 +61,7 @@ class Group extends AppModel {
 			default:
 				$conditions = array('conditions' => array());
 		}
-		//var_dump($conditions);
+
 		return $conditions;
 	}
 
