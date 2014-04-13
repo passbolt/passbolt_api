@@ -53,17 +53,17 @@ class Comment extends AppModel {
 				)
 			),
 			'parent_id' => array(
-				'exist' => array(
-					'rule' => array('parentExists', null),
-					'allowEmpty' => true,
-					'message' => __('The parent provided does not exist')
-				),
 				'uuid' => array(
 					'rule' => 'uuid',
 					'allowEmpty' => true,
 					'required' => false,
 					'message'	=> __('UUID must be in correct format')
-				)
+				),
+				'exist' => array(
+					'shared' => false,
+					'rule' => array('parentExists', null),
+					'message' => __('The parent provided does not exist')
+				),
 			),
 			'foreign_id' => array(
 				'uuid' => array(
@@ -73,12 +73,14 @@ class Comment extends AppModel {
 					'message'	=> __('UUID of the foreign key must be in correct format')
 				),
 				'exist' => array(
+					'shared' => false,
 					'rule' => array('foreignExists', null),
 					'message' => __('The resource provided does not exist')
 				),
 			),
 			'foreign_model' => array(
 				'inlist' => array(
+					'shared' => false,
 					'required' => true,
 					'allowEmpty' => false,
 					'rule' => 'validateForeignModel',
@@ -87,10 +89,14 @@ class Comment extends AppModel {
 			),
 			'content' => array(
 				'alphaNumeric' => array(
-					'rule' => '/^([\pL\s\.\!\,0-9]){1,255}$/u',
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('Alphanumeric only')
+					'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]'\"?!]*$/u",
+					'message'	=> __('Content should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? !')
+				),
+				'size' => array(
+					'rule' => array('between', 3, 255),
+					'message' => __('Username should be between %s and %s characters long'),
 				)
 			)
 		);

@@ -274,19 +274,24 @@ steal(
 
 			// The element requires a validation.
 			if (element.requireValidation()) {
+				// Get the element value.
+				var value = element.getValue();
 
+				// if a validation function is given directly in the element declaration, use this.
+				if (typeof element.options.validateFunction != 'undefined' && element.options.validateFunction != null) {
+					validationResult = element.options.validateFunction(value, {});
+				}
 				// if the element is associated to a model reference
-				if (eltModelRef != null) {
+				else if (eltModelRef != null) {
 					// the model references of the element
 					var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
-						// the leaf model reference
+					// the leaf model reference
 						model = fieldAttrs[fieldAttrs.length-2].modelReference,
-						// the attribute name
+					// the attribute name
 						attrName = fieldAttrs[fieldAttrs.length-1].name;
 
 					// validate the attribute value
 					if (model.validateAttribute) {
-						var value = element.getValue();
 						validationResult = model.validateAttribute(attrName, value, {}, this.options.action);
 					}
 				}

@@ -288,7 +288,7 @@ class Category extends AppModel {
 /**
  * Return the list of field to fetch for given context
  *
- * @param string $case context ex: login, activation
+ * @param string case (optional) The target validation case if any.
  * @return $condition array
  */
 	public static function getFindFields($case = 'get', $role = Role::USER) {
@@ -338,11 +338,11 @@ class Category extends AppModel {
 	}
 
 /**
- * Return the find conditions to be used for a given context.
+ * Return the find conditions to be used for a given context
  *
- * @param null|string $case The target case.
- * @param null|string $role The user role.
- * @param null|array $data (optional) Optional data to build the find conditions.
+ * @param string case (optional) The target validation case if any.
+ * @param string role
+ * @param array data Used in find conditions (such as User.id)
  * @return array
  */
 	public static function getFindConditions($case = 'get', $role = Role::USER, $data = null) {
@@ -383,6 +383,7 @@ class Category extends AppModel {
 					default:
 						$returnValue = array('conditions' => array());
 				}
+			case 'admin':
 				break;
 		}
 		return $returnValue;
