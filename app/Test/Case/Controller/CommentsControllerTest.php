@@ -48,15 +48,25 @@ class CommentsControllerTest extends ControllerTestCase {
 		// Unable to test missing id param because of route
 	}
 
+	/**
+	 * Test that invalid uuid are not accepted.
+	 */
 	public function testViewIdIsNotValid() {
 		$model = 'Resource';
 		$this->expectException('HttpException', 'The Resource id is invalid');
 		$this->testAction("/comments/$model/badId.json", array('method' => 'get', 'return' => 'contents'));
+
+		$id = '00000000-1111-1111-1111-000000000000';
+		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
+	/**
+	 * Test a non existing uuid.
+	 */
 	public function testViewDoesNotExist() {
 		$model = 'resource';
-		$id = '00000000-1111-1111-1111-000000000000';
+		$id = '534a914c-4f55-4e61-ba16-12c1c0a895dc';
 
 		$this->expectException('HttpException', 'The Resource does not exist');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
@@ -98,7 +108,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public function testAddDoesNotExist() {
 		$model = 'resource';
-		$id = '00000000-1111-1111-1111-000000000000';
+		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
 		$this->expectException('HttpException', 'The Resource does not exist');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
