@@ -146,7 +146,7 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateGroupDoesNotExist() {
-		$id = '00000000-1111-1111-1111-000000000000';
+		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
 		$this->expectException('HttpException', 'The group does not exist');
 		$this->testAction("/groups/$id.json", array('method' => 'put', 'return' => 'contents'));
@@ -201,7 +201,7 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteGroupDoesNotExist() {
-		$id = '00000000-1111-1111-1111-000000000000';
+		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
 		$this->expectException('HttpException', 'The group does not exist');
 		$this->testAction("/groups/$id.json", array('method' => 'delete', 'return' => 'contents'));
