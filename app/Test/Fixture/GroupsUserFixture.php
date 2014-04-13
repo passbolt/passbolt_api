@@ -117,7 +117,7 @@ class GroupsUserFixture extends CakeTestFixture {
 		array(
 			'id' => '13',
 			'group_id' => '6bd58742-c5cd-11e1-a0c5-080027796ce7',
-			'user_id' => 'fafaab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'user_id' => '533d346d-d378-4acc-affd-1663c0a895dc',
 			'created' => '2012-12-17 13:39:25',
 			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		),

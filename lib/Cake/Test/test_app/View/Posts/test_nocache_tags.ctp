@@ -1,21 +1,3 @@
-<?php
-/**
- *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       cake.libs.view.templates.pages
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
-?>
 <p>
 	<!--nocache-->
 	<span class="notice">
@@ -79,13 +61,13 @@
 <?php
 if (!empty($filePresent)):
 	App::uses('ConnectionManager', 'Model');
- 	$connected = ConnectionManager::getDataSource('default');
+	$connected = ConnectionManager::getDataSource('default');
 ?>
 <p>
 	<span class="notice">
 		<?php echo __d('cake', 'Cake');
 			if ($connected->isConnected()):
-		 		__d('cake', ' is able to ');
+				__d('cake', ' is able to ');
 			else:
 				__d('cake', ' is NOT able to ');
 			endif;
@@ -109,7 +91,7 @@ if (!empty($filePresent)):
 <a href="http://www-128.ibm.com/developerworks/edu/os-dw-os-php-cake1.html"><?php echo __d('cake', 'Cook up Web sites fast with CakePHP'); ?></a><br />
 <a href="http://www-128.ibm.com/developerworks/edu/os-dw-os-php-wiki1.html"><?php echo __d('cake', 'Create an interactive production wiki using PHP'); ?></a>
 </p>
-<h2><?php echo __d('cake', 'More about Cake'); ?></h2>
+<h2><?php echo __d('cake', 'More about CakePHP'); ?></h2>
 <p>
 <?php echo __d('cake', 'CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC.'); ?>
 </p>

@@ -52,7 +52,7 @@ class MessageComponentTest extends CakeTestCase {
 		$this->Controller = new TestMessageController($CakeRequest, $CakeResponse);
 		if ($complete) {
 			$this->Controller->Session = $this->Session;
-			$this->MessageComponent->initialize(&$this->Controller);
+			$this->MessageComponent->initialize($this->Controller);
 		}
 		$this->MessageComponent->startup($this->Controller);
 		$this->MessageComponent->reset();

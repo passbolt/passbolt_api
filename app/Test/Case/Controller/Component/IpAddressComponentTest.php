@@ -42,7 +42,7 @@ class IpAddressComponentTest extends CakeTestCase {
 		$CakeResponse = new CakeResponse();
 		$this->Controller = new TestIpAddressController($CakeRequest, $CakeResponse);
 		if ($complete) {
-			$this->IpAddressComponent->initialize(&$this->Controller);
+			$this->IpAddressComponent->initialize($this->Controller);
 		}
 		$this->IpAddressComponent->startup($this->Controller);
 	}

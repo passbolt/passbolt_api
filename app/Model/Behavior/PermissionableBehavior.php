@@ -126,7 +126,7 @@ class PermissionableBehavior extends ModelBehavior {
  * The permissionnable after save method is used to automatically give to the user
  * the ADMIN right to the reccords he has just inserted
  */
-	public function afterSave(Model $model, $created) {
+	public function afterSave(Model $model, $created, $options = Array()) {
 		if ($created) {
 			$Permission = Common::getModel('Permission');
 			// make the creator administrator of the created instance

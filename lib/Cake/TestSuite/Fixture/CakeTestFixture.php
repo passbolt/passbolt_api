@@ -1,16 +1,17 @@
 <?php
 /**
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.TestSuite.Fixture
  * @since         CakePHP(tm) v 1.2.0.4667
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('CakeSchema', 'Model');
@@ -31,7 +32,7 @@ class CakeTestFixture {
 	public $name = null;
 
 /**
- * Cake's DBO driver (e.g: DboMysql).
+ * CakePHP's DBO driver (e.g: DboMysql).
  *
  * @var object
  */
@@ -199,7 +200,7 @@ class CakeTestFixture {
 
 		if (empty($this->fields['tableParameters']['engine'])) {
 			$canUseMemory = true;
-			foreach ($this->fields as $field => $args) {
+			foreach ($this->fields as $args) {
 
 				if (is_string($args)) {
 					$type = $args;
@@ -264,6 +265,7 @@ class CakeTestFixture {
  *
  * @param DboSource $db An instance of the database into which the records will be inserted
  * @return boolean on success or if there are no records to insert, or false on failure
+ * @throws CakeException if counts of values and fields do not match.
  */
 	public function insert($db) {
 		if (!isset($this->_insert)) {
@@ -276,13 +278,20 @@ class CakeTestFixture {
 				$fields = array_unique($fields);
 				$default = array_fill_keys($fields, null);
 				foreach ($this->records as $record) {
-					$fields = array_keys($record);
-					$values[] = array_values(array_merge($default, $record));
+					$merge = array_values(array_merge($default, $record));
+					if (count($fields) !== count($merge)) {
+						throw new CakeException('Fixture invalid: Count of fields does not match count of values');
+					}
+					$values[] = $merge;
 				}
 				$nested = $db->useNestedTransactions;
 				$db->useNestedTransactions = false;
 				$result = $db->insertMulti($this->table, $fields, $values);
-				if ($this->primaryKey && in_array($this->fields[$this->primaryKey]['type'], array('integer', 'biginteger'))) {
+				if (
+					$this->primaryKey &&
+					isset($this->fields[$this->primaryKey]['type']) &&
+					in_array($this->fields[$this->primaryKey]['type'], array('integer', 'biginteger'))
+				) {
 					$db->resetSequence($this->table, $this->primaryKey);
 				}
 				$db->useNestedTransactions = $nested;

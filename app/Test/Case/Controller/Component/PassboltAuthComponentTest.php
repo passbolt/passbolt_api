@@ -99,7 +99,7 @@ class PassboltAuthComponentTest extends CakeTestCase {
 		$this->Controller = new TestUsersController($CakeRequest, $CakeResponse);
 		if ($complete) {
 			$this->Controller->Session = $this->Session;
-			$this->PassboltAuthComponent->initialize(&$this->Controller);
+			$this->PassboltAuthComponent->initialize($this->Controller);
 		}
 		$this->PassboltAuthComponent->startup($this->Controller);
 	}

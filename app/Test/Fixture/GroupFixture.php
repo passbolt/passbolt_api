@@ -102,7 +102,7 @@ class GroupFixture extends CakeTestFixture {
 			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
 		),
 		array(
-			'id' => '7bd56042-c5cd-11e1-c8c5-080027796c4c',
+			'id' => '9bd58742-c5cd-12f1-a0c5-080027796ce7',
 			'name' => 'freelancers',
 			'deleted' => 0,
 			'created' => '2012-12-17 13:39:25',

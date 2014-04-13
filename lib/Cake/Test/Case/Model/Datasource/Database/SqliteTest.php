@@ -2,20 +2,20 @@
 /**
  * DboSqliteTest file
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Test.Case.Model.Datasource.Database
  * @since         CakePHP(tm) v 1.2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 App::uses('Model', 'Model');
 App::uses('AppModel', 'Model');
 App::uses('Sqlite', 'Model/Datasource/Database');
@@ -89,6 +89,7 @@ class SqliteTest extends CakeTestCase {
 /**
  * Sets up a Dbo class instance for testing
  *
+ * @return void
  */
 	public function setUp() {
 		parent::setUp();
@@ -102,6 +103,7 @@ class SqliteTest extends CakeTestCase {
 /**
  * Sets up a Dbo class instance for testing
  *
+ * @return void
  */
 	public function tearDown() {
 		parent::tearDown();
@@ -111,6 +113,7 @@ class SqliteTest extends CakeTestCase {
 /**
  * Tests that SELECT queries from DboSqlite::listSources() are not cached
  *
+ * @return void
  */
 	public function testTableListCacheDisabling() {
 		$this->assertFalse(in_array('foo_test', $this->Dbo->listSources()));
@@ -157,6 +160,7 @@ class SqliteTest extends CakeTestCase {
 /**
  * Tests that cached table descriptions are saved under the sanitized key name
  *
+ * @return void
  */
 	public function testCacheKeyName() {
 		Configure::write('Cache.disable', false);
@@ -164,7 +168,6 @@ class SqliteTest extends CakeTestCase {
 		$dbName = 'db' . rand() . '$(*%&).db';
 		$this->assertFalse(file_exists(TMP . $dbName));
 
-		$config = $this->Dbo->config;
 		$db = new Sqlite(array_merge($this->Dbo->config, array('database' => TMP . $dbName)));
 		$this->assertTrue(file_exists(TMP . $dbName));
 
@@ -263,6 +266,17 @@ class SqliteTest extends CakeTestCase {
 		$result = $this->Dbo->buildColumn($data);
 		$expected = '"huge" bigint(20) NOT NULL';
 		$this->assertEquals($expected, $result);
+
+		$data = array(
+			'name' => 'id',
+			'type' => 'biginteger',
+			'length' => 20,
+			'null' => false,
+			'key' => 'primary',
+		);
+		$result = $this->Dbo->buildColumn($data);
+		$expected = '"id" bigint(20) NOT NULL PRIMARY KEY';
+		$this->assertEquals($expected, $result);
 	}
 
 /**
@@ -341,27 +355,30 @@ class SqliteTest extends CakeTestCase {
 			'id' => array(
 				'type' => 'integer',
 				'null' => false,
-				'default' => 0,
-				'key' => 'primary'
+				'default' => '',
+				'length' => 11,
+				'key' => 'primary',
 			),
 			'float_field' => array(
 				'type' => 'float',
-				'length' => '5,2',
 				'null' => false,
-				'default' => null
+				'default' => '',
+				'length' => '5,2',
 			),
 			'huge_int' => array(
-				'type' => 'bigint',
-				'length' => '20',
+				'type' => 'biginteger',
 				'null' => true,
-				'default' => null
+				'default' => null,
+				'length' => 20,
 			),
 			'bool' => array(
 				'type' => 'boolean',
 				'null' => false,
-				'default' => false
+				'default' => '0',
+				'length' => null
 			),
 		);
+		$this->assertSame($expected, $result);
 	}
 
 /**
@@ -416,7 +433,7 @@ class SqliteTest extends CakeTestCase {
 	}
 
 /**
- * Test that records can be inserted with uuid primary keys, and
+ * Test that records can be inserted with UUID primary keys, and
  * that the primary key is not blank
  *
  * @return void
@@ -426,7 +443,7 @@ class SqliteTest extends CakeTestCase {
 		$Model = ClassRegistry::init('Uuid');
 
 		$data = array(
-			'title' => 'A uuid should work',
+			'title' => 'A UUID should work',
 			'count' => 10
 		);
 		$Model->create($data);
@@ -434,7 +451,7 @@ class SqliteTest extends CakeTestCase {
 		$result = $Model->read();
 
 		$this->assertEquals($data['title'], $result['Uuid']['title']);
-		$this->assertTrue(Validation::uuid($result['Uuid']['id']), 'Not a uuid');
+		$this->assertTrue(Validation::uuid($result['Uuid']['id']), 'Not a UUID');
 	}
 
 /**
@@ -468,6 +485,31 @@ class SqliteTest extends CakeTestCase {
 
 		$this->assertTrue($this->Dbo->rollback());
 		$this->assertNotEmpty($model->read(null, 1));
+	}
+
+/**
+ * Test the limit function.
+ *
+ * @return void
+ */
+	public function testLimit() {
+		$db = $this->Dbo;
+
+		$result = $db->limit('0');
+		$this->assertNull($result);
+
+		$result = $db->limit('10');
+		$this->assertEquals(' LIMIT 10', $result);
+
+		$result = $db->limit('FARTS', 'BOOGERS');
+		$this->assertEquals(' LIMIT 0 OFFSET 0', $result);
+
+		$result = $db->limit(20, 10);
+		$this->assertEquals(' LIMIT 20 OFFSET 10', $result);
+
+		$result = $db->limit(10, 300000000000000000000000000000);
+		$scientificNotation = sprintf('%.1E', 300000000000000000000000000000);
+		$this->assertNotContains($scientificNotation, $result);
 	}
 
 }

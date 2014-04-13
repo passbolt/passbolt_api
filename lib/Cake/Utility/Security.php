@@ -2,19 +2,18 @@
 /**
  * Core Security
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Utility
  * @since         CakePHP(tm) v .0.10.0.1233
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('String', 'Utility');
@@ -43,6 +42,7 @@ class Security {
 /**
  * Get allowed minutes of inactivity based on security level.
  *
+ * @deprecated Exists for backwards compatibility only, not used by the core
  * @return integer Allowed inactivity in minutes
  */
 	public static function inactiveMins() {
@@ -85,7 +85,7 @@ class Security {
  * you ensuring that each hashed password will have a *unique* salt.
  * - Comparing Hashes: Simply pass the originally hashed password as the salt.
  * The salt is prepended to the hash and php handles the parsing automagically.
- * For convenience the BlowfishAuthenticate adapter is available for use with
+ * For convenience the `BlowfishPasswordHasher` class is available for use with
  * the AuthComponent.
  * - Do NOT use a constant salt for blowfish!
  *
@@ -97,10 +97,11 @@ class Security {
  *
  * @param string $string String to hash
  * @param string $type Method to use (sha1/sha256/md5/blowfish)
- * @param mixed $salt If true, automatically appends the application's salt
+ * @param mixed $salt If true, automatically prepends the application's salt
  *     value to $string (Security.salt). If you are using blowfish the salt
  *     must be false or a previously generated salt.
  * @return string Hash
+ * @link http://book.cakephp.org/2.0/en/core-utility-libraries/security.html#Security::hash
  */
 	public static function hash($string, $type = null, $salt = false) {
 		if (empty($type)) {
@@ -118,14 +119,14 @@ class Security {
 			$string = $salt . $string;
 		}
 
-		if (!$type || $type == 'sha1') {
+		if (!$type || $type === 'sha1') {
 			if (function_exists('sha1')) {
 				return sha1($string);
 			}
 			$type = 'sha256';
 		}
 
-		if ($type == 'sha256' && function_exists('mhash')) {
+		if ($type === 'sha256' && function_exists('mhash')) {
 			return bin2hex(mhash(MHASH_SHA256, $string));
 		}
 
@@ -136,7 +137,7 @@ class Security {
 	}
 
 /**
- * Sets the default hash method for the Security object.  This affects all objects using
+ * Sets the default hash method for the Security object. This affects all objects using
  * Security::hash().
  *
  * @param string $hash Method to use (sha1/sha256/md5/blowfish)
@@ -166,15 +167,23 @@ class Security {
 	}
 
 /**
- * Encrypts/Decrypts a text using the given key.
+ * Runs $text through a XOR cipher.
+ *
+ * *Note* This is not a cryptographically strong method and should not be used
+ * for sensitive data. Additionally this method does *not* work in environments
+ * where suhosin is enabled.
+ *
+ * Instead you should use Security::rijndael() when you need strong
+ * encryption.
  *
  * @param string $text Encrypted string to decrypt, normal string to encrypt
  * @param string $key Key to use
  * @return string Encrypted/Decrypted string
+ * @deprecated Will be removed in 3.0.
  */
 	public static function cipher($text, $key) {
 		if (empty($key)) {
-			trigger_error(__d('cake_dev', 'You cannot use an empty key for Security::cipher()'), E_USER_WARNING);
+			trigger_error(__d('cake_dev', 'You cannot use an empty key for %s', 'Security::cipher()'), E_USER_WARNING);
 			return '';
 		}
 
@@ -196,14 +205,18 @@ class Security {
 /**
  * Encrypts/Decrypts a text using the given key using rijndael method.
  *
+ * Prior to 2.3.1, a fixed initialization vector was used. This was not
+ * secure. This method now uses a random iv, and will silently upgrade values when
+ * they are re-encrypted.
+ *
  * @param string $text Encrypted string to decrypt, normal string to encrypt
- * @param string $key Key to use
+ * @param string $key Key to use as the encryption key for encrypted data.
  * @param string $operation Operation to perform, encrypt or decrypt
- * @return string Encrypted/Descrypted string
+ * @return string Encrypted/Decrypted string
  */
 	public static function rijndael($text, $key, $operation) {
 		if (empty($key)) {
-			trigger_error(__d('cake_dev', 'You cannot use an empty key for Security::rijndael()'), E_USER_WARNING);
+			trigger_error(__d('cake_dev', 'You cannot use an empty key for %s', 'Security::rijndael()'), E_USER_WARNING);
 			return '';
 		}
 		if (empty($operation) || !in_array($operation, array('encrypt', 'decrypt'))) {
@@ -214,14 +227,23 @@ class Security {
 			trigger_error(__d('cake_dev', 'You must use a key larger than 32 bytes for Security::rijndael()'), E_USER_WARNING);
 			return '';
 		}
-		$algorithm = 'rijndael-256';
-		$mode = 'cbc';
+		$algorithm = MCRYPT_RIJNDAEL_256;
+		$mode = MCRYPT_MODE_CBC;
+		$ivSize = mcrypt_get_iv_size($algorithm, $mode);
+
 		$cryptKey = substr($key, 0, 32);
-		$iv = substr($key, strlen($key) - 32, 32);
 
 		if ($operation === 'encrypt') {
-			return mcrypt_encrypt($algorithm, $cryptKey, $text, $mode, $iv);
+			$iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+			return $iv . '$$' . mcrypt_encrypt($algorithm, $cryptKey, $text, $mode, $iv);
 		}
+		// Backwards compatible decrypt with fixed iv
+		if (substr($text, $ivSize, 2) !== '$$') {
+			$iv = substr($key, strlen($key) - 32, 32);
+			return rtrim(mcrypt_decrypt($algorithm, $cryptKey, $text, $mode, $iv), "\0");
+		}
+		$iv = substr($text, 0, $ivSize);
+		$text = substr($text, $ivSize + 2);
 		return rtrim(mcrypt_decrypt($algorithm, $cryptKey, $text, $mode, $iv), "\0");
 	}
 

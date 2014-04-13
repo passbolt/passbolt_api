@@ -2,18 +2,17 @@
 /**
  * The DbConfig Task handles creating and updating the database.php
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 1.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -76,7 +75,7 @@ class DbConfigTask extends AppShell {
 	public function execute() {
 		if (empty($this->args)) {
 			$this->_interactive();
-			$this->_stop();
+			return $this->_stop();
 		}
 	}
 
@@ -109,7 +108,7 @@ class DbConfigTask extends AppShell {
 			$datasource = $this->in(__d('cake_console', 'Datasource:'), array('Mysql', 'Postgres', 'Sqlite', 'Sqlserver'), 'Mysql');
 
 			$persistent = $this->in(__d('cake_console', 'Persistent Connection?'), array('y', 'n'), 'n');
-			if (strtolower($persistent) == 'n') {
+			if (strtolower($persistent) === 'n') {
 				$persistent = 'false';
 			} else {
 				$persistent = 'true';
@@ -125,7 +124,7 @@ class DbConfigTask extends AppShell {
 				$port = $this->in(__d('cake_console', 'Port?'), null, 'n');
 			}
 
-			if (strtolower($port) == 'n') {
+			if (strtolower($port) === 'n') {
 				$port = null;
 			}
 
@@ -141,7 +140,7 @@ class DbConfigTask extends AppShell {
 
 				if (!$password) {
 					$blank = $this->in(__d('cake_console', 'The password you supplied was empty. Use an empty password?'), array('y', 'n'), 'n');
-					if ($blank == 'y') {
+					if ($blank === 'y') {
 						$blankPassword = true;
 					}
 				}
@@ -156,7 +155,7 @@ class DbConfigTask extends AppShell {
 			while (!$prefix) {
 				$prefix = $this->in(__d('cake_console', 'Table Prefix?'), null, 'n');
 			}
-			if (strtolower($prefix) == 'n') {
+			if (strtolower($prefix) === 'n') {
 				$prefix = null;
 			}
 
@@ -164,17 +163,17 @@ class DbConfigTask extends AppShell {
 			while (!$encoding) {
 				$encoding = $this->in(__d('cake_console', 'Table encoding?'), null, 'n');
 			}
-			if (strtolower($encoding) == 'n') {
+			if (strtolower($encoding) === 'n') {
 				$encoding = null;
 			}
 
 			$schema = '';
-			if ($datasource == 'postgres') {
+			if ($datasource === 'postgres') {
 				while (!$schema) {
 					$schema = $this->in(__d('cake_console', 'Table schema?'), null, 'n');
 				}
 			}
-			if (strtolower($schema) == 'n') {
+			if (strtolower($schema) === 'n') {
 				$schema = null;
 			}
 
@@ -187,7 +186,7 @@ class DbConfigTask extends AppShell {
 			$dbConfigs[] = $config;
 			$doneYet = $this->in(__d('cake_console', 'Do you wish to add another database configuration?'), null, 'n');
 
-			if (strtolower($doneYet == 'n')) {
+			if (strtolower($doneYet === 'n')) {
 				$done = true;
 			}
 		}
@@ -211,7 +210,7 @@ class DbConfigTask extends AppShell {
 		$this->out(__d('cake_console', 'The following database configuration will be created:'));
 		$this->hr();
 		$this->out(__d('cake_console', "Name:         %s", $name));
-		$this->out(__d('cake_console', "Datasource:       %s", $datasource));
+		$this->out(__d('cake_console', "Datasource:   %s", $datasource));
 		$this->out(__d('cake_console', "Persistent:   %s", $persistent));
 		$this->out(__d('cake_console', "Host:         %s", $host));
 
@@ -238,7 +237,7 @@ class DbConfigTask extends AppShell {
 		$this->hr();
 		$looksGood = $this->in(__d('cake_console', 'Look okay?'), array('y', 'n'), 'y');
 
-		if (strtolower($looksGood) == 'y') {
+		if (strtolower($looksGood) === 'y') {
 			return $config;
 		}
 		return false;
@@ -296,7 +295,7 @@ class DbConfigTask extends AppShell {
 		}
 
 		foreach ($oldConfigs as $key => $oldConfig) {
-			foreach ($configs as $k => $config) {
+			foreach ($configs as $config) {
 				if ($oldConfig['name'] == $config['name']) {
 					unset($oldConfigs[$key]);
 				}

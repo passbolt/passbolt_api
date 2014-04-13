@@ -2,20 +2,20 @@
 /**
  * CakeTestFixture file
  *
- * PHP 5
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.TestSuite
  * @since         CakePHP(tm) v 1.2.0.4667
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 App::uses('DboSource', 'Model/Datasource');
 App::uses('Model', 'Model');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
@@ -65,10 +65,9 @@ class CakeTestFixtureTestFixture extends CakeTestFixture {
 }
 
 /**
- * StringFieldsTestFixture class
+ * StringTestFixture class
  *
  * @package       Cake.Test.Case.TestSuite
- * @subpackage    cake.cake.tests.cases.libs
  */
 class StringsTestFixture extends CakeTestFixture {
 
@@ -110,6 +109,49 @@ class StringsTestFixture extends CakeTestFixture {
 	);
 }
 
+/**
+ * InvalidTestFixture class
+ *
+ * @package       Cake.Test.Case.TestSuite
+ */
+class InvalidTestFixture extends CakeTestFixture {
+
+/**
+ * Name property
+ *
+ * @var string
+ */
+	public $name = 'Invalid';
+
+/**
+ * Table property
+ *
+ * @var string
+ */
+	public $table = 'invalid';
+
+/**
+ * Fields array - missing "email" row
+ *
+ * @var array
+ */
+	public $fields = array(
+		'id' => array('type' => 'integer', 'key' => 'primary'),
+		'name' => array('type' => 'string', 'length' => '255'),
+		'age' => array('type' => 'integer', 'default' => 10)
+	);
+
+/**
+ * Records property
+ *
+ * @var array
+ */
+	public $records = array(
+		array('name' => 'Mark Doe', 'email' => 'mark.doe@email.com'),
+		array('name' => 'John Doe', 'email' => 'john.doe@email.com', 'age' => 20),
+		array('email' => 'jane.doe@email.com', 'name' => 'Jane Doe', 'age' => 30)
+	);
+}
 
 /**
  * CakeTestFixtureImportFixture class
@@ -152,7 +194,6 @@ class CakeTestFixtureDefaultImportFixture extends CakeTestFixture {
  * FixtureImportTestModel class
  *
  * @package       Cake.Test.Case.TestSuite
- * @package       Cake.Test.Case.TestSuite
  */
 class FixtureImportTestModel extends Model {
 
@@ -175,7 +216,6 @@ class FixturePrefixTest extends Model {
 	public $useDbConfig = 'test';
 }
 
-
 /**
  * Test case for CakeTestFixture
  *
@@ -189,6 +229,7 @@ class CakeTestFixtureTest extends CakeTestCase {
  * @return void
  */
 	public function setUp() {
+		parent::setUp();
 		$methods = array_diff(get_class_methods('DboSource'), array('enabled'));
 		$methods[] = 'connect';
 
@@ -204,6 +245,7 @@ class CakeTestFixtureTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
+		parent::tearDown();
 		unset($this->criticDb);
 		$this->db->config = $this->_backupConfig;
 	}
@@ -352,7 +394,7 @@ class CakeTestFixtureTest extends CakeTestCase {
 	}
 
 /**
- * test that importing with records works.  Make sure to try with postgres as its
+ * test that importing with records works. Make sure to try with postgres as its
  * handling of aliases is a workaround at best.
  *
  * @return void
@@ -435,6 +477,10 @@ class CakeTestFixtureTest extends CakeTestCase {
 		$this->insertMulti['table'] = $table;
 		$this->insertMulti['fields'] = $fields;
 		$this->insertMulti['values'] = $values;
+		$this->insertMulti['fields_values'] = array();
+		foreach ($values as $record) {
+			$this->insertMulti['fields_values'][] = array_combine($fields, $record);
+		}
 		return true;
 	}
 
@@ -453,13 +499,42 @@ class CakeTestFixtureTest extends CakeTestCase {
 		$this->assertTrue($this->criticDb->fullDebug);
 		$this->assertTrue($return);
 		$this->assertEquals('strings', $this->insertMulti['table']);
-		$this->assertEquals(array('email', 'name', 'age'), $this->insertMulti['fields']);
+		$this->assertEquals(array('name', 'email', 'age'), array_values($this->insertMulti['fields']));
 		$expected = array(
 			array('Mark Doe', 'mark.doe@email.com', null),
 			array('John Doe', 'john.doe@email.com', 20),
 			array('Jane Doe', 'jane.doe@email.com', 30),
 		);
 		$this->assertEquals($expected, $this->insertMulti['values']);
+		$expected = array(
+			array(
+				'name' => 'Mark Doe',
+				'email' => 'mark.doe@email.com',
+				'age' => null
+			),
+			array(
+				'name' => 'John Doe',
+				'email' => 'john.doe@email.com',
+				'age' => 20
+			),
+			array(
+				'name' => 'Jane Doe',
+				'email' => 'jane.doe@email.com',
+				'age' => 30
+			),
+		);
+		$this->assertEquals($expected, $this->insertMulti['fields_values']);
+	}
+
+/**
+ * test the insert method with invalid fixture
+ *
+ * @expectedException CakeException
+ * @return void
+ */
+	public function testInsertInvalid() {
+		$Fixture = new InvalidTestFixture();
+		$return = $Fixture->insert($this->criticDb);
 	}
 
 /**

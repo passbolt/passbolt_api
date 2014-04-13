@@ -2,19 +2,17 @@
 /**
  * DboPostgresTest file
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Test.Case.Model.Datasource.Database
  * @since         CakePHP(tm) v 1.2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Model', 'Model');
@@ -67,16 +65,9 @@ class DboPostgresTestDb extends Postgres {
 class PostgresTestModel extends Model {
 
 /**
- * name property
- *
- * @var string 'PostgresTestModel'
- */
-	public $name = 'PostgresTestModel';
-
-/**
  * useTable property
  *
- * @var bool false
+ * @var boolean
  */
 	public $useTable = false;
 
@@ -155,16 +146,9 @@ class PostgresTestModel extends Model {
 class PostgresClientTestModel extends Model {
 
 /**
- * name property
- *
- * @var string 'PostgresClientTestModel'
- */
-	public $name = 'PostgresClientTestModel';
-
-/**
  * useTable property
  *
- * @var bool false
+ * @var boolean
  */
 	public $useTable = false;
 
@@ -227,8 +211,10 @@ class PostgresTest extends CakeTestCase {
 /**
  * Sets up a Dbo class instance for testing
  *
+ * @return void
  */
 	public function setUp() {
+		parent::setUp();
 		Configure::write('Cache.disable', true);
 		$this->Dbo = ConnectionManager::getDataSource('test');
 		$this->skipIf(!($this->Dbo instanceof Postgres));
@@ -239,8 +225,10 @@ class PostgresTest extends CakeTestCase {
 /**
  * Sets up a Dbo class instance for testing
  *
+ * @return void
  */
 	public function tearDown() {
+		parent::tearDown();
 		Configure::write('Cache.disable', false);
 		unset($this->Dbo2);
 	}
@@ -248,6 +236,7 @@ class PostgresTest extends CakeTestCase {
 /**
  * Test field quoting method
  *
+ * @return void
  */
 	public function testFieldQuoting() {
 		$fields = array(
@@ -352,7 +341,8 @@ class PostgresTest extends CakeTestCase {
  */
 	public function testLocalizedFloats() {
 		$restore = setlocale(LC_NUMERIC, 0);
-		setlocale(LC_NUMERIC, 'de_DE');
+
+		$this->skipIf(setlocale(LC_NUMERIC, 'de_DE') === false, "The German locale isn't available.");
 
 		$result = $this->db->value(3.141593, 'float');
 		$this->assertEquals("3.141593", $result);
@@ -487,6 +477,18 @@ class PostgresTest extends CakeTestCase {
 	}
 
 /**
+ * Tests passing PostgreSQL regular expression operators when building queries
+ *
+ * @return void
+ */
+	public function testRegexpOperatorConditionsParsing() {
+		$this->assertSame(' WHERE "name" ~ \'[a-z_]+\'', $this->Dbo->conditions(array('name ~' => '[a-z_]+')));
+		$this->assertSame(' WHERE "name" ~* \'[a-z_]+\'', $this->Dbo->conditions(array('name ~*' => '[a-z_]+')));
+		$this->assertSame(' WHERE "name" !~ \'[a-z_]+\'', $this->Dbo->conditions(array('name !~' => '[a-z_]+')));
+		$this->assertSame(' WHERE "name" !~* \'[a-z_]+\'', $this->Dbo->conditions(array('name !~*' => '[a-z_]+')));
+	}
+
+/**
  * Tests the syntax of generated schema indexes
  *
  * @return void
@@ -540,7 +542,6 @@ class PostgresTest extends CakeTestCase {
 			CONSTRAINT test_data_types_pkey PRIMARY KEY (id)
 		)');
 
-		$model = new Model(array('name' => 'DatatypeTest', 'ds' => 'test'));
 		$schema = new CakeSchema(array('connection' => 'test'));
 		$result = $schema->read(array(
 			'connection' => 'test',
@@ -568,6 +569,38 @@ class PostgresTest extends CakeTestCase {
 		$this->assertEquals($result, $result2);
 
 		$db1->query('DROP TABLE ' . $db1->fullTableName('datatype_tests'));
+	}
+
+/**
+ * testCakeSchemaBegserial method
+ *
+ * Test that schema generated postgresql queries are valid.
+ *
+ * @return void
+ */
+	public function testCakeSchemaBigserial() {
+		$db1 = ConnectionManager::getDataSource('test');
+		$db1->cacheSources = false;
+
+		$db1->rawQuery('CREATE TABLE ' . $db1->fullTableName('bigserial_tests') . ' (
+			"id" bigserial NOT NULL,
+			"varchar" character varying(40) NOT NULL,
+			PRIMARY KEY ("id")
+		)');
+
+		$schema = new CakeSchema(array('connection' => 'test'));
+		$result = $schema->read(array(
+			'connection' => 'test',
+			'models' => array('BigserialTest')
+		));
+		$schema->tables = array(
+			'bigserial_tests' => $result['tables']['missing']['bigserial_tests']
+		);
+		$result = $db1->createSchema($schema, 'bigserial_tests');
+
+		$this->assertContains('"id" bigserial NOT NULL,', $result);
+
+		$db1->query('DROP TABLE ' . $db1->fullTableName('bigserial_tests'));
 	}
 
 /**
@@ -666,6 +699,34 @@ class PostgresTest extends CakeTestCase {
 	}
 
 /**
+ * Test the alterSchema changing boolean to integer
+ *
+ * @return void
+ */
+	public function testAlterSchemaBooleanToIntegerField() {
+		$default = array(
+			'connection' => 'test',
+			'name' => 'BoolField',
+			'bool_fields' => array(
+				'id' => array('type' => 'integer', 'key' => 'primary'),
+				'name' => array('type' => 'string', 'length' => 50),
+				'active' => array('type' => 'boolean', 'null' => false),
+			)
+		);
+		$Old = new CakeSchema($default);
+		$result = $this->Dbo->query($this->Dbo->createSchema($Old));
+		$this->assertTrue($result);
+
+		$modified = $default;
+		$modified['bool_fields']['active'] = array('type' => 'integer', 'null' => true);
+
+		$New = new CakeSchema($modified);
+		$query = $this->Dbo->alterSchema($New->compare($Old));
+		$result = $this->Dbo->query($query);
+		$this->Dbo->query($this->Dbo->dropSchema($Old));
+	}
+
+/**
  * Test the alter index capabilities of postgres
  *
  * @return void
@@ -738,6 +799,25 @@ class PostgresTest extends CakeTestCase {
 		$this->assertEquals(array(), $indexes);
 
 		$this->Dbo->query($this->Dbo->dropSchema($schema1));
+	}
+
+/**
+ * Test the alterSchema RENAME statements
+ *
+ * @return void
+ */
+	public function testAlterSchemaRenameTo() {
+		$query = $this->Dbo->alterSchema(array(
+			'posts' => array(
+				'change' => array(
+					'title' => array('name' => 'subject', 'type' => 'string', 'null' => false)
+				)
+			)
+		));
+		$this->assertContains('RENAME "title" TO "subject";', $query);
+		$this->assertContains('ALTER COLUMN "subject" TYPE', $query);
+		$this->assertNotContains(";\n\tALTER COLUMN \"subject\" TYPE", $query);
+		$this->assertNotContains('ALTER COLUMN "title" TYPE "subject"', $query);
 	}
 
 /**
@@ -923,6 +1003,7 @@ class PostgresTest extends CakeTestCase {
  * @return void
  */
 	public function testNestedTransaction() {
+		$this->Dbo->useNestedTransactions = true;
 		$this->skipIf($this->Dbo->nestedTransactionSupported() === false, 'The Postgres server do not support nested transaction');
 
 		$this->loadFixtures('Article');
@@ -970,6 +1051,47 @@ class PostgresTest extends CakeTestCase {
 		$result = $this->Dbo->rawQuery("SELECT currval('$sequence')");
 		$new = $result->fetch(PDO::FETCH_ASSOC);
 		$this->assertTrue($new['currval'] > $original['nextval'], 'Sequence did not update');
+	}
+
+	public function testSettings() {
+		Configure::write('Cache.disable', true);
+		$this->Dbo = ConnectionManager::getDataSource('test');
+		$this->skipIf(!($this->Dbo instanceof Postgres));
+
+		$config2 = $this->Dbo->config;
+		$config2['settings']['datestyle'] = 'sql, dmy';
+		ConnectionManager::create('test2', $config2);
+		$dbo2 = new Postgres($config2, true);
+		$expected = array(array('r' => date('d/m/Y')));
+		$r = $dbo2->fetchRow('SELECT now()::date AS "r"');
+		$this->assertEquals($expected, $r);
+		$dbo2->execute('SET DATESTYLE TO ISO');
+		$dbo2->disconnect();
+	}
+
+/**
+ * Test the limit function.
+ *
+ * @return void
+ */
+	public function testLimit() {
+		$db = $this->Dbo;
+
+		$result = $db->limit('0');
+		$this->assertNull($result);
+
+		$result = $db->limit('10');
+		$this->assertEquals(' LIMIT 10', $result);
+
+		$result = $db->limit('FARTS', 'BOOGERS');
+		$this->assertEquals(' LIMIT 0 OFFSET 0', $result);
+
+		$result = $db->limit(20, 10);
+		$this->assertEquals(' LIMIT 20 OFFSET 10', $result);
+
+		$result = $db->limit(10, 300000000000000000000000000000);
+		$scientificNotation = sprintf('%.1E', 300000000000000000000000000000);
+		$this->assertNotContains($scientificNotation, $result);
 	}
 
 }

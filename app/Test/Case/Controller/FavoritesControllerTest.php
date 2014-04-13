@@ -60,7 +60,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testAddDoesNotExist() {
 		$model = 'resource';
-		$id = '00000000-1111-1111-1111-000000000000';
+		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
 		$this->expectException('HttpException', 'The Resource does not exist');
 		$this->testAction("/favorites/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
@@ -84,7 +84,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testDeleteDoesNotExist() {
 		$model = 'resource';
-		$id = '00000000-1111-1111-1111-000000000000';
+		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
 		$this->expectException('HttpException', 'The record is not in your starred item list');
 		$this->testAction("/favorites/$id.json", array('method' => 'delete', 'return' => 'contents'));

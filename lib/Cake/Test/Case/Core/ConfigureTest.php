@@ -4,20 +4,20 @@
  *
  * Holds several tests
  *
- * PHP 5
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.Core
  * @since         CakePHP(tm) v 1.2.0.5432
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 App::uses('PhpReader', 'Configure');
 
 /**
@@ -65,6 +65,23 @@ class ConfigureTest extends CakeTestCase {
 			unlink(TMP . 'cache' . DS . 'persistent' . DS . 'test.php');
 		}
 		Configure::drop('test');
+	}
+
+/**
+ * Test to ensure bootrapping doesn't overwrite prior configs set under 'App' key
+ * @return void
+ */
+	public function testBootstrap() {
+		$expected = array(
+			'foo' => 'bar'
+		);
+		Configure::write('App', $expected);
+
+		Configure::bootstrap(true);
+		$result = Configure::read('App');
+
+		$this->assertEquals($expected['foo'], $result['foo']);
+		$this->assertFalse($result['base']);
 	}
 
 /**
@@ -239,7 +256,7 @@ class ConfigureTest extends CakeTestCase {
  */
 	public function testLoadExceptionOnNonExistantFile() {
 		Configure::config('test', new PhpReader());
-		$result = Configure::load('non_existing_configuration_file', 'test');
+		Configure::load('non_existing_configuration_file', 'test');
 	}
 
 /**
@@ -419,6 +436,7 @@ class ConfigureTest extends CakeTestCase {
 
 /**
  * @expectedException ConfigureException
+ * @return void
  */
 	public function testDumpNoAdapter() {
 		Configure::dump(TMP . 'test.php', 'does_not_exist');
@@ -445,7 +463,7 @@ class ConfigureTest extends CakeTestCase {
 /**
  * Test dumping only some of the data.
  *
- * @return
+ * @return void
  */
 	public function testDumpPartial() {
 		Configure::config('test_reader', new PhpReader(TMP));
