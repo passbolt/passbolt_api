@@ -11,7 +11,13 @@
 Install
 =========
 
-Copy the core configuration file
+Clone the repository and associated submodules
+```
+	git clone git@github.com:passbolt/passbolt
+	cd passbolt
+	git submodule update --init
+```
+Copy the core configuration file, change the cypher seed and salt
 ```
 	cp app/Config/core.php.default app/Config/core.php
 ```

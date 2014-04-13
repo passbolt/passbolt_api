@@ -1,6 +1,6 @@
 /* ==========================================================================
-	 Helper classes
-	 ========================================================================== */
+ *	Helper classes
+ * ========================================================================== */
 /*
  * Image replacement
  */
@@ -103,8 +103,20 @@ i.no-text + span {
 
 /* position shortcuts */
 .left {
-  float:left;
+	float:left;
 }
 .right {
-  float:right;
+	float:right;
+}
+
+/* ellipsis */
+.ellipsis() {
+ 	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+}
+.ellipsis {
+	.ellipsis();
 }

@@ -168,18 +168,13 @@ textarea {
 /* ==========================================================================
    Links
    ========================================================================== */
-/**
- * Address `outline` inconsistency between Chrome and other browsers.
- */
-a:focus {
-  outline: thin dotted;
-}
-/**
- * Improve readability when focused and also mouse hovered in all browsers.
- */
-a:active,
-a:hover {
+/* links */
+a {
   outline: 0;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
 }
 /* ==========================================================================
    Typography
@@ -533,8 +528,8 @@ table td {
   font-weight: normal;
 }
 /* ==========================================================================
-	 Helper classes
-	 ========================================================================== */
+ *	Helper classes
+ * ========================================================================== */
 /*
  * Image replacement
  */
@@ -634,6 +629,14 @@ i.no-text + span {
 .right {
   float: right;
 }
+/* ellipsis */
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+}
 /*
  * Animate.css - http://daneden.me/animate
  * Licensed under the MIT license
@@ -724,17 +727,12 @@ h2 {
 p {
   margin: .2em 0;
 }
-/* links */
-a {
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: none;
-}
-a:focus {
-  border: 1px dotted #777;
-}
 /* palette */
+/* borders */
+/* font */
+/* background */
+/* shadows */
+/* body */
 body {
   color: #333333;
 }
@@ -746,32 +744,29 @@ a:visited {
 a:hover {
   color: #d40101;
 }
+a:active,
+a:focus {
+  outline: 0;
+  color: #2a9ceb;
+  border: 0;
+}
 /* colors for messages */
 .message.error {
   color: #d40101;
-  background-color: #FFBABA;
 }
 .message.success {
   color: #4F8A10;
-  background-color: #DFF2BF;
 }
 .message.warning {
   color: #9F6000;
-  background-color: #FEEFB3;
 }
 .message.info,
 .message.information,
 .message.notice {
   color: #00529B;
-  background-color: #BDE5F8;
 }
-/* page sections */
-.header .navigation.top {
-  background: #333333;
-}
-.header .second {
-  background: #EFEFEF;
-}
+/* scrollbar */
+/* todos */
 .todo {
   background: #ffffcc !important;
 }
@@ -955,7 +950,7 @@ span + .icon {
 /* favorites */
 .icon.fav:before {
   content: '\2605';
-  color: #CCC;
+  color: #dddddd;
 }
 .icon.unfav:before {
   content: '\2605';
@@ -995,20 +990,19 @@ span + .icon {
 /*
 	Generic button
 
-	Description  : We support <input[submit]>, <input.button>, <button> and <a.button>
-	Compatible   : IE6+, Firefox 2+, Safari 4+, Chrome 1+, Opera 11+
-	Since        : version 3.0
+	Description	: We support <input[submit]>, <input.button>, <button> and <a.button>
+	Compatible	 : IE6+, Firefox 2+, Safari 4+, Chrome 1+, Opera 11+
+	Since				: version 3.0
 
-	:hover       - Subtle hover highlight and box shadow
-	:active      - Inset box shadow and 1px offset
-	.disabled    - Dims the button to indicate it cannot be used
+	:hover			 - Subtle hover highlight and box shadow
+	:active			- Inset box shadow and 1px offset
+	.disabled		- Dims the button to indicate it cannot be used
 */
 input[type=submit],
 input.button,
 button,
 a.button {
   position: relative;
-  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
   font-size: 100%;
   display: inline-block;
   zoom: 1;
@@ -1021,20 +1015,21 @@ a.button {
   text-align: center;
   text-decoration: none;
   padding: .5em 1.5em .5em 1.5em;
-  border: 1px solid #CCC;
-  color: #333;
+  border: 1px solid #cccccc;
+  color: #333333;
   font-weight: bold;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
   -webkit-border-radius: .25em;
   -moz-border-radius: .25em;
   border-radius: .25em;
   background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #fafafa, #ededed);
-  background-image: -ms-linear-gradient(top, #fafafa, #ededed);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#ededed));
-  background-image: -webkit-linear-gradient(top, #fafafa, #ededed);
-  background-image: -o-linear-gradient(top, #fafafa, #ededed);
-  background-image: linear-gradient(top, #fafafa, #ededed);
+  background: #eeeeee;
+  background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -ms-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(background-lightest), to(#eeeeee));
+  background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: linear-gradient(top, #f3f3f3, #eeeeee);
 }
 /* size and position adjustments */
 .submit {
@@ -1043,7 +1038,7 @@ a.button {
 }
 a.button {
   font-size: 0.875em;
-  /*  14px */
+  /*	14px */
   padding: .429em 1.286em .429em 1.286em ;
   /* 6px 20px */
   height: 1.429em;
@@ -1059,20 +1054,14 @@ input.button:hover,
 button:hover,
 a.button:hover {
   text-decoration: none;
-  background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(47%, #f6f6f6), color-stop(100%, #ededed));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  /* IE10+ */
-  background: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
-  /* IE6-9 */
+  background: #eeeeee;
+  background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -ms-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(background-lightest), to(#eeeeee));
+  background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: linear-gradient(top, #f3f3f3, #eeeeee);
+  border: 1px solid #bbbbbb;
 }
 /* focus */
 input[type=submit]:focus,
@@ -1091,16 +1080,16 @@ a.button:active {
   -webkit-box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
-  border: 1px solid #CCC;
+  border: 1px solid #cccccc;
 }
 input[type=submit].disabled,
 input.button.disabled,
 button.disabled,
 a.button.disabled {
   cursor: default;
-  color: #888;
-  background: white;
-  border: 1px solid #DDD;
+  color: #888888;
+  background: #ffffff;
+  border: 1px solid #dddddd;
 }
 /* inactive */
 input[type=submit].disabled:hover,
@@ -1122,7 +1111,7 @@ a.button.disabled:active {
   -webkit-box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
-  border: 1px solid #bbb;
+  border: 1px solid #bbbbbb;
 }
 /* duo */
 .button.duo:nth-child(1) {
@@ -1147,23 +1136,22 @@ a.button.disabled:active {
 /*
 	Generic Form Item
 
-	Description  : labels and input are wrapped in a <div.text>
-	Compatible   : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since        : version 3.0
+	Description	: labels and input are wrapped in a <div.text>
+	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
+	Since				: version 3.0
 
-	:hover       - subtle hover highlight
-	:active      - inset box shadow
-	.disabled    - grey out to indicate it cannot be used
+	:hover			 - subtle hover highlight
+	:active			- inset box shadow
+	.disabled		- grey out to indicate it cannot be used
 */
 input[type=text],
 input[type=password],
 input[type=search],
 textarea,
 select {
-  font-family: 'Lato', Verdana, Geneva, Arial, Helvetica, sans-serif;
   color: #333;
   background: #FFF;
-  border: 1px solid #CCC;
+  border: 1px solid #cccccc;
   width: 14em;
   /* 20 char (default input length) x .7em (average char length) */
   padding: .278em .5em .278em .5em;
@@ -1182,13 +1170,13 @@ input[type=text].fluid {
 /*
 	TextField
 
-	Description  : labels and input are wrapped in a div with the type of the class
-	Compatible   : FF2+, Chrome1+,
-	Since        : version 3.0
+	Description	: labels and input are wrapped in a div with the type of the class
+	Compatible	 : FF2+, Chrome1+,
+	Since		 : version 3.0
 
-	:hover       - subtle hover highlight
-	:active      - inset box shadow
-	.disabled    - grey out to indicate it cannot be used
+	:hover			- subtle hover highlight
+	:active			- inset box shadow
+	.disabled		- grey out to indicate it cannot be used
 */
 label {
   font-weight: bold;
@@ -1203,13 +1191,13 @@ input[type=search],
 input[type=text] {
   font-size: 1.125em;
   /* 18px */
-  border-top: 1px solid #999;
+  border-top: 1px solid #bbbbbb;
 }
 textarea:hover,
 input[type=password]:hover,
 input[type=search]:hover,
 input[type=text]:hover {
-  border: 1px solid #999;
+  border: 1px solid #bbbbbb;
 }
 textarea:focus,
 input[type=password]:focus,
@@ -1232,21 +1220,21 @@ input[type=text]:focus {
 .input.disabled input[type=text],
 .input.text.disabled input[type=text]:hover,
 .input.text.disabled input[type=text]:focus {
-  border: 1px solid #CCC;
+  border: 1px solid #dddddd;
   -webkit-box-shadow: 0 0 0 0;
   -moz-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
   cursor: normal;
-  background: #F3F3F3;
+  background: #f3f3f3;
 }
 /*
 	Required Textfield
 
-	Description  : Label and input are wrapped in <div.text.required>. Additional <span> with a star is included. Input also get the required class.
-	Compatible   : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since        : version 3.0
+	Description	: Label and input are wrapped in <div.text.required>. Additional <span> with a star is included. Input also get the required class.
+	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
+	Since				: version 3.0
 
-	.required    - additional red star
+	.required		- additional red star
 */
 .required label:after {
   content: " *";
@@ -1256,12 +1244,12 @@ input[type=text]:focus {
 /*
 	Large textarea Textfield
 
-	Description  : textarea.textarea is pretty much the same than div.input.text.
-	Compatible   : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since        : version 3.0
+	Description	: textarea.textarea is pretty much the same than div.input.text.
+	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
+	Since				: version 3.0
 
-	.required    - additional red star
-	.lager       - make the box bigger
+	.required		- additional red star
+	.lager			 - make the box bigger
 */
 textarea {
   height: 3.6em;
@@ -1274,14 +1262,14 @@ textarea {
 /*
 	Messages for validation error and example
 
-	Description  : <div.text.error>, <div.text.success>, can be used to add status messages or example. 
+	Description	: <div.text.error>, <div.text.success>, can be used to add status messages or example. 
 								 Additional messages are wrapped in <.error-message>, <.success-messages>
-	Compatible   : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since        : version 3.0
+	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
+	Since				: version 3.0
 
-	.success     - can be used for instant validation feedback
-	.notice      - can be used for example messages prior validation
-	.error       - error messages used for validation issues
+	.success		 - can be used for instant validation feedback
+	.notice			- can be used for example messages prior validation
+	.error			 - error messages used for validation issues
 */
 .message {
   font-weight: bold;
@@ -1313,9 +1301,9 @@ textarea {
 /*
 	Radio
 
-	Description  : 
-	Compatible   : ?
-	Since        : version 3.0
+	Description	: 
+	Compatible	 : ?
+	Since				: version 3.0
 
 .checkboxlist label,
 .radiolist label {
@@ -1327,11 +1315,11 @@ textarea {
   display: inline;
 }
 /* 
-  Hide the original radios and checkboxes (but still accessible)
-  @credit: http://www.wufoo.com/2011/06/13/custom-radio-buttons-and-checkboxes/
+	Hide the original radios and checkboxes (but still accessible)
+	@credit: http://www.wufoo.com/2011/06/13/custom-radio-buttons-and-checkboxes/
 
-  #cssrulefilter is a rule filter to block browsers that don't support that selector 
-  http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
+	#cssrulefilter is a rule filter to block browsers that don't support that selector 
+	http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
 */
 input[type="checkbox"] {
   position: absolute;
@@ -1350,45 +1338,41 @@ input[type="checkbox"] + label:hover {
 }
 /*#cssrulefilter:checked,
 input[type="checkbox"] {
-  position:absolute;
-  margin-left:0;
-  margin-top:8px;
-  opacity: 0;
+	position:absolute;
+	margin-left:0;
+	margin-top:8px;
+	opacity: 0;
 }
 #cssrulefilter:checked,
 .input.checkbox input[type="checkbox"] + label {
-  padding: 5px 0 4px 20px;
-  background: url('../img/controls/checkbox.png') left center no-repeat;
+	padding: 5px 0 4px 20px;
+	background: url('../img/controls/checkbox.png') left center no-repeat;
 }
 #cssrulefilter:checked,
 .input.checkbox input[type="checkbox"]:checked + label {
-  background: url('../img/controls/checkbox-checked.png') left center no-repeat;
+	background: url('../img/controls/checkbox-checked.png') left center no-repeat;
 }
 #cssrulefilter:checked,
 .input.checkbox:hover input[type="checkbox"] + label {
-  background: url('../img/controls/checkbox-active.png') left center no-repeat;
+	background: url('../img/controls/checkbox-active.png') left center no-repeat;
 }
 #cssrulefilter:checked,
 .input.checkbox:hover input[type="checkbox"]:checked + label {
-  background: url('../img/controls/checkbox-checked-active.png') left center no-repeat;
+	background: url('../img/controls/checkbox-checked-active.png') left center no-repeat;
 }*/
 /*
 	Select
 
-	Description  : ?
-	Compatible   : ?
-	Since        : version 3.0
+	Description	: ?
+	Compatible	 : ?
+	Since				: version 3.0
 */
 /** Added by Kevin - custom select **/
 select {
   font-size: 1.125em;
   padding: .278em .5em .278em .5em;
   margin: 0;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  background: #f8f8f8;
-  color: #888;
+  color: #333333;
   border: none;
   outline: none;
   display: inline-block;
@@ -1396,12 +1380,9 @@ select {
   -moz-appearance: none;
   appearance: none;
   cursor: pointer;
-  background: -o-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  background: -ms-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  background: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
-  border: 1px solid #CCC;
+  border: 1px solid #dddddd;
   width: 100%;
+  background: #ffffff;
 }
 /* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
@@ -1423,7 +1404,7 @@ span.select-box:after {
   right: 8px;
   top: 0px;
   padding: 0 0 2px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dddddd;
   position: absolute;
   pointer-events: none;
 }
@@ -1441,7 +1422,7 @@ span.select-box:before {
   background: -ms-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
   background: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #dddddd;
 }
 /* fallback placeholder */
 .placeholder {
@@ -1538,7 +1519,7 @@ span.select-box:before {
   height: 100%;
 }
 .panel.main {
-  border-top: 1px solid #DDD;
+  border-top: 1px solid #dddddd;
 }
 /*
  * shadow on scroll
@@ -1558,13 +1539,13 @@ span.select-box:before {
   /* 10px */
 }
 .cssscrollbar ::-webkit-scrollbar-track {
-  background: #FFF;
+  background: #ffffff;
 }
 .cssscrollbar ::-webkit-scrollbar-thumb {
-  background: #777;
+  background: #888888;
 }
 .cssscrollbar ::-webkit-scrollbar-thumb:window-inactive {
-  background: #FFF;
+  background: #ffffff;
 }
 /*
  * Styles needed by jScrollPane fallback
@@ -1602,11 +1583,11 @@ span.select-box:before {
   float: left;
 }
 .no-cssscrollbar .jspTrack {
-  background: #FFF;
+  background: #ffffff;
   position: relative;
 }
 .no-cssscrollbar .jspDrag {
-  background: #777;
+  background: #888888;
   position: relative;
   top: 0;
   left: 0;
@@ -1619,11 +1600,11 @@ span.select-box:before {
 }
 /* headers */
 .header.first {
-  background-color: #333;
+  background: #333333;
   height: 2.375em;
 }
 .header.second {
-  background-color: #E4E4E4;
+  background: #eeeeee;
 }
 /* top navigation */
 .header .navigation.primary li {
@@ -1636,17 +1617,16 @@ span.select-box:before {
   margin-right: 1em;
 }
 .header .navigation.primary li a {
-  color: #FFF;
+  color: #dddddd;
   text-decoration: none;
-  font-weight: bold;
   display: inline-block;
-  zoom: 1;
-  filter: alpha(opacity=90);
-  opacity: 0.9;
 }
 .header .navigation.primary li a:hover {
-  filter: alpha(opacity=100);
-  opacity: 1;
+  color: #eeeeee;
+}
+.header .navigation.primary li a:active,
+.header .navigation.primary li a:focus {
+  color: #2a9ceb;
 }
 /* home button is special */
 .header .navigation.primary .home a {
@@ -1655,6 +1635,7 @@ span.select-box:before {
   height: 1.250em;
   background: transparent url(../../img/icon20_white.png) 0 0 no-repeat;
 }
+.header .navigation.primary .home a:focus,
 .header .navigation.primary .home:hover a {
   background: transparent url(../../img/icon20.png) 0 0 no-repeat;
 }
@@ -1671,9 +1652,6 @@ span.select-box:before {
 }
 /* workspace title */
 h1.workspace-title {
-  color: #666;
-  font-weight: normal;
-  padding: .25em .5em 0 .5em;
   display: none;
 }
 /* search */
@@ -1692,9 +1670,10 @@ h1.workspace-title {
 }
 .search .submit {
   float: left;
+  border: 1px solid #bbbbbb;
 }
 .search button {
-  height: 2.2em;
+  height: 2.1em;
   min-width: 4em;
 }
 .search button .icon {
@@ -1715,23 +1694,23 @@ input[type="search"]::-webkit-search-cancel-button {
   max-width: 18em;
   width: 80%;
   float: right;
-  border: 1px solid #CCC;
+  border: 1px solid #dddddd;
   margin-top: .5em;
   background: #EEE;
   overflow: hidden;
 }
 .user.profile,
 .user.profile .more {
-  background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #fafafa, #ededed);
-  background-image: -ms-linear-gradient(top, #fafafa, #ededed);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#ededed));
-  background-image: -webkit-linear-gradient(top, #fafafa, #ededed);
-  background-image: -o-linear-gradient(top, #fafafa, #ededed);
-  background-image: linear-gradient(top, #fafafa, #ededed);
+  background: #eeeeee;
+  background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -ms-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(background-lightest), to(#eeeeee));
+  background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: linear-gradient(top, #f3f3f3, #eeeeee);
 }
 .user.profile .more {
-  border-left: 1px dotted #CCC;
+  border-left: 1px dotted #dddddd;
 }
 /* fixed fluid fixed layout */
 .user.profile .left-cell,
@@ -1761,7 +1740,7 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 2.875em;
   /* 46px */
   padding: 0.1250em;
-  /*	2px */
+  /* 2px */
 }
 .user.profile .details {
   float: left;
@@ -1814,7 +1793,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .breadcrumbs {
   padding: .1875em 0 .1875em 0;
   margin-bottom: .1875em;
-  border-bottom: 1px solid #DDD;
+  border-bottom: 1px solid #dddddd;
 }
 .breadcrumbs li {
   display: inline;
@@ -1836,14 +1815,19 @@ input[type="search"]::-webkit-search-cancel-button {
 .actions-wrapper {
   margin-top: .5em;
 }
-.actions button {
+.actions-wrapper .actions .button {
   font-size: .875em;
+  min-width: 4em;
 }
-.actions li {
+.actions-wrapper .actions li {
   display: inline;
 }
-.actions.secondary {
+.actions-wrapper .actions.secondary {
   float: right;
+}
+.actions-wrapper .actions.secondary .button {
+  font-size: .875em;
+  min-width: 1em;
 }
 /* Progress bar */
 .progress-bar {
@@ -1899,7 +1883,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .dialog {
   position: relative;
   width: 30em;
-  border: 1px solid #CCC;
+  border: 1px solid #dddddd;
   background: #F3F3F3;
   margin: auto;
   margin-top: 1.5%;
@@ -1955,7 +1939,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 /* submit / cancel */
 .submit-wrapper {
-  border-top: 1px solid #CCC;
+  border-top: 1px solid #dddddd;
   clear: both;
   width: 100%;
   padding: 1em 0;
@@ -1985,7 +1969,7 @@ input[type="search"]::-webkit-search-cancel-button {
 /* complexity and progress bar */
 .dialog .progress {
   width: 67.8%;
-  border: 1px solid #CCC;
+  border: 1px solid #dddddd;
   height: 7px;
   display: block;
   clear: both;
@@ -2119,7 +2103,7 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 39%;
 }
 .dialog .logs ul {
-  border: 1px solid #ccc;
+  border: 1px solid #dddddd;
   max-height: 21.5em;
   overflow-y: scroll;
 }
@@ -2196,7 +2180,7 @@ input[type="search"]::-webkit-search-cancel-button {
   float: left;
 }
 .dropdown.pressed .button {
-  background: #FFF;
+  background: #ffffff;
   z-index: 999;
   border-bottom: 0;
   -webkit-border-bottom-right-radius: 0;
@@ -2207,8 +2191,8 @@ input[type="search"]::-webkit-search-cancel-button {
   border-bottom-left-radius: 0;
 }
 .dropdown-content {
-  border: 1px solid #CCC;
-  background: #FFF;
+  border: 1px solid #dddddd;
+  background: #ffffff;
   float: left;
   position: absolute;
   min-width: 13em;
@@ -2238,15 +2222,15 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .dropdown-content li .checkbox:hover,
 .dropdown-content li a:hover {
-  background: #EFEFEF;
+  background: #eeeeee;
   text-decoration: none;
-  color: #000;
+  color: #333333;
 }
 .dropdown-content li .top-separator {
-  border-top: 1px solid #CCC;
+  border-top: 1px solid #dddddd;
 }
 .dropdown-content li .separator {
-  border-bottom: 1px solid #CCC;
+  border-bottom: 1px solid #dddddd;
 }
 .dropdown-content {
   display: none;
@@ -2256,32 +2240,36 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .user.profile.dropdown.pressed,
 .user.profile.dropdown.pressed .more {
-  background: #FFF;
+  background: #ffffff;
 }
 .user.profile.dropdown.pressed .more {
   border: 0;
 }
 .user.profile.dropdown.pressed .dropdown-content {
-  border-top: 1px dotted #DDD;
-  background: #FFF;
+  border-top: 1px dotted #dddddd;
+  background: #ffffff;
 }
 /* dropdown menu */
 .dropdownmenu {
   list-style: none;
   position: absolute;
   z-index: 2;
-  background: #FFF;
-  border: 1px solid #C0C0C0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  -moz-box-shadow: 0px 0px 10px 0px #dddddd;
+  -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
+  box-shadow: 0px 0px 10px 0px #dddddd;
 }
 .dropdownmenu ul {
   list-style: none;
   position: absolute;
   top: 0;
   left: 100%;
-  background: #FFF;
-  border: 1px solid #C0C0C0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  -moz-box-shadow: 0px 0px 10px 0px #dddddd;
+  -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
+  box-shadow: 0px 0px 10px 0px #dddddd;
 }
 .dropdownmenu li {
   position: relative;
@@ -2409,23 +2397,26 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .comments .comment .metadata .author.username {
   max-width: 48%;
+  display: inline-block;
+  padding-right: 2px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: inline-block;
-  white-space: nowrap;
-  padding-right: 2px;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
 }
 .comments .comment .metadata .author.username:after {
   content: ", ";
 }
 .comments .comment .metadata .modified {
   max-width: 48%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: inline-block;
-  white-space: nowrap;
   padding-right: 2px;
   color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
 }
 /* actions */
 .comments .actions {
@@ -2460,11 +2451,12 @@ input[type="search"]::-webkit-search-cancel-button {
   font-size: .875em;
   width: auto;
 }
+/* tree.less */
 .panel .navigation {
   font-size: .938em;
 }
 .panel .navigation.first {
-  border-bottom: 1px dotted #CCC;
+  border-bottom: 1px dotted #dddddd;
   padding: .625em;
   margin-bottom: .625em;
 }
@@ -2473,15 +2465,14 @@ input[type="search"]::-webkit-search-cancel-button {
   /* 10px */
 }
 .panel .navigation a {
-  color: #333;
+  color: #333333;
   display: block;
 }
 .panel .navigation a:hover {
-  color: #111;
   text-decoration: none;
 }
 .panel .navigation .row:hover {
-  background: #EEE;
+  background: #eeeeee;
 }
 .panel .navigation .row.selected {
   font-weight: bold;
@@ -2539,26 +2530,45 @@ input[type="search"]::-webkit-search-cancel-button {
   margin-left: -100%;
 }
 .tree .right-cell {
-  float: left;
+  float: right;
   width: 1em ;
   margin-left: -1em;
 }
+/* don't show nodes if parent is closed */
 .tree .node.close ul {
   display: none;
 }
+/* ellipsis on long node text */
+.tree .main-cell span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  display: block;
+}
+/* row action is a button */
+.tree .right-cell a {
+  height: .9em;
+  margin-top: .2em;
+}
+.tree .right-cell a:hover {
+  border: 1px solid #eeeeee;
+  background: #ffffff;
+}
 /* Events */
 .tree .row.drop-over {
-  background-color: #eee;
+  background-color: #eeeeee;
 }
 /**
  * Sidebar
  */
 .panel.aside {
-  border: 1px solid #DDD;
-  background: #FFF;
-  -moz-box-shadow: 0px 0px 10px 0px #ddd;
-  -webkit-box-shadow: 0px 0px 10px 0px #ddd;
-  box-shadow: 0px 0px 10px 0px #ddd;
+  border: 1px solid #dddddd;
+  background: #ffffff;
+  -moz-box-shadow: 0px 0px 10px 0px #dddddd;
+  -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
+  box-shadow: 0px 0px 10px 0px #dddddd;
 }
 .panel.aside .resource .dialog-close {
   position: absolute;
@@ -2575,7 +2585,6 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .panel.aside .resource li .label {
   width: 30%;
-  color: #000;
   display: inline-block;
   margin-right: 10%;
 }
@@ -2589,7 +2598,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .panel.aside .resource h4 {
   margin-bottom: .626em;
   padding-bottom: .313em;
-  border-bottom: 1px dotted #DDD;
+  border-bottom: 1px dotted #dddddd;
 }
 .panel.aside .resource .section-action {
   float: right;
@@ -2602,7 +2611,7 @@ input[type="search"]::-webkit-search-cancel-button {
   float: left;
   font-size: .775em;
   min-width: 21.5em;
-  border: 1px solid #DDD;
+  border: 1px solid #dddddd;
 }
 .panel.aside .resource-description-edit-wrapper input[type=submit] {
   float: right;
@@ -2613,7 +2622,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 /* tabs */
 .tabs {
-  border-bottom: 1px solid #CCC;
+  border-bottom: 1px solid #dddddd;
   width: 100%;
 }
 .tabs-nav li {
@@ -2628,7 +2637,7 @@ input[type="search"]::-webkit-search-cancel-button {
   margin-left: 1.25em;
 }
 .tabs-nav li a.selected {
-  border: 1px solid #CCC;
+  border: 1px solid #dddddd;
   border-bottom: 1px solid #FFF;
   margin-bottom: -1px;
   background: #FFF;
@@ -2682,10 +2691,12 @@ input[type="search"]::-webkit-search-cancel-button {
 .main.panel table td {
   text-align: left;
   padding: .25em 0;
+  line-height: 1.5em;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.5em;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
 }
 .main.panel table th {
   font-weight: bold;
@@ -2732,7 +2743,7 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 98%;
   height: 2em;
   background: #FFF;
-  border-top: 1px solid #DDD;
+  border-top: 1px solid #dddddd;
 }
 @media all and (min-width: 768px) {
   .footer {
@@ -2759,8 +2770,8 @@ table#js_passbolt_user_browser .tableview-content > table {
 /* drag n drop */
 #js_dragged_resource {
   padding: 6px 10px;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

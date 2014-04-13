@@ -21,7 +21,8 @@ steal(
 			'validateRules': {
 				'foreign_model': ['text'],
 				'foreign_id': ['uid'],
-				'tag_id': ['uid']
+				'tag_id': ['uid'],
+				'tag_list': ['tag_list']
 			},
 
 			attributes: {

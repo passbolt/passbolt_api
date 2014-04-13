@@ -135,7 +135,7 @@ class Resource extends AppModel {
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? !')
 				),
 				'size' => array(
-					'rule' => array('between', 3, 256),
+					'rule' => array('between', 3, 255),
 					'message' => __('Username should be between %s and %s characters long'),
 				)
 			),
@@ -150,15 +150,16 @@ class Resource extends AppModel {
 	}
 
 /**
- * Return the conditions to be used for a given context
+ * Return the find conditions to be used for a given context.
  *
- * @param $context string{guest or id}
- * @param $data used in find conditions (such as User.id)
- * @return $condition array
- * @access public
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
 		$conditions = array();
+
 		switch ($case) {
 			case 'add':
 			case 'edit':
@@ -168,6 +169,7 @@ class Resource extends AppModel {
 					'Resource.id' => $data['Resource.id']
 				));
 				break;
+
 			case 'index':
 			case 'viewByCategory':
 				$conditions = array('conditions' => array('Resource.deleted' => 0));
@@ -185,12 +187,15 @@ class Resource extends AppModel {
 						case 'favorite':
 							$conditions['conditions']["AND"][] = array('Favorite.id IS NOT NULL');
 							break;
+
 						case 'own':
 							$conditions['conditions']["AND"][] = array('Resource.created_by' => User::get('User.id'));
 							break;
+
 						case 'shared':
 							$conditions['conditions']["AND"][] = array('Resource.created_by <>' => User::get('User.id'));
 							break;
+
 					}
 				}
 				if (isset($data['order'])) {
@@ -198,15 +203,18 @@ class Resource extends AppModel {
 						case 'modified':
 							$conditions['order'] = array('Resource.modified DESC');
 							break;
+
 						case 'expiry_date':
 							$conditions['order'] = array('Resource.expiry_date DESC');
 							break;
+
 					}
 				} else {
 					// By default order by created date
 					$conditions['order'] = array('Resource.modified DESC');
 				}
 				break;
+
 			default:
 				$conditions = array('conditions' => array());
 		}

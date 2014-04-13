@@ -186,34 +186,6 @@ class Permission extends AppModel {
 		);
 		return $this->isUnique($combi, false);
 	}
-	
-/**
- * Return the conditions to be used for a given context
- *
- * @param $context string{guest or id}
- * @param $data used in find conditions (such as User.id)
- * @return $condition array
- * @access public
- */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$returnValue = array('conditions' => array());
-		// switch ($case) {
-			// case 'view':
-				// $returnValue = array(
-					// 'conditions' => array(
-						// // not null permissions
-						// 'UserCategoryPermission.permission_id' => $data['Permission']['id']
-					// )
-				// );
-			// break;
-			// default:
-				// $returnValue = array(
-					// 'conditions' => array()
-				// );
-		// }
-
-		return $returnValue;
-	}
 
 /**
  * Return the list of field to fetch for given context

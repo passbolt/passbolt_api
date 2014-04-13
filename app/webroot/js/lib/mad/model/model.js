@@ -263,6 +263,7 @@ steal(
                     // Build the url.
                     var url = '/validation/' + this.shortName + '/' + validationCase;
                     // Get the rules from the server.
+					self.serverValidationRules[self.shortName][validationCase] = {};
 					mad.net.Ajax.request({
 						'async': false,
 						'type': 'GET',
@@ -330,7 +331,7 @@ steal(
 			}
 
 			var rules = this.getValidationRules(validationCase);
-			if (rules[attrName]) {
+			if (typeof rules[attrName] != 'undefined') {
 				// Is the field required?
 				var required = this.isRequired(attrName, validationCase);
 				// Is the field passing the required validation.

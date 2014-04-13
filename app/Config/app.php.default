@@ -65,7 +65,7 @@ $config = array(
 	),
     'Validation' => array(
         'shared' => array(
-            'Resource', 'Secret'
+			'Category', 'Resource', 'Secret', 'Tag', 'Comment'
         )
     )
 );

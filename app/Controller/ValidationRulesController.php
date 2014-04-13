@@ -20,19 +20,21 @@ class ValidationRulesController extends AppController {
 		$settings = Configure::read('Validation');
 
 		// If the validation rules can be shared with the front-end.
-		if (!is_null($settings) && is_array($settings) && isset($settings['shared']) && in_array($model, $settings['shared'])) {
+		if (!is_null($settings)
+			&& is_array($settings)
+			&& isset($settings['shared'])
+			&& in_array($model, $settings['shared'])) {
+
 			App::import('Model', $model);
 			$instance = new $model();
 			$rules = $instance->getValidationRules($case);
 
 			// If some rules shouldn't be shared.
 			foreach ($rules as $fieldName => $fieldRules) {
-				// Unique rule given.
-				if (isset($fieldRules['rule'])) {
-					if (isset($fieldRules['shared']) && $fieldRules['shared'] === false) {
-						unset($rules[$fieldName]);
-					}
-				} else {
+				// Unique rule given or the exclusion of the whole field is asked.
+				if (isset($fieldRules['shared']) && $fieldRules['shared'] === false) {
+					unset($rules[$fieldName]);
+				} elseif (!isset($fieldRules['rule'])) {
 					// Multiple rules given.
 					foreach ($fieldRules as $ruleName => $fieldRule) {
 						if (isset($fieldRule['shared']) && $fieldRule['shared'] === false) {
@@ -46,6 +48,8 @@ class ValidationRulesController extends AppController {
 			$this->Message->success();
 			// $this->layout = 'js/canJs';
 			// $this->view = '/Js/modelValidationRules';
+		} else {
+			$this->Message->error(__('No validation rules defined'), array('code' => 404));
 		}
 	}
 

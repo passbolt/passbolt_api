@@ -8,10 +8,11 @@
  * @license			http://www.passbolt.com/license
  */
 App::uses('Comment', 'Model');
+App::uses('AppTestCase', 'Test');
 
-class CommentTest extends CakeTestCase {
+class CommentTest extends AppTestCase {
 
-	public $fixtures = array('app.comment','app.resource');
+	public $fixtures = array('app.comment', 'app.resource', 'app.user', 'app.role', 'app.profile');
 
 	public $autoFixtures = true;
 
@@ -154,9 +155,39 @@ class CommentTest extends CakeTestCase {
  * @return void
  */
 	public function testContentValidation() {
+		$len = 255;
 		$testcases = array(
-			'resource1' => true, '.' => true, '#.' => false, '<script>' => false, '' => false,
-			'Méthode du commentaire composé!' => true, 'الأسلوب يتكون تعليق' => true
+			// Not empty
+			'' => false,
+			// Email are not accepted
+			'test@test.com' => false,
+			// too short
+			'sh' => false,
+			// too long
+			'toolong' . self::randString($len - 6, self::getMask('alphaASCII')) => false,
+			// Short but enough
+			'sho' => true,
+			// Long but not too long
+			'long' . self::randString($len - 4, self::getMask('alphaASCII')) => true,
+			// Languages
+			'ASCII' . self::randString($len - 5, self::getMask('alphaASCII')) => true,
+			'ASCIIUPPER' . self::randString($len - 10, self::getMask('alphaASCIIUpper')) => true,
+			'ACCENT' . self::randString($len - 6, self::getMask('alphaAccent')) => true,
+			'LATIN' . self::randString($len - 5, self::getMask('alphaLatin')) => true,
+			'CHINESE' . self::randString($len - 7, self::getMask('alphaChinese')) => true,
+			'ARABIC' . self::randString($len - 6, self::getMask('alphaArabic')) => true,
+			'RUSSIAN' . self::randString($len - 7, self::getMask('alphaRussian')) => true,
+			// Spaces
+			'txt with spaces' => true,
+			"txt\twith\ttabs" => false,
+			"txt\nwith\nnew\nlines" => false,
+			// Special characters
+			',.-_([)]\'' => true,
+			'?!#' => false,
+			// Digit accepted
+			'0123456789' => true,
+			// Html
+			'<strong>test</strong>' => false,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$comment = array('Comment' => array('content' => $testcase));

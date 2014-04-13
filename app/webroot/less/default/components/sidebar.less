@@ -2,11 +2,9 @@
  * Sidebar
  */
 .panel.aside {
-	border:1px solid #DDD;
-	background:#FFF;
-	-moz-box-shadow: 0px 0px 10px 0px #ddd;
-  -webkit-box-shadow: 0px 0px 10px 0px #ddd;
-  box-shadow: 0px 0px 10px 0px #ddd;
+	border:1px solid @border-default;
+	background:@background-default;
+	.box-shadow();
 }
 .panel.aside .resource .dialog-close {
 	position:absolute;
@@ -24,7 +22,6 @@
 }
 .panel.aside .resource li .label {
 	width:30%;
-	color:#000;
 	display:inline-block;
 	margin-right:10%;
 }
@@ -38,7 +35,7 @@
 .panel.aside .resource h4 {
 	margin-bottom:.626em;
 	padding-bottom:.313em;
-	border-bottom:1px dotted #DDD;
+	border-bottom:1px dotted @border-default;
 }
 .panel.aside .resource .section-action {
 	float:right;
@@ -52,7 +49,7 @@
 	float: left;
 	font-size: .775em;
 	min-width: 21.5em;
-	border: 1px solid #DDD;
+	border: 1px solid @border-default;
 }
 .panel.aside .resource-description-edit-wrapper input[type=submit] {
 	float: right;

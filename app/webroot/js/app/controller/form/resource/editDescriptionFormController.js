@@ -37,14 +37,17 @@ steal(
 			 */
 			'afterStart' : function() {
 				// id hidden field
-				this.addElement(new mad.form.element.TextboxController($('.resource_id', this.element), {
+				this.addElement(new mad.form.element.TextboxController($('.js_resource_id', this.element), {
 					modelReference : 'passbolt.model.Resource.id'
 				}).start().setValue(this.options.resource.id));
 
 				// this textbox will contain the list of tags separated with a comma
-				this.options.descriptionField = this.addElement(new mad.form.element.TextboxController($('.resource_description', this.element), {
-					modelReference : 'passbolt.model.Resource.description'
-				}).start());
+				this.options.descriptionField = this.addElement(
+					new mad.form.element.TextboxController($('.js_resource_description', this.element), {
+						modelReference : 'passbolt.model.Resource.description'
+					}).start(),
+					new mad.form.FeedbackController($('.js_resource_description_feedback', this.element), {}).start()
+				);
 
 				// Update the resource description with current value
 				this.options.descriptionField.setValue(this.options.resource.description);

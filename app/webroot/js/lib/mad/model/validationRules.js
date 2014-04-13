@@ -67,6 +67,11 @@ steal(
 			return returnValue;
 		},
 
+		/**
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
+		 */
 		'regex': function (value, values, options) {
 			options = options || {};
 			var returnValue = true,
@@ -87,6 +92,11 @@ steal(
 			return returnValue;
 		},
 
+		/**
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
+		 */
         'notEmpty': function (value, values, options) {
             if (typeof value == 'undefined'
                 || value == null
@@ -97,6 +107,11 @@ steal(
             return true;
         },
 
+		/**
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
+		 */
         'uuid': function (value, values, options) {
             options = options || {};
             var regexp = "^[abcdef0-9]{8}-[abcdef0-9]{4}-[abcdef0-9]{4}-[abcdef0-9]{4}-[abcdef0-9]{12}$";
@@ -109,7 +124,9 @@ steal(
         },
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'alphaNumeric': function (value, values, options) {
 			options = options || {};
@@ -123,7 +140,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'alpha': function (value, values, options) {
 			options = options || {};
@@ -137,7 +156,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'num': function (value) {
 			var xregexp = XRegExp("^-?[0-9]+\.?[0-9]*$");
@@ -148,7 +169,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'required': function (value) {
 			var xregexp = XRegExp("^[\s\n\t ]*$");
@@ -159,7 +182,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'text': function (value) {
 			var xregexp = XRegExp("<(.|\n)*?>");
@@ -170,8 +195,9 @@ steal(
 		},
 
 		/**
-		 * Based on the cakephp url validator code
-		 * http://api.cakephp.org/2.3/class-Validation.html#_url
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'url': function (value) {
 			var	regex = "^\
@@ -200,7 +226,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'nospace': function (value) {
 			var xregexp = XRegExp("[ ]+");
@@ -211,7 +239,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'email': function (value) {
 			var xregexp = XRegExp("^[a-zA-Z0-9_.-]+[@]{1}[a-zA-Z0-9_.-]+\.[a-zA-Z]+$");
@@ -222,7 +252,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'date': function (value, values, options) {
 			value = value || '';
@@ -306,7 +338,9 @@ steal(
 		},
 
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'between': function (value, values, options) {
 			value = value || '';
@@ -321,9 +355,11 @@ steal(
 
 			return returnValue;
 		},
-		
+
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'foreignRule': function(value, options) {
 			// alert('foregi');
@@ -340,9 +376,11 @@ steal(
 			}
 			return returnValue;
 		},
-		
+
 		/**
-		 * 
+		 * @param {mixed} value The value to validate
+		 * @param {array} values The contextual values
+		 * @param {array} options Optional parameters
 		 */
 		'choice': function(value, options) {
 			var returnValue = true,

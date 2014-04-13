@@ -34,7 +34,7 @@ steal(
 					'label': __('logout'),
 					'cssClasses': ['logout'],
 					'action': function () {
-						document.location.href = '/logout';
+						document.location.href = APP_URL + '/logout';
 					}
 				})
 			];

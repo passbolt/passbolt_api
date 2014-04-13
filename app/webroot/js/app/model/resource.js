@@ -57,7 +57,7 @@ steal(
 		'destroy' : function (id, success, error) {
 			var params = {id:id};
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources/{id}',
+				url: APP_URL + 'resources/{id}.json',
 				type: 'DELETE',
 				params: params,
 				success: success,
@@ -76,7 +76,7 @@ steal(
 			}
 
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources',
+				url: APP_URL + 'resources.json',
 				type: 'GET',
 				params: params,
 				success: success,
@@ -86,7 +86,7 @@ steal(
 
 		'findOne': function (params, success, error) {
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources/{id}',
+				url: APP_URL + 'resources/{id}.json',
 				type: 'GET',
 				params: params,
 				success: success,
@@ -104,7 +104,7 @@ steal(
 			// add the root of the params, it will be used in the url template
 			params.id = id;
 			return mad.net.Ajax.request({
-				url: APP_URL + '/resources/{id}',
+				url: APP_URL + 'resources/{id}.json',
 				type: 'PUT',
 				params: params,
 				success: success,

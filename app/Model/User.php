@@ -248,21 +248,20 @@ class User extends AppModel {
 		return isset($user['Role']['name']) && $user['Role']['name'] == Role::ROOT;
 	}
 
-	/**
-	 * Return the conditions to be used for a given context
-	 * for example if you want to activate a User session
-	 *
-	 * @param $context string{guest or id}
-	 * @param $data    used in find conditions (such as User.id)
-	 *
-	 * @return $condition array
-	 * @access public
-	 */
+/**
+ * Return the find conditions to be used for a given context.
+ *
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
+ */
 	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::GUEST, $data = null) {
 		$conditions = array();
+
 		switch ($role) {
-			case Role::USER :
-			case Role::ADMIN :
+			case Role::USER:
+			case Role::ADMIN:
 				switch ($case) {
 					case 'User::activation':
 						$conditions = array(
@@ -271,12 +270,13 @@ class User extends AppModel {
 							)
 						);
 						break;
+
 					case User::ANONYMOUS:
 					default:
 						$conditions = array(
 							'conditions' => array(
 								'User.username' => User::ANONYMOUS,
-								'User.active'   => true
+								'User.active' => true
 							)
 						);
 						break;
@@ -284,7 +284,7 @@ class User extends AppModel {
 					case 'User::view':
 						$conditions = array(
 							'conditions' => array(
-								'User.active'  => true,
+								'User.active' => true,
 								'User.deleted' => false
 							)
 						);
@@ -292,10 +292,11 @@ class User extends AppModel {
 							$conditions['conditions']['User.id'] = $data['User.id'];
 						}
 						break;
+
 					case 'User::index':
 						$conditions = array(
 							'conditions' => array(
-								'User.active'  => true,
+								'User.active' => true,
 								'User.deleted' => false
 							)
 						);
@@ -306,12 +307,14 @@ class User extends AppModel {
 							}
 						}
 						break;
+
 					default:
 						$conditions = array(
 							'conditions' => array()
 						);
 				}
 				break;
+
 			default :
 				switch ($case) {
 					case User::ANONYMOUS:
@@ -319,12 +322,14 @@ class User extends AppModel {
 						$conditions = array(
 							'conditions' => array(
 								'User.username' => User::ANONYMOUS,
-								'User.active'   => true
+								'User.active' => true
 							)
 						);
 						break;
+
 				}
 				break;
+
 		}
 
 		return $conditions;

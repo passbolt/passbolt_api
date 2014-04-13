@@ -26,7 +26,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.resource', 'app.category', 'app.categories_resource', 
-		'app.user', 'app.group', 'app.groups_user', 'app.role', 
+		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile',
 		'app.permission', 'app.permissions_type', 'app.permission_view',
 		'app.authenticationLog', 'app.authenticationBlacklist');
 
