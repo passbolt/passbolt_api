@@ -271,20 +271,21 @@ class PassboltAuthComponent extends AuthComponent {
 
 		// if there is a failed attempt of login
 		if (isset($request->data['User']['username']) && !$identified) {
-			$this->controller->Session->write('Throttle.nextLogin', $this->nextAuthentication());
+			$nextAuth = $this->nextAuthentication();
+			$this->controller->Session->write('Throttle.nextLoginTime', $nextAuth);
 			// manage blacklist
 			if ($this->doBlacklist) {
 				$AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
 				$bl = array(
 					'ip' => $this->ip,
-					'expiry' => date('Y-m-d H:i:s', time() + $this->blacklistTime)
+					'expiry' => gmdate('Y-m-d H:i:s', gmdate('U') + $this->blacklistTime)
 				);
 				// record blacklisting in database
 				$AuthenticationBlacklist->save($bl);
 			}
 			return false;
 		}
-		$this->controller->Session->delete('Throttle.nextLogin');
+		$this->controller->Session->delete('Throttle.nextLoginTime');
 		return $identified;
 	}
 }
