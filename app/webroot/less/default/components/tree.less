@@ -5,10 +5,11 @@
 .panel .navigation.first {
 	border-bottom:1px dotted @border-default;
 	padding:.625em;
+	padding-right:.3125em;
 	margin-bottom:.625em;
 }
 .panel .navigation.last {
-	padding-right:.625em; /* 10px */
+	padding-right:.3125em; /* 5px */
 }
 .panel .navigation a {
 	color:@font-default;
@@ -42,14 +43,13 @@
 	width:100%;
 }
 .tree .node-ctrl a {
-	background:#DDD;
 	width:1em;
 	height:1em;
 	display:block;
 	margin-top:.15em;
 	opacity:0.5;
 	filter:alpha(opacity=50);
-	padding-left:.625em;
+	padding-left:.3125em;
 }
 .tree .node-ctrl a:hover {
 	opacity:.9;
@@ -83,7 +83,8 @@
 .tree .right-cell {
 	float: right;
 	width: 1em ;
-	margin-left: -1em;
+	margin-left: -1.4em;
+	padding-right:.25em;
 }
 
 /* don't show nodes if parent is closed */
@@ -98,15 +99,24 @@
 }
 
 /* row action is a button */
-.tree .right-cell a {
-	height:.9em;
-	margin-top:.2em;
+.tree .row .right-cell a {
+	height:1em;
+	margin-top:.125em;
+	width:1em;
 }
-.tree .right-cell a:hover {
-	border:1px solid @background-lighter;
-	background:@white;
+.tree .row:hover .right-cell a {
+	opacity:0.5;
+	filter:alpha(opacity=50);
+	border:1px solid @border-default;
+	background: transparent url('../../img/controls/tree-ctrl.png') center -9px no-repeat;
 }
-
+.tree .row:hover .right-cell a:hover {
+	opacity:0.9;
+	filter:alpha(opacity=90);
+	background: @white url('../../img/controls/tree-ctrl.png') center -9px no-repeat;
+}
+.tree .node.close .node-ctrl a {
+}
 /* Events */
 .tree .row.drop-over {
 	background-color:@background-lighter;
