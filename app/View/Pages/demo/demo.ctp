@@ -27,6 +27,7 @@
 <?php //echo $this->element('demo/loading-screen'); ?>
 <?php echo $this->element('demo/loading-bar'); ?>
 <?php echo $this->element('demo/notification'); ?>
+<?php echo $this->element('demo/contextual-menu'); ?>
 	<div class="header first">
 <?php echo $this->element('demo/nav'); ?>
 	</div>
@@ -133,6 +134,28 @@
 			});*/
 		//});
 
+		/* faking contextual menu interactions */
+		$('.navigation.tree').bind("contextmenu", function () {
+        	return false;
+        });
+		$('.navigation.tree .row').mousedown(function(event) {
+			var o = $(this).offset();
+			if (event.which == 3) { /* right click */
+				$('#js_contextual_menu').css("display","block").css('top',o.top);
+				event.stopPropagation();
+				return false;
+			}
+		});
+		$('.navigation.tree .more-ctrl a').click(function(){
+			var o = $(this).offset();
+			$('#js_contextual_menu').css("display","block").css('top',o.top);
+			return false;
+		});
+		$('body').mousedown(function(event) {
+			if (event.which) { 
+				$('#js_contextual_menu').css('display','none');
+			}
+		});
 	});
 </script>
 </body>
