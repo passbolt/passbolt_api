@@ -7,6 +7,7 @@
  * @package			 app.View.Elements.demo.tree
  * @since				 version 2.13.02
  */
+	$this->layout = 'demo';
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
