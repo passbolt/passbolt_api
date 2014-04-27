@@ -33,8 +33,8 @@ steal(
 				var data = null;
 				var li = el.parents('li.comment-wrapper');
 
-				if (this.controller.getItemClass()) {
-					data = li.data(this.controller.getItemClass().fullName);
+				if (this.getController().getItemClass()) {
+					data = li.data(this.getController().getItemClass().fullName);
 				} else {
 					data = li[0].id;
 				}

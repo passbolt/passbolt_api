@@ -76,7 +76,7 @@ steal(
 						cellElement,
 						'inside_replace',
 						mad.form.element.CheckboxController, {
-							'id': 'multiple_select_checkbox_' + item.id, 
+							'id': 'multiple_select_checkbox_' + item.id,
 							'name': 'test',
 							'cssClasses': ['js_checkbox_multiple_select'],
 						 	'availableValues': availableValues
@@ -101,7 +101,7 @@ steal(
 						cellElement,
 						'inside_replace',
 						passbolt.controller.component.FavoriteController, {
-							'id': 'favorite_' + item.id, 
+							'id': 'favorite_' + item.id,
 							'name': 'test2',
 							'instance': item
 						}

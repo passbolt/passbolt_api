@@ -8,83 +8,45 @@ steal(
 	 */
 	mad.view.View.extend('passbolt.view.component.Notification', /** @static */ {
 
+		'defaults': {
+			'timeout': 2500,
+			'timeoutBeforeReset': null,
+			'persistent': false
+		}
+
 	}, /** @prototype */ {
 
-		// 
-		'timeoutBeforeReset': null,
-		'params': {
-			'status': '',
-			'title': '',
-			'message': '',
-			'data': '',
-			'persistent': false,
-			'timeout': 2500
+		// constructor like
+		'init': function(elt, opts) {
+			var timeoutConf = mad.Config.read('notification.timeout');
+			if (typeof timeoutConf != 'undefined') {
+				this.options.timeout = timeoutConf;
+			}
+			this._super(elt, opts);
 		},
 
-		'init': function (el, options) {
-			this._super(el, options);
-
-			// position the notificator functions of the search field
-			this.element.position({
-				my: "center top",
-				at: "center bottom",
-				of: $('#js_filter_keywords')
-			});
-		},
-
+		/**
+		 * Override mad.view.View.render() function.
+		 */
 		'render': function () {
 			var self = this;
+
 			// A notification is already shown, destroy the current timeout listener
-			if (this.timeoutBeforeReset) {
-				clearTimeout(this.timeoutBeforeReset);
-				self.controller.setState('hidden');
+			if (this.options.timeoutBeforeReset) {
+				if(!this.options.persistent) {
+					clearTimeout(this.options.timeoutBeforeReset);
+				}
+				self.getController().setState('hidden');
 			}
 
-			if(!this.params.persistent) {
+			if(!this.options.persistent) {
 				// hide the notificator after timeout value
-				self.timeoutBeforeReset = setTimeout(function () {
-					self.controller.setState('hidden');
-				}, self.params.timeout);
+				self.options.timeoutBeforeReset = setTimeout(function () {
+					self.getController().setState('hidden');
+				}, self.options.timeout);
 			}
 
 			return this._super();
-		},
-
-		'reset': function () {
-			$(this.element).find('.js_notification_details_container').hide();
-			$(this.element).find('.js_notification_more_button').text(__('see details'));
-		},
-
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * The user clicks on details
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'#js_notification_more_button click': function (element, ev) {
-			var detailsVisible = $(this.element).find('#js_notification_details_container').is(':visible');
-			if (detailsVisible) {
-				$(this.element).find('#js_notification_details_container').hide();
-				$(this.element).find('#js_notification_more_button').text(__('see details'));
-			}
-			else {
-				$(this.element).find('#js_notification_details_container').show();
-				$(this.element).find('#js_notification_more_button').text(__('hide details'));
-			}
-		},
-
-		/**
-		 * The user clicks on close
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'#js_notification_close_button click': function (element, ev) {
-			this.controller.setState('hidden');
 		}
 
 	});

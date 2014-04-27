@@ -1,10 +1,22 @@
 {
 	"app": {
+		"name": "Passbolt",
+		"punchline": "The simple password management system",
+		"copyright": "2013 &copy; Passbolt.com",
+		"title": "%s | Passbolt",
+		"version": {
+			"number": "2.13.3",
+			"name": "Sauvage",
+			"song": "http://youtu.be/DaRG0ukxYqQ"
+		},
 		"url": "http://passbolt.local",
-		"hostname": "passbolt.local"
+		"hostname": "passbolt.local",
 		"controllerElt": "#js_app_controller",	
 		"namespace": "passbolt",
 		"ControllerClassName": "passbolt.controller.AppController"
+	},
+	"notification": {
+		"timeout": 10000
 	},
 	"error": {
 		"ErrorHandlerClassName": "passbolt.helper.ErrorHandler"

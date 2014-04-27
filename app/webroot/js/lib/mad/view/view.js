@@ -38,7 +38,7 @@ steal(
 		},
 
 		/**
-		 * Render a template. Prefer use this function instean of can.View.render or
+		 * Render a template. Prefer use this function instead of can.View.render or
 		 * jQuery.View cause they are not working with steal mapping of JMVC 3.3. We
 		 * do
 		 * @param {string} uri Template uri to render
@@ -53,17 +53,9 @@ steal(
 
 	}, /** @prototype */ {
 
-		/**
-		 * The component controller which use this view
-		 * @type {mad.controller.ComponentController}
-		 * @hide
-		 */
-		'controller': null,
-
 		// Constructor like 
 		'init': function (element, options) {
 			this._super(element, options);
-			this.controller = options.controller;
 
 			// add the classes to the top element
 			// @todo Hmmmmmmm. Ou pas ici
@@ -72,6 +64,14 @@ steal(
 					this.element.addClass(options.cssClasses[i]);
 				}
 			}
+		},
+
+		/**
+		 * Return the controller the view is associated with
+		 * @return {mad.controller.ComponentController}
+		 */
+		'getController': function () {
+			return this.options.controller;
 		},
 
 		/**
@@ -98,7 +98,7 @@ steal(
 			}
 			// define the template functions of the class name
 			else {
-				returnValue = mad.helper.ControllerHelper.getViewPath(this.controller.getClass());
+				returnValue = mad.helper.ControllerHelper.getViewPath(this.getController().getClass());
 			}
 
 			return returnValue;
@@ -156,12 +156,7 @@ steal(
 		 * @return {string} The rendered view
 		 */
 		'render': function () {
-			// if the view does is not template based leave
-			// if(!this.options.templateBased) {
-				// console.log('test');
-				// return true;
-			// }
-			return mad.view.View.render(this.getTemplate(), this.controller.viewData);
+			return mad.view.View.render(this.getTemplate(), this.getController().getViewData());
 		},
 
 		/**

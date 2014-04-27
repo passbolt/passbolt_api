@@ -39,12 +39,12 @@ steal(
 			}
 
 			// map the jmvc model objects into the desired format
-			var mappedItem = this.controller.getMap().mapObject(item);
+			var mappedItem = this.getController().getMap().mapObject(item);
 			mappedItem.hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
 			mappedItem.item = item;
-			mappedItem.itemClass = this.controller.getItemClass();
+			mappedItem.itemClass = this.getController().getItemClass();
 
-			var itemRender = mad.view.View.render(this.controller.options.itemTemplateUri, mappedItem);
+			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, mappedItem);
 			var $child = null;
 			if(position == 'first') {
 				$child = $(itemRender).prependTo($refList);
@@ -129,8 +129,8 @@ steal(
 
 			var data = null,
 				li = el.parents('li');
-			if (this.controller.getItemClass()) {
-				data = li.data(this.controller.getItemClass().fullName);
+			if (this.getController().getItemClass()) {
+				data = li.data(this.getController().getItemClass().fullName);
 			} else {
 				data = li[0].id;
 			}
@@ -152,8 +152,8 @@ steal(
 			if (ev.which == 3) {
 				var data = null,
 					li = el.parents('li');
-				if (this.controller.getItemClass()) {
-					data = li.data(this.controller.getItemClass().fullName);
+				if (this.getController().getItemClass()) {
+					data = li.data(this.getController().getItemClass().fullName);
 				} else {
 					data = li[0].id;
 				}
@@ -175,8 +175,8 @@ steal(
 
 			var data = null,
 				li = el.parents('li');
-			if (this.controller.getItemClass()) {
-				data = li.data(this.controller.getItemClass().fullName);
+			if (this.getController().getItemClass()) {
+				data = li.data(this.getController().getItemClass().fullName);
 			} else {
 				data = li[0].id;
 			}

@@ -28,7 +28,7 @@ steal(
 			 */
 			'.icon.create click': function (el, ev) {
 				// Displays the add comment form
-				this.controller.addFormController.setState('ready');
+				this.getController().addFormController.setState('ready');
 			},
 
 			/**
