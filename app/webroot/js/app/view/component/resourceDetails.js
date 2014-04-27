@@ -21,7 +21,7 @@ steal(
 		 * @return {void}
 		 */
 		'.icon.close click': function(el, ev) {
-			this.controller.setState('hidden');
+			this.getController().setState('hidden');
 		},
 
 		/**

@@ -27,7 +27,7 @@ steal(
 		'init': function(el, opts) {
 			this._super(el, opts);
 			this._changeTimeout = null;
-			this.changeTimeout = this.controller.options.changeTimeout;
+			this.changeTimeout = this.getController().options.changeTimeout;
 		},
 
 		/**
