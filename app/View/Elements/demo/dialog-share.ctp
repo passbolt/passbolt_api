@@ -18,31 +18,13 @@
 			<div class="tabs">
 				<ul class="tabs-nav">
 					<li>
-						<div class="row">
-							<div class="main-cell-wrapper">
-								<div class="main-cell">
-									<a href="#"><span>Edit</span></a>
-								</div>
-							</div>
-						</div>
+						<a href="pages/demo/demo#edit"><span>Edit</span></a>
 					</li>
 					<li>
-						<div class="row">
-							<div class="main-cell-wrapper">
-								<div class="main-cell">
-									<a href="#" class="selected"><span>Share</span></a>
-								</div>
-							</div>
-						</div>
+						<a href="#" class="selected"><span>Share</span></a>
 					</li>
 					<li>
-						<div class="row">
-							<div class="main-cell-wrapper">
-								<div class="main-cell">
-									<a href="#"><span>Organize</span></a>
-								</div>
-							</div>
-						</div>
+						<a href="#"><span>Organize</span></a>
 					</li>
 				</ul>
 				<ul class="tabs-content">
@@ -246,6 +228,12 @@
 										<i class="plus icon big no-text"></i>
 										<span>add permission</span>
 									</a>
+								</div>
+
+					</div>	
+								<div class="submit-wrapper clearfix">
+									<input type="submit" class="button primary" value="save"/>
+									<a href="#" class="cancel">cancel</a>
 								</div>
 							</form>
 							<!-- End actions -->

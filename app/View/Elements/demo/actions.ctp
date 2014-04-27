@@ -15,7 +15,7 @@
 	<div class="col2_3 actions-wrapper">
 		<ul class="actions">
 			<li>
-				<a href="#"  class="button">
+				<a href="#"  class="button" id="js_action_create">
 					<i class="icon create"></i>
 					<span>create</span>
 				</a>

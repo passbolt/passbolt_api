@@ -32,9 +32,7 @@ a.button {
 	-webkit-border-radius: .25em; 
 	-moz-border-radius: .25em;
 	border-radius: .25em;
-	background-color: #f5f5f5;
 	.background-gradient();
-
 }
 
 /* size and position adjustments */
@@ -50,6 +48,31 @@ a.button {
 	-webkit-border-radius: .286em; 
 	-moz-border-radius: .286em;
 	border-radius: .286em;
+}
+
+input.button.primary,
+button.primary,
+a.button.primary {
+	background:@blue;
+	border:1px solid @blue;
+	color:#FFF;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+input.button.primary:hover,
+button.primary:hover,
+a.button.primary:hover,
+input.button.primary:active,
+button.primary:active,
+a.button.primary:active {
+	border:1px solid @blue-light;
+	background:@blue-light;
+}
+
+input.button.primary:focus,
+button.primary:focus,
+a.button.primary:focus {
+	border:1px solid @blue;
+	background:@blue-light;
 }
 
 /* hover */

@@ -742,12 +742,12 @@ a:visited {
   color: #333333;
 }
 a:hover {
-  color: #2a9ceb;
+  color: #2894df;
 }
 a:active,
 a:focus {
   outline: 0;
-  color: #2a9ceb;
+  color: #2894df;
   border: 0;
 }
 /* colors for messages */
@@ -1022,7 +1022,6 @@ a.button {
   -webkit-border-radius: .25em;
   -moz-border-radius: .25em;
   border-radius: .25em;
-  background-color: #f5f5f5;
   background: #eeeeee;
   background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: -ms-linear-gradient(top, #f3f3f3, #eeeeee);
@@ -1048,6 +1047,29 @@ a.button {
   -moz-border-radius: .286em;
   border-radius: .286em;
 }
+input.button.primary,
+button.primary,
+a.button.primary {
+  background: #2894df;
+  border: 1px solid #2894df;
+  color: #FFF;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+input.button.primary:hover,
+button.primary:hover,
+a.button.primary:hover,
+input.button.primary:active,
+button.primary:active,
+a.button.primary:active {
+  border: 1px solid #2a9ceb;
+  background: #2a9ceb;
+}
+input.button.primary:focus,
+button.primary:focus,
+a.button.primary:focus {
+  border: 1px solid #2894df;
+  background: #2a9ceb;
+}
 /* hover */
 input[type=submit]:hover,
 input.button:hover,
@@ -1068,7 +1090,7 @@ input[type=submit]:focus,
 input.button:focus,
 button:focus,
 a.button:focus {
-  border: 1px solid #2a9ceb;
+  border: 1px solid #2894df;
 }
 /* active */
 input[type=submit]:active,
@@ -1626,7 +1648,7 @@ span.select-box:before {
 }
 .header .navigation.primary li a:active,
 .header .navigation.primary li a:focus {
-  color: #2a9ceb;
+  color: #2894df;
 }
 /* home button is special */
 .header .navigation.primary .home a {
@@ -1876,33 +1898,43 @@ input[type="search"]::-webkit-search-cancel-button {
 .dialog-wrapper {
   position: absolute;
   width: 100%;
-  height: 100%;
   z-index: 999;
   background: rgba(255, 255, 255, 0.9);
+  height: -moz-calc(94.6%);
+  height: -webkit-calc(94.6%);
+  height: -o-calc(94.6%);
+  height: calc(94.6%);
 }
 .dialog {
   position: relative;
   width: 30em;
   border: 1px solid #dddddd;
-  background: #F3F3F3;
+  background: #f3f3f3;
   margin: auto;
-  margin-top: 1.5%;
-  -moz-box-shadow: 0px 0px 10px 0px #ddd;
-  -webkit-box-shadow: 0px 0px 10px 0px #ddd;
-  box-shadow: 0px 0px 10px 0px #ddd;
+  margin-top: 1%;
+  -moz-box-shadow: 0px 0px 10px 0px #dddddd;
+  -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
+  box-shadow: 0px 0px 10px 0px #dddddd;
 }
 /* header */
 .dialog .dialog-header {
   padding: 0.5em 1em 0 1em;
 }
 .dialog .dialog-header h2 {
-  margin: .25em 0 .33em .25em;
-  font-size: 1.625em;
+  margin: .25em 0 .5em .2em;
+  font-size: 1.2em;
 }
 .dialog .dialog-close {
   float: right;
   right: 1em;
   margin-top: -2.5em;
+  padding: .25em .25em 0em .25em;
+  width: 1em;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.dialog .dialog-close:hover {
+  border: 1px solid #dddddd;
 }
 /* inputs */
 .dialog .form-content {
@@ -1942,33 +1974,20 @@ input[type="search"]::-webkit-search-cancel-button {
   border-top: 1px solid #dddddd;
   clear: both;
   width: 100%;
-  padding: 1em 0;
+  padding: .75em 0;
 }
 .submit-wrapper .cancel,
 .submit-wrapper input {
-  float: right;
-}
-.submit-wrapper .cancel,
-.submit-wrapper input {
-  margin: 0 2.25em 0 0;
-  padding-left: 2em;
-  padding-right: 2em;
-  min-width: 3em;
-}
-.submit-wrapper .cancel,
-.submit-wrapper .cancel:hover {
+  float: left;
+  margin-left: 2em;
   font-size: 16px;
-  margin-right: 1em;
-  padding-bottom: .5em;
-  padding-left: 2em;
-  padding-right: 2em;
-  padding-top: .5em;
-  line-height: 19px;
-  height: 19px;
+}
+.submit-wrapper .cancel {
+  margin-top: .5em;
 }
 /* complexity and progress bar */
 .dialog .progress {
-  width: 67.8%;
+  width: 67%;
   border: 1px solid #dddddd;
   height: 7px;
   display: block;
@@ -1978,15 +1997,19 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .dialog .progress-bar {
   height: 5px;
-  margin: 1px;
   display: block;
   float: left;
+  margin: 1px;
 }
 .dialog .complexity-text {
   float: right;
   clear: right;
   width: 28%;
   font-size: 11px;
+}
+.dialog .password-complexity .progress-bar {
+  background: #000;
+  width: 1%;
 }
 .dialog .password-complexity .progress-bar.very_weak {
   background: #000;
@@ -2664,6 +2687,9 @@ input[type="search"]::-webkit-search-cancel-button {
   border-bottom: 1px solid #dddddd;
   width: 100%;
 }
+.tabs-nav {
+  border-bottom: 1px solid #dddddd;
+}
 .tabs-nav li {
   display: inline;
 }
@@ -2672,13 +2698,14 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .tabs-nav li a {
   display: inline-block;
-  padding: .25em 1.75em;
+  padding: .4em 1.75em;
   margin-left: 1.25em;
+  font-size: 15px;
 }
 .tabs-nav li a.selected {
+  margin-bottom: -1px;
   border: 1px solid #dddddd;
   border-bottom: 1px solid #FFF;
-  margin-bottom: -1px;
   background: #FFF;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;

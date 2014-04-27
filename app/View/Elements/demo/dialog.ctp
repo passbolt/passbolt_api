@@ -8,41 +8,23 @@
  * @since				 version 2.13.09
  */
 ?>
-<div class="dialog-wrapper">
+<div class="dialog-wrapper" id="js_new_dialog">
 <div class="dialog">
 	<div class="dialog-header">
 		<h2>Edit Password</h2>
-		<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
+		<a href="#" class="dialog-close" id="js_dialog_close"><i class="icon close no-text"></i><span>close</span></a>
 	</div>
 	<div class="dialog-content">
 	<div class="tabs">
 		<ul class="tabs-nav">
 			<li>
-				<div class="row">
-					<div class="main-cell-wrapper">
-						<div class="main-cell">
-							<a href="#" class="selected"><span>Edit</span></a>
-						</div>
-					</div>
-				</div>
+				<a href="#" class="selected"><span>Edit</span></a>
 			</li>
 			<li>
-				<div class="row">
-					<div class="main-cell-wrapper">
-						<div class="main-cell">
-							<a href="#"><span>Share</span></a>
-						</div>
-					</div>
-				</div>
+				<a href="pages/demo/dialog-share"><span>Share</span></a>
 			</li>
 			<li>
-				<div class="row">
-					<div class="main-cell-wrapper">
-						<div class="main-cell">
-							<a href="#"><span>Organize</span></a>
-						</div>
-					</div>
-				</div>
+				<a href="#"><span>Organize</span></a>
 			</li>
 		</ul>
 		<ul class="tabs-content">
@@ -79,11 +61,11 @@
 							</a>
 						</div>
 						<div class="password-complexity good">
-							<span class="progress"><span class="progress-bar"></span></span>
-							<span class="complexity-text">complexity: <strong>good</strong></span>
+							<span class="progress"><span class="progress-bar weak"></span></span>
+							<span class="complexity-text">complexity: <strong>weak</strong></span>
 						</div>
 					</div>
-					<div class="input-datetime-wrapper">
+					<!--div class="input-datetime-wrapper">
 						<div class="input text datetime short">
 							<label for="ResourceExpire">Expiracy date</label>
 							<input name="data[Resource][expire]" class="required" type="text" id="ResourceExpire" data-format="YYYY-MM-DD HH:mm" data-template="D MMM YYYY HH:mm" placeholder="DD/MM/YYYY HH:MM">
@@ -100,15 +82,15 @@
 								</ul>
 							</div>
 						</div>
-					</div>
+					</div-->
 					<div class="input textarea required">
 						<label for="ResourceDescription">Description</label>
 						<textarea name="data[Resource][description]" class="required" maxlength="150" id="ResourceDescription" placeholder="add a description"></textarea>
 					</div>
 				</div>
 				<div class="submit-wrapper clearfix">
-					<input type="submit" class="button" value="save"/>
-					<a href="#" class="cancel button">cancel</a>
+					<input type="submit" class="button primary" value="save"/>
+					<a href="#" class="cancel">cancel</a>
 				</div>
 				</form>
 			</li>
