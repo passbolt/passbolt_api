@@ -10,7 +10,7 @@
 			"song": "http://youtu.be/DaRG0ukxYqQ"
 		},
 		"url": "http://passbolt.local",
-		"hostname": "passbolt.local"
+		"hostname": "passbolt.local",
 		"controllerElt": "#js_app_controller",	
 		"namespace": "passbolt",
 		"ControllerClassName": "passbolt.controller.AppController"
