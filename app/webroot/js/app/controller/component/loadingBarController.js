@@ -23,7 +23,11 @@ steal(
 		'defaults': {
 			'label': 'Loading Bar Controller',
 			'viewClass': passbolt.view.component.LoadingBar,
-			'templateBased': false
+			'templateBased': false,
+			'currentProcs': 0,
+			'previousProcs': 0,
+			'loadingPercent': 0,
+			'postponedUpdate': false
 		}
 
 	}, /** @prototype */ {
@@ -31,15 +35,134 @@ steal(
 		/**
 		 * Start a loading.
 		 */
-		'loading_start': function () {
-			this.view.loading_start();
+		'loading_start': function (callback) {
+			this.view.update(20, true, function() {
+				if (callback) {
+					callback();
+				}
+			});
 		},
 
 		/**
-		 * Complete a loading
+		 * Complete a loading.
 		 */
-		'loading_complete': function () {
-			this.view.loading_complete();
+		'loading_complete': function (callback) {
+			var self = this;
+			this.view.update(100, true, function () {
+				self.view.update(0, false);
+				if (callback) {
+					callback();
+				}
+			});
+		},
+
+		/**
+		 * Listen to the change relative to the state Loading
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateLoading': function (go) {},
+
+		/*
+		 1p update
+		 50 0L 1P
+		 complete
+		 100 1L 0P
+
+		 2p update
+		 50 0L 1P
+		 75 1L 2P
+		 complete
+		 87.5 2L 1P
+		 100 2L 0P
+
+		 3p update
+		 50 0L 1P
+		 75 1L 2P
+		 81.25 2L 3P
+		 complete
+		 87.5 3L 2P
+		 93.75 3L 1P
+		 100 3L 0P
+
+		 RANDOM CASE
+		 50 0L 1P
+		 75 1L 2P
+		 complete 1
+		 87.5 2L 1P
+		 load 1
+		 91,66667 2L 2P
+		 complete
+		 95.833334 1L 1P
+		 100 0 0
+
+		 */
+
+		/**
+		 * Refresh the loading bar
+		 */
+		'update': function(postponedUpdate) {
+			var self = this;
+			postponedUpdate = typeof postponedUpdate != 'undefined' ? postponedUpdate : false;
+
+			// If it's a delegated update.
+			if (postponedUpdate) {
+				this.options.postponedUpdate = false;
+			}
+
+			// If the loading bar is currently updating.
+			if (this.state.is('updating')) {
+				// If an update has not already been postponed, postpone one.
+				if (!this.options.postponedUpdate) {
+					this.options.postponedUpdate = true;
+					setTimeout(function() {
+						self.update(true);
+					}, 100);
+				}
+				return;
+			}
+
+			// Lock the component.
+			this.state.addState('updating');
+
+			// If no current process are runing. The loading is complete.
+			if(!this.options.currentProcs) {
+				// If the loading bar is loading, complete it.
+				if (this.state.is('loading')) {
+					this.loading_complete(function() {
+						// Reset class' variables.
+						self.options.loadingPercent = 0;
+						self.options.previousProcs = 0;
+						// Release the component to its initial state.
+						self.state.setState('ready');
+					});
+				}
+			} else {
+				if (!this.state.is('loading')) {
+					this.state.addState('loading');
+				}
+
+				var diffProcs = this.options.currentProcs - this.options.previousProcs;
+				// No more nor less processus.
+				if (diffProcs == 0) {
+					this.state.removeState('updating');
+					return;
+				} else if (diffProcs > 0) {
+					// Loading processus have been added to the queue.
+					this.options.loadingPercent = this.options.loadingPercent + ((100 - this.options.loadingPercent) / (diffProcs * 2));
+					this.view.update(this.options.loadingPercent, true, function() {
+						// release the lock on the component.
+						self.state.removeState('updating');
+					});
+				} else {
+					// Loading processus have been removed from the queue.
+					this.options.loadingPercent = this.options.loadingPercent + ((100 - this.options.loadingPercent) / (Math.abs(diffProcs) * 2));
+					this.view.update(this.options.loadingPercent, true, function() {
+						self.state.removeState('updating');
+					});
+				}
+				this.options.previousProcs = this.options.currentProcs;
+			}
 		},
 
 		/* ************************************************************** */
@@ -51,8 +174,29 @@ steal(
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 */
+		'{mad.bus} passbolt_component_loading_start': function (el, ev, component) {
+			this.options.currentProcs++;
+			this.update();
+		},
+
+		/**
+		 * Listen the event passbolt_loading and display a feedback to the user
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 */
+		'{mad.bus} passbolt_component_loading_complete': function (el, ev, component) {
+			this.options.currentProcs--;
+			this.update();
+		},
+
+		/**
+		 * Listen the event passbolt_loading and display a feedback to the user
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 */
 		'{mad.bus} passbolt_loading': function (el, ev) {
-			this.loading_start();
+			this.options.currentProcs++;
+			this.update();
 		},
 
 		/**
@@ -61,7 +205,8 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 */
 		'{mad.bus} passbolt_loading_complete': function (el, ev) {
-			this.loading_complete();
+			this.options.currentProcs--;
+			this.update();
 		}
 
 	});
