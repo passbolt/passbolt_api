@@ -146,16 +146,15 @@ steal(
 				// No more nor less processus.
 				if (diffProcs == 0) {
 					this.state.removeState('updating');
-					return;
 				} else if (diffProcs > 0) {
-					// Loading processus have been added to the queue.
+					// New processus are loading.
 					this.options.loadingPercent = this.options.loadingPercent + ((100 - this.options.loadingPercent) / (diffProcs * 2));
 					this.view.update(this.options.loadingPercent, true, function() {
 						// release the lock on the component.
 						self.state.removeState('updating');
 					});
 				} else {
-					// Loading processus have been removed from the queue.
+					// Processus complete.
 					this.options.loadingPercent = this.options.loadingPercent + ((100 - this.options.loadingPercent) / (Math.abs(diffProcs) * 2));
 					this.view.update(this.options.loadingPercent, true, function() {
 						self.state.removeState('updating');
@@ -170,9 +169,10 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Listen the event passbolt_loading and display a feedback to the user
+		 * Listen when a component is entering loading state.
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.controller.CoponentController} component The target component
 		 */
 		'{mad.bus} passbolt_component_loading_start': function (el, ev, component) {
 			this.options.currentProcs++;
@@ -180,13 +180,38 @@ steal(
 		},
 
 		/**
-		 * Listen the event passbolt_loading and display a feedback to the user
+		 * Listen when a component is leaving loading state.
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mad.controller.CoponentController} component The target component
 		 */
 		'{mad.bus} passbolt_component_loading_complete': function (el, ev, component) {
 			this.options.currentProcs--;
 			this.update();
+		},
+
+		/**
+		 * Listen when an ajax request is starting.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 */
+		'{mad.bus} passbolt_ajax_request_start': function (el, ev, request) {
+			if (!request.silentLoading) {
+				this.options.currentProcs++;
+				this.update();
+			}
+		},
+
+		/**
+		 * Listen when an ajax request is completed.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 */
+		'{mad.bus} passbolt_ajax_request_complete': function (el, ev, request) {
+			if (!request.silentLoading) {
+				this.options.currentProcs--;
+				this.update();
+			}
 		},
 
 		/**
