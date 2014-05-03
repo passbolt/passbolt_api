@@ -70,14 +70,15 @@ steal(
 		'update': function(postponedUpdate) {
 			var self = this;
 
-			// If it's a postponed update.
+			// If we are in a postponed update.
+			// Release the lock and allow other requests to be postponed.
 			if (typeof postponedUpdate != 'undefined' && postponedUpdate) {
 				this.options.postponedUpdate = false;
 			}
 
 			// If the loading bar is currently updating.
 			if (this.state.is('updating')) {
-				// If an update has not already been postponed, postpone one.
+				// Postpone an update, unless one is already scheduled.
 				if (!this.options.postponedUpdate) {
 					this.options.postponedUpdate = true;
 					setTimeout(function() {
