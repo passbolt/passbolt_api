@@ -26,6 +26,7 @@ steal(
 			'templateBased': false,
 			'currentProcs': 0,
 			'previousProcs': 0,
+			'maxProcs': 0,
 			'loadingPercent': 0,
 			'postponedUpdate': false
 		}
@@ -63,50 +64,14 @@ steal(
 		 */
 		'stateLoading': function (go) {},
 
-		/*
-		 1p update
-		 50 0L 1P
-		 complete
-		 100 1L 0P
-
-		 2p update
-		 50 0L 1P
-		 75 1L 2P
-		 complete
-		 87.5 2L 1P
-		 100 2L 0P
-
-		 3p update
-		 50 0L 1P
-		 75 1L 2P
-		 81.25 2L 3P
-		 complete
-		 87.5 3L 2P
-		 93.75 3L 1P
-		 100 3L 0P
-
-		 RANDOM CASE
-		 50 0L 1P
-		 75 1L 2P
-		 complete 1
-		 87.5 2L 1P
-		 load 1
-		 91,66667 2L 2P
-		 complete
-		 95.833334 1L 1P
-		 100 0 0
-
-		 */
-
 		/**
 		 * Refresh the loading bar
 		 */
 		'update': function(postponedUpdate) {
 			var self = this;
-			postponedUpdate = typeof postponedUpdate != 'undefined' ? postponedUpdate : false;
 
-			// If it's a delegated update.
-			if (postponedUpdate) {
+			// If it's a postponed update.
+			if (typeof postponedUpdate != 'undefined' && postponedUpdate) {
 				this.options.postponedUpdate = false;
 			}
 
@@ -120,48 +85,51 @@ steal(
 					}, 100);
 				}
 				return;
-			}
-
-			// Lock the component.
-			this.state.addState('updating');
-
-			// If no current process are runing. The loading is complete.
-			if(!this.options.currentProcs) {
-				// If the loading bar is loading, complete it.
-				if (this.state.is('loading')) {
-					this.loading_complete(function() {
-						// Reset class' variables.
-						self.options.loadingPercent = 0;
-						self.options.previousProcs = 0;
-						// Release the component to its initial state.
-						self.state.setState('ready');
-					});
-				}
 			} else {
-				if (!this.state.is('loading')) {
-					this.state.addState('loading');
+				// Lock the component.
+				this.state.addState('updating');
+			}
+
+			// Make a temporary working copy of the class' variables.
+			// Measurement are based on these variables, and they can change asynchronously.
+			var currentProcs = this.options.currentProcs;
+			// If we have more processus in the queue than during the previous execution.
+			if (this.options.maxProcs < currentProcs) {
+				this.options.maxProcs = currentProcs;
+			}
+			// The variation of processus compare to the latest execution of the function.
+			var diffProcs = currentProcs - this.options.previousProcs;
+
+			// As much as processus than during the previous execution.
+			// In asynchronous context it can happened.
+			if(!diffProcs) {
+				this.state.removeState('updating');
+			}
+			else if(!currentProcs) {
+				// All processus have been completed.
+				// Even if the bar is not in "progressing" state, complete it.
+				this.state.addState('completing');
+				this.loading_complete(function() {
+					// Release the component to its initial state.
+					self.state.setState('ready');
+				});
+			} else {
+				// Update the loading bar depending on the latest change.
+				// New processus are loading. Each new processus or completed processus will fill
+				// the loading bar. 50% at loading. 50% while completed.
+				if (!this.state.is('progressing')) {
+					this.state.addState('progressing');
 				}
 
-				var diffProcs = this.options.currentProcs - this.options.previousProcs;
-				// No more nor less processus.
-				if (diffProcs == 0) {
-					this.state.removeState('updating');
-				} else if (diffProcs > 0) {
-					// New processus are loading.
-					this.options.loadingPercent = this.options.loadingPercent + ((100 - this.options.loadingPercent) / (diffProcs * 2));
-					this.view.update(this.options.loadingPercent, true, function() {
-						// release the lock on the component.
-						self.state.removeState('updating');
-					});
-				} else {
-					// Processus complete.
-					this.options.loadingPercent = this.options.loadingPercent + ((100 - this.options.loadingPercent) / (Math.abs(diffProcs) * 2));
-					this.view.update(this.options.loadingPercent, true, function() {
-						self.state.removeState('updating');
-					});
-				}
-				this.options.previousProcs = this.options.currentProcs;
+				var procSpace = ( 100 / this.options.maxProcs ) * 1/2;
+				var spaceLeft = ( this.options.maxProcs - ( this.options.maxProcs - this.options.currentProcs ) ) * procSpace;
+				this.view.update(100 - spaceLeft, true, function() {
+					self.state.removeState('updating');
+				});
 			}
+
+			// Remind the number of processus the component had to treat.
+			this.options.previousProcs = currentProcs;
 		},
 
 		/* ************************************************************** */
