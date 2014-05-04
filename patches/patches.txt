@@ -1,0 +1,7 @@
+This file contains patches done to CakePHP core library and vendors library.
+Please avoid patches at any cost, for it will most likely break upgrade paths!
+
+--- CakePHP ---
+[app/Console/Commande/SchemaShell.php]
+Console_Command_SchemaShell-Non_interactive_parameter.patch
+Allow the using of "schema create" without any user interactions.
