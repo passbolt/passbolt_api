@@ -269,6 +269,8 @@ class FixtureTask extends BakeTask {
 	public function generateFixtureFile($model, $otherVars) {
 		$defaults = array('table' => null, 'schema' => null, 'records' => null, 'import' => null, 'fields' => null);
 		$vars = array_merge($defaults, $otherVars);
+		// Dirty patch to add missing semicolon.
+		$vars['schema'] = $vars['schema'] . ';';
 
 		$path = $this->getPath();
 		$filename = Inflector::camelize($model) . 'Fixture.php';
