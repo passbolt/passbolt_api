@@ -25,19 +25,7 @@ class Resource extends AppModel {
  * Details of has one relationships
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasOne = array('Secret'
-		// 'UserResourcePermission' => array(
-		// 'foreignKey' => 'resource_id'
-		// ),
-		// 'GroupResourcePermission' => array(
-		// 'foreignKey' => 'resource_id'
-		// ),
-		// 'Permission' => array(
-		// 'foreignKey' => false,
-		// 'conditions' => array( ' Permission.id = UserResourcePermission.permission_id ' ),
-		// 'type' => 'LEFT'
-		// )
-	);
+	public $hasOne = array('Secret');
 
 	public $belongsTo = array(
 		'Creator' => array(

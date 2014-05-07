@@ -14,7 +14,7 @@ class Permission extends AppModel {
  * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = array('Containable', 'Trackable');
-	
+
 /**
  * Details of belongs to relationships
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
