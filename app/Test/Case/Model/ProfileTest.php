@@ -22,6 +22,7 @@ class ProfileTest extends CakeTestCase {
 	public function setup() {
 		parent::setUp();
 		$this->Profile = ClassRegistry::init('Profile');
+		$this->User = ClassRegistry::init('User');
 	}
 
 	/**
@@ -40,6 +41,7 @@ class ProfileTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testUserIdValidation() {
+		$user = $this->User->findByUsername('utest@passbolt.com');
 		$testcases = array(
 			'' => false,
 			'?!#' => false,
@@ -47,14 +49,15 @@ class ProfileTest extends CakeTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
 			'zzz00003-c5cd-11e1-a0c5-080027796c4c' => false,
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => false,
-			'533d2064-a644-4bbe-8218-1221c0a895dc' => true,
+			$user['User']['id'] => true,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$profile = array('Profile' => array('user_id' => $testcase));
 			$this->Profile->set($profile);
 			if($result) $msg = 'validation of the user_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the user_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->Profile->validates(array('fieldList' => array('user_id'))), $result, $msg);
+			$validate = $this->Profile->validates(array('fieldList' => array('user_id')));
+			$this->assertEqual($validate, $result, $msg);
 		}
 	}
 

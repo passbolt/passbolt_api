@@ -53,11 +53,13 @@ class CategoryTask extends ModelTask {
 			'oth' => $Category->findByName("others"),
 			'op1' => $Category->findByName("o-project1"),
 			'op2' => $Category->findByName("o-project2"),
-			
+			'pvt' => $Category->findByName("private"),
+			'pjr' => $Category->findByName("pv-jean_rene"),
+
 			// Unit tests sandbox category
 			'utt' => $Category->findByName("utest")
 		);
-		foreach ($aliases as $name=>$obj){
+		foreach ($aliases as $name => $obj) {
 			$aliases[$name] = $obj['Category']['id'];
 		}
 		return $aliases;
@@ -263,7 +265,29 @@ class CategoryTask extends ModelTask {
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));
-		
+		$c[] = array('Category'=>array(
+			'id' => '444d3a7b-fc90-4faa-a19f-1aafc0a895dc',
+			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'name' => 'private',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2014-05-06 03:34:39',
+			'modified' => '2014-05-06 03:34:39',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$c[] = array('Category'=>array(
+			'id' => '222d3a7b-fc70-4faa-a19f-1aafc0a800dc',
+			'parent_id' => null,
+			'name' => 'pv-jean_rene',
+			'category_type_id' => null,
+			'deleted' => 0,
+			'created' => '2014-05-06 03:35:39',
+			'modified' => '2014-05-06 03:35:39',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+
 		// Sand box unit test
 		$c[] = array('Category'=>array(
 			'id' => '10d11ff1-5208-4dc2-94d1-1b63d7a10fce',

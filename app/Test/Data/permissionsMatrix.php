@@ -96,6 +96,11 @@ return array(
 				'aroname' => 'frank@passbolt.com',
 				'result' => PermissionType::DENY
 			),
+			array(
+				'aconame' => 'pv-jean_rene',
+				'aroname' => 'jean-rene@test.com',
+				'result' => PermissionType::CREATE
+			),
 		),
 		'Resource' => array(
 			array(

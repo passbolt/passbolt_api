@@ -28,6 +28,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		'app.category_type',
 		'app.categoriesResource',
 		'app.user',
+		'app.profile',
 		'app.group',
 		'app.groupsUser',
 		'app.role',
@@ -211,14 +212,34 @@ class CategoriesControllerTest extends ControllerTestCase {
 		// Error : name is empty
 		$this->expectException('HttpException', 'Could not validate category data');
 		$result = json_decode($this->testAction('/categories/add.json', array(
-					'data' => array(
-						'Category' => array(
-							'name' => ''
-						)
-					),
-					'method' => 'Post',
-					'return' => 'contents'
-				)), true);
+			'data' => array(
+				'Category' => array(
+					'name' => ''
+				)
+			),
+			'method' => 'Post',
+			'return' => 'contents'
+		)), true);
+	}
+
+	public function testAddAndPermission() {
+		// Looking at the matrix of permission Cedric should be able to read but not to create into the category d-project1
+		$user = $this->User->findByUsername('cedric@passbolt.com');
+		$this->User->setActive($user);
+
+		// Error : name is empty
+		$this->expectException('HttpException', 'You are not allowed to create the category into the given parent category');
+		$cat = $this->Category->findByName('d-project1');
+		$result = json_decode($this->testAction('/categories/add.json', array(
+			'data' => array(
+				'Category' => array(
+					'name' => 'testAddAndPermission Category',
+					'parent_id' => $cat['Category']['id']
+				)
+			),
+			'method' => 'Post',
+			'return' => 'contents'
+		)), true);
 	}
 
 	public function testAdd() {
@@ -314,9 +335,25 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->testAction("/categories/$id.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
-	/**
-	 * Test update function
-	 */
+	public function testEditAndPermission() {
+		// Looking at the matrix of permission Cedric should be able to read but not to edit the category d-project1
+		$user = $this->User->findByUsername('cedric@passbolt.com');
+		$this->User->setActive($user);
+
+		$this->expectException('HttpException', 'You are not allowed to edit this category');
+		$cat = $this->Category->findByName('d-project1');
+		$id = $cat['Category']['id'];
+		$result = json_decode($this->testAction("/categories/$id.json", array(
+			'data' => array(
+				'Category' => array(
+					'name' => 'testEditAndPermission Category'
+				)
+			),
+			'method' => 'Put',
+			'return' => 'contents'
+		)), true);
+	}
+
 	public function testEdit() {
 		$cat = $this->Category->findByName('o-project1');
 		$id = $cat['Category']['id'];
@@ -344,6 +381,21 @@ class CategoriesControllerTest extends ControllerTestCase {
 	public function testDeleteCategoryIdNotValid() {
 		$this->expectException('HttpException', 'The category id is invalid');
 		$this->testAction("/categories/badid.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+
+	public function testDeleteAndPermission() {
+		// Looking at the matrix of permission Jean-René should be able to create but not update the category jean rené private
+		$user = $this->User->findByUsername('jean-rene@test.com');
+		$this->User->setActive($user);
+
+		$this->expectException('HttpException', 'You are not allowed to delete this category');
+		$cat = $this->Category->findByName('pv-jean_rene');
+
+		$id = $cat['Category']['id'];
+		$result = json_decode($this->testAction("/categories/$id.json", array(
+			'method' => 'Delete',
+			'return' => 'contents'
+		)), true);
 	}
 
 	public function testDelete() {

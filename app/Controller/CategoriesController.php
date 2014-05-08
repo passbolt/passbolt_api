@@ -47,11 +47,11 @@ class CategoriesController extends AppController {
 	}
 
 /**
- * Get a category
- * Renders a json object with the nested categories
+ * Get a category.
+ * If children options is found in the request parameters, the function will return
+ * the Category with its children.
  *
  * @param uuid $id the id of the category
- * @param bool $children whether or not we want the children returned
  * @return void
  *
  */
@@ -68,6 +68,11 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
+//		// check if user is authorized
+//		if (!$this->Category->isAuthorized($id, PermissionType::READ)) {
+//			$this->Message->error(__('You are not authorized to read this category'), array('code' => 404));
+//			return;
+//		}
 		// check if it exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
@@ -133,8 +138,6 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function add() {
-//		var_dump($this->request->data);die();
-
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
@@ -146,8 +149,17 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// set the data for validation and save
 		$catpost = $this->request->data;
+
+		// Check if the user is allowed to create in the parent category.
+		if (isset($catpost['Category']['parent_id'])) {
+			if (!$this->Category->isAuthorized($catpost['Category']['parent_id'], PermissionType::CREATE)) {
+				$this->Message->error(__('You are not allowed to create the category into the given parent category'));
+				return;
+			}
+		}
+
+		// set the data for validation and save
 		$this->Category->set($catpost);
 
 		// check if the data is valid
@@ -159,6 +171,7 @@ class CategoriesController extends AppController {
 		// try to save
 		$fields = $this->Category->getFindFields("add", User::get('Role.name'));
 		$this->Category->create();
+		// @todo take a moment to check what is this mess ....
 		// disable the permissionnable behavior because we need to access other categories to position the new one
 		//		$this->Category->Behaviors->disable('Permissionable');
 		$category = $this->Category->save($catpost, true, $fields['fields']);
@@ -218,6 +231,16 @@ class CategoriesController extends AppController {
 			return;
 		}
 
+		// Check if the user is allowed to update the category.
+		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not allowed to edit this category'));
+			return;
+		}
+
+		if (isset($catpost['Category']['parent_id'])) {
+
+		}
+
 		// check if data was provided
 		if (!isset($this->request->data['Category'])) {
 			$this->Message->error(__('No data were provided'));
@@ -257,6 +280,11 @@ class CategoriesController extends AppController {
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
+			return;
+		}
+		// Check if the user is allowed to delete the category.
+		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not allowed to delete this category'));
 			return;
 		}
 		// delete
