@@ -24,29 +24,29 @@ class ResourcesController extends AppController {
  * Get all resources
  * Renders a json object of the resources
  *
- * @param array categories_id (optional) Ids of the categories to filter on
- * @param bool recursive (optional) Whether we want also the resources of all subcategories
+ *
  * @return void
  */
 	public function index() {
 		// The additional information to pass to the model request
 		$data = array();
+		// Whether we want also the resources of all subcategories
+		$recursive = false;
+
 		// Extract the filter from the request
 		$filter = $this->Filter->fromRequest($this->request->query);
 		// Merge the filter into the additional information to pass to the model request
 		$data = array_merge($data, $filter);
-		// Whether we want also the resources of all subcategories
-		$recursive = false;
 		if (isset($this->request->query['recursive']) && $this->request->query['recursive'] === 'true') {
 			$recursive = true;
 		}
 
 		// if filtered categories are provided
 		// - check the valildity of the given uids
-		// - if recursive, filter also on sub-categories 
+		// - if recursive, filter also on sub-categories
 		if (isset($data['foreignModels']['Category.id'])) {
 			// Tmp array to store the target categories and subcategories (if recursive provided)
-			$categories = array(); //$data['foreignModels']['Category.id'];
+			$categories = array();
 
 			foreach ($data['foreignModels']['Category.id'] as $categoryId) {
 				// if a category id is provided check it is well an uid
@@ -64,13 +64,13 @@ class ResourcesController extends AppController {
 				// The request is not a recursive request
 				if (!$recursive) {
 					$categories[] = $categoryId;
-				} // Else get the sub categories and add them to the target categories to filter on
-				else {
+				} else {
+					// Else get the sub categories and add them to the target categories to filter on
 					// If the category has yet been added to the additional parameters
 					if (in_array($categoryId, $categories)) {
 						continue;
-					} // Get the subcategories of the current category
-					else {
+					} else {
+						// Else Get the subcategories of the current category
 						$subCategories = $this->Resource->CategoryResource->Category->getSubCategories($category);
 						// Add the subcategories to the request conditions
 						foreach ($subCategories as $subCategory) {
@@ -103,7 +103,7 @@ class ResourcesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		// check if the category id is provided
+		// check if the resource id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The resource id is missing'));
 			return;
@@ -114,16 +114,26 @@ class ResourcesController extends AppController {
 			return;
 		}
 		// check if it exists
-		$data = array(
-			'Resource.id' => $id
-		);
-		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
-		$resources = $this->Resource->find('all', $options);
-		if (!count($resources)) {
+		$resource = $this->Resource->findById($id);
+		if (!$resource) {
 			$this->Message->error(__('The resource does not exist'), array('code' => 404));
 			return;
 		}
-		$this->set('data', $resources[0]);
+
+		// check if user is authorized
+		// the permissionable after find executed on the previous operation findById should drop
+		// any record the user is not authorized to access. This test should always be true.
+		if (!$this->Resource->isAuthorized($id, PermissionType::READ)) {
+			$this->Message->error(__('You are not authorized to access this resource'), array('code' => 403));
+			return;
+		}
+
+		// Get the resource.
+		$data = array(
+			'Resource.id' => $id
+		);
+		$o = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
+		$this->set('data', $this->Resource->find('first', $o));
 		$this->Message->success();
 	}
 
@@ -148,6 +158,13 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('The resource does not exist'), array('code' => 404));
 			return;
 		}
+
+		// check if user is authorized
+		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not authorized to delete this resource'), array('code' => 403));
+			return;
+		}
+
 		$resource['Resource']['deleted'] = '1';
 		$fields = $this->Resource->getFindFields('delete', User::get('Role.name'));
 		if (!$this->Resource->save($resource, true, $fields['fields'])) {
@@ -174,13 +191,24 @@ class ResourcesController extends AppController {
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;
+
+		// Check if the user is allowed to create in the parent category.
+		if($resourcepost['Resource']['name'] == 'testAddAndPermission')
+		if (isset($resourcepost['Category'])) {
+			foreach ($resourcepost['Category'] as $category) {
+				if (!$this->Resource->CategoryResource->Category->isAuthorized($category['id'], PermissionType::CREATE)) {
+					$this->Message->error(__('You are not authorized to create a resource into the category'), array('code' => 403));
+					return;
+				}
+			}
+		}
+
 		$this->Resource->set($resourcepost);
 
 		$fields = $this->Resource->getFindFields('save', User::get('Role.name'));
 
 		// check if the data is valid
 		if (!$this->Resource->validates()) {
-			var_dump($this->Resource->validationErrors);
 			$this->Message->error(__('Could not validate resource data'));
 			return;
 		}
@@ -258,28 +286,38 @@ class ResourcesController extends AppController {
 			return;
 		}
 
-		// check if data was provided
-		if (!isset($this->request->data['Resource']) && !isset($this->request->data['Category'])) {
-			$this->Message->error(__('No data were provided'));
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The resource id invalid'));
+			return;
+		}
+
+		// check if the resource exists
+		$resource = $this->Resource->findById($id);
+		if (!$resource) {
+			$this->Message->error(__('The resource doesn\'t exist'));
+			return;
+		}
+
+		// check if user is authorized
+		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not authorized to edit this resource'), array('code' => 403));
 			return;
 		}
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;
+		// Use the url id parameter as Resource id
+		$resourcepost['Resource']['id'] = $id;
 
+		// check if data was provided
+		if (!isset($resourcepost['Resource']) && !isset($resourcepost['Category'])) {
+			$this->Message->error(__('No data were provided'));
+			return;
+		}
+
+		// Update the resource
 		if (isset($resourcepost['Resource'])) {
-			// check if the id is valid
-			if (!Common::isUuid($resourcepost['Resource']['id'])) {
-				$this->Message->error(__('The resource id invalid'));
-				return;
-			}
-			// get the resource id
-			$resource = $this->Resource->findById($id);
-			if (!$resource) {
-				$this->Message->error(__('The resource doesn\'t exist'));
-				return;
-			}
-
 			$this->Resource->set($resourcepost);
 			if (!$this->Resource->validates()) {
 				$this->Message->error(__('Could not validate Resource'));
@@ -292,7 +330,8 @@ class ResourcesController extends AppController {
 				return;
 			}
 		}
-		// Save the associated secret
+
+		// Update the associated secret
 		if (isset($resourcepost['Secret'])) {
 			$resourcepost['Secret']['resource_id'] = isset($resourcepost['Secret']['resource_id']) ? $resourcepost['Secret']['resource_id'] : $resource['Resource']['id'];
 			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : User::get('User.id');

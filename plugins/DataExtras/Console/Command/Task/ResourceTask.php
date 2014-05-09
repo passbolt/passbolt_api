@@ -13,9 +13,9 @@ require_once ('plugins' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . 
 App::uses('Resource', 'Model');
 
 class ResourceTask extends ModelTask {
-	
+
 	public $model = 'Resource';
-	
+
 	public function execute() {
 		$Model = ClassRegistry::init($this->model);
 		// @todo work on permissionable and save

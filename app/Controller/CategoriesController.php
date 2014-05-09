@@ -68,15 +68,19 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
-//		// check if user is authorized
-//		if (!$this->Category->isAuthorized($id, PermissionType::READ)) {
-//			$this->Message->error(__('You are not authorized to read this category'), array('code' => 404));
-//			return;
-//		}
+
 		// check if it exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
 			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			return;
+		}
+
+		// check if user is authorized
+		// the permissionable after find executed on the previous operation findById should drop
+		// any record the user is not authorized to access. This test should always be true.
+		if (!$this->Category->isAuthorized($id, PermissionType::READ)) {
+			$this->Message->error(__('You are not authorized to access this category'), array('code' => 403));
 			return;
 		}
 
@@ -154,7 +158,7 @@ class CategoriesController extends AppController {
 		// Check if the user is allowed to create in the parent category.
 		if (isset($catpost['Category']['parent_id'])) {
 			if (!$this->Category->isAuthorized($catpost['Category']['parent_id'], PermissionType::CREATE)) {
-				$this->Message->error(__('You are not allowed to create the category into the given parent category'));
+				$this->Message->error(__('You are not authorized to create a category into the given parent category'), array('code' => 403));
 				return;
 			}
 		}
@@ -192,10 +196,6 @@ class CategoriesController extends AppController {
 			}
 		}
 
-		// Should be done by the after save of the permissionable behavior
-		// // Add the admin right to the just created category for the creator
-		// $this->PermissionCpt->add('Category', $category, 'User', User::get(), PermissionType::ADMIN);
-
 		// Get back the category data to return to the client
 		$data = array('Category' => array('id' => $category['Category']['id']));
 		$options = $this->Category->getFindOptions('addResult', User::get('Role.name'), $data);
@@ -226,19 +226,16 @@ class CategoriesController extends AppController {
 		}
 
 		// check if the category exists
-		if (!$this->Category->exists($id)) {
+		$category = $this->Category->findById($id);
+		if (!($category)) {
 			$this->Message->error(__('The category does not exist'), array('code' => 404));
 			return;
 		}
 
 		// Check if the user is allowed to update the category.
 		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not allowed to edit this category'));
+			$this->Message->error(__('You are not authorized to edit this category'), array('code' => 403));
 			return;
-		}
-
-		if (isset($catpost['Category']['parent_id'])) {
-
 		}
 
 		// check if data was provided
@@ -247,14 +244,24 @@ class CategoriesController extends AppController {
 			return;
 		}
 
+		// If the parent Category provided has changed.
+		// Check if the user is allowed to move the Category inside the given Category.
+		if (isset($this->request->data['Category']['parent_id']) && $category['Category']['parent_id'] != $this->request->data['Category']['parent_id']) {
+			if (!$this->Category->isAuthorized($this->request->data['Category']['parent_id'], PermissionType::CREATE)) {
+				$this->Message->error(__('You are not authorized to create a category into the given parent category'), array('code' => 403));
+				return;
+			}
+		}
+
+		// Check if the data is valid.
 		$this->Category->set($this->request->data);
-		// check if the data is valid
 		if (!$this->Category->validates()) {
 			$this->Message->error(__('Could not validate category data'));
 			return;
 		}
+
 		// try to save
-		$fields = $this->Category->getFindFields("edit", User::get('Role.name'));
+		$fields = $this->Category->getFindFields('edit', User::get('Role.name'));
 		$this->request->data['Category']['id'] = $id;
 		$category = $this->Category->save($this->request->data, true, $fields['fields']);
 		if ($category === false) {
@@ -277,16 +284,26 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is missing'));
 			return;
 		}
+
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
-		// Check if the user is allowed to delete the category.
-		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not allowed to delete this category'));
+
+		// check if the category exists
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'), array('code' => 404));
 			return;
 		}
+
+		// Check if the user is allowed to delete the category.
+		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not authorized to delete this category'), array('code' => 403));
+			return;
+		}
+
 		// delete
 		if ($this->Category->delete($id)) {
 			$this->Message->success(__('The category was succesfully deleted'));
@@ -385,6 +402,12 @@ class CategoriesController extends AppController {
 		$type = $this->Category->CategoryType->findByName($typeName);
 		if (!$type) {
 			$this->Message->error(__('The type does not exist'), array('code' => 404));
+			return;
+		}
+
+		// Check if the user is allowed to update the category.
+		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not authorized to change the type of this category'), array('code' => 403));
 			return;
 		}
 
