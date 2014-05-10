@@ -102,7 +102,50 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals('facebook account', $result['body']['Resource']['name'], 'resources/view/' . $id . ".json should a resource named 'facebook account' but returned {$result['body']['Resource']['name']} instead");
 	}
 
-	// TODO Test filter
+	public function testIndexFilterCategoryDoesntExist() {
+		$this->expectException('HttpException', 'The category doesn\'t exist');
+		$catId = '50d22ff7-5239-4dd2-94d1-1c63d7a10fce';
+		$url = '/resources.json?recursive=true&fltr_model_category=' . $catId;
+		json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
+	}
+
+	public function testIndexAndPermission() {
+		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../Data/permissionsMatrix.php');
+		$usersNames = array(
+			'a-usr1@companya.com',
+			'cedric@passbolt.com',
+			'dark.vador@passbolt.com',
+			'kevin@passbolt.com',
+			'ismail@passbolt.com',
+			'manager.nogroup@passbolt.com',
+			'myriam@passbolt.com',
+			'remy@passbolt.com'
+		);
+
+		foreach ($usersNames as $username) {
+			$user = $this->User->findByUsername($username);
+			$this->User->setActive($user);
+
+			// test when no parameters are provided
+			$url = '/resources/index.json';
+
+			$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
+			$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
+			$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
+
+			foreach ($permissionsMatrix['User']['Resource'] as $userResPermission) {
+				if ($userResPermission['aroname'] == $username) {
+					var_dump('test '.$username);
+					$path = $this->Resource->inNestedArray($userResPermission['aconame'], $result['body'], 'name');
+					if ($userResPermission['result'] == PermissionType::DENY) {
+						$this->assertTrue(empty($path), "{$url} : test should not contain '{$userResPermission['aconame']}' resource with user '{$username}'");
+					} else {
+						$this->assertTrue(!empty($path), "{$url} : test should contain '{$userResPermission['aconame']}' resource with user '{$username}'");
+					}
+				}
+			}
+		}
+	}
 
 	public function testIndex() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
@@ -113,7 +156,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		// test when no parameters are provided
 		$url = '/resources/index.json';
 		$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return an error but is returning {$result['header']['status']}");
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
 		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
 
 		// test with category parameter specified which does not contain resources

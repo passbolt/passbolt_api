@@ -57,7 +57,7 @@ class ResourcesController extends AppController {
 				// check if the category exists
 				$category = $this->Resource->CategoryResource->Category->findById($categoryId);
 				if (!$category) {
-					$this->Message->error(__('The category doesn\t exist'));
+					$this->Message->error(__('The category doesn\'t exist'));
 					return;
 				}
 
