@@ -20,4 +20,61 @@ class GroupUser extends AppModel {
 	);
 
 	public $actsAs = array('Trackable');
+
+	/**
+	 * Return the find conditions to be used for a given context.
+	 *
+	 * @param null|string $case The target case.
+	 * @param null|string $role The user role.
+	 * @param null|array $data (optional) Optional data to build the find conditions.
+	 * @return array
+	 */
+	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
+		$conditions = array();
+		switch ($case) {
+			case 'add':
+				$conditions = array();
+				break;
+			case 'view':
+				$conditions = array(
+					'conditions' => array(
+						'GroupUser.id' => $data['GroupUser.id']
+					)
+				);
+				break;
+			default:
+				$conditions = array(
+					'conditions' => array()
+				);
+		}
+		return $conditions;
+	}
+
+	/**
+	 * Return the list of field to fetch for given context
+	 * @param string $case context ex: login, activation
+	 * @return $condition array
+	 */
+	public static function getFindFields($case = 'view', $role = Role::USER) {
+		switch($case){
+			case 'view':
+			case 'add':
+			case 'edit':
+				$fields = array(
+					'fields' => array(
+						'id', 'group_id', 'user_id'
+					)
+				);
+				break;
+			case 'delete':
+				$fields = array();
+				break;
+			default:
+				$fields = array(
+					'fields' => array()
+				);
+				break;
+		}
+		return $fields;
+	}
 }
