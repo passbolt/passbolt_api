@@ -321,21 +321,6 @@ steal(
 				instance.Favorite = null;
 				can.trigger(passbolt.model.Resource, 'updated', instance);
 			});
-		},
-
-		/* ************************************************************** */
-		/* LISTEN TO THE STATE CHANGES */
-		/* ************************************************************** */
-
-		/**
-		 * Listen to the change relative to the state Ready.
-		 * The ready state is fired automatically after the Component is rendered
-		 * @param {boolean} go Enter or leave the state
-		 * @return {void}
-		 */
-		'stateReady': function (go) {
-			// @TODO : is triggered no matter what workspace is displayed.. to fix
-			console.log("password workspace ready");
 		}
 
 	});

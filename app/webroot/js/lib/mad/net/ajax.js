@@ -62,6 +62,19 @@ mad.net.Ajax.request({
 			request.dataType = request.dataType || 'json';
 			// Add the params left to the request
 			request.data = request.params;
+			// Format request attribute.
+			request.type = request.type ? request.type.toUpperCase() : 'GET';
+
+			// The request will not display a loading feedback, default true.
+			if (typeof request.silentLoading == 'undefined') {
+				request.silentLoading = true;
+				if (request.type == 'POST' || request.type == 'DELETE' || request.type == 'PUTw') {
+					request.silentLoading = false;
+				}
+			}
+
+			// Propagate an event on the bus to inform other components.
+			mad.bus.trigger('passbolt_ajax_request_start', [request]);
 
 			// make the ajax request
 			var returnValue = can.ajax(request)
@@ -123,12 +136,16 @@ mad.net.Ajax.request({
 
 			// Handle the server success response with the default response handler
 			returnValue.then(function (data, response, request) {
+				// Propagate an event on the bus to inform other components.
+				mad.bus.trigger('passbolt_ajax_request_complete', [request]);
 				var responseHandler = new ResponseHandlerClass(response, request);
 				responseHandler.handle();
 			});
 
 			// Handle the server fail response with the default response handler
 			returnValue.fail(function (jqXHR, textStatus, response) {
+				// Propagate an event on the bus to inform other components.
+				mad.bus.trigger('passbolt_ajax_request_complete', [request]);
 				var responseHandler = new ResponseHandlerClass(response, request);
 				responseHandler.handle();
 			});
