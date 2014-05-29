@@ -586,7 +586,13 @@ i.no-text + span {
 .invisible {
   visibility: hidden;
 }
-/*
+.clearfix {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
  * Clearfix: contain floats
  *
  * For modern browsers
@@ -597,22 +603,14 @@ i.no-text + span {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
+}
 .clearfix:before,
 .clearfix:after {
-  content: " ";
-  /* 1 */
+  content: "";
   display: table;
-  /* 2 */
 }
 .clearfix:after {
   clear: both;
-}
-/*
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
-.clearfix {
-  *zoom: 1;
 }
 /*
  * Border radius
@@ -741,8 +739,7 @@ a:focus {
 input[type=text],
 input[type=password],
 input[type=search],
-textarea,
-select {
+textarea {
   color: #333;
   background: #FFF;
   border: 1px solid #cccccc;
@@ -908,28 +905,33 @@ textarea {
   font-weight: normal;
   display: inline;
 }
+.checkbox label {
+  font-weight: normal;
+  display: inline;
+  font-size: 1em;
+}
 /* 
 	Hide the original radios and checkboxes (but still accessible)
 	@credit: http://www.wufoo.com/2011/06/13/custom-radio-buttons-and-checkboxes/
 
 	#cssrulefilter is a rule filter to block browsers that don't support that selector 
 	http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
-*/
+
 input[type="checkbox"] {
-  position: absolute;
-  margin-left: 0;
-  margin-top: .35em;
+	position:absolute;
+	margin-left:0;
+	margin-top:.35em;
 }
 input[type="checkbox"] + label {
-  font-size: .9375em;
-  font-weight: normal;
-  margin-left: 1.25em;
-  padding: 0;
+	font-size:.9375em;
+	font-weight:normal;
+	margin-left:1.25em;
+	padding:0;
 }
 input[type="checkbox"]:hover,
 input[type="checkbox"] + label:hover {
-  cursor: pointer;
-}
+	cursor: pointer;
+}*/
 /*#cssrulefilter:checked,
 input[type="checkbox"] {
 	position:absolute;
@@ -960,64 +962,66 @@ input[type="checkbox"] {
 	Description	: ?
 	Compatible	 : ?
 	Since				: version 3.0
-*/
-/** Added by Kevin - custom select **/
+
+
 select {
-  font-size: 1.125em;
-  padding: .278em .5em .278em .5em;
-  margin: 0;
-  color: #333333;
-  border: none;
-  outline: none;
-  display: inline-block;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  cursor: pointer;
-  border: 1px solid #dddddd;
-  width: 100%;
-  background: #ffffff;
+	font-size: 1.125em;
+	padding: .278em .5em .278em .5em;
+	margin: 0;
+	color:@font-default;
+	border:none;
+	outline:none;
+	display: inline-block;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	cursor:pointer;
+	border: 1px solid @border-default;
+	width: 100%;
+	background:@white;
 }
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  select {
-    padding-right: 18px;
-  }
+
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. * /
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	select {padding-right:18px}
 }
+
 span.select-box {
-  position: relative;
+	position:relative;
 }
+
 span.select-box:after {
-  content: '<>';
-  font: 11px "Consolas", monospace;
-  color: #aaa;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg);
-  right: 8px;
-  top: 0px;
-  padding: 0 0 2px;
-  border-bottom: 1px solid #dddddd;
-  position: absolute;
-  pointer-events: none;
+	content:'<>';
+	font:11px "Consolas", monospace;
+	color:#aaa;
+	-webkit-transform:rotate(90deg);
+	-moz-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg);
+	right:8px;
+	top:0px;
+	padding:0 0 2px;
+	border-bottom:1px solid @border-default;
+	position:absolute;
+	pointer-events:none;
 }
 span.select-box:before {
-  content: '';
-  right: 6px;
-  top: 0px;
-  width: 20px;
-  height: 20px;
-  background: #f8f8f8;
-  position: absolute;
-  pointer-events: none;
-  display: block;
-  background: -o-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  background: -ms-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  background: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
-  border-bottom: 1px solid #dddddd;
+	content:'';
+	right:6px;
+	top:0px;
+	width:20px;
+	height:20px;
+	background:#f8f8f8;
+	position:absolute;
+	pointer-events:none;
+	display:block;
+	background: -o-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -ms-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+	border-bottom: 1px solid @border-default;
 }
+*/
 /* fallback placeholder */
 .placeholder {
   color: #bbb;

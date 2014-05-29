@@ -586,7 +586,13 @@ i.no-text + span {
 .invisible {
   visibility: hidden;
 }
-/*
+.clearfix {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
  * Clearfix: contain floats
  *
  * For modern browsers
@@ -597,22 +603,14 @@ i.no-text + span {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
+}
 .clearfix:before,
 .clearfix:after {
-  content: " ";
-  /* 1 */
+  content: "";
   display: table;
-  /* 2 */
 }
 .clearfix:after {
   clear: both;
-}
-/*
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
-.clearfix {
-  *zoom: 1;
 }
 /*
  * Border radius
@@ -1169,8 +1167,7 @@ a.button.disabled:active {
 input[type=text],
 input[type=password],
 input[type=search],
-textarea,
-select {
+textarea {
   color: #333;
   background: #FFF;
   border: 1px solid #cccccc;
@@ -1336,28 +1333,33 @@ textarea {
   font-weight: normal;
   display: inline;
 }
+.checkbox label {
+  font-weight: normal;
+  display: inline;
+  font-size: 1em;
+}
 /* 
 	Hide the original radios and checkboxes (but still accessible)
 	@credit: http://www.wufoo.com/2011/06/13/custom-radio-buttons-and-checkboxes/
 
 	#cssrulefilter is a rule filter to block browsers that don't support that selector 
 	http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
-*/
+
 input[type="checkbox"] {
-  position: absolute;
-  margin-left: 0;
-  margin-top: .35em;
+	position:absolute;
+	margin-left:0;
+	margin-top:.35em;
 }
 input[type="checkbox"] + label {
-  font-size: .9375em;
-  font-weight: normal;
-  margin-left: 1.25em;
-  padding: 0;
+	font-size:.9375em;
+	font-weight:normal;
+	margin-left:1.25em;
+	padding:0;
 }
 input[type="checkbox"]:hover,
 input[type="checkbox"] + label:hover {
-  cursor: pointer;
-}
+	cursor: pointer;
+}*/
 /*#cssrulefilter:checked,
 input[type="checkbox"] {
 	position:absolute;
@@ -1388,64 +1390,66 @@ input[type="checkbox"] {
 	Description	: ?
 	Compatible	 : ?
 	Since				: version 3.0
-*/
-/** Added by Kevin - custom select **/
+
+
 select {
-  font-size: 1.125em;
-  padding: .278em .5em .278em .5em;
-  margin: 0;
-  color: #333333;
-  border: none;
-  outline: none;
-  display: inline-block;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  cursor: pointer;
-  border: 1px solid #dddddd;
-  width: 100%;
-  background: #ffffff;
+	font-size: 1.125em;
+	padding: .278em .5em .278em .5em;
+	margin: 0;
+	color:@font-default;
+	border:none;
+	outline:none;
+	display: inline-block;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	cursor:pointer;
+	border: 1px solid @border-default;
+	width: 100%;
+	background:@white;
 }
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  select {
-    padding-right: 18px;
-  }
+
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. * /
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	select {padding-right:18px}
 }
+
 span.select-box {
-  position: relative;
+	position:relative;
 }
+
 span.select-box:after {
-  content: '<>';
-  font: 11px "Consolas", monospace;
-  color: #aaa;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg);
-  right: 8px;
-  top: 0px;
-  padding: 0 0 2px;
-  border-bottom: 1px solid #dddddd;
-  position: absolute;
-  pointer-events: none;
+	content:'<>';
+	font:11px "Consolas", monospace;
+	color:#aaa;
+	-webkit-transform:rotate(90deg);
+	-moz-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg);
+	right:8px;
+	top:0px;
+	padding:0 0 2px;
+	border-bottom:1px solid @border-default;
+	position:absolute;
+	pointer-events:none;
 }
 span.select-box:before {
-  content: '';
-  right: 6px;
-  top: 0px;
-  width: 20px;
-  height: 20px;
-  background: #f8f8f8;
-  position: absolute;
-  pointer-events: none;
-  display: block;
-  background: -o-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  background: -ms-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  background: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed', GradientType=0);
-  border-bottom: 1px solid #dddddd;
+	content:'';
+	right:6px;
+	top:0px;
+	width:20px;
+	height:20px;
+	background:#f8f8f8;
+	position:absolute;
+	pointer-events:none;
+	display:block;
+	background: -o-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -ms-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+	border-bottom: 1px solid @border-default;
 }
+*/
 /* fallback placeholder */
 .placeholder {
   color: #bbb;
@@ -1970,233 +1974,20 @@ input[type="search"]::-webkit-search-cancel-button {
   clear: both;
 }
 /* submit / cancel */
-.submit-wrapper {
+.dialog .submit-wrapper {
   border-top: 1px solid #dddddd;
   clear: both;
   width: 100%;
   padding: .75em 0;
 }
-.submit-wrapper .cancel,
-.submit-wrapper input {
+.dialog .submit-wrapper .cancel,
+.dialog .submit-wrapper .button {
   float: left;
   margin-left: 2em;
   font-size: 16px;
 }
-.submit-wrapper .cancel {
+.dialog .submit-wrapper .cancel {
   margin-top: .5em;
-}
-/* complexity and progress bar */
-.dialog .progress {
-  width: 67%;
-  border: 1px solid #dddddd;
-  height: 7px;
-  display: block;
-  clear: both;
-  margin: .25em 0 .5em 0;
-  float: left;
-}
-.dialog .progress-bar {
-  height: 5px;
-  display: block;
-  float: left;
-  margin: 1px;
-}
-.dialog .complexity-text {
-  float: right;
-  clear: right;
-  width: 28%;
-  font-size: 11px;
-}
-.dialog .password-complexity .progress-bar {
-  background: #000;
-  width: 1%;
-}
-.dialog .password-complexity .progress-bar.very_weak {
-  background: #000;
-  width: 20%;
-}
-.dialog .password-complexity .progress-bar.weak {
-  background: #ef2929;
-  width: 40%;
-}
-.dialog .password-complexity .progress-bar.fair {
-  background: #fce94f;
-  width: 60%;
-}
-.dialog .password-complexity .progress-bar.strong {
-  background: #73d216;
-  width: 80%;
-}
-.dialog .password-complexity .progress-bar.very_strong {
-  background: #4e9a06;
-  width: 100%;
-}
-/** permissions **/
-.dialog .permissions {
-  height: 21.5em;
-  overflow-y: scroll;
-}
-.dialog .permissions .row {
-  border: 1px solid #ddd;
-  margin: 0 0 0.5em 0;
-  width: 97%;
-  -webkit-border-radius: .286em;
-  -moz-border-radius: .286em;
-  border-radius: .286em;
-}
-.dialog .permissions .row:hover {
-  background-color: #FAFAFA;
-}
-.dialog .permissions .row .avatar,
-.dialog .permissions .row .details {
-  float: left;
-}
-.dialog .permissions .row .actions {
-  float: right;
-  padding: 1em 1em 0 0;
-}
-.dialog .permissions .row > .avatar {
-  width: 3em;
-  height: 3em;
-  background-color: #eee;
-}
-.dialog .permissions .row > .avatar div.image-icon {
-  padding: 0.17em;
-}
-.dialog .permissions .row > .avatar div.image-file img {
-  width: 3em;
-  height: 3em;
-  -webkit-border-top-left-radius: .286em;
-  -webkit-border-bottom-left-radius: .286em;
-  -moz-border-radius-topleft: .286em;
-  -moz-border-radius-bottomleft: .286em;
-  border-top-left-radius: .286em;
-  border-bottom-left-radius: .286em;
-}
-.dialog .permissions .row .details {
-  margin: 0 0 0 1em;
-}
-.dialog .permissions .row .details span.name,
-.dialog .permissions .row .details span.rights {
-  display: block;
-}
-.dialog .permissions .row .details span.name {
-  text-overflow: clip;
-  word-wrap: break-word;
-  overflow: hidden;
-  height: 1.25em;
-  font-weight: bold;
-  font-size: 1.25em;
-}
-.dialog .perm-create-form {
-  margin: 20px 0 0 0;
-}
-.dialog .perm-create-form .perm-aro {
-  width: 22em;
-  padding-right: 0.375em;
-}
-.dialog .perm-create-form input[type=text].loading {
-  background: url(../../img/loading.gif) no-repeat 99% center;
-}
-.dialog .perm-create-form .perm-type {
-  padding-top: 2.075em;
-  padding-right: 0.375em;
-}
-.dialog .perm-create-form select.permission {
-  -webkit-appearance: menulist;
-  height: 2.2em;
-  width: 5.775em;
-  /* todo : make a generic fix for select fields. maybe chosen ? */
-}
-.dialog .perm-create-form .perm-actions {
-  height: 2.2em;
-  padding-top: 2.075em;
-}
-/** logs **/
-.dialog .logs .heading span.user,
-.dialog .logs .heading span.date {
-  display: block;
-  float: left;
-  width: 59%;
-  font-size: 1.1em;
-  font-weight: bold;
-  padding-left: 1%;
-}
-.dialog .logs .heading span.date {
-  width: 39%;
-}
-.dialog .logs ul {
-  border: 1px solid #dddddd;
-  max-height: 21.5em;
-  overflow-y: scroll;
-}
-.dialog .logs ul > li {
-  padding: 1%;
-}
-.dialog .logs ul > li.row.log:nth-child(even) {
-  background-color: #eee;
-}
-.dialog .logs ul > li div > .user,
-.dialog .logs ul > li div > .date {
-  float: left;
-  width: 62%;
-}
-.dialog .logs ul > li div > .date {
-  width: 38%;
-}
-.dialog .logs ul > li div > .user {
-  font-weight: bold;
-}
-.dialog .logs ul > li p {
-  font-style: italic;
-  margin: 1% 0 0 0;
-}
-.dialog .logs ul > li p > a {
-  color: #d40101;
-}
-.dialog .logs form.logs-filter-form {
-  margin-top: 1.5em;
-}
-.dialog .logs form.logs-filter-form .select.log-action-type {
-  float: left;
-  width: 49%;
-  margin-right: 2%;
-  height: 28px;
-}
-.dialog .logs form.logs-filter-form .input.text.log-user-group {
-  float: left;
-  width: 49%;
-}
-.dialog .logs form.logs-filter-form .input.text.log-user-group input.loading {
-  background: url(../../img/loading.gif) no-repeat 99% center;
-  padding-right: 12%;
-  width: 83%;
-}
-.dialog .logs form.logs-filter-form .input-datetime-wrapper.log-start-date .short input,
-.dialog .logs form.logs-filter-form .input-datetime-wrapper.log-end-date .short input {
-  float: left;
-  width: 35%;
-  margin-top: 0.5em;
-}
-.dialog .logs form.logs-filter-form .input-datetime-wrapper.log-end-date .short input {
-  margin-left: 1%;
-}
-.dialog .logs form.logs-filter-form .input-datetime-wrapper.log-start-date .actions,
-.dialog .logs form.logs-filter-form .input-datetime-wrapper.log-end-date .actions {
-  float: left;
-  width: auto;
-  margin-right: 0;
-  margin-top: 0.6em;
-}
-.dialog .logs form.logs-filter-form .input-datetime-wrapper.log-end-date .actions a.button {
-  margin-right: 0px;
-}
-.dialog .logs form.logs-filter-form > .actions {
-  margin-top: 1em;
-  float: left;
-}
-.dialog .logs form.logs-filter-form > .actions .log-filter-cancel {
-  padding-top: 0.25em;
 }
 /* dropdown */
 .dropdown {
@@ -2821,6 +2612,229 @@ input[type="search"]::-webkit-search-cancel-button {
     z-index: 990;
     text-align: right;
   }
+}
+/* complexity and progress bar */
+.dialog .progress {
+  width: 67%;
+  border: 1px solid #dddddd;
+  height: 7px;
+  display: block;
+  clear: both;
+  margin: .25em 0 .5em 0;
+  float: left;
+}
+.dialog .progress-bar {
+  height: 5px;
+  display: block;
+  float: left;
+  margin: 1px;
+}
+.dialog .password-complexity .complexity-text {
+  float: right;
+  clear: right;
+  width: 28%;
+  font-size: 11px;
+}
+.dialog .password-complexity .progress-bar {
+  background: #000;
+  width: 1%;
+}
+.dialog .password-complexity .progress-bar.very_weak {
+  background: #000;
+  width: 5%;
+}
+.dialog .password-complexity .progress-bar.weak {
+  background: #ef2929;
+  width: 10%;
+}
+.dialog .password-complexity .progress-bar.fair {
+  background: #fce94f;
+  width: 60%;
+}
+.dialog .password-complexity .progress-bar.strong {
+  background: #73d216;
+  width: 80%;
+}
+.dialog .password-complexity .progress-bar.very_strong {
+  background: #4e9a06;
+  width: 100%;
+}
+/* password share tab */
+.dialog .share-tab .form-content {
+  padding: 1em;
+}
+/* list of existing permissions settings */
+.dialog .share-tab .scroll {
+  max-height: 21.25em;
+}
+.dialog .share-tab .row {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  padding: .5em;
+  border-bottom: 1px dotted #dddddd;
+}
+.dialog .share-tab .row:before,
+.dialog .share-tab .row:after {
+  content: "";
+  display: table;
+}
+.dialog .share-tab .row:after {
+  clear: both;
+}
+.dialog .share-tab .row:before,
+.dialog .share-tab .row:after {
+  content: "";
+  display: table;
+}
+.dialog .share-tab .row:after {
+  clear: both;
+}
+.dialog .share-tab .row:last-child {
+  border: 0;
+}
+.dialog .share-tab .row .avatar img {
+  width: 36px;
+  height: 36px;
+  float: left;
+}
+.dialog .share-tab .row .user,
+.dialog .share-tab .row .group {
+  width: 55%;
+  float: left;
+  padding-left: 1em;
+}
+.dialog .share-tab .row .name {
+  display: block;
+}
+.dialog .share-tab .row .details a {
+  color: #888888;
+}
+.dialog .share-tab .row .rights {
+  float: left;
+  margin-top: .5em;
+}
+.dialog .share-tab .row .actions {
+  float: right;
+  margin-top: .55em;
+}
+.dialog .share-tab .row .actions a {
+  font-size: 1.125em;
+  padding: .25em .5em .2em .5em;
+  border: 1px solid transparent;
+}
+.dialog .share-tab .row .actions a:hover {
+  border: 1px solid #dddddd;
+}
+/* form to add new permissions */
+.dialog .share-tab .form-content.permission-add {
+  padding: 0 1.5em 1em 1.5em;
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+.dialog .share-tab .form-content.permission-add:before,
+.dialog .share-tab .form-content.permission-add:after {
+  content: "";
+  display: table;
+}
+.dialog .share-tab .form-content.permission-add:after {
+  clear: both;
+}
+.dialog .share-tab .form-content.permission-add:before,
+.dialog .share-tab .form-content.permission-add:after {
+  content: "";
+  display: table;
+}
+.dialog .share-tab .form-content.permission-add:after {
+  clear: both;
+}
+.dialog .share-tab .form-content.permission-add textarea {
+  width: 59%;
+  margin-right: 2%;
+  float: left;
+  height: 2.5em;
+  font-size: 1em;
+}
+.dialog .share-tab .form-content.permission-add .checkbox {
+  display: block;
+  float: left;
+}
+.dialog .organize-tab .current-folder {
+  background: #f3f3f3;
+  padding: .5em 1em;
+}
+.dialog .organize-tab .current-folder .folder-name {
+  font-weight: bold;
+}
+.dialog .organize-tab .tree {
+  height: 20.125em;
+  border: 1px solid #dddddd;
+}
+.dialog .organize-tab .selected {
+  background: #f3f3f3;
+}
+.dialog .organize-tab .selected {
+  background: #f3f3f3;
+}
+.folder-add .input.text {
+  width: 25em;
 }
 table#js_passbolt_user_browser {
   width: 100%;

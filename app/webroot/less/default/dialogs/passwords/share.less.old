@@ -1,0 +1,85 @@
+/** permissions **/
+
+.dialog .permissions{
+	height: 21em;
+	overflow-y: scroll;
+}
+.dialog .permissions .row{
+	border: 1px solid #ddd;
+	margin: 0 0 0.5em 0;
+	width: 97%;
+	padding:2px;
+}
+.dialog .permissions .row:hover{
+	background-color: @background-lightest;
+}
+
+.dialog .permissions .row .avatar,
+.dialog .permissions .row .details{
+	float: left;
+}
+.dialog .permissions .row .actions{
+	float: right;
+	padding: 1em 1em 0 0;
+}
+
+.dialog .permissions .row > .avatar{
+	width: 3em;
+	height: 3em;
+	background-color: #eee;
+}
+.dialog .permissions .row > .avatar div.image-icon{
+	padding: 0.17em;
+}
+.dialog .permissions .row > .avatar div.image-file img{
+	width: 3em;
+	height: 3em;
+}
+
+.dialog .permissions .row .details{
+	margin: 0 0 0 1em;
+}
+
+.dialog .permissions .row .details span.name,
+.dialog .permissions .row .details span.rights{
+	display: block;
+}
+.dialog .permissions .row .details span.name{
+	text-overflow: clip;
+	word-wrap: break-word;
+	overflow: hidden;
+	height: 1.25em;
+	font-weight: bold;
+	font-size: 1.25em;
+}
+
+.dialog .perm-create-form {
+	margin: 20px 0 0 0;
+}
+
+.dialog .perm-create-form .perm-aro {
+	width:22em;
+	padding-right:0.375em;
+}
+
+.dialog .perm-create-form input[type=text].loading{
+	background: url(../../img/loading.gif) no-repeat 99% center;
+}
+
+.dialog .perm-create-form .perm-type {
+	padding-top:2.075em;
+	padding-right:0.375em;
+}
+
+.dialog .perm-create-form select.permission{
+	-webkit-appearance: menulist;
+	height:2.2em;
+	width:5.775em;
+	/* todo : make a generic fix for select fields. maybe chosen ? */
+}
+
+.dialog .perm-create-form .perm-actions {
+	height: 2.2em;
+	padding-top:2.075em;
+}
+

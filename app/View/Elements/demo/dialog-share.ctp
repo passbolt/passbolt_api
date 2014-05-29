@@ -2,11 +2,20 @@
 /**
  * Demo Permissions Dialog
  *
- * @copyright		 copyright 2013 passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.View.Elements.demo.dialog
- * @since				 version 2.13.09
+ * @copyright	copyright 2014 passbolt.com
+ * @license		http://www.passbolt.com/license
+ * @package		app.View.Elements.demo.dialog-share
+ * @since		version 2.14.03
  */
+	$dummy = array(
+		0 => array ('name' => 'sysadmins','details' => 'group','group' => 1,'right' => 'update'),
+		1 => array ('name' => 'remy','details' => 'remy@passbolt.com','group' => 0,'right' => 'read'),
+		2 => array ('name' => 'kevin','details' => 'kevin@passbolt.com','group' => 0,'right' => 'admin'),
+		3 => array ('name' => 'cedric','details' => 'cedric@passbolt.com','group' => 0,'right' => 'update'),
+		4 => array ('name' => 'aurelie','details' => 'aurelie@passbolt.com','group' => 0,'right' => 'update'),
+		5 => array ('name' => 'myriam','details' => 'myriam@passbolt.com','group' => 0,'right' => 'update'),
+		6 => array ('name' => 'franck','details' => 'franck@passbolt.com','group' => 0,'right' => 'update')
+	);
 ?>
 <div class="dialog-wrapper">
 	<div class="dialog">
@@ -24,220 +33,71 @@
 						<a href="#" class="selected"><span>Share</span></a>
 					</li>
 					<li>
-						<a href="#"><span>Organize</span></a>
+						<a href="pages/demo/dialog-organize"><span>Organize</span></a>
 					</li>
 				</ul>
 				<ul class="tabs-content">
-					<!-- edit -->
-					<li class="tab-content selected" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
-						<div class="form-content">
-							<ul class="permissions">
-								<!-- This is a group row-->
-								<li class="row group clearfix">
+					<!-- share -->
+					<li class="tab-content share-tab selected" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
+						<form class="perm-create-form clearfix">
+						<div class="form-content permission-edit">
+							<ul class="permissions scroll">
+<?php foreach ($dummy as $i => $d): ?>
+								<li class="row">
 									<div class="avatar">
-										<div class="image-icon">
-											<!-- Here we display an icon by default, otherwise the user avatar if present -->
-											<i class="icon avatar group big no-text"></i>
-										</div>
+<?php if ($d['group']):?>
+										<img src="img/group_default.png"/>
+<?php else: ?>
+										<img src="img/user.png"/>
+<?php endif;?>
 									</div>
-									<div class="details">
-										<span class="name">
-											Sysadmins
-										</span>
-										<span class="rights">
-											can edit
-										</span>
+									<div class="group">
+										<span class="name"><?php echo $d['name'];?></span>
+										<span class="details"><a href="#"><?php echo $d['details'];?></a></span>
+									</div>
+									<div class="select rights">
+										<select id="js_permission_type" class="permission ">
+											<option value="read" <?php if ($d['right']=='read'):?>selected="selected"<?php endif;?>>can use</option>
+											<option value="update" <?php if ($d['right']=='udpate'):?>selected="selected"<?php endif;?>>can update</option>
+											<option value="admin" <?php if ($d['right']=='admin'):?>selected="selected"<?php endif;?>>can share</option>
+										</select>
 									</div>
 									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
+										<a href="#" class="close"><i class="icon close no-text"></i><span>remove</span></a>
 									</div>
 								</li>
-								<!-- End row -->
-								<!-- This is a user row with a default avatar -->
-								<li class="row user clearfix">
-									<div class="avatar">
-										<div class="image-icon">
-											<!-- Here we display an icon by default, otherwise the user avatar if present -->
-											<i class="icon avatar user big no-text"></i>
-										</div>
-									</div>
-									<div class="details">
-										<span class="name">
-											Kevin Muller
-										</span>
-										<span class="rights">
-											can edit
-										</span>
-									</div>
-									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
-									</div>
-								</li>
-								<!-- End row -->
-								<!-- This is a user row with a custom avatar -->
-								<li class="row user clearfix">
-									<div class="avatar">
-										<div class="image-file">
-											<!-- Here we display a custom avatar -->
-											<img src="img/user.png" alt="your picture"  />
-										</div>
-									</div>
-									<div class="details">
-										<span class="name">
-											Kevin Muller
-										</span>
-										<span class="rights">
-											can edit
-										</span>
-									</div>
-									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
-									</div>
-								</li>
-								<!-- End row -->
-								<!-- This is a user row with a custom avatar -->
-								<li class="row user clearfix">
-									<div class="avatar">
-										<div class="image-icon">
-											<i class="icon avatar user big no-text"></i>
-										</div>
-									</div>
-									<div class="details">
-										<span class="name">
-											Kevin Muller
-										</span>
-										<span class="rights">
-											can edit
-										</span>
-									</div>
-									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
-									</div>
-								</li>
-								<!-- End row -->
-								<!-- This is a user row with a custom avatar -->
-								<li class="row user clearfix">
-									<div class="avatar">
-										<div class="image-icon">
-											<i class="icon avatar user big no-text"></i>
-										</div>
-									</div>
-									<div class="details">
-										<span class="name">
-											Kevin Muller
-										</span>
-										<span class="rights">
-											can edit
-										</span>
-									</div>
-									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
-									</div>
-								</li>
-								<!-- End row -->
-								<!-- This is a user row with a custom avatar -->
-								<li class="row user clearfix">
-									<div class="avatar">
-										<div class="image-icon">
-											<i class="icon avatar user big no-text"></i>
-										</div>
-									</div>
-									<div class="details">
-										<span class="name">
-											Kevin Muller
-										</span>
-										<span class="rights">
-											can edit
-										</span>
-									</div>
-									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
-									</div>
-								</li>
-								<!-- End row -->
-								<!-- This is a user row with a custom avatar -->
-								<li class="row user clearfix">
-									<div class="avatar">
-										<div class="image-icon">
-											<i class="icon avatar user big no-text"></i>
-										</div>
-									</div>
-									<div class="details">
-										<span class="name">
-											Kevin Muller
-										</span>
-										<span class="rights">
-											can edit
-										</span>
-									</div>
-									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
-									</div>
-								</li>
-								<!-- End row -->
-								<!-- This is a user row with a custom avatar -->
-								<li class="row user clearfix">
-									<div class="avatar">
-										<div class="image-icon">
-											<i class="icon avatar user big no-text"></i>
-										</div>
-									</div>
-									<div class="details">
-										<span class="name">
-											Kevin Muller
-										</span>
-										<span class="rights">
-											can edit
-										</span>
-									</div>
-									<div class="actions">
-										<a href="#" class="close"><i class="icon close no-text"></i><span>close</span></a>
-									</div>
-								</li>
-								<!-- End row -->
+<?php endforeach; ?>
 							</ul>
-							<!-- Actions (add permissions) -->
-							<form class="perm-create-form clearfix">
-								<input id="js_permission_aco" type="hidden" />
-								<input id="js_permission_aro" type="hidden" />
-								
-								<div id="js_field_perm_aro_label" class="message">
-								</div>
-								
-								<div class="input text left perm-aro">
-									<label for="js_permission_aro_autocomplete">Share with a person or a group</label>
-									<div class="autocomplete">
-										<input class="loading" maxlength="50" type="text" id="js_permission_aro_autocomplete" placeholder="start typing a person or a group"/>
-										<ul id="js_permission_aro_autocomplete_list" class="autocomplete-content" style="display:none;">
-										</ul>
-									</div>
-								</div>
-								
-								<div class="select left perm-type">
-									<select id="js_permission_type" class="permission error">
-										<option value>select</option>
-										<option value="create">create</option>
-										<option value="read">read</option>
-										<option value="update">update</option>
-										<option value="admin">admin</option>
-									</select>
-								</div>
-								
-								<div class="left perm-actions">
-									<a href="#" id="js_permission_add_button" class="button">
-										<i class="plus icon big no-text"></i>
-										<span>add permission</span>
-									</a>
-								</div>
-
-					</div>	
-								<div class="submit-wrapper clearfix">
-									<input type="submit" class="button primary" value="save"/>
-									<a href="#" class="cancel">cancel</a>
-								</div>
-							</form>
-							<!-- End actions -->
 						</div>
+						<div class="form-content permission-add">
+							<input id="js_permission_aco" type="hidden" />
+							<input id="js_permission_aro" type="hidden" />
+							<div id="js_field_perm_aro_label" class="message">
+							</div>
+							<div class="input textarea autocomplete">
+								<label for="ResourceShare">Share with people or groups</label>
+								<textarea name="data[Resource][share]" class="small" id="ResourceShare" rows="2" placeholder="Enter a name or email address, separated by a coma"></textarea>
+								<ul id="js_permission_aro_autocomplete_list" class="autocomplete-content" style="display:none;">
+								</ul>
+							</div>
+							<div class="select left perm-type">
+								<select id="js_permission_type" class="permission ">
+									<!--option value="create">create</option-->
+									<option value="read">can use</option>
+									<option value="update">can update</option>
+									<option value="admin">can share</option>
+								</select>
+							</div>
+							<div class="input checkbox send-email-notification">
+								<input type="checkbox" name="select all" value="checkbox-send-email-notification" id="checkbox-send-email-notification">
+								<label for="checkbox-send-email-notification">send a notification by email</label>
+							</div>
+						</div>
+						<div class="submit-wrapper clearfix">
+							<input type="submit" class="button primary" value="save"/>
+							<a href="#" class="cancel">cancel</a>
+						</div>
+						</form>
 					</li>
 				</ul>
 			</div>
