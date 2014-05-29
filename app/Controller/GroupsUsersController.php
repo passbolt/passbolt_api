@@ -91,8 +91,8 @@ class GroupsUsersController extends AppController {
 
 		// set the data for validation and save
 		$this->request->data = Sanitize::clean($this->request->data);
-		$crpost = $this->request->data;
-		$this->GroupUser->set($crpost);
+		$gupost = $this->request->data;
+		$this->GroupUser->set($gupost);
 
 		$fields = $this->GroupUser->getFindFields('add', User::get('Role.name'));
 
@@ -102,7 +102,7 @@ class GroupsUsersController extends AppController {
 			return;
 		}
 
-		$cr = $this->GroupUser->save($crpost, false, $fields['fields']);
+		$cr = $this->GroupUser->save($gupost, false, $fields['fields']);
 		if ($cr === false) {
 			$this->Message->error(__('The GroupUser could not be saved'));
 			return;

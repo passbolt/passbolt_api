@@ -21,6 +21,50 @@ class GroupUser extends AppModel {
 
 	public $actsAs = array('Trackable');
 
+/**
+ * Get the validation rules upon context
+ * @param string $case (optional) The target validation case if any.
+ * @return array cakephp validation rules
+ */
+	public static function getValidationRules($case = 'default') {
+		$default = array(
+			'group_id' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'required' => true,
+					'allowEmpty' => false,
+					'message'	=> __('UUID must be in correct format')
+				),
+				'exist' => array(
+					'rule' => array('validateExists', 'group_id', 'Group'),
+					'message' => __('The group provided does not exist')
+				)
+			),
+			'user_id' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'required' => true,
+					'allowEmpty' => false,
+					'message'	=> __('UUID must be in correct format')
+				),
+				'exist' => array(
+					'rule' => array('validateExists', 'user_id', 'User'),
+					'message' => __('The user provided does not exist')
+				),
+				'uniqueCombi' => array(
+					'rule' => array('uniqueCombi', null),
+					'message' => __('The GroupUser entered is a duplicate')
+				)
+			)
+		);
+		switch ($case) {
+			default:
+			case 'default' :
+				$rules = $default;
+		}
+		return $rules;
+	}
+
 	/**
 	 * Return the find conditions to be used for a given context.
 	 *
@@ -76,5 +120,18 @@ class GroupUser extends AppModel {
 				break;
 		}
 		return $fields;
+	}
+
+	/**
+	 * Check if a category with same id exists
+	 * @param check
+	 */
+	public function uniqueCombi($check = false) {
+		$cr = $this->data['GroupUser'];
+		$combi = array(
+			'GroupUser.group_id' => $cr['group_id'],
+			'GroupUser.user_id' => $cr['user_id']
+		);
+		return $this->isUnique($combi, false);
 	}
 }

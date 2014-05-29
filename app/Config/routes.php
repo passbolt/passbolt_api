@@ -36,6 +36,7 @@ Router::mapResources('resources');
 Router::mapResources('secrets');
 Router::mapResources('permissions');
 Router::mapResources('comments');
+Router::mapResources('groupsUsers');
 
 // The line below doesn't seem to work
 // Router::mapResources('categoriesResources');
@@ -46,6 +47,11 @@ Router::connect("/categoriesResources/*", array("controller" => 'categories_reso
 Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST"));
 Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE"));
 
+Router::connect("/groupsUsers", array("controller" => 'groups_users', "action" => "view", "[method]" => "GET"));
+Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "view", "[method]" => "GET"));
+Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "edit", "[method]" => "PUT"));
+Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "add", "[method]" => "POST"));
+Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "delete", "[method]" => "DELETE"));
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',

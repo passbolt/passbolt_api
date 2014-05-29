@@ -22,10 +22,18 @@ if (!class_exists('CakeSession')) {
 class CategoriesResourcesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.category', 'app.resource', 'app.categories_resource',
-		'app.group', 'app.user', 'app.groups_user', 'app.role',
-		'app.permission', 'app.permissions_type', 'app.permission_view',
-		'app.authenticationBlacklist');
+		'app.category',
+		'app.resource',
+		'app.categories_resource',
+		'app.group',
+		'app.user',
+		'app.groups_user',
+		'app.role',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+		'app.authenticationBlacklist'
+	);
 
 	public function setUp() {
 		$this->Category = new Category();
