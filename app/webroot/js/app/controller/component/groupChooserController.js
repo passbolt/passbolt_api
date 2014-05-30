@@ -1,6 +1,8 @@
 steal(
     'mad/controller/component/dynamicTreeController.js',
-    'app/model/group.js'
+	'app/view/component/groupChooser.js',
+    'app/model/group.js',
+	'app/model/groupUser.js'
 ).then(function () {
 
         /*
@@ -23,7 +25,8 @@ steal(
 
             'defaults': {
                 'label': 'Group Chooser',
-                'viewClass': mad.view.component.tree.List,
+				// Specific view for groupChooser to handle dropping of elements.
+				'viewClass': passbolt.view.component.groupChooser,
                 'itemClass': passbolt.model.Group,
                 'templateUri': 'mad/view/template/component/tree.ejs',
                 // The map to use to make jstree working with our category model
@@ -55,7 +58,30 @@ steal(
                     self.load(groups);
                     self.setState('ready');
                 }, function (response) { });
-            }
+            },
+
+			/* ************************************************************** */
+			/* LISTEN TO THE VIEW EVENTS */
+			/* ************************************************************** */
+
+			/**
+			 * A resource has been dragged and dropped on a category
+			 * @param {HTMLElement} el The element the event occured on
+			 * @param {HTMLEvent} ev The event which occured
+			 * @param {jQuery.Drop} drop The drop object
+			 * @param {jQuery.Drag} drag The drag object
+			 * @param {HTMLEvent} srcEvent
+			 */
+			' group_dropon': function(el, ev, drop, drag, srcEvent) {
+				var groupId = drop.element.parent().attr("id");
+				var userId = drag.element.attr("id");
+				console.log(groupId + " " + userId);
+				new passbolt.model.GroupUser({
+					group_id : groupId,
+					user_id : userId
+				})
+				.save();
+			}
 
         });
 

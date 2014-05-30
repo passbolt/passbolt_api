@@ -4,14 +4,14 @@ steal(
 	// Grid component.
 	'mad/view/component/grid.js',
 	// Dragged Resource template.
-	'app/view/template/component/resource/draggedResource.ejs'
+	'app/view/template/component/user/draggedUser.ejs'
 ).then(function () {
 
 		/*
-		 * @class passbolt.view.component.passwordBrowser
+		 * @class passbolt.view.component.userBrowser
 		 * @inherits mad.view.View
 		 */
-		mad.view.component.Grid.extend('passbolt.view.component.passwordBrowser', /** @static */ {
+		mad.view.component.Grid.extend('passbolt.view.component.userBrowser', /** @static */ {
 
 		}, /** @prototype */ {
 
@@ -30,20 +30,20 @@ steal(
 				// Handles draginit event for the current row.
 				$row.on("draginit", function(ev, drag){
 					// create what we'll drag
-					var $draggedResource = $('div#js_dragged_resource');
-					if ($draggedResource.length) {
-						$('.name', $draggedResource).text($name.text());
+					var $draggedUser = $('div#js_dragged_user');
+					if ($draggedUser.length) {
+						$('.name', $draggedUser).text($name.text());
 					}
 					else {
-						$draggedResource = can.view(
-							'app/view/template/component/resource/draggedResource.ejs', {
+						$draggedUser = can.view(
+							'app/view/template/component/user/draggedUser.ejs', {
 								name: $name.text()
 							});
-						$($draggedResource).appendTo(document.body);
-						$draggedResource = $('div#js_dragged_resource');
+						$($draggedUser).appendTo(document.body);
+						$draggedUser = $('div#js_dragged_user');
 					}
 					// indicate we want our mouse on the top-right of it
-					drag.representative($draggedResource, 0, 0);
+					drag.representative($draggedUser, 0, 0);
 				});
 			}
 		});

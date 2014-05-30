@@ -2,7 +2,8 @@ steal(
     'mad/controller/component/gridController.js',
     'app/model/user.js',
     'app/model/group.js',
-	'app/model/profile.js'
+	'app/model/profile.js',
+	'app/view/component/userBrowser.js'
 ).then(function () {
 
         /*
@@ -25,6 +26,8 @@ steal(
             'defaults': {
                 // the type of the item rendered by the grid
                 itemClass: passbolt.model.User,
+				// Specific view for userBrowser. To handle specific behaviours like drag n drop.
+				viewClass: passbolt.view.component.userBrowser,
                 // the list of resources displayed by the grid
                 users: new can.Model.List(),
                 // the list of displayed categories

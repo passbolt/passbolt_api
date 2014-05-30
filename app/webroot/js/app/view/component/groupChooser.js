@@ -4,10 +4,10 @@ steal(
 ).then(function () {
 
 		/*
-		 * @class passbolt.view.component.categoryChooser
+		 * @class passbolt.view.component.groupChooser
 		 * @inherits mad.view.View
 		 */
-		mad.view.component.tree.DynamicTree.extend('passbolt.view.component.categoryChooser', /** @static */ {
+		mad.view.component.tree.DynamicTree.extend('passbolt.view.component.groupChooser', /** @static */ {
 
 		}, /** @prototype */ {
 
@@ -23,22 +23,22 @@ steal(
 			'insertItem': function(item, refItemId, position) {
 				var self = this;
 				// Get current category.
-				var category = this._super(item, refItemId, position);
+				var group = this._super(item, refItemId, position);
 				// Bind the row with drop events.
-				$("> .row", $(category))
+				$("> .row", $(group))
 					// Dropover event.
 					.bind("dropover", function(ev, drop, drag) {
 						$(this).addClass("drop-over");
-						self.element.trigger('category_dropover', [drop, drag, ev]);
+						self.element.trigger('group_dropover', [drop, drag, ev]);
 					})
 					// Dropout event.
 					.bind("dropout", function(ev, drop, drag) {
 						$(this).removeClass("drop-over");
-						self.element.trigger('category_dropout', [drop, drag, ev]);
+						self.element.trigger('group_dropout', [drop, drag, ev]);
 					})
 					.bind("dropon", function(ev, drop, drag) {
 						$(this).removeClass("drop-over");
-						self.element.trigger('category_dropon', [drop, drag, ev]);
+						self.element.trigger('group_dropon', [drop, drag, ev]);
 					});
 			}
 		});
