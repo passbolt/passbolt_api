@@ -65,7 +65,7 @@ steal(
 			/* ************************************************************** */
 
 			/**
-			 * A resource has been dragged and dropped on a category
+			 * A user has been dragged and dropped on a group
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured
 			 * @param {jQuery.Drop} drop The drop object
@@ -75,7 +75,7 @@ steal(
 			' group_dropon': function(el, ev, drop, drag, srcEvent) {
 				var groupId = drop.element.parent().attr("id");
 				var userId = drag.element.attr("id");
-				console.log(groupId + " " + userId);
+				// Save it.
 				new passbolt.model.GroupUser({
 					group_id : groupId,
 					user_id : userId
