@@ -16,7 +16,8 @@ class GroupUser extends AppModel {
 	public $useTable = "groups_users";
 
 	public $belongsTo = array(
-		'Group', 'User'
+		'Group',
+		'User',
 	);
 
 	public $actsAs = array('Trackable');

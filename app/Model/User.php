@@ -27,7 +27,11 @@ class User extends AppModel {
 	 *
 	 * @access public
 	 */
-	public $actsAs = array('Containable', 'Trackable');
+	public $actsAs = array(
+		'SuperJoin',
+		'Containable',
+		'Trackable'
+	);
 
 	/**
 	 * Details of belongs to relationships
@@ -35,15 +39,33 @@ class User extends AppModel {
 	 * @var array
 	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
 	 */
-	public $belongsTo = array('Role');
+	public $belongsTo = array(
+		'Role'
+	);
 
-  /**
-   * Details of the hasOne relationships
-   * @var array
-   */
-  public $hasOne = array(
-    'Profile'
-  );
+	/**
+	 * Details of the hasOne relationships
+	 * @var array
+	*/
+	public $hasOne = array(
+		'Profile'
+	);
+
+	/**
+	 * Details of has many relationships
+	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+	 */
+	public $hasMany = array('GroupUser');
+
+	/**
+	 * Details of has and belongs to many relationships
+	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+	 */
+	public $hasAndBelongsToMany = array(
+		'Group' => array(
+			'className' => 'Group'
+		)
+	);
 
 	/**
 	 * They are legions
@@ -306,6 +328,11 @@ class User extends AppModel {
 								'User.deleted' => false
 							)
 						);
+						// If filter on group.
+						if (isset($data['foreignModels']['Group.id'])) {
+							$conditions['conditions']['Group.id'] = $data['foreignModels']['Group.id'];
+						}
+						// If filter on keywords.
 						if (isset($data['keywords'])) {
 							$keywords = explode(' ', $data['keywords']);
 							foreach ($keywords as $keyword) {
@@ -361,6 +388,7 @@ class User extends AppModel {
 						'User.username',
 						'User.role_id',
 					),
+					'superjoin' => array('Group'),
 					'contain' => array(
 						'Role' => array(
 							'fields' => array(
@@ -374,7 +402,9 @@ class User extends AppModel {
 								'Profile.first_name',
 								'Profile.last_name'
 							)
-						)
+						),
+						'Group',
+						'GroupUser',
 					)
 				);
 				break;

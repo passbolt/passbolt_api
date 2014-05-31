@@ -65,6 +65,19 @@ steal(
 			/* ************************************************************** */
 
 			/**
+			 * An item has been selected
+			 * @param {HTMLElement} el The element the event occured on
+			 * @param {HTMLEvent} ev The event which occured
+			 * @param {passbolt.model.Category} item The selected item instance or its id
+			 * @param {HTMLEvent} srcEvent The source event which occured
+			 * @return {void}
+			 */
+			' item_selected': function (el, ev, item, srcEvent) {
+				mad.bus.trigger('group_selected', item);
+			},
+
+
+			/**
 			 * A user has been dragged and dropped on a group
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured

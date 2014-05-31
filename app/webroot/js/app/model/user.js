@@ -61,6 +61,15 @@ steal(
 		},
 
 		'findAll': function (params, success, error) {
+			// a filter is provided, format it as GET request parameter
+			if(typeof params.filter != 'undefined') {
+				var filter = params.filter;
+				delete params.filter;
+				// add the filter to the request param
+				var formattedFilter = filter.toRequest();
+				$.extend(params, formattedFilter);
+			}
+
 			return mad.net.Ajax.request({
 				url: APP_URL + '/users',
 				type: 'GET',

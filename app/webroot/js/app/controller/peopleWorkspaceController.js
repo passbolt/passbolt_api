@@ -25,7 +25,8 @@ steal(
 		'defaults': {
 			'label': 'People',
 			'templateUri': 'app/view/template/peopleWorkspace.ejs',
-			'selectedUsers': new can.Model.List()
+			'selectedUsers': new can.Model.List(),
+			'filter': new passbolt.model.Filter()
 		}
 
 	}, /** @prototype */ {
@@ -59,6 +60,26 @@ steal(
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
+
+		/**
+		 * Observe when group is selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Group} group The selected group
+		 * @return {void}
+		 */
+		'{mad.bus} group_selected': function (el, ev, group) {
+			// reset the selected resources
+			this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
+			// Set the new filter
+			this.options.filter.attr({
+				'foreignModels': {
+					'Group': new can.List([group])
+				}
+			});
+			// propagate a special event on bus
+			mad.bus.trigger('filter_users_browser', this.options.filter);
+		},
 
 		/**
 		 * Observe when the user requests a category creation
