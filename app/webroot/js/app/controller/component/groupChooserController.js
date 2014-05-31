@@ -160,8 +160,44 @@ steal(
 			' item_right_selected': function (el, ev, item, srcEvent) {
 				this._super(el, ev, item, srcEvent);
 				this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
-			}
+			},
 
+			/* ************************************************************** */
+			/* LISTEN TO THE MODEL EVENTS */
+			/* ************************************************************** */
+
+			/**
+			 * Observe when a group is created
+			 * @param {HTMLElement} el The el the event occured on
+			 * @param {HTMLEvent} ev The ev which occured
+			 * @param {mad.model.Model} group The inserted category
+			 * @return {void}
+			 */
+			'{passbolt.model.Group} created': function (el, ev, group) {
+				this.insertItem(group, null, 'last');
+			},
+
+			/**
+			 * Observe when a group is updated
+			 * @param {HTMLElement} el The el the event occured on
+			 * @param {HTMLEvent} ev The ev which occured
+			 * @param {mad.model.Model} group The group that has been updated.
+			 * @return {void}
+			 */
+			'{passbolt.model.Group} updated': function (el, ev, group) {
+				this.refresh();
+			},
+
+			/**
+			 * Observe when a group is destroyed
+			 * @param {mad.model.Model} model The model reference
+			 * @param {HTMLEvent} ev The ev which occured
+			 * @param {mad.model.Model} group The inserted group
+			 * @return {void}
+			 */
+			'{passbolt.model.Group} destroyed': function (model, ev, group) {
+				this.removeItem(group);
+			}
         });
 
     });

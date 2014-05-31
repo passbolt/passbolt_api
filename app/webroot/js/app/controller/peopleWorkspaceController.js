@@ -112,6 +112,43 @@ steal(
 		},
 
 		/**
+		 * Observe when the user requests a group edition
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_group_edition': function (el, ev, group) {
+
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Edit a Group')})
+				.start();
+
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.group.CreateFormController, {
+				data: group,
+				callbacks : {
+					submit: function (data) {
+						group.attr(data['passbolt.model.Group'])
+							.save();
+						dialog.remove();
+					}
+				}
+			});
+
+			form.load(group);
+		},
+
+		/**
+		 * Observe when the user requests a group deletion
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_group_deletion': function (el, ev, group) {
+			group.destroy();
+		},
+
+		/**
 		 * Observe when the user requests a category creation
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
