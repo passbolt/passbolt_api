@@ -60,6 +60,59 @@ steal(
                 }, function (response) { });
             },
 
+			/**
+			 * Show the contextual menu
+			 * @param {passbolt.model.Group} item The item to show the contextual menu for
+			 * @param {string} x The x position where the menu will be rendered
+			 * @param {string} y The y position where the menu will be rendered
+			 * @return {void}
+			 */
+			'showContextualMenu': function (item, x, y) {
+				var menuItems = mad.model.Action.models([
+					{
+						'id': uuid(),
+						'label': 'Open',
+						'action': function (menu) {
+							mad.bus.trigger('category_selected', item);
+							menu.remove();
+						}
+					}, {
+						'id': uuid(),
+						'label': 'Create user',
+						'action': function (menu) {
+							mad.bus.trigger('request_user_creation', item);
+							menu.remove();
+						}},
+					{
+						'id': uuid(),
+						'label': 'Create group',
+						'action': function (menu) {
+							mad.bus.trigger('request_group_creation', item);
+							menu.remove();
+						}
+					}, {
+						'id': uuid(),
+						'label': 'Rename...',
+						'action': function (menu) {
+							mad.bus.trigger('request_group_edition', item);
+							menu.remove();
+						}
+					}, {
+						'id': uuid(),
+						'label': 'Remove',
+						'action': function (menu) {
+							mad.bus.trigger('request_group_deletion', item);
+							menu.remove();
+						}
+					}
+				]);
+
+				// Contextual menu
+				var contextualMenu = new mad.controller.component.ContextualMenuController(null, {'mouseX': x, 'mouseY': y});
+				contextualMenu.start();
+				contextualMenu.load(menuItems);
+			},
+
 			/* ************************************************************** */
 			/* LISTEN TO THE VIEW EVENTS */
 			/* ************************************************************** */
@@ -94,6 +147,19 @@ steal(
 					user_id : userId
 				})
 				.save();
+			},
+
+			/**
+			 * An item has been right selected
+			 * @param {HTMLElement} el The element the event occured on
+			 * @param {HTMLEvent} ev The event which occured
+			 * @param {passbolt.model.Category} item The right selected item instance or its id
+			 * @param {HTMLEvent} srcEvent The source event which occured
+			 * @return {void}
+			 */
+			' item_right_selected': function (el, ev, item, srcEvent) {
+				this._super(el, ev, item, srcEvent);
+				this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
 			}
 
         });

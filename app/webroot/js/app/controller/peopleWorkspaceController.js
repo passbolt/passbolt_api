@@ -4,6 +4,7 @@ steal(
     'app/controller/component/userBrowserController.js',
 	'app/controller/component/userWorkspaceMenuController.js',
 	'app/controller/form/user/createFormController.js',
+	'app/controller/form/group/createFormController.js',
 	'app/model/user.js'
 ).then(function () {
 
@@ -79,6 +80,35 @@ steal(
 			});
 			// propagate a special event on bus
 			mad.bus.trigger('filter_users_browser', this.options.filter);
+		},
+
+		/**
+		 * Observe when the user requests a category creation
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_group_creation': function (el, ev, data) {
+			var group = new passbolt.model.Group();
+
+			// Get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Create a new Group')})
+				.start();
+
+			// Attach the component to the dialog.
+			var form = dialog.add(passbolt.controller.form.group.CreateFormController, {
+				data: group,
+				callbacks : {
+					submit: function (data) {
+						var instance = new passbolt.model.Group(
+							data['passbolt.model.Group']
+						)
+						.save();
+						dialog.remove();
+					}
+				}
+			});
+			form.load(group);
 		},
 
 		/**
