@@ -41,10 +41,6 @@
 			<li>
 				<a class="tag link" href="#">
 					<span>a</span>
-                    <span class="actions">
-                      <i class="icon close no-text"></i>
-                      <span>delete</span>
-                    </span>
 				</a>
 			</li>
 			<li>
@@ -82,7 +78,7 @@
 			<li class="comment-wrapper">
 				<div class="comment">
 					<div class="author profile picture"><a href="#"><img src="img/user.png"/></a></div>
-					<p>This is a very short comment, maybe it fits on a line or two!</p>
+					<p>This is a very short comment, maybe it fits!</p>
 					<div class="metadata">
 						<span class="author username"><a href="#">you</a></span>
 						<span class="modified">2 days ago</span>
@@ -90,12 +86,11 @@
 					<div class="actions">
 						<ul>
 							<li><a href="#"><i class="icon reply no-text"></i><span>reply</span></a></li>
-							<li><a href="#"><i class="icon delete no-text"></i><span>delete</span></a></li>
 						</ul>
 					</div>
 				</div>
 			</li>
-			<li class="comment reply">
+			<li class="comment-wrapper reply">
 				<div class="comment">
 					<div class="author profile picture"><a href="#"><img src="img/user.png"/></a></div>
 					<p>This is a very short comment, maybe it fits on a line or two who knows...</p>
@@ -113,8 +108,8 @@
 			</li>
 			<li class="comment-wrapper">
 				<div class="comment">
-					<div class="author profile picture"><a href="#"><img src="img/user.png"/></a></div>
-					<p>This is a another comment, maybe it fits on a line or two, but it's slightly longer.</p>
+					<div class="author profile picture"><a href="#"><img src="img/user2.png"/></a></div>
+					<p>This is a another comment, maybe it fits on a line or two, but it's slightly longer. So it be it, we shall allow very long comments.</p>
 					<div class="metadata">
 						<span class="author username"><a href="#">Test user with long username</a></span>
 						<span class="modified">2 days and one month ago</span>

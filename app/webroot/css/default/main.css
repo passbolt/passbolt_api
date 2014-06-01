@@ -2101,6 +2101,9 @@ input[type="search"]::-webkit-search-cancel-button {
 .dropdownmenu .node .control span {
   display: none;
 }
+.dropdown .checkbox {
+  font-size: .85em;
+}
 /* tags */
 .tags .tags-edit-wrapper textarea {
   height: 2.3em;
@@ -2174,30 +2177,28 @@ input[type="search"]::-webkit-search-cancel-button {
   margin: .5em 0;
   width: 100%;
 }
-.comments .content-wrapper {
+.comments .comment-wrapper.reply {
   float: left;
-  width: 85.7%;
-  margin-left: 4%;
-}
-.comments .comment.reply {
-  clear: both;
-  float: left;
-  margin-left: 2.5em;
+  margin-left: 2em;
+  width: auto;
 }
 /* content */
 .comments .comment p {
-  margin: -0.3em 0 0.3em 0;
+  margin: -0.3em 0 0.3em 3em;
+  min-height: 2em;
 }
 /* picture */
 .comments .comment .author.picture {
   float: left;
   width: 2em;
   height: 2em;
+  margin-right: .5em;
 }
 .comments .comment .author.picture img {
   float: left;
   width: 2em;
   height: 2em;
+  margin-right: .5em;
 }
 /* username and date */
 .comments .comment .metadata {
@@ -2205,11 +2206,10 @@ input[type="search"]::-webkit-search-cancel-button {
   font-style: italic;
   float: left;
   width: 75%;
+  padding-left: 3em;
 }
 .comments .comment .metadata .author.username {
   max-width: 48%;
-  display: inline-block;
-  padding-right: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2233,6 +2233,10 @@ input[type="search"]::-webkit-search-cancel-button {
 .comments .actions {
   float: right;
   margin: 0;
+}
+.comments .actions li {
+  display: inline;
+  width: 3em;
 }
 /* add / edit comment */
 .comments .comment.edit label,
