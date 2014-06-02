@@ -54,8 +54,8 @@
 	max-width:10em;
 }
 .main.panel table .l-cell {
-	width:20em;
-	max-width:20em;
+	width:12em;
+	max-width:12em;
 }
 .main.panel table tbody tr.selected,
 .main.panel table tbody tr:hover {
@@ -71,4 +71,19 @@
 .main.panel table th span,
 .main.panel table td span {
 	vertical-align:6%;
+}
+
+/* password */
+.main.panel table td.password pre:before{
+	content:"••••••••••••••••";
+	height:24px;
+	width:90%;
+	color:@font-default;
+}
+.main.panel table td.password pre {
+	height:24px;
+	width:90%;
+	overflow:hidden;
+	color:#FFF;
+	margin:0;
 }
