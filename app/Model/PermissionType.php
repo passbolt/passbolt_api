@@ -51,4 +51,14 @@ class PermissionType extends AppModel {
 			break;
 		}
 	}
+
+	public static function getAll() {
+		return array(
+			'DENY' => self::DENY,
+			'READ' => self::READ,
+			'CREATE' => self::CREATE,
+			'UPDATE' => self::UPDATE,
+			'ADMIN' => self::ADMIN,
+		);
+	}
 }

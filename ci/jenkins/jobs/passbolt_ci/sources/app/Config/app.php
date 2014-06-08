@@ -2,7 +2,7 @@
 /**
  * Main application configuration file
  *
- * @copyright    Copyright 2012, Passbolt.com 
+ * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.Config.app
  * @since        version 2.12.7
@@ -26,10 +26,14 @@ $config = array(
 		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
 	// Authentication & Authorisation
+	'HashType' => 'blowfish',
 	'Auth' => array(
-    'authenticate' => array(
-			'BcryptForm', // good encryption
-		  //'Form' // bad encryption
+		'authenticate' => array(
+			'Form' => array(
+				'passwordHasher' => array(
+					'className' => 'Blowfish'
+				)
+			)
 		),
 		'loginRedirect' => '/login',
 		'logoutRedirect' => '/login',
@@ -58,5 +62,10 @@ $config = array(
 	),
 	'ItemTag' => array(
 		'foreignModels' => array('Resource')
+	),
+	'Validation' => array(
+		'shared' => array(
+			'Category', 'Resource', 'Secret', 'Tag', 'Comment'
+		)
 	)
 );

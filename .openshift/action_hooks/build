@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Copying config data"
+cp -a $OPENSHIFT_DATA_DIR/ci/jenkins/jobs/passbolt_demo/sources/* $OPENSHIFT_DATA_DIR
+
+echo "Installing Passbolt"
+sh $OPENSHIFT_DATA_DIR/app/Console/cake install

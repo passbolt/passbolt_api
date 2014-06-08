@@ -63,11 +63,11 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'root',
-		'password' => 'theFreedomIsNotAnOption',
-		'database' => 'passbolt_deploy',
+		'login' => 'admintIsr7j4',
+		'password' => 'kPqPx9FVS5lw',
+		'database' => 'demo',
 		'prefix' => '',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8'
 	);
 
 }

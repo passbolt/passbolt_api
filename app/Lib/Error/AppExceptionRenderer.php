@@ -21,17 +21,17 @@ class AppExceptionRenderer extends ExceptionRenderer {
  * @param Exception $error
  * @return void
  */
-  public function error400($error) {
-  	// If the request is not Ajax, use the default exception handler behavior
-    // if(!$this->controller->request->isAjax()) {
-      // return parent::error400($error);
-    // }
-    // Set the http response status code
-    $code = ($error->getCode() >= 400 && $error->getCode() < 506) ? $error->getCode() : 500;
-    $this->controller->response->statusCode($code);
+	public function error400($error) {
+		// If the request is not Ajax, use the default exception handler behavior
+		// if(!$this->controller->request->isAjax()) {
+		// return parent::error400($error);
+		// }
+		// Set the http response status code
+		$code = ($error->getCode() >= 400 && $error->getCode() < 506) ? $error->getCode() : 500;
+		$this->controller->response->statusCode($code);
 		// Render the Json template
 		$this->controller->render('/Json/default');
 		$this->controller->afterFilter();
 		$this->controller->response->send();
-  }
+	}
 }

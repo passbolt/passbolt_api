@@ -25,7 +25,7 @@ class PermissionTask extends ModelTask {
 		$users = $UserTask::getAlias();
 		$CategoryTask = $this->Tasks->load('Data.Category');
 		$cat = $CategoryTask::getAlias();
-		
+
 		// User test@passbolt.com as admin of the root unit test category
 		// Sand box for unit tests
 		$ps[] = array('Permission' => array(
@@ -147,7 +147,7 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $users['rem'],
 			'type' => PermissionType::ADMIN,
 		));
-		// Frank has denied right on cakephp
+		// Frank has denied right on project
 		$ps[] = array('Permission' => array(
 			'id' => '50f6b4af-a491-43f5-fac9-23a4d7a10fce',
 			'aco' => 'Category',
@@ -200,6 +200,15 @@ class PermissionTask extends ModelTask {
 			'aro' => 'User',
 			'aro_foreign_key' => $users['jea'],
 			'type' => PermissionType::READ,
+		));
+		// Jean René has create access rights on "jean rené private"
+		$ps[] = array('Permission' => array(
+			'id' => '50e6b4af-c390-4f2e-a8f8-23a4d7a10fcc',
+			'aco' => 'Category',
+			'aco_foreign_key' => $cat['pjr'],
+			'aro' => 'User',
+			'aro_foreign_key' => $users['jea'],
+			'type' => PermissionType::CREATE,
 		));
 		// Jean René has readonly access rights on cpp1-pwd1
 		$rCpp1Pwd1 = $this->Resource->findByName("cpp1-pwd1");

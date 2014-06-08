@@ -45,6 +45,10 @@ steal('jquery/class').then(function () {
 				&& this.response.getMessage() == __('You need to login to access this location')) {
 				location.href = mad.Config.read('app.url');
 			}
+			else {
+				// @todo Same for success we use message as title, maybe we should to something cleaner.
+				this.response.attr('header').title = this.response.getMessage();
+			}
 			this._super();
 		}
 	});

@@ -23,14 +23,17 @@ if (!class_exists('CakeSession')) {
 class ResourcesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.resource',
 		'app.category',
-		'app.categories_resource',
+		'app.resource',
+		'app.categoryType',
+		'app.categoriesResource',
 		'app.secret',
 		'app.favorite',
+		'app.log',
 		'app.user',
+		'app.profile',
 		'app.group',
-		'app.groups_user',
+		'app.groupsUser',
 		'app.role',
 		'app.permission',
 		'app.permissions_type',
@@ -39,14 +42,15 @@ class ResourcesControllerTest extends ControllerTestCase {
 	);
 
 	public function setUp() {
-		parent::setUp();
-
 		$this->User = new User();
 		$this->User->useDbConfig = 'test';
 		$this->Resource = new Resource();
 		$this->Resource->useDbConfig = 'test';
+		$this->Category = new Category();
+		$this->Category->useDbConfig = 'test';
+		parent::setUp();
 
-		$kk = $this->User->findByUsername('admin@passbolt.com');
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
 		$this->User->setActive($kk);
 	}
 
@@ -72,6 +76,21 @@ class ResourcesControllerTest extends ControllerTestCase {
 		)), true);
 	}
 
+	public function testViewAndPermission() {
+		// Error : name is empty
+		$res = $this->Resource->findByName('cpp1-pwd1');
+
+		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findByUsername('ismail@passbolt.com');
+		$this->User->setActive($user);
+
+		$this->expectException('HttpException', 'The resource does not exist');
+		$result = json_decode($this->testAction("/resources/{$res['Resource']['id']}.json", array(
+			'method' => 'Get',
+			'return' => 'contents'
+		)), true);
+	}
+
 	public function testView() {
 		$festival = $this->Resource->findByName('facebook account');
 		$id = $festival['Resource']['id'];
@@ -83,7 +102,50 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals('facebook account', $result['body']['Resource']['name'], 'resources/view/' . $id . ".json should a resource named 'facebook account' but returned {$result['body']['Resource']['name']} instead");
 	}
 
-	// TODO Test filter
+	public function testIndexFilterCategoryDoesntExist() {
+		$this->expectException('HttpException', 'The category doesn\'t exist');
+		$catId = '50d22ff7-5239-4dd2-94d1-1c63d7a10fce';
+		$url = '/resources.json?recursive=true&fltr_model_category=' . $catId;
+		json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
+	}
+
+	public function testIndexAndPermission() {
+		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../Data/permissionsMatrix.php');
+		$usersNames = array(
+			'a-usr1@companya.com',
+			'cedric@passbolt.com',
+			'dark.vador@passbolt.com',
+			'kevin@passbolt.com',
+			'ismail@passbolt.com',
+			'manager.nogroup@passbolt.com',
+			'myriam@passbolt.com',
+			'remy@passbolt.com'
+		);
+
+		foreach ($usersNames as $username) {
+			$user = $this->User->findByUsername($username);
+			$this->User->setActive($user);
+
+			// test when no parameters are provided
+			$url = '/resources/index.json';
+
+			$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
+			$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
+			$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
+
+			foreach ($permissionsMatrix['User']['Resource'] as $userResPermission) {
+				if ($userResPermission['aroname'] == $username) {
+					var_dump('test '.$username);
+					$path = $this->Resource->inNestedArray($userResPermission['aconame'], $result['body'], 'name');
+					if ($userResPermission['result'] == PermissionType::DENY) {
+						$this->assertTrue(empty($path), "{$url} : test should not contain '{$userResPermission['aconame']}' resource with user '{$username}'");
+					} else {
+						$this->assertTrue(!empty($path), "{$url} : test should contain '{$userResPermission['aconame']}' resource with user '{$username}'");
+					}
+				}
+			}
+		}
+	}
 
 	public function testIndex() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
@@ -94,7 +156,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		// test when no parameters are provided
 		$url = '/resources/index.json';
 		$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return an error but is returning {$result['header']['status']}");
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
 		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
 
 		// test with category parameter specified which does not contain resources
@@ -199,6 +261,34 @@ class ResourcesControllerTest extends ControllerTestCase {
 		)), true);
 	}
 
+	public function testAddAndPermission() {
+		$cat = $this->Category->findByName('administration');
+
+		// Looking at the matrix of permission Myriam should be able to read but not to create into the category marketing
+		$user = $this->User->findByUsername('myriam@passbolt.com');
+		$this->User->setActive($user);
+
+		// Error : name is empty
+		$this->expectException('HttpException', 'You are not authorized to create a resource into the category');
+		$result = json_decode($this->testAction('/resources/add.json', array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'testAddAndPermission',
+					'username' => 'test1',
+					'uri' => 'http://www.google.com',
+					'description' => 'this is a description'
+				),
+				'Category' => array(
+					0 => array(
+						'id' => $cat['Category']['id']
+					)
+				)
+			),
+			'method' => 'Post',
+			'return' => 'contents'
+		)), true);
+	}
+
 	public function testAdd() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 
@@ -299,6 +389,26 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertTrue(count($after) == 0, "update /resources/$id.json : After this test, there should be no categories associated to the resource anymore.");
 	}
 
+	public function testEditAndPermission() {
+		$resource = $this->Resource->findByName("tetris license");
+
+		// Looking at the matrix of permission Myriam should be able to read but not to update the resource tetris license
+		$user = $this->User->findByUsername('myriam@passbolt.com');
+		$this->User->setActive($user);
+
+		// Error : name is empty
+		$this->expectException('HttpException', 'You are not authorized to edit this resource');
+		$result = json_decode($this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+			'data' => array(
+				'Resource' => array(
+					'name' => 'testEditAndPermission'
+				)
+			),
+			'method' => 'Put',
+			'return' => 'contents'
+		)), true);
+	}
+
 	public function testEdit() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$accountCat = $this->Resource->CategoryResource->Category->findByName('accounts');
@@ -368,6 +478,21 @@ class ResourcesControllerTest extends ControllerTestCase {
 	public function testDeleteResourceDoesNotExist() {
 		$this->expectException('HttpException', 'The resource does not exist');
 		$result = json_decode($this->testAction("/resources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+			'method' => 'delete',
+			'return' => 'contents'
+		)), true);
+	}
+
+	public function testDeleteAndPermission() {
+		// Looking at the matrix of permission Myriam should be able to read but not to delete the resource facebook
+		$user = $this->User->findByUsername('myriam@passbolt.com');
+		$this->User->setActive($user);
+
+		$res = $this->Resource->findByName('bank password');
+
+		// Error : name is empty
+		$this->expectException('HttpException', 'You are not authorized to delete this resource');
+		$result = json_decode($this->testAction("/resources/{$res['Resource']['id']}.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
 		)), true);
