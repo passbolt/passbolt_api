@@ -222,7 +222,7 @@ class Resource extends AppModel {
 			case 'viewByCategory':
 				$fields = array(
 					'fields' => array(
-						'Resource.id',
+						'DISTINCT Resource.id',
 						'Resource.name',
 						'Resource.username',
 						'Resource.expiry_date',

@@ -24,7 +24,6 @@ class ResourcesController extends AppController {
  * Get all resources
  * Renders a json object of the resources
  *
- *
  * @return void
  */
 	public function index() {
