@@ -50,6 +50,23 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->User->setActive($kk);
 	}
 
+	public function testIndexNoChildrenPermission() {
+		// Test that users won't get top categories if they're not allowed.
+		// Looking at the matrix of permission Jean rené should not be able to read the category 'Bolt Softwares Pvt. Ltd'
+		$user = $this->User->findByUsername('jean-rene@test.com');
+		$this->User->setActive($user);
+
+		// test when no parameters are provided (default behaviour : children=false)
+		$result = json_decode($this->testAction("/categories/index.json", array(
+			'method' => 'get',
+			'return' => 'contents'
+		)), true);
+		$debug = print_r($result, true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
+		$this->assertEmpty($this->Category->inNestedArray('Bolt Softwares Pvt. Ltd.', $result['body'], 'name'), '/categories/index.json : The server result should not contain Bolt Softwares Pvt. Ltd.');
+		$this->assertNotEmpty($this->Category->inNestedArray('pv-jean_rene', $result['body'], 'name'), '/categories/index.json : The server result should contain pv-jean_rene');
+	}
+
 	public function testIndex() {
 		// test when no parameters are provided (default behaviour : children=false)
 		$result = json_decode($this->testAction("/categories/index.json", array(

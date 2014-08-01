@@ -19,22 +19,26 @@ class CategoriesController extends AppController {
  */
 	public function index() {
 		$data = array();
-		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
+		$children = false;
 
-		// find roots categories
-		// we disable the permissionnable behavior to get all the top categories, that
-		// maybe the user are not allowed to see. But we need the top categories as
-		// access points to get threaded categories
-		$this->Category->Behaviors->disable('Permissionable');
-		$o = $this->Category->getFindOptions('index', User::get('Role.name'));
-		$categories = $this->Category->find('all', $o);
-		$this->Category->Behaviors->enable('Permissionable');
+		if (isset($this->request->query['children']) && $this->request->query['children'] === 'true') {
+			$children = true;
+		}
 
 		// foreach roots categories, find its children ! Done with the tree behavior
 		if (!$children) {
-			// @todo : yes but no, we return categories that maybe the user is not allowed to see
-			$data = $categories;
+			$o = $this->Category->getFindOptions('index', User::get('Role.name'));
+			$data = $this->Category->find('all', $o);
 		} else {
+			// Find roots categories.
+			// We disable the permissionnable behavior to get all the top categories, whatever
+			// the user is not able to READ them. We'll go through each top categories and return
+			// all the categories the user is allowed to READ.
+			$this->Category->Behaviors->disable('Permissionable');
+			$o = $this->Category->getFindOptions('index', User::get('Role.name'));
+			$categories = $this->Category->find('all', $o);
+			$this->Category->Behaviors->enable('Permissionable');
+
 			foreach ($categories as $category) {
 				$o = $this->Category->getFindOptions('getWithChildren', User::get('Role.name'), $category);
 				$result = $this->Category->find('threaded', $o);

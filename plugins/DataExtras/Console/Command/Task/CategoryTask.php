@@ -13,7 +13,7 @@ require_once ('plugins' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . 
 App::uses('Category', 'Model');
 
 class CategoryTask extends ModelTask {
-	
+
 	public $model = 'Category';
 
 	public function execute() {
@@ -26,8 +26,8 @@ class CategoryTask extends ModelTask {
 			$Model->create();
 			if (!$m = $Model->save($item)) {
 				pr($Model->invalidFields());
-				$error_msg = mysql_error(); 
-        echo $error_msg; 
+				$errorMsg = mysql_error();
+				echo $errorMsg;
 			}
 		}
 	}
