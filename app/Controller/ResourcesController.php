@@ -178,62 +178,53 @@ class ResourcesController extends AppController {
  * Add a resource
  */
 	public function add() {
+		$datasource = ConnectionManager::getDataSource('default');
+		$datasource->begin();
+
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
-			$this->Message->error(__('Invalid request method, should be POST'));
-			return;
+			$datasource->rollback();
+			return $this->Message->error(__('Invalid request method, should be POST'));
 		}
 		// check if data was provided
 		if (!isset($this->request->data['Resource'])) {
-			$this->Message->error(__('No data were provided'));
-			return;
+			$datasource->rollback();
+			return $this->Message->error(__('No data were provided'));
 		}
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;
-
-		// Check if the user is allowed to create in the parent category.
-		if($resourcepost['Resource']['name'] == 'testAddAndPermission')
-		if (isset($resourcepost['Category'])) {
-			foreach ($resourcepost['Category'] as $category) {
-				if (!$this->Resource->CategoryResource->Category->isAuthorized($category['id'], PermissionType::CREATE)) {
-					$this->Message->error(__('You are not authorized to create a resource into the category'), array('code' => 403));
-					return;
-				}
-			}
-		}
-
 		$this->Resource->set($resourcepost);
 
 		$fields = $this->Resource->getFindFields('save', User::get('Role.name'));
 
 		// check if the data is valid
 		if (!$this->Resource->validates()) {
-			$this->Message->error(__('Could not validate resource data'));
-			return;
+			$datasource->rollback();
+			return $this->Message->error(__('Could not validate resource data'));
 		}
 
-		//$this->Resource->contain(array('Secret'));
 		$resource = $this->Resource->save($resourcepost, false, $fields['fields']);
 
 		if ($resource === false) {
-			$this->Message->error(__('The resource could not be saved'));
-			return;
+			$datasource->rollback();
+			return $this->Message->error(__('The resource could not be saved'));
 		}
+
 		// Save the associated secret
 		if (isset($resourcepost['Secret'])) {
 			$resourcepost['Secret']['resource_id'] = isset($resourcepost['Secret']['resource_id']) ? $resourcepost['Secret']['resource_id'] : $resource['Resource']['id'];
 			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : User::get('User.id');
 			$this->Resource->Secret->set($resourcepost['Secret']);
 			if (!$this->Resource->Secret->validates()) {
-				$this->Message->error(__('Could not validate secret model'));
-				return;
+				$datasource->rollback();
+				return $this->Message->error(__('Could not validate secret model'));
 			}
 			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
 			// TODO : Encrypt data and save it once per user
 			if (!$this->Resource->Secret->save($resourcepost['Secret'], false, $fields['fields'])) {
-				$this->Message->error(__('Could not save secret'));
-				return;
+				$datasource->rollback();
+				return $this->Message->error(__('Could not save secret'));
 			}
 		}
 
@@ -250,18 +241,27 @@ class ResourcesController extends AppController {
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates()) {
-					$this->Message->error(__('Could not validate CategoryResource'));
-					return;
+					$datasource->rollback();
+					return $this->Message->error(__('Could not validate CategoryResource'));
+				}
+				// Check that the user is well authorized to create a resource into the given category.
+				if (!$this->Resource->CategoryResource->Category->isAuthorized($cat['id'], PermissionType::CREATE)) {
+					$datasource->rollback();
+					return $this->Message->error(__('You are not authorized to create a resource into the category'), array('code' => 403));
 				}
 				// if validation passes, then save the data
 				$res = $this->Resource->CategoryResource->save();
 				if (!$res) {
-					$this->Message->error(__('Could not save the association'));
-					return;
+					$datasource->rollback();
+					return $this->Message->error(__('Could not save the association'));
 				}
 			}
 		}
+
+		$datasource->commit();
 		$this->Message->success(__('The resource was sucessfully saved'));
+
+		// Return the just created resource
 		$data = array(
 			'Resource.id' => $resource['Resource']['id']
 		);
