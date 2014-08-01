@@ -38,7 +38,7 @@ steal(
 				var self = this;
 				var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 				return mad.net.Ajax.request({
-					url: APP_URL + 'comments/' + attrs.foreign_model + '/' + attrs.foreign_id,
+					url: APP_URL + 'comments/' + attrs.foreign_model + '/' + attrs.foreign_id + '.json',
 					type: 'POST',
 					params: params,
 					success: success,
@@ -55,7 +55,7 @@ steal(
 			'destroy': function (id, success, error) {
 				var params = {id: id};
 				return mad.net.Ajax.request({
-					url: APP_URL + '/comments/{id}',
+					url: APP_URL + 'comments/{id}.json',
 					type: 'DELETE',
 					params: params,
 					success: success,
@@ -65,7 +65,7 @@ steal(
 
 			'findAll': function (params, success, error) {
 				return mad.net.Ajax.request({
-					url: APP_URL + 'comments/{foreignModel}/{foreignId}',
+					url: APP_URL + 'comments/{foreignModel}/{foreignId}.json',
 					type: 'GET',
 					params: params,
 					success: success,
@@ -75,7 +75,7 @@ steal(
 
 			'findOne': function (params, success, error) {
 				return mad.net.Ajax.request({
-					url: APP_URL + 'comments/{foreignModel}/{foreignId}',
+					url: APP_URL + 'comments/{foreignModel}/{foreignId}.json',
 					type: 'GET',
 					params: params,
 					success: success,
