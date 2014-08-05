@@ -12,7 +12,7 @@
 input[type=text],
 input[type=password],
 input[type=search],
-textarea, select {
+textarea {
 	color:#333;
 	background:#FFF;
 	border:1px solid @border-2;
@@ -176,14 +176,18 @@ textarea {
 	font-weight:normal;
 	display:inline;
 }
-
+.checkbox label {
+	font-weight:normal;
+	display:inline;
+	font-size:1em;
+}
 /* 
 	Hide the original radios and checkboxes (but still accessible)
 	@credit: http://www.wufoo.com/2011/06/13/custom-radio-buttons-and-checkboxes/
 
 	#cssrulefilter is a rule filter to block browsers that don't support that selector 
 	http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
-*/
+
 input[type="checkbox"] {
 	position:absolute;
 	margin-left:0;
@@ -198,7 +202,7 @@ input[type="checkbox"] + label {
 input[type="checkbox"]:hover,
 input[type="checkbox"] + label:hover {
 	cursor: pointer;
-}
+}*/
 /*#cssrulefilter:checked,
 input[type="checkbox"] {
 	position:absolute;
@@ -229,9 +233,8 @@ input[type="checkbox"] {
 	Description	: ?
 	Compatible	 : ?
 	Since				: version 3.0
-*/
 
-/** Added by Kevin - custom select **/
+
 select {
 	font-size: 1.125em;
 	padding: .278em .5em .278em .5em;
@@ -249,7 +252,7 @@ select {
 	background:@white;
 }
 
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. * /
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 	select {padding-right:18px}
 }
@@ -289,7 +292,7 @@ span.select-box:before {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
 	border-bottom: 1px solid @border-default;
 }
-
+*/
 /* fallback placeholder */
 .placeholder {
 	color: #bbb;

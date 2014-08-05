@@ -43,7 +43,7 @@ class PermissionableBehavior extends ModelBehavior {
 					// We're looking for permissions for the current user.
 					$userPermissionModelName . '.user_id' => User::get('id'),
 					// The user should have a permission greater than DENY.
-					$userPermissionModelName . '.permission_type >' => PermissionType::DENY
+					$userPermissionModelName . '.permission_type >' => PermissionType::DENY,
 				),
 				'contain' => array($userPermissionModelName)
 			);
@@ -151,25 +151,50 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
- * Check a user is authorized to access a reccord
- *
- * @param $model The type of record
- * @param $id Id of the record
- * @param string $permissionType The permission type to verify
- * @return bool
+ * Get the permission to an instance for a given user.
+ * @param $model The type of record.
+ * @param $id Id of the record.
+ * @param null $aroId The target user/group to get the permission for, by default the current user.
+ * @param string $aroType The target aro model to get the permission for, by default the User.
+ * @return Permission
  */
-	public function isAuthorized(&$model, $id, $permissionType = PermissionType::READ) {
-		$userPermissionModelName = 'User' . $model->alias . 'Permission';
-		$UserPermission = Common::getModel($userPermissionModelName);
+	public function getPermission(&$model, $id, $aroId = null, $aroType = 'User') {
+		$aroId = !is_null($aroId) ? $aroId : User::get('id');
+		$targetPermissionModelName = $aroType . $model->alias . 'Permission';
+		$TargetPermissionModel = Common::getModel($targetPermissionModelName);
 		$findOptions = array(
-			'fields' => array('permission_id', 'permission_type'),
+			'fields' => array(
+				'permission_id',
+				'permission_type'
+			),
 			'conditions' => array(
-				$userPermissionModelName . '.user_id' => User::get('id'),
-				$userPermissionModelName . '.' . Inflector::underscore($model->alias) . '_id' => $id,
-				$userPermissionModelName . '.permission_type >=' => $permissionType
+				$targetPermissionModelName . '.' . strtolower($aroType) . '_id' => $aroId,
+				$targetPermissionModelName . '.' . Inflector::underscore($model->alias) . '_id' => $id,
+			),
+			'contain' => array(
+				'Permission(id, type)'
 			)
 		);
-		$result = $UserPermission->find('first', $findOptions);
-		return !empty($result) ? true : false;
+		$result = $TargetPermissionModel->find('first', $findOptions);
+		return $result;
+	}
+
+/**
+ * Check a user is authorized to access a reccord
+ *
+ * @param $model The type of record.
+ * @param $id Id of the record.
+ * @param string $permissionType The permission type to verify.
+ * @param null $aroId The target user/group to check the permission for, by default the current user.
+ * @param string $aroType The target aro model to check the permission for, by default the User.
+ * @return bool
+ */
+	public function isAuthorized(&$model, $id, $permissionType = PermissionType::READ, $aroId = null, $aroType = 'User') {
+		$aroId = !is_null($aroId) ? $aroId : User::get('id');
+		$permission = $this->getPermission($model, $id, $aroId, $aroType);
+		if ($permission && $permission['Permission']['type'] >= $permissionType) {
+			return true;
+		}
+		return false;
 	}
 }

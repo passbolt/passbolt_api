@@ -57,12 +57,13 @@ class UsersControllerTest extends ControllerTestCase {
 				'password' => 'ouaich mec'
 			)
 		);
-		$this->expectException('HttpException', 'Invalid username or password, try again');
 		$result = $this->testAction(
 			'/users/login',
 			array('return' => 'view', 'method' => 'POST', 'data' => $data),
 			true
 		);
+		$this->assertTextContains('Username', $result);
+		$this->assertTextContains('Password', $result);
 	}
 
 	public function testLogin() {

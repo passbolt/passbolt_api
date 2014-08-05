@@ -24,12 +24,12 @@
 				<a href="pages/demo/dialog-share"><span>Share</span></a>
 			</li>
 			<li>
-				<a href="#"><span>Organize</span></a>
+				<a href="pages/demo/dialog-organize"><span>Organize</span></a>
 			</li>
 		</ul>
 		<ul class="tabs-content">
 			<!-- edit -->
-			<li class="tab-content selected" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
+			<li class="tab-content selected edit-tab" id="b2164540-ea43-11e2-ac0e-0002a5d5c51c">
 				<form>
 				<div class="form-content">
 					<div class="input text required error">

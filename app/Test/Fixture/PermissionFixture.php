@@ -43,10 +43,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '30ce2d3a-0468-4334-b59f-3053d7a10fce',
 			'type' => '0',
-			'created' => '2014-03-18 06:28:45',
-			'modified' => '2014-03-18 06:28:45',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a10dee',
@@ -55,10 +55,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'User',
 			'aro_foreign_key' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
 			'type' => '15',
-			'created' => '2014-03-18 06:28:45',
-			'modified' => '2014-03-18 06:28:45',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce',
@@ -67,22 +67,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '10ce2d3a-0468-433b-b59f-3053d7a10fce',
 			'type' => '15',
-			'created' => '2014-03-18 06:28:45',
-			'modified' => '2014-03-18 06:28:45',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
-		),
-		array(
-			'id' => '533d2ecb-3ec8-4437-9ca5-0aafc0a895dc',
-			'aco' => 'Category',
-			'aco_foreign_key' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
-			'aro' => 'User',
-			'aro_foreign_key' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
-			'type' => '15',
-			'created' => '2014-03-18 06:28:45',
-			'modified' => '2014-03-18 06:28:45',
-			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-5fa4-493d-bad0-23a4d7a10fce',
@@ -91,10 +79,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '30ce2d3a-0468-4334-b59f-3053d7a10fce',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:45',
-			'modified' => '2014-03-18 06:28:45',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-6d20-4e4e-bbcf-23a4d7a10fce',
@@ -103,10 +91,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '30ce2d3a-0468-4334-b59f-3053d7a10fce',
 			'type' => '0',
-			'created' => '2014-03-18 06:28:45',
-			'modified' => '2014-03-18 06:28:45',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-7768-45e0-890d-23a4d7a10fce',
@@ -115,10 +103,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '30ce2d3a-0468-4334-b59f-3053d7a10fce',
 			'type' => '7',
-			'created' => '2014-03-18 06:28:45',
-			'modified' => '2014-03-18 06:28:45',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-7768-45e0-900d-7784d7a10fce',
@@ -127,10 +115,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'User',
 			'aro_foreign_key' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce',
 			'type' => '0',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-832c-44bf-8a49-23a4d7a10fce',
@@ -139,10 +127,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '20ce3d3a-0468-433b-b59f-3053d7a10fce',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-8824-48f9-89af-23a4d7a10fce',
@@ -151,10 +139,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '6bd58742-c5cd-11e1-a0c5-080027796c4c',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-8ab8-4533-a4b4-23a4d7a10fce',
@@ -163,10 +151,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '6bd58742-c5cd-11e1-a0c5-080027796ce7',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-a490-43f5-9cc9-23a4d7a10fce',
@@ -175,10 +163,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '5ad56042-c5cd-11e1-a0c5-080027796c4c',
 			'type' => '7',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-aa58-478c-804d-23a4d7a10fce',
@@ -187,10 +175,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'User',
 			'aro_foreign_key' => '50cdea9c-a34c-406f-a9f1-2f4fd7a10fce',
 			'type' => '15',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-ad14-4659-a60d-23a4d7a10fce',
@@ -199,22 +187,22 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'User',
 			'aro_foreign_key' => '50cdea9c-a34c-406f-a9f1-2f4fd7a10fce',
 			'type' => '15',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-b124-40e3-988e-23a4d7a10fce',
 			'aco' => 'Category',
 			'aco_foreign_key' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
 			'aro' => 'Group',
-			'aro_foreign_key' => '9bd58742-c5cd-12f1-a0c5-080027796ce7',
+			'aro_foreign_key' => '6bd58742-c5cd-11e1-a0c6-080127896ce7',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-b598-42f7-b105-23a4d7a10fce',
@@ -223,10 +211,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'User',
 			'aro_foreign_key' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-c390-4e5e-a8f8-23a4d7a10fce',
@@ -235,10 +223,22 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'User',
 			'aro_foreign_key' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '50e6b4af-c390-4f2e-a8f8-23a4d7a10fcc',
+			'aco' => 'Category',
+			'aco_foreign_key' => '222d3a7b-fc70-4faa-a19f-1aafc0a800dc',
+			'aro' => 'User',
+			'aro_foreign_key' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
+			'type' => '3',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
+			'created_by' => '',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-d4b0-43d8-947f-23a4d7a10ecb',
@@ -247,10 +247,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '8bd56042-d9cd-11e1-a0c5-080027796c4c',
 			'type' => '7',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50e6b4af-d4b0-43d8-947f-23a4d7a10fce',
@@ -259,10 +259,10 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'Group',
 			'aro_foreign_key' => '8bd56042-d9cd-11e1-a0c5-080027796c4c',
 			'type' => '1',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
 			'id' => '50f6b4af-a491-43f5-fac9-23a4d7a10fce',
@@ -271,10 +271,22 @@ class PermissionFixture extends CakeTestFixture {
 			'aro' => 'User',
 			'aro_foreign_key' => '533d346d-d378-4acc-affd-1663c0a895dc',
 			'type' => '0',
-			'created' => '2014-03-18 06:28:46',
-			'modified' => '2014-03-18 06:28:46',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
 			'created_by' => '',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '533d2ecb-3ec8-4437-9ca5-0aafc0a895dc',
+			'aco' => 'Category',
+			'aco_foreign_key' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'aro' => 'User',
+			'aro_foreign_key' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
+			'type' => '15',
+			'created' => '2014-05-08 05:50:17',
+			'modified' => '2014-05-08 05:50:17',
+			'created_by' => '',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 	);
 

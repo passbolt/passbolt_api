@@ -60,13 +60,44 @@ steal(
 
 		/**
 		 * Set the current states, store the previous states in the variable previous
-		 * @param {string|array} statesName the new state name or an array of states name 
+		 * @param {string|array} statesName the new state name or an array of states name
 		 * @return {void}
 		 */
 		'setState': function (statesName) {
 			statesName = $.isArray(statesName) ? statesName : [statesName];
 			this.previous.replace(this.current.attr());
 			this.current.replace(statesName);
+		},
+
+		/**
+		 * Add states to the current list of states, store the previous states in the variable previous
+		 * @param {string|array} statesName the state name or an array of states name
+		 * @return {void}
+		 */
+		'addState': function (statesName) {
+			statesName = $.isArray(statesName) ? statesName : [statesName];
+			this.previous.replace(this.current.attr());
+			$.each(this.current.attr(), function(i, val) {
+				statesName.push(val);
+			});
+			this.current.replace(statesName);
+		},
+
+		/**
+		 * Remove states to the current list of states, store the previous states in the variable previous
+		 * @param {string|array} statesName the state name or an array of states name
+		 * @return {void}
+		 */
+		'removeState': function (statesName) {
+			statesName = $.isArray(statesName) ? statesName : [statesName];
+			var newStatesName = [];
+			this.previous.replace(this.current.attr());
+			$.each(this.current.attr(), function(i, val) {
+				if (statesName.indexOf(val) == -1) {
+					newStatesName.push(val);
+				}
+			});
+			this.current.replace(newStatesName);
 		},
 
 		/**

@@ -7,22 +7,16 @@
 	margin:.5em 0;
 	width:100%;
 }
-
-.comments .content-wrapper{
-	float: left;
-	width: 85.7%;
-	margin-left: 4%;
-}
-
-.comments .comment.reply {
-	clear:both;
+.comments .comment-wrapper.reply {
 	float:left;
-	margin-left:2.5em;
+	margin-left:2em;
+	width:auto;
 }
 
 /* content */
 .comments .comment p {
-	margin: -0.3em 0 0.3em 0;
+	margin: -0.3em 0 0.3em 3em;
+	min-height:2em;
 }
 
 /* picture */
@@ -30,11 +24,13 @@
 	float:left;
 	width:2em;
 	height:2em;
+	margin-right:.5em;
 }
-.comments .comment .author.picture img{
+.comments .comment .author.picture img {
 	float:left;
 	width:2em;
 	height:2em;
+	margin-right:.5em;
 }
 
 /* username and date */
@@ -43,11 +39,10 @@
 	font-style:italic;
 	float: left;
 	width: 75%;
+	padding-left:3em;
 }
 .comments .comment .metadata .author.username {
 	max-width:48%;
-	display:inline-block;
-	padding-right:2px;
 	.ellipsis();
 }
 .comments .comment .metadata .author.username:after {
@@ -64,6 +59,11 @@
 .comments .actions {
 	float:right;
 	margin:0;
+}
+
+.comments .actions li {
+	display:inline;
+	width:3em;
 }
 
 /* add / edit comment */

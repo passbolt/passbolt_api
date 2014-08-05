@@ -326,6 +326,12 @@ steal(
 		 */
 		'stateLoading': function (go) {
 			this.view.loading(go);
+			if (go) {
+				mad.bus.trigger('passbolt_component_loading_start', [this]);
+			}
+			else {
+				mad.bus.trigger('passbolt_component_loading_complete', [this]);
+			}
 		},
 
 		/**

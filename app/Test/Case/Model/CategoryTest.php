@@ -1,6 +1,6 @@
 <?php
 /**
- * Cateogry Model Test
+ * Category Model Test
  *
  * @copyright    Copyright 2012, Passbolt.com
  * @package      app.Test.Case.Model.CategoryTest

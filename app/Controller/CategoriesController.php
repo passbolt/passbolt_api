@@ -47,11 +47,11 @@ class CategoriesController extends AppController {
 	}
 
 /**
- * Get a category
- * Renders a json object with the nested categories
+ * Get a category.
+ * If children options is found in the request parameters, the function will return
+ * the Category with its children.
  *
  * @param uuid $id the id of the category
- * @param bool $children whether or not we want the children returned
  * @return void
  *
  */
@@ -68,10 +68,19 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
+
 		// check if it exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
 			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			return;
+		}
+
+		// check if user is authorized
+		// the permissionable after find executed on the previous operation findById should drop
+		// any record the user is not authorized to access. This test should always be true.
+		if (!$this->Category->isAuthorized($id, PermissionType::READ)) {
+			$this->Message->error(__('You are not authorized to access this category'), array('code' => 403));
 			return;
 		}
 
@@ -133,8 +142,6 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function add() {
-//		var_dump($this->request->data);die();
-
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
@@ -146,8 +153,17 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		// set the data for validation and save
 		$catpost = $this->request->data;
+
+		// Check if the user is allowed to create in the parent category.
+		if (isset($catpost['Category']['parent_id'])) {
+			if (!$this->Category->isAuthorized($catpost['Category']['parent_id'], PermissionType::CREATE)) {
+				$this->Message->error(__('You are not authorized to create a category into the given parent category'), array('code' => 403));
+				return;
+			}
+		}
+
+		// set the data for validation and save
 		$this->Category->set($catpost);
 
 		// check if the data is valid
@@ -159,6 +175,7 @@ class CategoriesController extends AppController {
 		// try to save
 		$fields = $this->Category->getFindFields("add", User::get('Role.name'));
 		$this->Category->create();
+		// @todo take a moment to check what is this mess ....
 		// disable the permissionnable behavior because we need to access other categories to position the new one
 		//		$this->Category->Behaviors->disable('Permissionable');
 		$category = $this->Category->save($catpost, true, $fields['fields']);
@@ -178,10 +195,6 @@ class CategoriesController extends AppController {
 				$this->Category->moveUp($category['Category']['id'], $steps);
 			}
 		}
-
-		// Should be done by the after save of the permissionable behavior
-		// // Add the admin right to the just created category for the creator
-		// $this->PermissionCpt->add('Category', $category, 'User', User::get(), PermissionType::ADMIN);
 
 		// Get back the category data to return to the client
 		$data = array('Category' => array('id' => $category['Category']['id']));
@@ -213,8 +226,15 @@ class CategoriesController extends AppController {
 		}
 
 		// check if the category exists
-		if (!$this->Category->exists($id)) {
+		$category = $this->Category->findById($id);
+		if (!($category)) {
 			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			return;
+		}
+
+		// Check if the user is allowed to update the category.
+		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not authorized to edit this category'), array('code' => 403));
 			return;
 		}
 
@@ -224,14 +244,24 @@ class CategoriesController extends AppController {
 			return;
 		}
 
+		// If the parent Category provided has changed.
+		// Check if the user is allowed to move the Category inside the given Category.
+		if (isset($this->request->data['Category']['parent_id']) && $category['Category']['parent_id'] != $this->request->data['Category']['parent_id']) {
+			if (!$this->Category->isAuthorized($this->request->data['Category']['parent_id'], PermissionType::CREATE)) {
+				$this->Message->error(__('You are not authorized to create a category into the given parent category'), array('code' => 403));
+				return;
+			}
+		}
+
+		// Check if the data is valid.
 		$this->Category->set($this->request->data);
-		// check if the data is valid
 		if (!$this->Category->validates()) {
 			$this->Message->error(__('Could not validate category data'));
 			return;
 		}
+
 		// try to save
-		$fields = $this->Category->getFindFields("edit", User::get('Role.name'));
+		$fields = $this->Category->getFindFields('edit', User::get('Role.name'));
 		$this->request->data['Category']['id'] = $id;
 		$category = $this->Category->save($this->request->data, true, $fields['fields']);
 		if ($category === false) {
@@ -254,11 +284,26 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The category id is missing'));
 			return;
 		}
+
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
 			return;
 		}
+
+		// check if the category exists
+		$category = $this->Category->findById($id);
+		if (!$category) {
+			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			return;
+		}
+
+		// Check if the user is allowed to delete the category.
+		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not authorized to delete this category'), array('code' => 403));
+			return;
+		}
+
 		// delete
 		if ($this->Category->delete($id)) {
 			$this->Message->success(__('The category was succesfully deleted'));
@@ -357,6 +402,12 @@ class CategoriesController extends AppController {
 		$type = $this->Category->CategoryType->findByName($typeName);
 		if (!$type) {
 			$this->Message->error(__('The type does not exist'), array('code' => 404));
+			return;
+		}
+
+		// Check if the user is allowed to update the category.
+		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
+			$this->Message->error(__('You are not authorized to change the type of this category'), array('code' => 403));
 			return;
 		}
 

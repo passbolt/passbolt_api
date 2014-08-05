@@ -1,15 +1,16 @@
 <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 1.2.0.5550
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -28,29 +29,31 @@ App::uses('CakeSchema', 'Model');
  */
 class SchemaShell extends AppShell {
 
-/**
- * Schema class being used.
- *
- * @var CakeSchema
- */
+	/**
+	 * Schema class being used.
+	 *
+	 * @var CakeSchema
+	 */
 	public $Schema;
 
-/**
- * is this a dry run?
- *
- * @var boolean
- */
+	/**
+	 * is this a dry run?
+	 *
+	 * @var boolean
+	 */
 	protected $_dry = null;
 
-/**
- * Override startup
- *
- * @return void
- */
+	/**
+	 * Override startup
+	 *
+	 * @return void
+	 */
 	public function startup() {
 		$this->_welcome();
 		$this->out('Cake Schema Shell');
 		$this->hr();
+
+		Configure::write('Cache.disable', 1);
 
 		$name = $path = $connection = $plugin = null;
 		if (!empty($this->params['name'])) {
@@ -64,12 +67,12 @@ class SchemaShell extends AppShell {
 			$name = $this->params['name'] = $splitName;
 		}
 
-		if ($name) {
-			$this->params['file'] = Inflector::underscore($name);
-		}
-
+		$defaultFile = 'schema.php';
 		if (empty($this->params['file'])) {
-			$this->params['file'] = 'schema.php';
+			$this->params['file'] = $defaultFile;
+		}
+		if ($name && $this->params['file'] === $defaultFile) {
+			$this->params['file'] = Inflector::underscore($name);
 		}
 		if (strpos($this->params['file'], '.php') === false) {
 			$this->params['file'] .= '.php';
@@ -93,30 +96,29 @@ class SchemaShell extends AppShell {
 		$this->Schema = new CakeSchema(compact('name', 'path', 'file', 'connection', 'plugin'));
 	}
 
-/**
- * Read and output contents of schema object
- * path to read as second arg
- *
- * @return void
- */
+	/**
+	 * Read and output contents of schema object
+	 * path to read as second arg
+	 *
+	 * @return void
+	 */
 	public function view() {
 		$File = new File($this->Schema->path . DS . $this->params['file']);
 		if ($File->exists()) {
 			$this->out($File->read());
-			$this->_stop();
-		} else {
-			$file = $this->Schema->path . DS . $this->params['file'];
-			$this->err(__d('cake_console', 'Schema file (%s) could not be found.', $file));
-			$this->_stop();
+			return $this->_stop();
 		}
+		$file = $this->Schema->path . DS . $this->params['file'];
+		$this->err(__d('cake_console', 'Schema file (%s) could not be found.', $file));
+		return $this->_stop();
 	}
 
-/**
- * Read database and Write schema object
- * accepts a connection as first arg or path to save as second arg
- *
- * @return void
- */
+	/**
+	 * Read database and Write schema object
+	 * accepts a connection as first arg or path to save as second arg
+	 *
+	 * @return void
+	 */
 	public function generate() {
 		$this->out(__d('cake_console', 'Generating Schema...'));
 		$options = array();
@@ -151,6 +153,13 @@ class SchemaShell extends AppShell {
 
 		Configure::write('Cache.disable', $cacheDisable);
 
+		if (!empty($this->params['exclude']) && !empty($content)) {
+			$excluded = String::tokenize($this->params['exclude']);
+			foreach ($excluded as $table) {
+				unset($content['tables'][$table]);
+			}
+		}
+
 		if ($snapshot === true) {
 			$fileName = rtrim($this->params['file'], '.php');
 			$Folder = new Folder($this->Schema->path);
@@ -181,28 +190,27 @@ class SchemaShell extends AppShell {
 
 		if ($this->Schema->write($content)) {
 			$this->out(__d('cake_console', 'Schema file: %s generated', $content['file']));
-			$this->_stop();
-		} else {
-			$this->err(__d('cake_console', 'Schema file: %s generated'));
-			$this->_stop();
+			return $this->_stop();
 		}
+		$this->err(__d('cake_console', 'Schema file: %s generated'));
+		return $this->_stop();
 	}
 
-/**
- * Dump Schema object to sql file
- * Use the `write` param to enable and control SQL file output location.
- * Simply using -write will write the sql file to the same dir as the schema file.
- * If -write contains a full path name the file will be saved there. If -write only
- * contains no DS, that will be used as the file name, in the same dir as the schema file.
- *
- * @return string
- */
+	/**
+	 * Dump Schema object to sql file
+	 * Use the `write` param to enable and control SQL file output location.
+	 * Simply using -write will write the sql file to the same dir as the schema file.
+	 * If -write contains a full path name the file will be saved there. If -write only
+	 * contains no DS, that will be used as the file name, in the same dir as the schema file.
+	 *
+	 * @return string
+	 */
 	public function dump() {
 		$write = false;
 		$Schema = $this->Schema->load();
 		if (!$Schema) {
 			$this->err(__d('cake_console', 'Schema could not be loaded'));
-			$this->_stop();
+			return $this->_stop();
 		}
 		if (!empty($this->params['write'])) {
 			if ($this->params['write'] == 1) {
@@ -226,41 +234,40 @@ class SchemaShell extends AppShell {
 
 			if ($File->write($contents)) {
 				$this->out(__d('cake_console', 'SQL dump file created in %s', $File->pwd()));
-				$this->_stop();
-			} else {
-				$this->err(__d('cake_console', 'SQL dump could not be created'));
-				$this->_stop();
+				return $this->_stop();
 			}
+			$this->err(__d('cake_console', 'SQL dump could not be created'));
+			return $this->_stop();
 		}
 		$this->out($contents);
 		return $contents;
 	}
 
-/**
- * Run database create commands.  Alias for run create.
- *
- * @return void
- */
+	/**
+	 * Run database create commands. Alias for run create.
+	 *
+	 * @return void
+	 */
 	public function create() {
 		list($Schema, $table) = $this->_loadSchema();
 		$this->_create($Schema, $table);
 	}
 
-/**
- * Run database create commands.  Alias for run create.
- *
- * @return void
- */
+	/**
+	 * Run database create commands. Alias for run create.
+	 *
+	 * @return void
+	 */
 	public function update() {
 		list($Schema, $table) = $this->_loadSchema();
 		$this->_update($Schema, $table);
 	}
 
-/**
- * Prepares the Schema objects for database operations.
- *
- * @return void
- */
+	/**
+	 * Prepares the Schema objects for database operations.
+	 *
+	 * @return void
+	 */
 	protected function _loadSchema() {
 		$name = $plugin = null;
 		if (!empty($this->params['name'])) {
@@ -275,7 +282,11 @@ class SchemaShell extends AppShell {
 			$this->out(__d('cake_console', 'Performing a dry run.'));
 		}
 
-		$options = array('name' => $name, 'plugin' => $plugin);
+		$options = array(
+			'name' => $name,
+			'plugin' => $plugin,
+			'connection' => $this->params['connection'],
+		);
 		if (!empty($this->params['snapshot'])) {
 			$fileName = rtrim($this->Schema->file, '.php');
 			$options['file'] = $fileName . '_' . $this->params['snapshot'] . '.php';
@@ -287,7 +298,7 @@ class SchemaShell extends AppShell {
 			$this->err(__d('cake_console', 'The chosen schema could not be loaded. Attempted to load:'));
 			$this->err(__d('cake_console', 'File: %s', $this->Schema->path . DS . $this->Schema->file));
 			$this->err(__d('cake_console', 'Name: %s', $this->Schema->name));
-			$this->_stop();
+			return $this->_stop();
 		}
 		$table = null;
 		if (isset($this->args[1])) {
@@ -296,15 +307,15 @@ class SchemaShell extends AppShell {
 		return array(&$Schema, $table);
 	}
 
-/**
- * Create database from Schema object
- * Should be called via the run method
- *
- * @param CakeSchema $Schema
- * @param string $table
- * @return void
- */
-	protected function _create($Schema, $table = null) {
+	/**
+	 * Create database from Schema object
+	 * Should be called via the run method
+	 *
+	 * @param CakeSchema $Schema
+	 * @param string $table
+	 * @return void
+	 */
+	protected function _create(CakeSchema $Schema, $table = null) {
 		$db = ConnectionManager::getDataSource($this->Schema->connection);
 
 		$drop = $create = array();
@@ -320,13 +331,13 @@ class SchemaShell extends AppShell {
 		}
 		if (empty($drop) || empty($create)) {
 			$this->out(__d('cake_console', 'Schema is up to date.'));
-			$this->_stop();
+			return $this->_stop();
 		}
 
 		$this->out("\n" . __d('cake_console', 'The following table(s) will be dropped.'));
 		$this->out(array_keys($drop));
 
-		if ($this->params['force_drop'] || 'y' == $this->in(__d('cake_console', 'Are you sure you want to drop the table(s)?'), array('y', 'n'), 'y')) {
+		if ($this->params['force_drop'] || $this->in(__d('cake_console', 'Are you sure you want to drop the table(s)?'), array('y', 'n'), 'n') === 'y') {
 			$this->out(__d('cake_console', 'Dropping table(s).'));
 			$this->_run($drop, 'drop', $Schema);
 		}
@@ -334,21 +345,21 @@ class SchemaShell extends AppShell {
 		$this->out("\n" . __d('cake_console', 'The following table(s) will be created.'));
 		$this->out(array_keys($create));
 
-		if ($this->params['force_create'] || 'y' == $this->in(__d('cake_console', 'Are you sure you want to create the table(s)?'), array('y', 'n'), 'y')) {
+		if ($this->params['force_create'] || $this->in(__d('cake_console', 'Are you sure you want to create the table(s)?'), array('y', 'n'), 'y') === 'y') {
 			$this->out(__d('cake_console', 'Creating table(s).'));
 			$this->_run($create, 'create', $Schema);
 		}
 		$this->out(__d('cake_console', 'End create.'));
 	}
 
-/**
- * Update database with Schema object
- * Should be called via the run method
- *
- * @param CakeSchema $Schema
- * @param string $table
- * @return void
- */
+	/**
+	 * Update database with Schema object
+	 * Should be called via the run method
+	 *
+	 * @param CakeSchema $Schema
+	 * @param string $table
+	 * @return void
+	 */
 	protected function _update(&$Schema, $table = null) {
 		$db = ConnectionManager::getDataSource($this->Schema->connection);
 
@@ -364,20 +375,28 @@ class SchemaShell extends AppShell {
 
 		if (empty($table)) {
 			foreach ($compare as $table => $changes) {
-				$contents[$table] = $db->alterSchema(array($table => $changes), $table);
+				if (isset($compare[$table]['create'])) {
+					$contents[$table] = $db->createSchema($Schema, $table);
+				} else {
+					$contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+				}
 			}
 		} elseif (isset($compare[$table])) {
-			$contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+			if (isset($compare[$table]['create'])) {
+				$contents[$table] = $db->createSchema($Schema, $table);
+			} else {
+				$contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+			}
 		}
 
 		if (empty($contents)) {
 			$this->out(__d('cake_console', 'Schema is up to date.'));
-			$this->_stop();
+			return $this->_stop();
 		}
 
 		$this->out("\n" . __d('cake_console', 'The following statements will run.'));
 		$this->out(array_map('trim', $contents));
-		if ('y' == $this->in(__d('cake_console', 'Are you sure you want to alter the tables?'), array('y', 'n'), 'n')) {
+		if ($this->in(__d('cake_console', 'Are you sure you want to alter the tables?'), array('y', 'n'), 'n') === 'y') {
 			$this->out();
 			$this->out(__d('cake_console', 'Updating Database...'));
 			$this->_run($contents, 'update', $Schema);
@@ -386,15 +405,15 @@ class SchemaShell extends AppShell {
 		$this->out(__d('cake_console', 'End update.'));
 	}
 
-/**
- * Runs sql from _create() or _update()
- *
- * @param array $contents
- * @param string $event
- * @param CakeSchema $Schema
- * @return void
- */
-	protected function _run($contents, $event, &$Schema) {
+	/**
+	 * Runs sql from _create() or _update()
+	 *
+	 * @param array $contents
+	 * @param string $event
+	 * @param CakeSchema $Schema
+	 * @return void
+	 */
+	protected function _run($contents, $event, CakeSchema $Schema) {
 		if (empty($contents)) {
 			$this->err(__d('cake_console', 'Sql could not be run'));
 			return;
@@ -432,11 +451,11 @@ class SchemaShell extends AppShell {
 		}
 	}
 
-/**
- * get the option parser
- *
- * @return void
- */
+	/**
+	 * get the option parser
+	 *
+	 * @return void
+	 */
 	public function getOptionParser() {
 		$plugin = array(
 			'short' => 'p',
@@ -470,6 +489,11 @@ class SchemaShell extends AppShell {
 			'help' => __d('cake_console', 'Perform a dry run on create and update commands. Queries will be output instead of run.'),
 			'boolean' => true
 		);
+		$force = array(
+			'short' => 'f',
+			'help' => __d('cake_console', 'Force "generate" to create a new schema'),
+			'boolean' => true
+		);
 		$force_drop = array(
 			'help' => __d('cake_console', 'Force "drop table" to create a new schema'),
 			'boolean' => true,
@@ -480,65 +504,63 @@ class SchemaShell extends AppShell {
 			'boolean' => true,
 			'default' => null
 		);
-		$force = array(
-			'short' => 'f',
-			'help' => __d('cake_console', 'Force "generate" to create a new schema'),
-			'boolean' => true
-		);
 		$write = array(
 			'help' => __d('cake_console', 'Write the dumped SQL to a file.')
+		);
+		$exclude = array(
+			'help' => __d('cake_console', 'Tables to exclude as comma separated list.')
 		);
 
 		$parser = parent::getOptionParser();
 		$parser->description(
 			__d('cake_console', 'The Schema Shell generates a schema object from the database and updates the database from the schema.')
 		)->addSubcommand('view', array(
-			'help' => __d('cake_console', 'Read and output the contents of a schema file'),
-			'parser' => array(
-				'options' => compact('plugin', 'path', 'file', 'name', 'connection'),
-				'arguments' => compact('name')
-			)
-		))->addSubcommand('generate', array(
-			'help' => __d('cake_console', 'Reads from --connection and writes to --path. Generate snapshots with -s'),
-			'parser' => array(
-				'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'snapshot', 'force', 'models'),
-				'arguments' => array(
-					'snapshot' => array('help' => __d('cake_console', 'Generate a snapshot.'))
+				'help' => __d('cake_console', 'Read and output the contents of a schema file'),
+				'parser' => array(
+					'options' => compact('plugin', 'path', 'file', 'name', 'connection'),
+					'arguments' => compact('name')
 				)
-			)
-		))->addSubcommand('dump', array(
-			'help' => __d('cake_console', 'Dump database SQL based on a schema file to stdout.'),
-			'parser' => array(
-				'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'write'),
-				'arguments' => compact('name')
-			)
-		))->addSubcommand('create', array(
-			'help' => __d('cake_console', 'Drop and create tables based on the schema file.'),
-			'parser' => array(
-				'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'dry', 'snapshot', 'force_drop', 'force_create'),
-				'args' => array(
-					'name' => array(
-						'help' => __d('cake_console', 'Name of schema to use.')
-					),
-					'table' => array(
-						'help' => __d('cake_console', 'Only create the specified table.')
+			))->addSubcommand('generate', array(
+				'help' => __d('cake_console', 'Reads from --connection and writes to --path. Generate snapshots with -s'),
+				'parser' => array(
+					'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'snapshot', 'force', 'models', 'exclude'),
+					'arguments' => array(
+						'snapshot' => array('help' => __d('cake_console', 'Generate a snapshot.'))
 					)
 				)
-			)
-		))->addSubcommand('update', array(
-			'help' => __d('cake_console', 'Alter the tables based on the schema file.'),
-			'parser' => array(
-				'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'dry', 'snapshot', 'force'),
-				'args' => array(
-					'name' => array(
-						'help' => __d('cake_console', 'Name of schema to use.')
-					),
-					'table' => array(
-						'help' => __d('cake_console', 'Only create the specified table.')
+			))->addSubcommand('dump', array(
+				'help' => __d('cake_console', 'Dump database SQL based on a schema file to stdout.'),
+				'parser' => array(
+					'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'write'),
+					'arguments' => compact('name')
+				)
+			))->addSubcommand('create', array(
+				'help' => __d('cake_console', 'Drop and create tables based on the schema file.'),
+				'parser' => array(
+					'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'dry', 'snapshot', 'force_drop', 'force_create'),
+					'args' => array(
+						'name' => array(
+							'help' => __d('cake_console', 'Name of schema to use.')
+						),
+						'table' => array(
+							'help' => __d('cake_console', 'Only create the specified table.')
+						)
 					)
 				)
-			)
-		));
+			))->addSubcommand('update', array(
+				'help' => __d('cake_console', 'Alter the tables based on the schema file.'),
+				'parser' => array(
+					'options' => compact('plugin', 'path', 'file', 'name', 'connection', 'dry', 'snapshot', 'force'),
+					'args' => array(
+						'name' => array(
+							'help' => __d('cake_console', 'Name of schema to use.')
+						),
+						'table' => array(
+							'help' => __d('cake_console', 'Only create the specified table.')
+						)
+					)
+				)
+			));
 		return $parser;
 	}
 
