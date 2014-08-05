@@ -28,7 +28,7 @@ steal(
 			var menuItems = [
 				new mad.model.Action({
 					'id': uuid(),
-					'label': __('All items'),
+					'label': __('All users'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
 							'order': 'modified'
