@@ -2,6 +2,7 @@ steal(
 	'mad/controller/component/freeCompositeController.js',
     'app/controller/component/groupChooserController.js',
     'app/controller/component/userBrowserController.js',
+	'app/controller/component/userShortcutsController.js',
 	'app/controller/component/userWorkspaceMenuController.js',
 	'app/controller/form/user/createFormController.js',
 	'app/controller/form/group/createFormController.js',
@@ -46,11 +47,15 @@ steal(
 			});
 			this.primMenu.start();
 
-            // Instanciate the group chooser controller
+			// Instanciate the users filter controller.
+			var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_group_shortcuts', {});
+			userShortcut.start();
+
+            // Instanciate the group chooser controller.
             this.grpChooser = new passbolt.controller.component.GroupChooserController('#js_wsp_users_group_chooser', {});
             this.grpChooser.start();
 
-            // Instanciate the passwords browser controller
+            // Instanciate the passwords browser controller.
             var userBrowserController = this.addComponent(passbolt.controller.component.UserBrowserController, {
                 'id': 'js_passbolt_user_browser',
                 'selectedUsers': this.options.selectedUsers
