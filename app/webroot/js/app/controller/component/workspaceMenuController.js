@@ -53,7 +53,7 @@ steal(
 			}).start();
 
 			// Manage more action 
-			this.options.moreButton = new mad.controller.component.ButtonController($('#js_wk_menu_more_button'), {
+			this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_wk_menu_more_button'), {
 				'state': 'disabled'
 			}).start();
 			

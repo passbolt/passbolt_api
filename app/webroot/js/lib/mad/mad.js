@@ -45,6 +45,7 @@ steal(
 	'mad/controller/appController.js',
 	'mad/controller/componentController.js',
 	'mad/controller/component/buttonController.js',
+	'mad/controller/component/buttonDropdownController.js',
 	'mad/controller/component/compositeController.js',
 	'mad/controller/component/dialogController.js',
 	'mad/controller/component/freeCompositeController.js',
