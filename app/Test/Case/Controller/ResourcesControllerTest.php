@@ -215,7 +215,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		);
 		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
 		$this->assertTrue(!empty($path), "{$url} : test should contain 'cpp2-pwd2' resource");
-		$this->assertEquals(14, count($result['body']), "{$url} : counting the number of elements should return '14' but is reading " . count($result['body']));
+		$this->assertEquals(13, count($result['body']), "{$url} : counting the number of elements should return '13' but is reading " . count($result['body']));
 	}
 
 	public function testAddWithCategoryBadId() {

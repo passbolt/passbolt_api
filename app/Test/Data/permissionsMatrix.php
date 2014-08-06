@@ -101,6 +101,11 @@ return array(
 				'aroname' => 'jean-rene@test.com',
 				'result' => PermissionType::CREATE
 			),
+			array(
+				'aconame' => 'Bolt Softwares Pvt. Ltd.',
+				'aroname' => 'jean-rene@test.com',
+				'result' => null
+			),
 		),
 		'Resource' => array(
 			array(
