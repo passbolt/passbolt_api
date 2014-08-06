@@ -49,9 +49,20 @@ steal(
 
 
 
-				// Manage more action
-				this.options.moreButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_more_button'), {
-					'state': 'disabled'
+				// Manage more actions.
+				var moreButtonMenuItems = [
+					new mad.model.Action({
+						'id': uuid(),
+						'label': __('remove user from group'),
+						'cssClasses': ['todo'],
+						'action': function () {
+							mad.bus.trigger('workspace_selected');
+						}
+					})
+				];
+				this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_user_wk_menu_more_button'), {
+					'state': 'disabled',
+					'menuItems': moreButtonMenuItems
 				}).start();
 
 				// Rebind controller events

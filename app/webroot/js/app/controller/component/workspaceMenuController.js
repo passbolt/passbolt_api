@@ -52,9 +52,44 @@ steal(
 				'state': 'disabled'
 			}).start();
 
-			// Manage more action 
+			// Manage more action
+			var moreButtonMenuItems = [
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('copy login to clipboard'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						mad.bus.trigger('workspace_selected');
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('copy password to clipboard'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						mad.bus.trigger('workspace_selected');
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('organize'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						mad.bus.trigger('workspace_selected');
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('review logs'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						mad.bus.trigger('workspace_selected');
+					}
+				})
+			];
 			this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_wk_menu_more_button'), {
-				'state': 'disabled'
+				'state': 'disabled',
+				'menuItems': moreButtonMenuItems
 			}).start();
 			
 			// Rebind controller events

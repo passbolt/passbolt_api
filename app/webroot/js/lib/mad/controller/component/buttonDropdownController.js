@@ -29,12 +29,24 @@ steal(
 				'events': {
 					'click': null
 				},
-				'tag': 'buttonMenu'
+				'tag': 'buttonMenu',
+				// Menu Items inside the menu.
+				'menuItems': null,
+				'menu' : null
 			}
 
 		}, /** @prototype */ {
 
-
+			'afterStart': function() {
+				// Define id of container for menuItems.
+				var menuItemsId = 'mb-ctn-' + uuid();
+				// Inject container in dom.
+				$('<ul id="' + menuItemsId + '" class="dropdown-content"></div>').insertAfter(this.element);
+				// Create and render menu in the created container.
+				this.options.menu = new mad.controller.component.MenuController('#' + menuItemsId);
+				this.options.menu.start();
+				this.options.menu.load(this.options.menuItems);
+			}
 		});
 
 	});

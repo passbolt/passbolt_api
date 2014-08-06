@@ -14,13 +14,9 @@ steal(
 				 */
 				button: null,
 				/**
-				 * dropdown element (wrapper).
+				 * wrapper element (wrapper).
 				 */
-				dropdown: null,
-				/**
-				 * content of dropdown (sublinks)
-				 */
-				content: null
+				wrapper: null
 			}
 
 		}, /** @prototype */ {
@@ -28,14 +24,40 @@ steal(
 			'init': function (el, options) {
 				// Construct parent.
 				this._super(el, options);
+
 				// Init elements.
 				this.options.button = this.element;
-				this.options.dropdown = this.options.button.closest('.dropdown');
+				this.options.wrapper = this.options.button.closest('.dropdown');
+			},
+
+			/**
+			 * Open an item
+			 * @param {mad.model.Model} item The target item to open
+			 * @return {void}
+			 */
+			'open': function (item) {
+				var content = null;
 				if (this.options.button.attr('data-dropdown-content-id') == undefined) {
-					this.options.content = this.options.button.next();
+					content = this.options.button.next();
 				} else {
-					this.options.content = $("#" + this.options.button.attr('data-dropdown-content-id'));
+					content = $("#" + this.options.button.attr('data-dropdown-content-id'));
 				}
+				content.addClass('visible');
+			},
+
+			/**
+			 * Close an item
+			 * @param {mad.model.Model} item The target item to close
+			 * @return {void}
+			 */
+			'close': function (item) {
+				var content = null;
+				if (this.options.button.attr('data-dropdown-content-id') == undefined) {
+					content = this.options.button.next();
+				} else {
+					content = $("#" + this.options.button.attr('data-dropdown-content-id'));
+				}
+				content.removeClass('visible');
 			},
 
 			/* ************************************************************** */
@@ -47,13 +69,18 @@ steal(
 			 * @return {void}
 			 */
 			'click': function (el, ev) {
-				this.options.dropdown.toggleClass('pressed');
-				if(this.options.dropdown.hasClass('pressed')) {
-					this.options.content.addClass('visible');
-				} else {
-					this.options.content.removeClass('visible');
+				// If state is disabled, do not do anything on click.
+				if (this.getController().state.is('disabled')) {
+					return false;
 				}
-
+				// If state is not disabled,
+				// manage opening and closing of button dropdown.
+				this.options.wrapper.toggleClass('pressed');
+				if(this.options.wrapper.hasClass('pressed')) {
+					this.open();
+				} else {
+					this.close();
+				}
 				return false;
 			},
 
@@ -67,8 +94,8 @@ steal(
 			 */
 			'{document} click': function (el, ev) {
 				if (!this.element.is(el)) {
-					this.options.content.removeClass('visible');
-					this.options.dropdown.removeClass('pressed');
+					this.close();
+					this.options.wrapper.removeClass('pressed');
 				}
 			}
 
