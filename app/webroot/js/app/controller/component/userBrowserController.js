@@ -2,7 +2,8 @@ steal(
     'mad/controller/component/gridController.js',
     'app/model/user.js',
     'app/model/group.js',
-	'app/model/profile.js'
+	'app/model/profile.js',
+	'app/view/component/userBrowser.js'
 ).then(function () {
 
         /*
@@ -25,6 +26,8 @@ steal(
             'defaults': {
                 // the type of the item rendered by the grid
                 itemClass: passbolt.model.User,
+				// Specific view for userBrowser. To handle specific behaviours like drag n drop.
+				viewClass: passbolt.view.component.userBrowser,
                 // the list of resources displayed by the grid
                 users: new can.Model.List(),
                 // the list of displayed categories
@@ -396,6 +399,43 @@ steal(
                     self.setState('ready');
                 });
             },
+
+			/**
+			 * Listen to the browser filter
+			 * @param {jQuery} element The source element
+			 * @param {Event} event The jQuery event
+			 * @param {passbolt.model.Filter} filter The filter to apply
+			 * @return {void}
+			 */
+			'{mad.bus} filter_users_browser': function (element, evt, filter) {
+				var self = this;
+				// store the filter
+				this.filter = filter;
+				// reset the state variables
+				this.options.groups = [];
+
+				// override the current list of users displayed with the new ones
+				var filteredGroup = filter.getForeignModels('Group');
+				if(filteredGroup) {
+					can.each(filteredGroup, function (group, i) {
+						self.options.groups.push(group.id);
+					});
+				}
+
+				// change the state of the component to loading.
+				this.setState('loading');
+
+				// load resources functions of the filter.
+				passbolt.model.User.findAll({
+					'filter': this.filter,
+					'recursive': true
+				}, function (users, response, request) {
+					// load the users in the browser.
+					self.load(users);
+					// change the state to ready.
+					self.setState('ready');
+				});
+			},
 
             /* ************************************************************** */
             /* LISTEN TO THE STATE CHANGES */

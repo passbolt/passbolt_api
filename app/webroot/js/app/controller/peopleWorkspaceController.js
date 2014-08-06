@@ -2,8 +2,10 @@ steal(
 	'mad/controller/component/freeCompositeController.js',
     'app/controller/component/groupChooserController.js',
     'app/controller/component/userBrowserController.js',
+	'app/controller/component/userShortcutsController.js',
 	'app/controller/component/userWorkspaceMenuController.js',
 	'app/controller/form/user/createFormController.js',
+	'app/controller/form/group/createFormController.js',
 	'app/model/user.js'
 ).then(function () {
 
@@ -25,7 +27,8 @@ steal(
 		'defaults': {
 			'label': 'People',
 			'templateUri': 'app/view/template/peopleWorkspace.ejs',
-			'selectedUsers': new can.Model.List()
+			'selectedUsers': new can.Model.List(),
+			'filter': new passbolt.model.Filter()
 		}
 
 	}, /** @prototype */ {
@@ -44,11 +47,15 @@ steal(
 			});
 			this.primMenu.start();
 
-            // Instanciate the group chooser controller
+			// Instanciate the users filter controller.
+			var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_group_shortcuts', {});
+			userShortcut.start();
+
+            // Instanciate the group chooser controller.
             this.grpChooser = new passbolt.controller.component.GroupChooserController('#js_wsp_users_group_chooser', {});
             this.grpChooser.start();
 
-            // Instanciate the passwords browser controller
+            // Instanciate the passwords browser controller.
             var userBrowserController = this.addComponent(passbolt.controller.component.UserBrowserController, {
                 'id': 'js_passbolt_user_browser',
                 'selectedUsers': this.options.selectedUsers
@@ -59,6 +66,92 @@ steal(
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
+
+		/**
+		 * Observe when group is selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Group} group The selected group
+		 * @return {void}
+		 */
+		'{mad.bus} group_selected': function (el, ev, group) {
+			// reset the selected resources
+			this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
+			// Set the new filter
+			this.options.filter.attr({
+				'foreignModels': {
+					'Group': new can.List([group])
+				}
+			});
+			// propagate a special event on bus
+			mad.bus.trigger('filter_users_browser', this.options.filter);
+		},
+
+		/**
+		 * Observe when the user requests a category creation
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_group_creation': function (el, ev, data) {
+			var group = new passbolt.model.Group();
+
+			// Get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Create a new Group')})
+				.start();
+
+			// Attach the component to the dialog.
+			var form = dialog.add(passbolt.controller.form.group.CreateFormController, {
+				data: group,
+				callbacks : {
+					submit: function (data) {
+						var instance = new passbolt.model.Group(
+							data['passbolt.model.Group']
+						)
+						.save();
+						dialog.remove();
+					}
+				}
+			});
+			form.load(group);
+		},
+
+		/**
+		 * Observe when the user requests a group edition
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_group_edition': function (el, ev, group) {
+
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController({label: __('Edit a Group')})
+				.start();
+
+			// attach the component to the dialog
+			var form = dialog.add(passbolt.controller.form.group.CreateFormController, {
+				data: group,
+				callbacks : {
+					submit: function (data) {
+						group.attr(data['passbolt.model.Group'])
+							.save();
+						dialog.remove();
+					}
+				}
+			});
+
+			form.load(group);
+		},
+
+		/**
+		 * Observe when the user requests a group deletion
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_group_deletion': function (el, ev, group) {
+			group.destroy();
+		},
 
 		/**
 		 * Observe when the user requests a category creation

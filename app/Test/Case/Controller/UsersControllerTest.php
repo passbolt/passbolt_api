@@ -19,8 +19,11 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public $fixtures
 		= array(
+			'app.groups_user',
+			'app.group',
 			'app.user',
 			'app.profile',
+			'app.role',
 			'app.role',
 			'app.authenticationLog',
 			'app.authenticationBlacklist'

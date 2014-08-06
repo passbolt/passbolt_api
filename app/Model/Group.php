@@ -22,7 +22,22 @@ class Group extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array('id' => array('uuid' => array('rule' => 'uuid', 'message' => __('UUID must be in correct format'))), 'name' => array('alphaNumeric' => array('rule' => '/^[a-zA-Z0-9\-_ ]{1,64}$/i', 'required' => true, 'allowEmpty' => false, 'message' => __('Alphanumeric only'))));
+		$default = array(
+			'id' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'message' => __('UUID must be in correct format')
+				)
+			),
+			'name' => array(
+				'alphaNumeric' => array(
+					'rule' => '/^[a-zA-Z0-9\-_ ]{1,64}$/i',
+				    'required' => true,
+				    'allowEmpty' => false,
+				    'message' => __('Alphanumeric only')
+				)
+			)
+		);
 		switch ($case) {
 			default:
 			case 'default':

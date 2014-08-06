@@ -133,19 +133,23 @@ steal(
 			var request = passbolt.model.User.findAll({
 				'keywords': value
 			}).then(function(users) {
+				// Groups are removed from the autocomplete from the time being.
+				// Uncomment the lines below to reactivate the feature.
+				// See PASSBOLT-742 (https://passbolt.atlassian.net/browse/PASSBOLT-742)
+
 				// get all the groups
-				return passbolt.model.Group.findAll({
-					'keywords': value
-				}).then(function(groups) {
+				//return passbolt.model.Group.findAll({
+				//	'keywords': value
+				// }).then(function(groups) {
 					// aggregate users & groups in a format that the list will understand
 					var returnValue = [];
-					groups.each(function(group, i){
-						returnValue.push(new mad.model.Model({
-							id: group.id,
-							label: group.name,
-							model: 'passbolt.model.Group'
-						}));
-					});
+					// groups.each(function(group, i){
+					//	returnValue.push(new mad.model.Model({
+					//		id: group.id,
+					//		label: group.name,
+					//		model: 'passbolt.model.Group'
+					//	}));
+					// });
 					users.each(function(user, i){
 						returnValue.push(new mad.model.Model({
 							id: user.id,
@@ -155,7 +159,7 @@ steal(
 					});
 
 					return returnValue;
-				});
+				// });
 			});
 			
 			return request;

@@ -9,7 +9,9 @@
  */
 class GroupsController extends AppController {
 
-	public $helpers = array('PassboltAuth');
+	public $helpers = array(
+		'PassboltAuth'
+	);
 
 	/**
 	 * Index

@@ -11,6 +11,10 @@ class UsersController extends AppController {
 
 	public $helpers = array('PassboltAuth');
 
+	public $components = array(
+		'Filter'
+	);
+
 	/**
 	 * Login
 	 *
@@ -54,6 +58,34 @@ class UsersController extends AppController {
 		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
 
 		$data = array();
+		$filter = $this->Filter->fromRequest($this->request->query);
+
+		// Merge the filter into the additional information to pass to the model request
+		$data = array_merge($data, $filter);
+
+		// If group filter is used.
+		if (isset($data['foreignModels']['Group.id'])) {
+			// Tmp array to store the target groups
+			$groups = array();
+
+			foreach ($data['foreignModels']['Group.id'] as $groupId) {
+				// if a category id is provided check it is well an uid
+				if (!Common::isUuid($groupId)) {
+					$this->Message->error(__('The group id is invalid'));
+					return;
+				}
+				// check if the group exists
+				$Group = Common::getModel('Group');
+				$group = $Group->findById($groupId);
+				if (!$group) {
+					$this->Message->error(__('The group doesn\t exist'));
+					return;
+				}
+				$groups[] = $group['Group']['id'];
+			}
+			$data['foreignModels']['Group.id'] = $groups;
+		}
+
 		// if keywords provided build the model request with
 		if (!empty($keywords)) {
 			$data['keywords'] = $keywords;
