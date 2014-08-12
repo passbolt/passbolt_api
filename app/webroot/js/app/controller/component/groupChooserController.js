@@ -33,7 +33,8 @@ steal(
                 'map': new mad.object.Map({
                     'id': 'id',
                     'label': 'name'
-                })
+                }),
+				'selectedGroups': new can.Model.List()
             }
 
         }, /** @prototype */ {
