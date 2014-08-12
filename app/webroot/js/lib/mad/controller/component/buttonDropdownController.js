@@ -46,6 +46,37 @@ steal(
 				this.options.menu = new mad.controller.component.MenuController('#' + menuItemsId);
 				this.options.menu.start();
 				this.options.menu.load(this.options.menuItems);
+			},
+
+			/**
+			 * Set a menu item active status.
+			 * @param string name the name of the item.
+			 * @param bool active, the active status.
+			 */
+			'setItemActive': function(name, active) {
+				for (i in this.options.menuItems) {
+					if (this.options.menuItems[i].name == name) {
+						this.options.menuItems[i].active = active;
+					}
+				}
+				this.options.menu.reset();
+				this.options.menu.load(this.options.menuItems);
+			},
+
+			/* ************************************************************** */
+			/* LISTEN TO THE STATE CHANGES */
+			/* ************************************************************** */
+
+			/**
+			 * Listen to the change relative to the state Disabled
+			 * @param {boolean} go Enter or leave the state
+			 * @return {void}
+			 */
+			'stateDisabled': function (go) {
+				this._super(go);
+				if (go) {
+					this.view.close();
+				}
 			}
 		});
 
