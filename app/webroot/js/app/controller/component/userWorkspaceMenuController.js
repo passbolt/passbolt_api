@@ -23,7 +23,8 @@ steal(
 			'defaults': {
 				'label': 'User Workspace Menu Controller',
 				// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-				'selectedUsers': new can.Model.List()
+				'selectedUsers': new can.Model.List(),
+				'selectedGroups': new can.Model.List()
 			}
 
 		}, /** @prototype */ {
@@ -50,13 +51,26 @@ steal(
 
 
 				// Manage more actions.
+				var self = this;
 				var moreButtonMenuItems = [
 					new mad.model.Action({
 						'id': uuid(),
 						'label': __('remove user from group'),
-						'cssClasses': ['todo'],
+						'name': 'remove_user_from_group',
+						'active': 0,
+						'cssClasses': null,
 						'action': function () {
-							mad.bus.trigger('workspace_selected');
+							if (!this.active) {
+								return false;
+							}
+							mad.bus.trigger(
+								'request_remove_user_from_group',
+								[
+									self.options.selectedUsers,
+							     	self.options.selectedGroups
+								]
+
+							);
 						}
 					})
 				];
@@ -125,6 +139,16 @@ steal(
 					// else if more than one resource have been selected
 				} else {
 					this.setState('multiSelection');
+				}
+
+				// Set action remove_user_from_group as active or inactive depending on context.
+				// Active if at least a group is selected.
+				// Inactive if no group is selected.
+				if (this.options.selectedGroups.length > 0) {
+					this.options.moreButton.setItemActive('remove_user_from_group', 1);
+				}
+				else {
+					this.options.moreButton.setItemActive('remove_user_from_group', 0);
 				}
 			},
 
