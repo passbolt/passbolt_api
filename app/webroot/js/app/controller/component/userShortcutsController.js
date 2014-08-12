@@ -31,7 +31,8 @@ steal(
 					'label': __('All users'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
-							'order': 'modified'
+							'order': 'modified',
+							'name': 'all'
 						});
 						mad.bus.trigger('filter_users_browser', filter);
 					}
