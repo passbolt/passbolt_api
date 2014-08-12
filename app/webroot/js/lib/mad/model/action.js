@@ -23,8 +23,10 @@ steal(
 		attributes: {
 			'id': 'string',
 			'label': 'string',
+			'name': 'string',
 			'icon': 'string',
-			'action': 'string'
+			'action': 'string',
+			'active': 'boolean'
 		}
 
 	}, /** @prototype */ {
