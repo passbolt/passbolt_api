@@ -1,4 +1,4 @@
-<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= typeof cssClasses != 'undefined' ? cssClasses : '' %>">
+<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= typeof cssClasses != 'undefined' ? cssClasses : '' %><%= typeof item.active != 'undefined' && item.active != 1 ? ' disabled' : '' %>">
 	<div class="row">
 		<div class="main-cell-wrapper">
 			<div class="main-cell">
