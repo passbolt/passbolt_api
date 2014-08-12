@@ -31,17 +31,27 @@ steal(
 			},
 
 			/**
-			 * Open an item
-			 * @param {mad.model.Model} item The target item to open
-			 * @return {void}
+			 * Get the dropdown element for the current dropdown button.
+			 * @returns {elt}
 			 */
-			'open': function (item) {
+			'getDropdown': function() {
 				var content = null;
 				if (this.options.button.attr('data-dropdown-content-id') == undefined) {
 					content = this.options.button.next();
 				} else {
 					content = $("#" + this.options.button.attr('data-dropdown-content-id'));
 				}
+				return content;
+			},
+
+			/**
+			 * Open an item
+			 * @param {mad.model.Model} item The target item to open
+			 * @return {void}
+			 */
+			'open': function () {
+				this.options.wrapper.addClass('pressed');
+				content = this.getDropdown();
 				content.addClass('visible');
 			},
 
@@ -50,14 +60,14 @@ steal(
 			 * @param {mad.model.Model} item The target item to close
 			 * @return {void}
 			 */
-			'close': function (item) {
-				var content = null;
-				if (this.options.button.attr('data-dropdown-content-id') == undefined) {
-					content = this.options.button.next();
-				} else {
-					content = $("#" + this.options.button.attr('data-dropdown-content-id'));
-				}
+			'close': function () {
+				this.options.wrapper.removeClass('pressed');
+				content = this.getDropdown();
 				content.removeClass('visible');
+			},
+
+			'isOpen': function () {
+				return this.options.wrapper.hasClass('pressed');
 			},
 
 			/* ************************************************************** */
@@ -75,8 +85,7 @@ steal(
 				}
 				// If state is not disabled,
 				// manage opening and closing of button dropdown.
-				this.options.wrapper.toggleClass('pressed');
-				if(this.options.wrapper.hasClass('pressed')) {
+				if(!this.isOpen()) {
 					this.open();
 				} else {
 					this.close();
