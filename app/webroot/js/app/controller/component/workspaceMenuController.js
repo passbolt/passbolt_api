@@ -59,7 +59,7 @@ steal(
 					'label': __('copy login to clipboard'),
 					'cssClasses': ['todo'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected');
+						// TODO.
 					}
 				}),
 				new mad.model.Action({
@@ -67,7 +67,7 @@ steal(
 					'label': __('copy password to clipboard'),
 					'cssClasses': ['todo'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected');
+						// TODO.
 					}
 				}),
 				new mad.model.Action({
@@ -75,7 +75,7 @@ steal(
 					'label': __('organize'),
 					'cssClasses': ['todo'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected');
+						// TODO.
 					}
 				}),
 				new mad.model.Action({
@@ -83,7 +83,7 @@ steal(
 					'label': __('review logs'),
 					'cssClasses': ['todo'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected');
+						// TODO.
 					}
 				})
 			];
