@@ -39,6 +39,7 @@ steal(
 				this._super();
 				// pass the new resource to the view
 				this.setViewData('resource', this.options.resource);
+				this.setViewData('editable', passbolt.model.Permission.isAllowedTo(this.options.resource, passbolt.UPDATE));
 			},
 
 			/**

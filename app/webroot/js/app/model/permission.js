@@ -129,6 +129,50 @@ steal(
 				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
 				return def;
 			});
+		},
+
+		/**
+		 * Am I authorized to perform the given operation.
+		 * @param {passbolt.model.PermissionType} type
+		 */
+		'isAllowedTo': function(objs, requestedPermission) {
+			var permission = null;
+			var returnValue = null;
+
+			if (!(objs instanceof can.Model.List)) {
+				objs = new can.List([objs])
+			}console.log(objs);
+
+			objs.each(function(obj, i) {
+				if (returnValue == false) return;
+
+				// Extract the permission.
+				switch(obj.constructor.shortName) {
+					case 'Category':
+						if (typeof obj.UserCategoryPermission != 'undefined') {
+							permission = obj.UserCategoryPermission;
+						} else if (typeof obj.GroupCategoryPermission != 'undefined') {
+							permission = obj.GroupCategoryPermission;
+						}
+					case 'Resource':
+						console.log('R');
+						console.log('R');
+						if (typeof obj.UserResourcePermission != 'undefined') {
+							permission = obj.UserResourcePermission;
+						} else if (typeof obj.GroupResourcePermission != 'undefined') {
+							permission = obj.GroupResourcePermission;
+						}
+						break;
+				}
+
+				if (permission.permission_type >= requestedPermission) {
+					returnValue = true;
+				} else {
+					returnValue = false;
+				}
+			});
+
+			return returnValue ? returnValue : false;
 		}
 
 	}, /** @prototype */ {
@@ -145,6 +189,5 @@ steal(
 				return true;
 			return false;
 		}
-		
 	});
 });

@@ -5,6 +5,15 @@ steal(
 ).then(function () {
 
 	/*
+	 * Passbolt permission constants.
+     */
+	passbolt.DENY = 0;
+	passbolt.READ = 1;
+	passbolt.CREATE = 3;
+	passbolt.UPDATE = 7;
+	passbolt.ADMIN = 15;
+
+	/*
 	 * @class passbolt.model.Permission
 	 * @inherits {mad.model.Model}
 	 * @parent index
