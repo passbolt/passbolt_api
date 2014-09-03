@@ -30,7 +30,7 @@ steal(
 			start: 128,
 			id: 'very_strong',
 			label: __('very strong')
-		},
+		}
 	};
 
 	/*

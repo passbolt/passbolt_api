@@ -1,5 +1,6 @@
 steal(
 	'mad/view/component/tree.js',
+	'app/controller/component/commentsController.js',
 	'app/controller/component/sidebarSectionController.js'
 ).then(function () {
 

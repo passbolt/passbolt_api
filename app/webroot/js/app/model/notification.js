@@ -21,8 +21,7 @@ steal(
 			'status': 'string',
 			// The title of the notification
 			'title': 'string'
-		},
-
+		}
 
 	}, /** @prototype */ { });
 
