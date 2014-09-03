@@ -124,6 +124,27 @@ class CommentsControllerTest extends ControllerTestCase {
 		));
 	}
 
+	public function testAddAndPermission() {
+		$model = 'resource';
+		$res = $this->Resource->findByName('cpp1-pwd1');
+
+		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findByUsername('ismail@passbolt.com');
+		$this->User->setActive($user);
+
+		$id = $res['Resource']['id'];
+		$postOptions = array(
+			'method' => 'post',
+			'return' => 'contents',
+			'data' => array('Comment' => array(
+				'content' => 'UNIT TEST comment',
+			))
+		);
+
+		$this->expectException('HttpException', 'The Resource does not exist');
+		$srvResult = json_decode($this->testAction("/comments/$model/$id.json", $postOptions), true);
+	}
+
 	public function testAdd() {
 		$model = 'resource';
 		$rs = $this->Resource->findByName('salesforce account');

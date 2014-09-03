@@ -92,13 +92,20 @@ class CommentsController extends AppController {
 			$this->Message->error(__('The %s id is invalid', $foreignModelName));
 			return;
 		}
-		
+
 		// the foreign instance does not exist
-		// the authorization to access the record is provided by the permissionable behavior, so if a user is not authorized to
-		// access the instance reccord, the exists method should return false
-		$this->loadModel($foreignModelName);
-		if (!$this->$foreignModelName->exists($foreignId)) {
+		$instance = $this->Comment->$foreignModelName->findById($foreignId);
+		if (!$instance) {
 			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			return;
+		}
+
+		// check if user is authorized.
+		// if the permissionable behavior has been applied to the foreign model.
+		// the permissionable after find executed on the previous operation findById should drop
+		// any record the user is not authorized to access. This test should always be true.
+		if (!$this->Comment->$foreignModelName->isAuthorized($foreignId, PermissionType::READ)) {
+			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), array('code' => 403));
 			return;
 		}
 		
