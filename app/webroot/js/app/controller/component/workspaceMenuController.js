@@ -174,8 +174,10 @@ steal(
 
 				// If the user doesn't have the permission to create into the selected category.
 				// Or if multiple categories selected.
-				if (categories.length > 1 ||
-					!passbolt.model.Permission.isAllowedTo(categories[0], passbolt.CREATE)) {
+				if (categories.length > 1 || (
+						categories.length == 1 &&
+						!passbolt.model.Permission.isAllowedTo(categories[0], passbolt.CREATE))
+					) {
 					state = 'disabled';
 				}
 			}

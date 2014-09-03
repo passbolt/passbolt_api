@@ -29,7 +29,9 @@ steal(
 			'lft': 'string',
 			'rght': 'string',
 			'name': 'string',
-			'children': 'passbolt.model.Category.models'
+			'children': 'passbolt.model.Category.models',
+			'UserCategoryPermission': 'passbolt.model.UserCategoryPermission.model',
+			'GroupCategoryPermission': 'passbolt.model.GroupCategoryPermission.model'
 		},
 
 /* ************************************************************** */
