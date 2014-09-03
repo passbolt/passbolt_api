@@ -137,9 +137,9 @@ steal(
 		/**
 		 * Position an element in absolute
 		 * @param {array} options Array of options
-		 * @param {array} options.mouse (optional) Position the element functions of a mouse position
-		 * @param {string} options.mouse.x (At x pixels from the left first relative element found
-		 * @param {string} options.mouse.y At y pixels from the top first relative element found
+		 * @param {array} options.coordinates (optional) Position the element functions of the given coordinates
+		 * @param {integer} options.coordinates.x Position the element functions of the given x coordinates
+		 * @param {integer} options.coordinates.y Position the element functions of the given y coordinates
 		 * @param {array} options.reference (optional) Position the element functions of a reference element
 		 * @param {HTMLElement} options.reference.element The reference element
 		 * @param {array} options.reference.my As per Jquery position plugin, the target corner of my element ("top left" by instance)

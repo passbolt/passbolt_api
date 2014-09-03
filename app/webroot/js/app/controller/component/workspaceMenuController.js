@@ -95,7 +95,6 @@ steal(
 		 */
 		'{deletionButton} click': function (el, ev) {
 			var resources = this.options.deletionButton.getValue();
-			console.log(resources);
 			mad.bus.trigger('request_resource_deletion', resources);
 		},
 

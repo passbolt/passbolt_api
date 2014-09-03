@@ -141,7 +141,7 @@ steal(
 
 			if (!(objs instanceof can.Model.List)) {
 				objs = new can.List([objs])
-			}console.log(objs);
+			}
 
 			objs.each(function(obj, i) {
 				if (returnValue == false) return;
@@ -155,8 +155,6 @@ steal(
 							permission = obj.GroupCategoryPermission;
 						}
 					case 'Resource':
-						console.log('R');
-						console.log('R');
 						if (typeof obj.UserResourcePermission != 'undefined') {
 							permission = obj.UserResourcePermission;
 						} else if (typeof obj.GroupResourcePermission != 'undefined') {

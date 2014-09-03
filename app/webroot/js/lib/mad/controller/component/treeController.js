@@ -43,7 +43,7 @@ steal(
 			// the itemClass which represents the items managed by the component
 			'itemClass': null,
 			// the associated map, which will be used to map the model data to the
-		  // expected view format
+		    // expected view format
 			'map': null,
 			// the top tag of the tree
 			'tag': 'ul',
@@ -128,7 +128,7 @@ steal(
 		 * expected view format
 		 * @return {mad.object.Map}
 		 */
-		'getMap': function (map) {
+		'getMap': function () {
 			return this.options.map;
 		},
 

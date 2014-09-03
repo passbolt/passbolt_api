@@ -1,4 +1,10 @@
-<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= typeof cssClasses != 'undefined' ? cssClasses : '' %>">
+<%
+if (typeof cssClasses == 'undefined') {
+    cssClasses = '';
+}
+%>
+
+<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses %>">
 	<div class="row">
 		<div class="main-cell-wrapper">
 			<div class="main-cell">
@@ -6,7 +12,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 <% if(hasChildren) { %>
 	<ul>
 	</ul>
