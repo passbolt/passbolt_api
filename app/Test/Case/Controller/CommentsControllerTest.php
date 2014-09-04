@@ -23,7 +23,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.comment', 'app.resource', 'app.category', 'app.categories_resource',
-		'app.user', 'app.group', 'app.groups_user', 'app.role',
+		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile',
 		'app.permission', 'app.permissions_type', 'app.permission_view',
 		'app.authenticationBlacklist');
 
