@@ -30,8 +30,10 @@ steal(
 				'tag_id': 'string',
 				'foreign_model': 'string',
 				'foreign_id': 'string',
-				'created': 'date',
+				'created': 'string',
+				'modified': 'string',
 				'created_by': 'string',
+				'modified_by': 'string',
 				'Tag': 'passbolt.model.Tag.model'
 			},
 
