@@ -24,7 +24,6 @@ class UsersControllerTest extends ControllerTestCase {
 			'app.user',
 			'app.profile',
 			'app.role',
-			'app.role',
 			'app.authenticationLog',
 			'app.authenticationBlacklist'
 		);

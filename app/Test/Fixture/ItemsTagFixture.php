@@ -30,6 +30,22 @@ class ItemsTagFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
+			'id' => '10be2d3a-0468-432b-b49f-3153d7a82fce',
+			'tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',
+			'foreign_model' => 'Resource',
+			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
+			'id' => '10be2d3a-0468-432b-b58f-3153d7a83fce',
+			'tag_id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',
+			'foreign_model' => 'Resource',
+			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
+		array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
 			'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
 			'foreign_model' => 'Resource',
@@ -38,18 +54,10 @@ class ItemsTagFixture extends CakeTestFixture {
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
-			'id' => '10be2d3a-0468-432b-b59f-3153d7a82fce',
-			'tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',
-			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
-			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
-		),
-		array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
-			'tag_id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',
+			'tag_id' => 'aaa01103-c5cd-11d1-a1c5-080027796c4c',
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'foreign_id' => '50d77ffb-d254-49e4-ac86-1b63d7a10fce',
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),

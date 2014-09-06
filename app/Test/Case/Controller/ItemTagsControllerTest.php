@@ -19,7 +19,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.resource', 'app.category', 'app.categories_resource',
-		'app.user', 'app.group', 'app.groups_user', 'app.role',
+		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile',
 		'app.permission', 'app.permissions_type', 'app.permission_view',
 		'app.authenticationBlacklist', 'app.tag', 'app.itemsTag'
 	);
@@ -29,31 +29,74 @@ class TagsControllerTest extends ControllerTestCase {
 	public $session;
 
 	public function setUp() {
+		$this->User = ClassRegistry::init('User');
+		$this->Tag = ClassRegistry::init('Tag');
+		$this->ItemTag = ClassRegistry::init('ItemTag');
+		$this->Resource = ClassRegistry::init('Resource');
 		parent::setUp();
-		$this->User = new User();
-		$this->User->useDbConfig = 'test';
-		$this->Tag = new Tag();
-		$this->Tag->useDbConfig = 'test';
-		$this->ItemTag = new ItemTag();
-		$this->ItemTag->useDbConfig = 'test';
-		$this->Resource = new Resource();
-		$this->Resource->useDbConfig = 'test';
-		$this->session = new CakeSession();
-		$this->session->init();
+
+		// log the user as a manager to be able to access all categories
+		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($kk);
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 	}
 
+	public function testUpdateBulkNotTaggable() {
+		$model = 'User';
+		$this->expectException('HttpException', "The model {$model} is not taggable");
+		$this->testAction("/itemTags/updateBulk//$model/badId.json", array('method' => 'post', 'return' => 'contents'));
+	}
+
+	public function testUpdateBulkModelIdIsMissing() {
+		// Unable to test missing id param because of route
+	}
+
+	public function testUpdateBulkIdIsNotValid() {
+		$model = 'Resource';
+		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->testAction("/itemTags/updateBulk/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
+
+		$id = '00000000-1111-1111-1111-000000000000';
+		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->testAction("/itemTags/updateBulk/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
+	}
+
+	public function testUpdateBulkDoesNotExist() {
+		$model = 'resource';
+		$id = '534a914c-4f55-4e61-ba16-12c1c0a895dc';
+
+		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->testAction("/itemTags/updateBulk//$model/$id.json", array('method' => 'post', 'return' => 'contents'));
+	}
+
+	public function testUpdateBulkAndPermission() {
+		$rs = $this->Resource->findByName('dp1-pwd1');
+
+		// Looking at the matrix of permission Cédric should able to READ dp1-pwd1 but not update it
+		$user = $this->User->findByUsername('cedric@passbolt.com');
+		$this->User->setActive($user);
+
+		$this->expectException('HttpException', 'You are not authorized to update item tags of this Resource');
+
+		$tagList = array("tag1", "tag2", "tag3");
+		$tagListStr = implode(',', $tagList);
+		$id = $rs['Resource']['id'];
+		$postOptions = array(
+			'data' => array(
+				'ItemTag' => array(
+					'tag_list' => $tagListStr
+				),
+			),
+			'method' => 'post',
+			'return' => 'contents'
+		);
+		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", $postOptions), true);
+	}
+
 	public function testUpdateBulk() {
-		// make sure there is no active session
-		$result = $this->testAction('/logout',array('return' => 'contents'), true);
-
-		// test with normal user
-		$kk = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($kk);
-
 		$items = $this->Resource->find('all');
 
 		$tagList = array("tag1", "tag2", "tag3");
@@ -112,4 +155,195 @@ class TagsControllerTest extends ControllerTestCase {
 		$this->assertEqual($oldTag1Id, $newTag1Id, "The old tag id and new tag id should be same");
 	}
 
+	public function testViewNotTaggable() {
+		$model = 'User';
+		$this->expectException('HttpException', "The model {$model} is not taggable");
+		$this->testAction("/itemTags/$model/badId.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testViewModelIdIsMissing() {
+		// Unable to test missing id param because of route
+	}
+
+	public function testViewIdIsNotValid() {
+		$model = 'Resource';
+		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->testAction("/itemTags/$model/badId.json", array('method' => 'get', 'return' => 'contents'));
+
+		$id = '00000000-1111-1111-1111-000000000000';
+		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->testAction("/itemTags/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testViewDoesNotExist() {
+		$model = 'resource';
+		$id = '534a914c-4f55-4e61-ba16-12c1c0a895dc';
+
+		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->testAction("/itemTags/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testViewAndPermission() {
+		$model = 'resource';
+		$res = $this->Resource->findByName('cpp1-pwd1');
+
+		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findByUsername('ismail@passbolt.com');
+		$this->User->setActive($user);
+
+		$id = $res['Resource']['id'];
+
+		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->testAction("/itemTags/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testView() {
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents'
+		);
+
+		$model = 'resource';
+		$rs = $this->Resource->findByName('facebook account');
+		$result = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $getOptions), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+
+		// We expect 2 tags
+		$this->assertEquals(count($result['body']), 2, "We expect 2 tags");
+	}
+
+	public function testAddNotTaggable() {
+		$model = 'User';
+		$this->expectException('HttpException', "The model {$model} is not taggable");
+		$this->testAction("/itemTags/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
+	}
+
+	public function testAddModelIdIsMissing() {
+		// Unable to test missing id param because of route
+	}
+
+	public function testAddIdIsNotValid() {
+		$model = 'Resource';
+		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->testAction("/itemTags/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
+	}
+
+	public function testAddDoesNotExist() {
+		$model = 'resource';
+		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
+
+		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->testAction("/itemTags/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
+	}
+
+	public function testAddNoDataProvided() {
+		$model = 'resource';
+		$rs = $this->Resource->findByName('salesforce account');
+		$this->expectException('HttpException', 'No data were provided');
+		$this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", array(
+			'method' => 'post',
+			'return' => 'contents'
+		));
+	}
+
+	public function testAdd() {
+		$model = 'resource';
+		$rs = $this->Resource->findByName('salesforce account');
+		$postOptions = array(
+			'method' => 'post',
+			'return' => 'contents',
+			'data' => array('Tag' => array(
+				'name' => 'UNIT TEST tag',
+			))
+		);
+
+		// Tag a resource & ensure the server returned it.
+		$addResult = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $postOptions), true);
+		$this->assertEquals(Message::SUCCESS, $addResult['header']['status'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$addResult['header']['status']}");
+		$this->assertEquals($postOptions['data']['Tag']['name'], $addResult['body']['Tag']['name'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The server should return an item tag which has same content than the posted value");
+
+		// Ensure the item tag has well been inserted.
+		$findData = array(
+			'ItemTag' => array(
+				'foreign_id' => $rs['Resource']['id']
+			)
+		);
+		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
+		$getResult = $this->ItemTag->find('first', $findOptions);
+		$this->assertEquals($postOptions['data']['Tag']['name'], $getResult['Tag']['name'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The server should return an item tag which has same content than the posted value");
+	}
+
+	public function testDeleteIdIsMissing() {
+		$this->expectException('HttpException', 'The item tag id is missing');
+		$this->testAction("/itemTags.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+
+	public function testDeleteIdNotValid() {
+		$this->expectException('HttpException', 'The item tag id is invalid');
+		$this->testAction("/itemTags/badid.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+
+	public function testDeletIdDoesNotExist() {
+		$this->expectException('HttpException', 'The item tag does not exist');
+		$this->testAction("/itemTags/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents'));
+	}
+
+	public function testDeleteAndPermission() {
+		$rs = $this->Resource->findByName('dp1-pwd1');
+		$tag = $this->Tag->findByName('drupal');
+		$findData = array(
+			'ItemTag' => array(
+				'foreign_id' => $rs['Resource']['id'],
+				'tag_id' => $tag['Tag']['id'],
+			)
+		);
+		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
+		$itemTag = $this->ItemTag->find('first', $findOptions);
+
+		// Looking at the matrix of permission Cédric should able to READ dp1-pwd1 but not update it
+		$user = $this->User->findByUsername('cedric@passbolt.com');
+		$this->User->setActive($user);
+
+		$this->expectException('HttpException', 'You are not authorized to delete item tags of this Resource');
+
+		$id = $itemTag['ItemTag']['id'];
+		$result = json_decode($this->testAction("/itemTags/$id.json", array(
+			'method' => 'Delete',
+			'return' => 'contents'
+		)), true);
+	}
+
+	public function testDelete() {
+		$rs = $this->Resource->findByName('dp1-pwd1');
+		$tag = $this->Tag->findByName('drupal');
+		$findData = array(
+			'ItemTag' => array(
+				'foreign_id' => $rs['Resource']['id'],
+				'tag_id' => $tag['Tag']['id'],
+			)
+		);
+		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
+		$itemTag = $this->ItemTag->find('first', $findOptions);
+
+		$id = $itemTag['ItemTag']['id'];
+		$result = json_decode($this->testAction("/itemTags/$id.json", array(
+			'method' => 'Delete',
+			'return' => 'contents'
+		)), true);
+
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/itemTags/{$id}.json : The test should return a success but is returning {$result['header']['status']}");
+
+		// The resource should not be tagged anymore.
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents'
+		);
+
+		$model = 'resource';
+		$result = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $getOptions), true);
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+
+		// We expect 0 root tag
+		$this->assertEquals(count($result['body']), 0, "We expect 0 tags");
+	}
 }

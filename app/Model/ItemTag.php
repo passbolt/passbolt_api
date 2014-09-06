@@ -15,9 +15,24 @@ class ItemTag extends AppModel {
 
 	public $useTable = 'items_tags';
 
-	public $belongsTo = array('Tag', 'Resource');
-
+/**
+ * Model behaviors
+ * @link http://api20.cakephp.org/class/model#
+ */
 	public $actsAs = array('Trackable');
+
+/**
+ * Details of belongs to relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
+	public $belongsTo = array(
+		'Resource' => array(
+			'foreignId' => 'foreign_id',
+		),
+		'Tag' => array(
+			'foreignId' => 'tag_id',
+		)
+	);
 
 /**
  * Get the validation rules upon context
@@ -214,16 +229,23 @@ class ItemTag extends AppModel {
 						'ItemTag.foreign_model',
 						'ItemTag.foreign_id',
 						'ItemTag.created',
-						'ItemTag.created_by'
+						'ItemTag.created_by',
+					),
+					'contain' => array(
+						'Tag' => Tag::getFindFields('Tag.view', User::get('Role.name'))
 					)
 				);
 				break;
 			case 'ItemTag.add':
 				$returnValue = array(
 					'fields' => array(
-						'ItemTag.foreign_model',
-						'ItemTag.foreign_id',
-						'ItemTag.tag_id'
+						'foreign_model',
+						'foreign_id',
+						'tag_id',
+						'created',
+						'modified',
+						'created_by',
+						'modified_by',
 					)
 				);
 				break;
