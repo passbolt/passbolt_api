@@ -103,7 +103,7 @@ steal(
                         'label': __('Modified')
                     },
                     'valueAdapter': function (value, item, columnModel, rowNum) {
-                        return moment(value).fromNow();
+	                    return moment(value).fromNow();
                     }
                 }];
 
@@ -308,7 +308,6 @@ steal(
              */
             ' item_selected': function (el, ev, item, srcEvent) {
                 var self = this;
-				console.log("selected");
 
                 // switch to select state
                 this.setState('selection');

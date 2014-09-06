@@ -154,6 +154,9 @@ steal(
 					'label': __('Expires')
 				},
 				'valueAdapter': function (value, item, columnModel, rowNum) {
+					if (typeof value == 'undefined') {
+						return '-';
+					}
 					return moment(value).fromNow();
 				}
 			}, {
@@ -325,7 +328,6 @@ steal(
 		 * @return {void}
 		 */
 		'select': function (item, silent) {
-			var self = this;
 			silent = typeof silent == 'undefined' ? false : silent;
 			
 			// add the resource to the list of selected items
