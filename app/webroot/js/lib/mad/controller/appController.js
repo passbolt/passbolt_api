@@ -88,9 +88,13 @@ steal(
 			return returnValue;
 		},
 
+		/* ************************************************************** */
+		/* LISTEN TO THE STATE CHANGES */
+		/* ************************************************************** */
+
 		/**
-		 * Called when the application is ready            
-		 * @event {APP_NS_ID_app_ready}
+		 * The application is ready.
+		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
 		'stateReady': function (go) {

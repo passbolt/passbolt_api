@@ -329,7 +329,7 @@ steal(
 		 */
 		'select': function (item, silent) {
 			silent = typeof silent == 'undefined' ? false : silent;
-			
+
 			// add the resource to the list of selected items
 			this.options.selectedRs.push(item);
 			// check the checkbox (if it is not already done)

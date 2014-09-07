@@ -1,10 +1,10 @@
 steal(
 	'mad/controller/componentController.js',
-	'app/view/template/component/userWorkspaceMenu.ejs'
+	'app/view/template/component/peopleWorkspaceMenu.ejs'
 ).then(function () {
 
 		/*
-		 * @class passbolt.controller.component.UserWorkspaceMenuController
+		 * @class passbolt.controller.component.PeopleWorkspaceMenuController
 		 * @inherits mad.controller.component.ComponentController
 		 * @parent index
 		 *
@@ -16,9 +16,9 @@ steal(
 		 * @param {HTMLElement} element the element this instance operates on.
 		 * @param {Object} [options] option values for the controller.  These get added to
 		 * this.options and merged with defaults static variable
-		 * @return {passbolt.controller.component.UserWorkspaceMenuController}
+		 * @return {passbolt.controller.component.PeopleWorkspaceMenuController}
 		 */
-		mad.controller.ComponentController.extend('passbolt.controller.component.UserWorkspaceMenuController', /** @static */ {
+		mad.controller.ComponentController.extend('passbolt.controller.component.PeopleWorkspaceMenuController', /** @static */ {
 
 			'defaults': {
 				'label': 'User Workspace Menu Controller',
@@ -47,14 +47,12 @@ steal(
 					'state': 'disabled'
 				}).start();
 
-
-
 				// Manage more action
 				this.options.moreButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_more_button'), {
 					'state': 'disabled'
 				}).start();
 
-				// Rebind controller events
+				// @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
 				this.on();
 			},
 
@@ -99,7 +97,7 @@ steal(
 			 * Observe when a user is selected
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured
-			 * @param {passbolt.model.User} resource The selected user
+			 * @param {passbolt.model.User} user The selected user
 			 * @return {void}
 			 */
 			'{selectedUsers} add': function (el, ev, user) {
@@ -121,7 +119,7 @@ steal(
 			 * Observe when a user is unselected
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured
-			 * @param {passbolt.model.User} resource The unselected user
+			 * @param {passbolt.model.User} user The unselected user
 			 * @return {void}
 			 */
 			'{selectedUsers} remove': function (el, ev, user) {
