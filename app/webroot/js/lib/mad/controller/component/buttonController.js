@@ -65,20 +65,6 @@ steal(
 			return this;
 		},
 
-		/**
-		 * Set the value of the button
-		 * @param {mixed} value The value to set
-		 * @return {mad.controller.component.ButtonController}
-		 */
-		'setState': function (states) {
-			if (this.getId() == 'js_wk_menu_edition_button') {
-				console.log('button set state');
-				console.log(this.getId());
-				console.log(states);
-			}
-			return this._super(states);
-		},
-
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
