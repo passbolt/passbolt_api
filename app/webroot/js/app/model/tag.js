@@ -24,8 +24,8 @@ steal(
 			attributes: {
 				'id': 'string',
 				'name': 'string',
-				'created': 'date',
-				'modified': 'date',
+				'created': 'string',
+				'modified': 'string',
 				'created_by':'string',
 				'modified_by': 'string'
 			},

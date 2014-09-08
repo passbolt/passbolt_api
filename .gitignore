@@ -25,6 +25,7 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+/.settings
 
 /app/webroot/js/app/config/config.json
 /app/webroot/js/lib/mad/docs/

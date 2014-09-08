@@ -91,7 +91,7 @@ class GroupUserTask extends ModelTask {
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		));
 		$gu[] = array('GroupUser' => array(
-			'id' => '53865fa5-0df4-46e0-9b46-204fc0a895dc',
+			'id' => '53865fa5-0624-49d5-a802-215fc0a895dc',
 			'group_id' => $groups['cpa'],
 			'user_id' => $users['au1'],
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'

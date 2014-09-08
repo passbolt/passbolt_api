@@ -17,27 +17,46 @@ class ItemTagTask extends ModelTask {
 	public $model = 'ItemTag';
 
 	protected function getData() {
+		$this->Resource = ClassRegistry::init('Resource');
+		$this->Tag = ClassRegistry::init('Tag');
+
+		$tag = $this->Tag->findByName('banking');
+		$rs = $this->Resource->findByName('bank password');
 		$rts[] = array('ItemTag' => array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
-			'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',      // banking
+			'tag_id' => $tag['Tag']['id'],
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-b964-48ab-94fe-fb098cebc04d', // bank
+			'foreign_id' => $rs['Resource']['id'],
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));
+		$tag = $this->Tag->findByName('facebook');
+		$rs = $this->Resource->findByName('facebook account');
 		$rts[] = array('ItemTag' => array(
-			'id' => '10be2d3a-0468-432b-b59f-3153d7a82fce',
-			'tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',      // facebook
+			'id' => '10be2d3a-0468-432b-b49f-3153d7a82fce',
+			'tag_id' => $tag['Tag']['id'],
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d', // facebook
+			'foreign_id' => $rs['Resource']['id'],
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));
+		$tag = $this->Tag->findByName('social');
+		$rs = $this->Resource->findByName('facebook account');
+		$rts[] = array('ItemTag' => array(
+			'id' => '10be2d3a-0468-432b-b58f-3153d7a83fce',
+			'tag_id' => $tag['Tag']['id'],
+			'foreign_model' => 'Resource',
+			'foreign_id' => $rs['Resource']['id'],
+			'created' => '2012-11-25 13:39:25',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		));
+		$tag = $this->Tag->findByName('drupal');
+		$rs = $this->Resource->findByName('dp1-pwd1');
 		$rts[] = array('ItemTag' => array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
-			'tag_id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',      // social
+			'tag_id' => $tag['Tag']['id'],
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d', // facebook
+			'foreign_id' => $rs['Resource']['id'],
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		));

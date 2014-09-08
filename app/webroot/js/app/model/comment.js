@@ -30,8 +30,8 @@ steal(
 				'foreign_model': 'string',
 				'foreign_id': 'string',
 				'content': 'string',
-				'modified': 'date',
-				'created': 'date'
+				'created': 'string',
+				'modified': 'string'
 			},
 
 			'create': function (attrs, success, error) {

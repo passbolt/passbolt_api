@@ -158,7 +158,7 @@ class UserTask extends ModelTask {
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => 'aaaa6042-c5de-22e1-a0c5-080027796c4c',
+			'id' => '533d37a0-aa11-4945-9b11-1663a0a895dc',
 			'username' => 'a-usr1@companya.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
