@@ -32,7 +32,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->Comment = ClassRegistry::init('Comment');
 		$this->Resource = ClassRegistry::init('Resource');
 		parent::setUp();
-		
+
 		// log the user as a manager to be able to access all categories
 		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
 		$this->User->setActive($kk);
@@ -72,6 +72,20 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
+	public function testViewAndPermission() {
+		$model = 'resource';
+		$res = $this->Resource->findByName('cpp1-pwd1');
+
+		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findByUsername('ismail@passbolt.com');
+		$this->User->setActive($user);
+
+		$id = $res['Resource']['id'];
+
+		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
 	// test view foreign comments parameters
 	public function testView() {
 		$getOptions = array(
@@ -83,8 +97,8 @@ class CommentsControllerTest extends ControllerTestCase {
 		$rs = $this->Resource->findByName('salesforce account');
 		$result = json_decode($this->testAction("/comments/$model/{$rs['Resource']['id']}.json", $getOptions), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/comments/viewForeignComments/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
-		
-		// We expect 1 root comment 
+
+		// We expect 1 root comment
 		$this->assertEquals(count($result['body']), 1, "We expect 1 root comment");
 		// We expect the root comment as an answer
 		$this->assertEquals(count($result['body'][0]['children']), 1, "We expect 1 root comment");
@@ -135,7 +149,7 @@ class CommentsControllerTest extends ControllerTestCase {
 			))
 		);
 
-		// Add a comment to the resource 
+		// Add a comment to the resource
 		$srvResult = json_decode($this->testAction("/comments/$model/{$rs['Resource']['id']}.json", $postOptions), true);
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		$this->assertEquals($postOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The server should return a comment which has same content than the posted value");
@@ -166,7 +180,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		// $srvResult = json_decode($this->testAction("/comments/$model/{$rs['Resource']['id']}.json", $postOptions), true);
 		// $this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		// $this->assertEquals($postOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The server should return a comment which has same content than the posted value");
-// 
+//
 		// $findData = array(
 			// 'Comment' => array(
 				// 'foreign_id' => $rs['Resource']['id']
@@ -213,14 +227,14 @@ class CommentsControllerTest extends ControllerTestCase {
 		$resourceId = '509bb871-5168-49d4-a676-fb098cebc04d';
 		$commentContent = 'new comment';
 		$commentId = null;
-		
+
 		// insert a comment
 		$this->Comment->create();
 		$this->Comment->set(array(
 			'foreign_model' => 'Resource',
 			'foreign_id' => $resourceId,
 			'content' => $commentContent,
-			'parent_id' => $commentParentId	
+			'parent_id' => $commentParentId
 		));
 		$comment = $this->Comment->save();
 		$commentId = $this->Comment->id;
@@ -234,7 +248,7 @@ class CommentsControllerTest extends ControllerTestCase {
 			))
 		);
 		$srvResult = json_decode($this->testAction("/comments/$commentId.json", $putOptions), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");		
+		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		$this->assertEquals($putOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/edit/$commentId.json : The server should return a comment which has same content than the posted value");
 	}
 
@@ -270,25 +284,25 @@ class CommentsControllerTest extends ControllerTestCase {
 		$resourceId = '509bb871-5168-49d4-a676-fb098cebc04d';
 		$commentContent = 'new comment';
 		$commentId = null;
-		
+
 		// insert a comment
 		$this->Comment->create();
 		$this->Comment->set(array(
 			'foreign_model' => 'Resource',
 			'foreign_id' => $resourceId,
 			'content' => $commentContent,
-			'parent_id' => $commentParentId	
+			'parent_id' => $commentParentId
 		));
 		$this->Comment->save();
 		$commentId = $this->Comment->id;
-		
+
 		// insert a child to the just inserted comment
 		$this->Comment->create();
 		$this->Comment->set(array(
 			'foreign_model' => 'Resource',
 			'foreign_id' => $resourceId,
 			'content' => $commentContent,
-			'parent_id' => $commentId	
+			'parent_id' => $commentId
 		));
 		$this->Comment->save();
 		$childCommentId = $this->Comment->id;
@@ -300,7 +314,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		);
 		$srvResult = json_decode($this->testAction("/comments/$commentId.json", $deleteOptions), true);
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");
-		
+
 		// Check the comment has well been deleted
 		$this->assertFalse($this->Comment->exists($commentId), "The comment {$commentId} should not exist");
 		// Check if the children has well been deleted

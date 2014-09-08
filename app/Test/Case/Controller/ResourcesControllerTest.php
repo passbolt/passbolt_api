@@ -77,7 +77,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewAndPermission() {
-		// Error : name is empty
 		$res = $this->Resource->findByName('cpp1-pwd1');
 
 		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
