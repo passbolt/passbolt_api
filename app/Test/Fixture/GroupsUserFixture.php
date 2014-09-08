@@ -108,9 +108,9 @@ class GroupsUserFixture extends CakeTestFixture {
 			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
-			'id' => '53865fa5-0df4-46e0-9b46-204fc0a895dc',
+			'id' => '53865fa5-0624-49d5-a802-215fc0a895dc',
 			'group_id' => '8bd56042-d9cd-11e1-a0c5-080027796c4c',
-			'user_id' => 'abcdab9c-4380-adad-b4cc-2f4fd7a10fce',
+			'user_id' => '533d37a0-aa11-4945-9b11-1663a0a895dc',
 			'created' => '2012-12-17 13:39:25',
 			'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		),

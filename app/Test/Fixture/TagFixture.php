@@ -60,6 +60,14 @@ class TagFixture extends CakeTestFixture {
 			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
+		array(
+			'id' => 'aaa01103-c5cd-11d1-a1c5-080027796c4c',
+			'name' => 'drupal',
+			'created' => '2014-09-07 19:33:00',
+			'modified' => '2014-09-07 19:33:00',
+			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+		),
 	);
 
 }

@@ -70,6 +70,7 @@ class Tag extends AppModel {
 
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
+			case 'Tag.view':
 				$conditions = array(
 					'conditions' => array(
 						'Tag.id' => $data['Tag']['id']
@@ -92,6 +93,7 @@ class Tag extends AppModel {
 		$returnValue = array('fields' => array());
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
+			case 'Tag.view':
 				$returnValue = array(
 					'fields' => array(
 						'Tag.id',
@@ -99,7 +101,16 @@ class Tag extends AppModel {
 						'Tag.created',
 						'Tag.modified',
 						'Tag.created_by',
-						'Tag.modified_by'
+						'Tag.modified_by',
+					)
+				);
+				break;
+			case 'Tag.add':
+				$returnValue = array(
+					'fields' => array(
+						'name',
+						'created_by',
+						'modified_by',
 					)
 				);
 				break;
