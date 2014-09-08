@@ -15,17 +15,8 @@
  */
 
 steal(
-	'lib/jquery/jquery-1.8.3.js',
-	// usefull to position element, and does not require other dependancies than 
-	// the jQuery core lib
-	'lib/xregexp/xregexp-all-min.js'
-).then(
-	// 'lib/jquery/jquery.ui.position.js',
-	'lib/jquery/jquery-ui-1.10.3.custom.js',
 	'jquery/class',
-	// override the jmvc Class class
-	// loaded in a different block because the jquerypp libs inherit to the jquery
-	// Class that we need to override
+	// Need to load our overriding of Class before other classes which inherit from it.
 	'mad/core/class.js'
 ).then(
 	// load jquerypp libraries

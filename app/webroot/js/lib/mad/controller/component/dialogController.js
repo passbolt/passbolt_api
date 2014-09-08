@@ -24,7 +24,7 @@ steal(
 			'viewClass': mad.view.component.Dialog,
 			'cssClasses': ['popup'],
 			'tag': 'div'
-		},
+		}
 
 	}, /** @prototype */ {
 		

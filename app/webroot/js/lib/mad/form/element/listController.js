@@ -21,7 +21,7 @@ steal(
 		'defaults': {
 			'label': 'List Form Element Controller',
 			'templateBased': false,
-			'itemClass': passbolt.model.Category,
+			'itemClass': passbolt.model,
 			'itemTemplateUri': 'app/view/template/component/tagFilterItem.ejs',
 			'tag': 'ul',
 			'value' : []

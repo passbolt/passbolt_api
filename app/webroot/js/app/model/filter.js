@@ -6,15 +6,15 @@ steal(
 	 * @class passbolt.model.Filter
 	 * @inherits {mad.model.Model}
 	 * @parent index
-	 * 
+	 *
 	 * The Filter model used for the search
-	 * 
+	 *
 	 * target : Resource / User
 	 * keywords : string
 	 * conditions : Category = *, Group = *
 	 * order : conditions of order,
-	 * script: 
-	 * 
+	 * script:
+	 *
 	 * @constructor
 	 * Creates a filter
 	 * @param {array} options
@@ -37,7 +37,7 @@ steal(
 
 	}, /** @prototype */ {
 
-		'init':function(attrs) {
+		'init': function(attrs) {
 			if(typeof attrs == 'undefined' || typeof attrs['requestPrefix'] == 'undefined') {
 				this.requestPrefix = 'fltr_';
 			}
@@ -50,14 +50,13 @@ steal(
 		 * Format the filter to be passed in an ajax request
 		 */
 		'toRequest': function() {
-			var self = this;
 			var returnValue = {};
 
 			if(this.keywords != null) {
 				returnValue[this.requestPrefix + 'keywords'] = this.keywords;
 			}
-			if(this.case != null) {
-				returnValue[this.requestPrefix + 'case'] = this.case;
+			if(this['case'] != null) {
+				returnValue[this.requestPrefix + 'case'] = this['case'];
 			}
 			if(this.order != null) {
 				returnValue[this.requestPrefix + 'order'] = this.order;
@@ -65,7 +64,7 @@ steal(
 			var foreignModels = this.foreignModels.attr();
 			for(var foreignModel in foreignModels) {
 				returnValue[this.requestPrefix + 'model_' + [foreignModel.toLowerCase()]] = can.map(this.foreignModels[foreignModel], function (instance, i) { return instance.id; }).join(',');
-			};
+			}
 
 			return returnValue;
 		},

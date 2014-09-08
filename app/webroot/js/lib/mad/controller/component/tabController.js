@@ -9,13 +9,13 @@ steal(
 	 * @inherits mad.controller.CompositeController
 	 * @see mad.view.component.Tab
 	 * @parent mad.component
-	 * 
+	 *
 	 * @constructor
 	 * Creates a new TabController
-	 * 
+	 *
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
-	 * this.options and merged with defaults static variable 
+	 * this.options and merged with defaults static variable
 	 * @return {mad.controller.component.TabController}
 	 */
 	mad.controller.component.CompositeController.extend('mad.controller.component.TabController', /** @static */ {
@@ -36,24 +36,23 @@ steal(
 			 * @type {string}
 			 */
 			this.enabledId = null;
-			
+
 			this._super(el, opts);
 		},
-		
+
 		/**
 		 * After start
 		 */
 		'afterStart': function() {
-			var self = this;
 			// Instantiate the menu which will rule the tabs container
 			if (this.options.generateMenu) {
 				this.options.menu = new mad.controller.component.MenuController($('.js_tabs_nav', this.element));
 				this.options.menu.start();
 			}
-			
+
 			this.on();
 		},
-		
+
 		/**
 		 * A tab has been selected
 		 * @return {void}
@@ -93,8 +92,8 @@ steal(
 			else if(tab.state.is('hidden')) {
 				tab.setState('ready');
 			}
-			
-			this.view.selectTab(this.enabledTabId)
+
+			this.view.selectTab(this.enabledTabId);
 		},
 
 		/**
@@ -106,7 +105,11 @@ steal(
 			// default tab content css
 			var defaultTabCss = ['tab-content'];
 			// get the component if or create it
-			options.id = typeof options.id != 'undefined' ? options.id: uuid();
+			if (typeof options.id != 'undefined') {
+				options.id = options.id;
+			} else {
+				options.id = uuid();
+			}
 
 			// insert the associated menu entry
 			if (this.options.generateMenu) {
@@ -124,9 +127,15 @@ steal(
 				options.cssClasses = defaultTabCss;
 			}
 
-			var component = mad.helper.ComponentHelper.create($('.js_tabs_content', this.element), 'last', Class, options);
+			var component = mad.helper.ComponentHelper.create(
+				$('.js_tabs_content', this.element),
+				'last',
+				Class,
+				options
+			);
 			return this._super(component);
 		}
+
 	});
 
 });

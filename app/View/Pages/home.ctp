@@ -8,8 +8,12 @@
  * @since        version 2.12.7
  */
 	$this->assign('title', __('Passbolt - The simple password management system'));
+
+	$this->Html->script('lib/can/lib/jquery.1.8.3.js', array('block' => 'scriptBottom'));
+	$this->Html->script('lib/xregexp/xregexp-all-min.js', array('block' => 'scriptBottom'));
+	$this->Html->script('lib/jquery/jquery-ui-1.10.3.custom.js', array('block' => 'scriptBottom'));
 	$this->Html->script('lib/moment/moment.min.js', array('block' => 'scriptBottom'));
-	$this->Html->css('default/main.min', null, array('inline' => false));
+	$this->Html->css('default/main', null, array('inline' => false));
 	// load the front end application
 	if(!Configure::read('debug')) {
 		$frontUri = 'steal/steal.production.js?app/passbolt.js';
