@@ -99,7 +99,7 @@ steal(
 		 */
 		'{configButton} click': function (el, ev) {
 			console.log('configButton');
-		},
+		}
 
 	});
 

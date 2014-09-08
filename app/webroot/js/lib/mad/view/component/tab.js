@@ -13,7 +13,7 @@ steal(
 	 */
 	mad.view.View.extend('mad.view.component.Tab', /** @static */ {
 
-		'templateUri': 'mad/view/template/component/tab.ejs',
+		'templateUri': 'mad/view/template/component/tab.ejs'
 
 	}, /** @prototype */ {
 

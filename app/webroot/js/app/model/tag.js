@@ -67,7 +67,7 @@ steal(
 					success: success,
 					error: error
 				});
-			},
+			}
 
 		}, /** @prototype */ {
 

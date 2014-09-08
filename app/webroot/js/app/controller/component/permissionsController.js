@@ -176,7 +176,7 @@ steal(
 			// get permissions for the given resource
 			passbolt.model.Permission.findAll({
 				'aco': this.options.acoInstance.constructor.shortName,
-				'aco_foreign_key': this.options.acoInstance.id,
+				'aco_foreign_key': this.options.acoInstance.id
 			}, function (permissions, response, request) {
 				// load the perm list
 				self.permList.load(permissions);
