@@ -687,12 +687,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 		// check the response when a category is added (without parent_id)
 		$result = json_decode($this->testAction('/categories.json', array(
 			'data' => array(
-				'Category' => array('name' => '<script>alert("xss");</script>')
+				'Category' => array('name' => '<script>alert("xss");</script>XSS')
 			),
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
-		$this->assertEquals($result['body']['Category']['name'], '&lt;script&gt;alert(&quot;xss&quot;);&lt;/script&gt;', "Html should be striped down");
+		$this->assertEquals($result['body']['Category']['name'], 'XSS', "Html should be striped down");
 	}
 }

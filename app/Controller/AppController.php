@@ -9,7 +9,7 @@
  * @license      http://www.passbolt.com/license
  */
 
-App::uses('Sanitize', 'Utility');
+CakePlugin::load('HtmlPurifier', array('bootstrap' => true));
 App::uses('Controller', 'Controller');
 App::import('Model','User');
 
@@ -120,14 +120,41 @@ class AppController extends Controller {
 		} else {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
-		// sanitize any post data
+
+		// Sanitize input.
+		// Create a very restrictive configuration.
+		Purifier::config('nohtml', array(
+				'HTML.AllowedElements' => '',
+				'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
+			)
+		);
+
+		// Sanitize any controller parameters.
+		if (isset($this->request->params['pass']) && !empty($this->request->params['pass'])) {
+			$this->request->params['pass'] = $this->purify($this->request->params['pass'], 'nohtml');
+		}
+		// Sanitize any post data.
 		if (isset($this->request->data) && !empty($this->request->data)) {
-			$this->request->data = Sanitize::clean($this->request->data);
+			$this->request->data = $this->purify($this->request->data, 'nohtml');
 		}
-		// sanitize any get data
+		// Sanitize any get data.
 		if (isset($this->request->query) && !empty($this->request->query)) {
-			$this->request->query = Sanitize::clean($this->request->query);
+			$this->request->query = $this->purify($this->request->query, 'nohtml');
 		}
+	}
+
+	/**
+	 *
+	 */
+	protected function purify($data, $configName) {
+		if (is_array($data)) {
+			foreach ($data as $key => $val) {
+				$data[$key] = $this->purify($val, $configName);
+			}
+			return $data;
+		}
+
+		return Purifier::clean($data, $configName);
 	}
 
 	/**

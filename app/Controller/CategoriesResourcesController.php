@@ -90,7 +90,6 @@ class CategoriesResourcesController extends AppController {
 		}
 
 		// set the data for validation and save
-		$this->request->data = Sanitize::clean($this->request->data);
 		$crpost = $this->request->data;
 		$this->CategoryResource->set($crpost);
 

@@ -325,9 +325,6 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function move($id = null, $position = null, $parentId = null) {
-		$position = Sanitize::clean($position);
-		$parentId = Sanitize::clean($parentId);
-
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -383,8 +380,6 @@ class CategoriesController extends AppController {
  * @param varchar $typeName , the name of the type
  */
 	public function type($id = null, $typeName = null) {
-		$typeName = Sanitize::clean($typeName);
-
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));

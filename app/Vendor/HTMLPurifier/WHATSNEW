@@ -1,0 +1,5 @@
+HTML Purifier 4.6.0 is a major security release, fixing numerous bad
+quadratic asymptotics in HTML Purifier's core algorithms.  Most users will
+see a decent speedup on large inputs, although small inputs may take
+longer.  Additionally, the secure URI munging algorithm has changed to
+do a proper HMAC.  There are some other miscellaneous bugfixes as well.

@@ -90,7 +90,6 @@ class GroupsUsersController extends AppController {
 		}
 
 		// set the data for validation and save
-		$this->request->data = Sanitize::clean($this->request->data);
 		$gupost = $this->request->data;
 		$this->GroupUser->set($gupost);
 
