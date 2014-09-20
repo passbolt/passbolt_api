@@ -1,0 +1,5 @@
+#!/bin/sh
+echo "== DEPLOY STARTS ===="
+
+echo "Installing Passbolt"
+(cd $OPENSHIFT_REPO_DIR; sh $OPENSHIFT_REPO_DIR/app/Console/cake install)
