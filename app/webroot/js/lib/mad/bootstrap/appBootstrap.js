@@ -155,7 +155,7 @@ steal(
 				}
 
 			// Catch any exceptions released by the system
-			} catch (e) {	
+			} catch (e) {
 				if (mad.Config.read('error.ErrorHandlerClass')) {
 					mad.Config.read('error.ErrorHandlerClass').handleException(e);
 				} else {

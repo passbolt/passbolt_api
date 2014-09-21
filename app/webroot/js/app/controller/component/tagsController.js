@@ -1,6 +1,8 @@
 steal(
 	'app/controller/component/tagsListController.js',
-	'app/controller/form/tag/editFormController.js'
+	'app/controller/form/tag/editFormController.js',
+
+	'app/view/template/component/tags.ejs'
 ).then(function () {
 
 	/*

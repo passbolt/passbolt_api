@@ -47,7 +47,22 @@ steal(
 		 */
 		'render': function (uri, data) {
 			data = data || {};
-			uri = steal.idToUri(uri).toString();
+
+			// Because of the stealconfig mapping, the id system used to cache
+			// the template is buggy. The system is unable to find its templates
+			// if that ones have been mapped. Temporary dirty code to avoid
+			// useless calls to the server
+			if (uri.substring(0, 3) == 'mad') {
+				uri = 'lib/' + uri;
+			}
+
+			// Check if the template has well been referenced by the dev.
+			// Included in the referenced file by steal will avoid a useless server call.
+			if (typeof can.view.cached[can.view.toId(uri)] == 'undefined') {
+				console.warn('[PERF] the template ' + uri + ' is not referenced correctly, what will imply a useless server call on prod.');
+				uri = steal.idToUri(uri).toString();
+			}
+
 			return can.view.render(uri, data);
 		}
 

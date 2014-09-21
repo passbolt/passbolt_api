@@ -1,6 +1,8 @@
 steal(
 	'mad/controller/component/freeCompositeController.js',
-	'mad/view/component/dialog.js'
+	'mad/view/component/dialog.js',
+
+	'mad/view/template/component/dialog.ejs'
 ).then(function () {
 
 	/*

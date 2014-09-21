@@ -8,7 +8,9 @@ steal(
 	'app/controller/component/workspaceSecondaryMenuController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
-	'app/model/filter.js'
+	'app/model/filter.js',
+
+	'app/view/template/passwordWorkspace.ejs'
 ).then(function () {
 
 	/*

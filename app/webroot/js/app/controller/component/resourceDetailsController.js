@@ -4,7 +4,9 @@ steal(
 	'app/controller/component/commentsController.js',
 	'app/controller/component/sidebarSectionController.js',
 	'app/controller/component/sidebarSections/sidebarSectionTagsController.js',
-	'app/controller/component/sidebarSections/sidebarSectionDescriptionController.js'
+	'app/controller/component/sidebarSections/sidebarSectionDescriptionController.js',
+
+	'app/view/template/component/resourceDetails.ejs'
 ).then(function () {
 
 		/*

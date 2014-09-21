@@ -1,7 +1,9 @@
 steal(
 	'mad/controller/componentController.js',
 	'app/model/notification.js',
-	'app/view/component/notification.js'
+	'app/view/component/notification.js',
+
+	'app/view/template/component/notification.ejs'
 ).then(function () {
 
 	/*

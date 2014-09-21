@@ -3,7 +3,10 @@ steal(
 	'app/model/group.js',
 	'app/model/user.js',
 	'app/model/permission.js',
-	'app/model/permissionType.js'
+	'app/model/permissionType.js',
+
+	'app/view/template/form/permission/addForm.ejs',
+	'app/view/template/component/permission/permissionListElement.ejs'
 ).then(function () {
 
 	/*

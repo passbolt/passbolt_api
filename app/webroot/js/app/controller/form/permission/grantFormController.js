@@ -1,6 +1,5 @@
 steal(
-	'mad/form/formController.js',
-	'app/view/template/form/permission/grantForm.ejs'
+	'mad/form/formController.js'
 ).then(function () {
 
 	/**
