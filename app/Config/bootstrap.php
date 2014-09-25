@@ -41,6 +41,11 @@ if (Configure::read('debug') > 1) {
 }
 
 /**
+ * Html purifier.
+ */
+CakePlugin::load('HtmlPurifier', array('bootstrap' => true));
+
+/**
  * The settings below can be used to set additional paths to models, views and controllers.
  *
  * App::build(array(

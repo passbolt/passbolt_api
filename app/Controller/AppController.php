@@ -9,8 +9,8 @@
  * @license      http://www.passbolt.com/license
  */
 
-CakePlugin::load('HtmlPurifier', array('bootstrap' => true));
 App::uses('Controller', 'Controller');
+App::uses('Purifier', 'HtmlPurifier.Lib');
 App::import('Model','User');
 
 /**
@@ -30,6 +30,13 @@ class AppController extends Controller {
 	public $components = array(
 		'Session',
 		'Paginator',
+		'HtmlPurifier.HtmlPurifier' => array(
+			'config' => array(
+				'nohtml' => array(
+					'HTML.AllowedElements' => '',
+				),
+			),
+		),
 		'Cookie',
 		'Auth' => array(
 			'className' => 'PassboltAuth',
@@ -71,8 +78,8 @@ class AppController extends Controller {
 	);
 
 	public $helpers = array(
-		'Html', 'Form', // default
-		'MyForm'				// custom
+		'Html', 'Form',
+		'MyForm'
 	);
 
 	/**
@@ -121,40 +128,25 @@ class AppController extends Controller {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
 
-		// Sanitize input.
+		// Sanitize user input.
 		// Create a very restrictive configuration.
 		Purifier::config('nohtml', array(
 				'HTML.AllowedElements' => '',
 				'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
 			)
 		);
-
 		// Sanitize any controller parameters.
 		if (isset($this->request->params['pass']) && !empty($this->request->params['pass'])) {
-			$this->request->params['pass'] = $this->purify($this->request->params['pass'], 'nohtml');
+			$this->request->params['pass'] = $this->HtmlPurifier->purifyHtml($this->request->params['pass'], 'nohtml');
 		}
 		// Sanitize any post data.
 		if (isset($this->request->data) && !empty($this->request->data)) {
-			$this->request->data = $this->purify($this->request->data, 'nohtml');
+			$this->request->data = $this->HtmlPurifier->purifyHtml($this->request->data, 'nohtml');
 		}
 		// Sanitize any get data.
 		if (isset($this->request->query) && !empty($this->request->query)) {
-			$this->request->query = $this->purify($this->request->query, 'nohtml');
+			$this->request->query = $this->HtmlPurifier->purifyHtml($this->request->query, 'nohtml');
 		}
-	}
-
-	/**
-	 *
-	 */
-	protected function purify($data, $configName) {
-		if (is_array($data)) {
-			foreach ($data as $key => $val) {
-				$data[$key] = $this->purify($val, $configName);
-			}
-			return $data;
-		}
-
-		return Purifier::clean($data, $configName);
 	}
 
 	/**

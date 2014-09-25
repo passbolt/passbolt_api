@@ -6,6 +6,7 @@
 /app/tmp/cache/views/*
 /app/tmp/gpg/*
 /app/tmp/logs/*
+/app/tmp/purifier/*
 /app/tmp/sessions/*
 /app/tmp/tests/*
 /lib/Cake/Console/Templates/skel/tmp/
