@@ -6,6 +6,82 @@ steal(
 ).then(function () {
 
 	/*
+	 * @class passbolt.model.UserCategoryPermission
+	 * @inherits {mad.model.Model}
+	 * @parent index
+	 *
+	 * User category permission model
+	 *
+	 * @constructor
+	 * Creates a resource
+	 * @param {array} data
+	 * @return {passbolt.model.UserCategoryPermission}
+	 */
+	mad.model.Model('passbolt.model.UserCategoryPermission', /** @static */ {
+		attributes: {
+			'permission_id': 'string',
+			'permission_type': 'number'
+		}
+	}, {});
+
+	/*
+	 * @class passbolt.model.GroupCategoryPermission
+	 * @inherits {mad.model.Model}
+	 * @parent index
+	 *
+	 * Group category permission model
+	 *
+	 * @constructor
+	 * Creates a resource
+	 * @param {array} data
+	 * @return {passbolt.model.GroupCategoryPermission}
+	 */
+	mad.model.Model('passbolt.model.GroupCategoryPermission', /** @static */ {
+		attributes: {
+			'permission_id': 'string',
+			'permission_type': 'number'
+		}
+	}, {});
+
+	/*
+	 * @class passbolt.model.UserResourcePermission
+	 * @inherits {mad.model.Model}
+	 * @parent index
+	 *
+	 * User resource permission model
+	 *
+	 * @constructor
+	 * Creates a resource
+	 * @param {array} data
+	 * @return {passbolt.model.UserResourcePermission}
+	 */
+	mad.model.Model('passbolt.model.UserResourcePermission', /** @static */ {
+		attributes: {
+			'permission_id': 'string',
+			'permission_type': 'number'
+		}
+	}, {});
+
+	/*
+	 * @class passbolt.model.GroupResourcePermission
+	 * @inherits {mad.model.Model}
+	 * @parent index
+	 *
+	 * Group resource permission model
+	 *
+	 * @constructor
+	 * Creates a resource
+	 * @param {array} data
+	 * @return {passbolt.model.GroupResourcePermission}
+	 */
+	mad.model.Model('passbolt.model.GroupResourcePermission', /** @static */ {
+		attributes: {
+			'permission_id': 'string',
+			'permission_type': 'number'
+		}
+	}, {});
+
+	/*
 	 * @class passbolt.model.Permission
 	 * @inherits {mad.model.Model}
 	 * @parent index
@@ -129,6 +205,53 @@ steal(
 				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
 				return def;
 			});
+		},
+
+		/**
+		 * Am I authorized to perform the given operation.
+		 * @param {passbolt.model.PermissionType} type
+		 */
+		'isAllowedTo': function(objs, requestedPermission) {
+			var permission = null;
+			var returnValue = null;
+
+			if (!(objs instanceof can.Model.List)) {
+				objs = new can.List([objs])
+			}
+
+			objs.each(function(obj, i) {
+				// The asked permission has to be lower than all the defined permissions
+				// on the target objects.
+				if (returnValue == false) {
+					return;
+				}
+
+				// Extract the permission.
+				switch(obj.constructor.shortName) {
+					case 'Category':
+						if (typeof obj.UserCategoryPermission != 'undefined') {
+							permission = obj.UserCategoryPermission;
+						} else if (typeof obj.GroupCategoryPermission != 'undefined') {
+							permission = obj.GroupCategoryPermission;
+						}
+						break;
+					case 'Resource':
+						if (typeof obj.UserResourcePermission != 'undefined') {
+							permission = obj.UserResourcePermission;
+						} else if (typeof obj.GroupResourcePermission != 'undefined') {
+							permission = obj.GroupResourcePermission;
+						}
+						break;
+				}
+
+				if (permission.permission_type >= requestedPermission) {
+					returnValue = true;
+				} else {
+					returnValue = false;
+				}
+			});
+
+			return returnValue != null ? returnValue : false;
 		}
 
 	}, /** @prototype */ {
@@ -145,6 +268,5 @@ steal(
 				return true;
 			return false;
 		}
-		
 	});
 });

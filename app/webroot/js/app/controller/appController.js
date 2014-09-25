@@ -1,8 +1,10 @@
 steal(
 	'mad/controller/appController.js',
 	// the main workspaces of the application
+	'app/controller/component/passwordWorkspaceMenuController.js',
 	'app/controller/passwordWorkspaceController.js',
 	'app/controller/peopleWorkspaceController.js',
+	'app/controller/component/peopleWorkspaceMenuController.js',
 	// common components of the application
 	'app/controller/component/appNavigationLeftController.js',
 	'app/controller/component/appNavigationRightController.js',
@@ -56,7 +58,7 @@ steal(
 
 			// Instantiate workspaces container tabs element to the app 
 			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'), {
-				'generateMenu': false // do not generate the associated tab nav
+				'autoMenu': false // do not generate automatically the associated tab nav
 			});
 			this.workspacesCtl.start();
 
@@ -65,24 +67,33 @@ steal(
 				'id': 'js_passbolt_passwordWorkspace_controller',
 				'label': 'password'
 			});
+			var selectedResources = this.passwordWk.getSelectedResources()
 			// Instantiate the people workspace component and add it to the workspaces container
 			this.peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
 				'id': 'js_passbolt_peopleWorkspace_controller',
 				'label': 'people'
 			});
+			var selectedUsers = this.peopleWk.getSelectedUsers()
 
-			// @todo move this into ready state ??
-			this.workspacesCtl.enableTab('js_passbolt_passwordWorkspace_controller');
-		},
+			// Instantiate workspaces menus container tabs element to the app
+			this.workspacesMenusCtl = new mad.controller.component.TabController($('#js_wsp_primary_menu'), {
+				'autoMenu': false // do not generate automatically the associated tab nav
+			});
+			this.workspacesMenusCtl.start();
 
-		/**
-		 * Called when the passbolt application is ready
-		 * @return {void}
-		 */
-		'ready': function () {
-			this._super();
-			// @todo Il est bien puant ce ready, check the state management pour gerer ca
-			mad.bus.trigger('app_ready');
+			// Instantiate the password workspace menu component and add it to the workspaces menus container
+			this.passwordWkMenu = this.workspacesMenusCtl.addComponent(passbolt.controller.component.PasswordWorkspaceMenuController, {
+				'id': 'js_passbolt_passwordWorkspaceMenu_controller',
+				'label': 'password',
+				'selectedRs': selectedResources
+			});
+
+			// Instantiate the people workspace menu component and add it to the workspaces menus container
+			this.peopleWkMenu = this.workspacesMenusCtl.addComponent(passbolt.controller.component.PeopleWorkspaceMenuController, {
+				'id': 'js_passbolt_peopleWorkspaceMenu_controller',
+				'label': 'people',
+				'selectedUsers': selectedUsers
+			});
 		},
 
 		/* ************************************************************** */
@@ -93,12 +104,32 @@ steal(
 		 * Observe when the user wants to switch to another workspace
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
-		 * @param {string} workspaceId The target workspace
+		 * @param {string} workspace The target workspace
 		 * @return {void}
 		 */
-		'{mad.bus} workspace_selected': function (el, event, workspaceId) {
+		'{mad.bus} workspace_selected': function (el, event, workspace) {
+			// Enable the target workspace.
+			var wspId = 'js_passbolt_' + workspace + 'Workspace_controller';
 			var workspacesContainer = mad.app.getComponent('js_app_panel_main');
-			workspacesContainer.enableTab(workspaceId);
+			workspacesContainer.enableTab(wspId);
+			// Enable the corresponding workspace menu.
+			var wspMenuId = 'js_passbolt_' + workspace + 'WorkspaceMenu_controller';
+			var workspacesMenusContainer = mad.app.getComponent('js_wsp_primary_menu');
+			workspacesMenusContainer.enableTab(wspMenuId);
+		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE STATE CHANGES */
+		/* ************************************************************** */
+
+		/**
+		 * The application is ready.
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateReady': function (go) {
+			mad.bus.trigger('workspace_selected', 'password');
+			mad.bus.trigger('app_ready');
 		}
 
 	});

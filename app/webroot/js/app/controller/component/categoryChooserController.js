@@ -49,49 +49,84 @@ steal(
 		 * @return {void}
 		 */
 		'showContextualMenu': function (item, x, y) {
-			var menuItems = mad.model.Action.models([
-				{
-					'id': uuid(),
-					'label': 'Open',
-					'action': function (menu) {
-						mad.bus.trigger('category_selected', item);
-						menu.remove();
-					}
-				}, {
-					'id': uuid(),
-					'label': 'Create resource',
-					'action': function (menu) {
-						mad.bus.trigger('request_resource_creation', item);
-						menu.remove();
-					}},
-				{
-					'id': uuid(),
-					'label': 'Create category',
-					'action': function (menu) {
-						mad.bus.trigger('request_category_creation', item);
-						menu.remove();
-					}
-				}, {
-					'id': uuid(),
-					'label': 'Rename...',
-					'action': function (menu) {
-						mad.bus.trigger('request_category_edition', item);
-						menu.remove();
-					}
-				}, {
-					'id': uuid(),
-					'label': 'Remove',
-					'action': function (menu) {
-						mad.bus.trigger('request_category_deletion', item);
-						menu.remove();
-					}
-				}
-			]);
+			// Get the offset position of the clicked item.
+			var $item = $('a span', '#' + item.id);
+			var item_offset = $item.offset();
 
-			// Contextual menu
-			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {'mouseX': x, 'mouseY': y});
+			// Instantiate the contextual menu menu.
+			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {
+				'state': 'hidden',
+				'source': $item[0],
+				'coordinates': {
+					x: '180',
+					y: item_offset.top
+				}
+			});
 			contextualMenu.start();
-			contextualMenu.load(menuItems);
+
+			// get the permission on the category.
+			var canCreate = passbolt.model.Permission.isAllowedTo(item, passbolt.CREATE),
+				canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE);
+
+			// Add open action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Open',
+				'cssClasses': ['separator-after'],
+				'action': function (menu) {
+					mad.bus.trigger('category_selected', item);
+					menu.remove();
+				}
+			});
+			// Add Create resource action.
+			contextualMenu.insertItem(action);
+			action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Create resource',
+				'initial_state': !canCreate ? 'disable' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_creation', item);
+					menu.remove();
+				}
+			});
+			// Add Create category action.
+			contextualMenu.insertItem(action);
+			action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Create category',
+				'cssClasses': ['separator-after'],
+				'initial_state': !canCreate ? 'disable' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_category_creation', item);
+					menu.remove();
+				}
+			});
+			// Add Rename action.
+			contextualMenu.insertItem(action);
+			action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Rename...',
+				'initial_state': !canUpdate ? 'disable' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_category_edition', item);
+					menu.remove();
+				}
+			});
+			// Add Remove action.
+			contextualMenu.insertItem(action);
+			action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Remove',
+				'initial_state': !canUpdate ? 'disable' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_category_deletion', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Display the menu.
+			contextualMenu.setState('ready');
 		},
 
 		/* ************************************************************** */

@@ -3,7 +3,6 @@ steal(
     'app/controller/component/groupChooserController.js',
     'app/controller/component/userBrowserController.js',
 	'app/controller/component/userShortcutsController.js',
-	'app/controller/component/userWorkspaceMenuController.js',
 	'app/controller/form/user/createFormController.js',
 	'app/controller/form/group/createFormController.js',
 	'app/model/user.js'
@@ -39,14 +38,6 @@ steal(
          * @see {mad.controller.ComponentController}
          */
         'afterStart': function() {
-			// Kill the primary workspace menu controller, if exists
-			$('#js_wsp_primary_menu').html(''); // TODO : modify this by a proper destroy function
-			// Instantiate the primary workspace menu controller
-			this.primMenu = new passbolt.controller.component.UserWorkspaceMenuController('#js_wsp_primary_menu', {
-				'selectedUsers': this.options.selectedUsers
-			});
-			this.primMenu.start();
-
 			// Instanciate the users filter controller.
 			var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_group_shortcuts', {});
 			userShortcut.start();
@@ -62,6 +53,14 @@ steal(
             }, 'js_workspace_users_main');
             userBrowserController.start();
         },
+
+		/**
+		 * Get the selected users.
+		 * @return {can.Model.List}
+		 */
+		'getSelectedUsers': function() {
+			return this.options.selectedUsers;
+		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */

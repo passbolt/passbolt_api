@@ -106,6 +106,16 @@ steal(
 		 */
 		'getState': function () {
 			return this.attr('label');
+		},
+
+		/**
+		 * Get a string of state.
+		 */
+		'toString': function(separator) {
+			if (typeof separator == 'undefined') {
+				separator = ',';
+			}
+			return this.current.join(separator);
 		}
 
 	});

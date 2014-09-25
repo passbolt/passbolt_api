@@ -36,7 +36,8 @@ steal(
 	}, /** @prototype */ {
 
 		/**
-		 * Value of the button. This value will be released when events occured
+		 * Value of the button.
+		 * This value will be released as event parameter when an event occured
 		 * @type {string}
 		 */
 		'value': null,
@@ -74,9 +75,14 @@ steal(
 		 * @return {void}
 		 */
 		'click': function (el, ev) {
-			// if callbacks associated to the button
-			if (this.options.events.click) {
-				this.options.events.click(this.element, ev, this.value);
+			// if the component is disabled, stop the propagation
+			if (this.state.is('disabled')) {
+				ev.stopImmediatePropagation();
+			} else {
+				// if callbacks associated to the button
+				if (this.options.events.click) {
+					this.options.events.click(this.element, ev, this.value);
+				}
 			}
 		},
 

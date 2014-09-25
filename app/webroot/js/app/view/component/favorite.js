@@ -1,5 +1,6 @@
 steal(
-	'mad/view'
+	'mad/view',
+	'app/view/template/component/favorite.ejs'
 ).then(function () {
 
 	/*

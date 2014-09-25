@@ -1,6 +1,8 @@
 steal(
 	'app/model/itemTag.js',
-	'mad/controller/component/treeController.js'
+	'mad/controller/component/treeController.js',
+
+	'app/view/template/component/tag/tagItem.ejs'
 ).then(function () {
 
 	/*

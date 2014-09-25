@@ -23,8 +23,8 @@ steal(
 		'defaults': {
 			'label': 'Tab Controller',
 			'viewClass': mad.view.component.Tab,
-			// enable or not the embedded menu
-			'generateMenu': true
+			// Generate a menu automatically.
+			'autoMenu': true
 		}
 
 	}, /** @prototype */ {
@@ -45,7 +45,7 @@ steal(
 		 */
 		'afterStart': function() {
 			// Instantiate the menu which will rule the tabs container
-			if (this.options.generateMenu) {
+			if (this.options.autoMenu) {
 				this.options.menu = new mad.controller.component.MenuController($('.js_tabs_nav', this.element));
 				this.options.menu.start();
 			}
@@ -59,7 +59,7 @@ steal(
 		 */
 		'{menu} item_selected': function (el, ev, item) {
 			// If the tab controller generate is own menu to drive itself
-			if(this.options.generateMenu) {
+			if(this.options.autoMenu) {
 				var tabId = item.id.replace('js_tab_nav_', '');
 				this.enableTab(tabId);
 			}
@@ -112,7 +112,7 @@ steal(
 			}
 
 			// insert the associated menu entry
-			if (this.options.generateMenu) {
+			if (this.options.autoMenu) {
 				var menuEntry = new mad.model.Action({
 					'id': 'js_tab_nav_' + options.id,
 					'label': options.label

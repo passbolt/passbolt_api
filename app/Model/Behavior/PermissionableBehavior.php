@@ -142,6 +142,8 @@ class PermissionableBehavior extends ModelBehavior {
 			$Permission->create();
 			$Permission->set($data);
 			if (!$Permission->validates()) {
+				var_dump(User::get('User.id'));
+				var_dump($Permission->validationErrors);
 				$this->Message->error($Permission->validationErrors);
 				return;
 			}

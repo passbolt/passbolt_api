@@ -195,7 +195,7 @@ steal(
 				var self = this;
 				silent = typeof silent == 'undefined' ? false : silent;
 
-				// add the resource to the list of selected items
+				// add the user to the list of selected items
 				this.options.selectedUsers.push(item);
 				// check the checkbox (if it is not already done)
 				mad.app.getComponent('multiple_select_checkbox_' + item.id)

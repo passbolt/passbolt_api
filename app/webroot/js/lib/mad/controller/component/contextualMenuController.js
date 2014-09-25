@@ -1,5 +1,6 @@
 steal(
-	'mad/controller/component/dropDownMenuController.js'
+	'mad/controller/component/dropDownMenuController.js',
+	'mad/view/component/menu/contextualMenu.js'
 ).then(function () {
 
 	/**
@@ -17,22 +18,34 @@ steal(
 	 */
 	mad.controller.component.DropDownMenuController.extend('mad.controller.component.ContextualMenuController', /** @static */ {
 
+		'defaults': {
+			'viewClass': mad.view.component.menu.ContextualMenu,
+			'cssClasses': ['contextual-menu'],
+			// The element which requests the contextual menu.
+			'source': null,
+			// The coordinates you want to display the contextual menu.
+			'coordinates' : {
+				'x': null,
+				'y': null
+			}
+		}
+
 	}, /** @prototype */ {
 
 		// constructor like
 		'init': function(el, options) {
-			// if no element given
+			// If no element given, create a temporary one.
 			if(el == null || !el.length) {
-				// if a previous contextual menu is still displayed, remove it
+				// Remove any other contextual menu.
 				if($('#js_contextual_menu').length != 0) {
 					$('#js_contextual_menu').remove();
 				}
 
-				// create the DOM entry point for the popup
+				// Create the DOM entry point for the contextual menu.
 				var $el = mad.helper.HtmlHelper.create(
 					mad.app.element,
 					'first',
-					'<div id="js_contextual_menu" />'
+					'<ul id="js_contextual_menu" />'
 				);
 
 				// Changing the element force us to recall setup which is called before all init functions
@@ -45,25 +58,13 @@ steal(
 
 		/**
 		 * After start hook.
-		 * Position the contextual menu functions of the given mouse position
+		 * Position the contextual menu functions of the given position
 		 */
 		'afterStart': function () {
 			this._super();
-			this.view.position({'mouse': {'x':this.options.mouseX-5, 'y':this.options.mouseY-5}});
-		},
-
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * The mouse leave the contextual menu
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {Event} ev The jQuery event
-		 * @return {void}
-		 */
-		'mouseleave': function (el, ev) {
-			this.remove();
+			this.view.position({
+				'coordinates': this.options.coordinates
+			});
 		}
 
 	});

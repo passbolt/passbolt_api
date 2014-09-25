@@ -1,6 +1,6 @@
 steal(
     'mad/controller/componentController.js',
-	'app/view/template/component/workspaceMenu.ejs'
+	'app/view/template/component/passwordWorkspaceMenu.ejs'
 ).then(function () {
 
 	/*
@@ -18,7 +18,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.component.WorkspaceMenuController}
 	 */
-	mad.controller.ComponentController.extend('passbolt.controller.component.WorkspaceMenuController', /** @static */ {
+	mad.controller.ComponentController.extend('passbolt.controller.component.PasswordWorkspaceMenuController', /** @static */ {
 
 		'defaults': {
 			'label': 'Workspace Menu Controller',
@@ -33,10 +33,10 @@ steal(
 		 * @return {void}
 		 */
 		'afterStart': function () {
-			// Manage creation action 
+			// Manage creation action
 			this.options.creationButton = new mad.controller.component.ButtonController($('#js_wk_menu_creation_button'))
 				.start();
-			
+
 			// Manage edition action 
 			this.options.editionButton = new mad.controller.component.ButtonController($('#js_wk_menu_edition_button'), {
 				'state': 'disabled'
@@ -56,8 +56,8 @@ steal(
 			this.options.moreButton = new mad.controller.component.ButtonController($('#js_wk_menu_more_button'), {
 				'state': 'disabled'
 			}).start();
-			
-			// Rebind controller events
+
+			// @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
 			this.on();
 		},
 
@@ -72,8 +72,8 @@ steal(
 		 * @return {void}
 		 */
 		'{creationButton} click': function (el, ev) {
-			var categories = this.options.creationButton.getValue();
-			mad.bus.trigger('request_resource_creation', categories);	
+			var resource = this.options.creationButton.getValue();
+			mad.bus.trigger('request_resource_creation', resource);
 		},
 
 		/**
@@ -83,8 +83,8 @@ steal(
 		 * @return {void}
 		 */
 		'{editionButton} click': function (el, ev) {
-			var category = this.options.editionButton.getValue();
-			mad.bus.trigger('request_resource_edition', category);	
+			var resource = this.options.editionButton.getValue();
+			mad.bus.trigger('request_resource_edition', resource);
 		},
 
 		/**
@@ -94,8 +94,8 @@ steal(
 		 * @return {void}
 		 */
 		'{deletionButton} click': function (el, ev) {
-			var category = this.options.deletionButton.getValue();
-			mad.bus.trigger('request_resource_deletion', category);	
+			var resources = this.options.deletionButton.getValue();
+			mad.bus.trigger('request_resource_deletion', resources);
 		},
 
 		/**
@@ -105,10 +105,10 @@ steal(
 		 * @return {void}
 		 */
 		'{sharingButton} click': function (el, ev) {
-			var category = this.options.sharingButton.getValue();
-			mad.bus.trigger('request_resource_sharing', category);	
+			var resource = this.options.sharingButton.getValue();
+			mad.bus.trigger('request_resource_sharing', resource);
 		},
-		
+
 		/**
 		 * Observe when a resource is selected
 		 * @param {HTMLElement} el The element the event occured on
@@ -120,12 +120,12 @@ steal(
 			// if more than one resource selected, or no resource selected
 			if (this.options.selectedRs.length == 0) {
 				this.setState('ready');
-			
-			// else if only 1 resource selected show the details
+
+				// else if only 1 resource selected show the details
 			} else if (this.options.selectedRs.length == 1) {
 				this.setState('selection');
-			
-			// else if more than one resource have been selected
+
+				// else if more than one resource have been selected
 			} else {
 				this.setState('multiSelection');
 			}
@@ -142,12 +142,12 @@ steal(
 			// if more than one resource selected, or no resource selected
 			if (this.options.selectedRs.length == 0) {
 				this.setState('ready');
-			
-			// else if only 1 resource selected show the details
+
+				// else if only 1 resource selected show the details
 			} else if (this.options.selectedRs.length == 1) {
 				this.setState('selection');
-			
-			// else if more than one resource have been selected
+
+				// else if more than one resource have been selected
 			} else {
 				this.setState('multiSelection');
 			}
@@ -161,12 +161,28 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function(el, ev, filter) {
-			var categories = can.List([]);
-			var filterCategories = filter.getForeignModels('Category');
-			if(filterCategories) {
-				categories = filterCategories;
+			var categories = filter.getForeignModels('Category');
+			var state = 'ready';
+
+			// If no categories selected, it's allowed to create password.
+			if (!categories) {
+				// Reset the value carried by the button.
+				this.options.creationButton.setValue(new can.List([]));
+			} else {
+				// The button will now carry the latest selected categories.
+				this.options.creationButton.setValue(categories);
+
+				// If the user doesn't have the permission to create into the selected category.
+				// Or if multiple categories selected.
+				if (categories.length > 1 || (
+						categories.length == 1 &&
+						!passbolt.model.Permission.isAllowedTo(categories[0], passbolt.CREATE))
+					) {
+					state = 'disabled';
+				}
 			}
-			this.options.creationButton.setValue(categories);
+
+			this.options.creationButton.setState(state);
 		},
 
 		/* ************************************************************** */
@@ -180,15 +196,20 @@ steal(
 		 */
 		'stateSelection': function (go) {
 			if (go) {
+				// Is the resource editable ?
+				var updatable = passbolt.model.Permission.isAllowedTo(this.options.selectedRs[0], passbolt.UPDATE);
+				// Is the resource administrable ?
+				var administrable = passbolt.model.Permission.isAllowedTo(this.options.selectedRs[0], passbolt.ADMIN);
+
 				this.options.editionButton
 					.setValue(this.options.selectedRs[0])
-					.setState('ready');
+					.setState(updatable ? 'ready' : 'disabled');
 				this.options.deletionButton
 					.setValue(this.options.selectedRs)
-					.setState('ready');
+					.setState(updatable ? 'ready' : 'disabled');
 				this.options.sharingButton
 					.setValue(this.options.selectedRs)
-					.setState('ready');
+					.setState(administrable ? 'ready' : 'disabled');
 				this.options.moreButton
 					.setValue(this.options.selectedRs[0])
 					.setState('ready');
@@ -215,14 +236,19 @@ steal(
 		 */
 		'stateMultiSelection': function (go) {
 			if (go) {
+				// Is the resource editable ?
+				var canUpdate = passbolt.model.Permission.isAllowedTo(this.options.selectedRs, passbolt.UPDATE);
+				// Is the resource administrable ?
+				var canAdmin = passbolt.model.Permission.isAllowedTo(this.options.selectedRs, passbolt.ADMIN);
+
 				this.options.editionButton
 					.setState('disabled');
 				this.options.deletionButton
 					.setValue(this.options.selectedRs)
-					.setState('ready');
+					.setState(canUpdate ? 'ready' : 'disabled');
 				this.options.sharingButton
 					.setValue(this.options.selectedRs)
-					.setState('ready');
+					.setState(canAdmin ? 'ready' : 'disabled');
 				this.options.moreButton
 					.setState('disabled');
 			} else {

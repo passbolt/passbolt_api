@@ -5,11 +5,12 @@ steal(
 	'app/controller/component/resourceActionsTabController.js',
 	'app/controller/component/resourceDetailsController.js',
 	'app/controller/component/resourceShortcutsController.js',
-	'app/controller/component/workspaceMenuController.js',
 	'app/controller/component/workspaceSecondaryMenuController.js',
 	'app/controller/form/category/createFormController.js',
 	'app/controller/form/resource/createFormController.js',
-	'app/model/filter.js'
+	'app/model/filter.js',
+
+	'app/view/template/passwordWorkspace.ejs'
 ).then(function () {
 
 	/*
@@ -42,13 +43,6 @@ steal(
 		 * @see {mad.controller.ComponentController}
 		 */
 		'afterStart': function() {
-
-			// Instantiate the primary workspace menu controller
-			this.primMenu = new passbolt.controller.component.WorkspaceMenuController('#js_wsp_primary_menu', {
-				'selectedRs': this.options.selectedRs
-			});
-			this.primMenu.start();
-
 			// Instantiate the secondary workspace menu controller
 			this.secMenu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_wsp_secondary_menu', {});
 			this.secMenu.start();
@@ -72,6 +66,14 @@ steal(
 			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_wsp_pwd_sidebar_second', this.element), {
 				'selectedRs': this.options.selectedRs
 			});
+		},
+
+		/**
+		 * Get the selected resources.
+		 * @return {can.Model.List}
+		 */
+		'getSelectedResources': function() {
+			return this.options.selectedRs;
 		},
 
 		/**

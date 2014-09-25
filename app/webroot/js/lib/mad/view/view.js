@@ -47,7 +47,22 @@ steal(
 		 */
 		'render': function (uri, data) {
 			data = data || {};
-			uri = steal.idToUri(uri).toString();
+
+			// Because of the stealconfig mapping, the id system used to cache
+			// the template is buggy. The system is unable to find its templates
+			// if that ones have been mapped. Temporary dirty code to avoid
+			// useless calls to the server
+			if (uri.substring(0, 3) == 'mad') {
+				uri = 'lib/' + uri;
+			}
+
+			// Check if the template has well been referenced by the dev.
+			// Included in the referenced file by steal will avoid a useless server call.
+			if (typeof can.view.cached[can.view.toId(uri)] == 'undefined') {
+				console.warn('[PERF] the template ' + uri + ' is not referenced correctly, what will imply a useless server call on prod.');
+				uri = steal.idToUri(uri).toString();
+			}
+
 			return can.view.render(uri, data);
 		}
 
@@ -137,9 +152,9 @@ steal(
 		/**
 		 * Position an element in absolute
 		 * @param {array} options Array of options
-		 * @param {array} options.mouse (optional) Position the element functions of a mouse position
-		 * @param {string} options.mouse.x (At x pixels from the left first relative element found
-		 * @param {string} options.mouse.y At y pixels from the top first relative element found
+		 * @param {array} options.coordinates (optional) Position the element functions of the given coordinates
+		 * @param {integer} options.coordinates.x Position the element functions of the given x coordinates
+		 * @param {integer} options.coordinates.y Position the element functions of the given y coordinates
 		 * @param {array} options.reference (optional) Position the element functions of a reference element
 		 * @param {HTMLElement} options.reference.element The reference element
 		 * @param {array} options.reference.my As per Jquery position plugin, the target corner of my element ("top left" by instance)
