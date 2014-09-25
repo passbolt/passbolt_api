@@ -1,6 +1,6 @@
 steal(
     'mad/controller/componentController.js',
-	'app/view/template/component/workspaceMenu.ejs'
+	'app/view/template/component/passwordWorkspaceMenu.ejs'
 ).then(function () {
 
 	/*
@@ -18,7 +18,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.component.WorkspaceMenuController}
 	 */
-	mad.controller.ComponentController.extend('passbolt.controller.component.WorkspaceMenuController', /** @static */ {
+	mad.controller.ComponentController.extend('passbolt.controller.component.PasswordWorkspaceMenuController', /** @static */ {
 
 		'defaults': {
 			'label': 'Workspace Menu Controller',
@@ -56,8 +56,8 @@ steal(
 			this.options.moreButton = new mad.controller.component.ButtonController($('#js_wk_menu_more_button'), {
 				'state': 'disabled'
 			}).start();
-			
-			// Rebind controller events
+
+			// @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
 			this.on();
 		},
 
@@ -108,7 +108,7 @@ steal(
 			var resource = this.options.sharingButton.getValue();
 			mad.bus.trigger('request_resource_sharing', resource);
 		},
-		
+
 		/**
 		 * Observe when a resource is selected
 		 * @param {HTMLElement} el The element the event occured on
@@ -120,12 +120,12 @@ steal(
 			// if more than one resource selected, or no resource selected
 			if (this.options.selectedRs.length == 0) {
 				this.setState('ready');
-			
-			// else if only 1 resource selected show the details
+
+				// else if only 1 resource selected show the details
 			} else if (this.options.selectedRs.length == 1) {
 				this.setState('selection');
-			
-			// else if more than one resource have been selected
+
+				// else if more than one resource have been selected
 			} else {
 				this.setState('multiSelection');
 			}
@@ -142,12 +142,12 @@ steal(
 			// if more than one resource selected, or no resource selected
 			if (this.options.selectedRs.length == 0) {
 				this.setState('ready');
-			
-			// else if only 1 resource selected show the details
+
+				// else if only 1 resource selected show the details
 			} else if (this.options.selectedRs.length == 1) {
 				this.setState('selection');
-			
-			// else if more than one resource have been selected
+
+				// else if more than one resource have been selected
 			} else {
 				this.setState('multiSelection');
 			}

@@ -40,12 +40,12 @@ steal(
 					success: success,
 					error: error
 				}).pipe(function (data, textStatus, jqXHR) {
-						// pipe the result to convert cakephp response format into can format
-						// else the new attribute are not well placed
-						var def = $.Deferred();
-						def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-						return def;
-					});
+					// pipe the result to convert cakephp response format into can format
+					// else the new attribute are not well placed
+					var def = $.Deferred();
+					def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+					return def;
+				});
 			},
 
 			'destroy': function (id, success, error) {
@@ -71,17 +71,5 @@ steal(
 
 		}, /** @prototype */ {
 
-			/**
-			 * Override the constructor function
-			 * Listen change on Category, and update the model when a category has been destroyed
-			 */
-			'init': function () {
-				var self = this;
-			},
-
-			'destroy': function () {
-				// @todo unbind the passbolt.model.Category destroyed event, if it does not done automatically
-				this._super();
-			}
 		});
 	});

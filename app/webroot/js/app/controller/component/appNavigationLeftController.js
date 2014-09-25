@@ -34,28 +34,28 @@ steal(
 					'label': __('home'),
 					'cssClasses': ['home'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
+						mad.bus.trigger('workspace_selected', 'password');
 					}
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('passwords'),
 					'cssClasses': ['passwords'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
+						mad.bus.trigger('workspace_selected', 'password');
 					}
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('users'),
 					'cssClasses': ['users'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_passbolt_peopleWorkspace_controller');
+						mad.bus.trigger('workspace_selected', 'people');
 					}
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('help'),
 					'cssClasses': ['help todo'],
 					'action': function () {
-						mad.bus.trigger('workspace_selected', 'js_passbolt_passwordWorkspace_controller');
+						mad.bus.trigger('workspace_selected', 'password');
 					}
 				})
 			];
