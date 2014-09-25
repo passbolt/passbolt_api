@@ -61,7 +61,7 @@ steal(
 			var self = this;
 
             // Escape the following keys.
-            if ($.inArray(event.which, this.options.blackKeys) != -1) {
+            if ($.inArray(ev.which, this.options.blackKeys) != -1) {
                 return;
             }
 
