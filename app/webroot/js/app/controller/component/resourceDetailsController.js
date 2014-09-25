@@ -66,7 +66,7 @@ steal(
 				});
 				commentsController.start();
 
-				// Instantiate the comments controller for the current resource.
+				// Instantiate the item tags controller for the current resource.
 				var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
 					'instance': this.options.resource,
 					'foreignModel': 'Resource',

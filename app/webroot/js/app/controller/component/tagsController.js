@@ -118,6 +118,13 @@ steal(
 		 */
 		'stateEdit': function(go) {
 			if (go) {
+				var canUpdate = passbolt.model.Permission.isAllowedTo(this.options.instance, passbolt.UPDATE);
+				// If the use is not allowed to update the associated instance.
+				// He cannot edit its tags.
+				if (!canUpdate) {
+					return this.setState('ready');
+				}
+
 				this.tagsListController.setState('hidden');
 				this.editFormController.setState('ready');
 			}
