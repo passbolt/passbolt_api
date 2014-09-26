@@ -227,6 +227,17 @@ steal(
 			this.removeItem(category);
 		},
 
+		/**
+		 * Observe when a category is updated.
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Category} category The updated category
+		 * @return {void}
+		 */
+		'{passbolt.model.Category} updated': function (model, ev, category) {
+			this.refreshItem(category);
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
