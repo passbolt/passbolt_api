@@ -130,7 +130,7 @@ steal(
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
-			mad.bus.trigger('workspace_selected', 'people');
+			mad.bus.trigger('workspace_selected', 'password');
 			mad.bus.trigger('app_ready');
 		}
 
