@@ -40,7 +40,9 @@ steal(
 			'templateBased': false,
 			'cssClasses': ['tree'],
 
-			// the itemClass which represents the items managed by the component
+			// items carried by the component
+			'items': [],
+			// the itemClass which represents the items carried by the component
 			'itemClass': null,
 			// the associated map, which will be used to map the model data to the
 		    // expected view format
@@ -101,7 +103,8 @@ steal(
 		 */
 		'load': function (items) {
 			var self = this;
-			can.each(items, function (item, i) {
+			this.options.items = items;
+			can.each(this.options.items, function (item, i) {
 				self.insertItem(item);
 			});
 		},

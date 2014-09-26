@@ -64,14 +64,15 @@ $config = array(
 		'foreignModels' => array('Resource')
 	),
     'Validation' => array(
-        'shared' => array(
-			'Category',
-			'Resource',
-			'Secret',
-			'Tag',
-			'Comment',
-			'Group',
-			'User',
-        )
+ 		'shared' => array(
+ 			'Category',
+ 			'Comment',
+ 			'Group',
+ 			'Profile',
+ 			'Resource',
+ 			'Secret',
+ 			'Tag',
+ 			'User',
+ 		)
     )
 );

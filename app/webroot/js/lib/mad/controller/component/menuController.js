@@ -40,12 +40,13 @@ steal(
 				'cssClasses': {
 					'key': 'cssClasses',
 					'func': function(value, map, item, mappedValues) {
+						var mappedValue = $.merge([], value);
 						// If a state is defined for the given item.
 						// Add the state to the css classes.
 						if (typeof item.state != 'undefined') {
-							value = $.merge(value, item.state.current)
+							mappedValue = $.merge(mappedValue, item.state.getState());
 						}
-						return value.join(' ');
+						return mappedValue.join(' ');
 					}
 				},
 				'children': {
@@ -56,6 +57,21 @@ steal(
 		}
 
 	}, /** @prototype */ {
+
+		/**
+		 * Set the item state.
+		 * @param id The item id.
+		 * @param stateName The state to set.
+		 */
+		'setItemState': function(id, stateName) {
+			for (i in this.options.items) {
+				if (this.options.items[i].id == id) {
+					this.options.items[i].state.setState(stateName);
+				}
+			}
+			this.reset();
+			this.load(this.options.items);
+		},
 
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
@@ -71,7 +87,7 @@ steal(
 		' item_selected': function (el, ev, item) {
 			this._super(el, ev, item);
 			// If an action has been associated, and the item is not disabled.
-			if(action = item.getAction() && !item.state.is('disable')) {
+			if(action = item.getAction() && !item.state.is('disabled')) {
 				item.action(this);
 			}
 		}

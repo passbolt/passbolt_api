@@ -65,6 +65,14 @@ steal(
 			return this.options.selectedUsers;
 		},
 
+		/**
+		 * Get the selected groups.
+		 * @return {can.Model.List}
+		 */
+		'getSelectedGroups': function() {
+			return this.options.selectedGroups;
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
