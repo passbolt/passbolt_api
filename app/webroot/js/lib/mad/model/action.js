@@ -24,11 +24,13 @@ steal(
 		attributes: {
 			'id': 'string',
 			'label': 'string',
+			'name': 'string',
 			'icon': 'string',
 			'action': 'function',
 			'cssClasses': 'array',
 			'initial_state': 'string',
-			'state': mad.model.State.model
+			'state': mad.model.State.model,
+			'active': 'boolean'
 		}
 
 	}, /** @prototype */ {

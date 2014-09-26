@@ -384,7 +384,7 @@ class User extends AppModel {
 			default:
 				$fields = array(
 					'fields'  => array(
-						'User.id',
+						'DISTINCT User.id',
 						'User.username',
 						'User.role_id',
 					),

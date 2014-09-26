@@ -105,7 +105,7 @@ steal(
 		 * @return {string} The current state name
 		 */
 		'getState': function () {
-			return this.attr('label');
+			return this.current;
 		},
 
 		/**

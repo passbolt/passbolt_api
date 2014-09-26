@@ -98,20 +98,30 @@ class Profile extends AppModel {
 					'rule' => array('inList', array('Mr', 'Ms', 'Mrs', 'Dr')),
 					'message' => __('A valid title has to be provided'),
 					'allowEmpty' => false
-				)
+				),
 			),
 			'first_name' => array(
-				'rule' => '/^[a-zA-Z]+$/i',
-				'required' => true,
-				'allowEmpty' => false,
-				'message'	=> __('First name must be provided')
-			),
-			'last_name' => array(
-				'alphaNumeric' => array(
-					'rule' => '/^[a-zA-Z]+$/i',
+				'alphaNumericAndSpecial' => array(
+					'rule' => "/^[\p{L} \-']*$/u",
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('Last name must be provided')
+					'message'	=> __('First name should only contain alphabets and the special characters : - \'')
+				),
+				'size' => array(
+					'rule' => array('between', 3, 64),
+					'message' => __('First name should be between %s and %s characters long'),
+				)
+			),
+			'last_name' => array(
+				'alphaNumericAndSpecial' => array(
+					'rule' => "/^[\p{L} \-']*$/u",
+					'required' => true,
+					'allowEmpty' => false,
+					'message'	=> __('Last name should only contain alphabets and the special characters : - \'')
+				),
+				'size' => array(
+					'rule' => array('between', 3, 64),
+					'message' => __('Last name should be between %s and %s characters long'),
 				)
 			)
 			// TODO : timezone, locale
@@ -125,10 +135,11 @@ class Profile extends AppModel {
 		return $rules;
 	}
 
-	/**
-	 * Check if a user with same id exists
-	 * @param check
-	 */
+/**
+ * Check if a user with same id exists
+ * @param $check
+ * @return bool
+ */
 	public function userExists($check) {
 		if ($check['user_id'] == null) {
 			return false;

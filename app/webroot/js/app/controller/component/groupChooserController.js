@@ -33,7 +33,8 @@ steal(
                 'map': new mad.object.Map({
                     'id': 'id',
                     'label': 'name'
-                })
+                }),
+				'selectedGroups': new can.Model.List()
             }
 
         }, /** @prototype */ {
@@ -52,11 +53,10 @@ steal(
                 // load categories function of the selected database
                 this.setState('loading');
                 passbolt.model.Group.findAll({
-
                 }, function (groups, response, request) {
-                    // load the tree with the groups
-                    self.load(groups);
-                    self.setState('ready');
+			        // load the tree with the groups
+			        self.load(groups);
+			        self.setState('ready');
                 }, function (response) { });
             },
 

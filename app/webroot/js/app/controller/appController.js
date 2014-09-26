@@ -74,6 +74,7 @@ steal(
 				'label': 'people'
 			});
 			var selectedUsers = this.peopleWk.getSelectedUsers()
+			var selectedGroups = this.peopleWk.getSelectedGroups()
 
 			// Instantiate workspaces menus container tabs element to the app
 			this.workspacesMenusCtl = new mad.controller.component.TabController($('#js_wsp_primary_menu'), {
@@ -92,7 +93,8 @@ steal(
 			this.peopleWkMenu = this.workspacesMenusCtl.addComponent(passbolt.controller.component.PeopleWorkspaceMenuController, {
 				'id': 'js_passbolt_peopleWorkspaceMenu_controller',
 				'label': 'people',
-				'selectedUsers': selectedUsers
+				'selectedUsers': selectedUsers,
+				'selectedGroups': selectedGroups
 			});
 		},
 
@@ -128,7 +130,7 @@ steal(
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
-			mad.bus.trigger('workspace_selected', 'password');
+			mad.bus.trigger('workspace_selected', 'people');
 			mad.bus.trigger('app_ready');
 		}
 
