@@ -292,6 +292,31 @@ steal(
                 });
             },
 
+			/**
+			 * Observe when a category is removed. And remove from the grid all the resources
+			 * which are not belonging to a displayed Category.
+			 * @param {mad.model.Model} model The model reference
+			 * @param {HTMLEvent} ev The event which occured
+			 * @param {passbolt.model.Category} category The removed category
+			 * @return {void}
+			 */
+			'{passbolt.model.GroupUser} destroyed': function (model, ev, groupUser) {
+				// Remove user from the list of users in the grid.
+				for (i in this.options.users) {
+					if (this.options.users[i].id == groupUser.user_id) {
+						break;
+					}
+				}
+				this.options.users.splice(i, 1);
+
+				// Remove user from the list of selected users.
+				for (i in this.options.selectedUsers) {
+					if (this.options.selectedUsers[i].id == groupUser.user_id) {
+						this.options.selectedUsers.splice(i, 1);
+					}
+				}
+			},
+
 
             /* ************************************************************** */
             /* LISTEN TO THE VIEW EVENTS */

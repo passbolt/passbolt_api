@@ -27,6 +27,7 @@ steal(
 			'label': 'People',
 			'templateUri': 'app/view/template/peopleWorkspace.ejs',
 			'selectedUsers': new can.Model.List(),
+			'selectedGroups': new can.Model.List(),
 			'filter': new passbolt.model.Filter()
 		}
 
@@ -43,7 +44,9 @@ steal(
 			userShortcut.start();
 
             // Instanciate the group chooser controller.
-            this.grpChooser = new passbolt.controller.component.GroupChooserController('#js_wsp_users_group_chooser', {});
+            this.grpChooser = new passbolt.controller.component.GroupChooserController('#js_wsp_users_group_chooser', {
+				'selectedGroups': this.options.selectedGroups
+			});
             this.grpChooser.start();
 
             // Instanciate the passwords browser controller.
@@ -80,11 +83,35 @@ steal(
 			this.options.filter.attr({
 				'foreignModels': {
 					'Group': new can.List([group])
-				}
+				},
+				'name': 'group'
 			});
 			// propagate a special event on bus
 			mad.bus.trigger('filter_users_browser', this.options.filter);
+
+			// Add the group to the list of selected groups.
+			this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
+			this.options.selectedGroups.push(group);
 		},
+
+		/**
+		 * Event filter_users_browser.
+		 * When a new filter is applied.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Filter} filter, the filter being applied.
+		 * @return {void}
+		 */
+		'{mad.bus} filter_users_browser': function (el, ev, filter) {
+			// If the filter applied is "all groups", then empty the list of selected groups.
+			if (typeof filter.name != 'undefined') {
+				if(filter.name == 'all') {
+					this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
+				}
+			}
+			this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
+		},
+
 
 		/**
 		 * Observe when the user requests a category creation
@@ -225,6 +252,33 @@ steal(
 					throw new mad.error.Exception('The parameter ' + i + ' should be an instance of passbolt.model.User');
 				}
 				user.destroy();
+			}
+		},
+
+		/**
+		 * Observe when a user requests to remove a user from a group.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_remove_user_from_group': function (el, ev, selectedUsers, selectedGroups) {
+			// Check Params.
+			if(selectedGroups.attr("length") == 0) {
+				return;
+			}
+			if(selectedUsers.attr("length") == 0) {
+				return;
+			}
+
+			// Process and delete user from group.
+			var groupId = selectedGroups[0]['id'];
+			for (i in selectedUsers) {
+				for (j in selectedUsers[i]['GroupUser']) {
+					if (selectedUsers[i]['GroupUser'][j]['group_id'] == groupId) {
+						// Delete userGroup.
+						selectedUsers[i]['GroupUser'][j].destroy();
+					}
+				}
 			}
 		}
 	});

@@ -52,9 +52,44 @@ steal(
 				'state': 'disabled'
 			}).start();
 
-			// Manage more action 
-			this.options.moreButton = new mad.controller.component.ButtonController($('#js_wk_menu_more_button'), {
-				'state': 'disabled'
+			// Manage more action
+			var moreButtonMenuItems = [
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('copy login to clipboard'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						// TODO.
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('copy password to clipboard'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						// TODO.
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('organize'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						// TODO.
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('review logs'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						// TODO.
+					}
+				})
+			];
+			this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_wk_menu_more_button'), {
+				'state': 'disabled',
+				'menuItems': moreButtonMenuItems
 			}).start();
 
 			// @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)

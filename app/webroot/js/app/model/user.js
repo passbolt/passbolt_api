@@ -27,8 +27,9 @@ steal(
 			'id': 'string',
 			'username': 'string',
 			'email': 'string',
-			'active' : 'string',
-			'Profile': 'passbolt.model.Profile.model'
+			'active': 'string',
+			'Profile': 'passbolt.model.Profile.model',
+			'GroupUser': 'passbolt.model.GroupUser.models'
 		},
 
 		'create' : function (attrs, success, error) {
