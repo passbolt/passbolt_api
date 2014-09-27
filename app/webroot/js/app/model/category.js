@@ -21,6 +21,9 @@ steal(
 /* MODEL DEFINITION */
 /* ************************************************************** */
 
+		// Store all the instance of this model in the local store.
+		'forceStore': true,
+
 		'validateRules': { },
 
 		'attributes': {
@@ -140,6 +143,29 @@ steal(
 		 */
 		'getSubCategories': function () {
 			return mad.model.Model.nestedToList(this, 'children');
+		},
+
+		/**
+		* Get parent categories
+		*
+		*/
+		'getParentCategories': function() {
+			var data = [];
+
+			// If a parent category has been found.
+			var i = mad.model.List.indexOf(passbolt.model.Category.madStore, this.parent_id);
+			if (i != -1) {
+				var parentCategory = passbolt.model.Category.madStore[i];
+
+				// Find the parent category of the parent category.
+				if (parentCategory.parent_id != null) {
+					data = parentCategory.getParentCategories();
+				}
+
+				data.push(parentCategory);
+			}
+
+			return data;
 		}
 
 	});

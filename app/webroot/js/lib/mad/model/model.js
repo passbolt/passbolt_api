@@ -25,6 +25,20 @@ steal(
 	can.Model('mad.model.Model', /** @static */ {
 
 		/**
+		 * Force the storing of this model's instances.
+		 * @type boolean
+		 * @protected
+		 */
+		'forceStore': false,
+
+		/**
+		 * Store all the instance of this model in the local store.
+		 * @type boolean
+		 * @protected
+		 */
+		'madStore': new can.Model.List(),
+
+		/**
 		 * The model attributes validation rules.
 		 * @type array
 		 * @protected
@@ -221,6 +235,7 @@ steal(
 		 */
 		'model': function (data) {
 			data = data || {};
+
 			// if the provided data are formated as ajax server response
 			if (mad.net.Response.isResponse(data)) {
 				data = mad.net.Response.getData(data);
@@ -230,7 +245,19 @@ steal(
 				// serialize the data from cake to can format
 				data = mad.model.serializer.CakeSerializer.from(data, this);
 			}
-			return can.Model.model.call(this, data);
+
+			// Apply the can model func on the data.
+			var instance = can.Model.model.call(this, data);
+
+			// If we want to force the caching.
+			if (this.forceStore) {
+				var i = mad.model.List.indexOf(this.madStore, instance.id);
+				if (i == -1) {
+					this.madStore.push(instance);
+				}
+			}
+
+			return instance;
 		},
 
 		/**

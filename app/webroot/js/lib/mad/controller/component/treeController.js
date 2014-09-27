@@ -41,7 +41,7 @@ steal(
 			'cssClasses': ['tree'],
 
 			// items carried by the component
-			'items': [],
+			'items': new can.Model.List(),
 			// the itemClass which represents the items carried by the component
 			'itemClass': null,
 			// the associated map, which will be used to map the model data to the
@@ -58,6 +58,11 @@ steal(
 		}
 
 	}, /** @prototype */ {
+
+        'init': function(el, opts) {
+            opts.items = new opts.itemClass.List();
+            this._super(el, opts);
+        },
 
 		/**
 		 * Insert an item in the tree
@@ -108,6 +113,9 @@ steal(
 		 * @return {void}
 		 */
 		'reset': function () {
+			// Remove all the items from the list.
+			this.options.items.splice(0);
+			// Reset the view
 			this.view.reset();
 		},
 
@@ -118,7 +126,19 @@ steal(
 		 */
 		'load': function (items) {
 			var self = this;
-			this.options.items = items;
+
+			// If the provided items is null, treat them as empty.
+			if (items == null) {
+				items = new this.options.itemClass.List();
+			}
+			// If the provided items are not a List but an array, transform them.
+			else if (!(items instanceof can.Model.List) && $.isArray(items)) {
+				items = new this.options.itemClass.List(items);
+			}
+
+			// Add the new items to the list of watched items.
+			this.options.items = this.options.items.concat(items);
+			// Insert the items to the component.
 			can.each(this.options.items, function (item, i) {
 				self.insertItem(item);
 			});

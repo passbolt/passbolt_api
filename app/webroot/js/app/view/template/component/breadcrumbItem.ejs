@@ -1,0 +1,9 @@
+<%
+if (typeof cssClasses == 'undefined') {
+    cssClasses = '';
+}
+%>
+
+<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses %>">
+    <a href="#"><span><%= label %></span></a>
+</li>

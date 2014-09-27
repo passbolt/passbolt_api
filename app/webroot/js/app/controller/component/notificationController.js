@@ -26,9 +26,9 @@ steal(
 		'defaults': {
 			'label': 'Notification Controller',
 			'viewClass': passbolt.view.component.Notification,
+            'status': 'hidden',
 			// The notification to display
-			'notification': null,
-			'status': 'hidden'
+			'notification': null
 		}
 
 	}, /** @prototype */ {

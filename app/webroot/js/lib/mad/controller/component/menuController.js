@@ -67,10 +67,9 @@ steal(
 			for (i in this.options.items) {
 				if (this.options.items[i].id == id) {
 					this.options.items[i].state.setState(stateName);
+					this.refreshItem(this.options.items[i]);
 				}
 			}
-			this.reset();
-			this.load(this.options.items);
 		},
 
 		/* ************************************************************** */

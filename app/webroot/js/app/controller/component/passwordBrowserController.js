@@ -584,26 +584,6 @@ steal(
 			});
 		},
 
-		/**
-		 * Observe when the application is ready and load the tree with the roots
-		 * categories
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @return {void}
-		 */
-		'{mad.bus} app_ready': function (ui, event) {
-			var self = this;
-
-			this.setState('loading');
-			// load default resources
-			passbolt.model.Resource.findAll({}, function (resources, response, request) {
-				// load the resources in the browser
-				self.load(resources);
-				// change the state to ready
-				self.setState('ready');
-			});
-		},
-
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */

@@ -32,6 +32,7 @@ steal(
 					'label': __('All items'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
+							'label': __('All items'),
 							'order': 'modified'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
@@ -41,6 +42,7 @@ steal(
 					'label': __('Favorite'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
+							'label': __('Favorite'),
 							'case': 'favorite'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
@@ -55,6 +57,7 @@ steal(
 					'label': __('Recently modified'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
+							'label': __('Recently modified'),
 							'order': 'modified'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
@@ -64,6 +67,7 @@ steal(
 					'label': __('Expiring soon'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
+							'label': __('Expiring soon'),
 							'order': 'expiry_date'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
@@ -73,6 +77,7 @@ steal(
 					'label': __('Shared with me'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
+							'label': __('Shared with me'),
 							'case': 'shared'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
@@ -82,6 +87,7 @@ steal(
 					'label': __('Items I own'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
+							'label': __('Items I own'),
 							'case': 'own'
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
