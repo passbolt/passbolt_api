@@ -37,19 +37,19 @@ steal(
 				state: showSidebar ? 'selected' : 'ready'
 			}).start();
 			
-			// Manage the layout as grid action
-			this.options.gridLayoutButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_grid_layout_button'))
-				.start();
-			
-			// Manage the layout as box action
-			this.options.boxLayoutButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_box_layout_button'), {
-				'state': 'disabled'
-			}).start();
-			
-			// Manage the config action
-			this.options.configButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_config_button'), {
-				'state': 'disabled'
-			}).start();
+//			// Manage the layout as grid action
+//			this.options.gridLayoutButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_grid_layout_button'))
+//				.start();
+//
+//			// Manage the layout as box action
+//			this.options.boxLayoutButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_box_layout_button'), {
+//				'state': 'disabled'
+//			}).start();
+//
+//			// Manage the config action
+//			this.options.configButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_config_button'), {
+//				'state': 'disabled'
+//			}).start();
 			
 			// Rebind controller events
 			this.on();
