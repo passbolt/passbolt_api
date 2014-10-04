@@ -158,7 +158,6 @@ steal(
 			// Load the required component
 			var components = mad.Config.read('core.components');
 			for (var i in components) {
-//				alert(mad.Config.read('app.debug'));
 				if (components[i] == 'Devel' && (mad.Config.read('app.debug') == null ||
 					mad.Config.read('app.debug') == 0)) {
 					continue;
