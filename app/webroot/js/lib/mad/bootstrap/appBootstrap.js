@@ -104,12 +104,16 @@ steal(
 			}
 
 			// load cakephp config
-			if (typeof cakeConfig != 'undefined') {
-				mad.Config.load(cakeConfig);
+			if (typeof cakephpConfig != 'undefined') {
+				mad.Config.load(cakephpConfig);
 			}
 
 			// APP_URL super variable
-			APP_URL = mad.Config.read('app.url') + '/';
+			var appUrl = mad.Config.read('app.url');
+			if (typeof appUrl == 'undefined') {
+				throw new mad.error.WrongConfigException('app.url');
+			}
+			APP_URL = appUrl + '/';
 
 			// Check the configuration
 
@@ -154,6 +158,7 @@ steal(
 			// Load the required component
 			var components = mad.Config.read('core.components');
 			for (var i in components) {
+//				alert(mad.Config.read('app.debug'));
 				if (components[i] == 'Devel' && (mad.Config.read('app.debug') == null ||
 					mad.Config.read('app.debug') == 0)) {
 					continue;
