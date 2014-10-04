@@ -7,7 +7,6 @@
 	The password management solution
 	(c) 2012-2013 passbolt.com
 
-
 Install
 =========
 
@@ -54,6 +53,22 @@ Make sure Grunt watch for less changes and compile them into CSS
 ```
 Edit one LESS file to see if it works!
 
+Prepare the production release
+=========
+
+Install grunt if it hasn't yet been installed
+```
+	npm install -g grunt-cli
+```
+Install the needed modules defined in the grunt config
+```
+	npm install
+```
+Prepare the production release
+```
+	grunt production
+```
+CSS minified files should have been generated as the Javascript minified file.
 
 Credits
 =========
