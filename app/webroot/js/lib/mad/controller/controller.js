@@ -32,6 +32,18 @@ steal(
 			return mad.route.ExtensionControllerActionDispatcher;
 		},
 
+		/**
+		 * Get the parent class.
+		 * @return {mad.controller.Controller}
+		 */
+		'getParentClass': function () {
+			// @todo __proto__ is not compatible with all browsers
+			return this.prototype.__proto__.constructor;
+		},
+
+		/**
+		 * Defaults attribute of the controller.
+		 */
 		'defaults': { }
 
 	}, /** @prototype */ {
@@ -40,15 +52,34 @@ steal(
 		'init': function (el, options) {
 			// the el should exist
 			if(!$(el).length) {
-				throw new mad.error.Exception('The parameter "el" (' + el + ') should refer to an existing DOM node.');
+				throw new mad.error.Exception('The parameter "el" (' + $(el).selector + ') should refer to an existing DOM node.');
 			}
+
+			// The id is not given in the options.
+			if (typeof options.id == 'undefined' || options.id == null || options.id == '') {
+				// The id is maybe set directly on the templates.
+				var elId = this.element.attr('id');
+				if (elId == '') {
+					options.id = uuid();
+					this.element.attr('id', options.id);
+				} else {
+					options.id = elId;
+				}
+			}
+			// The id is given in the options.
+			else {
+				// The id is maybe set directly on the templates.
+				var elId = this.element.attr('id');
+				if (elId != '') {
+					console.warn('Controller id defined in options & templates for options.id = ' + options.id);
+				}
+				else {
+					options.id = elId;
+				}
+			}
+
 			// set the options
 			this.options = $.extend(true, {}, this.options, options);
-			// if the element does not carry the id, use the id given in options or generate a new one
-			if (this.getId() == '') {
-				var id = this.options.id || uuid();
-				this.element.attr('id', id);
-			}
 		},
 
 		/**
@@ -73,8 +104,7 @@ steal(
 		 * @todo oula la the function should get id from the associated component controller model
 		 */
 		'getId': function () {
-			// console.log(this.element);
-			return this.element[0].id;
+			return this.options.id;
 		},
 
 		/**
@@ -107,6 +137,14 @@ steal(
 			}
 			
 			return returnValue;
+		},
+
+		/**
+		 * Get the controller class.
+		 * @return {mad.controller.Controller}
+		 */
+		'getClass': function () {
+			return this.constructor;
 		}
 
 	});

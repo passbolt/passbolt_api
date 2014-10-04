@@ -1,6 +1,6 @@
 {
 	"core": {
-		"components": ["EventBus", "Internationalization", "AppController", "RouteListener"]
+		"components": ["EventBus", "Internationalization", "AppController", "Devel", "RouteListener"]
 	},
 	"app": {
 		"url": "http://passbolt.local",

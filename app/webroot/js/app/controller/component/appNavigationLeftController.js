@@ -50,13 +50,6 @@ steal(
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'people');
 					}
-				}), new mad.model.Action({
-					'id': uuid(),
-					'label': __('help'),
-					'cssClasses': ['help todo'],
-					'action': function () {
-						mad.bus.trigger('workspace_selected', 'password');
-					}
 				})
 			];
 			this.load(menuItems);

@@ -138,7 +138,7 @@ steal(
 			for(var i in previousStates) {
 				var previousState = previousStates[i];
 				// remove the previous state class
-				this.view.removeClass('js_state_' + previousState);
+				this.view.removeClass(previousState);
 				// leave the previous state
 				var previousStateListener = this['state' + $.String.capitalize(previousState)];
 				if (previousStateListener) {
@@ -149,7 +149,7 @@ steal(
 			for(var i in currentStates) {
 				var currentState = currentStates[i];
 				// add the new state class
-				this.view.addClass('js_state_' + currentState);
+				this.view.addClass(currentState);
 				// enter in the new state
 				var newStateListener = this['state' + $.String.capitalize(currentState)];
 				if (newStateListener) {
@@ -307,12 +307,6 @@ steal(
 		 */
 		'render': function (options) {
 			this.start();
-			return;
-			options = options || {}
-			var returnValue = false;
-			returnValue = this.view.render(options);
-
-			return options.display ? this : returnValue;
 		},
 
 		/* ************************************************************** */

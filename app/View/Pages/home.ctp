@@ -14,13 +14,20 @@
 	$this->Html->script('lib/jquery/jquery-ui-1.10.3.custom.js', array('block' => 'scriptBottom'));
 	$this->Html->script('lib/moment/moment.min.js', array('block' => 'scriptBottom'));
 	$this->Html->css('default/main', null, array('inline' => false));
+
 	// load the front end application
 	if(!Configure::read('debug')) {
 		$frontUri = 'steal/steal.production.js?app/passbolt.js';
 	} else {
 		$frontUri = 'steal/steal.js?app/passbolt.js';
 	}
+
+	// load devel materials.
+	if(Configure::read('debug')) {
+		$this->Html->css('default/devel', null, array('inline' => false));
+	}
+
 	$this->Html->script($frontUri, array('block' => 'scriptBottom'));
 ?>
-    <div id="js_app_controller" class="container_16"/>
-
+    <div id="js_app_controller">
+	</div>

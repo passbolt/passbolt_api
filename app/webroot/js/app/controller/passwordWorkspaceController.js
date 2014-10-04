@@ -1,5 +1,5 @@
 steal(
-	'mad/controller/component/freeCompositeController.js',
+	'mad/controller/componentController.js',
 	'app/controller/component/breadcrumbController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/passwordBrowserController.js',
@@ -27,7 +27,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.PasswordWorkspaceController}
 	 */
-	mad.controller.component.FreeCompositeController.extend('passbolt.controller.PasswordWorkspaceController', /** @static */ {
+	mad.controller.ComponentController.extend('passbolt.controller.PasswordWorkspaceController', /** @static */ {
 
 		'defaults': {
 			'label': 'Password',
@@ -46,10 +46,6 @@ steal(
 		 * @see {mad.controller.ComponentController}
 		 */
 		'afterStart': function() {
-			// Instantiate the password workspace breadcrumb controller
-			this.breadcrumCtl = new passbolt.controller.component.BreadcrumbController($('#js_wsp_pwd_breadcrumb'), {});
-            this.breadcrumCtl.start();
-
 			// Instantiate the secondary workspace menu controller
 			this.secMenu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_wsp_secondary_menu', {});
 			this.secMenu.start();
@@ -62,11 +58,14 @@ steal(
 			this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
 			this.catChooser.start();
 
+			// Instantiate the password workspace breadcrumb controller
+			this.breadcrumCtl = new passbolt.controller.component.BreadcrumbController($('#js_wsp_pwd_breadcrumb'), {});
+			this.breadcrumCtl.start();
+
 			// Instanciate the passwords browser controller
-			var passwordBrowserController = this.addComponent(passbolt.controller.component.PasswordBrowserController, {
-				'id': 'js_passbolt_password_browser',
+			var passwordBrowserController = new passbolt.controller.component.PasswordBrowserController('#js_wsp_pwd_browser', {
 				'selectedRs': this.options.selectedRs
-			}, 'js_wsp_pwd_main');
+			});
 			passwordBrowserController.start();
 
 			// Instanciate the resource details controller
@@ -150,7 +149,7 @@ steal(
 			var category = new passbolt.model.Category({ parent_id: data.id });
 
 			// get the dialog
-			var dialog = new mad.controller.component.DialogController({label: __('Create a new Category')})
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Create a new Category')})
 				.start();
 
 			// attach the component to the dialog
@@ -177,7 +176,7 @@ steal(
 		'{mad.bus} request_category_edition': function (el, ev, category) {
 			
 			// get the dialog
-			var dialog = new mad.controller.component.DialogController({label: __('Edit a Category')})
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit a Category')})
 				.start();
 			
 			// attach the component to the dialog

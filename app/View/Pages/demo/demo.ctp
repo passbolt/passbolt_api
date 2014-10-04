@@ -44,6 +44,7 @@
 <?php echo $this->element('demo/tree'); ?>
 		</div>
 		<div class="panel middle">
+<?php echo $this->element('demo/breadcrumb'); ?>
 <?php echo $this->element('demo/table'); ?>
 		</div>
 		<div class="panel aside">

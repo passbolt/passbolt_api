@@ -1,3 +1,6 @@
+//var fs = require('fs');
+var childProcess = require('child_process');
+
 module.exports = function(grunt) {
 
     // ========================================================================
@@ -8,7 +11,10 @@ module.exports = function(grunt) {
         clean: {
             css: [
                 'app/webroot/css/default/*.css'
-            ]
+            ],
+	        'js': [
+		        'app/webroot/js/app/production.js'
+	        ]
         },
         lesslint: {
             src: ['app/webroot/less/default/*.less']
@@ -37,15 +43,23 @@ module.exports = function(grunt) {
                 ext: '.min.css'
             }
         },
-        watch: {
-            less: {
-                files: ['Gruntfile.js', 'package.json', 'app/webroot/less/default/*.less','app/webroot/less/default/**/*.less'],
-                tasks: ['css'],
-                options: {
-                    spawn: false
-                }
-            }
-        }
+	    shell: {
+		    jsmin: {
+			    options: {
+				    stderr: false
+			    },
+				command: '(cd ./app/webroot/js; ./js ./steal/buildjs ./app/passbolt.html)'
+		    }
+	    },
+	    watch: {
+		    less: {
+			    files: ['Gruntfile.js', 'package.json', 'app/webroot/less/default/*.less','app/webroot/less/default/**/*.less'],
+			    tasks: ['css'],
+			    options: {
+				    spawn: false
+			    }
+		    }
+	    }
     });
 
     // on watch events configure jshint:all to only run on changed file
@@ -72,6 +86,8 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-watch');
 
+	grunt.loadNpmTasks('grunt-shell');
+
 
     // ========================================================================
     // Register Tasks
@@ -83,8 +99,11 @@ module.exports = function(grunt) {
     // compile LESS into CSS, combine and minify
     grunt.registerTask('csslint', ['lesslint', 'clean:css', 'less', 'cssmin']);
 
-    // Run 'grunt css' to compile LESS into CSS, combine and minify
-    grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
+	// Run 'grunt css' to compile LESS into CSS, combine and minify
+	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
+
+	// Run 'grunt production' to prepare the production release
+	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);
 
     // 'grunt' will check code quality, and if no errors,
     // compile LESS to CSS, and minify and concatonate all JS and CSS

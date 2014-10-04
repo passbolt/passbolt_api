@@ -1,10 +1,10 @@
 steal(
     'jquery/dom/route',
     'mad/bootstrap/bootstrapInterface.js',
-    'mad/event/eventBus.js',
+	'mad/event/eventBus.js',
+	'mad/devel/devel.js',
     'mad/helper/htmlHelper.js',
     'mad/config/config.js'
-//    'plugin/activity/bootstrap/bootstrap.js'                  // Extension bootstrap, should be enabled by the php script
 ).then(function () {
 
 	/*
@@ -98,69 +98,67 @@ steal(
 			// extend default options with args options (merge manually array, extends override)
 			$.extend(true, this.options, mad.bootstrap.AppBootstrap.defaults, options);
 
-			// Encapsulate the application execution in a try catch in order to intercept properly
-			// any errors which could occured
-			try {
-				// load config files
-				for (var i in configFiles) {
-					mad.Config.load(configFiles[i]);
+			// load config files
+			for (var i in configFiles) {
+				mad.Config.loadFile(configFiles[i]);
+			}
+
+			// load cakephp config
+			if (typeof cakeConfig != 'undefined') {
+				mad.Config.load(cakeConfig);
+			}
+
+			// APP_URL super variable
+			APP_URL = mad.Config.read('app.url') + '/';
+
+			// Check the configuration
+
+			// Define Error Handler Class
+			var ErrorHandlerClass = can.getObject(mad.Config.read('error.ErrorHandlerClassName'));
+			// Has to be a mad.error.ErrorHandler
+			if (!ErrorHandlerClass) {
+				throw new mad.error.WrongConfigException('error.ErrorHandlerClassName');
+			}
+			mad.Config.write('error.ErrorHandlerClass', ErrorHandlerClass);
+
+			// Define Response Handler Class
+			var ResponseHandlerClass = can.getObject(mad.Config.read('net.ResponseHandlerClassName'));
+			// Has to be a mad.net.ResponseHandler
+			if (!ResponseHandlerClass) {
+				throw new mad.error.WrongConfigException('net.ResponseHandlerClassName');
+			}
+			mad.Config.write('net.ResponseHandlerClass', ResponseHandlerClass);
+
+			// Define App Controller Class
+			var AppControllerClass = can.getObject(mad.Config.read('app.ControllerClassName'));
+			// Has to be a mad.net.ResponseHandler
+			if (!AppControllerClass) {
+				throw new mad.error.WrongConfigException('app.ControllerClassName');
+			}
+			mad.Config.write('app.AppControllerClass', AppControllerClass);
+
+			// The app url has to be defined
+			if ($.trim(mad.Config.read('app.url')) === '') {
+				throw new mad.error.WrongConfigException('app.url');
+			}
+
+			// The app controller element has to be defined, and to be a reference to
+			// an existing DOM element
+			if (!$(mad.Config.read('app.controllerElt')).length) {
+				throw new mad.error.WrongConfigException('app.controllerElt');
+			}
+
+			// Reference the application namespace if it does not exist yet
+			var ns = can.getObject(mad.Config.read('app.namespace'), window, true);
+
+			// Load the required component
+			var components = mad.Config.read('core.components');
+			for (var i in components) {
+				if (components[i] == 'Devel' && (mad.Config.read('app.debug') == null ||
+					mad.Config.read('app.debug') == 0)) {
+					continue;
 				}
-
-				// Check the configuration
-
-				// Define Error Handler Class
-				var ErrorHandlerClass = can.getObject(mad.Config.read('error.ErrorHandlerClassName'));
-				// Has to be a mad.error.ErrorHandler
-				if (!ErrorHandlerClass) {
-					throw new mad.error.WrongConfigException('error.ErrorHandlerClassName');
-				}
-				mad.Config.write('error.ErrorHandlerClass', ErrorHandlerClass);
-
-				// Define Response Handler Class
-				var ResponseHandlerClass = can.getObject(mad.Config.read('net.ResponseHandlerClassName'));
-				// Has to be a mad.net.ResponseHandler
-				if (!ResponseHandlerClass) {
-					throw new mad.error.WrongConfigException('net.ResponseHandlerClassName');
-				}
-				mad.Config.write('net.ResponseHandlerClass', ResponseHandlerClass);
-				
-				// Define App Controller Class
-				var AppControllerClass = can.getObject(mad.Config.read('app.ControllerClassName'));
-				// Has to be a mad.net.ResponseHandler
-				if (!AppControllerClass) {
-					throw new mad.error.WrongConfigException('app.ControllerClassName');
-				}
-				mad.Config.write('app.AppControllerClass', AppControllerClass);
-
-				// The app url has to be defined
-				if ($.trim(mad.Config.read('app.url')) === '') {
-					throw new mad.error.WrongConfigException('app.url');
-				}
-
-				// The app controller element has to be defined, and to be a reference to
-				// an existing DOM element
-				if (!$(mad.Config.read('app.controllerElt')).length) {
-					throw new mad.error.WrongConfigException('app.controllerElt');
-				}
-
-				// Reference the application namespace if it does not exist yet
-				var ns = can.getObject(mad.Config.read('app.namespace'), window, true);
-
-				// LET'S GO BILOUTE
-				// Load the required component
-
-				var components = mad.Config.read('core.components');
-				for (var i in components) {
-					this['init' + components[i]]();
-				}
-
-			// Catch any exceptions released by the system
-			} catch (e) {
-				if (mad.Config.read('error.ErrorHandlerClass')) {
-					mad.Config.read('error.ErrorHandlerClass').handleException(e);
-				} else {
-					throw e;
-				}
+				this['init' + components[i]]();
 			}
 		},
 
@@ -222,6 +220,20 @@ steal(
 			);
 			var eventBus = new mad.event.EventBus(elt);
 			mad.bus = eventBus;
+		},
+
+		/**
+		 * Initialize the Application Development tools
+		 * @return {void}
+		 */
+		'initDevel': function () {
+			var elt = mad.helper.HtmlHelper.create(
+				$(mad.Config.read('app.controllerElt')),
+				'before',
+				'<div/>'
+			);
+			var dev = new mad.devel.Devel(elt);
+			mad.dev = dev;
 		},
 
 		/**

@@ -115,9 +115,9 @@ steal(
 					'css': ['m-cell'],
 					'label': __('Resource')
 				},
-				'valueAdapter': function (value, item, columnModel, rowNum) {
+				'valueAdapter': function (value, mappedItem, item, columnModel) {
 					var returnValue = value;
-					can.each(item.Category, function (category, i) {
+					can.each(mappedItem.Category, function (category, i) {
 						returnValue += ' <span class="password_browser_category_label">' + category.name + '</span>';
 					});
 					return returnValue;
@@ -143,7 +143,7 @@ steal(
 					'css': ['m-cell'],
 					'label': __('Modified')
 				},
-				'valueAdapter': function (value, item, columnModel, rowNum) {
+				'valueAdapter': function (value, mappedItem, item, columnModel) {
 					return moment(value).fromNow();
 				}
 			}, {
@@ -153,8 +153,8 @@ steal(
 					'css': ['m-cell'],
 					'label': __('Expires')
 				},
-				'valueAdapter': function (value, item, columnModel, rowNum) {
-					if (typeof value == 'undefined') {
+				'valueAdapter': function (value, mappedItem, item, columnModel) {
+					if (typeof value == 'undefined' || value == null) {
 						return '-';
 					}
 					return moment(value).fromNow();

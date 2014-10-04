@@ -44,6 +44,11 @@
 </div>
 </footer>
 <?php echo $this->fetch('scriptBottom'); ?>
-<?php echo $this->element('debug');?>
+<?php
+// load devel materials.
+if(Configure::read('debug')) {
+	echo $this->element('devel/sqlTrace');
+}
+?>
 </body>
 </html>

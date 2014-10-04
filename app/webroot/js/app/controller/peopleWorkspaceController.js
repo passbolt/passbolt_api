@@ -1,5 +1,5 @@
 steal(
-	'mad/controller/component/freeCompositeController.js',
+	'mad/controller/componentController.js',
     'app/controller/component/groupChooserController.js',
     'app/controller/component/userBrowserController.js',
 	'app/controller/component/userShortcutsController.js',
@@ -10,7 +10,7 @@ steal(
 
 	/*
 	 * @class passbolt.controller.PeopleWorkspaceController
-	 * @inherits {mad.controller.component.WorkspaceController}
+	 * @inherits {mad.controller.ComponentController}
 	 * @parent index 
 	 * 
 	 * @constructor
@@ -21,7 +21,7 @@ steal(
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.PeopleWorkspaceController}
 	 */
-	mad.controller.component.FreeCompositeController.extend('passbolt.controller.PeopleWorkspaceController', /** @static */ {
+	mad.controller.ComponentController.extend('passbolt.controller.PeopleWorkspaceController', /** @static */ {
 
 		'defaults': {
 			'label': 'People',
@@ -50,10 +50,9 @@ steal(
             this.grpChooser.start();
 
             // Instanciate the passwords browser controller.
-            var userBrowserController = this.addComponent(passbolt.controller.component.UserBrowserController, {
-                'id': 'js_passbolt_user_browser',
+            var userBrowserController = new passbolt.controller.component.UserBrowserController('#js_wsp_ppl_browser', {
                 'selectedUsers': this.options.selectedUsers
-            }, 'js_workspace_users_main');
+            });
             userBrowserController.start();
         },
 
@@ -131,7 +130,7 @@ steal(
 			var group = new passbolt.model.Group();
 
 			// Get the dialog
-			var dialog = new mad.controller.component.DialogController({label: __('Create a new Group')})
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Create a new Group')})
 				.start();
 
 			// Attach the component to the dialog.
@@ -159,7 +158,7 @@ steal(
 		'{mad.bus} request_group_edition': function (el, ev, group) {
 
 			// get the dialog
-			var dialog = new mad.controller.component.DialogController({label: __('Edit a Group')})
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit a Group')})
 				.start();
 
 			// attach the component to the dialog

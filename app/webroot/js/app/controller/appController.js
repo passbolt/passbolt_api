@@ -40,7 +40,7 @@ steal(
 			// Instantiate the app navigation left controller
 			this.navLeftCtl = new passbolt.controller.component.AppNavigationLeftController($('#js_app_navigation_left'));
 			this.navLeftCtl.start();
-			
+
 			// Instantiate the app navigation right controller
 			this.navRightCtl = new passbolt.controller.component.AppNavigationRightController($('#js_app_navigation_right'));
 			this.navRightCtl.start();
@@ -56,7 +56,7 @@ steal(
 			this.loadingBarCtl = new passbolt.controller.component.LoadingBarController($('#js_app_loading_bar'), {});
 			this.loadingBarCtl.start();
 
-			// Instantiate workspaces container tabs element to the app 
+			// Instantiate workspaces container tabs element to the app
 			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'), {
 				'autoMenu': false // do not generate automatically the associated tab nav
 			});

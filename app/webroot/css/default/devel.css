@@ -1,0 +1,47 @@
+.devel-sidebar-toggle-button,
+.devel-sidebar-toggle-button:hover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 35px;
+  height: 35px;
+  margin: 0;
+  padding: 0;
+  background: url('../../../../js/lib/mad/view/images/admin_sprite.png') no-repeat scroll -35px 0px transparent;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 100;
+  border: 0;
+}
+.devel-sidebar-toggle-button.opened,
+.devel-sidebar-toggle-button.opened:hover {
+  background-position: 0px -35px;
+}
+.devel-sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 250px;
+  padding: 5px;
+  background-color: #070707;
+  z-index: 99;
+  display: none;
+}
+.devel-sidebar-menu-wrapper ul li a {
+  color: #C0C0C0;
+}
+.dialog-wrapper-devel-components-browser .dialog {
+  width: 90%;
+  height: 90%;
+}
+.dialog-wrapper-devel-components-browser .dialog-content {
+  position: absolute;
+  width: 100%;
+  top: 3em;
+  bottom: 0;
+}
+.dialog-wrapper-devel-sql-trace .dialog {
+  width: 90%;
+}

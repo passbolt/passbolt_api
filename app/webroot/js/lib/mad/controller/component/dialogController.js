@@ -24,7 +24,7 @@ steal(
 			'singleton': null,
 			'label': 'Dialog Controller',
 			'viewClass': mad.view.component.Dialog,
-			'cssClasses': ['popup'],
+			'cssClasses': ['dialog-wrapper'],
 			'tag': 'div'
 		}
 
@@ -32,21 +32,21 @@ steal(
 		
 		// constructor like
 		'init': function(el, options) {
-			// if an instance of popup already exist return this instance
+			// if an instance of dialog already exist return this instance
 			if(mad.controller.component.DialogController.singleton != null) {
 				return mad.controller.component.DialogController.singleton;
 			}
 			
-			// create the DOM entry point for the popup
+			// create the DOM entry point for the dialog
 			var $el = mad.helper.HtmlHelper.create(
 				mad.app.element,
 				'first',
 				'<div id="js_dialog" />'
 			);
-			
+
 			// Changing the element force us to recall setup which is called before all init functions
 			// and make the magic things (bind event ...)
-			this.setup($el);
+			this.setup($el, options);
 			this._super($el, options);
 			mad.controller.component.DialogController.singleton = this; 
 		},
@@ -58,13 +58,19 @@ steal(
 		},
 		
 		/**
-		 * Add a component to the popup container
-		 * @param {Object} Class The class of the component to add
+		 * Add a component to the dialog container
+		 * @param {mad.controller.ComponentController} Class The class of the component to add, or the html to
+		 *   display.
 		 * @param {Object} options Option of the component
 		 */
 		'add': function(Class, options) {
+			if (typeof options == 'undefined' || options == null) {
+				options = {};
+			}
+
 			var component = this.addComponent(Class, options, 'js_dialog_content');
 			component.start();
+
 			return component;
 		}
 	});

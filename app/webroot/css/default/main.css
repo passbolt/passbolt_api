@@ -149,13 +149,10 @@ audio:not([controls]) {
 html {
   font-size: 100%;
   /* 1 */
-
   -ms-text-size-adjust: 100%;
   /* 2 */
-
   -webkit-text-size-adjust: 100%;
   /* 2 */
-
 }
 /**
  * Address `font-family` inconsistency between `textarea` and other form
@@ -345,10 +342,8 @@ nav ol {
 img {
   border: 0;
   /* 1 */
-
   -ms-interpolation-mode: bicubic;
   /* 2 */
-
 }
 /**
  * Correct overflow displayed oddly in IE 9.
@@ -390,14 +385,11 @@ fieldset {
 legend {
   border: 0;
   /* 1 */
-
   padding: 0;
   white-space: normal;
   /* 2 */
-
   *margin-left: -7px;
   /* 3 */
-
 }
 /**
  * 1. Correct font size not being inherited in all browsers.
@@ -411,16 +403,12 @@ select,
 textarea {
   font-size: 100%;
   /* 1 */
-
   margin: 0;
   /* 2 */
-
   vertical-align: baseline;
   /* 3 */
-
   *vertical-align: middle;
   /* 3 */
-
 }
 /**
  * Address Firefox 3+ setting `line-height` on `input` using `!important` in
@@ -455,13 +443,10 @@ input[type="reset"],
 input[type="submit"] {
   -webkit-appearance: button;
   /* 2 */
-
   cursor: pointer;
   /* 3 */
-
   *overflow: visible;
   /* 4 */
-
 }
 /**
  * Re-set default cursor for disabled elements.
@@ -480,16 +465,12 @@ input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
   /* 1 */
-
   padding: 0;
   /* 2 */
-
   *height: 13px;
   /* 3 */
-
   *width: 13px;
   /* 3 */
-
 }
 /**
  * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
@@ -499,11 +480,9 @@ input[type="radio"] {
 input[type="search"] {
   -webkit-appearance: textfield;
   /* 1 */
-
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
   /* 2 */
-
   box-sizing: content-box;
 }
 /**
@@ -529,10 +508,8 @@ input::-moz-focus-inner {
 textarea {
   overflow: auto;
   /* 1 */
-
   vertical-align: top;
   /* 2 */
-
 }
 /* ==========================================================================
    Tables
@@ -561,7 +538,6 @@ table td {
   border: 0;
   overflow: hidden;
   /* IE 6/7 fallback */
-
   *text-indent: -9999px;
 }
 .ir:before {
@@ -615,7 +591,6 @@ i.no-text + span {
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-
   zoom: 1;
   /*
  * Clearfix: contain floats
@@ -628,7 +603,6 @@ i.no-text + span {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-
 }
 .clearfix:before,
 .clearfix:after {
@@ -821,7 +795,6 @@ a.no-text {
   font-family: "entypo";
   font-size: 2em;
   /* 28px */
-
   font-weight: normal;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -1032,7 +1005,6 @@ a.button {
   display: inline-block;
   zoom: 1;
   /* zoom and *display = ie7 hack for display:inline-block */
-
   *display: inline;
   vertical-align: baseline;
   margin: 0 2px;
@@ -1060,15 +1032,12 @@ a.button {
 .submit {
   display: inline-block;
   /* in case there is a div wrapper */
-
 }
 a.button {
   font-size: 0.875em;
   /*	14px */
-
   padding: .429em 1.286em .429em 1.286em ;
   /* 6px 20px */
-
   height: 1.429em;
   float: left;
   margin-right: .5em;
@@ -1204,14 +1173,11 @@ textarea {
   border: 1px solid #cccccc;
   width: 14em;
   /* 20 char (default input length) x .7em (average char length) */
-
   padding: .278em .5em .278em .5em;
   /* 5px 9px */
-
   display: inline-block;
   zoom: 1;
   /* zoom and *display = ie7 hack for display:inline-block */
-
   *display: inline;
   margin-bottom: .5em;
   -webkit-appearance: none;
@@ -1235,7 +1201,6 @@ label {
   font-weight: bold;
   font-size: 1.125em;
   /* 18px */
-
   padding: .2em;
   display: block;
 }
@@ -1245,7 +1210,6 @@ input[type=search],
 input[type=text] {
   font-size: 1.125em;
   /* 18px */
-
   border-top: 1px solid #bbbbbb;
 }
 textarea:hover,
@@ -1309,7 +1273,6 @@ input[type=text]:focus {
 textarea {
   height: 3.6em;
   /* 4 char (default input length) x 1em (average char length) + .6em (padding) */
-
 }
 .textarea.large textarea {
   width: 30em;
@@ -1524,7 +1487,6 @@ span.select-box:before {
 /* headers */
 .header.first {
   /* height:2.375em; //already defined in header */
-
 }
 .header.second {
   top: 2.375em;
@@ -1601,7 +1563,6 @@ span.select-box:before {
 .cssscrollbar ::-webkit-scrollbar {
   width: .625em;
   /* 10px */
-
 }
 .cssscrollbar ::-webkit-scrollbar-track {
   background: #ffffff;
@@ -1784,7 +1745,6 @@ input[type="search"]::-webkit-search-cancel-button {
   float: left;
   height: 3.125em;
   /* 50px */
-
 }
 .user.profile .center-cell-wrapper {
   width: 100%;
@@ -1805,10 +1765,8 @@ input[type="search"]::-webkit-search-cancel-button {
 .user.profile .picture img {
   width: 2.875em;
   /* 46px */
-
   padding: 0.1250em;
   /* 2px */
-
 }
 .user.profile .details {
   float: left;
@@ -1816,7 +1774,6 @@ input[type="search"]::-webkit-search-cancel-button {
   font-size: .9em;
   padding: .3125em .625em;
   /* 5/10px */
-
 }
 .user.profile .details .name {
   font-weight: bold;
@@ -1860,6 +1817,7 @@ input[type="search"]::-webkit-search-cancel-button {
  * Breadcrumbs
  */
 .breadcrumbs {
+  height: 2em;
   padding: .1875em 0 .1875em 0;
   margin-bottom: .1875em;
   border-bottom: 1px solid #dddddd;
@@ -1868,7 +1826,6 @@ input[type="search"]::-webkit-search-cancel-button {
   display: inline;
   font-size: .8em;
   /* 12px/base16>15 */
-
   margin-left: .250em;
 }
 .breadcrumbs li:before {
@@ -1934,16 +1891,13 @@ input[type="search"]::-webkit-search-cancel-button {
     padding-top: 0.833em;
     font-size: .75em;
     /* 12px */
-  
   }
   .notification .message {
     background: transparent;
     font-weight: normal;
   }
 }
-/*
- * Dialog
- */
+/* Dialog */
 .dialog-wrapper {
   position: absolute;
   width: 100%;
@@ -1965,6 +1919,7 @@ input[type="search"]::-webkit-search-cancel-button {
 /* header */
 .dialog .dialog-header {
   padding: 0.5em 1em 0 1em;
+  height: 3em;
 }
 .dialog .dialog-header h2 {
   margin: .25em 0 .5em .2em;
@@ -1981,6 +1936,10 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .dialog .dialog-close:hover {
   border: 1px solid #dddddd;
+}
+/* content */
+.dialog-content {
+  position: relative;
 }
 /* inputs */
 .dialog .form-content {
@@ -2072,7 +2031,6 @@ input[type="search"]::-webkit-search-cancel-button {
 .dropdown-content li .checkbox {
   padding: .313em .626em;
   /* 5px */
-
 }
 .dropdown-content li .checkbox label {
   padding: 0;
@@ -2325,7 +2283,6 @@ input[type="search"]::-webkit-search-cancel-button {
 .panel .navigation.last {
   padding-right: .3125em;
   /* 5px */
-
 }
 .panel .navigation a {
   color: #333333;
@@ -2344,13 +2301,11 @@ input[type="search"]::-webkit-search-cancel-button {
 .panel .navigation.shortcuts a {
   padding: .125em .313em;
   /* 2px 5px */
-
 }
 /* tree */
 .tree ul {
   padding-left: .625em;
   /* 10px */
-
 }
 .tree .row {
   float: left;
@@ -2439,7 +2394,6 @@ input[type="search"]::-webkit-search-cancel-button {
   border: 1px solid #dddddd;
   width: 11.25em;
   /* 180px */
-
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
@@ -2450,11 +2404,9 @@ input[type="search"]::-webkit-search-cancel-button {
 .contextual-menu a {
   font-size: .875em;
   /* 14px */
-
   display: block;
   padding: .357em .714em;
   /* 5px 10px */
-
 }
 .contextual-menu a:hover {
   color: #333333;
@@ -2575,9 +2527,10 @@ input[type="search"]::-webkit-search-cancel-button {
  * Main Workspace - Table View
  */
 .tableview {
+  position: relative;
   font-size: .9375em;
   /* 15px */
-
+  height: 100%;
 }
 /* additional space to avoid scrollbar bump */
 .tableview table {
@@ -2586,24 +2539,29 @@ input[type="search"]::-webkit-search-cancel-button {
 .no-cssscrollbar .tableview table {
   padding-right: 1em;
   /* 16px fallback */
-
 }
 /* header */
 .tableview-header {
-  height: 4em;
+  height: 2em;
+}
+.tableview-header table {
+  width: 100%;
 }
 /* main content */
 .tableview-content {
-  top: 4em;
+  top: 2em;
   bottom: 0;
   padding: 0;
   position: absolute;
   width: 100%;
   border-top: 1px solid #DDD;
 }
+.tableview-content table {
+  width: 100%;
+}
 /* rows */
-.main.panel table th,
-.main.panel table td {
+.tableview table th,
+.tableview table td {
   text-align: left;
   padding: .25em 0;
   white-space: nowrap;
@@ -2612,52 +2570,53 @@ input[type="search"]::-webkit-search-cancel-button {
   -o-text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
 }
-.main.panel table th {
+.tableview table th {
   font-weight: bold;
 }
-.main.panel table .s-cell {
+.tableview table .s-cell {
   width: 20px;
   max-width: 20px;
 }
-.main.panel table .s-cell.favorites {
+.tableview table .s-cell.favorites {
   width: 25px;
   max-width: 25px;
 }
-.main.panel table .s2-cell {
+.tableview table .s2-cell {
   width: 40px;
   max-width: 40px;
 }
-.main.panel table .m-cell {
+.tableview table .m-cell {
   width: 10em;
   max-width: 10em;
 }
-.main.panel table .l-cell {
+.tableview table .l-cell {
   width: 12em;
   max-width: 12em;
 }
-.main.panel table tbody tr.selected,
-.main.panel table tbody tr:hover {
+.tableview table tbody tr.selected,
+.tableview table tbody tr:hover {
+  height: 1em;
   background: #ffffcc;
 }
-.main.panel table .checkbox label {
+.tableview table .checkbox label {
   display: none;
 }
-.main.panel table .checkbox input {
+.tableview table .checkbox input {
   margin-top: 0px;
   float: left;
 }
-.main.panel table th span,
-.main.panel table td span {
+.tableview table th span,
+.tableview table td span {
   vertical-align: 6%;
 }
 /* password */
-.main.panel table td.password pre:before {
+.tableview table td.password pre:before {
   content: "••••••••••••••••";
   height: 24px;
   width: 90%;
   color: #333333;
 }
-.main.panel table td.password pre {
+.tableview table td.password pre {
   height: 24px;
   width: 90%;
   overflow: hidden;
@@ -2681,7 +2640,6 @@ input[type="search"]::-webkit-search-cancel-button {
     padding: 0.833em 1.5% 0 .5%;
     font-size: .75em;
     /* 12px */
-  
     z-index: 990;
     text-align: right;
   }
@@ -2745,7 +2703,6 @@ input[type="search"]::-webkit-search-cancel-button {
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-
   /*
  * Clearfix: contain floats
  *
@@ -2757,12 +2714,10 @@ input[type="search"]::-webkit-search-cancel-button {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-
   /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-
   zoom: 1;
   /*
  * Clearfix: contain floats
@@ -2775,7 +2730,6 @@ input[type="search"]::-webkit-search-cancel-button {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-
   padding: .5em;
   border-bottom: 1px dotted #dddddd;
 }
@@ -2838,7 +2792,6 @@ input[type="search"]::-webkit-search-cancel-button {
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-
   /*
  * Clearfix: contain floats
  *
@@ -2850,12 +2803,10 @@ input[type="search"]::-webkit-search-cancel-button {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-
   /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
-
   zoom: 1;
   /*
  * Clearfix: contain floats
@@ -2868,7 +2819,6 @@ input[type="search"]::-webkit-search-cancel-button {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-
 }
 .dialog .share-tab .form-content.permission-add:before,
 .dialog .share-tab .form-content.permission-add:after {
@@ -2917,17 +2867,6 @@ input[type="search"]::-webkit-search-cancel-button {
 .folder-add .input.text {
   width: 25em;
 }
-table#js_passbolt_user_browser {
-  width: 100%;
-}
-table#js_passbolt_user_browser .tableview-header > table,
-table#js_passbolt_user_browser .tableview-content > table {
-  width: 100%;
-}
-/* app */
-#js_app_controller {
-  height: 100%;
-}
 /* drag n drop */
 #js_dragged_resource {
   padding: 6px 10px;
@@ -2939,9 +2878,6 @@ table#js_passbolt_user_browser .tableview-content > table {
 }
 #js_dragged_resource span.name {
   font-weight: bold;
-}
-table#js_passbolt_password_browser {
-  width: 100%;
 }
 .loading-screen {
   width: 100%;

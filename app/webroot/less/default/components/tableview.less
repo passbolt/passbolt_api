@@ -2,11 +2,13 @@
  * Main Workspace - Table View
  */
 .tableview {
+    position:relative;
 	font-size:.9375em; /* 15px */
+    height:100%;
 }
 
 /* additional space to avoid scrollbar bump */
-.tableview table	{
+.tableview table {
 	padding-right:.625em;
 }
 .no-cssscrollbar .tableview table {
@@ -15,72 +17,80 @@
 
 /* header */
 .tableview-header {
-	height:4em;
+	height:2em;
+}
+.tableview-header table {
+    width:100%;
 }
 
 /* main content */
 .tableview-content {
-	top:4em;
+	top:2em;
 	bottom:0;
 	padding:0;
 	position:absolute;
 	width:100%;
 	border-top:1px solid #DDD;
 }
+.tableview-content table {
+  width:100%;
+}
+
 /* rows */
-.main.panel table th,
-.main.panel table td {
+.tableview table th,
+.tableview table td {
 	text-align:left;
 	padding:.25em 0;
 	.ellipsis();
 }
-.main.panel table th {
+.tableview table th {
 	font-weight:bold;
 }
-.main.panel table .s-cell {
+.tableview table .s-cell {
 	width:20px;
 	max-width:20px;
 }
-.main.panel table .s-cell.favorites {
+.tableview table .s-cell.favorites {
 	width:25px;
 	max-width:25px;
 }
-.main.panel table .s2-cell {
+.tableview table .s2-cell {
 	width:40px;
 	max-width:40px;
 }
-.main.panel table .m-cell {
+.tableview table .m-cell {
 	width:10em;
 	max-width:10em;
 }
-.main.panel table .l-cell {
+.tableview table .l-cell {
 	width:12em;
 	max-width:12em;
 }
-.main.panel table tbody tr.selected,
-.main.panel table tbody tr:hover {
+.tableview table tbody tr.selected,
+.tableview table tbody tr:hover {
+  height:1em;
 	background:#ffffcc;
 }
-.main.panel table .checkbox label {
+.tableview table .checkbox label {
 	display:none;
 }
-.main.panel table .checkbox input{
+.tableview table .checkbox input{
 	margin-top:0px;
 	float:left;
 }
-.main.panel table th span,
-.main.panel table td span {
+.tableview table th span,
+.tableview table td span {
 	vertical-align:6%;
 }
 
 /* password */
-.main.panel table td.password pre:before{
+.tableview table td.password pre:before{
 	content:"••••••••••••••••";
 	height:24px;
 	width:90%;
 	color:@font-default;
 }
-.main.panel table td.password pre {
+.tableview table td.password pre {
 	height:24px;
 	width:90%;
 	overflow:hidden;

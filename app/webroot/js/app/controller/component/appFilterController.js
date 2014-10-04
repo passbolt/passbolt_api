@@ -23,7 +23,6 @@ steal(
 	mad.controller.ComponentController.extend('passbolt.controller.component.AppFilterController', /** @static */ {
 
 		'defaults': {
-			// 'templateBased': false,
 			'viewClass': passbolt.view.component.AppFilter
 		}
 
@@ -43,12 +42,6 @@ steal(
 				modelReference: 'passbolt.model.Filter.keywords'
 			}));
 			this.keywordsFormElement.start();
-			
-			// Instantiate the list which will carry the filter tags
-			// this.listFormElement = this.filterForm.addElement(new mad.form.element.ListController('#js_filter_tags', {
-				// modelReference: 'passbolt.model.Filter.tags'
-			// }));
-			// this.listFormElement.start();
 		},
 
 		/**
@@ -57,7 +50,6 @@ steal(
 		 */
 		'reset': function () {
 			this.keywordsFormElement.setValue('');
-			// this.listFormElement.setValue([]);
 		},
 
 		/* ************************************************************** */
@@ -73,7 +65,6 @@ steal(
 		 */
 		'{mad.bus} category_selected': function (el, ev, category) {
 			this.reset();
-			// this.listFormElement.setValue([category]);
 		},
 
 		/* ************************************************************** */

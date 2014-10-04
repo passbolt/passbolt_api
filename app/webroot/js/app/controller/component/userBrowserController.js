@@ -85,8 +85,8 @@ steal(
                         'css': ['m-cell'],
                         'label': __('User')
                     },
-                    'valueAdapter': function (value, item, columnModel, rowNum) {
-                        return '<img src="img/user.png" alt="your picture" width="30" height="30">' + item.Profile.first_name + ' ' + item.Profile.last_name;
+                    'valueAdapter': function (value, mappedItem, item, columnModel) {
+                        return '<img src="img/user.png" alt="your picture" width="30" height="30">' + mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name;
                     }
                 }, {
                     'name': 'username',
@@ -102,7 +102,7 @@ steal(
                         'css': ['m-cell'],
                         'label': __('Modified')
                     },
-                    'valueAdapter': function (value, item, columnModel, rowNum) {
+                    'valueAdapter': function (value, mappedItem, item, columnModel) {
 	                    return moment(value).fromNow();
                     }
                 }];
