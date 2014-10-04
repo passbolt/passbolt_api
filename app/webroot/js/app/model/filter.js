@@ -23,6 +23,8 @@ steal(
 	mad.model.Model('passbolt.model.Filter', /** @static */	{
 
 		'attributes': {
+			// Label of the filter
+			'label': 'string',
 			// Filter by keywords
 			'keywords': 'string',
 			// Filter on a specific case (modified ... )

@@ -132,6 +132,13 @@ steal(
 		'stateReady': function (go) {
 			mad.bus.trigger('workspace_selected', 'password');
 			mad.bus.trigger('app_ready');
+
+			// Filter the view with all items order by modified date.
+			var filter = new passbolt.model.Filter({
+				'label': __('All items'),
+				'order': 'modified'
+			});
+			mad.bus.trigger('filter_resources_browser', filter);
 		}
 
 	});

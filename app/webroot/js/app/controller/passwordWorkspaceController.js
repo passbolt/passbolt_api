@@ -1,5 +1,6 @@
 steal(
 	'mad/controller/component/freeCompositeController.js',
+	'app/controller/component/breadcrumbController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/resourceActionsTabController.js',
@@ -31,7 +32,9 @@ steal(
 		'defaults': {
 			'label': 'Password',
 			'templateUri': 'app/view/template/passwordWorkspace.ejs',
+			// The current selected resources
 			'selectedRs': new can.Model.List(),
+			// The current filter
 			'filter': new passbolt.model.Filter()
 		}
 
@@ -43,6 +46,10 @@ steal(
 		 * @see {mad.controller.ComponentController}
 		 */
 		'afterStart': function() {
+			// Instantiate the password workspace breadcrumb controller
+			this.breadcrumCtl = new passbolt.controller.component.BreadcrumbController($('#js_wsp_pwd_breadcrumb'), {});
+            this.breadcrumCtl.start();
+
 			// Instantiate the secondary workspace menu controller
 			this.secMenu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_wsp_secondary_menu', {});
 			this.secMenu.start();
@@ -59,7 +66,7 @@ steal(
 			var passwordBrowserController = this.addComponent(passbolt.controller.component.PasswordBrowserController, {
 				'id': 'js_passbolt_password_browser',
 				'selectedRs': this.options.selectedRs
-			}, 'js_workspace_main');
+			}, 'js_wsp_pwd_main');
 			passwordBrowserController.start();
 
 			// Instanciate the resource details controller
