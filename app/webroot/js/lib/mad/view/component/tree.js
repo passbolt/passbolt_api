@@ -70,6 +70,32 @@ steal(
 			var $item = $('#' + item.id, this.element).remove();
 		},
 
+
+		/**
+		 * Refresh an item in the tree
+		 * @param {mad.model.Model} item The item to refresh
+		 */
+		'refreshItem': function (item, refItemId, position) {
+			var self = this;
+			var $item = $('#' + item.id, this.element);
+
+			// map the jmvc model objects into the desired format
+			var mappedItem = this.getController().getMap().mapObject(item);
+			mappedItem.hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
+			mappedItem.item = item;
+			mappedItem.itemClass = this.getController().getItemClass();
+
+			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, mappedItem);
+			$item.replaceWith(itemRender);
+
+			if (mappedItem.hasChildren) {
+				can.each(item.children, function (item, i) {
+					self.insertItem(item, mappedItem.id, 'last');
+				});
+			}
+			return $item;
+		},
+
 		/**
 		 * Reset the view by removing all the items
 		 * @return {void}

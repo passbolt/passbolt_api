@@ -89,6 +89,21 @@ steal(
 		},
 
 		/**
+		 * Refresh item
+		 * @param {mad.model.Model} item The item to refresh
+		 * @return {void}
+		 */
+		'refreshItem': function (item) {
+			if (this.getItemClass() == null) {
+				throw new mad.error.Exception('The associated itemClass can not be null');
+			}
+			if (!(item instanceof this.getItemClass())) {
+				throw new mad.error.WrongParametersException('item', this.getItemClass().fullName);
+			}
+			this.view.refreshItem(item);
+		},
+
+		/**
 		 * Reset the component by removing all items
 		 * @return {void}
 		 */
