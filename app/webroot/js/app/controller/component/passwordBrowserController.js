@@ -51,7 +51,8 @@ steal(
 				'username': 'username',
 				'uri': 'uri',
 				'modified': 'modified',
-				'expires': 'expiry_date',
+				// Hidden for PASSBOLT-732
+				//'expires': 'expiry_date',
 				'owner': 'Creator.username',
 				'copyLogin': 'id',
 				'copySecret': 'id',
@@ -140,19 +141,19 @@ steal(
 					return moment(value).fromNow();
 				}
 			}, {
-				'name': 'expires',
-				'index': 'expires',
-				'header': {
-					'css': ['m-cell'],
-					'label': __('Expires')
-				},
-				'valueAdapter': function (value, mappedItem, item, columnModel) {
-					if (typeof value == 'undefined' || value == null) {
-						return '-';
-					}
-					return moment(value).fromNow();
-				}
-			}, {
+//				'name': 'expires',
+//				'index': 'expires',
+//				'header': {
+//					'css': ['m-cell'],
+//					'label': __('Expires')
+//				},
+//				'valueAdapter': function (value, mappedItem, item, columnModel) {
+//					if (typeof value == 'undefined' || value == null) {
+//						return '-';
+//					}
+//					return moment(value).fromNow();
+//				}
+//			}, {
 				'name': 'owner',
 				'index': 'owner',
 				'header': {
