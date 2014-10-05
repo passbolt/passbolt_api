@@ -1,29 +1,31 @@
 steal(
 	'mad/controller/componentController.js',
 	'app/model/category.js',
-	'app/view/template/component/breadcrumb.ejs',
-	'app/view/template/component/breadcrumbItem.ejs'
+	'app/view/template/component/breadcrumb/breadcrumb.ejs',
+	'app/view/template/component/breadcrumb/breadcrumbItem.ejs'
 ).then(function () {
 
 	/*
-	 * @class passbolt.controller.component.breadcrumbController
+	 * @class passbolt.controller.component.PeopleBreadcrumbController
 	 * @inherits {mad.controller.ComponentController}
 	 * @parent index
 	 *
-	 * The application Breadcrumb will allow the user to know where he is.
+	 * The people Breadcrumb will allow the user to know where he is.
 	 *
 	 * @constructor
-	 * Instantiate the application breadcrumb controller
+	 * Instantiate the people breadcrumb controller
 	 *
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable
-	 * @return {passbolt.controller.component.breadcrumbController}
+	 * @return {passbolt.controller.component.PeopleBreadcrumbController}
 	 */
-	mad.controller.ComponentController.extend('passbolt.controller.component.BreadcrumbController', /** @static */ {
+	mad.controller.ComponentController.extend('passbolt.controller.component.PeopleBreadcrumbController', /** @static */ {
 
 		'defaults': {
 			'categories': passbolt.model.Category.List,
+			// Template
+			'templateUri': 'app/view/template/component/breadcrumb/breadcrumb.ejs',
 			// Hidden by default
 			'status': 'hidden',
 			// The filter to display
@@ -41,7 +43,7 @@ steal(
 			// Create and render menu in the created container.
 			var menuSelector = '#' + this.getId() + ' ul';
 			this.options.menu = new mad.controller.component.MenuController(menuSelector, {
-				'itemTemplateUri': 'app/view/template/component/breadcrumbItem.ejs'
+				'itemTemplateUri': 'app/view/template/component/breadcrumb/breadcrumbItem.ejs'
 			});
 			this.options.menu.start();
 		},
@@ -57,42 +59,29 @@ steal(
 			// Add a link to filter on all items as first item.
 			var menuItem = new mad.model.Action({
 				'id': uuid(),
-				'label': __('All items'),
+				'label': __('All users'),
 				'action': function () {
 					var filter = new passbolt.model.Filter({
-						'label': __('All items'),
-						'order': 'modified'
+						'label': __('All users'),
+						'type': passbolt.model.Filter.SHORTCUT
 					});
-					mad.bus.trigger('filter_resources_browser', filter);
+					mad.bus.trigger('filter_users_browser', filter);
 				}
 			});
 			menuItems.push(menuItem);
 
 			// If we want to filter on a Category.
-			if (typeof filter.foreignModels.Category != 'undefined') {
+			if (typeof filter.foreignModels.Group != 'undefined') {
 				// The breadcrumb can react for a unique Category.
-				if (filter.foreignModels.Category.length == 1) {
-					var category = filter.foreignModels.Category[0];
-
-					// Add the parent categories to the breadcrumb.
-					var parentCategories = category.getParentCategories();
-					can.each(parentCategories, function (parentCategory) {
-						var menuItem = new mad.model.Action({
-							'id': uuid(),
-							'label': parentCategory.name,
-							'action': function () {
-								mad.bus.trigger('category_selected', parentCategory);
-							}
-						});
-						menuItems.push(menuItem);
-					});
+				if (filter.foreignModels.Group.length == 1) {
+					var group = filter.foreignModels.Group[0];
 
 					// Add the current category to the breadcrumb.
 					var menuItem = new mad.model.Action({
 						'id': uuid(),
-						'label': category.name,
+						'label': group.name,
 						'action': function () {
-							mad.bus.trigger('category_selected', category);
+							mad.bus.trigger('group_selected', category);
 						}
 					});
 					menuItems.push(menuItem);
@@ -110,7 +99,7 @@ steal(
 			// Case filter
 			else {
 				if (typeof filter.label != 'undefined'
-					&& filter.label != __('All items')) {
+					&& filter.label != __('All users')) {
 					var menuItem = new mad.model.Action({
 						'id': uuid(),
 						'label': filter.label
@@ -131,21 +120,6 @@ steal(
 
 			this.options.menu.reset();
 			this.options.menu.load(menuItems);
-		},
-
-		/* ************************************************************** */
-		/* LISTEN TO APP EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * Listen to the browser filter
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @param {passbolt.model.Filter} filter The filter to apply
-		 * @return {void}
-		 */
-		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
-			this.load(filter);
 		}
 
 	});

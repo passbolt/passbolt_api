@@ -47,5 +47,4 @@ class FilterComponent extends Component {
 
 		return is_array($returnValue) ? $returnValue : null;
 	}
-
 }

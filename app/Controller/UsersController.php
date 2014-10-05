@@ -15,11 +15,11 @@ class UsersController extends AppController {
 		'Filter'
 	);
 
-	/**
-	 * Login
-	 *
-	 * @access public
-	 */
+/**
+ * Login
+ *
+ * @access public
+ */
 	public function login() {
 		// check if the user Authentication worked
 		// someone can not remain anonymous forever
@@ -40,20 +40,20 @@ class UsersController extends AppController {
 		}
 	}
 
-	/**
-	 * Logout
-	 *
-	 * @access public
-	 */
+/**
+ * Logout
+ *
+ * @access public
+ */
 	public function logout() {
 		$this->redirect($this->Auth->logout());
 	}
 
-	/**
-	 * Index entry point
-	 *
-	 * @access public
-	 */
+/**
+ * Index entry point
+ *
+ * @access public
+ */
 	public function index() {
 		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
 
@@ -100,13 +100,13 @@ class UsersController extends AppController {
 		$this->Message->success();
 	}
 
-	/**
-	 * View
-	 *
-	 * @param $id UUID of the user
-	 *
-	 * @access public
-	 */
+/**
+ * View
+ *
+ * @param $id UUID of the user
+ *
+ * @access public
+ */
 	public function view($id = null) {
 		// check if the id is provided
 		if (!isset($id)) {
@@ -137,9 +137,9 @@ class UsersController extends AppController {
 		$this->Message->success();
 	}
 
-	/**
-	 * add a user entry point
-	 */
+/**
+ * add a user entry point
+ */
 	public function add() {
 		// TODO : add associations management
 
@@ -214,11 +214,11 @@ class UsersController extends AppController {
 		return;
 	}
 
-	/**
-	 * edit entry point for users
-	 *
-	 * @param uuid $id the id of the user we want to edit
-	 */
+/**
+ * edit entry point for users
+ *
+ * @param uuid $id the id of the user we want to edit
+ */
 	public function edit($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
@@ -318,11 +318,11 @@ class UsersController extends AppController {
 		return;
 	}
 
-	/**
-	 * Delete a user
-	 *
-	 * @param uuid id the id of the user to delete
-	 */
+/**
+ * Delete a user
+ *
+ * @param uuid id the id of the user to delete
+ */
 	public function delete($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {

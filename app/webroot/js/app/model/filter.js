@@ -41,7 +41,7 @@ steal(
 
 		// Available shortcut types
 		'SHORTCUT': 1,
-		'CATEGORY': 2,
+		'FOREIGN_MODEL': 2,
 		'KEYWORD': 3,
 		'TAG': 4
 

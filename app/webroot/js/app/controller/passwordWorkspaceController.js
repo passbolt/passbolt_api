@@ -1,6 +1,6 @@
 steal(
 	'mad/controller/componentController.js',
-	'app/controller/component/breadcrumbController.js',
+	'app/controller/component/passwordBreadcrumbController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/resourceActionsTabController.js',
@@ -59,7 +59,7 @@ steal(
 			this.catChooser.start();
 
 			// Instantiate the password workspace breadcrumb controller
-			this.breadcrumCtl = new passbolt.controller.component.BreadcrumbController($('#js_wsp_pwd_breadcrumb'), {});
+			this.breadcrumCtl = new passbolt.controller.component.PasswordBreadcrumbController($('#js_wsp_pwd_breadcrumb'), {});
 			this.breadcrumCtl.start();
 
 			// Instanciate the passwords browser controller
@@ -72,6 +72,14 @@ steal(
 			var resourceDetails = new passbolt.controller.component.ResourceDetailsController($('.js_wsp_pwd_sidebar_second', this.element), {
 				'selectedRs': this.options.selectedRs
 			});
+
+			// Filter the workspace.
+			var filter = new passbolt.model.Filter({
+				'label': __('All items'),
+				'order': 'modified',
+				'type': passbolt.model.Filter.SHORTCUT
+			});
+			mad.bus.trigger('filter_resources_browser', filter);
 		},
 
 		/**
@@ -96,6 +104,18 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Listen to the browser filter
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {passbolt.model.Filter} filter The filter to apply
+		 * @return {void}
+		 */
+		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			// Update the breadcrumb with the new filter.
+			this.breadcrumCtl.load(filter);
+		},
+
+		/**
 		 * Observe when category is selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
@@ -110,7 +130,7 @@ steal(
 				'foreignModels': {
 					'Category': new can.List([category])
 				},
-				'type': passbolt.model.Filter.CATEGORY
+				'type': passbolt.model.Filter.FOREIGN_MODEL
 			});
 			// propagate a special event on bus
 			mad.bus.trigger('filter_resources_browser', this.options.filter);

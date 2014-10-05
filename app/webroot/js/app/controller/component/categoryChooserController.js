@@ -42,6 +42,25 @@ steal(
 	}, /** @prototype */ {
 
 		/**
+		 * Called right after the start function
+		 * @return {void}
+		 * @see {mad.controller.ComponentController}
+		 */
+		'afterStart': function() {
+			var self = this;
+
+			// Load categories.
+			this.setState('loading');
+			passbolt.model.Category.findAll({
+				'children': true
+			}, function (categories, response, request) {
+				// load the tree with the categories
+				self.load(categories);
+				self.setState('ready');
+			}, function (response) { });
+		},
+
+		/**
 		 * Show the contextual menu
 		 * @param {passbolt.model.Category} item The item to show the contextual menu for
 		 * @param {string} x The x position where the menu will be rendered
@@ -250,35 +269,13 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
-			if (filter.type != passbolt.model.Filter.CATEGORY) {
+			if (filter.type != passbolt.model.Filter.FOREIGN_MODEL) {
 				this.unselectAll();
 			}
 			else {
 				var categories = filter.getForeignModels('Category');
 				this.selectItem(categories[0]);
 			}
-		},
-
-		/**
-		 * Observe when the application is ready and load the tree with the roots
-		 * categories
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @return {void}
-		 */
-		'{mad.bus} app_ready': function (ui, event) {
-			var self = this;
-			// load categories function of the selected database
-			this.setState('loading');
-			passbolt.model.Category.findAll({
-				'children': true
-			}, function (categories, response, request) {
-				// load the tree with the categories
-				self.load(categories);
-				self.setState('ready');
-			}, function (response) { });
 		}
-
 	});
-
 });

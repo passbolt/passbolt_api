@@ -15,72 +15,72 @@ App::uses('Security', 'Utility');
 
 class User extends AppModel {
 
-	/**
-	 * Model Name
-	 *
-	 * @access public
-	 */
+/**
+ * Model Name
+ *
+ * @access public
+ */
 	public $name = 'User';
 
-	/**
-	 * Model behaviors
-	 *
-	 * @access public
-	 */
+/**
+ * Model behaviors
+ *
+ * @access public
+ */
 	public $actsAs = array(
 		'SuperJoin',
 		'Containable',
 		'Trackable'
 	);
 
-	/**
-	 * Details of belongs to relationships
-	 *
-	 * @var array
-	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
-	 */
+/**
+ * Details of belongs to relationships
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
 		'Role'
 	);
 
-	/**
-	 * Details of the hasOne relationships
-	 * @var array
-	*/
+/**
+ * Details of the hasOne relationships
+ * @var array
+*/
 	public $hasOne = array(
 		'Profile'
 	);
 
-	/**
-	 * Details of has many relationships
-	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
-	 */
+/**
+ * Details of has many relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasMany = array('GroupUser');
 
-	/**
-	 * Details of has and belongs to many relationships
-	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
-	 */
+/**
+ * Details of has and belongs to many relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasAndBelongsToMany = array(
 		'Group' => array(
 			'className' => 'Group'
 		)
 	);
 
-	/**
-	 * They are legions
-	 */
+/**
+ * They are legions
+ */
 	const ANONYMOUS = 'anonymous@passbolt.com';
 
-	/**
-	 * Get the validation rules upon context
-	 *
-	 * @param string context
-	 *
-	 * @return array validation rules
-	 * @throws exception if case is undefined
-	 * @access public
-	 */
+/**
+ * Get the validation rules upon context
+ *
+ * @param string context
+ *
+ * @return array validation rules
+ * @throws exception if case is undefined
+ * @access public
+ */
 	public static function getValidationRules($case = 'default') {
 		$default = array(
 			'username' => array(
@@ -118,13 +118,13 @@ class User extends AppModel {
 		return $rules;
 	}
 
-	/**
-	 * Before Save callback
-	 *
-	 * @link   http://api20.cakephp.org/class/app-model#method-AppModel__construct
-	 * @return bool, if true proceed with save
-	 * @access public
-	 */
+/**
+ * Before Save callback
+ *
+ * @link   http://api20.cakephp.org/class/app-model#method-AppModel__construct
+ * @return bool, if true proceed with save
+ * @access public
+ */
 	public function beforeSave($options=null) {
 		// Encrypt the password.
 		if (isset($this->data['User']['password'])) {
@@ -133,15 +133,15 @@ class User extends AppModel {
 		return true;
 	}
 
-	/**
-	 * Get the current user
-	 *
-	 * @return array the current user or an anonymous user, false if error
-	 *
-	 * @param string field
-	 *
-	 * @access public
-	 */
+/**
+ * Get the current user
+ *
+ * @return array the current user or an anonymous user, false if error
+ *
+ * @param string field
+ *
+ * @access public
+ */
 	public static function get($path = null) {
 		// Get the user from the session
 		Common::getModel('Role');
@@ -174,15 +174,15 @@ class User extends AppModel {
 		return $value[0];
 	}
 
-	/**
-	 * Set the user as current
-	 * It always perform a search on id to avoid abuse (such as using a crafted/fake user)
-	 *
-	 * @param mixed UUID, User::ANONYMOUS, or user array with id specified
-	 *
-	 * @return array the desired user or an ANONYMOUS user, false if error in find
-	 * @access public
-	 */
+/**
+ * Set the user as current
+ * It always perform a search on id to avoid abuse (such as using a crafted/fake user)
+ *
+ * @param mixed UUID, User::ANONYMOUS, or user array with id specified
+ *
+ * @return array the desired user or an ANONYMOUS user, false if error in find
+ * @access public
+ */
 	public static function setActive($user = null) {
 		// Instantiate the mode as we are in a static/singleton context
 		$_this = Common::getModel('User');
@@ -212,10 +212,10 @@ class User extends AppModel {
 		return $u;
 	}
 
-	/**
-	 * Make the current user inactive
-	 * @access public
-	 */
+/**
+ * Make the current user inactive
+ * @access public
+ */
 	public static function setInactive() {
 		// Store current user data in session
 		App::import('Model', 'CakeSession');
@@ -225,12 +225,13 @@ class User extends AppModel {
 		$Session->delete('Auth.redirect');
 		$Session->renew();
 	}
-	/**
-	 * Check if user is an admin (use role)
-	 *
-	 * @return bool true if role is admin
-	 * @access public
-	 */
+
+/**
+ * Check if user is an admin (use role)
+ *
+ * @return bool true if role is admin
+ * @access public
+ */
 	public static function isAdmin() {
 		Common::getModel('Role');
 		$user = User::get();
@@ -238,24 +239,24 @@ class User extends AppModel {
 		return isset($user['Role']['name']) && $user['Role']['name'] == Role::ADMIN;
 	}
 
-	/**
-	 * Check if user is admin role
-	 *
-	 * @return bool true if role is admin
-	 * @access public
-	 */
+/**
+ * Check if user is admin role
+ *
+ * @return bool true if role is admin
+ * @access public
+ */
 	public static function isAnonymous() {
 		$user = User::get();
 		$return = isset($user['User']['username']) && $user['User']['username'] == User::ANONYMOUS;
 		return $return;
 	}
 
-	/**
-	 * Check if user is a guest - Shortcut Method
-	 *
-	 * @return bool true if role is guest
-	 * @access public
-	 */
+/**
+ * Check if user is a guest - Shortcut Method
+ *
+ * @return bool true if role is guest
+ * @access public
+ */
 	public static function isGuest() {
 		Common::getModel('Role');
 		$user = User::get();
@@ -263,12 +264,12 @@ class User extends AppModel {
 		return isset($user['Role']['name']) && $user['Role']['name'] == Role::GUEST;
 	}
 
-	/**
-	 * Check if user is a root - Shortcut Method
-	 *
-	 * @return bool true if role is root
-	 * @access public
-	 */
+/**
+ * Check if user is a root - Shortcut Method
+ *
+ * @return bool true if role is root
+ * @access public
+ */
 	public static function isRoot() {
 		Common::getModel('Role');
 		$user = User::get();
@@ -339,6 +340,17 @@ class User extends AppModel {
 								$conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
 							}
 						}
+						// Order the data.
+						if (isset($data['order'])) {
+							switch ($data['order']) {
+								case 'modified':
+									$conditions['order'] = array('User.modified DESC');
+									break;
+							}
+						} else {
+							// By default order alphabetically
+							$conditions['order'] = array('Profile.last_name ASC');
+						}
 						break;
 
 					default:
@@ -368,14 +380,14 @@ class User extends AppModel {
 		return $conditions;
 	}
 
-	/**
-	 * Return the list of field to fetch for given context
-	 *
-	 * @param string $case context ex: login, activation
-	 *
-	 * @return $condition array
-	 * @access public
-	 */
+/**
+ * Return the list of field to fetch for given context
+ *
+ * @param string $case context ex: login, activation
+ *
+ * @return $condition array
+ * @access public
+ */
 	public static function getFindFields($case = User::ANONYMOUS, $role = Role::USER) {
 		switch ($case) {
 			case User::ANONYMOUS:
@@ -454,5 +466,4 @@ class User extends AppModel {
 		}
 		return $fields;
 	}
-
 }

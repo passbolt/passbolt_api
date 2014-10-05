@@ -1,5 +1,6 @@
 steal(
 	'mad/controller/componentController.js',
+	'app/controller/component/peopleBreadcrumbController.js',
     'app/controller/component/groupChooserController.js',
     'app/controller/component/userBrowserController.js',
 	'app/controller/component/userShortcutsController.js',
@@ -11,14 +12,14 @@ steal(
 	/*
 	 * @class passbolt.controller.PeopleWorkspaceController
 	 * @inherits {mad.controller.ComponentController}
-	 * @parent index 
-	 * 
+	 * @parent index
+	 *
 	 * @constructor
 	 * Instanciates a new People Workspace Controller
-	 * 
+	 *
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
-	 * this.options and merged with defaults static variable 
+	 * this.options and merged with defaults static variable
 	 * @return {passbolt.controller.PeopleWorkspaceController}
 	 */
 	mad.controller.ComponentController.extend('passbolt.controller.PeopleWorkspaceController', /** @static */ {
@@ -39,6 +40,10 @@ steal(
          * @see {mad.controller.ComponentController}
          */
         'afterStart': function() {
+	        // Instantiate the password workspace breadcrumb controller
+	        this.breadcrumCtl = new passbolt.controller.component.PeopleBreadcrumbController($('#js_wsp_ppl_breadcrumb'), {});
+	        this.breadcrumCtl.start();
+
 			// Instanciate the users filter controller.
 			var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_group_shortcuts', {});
 			userShortcut.start();
@@ -54,6 +59,13 @@ steal(
                 'selectedUsers': this.options.selectedUsers
             });
             userBrowserController.start();
+
+			// Filter the workspace.
+			var filter = new passbolt.model.Filter({
+				'label': __('All users'),
+				'type': passbolt.model.Filter.SHORTCUT
+			});
+			mad.bus.trigger('filter_users_browser', filter);
         },
 
 		/**
@@ -84,6 +96,7 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} group_selected': function (el, ev, group) {
+			console.log('group selected');
 			// reset the selected resources
 			this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
 			// Set the new filter
@@ -91,7 +104,7 @@ steal(
 				'foreignModels': {
 					'Group': new can.List([group])
 				},
-				'name': 'group'
+				'type': passbolt.model.Filter.FOREIGN_MODEL
 			});
 			// propagate a special event on bus
 			mad.bus.trigger('filter_users_browser', this.options.filter);
@@ -117,6 +130,9 @@ steal(
 				}
 			}
 			this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
+
+			// Update the breadcrumb with the new filter.
+			this.breadcrumCtl.load(filter);
 		},
 
 

@@ -110,14 +110,14 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} workspace_selected': function (el, event, workspace) {
-			// Enable the target workspace.
-			var wspId = 'js_passbolt_' + workspace + 'Workspace_controller';
-			var workspacesContainer = mad.app.getComponent('js_app_panel_main');
-			workspacesContainer.enableTab(wspId);
 			// Enable the corresponding workspace menu.
 			var wspMenuId = 'js_passbolt_' + workspace + 'WorkspaceMenu_controller';
 			var workspacesMenusContainer = mad.app.getComponent('js_wsp_primary_menu');
 			workspacesMenusContainer.enableTab(wspMenuId);
+			// Enable the target workspace.
+			var wspId = 'js_passbolt_' + workspace + 'Workspace_controller';
+			var workspacesContainer = mad.app.getComponent('js_app_panel_main');
+			workspacesContainer.enableTab(wspId);
 		},
 
 		/* ************************************************************** */
@@ -130,15 +130,8 @@ steal(
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
-			mad.bus.trigger('workspace_selected', 'password');
+			mad.bus.trigger('workspace_selected', 'people');
 			mad.bus.trigger('app_ready');
-
-			// Filter the view with all items order by modified date.
-			var filter = new passbolt.model.Filter({
-				'label': __('All items'),
-				'order': 'modified'
-			});
-			mad.bus.trigger('filter_resources_browser', filter);
 		}
 
 	});
