@@ -129,7 +129,7 @@ steal(
 		 * @param {mixed} item The selected item instance or its id
 		 * @return {void}
 		 */
-		'selectRightItem': function (item) {
+		'rightSelectItem': function (item) {
 		},
 
 		/**
@@ -151,7 +151,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li a click': function (el, ev) {
+		'li .main-cell a click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
@@ -186,7 +186,7 @@ steal(
 				} else {
 					data = li[0].id;
 				}
-				element.trigger('item_right_selected', [data, ev]);
+				this.element.trigger('item_right_selected', [data, ev]);
 			}
 
 			return false;

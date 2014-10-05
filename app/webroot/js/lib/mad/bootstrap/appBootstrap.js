@@ -113,7 +113,7 @@ steal(
 			if (typeof appUrl == 'undefined') {
 				throw new mad.error.WrongConfigException('app.url');
 			}
-			APP_URL = appUrl + '/';
+			APP_URL = appUrl;
 
 			// Check the configuration
 

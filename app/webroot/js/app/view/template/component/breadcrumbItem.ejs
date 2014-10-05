@@ -5,5 +5,7 @@ if (typeof cssClasses == 'undefined') {
 %>
 
 <li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses %>">
-    <a href="#"><span><%= label %></span></a>
+    <div class="main-cell">
+        <a href="#"><span><%= label %></span></a>
+    </div>
 </li>
