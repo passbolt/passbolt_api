@@ -114,13 +114,6 @@ steal(
 				'header': {
 					'css': ['m-cell'],
 					'label': __('Resource')
-				},
-				'valueAdapter': function (value, mappedItem, item, columnModel) {
-					var returnValue = value;
-					can.each(mappedItem.Category, function (category, i) {
-						returnValue += ' <span class="password_browser_category_label">' + category.name + '</span>';
-					});
-					return returnValue;
 				}
 			}, {
 				'name': 'username',
