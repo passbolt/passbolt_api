@@ -14,7 +14,7 @@ steal(
 	 * Creates a new Password Shortcuts Controller.
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
-	 * @param {Object} [options] option values for the controller.  These get added to
+	 * @param {Object} [options] option values for the controller. These get added to
 	 * this.options and merged with defaults static variable 
 	 * @return {passbolt.controller.ResourceShortcutsController}
 	 */
@@ -34,7 +34,7 @@ steal(
 						var filter = new passbolt.model.Filter({
 							'label': __('All items'),
 							'order': 'modified',
-							'type': passbolt.model.Filter.SHORTCUT,
+							'type': passbolt.model.Filter.SHORTCUT
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -45,7 +45,7 @@ steal(
 						var filter = new passbolt.model.Filter({
 							'label': __('Favorite'),
 							'case': 'favorite',
-							'type': passbolt.model.Filter.SHORTCUT,
+							'type': passbolt.model.Filter.SHORTCUT
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -61,7 +61,7 @@ steal(
 						var filter = new passbolt.model.Filter({
 							'label': __('Recently modified'),
 							'order': 'modified',
-							'type': passbolt.model.Filter.SHORTCUT,
+							'type': passbolt.model.Filter.SHORTCUT
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -72,7 +72,7 @@ steal(
 						var filter = new passbolt.model.Filter({
 							'label': __('Expiring soon'),
 							'order': 'expiry_date',
-							'type': passbolt.model.Filter.SHORTCUT,
+							'type': passbolt.model.Filter.SHORTCUT
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -83,7 +83,7 @@ steal(
 						var filter = new passbolt.model.Filter({
 							'label': __('Shared with me'),
 							'case': 'shared',
-							'type': passbolt.model.Filter.SHORTCUT,
+							'type': passbolt.model.Filter.SHORTCUT
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -94,7 +94,7 @@ steal(
 						var filter = new passbolt.model.Filter({
 							'label': __('Items I own'),
 							'case': 'own',
-							'type': passbolt.model.Filter.SHORTCUT,
+							'type': passbolt.model.Filter.SHORTCUT
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
