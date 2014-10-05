@@ -89,7 +89,7 @@ steal(
 			];
 			this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_wk_menu_more_button'), {
 				'state': 'disabled',
-				'menuItems': moreButtonMenuItems
+				'items': moreButtonMenuItems
 			}).start();
 
 			// @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
