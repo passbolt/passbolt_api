@@ -1,8 +1,7 @@
 steal(
 	'mad/controller/component/treeController.js',
 	'mad/view/template/component/menu/menuItem.ejs',
-	'mad/model/action.js',
-	'mad/view/template/component/menu/menuItem.ejs'
+	'mad/model/action.js'
 ).then(function () {
 
 	/**

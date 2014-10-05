@@ -243,6 +243,23 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Listen to the browser filter
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {passbolt.model.Filter} filter The filter to apply
+		 * @return {void}
+		 */
+		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			if (filter.type != passbolt.model.Filter.CATEGORY) {
+				this.unselectAll();
+			}
+			else {
+				var categories = filter.getForeignModels('Category');
+				this.selectItem(categories[0]);
+			}
+		},
+
+		/**
 		 * Observe when the application is ready and load the tree with the roots
 		 * categories
 		 * @param {jQuery} element The source element

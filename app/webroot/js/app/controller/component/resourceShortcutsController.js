@@ -1,6 +1,5 @@
 steal(
 	'mad/controller/component/menuController.js'
-	// 'mad/controller/component/treeController.js'
 ).then(function () {
 
 	/*
@@ -30,10 +29,12 @@ steal(
 				new mad.model.Action({
 					'id': uuid(),
 					'label': __('All items'),
+					'cssClasses': ['selected'],
 					'action': function () {
 						var filter = new passbolt.model.Filter({
 							'label': __('All items'),
-							'order': 'modified'
+							'order': 'modified',
+							'type': passbolt.model.Filter.SHORTCUT,
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -43,7 +44,8 @@ steal(
 					'action': function () {
 						var filter = new passbolt.model.Filter({
 							'label': __('Favorite'),
-							'case': 'favorite'
+							'case': 'favorite',
+							'type': passbolt.model.Filter.SHORTCUT,
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -58,7 +60,8 @@ steal(
 					'action': function () {
 						var filter = new passbolt.model.Filter({
 							'label': __('Recently modified'),
-							'order': 'modified'
+							'order': 'modified',
+							'type': passbolt.model.Filter.SHORTCUT,
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -68,7 +71,8 @@ steal(
 					'action': function () {
 						var filter = new passbolt.model.Filter({
 							'label': __('Expiring soon'),
-							'order': 'expiry_date'
+							'order': 'expiry_date',
+							'type': passbolt.model.Filter.SHORTCUT,
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -78,7 +82,8 @@ steal(
 					'action': function () {
 						var filter = new passbolt.model.Filter({
 							'label': __('Shared with me'),
-							'case': 'shared'
+							'case': 'shared',
+							'type': passbolt.model.Filter.SHORTCUT,
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
@@ -88,15 +93,32 @@ steal(
 					'action': function () {
 						var filter = new passbolt.model.Filter({
 							'label': __('Items I own'),
-							'case': 'own'
+							'case': 'own',
+							'type': passbolt.model.Filter.SHORTCUT,
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
 				})
 			];
 			this.load(menuItems);
-		}
+		},
 
+		/* ************************************************************** */
+		/* LISTEN TO THE APP EVENTS */
+		/* ************************************************************** */
+
+		/**
+		 * Listen to the browser filter
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {passbolt.model.Filter} filter The filter to apply
+		 * @return {void}
+		 */
+		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			if (filter.type != passbolt.model.Filter.SHORTCUT) {
+				this.unselectAll();
+			}
+		}
 	});
 
 });

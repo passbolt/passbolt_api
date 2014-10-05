@@ -16,6 +16,15 @@ steal(
 		},
 
 		/**
+		 * Get item element
+		 * @param item
+		 * @returns {jQuery}
+		 */
+		'getItemElement': function(item) {
+			return $('#' + item.id, this.element);
+		},
+
+		/**
 		 * Insert an item in the tree
 		 * @param {mad.model.Model} item The item to insert
 		 * @param {string} refItemId The reference item id. By default the grid view object
@@ -23,8 +32,7 @@ steal(
 		 * @param {string} position The position of the newly created item. You can pass in one
 		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
 		 * is set to last.
-		 * @return {void}
-		 * @todo does not require a map in this case
+		 * @return {jQuery}
 		 */
 		'insertItem': function (item, refItemId, position) {
 			position = position || 'last';
@@ -45,13 +53,7 @@ steal(
 			mappedItem.itemClass = this.getController().getItemClass();
 
 			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, mappedItem);
-			var $child = null;
-			if(position == 'first') {
-				$child = $(itemRender).prependTo($refList);
-			}
-			else {
-				$child = $(itemRender).appendTo($refList);
-			}
+			var $child = mad.helper.HtmlHelper.create($refList, position, itemRender);
 
 			if (mappedItem.hasChildren) {
 				can.each(item.children, function (item, i) {
@@ -67,7 +69,7 @@ steal(
 		 * @return {void}
 		 */
 		'removeItem': function (item) {
-			var $item = $('#' + item.id, this.element).remove();
+			var $item = this.getItemElement(item).remove();
 		},
 
 
@@ -77,7 +79,7 @@ steal(
 		 */
 		'refreshItem': function (item, refItemId, position) {
 			var self = this;
-			var $item = $('#' + item.id, this.element);
+			var $item = this.getItemElement(item);
 
 			// map the jmvc model objects into the desired format
 			var mappedItem = this.getController().getMap().mapObject(item);
@@ -105,38 +107,37 @@ steal(
 		},
 
 		/**
+		 * Unselect all.
+		 */
+		'unselectAll': function() {
+			$('.row.selected', this.element).removeClass('selected');
+		},
+
+		/**
 		 * An item has been selected
-		 * @event item_selected
 		 * @param {mixed} item The selected item instance or its id
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} srcEvent The jQuery source event
 		 * @return {void}
 		 */
-		'itemSelected': function (item, element, srcEvent) {
-			this.element.trigger('item_selected', [item, srcEvent]);
+		'selectItem': function (item) {
+			this.unselectAll();
+			var $item = this.getItemElement(item);
+			$('.row:first', $item).addClass('selected');
 		},
 
 		/**
 		 * An item has been right selected
-		 * @event item_right_selected
 		 * @param {mixed} item The selected item instance or its id
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} srcEvent The jQuery source event
 		 * @return {void}
 		 */
-		'itemRightSelected': function (item, element, srcEvent) {
-			element.trigger('item_right_selected', [item, srcEvent]);
+		'selectRightItem': function (item) {
 		},
 
 		/**
 		 * An item has been hovered
-		 * @event item_hovered
 		 * @param {mixed} item The selected item instance or its id
-		 * @param {HTMLElement} element The element the event occured on
 		 * @return {void}
 		 */
-		'itemHovered': function (item, element, srcEvent) {
-			this.element.trigger('item_hovered', [item, srcEvent]);
+		'hoverItem': function (item, element, srcEvent) {
 		},
 
 		/* ************************************************************** */
@@ -145,6 +146,7 @@ steal(
 
 		/**
 		 * An item has been selected
+		 * @event item_selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
@@ -161,12 +163,13 @@ steal(
 				data = li[0].id;
 			}
 
-			this.itemSelected(data, el, ev);
+			this.element.trigger('item_selected', [data, ev]);
 			return false;
 		},
 
 		/**
 		 * An item has been selected
+		 * @event item_right_selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
@@ -183,7 +186,7 @@ steal(
 				} else {
 					data = li[0].id;
 				}
-				this.itemRightSelected(data, el, ev);
+				element.trigger('item_right_selected', [data, ev]);
 			}
 
 			return false;
@@ -191,6 +194,7 @@ steal(
 
 		/**
 		 * An item has been hovered
+		 * @event item_hovered
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
@@ -206,7 +210,8 @@ steal(
 			} else {
 				data = li[0].id;
 			}
-			this.itemHovered(data, el, ev);
+
+			this.element.trigger('item_hovered', [data, ev]);
 			return false;
 		}
 

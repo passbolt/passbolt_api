@@ -1,5 +1,4 @@
 steal(
-	'jquery/controller',
 	'mad/controller/componentController.js',
 	'mad/view/component/tree.js',
 	'mad/object/map.js',
@@ -180,6 +179,45 @@ steal(
 			this.options.map = map;
 		},
 
+		/**
+		 * Select the given item.
+		 * @param {item}
+		 */
+		'selectItem': function (item) {
+			this.view.selectItem(item);
+		},
+
+		/**
+		 * Right select the given item.
+		 * @param {item}
+		 */
+		'rightSelectItem': function (item) {
+			this.view.rightSelectItem(item);
+		},
+
+		/**
+		 * Unselect the given item.
+		 * @param {item}
+		 */
+		'unselectItem': function (item) {
+			this.view.unselectAll();
+		},
+
+		/**
+		 * Unselect all.
+		 */
+		'unselectAll': function () {
+			this.view.unselectAll();
+		},
+
+		/**
+		 * Hover the given item.
+		 * @param {item}
+		 */
+		'hoverItem': function (item) {
+			this.view.hoverItem(item);
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
@@ -193,6 +231,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
+			this.selectItem(item);
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemSelected) {
 				this.options.callbacks.itemSelected(el, ev, item, srcEvent);
@@ -208,6 +247,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_right_selected': function (el, ev, item, srcEvent) {
+			this.rightSelectItem(item);
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemRightSelected) {
 				this.options.callbacks.itemRightSelected(el, ev, item, srcEvent);
@@ -223,6 +263,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_hovered': function (el, ev, item, srcEvent) {
+			this.hoverItem(item);
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemHovered) {
 				this.options.callbacks.itemHovered(el, ev, item, srcEvent);

@@ -109,7 +109,8 @@ steal(
 			this.options.filter.attr({
 				'foreignModels': {
 					'Category': new can.List([category])
-				}
+				},
+				'type': passbolt.model.Filter.CATEGORY
 			});
 			// propagate a special event on bus
 			mad.bus.trigger('filter_resources_browser', this.options.filter);
