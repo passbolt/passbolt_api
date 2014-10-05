@@ -21,7 +21,7 @@ var cakephpConfig = {
 			name: "<?php echo Configure::read('App.version.name'); ?>",
 			song: "<?php echo Configure::read('App.version.song'); ?>"
 		},
-		url: "<?php echo FULL_BASE_URL; ?>",
+		url: "<?php echo Router::url('/',true); ?>",
 		debug: "<?php echo Configure::read('debug'); ?>"
 	}
 };
