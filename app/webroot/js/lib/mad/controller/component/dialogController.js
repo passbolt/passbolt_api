@@ -34,7 +34,7 @@ steal(
 		'init': function(el, options) {
 			// if an instance of dialog already exist return this instance
 			if(mad.controller.component.DialogController.singleton != null) {
-				return mad.controller.component.DialogController.singleton;
+				mad.controller.component.DialogController.singleton.element.remove();
 			}
 			
 			// create the DOM entry point for the dialog
@@ -56,7 +56,7 @@ steal(
 			mad.controller.component.DialogController.singleton = null;
 			this._super();
 		},
-		
+
 		/**
 		 * Add a component to the dialog container
 		 * @param {mad.controller.ComponentController} Class The class of the component to add, or the html to
@@ -72,6 +72,14 @@ steal(
 			component.start();
 
 			return component;
+		},
+
+		/**
+		 * Set the title
+		 * @param {string} title The new title
+		 */
+		'setTitle': function(title) {
+			this.view.setTitle(title);
 		}
 	});
 });

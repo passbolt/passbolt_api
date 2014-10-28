@@ -4,23 +4,23 @@ steal(
 ).then(function () {
 
 	/*
-	 * @class passbolt.controller.ResourceActionsTabController
+	 * @class passbolt.controller.CategoryActionsTabController
 	 * @inherits mad.controller.component.TabController
 	 * @parent index 
 	 * 
 	 * @constructor
-	 * Creates new ResourceActionsTabController
+	 * Creates new CategoryActionsTabController
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable 
-	 * @return {passbolt.controller.ResourceActionsTabController}
+	 * @return {passbolt.controller.CategoryActionsTabController}
 	 */
-	mad.controller.component.TabController.extend('passbolt.controller.component.ResourceActionsTabController', /** @static */ {
+	mad.controller.component.TabController.extend('passbolt.controller.component.CategoryActionsTabController', /** @static */ {
 
 		'defaults': {
 			'label': null,
-			'resource': null,
+			'category': null,
 			'cssClasses': ['tabs'],
 			// @todo The system is trying to get the view class of the ResourceActionsTabController.
 			// @todo But we want this component to be based on the parent viewClass & templateUri.
@@ -30,40 +30,48 @@ steal(
 		}
 
 	}, /** @prototype */ {
-		
+
 		// after start
 		'afterStart': function() {
 			this._super();
 			var self = this;
 
-			// Add the edition form controller to the tab
-			var editFormCtl = this.addComponent(passbolt.controller.form.resource.CreateFormController, {
-				'id': 'js_rs_edit',
-				'label': __('Edit'),
-				'data': this.options.resource,
-				'callbacks' : {
-					'submit': function (data) {
-						// save the resource's changes
-						self.options.resource.attr(data['passbolt.model.Resource'])
-							.save();
-						// close the popup
-						mad.app.getComponent('js_dialog')
-							.remove();
-					}
-				}
-			});
-			editFormCtl.start();
-			editFormCtl.load(this.options.resource);
+			// Is the resource editable ?
+			var canUpdate = passbolt.model.Permission.isAllowedTo(this.options.category, passbolt.UPDATE);
+			// Is the resource administrable ?
+			var canAdmin = passbolt.model.Permission.isAllowedTo(this.options.category, passbolt.ADMIN);
 
-			// Add the permission controller to the tab, if the user is allowed to share.
-			var permCtl = this.addComponent(passbolt.controller.component.PermissionsController, {
-				'id': 'js_rs_permission',
-				'label': 'Share',
-				'resource': this.options.resources,
-				'cssClasses': ['share-tab']
-			});
-			permCtl.start();
-			permCtl.load(this.options.resource);
+			// Add the edition form controller to the tab
+			if (canUpdate) {
+				var editFormCtl = this.addComponent(passbolt.controller.form.category.CreateFormController, {
+					'id': 'js_cat_edit',
+					'label': __('Edit'),
+					'data': self.options.category,
+					'callbacks' : {
+						'submit': function (data) {
+							self.options.category.attr(data['passbolt.model.Category'])
+								.save();
+							// close the popup
+							mad.app.getComponent('js_dialog')
+								.remove();
+						}
+					}
+				});
+				editFormCtl.start();
+				editFormCtl.load(this.options.category);
+			}
+
+			// Add the permission controller to the tab
+			if (canAdmin) {
+				var permCtl = this.addComponent(passbolt.controller.component.PermissionsController, {
+					'id': 'js_cat_permission',
+					'label': 'Share',
+					'resource': this.options.category,
+					'cssClasses': ['share-tab']
+				});
+				permCtl.start();
+				permCtl.load(this.options.category);
+			}
 		},
 		
 		/**
@@ -93,11 +101,11 @@ steal(
 			this._super(tabId);
 			// change the popup dialog
 			var enabledTabCtl = this.getComponent(this.enabledTabId);
-			var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
+			var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.category.name + '</span>';
 			mad.app.getComponent('js_dialog')
 				.setTitle(label);
 		}
-
+		 
 	});
 
 });

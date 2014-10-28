@@ -46,16 +46,27 @@ steal(
 				$refList = $refElement.find('ul:first');
 			}
 
-			// map the jmvc model objects into the desired format
+			// map the given data to the desired format
 			var mappedItem = this.getController().getMap().mapObject(item);
-			mappedItem.hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
-			mappedItem.item = item;
-			mappedItem.itemClass = this.getController().getItemClass();
+			this.getController().setViewData('itemClass', this.getController().getItemClass());
+			this.getController().setViewData('item', item);
+			this.getController().setViewData('mappedItem', mappedItem);
 
-			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, mappedItem);
+			// the item has children
+			var hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
+			this.getController().setViewData('hasChildren', hasChildren);
+
+			// some css classes has been defined on the item merge them
+			var cssClasses = [];
+			if (typeof mappedItem['cssClasses'] != 'undefiend') {
+				cssClasses = cssClasses.concat(mappedItem['cssClasses']);
+			}
+			this.getController().setViewData('cssClasses', cssClasses);
+
+			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, this.getController().getViewData());
 			var $child = mad.helper.HtmlHelper.create($refList, position, itemRender);
 
-			if (mappedItem.hasChildren) {
+			if (hasChildren) {
 				can.each(item.children, function (item, i) {
 					self.insertItem(item, mappedItem.id, 'last');
 				});
@@ -81,20 +92,23 @@ steal(
 			var self = this;
 			var $item = this.getItemElement(item);
 
-			// map the jmvc model objects into the desired format
+			// map the given data to the desired format
 			var mappedItem = this.getController().getMap().mapObject(item);
-			mappedItem.hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
-			mappedItem.item = item;
-			mappedItem.itemClass = this.getController().getItemClass();
+			this.getController().setViewData('itemClass', this.getController().getItemClass());
+			this.getController().setViewData('item', item);
+			this.getController().setViewData('mappedItem', mappedItem);
+			var hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
+			this.getController().setViewData('hasChildren', hasChildren);
 
-			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, mappedItem);
+			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, this.getController().getViewData());
 			$item.replaceWith(itemRender);
 
-			if (mappedItem.hasChildren) {
+			if (hasChildren) {
 				can.each(item.children, function (item, i) {
 					self.insertItem(item, mappedItem.id, 'last');
 				});
 			}
+
 			return $item;
 		},
 

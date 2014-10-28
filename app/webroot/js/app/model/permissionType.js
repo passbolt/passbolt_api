@@ -58,6 +58,48 @@ steal(
 			3: __('create'),
 			7: __('update'),
 			15: __('admin')
+		},
+
+		/**
+		 * Get permission type formated.
+		 * @return {string}
+		 */
+		'toString': function(permId) {
+			var returnValue = '';
+			switch (permId) {
+				case '0':
+					returnValue = this.PERMISSION_TYPES[permId];
+					break;
+				default:
+					returnValue = __('can %s', this.PERMISSION_TYPES[permId]);
+					break;
+			}
+			return returnValue;
+		},
+
+		/**
+		 * Get the list of permission type.
+		 * @param {string} foreignModel (optional) Filter permission types by foreign model.
+		 * @return {array}
+		 */
+		'getPermissionTypes': function(foreignModel) {
+			var returnValue = [];
+
+			// @todo [low] Make something generic and configurable.
+			var allowedPermissions = {
+				'Group': [0,1,3,7,15],
+				'User': [0,1,7,15]
+			};
+
+			if (typeof foreignModel != 'undefined') {
+				for (var permType in allowedPermissions[foreignModel]) {
+					returnValue[permType] = passbolt.model.PermissionType.PERMISSION_TYPES[permType];
+				}
+			} else {
+				returnValue = passbolt.model.PermissionType.PERMISSION_TYPES;
+			}
+
+			return returnValue;
 		}
 
 	}, /** @prototype */ {

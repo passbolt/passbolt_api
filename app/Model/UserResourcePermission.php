@@ -72,7 +72,10 @@ class UserResourcePermission extends AppModel {
 							),
 							// Return the elements the permission has been defined for (user, category)
 							'User' => array(
-								'fields' => array('id', 'username', 'role_id')
+								'fields' => array('id', 'username', 'role_id'),
+								'Profile' => array(
+									'fields' => array('id', 'first_name', 'last_name')
+								),
 							),
 							'Resource' => array(
 								'fields' => array('id', 'name')

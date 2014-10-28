@@ -368,11 +368,12 @@ class PermissionsController extends AppController {
 			$this->Message->error(__('The permission does not exist', $id), array('code' => 404));
 		}
 		$acoModelName = $permission['Permission']['aco'];
+		$acoForeignKey = $permission['Permission']['aco_foreign_key'];
 
 		// check the user has ADMIN right on the aco foreign instance
 		$this->loadModel($acoModelName);
-		if (!$this->$acoModelName->isAuthorized($id, PermissionType::ADMIN)) {
-			$this->Message->error(__('You are not allowed to delete this permission', $id));
+		if (!$this->$acoModelName->isAuthorized($acoForeignKey, PermissionType::ADMIN)) {
+			$this->Message->error(__('You are not allowed to delete this permission', $acoForeignKey));
 		}
 
 		// Delete the target permission

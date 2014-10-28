@@ -85,7 +85,8 @@ steal(
 
 			// get the permission on the category.
 			var canCreate = passbolt.model.Permission.isAllowedTo(item, passbolt.CREATE),
-				canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE);
+				canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE),
+				canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
 
 			// Add open action.
 			var action = new mad.model.Action({
@@ -102,7 +103,7 @@ steal(
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Create resource',
-				'initial_state': !canCreate ? 'disable' : 'ready',
+				'initial_state': !canCreate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_resource_creation', item);
 					menu.remove();
@@ -114,7 +115,7 @@ steal(
 				'id': uuid(),
 				'label': 'Create category',
 				'cssClasses': ['separator-after'],
-				'initial_state': !canCreate ? 'disable' : 'ready',
+				'initial_state': !canCreate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_category_creation', item);
 					menu.remove();
@@ -125,9 +126,20 @@ steal(
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Rename...',
-				'initial_state': !canUpdate ? 'disable' : 'ready',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_category_edition', item);
+					menu.remove();
+				}
+			});
+			// Add Share action.
+			contextualMenu.insertItem(action);
+			action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Share',
+				'initial_state': !canAdmin ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_category_sharing', item);
 					menu.remove();
 				}
 			});
@@ -136,7 +148,7 @@ steal(
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Remove',
-				'initial_state': !canUpdate ? 'disable' : 'ready',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_category_deletion', item);
 					menu.remove();

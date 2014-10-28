@@ -1,6 +1,7 @@
 steal(
 	'mad/controller/componentController.js',
 	'app/controller/component/passwordBreadcrumbController.js',
+	'app/controller/component/categoryActionsTabController.js',
 	'app/controller/component/categoryChooserController.js',
 	'app/controller/component/passwordBrowserController.js',
 	'app/controller/component/resourceActionsTabController.js',
@@ -195,24 +196,34 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_category_edition': function (el, ev, category) {
-			
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit a Category')})
 				.start();
-			
-			// attach the component to the dialog
-			var form = dialog.add(passbolt.controller.form.category.CreateFormController, {
-				data: category,
-				callbacks : {
-					submit: function (data) {
-						category.attr(data['passbolt.model.Category'])
-							.save();
-						dialog.remove();
-					}
-				}
+
+			// Instanciate the Resource Actions Tab Controller into the dialog
+			var tab = dialog.add(passbolt.controller.component.CategoryActionsTabController, {
+				category: category
 			});
-			
-			form.load(category);
+			tab.enableTab('js_cat_edit');
+		},
+
+		/**
+		 * Observe when the user requests a category sharing
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_category_sharing': function (el, ev, category) {
+
+			// get the dialog
+			var dialog = new mad.controller.component.DialogController(null, {label: __('Share a Category')})
+				.start();
+
+			// Instanciate the Resource Actions Tab Controller into the dialog
+			var tab = dialog.add(passbolt.controller.component.CategoryActionsTabController, {
+				category: category
+			});
+			tab.enableTab('js_cat_permission');
 		},
 
 		/**

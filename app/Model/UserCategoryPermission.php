@@ -88,14 +88,17 @@ class UserCategoryPermission extends AppModel {
 						'Permission' => array(
 							'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
 							'PermissionType' => array(
-								'fields' => array('serial', 'name')
+								'fields' => array('serial', 'name'),
 							),
 							// Return the elements the permission has been defined for (user, category)
 							'User' => array(
-								'fields' => array('id', 'username', 'role_id')
+								'fields' => array('id', 'username', 'role_id'),
+								'Profile' => array(
+									'fields' => array('id', 'first_name', 'last_name')
+								),
 							),
 							'Category' => array(
-								'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght')
+								'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght'),
 							)
 						)
 					)

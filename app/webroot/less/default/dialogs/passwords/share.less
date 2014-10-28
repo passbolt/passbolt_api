@@ -49,19 +49,41 @@
 	border:1px solid @border-default;
 }
 
+.dialog .share-tab .row.inherited-permission .inherited-actions {
+	display:none;
+	float:right;
+}
+
+.dialog .share-tab .row.inherited-permission:hover .inherited-actions {
+	display:block;
+}
+
+.dialog .share-tab .row.inherited-permission .inherited-actions a {
+	color: @font-light;
+}
+
 /* form to add new permissions */
 .dialog .share-tab .form-content.permission-add {
 	padding:0 1.5em 1em 1.5em;
 	.clearfix();
 }
-.dialog .share-tab .form-content.permission-add textarea {
-	width:59%;
-	margin-right:2%;
+.dialog .share-tab .form-content.permission-add .autocomplete input {
+	width:53%;
+	margin-right:4%;
 	float:left;
-	height:2.5em;
 	font-size:1em;
 }
+.dialog .share-tab .form-content.permission-add .autocomplete-content {
+	width:52%;
+}
+.dialog .share-tab .form-content.permission-add .perm-type {
+	margin-right:4%;
+}
+.dialog .share-tab .form-content.permission-add .actions input {
+	padding:0.3em 1em;
+}
 .dialog .share-tab .form-content.permission-add .checkbox {
+	clear: both;
 	display:block;
 	float:left;
 }

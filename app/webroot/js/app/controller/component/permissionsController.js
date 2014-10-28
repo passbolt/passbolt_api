@@ -6,7 +6,7 @@ steal(
 	'app/model/permissionType.js',
 
 	'app/view/template/form/permission/addForm.ejs',
-	'app/view/template/component/permission/permissionListElement.ejs'
+	'app/view/template/component/permission/permissionListItem.ejs'
 ).then(function () {
 
 	/*
@@ -39,40 +39,60 @@ steal(
 
 		'afterStart': function() {
 			var self = this;
-			
+
 			// List defined permissions
 			this.permList = new mad.controller.component.TreeController($('#js_permissions_list'), {
 				'cssClasses': ['permissions'],
 				'viewClass': mad.view.component.Tree,
 				'itemClass': passbolt.model.Permission,
 				'templateUri': 'mad/view/template/component/tree.ejs',
-				'itemTemplateUri': 'app/view/template/component/permission/permissionListElement.ejs',
+				'itemTemplateUri': 'app/view/template/component/permission/permissionListItem.ejs',
 				// The map to use to make jstree working with our category model
 				'map': new mad.object.Map({
 					'id': 'id',
-					'permTarget': {
-						'key': 'aco_foreign_key',
-						'func': function(aco_foreign_key, map, obj) {
-							switch(obj.aro) {
-								case 'Group':
-									return obj['Group'].name;
-								break;
-								case 'User':
-									return obj['User'].username;
-								break;
-							}
+					'isDirect': {
+						'key': 'aro_foreign_key',
+						'func': function(aro_foreign_key, map, obj) {
+							return obj.isDirect(self.options.acoInstance);
 						}
 					},
-					'permType': {
+					'aroLabel': {
 						'key': 'aro',
 						'func': function(aro, map, obj) {
 							return aro.toLowerCase();
 						}
 					},
+					'permType': 'PermissionType.serial',
 					'permLabel': {
 						'key': 'PermissionType',
 						'func': function(permType, map, obj) {
 							return permType.toString('long');
+						}
+					},
+					'acoLabel': {
+						'key': 'aco_foreign_key',
+						'func': function(aco_foreign_key, map, obj) {
+							switch(obj.aro) {
+								case 'Group':
+									return obj['Group'].name;
+									break;
+								case 'User':
+									return obj['User']['Profile'].first_name + ' ' + obj['User']['Profile'].last_name;
+									break;
+							}
+						}
+					},
+					'acoDetails': {
+						'key': 'aco_foreign_key',
+						'func': function(aco_foreign_key, map, obj) {
+							switch(obj.aro) {
+								case 'Group':
+									return __('group');
+									break;
+								case 'User':
+									return obj['User'].username;
+									break;
+							}
 						}
 					}
 				})
@@ -113,11 +133,16 @@ steal(
 				}
 			}).start();
 			this.addFormController.addElement(this.options.permAroAutocpltTxtbx, permCreateFormFeedback);
-	
+
 			// Add a selectbox element to the form to carry permission type
+			var availablePermissionTypes = {};
+			for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
+				availablePermissionTypes[permType] = passbolt.model.PermissionType.toString(permType);
+			}
 			var permTypeCtl = new mad.form.element.DropdownController($('#js_perm_create_form_type', this.element), {
+					emptyValue: false,
 					modelReference: 'passbolt.model.Permission.type',
-					availableValues: passbolt.model.PermissionType.PERMISSION_TYPES
+					availableValues: availablePermissionTypes
 				}).start();
 			this.addFormController.addElement(permTypeCtl, permCreateFormFeedback);		
 
@@ -185,6 +210,44 @@ steal(
 				self.permList.load(permissions);
 				// load the form with the resource data
 				self.addFormController.load(self.options.acoInstance);
+
+				// load the edit forms functions of the permissions
+				permissions.each(function(permission, i) {
+					// form edit permission
+					var formId = 'js_perm_edit_form_' + permission.id;
+					var formCtl = new mad.form.FormController($('#' + formId, this.element), {
+						'templateBased': false,
+						'cssClasses': [],
+						'validateOnChange': false
+					});
+					formCtl.start();
+
+					// Add an hidden element to the form to carry the aro id
+					var permIdCtl = new mad.form.element.TextboxController($('.js_perm_edit_form_id', formCtl.element), {
+						modelReference: 'passbolt.model.Permission.id'
+					}).start();
+					formCtl.addElement(permIdCtl);
+
+					// Add a selectbox element to the form to carry permission type
+					var availablePermissionTypes = {};
+					for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
+						availablePermissionTypes[permType] = passbolt.model.PermissionType.toString(permType);
+					}
+					var permTypeCtl = new mad.form.element.DropdownController($('.js_perm_edit_form_type', formCtl.element), {
+						emptyValue: false,
+						modelReference: 'passbolt.model.Permission.type',
+						availableValues: availablePermissionTypes
+					}).start();
+					formCtl.addElement(permTypeCtl);
+
+					// If the permission is not direct, disable the permission type select list
+					if (!permission.isDirect(self.options.acoInstance)) {
+						permTypeCtl.setState('disabled');
+					}
+
+					// load the form with the resource data
+					formCtl.load(permission);
+				});
 			});
 		},
 
@@ -240,7 +303,7 @@ steal(
 		 * @param {passbolt.model.Permission} permission The permission to remove
 		 * @return {void}
 		 */
-		' delete': function (el, ev, permission) {
+		' request_permission_delete': function (el, ev, permission) {
 			var self = this;
 
 			// if the permission is a direct permission, remove it
@@ -257,6 +320,7 @@ steal(
 
 			// otherwise write a direct permission to drop the existing right of the given permission
 			// @todo check the user has the right to override the permission
+			// @todo need to be rechecked, for now we don't do anything on inherited permission.
 			} else {
 				// gather the data to create a new permission
 				var data = {
@@ -299,6 +363,43 @@ steal(
 			this.permAroHiddenTxtbx.setModelReference(data.model + '.id');
 			// set the value of the hidden field aro_foreign_key
 			this.permAroHiddenTxtbx.setValue(data.id);
+		},
+
+		/**
+		 * A permission has been updated.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {string} permissionType The new permission type
+		 * @return {void}
+		 */
+		'.js_perm_edit_form_type changed': function(el, ev, permissionType) {
+			var li = el.parents('li'),
+				permission = li.data('passbolt.model.Permission');
+
+			permission.attr('type', permissionType['value']);
+			permission.update();
+		},
+
+		/**
+		 * The user request a go to permission.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {string} permissionType The new permission type
+		 * @return {void}
+		 */
+		'.js_perm_goto click': function(el, ev) {
+			var li = el.parents('li'),
+				permission = li.data('passbolt.model.Permission');
+
+			// Extract the permission.
+			switch(permission.aco) {
+				case 'Category':
+					// Get the full object stored in our local madstore.c
+					var i = mad.model.List.indexOf(passbolt.model.Category.madStore, permission.Category.id);
+					var category = passbolt.model.Category.madStore[i];
+					mad.bus.trigger('request_category_sharing', category);
+					break;
+			}
 		}
 
 	});

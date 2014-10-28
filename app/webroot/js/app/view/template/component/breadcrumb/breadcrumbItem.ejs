@@ -4,8 +4,8 @@ if (typeof cssClasses == 'undefined') {
 }
 %>
 
-<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses %>">
+<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses %>">
     <div class="main-cell">
-        <a href="#"><span><%= label %></span></a>
+        <a href="#"><span><%= mappedItem.label %></span></a>
     </div>
 </li>

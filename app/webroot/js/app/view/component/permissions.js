@@ -29,7 +29,7 @@ steal(
 
 			var li = el.parents('li');
 			var permission = li.data('passbolt.model.Permission');
-			this.element.trigger('delete', [permission]);
+			this.element.trigger('request_permission_delete', [permission]);
 		},
 
 		/**

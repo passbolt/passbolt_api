@@ -164,6 +164,7 @@ class PermissionableBehavior extends ModelBehavior {
 		$aroId = !is_null($aroId) ? $aroId : User::get('id');
 		$targetPermissionModelName = $aroType . $model->alias . 'Permission';
 		$TargetPermissionModel = Common::getModel($targetPermissionModelName);
+
 		$findOptions = array(
 			'fields' => array(
 				'permission_id',

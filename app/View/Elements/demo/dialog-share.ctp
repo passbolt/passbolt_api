@@ -72,13 +72,10 @@
 						<div class="form-content permission-add">
 							<input id="js_permission_aco" type="hidden" />
 							<input id="js_permission_aro" type="hidden" />
-							<div id="js_field_perm_aro_label" class="message">
-							</div>
-							<div class="input textarea autocomplete">
-								<label for="ResourceShare">Share with people or groups</label>
-								<textarea name="data[Resource][share]" class="small" id="ResourceShare" rows="2" placeholder="Enter a name or email address, separated by a coma"></textarea>
-								<ul id="js_permission_aro_autocomplete_list" class="autocomplete-content" style="display:none;">
-								</ul>
+
+							<div class="input text autocomplete">
+								<label for="js_perm_create_form_aro_auto_cplt">Share with people or groups</label>
+								<input type="text" id="js_perm_create_form_aro_auto_cplt" placeholder="start typing a person name" rows="2" class="small permision-add-input" />
 							</div>
 							<div class="select left perm-type">
 								<select id="js_permission_type" class="permission ">
@@ -88,13 +85,15 @@
 									<option value="admin">can share</option>
 								</select>
 							</div>
+							<div class="left actions">
+								<input id="js_perm_create_form_add_btn" type="submit" class="button primary" value="add"/>
+							</div>
 							<div class="input checkbox send-email-notification">
 								<input type="checkbox" name="select all" value="checkbox-send-email-notification" id="checkbox-send-email-notification">
 								<label for="checkbox-send-email-notification">send a notification by email</label>
 							</div>
 						</div>
 						<div class="submit-wrapper clearfix">
-							<input type="submit" class="button primary" value="save"/>
 							<a href="#" class="cancel">cancel</a>
 						</div>
 						</form>

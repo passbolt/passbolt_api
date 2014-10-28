@@ -59,7 +59,7 @@ steal(
 			if (typeof options.id == 'undefined' || options.id == null || options.id == '') {
 				// The id is maybe set directly on the templates.
 				var elId = this.element.attr('id');
-				if (elId == '') {
+				if (typeof elId == 'undefined' || elId == '') {
 					options.id = uuid();
 					this.element.attr('id', options.id);
 				} else {

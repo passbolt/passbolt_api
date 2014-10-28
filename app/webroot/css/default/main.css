@@ -914,6 +914,9 @@ span + .icon {
 .icon.eye:before {
   content: '\E70A';
 }
+.icon.levelup:before {
+  content: '\21B0';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -1900,6 +1903,20 @@ input[type="search"]::-webkit-search-cancel-button {
     font-weight: normal;
   }
 }
+.autocomplete-content {
+  border: 1px solid #dddddd;
+  background: #ffffff;
+  float: left;
+  position: absolute;
+  min-width: 13em;
+  z-index: 998;
+  padding-top: .25em;
+  width: 100%;
+}
+.autocomplete input + .autocomplete-content {
+  margin-top: 1.80em;
+  margin-right: 7px;
+}
 /* Dialog */
 .dialog-wrapper {
   position: absolute;
@@ -1927,6 +1944,12 @@ input[type="search"]::-webkit-search-cancel-button {
 .dialog .dialog-header h2 {
   margin: .25em 0 .5em .2em;
   font-size: 1.2em;
+}
+.dialog .dialog-header-subtitle {
+  padding-top: 0.3em;
+  padding-left: 1em;
+  font-size: 0.7em;
+  color: #888888;
 }
 .dialog .dialog-close {
   float: right;
@@ -2415,7 +2438,7 @@ input[type="search"]::-webkit-search-cancel-button {
   color: #333333;
   background: #eeeeee;
 }
-.contextual-menu li.disable a {
+.contextual-menu li.disabled a {
   color: #eeeeee;
 }
 .contextual-menu .separator-before {
@@ -2788,6 +2811,16 @@ input[type="search"]::-webkit-search-cancel-button {
 .dialog .share-tab .row .actions a:hover {
   border: 1px solid #dddddd;
 }
+.dialog .share-tab .row.inherited-permission .inherited-actions {
+  display: none;
+  float: right;
+}
+.dialog .share-tab .row.inherited-permission:hover .inherited-actions {
+  display: block;
+}
+.dialog .share-tab .row.inherited-permission .inherited-actions a {
+  color: #888888;
+}
 /* form to add new permissions */
 .dialog .share-tab .form-content.permission-add {
   padding: 0 1.5em 1em 1.5em;
@@ -2839,14 +2872,23 @@ input[type="search"]::-webkit-search-cancel-button {
 .dialog .share-tab .form-content.permission-add:after {
   clear: both;
 }
-.dialog .share-tab .form-content.permission-add textarea {
-  width: 59%;
-  margin-right: 2%;
+.dialog .share-tab .form-content.permission-add .autocomplete input {
+  width: 53%;
+  margin-right: 4%;
   float: left;
-  height: 2.5em;
   font-size: 1em;
 }
+.dialog .share-tab .form-content.permission-add .autocomplete-content {
+  width: 52%;
+}
+.dialog .share-tab .form-content.permission-add .perm-type {
+  margin-right: 4%;
+}
+.dialog .share-tab .form-content.permission-add .actions input {
+  padding: 0.3em 1em;
+}
 .dialog .share-tab .form-content.permission-add .checkbox {
+  clear: both;
   display: block;
   float: left;
 }

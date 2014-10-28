@@ -152,7 +152,7 @@ steal(
 		'destroy' : function (id, success, error) {
 			var params = {id:id};
 			return mad.net.Ajax.request({
-				url: APP_URL + 'permissions/{id}',
+				url: APP_URL + 'permissions/{id}.json',
 				type: 'DELETE',
 				params: params,
 				success: success,
@@ -264,8 +264,9 @@ steal(
 		 */
 		'isDirect': function(acoInstance) {
 			var permAcoModel = can.getObject('passbolt.model.' + this.aco);
-			if(acoInstance instanceof permAcoModel && acoInstance.id === this.aco_foreign_key)
+			if(acoInstance instanceof permAcoModel && acoInstance.id === this.aco_foreign_key) {
 				return true;
+			}
 			return false;
 		}
 	});
