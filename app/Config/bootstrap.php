@@ -41,6 +41,24 @@ if (Configure::read('debug') > 1) {
 }
 
 /**
+ * Imagine plugin for the image manipulation.
+ */
+CakePlugin::load('Imagine', array(
+	'bootstrap' => true
+));
+
+/**
+ * File storage plugin for file manipulation.
+ */
+CakePlugin::load('FileStorage', array(
+	'bootstrap' => true
+));
+CakePlugin::load('Imagine', array(
+	'bootstrap' => true
+));
+require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
+
+/**
  * The settings below can be used to set additional paths to models, views and controllers.
  *
  * App::build(array(

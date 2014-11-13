@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="index, follow, all" />
+        <title>Imagine\Image\Palette\Color\Gray | </title>
+                    <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css">
+                            </head>
+        <body id="class">
+            <div class="header">
+        <ul>
+            <li><a href="../../../../classes.html">Classes</a></li>
+                            <li><a href="../../../../namespaces.html">Namespaces</a></li>
+                        <li><a href="../../../../interfaces.html">Interfaces</a></li>
+            <li><a href="../../../../traits.html">Traits</a></li>
+            <li><a href="../../../../doc-index.html">Index</a></li>
+            
+        </ul>
+
+        <div id="title"></div>
+
+            <div class="type">Class</div>
+    <h1><a href="../../../../Imagine/Image/Palette/Color.html">Imagine\Image\Palette\Color</a>\Gray</h1>
+    </div>
+        <div class="content">
+                <p>    class
+    <strong>Gray</strong>        implements
+        <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a></p>
+
+    
+    
+    
+            <h2>Methods</h2>
+
+            <table>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method___construct">__construct</a>(<a href="../../../../Imagine/Image/Palette/Grayscale.html"><abbr title="Imagine\Image\Palette\Grayscale">Grayscale</abbr></a> $palette, array $color, $alpha)
+                    <p>
+</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    Integer
+                </td>
+                <td class="last">
+                    <a href="#method_getValue">getValue</a>(string $component)
+                    <p>Return the value of one of the component.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    integer
+                </td>
+                <td class="last">
+                    <a href="#method_getGray">getGray</a>()
+                    <p>Returns Gray value of the color</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_getPalette">getPalette</a>()
+                    <p>Returns the palette attached to the current color</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    integer
+                </td>
+                <td class="last">
+                    <a href="#method_getAlpha">getAlpha</a>()
+                    <p>Returns percentage of transparency of the color</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_dissolve">dissolve</a>(integer $alpha)
+                    <p>Returns a copy of current color, incrementing the alpha channel by the given amount</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_lighten">lighten</a>(integer $shade)
+                    <p>Returns a copy of the current color, lightened by the specified number of shades</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_darken">darken</a>(integer $shade)
+                    <p>Returns a copy of the current color, darkened by the specified number of shades</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_grayscale">grayscale</a>()
+                    <p>Returns a gray related to the current color</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    Boolean
+                </td>
+                <td class="last">
+                    <a href="#method_isOpaque">isOpaque</a>()
+                    <p>Checks if the current color is opaque</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    string
+                </td>
+                <td class="last">
+                    <a href="#method___toString">__toString</a>()
+                    <p>Returns hex representation of the color</p>
+                </td>
+                <td></td>
+            </tr>
+            </table>
+
+
+        <h2>Details</h2>
+
+                        <h3 id="method___construct">
+        <div class="location">at line 35</div>
+        <code>            public            
+    <strong>__construct</strong>(<a href="../../../../Imagine/Image/Palette/Grayscale.html"><abbr title="Imagine\Image\Palette\Grayscale">Grayscale</abbr></a> $palette, array $color, $alpha)</code>
+    </h3>
+    <div class="details">
+        <p>
+</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../../../Imagine/Image/Palette/Grayscale.html"><abbr title="Imagine\Image\Palette\Grayscale">Grayscale</abbr></a></td>
+                <td>$palette</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$color</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$alpha</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getValue">
+        <div class="location">at line 45</div>
+        <code>            public            Integer
+    <strong>getValue</strong>(string $component)</code>
+    </h3>
+    <div class="details">
+        <p>Return the value of one of the component.</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$component</td>
+                <td>One of the ColorInterface::COLOR_* component</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>Integer</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getGray">
+        <div class="location">at line 60</div>
+        <code>            public            integer
+    <strong>getGray</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns Gray value of the color</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>integer</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getPalette">
+        <div class="location">at line 68</div>
+        <code>            public            <a href="../../../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a>
+    <strong>getPalette</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns the palette attached to the current color</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getAlpha">
+        <div class="location">at line 76</div>
+        <code>            public            integer
+    <strong>getAlpha</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns percentage of transparency of the color</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>integer</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_dissolve">
+        <div class="location">at line 84</div>
+        <code>            public            <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+    <strong>dissolve</strong>(integer $alpha)</code>
+    </h3>
+    <div class="details">
+        <p>Returns a copy of current color, incrementing the alpha channel by the given amount</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$alpha</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_lighten">
+        <div class="location">at line 94</div>
+        <code>            public            <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+    <strong>lighten</strong>(integer $shade)</code>
+    </h3>
+    <div class="details">
+        <p>Returns a copy of the current color, lightened by the specified number of shades</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$shade</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_darken">
+        <div class="location">at line 102</div>
+        <code>            public            <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+    <strong>darken</strong>(integer $shade)</code>
+    </h3>
+    <div class="details">
+        <p>Returns a copy of the current color, darkened by the specified number of shades</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$shade</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_grayscale">
+        <div class="location">at line 110</div>
+        <code>            public            <a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+    <strong>grayscale</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns a gray related to the current color</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_isOpaque">
+        <div class="location">at line 118</div>
+        <code>            public            Boolean
+    <strong>isOpaque</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Checks if the current color is opaque</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>Boolean</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method___toString">
+        <div class="location">at line 128</div>
+        <code>            public            string
+    <strong>__toString</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns hex representation of the color</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>string</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+    
+            </div>
+            <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+    </div>
+    </body>
+</html>

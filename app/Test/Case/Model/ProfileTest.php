@@ -11,7 +11,7 @@ App::uses('Profile', 'Model');
 
 class ProfileTest extends CakeTestCase {
 
-	public $fixtures = array('app.user','app.profile');
+	public $fixtures = array('app.user', 'app.profile', 'app.file_storage');
 
 	public $autoFixtures = true;
 

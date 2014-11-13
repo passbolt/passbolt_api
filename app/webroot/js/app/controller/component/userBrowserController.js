@@ -45,7 +45,7 @@ steal(
             // The map to use to make our grid working with our resource model
             options.map = new mad.object.Map({
                 'id': 'id',
-                'name': 'name',
+	            'name': 'name',
                 'username': 'username',
                 'modified': 'modified',
                 'Group': 'Group',
@@ -78,7 +78,17 @@ steal(
                     );
                     checkbox.start();
                 }
-            },  {
+            }, {
+	            'name': 'avatar',
+	            'index': 'Profile',
+	            'header': {
+		            'css': ['s-cell'],
+		            'label': ''
+	            },
+	            'valueAdapter': function (value, mappedItem, item, columnModel) {
+		            return '<img src="' + item.Profile.avatarPath('smallest') + '" width="30" height="30">';
+	            }
+            }, {
                 'name': 'name',
                 'index': 'Profile',
                 'header': {
@@ -86,7 +96,7 @@ steal(
                     'label': __('User')
                 },
                 'valueAdapter': function (value, mappedItem, item, columnModel) {
-                    return '<img src="img/user.png" alt="your picture" width="30" height="30">' + mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name;
+                    return mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name;
                 }
             }, {
                 'name': 'username',

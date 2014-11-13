@@ -13,12 +13,14 @@ class InstallShell extends AppShell {
 	public function main() {
 		$this->schema();
 		$this->data();
-		$this->out("\ninstallation success");
+		$this->out("\npassbolt installation success");
 	}
 
 	public function schema() {
 		$this->dispatchShell('schema create --force_drop --force_create -q');
-		$this->out('schema deployed');
+		$this->out('passbolt schema deployed');
+		$this->dispatchShell('schema create --plugin FileStorage --force_drop --force_create -q');
+		$this->out('plugins schemas deployed');
 	}
 
 	public function data() {

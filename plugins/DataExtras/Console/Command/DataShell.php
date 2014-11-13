@@ -29,7 +29,8 @@ class DataShell extends AppShell {
 		'PermissionType',
 		'Permission',
 		'Comment',
-		'Profile'
+		'Profile',
+		'Avatar',
 	);
 
 /**
@@ -66,11 +67,12 @@ class DataShell extends AppShell {
 	}
 
 /**
- * Export data test into fixtures
+ * Export passbolt data into fixtures.
  *
  * @return void
  */
 	public function export() {
+		// Export passbolt schema data
 		$noFixtureTables = array(
 			'gpgKeys'
 		);
@@ -81,13 +83,34 @@ class DataShell extends AppShell {
 			"connection" => "default",
 			"plugin" => null
 		);
-		$cakeSchema = new CakeSchema();
+		$this->exportSchema($options, $noFixtureTables);
+
+		// Export
+		$noFixtureTables = array();
+		$options = array(
+			"name" => "FileStorage",
+			"path" => APP . "Plugin/FileStorage/Config/Schema",
+			"file" => "schema.php",
+			"connection" => "default",
+			"plugin" => ""
+		);
+		$this->exportSchema($options, $noFixtureTables);
+	}
+
+/**
+ * Export data from a schema into fixtures
+ *
+ * @return void
+ */
+	public function exportSchema($options, $noFixtureTables) {
+		$cakeSchema = new CakeSchema($options);
 		$schema = $cakeSchema->load($options);
+
 		foreach ($schema->tables as $name => $table) {
 			if (in_array($name, $noFixtureTables)) {
 				continue;
 			}
-			$this->dispatchShell("bake fixture {$name} --count 1000 --records --schema");
+			$this->dispatchShell("bake fixture --count 1000 --records --schema {$name}");
 		}
 	}
 

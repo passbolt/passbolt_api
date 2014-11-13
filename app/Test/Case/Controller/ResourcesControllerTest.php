@@ -32,6 +32,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		'app.log',
 		'app.user',
 		'app.profile',
+		'app.file_storage',
 		'app.group',
 		'app.groupsUser',
 		'app.role',

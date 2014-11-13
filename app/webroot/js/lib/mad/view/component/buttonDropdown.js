@@ -9,39 +9,25 @@ steal(
 		mad.view.View.extend('mad.view.component.ButtonDropdown', /** @static */ {
 
 			'defaults': {
-				/**
-				 * main clickable element.
-				 */
-				button: null,
-				/**
-				 * wrapper element (wrapper).
-				 */
-				wrapper: null
 			}
 
 		}, /** @prototype */ {
-
-			'init': function (el, options) {
-				// Construct parent.
-				this._super(el, options);
-
-				// Init elements.
-				this.options.button = this.element;
-				this.options.wrapper = this.options.button.closest('.dropdown');
-			},
 
 			/**
 			 * Get the dropdown element for the current dropdown button.
 			 * @returns {elt}
 			 */
-			'getDropdown': function() {
-				var content = null;
-				if (this.options.button.attr('data-dropdown-content-id') == undefined) {
-					content = this.options.button.next();
-				} else {
-					content = $("#" + this.options.button.attr('data-dropdown-content-id'));
+			'getDropdownContentElement': function() {
+				var contentElement = this.getController().options.contentElement;
+
+				// a custom dropdown content element has been defined
+				if (contentElement != null) {
+					return $(contentElement);
 				}
-				return content;
+				// otherwise the element next to this element is the dropdown content element
+				else {
+					return this.element.next();
+				}
 			},
 
 			/**
@@ -50,9 +36,10 @@ steal(
 			 * @return {void}
 			 */
 			'open': function () {
-				this.options.wrapper.addClass('pressed');
-				content = this.getDropdown();
-				content.addClass('visible');
+				this.element.addClass('pressed');
+				var $contentElement = this.getDropdownContentElement();
+				$contentElement.addClass('visible');
+				this.getController().state.addState('open');
 			},
 
 			/**
@@ -61,13 +48,11 @@ steal(
 			 * @return {void}
 			 */
 			'close': function () {
-				this.options.wrapper.removeClass('pressed');
-				content = this.getDropdown();
-				content.removeClass('visible');
-			},
-
-			'isOpen': function () {
-				return this.options.wrapper.hasClass('pressed');
+				this.element.removeClass('pressed');
+				var $contentElement = this.getDropdownContentElement();
+				$contentElement.removeClass('visible');
+				if (this.getController().state.is('open'))
+				this.getController().state.removeState('open');
 			},
 
 			/* ************************************************************** */
@@ -83,13 +68,15 @@ steal(
 				if (this.getController().state.is('disabled')) {
 					return false;
 				}
+
 				// If state is not disabled,
 				// manage opening and closing of button dropdown.
-				if(!this.isOpen()) {
+				if(!this.getController().state.is('open')) {
 					this.open();
 				} else {
 					this.close();
 				}
+
 				return false;
 			},
 
@@ -104,7 +91,6 @@ steal(
 			'{document} click': function (el, ev) {
 				if (!this.element.is(el)) {
 					this.close();
-					this.options.wrapper.removeClass('pressed');
 				}
 			}
 

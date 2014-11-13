@@ -12,7 +12,7 @@ App::uses('AppTestCase', 'Test');
 
 class TagTest extends AppTestCase {
 
-	public $fixtures = array('app.tag', 'app.user', 'app.role', 'app.profile');
+	public $fixtures = array('app.tag', 'app.user', 'app.role', 'app.profile', 'app.file_storage');
 
 	public $autoFixtures = true;
 

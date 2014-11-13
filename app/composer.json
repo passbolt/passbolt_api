@@ -1,0 +1,12 @@
+{
+	"name": "passbolt/dependencies",
+	"description": "The passbolt dependencies",
+	"license": "GPL-3.0",
+	"config": {
+		"vendor-dir": "Vendor"
+	},
+	"require": {
+		"burzum/file-storage": "dev-master",
+		"burzum/cakephp-imagine-plugin": "dev-master"
+	}
+}

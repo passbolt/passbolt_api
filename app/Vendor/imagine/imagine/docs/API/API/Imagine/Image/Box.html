@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="index, follow, all" />
+        <title>Imagine\Image\Box | </title>
+                    <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+                            </head>
+        <body id="class">
+            <div class="header">
+        <ul>
+            <li><a href="../../classes.html">Classes</a></li>
+                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                        <li><a href="../../interfaces.html">Interfaces</a></li>
+            <li><a href="../../traits.html">Traits</a></li>
+            <li><a href="../../doc-index.html">Index</a></li>
+            
+        </ul>
+
+        <div id="title"></div>
+
+            <div class="type">Class</div>
+    <h1><a href="../../Imagine/Image.html">Imagine\Image</a>\Box</h1>
+    </div>
+        <div class="content">
+                <p>    class
+    <strong>Box</strong>        implements
+        <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></p>
+
+            <div class="description">
+            <p>A box implementation</p>
+            <p>
+</p>
+        </div>
+    
+    
+    
+            <h2>Methods</h2>
+
+            <table>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method___construct">__construct</a>(integer $width, integer $height)
+                    <p>Constructs the Size with given width and height</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    integer
+                </td>
+                <td class="last">
+                    <a href="#method_getWidth">getWidth</a>()
+                    <p>Gets current image width</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    integer
+                </td>
+                <td class="last">
+                    <a href="#method_getHeight">getHeight</a>()
+                    <p>Gets current image height</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_scale">scale</a>(float $ratio)
+                    <p>Creates new BoxInterface instance with ratios applied to both sides</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_increase">increase</a>(integer $size)
+                    <p>Creates new BoxInterface, adding given size to both sides</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    Boolean
+                </td>
+                <td class="last">
+                    <a href="#method_contains">contains</a>(<a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $box, <a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $start = null)
+                    <p>Checks whether current box can fit given box at a given start position, start position defaults to top left corner xy(0,0)</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    integer
+                </td>
+                <td class="last">
+                    <a href="#method_square">square</a>()
+                    <p>Gets current box square, useful for getting total number of pixels in a given box</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    string
+                </td>
+                <td class="last">
+                    <a href="#method___toString">__toString</a>()
+                    <p>Returns a string representation of the current box</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_widen">widen</a>(integer $width)
+                    <p>Resizes box to given width, constraining proportions and returns the new box</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_heighten">heighten</a>(integer $height)
+                    <p>Resizes box to given height, constraining proportions and returns the new box</p>
+                </td>
+                <td></td>
+            </tr>
+            </table>
+
+
+        <h2>Details</h2>
+
+                        <h3 id="method___construct">
+        <div class="location">at line 39</div>
+        <code>            public            
+    <strong>__construct</strong>(integer $width, integer $height)</code>
+    </h3>
+    <div class="details">
+        <p>Constructs the Size with given width and height</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$width</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>integer</td>
+                <td>$height</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getWidth">
+        <div class="location">at line 52</div>
+        <code>            public            integer
+    <strong>getWidth</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Gets current image width</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>integer</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getHeight">
+        <div class="location">at line 60</div>
+        <code>            public            integer
+    <strong>getHeight</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Gets current image height</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>integer</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_scale">
+        <div class="location">at line 68</div>
+        <code>            public            <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+    <strong>scale</strong>(float $ratio)</code>
+    </h3>
+    <div class="details">
+        <p>Creates new BoxInterface instance with ratios applied to both sides</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>float</td>
+                <td>$ratio</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_increase">
+        <div class="location">at line 76</div>
+        <code>            public            <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+    <strong>increase</strong>(integer $size)</code>
+    </h3>
+    <div class="details">
+        <p>Creates new BoxInterface, adding given size to both sides</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$size</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_contains">
+        <div class="location">at line 84</div>
+        <code>            public            Boolean
+    <strong>contains</strong>(<a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $box, <a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $start = null)</code>
+    </h3>
+    <div class="details">
+        <p>Checks whether current box can fit given box at a given start position, start position defaults to top left corner xy(0,0)</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+                <td>$box</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a></td>
+                <td>$start</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>Boolean</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_square">
+        <div class="location">at line 94</div>
+        <code>            public            integer
+    <strong>square</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Gets current box square, useful for getting total number of pixels in a given box</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>integer</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method___toString">
+        <div class="location">at line 102</div>
+        <code>            public            string
+    <strong>__toString</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns a string representation of the current box</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>string</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_widen">
+        <div class="location">at line 110</div>
+        <code>            public            <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+    <strong>widen</strong>(integer $width)</code>
+    </h3>
+    <div class="details">
+        <p>Resizes box to given width, constraining proportions and returns the new box</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$width</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_heighten">
+        <div class="location">at line 118</div>
+        <code>            public            <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+    <strong>heighten</strong>(integer $height)</code>
+    </h3>
+    <div class="details">
+        <p>Resizes box to given height, constraining proportions and returns the new box</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$height</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+    
+            </div>
+            <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+    </div>
+    </body>
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="index, follow, all" />
+        <title>Imagine\Gd\Layers | </title>
+                    <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+                            </head>
+        <body id="class">
+            <div class="header">
+        <ul>
+            <li><a href="../../classes.html">Classes</a></li>
+                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                        <li><a href="../../interfaces.html">Interfaces</a></li>
+            <li><a href="../../traits.html">Traits</a></li>
+            <li><a href="../../doc-index.html">Index</a></li>
+            
+        </ul>
+
+        <div id="title"></div>
+
+            <div class="type">Class</div>
+    <h1><a href="../../Imagine/Gd.html">Imagine\Gd</a>\Layers</h1>
+    </div>
+        <div class="content">
+                <p>    class
+    <strong>Layers</strong>        extends <a href="../../Imagine/Image/AbstractLayers.html"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a></p>
+
+    
+    
+    
+            <h2>Methods</h2>
+
+            <table>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_add">add</a>(<a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $image)
+                    <p>Adds an image at the end of the layers stack</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/AbstractLayers.html#method_add"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_set">set</a>(integer $offset, <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $image)
+                    <p>Set an image at offset</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/AbstractLayers.html#method_set"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_remove">remove</a>(integer $offset)
+                    <p>Removes the image at offset</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/AbstractLayers.html#method_remove"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_get">get</a>(integer $offset)
+                    <p>Returns the image at offset</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/AbstractLayers.html#method_get"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    Boolean
+                </td>
+                <td class="last">
+                    <a href="#method_has">has</a>(integer $offset)
+                    <p>Returns true if a layer at offset is preset</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/AbstractLayers.html#method_has"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method___construct">__construct</a>(<a href="../../Imagine/Gd/Image.html"><abbr title="Imagine\Gd\Image">Image</abbr></a> $image, <a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a> $palette, $resource)
+                    <p>
+</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_merge">merge</a>()
+                    <p>Merge layers into the original objects</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_coalesce">coalesce</a>()
+                    <p>Coalesce layers.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_animate">animate</a>(string $format, integer $delay, integer $loops)
+                    <p>Animates layers</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_current">current</a>()
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_key">key</a>()
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_next">next</a>()
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_rewind">rewind</a>()
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_valid">valid</a>()
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_count">count</a>()
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_offsetExists">offsetExists</a>($offset)
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_offsetGet">offsetGet</a>($offset)
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_offsetSet">offsetSet</a>($offset, $value)
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    
+                </td>
+                <td class="last">
+                    <a href="#method_offsetUnset">offsetUnset</a>($offset)
+                    <p>{@inheritdoc}</p>
+                </td>
+                <td></td>
+            </tr>
+            </table>
+
+
+        <h2>Details</h2>
+
+                        <h3 id="method_add">
+        <div class="location">in <a href="../../Imagine/Image/AbstractLayers.html#method_add"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a> at line 19</div>
+        <code>            public            <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+    <strong>add</strong>(<a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $image)</code>
+    </h3>
+    <div class="details">
+        <p>Adds an image at the end of the layers stack</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+                <td>$image</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_set">
+        <div class="location">in <a href="../../Imagine/Image/AbstractLayers.html#method_set"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a> at line 29</div>
+        <code>            public            <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+    <strong>set</strong>(integer $offset, <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $image)</code>
+    </h3>
+    <div class="details">
+        <p>Set an image at offset</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+                <td>$image</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/OutOfBoundsException"><abbr title="OutOfBoundsException">OutOfBoundsException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_remove">
+        <div class="location">in <a href="../../Imagine/Image/AbstractLayers.html#method_remove"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a> at line 39</div>
+        <code>            public            <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+    <strong>remove</strong>(integer $offset)</code>
+    </h3>
+    <div class="details">
+        <p>Removes the image at offset</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_get">
+        <div class="location">in <a href="../../Imagine/Image/AbstractLayers.html#method_get"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a> at line 49</div>
+        <code>            public            <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+    <strong>get</strong>(integer $offset)</code>
+    </h3>
+    <div class="details">
+        <p>Returns the image at offset</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_has">
+        <div class="location">in <a href="../../Imagine/Image/AbstractLayers.html#method_has"><abbr title="Imagine\Image\AbstractLayers">AbstractLayers</abbr></a> at line 57</div>
+        <code>            public            Boolean
+    <strong>has</strong>(integer $offset)</code>
+    </h3>
+    <div class="details">
+        <p>Returns true if a layer at offset is preset</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>Boolean</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method___construct">
+        <div class="location">at line 27</div>
+        <code>            public            
+    <strong>__construct</strong>(<a href="../../Imagine/Gd/Image.html"><abbr title="Imagine\Gd\Image">Image</abbr></a> $image, <a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a> $palette, $resource)</code>
+    </h3>
+    <div class="details">
+        <p>
+</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Gd/Image.html"><abbr title="Imagine\Gd\Image">Image</abbr></a></td>
+                <td>$image</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a></td>
+                <td>$palette</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$resource</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_merge">
+        <div class="location">at line 42</div>
+        <code>            public            
+    <strong>merge</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Merge layers into the original objects</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_coalesce">
+        <div class="location">at line 49</div>
+        <code>            public            
+    <strong>coalesce</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Coalesce layers.</p>
+        <p>Each layer in the sequence is the same size as the first and composited with the next layer in
+the sequence.</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_animate">
+        <div class="location">at line 56</div>
+        <code>            public            <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+    <strong>animate</strong>(string $format, integer $delay, integer $loops)</code>
+    </h3>
+    <div class="details">
+        <p>Animates layers</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$format</td>
+                <td>The output output format</td>
+            </tr>
+                    <tr>
+                <td>integer</td>
+                <td>$delay</td>
+                <td>The delay in milliseconds between two frames</td>
+            </tr>
+                    <tr>
+                <td>integer</td>
+                <td>$loops</td>
+                <td>The number of loops, 0 means infinite</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>In case an invalid argument is provided</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>In case the driver fails to animate</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_current">
+        <div class="location">at line 64</div>
+        <code>            public            
+    <strong>current</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_key">
+        <div class="location">at line 72</div>
+        <code>            public            
+    <strong>key</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_next">
+        <div class="location">at line 80</div>
+        <code>            public            
+    <strong>next</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_rewind">
+        <div class="location">at line 88</div>
+        <code>            public            
+    <strong>rewind</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_valid">
+        <div class="location">at line 96</div>
+        <code>            public            
+    <strong>valid</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_count">
+        <div class="location">at line 104</div>
+        <code>            public            
+    <strong>count</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_offsetExists">
+        <div class="location">at line 112</div>
+        <code>            public            
+    <strong>offsetExists</strong>($offset)</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td></td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_offsetGet">
+        <div class="location">at line 120</div>
+        <code>            public            
+    <strong>offsetGet</strong>($offset)</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td></td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_offsetSet">
+        <div class="location">at line 132</div>
+        <code>            public            
+    <strong>offsetSet</strong>($offset, $value)</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td></td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$value</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_offsetUnset">
+        <div class="location">at line 140</div>
+        <code>            public            
+    <strong>offsetUnset</strong>($offset)</code>
+    </h3>
+    <div class="details">
+        <p>{@inheritdoc}</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td></td>
+                <td>$offset</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+    
+            </div>
+            <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+    </div>
+    </body>
+</html>

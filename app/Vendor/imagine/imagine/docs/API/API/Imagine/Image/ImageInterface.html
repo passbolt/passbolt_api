@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="robots" content="index, follow, all" />
+        <title>Imagine\Image\ImageInterface | </title>
+                    <link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+                            </head>
+        <body id="class">
+            <div class="header">
+        <ul>
+            <li><a href="../../classes.html">Classes</a></li>
+                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                        <li><a href="../../interfaces.html">Interfaces</a></li>
+            <li><a href="../../traits.html">Traits</a></li>
+            <li><a href="../../doc-index.html">Index</a></li>
+            
+        </ul>
+
+        <div id="title"></div>
+
+            <div class="type">Interface</div>
+    <h1><a href="../../Imagine/Image.html">Imagine\Image</a>\ImageInterface</h1>
+    </div>
+        <div class="content">
+                <p>    interface
+    <strong>ImageInterface</strong>        implements
+        <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></p>
+
+            <div class="description">
+            <p>The image interface</p>
+            <p>
+</p>
+        </div>
+    
+            <h2>Constants</h2>
+
+            <table>
+                    <tr>
+                <td>RESOLUTION_PIXELSPERINCH</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>RESOLUTION_PIXELSPERCENTIMETER</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>INTERLACE_NONE</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>INTERLACE_LINE</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>INTERLACE_PLANE</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>INTERLACE_PARTITION</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_UNDEFINED</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_POINT</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_BOX</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_TRIANGLE</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_HERMITE</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_HANNING</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_HAMMING</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_BLACKMAN</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_GAUSSIAN</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_QUADRATIC</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_CUBIC</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_CATROM</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_MITCHELL</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_LANCZOS</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_BESSEL</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+                    <tr>
+                <td>FILTER_SINC</td>
+                <td class="last">
+                    <p><em>
+</em></p>
+                    <p>
+</p>
+                </td>
+            </tr>
+            </table>
+
+    
+    
+            <h2>Methods</h2>
+
+            <table>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_copy">copy</a>()
+                    <p>Copies current source image into a new ImageInterface instance</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_copy"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_crop">crop</a>(<a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $start, <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $size)
+                    <p>Crops a specified box out of the source image (modifies the source image) Returns cropped self</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_crop"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_resize">resize</a>(<a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $size, string $filter = ImageInterface::FILTER_UNDEFINED)
+                    <p>Resizes current image and returns self</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_resize"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_rotate">rotate</a>(integer $angle, <a href="../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a> $background = null)
+                    <p>Rotates an image at the given angle.</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_rotate"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_paste">paste</a>(<a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $image, <a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $start)
+                    <p>Pastes an image into a parent image Throws exceptions if image exceeds parent image borders or if paste operation fails</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_paste"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_save">save</a>(string $path = null, array $options = array())
+                    <p>Saves the image at a specified path, the target file extension is used to determine file format, only jpg, jpeg, gif, png, wbmp and xbm are supported</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_save"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_show">show</a>(string $format, array $options = array())
+                    <p>Outputs the image content</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_show"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_flipHorizontally">flipHorizontally</a>()
+                    <p>Flips current image using horizontal axis</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_flipHorizontally"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_flipVertically">flipVertically</a>()
+                    <p>Flips current image using vertical axis</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_flipVertically"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_strip">strip</a>()
+                    <p>Remove all profiles and comments</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_strip"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_thumbnail">thumbnail</a>(<a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $size, string $mode = self::THUMBNAIL_INSET, string $filter = ImageInterface::FILTER_UNDEFINED)
+                    <p>Generates a thumbnail from a current image Returns it as a new image, doesn't modify the current image</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_thumbnail"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_applyMask">applyMask</a>(<a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $mask)
+                    <p>Applies a given mask to current image's alpha channel</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_applyMask"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_fill">fill</a>(<a href="../../Imagine/Image/Fill/FillInterface.html"><abbr title="Imagine\Image\Fill\FillInterface">FillInterface</abbr></a> $fill)
+                    <p>Fills image with provided filling, by replacing each pixel's color in the current image with corresponding color from FillInterface, and returns modified image</p>
+                </td>
+                <td><small>from&nbsp;<a href="../../Imagine/Image/ManipulatorInterface.html#method_fill"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    string
+                </td>
+                <td class="last">
+                    <a href="#method_get">get</a>(string $format, array $options = array())
+                    <p>Returns the image content as a binary string</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    string
+                </td>
+                <td class="last">
+                    <a href="#method___toString">__toString</a>()
+                    <p>Returns the image content as a PNG binary string</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Draw/DrawerInterface.html"><abbr title="Imagine\Draw\DrawerInterface">DrawerInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_draw">draw</a>()
+                    <p>Instantiates and returns a DrawerInterface instance for image drawing</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Effects/EffectsInterface.html"><abbr title="Imagine\Effects\EffectsInterface">EffectsInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_effects">effects</a>()
+                    <p>
+</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_getSize">getSize</a>()
+                    <p>Returns current image size</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_mask">mask</a>()
+                    <p>Transforms creates a grayscale mask from current image, returns a new image, while keeping the existing image unmodified</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    array
+                </td>
+                <td class="last">
+                    <a href="#method_histogram">histogram</a>()
+                    <p>Returns array of image colors as Imagine\Image\Palette\Color\ColorInterface instances</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_getColorAt">getColorAt</a>(<a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $point)
+                    <p>Returns color at specified positions of current image</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_layers">layers</a>()
+                    <p>Returns the image layers when applicable.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_interlace">interlace</a>(string $scheme)
+                    <p>Enables or disables interlacing</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_palette">palette</a>()
+                    <p>Return the current color palette</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_usePalette">usePalette</a>(<a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a> $palette)
+                    <p>Set a palette for the image.</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+                </td>
+                <td class="last">
+                    <a href="#method_profile">profile</a>(<a href="../../Imagine/Image/ProfileInterface.html"><abbr title="Imagine\Image\ProfileInterface">ProfileInterface</abbr></a> $profile)
+                    <p>Applies a color profile on the Image</p>
+                </td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type">
+                    <abbr title="Imagine\Image\Metadata\MetadataInterface">MetadataInterface</abbr>
+                </td>
+                <td class="last">
+                    <a href="#method_metadata">metadata</a>()
+                    <p>Returns the Image's meta data</p>
+                </td>
+                <td></td>
+            </tr>
+            </table>
+
+
+        <h2>Details</h2>
+
+                        <h3 id="method_copy">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_copy"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 34</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>copy</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Copies current source image into a new ImageInterface instance</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_crop">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_crop"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 48</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>crop</strong>(<a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $start, <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $size)</code>
+    </h3>
+    <div class="details">
+        <p>Crops a specified box out of the source image (modifies the source image) Returns cropped self</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a></td>
+                <td>$start</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+                <td>$size</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/OutOfBoundsException"><abbr title="OutOfBoundsException">OutOfBoundsException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_resize">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_resize"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 60</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>resize</strong>(<a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $size, string $filter = ImageInterface::FILTER_UNDEFINED)</code>
+    </h3>
+    <div class="details">
+        <p>Resizes current image and returns self</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+                <td>$size</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$filter</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_rotate">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_rotate"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 74</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>rotate</strong>(integer $angle, <a href="../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a> $background = null)</code>
+    </h3>
+    <div class="details">
+        <p>Rotates an image at the given angle.</p>
+        <p>Optional $background can be used to specify the fill color of the empty
+area of rotated image.</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>integer</td>
+                <td>$angle</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a></td>
+                <td>$background</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_paste">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_paste"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 92</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>paste</strong>(<a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $image, <a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $start)</code>
+    </h3>
+    <div class="details">
+        <p>Pastes an image into a parent image Throws exceptions if image exceeds parent image borders or if paste operation fails</p>
+        <p>Returns source image</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+                <td>$image</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a></td>
+                <td>$start</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/OutOfBoundsException"><abbr title="OutOfBoundsException">OutOfBoundsException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_save">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_save"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 106</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>save</strong>(string $path = null, array $options = array())</code>
+    </h3>
+    <div class="details">
+        <p>Saves the image at a specified path, the target file extension is used to determine file format, only jpg, jpeg, gif, png, wbmp and xbm are supported</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$path</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$options</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_show">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_show"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 118</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>show</strong>(string $format, array $options = array())</code>
+    </h3>
+    <div class="details">
+        <p>Outputs the image content</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$format</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$options</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_flipHorizontally">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_flipHorizontally"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 127</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>flipHorizontally</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Flips current image using horizontal axis</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_flipVertically">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_flipVertically"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 136</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>flipVertically</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Flips current image using vertical axis</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_strip">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_strip"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 145</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>strip</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Remove all profiles and comments</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_thumbnail">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_thumbnail"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 159</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>thumbnail</strong>(<a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a> $size, string $mode = self::THUMBNAIL_INSET, string $filter = ImageInterface::FILTER_UNDEFINED)</code>
+    </h3>
+    <div class="details">
+        <p>Generates a thumbnail from a current image Returns it as a new image, doesn't modify the current image</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+                <td>$size</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$mode</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$filter</td>
+                <td>The filter to use for resizing, one of ImageInterface::FILTER_*</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_applyMask">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_applyMask"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 168</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>applyMask</strong>(<a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a> $mask)</code>
+    </h3>
+    <div class="details">
+        <p>Applies a given mask to current image's alpha channel</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+                <td>$mask</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_fill">
+        <div class="location">in <a href="../../Imagine/Image/ManipulatorInterface.html#method_fill"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a> at line 179</div>
+        <code>            public            <a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a>
+    <strong>fill</strong>(<a href="../../Imagine/Image/Fill/FillInterface.html"><abbr title="Imagine\Image\Fill\FillInterface">FillInterface</abbr></a> $fill)</code>
+    </h3>
+    <div class="details">
+        <p>Fills image with provided filling, by replacing each pixel's color in the current image with corresponding color from FillInterface, and returns modified image</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/Fill/FillInterface.html"><abbr title="Imagine\Image\Fill\FillInterface">FillInterface</abbr></a></td>
+                <td>$fill</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ManipulatorInterface.html"><abbr title="Imagine\Image\ManipulatorInterface">ManipulatorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_get">
+        <div class="location">at line 61</div>
+        <code>            public            string
+    <strong>get</strong>(string $format, array $options = array())</code>
+    </h3>
+    <div class="details">
+        <p>Returns the image content as a binary string</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$format</td>
+                <td>
+</td>
+            </tr>
+                    <tr>
+                <td>array</td>
+                <td>$options</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>string</td>
+            <td>binary</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method___toString">
+        <div class="location">at line 70</div>
+        <code>            public            string
+    <strong>__toString</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns the image content as a PNG binary string</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>string</td>
+            <td>binary</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_draw">
+        <div class="location">at line 77</div>
+        <code>            public            <a href="../../Imagine/Draw/DrawerInterface.html"><abbr title="Imagine\Draw\DrawerInterface">DrawerInterface</abbr></a>
+    <strong>draw</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Instantiates and returns a DrawerInterface instance for image drawing</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Draw/DrawerInterface.html"><abbr title="Imagine\Draw\DrawerInterface">DrawerInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_effects">
+        <div class="location">at line 82</div>
+        <code>            public            <a href="../../Imagine/Effects/EffectsInterface.html"><abbr title="Imagine\Effects\EffectsInterface">EffectsInterface</abbr></a>
+    <strong>effects</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>
+</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Effects/EffectsInterface.html"><abbr title="Imagine\Effects\EffectsInterface">EffectsInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getSize">
+        <div class="location">at line 89</div>
+        <code>            public            <a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a>
+    <strong>getSize</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns current image size</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/BoxInterface.html"><abbr title="Imagine\Image\BoxInterface">BoxInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_mask">
+        <div class="location">at line 97</div>
+        <code>            public            <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+    <strong>mask</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Transforms creates a grayscale mask from current image, returns a new image, while keeping the existing image unmodified</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_histogram">
+        <div class="location">at line 104</div>
+        <code>            public            array
+    <strong>histogram</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns array of image colors as Imagine\Image\Palette\Color\ColorInterface instances</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td>array</td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_getColorAt">
+        <div class="location">at line 115</div>
+        <code>            public            <a href="../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a>
+    <strong>getColorAt</strong>(<a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a> $point)</code>
+    </h3>
+    <div class="details">
+        <p>Returns color at specified positions of current image</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/PointInterface.html"><abbr title="Imagine\Image\PointInterface">PointInterface</abbr></a></td>
+                <td>$point</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/Palette/Color/ColorInterface.html"><abbr title="Imagine\Image\Palette\Color\ColorInterface">ColorInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_layers">
+        <div class="location">at line 125</div>
+        <code>            public            <a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a>
+    <strong>layers</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns the image layers when applicable.</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/LayersInterface.html"><abbr title="Imagine\Image\LayersInterface">LayersInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>In case the layer can not be returned</td>
+            </tr>
+                    <tr>
+                <td><a href="http://php.net/OutOfBoundsException"><abbr title="OutOfBoundsException">OutOfBoundsException</abbr></a></td>
+                <td>In case the index is not a valid value</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_interlace">
+        <div class="location">at line 136</div>
+        <code>            public            <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+    <strong>interlace</strong>(string $scheme)</code>
+    </h3>
+    <div class="details">
+        <p>Enables or disables interlacing</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td>string</td>
+                <td>$scheme</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/InvalidArgumentException"><abbr title="InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td>When an unsupported Interface type is supplied</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_palette">
+        <div class="location">at line 143</div>
+        <code>            public            <a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a>
+    <strong>palette</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Return the current color palette</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+                <h3 id="method_usePalette">
+        <div class="location">at line 154</div>
+        <code>            public            <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+    <strong>usePalette</strong>(<a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a> $palette)</code>
+    </h3>
+    <div class="details">
+        <p>Set a palette for the image.</p>
+        <p>Useful to change colorspace.</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/Palette/PaletteInterface.html"><abbr title="Imagine\Image\Palette\PaletteInterface">PaletteInterface</abbr></a></td>
+                <td>$palette</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_profile">
+        <div class="location">at line 165</div>
+        <code>            public            <a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a>
+    <strong>profile</strong>(<a href="../../Imagine/Image/ProfileInterface.html"><abbr title="Imagine\Image\ProfileInterface">ProfileInterface</abbr></a> $profile)</code>
+    </h3>
+    <div class="details">
+        <p>Applies a color profile on the Image</p>
+        <p>
+</p>
+        <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="../../Imagine/Image/ProfileInterface.html"><abbr title="Imagine\Image\ProfileInterface">ProfileInterface</abbr></a></td>
+                <td>$profile</td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><a href="../../Imagine/Image/ImageInterface.html"><abbr title="Imagine\Image\ImageInterface">ImageInterface</abbr></a></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table>
+                    <tr>
+                <td><a href="http://php.net/RuntimeException"><abbr title="RuntimeException">RuntimeException</abbr></a></td>
+                <td>
+</td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+                <h3 id="method_metadata">
+        <div class="location">at line 172</div>
+        <code>            public            <abbr title="Imagine\Image\Metadata\MetadataInterface">MetadataInterface</abbr>
+    <strong>metadata</strong>()</code>
+    </h3>
+    <div class="details">
+        <p>Returns the Image's meta data</p>
+        <p>
+</p>
+        <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table>
+        <tr>
+            <td><abbr title="Imagine\Image\Metadata\MetadataInterface">MetadataInterface</abbr></td>
+            <td>
+</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+    
+            </div>
+            <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/" target="_top">Sami, the API Documentation Generator</a>.
+    </div>
+    </body>
+</html>

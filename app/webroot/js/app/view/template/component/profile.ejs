@@ -1,0 +1,41 @@
+<div class="profile">
+	<h3><%= __('Summary') %></h3>
+
+	<div class="section detailed-information">
+        <h4>
+            <%= __('Details') %>
+            <a href="#" class="section-action edit-action">
+                <i class="icon edit no-text"></i>
+                <span>edit</span>
+            </a>
+        </h4>
+        <ul>
+            <li class="avatar">
+                <span class="label"><%= __('Avatar') %></span>
+                <div class="value">
+                    <a class="edit-avatar-action" href="#" title="<%= __('Change Avatar') %>">
+                        <img src="<%= user.Profile.avatarPath('small'); %>" />
+                    </a>
+                </div>
+            </li>
+            <li>
+                <span class="label"><%= __('Username') %></span>
+                <span class="value"><%= user.username %></span>
+            </li>
+            <li>
+                <span class="label"><%= __('Full name') %></span>
+                <span class="value"><%= user.Profile.first_name %> <%= user.Profile.last_name %></span>
+            </li>
+            <li>
+                <span class="label"><%= __('Password') %></span>
+                <span class="value"><a class="edit-password-action" href="#"><%= __('Change Password') %></a></span>
+            </li>
+            <li>
+                <span class="label"><%= __('Groups') %></span>
+                <div class="value">
+                    <ul id="js_wk_preference_profile_groups"></ul>
+                </div>
+            </li>
+        </ul>
+	</div>
+</div>

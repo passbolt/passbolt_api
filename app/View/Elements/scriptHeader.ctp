@@ -23,6 +23,12 @@ var cakephpConfig = {
 		},
 		url: "<?php echo Router::url('/',true); ?>",
 		debug: "<?php echo Configure::read('debug'); ?>"
+	},
+	user : {
+		id: "<?php echo User::get('id') ?>"
+	},
+	image_storage : {
+		public_path: "<?php echo Configure::read('ImageStorage.publicPath') ?>"
 	}
 };
 </script>

@@ -1,4 +1,7 @@
 <?php
+
+App::uses('ProfileAvatar', 'Model');
+
 /**
  * Profile Model
  *
@@ -13,54 +16,38 @@
  */
 class Profile extends AppModel {
 
-	/**
-	 * defines belongsTo relationship
-	 * @var array
-	 */
+/**
+ * Details of belongs to relationships
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
-		'User'
+		'User',
 	);
 
-	public static function getFindFields($case = '', $role = Role::USER) {
-		$returnValue = array();
-		switch ($case) {
-			case 'view':
-				$returnValue = array(
-					'fields' => array(
-						'Role.id',
-						'Role.name'
-					)
-				);
-				break;
-			case 'User::save':
-			case 'User::edit':
-				$returnValue = array(
-					'fields' => array(
-						'user_id',
-						'first_name',
-						'last_name',
-					)
-				);
-				break;
-			default:
-				$returnValue = array(
-					'fields' => array()
-				);
-				break;
-		}
+/**
+ * Details of has one relationships
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
+	public $hasOne = array(
+		'Avatar' => array(
+			'className' => 'ProfileAvatar',
+			'foreignKey' => 'foreign_key',
+		),
+	);
 
-		return $returnValue;
-	}
-
-	/**
-	 * Get the validation rules upon context
-	 *
-	 * @param string context
-	 *
-	 * @return array validation rules
-	 * @throws exception if case is undefined
-	 * @access public
-	 */
+/**
+ * Get the validation rules upon context
+ *
+ * @param string context
+ *
+ * @return array validation rules
+ * @throws exception if case is undefined
+ * @access public
+ */
 	public static function getValidationRules($case = 'default') {
 		$default = array(
 			'user_id' => array(
@@ -123,8 +110,7 @@ class Profile extends AppModel {
 					'rule' => array('between', 3, 64),
 					'message' => __('Last name should be between %s and %s characters long'),
 				)
-			)
-			// TODO : timezone, locale
+			),
 		);
 		switch ($case) {
 			default:
@@ -133,6 +119,37 @@ class Profile extends AppModel {
 		}
 
 		return $rules;
+	}
+
+	public static function getFindFields($case = '', $role = Role::USER) {
+		$returnValue = array();
+		switch ($case) {
+			case 'view':
+				$returnValue = array(
+					'fields' => array(
+						'Role.id',
+						'Role.name'
+					)
+				);
+				break;
+			case 'User::save':
+			case 'User::edit':
+				$returnValue = array(
+					'fields' => array(
+						'user_id',
+						'first_name',
+						'last_name',
+					)
+				);
+				break;
+			default:
+				$returnValue = array(
+					'fields' => array()
+				);
+				break;
+		}
+
+		return $returnValue;
 	}
 
 /**

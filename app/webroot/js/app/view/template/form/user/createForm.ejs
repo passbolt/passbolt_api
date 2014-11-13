@@ -24,7 +24,8 @@
 		</div>
 	</div>
 
-	<div class="input-password-wrapper">
+    <% if (action == 'create') { %>
+	<div class="input text input-password-wrapper">
 		<div class="input password required short">
 			<label for="js_field_password"><%= __('Password') %></label>
 			<input name="passbolt.model.User.password" class="required" maxlength="50" type="password" id="js_field_password" placeholder="password"/>
@@ -47,9 +48,11 @@
 		<div id="js_user_pwd_strength" class="password-complexity">
 		</div>
 	</div>
+	<% } %>
 
-	<div>
-		<input type="submit" value="submit" />
-	</div>
+</div>
 
+<div class="submit-wrapper clearfix">
+    <input type="submit" class="button primary" value="<%= __('save')%>" />
+    <a href="#" class="js-dialog-cancel cancel"><%= __('cancel')%></a>
 </div>

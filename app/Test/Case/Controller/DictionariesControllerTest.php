@@ -20,6 +20,7 @@ class DictionariesControllerTest extends ControllerTestCase {
 	public $fixtures = array(
 		'app.user',
 		'app.profile',
+		'app.file_storage',
 		'app.group',
 		'app.groupsUser',
 		'app.role',

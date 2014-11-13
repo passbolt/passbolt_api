@@ -27,6 +27,10 @@ class Resource extends AppModel {
  */
 	public $hasOne = array('Secret');
 
+/**
+ * Details of belongs to relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
 		'Creator' => array(
 			'className' => 'User',

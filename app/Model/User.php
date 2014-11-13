@@ -25,7 +25,7 @@ class User extends AppModel {
 /**
  * Model behaviors
  *
- * @access public
+ * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = array(
 		'SuperJoin',
@@ -103,13 +103,19 @@ class User extends AppModel {
 					'rule'       => array('notEmpty'),
 					'message'    => __('A password is required'),
 				),
-				'minLength' => array(
-					'rule'    => array('minLength', 5),
-					'message' => __('Your password should be at least composed of 5 characters')
+				'size' => array(
+					'rule' => array('between', 8, 20),
+					'message' => __('Password should be between %s and %s characters long'),
 				)
 			)
 		);
 		switch ($case) {
+			case 'editPassword':
+				$rules = array(
+					'password' => $default['password'],
+				);
+				break;
+
 			default:
 			case 'default' :
 				$rules = $default;
@@ -395,7 +401,7 @@ class User extends AppModel {
 			case 'User::index':
 			default:
 				$fields = array(
-					'fields'  => array(
+					'fields' => array(
 						'DISTINCT User.id',
 						'User.username',
 						'User.role_id',
@@ -412,11 +418,40 @@ class User extends AppModel {
 							'fields' => array(
 								'Profile.id',
 								'Profile.first_name',
-								'Profile.last_name'
+								'Profile.last_name',
+							),
+							'Avatar' => array(
+								'fields' => array(
+									'Avatar.id',
+									'Avatar.user_id',
+									'Avatar.foreign_key',
+									'Avatar.model',
+									'Avatar.filename',
+									'Avatar.filesize',
+									'Avatar.mime_type',
+									'Avatar.extension',
+									'Avatar.hash',
+									'Avatar.path',
+									'Avatar.adapter',
+									'Avatar.created',
+									'Avatar.modified'
+								)
 							)
 						),
-						'Group',
-						'GroupUser',
+						'Group' => array(
+							'fields' => array(
+								'Group.id',
+								'Group.name',
+								'Group.created',
+								'Group.modified'
+							),
+						),
+						'GroupUser' => array(
+							'fields' => array(
+								'GroupUser.group_id',
+								'GroupUser.user_id',
+							),
+						),
 					)
 				);
 				break;
@@ -451,8 +486,14 @@ class User extends AppModel {
 					'fields' => array(
 						'username',
 						'role_id',
-						'password',
 						'active'
+					)
+				);
+				break;
+			case 'User::editPassword':
+				$fields = array(
+					'fields' => array(
+						'password'
 					)
 				);
 				break;

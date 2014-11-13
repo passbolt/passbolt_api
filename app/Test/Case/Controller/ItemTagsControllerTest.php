@@ -19,7 +19,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.resource', 'app.category', 'app.categories_resource',
-		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile',
+		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile', 'app.file_storage',
 		'app.permission', 'app.permissions_type', 'app.permission_view',
 		'app.authenticationBlacklist', 'app.tag', 'app.itemsTag'
 	);

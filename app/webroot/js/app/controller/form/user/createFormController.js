@@ -20,7 +20,9 @@ steal(
 		mad.form.FormController.extend('passbolt.controller.form.user.CreateFormController', /** @static */ {
 			'defaults': {
 				'templateBased': true,
-				'passwordField': null
+				'passwordField': null,
+				// @todo should be dynamic functions of creation or update
+				'action': 'create'
 			}
 		}, /** @prototype */ {
 
@@ -33,13 +35,6 @@ steal(
 			'afterStart': function () {
 				// temporary for update demonstration
 				this.options.data.User = this.options.data.User || {};
-
-				// Add category id hidden field
-				/*this.addElement(
-					new mad.form.element.TextboxController($('#js_field_category_id'), {
-						modelReference: 'passbolt.model.User.Group.id'
-					}).start()
-				);*/
 
 				var activeField = this.addElement(
 				 new mad.form.element.TextboxController($('#js_field_user_active'), {
@@ -71,32 +66,35 @@ steal(
 				);
 
 				// Add secret data field
-				this.options.passwordField = new mad.form.element.TextboxController($('#js_field_password'), {
-					modelReference: 'passbolt.model.User.password'
-				}).start();
-				this.addElement(this.options.passwordField);
-				// Add secret data in clear field
-				this.options.passwordClear = this.addElement(
-					new mad.form.element.TextboxController($('#js_field_password_clear'), {
-						'state': 'hidden'
-					}).start()
-				);
+				// Only while creating a new user
+				if (this.options.action == 'create') {
+					this.options.passwordField = new mad.form.element.TextboxController($('#js_field_password'), {
+						modelReference: 'passbolt.model.User.password'
+					}).start();
+					this.addElement(this.options.passwordField);
+					// Add secret data in clear field
+					this.options.passwordClear = this.addElement(
+						new mad.form.element.TextboxController($('#js_field_password_clear'), {
+							'state': 'hidden'
+						}).start()
+					);
 
-				// Show/Hide the password
-				this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_pwd_button'))
-					.start();
+					// Show/Hide the password
+					this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_pwd_button'))
+						.start();
 
-				// generate a password
-				this.options.genPwdButton = new mad.controller.component.ButtonController($('#js_gen_pwd_button'))
-					.start();
+					// generate a password
+					this.options.genPwdButton = new mad.controller.component.ButtonController($('#js_gen_pwd_button'))
+						.start();
 
-				// The secret strength component
-				var secret = can.getObject('data.Secret.data', this.options);
-				var secretStrength = passbolt.model.SecretStrength.getSecretStrength(secret);
+					// The secret strength component
+					var secret = can.getObject('data.Secret.data', this.options);
+					var secretStrength = passbolt.model.SecretStrength.getSecretStrength(secret);
 
-				this.options.secretStrength = new passbolt.controller.component.SecretStrengthController($('#js_user_pwd_strength'), {
-					secretStrength: secretStrength
-				}).start();
+					this.options.secretStrength = new passbolt.controller.component.SecretStrengthController($('#js_user_pwd_strength'), {
+						secretStrength: secretStrength
+					}).start();
+				}
 
 				// Rebind controller events
 				this.on();
@@ -123,7 +121,9 @@ steal(
 			 * @return {void}
 			 */
 			'{passwordField} changed': function(el, ev) {
-				this.updateSecretEntropy(this.options.passwordField.getValue());
+				if (this.options.passwordField) {
+					this.updateSecretEntropy(this.options.passwordField.getValue());
+				}
 			},
 
 			/**

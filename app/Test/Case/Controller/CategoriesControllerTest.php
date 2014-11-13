@@ -29,6 +29,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		'app.categoriesResource',
 		'app.user',
 		'app.profile',
+		'app.file_storage',
 		'app.group',
 		'app.groupsUser',
 		'app.role',

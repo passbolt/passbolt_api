@@ -1,6 +1,7 @@
 steal(
 	'mad/controller/appController.js',
 	// the main workspaces of the application
+	'app/controller/preferenceWorkspaceController.js',
 	'app/controller/component/passwordWorkspaceMenuController.js',
 	'app/controller/passwordWorkspaceController.js',
 	'app/controller/peopleWorkspaceController.js',
@@ -9,6 +10,7 @@ steal(
 	'app/controller/component/appNavigationLeftController.js',
 	'app/controller/component/appNavigationRightController.js',
 	'app/controller/component/appFilterController.js',
+	'app/controller/component/profileDropdownController.js',
 	'app/controller/component/notificationController.js',
 	'app/controller/component/loadingBarController.js',
 	// the ressources workspace models
@@ -37,6 +39,8 @@ steal(
 		 * @return {void}
 		 */
 		'afterStart': function() {
+			var self = this;
+
 			// Instantiate the app navigation left controller
 			this.navLeftCtl = new passbolt.controller.component.AppNavigationLeftController($('#js_app_navigation_left'));
 			this.navLeftCtl.start();
@@ -48,6 +52,16 @@ steal(
 			// Instantiate the filter controller
 			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_app_filter'), {});
 			this.filterCtl.start();
+
+			// Instantiate the profile controller
+			passbolt.model.User.findOne({
+				'id': mad.Config.read('user.id')
+			}).then(function(user) {
+				self.profileDropDownCtl = new passbolt.controller.component.ProfileDropdownController($('#js_app_profile_dropdown'), {
+					'user': user
+				});
+				self.profileDropDownCtl.start();
+			});
 
 			// Instantiate the notification controller
 			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {});
@@ -67,14 +81,21 @@ steal(
 				'id': 'js_passbolt_passwordWorkspace_controller',
 				'label': 'password'
 			});
-			var selectedResources = this.passwordWk.getSelectedResources()
+			var selectedResources = this.passwordWk.getSelectedResources();
+
 			// Instantiate the people workspace component and add it to the workspaces container
 			this.peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
 				'id': 'js_passbolt_peopleWorkspace_controller',
 				'label': 'people'
 			});
-			var selectedUsers = this.peopleWk.getSelectedUsers()
-			var selectedGroups = this.peopleWk.getSelectedGroups()
+			var selectedUsers = this.peopleWk.getSelectedUsers();
+			var selectedGroups = this.peopleWk.getSelectedGroups();
+
+			// Instantiate the preference workspace component and add it to the workspaces container
+			this.preferenceWk = this.workspacesCtl.addComponent(passbolt.controller.PreferenceWorkspaceController, {
+				'id': 'js_passbolt_preferenceWorkspace_controller',
+				'label': 'preference'
+			});
 
 			// Instantiate workspaces menus container tabs element to the app
 			this.workspacesMenusCtl = new mad.controller.component.TabController($('#js_wsp_primary_menu'), {
@@ -110,10 +131,23 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} workspace_selected': function (el, event, workspace) {
-			// Enable the corresponding workspace menu.
 			var wspMenuId = 'js_passbolt_' + workspace + 'WorkspaceMenu_controller';
-			var workspacesMenusContainer = mad.app.getComponent('js_wsp_primary_menu');
-			workspacesMenusContainer.enableTab(wspMenuId);
+			var primWkMenuContainer = mad.app.getComponent('js_wsp_primary_menu');
+
+			// The primary workspace is a specific case.
+			// It is only displayed for the password and people workpsaces.
+			if (workspace == 'password' || workspace == 'people') {
+				if (primWkMenuContainer.state.is('hidden')) {
+					primWkMenuContainer.setState('ready');
+				}
+				// Enable the corresponding workspace menu.
+				primWkMenuContainer.enableTab(wspMenuId);
+			}
+			// In any other case, hide the primary and secondary workspace.
+			else {
+				primWkMenuContainer.setState('hidden');
+			}
+
 			// Enable the target workspace.
 			var wspId = 'js_passbolt_' + workspace + 'Workspace_controller';
 			var workspacesContainer = mad.app.getComponent('js_app_panel_main');
@@ -130,6 +164,7 @@ steal(
 		 * @return {void}
 		 */
 		'stateReady': function (go) {
+			// Select the password workspace
 			mad.bus.trigger('workspace_selected', 'password');
 			mad.bus.trigger('app_ready');
 		}

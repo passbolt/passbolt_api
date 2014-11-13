@@ -17,9 +17,12 @@ class ProfileTask extends ModelTask {
 	public $model = 'Profile';
 
 	protected function getData() {
+		$UserTask = $this->Tasks->load('Data.User');
+		$users = $UserTask::getAlias();
+
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-c358-416d-802b-71668cebc04d',
-			'user_id' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
+			'user_id' => $users['utt'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -29,7 +32,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-ccca-416d-802b-71668cebc04d',
-			'user_id' => 'dada6042-c5cd-11e1-a0c5-080027796c51',
+			'user_id' => $users['ins'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -39,7 +42,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccb-416d-802b-71668cebc04d',
-			'user_id' => 'dada6042-c5cd-11e1-a0c5-080027796c4c',
+			'user_id' => $users['dar'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -49,7 +52,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccc-416d-802b-71668cebc04d',
-			'user_id' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
+			'user_id' => $users['mng'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -58,8 +61,8 @@ class ProfileTask extends ModelTask {
 		));
 
 		$c[] = array('Profile' => array(
-			'id' => '528c2dab-cccd-416d-802b-71668cebc04d',
-			'user_id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'user_id' => $users['ano'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -69,7 +72,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-ccce-416d-802b-71668cebc04d',
-			'user_id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e',
+			'user_id' => $users['tst'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -79,7 +82,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccf-416d-802b-71668cebc04d',
-			'user_id' => '50cdea9c-f214-4549-9807-2f4fd7a10fce',
+			'user_id' => $users['aur'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -89,7 +92,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccg-416d-802b-71668cebc04d',
-			'user_id' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
+			'user_id' => $users['ism'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -99,7 +102,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-ccch-416d-802b-71668cebc04d',
-			'user_id' => '50cdea9c-fa10-47af-aaa8-2f4fd7a10fce',
+			'user_id' => $users['myr'],
 			'gender' => 'f',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Ms',
@@ -109,7 +112,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-ccci-416d-802b-71668cebc04d',
-			'user_id' => '50cdea9c-a34c-406f-a9f1-2f4fd7a10fce',
+			'user_id' => $users['rem'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -119,7 +122,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccj-416d-802b-71668cebc04d',
-			'user_id' => '50cdea9c-aa88-46cb-a09b-2f4fd7a10fce',
+			'user_id' => $users['kev'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -129,7 +132,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-ccck-416d-802b-71668cebc04d',
-			'user_id' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce',
+			'user_id' => $users['ced'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -139,7 +142,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccl-416d-802b-71668cebc04d',
-			'user_id' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
+			'user_id' => $users['jea'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -149,7 +152,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccm-416d-802b-71668cebc04d',
-			'user_id' => '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce',
+			'user_id' => $users['usr'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -159,7 +162,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '533d3505-a170-4f57-b14b-1768c0a895dc',
-			'user_id' => '533d3564-03e8-4963-94a7-178cc0a895dc',
+			'user_id' => $users['gue'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -169,7 +172,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-ccco-416d-802b-71668cebc04d',
-			'user_id' => '533d37a0-bc80-4945-9b11-1663c0a895dc',
+			'user_id' => $users['adm'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -179,7 +182,7 @@ class ProfileTask extends ModelTask {
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccp-416d-802b-71668cebc04d',
-			'user_id' => '533d346d-d378-4acc-affd-1663c0a895dc',
+			'user_id' => $users['fra'],
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',

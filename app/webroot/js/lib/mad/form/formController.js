@@ -56,6 +56,13 @@ steal(
 		},
 
 		/**
+		 * Implements beforeRender hook.
+		 */
+		'beforeRender': function() {
+			this.setViewData('action', this.options.action);
+		},
+
+		/**
 		 * Load the form with the given data
 		 * @param {mixed} data The data to load the form element with
 		 * @return {void}

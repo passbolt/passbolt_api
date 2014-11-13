@@ -1,10 +1,10 @@
 <?php
 /**
- * Insert ResourceTag Task
+ * Insert ItemTag Task
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.plugins.DataExtras.Console.Command.Task.ResourceTagTask
+ * @package      app.plugins.DataExtras.Console.Command.Task.ItemTagTask
  * @since        version 2.12.11
  */
 

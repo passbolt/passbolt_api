@@ -1,0 +1,72 @@
+{
+    "name": "composer/installers",
+    "type": "composer-installer",
+    "license": "MIT",
+    "description": "A multi-framework Composer library installer",
+    "keywords": [
+        "installer",
+        "AGL",
+        "AnnotateCms",
+        "Bitrix",
+        "CakePHP",
+        "Chef",
+        "CodeIgniter",
+        "concrete5",
+        "Craft",
+        "Croogo",
+        "Dolibarr",
+        "Drupal",
+        "Elgg",
+        "FuelPHP",
+        "Hurad",
+        "Joomla",
+        "Kohana",
+        "Laravel",
+        "Lithium",
+        "Magento",
+        "Mako",
+        "MODX Evo",
+        "MediaWiki",
+        "OXID",
+        "MODULEWork",
+        "Moodle",
+        "Piwik",
+        "phpBB",
+        "PPI",
+        "Puppet",
+        "Roundcube",
+        "shopware",
+        "SilverStripe",
+        "symfony",
+        "TYPO3",
+        "WolfCMS",
+        "WordPress",
+        "Zend",
+        "Zikula"
+    ],
+    "homepage": "http://composer.github.com/installers/",
+    "authors": [
+        {
+            "name": "Kyle Robinson Young",
+            "email": "kyle@dontkry.com",
+            "homepage": "https://github.com/shama"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Composer\\Installers\\": "src/" }
+    },
+    "extra": {
+        "class": "Composer\\Installers\\Installer",
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "replace": {
+        "shama/baton": "*",
+        "roundcube/plugin-installer": "*"
+    },
+    "require-dev": {
+        "composer/composer": "1.0.*@dev",
+        "phpunit/phpunit": "4.1.*"
+    }
+}

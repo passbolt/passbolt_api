@@ -1,4 +1,4 @@
-<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= typeof cssClasses != 'undefined' ? cssClasses : '' %>">
+<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses.join(' ') %>">
 	<div class="row">
 		<div class="main-cell-wrapper">
 			<div class="main-cell">

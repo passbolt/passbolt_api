@@ -19,6 +19,9 @@ class UserTask extends ModelTask {
 	public static function getAlias() {
 		$User = ClassRegistry::init('User');
 		$aliases = array (
+			'adm' => $User->findByUsername('admin@passbolt.com'),
+			'gue' => $User->findByUsername('guest@passbolt.com'),
+			'ano' => $User->findByUsername('anonymous@passbolt.com'),
 			'mng' => $User->findByUsername('manager.nogroup@passbolt.com'),
 			'utt' => $User->findByUsername('utest@passbolt.com'),
 			'tst' => $User->findByUsername('test@passbolt.com'),

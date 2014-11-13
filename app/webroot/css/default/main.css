@@ -2134,6 +2134,26 @@ input[type="search"]::-webkit-search-cancel-button {
 .dropdown .checkbox {
   font-size: .85em;
 }
+.profile .section.detailed-information h4 {
+  margin-bottom: .626em;
+  padding-bottom: .313em;
+  border-bottom: 1px dotted #dddddd;
+}
+.profile .section .section-action {
+  padding-left: 1em;
+}
+.profile .section.detailed-information li .label {
+  float: left;
+  width: 6em;
+  color: #888888;
+}
+.profile .section.detailed-information li .value {
+  display: inline-block;
+}
+.profile .section.detailed-information .avatar img {
+  width: 2.875em;
+  padding: 0.1250em;
+}
 /* tags */
 .tags .tags-edit-wrapper textarea {
   height: 2.3em;
@@ -2685,6 +2705,9 @@ input[type="search"]::-webkit-search-cancel-button {
   display: block;
   float: left;
   margin: 1px;
+}
+.dialog .input-password-wrapper {
+  overflow: hidden;
 }
 .dialog .password-complexity .complexity-text {
   float: right;

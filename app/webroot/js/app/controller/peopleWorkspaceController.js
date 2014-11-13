@@ -219,6 +219,7 @@ steal(
 			// attach the component to the dialog
 			var form = dialog.add(passbolt.controller.form.user.CreateFormController, {
 				data: user,
+				action: 'create',
 				callbacks : {
 					submit: function (data) {
 						var user = new passbolt.model.User(data['passbolt.model.User']);
@@ -248,12 +249,11 @@ steal(
 			// attach the component to the dialog
 			var form = dialog.add(passbolt.controller.form.user.CreateFormController, {
 				data: user,
+				action: 'edit',
 				callbacks : {
 					submit: function (data) {
-						//var user = new passbolt.model.User(data['passbolt.model.User']);
 						user.attr(data['passbolt.model.User']).save();
 						dialog.remove();
-						// TODO : remove only in case of success
 					}
 				}
 			});

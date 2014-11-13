@@ -17,7 +17,7 @@ if (!class_exists('CakeSession')) {
 
 class UserTest extends CakeTestCase {
 
-	public $fixtures = array('app.user', 'app.role');
+	public $fixtures = array('app.group', 'app.groups_user', 'app.user', 'app.profile', 'app.file_storage', 'app.role');
 
 	public $autoFixtures = true;
 
@@ -65,8 +65,8 @@ class UserTest extends CakeTestCase {
 		$testcases = array(
 			''       => false,
 			'?!#'    => false,
-			'testss' => true,
-			't2stss' => true
+			'abcdefghijkl' => true,
+			'32abcde,-fghijkl20' => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$user = array('User' => array('password' => $testcase, 'password_confirm' => $testcase));
@@ -219,7 +219,7 @@ class UserTest extends CakeTestCase {
 			array(
 				'username' => 'testSave@passbolt.com',
 				'role_id'  => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
-				'password' => 'this will be replaced at runtime',
+				'password' => 'abcdefgh',
 				'active'   => 1
 			)
 		);
@@ -231,6 +231,7 @@ class UserTest extends CakeTestCase {
 			'conditions' => array('username' => 'testSave@passbolt.com')
 		);
 		$user = $this->User->find('first', $param);
+
 		$this->assertEqual(
 			$anon['User']['id'],
 			$user['User']['created_by'],
@@ -247,8 +248,13 @@ class UserTest extends CakeTestCase {
 		$this->User->setActive($kevin);
 
 		// change username and save
-		$kevin['User']['username'] = 'kk@passbolt.com';
-		$this->User->save($kevin);
+		$data = array(
+			'User' => array(
+				'id' => $kevin['User']['id'],
+				'username' => 'kk@passbolt.com'
+			)
+		);
+		$this->User->save($data);
 
 		// find it again
 		$param = array(

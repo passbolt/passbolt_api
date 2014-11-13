@@ -42,12 +42,12 @@ steal(
 				success: success,
 				error: error
 			}).pipe(function (data, textStatus, jqXHR) {
-					// pipe the result to convert cakephp response format into can format
-					// else the new attribute are not well placed
-					var def = $.Deferred();
-					def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-					return def;
-				});
+				// pipe the result to convert cakephp response format into can format
+				// else the new attribute are not well placed
+				var def = $.Deferred();
+				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+				return def;
+			});
 		},
 
 		'destroy' : function (id, success, error) {
@@ -80,15 +80,29 @@ steal(
 			});
 		},
 
+		'findOne': function (params, success, error) {
+			var async = true;
+			if (typeof params['async'] != 'undefined') {
+				async = params['async'];
+			}
+			return mad.net.Ajax.request({
+				url: APP_URL + 'users/{id}.json',
+				type: 'GET',
+				params: params,
+				success: success,
+				error: error,
+				async: async
+			});
+		},
+
 		'update' : function(id, attrs, success, error) {
 			var self = this;
-			// remove not desired attributes
-			delete attrs.created;
-			delete attrs.modified;
+
 			// format data as expected by cakePHP
 			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 			// add the root of the params, it will be used in the url template
 			params.id = id;
+
 			return mad.net.Ajax.request({
 				url: APP_URL + 'users/{id}',
 				type: 'PUT',
@@ -101,7 +115,81 @@ steal(
 				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
 				return def;
 			});
+		},
+
+		'updatePassword' : function(id, attrs, success, error) {
+			var self = this;
+			// format data as expected by cakePHP
+			var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+			// add the root of the params, it will be used in the url template
+			params.id = id;
+
+			return mad.net.Ajax.request({
+				url: APP_URL + 'users/password/{id}',
+				type: 'PUT',
+				params: params,
+				success: success,
+				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				//pipe the result to convert cakephp response format into can format
+				var def = $.Deferred();
+				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+				return def;
+			});
+		},
+
+		'updateAvatar' : function(id, attrs, success, error) {
+			var self = this;
+
+			// Build the params.
+			var params = new FormData();
+			params.append('file-0', attrs.newAvatar);
+			params.id = id;
+
+			return mad.net.Ajax.request({
+				url: APP_URL + 'users/avatar/{id}',
+				type: 'POST',
+				cache: false,
+				contentType: false,
+				processData: false,
+				params: params,
+				success: success,
+				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				//pipe the result to convert cakephp response format into can format
+				var def = $.Deferred();
+				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+				return def;
+			});
 		}
 
-	}, /** @prototype */ { });
+	}, /** @prototype */ {
+
+		/**
+		 * Save a new user avatar.
+		 * @param file The new avatar file.
+		 * @return {can.Deferred}
+		 */
+		'saveAvatar': function(file) {
+			// Custom update.
+			// Use the makeRequest operation of Can to support the local object update
+			// feature and its events system which is awesome.
+			this.attr('newAvatar', file);
+			var def = can.Model._makeRequest(this, 'updateAvatar', null, null, 'updated');
+			this.attr('newAvatar', null);
+			return def;
+		},
+
+		/**
+		 * Save a new password.
+		 * @return {can.Deferred}
+		 */
+		'savePassword': function() {
+			// Custom update.
+			// Use the makeRequest operation of Can to support the local object update
+			// feature and its events system which is awesome.
+			return can.Model._makeRequest(this, 'updatePassword', null, null, 'updated');
+		}
+
+	});
 });

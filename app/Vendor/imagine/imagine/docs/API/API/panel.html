@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="css/panel.css" type="text/css" media="screen" charset="utf-8">
+    <script src="tree.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/searchdoc.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        //<![CDATA[
+        $(document).ready(function(){
+            $('#version-switcher').change(function() {
+                window.parent.location = $(this).val()
+            })
+        })
+       $(function() {
+           $.ajax({
+             url: 'search_index.js',
+             dataType: 'script',
+             success: function () {
+                 $('.loader').css('display', 'none');
+                 var panel = new Searchdoc.Panel($('#panel'), search_data, tree, parent.frames[1]);
+                 $('#search').focus();
+
+                 for (var i=0; i < 2; i++) {
+                     $('.level_' + i).each(function ($li) {
+                         panel.tree.toggle($(this));
+                     });
+                 }
+
+                 var s = window.parent.location.search.match(/\?q=([^&]+)/);
+                 if (s) {
+                     s = decodeURIComponent(s[1]).replace(/\+/g, ' ');
+                     if (s.length > 0)
+                     {
+                         $('#search').val(s);
+                         panel.search(s, true);
+                     }
+                 }
+             }
+           });
+       })
+        //]]>
+    </script>
+</head>
+<body>
+    <div class="panel panel_tree" id="panel">
+        <div class="loader">
+            <img src="i/loader.gif" /> loading...
+        </div>
+        <div class="header">
+            <div class="nav">
+                <h1></h1>
+                                <div style="clear: both"></div>
+                <table>
+                    <tr><td><input type="Search" placeholder="Search" autosave="searchdoc" results="10" id="search" autocomplete="off"></td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="tree">
+            <ul>
+            </ul>
+        </div>
+        <div class="result">
+            <ul>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

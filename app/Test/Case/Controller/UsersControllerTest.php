@@ -23,6 +23,7 @@ class UsersControllerTest extends ControllerTestCase {
 			'app.group',
 			'app.user',
 			'app.profile',
+			'app.file_storage',
 			'app.role',
 			'app.authenticationLog',
 			'app.authenticationBlacklist'
@@ -235,7 +236,7 @@ class UsersControllerTest extends ControllerTestCase {
 					'data'   => array(
 						'User' => array(
 							'username' => 'testadd1@passbolt.com',
-							'password' => 'test1',
+							'password' => 'abcedfghijk',
 							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 							'active'   => 1
 						),
@@ -276,7 +277,7 @@ class UsersControllerTest extends ControllerTestCase {
 					'data'   => array(
 						'User' => array(
 							'username' => 'testaddnoroleid@passbolt.com',
-							'password' => 'test1',
+							'password' => 'abcedfghijk',
 							'active'   => 1
 						),
 					),
@@ -325,7 +326,7 @@ class UsersControllerTest extends ControllerTestCase {
 					'data'   => array(
 						'User' => array(
 							'username' => 'testprofile@passbolt.com',
-							'password' => 'test1',
+							'password' => 'abcedfghijk',
 							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 							'active'   => 1
 						),
@@ -362,8 +363,10 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public function testUpdateNoAllowed() {
 		// normal user don't have the right to add user
+		$dv = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($dv);
 		$kk = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($kk);
+
 		$id = $kk['User']['id'];
 
 		$this->expectException('HttpException', 'You are not authorized to access that location');
@@ -376,7 +379,7 @@ class UsersControllerTest extends ControllerTestCase {
 						'User' => array(
 							'id'       => $kk['User']['id'],
 							'username' => 'user-modified@passbolt.com',
-							'password' => 'test1',
+							'password' => 'abcedfghijk',
 							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 							'active'   => 1
 						),
@@ -448,12 +451,12 @@ class UsersControllerTest extends ControllerTestCase {
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$id = $kk['User']['id'];
 
-		$kk['User']['username'] = 'user-modified@passbolt.com';
+		$data['User']['username'] = 'user-modified@passbolt.com';
 		$result = json_decode(
 			$this->testAction(
 				"/users/$id.json",
 				array(
-					'data'   => $kk,
+					'data'   => $data,
 					'method' => 'put',
 					'return' => 'contents'
 				)
@@ -587,5 +590,236 @@ class UsersControllerTest extends ControllerTestCase {
 			$deleted['User']['deleted'],
 			"delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}"
 		);
+	}
+
+	public function testUpdateAvatarNoAllowed() {
+		// normal user don't have the right to add user
+		$dv = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($dv);
+		$kk = $this->User->findByUsername('user@passbolt.com');
+
+		$id = $kk['User']['id'];
+
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		// test with anonymous user
+		$_FILES['file-0'] = array(
+			'file' => array(
+				'tmp_name' => APP . 'Test' . DS . 'Data' . DS . 'img' . DS . 'user.png'
+			)
+		);
+		$result = json_decode(
+			$this->testAction(
+				"/users/avatar/$id.json",
+				array(
+					'data'   => array(),
+					'method' => 'post',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+	}
+
+	public function testUpdateAvatarUserIdIsMissing() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'The user id is missing');
+		$result = json_decode($this->testAction('/users/avatar.json', array('return' => 'contents', 'method' => 'post'), true));
+	}
+
+	public function testUpdateAvatarUserIdNotValid() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'The user id is invalid');
+		$result = json_decode(
+			$this->testAction('/users/avatar/badId.json', array('return' => 'contents', 'method' => 'post'), true)
+		);
+	}
+
+	public function testUpdateAvatarUserDoesNotExist() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'The user does not exist');
+		$result = json_decode(
+			$this->testAction(
+				'/users/avatar/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
+				array('return' => 'contents', 'method' => 'post'),
+				true
+			)
+		);
+	}
+
+	public function testUpdateAvatarNoDataProvided() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'No data were provided');
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$id = $kk['User']['id'];
+
+		$kk['User']['username'] = 'user-modified@passbolt.com';
+		$result = json_decode(
+			$this->testAction(
+				"/users/avatar/$id.json",
+				array(
+					'method' => 'post',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+	}
+
+	public function testUpdateAvatar() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$id = $kk['User']['id'];
+
+		$findConditions = array('User.id' => $id);
+		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $findConditions);
+		$users = $this->User->find('all', $options);
+		$kk = reset($users);
+
+		$this->assertEmpty($kk['Profile']['Avatar'], "The user " . $kk['User']['username'] . " should not have an avatar");
+
+		$_FILES['file-0'] = array(
+			'tmp_name' => APP . 'Test' . DS . 'Data' . DS . 'img' . DS . 'user.png'
+		);
+		$result = json_decode(
+			$this->testAction(
+				"/users/avatar/$id.json",
+				array(
+					'data'   => array(),
+					'method' => 'post',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$result['header']['status'],
+			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
+		);
+
+		$findConditions = array('User.id' => $id);
+		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $findConditions);
+		$users = $this->User->find('all', $options);
+		$kk = reset($users);
+
+		$this->assertNotEmpty($kk['Profile']['Avatar'], "The user " . $kk['User']['username'] . " should have an avatar");
+	}
+
+	public function testUpdatePasswordNoAllowed() {
+		// normal user don't have the right to add user
+		$dv = $this->User->findByUsername('dark.vador@passbolt.com');
+		$this->User->setActive($dv);
+		$kk = $this->User->findByUsername('user@passbolt.com');
+
+		$id = $kk['User']['id'];
+
+		$this->expectException('HttpException', 'You are not authorized to access that location');
+		// test with anonymous user
+		$result = json_decode(
+			$this->testAction(
+				"/users/password/$id.json",
+				array(
+					'data'   => array(
+						'User' => array(
+							'password' => 'abcedfghijk',
+						),
+					),
+					'method' => 'put',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+	}
+
+	public function testUpdatePasswordUserIdIsMissing() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'The user id is missing');
+		$result = json_decode($this->testAction('/users/password.json', array('return' => 'contents', 'method' => 'put'), true));
+	}
+
+	public function testUpdatePasswordUserIdNotValid() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'The user id is invalid');
+		$result = json_decode(
+			$this->testAction('/users/password/badId.json', array('return' => 'contents', 'method' => 'put'), true)
+		);
+	}
+
+	public function testUpdatePasswordUserDoesNotExist() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'The user does not exist');
+		$result = json_decode(
+			$this->testAction(
+				'/users/password/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
+				array('return' => 'contents', 'method' => 'put'),
+				true
+			)
+		);
+	}
+
+	public function testUpdatePasswordNoDataProvided() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->expectException('HttpException', 'No data were provided');
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$id = $kk['User']['id'];
+
+		$result = json_decode(
+			$this->testAction(
+				"/users/password/$id.json",
+				array(
+					'method' => 'put',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+	}
+
+	public function testUpdatePassword() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$oldPwdHash = $kk['User']['password'];
+		$id = $kk['User']['id'];
+
+		$data['User']['password'] = '1234567890';
+		$result = json_decode(
+			$this->testAction(
+				"/users/password/$id.json",
+				array(
+					'data'   => $data,
+					'method' => 'put',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$result['header']['status'],
+			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
+		);
+
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$this->assertNotEqual($oldPwdHash, $kk['User']['password'], "The user " . $kk['User']['username'] . " should'nt have the same password");
 	}
 }

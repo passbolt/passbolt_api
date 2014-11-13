@@ -98,8 +98,8 @@ steal(
 					menu.remove();
 				}
 			});
-			// Add Create resource action.
 			contextualMenu.insertItem(action);
+			// Add Create resource action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Create resource',
@@ -109,8 +109,8 @@ steal(
 					menu.remove();
 				}
 			});
-			// Add Create category action.
 			contextualMenu.insertItem(action);
+			// Add Create category action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Create category',
@@ -121,8 +121,8 @@ steal(
 					menu.remove();
 				}
 			});
-			// Add Rename action.
 			contextualMenu.insertItem(action);
+			// Add Rename action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Rename...',
@@ -132,8 +132,8 @@ steal(
 					menu.remove();
 				}
 			});
-			// Add Share action.
 			contextualMenu.insertItem(action);
+			// Add Share action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Share',
@@ -143,8 +143,8 @@ steal(
 					menu.remove();
 				}
 			});
-			// Add Remove action.
 			contextualMenu.insertItem(action);
+			// Add Remove action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Remove',

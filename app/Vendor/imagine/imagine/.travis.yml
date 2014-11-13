@@ -1,0 +1,50 @@
+language: php
+
+env:
+  - IMAGINE_DRIVER=imagick
+  - IMAGINE_DRIVER=gmagick
+
+before_script:
+  - composer self-update
+  - composer install --prefer-source
+  - sudo apt-get remove -y imagemagick libmagickcore-dev libmagickwand-dev
+  - sudo apt-get install -y libtiff-dev libjpeg-dev libdjvulibre-dev libwmf-dev pkg-config
+  - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+  - sh -c " if [ '$IMAGINE_DRIVER' = 'imagick' ]; then
+              wget http://www.imagemagick.org/download/legacy/ImageMagick-6.8.5-10.tar.gz;
+              tar xzf ImageMagick-6.8.5-10.tar.gz;
+              cd ImageMagick-6.8.5-10;
+              ./configure --prefix=/opt/imagemagick;
+              make -j;
+              sudo make install;
+              export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/imagemagick/lib/pkgconfig;
+              sudo ln -s /opt/imagemagick/include/ImageMagick-6 /opt/imagemagick/include/ImageMagick;
+              cd ..;
+              wget http://pecl.php.net/get/imagick-3.1.0RC2.tgz;
+              tar -xzf imagick-3.1.0RC2.tgz;
+              cd imagick-3.1.0RC2;
+              phpize;
+              ./configure --with-imagick=/opt/imagemagick;
+              make -j;
+              sudo make install;
+              echo \"extension=imagick.so\" >> `php --ini | grep \"Loaded Configuration\" | sed -e \"s|.*:\s*||\"`;
+              php --ri imagick;
+            fi"
+  - sh -c " if [ '$IMAGINE_DRIVER' = 'gmagick' ]; then
+              sudo apt-get install -y graphicsmagick libgraphicsmagick1-dev;
+              wget http://pecl.php.net/get/gmagick-1.1.0RC3.tgz;
+              tar -xzf gmagick-1.1.0RC3.tgz;
+              cd gmagick-1.1.0RC3;
+              phpize;
+              ./configure --with-gmagick=/usr/local;
+              make -j;
+              sudo make install;
+              echo \"extension=gmagick.so\" >> `php --ini | grep \"Loaded Configuration\" | sed -e \"s|.*:\s*||\"`;
+              php --ri gmagick;
+            fi"
+
+php:
+  - 5.3.3
+  - 5.3
+  - 5.4
+  - 5.5

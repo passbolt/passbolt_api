@@ -25,19 +25,27 @@ steal(
 			// The menu which is piloted by the component.
 			'menu' : null,
 			// The menu items.
-			'items': null
+			'items': null,
+			// Customize the element which will carry the dropdown content
+			'contentElement': null
 		}
 
 	}, /** @prototype */ {
 
 		'afterStart': function() {
-			// Define id of container for menuItems.
-			var menuItemsId = 'mb-ctn-' + uuid();
-			// Inject container in dom.
+			var $dropdownElement = null;
+
 			// @todo This container should be inserted following a different way
-			$('<ul id="' + menuItemsId + '" class="dropdown-content"></div>').insertAfter(this.element);
-			// Create and render menu in the created container.
-			this.options.menu = new mad.controller.component.MenuController('#' + menuItemsId);
+			// If the dropdown content element hasn't been customized, inject one in DOM.
+			if (this.options.contentElement == null) {
+				$dropdownElement = $('<ul class="dropdown-content"></div>').insertAfter(this.element);
+			}
+			else {
+				$dropdownElement = $(this.options.contentElement);
+			}
+
+			// Create and render dropdown content.
+			this.options.menu = new mad.controller.component.MenuController($dropdownElement);
 			this.options.menu.start();
 			this.options.menu.load(this.options.items);
 		},

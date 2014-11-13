@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+
+before_script:
+  - ./bin/configure_test_env.sh
+  - composer self-update && composer install --dev --prefer-source --no-interaction
+
+script:
+  - php bin/phpspec run -fpretty --verbose
+  - bin/phpunit

@@ -128,6 +128,8 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
 	Router::connect('/users/index', array('controller' => 'users', 'action' => 'index'));
 	Router::connect('/users/index/*', array('controller' => 'users', 'action' => 'index'));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'delete', '[method]' => "DELETE"));
+	Router::connect('/users/password/*', array('controller' => 'users', 'action' => 'editPassword', '[method]' => "PUT"));
+	Router::connect('/users/avatar/*', array('controller' => 'users', 'action' => 'editAvatar', '[method]' => "POST"));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'edit', '[method]' => "PUT"));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'view', '[method]' => "GET"));
 
