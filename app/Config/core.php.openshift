@@ -19,6 +19,11 @@
  */
 
 /**
+ * Add the composer autoloader script.
+ */
+require_once dirname(__DIR__) . '/Vendor/autoload.php';
+
+/**
  * CakePHP Debug Level:
  *
  * Production Mode:
