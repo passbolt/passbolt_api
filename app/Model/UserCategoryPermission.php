@@ -94,8 +94,25 @@ class UserCategoryPermission extends AppModel {
 							'User' => array(
 								'fields' => array('id', 'username', 'role_id'),
 								'Profile' => array(
-									'fields' => array('id', 'first_name', 'last_name')
-								),
+									'fields' => array('id', 'first_name', 'last_name'),
+									'Avatar' => array(
+										'fields' => array(
+											'Avatar.id',
+											'Avatar.user_id',
+											'Avatar.foreign_key',
+											'Avatar.model',
+											'Avatar.filename',
+											'Avatar.filesize',
+											'Avatar.mime_type',
+											'Avatar.extension',
+											'Avatar.hash',
+											'Avatar.path',
+											'Avatar.adapter',
+											'Avatar.created',
+											'Avatar.modified'
+										)
+									),
+								)
 							),
 							'Category' => array(
 								'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght'),

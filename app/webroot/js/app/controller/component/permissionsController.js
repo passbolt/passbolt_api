@@ -62,6 +62,16 @@ steal(
 							return aro.toLowerCase();
 						}
 					},
+					'aroAvatarPath': {
+						'key': 'id',
+						'func': function(user, map, obj) {
+							if (obj.aro == 'User') {
+								return obj.User.Profile.avatarPath('small');
+							} else {
+								return 'img/group_default.png';
+							}
+						}
+					},
 					'permType': 'PermissionType.serial',
 					'permLabel': {
 						'key': 'PermissionType',

@@ -8,9 +8,9 @@
 /app/tmp/logs/*
 /app/tmp/sessions/*
 /app/tmp/tests/*
+/app/tmp/image-processing/*
+/app/webroot/img/public/*
 /lib/Cake/Console/Templates/skel/tmp/
-/plugins
-/vendors
 /build
 /dist
 /tags

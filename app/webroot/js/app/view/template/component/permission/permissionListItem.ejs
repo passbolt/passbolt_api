@@ -16,11 +16,7 @@ for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
 <li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="row <%= cssClasses.join(' ') %>">
 
     <div class="avatar">
-        <% if (mappedItem.aroLabel == 'group') { %>
-        <img src="img/group_default.png"/>
-        <% } else if (mappedItem.aroLabel == 'user') { %>
-        <img src="img/user.png"/>
-        <% } %>
+        <img src="<%= mappedItem.aroAvatarPath %>"/>
     </div>
 
     <div class="group">
