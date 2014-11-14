@@ -52,7 +52,14 @@ steal(
 				} else {
 					return "img/user.png";
 				}
-			}
+			},
 
+			/**
+			 * Return the user full name.
+			 * @returns {string}
+			 */
+			'fullName': function() {
+				return this.first_name + ' ' + this.last_name;
+			}
 		});
 	});

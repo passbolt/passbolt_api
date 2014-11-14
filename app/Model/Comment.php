@@ -22,6 +22,14 @@ class Comment extends AppModel {
 	public $belongsTo = array(
 		'Resource' => array(
 			'foreignId' => 'aco_foreign_key'
+		),
+		'Creator' => array(
+			'className' => 'User',
+			'foreignKey' => 'created_by'
+		),
+		'Modifier' => array(
+			'className' => 'User',
+			'foreignKey' => 'modified_by'
 		)
 	);
 
@@ -203,7 +211,44 @@ class Comment extends AppModel {
 			case 'view':
 			case 'viewByForeignModel':
 				$returnValue = array(
-					'fields' => array('id', 'parent_id', 'content', 'created', 'modified', 'created_by', 'modified_by')
+					'fields' => array('id', 'parent_id', 'content', 'created', 'modified', 'created_by', 'modified_by'),
+					'contain' => array(
+						'Creator' => array(
+							'fields' => array(
+								'username'
+							),
+							'Role' => array(
+								'fields' => array(
+									'Role.id',
+									'Role.name'
+								)
+							),
+							'Profile' => array(
+								'fields' => array(
+									'Profile.id',
+									'Profile.first_name',
+									'Profile.last_name',
+								),
+								'Avatar' => array(
+									'fields' => array(
+										'Avatar.id',
+										'Avatar.user_id',
+										'Avatar.foreign_key',
+										'Avatar.model',
+										'Avatar.filename',
+										'Avatar.filesize',
+										'Avatar.mime_type',
+										'Avatar.extension',
+										'Avatar.hash',
+										'Avatar.path',
+										'Avatar.adapter',
+										'Avatar.created',
+										'Avatar.modified'
+									)
+								)
+							),
+						)
+					)
 				);
 			break;
 			case 'add':
