@@ -26,8 +26,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'uTest',
-			'last_name' => 'lastname'
+			'first_name' => 'User',
+			'last_name' => 'Test'
 		));
 
 		$c[] = array('Profile' => array(
@@ -36,8 +36,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'root',
-			'last_name' => 'lastname'
+			'first_name' => 'Root',
+			'last_name' => 'Abaga'
 		));
 
 		$c[] = array('Profile' => array(
@@ -46,8 +46,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'Dark',
-			'last_name' => 'Vador'
+			'first_name' => 'Darth',
+			'last_name' => 'Vader'
 		));
 
 		$c[] = array('Profile' => array(
@@ -56,8 +56,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'Manager',
-			'last_name' => 'lastname'
+			'first_name' => 'Great',
+			'last_name' => 'Manager'
 		));
 
 		$c[] = array('Profile' => array(
@@ -76,8 +76,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'Test',
-			'last_name' => 'Ons'
+			'first_name' => 'User b',
+			'last_name' => 'Test'
 		));
 
 		$c[] = array('Profile' => array(
@@ -136,7 +136,7 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'Cedric',
+			'first_name' => 'Cédric',
 			'last_name' => 'Alfonsi'
 		));
 
@@ -146,7 +146,7 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'JeanRene',
+			'first_name' => 'Jean René',
 			'last_name' => 'Bergamotte'
 		));
 
@@ -156,8 +156,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'user',
-			'last_name' => 'user'
+			'first_name' => 'User',
+			'last_name' => 'Lambda'
 		));
 
 		$c[] = array('Profile' => array(
@@ -166,8 +166,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'guest',
-			'last_name' => 'apo'
+			'first_name' => 'Guest',
+			'last_name' => 'Star'
 		));
 
 		$c[] = array('Profile' => array(
@@ -176,8 +176,8 @@ class ProfileTask extends ModelTask {
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
-			'first_name' => 'admin',
-			'last_name' => 'istrator'
+			'first_name' => 'Admin',
+			'last_name' => 'Istrator'
 		));
 
 		$c[] = array('Profile' => array(
@@ -188,6 +188,16 @@ class ProfileTask extends ModelTask {
 			'title' => 'Mr',
 			'first_name' => 'Frank',
 			'last_name' => 'Leboeuf'
+		));
+
+		$c[] = array('Profile' => array(
+			'id' => '528c2dab-facp-416d-802b-71668cebc04d',
+			'user_id' => $users['au1'],
+			'gender' => 'm',
+			'date_of_birth' => '1980-12-14',
+			'title' => 'Mr',
+			'first_name' => 'Userone',
+			'last_name' => 'Company A'
 		));
 
 		return $c;

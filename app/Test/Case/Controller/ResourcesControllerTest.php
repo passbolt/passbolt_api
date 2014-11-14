@@ -51,7 +51,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->Category->useDbConfig = 'test';
 		parent::setUp();
 
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$kk = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($kk);
 	}
 
@@ -114,7 +114,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$usersNames = array(
 			'a-usr1@companya.com',
 			'cedric@passbolt.com',
-			'dark.vador@passbolt.com',
+			'darth.vader@passbolt.com',
 			'kevin@passbolt.com',
 			'ismail@passbolt.com',
 			'manager.nogroup@passbolt.com',

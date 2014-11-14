@@ -363,7 +363,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public function testUpdateNoAllowed() {
 		// normal user don't have the right to add user
-		$dv = $this->User->findByUsername('dark.vador@passbolt.com');
+		$dv = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($dv);
 		$kk = $this->User->findByUsername('user@passbolt.com');
 
@@ -594,7 +594,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public function testUpdateAvatarNoAllowed() {
 		// normal user don't have the right to add user
-		$dv = $this->User->findByUsername('dark.vador@passbolt.com');
+		$dv = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($dv);
 		$kk = $this->User->findByUsername('user@passbolt.com');
 
@@ -717,7 +717,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public function testUpdatePasswordNoAllowed() {
 		// normal user don't have the right to add user
-		$dv = $this->User->findByUsername('dark.vador@passbolt.com');
+		$dv = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($dv);
 		$kk = $this->User->findByUsername('user@passbolt.com');
 

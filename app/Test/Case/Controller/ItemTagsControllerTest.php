@@ -36,7 +36,7 @@ class TagsControllerTest extends ControllerTestCase {
 		parent::setUp();
 
 		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
+		$kk = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($kk);
 	}
 

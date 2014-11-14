@@ -63,7 +63,7 @@ return array(
 		'Category' => array(
 			array(
 				'aconame' => 'marketing',
-				'aroname' => 'dark.vador@passbolt.com',
+				'aroname' => 'darth.vader@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
@@ -110,7 +110,7 @@ return array(
 		'Resource' => array(
 			array(
 				'aconame' => 'facebook account',
-				'aroname' => 'dark.vador@passbolt.com',
+				'aroname' => 'darth.vader@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(

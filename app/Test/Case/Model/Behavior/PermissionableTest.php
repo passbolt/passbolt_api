@@ -26,7 +26,7 @@ class PermissionnableTest extends CakeTestCase {
 
 	public function testGetPermission() {
 		// log the user as a manager to be able to access all the db.
-		$adminUser = $this->User->findByUsername('dark.vador@passbolt.com');
+		$adminUser = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($adminUser);
 
 		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../../Data/permissionsMatrix.php');
@@ -54,7 +54,7 @@ class PermissionnableTest extends CakeTestCase {
 
 	public function testIsAuthorized() {
 		// log the user as a manager to be able to access all the db.
-		$adminUser = $this->User->findByUsername('dark.vador@passbolt.com');
+		$adminUser = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($adminUser);
 
 		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../../Data/permissionsMatrix.php');

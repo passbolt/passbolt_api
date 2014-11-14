@@ -39,7 +39,7 @@ class CommentFixture extends CakeTestFixture {
 			'content' => 'this is a short comment',
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'created_by' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 		array(
@@ -50,7 +50,7 @@ class CommentFixture extends CakeTestFixture {
 			'content' => 'this is a reply to the short comment',
 			'created' => '2012-11-25 13:39:26',
 			'modified' => '2012-11-25 13:39:26',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'created_by' => '50cdea9c-fa10-47af-aaa8-2f4fd7a10fce',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
 	);

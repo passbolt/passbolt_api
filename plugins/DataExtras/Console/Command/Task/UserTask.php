@@ -26,7 +26,7 @@ class UserTask extends ModelTask {
 			'utt' => $User->findByUsername('utest@passbolt.com'),
 			'tst' => $User->findByUsername('test@passbolt.com'),
 			'ins' => $User->findByUsername('root@passbolt.com'),
-			'dar' => $User->findByUsername('dark.vador@passbolt.com'),
+			'dar' => $User->findByUsername('darth.vader@passbolt.com'),
 			'rem' => $User->findByUsername('remy@passbolt.com'),
 			'aur' => $User->findByUsername('aurelie@passbolt.com'),
 			'myr' => $User->findByUsername('myriam@passbolt.com'),
@@ -51,21 +51,21 @@ class UserTask extends ModelTask {
 			'id' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
 			'username' => 'utest@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c', // USER
-			'password' => 'notdefined',
+			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
 			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c51',
 			'username' => 'root@passbolt.com',
 			'role_id' => '142c1340-c5cd-11e1-a0c5-080027796c4c', // ROOT
-			'password' => 'notdefined',
+			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
 			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c4c',
-			'username' => 'dark.vador@passbolt.com',
+			'username' => 'darth.vader@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'I am your father',
+			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
@@ -73,14 +73,14 @@ class UserTask extends ModelTask {
 			'id' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
 			'username' => 'manager.nogroup@passbolt.com',
 			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'nodefined',
+			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
 			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
 			'username' => 'anonymous@passbolt.com',
 			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'we are legions',
+			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
