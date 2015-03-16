@@ -48,11 +48,12 @@ steal(
 			var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_group_shortcuts', {});
 			userShortcut.start();
 
-            // Instanciate the group chooser controller.
-            this.grpChooser = new passbolt.controller.component.GroupChooserController('#js_wsp_users_group_chooser', {
-				'selectedGroups': this.options.selectedGroups
-			});
-            this.grpChooser.start();
+			// Removed group choosed for #PASSBOLT-787
+            //// Instanciate the group chooser controller.
+            //this.grpChooser = new passbolt.controller.component.GroupChooserController('#js_wsp_users_group_chooser', {
+				//'selectedGroups': this.options.selectedGroups
+			//});
+            //this.grpChooser.start();
 
             // Instanciate the passwords browser controller.
             var userBrowserController = new passbolt.controller.component.UserBrowserController('#js_wsp_ppl_browser', {
