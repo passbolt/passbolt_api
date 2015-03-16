@@ -28,23 +28,23 @@ steal(
 				var $row = this._super(item, refItemId, position);
 				var $name = $('.js_grid_column_name', $row);
 				// Handles draginit event for the current row.
-				$row.on("draginit", function(ev, drag){
-					// create what we'll drag
-					var $draggedResource = $('div#js_dragged_resource');
-					if ($draggedResource.length) {
-						$('.name', $draggedResource).text($name.text());
-					}
-					else {
-						$draggedResource = can.view(
-							'app/view/template/component/resource/draggedResource.ejs', {
-								name: $name.text()
-							});
-						$($draggedResource).appendTo(document.body);
-						$draggedResource = $('div#js_dragged_resource');
-					}
-					// indicate we want our mouse on the top-right of it
-					drag.representative($draggedResource, 0, 0);
-				});
+				//$row.on("draginit", function(ev, drag){
+				//	// create what we'll drag
+				//	var $draggedResource = $('div#js_dragged_resource');
+				//	if ($draggedResource.length) {
+				//		$('.name', $draggedResource).text($name.text());
+				//	}
+				//	else {
+				//		$draggedResource = can.view(
+				//			'app/view/template/component/resource/draggedResource.ejs', {
+				//				name: $name.text()
+				//			});
+				//		$($draggedResource).appendTo(document.body);
+				//		$draggedResource = $('div#js_dragged_resource');
+				//	}
+				//	// indicate we want our mouse on the top-right of it
+				//	drag.representative($draggedResource, 0, 0);
+				//});
 			}
 		});
 	});
