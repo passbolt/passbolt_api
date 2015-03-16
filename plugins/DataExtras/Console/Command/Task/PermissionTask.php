@@ -45,71 +45,71 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $users['mng'],
 			'type' => PermissionType::ADMIN
 		));
-		// Group Management has admin rights on everything
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['root'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['man'],
-			'type' => PermissionType::ADMIN
-		));
-		// Group human resources have read only rights on administration
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-5fa4-493d-bad0-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['adm'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['hr'],
-			'type' => PermissionType::READ
-		));
-		// human resources have no rights on accounts
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-6d20-4e4e-bbcf-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['acc'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['hr'],
-			'type' => PermissionType::DENY
-		));
-		// Group human resources can modify resource salesforce account
-		$rSalesforce = $this->Resource->findByName("salesforce account");
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-7768-45e0-890d-23a4d7a10fce',
-			'aco' => 'Resource',
-			'aco_foreign_key' => $rSalesforce['Resource']['id'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['hr'],
-			'type' => PermissionType::UPDATE
-		));
-		// Group human resources cannot access resource facebook account
-		$rFacebook = $this->Resource->findByName("facebook account");
-		$ps[] = array('Permission' => array(
-			'id' => '50e234af-7768-7890-890d-23a4d7a10fce',
-			'aco' => 'Resource',
-			'aco_foreign_key' => $rFacebook['Resource']['id'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['hr'],
-			'type' => PermissionType::DENY
-		));
-		// accounting dpt can access administration>accounts in read only
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-832c-44bf-8a49-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['acc'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['acc'],
-			'type' => PermissionType::READ,
-		));
-		// Group developers drupal have read only rights on Projects > Drupal
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-8824-48f9-89af-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['dru'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['dru'],
-			'type' => PermissionType::READ,
-		));
+//		// Group Management has admin rights on everything
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['root'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['man'],
+//			'type' => PermissionType::ADMIN
+//		));
+//		// Group human resources have read only rights on administration
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-5fa4-493d-bad0-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['adm'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['hr'],
+//			'type' => PermissionType::READ
+//		));
+//		// human resources have no rights on accounts
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-6d20-4e4e-bbcf-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['acc'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['hr'],
+//			'type' => PermissionType::DENY
+//		));
+//		// Group human resources can modify resource salesforce account
+//		$rSalesforce = $this->Resource->findByName("salesforce account");
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-7768-45e0-890d-23a4d7a10fce',
+//			'aco' => 'Resource',
+//			'aco_foreign_key' => $rSalesforce['Resource']['id'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['hr'],
+//			'type' => PermissionType::UPDATE
+//		));
+//		// Group human resources cannot access resource facebook account
+//		$rFacebook = $this->Resource->findByName("facebook account");
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e234af-7768-7890-890d-23a4d7a10fce',
+//			'aco' => 'Resource',
+//			'aco_foreign_key' => $rFacebook['Resource']['id'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['hr'],
+//			'type' => PermissionType::DENY
+//		));
+//		// accounting dpt can access administration>accounts in read only
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-832c-44bf-8a49-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['acc'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['acc'],
+//			'type' => PermissionType::READ,
+//		));
+//		// Group developers drupal have read only rights on Projects > Drupal
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-8824-48f9-89af-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['dru'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['dru'],
+//			'type' => PermissionType::READ,
+//		));
 		// Group human resources can modify resource salesforce account
 		$rDrupalPwd2 = $this->Resource->findByName("dp2-pwd1");
 		$ps[] = array('Permission' => array(
@@ -120,24 +120,24 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $users['ced'],
 			'type' => PermissionType::DENY
 		));
-		// Group cakephp has access to category cakephp in readonly
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-8ab8-4533-a4b4-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['cak'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['cak'],
-			'type' => PermissionType::READ,
-		));
-		// Group developers team leads has access to projects in modify
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-a490-43f5-9cc9-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['pro'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['dtl'],
-			'type' => PermissionType::UPDATE,
-		));
+//		// Group cakephp has access to category cakephp in readonly
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-8ab8-4533-a4b4-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['cak'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['cak'],
+//			'type' => PermissionType::READ,
+//		));
+//		// Group developers team leads has access to projects in modify
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-a490-43f5-9cc9-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['pro'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['dtl'],
+//			'type' => PermissionType::UPDATE,
+//		));
 		// Remy Bertot has admin rights on cp-project1
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-aa58-478c-804d-23a4d7a10fce',
@@ -184,14 +184,14 @@ class PermissionTask extends ModelTask {
 			'type' => PermissionType::ADMIN,
 		));
 		//  Freelancers have read only rights to projects others
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-b124-40e3-988e-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['oth'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['fre'],
-			'type' => PermissionType::READ,
-		));
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-b124-40e3-988e-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['oth'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['fre'],
+//			'type' => PermissionType::READ,
+//		));
 		// Jean René has readonly access rights on cp-project2
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-b598-42f7-b105-23a4d7a10fce',
@@ -221,23 +221,23 @@ class PermissionTask extends ModelTask {
 			'type' => PermissionType::READ
 		));
 		//  company a has read only rights to o-project1
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-d4b0-43d8-947f-23a4d7a10fce',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['op1'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['cpa'],
-			'type' => PermissionType::READ,
-		));
-		//  company a has read only rights to o-project1
-		$ps[] = array('Permission' => array(
-			'id' => '50e6b4af-d4b0-43d8-947f-23a4d7a10ecb',
-			'aco' => 'Category',
-			'aco_foreign_key' => $cat['op2'],
-			'aro' => 'Group',
-			'aro_foreign_key' => $groups['cpa'],
-			'type' => PermissionType::UPDATE,
-		));
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-d4b0-43d8-947f-23a4d7a10fce',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['op1'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['cpa'],
+//			'type' => PermissionType::READ,
+//		));
+//		//  company a has read only rights to o-project1
+//		$ps[] = array('Permission' => array(
+//			'id' => '50e6b4af-d4b0-43d8-947f-23a4d7a10ecb',
+//			'aco' => 'Category',
+//			'aco_foreign_key' => $cat['op2'],
+//			'aro' => 'Group',
+//			'aro_foreign_key' => $groups['cpa'],
+//			'type' => PermissionType::UPDATE,
+//		));
 
 		return $ps;
 	}
