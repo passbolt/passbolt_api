@@ -55,9 +55,10 @@ steal(
 			var rsShortcut = new passbolt.controller.component.ResourceShortcutsController('#js_wsp_pwd_rs_shortcuts', {});
 			rsShortcut.start();
 
-			// Instanciate the categories chooser controller
-			this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
-			this.catChooser.start();
+			// Removed the lines below for #PASSBOLT-787
+			//// Instanciate the categories chooser controller
+			//this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
+			//this.catChooser.start();
 
 			// Instantiate the password workspace breadcrumb controller
 			this.breadcrumCtl = new passbolt.controller.component.PasswordBreadcrumbController($('#js_wsp_pwd_breadcrumb'), {});
