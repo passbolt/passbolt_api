@@ -55,8 +55,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
-			'created_by' => '',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
+			'modified_by' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce'
 		));
 		$r[] = array('Resource'=>array(
 			'id' => '509bb871-b964-48ab-94fe-fb098cebc04d',
@@ -68,8 +68,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
-			'created_by' => '',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
+			'modified_by' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce'
 		));
 		$r[] = array('Resource'=>array(
 			'id' => '50d77ff9-c358-4dfb-be34-1b63d7a10fce',
