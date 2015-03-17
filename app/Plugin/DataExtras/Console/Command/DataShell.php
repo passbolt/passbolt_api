@@ -31,6 +31,7 @@ class DataShell extends AppShell {
 		'Comment',
 		'Profile',
 		'Avatar',
+		'Secret',
 	);
 
 /**
