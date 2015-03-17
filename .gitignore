@@ -10,9 +10,9 @@
 /app/tmp/tests/*
 /app/tmp/image-processing/*
 /app/webroot/img/public/*
-/app/Plugin/*
-!/app/Plugin/api_generator/*
-!/app/Plugin/DataExtras/*
+app/Plugin/*
+!app/Plugin/DataExtras
+!/app/Plugin/api_generator
 /app/Vendor/*
 !/app/Vendor/RandomTool.php
 /lib/Cake/Console/Templates/skel/tmp/
