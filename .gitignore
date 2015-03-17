@@ -10,6 +10,10 @@
 /app/tmp/tests/*
 /app/tmp/image-processing/*
 /app/webroot/img/public/*
+/app/Plugin/*
+!/app/Plugin/api_generator/*
+!/app/Plugin/DataExtras/*
+app/Vendor/*
 /lib/Cake/Console/Templates/skel/tmp/
 /build
 /dist
