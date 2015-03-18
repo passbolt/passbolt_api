@@ -20,9 +20,6 @@ class SecretTask extends ModelTask {
 
 	public function execute() {
 		$Model = ClassRegistry::init($this->model);
-		// @todo work on permissionable and save
-		//$Model->hasOne = array();
-		$Model->Behaviors->disable('Permissionable');
 		$data = $this->getData();
 		foreach ($data as $item) {
 			$Model->create();

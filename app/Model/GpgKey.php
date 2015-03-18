@@ -7,11 +7,11 @@
  * @package      app.Model.GpgKey
  * @since        version 2.12.9
  */
-class GpgKey extends AppModel {
+class Gpgkey extends AppModel {
 
-	public $name = 'GpgKey';
+	public $name = 'Gpgkey';
 
-	public $useTable = 'gpgKeys';
+	public $useTable = 'gpgkeys';
 
 /**
  * Import a key in the keyring
@@ -21,92 +21,171 @@ class GpgKey extends AppModel {
  * @access public
  */
 	public function import($key) {
-		$tmp = APP . 'tmp' . DS . 'gpg' . DS . 'keys' . md5(uniqid(rand()));
-		file_put_contents($tmp, $key);
-		$cmd = 'gpg --import ' . $tmp;
-		$cmd = escapeshellcmd($cmd);
-		exec($cmd,$output);
-		unlink($tmp);
-		return true;
+		$res = gnupg_init();
+		$import = gnupg_import($res, $key);
+		return $import;
 	}
 
 /**
  * Remove a key from the keyring
  *
- * @param string $key 
+ * @param string $fingerprint
  * @return void
  * @access public
  */
-	public function remove($key) {
-		$cmd = 'gpg --batch --delete-key --yes ' . $key;
-		$cmd = escapeshellcmd($cmd);
-		exec($cmd,$output);
-		return $output;
+	public function remove($fingerprint) {
+		$res = gnupg_init();
+		$remove = gnupg_deletekey($res, $fingerprint);
+		return $remove;
 	}
 
 /**
  * Check the fingerprint of a key
  *
- * @param string $id 
+ * @param string $fingerprint
  * @return mixed array or false if error
  * @access public
  */
-	public function fingerprint($id) {
-		$f = false;
-		$cmd = 'gpg --fingerprint ' . $id;
-		$cmd = escapeshellcmd($cmd);
-		exec($cmd,$output);
+	public function info($fingerprint) {
+		$res = gnupg_init();
+		$info = gnupg_keyinfo($res, $fingerprint);
 
-		if (isset($output) && !empty($output)) {
-			$f = $this->_deserializeFingerprint($output);
+		$i = FALSE;
+		if ($info) {
+			$i = array(
+				'fingerprint' => $fingerprint,
+				'bits' => null,
+				'type' => null,
+				'key_id' => substr($fingerprint, -8),
+				'key_created' => $info[0]['subkeys'][0]['timestamp'],
+				'uid' => $info[0]['uids'][0]['uid'],
+				'expires' => $info[0]['subkeys'][0]['expires'],
+			);
 		}
-		return $f;
+		return $i;
 	}
 
-/**
- * Deserialize the fingerprint 
- * from gpg command line to a proper model object
- *
- * @param string $f command line output 
- * @return mixed array or false if error
- * @access protected
- */
-	protected function _deserializeFingerPrint($o) {
-		// parse first line
-		// ex: pub   2048R/E513B181 2012-08-25
-		preg_match('/pub   ([0-9]{4})([A-Z]{1})\/([A-Z0-9]{8}) ([0-9]{4}-[0-9]{2}-[0-9]{2})/', $o[0], $matches);
-		if (count($matches) != 5) {
-			return false;
-		}
-		$f['bits'] = $matches[1];
-		if ($matches[2] == 'R') {
-			$f['type'] = 'RSA';
-		} elseif ($matches[2] == 'D') {
-			$f['type'] = 'DSA';
-		} else {
-			return false; // unsupported or legacy
-		}
-		$f['key_id'] = $matches[3];
-		$f['modified'] = $matches[4];
+	/**
+	 * Get the validation rules upon context
+	 *
+	 * @param string case (optional) The target validation case if any.
+	 * @return array CakePHP validation rules
+	 */
+	public static function getValidationRules($case = 'default') {
+		$default = array(
+			'id' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'required' => 'update',
+					'message' => __('Id must be in correct format'),
+				)
+			),
+			'user_id' => array(
 
-		// parse second line
-		// ex: Key fingerprint = EA1B 5DDF 504D 669D B3DD  3B82 18A0 ED3D E513 B181
-		preg_match('/      Key fingerprint = ([A-Z0-9\ ]{50})/', $o[1], $matches);
-		if (count($matches) != 2) {
-			return false;
-		}
-		$f['fingerprint'] = $matches[1];
+			),
+			'key' => array(
 
-		// parse third line
-		// ex: uid Lisa <lisa@passbolt.com>
-		$email = '[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@' .
-			'(?:[-_a-z0-9][-_a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4}|museum|travel)';
-		preg_match('/uid                  ([0-9\w\ ]+) <(' . $email . ')>/', $o[2], $matches);
-		if (count($matches) != 3) {
-			return false;
+			),
+		);
+		switch ($case) {
+			default:
+			case 'default':
+				$rules = $default;
+				break;
 		}
-		$f['uid'] = $matches[1] . ' <' . $matches[2] . '>';
+		return $rules;
+	}
 
-		return $f;
+	/**
+	 * Analyze key before saving it, and extract key information.
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function beforeSave($options = array()) {
+		if (!empty($this->data['Gpgkey']['key']) &&
+			empty($this->data['Gpgkey']['fingerprint'])
+		) {
+			$info = $this->import($this->data['Gpgkey']['key']);
+			$info = $this->info($info['fingerprint']);
+			$this->data['Gpgkey'] = array_merge(
+				$this->data['Gpgkey'],
+				$info
+			);
+		}
+		return true;
+	}
+
+
+	/**
+	 * Return the find conditions to be used for a given context.
+	 *
+	 * @param null|string $case The target case.
+	 * @param null|string $role The user role.
+	 * @param null|array $data (optional) Optional data to build the find conditions.
+	 * @return array
+	 */
+	public static function getFindConditions($case = 'view', $role = Role::ANONYMOUS, $data = null) {
+		switch ($case) {
+			case 'index':
+				$conditions = array('Gpgkey.deleted' => 0);
+				if (isset($data['modified_after'])) {
+					$conditions['Gpgkey.modified >='] = $data['modified_after'];
+				}
+				$conditions = array('conditions' => $conditions);
+				break;
+			case 'view':
+				$conditions = array('conditions' => array('Gpgkey.deleted' => 0, 'Gpgkey.user_id' => $data['Gpgkey.user_id']));
+				break;
+			default:
+				$conditions = array('conditions' => array());
+				break;
+		}
+		return $conditions;
+	}
+
+	/**
+	 * Return the list of field to fetch for given context.
+	 *
+	 * @param string $case context ex: login, activation
+	 * @return array
+	 */
+	public static function getFindFields($case = 'view', $role = Role::USER) {
+		switch ($case) {
+			case 'view':
+			case 'index':
+				$fields = array('fields' => array(
+					'user_id',
+					'key',
+					'bits',
+					'uid',
+					'key_id',
+					'fingerprint',
+					'type', 'expires',
+					'modified'
+				));
+				break;
+			case 'delete':
+				$fields = array('fields' => array(
+					'deleted'
+				));
+				break;
+			case 'save':
+				$fields = array('fields' => array(
+					'user_id',
+					'key',
+					'bits',
+					'uid',
+					'key_id',
+					'fingerprint',
+					'type',
+					'expires',
+					'parent_id',
+					'key_created'
+				));
+				break;
+		}
+		return $fields;
 	}
 }

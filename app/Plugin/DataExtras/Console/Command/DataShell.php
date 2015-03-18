@@ -18,6 +18,7 @@ class DataShell extends AppShell {
 	public $dataModels = array(
 		'Role',
 		'User',
+		'Gpgkey',
 		'CategoryType',
 		'Category',
 		'Resource',

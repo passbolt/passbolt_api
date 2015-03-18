@@ -32,6 +32,9 @@ class FilterComponent extends Component {
 		if (isset($params['fltr_order'])) {
 			$returnValue['order'] = $params['fltr_order'];
 		}
+		if (isset($params['modified_after'])) {
+			$returnValue['modified_after'] = $params['modified_after'];
+		}
 		// extract the foreign model to filter on
 		$exp = "/^fltr_model_(.*)$/";
 		foreach ($params as $param => $value) {
