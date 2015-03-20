@@ -231,9 +231,9 @@ class Gpgkey extends AppModel {
 		if ($check['key_created'] == null) {
 			return false;
 		} else {
-			$expire = strtotime($check['key_created']);
+			$created = strtotime($check['key_created']);
 			$now = time();
-			$inPast = $now > $expire;
+			$inPast = $now > $created;
 			return $inPast;
 		}
 	}

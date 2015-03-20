@@ -33,7 +33,16 @@ class GpgkeyTask extends ModelTask {
 	}
 
 	public function getUserKey($userId) {
-		$key = file_get_contents(APP . DS . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc');
+		$User = Common::getModel('User');
+		$u = $User->findById($userId);
+		$prefix = $u['User']['username'];
+		$uprefix = explode('@', $prefix);
+		$gpgkeyPath = APP . 'Config' . DS . 'gpg' . DS;
+		$keyFileName = $gpgkeyPath . 'passbolt_dummy_key.asc';
+		if (file_exists($gpgkeyPath . $uprefix[0] . '_public.key')) {
+			$keyFileName = $gpgkeyPath . $uprefix[0] . '_public.key';
+		}
+		$key = file_get_contents($keyFileName);
 		return $key;
 	}
 
@@ -57,7 +66,7 @@ class GpgkeyTask extends ModelTask {
 					'key_id' => $info['key_id'],
 					'fingerprint' => $info['fingerprint'],
 					'type' => $info['type'],
-					'expires' => date('Y-m-d H:i:s', $info['expires']),
+					'expires' => !empty($info['expires']) ? date('Y-m-d H:i:s', $info['expires']) : '',
 					'key_created' => date('Y-m-d H:i:s', $info['key_created']),
 					'created' => date('Y-m-d H:i:s'),
 					'modified' => date('Y-m-d H:i:s'),
