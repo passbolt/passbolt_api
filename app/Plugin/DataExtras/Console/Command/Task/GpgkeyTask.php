@@ -46,23 +46,25 @@ class GpgkeyTask extends ModelTask {
 
 		foreach($us as $u) {
 			$keyRaw = $this->getUserKey($u['User']['id']);
-			$gpgkey = $Model->import($keyRaw);
-			$info = $Model->info($gpgkey['fingerprint']);
-			$key = array('Gpgkey'=>array(
-				'id' => Common::uuid(),
-				'user_id' => $u['User']['id'],
-				'key' => $keyRaw,
-				'bits' => 0,
-				'uid' => $info['uid'],
-				'key_id' => $info['key_id'],
-				'fingerprint' => $info['fingerprint'],
-				'expires' => date('Y-m-d H:i:s', $info['expires']),
-				'key_created' => date('Y-m-d H:i:s', $info['modified']),
-				'created' => date('Y-m-d H:i:s', $info['modified']),
-				'modified' => date('Y-m-d H:i:s', $info['modified']),
-				'created_by' => $u['User']['id'],
-				'modified_by' => $u['User']['id']
-			));
+			$info = $Model->info($keyRaw);
+			$key = array(
+				'Gpgkey'=>array(
+					'id' => Common::uuid(),
+					'user_id' => $u['User']['id'],
+					'key' => $keyRaw,
+					'bits' => 0,
+					'uid' => $info['uid'],
+					'key_id' => $info['key_id'],
+					'fingerprint' => $info['fingerprint'],
+					'type' => $info['type'],
+					'expires' => date('Y-m-d H:i:s', $info['expires']),
+					'key_created' => date('Y-m-d H:i:s', $info['key_created']),
+					'created' => date('Y-m-d H:i:s'),
+					'modified' => date('Y-m-d H:i:s'),
+					'created_by' => $u['User']['id'],
+					'modified_by' => $u['User']['id'],
+				)
+			);
 			$k[] = $key;
 		}
 		return $k;

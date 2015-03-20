@@ -63,42 +63,11 @@ class GpgkeysController extends AppController {
 		$o = $this->Gpgkey->getFindOptions('view', User::get('Role.name'), $data);
 		$gpgkey = $this->Gpgkey->find('first', $o);
 		if (!$gpgkey) {
-			$this->Message->error(__('The gpg key does not exist'), array('code' => 404));
+			$this->Message->error(__('The user id is invalid'), array('code' => 404));
 			return;
 		}
 		$this->set('data', $gpgkey);
 		$this->Message->success();
-	}
-
-	/**
-	 * Delete a Gpgkey.
-	 *
-	 * @param uuid id the id of the gpgKey to delete
-	 */
-	public function delete($id = null) {
-		// check if the category id is provided
-		if (!isset($id)) {
-			$this->Message->error(__('The gpg key id is missing'));
-			return;
-		}
-		// check if the id is valid
-		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The gpg key id is invalid'));
-			return;
-		}
-		$gpgkey = $this->Gpgkey->findById($id);
-		if (!$gpgkey) {
-			$this->Message->error(__('The gpgkey does not exist'), array('code' => 404));
-			return;
-		}
-
-		$gpgkey['Gpgkey']['deleted'] = '1';
-		$fields = $this->Gpgkey->getFindFields('delete', User::get('Role.name'));
-		if (!$this->Gpgkey->save($gpgkey, true, $fields['fields'])) {
-			$this->Message->error(__('Error while deleting'));
-			return;
-		}
-		$this->Message->success(__('The Gpgkey was sucessfully deleted'));
 	}
 
 	/**
@@ -116,19 +85,46 @@ class GpgkeysController extends AppController {
 			return;
 		}
 
+		$userId = User::get('id');
+
+		$this->Gpgkey->begin();
+		// Check if a key already exists for the given user.
+		$existingKey = $this->Gpgkey->find('first', array(
+				'conditions' => array(
+					'Gpgkey.deleted' => 0,
+					'Gpgkey.user_id' => $userId,
+				)
+			));
+		// If key already exists, soft delete them.
+		if ($existingKey) {
+			$this->Gpgkey->updateAll(
+				array('Gpgkey.deleted' => 1),
+				array(
+					'Gpgkey.user_id' => $userId,
+					'Gpgkey.deleted' => 0
+				)
+			);
+		}
+
 		// set the data for validation and save
 		$gpgkeyData = $this->request->data;
+
+		// Only the key owner can change his key.
+		// Force the user id of the user. We are not concerned about what was given.
+		$gpgkeyData = $this->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['Gpgkey']['key']);
+		$gpgkeyData['Gpgkey']['user_id'] = $userId;
+		// Set data.
 		$this->Gpgkey->set($gpgkeyData);
 
+		// Get fields.
 		$fields = $this->Gpgkey->getFindFields('save', User::get('Role.name'));
-
-		// check if the data is valid
+		// Check if the data is valid.
 		if (!$this->Gpgkey->validates()) {
+			$this->Gpgkey->rollback();
 			$this->Message->error(__('Could not validate gpgkey data'));
 			return;
 		}
 
-		$this->Gpgkey->begin();
 		$gpgkey= $this->Gpgkey->save($gpgkeyData, false, $fields['fields']);
 
 		if ($gpgkey == false) {
@@ -137,12 +133,12 @@ class GpgkeysController extends AppController {
 			return;
 		}
 		$this->Gpgkey->commit();
-		$data = array('Gpgkey.id' => $this->Gpgkey->id);
+		$data = array('Gpgkey.user_id' => $gpgkeyData['Gpgkey']['user_id']);
 		$options = $this->Gpgkey->getFindOptions('view', User::get('Role.name'), $data);
-		$group = $this->Gpgkey->find('first', $options);
+		$gpgkey = $this->Gpgkey->find('first', $options);
 
 		$this->Message->success(__("The gpgkey has been saved successfully"));
-		$this->set('data', $group);
+		$this->set('data', $gpgkey);
 
 		return;
 	}

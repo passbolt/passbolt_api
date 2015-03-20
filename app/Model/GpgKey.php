@@ -7,37 +7,24 @@
  * @package      app.Model.GpgKey
  * @since        version 2.12.9
  */
+
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'vendor' . DS . 'autoload.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_rsa.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_symmetric.php';
+
+
 class Gpgkey extends AppModel {
 
 	public $name = 'Gpgkey';
 
 	public $useTable = 'gpgkeys';
 
-/**
- * Import a key in the keyring
- *
- * @param string $key 
- * @return void
- * @access public
- */
-	public function import($key) {
-		$res = gnupg_init();
-		$import = gnupg_import($res, $key);
-		return $import;
-	}
+	public $belongsTo = array(
+		'User',
+	);
 
-/**
- * Remove a key from the keyring
- *
- * @param string $fingerprint
- * @return void
- * @access public
- */
-	public function remove($fingerprint) {
-		$res = gnupg_init();
-		$remove = gnupg_deletekey($res, $fingerprint);
-		return $remove;
-	}
+
 
 /**
  * Check the fingerprint of a key
@@ -46,22 +33,43 @@ class Gpgkey extends AppModel {
  * @return mixed array or false if error
  * @access public
  */
-	public function info($fingerprint) {
-		$res = gnupg_init();
-		$info = gnupg_keyinfo($res, $fingerprint);
-
-		$i = FALSE;
-		if ($info) {
-			$i = array(
-				'fingerprint' => $fingerprint,
-				'bits' => null,
-				'type' => null,
-				'key_id' => substr($fingerprint, -8),
-				'key_created' => $info[0]['subkeys'][0]['timestamp'],
-				'uid' => $info[0]['uids'][0]['uid'],
-				'expires' => $info[0]['subkeys'][0]['expires'],
-			);
+	public function info($keyData) {
+		// Try to unarmor the key.
+		// If it cannot, means the key is in the wrong format.
+		$keyUnarmored = OpenPGP::unarmor($keyData);
+		if (!$keyUnarmored) {
+			// Key in wrong format, we return false.
+			return false;
 		}
+
+		// Get OpenPGP_Message.
+		$msg = OpenPGP_Message::parse($keyUnarmored);
+		// Get Public key.
+		$publicKey = OpenPGP_PublicKeyPacket::parse($keyUnarmored);
+		// Get Packets for public key.
+		$publicKeyPacket = $msg->packets[0];
+		// Get self signatures.
+		$self_signatures = $publicKeyPacket->self_signatures($msg);
+		// Get userId.
+		$userIds = array();
+		foreach($msg->signatures() as $signatures) {
+			foreach($signatures as $signature) {
+				if ($signature instanceof OpenPGP_UserIDPacket) {
+					$userIds[] = sprintf('%s', $signature);
+				}
+			}
+		}
+
+		// Build information array.
+		$i = array(
+			'fingerprint' => $publicKeyPacket->fingerprint(),
+			'bits' => OpenPGP::bitlength($self_signatures[0]->data[0]),
+			'type' => $self_signatures[0]->key_algorithm_name(),
+			'key_id' => $publicKeyPacket->key_id,
+			'key_created' => $publicKey->timestamp,
+			'uid' => $userIds[0],
+			'expires' => $publicKeyPacket->expires($msg),
+		);
 		return $i;
 	}
 
@@ -77,15 +85,86 @@ class Gpgkey extends AppModel {
 				'uuid' => array(
 					'rule' => 'uuid',
 					'required' => 'update',
-					'message' => __('Id must be in correct format'),
+					'message' => __('Uuid must be provided and in correct format'),
 				)
 			),
 			'user_id' => array(
-
+				'uuid' => array(
+					'rule' => 'uuid',
+					'required' => 'create',
+					'allowEmpty' => false,
+					'message' => __('Id must be in correct format'),
+				),
+				'exist' => array(
+					'rule' => array('userExists', null),
+					'message' => __('The user id provided does not exist')
+				),
 			),
 			'key' => array(
-
+				'importable' => array(
+					'rule'    => array('checkKeyIsImportable', null),
+					'required' => true,
+					'allowEmpty' => false,
+					'message' => __('The key provided is not in the right format, and couldn\'t be imported'),
+				),
 			),
+			'bits' => array(
+				'rule'    => 'numeric',
+				'required' => false,
+				'message' => __('The number of bits should be specified in a numeric format'),
+			),
+			'uid' => array(
+				'format' => array(
+					'rule'    => array('checkUid', null),
+					'required' => false,
+					'message' => __('The uid uses incorrect characters'),
+				),
+			),
+			'key_id' => array(
+				'format' => array(
+					'rule'    => '/^[A-Z0-9]{8}$/',
+					'required' => false,
+					'message' => __('The key id has an incorrect format'),
+				),
+			),
+			'fingerprint' => array(
+				'format' => array(
+					'rule'    => '/^[A-Z0-9]{40}$/',
+					'required' => 'create',
+					'message' => __('The fingerprint has an incorrect format'),
+					'allowEmpty' => false,
+				),
+			),
+			'type' => array(
+				'format' => array(
+					'rule'    => array('checkTypeExist', null),
+					'message' => __('The type uses an incorrect format'),
+					'allowEmpty' => true,
+				),
+			),
+			'expires' => array(
+				'is_date' => array(
+					'rule'    => '/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/i',
+					'message' => __('The expiring date has an incorrect format'),
+					'allowEmpty' => true,
+				),
+				'is_in_future' => array(
+					'rule' => array('checkExpireIsInFuture', null),
+					'message' => __('The key should expire in future.'),
+				),
+			),
+			'key_created' => array(
+				'is_date' => array(
+					'rule'    => '/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/i',
+					'message' => __('The key creation date has an incorrect format'),
+					'allowEmpty' => false,
+				),
+				'is_in_past' => array(
+					'rule' => array('checkCreatedIsInPast', null),
+					'message' => __('The key should have been created in the past.'),
+				),
+			),
+
 		);
 		switch ($case) {
 			default:
@@ -95,6 +174,105 @@ class Gpgkey extends AppModel {
 		}
 		return $rules;
 	}
+
+	/**
+	 * Check if a user with same id exists
+	 * @param $check
+	 * @return bool
+	 */
+	public function userExists($check) {
+		if ($check['user_id'] == null) {
+			return false;
+		} else {
+			$exists = $this->User->find('count', array(
+					'conditions' => array('User.id' => $check['user_id']),
+					'recursive' => -1
+				));
+			return $exists > 0;
+		}
+	}
+
+	/**
+	 * Check if a key can be imported
+	 * @param $check
+	 * @return bool
+	 */
+	public function checkKeyIsImportable($check) {
+		if ($check['key'] == null) {
+			return false;
+		} else {
+			$importable = $this->info($check['key']);
+			return $importable;
+		}
+	}
+
+	/**
+	 * Check if a key can be imported
+	 * @param $check
+	 * @return bool
+	 */
+	public function checkExpireIsInFuture($check) {
+		if ($check['expires'] == null) {
+			return false;
+		} else {
+			$expire = strtotime($check['expires']);
+			$now = time();
+			$inFuture = $now < $expire;
+			return $inFuture;
+		}
+	}
+
+	/**
+	 * Check if a key can be imported
+	 * @param $check
+	 * @return bool
+	 */
+	public function checkCreatedIsInPast($check) {
+		if ($check['key_created'] == null) {
+			return false;
+		} else {
+			$expire = strtotime($check['key_created']);
+			$now = time();
+			$inPast = $now > $expire;
+			return $inPast;
+		}
+	}
+
+	/**
+	 * Check uid (according to gpg rfc).
+	 * @param $check
+	 * @return bool
+	 */
+	public function checkUid($check) {
+		if ($check['uid'] == null) {
+			return false;
+		} else {
+			$valid = false;
+			try {
+				$userIdPacket = new OpenPGP_UserIDPacket($check['uid']);
+			}
+			catch (Exception $e) {
+				return false;
+			}
+			$valid = ($check['uid'] == sprintf('%s', $userIdPacket));
+			return $valid;
+		}
+	}
+
+	/**
+	 * Check type exists (according to gpg rfc).
+	 * @param $check
+	 * @return bool
+	 */
+	public function checkTypeExist($check) {
+		if ($check['type'] == null) {
+			return false;
+		} else {
+			$supported = array_search($check['type'], OpenPGP_PublicKeyPacket::$algorithms);
+			return $supported;
+		}
+	}
+
 
 	/**
 	 * Analyze key before saving it, and extract key information.
@@ -107,16 +285,40 @@ class Gpgkey extends AppModel {
 		if (!empty($this->data['Gpgkey']['key']) &&
 			empty($this->data['Gpgkey']['fingerprint'])
 		) {
-			$info = $this->import($this->data['Gpgkey']['key']);
-			$info = $this->info($info['fingerprint']);
-			$this->data['Gpgkey'] = array_merge(
-				$this->data['Gpgkey'],
-				$info
-			);
+			$data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']);
+			$this->data['Gpgkey'] = $data['Gpgkey'];
 		}
 		return true;
 	}
 
+	/**
+	 * Build data array from a key.
+	 *
+	 * @param $key
+	 *
+	 * @return mixed
+	 */
+	public function buildGpgkeyDataFromKey($key) {
+		$info = $this->info($key);
+		if ($info) {
+			$data['Gpgkey'] = array_merge (
+				array(
+					'key' => $key
+				),
+				$info
+			);
+			if (!empty ($data['Gpgkey']['expires'])) {
+				$data['Gpgkey']['expires'] = date('Y-m-d H:i:s', $data['Gpgkey']['expires']);
+			}
+			if (!empty ($data['Gpgkey']['key_created'])) {
+				$data['Gpgkey']['key_created'] = date('Y-m-d H:i:s', $data['Gpgkey']['key_created']);
+			}
+		}
+		else {
+			$data['Gpgkey']['key'] = $key;
+		}
+		return $data;
+	}
 
 	/**
 	 * Return the find conditions to be used for a given context.

@@ -123,6 +123,16 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
 	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'view', '[method]' => "GET"));
 
 /**
+ * Custom route for gpgkeys controller
+ */
+	Router::connect('/gpgkeys', array('controller' => 'gpgkeys', 'action' => 'index', '[method]' => "GET"));
+	Router::connect('/gpgkeys', array('controller' => 'gpgkeys', 'action' => 'add', '[method]' => "POST"));
+	Router::connect('/gpgkeys/index', array('controller' => 'gpgkeys', 'action' => 'index'));
+	Router::connect('/gpgkeys/index/*', array('controller' => 'gpgkeys', 'action' => 'index'));
+	Router::connect('/gpgkeys/*', array('controller' => 'gpgkeys', 'action' => 'delete', '[method]' => "DELETE"));
+	Router::connect('/gpgkeys/*', array('controller' => 'gpgkeys', 'action' => 'view', '[method]' => "GET"));
+
+/**
  * Custom route for users controller
  */
 	Router::connect('/users/index', array('controller' => 'users', 'action' => 'index'));
