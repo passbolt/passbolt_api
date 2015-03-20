@@ -15,6 +15,7 @@ app/Plugin/*
 !/app/Plugin/api_generator
 /app/Vendor/*
 !/app/Vendor/RandomTool.php
+!/app/Vendor/openpgp-php
 /lib/Cake/Console/Templates/skel/tmp/
 /build
 /dist
