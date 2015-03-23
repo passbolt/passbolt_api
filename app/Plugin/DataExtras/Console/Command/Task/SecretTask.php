@@ -13,6 +13,7 @@ require_once(APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS 
 App::uses('Secret', 'Model');
 App::uses('Resource', 'Model');
 App::uses('User', 'Model');
+App::uses('Gpgkey', 'Model');
 
 class SecretTask extends ModelTask {
 
@@ -29,7 +30,7 @@ class SecretTask extends ModelTask {
 			}
 			$instance = $Model->save();
 			if (!$instance) {
-				$this->out('<error>Unable to insert ' . $item[$this->model]['name'] . '</error>');
+				$this->out('<error>Unable to insert ' . $item[$this->model]['data'] . '</error>');
 			}
 		}
 	}
@@ -37,27 +38,66 @@ class SecretTask extends ModelTask {
 	/**
 	 * Get Dummy Secret Data.
 	 *
+	 * The passwords are always returned in the same order, useful for cross checking.
+	 *
 	 * This secret was encrypted with the dummy public key, also located in the repository.
 	 *
 	 * @return string
 	 */
-	protected function getDummySecretData() {
-		$s = '-----BEGIN PGP MESSAGE-----
-Version: OpenPGP.js v0.7.2
-Comment: http://openpgpjs.org
+	protected function getDummyPassword() {
+		static $i = 0;
+		$passwords = array(
+			"testpassword",
+			"123456",
+			"qwerty",
+			"111111",
+			"iloveyou",
+			"adbobe123",
+			"admin",
+			"letmein",
+			"monkey",
+			"adobe",
+			"sunshine",
+			"princess",
+			"azerty",
+			"trustno1",
+			"iamgod",
+			"love",
+			"god",
+			"business",
+			"passbolt",
+			"enova",
+			"kevisthebest",
+		);
+		$password = $passwords[$i];
+		$i++;
+		if ($i > sizeof($passwords) - 1) {
+			$i = 0;
+		}
+		return $passwords[$i];
+	}
 
-wcBMAwvNmZMMcWZiAQf+MIoTnUl1TZ37Smc7vN+pZa1eykxiBoL9qyLMIoXO
-/ICcFVLB21X4snN7C9Kj7tZAh+K1n4C1BPcokb4lLjtrUUxxeb4CEmszutaQ
-67eyuIi2oUBh4YqERexAcC89xzLNVeHa7X4LcUltdmydyut9BZq6vh9OGxKs
-l5H89H5CYnSVgY9uEGQKJViVNhdTCtSOvYVG3thpSnfrv5V4kPxBPeI3TRX1
-izMvb9XXCGgmudF6H+NxzyY9OqnDzk4sVYtw4LD+tYSebYulyZz4KyFQIBVN
-O2Dhm2LikecJUj154HuN+b1ZiFFkugsV6vk2LTIC58/jqMypGZ1UvEkEE8J2
-WtJfAV3hQYtt9278GPXH69KgwRTfSLOt9FDAfa/Gtpad1USRe3aZOnoTownv
-BIueB4S3TDNlIgJ0oicIFa++GghK+QWlnMgvtDJRZfb7wmSToYQwXcZei7bW
-4xIEkjyjRes=
-=MjPm
------END PGP MESSAGE-----';
-		return $s;
+	/**
+	 * Encrypt a password with the user public key.
+	 * @param $password
+	 * @param $userId
+	 * @return string $encrypted encrypted password
+	 */
+	protected function encryptPassword($password, $userId) {
+		$GpgkeyTask = $this->Tasks->load('Data.Gpgkey');
+		$gpgkeyPath = $GpgkeyTask->getGpgkeyPath($userId);
+		$Gpgkey = Common::getModel('Gpgkey');
+		$key = $Gpgkey->find("first", array('conditions' => array(
+				'Gpgkey.user_id' => $userId,
+				'Gpgkey.deleted' => 0
+			)));
+
+		$res = gnupg_init();
+		gnupg_import($res, $key['Gpgkey']['key']);
+		gnupg_addencryptkey($res , $key['Gpgkey']['fingerprint']);
+		$encrypted = gnupg_encrypt ($res , $password);
+
+		return $encrypted;
 	}
 
 	/**
@@ -73,14 +113,16 @@ BIueB4S3TDNlIgJ0oicIFa++GghK+QWlnMgvtDJRZfb7wmSToYQwXcZei7bW
 		// Insertion for all users who can access to available resources.
 		// We insert dummy data, same secret for everyone.
 		foreach($rs as $r) {
+			$password = $this->getDummyPassword();
 			foreach ($us as $u) {
 				$isAuthorized = $Resource->isAuthorized($r['Resource']['id'], PermissionType::READ, $u['User']['id']);
 				if ($isAuthorized) {
+					$passwordEncrypted = $this->encryptPassword($password, $u['User']['id']);
 					$s[] = array('Secret'=>array(
 						'id' => Common::uuid(),
 						'user_id' => $u['User']['id'],
 						'resource_id' => $r['Resource']['id'],
-						'data' => $this->getDummySecretData(),
+						'data' => $passwordEncrypted,
 						'created' => '2012-12-24 03:34:40',
 						'modified' => '2012-12-24 03:34:40',
 						'created_by' => $u['User']['id'],

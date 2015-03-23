@@ -32,7 +32,14 @@ class GpgkeyTask extends ModelTask {
 		}
 	}
 
-	public function getUserKey($userId) {
+	/**
+	 * Get path of the key for the given user.
+	 *
+	 * @param $userId
+	 *
+	 * @return string
+	 */
+	public function getGpgkeyPath($userId) {
 		$User = Common::getModel('User');
 		$u = $User->findById($userId);
 		$prefix = $u['User']['username'];
@@ -42,7 +49,18 @@ class GpgkeyTask extends ModelTask {
 		if (file_exists($gpgkeyPath . $uprefix[0] . '_public.key')) {
 			$keyFileName = $gpgkeyPath . $uprefix[0] . '_public.key';
 		}
-		$key = file_get_contents($keyFileName);
+		return $keyFileName;
+	}
+
+	/**
+	 * Get the public key of a user.
+	 *
+	 * @param $userId
+	 *
+	 * @return string
+	 */
+	public function getUserKey($userId) {
+		$key = file_get_contents($this->getGpgkeyPath($userId));
 		return $key;
 	}
 
@@ -61,7 +79,7 @@ class GpgkeyTask extends ModelTask {
 					'id' => Common::uuid(),
 					'user_id' => $u['User']['id'],
 					'key' => $keyRaw,
-					'bits' => 0,
+					'bits' => $info['bits'],
 					'uid' => $info['uid'],
 					'key_id' => $info['key_id'],
 					'fingerprint' => $info['fingerprint'],
