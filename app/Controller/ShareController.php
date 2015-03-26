@@ -153,21 +153,6 @@ class ShareController extends AppController {
 		}
 	}
 
-	private function _simulateUpdate($acoModelName = '', $acoInstanceId = null, $permissions) {
-		$this->Permission->begin();
-
-		try {
-			$this->_updatePermissions($acoModelName, $acoInstanceId, $permissions);
-		}
-		catch (Exception $e) {
-			$this->Permission->rollback();
-			throw new Exception($e->getMessage());
-		}
-		$users = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
-		$this->Permission->rollback();
-		return $users;
-	}
-
 	/**
 	 * Simulation entry point.
 	 * @param string $acoModelName
@@ -179,9 +164,18 @@ class ShareController extends AppController {
 		// Get permissions from request.
 		$permissions = isset($this->request->data['Permissions']) ? $this->request->data['Permissions'] : null;
 
-		$res = $this->_simulateUpdate($acoModelName, $acoInstanceId, $permissions);
+		$this->Permission->begin();
+		try {
+			$this->_updatePermissions($acoModelName, $acoInstanceId, $permissions);
+		}
+		catch (Exception $e) {
+			$this->Permission->rollback();
+			throw new Exception($e->getMessage());
+		}
+		$users = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
+		$this->Permission->rollback();
 
-		return $res;
+		return $users;
 	}
 
 	/**
@@ -220,22 +214,6 @@ class ShareController extends AppController {
 		// TODO : remove the simulate update and do the diff sequentially.
 		// Get list of current permissions for the given ACO.
 		$permsCurrent = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
-		try {
-			// Get permissions with simulation, so we can get the diff of the users, and create the missing keys.
-			$permsSimulated = $this->_simulateUpdate($acoModelName, $acoInstanceId, $permissions);
-		}
-		catch (Exception $e) {
-			$this->Message->error($e->getMessage());
-			return;
-		}
-
-		// Extract user ids from array.
-		$usersCurrent = Hash::extract($permsCurrent, '{n}.User.id');
-		$usersSimulated = Hash::extract($permsSimulated, '{n}.User.id');
-		// Users who have been added will show with the diff between simulated and current.
-		$addedUsers = array_diff($usersSimulated, $usersCurrent);
-		// Users who have been removed will show with the diff between current and simulated.
-		$removedUsers = array_diff($usersCurrent, $usersSimulated);
 
 		// Begin transaction.
 		$this->Permission->begin();
@@ -247,6 +225,16 @@ class ShareController extends AppController {
 			$this->Message->error($e->getMessage());
 			return;
 		}
+
+		// Get new permissions after all changes.
+		$permsAfterChanges = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
+		// Extract user ids from array.
+		$usersCurrent = Hash::extract($permsCurrent, '{n}.User.id');
+		$usersAfterChanges = Hash::extract($permsAfterChanges, '{n}.User.id');
+		// Users who have been added will show with the diff between simulated and current.
+		$addedUsers = array_diff($usersAfterChanges, $usersCurrent);
+		// Users who have been removed will show with the diff between current and simulated.
+		$removedUsers = array_diff($usersCurrent, $usersAfterChanges);
 
 		// If there are users that have been removed.
 		if (!empty($removedUsers)) {
