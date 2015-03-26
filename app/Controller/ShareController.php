@@ -9,10 +9,12 @@
  */
 class ShareController extends AppController {
 
+	// Components.
 	public $components = array(
 		'PermissionHelper',
 	);
 
+	// Used models.
 	public $uses = array(
 		'Secret',
 		'Resource',
@@ -153,6 +155,57 @@ class ShareController extends AppController {
 		}
 	}
 
+	private function _processAddedSecrets($acoInstanceId, $addedUsers, $secrets) {
+		// Add secrets for added users.
+		if (count($addedUsers) != count($secrets)) {
+			throw new Exception(__("The number of secrets provided doesn't match the %s users who have now access to the resources", count($addedUsers)));
+		}
+		// TODO : check that each user has its item entered.
+		foreach ($addedUsers as $userId) {
+			$userSecret = null;
+			foreach($secrets as $secret) {
+				$secretProvided = $secret['Secret']['user_id'] == $userId
+					&& $secret['Secret']['resource_id'] == $acoInstanceId;
+				if (!$secretProvided) {
+					throw new Exception(__("The secret for user id %s is not provided", $userId));
+				}
+
+				// Save secret.
+				$data = array(
+					'user_id' => $userId,
+					'resource_id' => $acoInstanceId,
+					'data' => $secret['Secret']['data'],
+				);
+				// Validates data.
+				$this->Secret->set($data);
+				$v = $this->Secret->validates();
+				if (!$v) {
+					throw new Exception(__("Invalid secret provided for user %s and resource %s", $userId, $acoInstanceId));
+				}
+
+				// Save secret.
+				$this->Secret->create();
+				$s = $this->Secret->save($data);
+				if (!$s) {
+					throw new Exception(__("Could not save secret for user %s and resource %s", $userId, $acoInstanceId));
+				}
+			}
+		}
+	}
+
+	private function _processRemovedSecrets($acoInstanceId, $removedUsers) {
+		// If there are users that have been removed.
+		if (!empty($removedUsers)) {
+			// Delete Secrets for removed permissions.
+			$this->Secret->deleteAll(
+				array(
+					'user_id' => $removedUsers,
+					'resource_id' => $acoInstanceId,
+				)
+			);
+		}
+	}
+
 	/**
 	 * Simulation entry point.
 	 * @param string $acoModelName
@@ -236,65 +289,24 @@ class ShareController extends AppController {
 		// Users who have been removed will show with the diff between current and simulated.
 		$removedUsers = array_diff($usersCurrent, $usersAfterChanges);
 
-		// If there are users that have been removed.
-		if (!empty($removedUsers)) {
-			// Delete Secrets for removed permissions.
-			$this->Secret->deleteAll(
-				array(
-					'user_id' => $removedUsers,
-					'resource_id' => $acoInstanceId,
-				)
-			);
+		// Manage added users and removed users.
+		try {
+			$this->_processRemovedSecrets($acoInstanceId, $addedUsers);
+			$this->_processAddedSecrets($acoInstanceId, $addedUsers, $secrets);
 		}
-
-		// Add secrets for added users.
-		if (count($addedUsers) != count($secrets)) {
+		catch (Exception $e) {
 			$this->Permission->rollback();
-			$this->Message->error(__("The number of secrets provided doesn't match the %s users who have now access to the resources", count($addedUsers)));
+			$this->Message->error($e->getMessage());
 			return;
 		}
-		// TODO : check that each user has its item entered.
-		foreach ($addedUsers as $userId) {
-			$userSecret = null;
-			foreach($secrets as $secret) {
-				$secretProvided = $secret['Secret']['user_id'] == $userId
-					&& $secret['Secret']['resource_id'] == $acoInstanceId;
-				if (!$secretProvided) {
-					$this->Permission->rollback();
-					$this->Message->error(__("The secret for user id %s is not provided", $userId));
-					return;
-				}
 
-				// Save secret.
-				$data = array(
-					'user_id' => $userId,
-					'resource_id' => $acoInstanceId,
-					'data' => $secret['Secret']['data'],
-				);
-				// Validates data.
-				$this->Secret->set($data);
-				$v = $this->Secret->validates();
-				if (!$v) {
-					$this->Permission->rollback();
-					$this->Message->error(__("Invalid secret provided for user %s and resource %s", $userId, $acoInstanceId));
-					return;
-				}
-
-				// Save secret.
-				$this->Secret->create();
-				$s = $this->Secret->save($data);
-				if (!$s) {
-					$this->Permission->rollback();
-					$this->Message->error(__("Could not save secret for user %s and resource %s", $userId, $acoInstanceId));
-					return;
-				}
-			}
-		}
 		// Everything ok, we can commit.
 		$this->Permission->commit();
 
 		// Manage email alerts.
-		// TODO :
+		// TODO : manage emails.
+
+		// TODO : return something.
 
 		$this->Message->success();
 	}
