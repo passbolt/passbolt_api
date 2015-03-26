@@ -12,7 +12,10 @@ App::uses('Resource', 'Model');
 
 class Secret extends AppModel {
 
-	public $actsAs = array('Containable', 'Trackable');
+	public $actsAs = array(
+		'Containable',
+		'Trackable'
+	);
 
 	public $belongsTo = array(
 		'Resource',
@@ -77,7 +80,9 @@ class Secret extends AppModel {
 			return false;
 		} else {
 			$exists = $this->Resource->find('count', array(
-				'conditions' => array('Resource.id' => $check['resource_id']),
+				'conditions' => array(
+					'Resource.id' => $check['resource_id']
+				),
 				'recursive' => -1
 			));
 			return $exists > 0;
@@ -93,7 +98,9 @@ class Secret extends AppModel {
 			return false;
 		} else {
 			$exists = $this->User->find('count', array(
-				'conditions' => array('User.id' => $check['user_id']),
+				'conditions' => array(
+					'User.id' => $check['user_id']
+				),
 				'recursive' => -1
 			));
 			return $exists > 0;
@@ -138,10 +145,29 @@ class Secret extends AppModel {
 	public static function getFindFields($case = 'view', $role = Role::USER) {
 		switch($case){
 			case 'view':
-				$fields = array('fields' => array('id', 'user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
+				$fields = array(
+					'fields' => array(
+						'id',
+						'user_id',
+						'resource_id',
+						'data',
+						'created',
+						'modified',
+						'created_by',
+						'modified_by'
+					));
 			break;
 			case 'save':
-				$fields = array('fields' => array('user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
+				$fields = array(
+					'fields' => array(
+						'user_id',
+						'resource_id',
+						'data',
+						'created',
+						'modified',
+						'created_by',
+						'modified_by'
+					));
 			break;
 			default:
 				$fields = array(
