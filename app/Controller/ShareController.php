@@ -19,6 +19,7 @@ class ShareController extends AppController {
 		'Secret',
 		'Resource',
 		'Permission',
+		'User',
 	);
 
 	/**
@@ -155,61 +156,91 @@ class ShareController extends AppController {
 		}
 	}
 
+	/**
+	 * Process added secrets.
+	 *
+	 * When we make a share operation, if a new user is added to access an ACO, we need to add his secret.
+	 * this function takes care of processing the secrets provided in the data, and make sure we have everything we need.
+	 *
+	 * @param uuid $acoInstanceId the resource id
+	 * @param array $addedUsers an array of users uuid
+	 * @param array $secrets an array of secrets
+	 *
+	 * @throws Exception
+	 */
 	private function _processAddedSecrets($acoInstanceId, $addedUsers, $secrets) {
 		// Add secrets for added users.
 		if (count($addedUsers) != count($secrets)) {
 			throw new Exception(__("The number of secrets provided doesn't match the %s users who have now access to the resources", count($addedUsers)));
 		}
-		// TODO : check that each user has its item entered.
+
 		foreach ($addedUsers as $userId) {
-			$userSecret = null;
-			foreach($secrets as $secret) {
+			$secretProvided = false;
+			foreach ($secrets as $secret) {
 				$secretProvided = $secret['Secret']['user_id'] == $userId
 					&& $secret['Secret']['resource_id'] == $acoInstanceId;
-				if (!$secretProvided) {
-					throw new Exception(__("The secret for user id %s is not provided", $userId));
+				if ($secretProvided) {
+					break;
 				}
+			}
+			// If a user doesn't have its secret provided, we throw an exception.
+			if (!$secretProvided) {
+				throw new Exception(__("The secret for user id %s is not provided", $userId));
+			}
 
-				// Save secret.
-				$data = array(
-					'user_id' => $userId,
-					'resource_id' => $acoInstanceId,
-					'data' => $secret['Secret']['data'],
-				);
-				// Validates data.
-				$this->Secret->set($data);
-				$v = $this->Secret->validates();
-				if (!$v) {
-					throw new Exception(__("Invalid secret provided for user %s and resource %s", $userId, $acoInstanceId));
-				}
+			// Save secret.
+			$data = array(
+				'user_id' => $userId,
+				'resource_id' => $acoInstanceId,
+				'data' => $secret['Secret']['data'],
+			);
+			// Validates data.
+			$this->Secret->set($data);
+			$v = $this->Secret->validates();
+			if (!$v) {
+				throw new Exception(__("Invalid secret provided for user %s and resource %s", $userId, $acoInstanceId));
+			}
 
-				// Save secret.
-				$this->Secret->create();
-				$s = $this->Secret->save($data);
-				if (!$s) {
-					throw new Exception(__("Could not save secret for user %s and resource %s", $userId, $acoInstanceId));
-				}
+			// Save secret.
+			$this->Secret->create();
+			$s = $this->Secret->save($data);
+			if (!$s) {
+				throw new Exception(__("Could not save secret for user %s and resource %s", $userId, $acoInstanceId));
 			}
 		}
 	}
 
+	/**
+	 * Process removed secrets. See similar function _processAddedSecrets().
+	 *
+	 * @param uuid $acoInstanceId
+	 * @param array $removedUsers
+	 *
+	 * @throws Exception
+	 */
 	private function _processRemovedSecrets($acoInstanceId, $removedUsers) {
 		// If there are users that have been removed.
 		if (!empty($removedUsers)) {
 			// Delete Secrets for removed permissions.
-			$this->Secret->deleteAll(
+			$del = $this->Secret->deleteAll(
 				array(
 					'user_id' => $removedUsers,
 					'resource_id' => $acoInstanceId,
 				)
 			);
+			if (!$del) {
+				throw new Exception(__("Could not delete secrets"));
+			}
 		}
 	}
 
 	/**
 	 * Simulation entry point.
+	 *
 	 * @param string $acoModelName
-	 * @param null   $acoInstanceId
+	 * @param uuid   $acoInstanceId
+	 *
+	 * @throws Exception
 	 */
 	public function simulate($acoModelName = '', $acoInstanceId = null) {
 		// Should be capitalized
@@ -264,7 +295,6 @@ class ShareController extends AppController {
 			return;
 		}
 
-		// TODO : remove the simulate update and do the diff sequentially.
 		// Get list of current permissions for the given ACO.
 		$permsCurrent = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
 
@@ -306,8 +336,21 @@ class ShareController extends AppController {
 		// Manage email alerts.
 		// TODO : manage emails.
 
-		// TODO : return something.
 
-		$this->Message->success();
+		$added = $this->User->find(
+			'all',
+			array_merge(
+				array('conditions' => array('User.id' => $addedUsers)),
+				$this->User->getFindFields('User::edit')
+			));
+		$removed = $this->User->find(
+			'all',
+			array_merge(
+				array('conditions' => array('User.id' => $removedUsers)),
+				$this->User->getFindFields('User::edit')
+			));
+
+		$this->set('data', array('added' => $added, 'removed' => $removed));
+		$this->Message->success(__('Share operation successful'));
 	}
 }

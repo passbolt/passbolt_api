@@ -281,6 +281,50 @@ class ShareControllerTest extends ControllerTestCase {
 		$this->_updateCall($resource['Resource']['name'], $data, 'Resource');
 	}
 
+	// Test update add with wrong secrets data provided. (not matching the user ids).
+	public function testUpdateAddSecretForWrongUserProvided() {
+		// Get Remy. he is the wrong user. #specialdedicace #remoisi
+		$kk = $this->User->findByUsername('kevin@passbolt.com');
+		$rm = $this->User->findByUsername('remy@passbolt.com');
+		$ce = $this->User->findByUsername('cedric@passbolt.com');
+		$fbRs = $this->Resource->findByName('facebook account');
+
+		$data = array(
+			'Permissions' => array(
+				array(
+					'Permission' => array (
+						'aro_foreign_key' => $kk['User']['id'],
+						'type' => PermissionType::ADMIN,
+					),
+				),
+				array(
+					'Permission' => array (
+						'aro_foreign_key' => $ce['User']['id'],
+						'type' => PermissionType::ADMIN,
+					),
+				)
+			),
+			'Secrets' => array(
+				array(
+					'Secret' => array (
+						'user_id' =>$rm['User']['id'],
+						'resource_id' => $fbRs['Resource']['id'],
+						'data' => 'test',
+					),
+				),
+				array(
+					'Secret' => array (
+						'user_id' =>$kk['User']['id'],
+						'resource_id' => $fbRs['Resource']['id'],
+						'data' => 'test',
+					),
+				),
+			),
+		);
+		$this->setExpectedException('HttpException', "The secret for user id {$ce['User']['id']} is not provided");
+		$this->_updateCall('facebook account', $data, 'Resource');
+	}
+
 	public function testUpdateAddValid() {
 		// Get Kevin.
 		$kk = $this->User->findByUsername('kevin@passbolt.com');
@@ -326,10 +370,6 @@ class ShareControllerTest extends ControllerTestCase {
 			"Adding a permission should have actually added the permission, but the permission doesn't exist."
 		);
 	}
-
-	// TODO : test update add with wrong secrets data provided. (not matching the user ids).
-
-	// TODO : test update add with data that don't validate.
 
 	public function testUpdateUpdate() {
 		// Get a direct permission that already exist.
