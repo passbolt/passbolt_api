@@ -7,6 +7,12 @@
  * @package       app.Model.Secret
  * @since         version 2.12.7
  */
+
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'vendor' . DS . 'autoload.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_rsa.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_symmetric.php';
+
 App::uses('User', 'Model');
 App::uses('Resource', 'Model');
 
@@ -59,7 +65,11 @@ class Secret extends AppModel {
 					'required' => 'create',
 					'rule' => 'notEmpty',
 					'message' => __('The secret must me provided')
-				)
+				),
+				'isGpgFormat' => array(
+					'rule'    => array('checkGpgMessageIsValid', null),
+					'message' => __('The message provided is not in the right format'),
+				),
 			),
 		);
 		switch ($case) {
@@ -104,6 +114,30 @@ class Secret extends AppModel {
 				'recursive' => -1
 			));
 			return $exists > 0;
+		}
+	}
+
+	/**
+	 * Check a gpg message is valid
+	 * @param $check
+	 * @return bool
+	 */
+	public function checkGpgMessageIsValid($check) {
+		if ($check['data'] == null) {
+			return false;
+		} else {
+			$isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $check['data'], $values);
+			if (!$isMarker || !isset($values[2])) {
+				return false;
+			}
+			$marker = $values[2];
+			$msgUnarmored = OpenPGP::unarmor($check['data'], $marker);
+			if ($msgUnarmored != false) {
+				// Message in right format.
+				$msg = OpenPGP_Message::parse($msgUnarmored);
+				return true;
+			}
+			return false;
 		}
 	}
 

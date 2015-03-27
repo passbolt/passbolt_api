@@ -12,7 +12,6 @@ require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'vendor' . DS . 'autoloa
 require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp.php';
 require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_rsa.php';
 require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_symmetric.php';
-require_once APP . 'Vendor' . DS . 'php-gpg' . DS . 'libs' . DS . 'GPG.php';
 
 
 class Gpgkey extends AppModel {
@@ -34,7 +33,10 @@ class Gpgkey extends AppModel {
 	 * @return mixed
 	 */
 	public function getMarker($keyData) {
-		preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $keyData, $values);
+		$isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $keyData, $values);
+		if (!$isMarker || !isset($values[2])) {
+			return false;
+		}
 		return $values[2];
 	}
 
@@ -49,8 +51,11 @@ class Gpgkey extends AppModel {
 		// Try to unarmor the key.
 		// If it cannot, means the key is in the wrong format.
 		$marker = $this->getMarker($keyData);
+		if (!$marker) {
+			return false;
+		}
 		$keyUnarmored = OpenPGP::unarmor($keyData, $marker);
-		if (!$keyUnarmored) {
+		if ($keyUnarmored == false) {
 			// Key in wrong format, we return false.
 			return false;
 		}
