@@ -108,6 +108,7 @@ class GpgkeysController extends AppController {
 
 		// set the data for validation and save
 		$gpgkeyData = $this->request->data;
+		$gpgkeyData['Gpgkey']['key'] = $this->request->rawData['Gpgkey']['key'];
 
 		// Only the key owner can change his key.
 		// Force the user id of the user. We are not concerned about what was given.

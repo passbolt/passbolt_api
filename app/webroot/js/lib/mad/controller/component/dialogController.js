@@ -21,40 +21,41 @@ steal(
 	mad.controller.component.FreeCompositeController.extend('mad.controller.component.DialogController', /** @static */ {
 
 		'defaults': {
-			'singleton': null,
 			'label': 'Dialog Controller',
 			'viewClass': mad.view.component.Dialog,
 			'cssClasses': ['dialog-wrapper'],
 			'tag': 'div'
+		},
+
+		/**
+		 * Close the latest dialog.
+		 */
+		'closeLatest': function() {
+			$('.dialog-wrapper:last').remove();
 		}
 
 	}, /** @prototype */ {
 		
 		// constructor like
 		'init': function(el, options) {
-			// if an instance of dialog already exist return this instance
-			if(mad.controller.component.DialogController.singleton != null) {
-				mad.controller.component.DialogController.singleton.element.remove();
-			}
-			
-			// create the DOM entry point for the dialog
-			var $el = mad.helper.HtmlHelper.create(
-				mad.app.element,
-				'first',
-				'<div id="js_dialog" />'
-			);
+			// Create the DOM entry point for the dialog
+			var refElt = mad.app.element,
+				position = 'first';
 
-			// Changing the element force us to recall setup which is called before all init functions
+			// If a dialog already exist, position the new one right after.
+			var $existingDialog = $('.dialog-wrapper:last');
+			if ($existingDialog.length) {
+				refElt = $existingDialog;
+				position = "after";
+			}
+
+			// Insert the element in the page DOM.
+			var $el = mad.helper.HtmlHelper.create(refElt, position, '<div />');
+
+			// Changing the element force us to recall the setup which is called before all init functions
 			// and make the magic things (bind event ...)
 			this.setup($el, options);
 			this._super($el, options);
-			mad.controller.component.DialogController.singleton = this; 
-		},
-		
-		// destructor like
-		'destroy': function() {
-			mad.controller.component.DialogController.singleton = null;
-			this._super();
 		},
 
 		/**

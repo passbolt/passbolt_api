@@ -142,7 +142,10 @@ class Secret extends AppModel {
 			break;
 			case 'save':
 				$fields = array('fields' => array('user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
-			break;
+				break;
+			case 'update':
+				$fields = array('fields' => array('user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
+				break;
 			default:
 				$fields = array(
 					'fields' => array()

@@ -1,6 +1,7 @@
 steal(
 	'mad/form/formController.js',
 	'app/controller/component/secretStrengthController.js',
+	'app/controller/form/secret/createFormController.js',
 	'app/view/template/form/resource/createForm.ejs'
 ).then(function () {
 
@@ -22,9 +23,19 @@ steal(
 			'templateBased': true,
 			'secretField': null,
 			// @todo should be dynamic functions of creation or update
-			'action': 'create'
+			'action': 'create',
+			'secretsForms': [],
+			'resource': null
 		}
 	}, /** @prototype */ {
+
+		/**
+		 * Before render.
+		 */
+		'beforeRender': function() {
+			this._super();
+			this.setViewData('resource', this.options.data);
+		},
 
 		/**
 		 * After start hook.
@@ -33,6 +44,7 @@ steal(
 		 * @return {void}
 		 */
 		'afterStart': function () {
+			var self = this;
 			// temporary for update demonstration
 			this.options.data.Resource = this.options.data.Resource || {};
 
@@ -64,28 +76,16 @@ steal(
 				}).start(),
 				new mad.form.FeedbackController($('#js_field_username_feedback'), {}).start()
 			);
-			// Add secret id field
-			this.addElement(
-				new mad.form.element.TextboxController($('#js_field_secret_id'), {
-					modelReference: 'passbolt.model.Resource.Secret.id'
-				}).start()
-			);
-			// Add secret data field
-			this.options.secretField = new mad.form.element.TextboxController($('#js_field_secret'), {
-					modelReference: 'passbolt.model.Resource.Secret.data'
-				}).start();
-			this.addElement(
-                this.options.secretField,
-                new mad.form.FeedbackController($('#js_field_password_feedback'), {}).start()
-            );
-			// Add secret data in clear field
-			this.options.passwordClear = this.addElement(
-				new mad.form.element.TextboxController($('#js_field_secret_clear'), {
-					// modelReference: 'passbolt.model.Resource.Secret.data'
-					'state': 'hidden',
-					'validate': false
-				}).start()
-			);
+			// Add secrets forms.
+			can.each(this.options.data.Secret, function (secret, i) {
+				var form = new passbolt.controller.form.secret.CreateFormController('#js_secret_edit_' + i, {
+					data: secret,
+					secret_i: i
+				});
+				form.start();
+				form.load(secret);
+				self.options.secretsForms.push(form);
+			});
 			// Add resource description field
 			this.addElement(
 				new mad.form.element.TextboxController($('#js_field_description'), {
@@ -94,103 +94,60 @@ steal(
 				new mad.form.FeedbackController($('#js_field_description_feedback'), {}).start()
 			);
 
-			// Show/Hide the password
-			this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_pwd_button'))
-				.start();
 
-			// generate a password
-			this.options.genPwdButton = new mad.controller.component.ButtonController($('#js_gen_pwd_button'))
-				.start();
-
-			// The secret strength compone nt
-			var secret = can.getObject('data.Secret.data', this.options);
-			var secretStrength = passbolt.model.SecretStrength.getSecretStrength(secret);
-
-			this.options.secretStrength = new passbolt.controller.component.SecretStrengthController($('#js_rs_pwd_strength'), {
-				secretStrength: secretStrength
-			}).start();
-
-			// Rebind controller events
-			this.on();
+			// Notify the plugin that the resource is ready to be edited.
+			mad.bus.trigger('passbolt.plugin.resource_edition');
 		},
 
 		/**
-		 * Update the secret entropy
-		 * @param {string} pwd The password to use to mesure the entropy
-		 * @return {void}
+		 * @See parent:: submit();
 		 */
-		'updateSecretEntropy': function(pwd) {
-			var secretStrength = passbolt.model.SecretStrength.getSecretStrength(pwd);
-			this.options.secretStrength.load(secretStrength);
-		},
+		' submit': function (el, ev) {
+			ev.preventDefault();
 
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * Observe when the user is changing the password
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'{secretField} changed': function(el, ev) {
-			this.updateSecretEntropy(this.options.secretField.getValue());
-		},
-
-		/**
-		 * Observe when the user is changing the password through the unscrumbeld field
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'{passwordClear} changed': function(el, ev) {
-			var value = this.getElement('js_field_secret_clear').getValue();
-			this.getElement('js_field_secret').setValue(value);
-			this.updateSecretEntropy(value);
-		},
-
-		/**
-		 * Observe when the user wants to see the password unscrumbled
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'{showPwdButton} click': function(el, ev) {
-			var password = this.getElement('js_field_secret');
-			var passwordClear = this.getElement('js_field_secret_clear');
-			
-			// if the password is already hidden
-			if (password.state.is('hidden')) {
-				// hide the unscrambled password
-				passwordClear.setState('hidden');
-				// show the password field
-				password.setState('ready');
-				// unpush the button
-				this.options.showPwdButton.view.removeClass('selected');
+			// Form data are valid
+			if (this.validate()) {
+				var usersIds = [];
+				// Get the users to encrypt the resource for.
+				passbolt.model.Permission.findAll({
+					'aco': this.options.data.constructor.shortName,
+					'aco_foreign_key': this.options.data.id
+				}, function (permissions, response, request) {
+					permissions.each(function(permission, i) {
+						usersIds.push(permission.aro_foreign_key);
+					});
+					// ask the plugin to encrypt the secrets.
+					// When the secrets are encrypted the addon will send back the event passbolt.plugin.resource.edition.encrypt.complete.
+					mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
+				});
 			}
 			else {
-				// hide the password field
-				password.setState('hidden');
-				// display the unscrambled password
-				passwordClear.setState('ready');
-				passwordClear.setValue(password.getValue());
-				// push the button
-				this.options.showPwdButton.view.addClass('selected');
+				// Data are not valid
+				// if an error callback is given, call it
+				if (this.options.callbacks.error) {
+					this.options.callbacks.error();
+				}
 			}
 		},
 
 		/**
-		 * Observe when the user wants to generate a password
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
+		 * Listen when the plugin has encrypted the secrets.
 		 */
-		'{genPwdButton} click': function(el, ev) {
-			var value = passbolt.model.Secret.generate();
-			this.getElement('js_field_secret').setValue(value);
-			this.getElement('js_field_secret_clear').setValue(value);
-			this.updateSecretEntropy(value);
+		'{mad.bus} resource_edition_secret_encrypted': function(el, ev, armoreds) {
+			var data = this.getData();
+			data['passbolt.model.Resource'].Secret = [];
+
+			for (var userId in armoreds) {
+				data['passbolt.model.Resource'].Secret.push({
+					'user_id': userId,
+					'data': armoreds[userId]
+				});
+			}
+
+			// if a submit callback is given, call it
+			if (this.options.callbacks.submit) {
+				this.options.callbacks.submit(data);
+			}
 		}
 
 	});

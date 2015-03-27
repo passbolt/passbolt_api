@@ -32,6 +32,10 @@ steal(
 		'trigger': function (eventName, eventData) {
 			var data = typeof eventData != 'undefined' ? eventData : {};
 			this.element.trigger(eventName, data);
+			// Trigger the event to the plugin
+			var event = document.createEvent('CustomEvent');
+			event.initCustomEvent(eventName, true, true, data);
+			document.documentElement.dispatchEvent(event);
 		},
 
 		/**
@@ -46,6 +50,10 @@ steal(
 
 	});
 
-//	mad.event.EventBus.augment('mad.event.Eventable');
+//	mad.event.EventBus.augment('mad.event.Eventable')
 
+	// Listen to addon event, and dispatch them on the event bus.
+	window.addEventListener("addon-message", function(event) {
+		mad.bus.element.trigger(event.detail.event, event.detail.data);
+	}, false);
 });

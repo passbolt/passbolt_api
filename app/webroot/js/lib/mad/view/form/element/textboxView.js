@@ -52,6 +52,8 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * @todo take a look to the input event
+		 * @todo https://developer.mozilla.org/en-US/docs/Web/Events/input
 		 * Listen to the view event change
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
@@ -99,6 +101,17 @@ steal(
 					});
 				}, this.changeTimeout);
 			}
+		},
+
+
+		/**
+		 * Listen to the view event change
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		' change': function (el, ev) {
+			this.getController().value = this.element.val();
 		},
 
 		/**

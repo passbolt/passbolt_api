@@ -49,6 +49,7 @@ steal(
 				'id': 'id',
 				'name': 'name',
 				'username': 'username',
+				'secret': 'Secret',
 				'uri': 'uri',
 				'modified': 'modified',
 				// Hidden for PASSBOLT-732
@@ -122,6 +123,24 @@ steal(
 				'header': {
 					'css': ['m-cell'],
 					'label': __('Username')
+				}
+			}, {
+				'name': 'secret',
+				'index': 'secret',
+				'header': {
+					'css': ['m-cell', 'password'],
+					'label': __('Password')
+				},
+				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+					var secret = '';
+					if (typeof cellValue[0] != 'undefined') {
+						secret = cellValue[0].data
+					}
+					mad.helper.HtmlHelper.create(
+						cellElement,
+						'inside_replace',
+						'<pre>' + secret + '</pre>'
+					);
 				}
 			}, {
 				'name': 'uri',
@@ -455,6 +474,19 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Observe when a password cell is clicked.
+		 *
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
+		 * @return {void}
+		 */
+		' password_clicked': function (el, ev, item, srcEvent) {
+			mad.bus.trigger('request_secret_view', item);
+		},
+
+		/**
 		 * Observe when an item is selected in the grid.
 		 * This event comes from the grid view
 		 * @param {HTMLElement} el The element the event occured on
@@ -465,7 +497,7 @@ steal(
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
 			var self = this;
-			
+
 			// switch to select state
 			this.setState('selection');
 			
@@ -484,7 +516,7 @@ steal(
 		 */
 		'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
 			var self = this;
-			
+
 			// if the grid is in initial state, switch it to selected
 			if (this.state.is('ready')) {
 				this.setState('selection');
@@ -588,7 +620,7 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateReady': function (go) { 
+		'stateReady': function (go) {
 			// nothing to do
 		},
 

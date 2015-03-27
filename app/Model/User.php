@@ -55,7 +55,7 @@ class User extends AppModel {
  * Details of has many relationships
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasMany = array('GroupUser');
+	public $hasMany = array('GroupUser', 'Secret');
 
 /**
  * Details of has and belongs to many relationships
@@ -405,6 +405,8 @@ class User extends AppModel {
 						'DISTINCT User.id',
 						'User.username',
 						'User.role_id',
+						'User.created',
+						'User.modified',
 					),
 					'superjoin' => array('Group'),
 					'contain' => array(

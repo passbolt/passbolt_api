@@ -5,7 +5,7 @@
 	  /_/    \__,_/____/____/_.___/\____/_/\__/
 	
 	The password management solution
-	(c) 2012-2013 passbolt.com
+	(c) 2012-2015 passbolt.com
 
 Install
 =========

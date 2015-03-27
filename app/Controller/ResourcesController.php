@@ -311,41 +311,58 @@ class ResourcesController extends AppController {
 
 		// check if data was provided
 		if (!isset($resourcepost['Resource']) && !isset($resourcepost['Category'])) {
-			$this->Message->error(__('No data were provided'));
-			return;
+			return $this->Message->error(__('No data were provided'));
 		}
 
 		// Update the resource
 		if (isset($resourcepost['Resource'])) {
 			$this->Resource->set($resourcepost);
 			if (!$this->Resource->validates()) {
-				$this->Message->error(__('Could not validate Resource'));
-				return;
+				return $this->Message->error(__('Could not validate Resource'));
 			}
 			$fields = $this->Resource->getFindFields('edit', User::get('Role.name'));
 			$save = $this->Resource->save($resourcepost, false, $fields['fields']);
 			if (!$save) {
-				$this->Message->error(__('The resource could not be updated'));
-				return;
+				return $this->Message->error(__('The resource could not be updated'));
 			}
 		}
 
-		// Update the associated secret
+		// Update the associated secrets.
 		if (isset($resourcepost['Secret'])) {
-			$resourcepost['Secret']['resource_id'] = isset($resourcepost['Secret']['resource_id']) ? $resourcepost['Secret']['resource_id'] : $resource['Resource']['id'];
-			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : User::get('User.id');
-			$this->Resource->Secret->set($resourcepost['Secret']);
-			if (!$this->Resource->Secret->validates()) {
-				$this->Message->error(__('Could not validate secret model'));
-				return;
+			$secrets = array();
+
+			// Delete all the previous secrets.
+			$this->Resource->Secret->deleteAll(array(
+				'Secret.resource_id' => $id
+			), false);
+
+			// Validate the given resources.
+			foreach ($resourcepost['Secret'] as $i => $secret) {
+				// Use the raw secret data, the secret will be validated by the model.
+				$secret['data'] = $this->request->rawData['Secret'][$i]['data'];
+				// Force the resource id if empty.
+				if (empty($secret['resource_id'])) {
+					$secret['resource_id'] = $resource['Resource']['id'];
+				}
+				// Force the user id if empty.
+				if (empty($secret['user_id'])) {
+					$secret['user_id'] = User::get('User.id');
+				}
+				// Validate the data.
+				$this->Resource->Secret->set($secret);
+				if (!$this->Resource->Secret->validates()) {
+					return $this->Message->error(__('Could not validate secret model'));
+				}
+				$secrets[] = $secret;
 			}
-			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
-			// TODO : Encrypt data and save it once per user
-			if (!$this->Resource->Secret->save($resourcepost['Secret'], false, $fields['fields'])) {
-				$this->Message->error(__('Could not save secret'));
-				return;
-			}
+
+			// Save the secrets.
+			$fields = $this->Resource->Secret->getFindFields('update', User::get('Role.name'));
+			if (!$this->Resource->Secret->saveMany($secrets, $fields)) {
+				return $this->Message->error(__('Could not save the secrets'));
+	        }
 		}
+
 		// Save the relations
 		if (isset($resourcepost['Category'])) {
 			// If relations are given with the resource
@@ -354,8 +371,7 @@ class ResourcesController extends AppController {
 				'resource_id' => $id
 			));
 			if (!$delete) {
-				$this->Message->error(__('Could not delete Categories'));
-				return;
+				return $this->Message->error(__('Could not delete Categories'));
 			}
 			// Save the new relations
 			foreach ($resourcepost['Category'] as $cat) {
