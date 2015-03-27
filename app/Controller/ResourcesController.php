@@ -339,7 +339,7 @@ class ResourcesController extends AppController {
 			// Validate the given resources.
 			foreach ($resourcepost['Secret'] as $i => $secret) {
 				// Use the raw secret data, the secret will be validated by the model.
-				$secret['data'] = $this->request->rawData['Secret'][$i]['data'];
+				$secret['data'] = $this->request->dataRaw['Secret'][$i]['data'];
 				// Force the resource id if empty.
 				if (empty($secret['resource_id'])) {
 					$secret['resource_id'] = $resource['Resource']['id'];
