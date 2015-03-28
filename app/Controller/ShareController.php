@@ -22,12 +22,15 @@ class ShareController extends AppController {
 		'User',
 	);
 
+
 	/**
 	 * Update permissions for the objects that have been modified or deleted.
 	 *
-	 * @param string $acoModelName
+	 * @param $acoModelName
 	 * @param $acoInstanceId
 	 * @param $permissions
+	 *
+	 * @throws Exception
 	 */
 	private function _updatePermissions($acoModelName, $acoInstanceId, $permissions) {
 		// check if the target ACO model is permissionable
@@ -277,6 +280,14 @@ class ShareController extends AppController {
 		$secrets = isset($this->request->data['Secrets']) ?
 			$this->request->data['Secrets'] : null;
 
+		if ($secrets) {
+			// For secrets, get raw data. We do not want the sanitized data that break the gpg format.
+			foreach($secrets as $key => $val) {
+				$rawSecrets = $this->request->dataRaw['Secrets'];
+				$secrets[$key]['Secret']['data'] = $rawSecrets[$key]['Secret']['data'];
+			}
+		}
+
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
@@ -350,7 +361,9 @@ class ShareController extends AppController {
 				$this->User->getFindFields('User::edit')
 			));
 
-		$this->set('data', array('added' => $added, 'removed' => $removed));
+		// Get new permissions.
+		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
+		$this->set('data', array('Permissions' => $perms, 'changes' => array('added' => $added, 'removed' => $removed)));
 		$this->Message->success(__('Share operation successful'));
 	}
 }

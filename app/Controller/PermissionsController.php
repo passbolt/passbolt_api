@@ -13,6 +13,10 @@ App::uses('Permission', 'Model');
 
 class PermissionsController extends AppController {
 
+	public $components = array(
+		'PermissionHelper'
+	);
+
 	private function _addAcoPermissions($acoModelName = '', $acoInstanceId = null, $aroModelName = '', $aroInstanceId = null, $permission = null) {
 		// The given permission type
 		$permissionType = isset($permission) ? $permission : null;
@@ -101,82 +105,6 @@ class PermissionsController extends AppController {
 		return $ret;
 	}
 
-	/**
-	 * Get list of ACO permissions.
-	 *
-	 * @param string $acoModelName
-	 * @param null   $acoInstanceId
-	 *
-	 * @return array
-	 */
-	private function _getAcoPermissions($acoModelName = '', $acoInstanceId = null) {
-
-		// check if the target ACO model is permissionable
-		if (!$this->Permission->isValidAco($acoModelName)) {
-			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
-			return;
-		}
-
-		// no aco instance id given
-		if (is_null($acoInstanceId)) {
-			$this->Message->error(__('The %s id is missing', $acoModelName));
-			return;
-		}
-
-		// the aco instance id is invalid
-		if (!Common::isUuid($acoInstanceId)) {
-			$this->Message->error(__('The %s id is invalid', $acoModelName));
-			return;
-		}
-
-		// the aco instance does not exist
-		$this->loadModel($acoModelName);
-		// here the permissionable behavior will filter data to avoid user who are not allowed
-		// not allowed => Permission.type < PermissionType::READ
-		$acoInstance = $this->$acoModelName->findById($acoInstanceId);
-		if (empty($acoInstance)) {
-			// If the user is not allowed to access an instance, this instance is simply hidden to him
-			$this->Message->error(__('The %s does not exist', $acoModelName), array('code' => 404));
-			return;
-		}
-
-		// case used by find options functions
-		// this view case has to be defined in model which represent the views
-		$viewCase = 'viewBy' . $acoModelName;
-
-		// @todo, automatic aro, based on optional parameters !??
-
-		// get user's permissions for the target instance
-		// @todo We need a strong use case to check this part. Think about the case, direct user permission on the parent categories !!!
-		$viewName = 'User' . $acoModelName . 'Permission';
-		$ModelView = ClassRegistry::init($viewName);
-		$foreignKey = Inflector::underscore($acoModelName) . '_id';
-		$upData = array(
-			$viewName => array(
-				$foreignKey => $acoInstanceId
-			)
-		);
-		$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
-		$ups = $ModelView->find('all', $upOptions);
-
-		// get group's permissions for the target instance
-		$viewName = 'Group' . $acoModelName . 'Permission';
-		$ModelView = ClassRegistry::init($viewName);
-		$foreignKey = strtolower($acoModelName) . '_id';
-		$gpData = array(
-			$viewName => array(
-				$foreignKey => $acoInstanceId
-			)
-		);
-		$gpOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $gpData);
-		$gps = $ModelView->find('all', $gpOptions);
-
-		// merge user's and group's permissions
-		$returnValue = array_merge($ups, $gps);
-
-		return $returnValue;
-	}
-
 
 /**
  * Add permission to a target instance of a given model
@@ -243,8 +171,6 @@ class PermissionsController extends AppController {
  * @return array
  */
 	public function viewAcoPermissions($acoModelName = '', $acoInstanceId = null) {
-		$returnValue = array();
-
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
 			$this->Message->error(__('Invalid request method, should be GET'));
@@ -252,8 +178,15 @@ class PermissionsController extends AppController {
 		}
 
 		// Get list of permissions from subfunction.
-		$returnValue = $this->_getAcoPermissions($acoModelName, $acoInstanceId);
+		try {
+			$returnValue = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
+		}
+		catch (Exception $e) {
+			$this->Message->error($e->getMessage());
+			return;
+		}
 
+		// Return data.
 		$this->Message->success();
 		$this->set('data', $returnValue);
 	}
@@ -303,9 +236,11 @@ class PermissionsController extends AppController {
 		$save = $this->_addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType);
 
 		// Return list of permissions.
-		$perms = $this->_getAcoPermissions($acoModelName, $acoInstanceId);
+		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
+		// Rollback to return to initial state.
 		$this->Permission->rollback();
 
+		// Return data.
 		$this->Message->success();
 		$this->set('data', $perms);
 	}
