@@ -56,6 +56,9 @@ CakePlugin::load('FileStorage', array(
 CakePlugin::load('Imagine', array(
 	'bootstrap' => true
 ));
+CakePlugin::load('EmailQueue');
+
+
 require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
 
 /**
