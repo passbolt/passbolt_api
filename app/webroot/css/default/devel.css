@@ -8,7 +8,7 @@
   height: 35px;
   margin: 0;
   padding: 0;
-  background: url('../../../../js/lib/mad/view/images/admin_sprite.png') no-repeat scroll -35px 0px transparent;
+  background: url('../../../js/lib/mad/view/images/admin_sprite.png') no-repeat scroll -35px 0px transparent;
   overflow: hidden;
   cursor: pointer;
   z-index: 100;
