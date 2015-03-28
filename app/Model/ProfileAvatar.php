@@ -44,19 +44,37 @@ class ProfileAvatar extends ImageStorage {
 		return true;
 	}
 
-/**
- * Serializes and then hashes an array of operations that are applied to an image
- *
- * @param array $operations
- * @return array
- */
-	public function hashOperations($operations) {
-		$versions = Configure::read('Media.imageSizes.ProfileAvatar');
-		$versionName = array_search($operations, $versions);
-		if ($versionName) {
-			return $versionName;
+	/**
+	 * After find callback.
+	 *
+	 * Is used to build an array of url for the images.
+	 *
+	 * @param mixed $results
+	 * @param bool  $primary
+	 *
+	 * @return mixed
+	 */
+	public function afterFind($results, $primary = false) {
+		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
+		if (isset($results[0])) {
+			foreach ($results as $key => $result) {
+				$url = array();
+				foreach($sizes as $size => $data) {
+					$url[$size] = $this->imageUrl($result, $size);
+				}
+				$url['default'] = $this->imageUrl($results);
+				$results[$key]['url'] = $url;
+			}
 		}
-		return 'VERSION_NOT_FOUND';
+		else {
+			$url = array();
+			foreach($sizes as $size => $data) {
+				$url[$size] = $this->imageUrl($results, $size);
+			}
+			$url['default'] = $this->imageUrl($results);
+			$results['url'] = $url;
+		}
+		return $results;
 	}
 
 /**
@@ -99,6 +117,57 @@ class ProfileAvatar extends ImageStorage {
 		$data[$this->alias]['foreign_key'] = $foreignId;
 		$this->create();
 		return $this->save($data);
+	}
+
+	/**
+	 * Get Image Url for an entry.
+	 *
+	 * @param array $image
+	 *   entry of the db
+	 * @param string $version
+	 *   version as defined in file storage configuration file.
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function imageUrl($image, $version = null, $options = array()) {
+		if (empty($image) || empty($image['id'])) {
+			return false;
+		}
+
+		if (!empty($version)) {
+			$hash = Configure::read('Media.imageHashes.' . $image['model'] . '.' . $version);
+			if (empty($hash)) {
+				throw new \InvalidArgumentException(__d('file_storage', 'No valid version key (%s %s) passed!', @$image['model'], $version));
+			}
+		} else {
+			$hash = null;
+		}
+
+		$Event = new CakeEvent('FileStorage.ImageHelper.imagePath', $this, array(
+				'hash' => $hash,
+				'image' => $image,
+				'version' => $version,
+				'options' => $options
+			)
+		);
+		CakeEventManager::instance()->dispatch($Event);
+
+		if ($Event->isStopped()) {
+			return Configure::read('ImageStorage.publicPath') . $this->normalizePath($Event->data['path']);
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Turns the windows \ into / so that the path can be used in an url
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	public function normalizePath($path) {
+		return str_replace('\\', '/', $path);
 	}
 
 }
