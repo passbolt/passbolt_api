@@ -120,8 +120,12 @@ class AppController extends Controller {
 		} else {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
-		// sanitize any post data
+
+		// Before sanitizing, keep values somewhere else.
+		$this->request->dataRaw = $this->request->data;
+		$this->request->queryRaw = $this->request->query;
 		if (isset($this->request->data) && !empty($this->request->data)) {
+			// Exception for gpgKeys.
 			$this->request->data = Sanitize::clean($this->request->data);
 		}
 		// sanitize any get data

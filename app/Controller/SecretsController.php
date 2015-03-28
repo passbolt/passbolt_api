@@ -9,4 +9,5 @@
  */
 class SecretsController extends AppController {
 
+
 }

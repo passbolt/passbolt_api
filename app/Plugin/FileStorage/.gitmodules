@@ -1,3 +1,0 @@
-[submodule "Vendor/Gaufrette"]
-	path = Vendor/Gaufrette
-	url = git://github.com/KnpLabs/Gaufrette.git

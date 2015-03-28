@@ -21,11 +21,6 @@ class Resource extends AppModel {
 		'Permissionable' => array('priority' => 1)
 	);
 
-/**
- * Details of has one relationships
- * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
- */
-	public $hasOne = array('Secret');
 
 /**
  * Details of belongs to relationships
@@ -46,7 +41,10 @@ class Resource extends AppModel {
  * Details of has many relationships
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasMany = array('CategoryResource');
+	public $hasMany = array(
+		'CategoryResource',
+		'Secret',
+	);
 
 /**
  * Details of has and belongs to many relationships
@@ -234,10 +232,6 @@ class Resource extends AppModel {
 						'Resource.description',
 						'Resource.created',
 						'Resource.modified',
-						'Secret.id',
-						'Secret.data',
-						'Secret.created',
-						'Secret.modified',
 						'Favorite.id',
 						'Favorite.user_id',
 						'Favorite.created',
@@ -251,7 +245,15 @@ class Resource extends AppModel {
 						'Category',
 						'CategoryResource',
 						'Favorite',
-						'Secret',
+						'Secret' => array (
+							'fields' => array(
+								'Secret.id',
+								'Secret.user_id',
+								'Secret.data',
+								'Secret.created',
+								'Secret.modified',
+							),
+						),
 						'Creator',
 						'Modifier'
 					)

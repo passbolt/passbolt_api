@@ -29,6 +29,10 @@ Copy the app configuration file
 ```
 	cp app/Config/app.php.default app/Config/app.php
 ```
+Install Composer files (to install vendor and plugin dependencies).
+```
+	cd app && php composer.phar install
+```
 Run the install script
 ```
 	./app/Console/cake install

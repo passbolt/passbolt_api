@@ -11,7 +11,7 @@ class GpgKeyFixture extends CakeTestFixture {
 
 	public $useDbConfig = 'test';
 
-	public $import = 'GpgKey';
+	public $import = 'Gpgkey';
 
 	public function init() {
 		$this->records = array(
@@ -22,7 +22,7 @@ class GpgKeyFixture extends CakeTestFixture {
 				'bits' => '2048',
 				'type' => 'RSA',
 				'uid' => 'Lisa Simpson <lisa@passbolt.com>',
-				'fingerprint' => 'EA1B 5DDF 504D 669D B3DD  3B82 18A0 ED3D E513 B181',
+				'fingerprint' => 'EA1B5DDF504D669DB3DD3B8218A0ED3DE513B181',
 				'created' => '2012-08-25 13:39:25',
 				'modified' => '2012-08-25 13:39:25',
 				'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',

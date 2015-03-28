@@ -1,0 +1,27 @@
+<phpunit bootstrap="tests/bootstrap.php">
+  <testsuites>
+    <testsuite name="Serialization">
+      <file>tests/suite.php</file>
+    </testsuite>
+
+    <testsuite name="Fingerprint">
+      <file>tests/suite.php</file>
+    </testsuite>
+
+    <testsuite name="MessageVerification">
+      <file>tests/phpseclib_suite.php</file>
+    </testsuite>
+
+    <testsuite name="KeyVerification">
+      <file>tests/phpseclib_suite.php</file>
+    </testsuite>
+
+    <testsuite name="Decryption">
+      <file>tests/phpseclib_suite.php</file>
+    </testsuite>
+
+    <testsuite name="Encryption">
+      <file>tests/phpseclib_suite.php</file>
+    </testsuite>
+  </testsuites>
+</phpunit>
