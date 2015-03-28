@@ -67,12 +67,14 @@ class AppController extends Controller {
 		'Message',
 		'Mailer',
 		'IpAddress',
-		'Blacklist'
+		'Blacklist',
 	);
 
 	public $helpers = array(
-		'Html', 'Form', // default
-		'MyForm'				// custom
+		'Html',
+		'Form',
+		'MyForm',
+		'FileStorage.Image'
 	);
 
 	/**
