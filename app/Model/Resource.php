@@ -253,11 +253,16 @@ class Resource extends AppModel {
 								'Secret.created',
 								'Secret.modified',
 							),
+							// We get only the secret for the current user.
+							'conditions' => array(
+								'Secret.user_id' => User::get('id')
+							),
 						),
 						'Creator',
 						'Modifier'
 					)
 				);
+				$fields['contain']['Secret']['conditions'] = array();
 				break;
 			case 'delete':
 				$fields = array('fields' => array('deleted'));
