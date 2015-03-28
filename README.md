@@ -74,6 +74,14 @@ Prepare the production release
 ```
 CSS minified files should have been generated as the Javascript minified file.
 
+Emails settings
+=========
+For images that are send in emails, we need to tell cakephp what is the base url.
+To fix this, add/uncomment this line in Config/core.php
+```
+Configure::write('App.fullBaseUrl', 'http://{your domain without slash}');
+```
+
 Credits
 =========
 
