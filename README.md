@@ -31,7 +31,7 @@ Copy the app configuration file
 ```
 Install Composer files (to install vendor and plugin dependencies).
 ```
-	cd app && php composer.phar install
+	cd app && php composer.phar install --no-dev
 ```
 Run the install script
 ```
