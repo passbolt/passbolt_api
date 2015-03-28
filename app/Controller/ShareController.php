@@ -238,7 +238,7 @@ class ShareController extends AppController {
 	}
 
 	/**
-	 * Simulation entry point.
+	 * Simulate entry point.
 	 *
 	 * @param string $acoModelName
 	 * @param uuid   $acoInstanceId
@@ -260,9 +260,15 @@ class ShareController extends AppController {
 			throw new Exception($e->getMessage());
 		}
 		$users = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
+		$permissions = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
 		$this->Permission->rollback();
 
-		return $users;
+		$data = array(
+			'UserResourcePermissions' => $users,
+			'Permissions' => $permissions,
+		);
+		$this->set('data', $data);
+		$this->Message->success(__('Simulate successful'));
 	}
 
 	/**

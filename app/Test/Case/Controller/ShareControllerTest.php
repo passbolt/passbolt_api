@@ -447,4 +447,50 @@ hcciUFw5
 			"Updating a permission should have returned a success, but returned {$res['header']['status']}"
 		);
 	}
+
+	public function testSimulate() {
+		// Get Kevin.
+		$kk = $this->User->findByUsername('kevin@passbolt.com');
+		$fbRs = $this->Resource->findByName('facebook account');
+		$acoInstanceId = $fbRs['Resource']['id'];
+
+		$data = array(
+			'Permissions' => array(
+				array(
+					'Permission' => array (
+						'aro_foreign_key' => $kk['User']['id'],
+						'type' => PermissionType::ADMIN,
+					),
+				),
+			),
+		);
+		// check how many permissions are already existing before the new insertion
+		$res = $this->testAction("/share/simulate/Resource/$acoInstanceId.json", array(
+				'method' => 'put',
+				'return' => 'contents',
+				'data' => $data
+			), true);
+		$json = json_decode($res, true);
+
+		$this->assertEquals(
+			Message::SUCCESS,
+			$json['header']['status'],
+			"Simulation of adding permissions should have returned success, but returned {$json['header']['status']}"
+		);
+
+		// Test that there is one more permissions returned by the simulation.
+		$perms = $this->UserResourcePermission->find('all', array(
+				'conditions' => array(
+					'resource_id' => $acoInstanceId,
+					'permission_type <>' => ''
+				)
+			));
+
+		$this->assertEquals(
+			count($perms) + 1,
+			count($json['body']['UserResourcePermissions']),
+			"Simulation of adding permissions should have returned " . (count($perms) + 1) . " permissions, but returned " . count($json['body']['UserResourcePermissions'])
+		);
+
+	}
 }
