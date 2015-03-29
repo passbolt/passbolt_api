@@ -12,6 +12,7 @@ class ShareController extends AppController {
 	// Components.
 	public $components = array(
 		'PermissionHelper',
+		'EmailNotificator',
 	);
 
 	// Used models.
@@ -350,10 +351,17 @@ class ShareController extends AppController {
 		// Everything ok, we can commit.
 		$this->Permission->commit();
 
-		// Manage email alerts.
-		// TODO : manage emails.
+		// Send an email notification.
+		foreach ($addedUsers as $userId) {
+			$this->EmailNotificator->passwordSharedNotification(
+				$userId,
+				array(
+					'resource_id' => $acoInstanceId,
+					'sharer_id' => User::get('id'),
+				));
+		}
 
-
+		// Prepare output.
 		$added = $this->User->find(
 			'all',
 			array_merge(
@@ -371,5 +379,17 @@ class ShareController extends AppController {
 		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
 		$this->set('data', array('Permissions' => $perms, 'changes' => array('added' => $added, 'removed' => $removed)));
 		$this->Message->success(__('Share operation successful'));
+	}
+
+	public function send_email() {
+		$this->EmailNotificator->passwordSharedNotification('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce', array(
+				'resource_id' => '50d77ff9-fdd8-4035-b7c6-1b63d7a10fce',
+				'sharer_id' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
+			));
+
+		$this->EmailNotificator->accountCreationNotification('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce', array(
+				'creator_id' => '533d37a0-bc80-4945-9b11-1663c0a895dc'
+			));
+		die();
 	}
 }

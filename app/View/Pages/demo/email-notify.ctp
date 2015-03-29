@@ -4,10 +4,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width"/>
 	<title>Modular Template Patterns</title>
-
 	<style type="text/css">
 		/*////// RESET STYLES //////*/
-		body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+		body, #bodyTable, #bodyCell {height:100% !important; margin:0; padding:0; width:100% !important;}
+		#headerTable, #headerCell, #footerTable, #footerCell { margin:0; padding:0; width:100% !important;}
 		table{border-collapse:collapse;}
 		img, a img{border:0; outline:none; text-decoration:none;}
 		h1, h2, h3, h4, h5, h6{margin:0; padding:0;}
@@ -22,24 +22,27 @@
 		body, table, td, p, a, li, blockquote{-ms-text-size-adjust:100%; -webkit-text-size-adjust:100%;} /* Prevent Windows- and Webkit-based mobile platforms from changing declared text sizes. */
 
 		/*////// FRAMEWORK STYLES //////*/
-		.flexibleContainerCellTop{padding-top:25px; padding-Right:20px; padding-Left:20px;}
-		.flexibleContainerCell{padding-top:5px; padding-Right:20px; padding-Left:20px;}
+		.flexibleContainerCell{padding-top:20px; padding-Right:20px; padding-Left:20px;}
+		.flexibleContainerCell.noPaddingTop{padding-top:0px;}
 		.flexibleImage{height:auto;}
 		.bottomShim{padding-bottom:20px;}
-		.imageContent, .imageContentLast{padding-bottom:20px;}
-		.nestedContainerCell{padding-top:5px; padding-Right:20px; padding-Left:20px;}
+		.imageContent, .imageContentLast{padding-bottom:0px;}
 
 		/*////// GENERAL STYLES //////*/
-		body, #bodyTable{background-color:#F2F2F2;}
-		#headerCell{padding-top:30px; padding-bottom:20px;}
-		#emailHeader{background-color:#F2F2F2; border:0px; border-collapse:separate; border-radius:0px;}
+		body, #headerTable, #bodyTable, #footerTable {background-color:#F5F5F5;}
+		#headerTable {height:37px !important;}
+		#footerTable {height:30px !important;}
+		#headerCell{padding-top:40px; padding-bottom:10px;}
+		#bodyCell{padding-top:0px; padding-bottom:0px;}
+		#footerCell{padding-top:0px; padding-bottom:40px;}
+		#emailHeader, #emailFooter {border-collapse:separate;}
 		#emailBody{background-color:#FFFFFF; border:1px solid #FFFFFF; border-collapse:separate; border-radius:4px;}
-		h1, h2, h3, h4, h5, h6{color:#202020; font-family:Arial; font-size:20px; line-height:125%; text-align:Left;}
-		.textContent, .textContentLast{color:#404040; font-family:Arial; font-size:14px; line-height:125%; text-align:Left; padding-bottom:20px;}
+		h1, h2, h3, h4, h5, h6{color:#202020; font-family:Helvetica; font-size:20px; line-height:125%; text-align:Left;}
+		.textContent, .textContentLast{color:#404040; font-family:Helvetica; font-size:14px; line-height:125%; text-align:Left; padding-bottom:20px;}
+		.textContentLast {font-size:12px; text-align:center}
 		.textContent a, .textContentLast a{color:#888888; text-decoration:underline;}
-		.nestedContainer{background-color:#E5E5E5; border:1px solid #CCCCCC;}
-		.emailButton{background-color:#2894DF; border-collapse:separate; border-radius:4px;}
-		.buttonContent{color:#FFFFFF; font-family:Arial; font-size:16px; font-weight:bold; line-height:100%; padding:10px; text-align:center;}
+		.emailButton{background-color:#2894DF; color:#FFFFFF; order-collapse:separate; border-radius:4px;}
+		.buttonContent{color:#FFFFFF; font-family:Helvetica; font-size:14px; font-weight:bold; line-height:100%; padding:15px; text-align:center;}
 		.buttonContent a{color:#FFFFFF; display:block; text-decoration:none;}
 
 		/*////// MOBILE STYLES //////*/
@@ -54,7 +57,7 @@
 				from rendering media query styles on
 				desktop.
 			*/
-			table[id="emailheader"], table[id="emailBody"], table[class="flexibleContainer"]{width:100% !important;}
+			table[id="emailBody"], table[class="flexibleContainer"]{width:100% !important;}
 
 			/*
 				The following style rule makes any
@@ -104,7 +107,8 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 </head>
 <body>
 <center>
-	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="headerTable">
+	<!-- HEADER // -->
+	<table border="0" cellpadding="0" cellspacing="0" height="37" width="100%" id="headerTable">
 		<tr>
 			<td align="center" valign="top" id="headerCell">
 				<!-- EMAIL CONTAINER // -->
@@ -113,35 +117,30 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 						Its width can be set to 100% for a color band
 						that spans the width of the page.
 				-->
-				<table border="0" cellpadding="0" cellspacing="0" width="600" id="emailHeader">
-					<!-- MODULE ROW // LOGO IMAGE -->
-					<!--
-						To move or duplicate any of the design patterns
-							in this email, simply move or copy the entire
-							MODULE ROW section for each content block.
-					-->
+				<table border="0" cellpadding="0" cellspacing="0" width="480" id="emailHeader">
+
+					<!-- MODULE ROW // -->
 					<tr>
 						<td align="center" valign="top">
 							<!-- CENTERING TABLE // -->
-							<!--
-								The centering table keeps the content
-									tables centered in the emailBody table,
-									in case its width is set to 100%.
-							-->
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
 								<tr>
 									<td align="center" valign="top">
 										<!-- FLEXIBLE CONTAINER // -->
-										<!--
-											The flexible container has a set width
-												that gets overridden by the media query.
-												Most content tables within can then be
-												given 100% widths.
-										-->
-										<table border="0" cellpadding="0" cellspacing="0" width="530" class="flexibleContainer">
+										<table border="0" cellpadding="0" cellspacing="0" width="480" class="flexibleContainer">
 											<tr>
-												<td align="left" valign="top" width="530" class="flexibleContainerCell">
-													<img src="<?php echo Router::url('/',true); ?>/img/logo.png" width="140" border="0"/>
+												<td valign="top" width="480" class="flexibleContainerCell">
+
+													<!-- CONTENT TABLE // -->
+													<table align="Left" border="0" cellpadding="0" cellspacing="0" width="160" class="flexibleContainer">
+														<tr>
+															<td align="Left" valign="top" class="imageContent">
+																<img src="http://www.passbolt.com/img/logo.png" width="160" class="flexibleImage" style="max-width:160px;" />
+															</td>
+														</tr>
+													</table>
+													<!-- // CONTENT TABLE -->
+
 												</td>
 											</tr>
 										</table>
@@ -153,11 +152,15 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 						</td>
 					</tr>
 					<!-- // MODULE ROW -->
+
 				</table>
 				<!-- // EMAIL CONTAINER -->
 			</td>
 		</tr>
 	</table>
+	<!-- // HEADER -->
+
+	<!-- BODY // -->
 	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
 		<tr>
 			<td align="center" valign="top" id="bodyCell">
@@ -167,56 +170,54 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 						Its width can be set to 100% for a color band
 						that spans the width of the page.
 				-->
-				<table border="0" cellpadding="0" cellspacing="0" width="530" id="emailBody">
+				<table border="0" cellpadding="0" cellspacing="0" width="480" id="emailBody">
 
-					<!-- MODULE ROW // PICTURE AND EVENT DETAILS-->
+					<!-- MODULE ROW // IMG + TEXT -->
 					<tr>
 						<td align="center" valign="top">
 							<!-- CENTERING TABLE // -->
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
-								<tbody><tr>
+								<tr>
 									<td align="center" valign="top">
 										<!-- FLEXIBLE CONTAINER // -->
-										<table class="flexibleContainer" border="0" cellpadding="0" cellspacing="0" width="530">
-											<tbody><tr>
-												<td class="flexibleContainerCellTop" valign="top" width="530">
+										<table border="0" cellpadding="0" cellspacing="0" width="480" class="flexibleContainer">
+											<tr>
+												<td valign="top" width="480" class="flexibleContainerCell">
 
 													<!-- CONTENT TABLE // -->
-													<table class="flexibleContainer" align="Left" border="0" cellpadding="0" cellspacing="0" width="50">
-														<tbody><tr>
-															<td class="textContent" align="Left" valign="top" style="padding-bottom: 10px;">
-																<img src="<?php echo Router::url('/',true);?>/img/user.png" class="flexibleImage" width="50">
+													<table align="Left" border="0" cellpadding="0" cellspacing="0" width="60" class="flexibleContainer">
+														<tr>
+															<td align="Left" valign="top" class="imageContent">
+																<img src="https://raw.githubusercontent.com/passbolt/passbolt/develop/app/webroot/img/user.png?token=AAEuYs2GqTwX4JeaQPGFPX6DX6ZBIJynks5VI3MuwA%3D%3D" width="50" class="flexibleImage" style="max-width:50px;" />
 															</td>
 														</tr>
-														</tbody></table>
+													</table>
 													<!-- // CONTENT TABLE -->
 
 													<!-- CONTENT TABLE // -->
-													<table class="flexibleContainer" align="Right" border="0" cellpadding="0" cellspacing="0" width="400">
-														<tbody><tr>
-															<td class="textContent" valign="top" style="padding-bottom: 10px;">
-																<span style="font-weight:bold;">Ismael (ismael@passbolt.com)</span><br>
-																<span style="">shared a password with you</span><br>
-																<span style="color:#888888">on Mar 26, 2015 at 18:49</span><br>
+													<table align="Right" border="0" cellpadding="0" cellspacing="0" width="360" class="flexibleContainer">
+														<tr>
+															<td valign="top" class="textContent">
+																<span style="font-weight:bold;">Ismael (<a href="mailto:ismael@passbolt.com">ismael@passbolt.com</a>)</span><br>
+																shared a password with you<br>
+																on Mar 26, 2015 at 18:49<br>
 															</td>
 														</tr>
-														</tbody></table>
+													</table>
 													<!-- // CONTENT TABLE -->
-
 
 												</td>
 											</tr>
-											</tbody></table>
+										</table>
 										<!-- // FLEXIBLE CONTAINER -->
 									</td>
 								</tr>
-								</tbody></table>
+							</table>
 							<!-- // CENTERING TABLE -->
 						</td>
 					</tr>
 					<!-- // MODULE ROW -->
-
-					<!-- MODULE ROW // PASSWORD DETAILS -->
+					<!-- MODULE ROW // TITLE AND TEXT -->
 					<tr>
 						<td align="center" valign="top">
 							<!-- CENTERING TABLE // -->
@@ -226,7 +227,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 									in case its width is set to 100%.
 							-->
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
-								<tbody><tr>
+								<tr>
 									<td align="center" valign="top">
 										<!-- FLEXIBLE CONTAINER // -->
 										<!--
@@ -235,9 +236,10 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 												Most content tables within can then be
 												given 100% widths.
 										-->
-										<table class="flexibleContainer" border="0" cellpadding="0" cellspacing="0" width="530">
-											<tbody><tr>
-												<td class="flexibleContainerCell" align="center" valign="top" width="530">
+										<table border="0" cellpadding="0" cellspacing="0" width="480" class="flexibleContainer ">
+											<tr>
+												<td align="center" valign="top" width="480" class="flexibleContainerCell noPaddingTop">
+
 													<!-- CONTENT TABLE // -->
 													<!--
 														The content table is the first element
@@ -245,54 +247,103 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 															framework of the email.
 													-->
 													<table border="0" cellpadding="0" cellspacing="0" width="100%">
-														<tbody><tr>
-															<td class="textContent" valign="top">
+														<tr>
+															<td valign="top" class="textContent">
 																Name: Twitter login<br>
 																Username: @passbolt<br>
-																URL: http://www.twitter.com/login<br>
-																Comment: this is the main twitter account for passbolt.<br><br>
-																<table class="emailButton" border="0" cellpadding="0" cellspacing="0" width="230">
-																	<tbody><tr>
-																		<td class="buttonContent" align="center" valign="middle">
-																			<a href="#" target="_blank">view it on passbolt</a>
-																		</td>
-																	</tr>
-																	</tbody></table>
+																URL: <a href="http://www.twitter.com/login">http://www.twitter.com/login</a><br>
+																Comment: this is the main twitter account for passbolt.
 															</td>
 														</tr>
-														</tbody></table>
+													</table>
 													<!-- // CONTENT TABLE -->
+
 												</td>
 											</tr>
-											</tbody></table>
+										</table>
 										<!-- // FLEXIBLE CONTAINER -->
 									</td>
 								</tr>
-								</tbody></table>
+							</table>
 							<!-- // CENTERING TABLE -->
 						</td>
 					</tr>
 					<!-- // MODULE ROW -->
 
-					<!-- MODULE ROW // GPG CONTENT -->
-					<!--
-						To move or duplicate any of the design patterns
-							in this email, simply move or copy the entire
-							MODULE ROW section for each content block.
-					-->
+					<!-- MODULE ROW // BUTTON -->
 					<tr>
 						<td align="center" valign="top">
+							<!-- CENTERING TABLE // -->
 							<table border="0" cellpadding="0" cellspacing="0" width="100%">
 								<tr>
 									<td align="center" valign="top">
-										<table border="0" cellpadding="0" cellspacing="0" width="530" class="flexibleContainer">
+										<!-- FLEXIBLE CONTAINER // -->
+										<table border="0" cellpadding="0" cellspacing="0" width="480" class="flexibleContainer">
 											<tr>
-												<td align="center" valign="top" width="530" class="flexibleContainerCell">
+												<td align="center" valign="top" width="480" class="flexibleContainerCell bottomShim">
+
+													<!-- CONTENT TABLE // -->
+													<!--
+														The emailButton table's width can be changed
+															to affect the look of the button. To make the
+															button width dependent on the text inside, leave
+															the width blank. When a button is placed in a column,
+															it's helpful to set the width to 100%.
+													-->
+													<table border="0" cellpadding="0" cellspacing="0" width="260" class="emailButton">
+														<tr>
+															<td align="center" valign="middle" class="buttonContent">
+																<a href="#" target="_blank">view it with passbolt</a>
+															</td>
+														</tr>
+													</table>
+													<!-- // CONTENT TABLE -->
+
+												</td>
+											</tr>
+										</table>
+										<!-- // FLEXIBLE CONTAINER -->
+									</td>
+								</tr>
+							</table>
+							<!-- // CENTERING TABLE -->
+						</td>
+					</tr>
+					<!-- // MODULE ROW -->
+
+					<!-- MODULE ROW // TITLE AND TEXT -->
+					<tr>
+						<td align="center" valign="top">
+							<!-- CENTERING TABLE // -->
+							<!--
+								The centering table keeps the content
+									tables centered in the emailBody table,
+									in case its width is set to 100%.
+							-->
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td align="center" valign="top">
+										<!-- FLEXIBLE CONTAINER // -->
+										<!--
+											The flexible container has a set width
+												that gets overridden by the media query.
+												Most content tables within can then be
+												given 100% widths.
+										-->
+										<table border="0" cellpadding="0" cellspacing="0" width="480" class="flexibleContainer">
+											<tr>
+												<td align="center" valign="top" width="480" class="flexibleContainerCell">
+
+													<!-- CONTENT TABLE // -->
+													<!--
+														The content table is the first element
+															that's entirely separate from the structural
+															framework of the email.
+													-->
 													<table border="0" cellpadding="0" cellspacing="0" width="100%">
 														<tr>
-															<td valign="top" class="textContent" style="font-family: 'Courier New', Courier, monospace;font-size:12px;" >
-																<h3 style="font-size:14px;">Password (encrypted)</h3>
-<pre>
+															<td valign="top" class="textContent">
+<span style='font-size:11px;font-family: "Courier New", Courier, monospace;white-space:pre-wrap'>
 -----BEGIN PGP MESSAGE-----
 Version: GnuPG v2.0.22
 Comment: Opengpg.js
@@ -312,28 +363,33 @@ RAHSmR3z/ygybNujw/FrKHUWDvpZqZs+ZIYHUqkYpJssJc1UZFOUrY8X2iKT8V+T
 ptTZa7zavYFVO1J0Q7TU4ZqN9Ei8
 =95oA
 -----END PGP MESSAGE-----
-</pre>
+</span>
 															</td>
 														</tr>
 													</table>
+													<!-- // CONTENT TABLE -->
+
 												</td>
 											</tr>
 										</table>
+										<!-- // FLEXIBLE CONTAINER -->
 									</td>
 								</tr>
 							</table>
+							<!-- // CENTERING TABLE -->
 						</td>
 					</tr>
 					<!-- // MODULE ROW -->
-
 
 				</table>
 				<!-- // EMAIL CONTAINER -->
 			</td>
 		</tr>
 	</table>
+	<!-- // BODY -->
 
-	<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="footerTable">
+	<!-- FOOTER // -->
+	<table border="0" cellpadding="0" cellspacing="0" height="30" width="100%" id="footerTable">
 		<tr>
 			<td align="center" valign="top" id="footerCell">
 				<!-- EMAIL CONTAINER // -->
@@ -342,13 +398,9 @@ ptTZa7zavYFVO1J0Q7TU4ZqN9Ei8
 						Its width can be set to 100% for a color band
 						that spans the width of the page.
 				-->
-				<table border="0" cellpadding="0" cellspacing="0" width="600" id="emailFooter">
-					<!-- MODULE ROW // LOGO IMAGE -->
-					<!--
-						To move or duplicate any of the design patterns
-							in this email, simply move or copy the entire
-							MODULE ROW section for each content block.
-					-->
+				<table border="0" cellpadding="0" cellspacing="0" width="480" id="emailFooter">
+
+					<!-- MODULE ROW // TITLE AND TEXT -->
 					<tr>
 						<td align="center" valign="top">
 							<!-- CENTERING TABLE // -->
@@ -367,9 +419,10 @@ ptTZa7zavYFVO1J0Q7TU4ZqN9Ei8
 												Most content tables within can then be
 												given 100% widths.
 										-->
-										<table border="0" cellpadding="0" cellspacing="0" width="530" class="flexibleContainer">
+										<table border="0" cellpadding="0" cellspacing="0" width="480" class="flexibleContainer">
 											<tr>
-												<td align="center" valign="top" width="530" class="flexibleContainerCell">
+												<td align="center" valign="top" width="480" class="flexibleContainerCell">
+
 													<!-- CONTENT TABLE // -->
 													<!--
 														The content table is the first element
@@ -377,13 +430,14 @@ ptTZa7zavYFVO1J0Q7TU4ZqN9Ei8
 															framework of the email.
 													-->
 													<table border="0" cellpadding="0" cellspacing="0" width="100%">
-														<tbody><tr>
-															<td class="textContent" valign="top" style="text-align:center;font-size:12px;padding-top:10px;">
-																This email is an automatic notification sent by <a href="demo.passbolt.com">demo.passbolt.com</a>. You can choose which messages you wish to receive from your profile in the "email notifications" section.
+														<tr>
+															<td valign="top" class="textContentLast">
+																This email was sent by <a href="#">demo.passbolt.com</a>. You can choose which messages you wish to receive, from your profile in the "email notifications: section.
 															</td>
 														</tr>
-														</tbody></table>
+													</table>
 													<!-- // CONTENT TABLE -->
+
 												</td>
 											</tr>
 										</table>
@@ -395,11 +449,13 @@ ptTZa7zavYFVO1J0Q7TU4ZqN9Ei8
 						</td>
 					</tr>
 					<!-- // MODULE ROW -->
+
 				</table>
 				<!-- // EMAIL CONTAINER -->
 			</td>
 		</tr>
 	</table>
+	<!-- // FOOTER -->
 </center>
 </body>
 </html>

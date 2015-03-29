@@ -25,19 +25,37 @@ class Gpgkey extends AppModel {
 	);
 
 
+	/**
+	 * Get Marker from a key.
+	 *
+	 * @param $keyData
+	 *
+	 * @return mixed
+	 */
+	public function getMarker($keyData) {
+		$isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $keyData, $values);
+		if (!$isMarker || !isset($values[2])) {
+			return false;
+		}
+		return $values[2];
+	}
 
-/**
- * Check the fingerprint of a key
- *
- * @param string $fingerprint
- * @return mixed array or false if error
- * @access public
- */
+	/**
+	 * Check the fingerprint of a key
+	 *
+	 * @param string $fingerprint
+	 * @return mixed array or false if error
+	 * @access public
+	 */
 	public function info($keyData) {
 		// Try to unarmor the key.
 		// If it cannot, means the key is in the wrong format.
-		$keyUnarmored = OpenPGP::unarmor($keyData);
-		if (!$keyUnarmored) {
+		$marker = $this->getMarker($keyData);
+		if (!$marker) {
+			return false;
+		}
+		$keyUnarmored = OpenPGP::unarmor($keyData, $marker);
+		if ($keyUnarmored == false) {
 			// Key in wrong format, we return false.
 			return false;
 		}
@@ -231,9 +249,9 @@ class Gpgkey extends AppModel {
 		if ($check['key_created'] == null) {
 			return false;
 		} else {
-			$expire = strtotime($check['key_created']);
+			$created = strtotime($check['key_created']);
 			$now = time();
-			$inPast = $now > $expire;
+			$inPast = $now > $created;
 			return $inPast;
 		}
 	}

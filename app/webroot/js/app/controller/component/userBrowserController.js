@@ -58,9 +58,9 @@ steal(
                 'index': 'multipleSelect',
                 'header': {
                     'css': ['selections s-cell'],
-                    'label': '<div class="input checkbox"> \
-						<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all"> \
-						<label for="checkbox-select-all">select all</label> \
+                    'label': '<div class="input checkbox">'
+						// + '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all">'
+						+ '<label for="checkbox-select-all">select all</label> \
 					</div>'
                 },
                 'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
@@ -204,6 +204,12 @@ steal(
 		'select': function (item, silent) {
 			var self = this;
 			silent = typeof silent == 'undefined' ? false : silent;
+
+			// Added the lines below to prevent multiple selection.
+			if (this.options.selectedUsers.length > 0) {
+				this.unselect(this.options.selectedUsers[0]);
+			}
+			// End of multiple selection prevention.
 
 			// add the user to the list of selected items
 			this.options.selectedUsers.push(item);
