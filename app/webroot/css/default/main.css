@@ -2662,18 +2662,30 @@ input[type="search"]::-webkit-search-cancel-button {
   vertical-align: 6%;
 }
 /* password */
-.tableview table td.password pre:before {
-  content: "••••••••••••••••";
-  height: 24px;
+.tableview table td.password a {
+  background: transparent url(../../img/icon20_grey.png) no-repeat right top;
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+  width: 130px;
+  margin-top: 2px;
+}
+.tableview table td.password a:before {
+  content: "••••••••••";
+  font-size: 1.8em;
+  line-height: 0.8em;
   width: 90%;
   color: #333333;
+  display: inline-block;
+}
+.tableview table td.password a:hover {
+  background: transparent url(../../img/icon20.png) no-repeat right top;
+}
+.tableview table td.password a > span {
+  display: none;
 }
 .tableview table td.password pre {
-  height: 24px;
-  width: 90%;
-  overflow: hidden;
-  color: #FFF;
-  margin: 0;
+  display: none;
 }
 /*
  * Footer
