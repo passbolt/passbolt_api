@@ -81,6 +81,12 @@ To fix this, add/uncomment this line in Config/core.php
 ```
 Configure::write('App.fullBaseUrl', 'http://{your domain without slash}');
 ```
+Emails are placed in a queue that needs to be processed by a CakePhp Shell. To do so, execute the following command, or launch it at regular intervals through cron.
+From your app folder :
+```
+Console/cake EmailQueue.sender
+```
+You can also see the corresponding documentation here https://github.com/lorenzo/cakephp-email-queue
 
 Credits
 =========
