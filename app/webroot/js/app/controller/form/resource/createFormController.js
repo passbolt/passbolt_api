@@ -109,9 +109,9 @@ steal(
 			if (this.validate()) {
 				var usersIds = [];
 
-				// @todo move that checking into the plugin.
-				if (this.options.mode == 'edit') {
+				if (this.options.action == 'edit') {
 					// Get the users to encrypt the resource for.
+					// @todo #security move that checking into the plugin.
 					passbolt.model.Permission.findAll({
 						'aco': this.options.data.constructor.shortName,
 						'aco_foreign_key': this.options.data.id
@@ -119,15 +119,16 @@ steal(
 						permissions.each(function(permission, i) {
 							usersIds.push(permission.aro_foreign_key);
 						});
+						// ask the plugin to encrypt the secrets.
+						// When the secrets are encrypted the addon will send back the event secret_edition_secret_encrypted.
+						mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
 					});
 				} else {
 					usersIds.push(mad.Config.read('user.id'));
+					// ask the plugin to encrypt the secrets.
+					// When the secrets are encrypted the addon will send back the event secret_edition_secret_encrypted.
+					mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
 				}
-
-				// ask the plugin to encrypt the secrets.
-				// When the secrets are encrypted the addon will send back the event passbolt.plugin.resource.edition.encrypt.complete.
-				mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
-
 			}
 			else {
 				// Data are not valid
@@ -140,6 +141,7 @@ steal(
 
 		/**
 		 * Listen when the plugin has encrypted the secrets.
+		 * @todo #security #architecture refactor, check also permissionController.
 		 */
 		'{mad.bus} secret_edition_secret_encrypted': function(el, ev, armoreds) {
 			// @todo #BUG #JMVC The event is not unbound when the element is destroyed. Check that point when updating to canJS.

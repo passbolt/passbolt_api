@@ -273,6 +273,54 @@ steal(
 		},
 
 		/**
+		 * Listen when the plugin has encrypted the secrets.
+		 * @todo #security #architecture refactor, check also resource createFormController.
+		 * @todo #dirtycode
+		 */
+		'{mad.bus} resource_share_secret_encrypted': function(el, ev, armoreds) {
+			var self = this;
+
+			// @todo #BUG #JMVC The event is not unbound when the element is destroyed. Check that point when updating to canJS.
+			if (!this.element) return;
+
+			var formData = this.addFormController.getData(),
+				fieldAttrs = mad.model.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference()),
+				modelAttr = fieldAttrs[0],
+				aco = this.options.acoInstance.constructor.shortName,
+				acoForeignKey = this.options.acoInstance.id,
+				aro = modelAttr.modelReference.shortName,
+				aroForeignKey = formData[modelAttr.modelReference.fullName].id,
+				type = formData['passbolt.model.Permission'].type,
+				data = {};
+
+			// Add the permissions to the request.
+			data.Permissions = [];
+			data.Permissions.push({
+				'Permission': {
+					'aro': 'User',
+					'aro_foreign_key': aroForeignKey,
+					'type': type
+				}
+			});
+			// Add the secrets to the request.
+			data.Secrets = [];
+			data.Secrets.push({
+				'Secret': {
+					'resource_id': acoForeignKey,
+					'user_id': aroForeignKey,
+					'data': armoreds[aroForeignKey]
+				}
+			});
+
+			// create a new permission
+			passbolt.model.Permission.share(aco, acoForeignKey, data)
+				.then(function() {
+					//self.load(self.options.acoInstance);
+					self.refresh();
+				});
+		},
+
+		/**
 		 * The user want to remove a permission
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
@@ -294,12 +342,19 @@ steal(
 			};
 			data[aro] = formData[modelAttr.modelReference.fullName];
 
-			// create a new permission
-			new passbolt.model.Permission(data)
-				.save(function(newPermission){
-					// refresh the component with the updated permissions
-					self.refresh()
-				});
+			// ask the plugin to encrypt the secret for the new user.
+			// When the secrets are encrypted the addon will send back the event secret_share_secret_encrypted.
+			mad.bus.trigger('passbolt.resource_share.encrypt', {
+				resourceId: this.options.acoInstance.id,
+				userId: data[aro].id
+			});
+
+			//// create a new permission
+			//new passbolt.model.Permission(data)
+			//	.save(function(newPermission){
+			//		// refresh the component with the updated permissions
+			//		self.refresh()
+			//	});
 		},
 
 		/* ************************************************************** */
@@ -318,15 +373,45 @@ steal(
 
 			// if the permission is a direct permission, remove it
 			if(permission.isDirect(this.options.acoInstance)) {
-				permission.destroy(function(){
-					// if removed successfully, remove the permission from the list
-					self.permList.removeItem(permission);
-					// refresh the component with the update permissions
-					self.refresh()
-				}, function() {
-					// @todo treat the error properly
-					alert('Unable to remove the permission');
+
+				var formData = this.addFormController.getData(),
+					fieldAttrs = mad.model.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference()),
+					modelAttr = fieldAttrs[0],
+					aco = this.options.acoInstance.constructor.shortName,
+					acoForeignKey = this.options.acoInstance.id,
+					aro = modelAttr.modelReference.shortName,
+					aroForeignKey = formData[modelAttr.modelReference.fullName].id,
+					data = {};
+
+				// Add the permissions to the request.
+				data.Permissions = [];
+				data.Permissions.push({
+					'Permission': {
+						'id': permission.id,
+						'aro': 'User',
+						'aro_foreign_key': aroForeignKey,
+						'delete': 1
+					}
 				});
+
+				// create a new permission
+				passbolt.model.Permission.share(aco, acoForeignKey, data)
+					.then(function() {
+						// if removed successfully, remove the permission from the list
+						self.permList.removeItem(permission);
+						// refresh the component with the update permissions
+						self.refresh();
+					});
+
+				//permission.destroy(function(){
+				//	// if removed successfully, remove the permission from the list
+				//	self.permList.removeItem(permission);
+				//	// refresh the component with the update permissions
+				//	self.refresh()
+				//}, function() {
+				//	// @todo treat the error properly
+				//	alert('Unable to remove the permission');
+				//});
 
 			// otherwise write a direct permission to drop the existing right of the given permission
 			// @todo check the user has the right to override the permission

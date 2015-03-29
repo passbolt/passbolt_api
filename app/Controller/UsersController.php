@@ -122,6 +122,11 @@ class UsersController extends AppController {
  * @access public
  */
 	public function view($id = null) {
+		// asking for me returns the currently logged-in user.
+		if ($id == 'me') {
+			$id = User::get('id');
+		}
+
 		// check if the id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The user id is missing'));
