@@ -23,32 +23,23 @@
 		</div>
 	</div>
 
-	<div class="js_form_element_wrapper">
-		<div class="input password required short">
-			<label for="js_field_secret"><%= __('Password') %></label>
+	<div class="js_form_element_wrapper js_form_secret_wrapper">
+		<label for="js_field_secret"><%= __('Password') %></label>
+
+	    <% if (action == 'create') { %>
 			<input type="hidden" name="passbolt.model.Resource.Secret.id" id="js_field_secret_id" class="form_field" />
-			<input name="passbolt.model.Resource.Secret.data" class="required" maxlength="50" type="password" id="js_field_secret" placeholder="password"/>
-			<input class="required" maxlength="50" type="text" id="js_field_secret_clear" placeholder="password"/>
-		</div>
-		<ul class="actions inline">
-			<li>
-				<a href="#" id="js_show_pwd_button" class="button toggle">
-					<i class="icon eye big no-text"></i>
-					<span><%= __('view') %></span>
-				</a>
-			</li>
-			<li>
-				<a href="#" id="js_gen_pwd_button" class="button">
-					<i class="icon key big no-text"></i>
-					<span><%= __('generate') %></span>
-				</a>
-			</li>
-		</ul>
-		<div id="js_rs_pwd_strength" class="password-complexity">
-		</div>
-		<div id="js_field_password_feedback" class="message">
-		</div>
+			<textarea name="passbolt.model.Resource.Secret.data" class="required" maxlength="50" type="password" id="js_field_secret" placeholder="password"></textarea>
+	    <% } else if (action == 'edit') { %>
+            <% can.each(resource.Secret, function (secret, i) { %>
+                <div id="js_secret_edit_<%= i %>" class="js_secret_edit_form">
+                    <input type="hidden" name="passbolt.model.Secret.id" id="js_field_secret_id_<%= i %>" class="js_field_secret_id form_field" />
+                    <input type="hidden" name="passbolt.model.Secret.user_id" id="js_field_secret_user_id_<%= i %>" class="js_field_secret_user_id form_field" />
+                    <textarea name="passbolt.model.Secret.data" id="js_field_secret_data_<%= i %>" class="form_field hidden js_field_secret_data"></textarea>
+                </div>
+            <% }); %>
+	    <% } %>
 	</div>
+
 	<!--<div class="input-datetime-wrapper js_form_element_wrapper">-->
 		<!--<div class="input text datetime short">-->
 			<!--<label for="ResourceExpire"><%= __('Expiracy date') %></label>-->

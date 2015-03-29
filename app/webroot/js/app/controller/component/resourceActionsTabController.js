@@ -40,6 +40,7 @@ steal(
 			var editFormCtl = this.addComponent(passbolt.controller.form.resource.CreateFormController, {
 				'id': 'js_rs_edit',
 				'label': __('Edit'),
+				'action': 'edit',
 				'data': this.options.resource,
 				'callbacks' : {
 					'submit': function (data) {
@@ -47,8 +48,8 @@ steal(
 						self.options.resource.attr(data['passbolt.model.Resource'])
 							.save();
 						// close the popup
-						mad.app.getComponent('js_dialog')
-							.remove();
+						//mad.app.getComponent('js_dialog')
+						//	.remove();
 					}
 				}
 			});
@@ -93,9 +94,9 @@ steal(
 			this._super(tabId);
 			// change the popup dialog
 			var enabledTabCtl = this.getComponent(this.enabledTabId);
-			var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
-			mad.app.getComponent('js_dialog')
-				.setTitle(label);
+			//var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
+			//mad.app.getComponent('js_dialog')
+			//	.setTitle(label);
 		}
 
 	});

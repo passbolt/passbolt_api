@@ -240,10 +240,10 @@ steal(
 									obj[attrName] = val;
 									leafValue.push(obj);
 								});
-								// construct the return format functon of the sub models references
+								// construct the return format function of the sub models references
 								can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
 							} else {
-								// construct the return format functon of the sub models references
+								// construct the return format function of the sub models references
 								can.getObject(subModelPath + '.' + attrName , returnValue[fieldAttrs[0].name], true, eltValue);
 							}
 						}

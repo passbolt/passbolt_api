@@ -154,6 +154,29 @@ steal(
 			workspacesContainer.enableTab(wspId);
 		},
 
+		/**
+		 * Observe when the user requests a dialog to be opened.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {string} label The label of the dialog
+		 * @param {array} options (optional) Options to give to the dialog controller
+		 * @return {void}
+		 */
+		'{mad.bus} request_dialog': function (el, ev, options) {
+			var options = options || {};
+			new mad.controller.component.DialogController(null, options).start();
+		},
+
+		/**
+		 * Observe when the user wants to close the latest dialog.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} request_dialog_close_latest': function (el, ev, options) {
+			mad.controller.component.DialogController.closeLatest();
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */
