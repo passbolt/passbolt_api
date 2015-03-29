@@ -11,7 +11,16 @@ App::uses('Secret', 'Model');
 
 class SecretTest extends CakeTestCase {
 
-	public $fixtures = array('app.secret', 'app.resource', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.secret',
+		'app.resource',
+		'app.user',
+		'app.profile',
+		'app.groupsUser',
+		'app.fileStorage',
+		'app.group',
+		'app.role'
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -65,8 +74,20 @@ class SecretTest extends CakeTestCase {
 	public function testDataValidation() {
 		$testcases = array(
 			'' => false,
-			'!#*' => true,
-			'blabla' => true
+			'!#*' => false,
+			'-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----' => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$secret = array('Secret' => array(

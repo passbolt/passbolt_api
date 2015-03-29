@@ -316,13 +316,21 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'data'=> $data
 		)), true);
 
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(
+			Message::SUCCESS,
+			$srvResult['header']['status'],
+			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
+		);
 		// check the permission has well been inserted
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		)), true);
-		$this->assertEquals($expectedCount, count($srvResult['body']), "/permissions/$model/$id.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body']));
+		$this->assertEquals(
+			$expectedCount,
+			count($srvResult['body']),
+			"/permissions/$model/$id.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body'])
+		);
 	}
 
 	public function testAddAcoPermissionsOnResourceExistingPermission() {	
@@ -361,6 +369,65 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'return' => 'contents',
 			 'data'=> $data
 		)), true);
+	}
+
+	public function testSimulateAcoPermissionsOnResource() {
+		// log with a user who has right on the unit test sandbox category
+		$kk = $this->User->findByUsername('utest@passbolt.com');
+		$this->User->setActive($kk);
+
+		// Add a permisision for a given user to a given category
+		$model = 'resource';
+		$resName = 'utest1-pwd1';
+		$resource = $this->Resource->findByName($resName);
+
+		$id = $resource['Resource']['id'];
+		$data = array(
+			'Permission' => array(
+				'type' => PermissionType::READ
+			),
+			'User' => array(
+				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // test@passbolt.com, but we can put any other users
+			)
+		);
+
+		// check how many permissions are already existing before the new insertion
+		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+					'method' => 'get',
+					'return' => 'contents'
+				)), true);
+
+		$realCount = count($srvResult['body']);
+		// insert the new permission
+		$srvSimulatedResult = json_decode($this->testAction("/permissions/simulate/$model/$id.json", array(
+					'method' => 'post',
+					'return' => 'contents',
+					'data'=> $data
+				)), true);
+		$simulatedCount = count($srvSimulatedResult['body']);
+
+		$this->assertEquals(
+			Message::SUCCESS,
+			$srvResult['header']['status'],
+			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
+		);
+
+		$this->assertEquals(
+			$simulatedCount,
+			count($srvResult['body']) + 1,
+			"/permissions/$model/$id.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
+		);
+
+		// check the permission was not actually inserted (was only a simulation).
+		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+					'method' => 'get',
+					'return' => 'contents'
+				)), true);
+		$this->assertEquals(
+			$realCount,
+			count($srvResult['body']),
+			"/permissions/$model/$id.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
+		);
 	}
 
 	public function testEditPermissionIdIsMissing() {

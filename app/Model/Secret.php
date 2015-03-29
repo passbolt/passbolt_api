@@ -7,12 +7,21 @@
  * @package       app.Model.Secret
  * @since         version 2.12.7
  */
+
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'vendor' . DS . 'autoload.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_rsa.php';
+require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_symmetric.php';
+
 App::uses('User', 'Model');
 App::uses('Resource', 'Model');
 
 class Secret extends AppModel {
 
-	public $actsAs = array('Containable', 'Trackable');
+	public $actsAs = array(
+		'Containable',
+		'Trackable'
+	);
 
 	public $belongsTo = array(
 		'Resource',
@@ -56,7 +65,11 @@ class Secret extends AppModel {
 					'required' => 'create',
 					'rule' => 'notEmpty',
 					'message' => __('The secret must me provided')
-				)
+				),
+				'isGpgFormat' => array(
+					'rule'    => array('checkGpgMessageIsValid', null),
+					'message' => __('The message provided is not in the right format'),
+				),
 			),
 		);
 		switch ($case) {
@@ -77,7 +90,9 @@ class Secret extends AppModel {
 			return false;
 		} else {
 			$exists = $this->Resource->find('count', array(
-				'conditions' => array('Resource.id' => $check['resource_id']),
+				'conditions' => array(
+					'Resource.id' => $check['resource_id']
+				),
 				'recursive' => -1
 			));
 			return $exists > 0;
@@ -93,10 +108,36 @@ class Secret extends AppModel {
 			return false;
 		} else {
 			$exists = $this->User->find('count', array(
-				'conditions' => array('User.id' => $check['user_id']),
+				'conditions' => array(
+					'User.id' => $check['user_id']
+				),
 				'recursive' => -1
 			));
 			return $exists > 0;
+		}
+	}
+
+	/**
+	 * Check a gpg message is valid
+	 * @param $check
+	 * @return bool
+	 */
+	public function checkGpgMessageIsValid($check) {
+		if ($check['data'] == null) {
+			return false;
+		} else {
+			$isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $check['data'], $values);
+			if (!$isMarker || !isset($values[2])) {
+				return false;
+			}
+			$marker = $values[2];
+			$msgUnarmored = OpenPGP::unarmor($check['data'], $marker);
+			if ($msgUnarmored != false) {
+				// Message in right format.
+				$msg = OpenPGP_Message::parse($msgUnarmored);
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -138,14 +179,42 @@ class Secret extends AppModel {
 	public static function getFindFields($case = 'view', $role = Role::USER) {
 		switch($case){
 			case 'view':
-				$fields = array('fields' => array('id', 'user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
+				$fields = array(
+					'fields' => array(
+						'id',
+						'user_id',
+						'resource_id',
+						'data',
+						'created',
+						'modified',
+						'created_by',
+						'modified_by'
+					));
 			break;
 			case 'save':
-				$fields = array('fields' => array('user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
-				break;
+				$fields = array(
+					'fields' => array(
+						'user_id',
+						'resource_id',
+						'data',
+						'created',
+						'modified',
+						'created_by',
+						'modified_by'
+					));
+            break;
 			case 'update':
-				$fields = array('fields' => array('user_id', 'resource_id', 'data', 'created', 'modified', 'created_by', 'modified_by'));
-				break;
+				$fields = array(
+					'fields' => array(
+						'user_id',
+						'resource_id',
+						'data',
+						'created',
+						'modified',
+						'created_by',
+						'modified_by'
+					));
+            break;
 			default:
 				$fields = array(
 					'fields' => array()

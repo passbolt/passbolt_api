@@ -121,9 +121,9 @@ class AppController extends Controller {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
 
-		// Store the original data.
-		$this->request->rawData = $this->request->data;
-		$this->request->rawQuery = $this->request->query;
+		// Before sanitizing, keep the original data.
+		$this->request->dataRaw = $this->request->data;
+		$this->request->queryRaw = $this->request->query;
 
 		// Sanitize post data, except exceptions.
 		if (isset($this->request->data) && !empty($this->request->data)) {

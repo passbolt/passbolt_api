@@ -151,6 +151,10 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
 		array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Resource', "[method]" => "POST"),
 		array('pass' => array('model', 'id')));
 	Router::connect(
+		'/permissions/simulate/:resource/:id',
+		array('controller' => 'permissions', 'action' => 'simulateAcoPermissionsAfterChange', 'model' => 'Resource', "[method]" => "POST"),
+		array('pass' => array('resource', 'id')));
+	Router::connect(
 		'/permissions/resource/:id',
 		array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model' => 'Resource', "[method]" => "GET"),
 		array('pass' => array('model', 'id')));
@@ -164,6 +168,15 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
 		array('pass' => array('model', 'id')));
 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'edit', "[method]" => "PUT"));
 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'delete', "[method]" => "DELETE"));
+
+/**
+ * Custom route for share
+ */
+Router::connect(
+	'/share/:resource/:id',
+	array('controller' => 'share',  'action' => 'update', "[method]" => "PUT"),
+	array('pass' => array('resource', 'id'))
+);
 
 /**
  * Custom route for comments controller

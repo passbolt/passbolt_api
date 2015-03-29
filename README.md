@@ -10,6 +10,11 @@
 Install
 =========
 
+You will need to install php5 and the following modules directly or using pear/pecl
+- mod_rewrite http://book.cakephp.org/2.0/en/installation/url-rewriting.html
+- gd / imagemagick
+- gnupg http://php.net/manual/en/gnupg.installation.php
+
 Clone the repository and associated submodules
 ```
 	git clone git@github.com:passbolt/passbolt
@@ -33,8 +38,9 @@ Install Composer files (to install vendor and plugin dependencies).
 ```
 	cd app && php composer.phar install
 ```
-Run the install script
+Run the install script from the cakephp root
 ```
+  cd ..
 	./app/Console/cake install
 ```
 Check if it works!
