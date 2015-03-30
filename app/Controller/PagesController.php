@@ -64,9 +64,15 @@ class PagesController extends AppController {
 
 		if (!empty($path[0])) {
 			$page = $path[0];
+			if(strpos($page,'demo') !== false) {
+				$this->layout = 'demo';
+			}
 		}
 		if (!empty($path[1])) {
 			$subpage = $path[1];
+			if(strpos($subpage,'email-') !== false) {
+				$this->layout = 'demo';
+			}
 		}
 		if (!empty($path[$count - 1])) {
 			$title_for_layout = Inflector::humanize($path[$count - 1]);

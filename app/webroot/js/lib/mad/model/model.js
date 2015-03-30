@@ -288,7 +288,7 @@ steal(
 				// If no rules have been defined for the given case.
 				if (typeof this.serverValidationRules[this.shortName][validationCase] == 'undefined') {
                     // Build the url.
-                    var url = '/validation/' + this.shortName + '/' + validationCase + '.json';
+                    var url = APP_URL + 'validation/' + this.shortName + '/' + validationCase + '.json';
                     // Get the rules from the server.
 					self.serverValidationRules[self.shortName][validationCase] = {};
 					mad.net.Ajax.request({
