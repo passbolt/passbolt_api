@@ -24,6 +24,6 @@
 <body>
 	<?php echo $this->fetch('content'); ?>
 
-	<p>This email was sent using the <a href="http://cakephp.org">CakePHP Framework</a></p>
+	<p>This email was sent by <?= FULL_BASE_URL ?>. You can choose which messages you wish to receive, from your profile in the "email notifications: section.</p>
 </body>
 </html>
