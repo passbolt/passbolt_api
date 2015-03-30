@@ -24,6 +24,35 @@ class EmailNotificatorComponent extends Component {
 		parent::initialize($controller);
 	}
 
+	private function _getAuthorInfo($userId) {
+		$author = $this->User->find(
+			'first',
+			array(
+				'conditions' => array(
+					'User.id' => $userId,
+				),
+				'fields' => array(
+					'username'
+				),
+				'contain' => array(
+					'Profile' => array(
+						'fields' => array(
+							'Profile.first_name',
+							'Profile.last_name',
+						),
+						'Avatar' => array(
+							'fields' => array(
+								'Avatar.*'
+							)
+						)
+					),
+				)
+			)
+		);
+
+		return $author;
+	}
+
 	/**
 	 * Send a notification email regarding a new password that has been shared with the user.
 	 *
@@ -35,7 +64,6 @@ class EmailNotificatorComponent extends Component {
 	 *     sharer_id the user who is sharing the resource
 	 */
 	public function passwordSharedNotification($toUserId, $data) {
-
 		// get resource.
 		$resource = $this->Resource->find(
 			'first',
@@ -72,30 +100,8 @@ class EmailNotificatorComponent extends Component {
 			)
 		);
 
-		$sharer = $this->User->find(
-			'first',
-			array(
-				'conditions' => array(
-					'User.id' => $data['sharer_id']
-				),
-				'fields' => array(
-					'username'
-				),
-				'contain' => array(
-					'Profile' => array(
-						'fields' => array(
-							'Profile.first_name',
-							'Profile.last_name',
-						),
-						'Avatar' => array(
-							'fields' => array(
-								'Avatar.*'
-							)
-						)
-					),
-				)
-			)
-		);
+		// Get sharer info.
+		$sharer = $this->_getAuthorInfo($data['sharer_id']);
 
 		// Send notification.
 		$this->EmailNotification->send(
@@ -108,4 +114,43 @@ class EmailNotificatorComponent extends Component {
 			'new_password_share'
 		);
 	}
+
+	/**
+	 * Send a notification email regarding a new account created for a user.
+	 *
+	 * @param uuid $toUserId
+	 *   user id of the recipient
+	 * @param array $data
+	 *   variables to pass to the template which should contain
+	 *     creator_id the user who has created the account
+	 */
+	public function accountCreationNotification($toUserId, $data) {
+		// Get recipient info.
+		$recipient = $this->User->find(
+			'first',
+			array(
+				'conditions' => array(
+					'User.id' => $toUserId,
+				),
+				'contain' => array(
+					'Profile'
+				),
+			)
+		);
+
+		// Get invite sender.
+		$sender = $this->_getAuthorInfo($data['creator_id']);
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			__("%s created an account for you!", $sender['Profile']['first_name']),
+			array(
+				'sender' => $sender,
+				'account' => $recipient,
+			),
+			'account_creation'
+		);
+	}
+
 }
