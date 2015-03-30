@@ -309,6 +309,22 @@ steal(
 			this.start();
 		},
 
+		/**
+		 * Search the closest parent component controller.
+		 * @param {class} clazz The component controller to look for.
+		 */
+		'closest': function(clazz) {
+			var classCssSelector = '.' + clazz._fullName,
+				data = this.element.closest(classCssSelector).data();
+			// @todo #BUG #JMVC $(ELEMENT).data(ControllerName) doesn't work.
+			for (var i in data.controls) {
+				if (data.controls[i].getClass().fullName == clazz.fullName) {
+					return data.controls[i];
+				}
+			};
+			return null;
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */

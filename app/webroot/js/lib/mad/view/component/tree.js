@@ -58,7 +58,7 @@ steal(
 
 			// some css classes has been defined on the item merge them
 			var cssClasses = [];
-			if (typeof mappedItem['cssClasses'] != 'undefiend') {
+			if (typeof mappedItem['cssClasses'] != 'undefined') {
 				cssClasses = cssClasses.concat(mappedItem['cssClasses']);
 			}
 			this.getController().setViewData('cssClasses', cssClasses);

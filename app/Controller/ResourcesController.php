@@ -210,20 +210,24 @@ class ResourcesController extends AppController {
 			return $this->Message->error(__('The resource could not be saved'));
 		}
 
-		// Save the associated secret
-		if (isset($resourcepost['Secret'])) {
-			$resourcepost['Secret']['resource_id'] = isset($resourcepost['Secret']['resource_id']) ? $resourcepost['Secret']['resource_id'] : $resource['Resource']['id'];
-			$resourcepost['Secret']['user_id'] = isset($resourcepost['Secret']['user_id']) ? $resourcepost['Secret']['user_id'] : User::get('User.id');
-			$this->Resource->Secret->set($resourcepost['Secret']);
+		// Insert the given secret.
+		if (!empty($resourcepost['Secret'])) {
+			// Concat the resource infos.
+			$secret = $resourcepost['Secret'][0];
+			$secret['user_id'] = User::get('User.id');
+			$secret['resource_id'] = $resource['Resource']['id'];
+			$secret['data'] = $this->request->dataRaw['Secret'][0]['data'];
+
+			// Validate the secret.
+			$this->Resource->Secret->set($secret);
 			if (!$this->Resource->Secret->validates()) {
-				$datasource->rollback();
 				return $this->Message->error(__('Could not validate secret model'));
 			}
+
+			// Save the secret.
 			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
-			// TODO : Encrypt data and save it once per user
-			if (!$this->Resource->Secret->save($resourcepost['Secret'], false, $fields['fields'])) {
-				$datasource->rollback();
-				return $this->Message->error(__('Could not save secret'));
+			if (!$this->Resource->Secret->save($secret, false, $fields)) {
+				return $this->Message->error(__('Could not save the secret'));
 			}
 		}
 

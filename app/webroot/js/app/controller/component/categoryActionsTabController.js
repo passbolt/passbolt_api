@@ -51,8 +51,8 @@ steal(
 						'submit': function (data) {
 							self.options.category.attr(data['passbolt.model.Category'])
 								.save();
-							// close the popup
-							mad.app.getComponent('js_dialog')
+							// Close the dialog which contains this component.
+							self.closest(mad.controller.component.DialogController)
 								.remove();
 						}
 					}

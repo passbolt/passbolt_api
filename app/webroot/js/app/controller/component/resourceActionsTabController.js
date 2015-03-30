@@ -47,9 +47,9 @@ steal(
 						// save the resource's changes
 						self.options.resource.attr(data['passbolt.model.Resource'])
 							.save();
-						// close the popup
-						//mad.app.getComponent('js_dialog')
-						//	.remove();
+						// Close the dialog which contains this component.
+						self.closest(mad.controller.component.DialogController)
+							.remove();
 					}
 				}
 			});
@@ -92,11 +92,11 @@ steal(
 		 */
 		'enableTab': function (tabId) {
 			this._super(tabId);
-			// change the popup dialog
+			// Change the label of the dialog which contains this component.
 			var enabledTabCtl = this.getComponent(this.enabledTabId);
-			//var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
-			//mad.app.getComponent('js_dialog')
-			//	.setTitle(label);
+			var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
+			this.closest(mad.controller.component.DialogController)
+				.setTitle(label);
 		}
 
 	});
