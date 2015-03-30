@@ -131,7 +131,19 @@ class ProfileAvatar extends ImageStorage {
 	 * @return bool
 	 */
 	public function imageUrl($image, $version = null, $options = array()) {
+		// Default options.
+		$defaultOptions = array(
+			'version' => 'small',
+		);
+		$options = array_merge($options, $defaultOptions);
+
+		// If image is empty, we return the default avatar.
 		if (empty($image) || empty($image['id'])) {
+			// Return fallback images.
+			$avatarDefaults = Configure::read('Media.imageDefaults.ProfileAvatar');
+			if (isset($avatarDefaults[$version])) {
+				return $avatarDefaults[$version];
+			}
 			return false;
 		}
 
