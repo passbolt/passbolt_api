@@ -168,4 +168,38 @@ class Profile extends AppModel {
 			return $exists > 0;
 		}
 	}
+
+
+	/**
+	 * AfterFind callback.
+	 *
+	 * Used mainly to initialize default avatars.
+	 * It is added here, because ProfileAvatar after Find is not executed if the result is empty.
+	 *
+	 * @param mixed $results
+	 * @param bool  $primary
+	 *
+	 * @return mixed
+	 */
+	public function afterFind($results, $primary = false) {
+		if (empty($results['Avatar'])) {
+			$Avatar = ClassRegistry::init('ProfileAvatar');
+			$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
+			$defaultAvatars = array();
+			if (empty($sizes)) {
+				return $results;
+			}
+			foreach ($sizes as $size => $filters) {
+				$url = $Avatar->imageUrl(array(), $size);
+				if ($url) {
+					$defaultAvatars[$size] = $url;
+				}
+			}
+
+			$results['Avatar'] = array(
+				'url' => $defaultAvatars,
+			);
+		}
+		return $results;
+	}
 }

@@ -16,6 +16,12 @@ Configure::write('ImageStorage.publicPath', 'img' . DS . 'public');
 Configure::write('Media', array(
 	// Configure the `basePath` for the Local adapter, not needed when not using it
 	'basePath' => APP . 'FileStorage' . DS,
+	'imageDefaults' => array(
+		'ProfileAvatar' => array(
+			'small'     => IMAGES_URL . 'placeholder' . DS . 'user_small.png',
+			'smallest'  => IMAGES_URL . 'placeholder' . DS . 'user_smallest.png',
+		)
+	),
 	// Configure image versions on a per model base
 	'imageSizes' => array(
 		'ProfileAvatar' => array(
@@ -58,6 +64,7 @@ Configure::write('Media', array(
 		)
 	)
 ));
+
 
 $listener = new LocalFileStorageListener();
 CakeEventManager::instance()->attach($listener);
