@@ -7,11 +7,11 @@ steal(
 	/*
 	 * Passbolt permission constants.
      */
-	passbolt.DENY = 0;
-	passbolt.READ = 1;
+	passbolt.DENY 	= 0;
+	passbolt.READ 	= 1;
 	passbolt.CREATE = 3;
 	passbolt.UPDATE = 7;
-	passbolt.ADMIN = 15;
+	passbolt.ADMIN 	= 15;
 
 	/*
 	 * @class passbolt.model.Permission
@@ -53,11 +53,11 @@ steal(
 		},
 
 		PERMISSION_TYPES: {
-			0: __('deny'),
+			//0: __('deny'),
 			1: __('read'),
 			3: __('create'),
 			7: __('update'),
-			15: __('admin')
+			15: __('owner')
 		},
 
 		/**
@@ -67,8 +67,13 @@ steal(
 		'toString': function(permId) {
 			var returnValue = '';
 			switch (permId) {
-				case '0':
+				case passbolt.DENY
+					.toString():
 					returnValue = this.PERMISSION_TYPES[permId];
+					break;
+				case passbolt.ADMIN
+					.toString():
+					returnValue = __('is %s', this.PERMISSION_TYPES[permId]);
 					break;
 				default:
 					returnValue = __('can %s', this.PERMISSION_TYPES[permId]);
@@ -109,7 +114,7 @@ steal(
 			switch(format) {
 				case 'long':
 					returnValue = passbolt.model.PermissionType.PERMISSION_TYPES[this.serial];
-					if(this.serial !== '0') {
+					if(this.serial !== passbolt.DENY.toString() && this.serial != passbolt.ADMIN.toString()) {
 						returnValue = __('can %s', returnValue);
 					}
 					break;
