@@ -12,7 +12,8 @@ class UsersController extends AppController {
 	public $helpers = array('PassboltAuth');
 
 	public $components = array(
-		'Filter'
+		'Filter',
+		'EmailNotificator',
 	);
 
 /**
@@ -203,8 +204,17 @@ class UsersController extends AppController {
 				return $this->Message->error(__('The profile could not be saved'));
 			}
 		}
-
+		// Everything fine, we commit.
 		$this->User->commit();
+
+		// Send notification email.
+		$this->EmailNotificator->accountCreationNotification(
+			$this->User->id,
+			array(
+				'creator_id' => User::get('id'),
+			));
+
+		// Return data.
 		$data = array('User.id' => $this->User->id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 

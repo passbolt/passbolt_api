@@ -40,10 +40,13 @@
 class EmailConfig {
 
 	public $default = array(
-		'transport' => 'Mail',
-		'from' => 'you@localhost',
-		//'charset' => 'utf-8',
-		//'headerCharset' => 'utf-8',
+		'transport' => 'Smtp',
+		'from' => array('kevin@passbolt.com' => 'Passbolt'),
+		'host' => 'smtp.mandrillapp.com',
+		'port' => 587,
+		'timeout' => 30,
+		'username' => 'kevin@passbolt.com',
+		'password' => 'geUpSktGlBmKA67mAlOZMw',
 	);
 
 	public $smtp = array(

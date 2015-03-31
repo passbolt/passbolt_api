@@ -25,14 +25,14 @@ steal(
 		 * @return {string} The image path
 		 */
 		'imagePath': function(version) {
-			var versionHash = '';
-			if (typeof version != 'undefined') {
-				versionHash = '.' + version;
-			}
 			if (typeof this.id == 'undefined') {
 				return '';
-			} else {
-				return mad.Config.read('image_storage.public_path') + '/' + this.path + this.id.replace(/\-/g, '') + versionHash + '.' + this.extension;
+			}
+			if (typeof this.url[version] == 'undefined') {
+				return '';
+			}
+			else {
+				return this.url[version];
 			}
 		}
 
