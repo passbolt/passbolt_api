@@ -21,7 +21,8 @@ steal(
 		 * @return {void}
 		 */
 		'.icon.close click': function(el, ev) {
-			this.getController().setState('hidden');
+			mad.Config.write('ui.workspace.showSidebar', false);
+			mad.bus.trigger('workspace_showSidebar', false);
 		},
 
 		/**

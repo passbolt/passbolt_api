@@ -37,20 +37,6 @@ steal(
 				state: showSidebar ? 'selected' : 'ready'
 			}).start();
 			
-//			// Manage the layout as grid action
-//			this.options.gridLayoutButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_grid_layout_button'))
-//				.start();
-//
-//			// Manage the layout as box action
-//			this.options.boxLayoutButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_box_layout_button'), {
-//				'state': 'disabled'
-//			}).start();
-//
-//			// Manage the config action
-//			this.options.configButton = new mad.controller.component.ButtonController($('#js_wk_secondary_menu_config_button'), {
-//				'state': 'disabled'
-//			}).start();
-			
 			// Rebind controller events
 			this.on();
 		},
@@ -58,7 +44,19 @@ steal(
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
-		
+
+		/**
+		 * Observe when another component wants the sidebar to be hidden.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} workspace_showSidebar': function (el, ev, show) {
+			if (!show && this.options.viewSidebarButton.state.is('selected')) {
+				this.options.viewSidebarButton.setState('ready');
+			}
+		},
+
 		/**
 		 * Observe when the user wants to view the side bar
 		 * @param {HTMLElement} el The element the event occured on
@@ -69,36 +67,6 @@ steal(
 			var showSidebar = !mad.Config.read('ui.workspace.showSidebar');
 			mad.Config.write('ui.workspace.showSidebar', showSidebar);
 			mad.bus.trigger('workspace_showSidebar', showSidebar);
-		},
-
-		/**
-		 * Observe when the user wants to see the browser as grid
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'{gridLayoutButton} click': function (el, ev) {
-			console.log('gridLayoutButton');
-		},
-
-		/**
-		 * Observe when the user wants to see the browser as boxes
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'{boxLayoutButton} click': function (el, ev) {
-			console.log('boxLayoutButton');
-		},
-
-		/**
-		 * Observe when the user wants to see the extra config
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'{configButton} click': function (el, ev) {
-			console.log('configButton');
 		}
 
 	});
