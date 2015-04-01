@@ -120,6 +120,56 @@ steal(
             this._super(el, options);
         },
 
+		/**
+		 * Show the contextual menu
+		 * @param {passbolt.model.User} item The item to show the contextual menu for
+		 * @param {string} x The x position where the menu will be rendered
+		 * @param {string} y The y position where the menu will be rendered
+		 * @return {void}
+		 */
+		'showContextualMenu': function (item, x, y) {
+			// Get the offset position of the clicked item.
+			var $item = $('td span', '#' + item.id);
+			var item_offset = $item.offset();
+
+
+			// Instantiate the contextual menu menu.
+			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {
+				'state': 'hidden',
+				'source': $item[0],
+				'coordinates': {
+					x: x,
+					y: item_offset.top
+				}
+			});
+			contextualMenu.start();
+
+			// Add Edit action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Edit',
+				'action': function (menu) {
+					mad.bus.trigger('request_user_edition', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Delete action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Delete',
+				'action': function (menu) {
+					mad.bus.trigger('request_user_deletion', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Display the menu.
+			contextualMenu.setState('ready');
+		},
+
         /**
          * Insert a resource in the grid
          * @param {mad.model.Model} resource The resource to insert
@@ -356,6 +406,21 @@ steal(
                 this.select(item);
             }
         },
+
+		/**
+		 * An item has been right selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.User} item The right selected item instance or its id
+		 * @param {HTMLEvent} srcEvent The source event which occured
+		 * @return {void}
+		 */
+		' item_right_selected': function (el, ev, item, srcEvent) {
+			// Select item.
+			this.select(item);
+			// Show contextual menu.
+			this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+		},
 
         /**
          * Listen to the check event on any checkbox form element components.
