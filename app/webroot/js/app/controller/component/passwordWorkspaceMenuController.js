@@ -33,6 +33,7 @@ steal(
 		 * @return {void}
 		 */
 		'afterStart': function () {
+			var self = this;
 			// Manage creation action
 			this.options.creationButton = new mad.controller.component.ButtonController($('#js_wk_menu_creation_button'))
 				.start();
@@ -59,7 +60,8 @@ steal(
 					'label': __('copy login to clipboard'),
 					'cssClasses': ['todo'],
 					'action': function () {
-						// TODO.
+						var username = self.options.selectedRs[0].username;
+						mad.bus.trigger('passbolt.login.clipboard', username);
 					}
 				}),
 				new mad.model.Action({
@@ -67,7 +69,8 @@ steal(
 					'label': __('copy password to clipboard'),
 					'cssClasses': ['todo'],
 					'action': function () {
-						// TODO.
+						var secret = self.options.selectedRs[0].Secret[0].data;
+						mad.bus.trigger('passbolt.secret.decrypt', secret);
 					}
 				}),
 				//new mad.model.Action({

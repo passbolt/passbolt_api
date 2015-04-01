@@ -139,7 +139,8 @@ steal(
 					mad.helper.HtmlHelper.create(
 						cellElement,
 						'inside_replace',
-						'<pre>' + secret + '</pre>'
+						'<a href="#copy_secret"><span>copy to clipboard</span></a>'
+						+ '<pre>' + secret + '</pre>'
 					);
 				}
 			}, {
@@ -216,6 +217,101 @@ steal(
 			}];
 			
 			this._super(el, options);
+		},
+
+		/**
+		 * Show the contextual menu
+		 * @param {passbolt.model.Resource} item The item to show the contextual menu for
+		 * @param {string} x The x position where the menu will be rendered
+		 * @param {string} y The y position where the menu will be rendered
+		 * @return {void}
+		 */
+		'showContextualMenu': function (item, x, y) {
+			// Get the offset position of the clicked item.
+			var $item = $('td span', '#' + item.id);
+			var item_offset = $item.offset();
+
+
+			// Instantiate the contextual menu menu.
+			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {
+				'state': 'hidden',
+				'source': $item[0],
+				'coordinates': {
+					x: x,
+					y: item_offset.top
+				}
+			});
+			contextualMenu.start();
+
+			// get the permission on the category.
+			var canRead = passbolt.model.Permission.isAllowedTo(item, passbolt.READ),
+				canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE),
+				canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
+
+
+			// Add Rename action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Edit',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_edition', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Share action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Share',
+				'cssClasses': ['separator-after'],
+				'initial_state': !canAdmin ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_sharing', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Delete action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Delete',
+				'cssClasses': ['separator-after'],
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_deletion', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Copy username action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy username',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var username = item.username;
+					mad.bus.trigger('passbolt.login.clipboard', username);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Copy password action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy password',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var secret = item.Secret[0].data;
+					mad.bus.trigger('passbolt.secret.decrypt', secret);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Display the menu.
+			contextualMenu.setState('ready');
 		},
 
 		/**
@@ -510,6 +606,36 @@ steal(
 			if (this.beforeSelect(item)) {
 				this.select(item);
 			}
+		},
+
+		/**
+		 * An item has been right selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} item The right selected item instance or its id
+		 * @param {HTMLEvent} srcEvent The source event which occured
+		 * @return {void}
+		 */
+		' item_right_selected': function (el, ev, item, srcEvent) {
+			// Select item.
+			this.select(item);
+			// Show contextual menu.
+			this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+		},
+
+		/**
+		 * A password has been clicked.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} item The right selected item instance or its id
+		 * @param {HTMLEvent} srcEvent The source event which occured
+		 * @return {void}
+		 */
+		' password_clicked': function (el, ev, item, srcEvent) {
+			// Get secret out of Resource object.
+			var secret = item.Secret[0].data;
+			// Request decryption. (delegated to plugin).
+			mad.bus.trigger('passbolt.secret.decrypt', secret);
 		},
 
 		/**
