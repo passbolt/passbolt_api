@@ -48,7 +48,8 @@ class User extends AppModel {
  * @var array
 */
 	public $hasOne = array(
-		'Profile'
+		'Profile',
+		'Gpgkey'
 	);
 
 /**
@@ -439,6 +440,11 @@ class User extends AppModel {
 									'Avatar.modified'
 								)
 							)
+						),
+						'Gpgkey' => array(
+							'fields' => array(
+								'Gpgkey.key'
+							),
 						),
 						'Group' => array(
 							'fields' => array(

@@ -147,6 +147,36 @@ steal(
 			// Add Edit action.
 			var action = new mad.model.Action({
 				'id': uuid(),
+				'label': 'Copy public key',
+				'action': function (menu) {
+					var data = {
+						name : 'public key',
+						data : item.Gpgkey.key
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Edit action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy email address',
+				'cssClasses': ['separator-after'],
+				'action': function (menu) {
+					console.log(item);
+					var data = {
+						name : 'email',
+						data : item.username
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Edit action.
+			var action = new mad.model.Action({
+				'id': uuid(),
 				'label': 'Edit',
 				'action': function (menu) {
 					mad.bus.trigger('request_user_edition', item);

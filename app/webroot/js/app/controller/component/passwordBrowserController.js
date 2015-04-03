@@ -291,8 +291,11 @@ steal(
 				'label': 'Copy username',
 				'initial_state': !canRead ? 'disabled' : 'ready',
 				'action': function (menu) {
-					var username = item.username;
-					mad.bus.trigger('passbolt.login.clipboard', username);
+					var data = {
+						name : 'username',
+						data : item.username
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
 					menu.remove();
 				}
 			});
