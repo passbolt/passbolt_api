@@ -13,7 +13,7 @@
 	$this->Html->script('lib/xregexp/xregexp-all-min.js', array('block' => 'scriptBottom'));
 	$this->Html->script('lib/jquery/jquery-ui-1.10.3.custom.js', array('block' => 'scriptBottom'));
 	$this->Html->script('lib/moment/moment.min.js', array('block' => 'scriptBottom'));
-	$this->Html->css('default/main', null, array('inline' => false));
+	$this->Html->css('main', null, array('inline' => false));
 
 	// load the front end application
 	if(!Configure::read('debug')) {
@@ -24,7 +24,7 @@
 
 	// load devel materials.
 	if(Configure::read('debug')) {
-		$this->Html->css('default/devel', null, array('inline' => false));
+		$this->Html->css('devel', null, array('inline' => false));
 	}
 
 	$this->Html->script($frontUri, array('block' => 'scriptBottom'));
