@@ -4,6 +4,7 @@ steal(
     'app/controller/component/groupChooserController.js',
     'app/controller/component/userBrowserController.js',
 	'app/controller/component/userShortcutsController.js',
+	'app/controller/component/userDetailsController.js',
 	'app/controller/form/user/createFormController.js',
 	'app/controller/form/group/createFormController.js',
 	'app/model/user.js'
@@ -60,6 +61,11 @@ steal(
                 'selectedUsers': this.options.selectedUsers
             });
             userBrowserController.start();
+
+			// Instanciate the resource details controller
+			var userDetails = new passbolt.controller.component.UserDetailsController($('.js_wsp_users_sidebar_second', this.element), {
+				'selectedUsers': this.options.selectedUsers
+			});
 
 			// Filter the workspace.
 			var filter = new passbolt.model.Filter({

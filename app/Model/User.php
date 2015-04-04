@@ -443,7 +443,11 @@ class User extends AppModel {
 						),
 						'Gpgkey' => array(
 							'fields' => array(
-								'Gpgkey.key'
+								'Gpgkey.key_id',
+								'Gpgkey.key_created',
+								'Gpgkey.expires',
+								'Gpgkey.type',
+								'Gpgkey.key',
 							),
 						),
 						'Group' => array(
