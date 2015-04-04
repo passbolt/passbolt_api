@@ -134,6 +134,19 @@ steal(
 				this._super(go);
 			},
 
+			/**
+			 * A password has been clicked.
+			 * @param {HTMLElement} el The element the event occured on
+			 * @param {HTMLEvent} ev The event which occured
+			 * @return {void}
+			 */
+			' password_clicked': function (el, ev) {
+				// Get secret out of Resource object.
+				var secret = this.options.selectedRs[0].Secret[0].data;
+				// Request decryption. (delegated to plugin).
+				mad.bus.trigger('passbolt.secret.decrypt', secret);
+			},
+
 			/* ************************************************************** */
 			/* LISTEN TO THE MODEL EVENTS */
 			/* ************************************************************** */

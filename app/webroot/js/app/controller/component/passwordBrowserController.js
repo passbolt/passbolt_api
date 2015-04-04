@@ -249,42 +249,6 @@ steal(
 				canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
 
 
-			// Add Rename action.
-			var action = new mad.model.Action({
-				'id': uuid(),
-				'label': 'Edit',
-				'initial_state': !canUpdate ? 'disabled' : 'ready',
-				'action': function (menu) {
-					mad.bus.trigger('request_resource_edition', item);
-					menu.remove();
-				}
-			});
-			contextualMenu.insertItem(action);
-
-			// Add Share action.
-			var action = new mad.model.Action({
-				'id': uuid(),
-				'label': 'Share',
-				'cssClasses': ['separator-after'],
-				'initial_state': !canAdmin ? 'disabled' : 'ready',
-				'action': function (menu) {
-					mad.bus.trigger('request_resource_sharing', item);
-					menu.remove();
-				}
-			});
-			contextualMenu.insertItem(action);
-			// Add Delete action.
-			var action = new mad.model.Action({
-				'id': uuid(),
-				'label': 'Delete',
-				'cssClasses': ['separator-after'],
-				'initial_state': !canUpdate ? 'disabled' : 'ready',
-				'action': function (menu) {
-					mad.bus.trigger('request_resource_deletion', item);
-					menu.remove();
-				}
-			});
-			contextualMenu.insertItem(action);
 			// Add Copy username action.
 			var action = new mad.model.Action({
 				'id': uuid(),
@@ -308,6 +272,71 @@ steal(
 				'action': function (menu) {
 					var secret = item.Secret[0].data;
 					mad.bus.trigger('passbolt.secret.decrypt', secret);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Copy url action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy URL',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var data = {
+						name : 'URL',
+						data : item.uri
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Open URL in a new tab action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Open URL in a new tab',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'cssClasses': ['separator-after'],
+				'action': function (menu) {
+					var uri = item.uri;
+					var win = window.open(uri, '_blank');
+					win.focus();
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Rename action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Edit',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_edition', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Share action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Share',
+				'initial_state': !canAdmin ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_sharing', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Delete action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Delete',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_deletion', item);
 					menu.remove();
 				}
 			});
