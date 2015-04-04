@@ -171,8 +171,7 @@ steal(
 			 * @param {passbolt.model.User} user The selected user
 			 * @return {void}
 			 */
-			'{selectedUsers} add': function (el, ev, resource) {
-				console.log("user is selected");
+			'{selectedUsers} add': function (el, ev, user) {
 				// if more than one resource selected, or no resource selected
 				if (this.options.selectedUsers.length == 0 || this.options.selectedUsers.length > 1) {
 					this.options.user = null;
