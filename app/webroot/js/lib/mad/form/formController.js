@@ -63,6 +63,17 @@ steal(
 		},
 
 		/**
+		 * Reset the form.
+		 * @return {void}
+		 */
+		'reset': function () {
+			// Reset all the form elements value.
+			for (var eltId in this.elements) {
+				this.elements[eltId].setValue(this.options.defaultValue);
+			}
+		},
+
+		/**
 		 * Load the form with the given data
 		 * @param {mixed} data The data to load the form element with
 		 * @return {void}

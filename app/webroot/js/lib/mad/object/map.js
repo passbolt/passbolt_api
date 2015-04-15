@@ -60,13 +60,18 @@ steal(
 			var returnValue = {};
 
 			getObjFieldPointer = function (object, key) {
-				var returnValue = object;
-				var split = key.split('.');
-				for (var i in split) {
+				var returnValue = object,
+					split = key.split('.');
+
+				for (var i = 0; i < split.length; i++) {
+					// Failed to find the subkey.
+					if (returnValue[split[i]] === undefined) {
+						return null;
+					}
 					returnValue = returnValue[split[i]];
 				}
 				return returnValue;
-			}
+			};
 
 			for (var key in this.map) {
 				var mapKeyElts = key.split('.'),

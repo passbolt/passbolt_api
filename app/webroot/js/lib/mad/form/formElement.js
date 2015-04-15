@@ -30,6 +30,8 @@ steal(
 			'validate': true,
 			// The element should be validated following the given function. Priority max.
 			'validateFunction': null,
+			// The default value of the component.
+			'defaultValue': null,
 			'value': null,
 			'callbacks': {
 				'changed': function (el, ev, value) {}
@@ -44,6 +46,7 @@ steal(
 			 * The value of the Form Element
 			 * @type {mixed}
 			 */
+			this.defaultValue = options.value;
 			this.value = options.value;
 			this._super(el, options);
 		},

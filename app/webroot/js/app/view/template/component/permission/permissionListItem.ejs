@@ -25,9 +25,8 @@ for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
     </div>
 
     <div class="select rights">
-        <form id="js_perm_edit_form_<%= mappedItem.id %>" class="js_perm_edit_form">
-            <input class="js_perm_edit_form_id" type="hidden" />
-            <select class="js_perm_edit_form_type permission">
+        <form id="js_share_rs_perm_<%= mappedItem.id %>" class="js_perm_edit_form">
+            <select class="js_share_rs_perm_type permission">
             </select>
         </form>
     </div>
@@ -41,13 +40,6 @@ for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
             <i class="icon close no-text"></i>
             <span><%= __('remove') %></span>
         </a>
-        <% }
-        // Otherwise, if the permission is indirect. Display a link to the inherited permission.
-        else { %>
-        <!--<a href="#" class="js_perm_goto" title="<%= __('go to parent permission') %>">-->
-            <!--<i class="icon levelup no-text"></i>-->
-            <!--<span><%= __('go to parent permission') %></span>-->
-        <!--</a>-->
         <% } %>
     </div>
 
