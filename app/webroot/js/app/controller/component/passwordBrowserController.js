@@ -247,6 +247,64 @@ steal(
 				canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
 
 
+			// Add Copy username action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy username',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var data = {
+						name : 'username',
+						data : item.username
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Copy password action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy password',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var secret = item.Secret[0].data;
+					mad.bus.trigger('passbolt.secret.decrypt', secret);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Copy url action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy URL',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var data = {
+						name : 'URL',
+						data : item.uri
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Open URL in a new tab action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Open URL in a new tab',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'cssClasses': ['separator-after'],
+				'action': function (menu) {
+					var uri = item.uri;
+					var win = window.open(uri, '_blank');
+					win.focus();
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
 			// Add Rename action.
 			var action = new mad.model.Action({
 				'id': uuid(),
@@ -263,7 +321,6 @@ steal(
 			var action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Share',
-				'cssClasses': ['separator-after'],
 				'initial_state': !canAdmin ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_resource_sharing', item);
@@ -275,34 +332,9 @@ steal(
 			var action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Delete',
-				'cssClasses': ['separator-after'],
 				'initial_state': !canUpdate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_resource_deletion', item);
-					menu.remove();
-				}
-			});
-			contextualMenu.insertItem(action);
-			// Add Copy username action.
-			var action = new mad.model.Action({
-				'id': uuid(),
-				'label': 'Copy username',
-				'initial_state': !canRead ? 'disabled' : 'ready',
-				'action': function (menu) {
-					var username = item.username;
-					mad.bus.trigger('passbolt.login.clipboard', username);
-					menu.remove();
-				}
-			});
-			contextualMenu.insertItem(action);
-			// Add Copy password action.
-			var action = new mad.model.Action({
-				'id': uuid(),
-				'label': 'Copy password',
-				'initial_state': !canRead ? 'disabled' : 'ready',
-				'action': function (menu) {
-					var secret = item.Secret[0].data;
-					mad.bus.trigger('passbolt.secret.decrypt', secret);
 					menu.remove();
 				}
 			});

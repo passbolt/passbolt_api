@@ -1,36 +1,33 @@
 steal(
 	'mad/view/component/tree.js',
-	'app/view/component/resourceDetails.js',
-	'app/controller/component/commentsController.js',
+	'app/view/component/userDetails.js',
 	'app/controller/component/sidebarSectionController.js',
-	'app/controller/component/sidebarSections/sidebarSectionTagsController.js',
 	'app/controller/component/sidebarSections/sidebarSectionDescriptionController.js',
-
-	'app/view/template/component/resourceDetails.ejs'
+	'app/view/template/component/userDetails.ejs'
 ).then(function () {
 
 		/*
-		 * @class passbolt.controller.ResourceDetailsController
+		 * @class passbolt.controller.UserDetailsController
 		 * @inherits mad.controller.component.ComponentController
 		 * @parent index
 		 *
 		 * @constructor
-		 * Creates a new Resource details controller
+		 * Creates a new User details controller
 		 *
 		 * @param {HTMLElement} element the element this instance operates on.
 		 * @param {Object} [options] option values for the controller.  These get added to
 		 * this.options and merged with defaults static variable
-		 * @return {passbolt.controller.ResourceDetailsController}
+		 * @return {passbolt.controller.UserDetailsController}
 		 */
-		mad.controller.ComponentController.extend('passbolt.controller.component.ResourceDetailsController', /** @static */ {
+		mad.controller.ComponentController.extend('passbolt.controller.component.UserDetailsController', /** @static */ {
 
 			'defaults': {
-				'label': 'Resource Details Controller',
-				'viewClass': passbolt.view.component.ResourceDetails,
+				'label': 'User Details Controller',
+				'viewClass': passbolt.view.component.UserDetails,
 				// the resource to bind the component on
 				'resource': null,
 				// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-				'selectedRs': new can.Model.List()
+				'selectedUsers': new can.Model.List()
 			}
 
 		}, /** @prototype */ {
@@ -42,50 +39,18 @@ steal(
 			'beforeRender': function () {
 				this._super();
 				// pass the new resource to the view
-				this.setViewData('resource', this.options.resource);
-				// pass the secret strength label to the view
-				var secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.resource.Secret.data);
-				this.setViewData('secretStrength', secretStrength);
-			},
-
-			/**
-			 * Called right after the start function
-			 * @return {void}
-			 * @see {mad.controller.ComponentController}
-			 */
-			'afterStart': function () {
-				// Instantiate the description controller for the current resource.
-				var descriptionController = new passbolt.controller.component.sidebarSection.SidebarSectionDescriptionController($('#js_rs_details_description', this.element), {
-					'resource': this.options.resource
-				});
-				descriptionController.start();
-
-				// Instantiate the comments controller for the current resource.
-				var commentsController = new passbolt.controller.component.CommentsController($('#js_rs_details_comments', this.element), {
-					'resource': this.options.resource,
-					'foreignModel': 'Resource',
-					'foreignId': this.options.resource.id
-				});
-				commentsController.start();
-
-				//// Instantiate the item tags controller for the current resource.
-				//var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
-				//	'instance': this.options.resource,
-				//	'foreignModel': 'Resource',
-				//	'foreignId': this.options.resource.id
-				//});
-				//sidebarTagsController.start();
+				this.setViewData('user', this.options.user);
 			},
 
 			/**
 			 * Load details of a resource
-			 * @param {passbolt.model.Resource} resource The resource to load
+			 * @param {passbolt.model.User} user The user to load
 			 * @return {void}
 			 */
-			'load': function (resource) {
+			'load': function (user) {
 				// push the new resource in the options to be able to listen the resource
 				// change in the function name
-				this.options.resource = resource;
+				this.options.user = user;
 				// If the component has not been already started
 				if (this.state.is(null)) {
 					this.start();
@@ -134,17 +99,24 @@ steal(
 				this._super(go);
 			},
 
+			/* ************************************************************** */
+			/* LISTEN TO THE VIEW EVENTS */
+			/* ************************************************************** */
+
 			/**
-			 * A password has been clicked.
-			 * @param {HTMLElement} el The element the event occured on
-			 * @param {HTMLEvent} ev The event which occured
+			 * Listen when a user clicks on copy public key.
 			 * @return {void}
 			 */
-			' password_clicked': function (el, ev) {
+			' request_copy_publickey': function(el, ev) {
 				// Get secret out of Resource object.
-				var secret = this.options.selectedRs[0].Secret[0].data;
+				var gpgKey = this.options.selectedUsers[0].Gpgkey.key;
+				// Build data.
+				var data = {
+					name : 'Public key',
+					data : gpgKey
+				};
 				// Request decryption. (delegated to plugin).
-				mad.bus.trigger('passbolt.secret.decrypt', secret);
+				mad.bus.trigger('passbolt.clipboard', data);
 			},
 
 			/* ************************************************************** */
@@ -152,11 +124,11 @@ steal(
 			/* ************************************************************** */
 
 			/**
-			 * Observe when an resource is updated
-			 * @param {passbolt.model.Resource} resource The updated resource
+			 * Observe when a user is updated
+			 * @param {passbolt.model.User} user The updated user
 			 * @return {void}
 			 */
-			'{resource} updated': function (resource) {
+			'{user} updated': function (user) {
 				// The reference of the resource does not change, refresh the component
 				if(!this.isDisabled()) {
 					this.refresh();
@@ -169,7 +141,7 @@ steal(
 
 			/**
 			 * Observe when the user desire to hide the sidebar
-			 * @param {passbolt.model.Resource} resource The updated resource
+			 * @param {passbolt.model.User} user The updated user
 			 * @return {void}
 			 */
 			'{mad.bus} workspace_showSidebar': function(el, ev, show) {
@@ -179,7 +151,7 @@ steal(
 					} else {
 						this.setState('ready');
 						// and if one resource has been selected
-						if (this.options.selectedRs.length == 1) {
+						if (this.options.selectedUsers.length == 1) {
 							this.refresh();
 						}
 					}
@@ -196,13 +168,14 @@ steal(
 			 * Observe when a resource is selected
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured
-			 * @param {passbolt.model.Resource} resource The selected resource
+			 * @param {passbolt.model.User} user The selected user
 			 * @return {void}
 			 */
-			'{selectedRs} add': function (el, ev, resource) {
+			'{selectedUsers} add': function (el, ev, resource) {
+				console.log("user is selected");
 				// if more than one resource selected, or no resource selected
-				if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
-					this.options.resource = null;
+				if (this.options.selectedUsers.length == 0 || this.options.selectedUsers.length > 1) {
+					this.options.user = null;
 					if(!this.isDisabled()) {
 						this.setState('hidden');
 					}
@@ -210,43 +183,41 @@ steal(
 				// else if only 1 resource selected show the details
 				} else {
 					// load the only one resource
-					this.options.resource = this.options.selectedRs[0];
+					this.options.user = this.options.selectedUsers[0];
 					if(!this.isDisabled()) {
-						this.load(this.options.resource);
+						this.load(this.options.user);
 						this.setState('ready');
 					}
 				}
 			},
 
 			/**
-			 * Observe when a resource is unselected
+			 * Observe when a user is unselected
 			 * @param {HTMLElement} el The element the event occured on
 			 * @param {HTMLEvent} ev The event which occured
-			 * @param {passbolt.model.Resource} resource The unselected resource
+			 * @param {passbolt.model.User} user The unselected user
 			 * @return {void}
 			 */
-			'{selectedRs} remove': function (el, ev, resource) {
-				// if more than one resource selected, or no resource selected
-				if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
-					this.options.resource = null;
+			'{selectedUsers} remove': function (el, ev, user) {
+				// if more than one user selected, or no user selected
+				if (this.options.selectedUsers.length == 0 || this.options.selectedUsers.length > 1) {
+					this.options.user = null;
 					// if the component is not disabled, hide it
 					// and the component has already been started
 					if(!this.isDisabled() && !this.state.is(null)) {
 						this.setState('hidden');
 					}
 
-					// else if only 1 resource selected show the details
+					// else if only 1 user selected show the details
 				} else {
-					// load the only one resource
-					this.options.resource = this.options.selectedRs[0];
-					// if the component is not disabled, load the resource and display the component
+					// load the only one user
+					this.options.user = this.options.selectedUsers[0];
+					// if the component is not disabled, load the user and display the component
 					if(!this.isDisabled()) {
-						this.load(this.options.resource);
+						this.load(this.options.user);
 						this.setState('ready');
 					}
 				}
 			}
-
 		});
-
 	});

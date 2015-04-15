@@ -3,10 +3,10 @@ steal(
 ).then(function () {
 
 	/*
-	 * @class passbolt.view.component.ResourceDetails
+	 * @class passbolt.view.component.UserDetails
 	 * @inherits mad.view.View
 	 */
-	mad.view.View.extend('passbolt.view.component.ResourceDetails', /** @static */ {
+	mad.view.View.extend('passbolt.view.component.UserDetails', /** @static */ {
 
 	}, /** @prototype */ {
 
@@ -26,25 +26,15 @@ steal(
 		},
 
 		/**
-		 * Observe when the user clicks on any h2 element, rolldown the following p tag
+		 * Observe when the user clicks on the copy key button.
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'h2 click': function (el, ev) {
-			el.next('p').toggle();
-		},
-
-		/**
-		 * Observe when the user clicks on any h2 element, rolldown the following p tag
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'li.password a.copy-clipboard click': function (el, ev) {
+		'a.copy-public-key click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
-			this.element.trigger('password_clicked', [ev]);
+			this.element.trigger('request_copy_publickey', [ev]);
 		}
 	});
 });

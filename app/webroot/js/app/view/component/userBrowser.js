@@ -45,6 +45,30 @@ steal(
 				//	// indicate we want our mouse on the top-right of it
 				//	drag.representative($draggedUser, 0, 0);
 				//});
+			},
+
+			/**
+			 * Right click has been detected. (contextual menu).
+			 * @event item_right_selected
+			 * @param {HTMLElement} el The element the event occured on
+			 * @param {HTMLEvent} ev The event which occured
+			 * @return {bool}
+			 */
+			'tbody tr contextmenu': function (el, ev) {
+				ev.stopPropagation();
+				ev.preventDefault();
+
+				if (ev.which == 3) {
+					var data = null,
+						tr = el;
+					if (this.getController().getItemClass()) {
+						data = tr.data(this.getController().getItemClass().fullName);
+					} else {
+						data = tr[0].id;
+					}
+					this.element.trigger('item_right_selected', [data, ev]);
+				}
+				return false;
 			}
 		});
 	});
