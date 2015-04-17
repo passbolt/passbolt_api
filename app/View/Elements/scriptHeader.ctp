@@ -27,6 +27,10 @@ var cakephpConfig = {
 	user : {
 		id: "<?php echo User::get('id') ?>"
 	},
+	roles : <?php
+			$roles = Hash::combine($roles, '{n}.Role.name', '{n}.Role.id');
+			echo json_encode($roles);
+	?>,
 	image_storage : {
 		public_path: "<?php echo Configure::read('ImageStorage.publicPath') ?>"
 	}
