@@ -100,6 +100,14 @@ class AppController extends Controller {
 				$this->layout = 'json';
 				$this->view = '/Json/default';
 			} else {
+				// Get roles, to load in the layout js variables.
+				// Only for admin and user.
+				$Role = Common::getModel('Role');
+				$this->set('roles', $Role->find('all', array(
+							'conditions' => array(
+								'name' => array('admin', 'user')
+							)
+						)));
 				$this->layout = 'html5';
 			}
 		}
@@ -136,6 +144,7 @@ class AppController extends Controller {
 			$this->request->query = Sanitize::clean($this->request->query);
 		}
 	}
+
 
 	/**
 	 * Authorization check main callback
