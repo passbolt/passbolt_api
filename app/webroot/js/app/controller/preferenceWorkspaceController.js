@@ -24,7 +24,8 @@ steal(
 		mad.controller.ComponentController.extend('passbolt.controller.PreferenceWorkspaceController', /** @static */ {
 			defaults: {
 				'label': 'Preference',
-				'templateUri': 'app/view/template/preferenceWorkspace.ejs'
+				'templateUri': 'app/view/template/preferenceWorkspace.ejs',
+				'currentUser' : null
 			}
 		}, /** @prototype */ {
 
@@ -51,6 +52,7 @@ steal(
 					'id': mad.Config.read('user.id'),
 					'async': false
 				}).then(function(user) {
+					self.options.currentUser = user;
 					self.profileCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileController, {
 						'id': 'js_preference_wk_profile_controller',
 						'label': 'profile',
@@ -71,6 +73,11 @@ steal(
 			 */
 			'{mad.bus} request_profile_edition': function (el, ev, user) {
 				var self = this;
+
+				// If user is not provided, or user is empty, get the current user.
+				if (user == undefined || $.isEmptyObject(user)) {
+					user = self.options.currentUser;
+				}
 
 				// get the dialog
 				var dialog = new mad.controller.component.DialogController(null, {label: __('Edit User')})

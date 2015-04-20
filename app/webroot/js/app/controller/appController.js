@@ -6,6 +6,7 @@ steal(
 	'app/controller/passwordWorkspaceController.js',
 	'app/controller/peopleWorkspaceController.js',
 	'app/controller/component/peopleWorkspaceMenuController.js',
+	'app/controller/component/preferenceWorkspaceMenuController.js',
 	// common components of the application
 	'app/controller/component/appNavigationLeftController.js',
 	'app/controller/component/appNavigationRightController.js',
@@ -117,6 +118,12 @@ steal(
 				'selectedUsers': selectedUsers,
 				'selectedGroups': selectedGroups
 			});
+
+			// Instantiate the people workspace menu component and add it to the workspaces menus container
+			this.preferenceWkMenu = this.workspacesMenusCtl.addComponent(passbolt.controller.component.PreferenceWorkspaceMenuController, {
+				'id': 'js_passbolt_preferenceWorkspaceMenu_controller',
+				'label': 'preferences'
+			});
 		},
 
 		/* ************************************************************** */
@@ -136,7 +143,7 @@ steal(
 
 			// The primary workspace is a specific case.
 			// It is only displayed for the password and people workpsaces.
-			if (workspace == 'password' || workspace == 'people') {
+			if (workspace == 'password' || workspace == 'people' || workspace == 'preference') {
 				if (primWkMenuContainer.state.is('hidden')) {
 					primWkMenuContainer.setState('ready');
 				}
