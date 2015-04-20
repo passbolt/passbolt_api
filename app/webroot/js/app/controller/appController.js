@@ -54,10 +54,13 @@ steal(
 			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_app_filter'), {});
 			this.filterCtl.start();
 
-			// Instantiate the profile controller
+			// Get logged in user.
 			passbolt.model.User.findOne({
 				'id': mad.Config.read('user.id')
 			}).then(function(user) {
+				// Set current user.
+				passbolt.model.User.setCurrent(user);
+				// Instantiate the profile controller.
 				self.profileDropDownCtl = new passbolt.controller.component.ProfileDropdownController($('#js_app_profile_dropdown'), {
 					'user': user
 				});
