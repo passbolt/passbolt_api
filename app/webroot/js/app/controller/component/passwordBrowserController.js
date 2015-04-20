@@ -402,6 +402,9 @@ steal(
 			
 			// if the resource has not been removed from the grid, update it
 			this._super(resource);
+			if (this.options.selectedRs.length > 0) {
+				this.select(this.options.selectedRs[0]);
+			}
 		},
 
 		/**

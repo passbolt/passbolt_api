@@ -217,6 +217,18 @@ steal(
             this._super(user, refUserId, position);
         },
 
+		/**
+		 * Refresh an item in the grid.
+		 * We override this function, so we can keep the selected state after the refresh.
+		 * @param item
+		 */
+		'refreshItem': function(item) {
+			this._super(item);
+			if (this.options.selectedUsers.length > 0) {
+				this.select(this.options.selectedUsers[0]);
+			}
+		},
+
         /**
          * Remove an item to the grid
          * @param {mad.model.Model} item The item to remove
