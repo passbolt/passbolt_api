@@ -18,7 +18,7 @@ steal(
 		/* ************************************************************** */
 
 		/**
-		 * Observe when the user want to reset the filter
+		 * Observe when the user want to delete a permission.
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
@@ -30,6 +30,22 @@ steal(
 			var li = el.parents('li');
 			var permission = li.data('passbolt.model.Permission');
 			this.element.trigger('request_permission_delete', [permission]);
+		},
+
+		/**
+		 * Observe when the user want to edit a permission type.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'.js_share_rs_perm_type changed': function(el, ev, data) {
+			ev.stopPropagation();
+			ev.preventDefault();
+
+			var li = el.parents('li'),
+				permission = li.data('passbolt.model.Permission');
+
+			this.element.trigger('request_permission_edit', [permission, data.value]);
 		},
 
 		/**

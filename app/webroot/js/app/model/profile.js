@@ -50,7 +50,7 @@ steal(
 				if (typeof this.Avatar != 'undefined' && this.Avatar.id) {
 					return this.Avatar.imagePath(version);
 				} else {
-					return "img/user.png";
+					return "img/avatar/user.png";
 				}
 			},
 

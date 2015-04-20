@@ -10,14 +10,13 @@ steal(
 
 		'defaults': {
 			'timeout': 2500,
-			'timeoutBeforeReset': null,
-			'persistent': false
+			'notifications': []
 		}
 
 	}, /** @prototype */ {
 
 		// constructor like
-		'init': function(elt, opts) {
+		'init': function(elt, opts, notifications) {
 			var timeoutConf = mad.Config.read('notification.timeout');
 			if (typeof timeoutConf != 'undefined') {
 				this.options.timeout = timeoutConf;
@@ -26,25 +25,31 @@ steal(
 		},
 
 		/**
+		 * Load a new notification
+		 */
+		'load': function(notification) {
+			this.notifications.push(notification);
+		},
+
+		/**
 		 * Override mad.view.View.render() function.
 		 */
 		'render': function () {
 			var self = this;
 
-			// A notification is already shown, destroy the current timeout listener
-			if (this.options.timeoutBeforeReset) {
-				if(!this.options.persistent) {
-					clearTimeout(this.options.timeoutBeforeReset);
-				}
-				self.getController().setState('hidden');
-			}
+			// Set the view data with the next notification in the queue.
+			var notifications = this.getController().options.notifications,
+				notification = notifications.shift();
+			this.getController().setViewData(notification);
 
-			if(!this.options.persistent) {
-				// hide the notificator after timeout value
-				self.options.timeoutBeforeReset = setTimeout(function () {
+			// Hide the notification after a defined timeout.
+			setTimeout(function () {
+				if (notifications.length) {
+					self.getController().refresh();
+				} else {
 					self.getController().setState('hidden');
-				}, self.options.timeout);
-			}
+				}
+			}, self.options.timeout);
 
 			return this._super();
 		}

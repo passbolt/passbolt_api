@@ -3,11 +3,16 @@
     </ul>
 </div>
 
+<div id="js_permissions_changes" style="display:none; background-color:yellow;">
+    <span>You need to save to apply the changes. View changes.</span>
+</div>
+
 <div class="form-content permission-add">
     <form id="js_permission_add_form">
     </form>
 </div>
 
 <div class="submit-wrapper clearfix">
+    <input id="js_rs_share_save" type="submit" class="button primary" value="<%= __('save') %>" />
     <a href="#" class="js-dialog-cancel cancel">cancel</a>
 </div>
