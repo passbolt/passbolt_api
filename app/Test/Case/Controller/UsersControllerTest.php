@@ -22,6 +22,8 @@ class UsersControllerTest extends ControllerTestCase {
 			'app.groups_user',
 			'app.group',
 			'app.user',
+			'app.gpgkey',
+			'app.email_queue',
 			'app.profile',
 			'app.file_storage',
 			'app.role',
@@ -424,6 +426,25 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 	}
 
+	public function testUpdateUsernameNotValid() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$id = $kk['User']['id'];
+		$data['User']['username'] = 'user@34@passbolt.com';
+
+		$this->expectException('HttpException', 'Could not validate User');
+		$resRaw = $this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => $data,
+				'method' => 'put',
+				'return' => 'contents'
+			)
+		);
+		$result = json_decode($resRaw, true);
+	}
+
 	public function testUpdateNoDataProvided() {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
@@ -452,17 +473,15 @@ class UsersControllerTest extends ControllerTestCase {
 		$id = $kk['User']['id'];
 
 		$data['User']['username'] = 'user-modified@passbolt.com';
-		$result = json_decode(
-			$this->testAction(
-				"/users/$id.json",
-				array(
-					'data'   => $data,
-					'method' => 'put',
-					'return' => 'contents'
-				)
-			),
-			true
+		$resRaw = $this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => $data,
+				'method' => 'put',
+				'return' => 'contents'
+			)
 		);
+		$result = json_decode($resRaw, true);
 		$this->assertEquals(
 			Message::SUCCESS,
 			$result['header']['status'],
@@ -685,7 +704,11 @@ class UsersControllerTest extends ControllerTestCase {
 		$users = $this->User->find('all', $options);
 		$kk = reset($users);
 
-		$this->assertEmpty($kk['Profile']['Avatar'], "The user " . $kk['User']['username'] . " should not have an avatar");
+		// Get empty image url.
+		$defaults = Configure::read('Media.imageDefaults.ProfileAvatar');
+		$diff = Hash::diff($kk['Profile']['Avatar']['url'], $defaults);
+
+		$this->assertEmpty($diff, "The user " . $kk['User']['username'] . " should have the default avatar");
 
 		$_FILES['file-0'] = array(
 			'tmp_name' => APP . 'Test' . DS . 'Data' . DS . 'img' . DS . 'user.png'
