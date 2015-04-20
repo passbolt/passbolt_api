@@ -259,6 +259,53 @@ steal(
 		},
 
 		/**
+		 * Read and process server errors.
+		 * @param errors
+		 */
+		'showErrors':function(errors) {
+			console.log(errors);
+			for (var i in this.elements) {
+				var element = this.elements[i];
+				//console.log(element);
+				var eltModelRef = element.getModelReference();
+				if (eltModelRef) {
+					var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
+						// model name
+						modelFullName = fieldAttrs[fieldAttrs.length-2].name,
+						// the attribute name
+						attrName = fieldAttrs[fieldAttrs.length-1].name,
+						// model name
+						modelName = modelFullName.substr(modelFullName.lastIndexOf('.') + 1),
+						// element id
+						eltId = element.getId();
+
+					for (var j in errors) {
+						if (errors[j][modelName] != undefined && errors[j][modelName][attrName] != undefined) {
+							var error = errors[j][modelName][attrName][0];
+
+							var eltStates = ['error'];
+							if (element.state.is('hidden')) {
+								eltStates.push('hidden');
+							}
+							// switch the state of the element to error
+							element.setState(eltStates);
+							// set the feedback message, and switch the feedback element state to error
+							if (this.feedbackElements[eltId]) {
+								this.feedbackElements[eltId]
+									.setMessage(error)
+									.setState('error');
+							}
+							// Update the view.
+							this.view.setElementState(this.elements[eltId], 'error');
+						}
+					}
+
+				}
+			}
+
+		},
+
+		/**
 		 * validate an element functions of its associated model. If the element is invalid :
 		 * <ul>
 		 *	<li>switch the state of the element to error</li>

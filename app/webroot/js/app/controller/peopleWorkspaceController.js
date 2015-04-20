@@ -259,8 +259,16 @@ steal(
 				action: 'edit',
 				callbacks : {
 					submit: function (data) {
-						user.attr(data['passbolt.model.User']).save();
-						dialog.remove();
+						user.attr(data['passbolt.model.User']).save(
+							// Success.
+							function() {
+								dialog.remove();
+							},
+							// Error.
+							function(v) {
+								form.showErrors(JSON.parse(v.responseText)['body']);
+							}
+						);
 					}
 				}
 			});
