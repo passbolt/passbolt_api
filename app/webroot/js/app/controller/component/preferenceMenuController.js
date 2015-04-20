@@ -32,14 +32,14 @@ steal(
 					'action': function () {
 
 					}
-				}),
-				new mad.model.Action({
-					'id': uuid(),
-					'label': __('Manage your keys'),
-					'action': function () {
-
-					}
 				})
+				//new mad.model.Action({
+				//	'id': uuid(),
+				//	'label': __('Manage your keys'),
+				//	'action': function () {
+				//
+				//	}
+				//})
 			];
 			this.load(menuItems);
 		}
