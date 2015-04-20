@@ -17,7 +17,15 @@ if (!class_exists('CakeSession')) {
 
 class UserTest extends CakeTestCase {
 
-	public $fixtures = array('app.group', 'app.groups_user', 'app.user', 'app.profile', 'app.file_storage', 'app.role');
+	public $fixtures = array(
+		'app.group',
+		'app.groups_user',
+		'app.user',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgkey',
+		'app.role',
+	);
 
 	public $autoFixtures = true;
 
