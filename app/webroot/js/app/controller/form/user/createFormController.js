@@ -42,7 +42,6 @@ steal(
 					 modelReference: 'passbolt.model.User.active'
 					 }).start()
 				 );
-				activeField.setValue("test");
 
 				// Add user first name field
 				this.addElement(
@@ -78,15 +77,13 @@ steal(
 				// Hide everything that is not admin.
 				$('input[type=checkbox]', $('#js_field_role_id')).not("[value='" + cakephpConfig.roles.admin + "']").hide().next('span').hide();
 
-				if (this.options.action == 'create') {
-					// Add resource username field
-					this.addElement(
-						new mad.form.element.TextboxController($('#js_field_username'), {
-							modelReference: 'passbolt.model.User.username'
-						}).start(),
-						new mad.form.FeedbackController($('#js_field_username_feedback'), {}).start()
-					);
-				}
+				// Add resource username field
+				this.addElement(
+					new mad.form.element.TextboxController($('#js_field_username'), {
+						modelReference: 'passbolt.model.User.username'
+					}).start(),
+					new mad.form.FeedbackController($('#js_field_username_feedback'), {}).start()
+				);
 
 				// Add secret data field
 				// Only while creating a new user
@@ -106,7 +103,10 @@ steal(
 					this.options.currentPasswordField = new mad.form.element.TextboxController($('#js_field_current_password'), {
 						modelReference: 'passbolt.model.User.current_password'
 					}).start();
-					this.addElement(this.options.currentPasswordField);
+					this.addElement(
+						this.options.currentPasswordField,
+						new mad.form.FeedbackController($('#js_field_current_password_feedback'), {}).start()
+					);
 					// Button to see clear current password.
 					this.options.currentPasswordClear = this.addElement(
 						new mad.form.element.TextboxController($('#js_field_current_password_clear'), {
