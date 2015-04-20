@@ -24,8 +24,7 @@ steal(
 		mad.controller.ComponentController.extend('passbolt.controller.PreferenceWorkspaceController', /** @static */ {
 			defaults: {
 				'label': 'Preference',
-				'templateUri': 'app/view/template/preferenceWorkspace.ejs',
-				'currentUser' : null
+				'templateUri': 'app/view/template/preferenceWorkspace.ejs'
 			}
 		}, /** @prototype */ {
 
@@ -47,17 +46,10 @@ steal(
 				});
 				this.preferenceTabsCtl.start();
 
-				// Instantiate the profile component
-				passbolt.model.User.findOne({
-					'id': mad.Config.read('user.id'),
-					'async': false
-				}).then(function(user) {
-					self.options.currentUser = user;
-					self.profileCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileController, {
-						'id': 'js_preference_wk_profile_controller',
-						'label': 'profile',
-						'user': user
-					});
+				self.profileCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileController, {
+					'id': 'js_preference_wk_profile_controller',
+					'label': 'profile',
+					'user': passbolt.model.User.getCurrent()
 				});
 			},
 
@@ -71,13 +63,10 @@ steal(
 			 * @param {HTMLEvent} ev The event which occured
 			 * @return {void}
 			 */
-			'{mad.bus} request_profile_edition': function (el, ev, user) {
+			'{mad.bus} request_profile_edition': function (el, ev) {
 				var self = this;
 
-				// If user is not provided, or user is empty, get the current user.
-				if (user == undefined || $.isEmptyObject(user)) {
-					user = self.options.currentUser;
-				}
+				var user = passbolt.model.User.getCurrent();
 
 				// get the dialog
 				var dialog = new mad.controller.component.DialogController(null, {label: __('Edit User')})
