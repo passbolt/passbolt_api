@@ -1,41 +1,50 @@
 <div class="profile">
-	<h3><%= __('Summary') %></h3>
+	<h3><%= __('Profile') %></h3>
 
 	<div class="section detailed-information">
-        <h4>
-            <%= __('Details') %>
-            <a href="#" class="section-action edit-action">
-                <i class="icon edit no-text"></i>
-                <span>edit</span>
-            </a>
-        </h4>
+
+		<div class="avatar" style="float:left;">
+			<div class="value">
+				<img src="<%= user.Profile.avatarPath('medium'); %>" width="200" height="200" style="width: 200px;" />
+			</div>
+			<div class="edit">
+				<a class="edit-avatar-action" href="#" title="<%= __('Change Avatar') %>">
+					<span>Click here to upload a new picture.</span>
+				</a>
+			</div>
+		</div>
         <ul>
-            <li class="avatar">
-                <span class="label"><%= __('Avatar') %></span>
-                <div class="value">
-                    <a class="edit-avatar-action" href="#" title="<%= __('Change Avatar') %>">
-                        <img src="<%= user.Profile.avatarPath('small'); %>" />
-                    </a>
-                </div>
-            </li>
+			<li>
+				<span class="label"><%= __('Name') %></span>
+				<span class="value"><%= user.Profile.first_name %> <%= user.Profile.last_name %></span>
+			</li>
             <li>
-                <span class="label"><%= __('Username') %></span>
+                <span class="label"><%= __('Email') %></span>
                 <span class="value"><%= user.username %></span>
             </li>
-            <li>
-                <span class="label"><%= __('Full name') %></span>
-                <span class="value"><%= user.Profile.first_name %> <%= user.Profile.last_name %></span>
-            </li>
-            <li>
-                <span class="label"><%= __('Password') %></span>
-                <span class="value"><a class="edit-password-action" href="#"><%= __('Change Password') %></a></span>
-            </li>
-            <li>
-                <span class="label"><%= __('Groups') %></span>
-                <div class="value">
-                    <ul id="js_wk_preference_profile_groups"></ul>
-                </div>
-            </li>
+			<li>
+				<span class="label"><%= __('Role') %></span>
+				<span class="value"><%= user.Role.name %></span>
+			</li>
+			<li>
+				<span class="label"><%= __('Modified') %></span>
+				<span class="value"><%= moment(user.Profile.modified).fromNow(); %></span>
+			</li>
+			<li>
+				<span class="label"><%= __('Created') %></span>
+				<span class="value"><%= moment(user.Profile.created).fromNow(); %></span>
+			</li>
+			<li>
+				<span class="label"><%= __('Public key') %></span>
+				<span class="value"><%= user.Gpgkey.key_id %></span>
+				<p><em>Note: Sorry it is not possible to change your key at the moment. <a href="#">learn more ›</a></em></p>
+			</li>
+            <!--<li>-->
+                <!--<span class="label"><%= __('Groups') %></span>-->
+                <!--<div class="value">-->
+                    <!--<ul id="js_wk_preference_profile_groups"></ul>-->
+                <!--</div>-->
+            <!--</li>-->
         </ul>
 	</div>
 </div>
