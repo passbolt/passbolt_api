@@ -35,6 +35,9 @@ steal(
 			this._super();
 			var self = this;
 
+			// Set current user.
+			self.options.user = passbolt.model.User.getCurrent();
+
 			// Add my profile action
 			var action = new mad.model.Action({
 				'id': uuid(),
