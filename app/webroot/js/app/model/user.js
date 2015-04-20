@@ -27,6 +27,7 @@ steal(
 			'id': 'string',
 			'username': 'string',
 			'email': 'string',
+			'role_id': 'string',
 			'active': 'string',
 			'Profile': 'passbolt.model.Profile.model',
 			'GroupUser': 'passbolt.model.GroupUser.models'
