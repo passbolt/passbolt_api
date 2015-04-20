@@ -108,7 +108,15 @@ class User extends AppModel {
 					'rule' => array('between', 8, 20),
 					'message' => __('Password should be between %s and %s characters long'),
 				)
-			)
+			),
+			'current_password' => array(
+				'validPassword' => array(
+					'rule' => array('validPassword', true),
+					'shared' => false,
+					'required' => false,
+					'message' => __('Password provided is not valid'),
+				)
+			),
 		);
 		switch ($case) {
 			case 'editPassword':
@@ -123,6 +131,28 @@ class User extends AppModel {
 		}
 
 		return $rules;
+	}
+
+
+	/**
+	 * Check if the password is valid
+	 * @param $check
+	 * @return bool
+	 */
+	public function validPassword($check) {
+		if ($check['current_password'] == null) {
+			return false;
+		} else {
+			$userId = $this->data['User']['id'];
+			if (!$userId) {
+				return false;
+			}
+			$currentUserPass = $this->field('password', array('id' => $userId));
+			$hashedPass = Security::hash($check['current_password'], 'blowfish', $currentUserPass);
+			// Check that current password is valid.
+			$valid = $currentUserPass == $hashedPass;
+			return $valid;
+		}
 	}
 
 /**
@@ -477,7 +507,7 @@ class User extends AppModel {
 						'Role' => array(
 							'fields' => array(
 								'Role.id',
-								'Role.name'
+								'Role.name',
 							)
 						)
 					)
@@ -489,23 +519,29 @@ class User extends AppModel {
 						'username',
 						'role_id',
 						'password',
-						'active'
+						'active',
 					)
 				);
 				break;
 			case 'User::edit':
 				$fields = array(
 					'fields' => array(
-						'username',
-						'role_id',
-						'active'
+						'User' => array(
+							'role_id',
+							'password',
+							'active',
+						),
+						'Profile' => array(
+							'first_name',
+							'last_name',
+						)
 					)
 				);
 				break;
 			case 'User::editPassword':
 				$fields = array(
 					'fields' => array(
-						'password'
+						'password',
 					)
 				);
 				break;
