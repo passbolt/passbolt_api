@@ -267,26 +267,48 @@ class UsersController extends AppController {
 			return $this->Message->error(__('No data were provided'));
 		}
 
-		// set the data for validation and save
+		// Set the data for validation and save.
 		$userData = $this->request->data;
+		// Begin transaction.
 		$this->User->begin();
 
+		// Save user.
 		if (isset($userData['User'])) {
-			$this->User->id = $id;
-
-			$this->User->set($userData);
-			if (!$this->User->validates()) {
-				return $this->Message->error(__('Could not validate User'));
+			// Manage empty password.
+			// Is the current password empty ?
+			$currentPasswordEmpty = isset($userData['User']['current_password'])
+				&& empty($userData['User']['current_password']);
+			// If no current password is provided, then we remove password and current_password field from the data.
+			if ($currentPasswordEmpty) {
+				unset($userData['User']['current_password']);
+				unset($userData['User']['password']);
 			}
-
+			// Validates data.
+			$this->User->id = $id;
+			$this->User->set($userData);
 			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
+			if (!$this->User->validates(array('fieldList' => array($fields['fields'])))) {
+				$invalidFields = $this->User->invalidFields();
+				// Format invalid fields.
+				// Add 'User' index in the array.
+				$finalInvalidFields = array();
+				$i = 0;
+				foreach($invalidFields as $key => $if) {
+					$finalInvalidFields[$i++]['User'][$key] = $if;
+				}
+				// Return error message, with list of invalid fields.
+				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
+			}
+			// Save data.
 			$save = $this->User->save($userData, false, $fields['fields']);
+			// Didn't save, we rollback and return an error.
 			if (!$save) {
 				$this->User->rollback();
 				return $this->Message->error(__('The user could not be updated'));
 			}
 		}
 
+		// Save profile for user.
 		if (isset($userData['Profile'])) {
 			$profile = $this->User->Profile->findByUserId($id);
 			if(!$profile) {
@@ -297,13 +319,14 @@ class UsersController extends AppController {
 			// Reformat date of birth properly to pass validation
 			$profile['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profile['Profile']['date_of_birth']));
 
+			$fields = $this->User->Profile->getFindFields('User::edit', User::get('Role.name'));
+			$fields = Hash::expand($fields);
 			$this->User->Profile->set($profile);
-			if (!$this->User->Profile->validates()) {
+			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not validate Profile'));
 			}
 
-			$fields = $this->User->Profile->getFindFields('User::edit', User::get('Role.name'));
 			$save = $this->User->Profile->save($profile, false, $fields['fields']);
 			if (!$save) {
 				$this->User->rollback();
