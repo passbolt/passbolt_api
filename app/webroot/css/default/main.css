@@ -2726,6 +2726,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .dialog .input-password-wrapper {
   overflow: hidden;
+  clear: both;
 }
 .dialog .password-complexity .complexity-text {
   float: right;
