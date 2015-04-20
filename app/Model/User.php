@@ -452,6 +452,8 @@ class User extends AppModel {
 								'Profile.id',
 								'Profile.first_name',
 								'Profile.last_name',
+								'Profile.created',
+								'Profile.modified'
 							),
 							'Avatar' => array(
 								'fields' => array(
