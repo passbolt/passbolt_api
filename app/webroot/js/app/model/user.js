@@ -19,10 +19,21 @@ steal(
 	 */
 	mad.model.Model('passbolt.model.User', /** @static */ {
 
+		/**
+		 * Stores the current user. (the one logged in).
+		 */
+		current : null,
+
+		/**
+		 * Validation rules.
+		 */
 		'validateRules': {
 			'username': ['email', 'required']
 		},
 
+		/**
+		 * Attributes.
+		 */
 		attributes: {
 			'id': 'string',
 			'username': 'string',
@@ -31,6 +42,14 @@ steal(
 			'active': 'string',
 			'Profile': 'passbolt.model.Profile.model',
 			'GroupUser': 'passbolt.model.GroupUser.models'
+		},
+
+		'getCurrent' : function() {
+			return passbolt.model.User.current;
+		},
+
+		'setCurrent' : function(user) {
+			passbolt.model.User.current = user;
 		},
 
 		'create' : function (attrs, success, error) {
