@@ -53,7 +53,7 @@ steal(
 		},
 
 		PERMISSION_TYPES: {
-			//0: __('deny'),
+			0: __('deny'),
 			1: __('read'),
 			3: __('create'),
 			7: __('update'),

@@ -49,7 +49,7 @@ Check if it works!
 How to edit the LESS/CSS files?
 =========
 
-Install grunt
+Install grunt and grunt
 ```
 	npm install -g grunt-cli
 ```
@@ -57,11 +57,18 @@ Install the needed modules defined in the grunt config
 ```
 	npm install
 ```
+Install the styleguide
+```
+	bower install
+	grunt styleguide-deploy
+```
 Make sure Grunt watch for less changes and compile them into CSS
 ```
 	grunt watch
 ```
 Edit one LESS file to see if it works!
+Make sure that if you need to make change the styleguide to request changes upstream.
+
 
 Prepare the production release
 =========

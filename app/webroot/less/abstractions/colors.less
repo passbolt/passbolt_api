@@ -1,0 +1,96 @@
+/* palette */
+@white  : #FFF;
+@black	: #333;
+@blacker: #000;
+@red	: #d40101;
+@blue	: #2894df;
+@grey	: #DDD;
+@grey-lighter : #EEE;
+@grey-lightest: #F3F3F3;
+@grey-darker  : #888;
+
+@blue-light : #2a9ceb;
+@blue-twitter: #4099FF;
+@blue-facebook: #3B5998;
+
+/* borders */
+@border-default : @grey;
+@border-2 : #CCC;
+@border-3 : #BBB;
+@border-focus : @blue;
+
+/* font */
+@font-default: @black;
+@font-light: @grey-darker;
+@font-focus: @blue;
+
+/* background */
+@background-default: @white;
+@background-dark: @black;
+@background-light: @grey;
+@background-lighter: @grey-lighter;
+@background-lightest: #F3F3F3;
+
+.background-gradient() {
+	background:@background-lighter;
+	background-image: -moz-linear-gradient(top, @background-lightest, @background-lighter);
+	background-image: -ms-linear-gradient(top, @background-lightest, @background-lighter);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(background-lightest), to(@background-lighter));
+	background-image: -webkit-linear-gradient(top, @background-lightest, @background-lighter);
+	background-image: -o-linear-gradient(top, @background-lightest, @background-lighter);
+	background-image: linear-gradient(top, @background-lightest, @background-lighter);
+}
+
+/* shadows */
+.box-shadow() {
+	-moz-box-shadow: 0px 0px 10px 0px @grey;
+	-webkit-box-shadow: 0px 0px 10px 0px @grey;
+	box-shadow: 0px 0px 10px 0px @grey;
+}
+
+/* body */
+body {
+	color: @black;
+}
+
+/* links */
+a:link, a:visited {
+	color: @black;
+}
+a:hover {
+	color:@blue;
+}
+a:active, a:focus {
+	outline: 0;
+	color:@blue;
+	border:0;
+}
+
+/* colors for messages */
+.message.error {
+	color: @red;
+	//background-color: #FFBABA;
+}
+.message.success {
+	color:#4F8A10;
+	//background-color:#DFF2BF;
+}
+.message.warning {
+	color:#9F6000;
+	//background-color:#FEEFB3;
+}
+.message.info,
+.message.information,
+.message.notice {
+	color:#00529B;
+	//background-color:#BDE5F8;
+}
+
+/* scrollbar */
+@scrollbar-background : @white;
+@scrollbar : @grey-darker;
+
+/* todos */
+.todo {
+	background:#ffffcc !important;
+}

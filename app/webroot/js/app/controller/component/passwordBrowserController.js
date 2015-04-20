@@ -43,7 +43,7 @@ steal(
 
 		// Constructor like
 		'init': function (el, options) {
-			
+
 			// The map to use to make our grid working with our resource model
 			options.map = new mad.object.Map({
 				'id': 'id',
@@ -52,14 +52,12 @@ steal(
 				'secret': 'Secret',
 				'uri': 'uri',
 				'modified': 'modified',
-				// Hidden for PASSBOLT-732
-				//'expires': 'expiry_date',
 				'owner': 'Creator.username',
 				'copyLogin': 'id',
 				'copySecret': 'id',
 				'Category': 'Category'
 			});
-			
+
 			// the columns model
 			options.columnModel = [{
 				'name': 'multipleSelect',
@@ -215,7 +213,7 @@ steal(
 					copyPwd.start();
 				}
 			}];
-			
+
 			this._super(el, options);
 		},
 
