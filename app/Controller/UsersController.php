@@ -179,12 +179,18 @@ class UsersController extends AppController {
 		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
 			$userData['User']['role_id'] = $this->User->Role->field('Role.id', array('name' => Role::USER));
 		}
+		// Assign a temporary and random password.
+		$userData['User']['password'] = Common::randomString(15);
+		// User is not activated by default.
+		$userData['User']['active'] = FALSE;
 		// Validates user information
 		$this->User->set($userData);
 		$fields = $this->User->getFindFields('User::save', User::get('Role.name'));
 		// check if the data is valid
 		if (!$this->User->validates()) {
-			return $this->Message->error(__('Could not validate user data'));
+			$invalidFields = $this->User->invalidFields();
+			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
+			return $this->Message->error(__('Could not validate user data'), array('body' => $finalInvalidFields));
 		}
 
 		$this->User->begin();
@@ -199,7 +205,10 @@ class UsersController extends AppController {
 			$userData['Profile']['user_id'] = $this->User->id;
 			$this->User->Profile->set($userData);
 			if (!$this->User->Profile->validates()) {
-				return $this->Message->error(__('Could not validate profile data'));
+				$this->User->rollback();
+				$invalidFields = $this->User->Profile->invalidFields();
+				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
+				return $this->Message->error(__('Could not validate profile'), array('body' => $finalInvalidFields));
 			}
 
 			$fields = $this->User->Profile->getFindFields('User::save', User::get('Role.name'));
@@ -212,15 +221,26 @@ class UsersController extends AppController {
 		// Everything fine, we commit.
 		$this->User->commit();
 
+		// Create token for user.
+		$token = $this->User->AuthenticationToken->createToken($this->User->id);
+		if (!$token) {
+			$this->User->rollback();
+			return $this->Message->error(__('The account token could not be created'));
+		}
 		// Send notification email.
 		$this->EmailNotificator->accountCreationNotification(
 			$this->User->id,
 			array(
+				'token' => $token['AuthenticationToken']['token'],
 				'creator_id' => User::get('id'),
 			));
 
+
 		// Return data.
-		$data = array('User.id' => $this->User->id);
+		$data = array(
+			'User.id' => $this->User->id,
+			'User.active' => FALSE,
+		);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 
 		$users = $this->User->find('all', $options);
@@ -289,13 +309,7 @@ class UsersController extends AppController {
 			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
 			if (!$this->User->validates(array('fieldList' => array($fields['fields'])))) {
 				$invalidFields = $this->User->invalidFields();
-				// Format invalid fields.
-				// Add 'User' index in the array.
-				$finalInvalidFields = array();
-				$i = 0;
-				foreach($invalidFields as $key => $if) {
-					$finalInvalidFields[$i++]['User'][$key] = $if;
-				}
+				$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
 				// Return error message, with list of invalid fields.
 				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
 			}
@@ -324,7 +338,9 @@ class UsersController extends AppController {
 			$this->User->Profile->set($profile);
 			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->rollback();
-				return $this->Message->error(__('Could not validate Profile'));
+				$invalidFields = $this->User->Profile->invalidFields();
+				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
+				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
 			}
 
 			$save = $this->User->Profile->save($profile, false, $fields['fields']);
