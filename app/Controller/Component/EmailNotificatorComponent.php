@@ -148,6 +148,7 @@ class EmailNotificatorComponent extends Component {
 			array(
 				'sender' => $sender,
 				'account' => $recipient,
+				'token' => $data['token'],
 			),
 			'account_creation'
 		);
