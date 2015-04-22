@@ -123,7 +123,8 @@ class AuthenticationToken extends AppModel {
 		$token = $this->find('first', array(
 				'conditions' => array(
 					'AuthenticationToken.user_id' => $userId,
-					'AuthenticationToken.token' => $token
+					'AuthenticationToken.token' => $token,
+					'AuthenticationToken.active' => TRUE,
 				),
 				'order' => array(
 					'created' => 'DESC'
