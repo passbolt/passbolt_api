@@ -104,6 +104,6 @@ class AuthenticationTokenTest extends CakeTestCase {
 		$kk = $this->User->findByUsername('kevin@passbolt.com');
 		$token = $this->AuthenticationToken->createToken($kk['User']['id']);
 		$isValid = $this->AuthenticationToken->checkTokenIsValid($token['AuthenticationToken']['token'], 'aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
-		$this->assertEqual(empty($isValid), true, 'The test should have returned an invalid token');
+		$this->assertEqual((bool)$isValid, false, 'The test should have returned an invalid token');
 	}
 }
