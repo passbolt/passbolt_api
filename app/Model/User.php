@@ -49,7 +49,8 @@ class User extends AppModel {
 */
 	public $hasOne = array(
 		'Profile',
-		'Gpgkey'
+		'Gpgkey',
+		'AuthenticationToken',
 	);
 
 /**
@@ -94,6 +95,12 @@ class User extends AppModel {
 				'email'    => array(
 					'rule'    => array('email'),
 					'message' => __('The username should be a valid email address')
+				),
+				'login' => array(
+					'rule' => 'isUnique',
+					'on' => 'create',
+					'shared' => FALSE,
+					'message' => __('The username has already been taken')
 				)
 			),
 			'password' => array(
@@ -356,6 +363,9 @@ class User extends AppModel {
 						);
 						if (isset($data['User.id'])) {
 							$conditions['conditions']['User.id'] = $data['User.id'];
+						}
+						if (isset($data['User.active'])) {
+							$conditions['conditions']['User.active'] = $data['User.active'];
 						}
 						break;
 
