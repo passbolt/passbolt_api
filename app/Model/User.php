@@ -87,7 +87,7 @@ class User extends AppModel {
 		$default = array(
 			'username' => array(
 				'required' => array(
-					'required'   => true,
+					'required'   => 'create',
 					'allowEmpty' => false,
 					'rule'       => array('notEmpty'),
 					'message'    => __('A username is required')
@@ -521,6 +521,16 @@ class User extends AppModel {
 								'Role.id',
 								'Role.name',
 							)
+						)
+					)
+				);
+				break;
+			case 'User::validateAccount':
+				$fields = array(
+					'fields' => array(
+						'Profile' => array(
+							'first_name',
+							'last_name',
 						)
 					)
 				);
