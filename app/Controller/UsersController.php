@@ -16,6 +16,14 @@ class UsersController extends AppController {
 		'EmailNotificator',
 	);
 
+	/**
+	 * beforeFilter
+	 */
+	function beforeFilter(){
+		parent::beforeFilter();
+		$this->Auth->allow('validateAccount');
+	}
+
 /**
  * Login
  *
@@ -200,23 +208,25 @@ class UsersController extends AppController {
 			return $this->Message->error(__('The user could not be saved'));
 		}
 
-		if(isset($userData['Profile']) && !empty($userData['Profile'])) {
-			// Validates profile information
-			$userData['Profile']['user_id'] = $this->User->id;
-			$this->User->Profile->set($userData);
-			if (!$this->User->Profile->validates()) {
-				$this->User->rollback();
-				$invalidFields = $this->User->Profile->invalidFields();
-				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
-				return $this->Message->error(__('Could not validate profile'), array('body' => $finalInvalidFields));
-			}
+		if (!isset($userData['Profile']) || empty($userData['Profile'])) {
+			$this->User->rollback();
+			return $this->Message->error(__('Profile data are missing'));
+		}
+		// Validates profile information
+		$userData['Profile']['user_id'] = $this->User->id;
+		$this->User->Profile->set($userData);
+		if (!$this->User->Profile->validates()) {
+			$this->User->rollback();
+			$invalidFields = $this->User->Profile->invalidFields();
+			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
+			return $this->Message->error(__('Could not validate profile'), array('body' => $finalInvalidFields));
+		}
 
-			$fields = $this->User->Profile->getFindFields('User::save', User::get('Role.name'));
-			$profile = $this->User->Profile->save($userData['Profile'], false, $fields['fields']);
-			if ($profile == false) {
-				$this->User->rollback();
-				return $this->Message->error(__('The profile could not be saved'));
-			}
+		$fields = $this->User->Profile->getFindFields('User::save', User::get('Role.name'));
+		$profile = $this->User->Profile->save($userData['Profile'], false, $fields['fields']);
+		if ($profile == false) {
+			$this->User->rollback();
+			return $this->Message->error(__('The profile could not be saved'));
 		}
 		// Everything fine, we commit.
 		$this->User->commit();
@@ -304,8 +314,8 @@ class UsersController extends AppController {
 				unset($userData['User']['password']);
 			}
 			// Validates data.
-			$this->User->id = $id;
 			$this->User->set($userData);
+			$this->User->id = $id;
 			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
 			if (!$this->User->validates(array('fieldList' => array($fields['fields'])))) {
 				$invalidFields = $this->User->invalidFields();
@@ -427,23 +437,84 @@ class UsersController extends AppController {
 		$this->set('data', $user);
 	}
 
-/**
- * edit password entry point for users
- *
- * @param uuid $id the id of the user we want to edit
- */
-	public function editPassword($id = null) {
-		// check the HTTP request method
-		if (!$this->request->is('put')) {
-			return $this->Message->error(__('Invalid request method, should be PUT'));
-		}
+///**
+// * edit password entry point for users
+// *
+// * @param uuid $id the id of the user we want to edit
+// */
+//	public function editPassword($id = null) {
+//		// check the HTTP request method
+//		if (!$this->request->is('put')) {
+//			return $this->Message->error(__('Invalid request method, should be PUT'));
+//		}
+//
+//		// First of all, check if the user is an administrator
+//		// Or the user is editing is own account
+//		if (User::get('Role.name') != Role::ADMIN && $id != User::get('id')) {
+//			return $this->Message->error(__('You are not authorized to access that location'));
+//		}
+//
+//		// check if the id is provided
+//		if (!isset($id)) {
+//			return $this->Message->error(__('The user id is missing'));
+//		}
+//
+//		// check if the id is valid
+//		if (!Common::isUuid($id)) {
+//			return $this->Message->error(__('The user id is invalid'));
+//		}
+//
+//		// get the resource id
+//		$resource = $this->User->findById($id);
+//		if (!$resource) {
+//			return $this->Message->error(__('The user does not exist'), array('code' => 404));
+//		}
+//
+//		// check if data was provided
+//		if (!isset($this->request->data['User'])) {
+//			return $this->Message->error(__('No data were provided'));
+//		}
+//
+//		// set the data for validation and save
+//		$userData = $this->request->data;
+//		$this->User->begin();
+//
+//		if (isset($userData['User'])) {
+//			$this->User->id = $id;
+//
+//			$this->User->set($userData);
+//			$this->User->setValidationRules('editPassword');
+//			if (!$this->User->validates()) {
+//				return $this->Message->error(__('Could not validate User'));
+//			}
+//
+//			$fields = $this->User->getFindFields('User::editPassword', User::get('Role.name'));
+//			$save = $this->User->save($userData, false, $fields['fields']);
+//			if (!$save) {
+//				$this->User->rollback();
+//				return $this->Message->error(__('The user could not be updated'));
+//			}
+//		}
+//
+//		$this->User->commit();
+//
+//		$data = array('User.id' => $this->User->id);
+//		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
+//		$user = $this->User->find('all', $options);
+//
+//		$this->Message->success(__("The password has been updated successfully"));
+//		$this->set('data', $user);
+//	}
 
-		// First of all, check if the user is an administrator
-		// Or the user is editing is own account
-		if (User::get('Role.name') != Role::ADMIN && $id != User::get('id')) {
-			return $this->Message->error(__('You are not authorized to access that location'));
-		}
-
+	/**
+	 * Validate a user account.
+	 * @param uuid $id the user id
+	 * @method PUT
+	 *  @param AuthenticationToken['token'] (compulsory) the token
+	 *  @param Profile['first_name'] (optional) the first_name
+	 *  @param Profile['last_name'] (optional) the last_name
+	 */
+	public function validateAccount($id) {
 		// check if the id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The user id is missing'));
@@ -460,39 +531,85 @@ class UsersController extends AppController {
 			return $this->Message->error(__('The user does not exist'), array('code' => 404));
 		}
 
+		// check the HTTP request method
+		if (!$this->request->is('put')) {
+			return $this->Message->error(__('Invalid request method, should be PUT'));
+		}
+
 		// check if data was provided
-		if (!isset($this->request->data['User'])) {
+		$data = $this->request->data;
+		if (!isset($data['AuthenticationToken'])) {
 			return $this->Message->error(__('No data were provided'));
 		}
 
-		// set the data for validation and save
-		$userData = $this->request->data;
+		// Set the data for validation and save.
+		if (!isset($data['AuthenticationToken']['token'])) {
+			return $this->Message->error(__('Token not provided') . 'test' . print_r($this->request, true));
+		}
+
+		// Check that token is valid.
+		$isValid = $this->User->AuthenticationToken->checkTokenIsValid($data['AuthenticationToken']['token'], $id);
+		if (!$isValid) {
+			return $this->Message->error(__('Invalid token'));
+		}
+
+		// Token is valid, we begin transaction.
 		$this->User->begin();
 
-		if (isset($userData['User'])) {
-			$this->User->id = $id;
+		// Activate user.
+		$this->User->id = $id;
+		$s = $this->User->saveField('active', TRUE);
+		if (!$s) {
+			$this->User->rollback();
+			return $this->Message->error(__('Could not update user'));
+		}
 
-			$this->User->set($userData);
-			$this->User->setValidationRules('editPassword');
-			if (!$this->User->validates()) {
-				return $this->Message->error(__('Could not validate User'));
-			}
+		// Deactivate Token.
+		$this->User->AuthenticationToken->id = $isValid['AuthenticationToken']['id'];
+		$s = $this->User->AuthenticationToken->saveField('active', FALSE);
+		if (!$s) {
+			$this->User->rollback();
+			return $this->Message->error(__('Could not update token'));
+		}
 
-			$fields = $this->User->getFindFields('User::editPassword', User::get('Role.name'));
-			$save = $this->User->save($userData, false, $fields['fields']);
-			if (!$save) {
+		// If Profile information are provided, we update.
+		if (isset($data['Profile'])) {
+			$profileData = $data['Profile'];
+			// Get user profile (for profile_id).
+			$profile = $this->User->Profile->findByUserId($id);
+			// Get fields.
+			$fields = $this->User->getFindFields('User::validateAccount');
+			// Set profile id.
+			$this->User->Profile->id = $profile['Profile']['id'];
+			// Validate Profile data.
+			$this->User->Profile->set($profileData);
+			$v = $this->User->Profile->validates(array('fieldList' => array($fields['fields'])));
+			// If validation failed.
+			if (!$v) {
 				$this->User->rollback();
-				return $this->Message->error(__('The user could not be updated'));
+				$invalidFields = $this->User->Profile->invalidFields();
+				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
+				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
+			}
+			// Save (update) profile.
+			$s = $this->User->Profile->save($profileData, false, array('fieldList' => $fields['fields']));
+			// If update failed.
+			if (!$s) {
+				$this->User->rollback();
+				return $this->Message->error(__('Could not save Profile'));
 			}
 		}
 
+        // Everything ok, we commit the transaction.
 		$this->User->commit();
 
-		$data = array('User.id' => $this->User->id);
+		// Return information in case of success.
+		$data = array('User.id' => $id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-		$user = $this->User->find('all', $options);
+		$users = $this->User->find('all', $options);
+		$user = reset($users);
 
-		$this->Message->success(__("The password has been updated successfully"));
+		$this->Message->success(__("The user has been updated successfully"));
 		$this->set('data', $user);
 	}
 
