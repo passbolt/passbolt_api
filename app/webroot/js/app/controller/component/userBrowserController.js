@@ -86,7 +86,7 @@ steal(
 		            'label': ''
 	            },
 	            'valueAdapter': function (value, mappedItem, item, columnModel) {
-		            return '<img src="' + item.Profile.avatarPath('smallest') + '" width="30" height="30">';
+		            return '<img src="' + item.Profile.avatarPath('small') + '" width="30" height="30">';
 	            }
             }, {
                 'name': 'name',
