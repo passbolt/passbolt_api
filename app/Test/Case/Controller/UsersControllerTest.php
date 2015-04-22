@@ -27,6 +27,7 @@ class UsersControllerTest extends ControllerTestCase {
 			'app.profile',
 			'app.file_storage',
 			'app.role',
+			'app.authenticationToken',
 			'app.authenticationLog',
 			'app.authenticationBlacklist'
 		);
@@ -125,8 +126,8 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEqual($result->header->status, Message::SUCCESS, '/users return something');
 
 		// @todo empty database and test if index throws warning for no
-		$this->User->deleteAll(array('active' => '1'));
-		$this->User->deleteAll(array('active' => '0'));
+		$this->User->deleteAll(array('User.active' => '1'));
+		$this->User->deleteAll(array('User.active' => '0'));
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEqual($result->header->status, Message::NOTICE, '/users return a warning');
 	}
@@ -242,6 +243,10 @@ class UsersControllerTest extends ControllerTestCase {
 							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 							'active'   => 1
 						),
+						'Profile' => array(
+							'first_name' => 'jean',
+							'last_name' => 'test'
+						)
 					),
 					'method' => 'post',
 					'return' => 'contents'
@@ -267,6 +272,12 @@ class UsersControllerTest extends ControllerTestCase {
 			$result['body']['User']['username'],
 			"Add : /users.json : the email of the user inserted should be test1@passbolt.com but is {$result['body']['User']['username']}"
 		);
+
+		$this->assertEquals(
+			'jean',
+			$result['body']['Profile']['first_name'],
+			"Add : /users.json : the first name of the added user should be jean but is {$result['body']['Profile']['first_name']}"
+		);
 	}
 
 	public function testAddWithoutRoleId() {
@@ -282,6 +293,10 @@ class UsersControllerTest extends ControllerTestCase {
 							'password' => 'abcedfghijk',
 							'active'   => 1
 						),
+						'Profile' => array(
+							'first_name' => 'test',
+							'last_name' => 'test'
+						)
 					),
 					'method' => 'post',
 					'return' => 'contents'
@@ -318,9 +333,10 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 	}
 
-	public function testAddWithProfileInfo() {
+	public function testAddWithoutProfileInfo() {
 		$kk = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($kk);
+		$this->expectException('HttpException', 'Profile data are missing');
 		$result = json_decode(
 			$this->testAction(
 				'/users.json',
@@ -332,34 +348,12 @@ class UsersControllerTest extends ControllerTestCase {
 							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
 							'active'   => 1
 						),
-						'Profile' => array(
-							'first_name' => 'jean',
-							'last_name' => 'gabin'
-						)
 					),
 					'method' => 'post',
 					'return' => 'contents'
 				)
 			),
 			true
-		);
-		$this->assertEquals(
-			Message::SUCCESS,
-			$result['header']['status'],
-			"Add : /users.json : The test should return sucess but is returning " . print_r($result, true)
-		);
-
-		// check that User was properly saved
-		$user = $this->User->findByUsername("testprofile@passbolt.com");
-		$this->assertEquals(
-			1,
-			count($user),
-			"Add : /users.json : The number of users returned should be 1, but actually is " . count($user)
-		);
-		$this->assertEquals(
-			'jean',
-			$result['body']['Profile']['first_name'],
-			"Add : /users.json : the first name of the added user should be jean but is {$result['body']['Profile']['first_name']}"
 		);
 	}
 
@@ -472,7 +466,10 @@ class UsersControllerTest extends ControllerTestCase {
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$id = $kk['User']['id'];
 
-		$data['User']['username'] = 'user-modified@passbolt.com';
+		$Role = Common::getModel('Role');
+		$adminRole = $Role->findByName("admin");
+
+		$data['User']['role_id'] = $adminRole['Role']['id'];
 		$resRaw = $this->testAction(
 			"/users/$id.json",
 			array(
@@ -489,10 +486,10 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 
 		// check that User was properly saved
-		$user = $this->User->findByUsername("user-modified@passbolt.com");
+		$user = $this->User->findByUsername("user@passbolt.com");
 		$this->assertEquals(
-			1,
-			count($user),
+			$user['User']['role_id'],
+			$adminRole['Role']['id'],
 			"Edit : /users.json : The number of users returned should be 1, but actually is " . count($user)
 		);
 		$this->assertEquals(
@@ -738,111 +735,258 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertNotEmpty($kk['Profile']['Avatar'], "The user " . $kk['User']['username'] . " should have an avatar");
 	}
 
-	public function testUpdatePasswordNoAllowed() {
-		// normal user don't have the right to add user
-		$dv = $this->User->findByUsername('darth.vader@passbolt.com');
-		$this->User->setActive($dv);
-		$kk = $this->User->findByUsername('user@passbolt.com');
-
-		$id = $kk['User']['id'];
-
-		$this->expectException('HttpException', 'You are not authorized to access that location');
-		// test with anonymous user
-		$result = json_decode(
-			$this->testAction(
-				"/users/password/$id.json",
-				array(
-					'data'   => array(
-						'User' => array(
-							'password' => 'abcedfghijk',
-						),
+	private function __createAccount($username) {
+		$userAdd = $this->testAction(
+			'/users.json',
+			array(
+				'data'   => array(
+					'User' => array(
+						'username' => $username,
+						'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c'
 					),
-					'method' => 'put',
-					'return' => 'contents'
-				)
-			),
-			true
+					'Profile' => array(
+						'first_name' => 'Jean',
+						'last_name' => 'Gabin'
+					),
+				),
+				'method' => 'post',
+				'return' => 'contents'
+			)
 		);
+		$json = json_decode($userAdd, true);
+		return $json['body'];
 	}
 
-	public function testUpdatePasswordUserIdIsMissing() {
+	public function testAccountCreateAndToken() {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
+		$user = $this->__createAccount('jean-gabin@gmail.com');
 
-		$this->expectException('HttpException', 'The user id is missing');
-		$result = json_decode($this->testAction('/users/password.json', array('return' => 'contents', 'method' => 'put'), true));
+		// Verify that user is not active.
+		$u = $this->User->findById($user['User']['id']);
+		$this->assertEqual($u['User']['active'], 0, 'The user created should be inactive by default');
+
+		// Check that there is an entry in the table authenticationToken.
+		$AuthenticationToken = Common::getModel('AuthenticationToken');
+		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+		$this->assertEqual((bool)$at, true, 'There should be an authentication token created for the user');
 	}
 
-	public function testUpdatePasswordUserIdNotValid() {
+	public function testAccountValidation() {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
+		$user = $this->__createAccount('jean-gabin@gmail.com');
 
-		$this->expectException('HttpException', 'The user id is invalid');
-		$result = json_decode(
-			$this->testAction('/users/password/badId.json', array('return' => 'contents', 'method' => 'put'), true)
+		$AuthenticationToken = Common::getModel('AuthenticationToken');
+		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+
+		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+		$validate = $this->testAction(
+			'/users/validateAccount/' . $user['User']['id'] . '.json',
+			array(
+				'data'   => array (
+					'AuthenticationToken' => array (
+						'token' => $at['AuthenticationToken']['token'],
+					),
+				),
+				'method' => 'put',
+				'return' => 'contents'
+			)
 		);
+		$json = json_decode($validate, true);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$json['header']['status'],
+			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
+		);
+
+		// Get user and check if deactivated.
+		$u = $this->User->findById($user['User']['id']);
+		$this->assertEqual($u['User']['active'], true, 'The user should be activated after account validation, but is not');
+
+		// Check Authentication Token is not active anymore.
+		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+		$this->assertEqual($at['AuthenticationToken']['active'], 0, 'The authentication token should be deactivated after account activation, but it is not');
 	}
 
-	public function testUpdatePasswordUserDoesNotExist() {
+	public function testAccountValidationWithProfileEdit() {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
+		$user = $this->__createAccount('jean-gabin@gmail.com');
 
+		$AuthenticationToken = Common::getModel('AuthenticationToken');
+		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+
+		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+		$validate = $this->testAction(
+			$url,
+			array(
+				'data'   => array (
+					'AuthenticationToken' => array (
+						'token' => $at['AuthenticationToken']['token'],
+					),
+					'Profile' => array (
+						'first_name' => 'Rene',
+						'last_name' => 'Dupuit',
+					),
+				),
+				'method' => 'put',
+				'return' => 'contents'
+			)
+		);
+		$json = json_decode($validate, true);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$json['header']['status'],
+			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
+		);
+
+		// Get user and check if deactivated.
+		$p = $this->User->Profile->findByUserId($user['User']['id']);
+		$this->assertEqual($p['Profile']['first_name'], 'Rene', "After account validation the user first_name should be rene, but is {$p['Profile']['first_name']}");
+	}
+
+	public function testAccountValidationWrongUserId() {
 		$this->expectException('HttpException', 'The user does not exist');
-		$result = json_decode(
-			$this->testAction(
-				'/users/password/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
-				array('return' => 'contents', 'method' => 'put'),
-				true
+		$validate = $this->testAction(
+			'/users/validateAccount/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
+			array(
+				'data'   => array (
+					'AuthenticationToken' => array (
+						'token' => 'tokentoken',
+					),
+				),
+				'method' => 'put',
+				'return' => 'contents'
 			)
 		);
 	}
 
-	public function testUpdatePasswordNoDataProvided() {
+	public function testAccountValidationWrongToken() {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
-
-		$this->expectException('HttpException', 'No data were provided');
-		$kk = $this->User->findByUsername('user@passbolt.com');
-		$id = $kk['User']['id'];
-
-		$result = json_decode(
-			$this->testAction(
-				"/users/password/$id.json",
-				array(
-					'method' => 'put',
-					'return' => 'contents'
-				)
-			),
-			true
+		$user = $this->__createAccount('jean-gabin@gmail.com');
+		$this->expectException('HttpException', 'Invalid token');
+		$validate = $this->testAction(
+			'/users/validateAccount/' . $user['User']['id'] . '.json',
+			array(
+				'data'   => array (
+					'AuthenticationToken' => array (
+						'token' => 'wrong token',
+					),
+				),
+				'method' => 'put',
+				'return' => 'contents'
+			)
 		);
 	}
 
-	public function testUpdatePassword() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-		$kk = $this->User->findByUsername('user@passbolt.com');
-		$oldPwdHash = $kk['User']['password'];
-		$id = $kk['User']['id'];
 
-		$data['User']['password'] = '1234567890';
-		$result = json_decode(
-			$this->testAction(
-				"/users/password/$id.json",
-				array(
-					'data'   => $data,
-					'method' => 'put',
-					'return' => 'contents'
-				)
-			),
-			true
-		);
-		$this->assertEquals(
-			Message::SUCCESS,
-			$result['header']['status'],
-			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
-		);
-
-		$kk = $this->User->findByUsername('user@passbolt.com');
-		$this->assertNotEqual($oldPwdHash, $kk['User']['password'], "The user " . $kk['User']['username'] . " should'nt have the same password");
-	}
+//	public function testUpdatePasswordNoAllowed() {
+//		// normal user don't have the right to add user
+//		$dv = $this->User->findByUsername('darth.vader@passbolt.com');
+//		$this->User->setActive($dv);
+//		$kk = $this->User->findByUsername('user@passbolt.com');
+//
+//		$id = $kk['User']['id'];
+//
+//		$this->expectException('HttpException', 'You are not authorized to access that location');
+//		// test with anonymous user
+//		$result = json_decode(
+//			$this->testAction(
+//				"/users/password/$id.json",
+//				array(
+//					'data'   => array(
+//						'User' => array(
+//							'password' => 'abcedfghijk',
+//						),
+//					),
+//					'method' => 'put',
+//					'return' => 'contents'
+//				)
+//			),
+//			true
+//		);
+//	}
+//
+//	public function testUpdatePasswordUserIdIsMissing() {
+//		$ad = $this->User->findByUsername('admin@passbolt.com');
+//		$this->User->setActive($ad);
+//
+//		$this->expectException('HttpException', 'The user id is missing');
+//		$result = json_decode($this->testAction('/users/password.json', array('return' => 'contents', 'method' => 'put'), true));
+//	}
+//
+//	public function testUpdatePasswordUserIdNotValid() {
+//		$ad = $this->User->findByUsername('admin@passbolt.com');
+//		$this->User->setActive($ad);
+//
+//		$this->expectException('HttpException', 'The user id is invalid');
+//		$result = json_decode(
+//			$this->testAction('/users/password/badId.json', array('return' => 'contents', 'method' => 'put'), true)
+//		);
+//	}
+//
+//	public function testUpdatePasswordUserDoesNotExist() {
+//		$ad = $this->User->findByUsername('admin@passbolt.com');
+//		$this->User->setActive($ad);
+//
+//		$this->expectException('HttpException', 'The user does not exist');
+//		$result = json_decode(
+//			$this->testAction(
+//				'/users/password/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
+//				array('return' => 'contents', 'method' => 'put'),
+//				true
+//			)
+//		);
+//	}
+//
+//	public function testUpdatePasswordNoDataProvided() {
+//		$ad = $this->User->findByUsername('admin@passbolt.com');
+//		$this->User->setActive($ad);
+//
+//		$this->expectException('HttpException', 'No data were provided');
+//		$kk = $this->User->findByUsername('user@passbolt.com');
+//		$id = $kk['User']['id'];
+//
+//		$result = json_decode(
+//			$this->testAction(
+//				"/users/password/$id.json",
+//				array(
+//					'method' => 'put',
+//					'return' => 'contents'
+//				)
+//			),
+//			true
+//		);
+//	}
+//
+//	public function testUpdatePassword() {
+//		$ad = $this->User->findByUsername('admin@passbolt.com');
+//		$this->User->setActive($ad);
+//		$kk = $this->User->findByUsername('user@passbolt.com');
+//		$oldPwdHash = $kk['User']['password'];
+//		$id = $kk['User']['id'];
+//
+//		$data['User']['password'] = '1234567890';
+//		$result = json_decode(
+//			$this->testAction(
+//				"/users/password/$id.json",
+//				array(
+//					'data'   => $data,
+//					'method' => 'put',
+//					'return' => 'contents'
+//				)
+//			),
+//			true
+//		);
+//		$this->assertEquals(
+//			Message::SUCCESS,
+//			$result['header']['status'],
+//			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
+//		);
+//
+//		$kk = $this->User->findByUsername('user@passbolt.com');
+//		$this->assertNotEqual($oldPwdHash, $kk['User']['password'], "The user " . $kk['User']['username'] . " should'nt have the same password");
+//	}
 }
