@@ -49,4 +49,38 @@ class Common extends Object {
 		return is_string($str) && preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/', $str);
 	}
 
+/**
+ * Generate a random string.
+ * @param int $length length of the string.
+ * @return string the random string
+ */
+	public static function randomString($length) {
+		$mask = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$';
+		$rdStr = substr(
+			str_shuffle($mask) ,
+			0,
+			$length
+		);
+		return $rdStr;
+	}
+
+	/**
+	 * Format a list of invalid fields to be returned to the client.
+	 *
+	 * @param $model
+	 * @param $invalidFields
+	 *
+	 * @return array
+	 */
+	public static function formatInvalidFields($model, $invalidFields) {
+		// Format invalid fields.
+		// Add 'User' index in the array.
+		$finalInvalidFields = array();
+		$i = 0;
+		foreach($invalidFields as $key => $if) {
+			$finalInvalidFields[$i++][$model][$key] = $if;
+		}
+		return $finalInvalidFields;
+	}
+
 }
