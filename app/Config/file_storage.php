@@ -18,20 +18,13 @@ Configure::write('Media', array(
 	'basePath' => APP . 'FileStorage' . DS,
 	'imageDefaults' => array(
 		'ProfileAvatar' => array(
-			'small'     => IMAGES_URL . 'placeholder' . DS . 'user_small.png',
-			'smallest'  => IMAGES_URL . 'placeholder' . DS . 'user_smallest.png',
+			'medium'     => IMAGES_URL . 'avatar' . DS . 'user_medium.png',
+			'small'  => IMAGES_URL . 'avatar' . DS . 'user.png',
 		)
 	),
 	// Configure image versions on a per model base
 	'imageSizes' => array(
 		'ProfileAvatar' => array(
-			'large' => array(
-				'thumbnail' => array(
-					'mode' => 'outbound',
-					'width' => 800,
-					'height' => 800
-				)
-			),
 			'medium' => array(
 				'thumbnail' => array(
 					'mode' => 'outbound',
@@ -42,25 +35,14 @@ Configure::write('Media', array(
 			'small' => array(
 				'thumbnail' => array(
 					'mode' => 'outbound',
-					'width' => 50,
-					'height' => 50
+					'width' => 80,
+					'height' => 80
 				),
 				'crop' => array(
-					'width' => 50,
-					'height' => 50
+					'width' => 80,
+					'height' => 80
 				)
 			),
-			'smallest' => array(
-				'thumbnail' => array(
-					'mode' => 'outbound',
-					'width' => 30,
-					'height' => 30
-				),
-				'crop' => array(
-					'width' => 30,
-					'height' => 30
-				)
-			)
 		)
 	)
 ));
