@@ -53,7 +53,7 @@ class Profile extends AppModel {
 			'user_id' => array(
 				'uuid' => array(
 					'rule' => 'uuid',
-					'required' => true,
+					'required' => 'create',
 					'allowEmpty' => false,
 					'message'	=> __('UUID must be in correct format')
 				),
