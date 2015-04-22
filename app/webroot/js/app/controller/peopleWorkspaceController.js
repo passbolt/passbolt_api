@@ -230,9 +230,16 @@ steal(
 				callbacks : {
 					submit: function (data) {
 						var user = new passbolt.model.User(data['passbolt.model.User']);
-						user.save();
-						dialog.remove();
-						// TODO : remove only in case of success
+						user.save(
+							// success
+							function() {
+								dialog.remove();
+							},
+							function(v) {
+								form.showErrors(JSON.parse(v.responseText)['body']);
+							}
+						);
+
 					}
 				}
 			});
