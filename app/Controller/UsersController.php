@@ -304,15 +304,27 @@ class UsersController extends AppController {
 
 		// Save user.
 		if (isset($userData['User'])) {
-			// Manage empty password.
-			// Is the current password empty ?
-			$currentPasswordEmpty = isset($userData['User']['current_password'])
-				&& empty($userData['User']['current_password']);
-			// If no current password is provided, then we remove password and current_password field from the data.
-			if ($currentPasswordEmpty) {
-				unset($userData['User']['current_password']);
+			// if password field is present but empty, we simply ignore it.
+			if (isset($userData['User']['password']) && empty($userData['User']['password'])) {
 				unset($userData['User']['password']);
 			}
+			// If the password is provided.
+			if (isset($userData['User']['password'])) {
+				// Manage password fields depending on roles and data provided.
+				// Is user's own password.
+				$isOwn = ($id == User::get('id'));
+				// Is current password required.
+				$currentPasswordRequired = $isOwn;
+				// Is current password provided.
+				$currentPasswordProvided = isset($userData['User']['current_password'])
+					&& !empty($userData['User']['current_password']);
+				// If no current password is provided, then we return an error.
+				if ($currentPasswordRequired && !$currentPasswordProvided) {
+					$finalInvalidFields = Common::formatInvalidFields('User', array('current_password' => array(__("Current password is required"))));
+					return $this->Message->error(__('Current Password must be provided'), array('body' => $finalInvalidFields));
+				}
+			}
+
 			// Validates data.
 			$this->User->set($userData);
 			$this->User->id = $id;

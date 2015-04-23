@@ -150,7 +150,7 @@ class User extends AppModel {
 		if ($check['current_password'] == null) {
 			return false;
 		} else {
-			$userId = $this->data['User']['id'];
+			$userId = $this->id;
 			if (!$userId) {
 				return false;
 			}
@@ -284,9 +284,9 @@ class User extends AppModel {
 	}
 
 /**
- * Check if user is admin role
+ * Check if user has anonymous role
  *
- * @return bool true if role is admin
+ * @return bool true if role is anonymous
  * @access public
  */
 	public static function isAnonymous() {

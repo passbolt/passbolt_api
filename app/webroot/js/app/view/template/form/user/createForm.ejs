@@ -1,3 +1,5 @@
+<% var role = passbolt.model.User.getCurrent().Role.name; %>
+<% var user = this.controller.options.data; %>
 <div class="form-content">
 
 	<input type="hidden" name="passbolt.model.User.Group.id" id="js_field_group_id" class="form_field" />
@@ -25,6 +27,7 @@
 	</div>
 
     <% if (action != 'create') { %>
+	<% if (role != 'admin' || (role == 'admin' && user.id == passbolt.model.User.getCurrent().id)) { %>
 	<div class="input text input-current-password-wrapper">
 		<div class="input current_password required short">
 			<label for="js_field_current_password"><%= __('Current login password') %></label>
@@ -41,6 +44,7 @@
 		</ul>
 		<div id="js_field_current_password_feedback" class="message"></div>
 	</div>
+	<% } %>
 
 	<div class="input text input-password-wrapper">
 		<div class="input password required short">

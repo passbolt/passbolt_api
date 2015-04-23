@@ -499,6 +499,87 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 	}
 
+	public function testUpdatePasswordFromAdmin() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+		$kk = $this->User->findByUsername('user@passbolt.com');
+		$id = $kk['User']['id'];
+
+		$data['User']['password'] = 'test12345678';
+		$resRaw = $this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => $data,
+				'method' => 'put',
+				'return' => 'contents'
+			)
+		);
+		$result = json_decode($resRaw, true);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$result['header']['status'],
+			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
+		);
+	}
+
+	public function testUpdateOwnPasswordFromAdminNoCurrentPassword() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+		$id = $ad['User']['id'];
+
+		$this->expectException('HttpException', 'Current Password must be provided');
+		$data['User']['password'] = 'test12345678';
+		$resRaw = $this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => $data,
+				'method' => 'put',
+				'return' => 'contents'
+			)
+		);
+	}
+
+	public function testUpdateOwnPasswordFromLU() {
+		$kk = $this->User->findByUsername('kevin@passbolt.com');
+		$this->User->setActive($kk);
+		$id = $kk['User']['id'];
+
+		$data['User']['current_password'] = 'password';
+		$data['User']['password'] = 'test12345678';
+		$resRaw = $this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => $data,
+				'method' => 'put',
+				'return' => 'contents'
+			)
+		);
+		$result = json_decode($resRaw, true);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$result['header']['status'],
+			"Edit : /users.json : The test should return success but is returning " . print_r($result, true)
+		);
+	}
+
+	public function testUpdateOwnPasswordFromLUWrongCurrentPassword() {
+		$kk = $this->User->findByUsername('kevin@passbolt.com');
+		$this->User->setActive($kk);
+		$id = $kk['User']['id'];
+
+		$this->expectException('HttpException', 'Could not validate User');
+		$data['User']['current_password'] = 'wrongpassword';
+		$data['User']['password'] = 'test12345678';
+		$resRaw = $this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => $data,
+				'method' => 'put',
+				'return' => 'contents'
+			)
+		);
+	}
+
 	public function testDeleteNoAllowed() {
 		// normal user don't have the right to delete user
 		$u = $this->User->findByUsername('user@passbolt.com');

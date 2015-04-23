@@ -99,23 +99,28 @@ steal(
 						}).start()
 					);
 
-					// Declare current password field.
-					this.options.currentPasswordField = new mad.form.element.TextboxController($('#js_field_current_password'), {
-						modelReference: 'passbolt.model.User.current_password'
-					}).start();
-					this.addElement(
-						this.options.currentPasswordField,
-						new mad.form.FeedbackController($('#js_field_current_password_feedback'), {}).start()
-					);
-					// Button to see clear current password.
-					this.options.currentPasswordClear = this.addElement(
-						new mad.form.element.TextboxController($('#js_field_current_password_clear'), {
-							'state': 'hidden'
-						}).start()
-					);
-					// Show/Hide the password
-					this.options.showCurrPwdButton = new mad.controller.component.ButtonController($('#js_show_curr_pwd_button'))
-						.start();
+					// Declare current password field for non admin users.
+					var userRole = passbolt.model.User.getCurrent().Role.name;
+					var userId = this.options.data.id;
+					// Current password is required only for non admin users.
+					if (userRole != 'admin'  || (userRole == 'admin' && userId == passbolt.model.User.getCurrent().id)) {
+						this.options.currentPasswordField = new mad.form.element.TextboxController($('#js_field_current_password'), {
+							modelReference: 'passbolt.model.User.current_password'
+						}).start();
+						this.addElement(
+							this.options.currentPasswordField,
+							new mad.form.FeedbackController($('#js_field_current_password_feedback'), {}).start()
+						);
+						// Button to see clear current password.
+						this.options.currentPasswordClear = this.addElement(
+							new mad.form.element.TextboxController($('#js_field_current_password_clear'), {
+								'state': 'hidden'
+							}).start()
+						);
+						// Show/Hide the password
+						this.options.showCurrPwdButton = new mad.controller.component.ButtonController($('#js_show_curr_pwd_button'))
+							.start();
+					}
 
 					// Show/Hide the password
 					this.options.showPwdButton = new mad.controller.component.ButtonController($('#js_show_pwd_button'))

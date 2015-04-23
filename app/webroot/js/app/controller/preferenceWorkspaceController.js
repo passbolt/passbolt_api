@@ -1,6 +1,7 @@
 steal(
 	'mad/controller/componentController.js',
 	'app/controller/component/preferenceMenuController.js',
+	'app/controller/component/preferenceBreadcrumbController.js',
 	'app/controller/component/profileController.js',
 	'app/controller/form/user/createFormController.js',
 	'app/controller/form/user/passwordFormController.js',
@@ -45,6 +46,11 @@ steal(
 					'autoMenu': false // do not generate automatically the associated tab nav
 				});
 				this.preferenceTabsCtl.start();
+
+				// Instantiate the password workspace breadcrumb controller
+				this.breadcrumCtl = new passbolt.controller.component.PreferenceBreadcrumbController($('#js_wsp_preference_breadcrumb'), {});
+				this.breadcrumCtl.start();
+				this.breadcrumCtl.load();
 
 				self.profileCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileController, {
 					'id': 'js_preference_wk_profile_controller',

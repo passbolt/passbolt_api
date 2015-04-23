@@ -58,6 +58,21 @@ steal(
 		},
 
 		/**
+		 * Observe when a workspace is selected.
+		 * @param {HTMLElement} el
+		 * @param {HTMLEvent} event
+		 * @param workspace
+		 */
+		'{mad.bus} workspace_selected': function (el, event, workspace) {
+			if (workspace == 'preference') {
+				this.options.viewSidebarButton.stateHidden(true);
+			}
+			else {
+				this.options.viewSidebarButton.stateHidden(false);
+			}
+		},
+
+		/**
 		 * Observe when the user wants to view the side bar
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured

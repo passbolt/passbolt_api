@@ -105,8 +105,11 @@ class AppController extends Controller {
 				$Role = Common::getModel('Role');
 				$this->set('roles', $Role->find('all', array(
 							'conditions' => array(
-								'name' => array('admin', 'user')
-							)
+								'name' => array(
+									Role::ADMIN,
+									Role::USER
+								),
+							),
 						)));
 				$this->layout = 'html5';
 			}

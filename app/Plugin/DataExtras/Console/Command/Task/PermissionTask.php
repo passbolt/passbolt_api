@@ -24,6 +24,13 @@ class PermissionTask extends ModelTask {
 		$users = $UserTask::getAlias();
 
 		$permissions = array(
+			'adm' => array(
+				'facebook account' => PermissionType::ADMIN,
+				'bank password' => PermissionType::ADMIN,
+				'salesforce account' => PermissionType::ADMIN,
+				'tetris license' => PermissionType::ADMIN,
+				'shared resource' => PermissionType::ADMIN,
+			),
 			'mng' => array(
 				'facebook account' => PermissionType::ADMIN,
 				'bank password' => PermissionType::ADMIN,

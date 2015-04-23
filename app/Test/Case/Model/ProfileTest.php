@@ -130,6 +130,7 @@ class ProfileTest extends CakeTestCase {
 		$testcases = array(
 			'Kevin' => true,
 			'Georges1' => false,
+			'Cédric' => true,
 			'123' => false,
 			'' => false,
 		);
@@ -150,6 +151,7 @@ class ProfileTest extends CakeTestCase {
 		$testcases = array(
 			'Kevin' => true,
 			'Georges1' => false,
+			'Cédric' => true,
 			'123' => false,
 			'' => false,
 		);

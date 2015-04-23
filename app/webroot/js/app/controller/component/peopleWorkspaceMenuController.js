@@ -37,39 +37,44 @@ steal(
 			'afterStart': function () {
 				var self = this;
 
-				// Manage creation action
-				this.options.creationButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_creation_button'))
-					.start();
+				var user = passbolt.model.User.getCurrent();
+				var userRole = user.Role.name;
 
-				// Manage edition action
-				this.options.editionButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_edition_button'), {
-					'state': 'disabled'
-				}).start();
+				if (userRole == 'admin') {
+					// Manage creation action
+					this.options.creationButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_creation_button'))
+						.start();
 
-				// Manage deletion action
-				this.options.deletionButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_deletion_button'), {
-					'state': 'disabled'
-				}).start();
+					// Manage edition action
+					this.options.editionButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_edition_button'), {
+						'state': 'disabled'
+					}).start();
 
-				// Manage more actions.
-				var moreButtonMenuItems = [
-					new mad.model.Action({
-						'id': 'js_ppl_wk_remove_user_from_group',
-						'label': __('remove user from group'),
-						'initial_state': 'disabled',
-						'cssClasses': null,
-						'action': function () {
-							mad.bus.trigger(
-								'request_remove_user_from_group',
-								[self.options.selectedUsers, self.options.selectedGroups]
-							);
-						}
-					})
-				];
-				this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_user_wk_menu_more_button'), {
-					'state': 'disabled',
-					'items': moreButtonMenuItems
-				}).start();
+					// Manage deletion action
+					this.options.deletionButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_deletion_button'), {
+						'state': 'disabled'
+					}).start();
+
+					// Manage more actions.
+					var moreButtonMenuItems = [
+						new mad.model.Action({
+							'id': 'js_ppl_wk_remove_user_from_group',
+							'label': __('remove user from group'),
+							'initial_state': 'disabled',
+							'cssClasses': null,
+							'action': function () {
+								mad.bus.trigger(
+									'request_remove_user_from_group',
+									[self.options.selectedUsers, self.options.selectedGroups]
+								);
+							}
+						})
+					];
+					this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_user_wk_menu_more_button'), {
+						'state': 'disabled',
+						'items': moreButtonMenuItems
+					}).start();
+				}
 
 				// @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
 				this.on();
@@ -133,14 +138,16 @@ steal(
 					this.setState('multiSelection');
 				}
 
-				// Enable or disable the "remove user from group" if a group is selected.
-				// Active if at least a group is selected.
-				if (this.options.selectedGroups.length > 0) {
-					this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'ready');
-				}
-				// Disabled if no group selected.
-				else {
-					this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'disabled');
+				if (passbolt.model.User.getCurrent().Role.name == 'admin') {
+					// Enable or disable the "remove user from group" if a group is selected.
+					// Active if at least a group is selected.
+					if (this.options.selectedGroups.length > 0) {
+						this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'ready');
+					}
+					// Disabled if no group selected.
+					else {
+						this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'disabled');
+					}
 				}
 			},
 
@@ -176,26 +183,28 @@ steal(
 			 * @return {void}
 			 */
 			'stateSelection': function (go) {
-				if (go) {
-					this.options.editionButton
-						.setValue(this.options.selectedUsers[0])
-						.setState('ready');
-					this.options.deletionButton
-						.setValue(this.options.selectedUsers)
-						.setState('ready');
-					this.options.moreButton
-						.setValue(this.options.selectedUsers[0])
-						.setState('ready');
-				} else {
-					this.options.editionButton
-						.setValue(null)
-						.setState('disabled');
-					this.options.deletionButton
-						.setValue(null)
-						.setState('disabled');
-					this.options.moreButton
-						.setValue(null)
-						.setState('disabled');
+				if (passbolt.model.User.getCurrent().Role.name == 'admin') {
+					if (go) {
+						this.options.editionButton
+							.setValue(this.options.selectedUsers[0])
+							.setState('ready');
+						this.options.deletionButton
+							.setValue(this.options.selectedUsers)
+							.setState('ready');
+						this.options.moreButton
+							.setValue(this.options.selectedUsers[0])
+							.setState('ready');
+					} else {
+						this.options.editionButton
+							.setValue(null)
+							.setState('disabled');
+						this.options.deletionButton
+							.setValue(null)
+							.setState('disabled');
+						this.options.moreButton
+							.setValue(null)
+							.setState('disabled');
+					}
 				}
 			},
 
@@ -205,21 +214,23 @@ steal(
 			 * @return {void}
 			 */
 			'stateMultiSelection': function (go) {
-				if (go) {
-					this.options.editionButton
-						.setState('disabled');
-					this.options.deletionButton
-						.setValue(this.options.selectedUsers)
-						.setState('ready');
-					this.options.moreButton
-						.setState('disabled');
-				} else {
-					this.options.editionButton
-						.setValue(null)
-						.setState('disabled');
-					this.options.deletionButton
-						.setValue(null)
-						.setState('disabled');
+				if (passbolt.model.User.getCurrent().Role.name == 'admin') {
+					if (go) {
+						this.options.editionButton
+							.setState('disabled');
+						this.options.deletionButton
+							.setValue(this.options.selectedUsers)
+							.setState('ready');
+						this.options.moreButton
+							.setState('disabled');
+					} else {
+						this.options.editionButton
+							.setValue(null)
+							.setState('disabled');
+						this.options.deletionButton
+							.setValue(null)
+							.setState('disabled');
+					}
 				}
 			}
 
