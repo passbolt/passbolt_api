@@ -25,7 +25,7 @@ class PermissionableBehavior extends ModelBehavior {
 		// If the current user is a normal user or an anonymous user,
 		// all his requests will be augmented with the permissionable behavior
 		// to ensure he can only access records he has permission for.
-		if (User::get('Role.name') == Role::USER || User::get('Role.name') == Role::GUEST) {
+		if (User::get('Role.name') == Role::USER || User::get('Role.name') == Role::GUEST || User::get('Role.name') == Role::ADMIN) {
 
 			// Depending on the target model the user wants to access,
 			// the permissions are managed by a specific model.
@@ -105,7 +105,7 @@ class PermissionableBehavior extends ModelBehavior {
  * @link http://api20.cakephp.org/class/model#method-ModelafterFind
  */
 	public function afterFind(Model $model, $results, $primary = false) {
-		if (User::get('Role.name') == Role::USER || User::get('Role.name') == Role::GUEST) {
+		if (User::get('Role.name') == Role::USER || User::get('Role.name') == Role::GUEST || User::get('Role.name') == Role::ADMIN) {
 
 			$model->unbindModel(array(
 				'hasOne' => array(
@@ -124,7 +124,7 @@ class PermissionableBehavior extends ModelBehavior {
  * @link http://api20.cakephp.org/class/model#method-ModelafterSave
  *
  * The permissionnable after save method is used to automatically give to the user
- * the ADMIN right to the reccords he has just inserted
+ * the ADMIN right to the records he has just inserted
  */
 	public function afterSave(Model $model, $created, $options = Array()) {
 		if ($created) {
