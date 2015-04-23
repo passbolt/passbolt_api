@@ -1,3 +1,5 @@
+<% var role = passbolt.model.User.getCurrent().Role.name; %>
+<% if (role == 'admin') { %>
 <li>
 	<a id="js_user_wk_menu_creation_button" href="#" class="button">
 		<i class="icon create"></i>
@@ -25,3 +27,4 @@
 		</a>
 	</div>
 </li>
+<% } %>
