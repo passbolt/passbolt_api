@@ -515,6 +515,9 @@ class UsersController extends AppController {
 	 *  @param Profile['last_name'] (optional) the last_name
 	 */
 	public function validateAccount($id) {
+		header('Access-Control-Allow-Origin: *');
+		header('Access-Control-Allow-Methods: PUT, OPTIONS');
+
 		// check if the id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The user id is missing'));
@@ -566,7 +569,7 @@ class UsersController extends AppController {
 
 		// Deactivate Token.
 		$this->User->AuthenticationToken->id = $isValid['AuthenticationToken']['id'];
-		$s = $this->User->AuthenticationToken->saveField('active', FALSE);
+		//$s = $this->User->AuthenticationToken->saveField('active', FALSE);
 		if (!$s) {
 			$this->User->rollback();
 			return $this->Message->error(__('Could not update token'));

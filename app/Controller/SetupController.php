@@ -19,6 +19,7 @@ class SetupController extends AppController {
 	function beforeFilter(){
 		parent::beforeFilter();
 		$this->Auth->allow('install');
+		$this->Auth->allow('userInfo');
 	}
 
 /**
@@ -26,7 +27,7 @@ class SetupController extends AppController {
  *
  * @param string $token
  */
-	public function install($userId = null, $token = null, $step = null) {
+	public function install($userId = null, $token = null) {
 		$this->layout = 'html5';
 
 		// check if the id is provided
@@ -39,12 +40,6 @@ class SetupController extends AppController {
 			throw new BadRequestException(__('User id is incorrect'));
 		}
 
-		// get the user
-		$user = $this->User->findById($userId);
-		if (!$user) {
-			throw new NotFoundException(__('User not found'));
-		}
-
 		// Check if token is provided.
 		if (!$token) {
 			throw new BadRequestException(__('Token not provided'));
@@ -55,5 +50,17 @@ class SetupController extends AppController {
 		if (!$token) {
 			throw new NotFoundException(__('Token not found'));
 		}
+
+		// Retrieve the user.
+		$data = array('User.id' => $userId);
+		$o = $this->User->getFindOptions('Setup::userInfo', User::get('Role.name'), $data);
+		$user = $this->User->find('first', $o);
+
+		if (!$user) {
+			throw new NotFoundException(__('User not found'));
+		}
+
+		$this->set('user', $user);
 	}
+
 }

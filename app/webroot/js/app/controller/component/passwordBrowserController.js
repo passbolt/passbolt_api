@@ -70,7 +70,7 @@ steal(
 						</div>'
 				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
-					var availableValues = [];
+					var availableValues = {};
 					availableValues[item.id] = '';
 					var checkbox = mad.helper.ComponentHelper.create(
 						cellElement,
@@ -95,7 +95,7 @@ steal(
 						</a>'
 				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
-					var availableValues = [];
+					var availableValues = {};
 					availableValues[item.id] = '';
 					var favorite = mad.helper.ComponentHelper.create(
 						cellElement,

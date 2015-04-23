@@ -333,6 +333,20 @@ class User extends AppModel {
 		$conditions = array();
 
 		switch ($role) {
+			case Role::GUEST:
+				switch ($case) {
+					case 'Setup::userInfo':
+						$conditions = array(
+							'conditions' => array(
+								'User.active' => false,
+								'User.deleted' => false,
+								'User.id' => $data['User.id'],
+							)
+						);
+						break;
+				}
+				break;
+
 			case Role::USER:
 			case Role::ADMIN:
 				switch ($case) {

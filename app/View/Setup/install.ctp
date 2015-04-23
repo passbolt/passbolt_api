@@ -13,6 +13,10 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scriptBottom'));
 ?>
 
+<input type="hidden" id="js_setup_user_username" value="<?php echo $user['User']['username'] ?>"/>
+<input type="hidden" id="js_setup_user_first_name" value="<?php echo $user['Profile']['first_name'] ?>"/>
+<input type="hidden" id="js_setup_user_last_name" value="<?php echo $user['Profile']['last_name'] ?>"/>
+
 <div>
 	<?php echo __('Welcome to passbolt! Let\'s take 5 min to setup your system.') ?>
 </div>
@@ -43,5 +47,5 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 		</a>
 	</div>
 
-	<a id="js_plugin_check_retry" href="#"><?php echo __('Retry'); ?></a>
+	<a id="js_setup_plugin_check" href="#"><?php echo __('Retry'); ?></a>
 </div>
