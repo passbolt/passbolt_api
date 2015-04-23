@@ -42,6 +42,7 @@ steal(
 				modelReference: 'passbolt.model.Filter.keywords'
 			}));
 			this.keywordsFormElement.start();
+			this.workspace = 'password';
 		},
 
 		/**
@@ -67,6 +68,22 @@ steal(
 			this.reset();
 		},
 
+		/**
+		 * Observe when a workspace is selected.
+		 * @param {HTMLElement} el
+		 * @param {HTMLEvent} event
+		 * @param workspace
+		 */
+		'{mad.bus} workspace_selected': function (el, event, workspace) {
+			this.workspace = workspace;
+			if (this.workspace == 'password') {
+				this.keywordsFormElement.element.attr("placeholder", "search passwords");
+			}
+			else {
+				this.keywordsFormElement.element.attr("placeholder", "search people");
+			}
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO VIEW EVENTS */
 		/* ************************************************************** */
@@ -80,7 +97,18 @@ steal(
 		' update': function(el, ev) {
 			var data = this.filterForm.getData();
 			var filter = new passbolt.model.Filter(data['passbolt.model.Filter']);
-			mad.bus.trigger('filter_resources_browser', filter);
+			if (this.workspace == 'password') {
+				mad.bus.trigger('filter_resources_browser', filter);
+			}
+			else if (this.workspace == 'people') {
+				mad.bus.trigger('filter_users_browser', filter);
+			}
+			else if (this.workspace == 'preference') {
+				// Switch to people workspace.
+				mad.bus.trigger('workspace_selected', 'people');
+				// Filters on the given workspace.
+				mad.bus.trigger('filter_users_browser', filter);
+			}
 		},
 
 		/**
