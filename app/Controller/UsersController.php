@@ -384,7 +384,7 @@ class UsersController extends AppController {
 	}
 
 /**
- * edit password entry point for users
+ * edit avatar entry point for users
  *
  * @param uuid $id the id of the user we want to edit
  */
@@ -612,6 +612,32 @@ class UsersController extends AppController {
 			if (!$s) {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not save Profile'));
+			}
+		}
+
+		// If User information are provided, we update.
+		if (isset($data['User'])) {
+			$userData = $data['User'];
+			// Get fields.
+			$fields = $this->User->getFindFields('User::validateAccount');
+			// Set user id.
+			$this->User->id = $id;
+			// Validate User data.
+			$this->User->set($userData);
+			$v = $this->User->validates(array('fieldList' => array($fields['fields'])));
+			// If validation failed.
+			if (!$v) {
+				$this->User->rollback();
+				$invalidFields = $this->User->invalidFields();
+				$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
+				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
+			}
+			// Save (update) profile.
+			$s = $this->User->save($userData, false, array('fieldList' => $fields['fields']));
+			// If update failed.
+			if (!$s) {
+				$this->User->rollback();
+				return $this->Message->error(__('Could not save User'));
 			}
 		}
 

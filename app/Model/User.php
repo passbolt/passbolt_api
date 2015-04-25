@@ -542,6 +542,9 @@ class User extends AppModel {
 			case 'User::validateAccount':
 				$fields = array(
 					'fields' => array(
+						'User' => array(
+							'password',
+						),
 						'Profile' => array(
 							'first_name',
 							'last_name',

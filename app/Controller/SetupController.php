@@ -19,7 +19,7 @@ class SetupController extends AppController {
 	function beforeFilter(){
 		parent::beforeFilter();
 		$this->Auth->allow('install');
-		$this->Auth->allow('userInfo');
+		$this->Auth->allow('ping');
 	}
 
 /**
@@ -63,4 +63,12 @@ class SetupController extends AppController {
 		$this->set('user', $user);
 	}
 
+	/**
+	 * Ping passbolt.
+	 */
+	public function ping() {
+		header('Access-Control-Allow-Origin: *');
+		header('Access-Control-Allow-Methods: PUT, OPTIONS');
+		$this->Message->success(__("Affirmative, Dave. I read you."));
+	}
 }
