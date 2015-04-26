@@ -90,10 +90,14 @@ module.exports = function(grunt) {
 				},{
 					// Less
 					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/less',
-					src: ['**'],
+					src: [
+						'abstractions/**','base/**','components/**','dialogs/**',
+						'pages/config.less','pages/loading.less','pages/login.less','pages/passwords.less',
+						'pages/users.less'
+					],
 					dest: '<%= config.webroot %>/less',
 					expand: true
-				},{
+				}/*,{
 					// CSS minified
 					cwd: '<%= bower.directory %>/<%= config.styleguide %>/build/css',
 					src: ['**'],
@@ -105,7 +109,7 @@ module.exports = function(grunt) {
 					src: ['**'],
 					dest: '<%= config.webroot %>/css',
 					expand: true
-				}]
+				}*/]
 			}
 		},
 		watch: {
