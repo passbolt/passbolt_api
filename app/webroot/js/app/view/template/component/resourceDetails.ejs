@@ -10,13 +10,15 @@
 			<span class="value"><%= resource.username %></span>
 		</li>
 		<li class="password">
-			<span class="label"><%= __('Password') %></span>
-			<span class="value">
-				<a href="#copy_secret" class="copy-clipboard">
-					<span>copy to clipboard</span>
-				</a>
-				<pre><%= resource.Secret[0].data %></pre>
-			</span>
+			<div class="label"><%= __('Password') %></div>
+			<div class="value">
+				<div class="secret-copy">
+					<a href="#copy_secret">
+						<span>copy password to clipboard</span>
+					</a>
+					<pre><%= resource.Secret[0].data %></pre>
+				</div>
+			</div>
 		</li>
 		<li class="url">
 			<span class="label"><%= __('URL') %></span>

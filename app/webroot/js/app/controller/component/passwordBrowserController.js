@@ -137,8 +137,13 @@ steal(
 					mad.helper.HtmlHelper.create(
 						cellElement,
 						'inside_replace',
-						'<a href="#copy_secret"><span>copy to clipboard</span></a>'
-						+ '<pre>' + secret + '</pre>'
+						'<div class="secret-copy">' +
+							'<a href="#copy_secret">' +
+								'<span>copy password to clipboard</span>' +
+							'</a>' +
+							'<pre>' + secret + '</pre>' +
+						'</div>'
+
 					);
 				}
 			}, {
