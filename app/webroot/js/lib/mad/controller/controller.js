@@ -71,7 +71,7 @@ steal(
 				// The id is maybe set directly on the templates.
 				var elId = this.element.attr('id');
 				if (elId != '') {
-					console.warn('Controller id defined in options & templates for options.id = ' + options.id);
+					//console.warn('Controller id defined in options & templates for options.id = ' + options.id);
 				}
 				else {
 					options.id = elId;
