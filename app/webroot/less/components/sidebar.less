@@ -5,57 +5,80 @@
 	border:1px solid @border-default;
 	background:@background-default;
 	.box-shadow();
-}
-.panel.aside .resource .dialog-close {
-	position:absolute;
-	right:1em;
-	top:1em;
+
+  /* general resource information */
+  .resource {
+    padding:.5em 1em 1em 1em;
+
+    h3 {
+      margin-top:.5em;
+    }
+    h4 {
+      margin-bottom:.626em;
+      padding-bottom:.313em;
+      border-bottom:1px dotted @border-default;
+    }
+    li, p {
+      font-size:.875em;
+    }
+    li {
+      .clearfix();
+
+      .label {
+        width:30%;
+        display:inline-block;
+        margin-right:10%;
+        float: left;
+        height: 1.8em;
+      }
+      .value {
+        width:50%;
+        display:inline-block;
+        float: left;
+        height: 1.8em;
+      }
+    }
+    textarea.resource_description {
+      height: 2.3em;
+      float: left;
+      font-size: .775em;
+      min-width: 21.5em;
+      border: 1px solid @border-default;
+    }
+    /** description edit **/
+    .resource-description-edit-wrapper input[type=submit] {
+      float: right;
+      margin: 0;
+      font-size: .700em;
+      width: auto;
+      margin: 0;
+      padding: .300em .6em .300em .6em;
+    }
+    .dialog-close {
+      position:absolute;
+      right:1em;
+      top:1em;
+    }
+    .section-action {
+      float:right;
+      margin-top:-1.65em;
+      padding:0;
+    }
+    .detailed-information {
+      li {
+        .label,
+        .value {
+          line-height: 1.8em;
+        }
+        &.password {
+          .value {
+            height: 1.6em;
+            padding-top: 0.2em;
+          }
+        }
+      }
+    }
+  }
 }
 
-/* general resource information */
-.panel.aside .resource {
-	padding:.5em 1em 1em 1em;
-}
-.panel.aside .resource li,
-.panel.aside .resource p {
-	font-size:.875em;
-}
-.panel.aside .resource li .label {
-	width:30%;
-	display:inline-block;
-	margin-right:10%;
-}
-.panel.aside .resource li .value {
-	width:50%;
-	display:inline-block;
-}
-.panel.aside .resource h3 {
-	margin-top:.5em;
-}
-.panel.aside .resource h4 {
-	margin-bottom:.626em;
-	padding-bottom:.313em;
-	border-bottom:1px dotted @border-default;
-}
-.panel.aside .resource .section-action {
-	float:right;
-	margin-top:-2.2em;
-	padding:0;
-}
 
-/** description edit **/
-.panel.aside textarea.resource_description {
-	height: 2.3em;
-	float: left;
-	font-size: .775em;
-	min-width: 21.5em;
-	border: 1px solid @border-default;
-}
-.panel.aside .resource-description-edit-wrapper input[type=submit] {
-	float: right;
-	margin: 0;
-	font-size: .700em;
-	width: auto;
-	margin: 0;
-	padding: .300em .6em .300em .6em;
-}

@@ -106,6 +106,10 @@ i.no-text + span {
   -o-text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
 }
+/* force display of a block inline */
+.inline {
+  display: inline-block;
+}
 /* palette */
 /* borders */
 /* font */
@@ -128,6 +132,12 @@ a:focus {
   outline: 0;
   color: #2894df;
   border: 0;
+}
+p a {
+  border-bottom: 1px solid #dddddd;
+}
+p a:hover {
+  border-bottom: 1px solid #2894df;
 }
 /* colors for messages */
 .message.error {
@@ -741,15 +751,24 @@ body {
   font-family: 'Open Sans', Verdana, sans-serif;
   font-size: 100%;
   line-height: 1.42;
-  color: #666;
   font-weight: 400;
 }
 /* titles */
 h1 {
-  font-size: 1.6em;
+  font-size: 1.5em;
+  /* 24px base 16 */
 }
 h2 {
-  font-size: 1.6em;
+  font-size: 1.250em;
+  /* 20px base 16 */
+}
+h3 {
+  font-size: 1.125em;
+  /* 18px base 16 */
+  display: block;
+  padding-bottom: .333em;
+  /* 6px */
+  border-bottom: 1px dotted #dddddd;
 }
 p {
   margin: .2em 0;
@@ -1033,6 +1052,10 @@ a.button {
   -webkit-border-radius: .286em;
   -moz-border-radius: .286em;
   border-radius: .286em;
+}
+a.button.big {
+  font-size: 1em;
+  margin-top: 1em;
 }
 input.button.primary,
 button.primary,
@@ -1487,7 +1510,7 @@ span.select-box:before {
   top: 7em;
   height: 3em;
 }
-/* main workspace panels */
+/* main workspace panel */
 .panel {
   height: 100%;
 }
@@ -1497,6 +1520,15 @@ span.select-box:before {
   height: auto;
   padding: 0;
 }
+/* its position depends on how many headers are there */
+.header.second + .panel.main {
+  top: 7em;
+}
+.header.third + .panel.main {
+  top: 10em;
+  border-top: 1px solid #dddddd;
+}
+/* collumns */
 .panel,
 .col1,
 .col2,
@@ -1506,15 +1538,16 @@ span.select-box:before {
 }
 .col1,
 .panel.left {
-  width: 14.5%;
+  width: 17.5%;
 }
 .panel.middle {
-  width: 85%;
-  left: 15%;
+  width: 82%;
+  left: 18%;
+  overflow: hidden;
 }
 .col2 {
-  width: 50%;
-  left: 15%;
+  width: 47%;
+  left: 18%;
 }
 .col3,
 .panel.right {
@@ -1522,11 +1555,8 @@ span.select-box:before {
   left: 75%;
 }
 .col2_3 {
-  width: 84.5%;
-  left: 15%;
-}
-.panel.middle {
-  overflow: hidden;
+  width: 81.5%;
+  left: 18%;
 }
 .panel.aside {
   position: absolute;
@@ -1535,8 +1565,21 @@ span.select-box:before {
   bottom: 0;
   height: 100%;
 }
-.panel.main {
-  border-top: 1px solid #dddddd;
+/* hide left collumn when there is no space */
+@media all and (max-width: 980px) {
+  .col1,
+  .panel.left {
+    display: none;
+  }
+  .panel.middle,
+  .col2_3 {
+    width: 98%;
+    left: 1%;
+  }
+  .col2 {
+    width: 55%;
+    left: 1%;
+  }
 }
 /*
  * shadow on scroll
@@ -1619,7 +1662,7 @@ span.select-box:before {
 .header {
   /* top navigation */
   /* logo */
-  /* workspace title */
+  /* do not show h1 in header */
 }
 .header.first {
   background: #333333;
@@ -1657,11 +1700,11 @@ span.select-box:before {
   margin-left: .5em;
   width: 1.250em;
   height: 1.250em;
-  background: transparent url('../img/logo/icon20_white.png') 0 0 no-repeat;
+  background: transparent url('../img/logo/icon-20_white.png') 0 0 no-repeat;
 }
 .header .navigation.primary .home a:focus,
 .header .navigation.primary .home:hover a {
-  background: transparent url('../img/logo/icon20.png') 0 0 no-repeat;
+  background: transparent url('../img/logo/icon-20.png') 0 0 no-repeat;
 }
 .header .navigation.primary .home a span {
   display: none;
@@ -1673,7 +1716,7 @@ span.select-box:before {
 .header .logo img {
   max-width: 150px;
 }
-.header h1.workspace-title {
+.header h1 {
   display: none;
 }
 /* search */
@@ -1898,6 +1941,85 @@ input[type="search"]::-webkit-search-cancel-button {
     background: transparent;
     font-weight: normal;
   }
+}
+/** Copy secret component **/
+div.secret-copy {
+  display: table-cell;
+  vertical-align: middle;
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+div.secret-copy:before,
+div.secret-copy:after {
+  content: "";
+  display: table;
+}
+div.secret-copy:after {
+  clear: both;
+}
+div.secret-copy:before,
+div.secret-copy:after {
+  content: "";
+  display: table;
+}
+div.secret-copy:after {
+  clear: both;
+}
+div.secret-copy > a {
+  background: transparent url('../img/controls/password-dots.png') no-repeat left top;
+  display: inline-block;
+  width: 148px;
+  height: 20px;
+  float: left;
+}
+div.secret-copy > a:hover {
+  background: transparent url('../img/controls/password-dots.png') no-repeat left bottom;
+}
+div.secret-copy > a:after {
+  background: transparent url('../img/logo/icon-20_grey.png') no-repeat center center;
+  display: inline-block;
+  content: '';
+  width: 20px;
+  height: 20px;
+  float: right;
+}
+div.secret-copy > a:hover:after {
+  background: transparent url('../img/logo/icon-20.png') no-repeat center center;
+}
+div.secret-copy > a > span {
+  display: none;
+}
+div.secret-copy > pre {
+  display: none;
 }
 .autocomplete-content {
   border: 1px solid #dddddd;
@@ -2472,28 +2594,11 @@ input[type="search"]::-webkit-search-cancel-button {
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
+  /* general resource information */
 }
-.panel.aside .resource .dialog-close {
-  position: absolute;
-  right: 1em;
-  top: 1em;
-}
-/* general resource information */
 .panel.aside .resource {
   padding: .5em 1em 1em 1em;
-}
-.panel.aside .resource li,
-.panel.aside .resource p {
-  font-size: .875em;
-}
-.panel.aside .resource li .label {
-  width: 30%;
-  display: inline-block;
-  margin-right: 10%;
-}
-.panel.aside .resource li .value {
-  width: 50%;
-  display: inline-block;
+  /** description edit **/
 }
 .panel.aside .resource h3 {
   margin-top: .5em;
@@ -2503,25 +2608,103 @@ input[type="search"]::-webkit-search-cancel-button {
   padding-bottom: .313em;
   border-bottom: 1px dotted #dddddd;
 }
-.panel.aside .resource .section-action {
-  float: right;
-  margin-top: -2.2em;
-  padding: 0;
+.panel.aside .resource li,
+.panel.aside .resource p {
+  font-size: .875em;
 }
-/** description edit **/
-.panel.aside textarea.resource_description {
+.panel.aside .resource li {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+.panel.aside .resource li:before,
+.panel.aside .resource li:after {
+  content: "";
+  display: table;
+}
+.panel.aside .resource li:after {
+  clear: both;
+}
+.panel.aside .resource li:before,
+.panel.aside .resource li:after {
+  content: "";
+  display: table;
+}
+.panel.aside .resource li:after {
+  clear: both;
+}
+.panel.aside .resource li .label {
+  width: 30%;
+  display: inline-block;
+  margin-right: 10%;
+  float: left;
+  height: 1.8em;
+}
+.panel.aside .resource li .value {
+  width: 50%;
+  display: inline-block;
+  float: left;
+  height: 1.8em;
+}
+.panel.aside .resource textarea.resource_description {
   height: 2.3em;
   float: left;
   font-size: .775em;
   min-width: 21.5em;
   border: 1px solid #dddddd;
 }
-.panel.aside .resource-description-edit-wrapper input[type=submit] {
+.panel.aside .resource .resource-description-edit-wrapper input[type=submit] {
   float: right;
   font-size: .700em;
   width: auto;
   margin: 0;
   padding: .300em .6em .300em .6em;
+}
+.panel.aside .resource .dialog-close {
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+.panel.aside .resource .section-action {
+  float: right;
+  margin-top: -1.65em;
+  padding: 0;
+}
+.panel.aside .resource .detailed-information li .label,
+.panel.aside .resource .detailed-information li .value {
+  line-height: 1.8em;
+}
+.panel.aside .resource .detailed-information li.password .value {
+  height: 1.6em;
+  padding-top: 0.2em;
 }
 /* tabs */
 .tabs {
@@ -2547,7 +2730,7 @@ input[type="search"]::-webkit-search-cancel-button {
   margin-bottom: -1px;
   border: 1px solid #dddddd;
   border-bottom: 1px solid #FFF;
-  background: #FFF;
+  background: #ffffff;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -2633,6 +2816,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .tableview table .m-cell {
   width: 10em;
   max-width: 10em;
+  vertical-align: middle;
 }
 .tableview table .l-cell {
   width: 12em;
@@ -2654,52 +2838,22 @@ input[type="search"]::-webkit-search-cancel-button {
 .tableview table td span {
   vertical-align: 6%;
 }
-/* password */
-.tableview table td.password a {
-  background: transparent url('../img/logo/icon20_grey.png') no-repeat right top;
-  height: 20px;
-  width: 20px;
-  display: inline-block;
-  width: 130px;
-  margin-top: 2px;
-}
-.tableview table td.password a:before {
-  content: "••••••••••";
-  font-size: 1.8em;
-  line-height: 0.8em;
-  width: 90%;
-  color: #333333;
-  display: inline-block;
-}
-.tableview table td.password a:hover {
-  background: transparent url('../img/logo/icon20.png') no-repeat right top;
-}
-.tableview table td.password a > span {
-  display: none;
-}
-.tableview table td.password pre {
-  display: none;
-}
 /*
  * Footer
  */
 .footer {
+  padding: 0.833em 1.5% 0 .5%;
+  text-align: right;
+  font-size: .75em;
+  /* 12px */
   margin-top: 0em;
   width: 98%;
   height: 2em;
   background: #FFF;
   border-top: 1px solid #dddddd;
-}
-@media all and (min-width: 768px) {
-  .footer {
-    bottom: 0;
-    position: absolute;
-    padding: 0.833em 1.5% 0 .5%;
-    font-size: .75em;
-    /* 12px */
-    z-index: 990;
-    text-align: right;
-  }
+  bottom: 0;
+  position: fixed;
+  z-index: 990;
 }
 /* complexity and progress bar */
 .dialog .progress {
@@ -2719,7 +2873,6 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .dialog .input-password-wrapper {
   overflow: hidden;
-  clear: both;
 }
 .dialog .password-complexity .complexity-text {
   float: right;

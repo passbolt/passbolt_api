@@ -33,7 +33,7 @@
 	height:3em;
 }
 
-/* main workspace panels */
+/* main workspace panel */
 .panel {
 	height:100%;
 }
@@ -43,21 +43,32 @@
 	height:auto;
 	padding:0;
 }
+/* its position depends on how many headers are there */
+.header.second + .panel.main {
+	top: 7em;
+}
+.header.third + .panel.main {
+	top: 10em;
+	border-top:1px solid @border-default;
+}
+
+/* collumns */
 .panel,
 .col1, .col2, .col3, .col2_3 {
 	position:absolute;
 }
 .col1,
 .panel.left {
-	width:14.5%;
+	width:17.5%;
 }
 .panel.middle {
-	width:85%; 
-	left:15%;
+	width:82%;
+	left:18%;
+	overflow:hidden;
 }
 .col2 {
-	width:50%; 
-	left:15%;
+	width:47%;
+	left:18%;
 }
 .col3,
 .panel.right {
@@ -65,11 +76,8 @@
 	left:75%;
 }
 .col2_3 {
-	width:84.5%; 
-	left:15%;
-}
-.panel.middle {
-	overflow:hidden;
+	width:81.5%;
+	left:18%;
 }
 .panel.aside {
 	position:absolute;
@@ -78,7 +86,19 @@
 	bottom:0;
 	height:100%;
 }
-.panel.main {
-	border-top:1px solid @border-default;
-}
 
+/* hide left collumn when there is no space */
+@media all and (max-width: 980px) {
+	.col1, .panel.left {
+		display:none;
+	}
+	.panel.middle,
+	.col2_3 {
+		width:98%;
+		left:1%;
+	}
+	.col2 {
+		width:55%;
+		left:1%;
+	}
+}

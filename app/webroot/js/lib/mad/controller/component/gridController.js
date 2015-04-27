@@ -155,7 +155,7 @@ steal(
 
 				if(columnModel.cellAdapter) {
 					var itemId = mappedItem.id;
-					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' div');
 					var cellValue = mappedItem[columnModel.name];
 					columnModel.cellAdapter($cell, cellValue, mappedItem, item, columnModel);
 				}

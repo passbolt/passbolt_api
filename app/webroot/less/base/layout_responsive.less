@@ -17,26 +17,28 @@
 /*
  * Main container for all
  */
+.grid-responsive-12,
 .grid {
 	margin: 0 auto;
 	padding: 0 0 0 1%;
 	max-width: 1220px;
-}
-.row {
-	clear: both;
-	padding: 0 10px;
-}
-.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11 {
-	float: none;
-	width: 99%;
-}
 
-.col1 img, .col2 img, .col3 img, .col4 img, .col5 img, .col6 img, .col7 img, .col8 img, .col9 img, .col10 img, .col11 img, .col12 img {
-	width: 100%;
-	height: auto;
-	display: block;
-}
+	.row {
+		clear: both;
+		padding: 0 10px;
 
+		.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11 {
+			float: none;
+			width: 99%;
+		}
+
+		.col1 img, .col2 img, .col3 img, .col4 img, .col5 img, .col6 img, .col7 img, .col8 img, .col9 img, .col10 img, .col11 img, .col12 img {
+			width: 100%;
+			height: auto;
+			display: block;
+		}
+	}
+}
 /*
  * large devices
  */
@@ -45,29 +47,31 @@
 	/*
 	 * Common columns definitions
 	 */
-	.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
-		float: left;
-		margin: 0 3% 0 0;
+	.grid .row {
+		.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+			float: left;
+			margin: 0 3% 0 0;
+		}
+
+		.last {
+			margin-right: 0;
+		}
+
+		.col1 { width: 5.5%; }
+		.col2 { width: 14%; }
+		.col3 { width: 22.5%; }
+		.col4 { width: 31%; }
+		.col5 { width: 39.5%; }
+		.col6 { width: 48%; }
+		.col7 { width: 56.5%; }
+		.col8 { width: 65%; }
+		.col9 { width: 73.5%; }
+		.col10 { width: 82%; }
+		.col11 { width: 90.5%; }
+		.col12 { width: 99%; margin: 0; }
+
+		.push1 { margin-left:5.5%; }
+		.push2 { margin-left:14%; }
+
 	}
-
-	.last {
-		margin-right: 0;
-	}
-
-	.col1 { width: 5.5%; }
-	.col2 { width: 14%; }
-	.col3 { width: 22.5%; }
-	.col4 { width: 31%; }
-	.col5 { width: 39.5%; }
-	.col6 { width: 48%; }
-	.col7 { width: 56.5%; }
-	.col8 { width: 65%; }
-	.col9 { width: 73.5%; }
-	.col10 { width: 82%; }
-	.col11 { width: 90.5%; }
-	.col12 { width: 99%; margin: 0; }
-
-	.push1 { margin-left:5.5%; }
-	.push2 { margin-left:14%; }
-
 }
