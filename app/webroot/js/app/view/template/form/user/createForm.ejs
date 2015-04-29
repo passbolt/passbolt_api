@@ -19,7 +19,7 @@
 		</div>
 	</div>
 
-	<div class="input text required">
+	<div class="input text required clearfix">
 		<label for="js_field_username"><%= __('Username / Email') %></label>
 		<input name="passbolt.model.User.username" class="required" maxlength="50" type="text" id="js_field_username" placeholder="email"<% if (action != 'create') { %> disabled<% } %> />
 		<div id="js_field_username_feedback" class="message">
@@ -28,7 +28,7 @@
 
     <% if (action != 'create') { %>
 	<% if (role != 'admin' || (role == 'admin' && user.id == passbolt.model.User.getCurrent().id)) { %>
-	<div class="input text input-current-password-wrapper">
+	<div class="input text input-current-password-wrapper clearfix">
 		<div class="input current_password required short">
 			<label for="js_field_current_password"><%= __('Current login password') %></label>
 			<input name="passbolt.model.User.current_password" class="required" maxlength="50" type="password" id="js_field_current_password" placeholder="password"/>
@@ -46,7 +46,7 @@
 	</div>
 	<% } %>
 
-	<div class="input text input-password-wrapper">
+	<div class="input text input-password-wrapper clearfix">
 		<div class="input password required short">
 			<label for="js_field_password"><%= __('New login password') %></label>
 			<input name="passbolt.model.User.password" class="required" maxlength="50" type="password" id="js_field_password" placeholder="password"/>
