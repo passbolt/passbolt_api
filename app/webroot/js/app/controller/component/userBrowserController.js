@@ -85,6 +85,9 @@ steal(
 		            'css': ['s-cell'],
 		            'label': ''
 	            },
+				'titleAdapter': function (value, mappedItem, item, columnModel) {
+					return 'avatar';
+				},
 	            'valueAdapter': function (value, mappedItem, item, columnModel) {
 		            return '<img src="' + item.Profile.avatarPath('small') + '" width="30" height="30">';
 	            }
