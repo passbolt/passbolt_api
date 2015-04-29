@@ -75,7 +75,7 @@ steal(
 					new mad.form.FeedbackController($('#js_field_role_id_feedback'), {}).start()
 				);
 				// Hide everything that is not admin.
-				$('input[type=checkbox]', $('#js_field_role_id')).not("[value='" + cakephpConfig.roles.admin + "']").hide().next('span').hide();
+				$('input[type=checkbox]', $('#js_field_role_id')).not("[value='" + cakephpConfig.roles.admin + "']").hide().next('label').hide();
 
 				// Add resource username field
 				this.addElement(
