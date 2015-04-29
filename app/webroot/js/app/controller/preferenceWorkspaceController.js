@@ -127,7 +127,7 @@ steal(
 				var self = this;
 
 				// get the dialog
-				var dialog = new mad.controller.component.DialogController(null, {label: __('Edit User Password')})
+				var dialog = new mad.controller.component.DialogController(null, {label: __('Edit Avatar')})
 					.start();
 				// attach the component to the dialog
 				var form = dialog.add(passbolt.controller.form.user.AvatarFormController, {
