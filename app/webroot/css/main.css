@@ -922,6 +922,9 @@ span + .icon {
 .icon.levelup:before {
   content: '\21B0';
 }
+.icon.camera:before {
+  content: '\1F4F7';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -1864,20 +1867,23 @@ input[type="search"]::-webkit-search-cancel-button {
   margin-bottom: .1875em;
   border-bottom: 1px solid #dddddd;
 }
-.breadcrumbs li {
+.breadcrumbs ul {
+  padding-top: 0.4em;
+}
+.breadcrumbs ul li {
   display: inline;
   font-size: .8em;
   /* 12px/base16>15 */
   margin-left: .250em;
 }
-.breadcrumbs li:before {
+.breadcrumbs ul li:before {
   content: "›";
   margin-right: .5em;
 }
-.breadcrumbs li:first-child {
+.breadcrumbs ul li:first-child {
   margin-left: 0;
 }
-.breadcrumbs li:first-child:before {
+.breadcrumbs ul li:first-child:before {
   content: "";
 }
 .breadcrumbs div.main-cell {
@@ -2596,23 +2602,29 @@ div.secret-copy > pre {
   box-shadow: 0px 0px 10px 0px #dddddd;
   /* general resource information */
 }
-.panel.aside .resource {
+.panel.aside .resource,
+.panel.aside .user {
   padding: .5em 1em 1em 1em;
   /** description edit **/
 }
-.panel.aside .resource h3 {
+.panel.aside .resource h3,
+.panel.aside .user h3 {
   margin-top: .5em;
 }
-.panel.aside .resource h4 {
+.panel.aside .resource h4,
+.panel.aside .user h4 {
   margin-bottom: .626em;
   padding-bottom: .313em;
   border-bottom: 1px dotted #dddddd;
 }
 .panel.aside .resource li,
-.panel.aside .resource p {
+.panel.aside .user li,
+.panel.aside .resource p,
+.panel.aside .user p {
   font-size: .875em;
 }
-.panel.aside .resource li {
+.panel.aside .resource li,
+.panel.aside .user li {
   /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
@@ -2646,65 +2658,75 @@ div.secret-copy > pre {
  */
 }
 .panel.aside .resource li:before,
-.panel.aside .resource li:after {
+.panel.aside .user li:before,
+.panel.aside .resource li:after,
+.panel.aside .user li:after {
   content: "";
   display: table;
 }
-.panel.aside .resource li:after {
+.panel.aside .resource li:after,
+.panel.aside .user li:after {
   clear: both;
 }
 .panel.aside .resource li:before,
-.panel.aside .resource li:after {
+.panel.aside .user li:before,
+.panel.aside .resource li:after,
+.panel.aside .user li:after {
   content: "";
   display: table;
 }
-.panel.aside .resource li:after {
+.panel.aside .resource li:after,
+.panel.aside .user li:after {
   clear: both;
 }
-.panel.aside .resource li .label {
+.panel.aside .resource li .label,
+.panel.aside .user li .label {
   width: 30%;
   display: inline-block;
   margin-right: 10%;
   float: left;
   height: 1.8em;
 }
-.panel.aside .resource li .value {
+.panel.aside .resource li .value,
+.panel.aside .user li .value {
   width: 50%;
   display: inline-block;
   float: left;
   height: 1.8em;
 }
-.panel.aside .resource textarea.resource_description {
+.panel.aside .resource textarea.resource_description,
+.panel.aside .user textarea.resource_description {
   height: 2.3em;
   float: left;
   font-size: .775em;
   min-width: 21.5em;
   border: 1px solid #dddddd;
 }
-.panel.aside .resource .resource-description-edit-wrapper input[type=submit] {
+.panel.aside .resource .resource-description-edit-wrapper input[type=submit],
+.panel.aside .user .resource-description-edit-wrapper input[type=submit] {
   float: right;
   font-size: .700em;
   width: auto;
   margin: 0;
   padding: .300em .6em .300em .6em;
 }
-.panel.aside .resource .dialog-close {
+.panel.aside .resource .dialog-close,
+.panel.aside .user .dialog-close {
   position: absolute;
   right: 1em;
-  top: 1em;
+  top: 2em;
 }
-.panel.aside .resource .section-action {
+.panel.aside .resource .section-action,
+.panel.aside .user .section-action {
   float: right;
   margin-top: -1.65em;
   padding: 0;
 }
 .panel.aside .resource .detailed-information li .label,
-.panel.aside .resource .detailed-information li .value {
+.panel.aside .user .detailed-information li .label,
+.panel.aside .resource .detailed-information li .value,
+.panel.aside .user .detailed-information li .value {
   line-height: 1.8em;
-}
-.panel.aside .resource .detailed-information li.password .value {
-  height: 1.6em;
-  padding-top: 0.2em;
 }
 /* tabs */
 .tabs {
@@ -2792,6 +2814,7 @@ div.secret-copy > pre {
 .tableview table td {
   text-align: left;
   padding: .25em 0;
+  vertical-align: middle;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3100,6 +3123,113 @@ div.secret-copy > pre {
 .folder-add .input.text {
   width: 25em;
 }
+.panel.aside .user .header {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+.panel.aside .user .header:before,
+.panel.aside .user .header:after {
+  content: "";
+  display: table;
+}
+.panel.aside .user .header:after {
+  clear: both;
+}
+.panel.aside .user .header:before,
+.panel.aside .user .header:after {
+  content: "";
+  display: table;
+}
+.panel.aside .user .header:after {
+  clear: both;
+}
+.panel.aside .user .header img {
+  float: left;
+  width: 55px;
+  height: 55px;
+  border: 1px solid #333;
+}
+.panel.aside .user .header h3 {
+  float: left;
+  width: 67%;
+  margin: 0;
+  padding: 0 0 0 1em;
+  display: table-cell;
+  vertical-align: middle;
+  border: 0;
+}
+.panel.aside .user .header h3 span.name {
+  font-size: 1.2em;
+}
+.panel.aside .user .header h3 span.username {
+  font-size: 0.8em;
+  color: #666666;
+  font-weight: normal;
+}
+.panel.aside .user li.key {
+  margin-bottom: 0.5em;
+}
+.panel.aside .user li.key a.button.copy-public-key {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  font-size: 0.75em;
+}
+.panel.aside .user li textarea {
+  width: 100%;
+}
+.panel.aside .user .dialog-close {
+  position: absolute;
+  right: 1em;
+  top: 1.6em;
+}
+.tableview-header th.cell_multipleSelect {
+  width: 3%;
+}
+.tableview-header th.cell_avatar {
+  width: 3%;
+}
+.tableview-content td.cell_multipleSelect {
+  width: 3%;
+}
+.tableview-content td.cell_avatar {
+  text-align: right;
+  padding-right: 1em;
+  width: 3%;
+  max-width: 20px;
+}
+.tableview-content td.cell_avatar img {
+  width: 25px !important;
+  height: 25px !important;
+}
 /* drag n drop */
 #js_dragged_resource {
   padding: 6px 10px;
@@ -3111,6 +3241,10 @@ div.secret-copy > pre {
 }
 #js_dragged_resource span.name {
   font-weight: bold;
+}
+.panel.aside .resource .detailed-information li.password .value {
+  height: 1.6em;
+  padding-top: 0.2em;
 }
 .loading-screen {
   width: 100%;
@@ -3138,3 +3272,151 @@ div.secret-copy > pre {
   font-size: .75em;
 }
 /* initial loading state bar */
+.passbolt_controller_preference_workspace_controller .section.detailed-information {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information:before,
+.passbolt_controller_preference_workspace_controller .section.detailed-information:after {
+  content: "";
+  display: table;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information:after {
+  clear: both;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information:before,
+.passbolt_controller_preference_workspace_controller .section.detailed-information:after {
+  content: "";
+  display: table;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information:after {
+  clear: both;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar {
+  float: left;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar img {
+  border: 1px solid #dddddd;
+  padding: 0;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit {
+  width: 201px;
+  height: 50px;
+  background: transparent url('../img/controls/overlay-opacity-50.png') repeat;
+  color: #fff;
+  margin-top: -50px;
+  position: relative;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a {
+  color: #fff;
+  display: block;
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a:before,
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a:after {
+  content: "";
+  display: table;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a:after {
+  clear: both;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a:before,
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a:after {
+  content: "";
+  display: table;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a:after {
+  clear: both;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a i.icon {
+  display: block;
+  float: left;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a i.icon:before {
+  display: block;
+  float: left;
+  width: 48px;
+  height: 48px;
+  line-height: 1.4em;
+  font-size: 3em;
+  text-align: center;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a span.text {
+  display: block;
+  width: 130px;
+  float: left;
+  margin-left: 0;
+  padding: 0.5em 0.5em 0 0.5em;
+  font-size: 0.8em;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information > ul {
+  float: left;
+  margin-left: 2em;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information > ul li {
+  margin-bottom: 1.5em;
+}
+.passbolt_controller_preference_workspace_controller .section.detailed-information > ul li p > em {
+  margin-top: 0.8em;
+  font-size: 0.8em;
+  display: block;
+}

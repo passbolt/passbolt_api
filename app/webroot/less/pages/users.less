@@ -1,0 +1,70 @@
+.panel.aside .user {
+  .header {
+    .clearfix();
+    img {
+      float: left;
+      width: 55px;
+      height: 55px;
+      border: 1px solid #333;
+    }
+    h3 {
+      float: left;
+      width: 67%;
+      margin: 0;
+      padding: 0 0 0 1em;
+      display: table-cell;
+      vertical-align: middle;
+      border: 0;
+      span.name {
+        font-size: 1.2em;
+      }
+      span.username {
+        font-size: 0.8em;
+        color: #666666;
+        font-weight: normal;
+      }
+    }
+  }
+  li {
+    &.key {
+      margin-bottom: 0.5em;
+      a.button.copy-public-key {
+        padding-top: 0.2em;
+        padding-bottom: 0.2em;
+        font-size: 0.75em;
+      }
+    }
+    textarea {
+      width: 100%;
+    }
+  }
+  .dialog-close {
+    position:absolute;
+    right:1em;
+    top:1.6em;
+  }
+}
+
+.tableview-header {
+  th.cell_multipleSelect {
+    width: 3%;
+  }
+  th.cell_avatar {
+    width: 3%;
+  }
+}
+.tableview-content {
+  td.cell_multipleSelect {
+    width: 3%
+  }
+  td.cell_avatar {
+    text-align: right;
+    padding-right: 1em;
+    width: 3%;
+    max-width: 20px;
+    img {
+      width: 25px !important;
+      height: 25px !important;
+    }
+  }
+}

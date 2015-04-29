@@ -2,31 +2,30 @@
  * Breadcrumbs
  */
 .breadcrumbs {
-	height: 2em;
-	padding: .1875em 0 .1875em 0;
-	margin-bottom: .1875em;
-	border-bottom: 1px solid @border-default;
+  height: 2em;
+  padding: .1875em 0 .1875em 0;
+  margin-bottom: .1875em;
+  border-bottom: 1px solid @border-default;
+  ul {
+    padding-top: 0.4em;
+    li {
+      display: inline;
+      font-size: .8em; /* 12px/base16>15 */
+      margin-left: .250em;
+      &:before {
+        content: "›";
+        margin-right: .5em;
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+      &:first-child:before {
+        content: "";
+      }
+    }
+  }
+  div.main-cell {
+    display: inline;
+  }
 }
 
-.breadcrumbs li {
-	display: inline;
-	font-size: .8em; /* 12px/base16>15 */
-	margin-left: .250em;
-}
-
-.breadcrumbs li:before {
-	content: "›";
-	margin-right: .5em;
-}
-
-.breadcrumbs li:first-child {
-	margin-left: 0;
-}
-
-.breadcrumbs li:first-child:before {
-	content: "";
-}
-
-.breadcrumbs div.main-cell {
-	display: inline;
-}
