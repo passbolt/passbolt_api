@@ -16,12 +16,18 @@ class UsersController extends AppController {
 		'EmailNotificator',
 	);
 
-	/**
-	 * beforeFilter
-	 */
+/**
+ * beforeFilter
+ */
 	function beforeFilter(){
 		parent::beforeFilter();
-		$this->Auth->allow('validateAccount');
+		$allow = array(
+			'validateAccount'
+		);
+		if (Configure::read('Registration.public')) {
+			$allow[] = 'register';
+		}
+		$this->Auth->allow($allow);
 	}
 
 /**
@@ -56,6 +62,29 @@ class UsersController extends AppController {
  */
 	public function logout() {
 		$this->redirect($this->Auth->logout());
+	}
+
+/**
+ * Register page.
+ */
+	public function register() {
+		$this->layout = 'login';
+		// if data is provided.
+		if (!empty ($this->request->data)) {
+			$userData = $this->request->data;
+			try {
+				$this->__add($userData);
+			}
+			catch (ValidationException $e) {
+				echo $e->getMessage();
+				pr($e->getInvalidFields());
+				return;
+			}
+
+			// Redirect to thank you page.
+			$this->redirect("/register/thank-you");
+			return;
+		}
 	}
 
 /**
@@ -160,12 +189,90 @@ class UsersController extends AppController {
 		$this->Message->success();
 	}
 
+
+	/**
+	 * Add a user to the app, create a token and send a notification.
+	 * @param $data
+	 *   user and profile data.
+	 *
+	 * @return array
+	 *   a user object
+	 *
+	 * @throws Exception
+	 * @throws ValidationException
+	 */
+	private function __add($data) {
+		// If role id is not provided, we assign a default one
+		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
+			$userData['User']['role_id'] = $this->User->Role->field('Role.id', array('name' => Role::USER));
+		}
+		// Assign a temporary and random password.
+		$userData['User']['password'] = Common::randomString(15);
+		// User is not activated by default.
+		$userData['User']['active'] = FALSE;
+		// Validates user information
+		$this->User->set($userData);
+		// Get fields.
+		$fields = $this->User->getFindFields('User::save', User::get('Role.name'));
+		// check if the data is valid
+		if (!$this->User->validates()) {
+			$invalidFields = $this->User->invalidFields();
+			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
+			throw new ValidationException(__('Could not validate user data'), $finalInvalidFields);
+		}
+
+		$this->User->begin();
+		$user = $this->User->save($userData, false, $fields['fields']);
+		if ($user == false) {
+			$this->User->rollback();
+			throw new Exception(__('The user could not be saved'));
+		}
+
+		if (!isset($userData['Profile']) || empty($userData['Profile'])) {
+			$this->User->rollback();
+			throw new Exception(__('Profile data are missing'));
+		}
+		// Validates profile information
+		$userData['Profile']['user_id'] = $this->User->id;
+		$this->User->Profile->set($userData);
+		if (!$this->User->Profile->validates()) {
+			$this->User->rollback();
+			$invalidFields = $this->User->Profile->invalidFields();
+			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
+			throw new ValidationException(__('Could not validate profile'), $finalInvalidFields);
+		}
+
+		$fields = $this->User->Profile->getFindFields('User::save', User::get('Role.name'));
+		$profile = $this->User->Profile->save($userData['Profile'], false, $fields['fields']);
+		if ($profile == false) {
+			$this->User->rollback();
+			throw new Exception(__('The profile could not be saved'));
+		}
+
+		// Create token for user.
+		$token = $this->User->AuthenticationToken->createToken($this->User->id);
+		if (!$token) {
+			$this->User->rollback();
+			throw new Exception(__('The account token could not be created'));
+		}
+		// Send notification email.
+		$this->EmailNotificator->accountCreationNotification(
+			$this->User->id,
+			array(
+				'token' => $token['AuthenticationToken']['token'],
+				'creator_id' => User::get('id'),
+			));
+
+		// Everything fine, we commit.
+		$this->User->commit();
+
+		return $user;
+	}
+
 /**
  * add a user entry point
  */
 	public function add() {
-		// TODO : add associations management
-
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
 			return $this->Message->error(__('You are not authorized to access that location'));
@@ -183,68 +290,15 @@ class UsersController extends AppController {
 		// set the data for validation and save
 		$userData = $this->request->data;
 
-		// If role id is not provided, we assign a default one
-		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
-			$userData['User']['role_id'] = $this->User->Role->field('Role.id', array('name' => Role::USER));
+		try {
+			$this->__add($userData);
 		}
-		// Assign a temporary and random password.
-		$userData['User']['password'] = Common::randomString(15);
-		// User is not activated by default.
-		$userData['User']['active'] = FALSE;
-		// Validates user information
-		$this->User->set($userData);
-		$fields = $this->User->getFindFields('User::save', User::get('Role.name'));
-		// check if the data is valid
-		if (!$this->User->validates()) {
-			$invalidFields = $this->User->invalidFields();
-			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
-			return $this->Message->error(__('Could not validate user data'), array('body' => $finalInvalidFields));
+		catch (ValidationException $ve) {
+			return $this->Message->error(__('Could not validate profile'), array('body' => $ve->getInvalidFields()));
 		}
-
-		$this->User->begin();
-		$user = $this->User->save($userData, false, $fields['fields']);
-		if ($user == false) {
-			$this->User->rollback();
-			return $this->Message->error(__('The user could not be saved'));
+		catch (Exception $e) {
+			return $this->Message->error($e->getMessage());
 		}
-
-		if (!isset($userData['Profile']) || empty($userData['Profile'])) {
-			$this->User->rollback();
-			return $this->Message->error(__('Profile data are missing'));
-		}
-		// Validates profile information
-		$userData['Profile']['user_id'] = $this->User->id;
-		$this->User->Profile->set($userData);
-		if (!$this->User->Profile->validates()) {
-			$this->User->rollback();
-			$invalidFields = $this->User->Profile->invalidFields();
-			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
-			return $this->Message->error(__('Could not validate profile'), array('body' => $finalInvalidFields));
-		}
-
-		$fields = $this->User->Profile->getFindFields('User::save', User::get('Role.name'));
-		$profile = $this->User->Profile->save($userData['Profile'], false, $fields['fields']);
-		if ($profile == false) {
-			$this->User->rollback();
-			return $this->Message->error(__('The profile could not be saved'));
-		}
-		// Everything fine, we commit.
-		$this->User->commit();
-
-		// Create token for user.
-		$token = $this->User->AuthenticationToken->createToken($this->User->id);
-		if (!$token) {
-			$this->User->rollback();
-			return $this->Message->error(__('The account token could not be created'));
-		}
-		// Send notification email.
-		$this->EmailNotificator->accountCreationNotification(
-			$this->User->id,
-			array(
-				'token' => $token['AuthenticationToken']['token'],
-				'creator_id' => User::get('id'),
-			));
-
 
 		// Return data.
 		$data = array(

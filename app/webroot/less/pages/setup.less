@@ -1,8 +1,96 @@
+/*
+	Custom rules for the setup process pages
+	Mostly extra padding here and there
+*/
 .setup {
 	.video-wrapper {
 		margin-top:2em;
 	}
+	.panel.middle .grid {
+		padding-bottom:2em;
+	}
 
 	h2 {
+		margin-top:1em;
+	}
+	h2 .button {
+		margin-right:0.3em;
+		margin-top:-5px;
+	}
+
+	.why-plugin-wrapper p {
+		padding-bottom:1em;
+	}
+
+	.input-password-wrapper {
+		margin-top:1.5em;
+	}
+
+	.first-password-wrapper {
+		padding-top:1em;
+	}
+	/* last row is for cancel / submit buttons */
+	.row.last {
+		padding-top:1.5em;
+	}
+
+	/* gpg textare is tall */
+	.gpgkey textarea {
+		height:24em;
+		width:95%;
+	}
+
+	.side-message {
+		margin-top:3em;
+		margin-left:1em;
+		font-size:1em;
+		margin-right:2em;
+
+		ul, p {
+			padding-bottom:1em;
+		}
+		a {
+			border-color:@black;
+		}
+		a:hover {
+			border-color:@blue;
+		}
+	}
+}
+/* hide left column when there is no space */
+@media all and (min-width: 980px) {
+
+	.setup .panel.middle {
+		overflow-y: scroll;
+	}
+}
+/* reset layout styles on smaller screen */
+@media all and (max-width: 980px) {
+	.page, .panel,
+	.header.second + .panel.main, .header.first,
+	.header.second, .col1, .col2, .col3, .col2_3{
+		position:relative;
+		width:auto;
+		height:auto;
+		display:block;
+		margin:0;
+		top:auto;
+		overflow:auto;
+	}
+	.header.second {
+		text-align: center;
+		margin-bottom:2em;
+	}
+	.col1, .panel.left {
+		display:none;
+	}
+	.panel.middle,
+	.col2_3 {
+		width:98%;
+		left:1%;
+	}
+	.col2 {
+		width:55%;
+		left:1%;
 	}
 }

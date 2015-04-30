@@ -1,50 +1,5 @@
-/* complexity and progress bar */
-.dialog .progress {
-	width:67%;
-	border:1px solid @border-default;
-	height:7px;
-	display:block;
-	clear:both;
-	margin:.25em 0 .5em 0;
-	float:left;
-}
-.dialog .progress-bar {
-	height:5px;
-	display:block;
-	float:left;
-	margin:1px;
-}
-.dialog .input-password-wrapper {
+@import "../../components/form/password.less";
+
+.input-password-wrapper {
 	overflow: hidden;
 }
-.dialog .password-complexity .complexity-text {
-	float:right;
-	clear:right;
-	width:28%;
-	font-size:11px;
-}
-.dialog .password-complexity .progress-bar {
-	background:#000;
-	width:1%;
-}
-.dialog .password-complexity .progress-bar.very_weak {
-	background:#000;
-	width:5%;
-}
-.dialog .password-complexity .progress-bar.weak {
-	background:#ef2929;
-	width:10%;
-}
-.dialog .password-complexity .progress-bar.fair {
-	background:#fce94f;
-	width:60%;
-}
-.dialog .password-complexity .progress-bar.strong {
-	background:#73d216;
-	width:80%;
-}
-.dialog .password-complexity .progress-bar.very_strong {
-	background:#4e9a06;
-	width:100%;
-}
-

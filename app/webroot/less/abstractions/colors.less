@@ -2,8 +2,12 @@
 @white  : #FFF;
 @black	: #333;
 @blacker: #000;
+
 @red	: #d40101;
 @blue	: #2894df;
+@green : #009900;
+@orange: #9F6000;
+
 @grey	: #DDD;
 @grey-lighter : #EEE;
 @grey-lightest: #F3F3F3;
@@ -30,8 +34,12 @@
 @background-light: @grey;
 @background-lighter: @grey-lighter;
 @background-lightest: #F3F3F3;
-@background-error: #fce6e8;
+
+@background-error: lighten(@red,53%);
 @background-success: #edf7eb;
+@background-warning: #ffefc1;
+@background-notice: lighten(@blue,40%);
+@background-disabled: @grey-lightest;
 
 .background-gradient() {
 	background:@background-lighter;
@@ -72,26 +80,6 @@ p a {
 }
 p a:hover {
 	border-bottom:1px solid @blue;
-}
-
-/* colors for messages */
-.message.error {
-	color: @red;
-	//background-color: #FFBABA;
-}
-.message.success {
-	color:#4F8A10;
-	//background-color:#DFF2BF;
-}
-.message.warning {
-	color:#9F6000;
-	//background-color:#FEEFB3;
-}
-.message.info,
-.message.information,
-.message.notice {
-	color:#00529B;
-	//background-color:#BDE5F8;
 }
 
 /* scrollbar */

@@ -1,45 +1,93 @@
+/*
+ * Login page additional styles
+ */
 /* header */
-.login .logo {
-	background:transparent url('@{images}/logo/logo.png') 0 10px no-repeat;
-	width:260px;
-	height:60px;
-	margin-top:.5em;
-}
-.login .logo span {
-	display:none;
-}
-.login form legend,
-.login .information {
-	display:none;
-}
-.login form {
-	background:#EEE;
-	padding:6% 0% 9% 5%;
-	margin-top:2%;
-}
-.login form fieldset {
-	margin:0;
-	border:0;
-}
-@media all and (min-width: 768px) {
-	/* form */
-	.login .information {
-		margin-top:2%;
-		display:block;
-	}
-	.login form .submit {
-		margin-left:2%;
-	}
-	.login form .forgot {
-		margin-left:.8em;
+.page.register, /* register use the same layout */
+.page.login {
+
+	h2 {
+		font-size:2em;
+		margin-top:1em;
 	}
 
-	/* information */
-	.login .information {
-		font-size:1.2em;
+	.logo {
+		background: transparent url('@{images}/logo/logo.png') 0 10px no-repeat;
+		width: 260px;
+		height: 60px;
+		margin-top: .5em;
+
+		span {
+			display: none;
+		}
 	}
-	.login .information ul {
-		list-style:circle;
-		padding-left:1.5em;
+
+	.form {
+		background: #EEE;
+		padding: 4% 0% 9% 5%;
+		margin-top: 1%;
+
+		fieldset {
+			margin: 0;
+			border: 0;
+		}
+		legend {
+			display: none;
+		}
+		.actions-wrapper .secondary {
+			margin-left:1em;
+		}
+		.submit {
+			margin-left:2%;
+			input {
+				padding:.7em 1.5em;
+			}
+		}
+	}
+
+	.chrome-plugin-block p img {
+		width: 160px;
+		margin-top:20px;
+	}
+
+	.github-block .button,
+	.donate-block .donate.button {
+		margin-top:20px;
+	}
+	.message-wrapper,
+	.plugin-check-wrapper {
+		margin-bottom:1em;
+	}
+
+	.information p {
+		font-size: 1.25em;
+		margin-bottom: 1em;
+
+		&.message {
+			font-size: 1.125em;
+			margin-bottom: .425em;
+		}
+	}
+
+	.row + .row {
+		padding-top:1em;
+	}
+
+	.feedback {
+		.icon.paperplane.huge {
+			font-size:160px;
+			color:#CCC;
+			text-align:center;
+			display:block;
+			width:95%;
+			padding:.1em 0 0 0;
+			line-height: 160px;
+		}
+		p {
+			text-align: center;
+			width:85%;
+			padding:0 0 0 5%;
+			font-size: 1.250em;
+		}
 	}
 }
+

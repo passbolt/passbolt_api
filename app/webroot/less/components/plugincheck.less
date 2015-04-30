@@ -2,8 +2,8 @@
 	padding:1em;
 
 	&.firefox {
-		background:transparent url('@{images}/third_party/firefox_logo.png') 1em center no-repeat;
-		background-size: 9.375em auto; /* 150px */
+		background:transparent url('@{images}/third_party/firefox_logo.png') 1.5em center no-repeat;
+		background-size: 150px auto; /* 150px */
 	}
 	&.success {
 		background-color:@background-success;
@@ -14,7 +14,15 @@
 
 	.message {
 		font-weight: normal;
-		margin-left: 10.375em;
+		margin-left: 180px;
 		padding:.5em 1em;
 	}
+}
+/* no plugin = display error */
+.no-passboltplugin .plugin-check.success {
+	display:none;
+}
+/* plugin = display success */
+.passboltplugin .plugin-check.error {
+	display:none;
 }

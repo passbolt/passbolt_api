@@ -1,0 +1,34 @@
+table.table-info {
+	border-collapse: separate;
+
+	td {
+		border:.25em solid @background-default;
+		padding:.25em .5em;
+		padding-right:1em;
+		color:@font-light;
+
+		&.warning {
+			background:@background-warning;
+		}
+		&.error {
+			background:@background-error;
+		}
+		.alt.side {
+			color:@font-light;
+			float:right;
+		}
+		.alt.side:before {
+			content: "(";
+		}
+		.alt.side:after {
+			content: ")";
+		}
+	}
+
+	td + td {
+		color:@black;
+		padding-right:.5em;
+		padding:.25em .5em;
+	}
+
+}

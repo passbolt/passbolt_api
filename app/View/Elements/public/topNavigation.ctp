@@ -14,6 +14,9 @@
 			'about' => array( 'url' => '#', 'class' => 'left' ),
 			'login' => array( 'url' => '#', 'class' => 'right' )
 		);
+	    if (Configure::read('Registration.public')) {
+		    $menu['register'] = array( 'url' => '/register', 'class' => 'right' );
+	    }
 	} else {
 		$menu = array(
 			'home' => array( 'url' => '#', 'class' => 'home' ),

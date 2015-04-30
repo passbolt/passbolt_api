@@ -139,21 +139,6 @@ p a {
 p a:hover {
   border-bottom: 1px solid #2894df;
 }
-/* colors for messages */
-.message.error {
-  color: #d40101;
-}
-.message.success {
-  color: #4F8A10;
-}
-.message.warning {
-  color: #9F6000;
-}
-.message.info,
-.message.information,
-.message.notice {
-  color: #00529B;
-}
 /* scrollbar */
 /* todos */
 .todo {
@@ -771,7 +756,12 @@ h3 {
   border-bottom: 1px dotted #dddddd;
 }
 p {
-  margin: .2em 0;
+  margin: .25em 0;
+}
+.code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.688em;
+  /* 11px base 16 */
 }
 /**
  * Shiny! Shiny!
@@ -925,6 +915,9 @@ span + .icon {
 .icon.camera:before {
   content: '\1F4F7';
 }
+.icon.paperplane:before {
+  content: '\1F53F';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -1050,7 +1043,6 @@ a.button {
   padding: .429em 1.286em .429em 1.286em ;
   /* 6px 20px */
   height: 1.429em;
-  float: left;
   margin-right: .5em;
   -webkit-border-radius: .286em;
   -moz-border-radius: .286em;
@@ -1059,6 +1051,7 @@ a.button {
 a.button.big {
   font-size: 1em;
   margin-top: 1em;
+  min-width: 3em;
 }
 input.button.primary,
 button.primary,
@@ -1082,6 +1075,13 @@ button.primary:focus,
 a.button.primary:focus {
   border: 1px solid #2894df;
   background: #2a9ceb;
+}
+a.button.dim,
+a.button.dim:focus,
+a.button.dim:hover,
+a.button.dim:active {
+  background: #ffffff;
+  font-weight: normal;
 }
 /* hover */
 input[type=submit]:hover,
@@ -1139,6 +1139,8 @@ a.button.disabled:active {
   -moz-box-shadow: 0 0 0;
   box-shadow: 0 0 0;
   top: 0;
+  background: #ffffff;
+  border: 1px solid #dddddd;
 }
 /* toggle selected */
 .toggle.button.selected {
@@ -1169,11 +1171,44 @@ a.button.disabled:active {
   border-bottom-left-radius: 0;
 }
 /*
+	Base form components styling
+	Check components/form for more advanced/fancy input
+*/
+/* input label */
+label {
+  font-weight: bold;
+  font-size: 1.125em;
+  /* 18px */
+  padding: .2em;
+  display: block;
+}
+/*
+	Required Label
+
+	Description	: Label and input are wrapped in <div.text.required>. Additional <span> with a star is included. Input also get the required class.
+	.required		- additional red star
+*/
+.required label:after {
+  content: " *";
+  color: #D40000;
+  font-weight: bold;
+}
+/* fallback placeholder */
+.placeholder {
+  color: #bbb;
+}
+/* webkit placeholder */
+::-webkit-input-placeholder {
+  color: #bbb;
+}
+/* moz placeholder */
+:-moz-placeholder {
+  color: #bbb;
+}
+/*
 	Generic Form Item
 
 	Description	: labels and input are wrapped in a <div.text>
-	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since				: version 3.0
 
 	:hover			 - subtle hover highlight
 	:active			- inset box shadow
@@ -1183,50 +1218,16 @@ input[type=text],
 input[type=password],
 input[type=search],
 textarea {
-  color: #333;
-  background: #FFF;
-  border: 1px solid #cccccc;
+  font-size: 16px;
+  color: #333333;
+  background: #ffffff;
   width: 14em;
   /* 20 char (default input length) x .7em (average char length) */
-  padding: .278em .5em .278em .5em;
-  /* 5px 9px */
+  padding: .563em .625em .375em .625em;
   display: inline-block;
-  zoom: 1;
-  /* zoom and *display = ie7 hack for display:inline-block */
-  *display: inline;
   margin-bottom: .5em;
   -webkit-appearance: none;
-}
-select.fluid,
-textarea.fluid,
-input[type=password].fluid,
-input[type=text].fluid {
-  width: 80%;
-}
-/*
-	TextField
-
-	Description	: labels and input are wrapped in a div with the type of the class
-	Compatible	 : FF2+, Chrome1+,
-	Since		 : version 3.0
-
-	:hover			- subtle hover highlight
-	:active			- inset box shadow
-	.disabled		- grey out to indicate it cannot be used
-*/
-label {
-  font-weight: bold;
-  font-size: 1.125em;
-  /* 18px */
-  padding: .2em;
-  display: block;
-}
-textarea,
-input[type=password],
-input[type=search],
-input[type=text] {
-  font-size: 1.125em;
-  /* 18px */
+  border: 1px solid #cccccc;
   border-top: 1px solid #bbbbbb;
 }
 textarea:hover,
@@ -1244,18 +1245,9 @@ input[type=text]:focus {
   box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
   border: 1px solid #2a9ceb;
 }
-.textarea.disabled textarea,
-.textarea.disabled textarea:hover,
-.textarea.disabled textarea:focus,
-.input.disabled input[type=password],
-.input.password.disabled input[type=password]:hover,
-.input.password.disabled input[type=password]:focus,
-.input.disabled input[type=search],
-.input.search.disabled input[type=search]:hover,
-.input.search.disabled input[type=search]:focus,
-.input.disabled input[type=text],
-.input.text.disabled input[type=text]:hover,
-.input.text.disabled input[type=text]:focus {
+input[type=password]:disabled,
+input[type=search]:disabled,
+input[type=text]:disabled {
   border: 1px solid #dddddd;
   -webkit-box-shadow: 0 0 0 0;
   -moz-box-shadow: 0 0 0 0;
@@ -1264,28 +1256,11 @@ input[type=text]:focus {
   background: #f3f3f3;
 }
 /*
-	Required Textfield
-
-	Description	: Label and input are wrapped in <div.text.required>. Additional <span> with a star is included. Input also get the required class.
-	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since				: version 3.0
-
-	.required		- additional red star
-*/
-.required label:after {
-  content: " *";
-  color: #D40000;
-  font-weight: bold;
-}
-/*
-	Large textarea Textfield
-
+	Textarea Textfield
 	Description	: textarea.textarea is pretty much the same than div.input.text.
-	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since				: version 3.0
 
 	.required		- additional red star
-	.lager			 - make the box bigger
+	.lage		 	 - make the box bigger
 */
 textarea {
   height: 3.6em;
@@ -1295,56 +1270,10 @@ textarea {
   width: 30em;
   height: 7em;
 }
-/*
-	Messages for validation error and example
-
-	Description	: <div.text.error>, <div.text.success>, can be used to add status messages or example. 
-								 Additional messages are wrapped in <.error-message>, <.success-messages>
-	Compatible	 : FF2+, Chrome1+, IE?, Opera?, Safari?
-	Since				: version 3.0
-
-	.success		 - can be used for instant validation feedback
-	.notice			- can be used for example messages prior validation
-	.error			 - error messages used for validation issues
-*/
-.message {
-  font-weight: bold;
-  padding: 0;
-}
-.input .message {
-  padding-left: .25em;
-  margin-bottom: .25em;
-  background-color: transparent;
-  border: 0;
-}
-.input.error label {
-  color: #d40101;
-}
-.input input.error,
-.textarea textarea.error,
-.select select.error {
-  border: 1px solid #d40101;
-}
-.input .inline.message {
-  display: inline-block;
-}
-/* do not show javascript needed warning if js is enabled 
-	 this needs modernizer to work
-*/
-.js .message.nojs {
-  display: none;
-}
+/* text and textarea */
 /*
 	Radio
-
-	Description	: 
-	Compatible	 : ?
-	Since				: version 3.0
-
-.checkboxlist label,
-.radiolist label {
-	font-size:1.25em;
-}*/
+*/
 .checkboxlist .input.checkbox label,
 .radiolist .input.radio label {
   font-weight: normal;
@@ -1355,130 +1284,102 @@ textarea {
   display: inline;
   font-size: 1em;
 }
-/* 
-	Hide the original radios and checkboxes (but still accessible)
-	@credit: http://www.wufoo.com/2011/06/13/custom-radio-buttons-and-checkboxes/
-
-	#cssrulefilter is a rule filter to block browsers that don't support that selector 
-	http://lea.verou.me/2011/05/rule-filtering-based-on-specific-selectors-support/
-
-input[type="checkbox"] {
-	position:absolute;
-	margin-left:0;
-	margin-top:.35em;
-}
-input[type="checkbox"] + label {
-	font-size:.9375em;
-	font-weight:normal;
-	margin-left:1.25em;
-	padding:0;
-}
-input[type="checkbox"]:hover,
-input[type="checkbox"] + label:hover {
-	cursor: pointer;
-}*/
-/*#cssrulefilter:checked,
-input[type="checkbox"] {
-	position:absolute;
-	margin-left:0;
-	margin-top:8px;
-	opacity: 0;
-}
-#cssrulefilter:checked,
-.input.checkbox input[type="checkbox"] + label {
-	padding: 5px 0 4px 20px;
-	background: url('../img/controls/checkbox.png') left center no-repeat;
-}
-#cssrulefilter:checked,
-.input.checkbox input[type="checkbox"]:checked + label {
-	background: url('../img/controls/checkbox-checked.png') left center no-repeat;
-}
-#cssrulefilter:checked,
-.input.checkbox:hover input[type="checkbox"] + label {
-	background: url('../img/controls/checkbox-active.png') left center no-repeat;
-}
-#cssrulefilter:checked,
-.input.checkbox:hover input[type="checkbox"]:checked + label {
-	background: url('../img/controls/checkbox-checked-active.png') left center no-repeat;
-}*/
+/* radio and checkboxes */
 /*
-	Select
+	Messages for validation error and example
 
-	Description	: ?
-	Compatible	 : ?
-	Since				: version 3.0
+	Description	: <div.text.error>, <div.text.success>, can be used to add status messages or example.
+								 Additional messages are wrapped in <.error-message>, <.success-messages>
 
-
-select {
-	font-size: 1.125em;
-	padding: .278em .5em .278em .5em;
-	margin: 0;
-	color:@font-default;
-	border:none;
-	outline:none;
-	display: inline-block;
-	-webkit-appearance:none;
-	-moz-appearance:none;
-	appearance:none;
-	cursor:pointer;
-	border: 1px solid @border-default;
-	width: 100%;
-	background:@white;
-}
-
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. * /
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-	select {padding-right:18px}
-}
-
-span.select-box {
-	position:relative;
-}
-
-span.select-box:after {
-	content:'<>';
-	font:11px "Consolas", monospace;
-	color:#aaa;
-	-webkit-transform:rotate(90deg);
-	-moz-transform:rotate(90deg);
-	-ms-transform:rotate(90deg);
-	transform:rotate(90deg);
-	right:8px;
-	top:0px;
-	padding:0 0 2px;
-	border-bottom:1px solid @border-default;
-	position:absolute;
-	pointer-events:none;
-}
-span.select-box:before {
-	content:'';
-	right:6px;
-	top:0px;
-	width:20px;
-	height:20px;
-	background:#f8f8f8;
-	position:absolute;
-	pointer-events:none;
-	display:block;
-	background: -o-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
-	background: -ms-linear-gradient(top, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
-	background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
-	border-bottom: 1px solid @border-default;
-}
+	.success		 - can be used for instant validation feedback
+	.notice			- can be used for example messages prior validation
+	.error			 - error messages used for validation issues
 */
-/* fallback placeholder */
-.placeholder {
-  color: #bbb;
+form .input .message {
+  font-weight: bold;
+  padding: 0;
+  padding-left: .25em;
+  margin-bottom: .25em;
+  background-color: transparent;
+  border: 0;
+  /* colors for messages */
 }
-/* webkit placeholder */
-::-webkit-input-placeholder {
-  color: #bbb;
+form .input .message.error {
+  color: #d40101;
 }
-/* moz placeholder */
-:-moz-placeholder {
-  color: #bbb;
+form .input .message.success {
+  color: #009900;
 }
+form .input .message.warning {
+  color: #9f6000;
+}
+form .input .message.notice {
+  color: #2894df;
+}
+.input.error label {
+  color: #d40101;
+}
+.input input.error,
+.textarea textarea.error,
+.select select.error {
+  border: 1px solid #d40101;
+}
+form .input .inline.message {
+  display: inline-block;
+}
+/* error messages */
+select {
+  font-size: 16px;
+  color: #333333;
+  background: #ffffff;
+  width: 15.5em;
+  /* 20 char x .7em x random browser stuffs */
+  padding: .5em .625em .313em .625em;
+  margin-bottom: .5em;
+  border: 1px solid #cccccc;
+  border-top: 1px solid #bbbbbb;
+  display: inline-block;
+}
+select:disabled {
+  background: #f3f3f3;
+}
+/* select */
+.input.date input {
+  border-right: 0;
+  width: 12em;
+}
+.input.date:after {
+  position: absolute;
+  content: ' ';
+  z-index: 99999;
+  width: 20px;
+  height: 20px;
+  background: transparent url('../img/controls/calendar.png') center center no-repeat;
+  padding: .365em;
+  border: 1px solid #cccccc;
+  border-top: 1px solid #bbbbbb;
+  border-left: 0;
+}
+/* date input */
+input[type=file] {
+  width: 100%;
+  color: #333333;
+}
+/* file upload input */
+/* layout and shortcuts */
+input.big {
+  font-size: 20px;
+}
+select.fluid,
+textarea.fluid,
+input[type=password].fluid,
+input[type=text].fluid {
+  width: 80%;
+}
+select.fluid {
+  width: 97.5%;
+}
+/* shortcut classes for layout */
 /*
  * Page layout
  */
@@ -1504,6 +1405,7 @@ span.select-box:before {
 /* headers */
 .header.first {
   /* height:2.375em; //already defined in header */
+  height: 2.375em;
 }
 .header.second {
   top: 2.375em;
@@ -1568,7 +1470,13 @@ span.select-box:before {
   bottom: 0;
   height: 100%;
 }
-/* hide left collumn when there is no space */
+/* if the other grid is used
+   don't center the grid inside main panel */
+.panel.main .grid-responsive-12 {
+  float: left;
+  width: 100%;
+}
+/* hide left column when there is no space */
 @media all and (max-width: 980px) {
   .col1,
   .panel.left {
@@ -1907,6 +1815,9 @@ input[type="search"]::-webkit-search-cancel-button {
   font-size: .875em;
   min-width: 1em;
 }
+.actions-wrapper a.button {
+  float: left;
+}
 /* Progress bar */
 .progress-bar {
   background: #ffffff;
@@ -2110,14 +2021,6 @@ div.secret-copy > pre {
 }
 .dialog textarea {
   width: 92%;
-}
-.dialog .actions.inline {
-  float: right;
-  margin-right: .5em;
-  width: 28%;
-}
-.dialog .actions.inline .button {
-  float: left;
 }
 .dialog .error {
   display: block;
@@ -2878,8 +2781,79 @@ div.secret-copy > pre {
   position: fixed;
   z-index: 990;
 }
-/* complexity and progress bar */
-.dialog .progress {
+/*
+	Password fields in passbolt have complexity "progress bar"
+	and a custom layout to accomodate buttons on the left end
+*/
+.input-password-wrapper {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  width: 90%;
+}
+.input-password-wrapper:before,
+.input-password-wrapper:after {
+  content: "";
+  display: table;
+}
+.input-password-wrapper:after {
+  clear: both;
+}
+.input-password-wrapper:before,
+.input-password-wrapper:after {
+  content: "";
+  display: table;
+}
+.input-password-wrapper:after {
+  clear: both;
+}
+.input-password-wrapper .input.password input {
+  width: 63%;
+  float: left;
+}
+.input-password-wrapper .actions.inline {
+  float: right;
+  margin-right: .5em;
+  width: 28%;
+}
+.input-password-wrapper .actions.inline .button {
+  float: left;
+}
+.input-password-wrapper .password-complexity .complexity-text {
+  float: right;
+  clear: right;
+  width: 28%;
+  font-size: 11px;
+}
+.input-password-wrapper .password-complexity .progress {
   width: 67%;
   border: 1px solid #dddddd;
   height: 7px;
@@ -2888,44 +2862,47 @@ div.secret-copy > pre {
   margin: .25em 0 .5em 0;
   float: left;
 }
-.dialog .progress-bar {
+.input-password-wrapper .password-complexity .progress-bar {
+  background: #000000;
+  width: 1%;
   height: 5px;
   display: block;
   float: left;
   margin: 1px;
 }
-.dialog .input-password-wrapper {
-  overflow: hidden;
-}
-.dialog .password-complexity .complexity-text {
-  float: right;
-  clear: right;
-  width: 28%;
-  font-size: 11px;
-}
-.dialog .password-complexity .progress-bar {
-  background: #000;
-  width: 1%;
-}
-.dialog .password-complexity .progress-bar.very_weak {
-  background: #000;
+.input-password-wrapper .password-complexity .progress-bar.very_weak {
+  background: #000000;
   width: 5%;
 }
-.dialog .password-complexity .progress-bar.weak {
-  background: #ef2929;
+.input-password-wrapper .password-complexity .progress-bar.weak {
+  background: #d40101;
   width: 10%;
 }
-.dialog .password-complexity .progress-bar.fair {
+.input-password-wrapper .password-complexity .progress-bar.fair {
   background: #fce94f;
   width: 60%;
 }
-.dialog .password-complexity .progress-bar.strong {
-  background: #73d216;
+.input-password-wrapper .password-complexity .progress-bar.strong {
+  background: #66CC00;
   width: 80%;
 }
-.dialog .password-complexity .progress-bar.very_strong {
-  background: #4e9a06;
-  width: 100%;
+.input-password-wrapper .password-complexity .progress-bar.very_strong {
+  background: #009900;
+  width: 99.5%;
+}
+.password-hints li:before {
+  content: "●";
+  color: #f3f3f3;
+  padding-right: .5em;
+}
+.password-hints li.success:before {
+  color: #009900;
+}
+.password-hints li.error:before {
+  color: #d40101;
+}
+.input-password-wrapper {
+  overflow: hidden;
 }
 /* password share tab */
 .dialog .share-tab .form-content {
@@ -3333,12 +3310,13 @@ div.secret-copy > pre {
   height: 50px;
   background: transparent url('../img/controls/overlay-opacity-50.png') repeat;
   color: #fff;
-  margin-top: -50px;
+  margin-top: -55px;
   position: relative;
 }
 .passbolt_controller_preference_workspace_controller .section.detailed-information .avatar .edit a {
   color: #fff;
   display: block;
+  height: 50px;
   /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
