@@ -118,6 +118,48 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 		}
 	}
 
+//	public function testGeneratedKeyInfo() {
+//		$key = '-----BEGIN PGP PUBLIC KEY BLOCK-----
+//
+//Version: OpenPGP.js v0.7.2
+//
+//Comment: http://openpgpjs.org
+//
+//xsBNBFVDHW8BCADBxipSynxBa+vMDDOZa95EiWIk5lRQiP6kKe/fJhcNxynU
+//cL6O0kixgGD+8Dl1/JrgUIhYTgQWAu+CeLy+Rfa3mMei3VBAGuBaYuDDDcoF
+//aK9H00wsHvzLlbxW8Wr7HkOVQfC73GHbMUi/FQeD/pHEffEYg68ohGLfwSPg
+//rGaGKzqVUXcKoiqQSQUo3ryM3RhuXRcN2CLtmem1vCYY3BNSEnKUsQeuaD1c
+//ufX8x3kkRqAdQVevZjTuc2Ujw675k69OMmRJ9LBBz1LBYmmq4b9Wr3QXk6Ye
+//Ok6esOgd3oyghBby6KgTZ9Q7zJxCK8DJ+Z4hFqP8Qyej960kyl0uOP8RABEB
+//AAHNLWtldmluIG11bGxlciA8a2V2aW4ubXVsbGVyQGNsaWNrb25mcmVuY2gu
+//Y29tPsLAcgQQAQgAJgUCVUMdcgYLCQgHAwIJEHN6/zDdgn6wBBUIAgoDFgIB
+//AhsDAh4BAAAyFQf+LnnEZ/pBupixwavP24kL1kD/kcf0SAq1RDHxrDpRBrr0
+//GmX/31XaQJMTSAtYtGLOPFN4L1Go+RGANNv31lY1whBfsVTFzZE0NtcGATQ1
+//gdoN2oQy6nCg+NcadaieDC7wiY2VUvhcfFShq4buAiwyPhKltgudxDzem3vB
+//g+AEueSLt4ZNRTrD78a7DePJGTvXVXRawzHO1xf8toLNlLSOKi+uDx0LFSRJ
+//gN8/rrvS6D1ieMBAsSAau5kQV7P2VzUNZ++8UxESBpaZ2p01aBfyXnehwyiR
+//iXq0xs3kg64cVsFDh6RqgtBVCyb11pL/hCum51w5Wf4ysSulCbbdF2Xicc7A
+//TQRVQx1yAQgAipF8cm2pG8G91PCrnGRqMuqK5i3Rdk69r2XWE9B/sUX/67jM
+//IbgC8EOWQglXERIuVdjBCoB8FEzJ8pYfsjuQeXfTHf1T8cjOtGy+aqFI5cL1
+//f2A6ZDHVp4CjiB4OLon+GjonrCtk+fD6JdjqLLFP8OsGo8EQxOnJFMyMK3zf
+//Qz6KedJWftwJb5r1NsAh9pmmCMfgS/rGgo7gm4ckMWkthoiSpDPRrCydEh4J
+//zd3+FLvqpz9hCMUt349Qrp6XeBfIQbeoiw3jx3W8xTRTo4/O8of2qowMud6q
+//hwy5EOkzpzplPZ+E/j5Z0Fr+D4fq4UvUGTPS9g6CHLN6MVR5bh107QARAQAB
+//wsBfBBgBCAATBQJVQx10CRBzev8w3YJ+sAIbDAAAEu8H/0kgOGE1QudDEALT
+//fCqhk1apPAOMLgckwWTP+BvlcHCwTWvWbUWMhTl1fgM2zczTjl6jT4kRonxU
+//UW7yD+DURmgMrbZyVctwLOpXub9852jeF8a2NcwwwfYKvLykYTX8qZE/cqwz
+//DtxeOb5Zmux5HrfYdHxwu2pokBd1LEm1JiY5Tg88V5AQNwSfPP07oSaVKHsW
+//bkmapRxg7uI7FsQKExnH5ZHfmLTHY+ClO7YQnR7iI5xQAmy9GI2k4IeOAKzx
+///s+rUKbBol5+ArbsJX7Yexf78+1pEnrOj1VvZn9GuVFj0iU9c8M8b1a8K41n
+//JV+d0BnpZzkVpti7wRZ0pijpC5o=
+//
+//=DdAr
+//
+//-----END PGP PUBLIC KEY BLOCK-----';
+//		$info = $this->Gpgkey->info($key);
+//		// TODO : complete test
+//	}
+
 	/**
 	 * Test UserId Validation
 	 * @return void
