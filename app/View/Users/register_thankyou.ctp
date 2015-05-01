@@ -14,10 +14,9 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 <div class="grid">
 	<div class="row">
 		<div class="col6 push1 information">
-			<h2>Try passbolt today!</h2>
+			<h2>Thank you!</h2>
 			<p>
-				Enter your details in the form.
-				We will send you an email to get you started.
+				Thank you for giving passbolt a test run! We just sent you an email, please follow the instructions to get started.
 			</p>
 			<div class="message-wrapper">
 				<p class="message warning"><strong>Disclaimer:</strong> please note this is a demo instance of Passbolt for trial purposes only.
@@ -35,17 +34,9 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 			<div class="logo">
 				<h1><a href="#"><span>Passbolt</span></a></h1>
 			</div>
-			<div class="users register form">
-				<?php echo $this->MyForm->create('User');?>
-				<fieldset>
-					<legend><?php echo __('Please enter your username and password'); ?></legend>
-					<?php echo $this->MyForm->input('Profile.first_name', array('label' => __('First name'), 'class' =>'required fluid')) ?>
-					<?php echo $this->MyForm->input('Profile.last_name', array('label' => __('Last name'), 'class' =>'required fluid')) ?>
-					<?php echo $this->MyForm->input('User.username', array('label' => __('Email'), 'class' =>'required fluid')) ?>
-				</fieldset>
-				<?php echo $this->MyForm->submit(__('Register'));?>
-				<span class="forgot"><a href="/login">already a member?</a></span>
-				<?php echo $this->MyForm->end();?>
+			<div class="register thank-you form feedback">
+				<div class="graphical-feedback"><i class="icon huge paperplane"></i></div>
+				<p><strong>Email sent!</strong> Please check your spam folder if you do not hear from us after a while.</p>
 			</div>
 		</div>
 	</div>
@@ -60,4 +51,4 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 			<?php echo $this->element('public/box-donate'); ?>
 		</div>
 	</div>
-
+</div>
