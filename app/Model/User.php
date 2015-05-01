@@ -335,6 +335,17 @@ class User extends AppModel {
 		switch ($role) {
 			case Role::GUEST:
 				switch ($case) {
+					case 'User::view':
+						$conditions = array(
+							'conditions' => array(
+								'User.active' => true,
+								'User.deleted' => false
+							)
+						);
+						if (isset($data['User.id'])) {
+							$conditions['conditions']['User.id'] = $data['User.id'];
+						}
+						break;
 					case 'Setup::userInfo':
 						$conditions = array(
 							'conditions' => array(
@@ -548,8 +559,11 @@ class User extends AppModel {
 						'Profile' => array(
 							'first_name',
 							'last_name',
-						)
-					)
+						),
+						'Gpgkey' => array(
+							'key',
+						),
+					),
 				);
 				break;
 			case 'User::save':
