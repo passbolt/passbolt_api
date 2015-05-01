@@ -137,6 +137,7 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
  */
 	Router::connect('/users/index', array('controller' => 'users', 'action' => 'index'));
 	Router::connect('/register', array('controller' => 'users', 'action' => 'register'));
+	Router::connect('/register/thankyou', array('controller' => 'users', 'action' => 'register_thankyou'));
 	Router::connect('/users/index/*', array('controller' => 'users', 'action' => 'index'));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'delete', '[method]' => "DELETE"));
 	Router::connect('/users/password/*', array('controller' => 'users', 'action' => 'editPassword', '[method]' => "PUT"));
