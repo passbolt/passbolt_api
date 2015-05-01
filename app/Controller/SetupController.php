@@ -53,7 +53,7 @@ class SetupController extends AppController {
 
 		// Retrieve the user.
 		$data = array('User.id' => $userId);
-		$o = $this->User->getFindOptions('Setup::userInfo', User::get('Role.name'), $data);
+		$o = $this->User->getFindOptions('Setup::userInfo', Role::GUEST, $data);
 		$user = $this->User->find('first', $o);
 
 		if (!$user) {
