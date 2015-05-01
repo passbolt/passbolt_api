@@ -177,6 +177,7 @@ class MessageComponent extends Component {
 			'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
 			'status' => ((empty($code)) ? $type : $type . ' ' . $code),
 			'title' => $title,
+			'servertime' => time(),
 			'message' => $message,
 			'controller' => $this->Controller->name,
 			'action' => $this->Controller->action
