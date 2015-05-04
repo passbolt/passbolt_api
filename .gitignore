@@ -10,6 +10,7 @@
 /app/tmp/sessions/*
 /app/tmp/tests/*
 /app/tmp/image-processing/*
+/app/composer.phar
 /app/webroot/img/public/*
 app/Plugin/*
 !app/Plugin/DataExtras
