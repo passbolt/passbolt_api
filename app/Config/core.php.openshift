@@ -111,6 +111,8 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  */
 	//Configure::write('App.baseUrl', env('SCRIPT_NAME'));
 
+	Configure::write('App.fullBaseUrl', 'http://demo-passbolt.rhcloud.com');
+
 /**
  * To configure CakePHP to use a particular domain URL
  * for any URL generation inside the application, set the following
