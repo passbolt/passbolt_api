@@ -293,6 +293,23 @@ class Gpgkey extends AppModel {
 
 
 	/**
+	 * Analyze key before validating it, and extract key information.
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function beforeValidate($options = array()) {
+		if (!empty($this->data['Gpgkey']['key']) &&
+			empty($this->data['Gpgkey']['fingerprint'])
+		) {
+			$data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']['key']);
+			$this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
+		}
+		return true;
+	}
+
+	/**
 	 * Analyze key before saving it, and extract key information.
 	 *
 	 * @param array $options
@@ -303,8 +320,8 @@ class Gpgkey extends AppModel {
 		if (!empty($this->data['Gpgkey']['key']) &&
 			empty($this->data['Gpgkey']['fingerprint'])
 		) {
-			$data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']);
-			$this->data['Gpgkey'] = $data['Gpgkey'];
+			$data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']['key']);
+			$this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
 		}
 		return true;
 	}
