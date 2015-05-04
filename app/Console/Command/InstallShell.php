@@ -46,6 +46,7 @@ class InstallShell extends AppShell {
 				return;
 			}
 			$this->createRoles();
+			$this->createAnonUser();
 			$this->createAdminUser($password);
 		}
 		$this->out("\npassbolt installation success");
@@ -67,6 +68,7 @@ class InstallShell extends AppShell {
 	public function createAdminUser($password) {
 		$User = ClassRegistry::init('User');
 		$Role = ClassRegistry::init('Role');
+		$User->create();
 		$u = $User->save(array(
 				'username' => 'admin@passbolt.com',
 				'active' => true,
@@ -78,6 +80,7 @@ class InstallShell extends AppShell {
 		}
 
 		$Profile = ClassRegistry::init('Profile');
+		$Profile->create();
 		$p = $Profile->save(array(
 				'first_name' => 'admin',
 				'last_name' => 'admin',
@@ -96,6 +99,32 @@ class InstallShell extends AppShell {
 			));
 		if (!$gpgkey) {
 			$this->out("<error>Could not save gpg key</error>");
+		}
+	}
+
+	public function createAnonUser() {
+		$User = ClassRegistry::init('User');
+		$Role = ClassRegistry::init('Role');
+		$User->create();
+		$u = $User->save(array(
+				'username' => 'anonymous@passbolt.com',
+				'active' => true,
+				'password' => 'thYu!76hn54(§7yhT(',
+				'role_id' => $Role->field('id', array('name' => 'guest')),
+			));
+		if (!$u) {
+			$this->out("<error>Could not save user</error>");
+		}
+
+		$Profile = ClassRegistry::init('Profile');
+		$Profile->create();
+		$p = $Profile->save(array(
+				'first_name' => 'anon',
+				'last_name' => 'ymous',
+				'user_id' => $u['User']['id'],
+			));
+		if (!$p) {
+			$this->out("<error>Could not save profile</error>");
 		}
 	}
 
