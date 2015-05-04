@@ -25,6 +25,9 @@ $config = array(
 		'timezone' => 'GTM+1',
 		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
+	'Registration' => array(
+    	'public' => TRUE,
+    ),
 	// Authentication & Authorisation
 	'HashType' => 'blowfish',
 	'Auth' => array(
