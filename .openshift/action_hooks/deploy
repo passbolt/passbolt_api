@@ -5,12 +5,12 @@ echo "= install composer dependencies ="
 export COMPOSER_HOME="$OPENSHIFT_DATA_DIR/.composer"
 
 if [ ! -f "$OPENSHIFT_DATA_DIR/composer.phar" ]; then
-    curl -s https://getcomposer.org/installer | /usr/local/zend/bin/php -- --install-dir=$OPENSHIFT_DATA_DIR
+    curl -s https://getcomposer.org/installer | php -- --install-dir=$OPENSHIFT_DATA_DIR
 else
-	/usr/local/zend/bin/php $OPENSHIFT_DATA_DIR/composer.phar self-update
+	php $OPENSHIFT_DATA_DIR/composer.phar self-update
 fi
 
-( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR ; php ./composer.phar install )
+( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/app ; php $OPENSHIFT_DATA_DIR/composer.phar install )
 
 echo "Installing Passbolt"
 (cd $OPENSHIFT_REPO_DIR; sh $OPENSHIFT_REPO_DIR/app/Console/cake install)
