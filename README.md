@@ -34,14 +34,17 @@ Copy the app configuration file
 ```
 	cp app/Config/app.php.default app/Config/app.php
 ```
-Install Composer files (to install vendor and plugin dependencies).
+Install Composer app files (to install vendor and plugin dependencies).
+You will need a working version of composer. See https://getcomposer.org
 ```
-	cd app && php composer.phar install --no-dev
+	cd app
+	composer install --no-dev
 ```
-Run the install script from the cakephp root
+Run the install script from the cakephp root with the data flag set
+if you want to install test data.
 ```
   cd ..
-	./app/Console/cake install
+	./app/Console/cake install [--data=1]
 ```
 Check if it works!
 
