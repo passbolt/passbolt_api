@@ -135,7 +135,7 @@ class InstallShell extends AppShell {
 		$Role->create();
 		$Role->save(array('name' => 'user', 'description' => 'normal user'));
 		$Role->create();
-		$Role->save(array('name' => 'admin', 'description' => 'god'));
+		$Role->save(array('name' => 'admin', 'description' => 'god almighty'));
 	}
 
 }
