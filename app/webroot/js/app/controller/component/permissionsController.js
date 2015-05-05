@@ -244,7 +244,7 @@ steal(
 			// reload the component with the updated permissions
 			this.load(this.options.acoInstance);
 			// hide the user feedback.
-			$('#js_permissions_changes').hide();
+			$('#js_permissions_changes').addClass('hidden');
 		},
 
 		/**
@@ -274,7 +274,7 @@ steal(
 				delete this.options.changes[id];
 				// Hide the user feedback if there is no more changes.
 				if (!this.options.changes.length) {
-					$('#js_permissions_changes').hide();
+					$('#js_permissions_changes').addClass('hidden');
 				}
 			}
 			else {
@@ -282,8 +282,8 @@ steal(
 					Permission: data
 				};
 				// Display the user feedback if not shown already.
-				if (($permissionChanges = $('#js_permissions_changes:hidden')).length) {
-					$permissionChanges.show();
+				if (($permissionChanges = $('#js_permissions_changes.hidden')).length) {
+					$permissionChanges.removeClass('hidden');
 				}
 			}
 		},
