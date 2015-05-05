@@ -55,6 +55,8 @@ class InstallShell extends AppShell {
 	public function schema() {
 		$this->dispatchShell('schema create --force_drop --force_create -q');
 		$this->out('passbolt schema deployed');
+		$this->dispatchShell('schema create sessions --force_drop --force_create -q');
+		$this->out('passbolt session table deployed');
 		$this->dispatchShell('schema create --plugin FileStorage --force_drop --force_create -q');
 		$this->out('plugins schemas deployed');
 	}
