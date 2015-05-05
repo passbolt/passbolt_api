@@ -9,10 +9,7 @@
  */
 ?>
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html class="no-js alpha version" lang="en">
 <head>
   <meta charset="utf-8">
   <title><?php echo $this->fetch('title'); ?></title>
@@ -24,7 +21,7 @@
        /_/    \__,_/____/____/_.___/\____/_/\__/
 
        The password management solution
-       (c) 2014 passbolt.com
+       (c) 2015 passbolt.com
 
    -->
   <base href="<?php echo Router::url('/',true);?>">

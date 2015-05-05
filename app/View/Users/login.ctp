@@ -42,8 +42,10 @@
 					<?php echo $this->MyForm->input('User.username', array('label' => __('Username'), 'class' =>'required fluid')); ?>
 					<?php echo $this->MyForm->input('User.password', array('label' => __('Password'), 'class' =>'required fluid')); ?>
 				</fieldset>
-				<?php echo $this->MyForm->submit(__('login'));?>
-				<span class="forgot"><a href="#">forgot password?</a></span>
+				<div class="actions-wrapper">
+					<div class="submit"><input class="button primary" value="login" type="submit"></div>
+					<!--a class="secondary" href="#">forgot password?</a-->
+				</div>
 				<?php echo $this->PassboltAuth->get(); ?>
 			<?php echo $this->MyForm->end();?>
 			</div>
