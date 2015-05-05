@@ -822,7 +822,7 @@ textarea {
 }
 /* text and textarea */
 /*
-	Radio
+	Checkboxes and Radio
 */
 .checkboxlist .input.checkbox label,
 .radiolist .input.radio label {
@@ -832,7 +832,6 @@ textarea {
 .checkbox label {
   font-weight: normal;
   display: inline;
-  font-size: 1em;
 }
 /* radio and checkboxes */
 /*
@@ -991,6 +990,7 @@ a.button {
 }
 a.button.big {
   font-size: 1em;
+  height: 1.5em;
   margin-top: 1em;
   min-width: 3em;
 }
@@ -1017,6 +1017,10 @@ a.button.primary:focus {
   border: 1px solid #2894df;
   background: #2a9ceb;
 }
+a.button.cancel,
+a.button.cancel:focus,
+a.button.cancel:hover,
+a.button.cancel:active,
 a.button.dim,
 a.button.dim:focus,
 a.button.dim:hover,
@@ -1075,7 +1079,11 @@ a.button.disabled:hover,
 input[type=submit].disabled:active,
 input.button.disabled:active,
 button.disabled:active,
-a.button.disabled:active {
+a.button.disabled:active,
+input[type=submit].disabled:focus,
+input.button.disabled:focus,
+button.disabled:focus,
+a.button.disabled:focus {
   -webkit-box-shadow: 0 0 0;
   -moz-box-shadow: 0 0 0;
   box-shadow: 0 0 0;
@@ -1110,6 +1118,24 @@ a.button.disabled:active {
   -moz-border-radius-bottomleft: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+/* processing state */
+html body .button.processing {
+  background: #ffffff;
+  border: 1px solid #ffffff;
+}
+.button.processing:after {
+  line-height: 2.25em;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  content: " ";
+  top: -2px;
+  left: -2px;
+  background: #ffffff url('../img/controls/loading.gif') center center no-repeat;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  padding: 1px;
 }
 /*
 	One% CSS Grid - 12 Columns Fluid CSS Grid System

@@ -50,6 +50,7 @@ a.button {
 }
 a.button.big {
 	font-size:1em;
+	height:1.5em;
 	margin-top:1em;
 	min-width:3em;
 }
@@ -78,6 +79,10 @@ a.button.primary:focus {
 	background:@blue-light;
 }
 
+a.button.cancel,
+a.button.cancel:focus,
+a.button.cancel:hover,
+a.button.cancel:active,
 a.button.dim,
 a.button.dim:focus,
 a.button.dim:hover,
@@ -134,7 +139,11 @@ a.button.disabled:hover,
 input[type=submit].disabled:active,
 input.button.disabled:active,
 button.disabled:active,
-a.button.disabled:active {
+a.button.disabled:active,
+input[type=submit].disabled:focus,
+input.button.disabled:focus,
+button.disabled:focus,
+a.button.disabled:focus {
 	-webkit-box-shadow:0 0 0;
 	-moz-box-shadow:0 0 0;
 	box-shadow:0 0 0;
@@ -173,3 +182,21 @@ a.button.disabled:active {
 	border-bottom-left-radius:0;
 }
 
+/* processing state */
+html body .button.processing {
+	background:@background-default;
+	border:1px solid @background-default;
+}
+.button.processing:after {
+	line-height:2.25em;
+	width:100%;
+	height:100%;
+	position:absolute;
+	content:" ";
+	top:-2px;
+	left:-2px;
+	background:#FFF url('@{images}/controls/loading.gif') center center no-repeat;
+	border:1px solid #CCC;
+	border-radius: 5px;
+	padding:1px;
+}

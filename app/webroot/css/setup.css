@@ -918,6 +918,9 @@ span + .icon {
 .icon.paperplane:before {
   content: '\1F53F';
 }
+.icon.download:before {
+  content: '\1F4E5';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -1050,6 +1053,7 @@ a.button {
 }
 a.button.big {
   font-size: 1em;
+  height: 1.5em;
   margin-top: 1em;
   min-width: 3em;
 }
@@ -1076,6 +1080,10 @@ a.button.primary:focus {
   border: 1px solid #2894df;
   background: #2a9ceb;
 }
+a.button.cancel,
+a.button.cancel:focus,
+a.button.cancel:hover,
+a.button.cancel:active,
 a.button.dim,
 a.button.dim:focus,
 a.button.dim:hover,
@@ -1134,7 +1142,11 @@ a.button.disabled:hover,
 input[type=submit].disabled:active,
 input.button.disabled:active,
 button.disabled:active,
-a.button.disabled:active {
+a.button.disabled:active,
+input[type=submit].disabled:focus,
+input.button.disabled:focus,
+button.disabled:focus,
+a.button.disabled:focus {
   -webkit-box-shadow: 0 0 0;
   -moz-box-shadow: 0 0 0;
   box-shadow: 0 0 0;
@@ -1169,6 +1181,24 @@ a.button.disabled:active {
   -moz-border-radius-bottomleft: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+/* processing state */
+html body .button.processing {
+  background: #ffffff;
+  border: 1px solid #ffffff;
+}
+.button.processing:after {
+  line-height: 2.25em;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  content: " ";
+  top: -2px;
+  left: -2px;
+  background: #ffffff url('../img/controls/loading.gif') center center no-repeat;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  padding: 1px;
 }
 /*
 	Base form components styling
@@ -1272,7 +1302,7 @@ textarea {
 }
 /* text and textarea */
 /*
-	Radio
+	Checkboxes and Radio
 */
 .checkboxlist .input.checkbox label,
 .radiolist .input.radio label {
@@ -1282,7 +1312,6 @@ textarea {
 .checkbox label {
   font-weight: normal;
   display: inline;
-  font-size: 1em;
 }
 /* radio and checkboxes */
 /*
@@ -1874,78 +1903,81 @@ select.fluid {
  */
 .scroll {
   overflow-y: scroll;
-  background: -webkit-linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), -webkit-linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) bottom, -webkit-radial-gradient(50% 0, rgba(0, 0, 0, 0.2), transparent 70%), -webkit-radial-gradient(50% 100%, rgba(0, 0, 0, 0.2), transparent 70%) bottom;
+  background: linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, radial-gradient(farthest-side at 75% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 75% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
   background-repeat: no-repeat;
-  background-size: 100% 2.5em, 100% 2.5em, 100% .31250em, 100% .31250em;
+  background-color: white;
+  background-size: 100% 10px, 100% 10px, 100% 5px, 100% 5px;
+  /* Opera doesn't support this in the shorthand */
   background-attachment: local, local, scroll, scroll;
 }
 /*
  * Scrollbar styling with native webkit support
- */
+
 .cssscrollbar ::-webkit-scrollbar {
-  width: .625em;
-  /* 10px */
+	width:.625em;
 }
 .cssscrollbar ::-webkit-scrollbar-track {
-  background: #ffffff;
+	background:@scrollbar-background;
 }
 .cssscrollbar ::-webkit-scrollbar-thumb {
-  background: #888888;
+	background:@scrollbar;
 }
 .cssscrollbar ::-webkit-scrollbar-thumb:window-inactive {
-  background: #ffffff;
+	background:@scrollbar-background;
 }
+*/
 /*
  * Styles needed by jScrollPane fallback
- */
+
 .no-cssscrollbar .jspContainer {
-  overflow: hidden;
-  position: relative;
+	overflow: hidden;
+	position: relative;
 }
 .no-cssscrollbar .jspPane {
-  position: absolute;
+	position: absolute;
 }
 .no-cssscrollbar .jspVerticalBar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 10px;
-  height: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 10px;
+	height: 100%;
 }
 .no-cssscrollbar .jspHorizontalBar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: .625em;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: .625em;
 }
 .no-cssscrollbar .jspVerticalBar *,
 .no-cssscrollbar .jspHorizontalBar * {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 .no-cssscrollbar .jspCap {
-  display: none;
+	display: none;
 }
 .no-cssscrollbar .jspHorizontalBar .jspCap {
-  float: left;
+	float: left;
 }
 .no-cssscrollbar .jspTrack {
-  background: #ffffff;
-  position: relative;
+	background: @scrollbar-background;
+	position: relative;
 }
 .no-cssscrollbar .jspDrag {
-  background: #888888;
-  position: relative;
-  top: 0;
-  left: 0;
-  cursor: pointer;
+	background:@scrollbar;
+	position: relative;
+	top: 0;
+	left: 0;
+	cursor: pointer;
 }
 .no-cssscrollbar .jspHorizontalBar .jspTrack,
 .no-cssscrollbar .jspHorizontalBar .jspDrag {
-  float: left;
-  height: 100%;
+	float: left;
+	height: 100%;
 }
+*/
 /* headers */
 .header {
   /* top navigation */
@@ -2007,7 +2039,7 @@ select.fluid {
 .header h1 {
   display: none;
 }
-/* Progress bar */
+/* Small Progress bar */
 .progress-bar {
   background: #ffffff;
   width: 100%;
@@ -2019,7 +2051,49 @@ select.fluid {
   height: 2px;
   display: block;
 }
-/* update loading state bar */
+.progress-details {
+  display: none;
+}
+/* larger progress bar */
+.progress-bar-wrapper {
+  border: 1px solid #dddddd;
+  height: 10px;
+  display: block;
+  margin: 2em 0;
+  padding: 2px;
+}
+.progress-bar-wrapper .progress-bar.big {
+  width: 100%;
+  height: 10px;
+  display: block;
+  clear: both;
+  /* indefinite loading */
+}
+.progress-bar-wrapper .progress-bar.big .progress {
+  background: #d40101;
+  width: 5%;
+  height: 5px;
+  display: block;
+  height: 10px;
+}
+.progress-bar-wrapper .progress-bar.big.infinite {
+  background: #d40101;
+}
+.progress-bar-wrapper .progress-bar.big.infinite .progress {
+  width: 100%;
+  overflow: hidden;
+  background: url('../img/controls/infinite-bar.gif') repeat-x;
+  -moz-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=5);
+  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=5);
+  filter: alpha(opacity=5);
+}
+/*
+	Contextual loading bar
+	  it is situated at the bottom of the workspace
+*/
 .update-loading-bar {
   position: absolute;
   display: block;
@@ -2027,32 +2101,55 @@ select.fluid {
   bottom: 2em;
   z-index: 991;
 }
-/* initial loading state bar */
 /*
  * Notification
  */
+.notification-container {
+  font-size: .75em;
+  /* 12px */
+  width: 100%;
+}
+.notification-container .message {
+  float: left;
+  margin-left: 25%;
+  width: 50%;
+}
 @media all and (min-width: 768px) {
   .notification-container {
     bottom: 0;
     position: absolute;
     z-index: 992;
-    width: 100%;
     height: 2em;
     margin: 0;
     padding-top: 0.833em;
-    font-size: .75em;
-    /* 12px */
   }
-  .notification .message {
-    background: transparent;
+  .notification-container .notification .message {
+    margin: 0;
+    padding: 0;
+    width: 60%;
+    float: none;
+    background: #ffffff;
     font-weight: normal;
+    /* colors for messages */
+  }
+  .notification-container .notification .message.error {
+    color: #d40101;
+  }
+  .notification-container .notification .message.success {
+    color: #009900;
+  }
+  .notification-container .notification .message.warning {
+    color: #9f6000;
+  }
+  .notification-container .notification .message.notice {
+    color: #2894df;
   }
 }
 /* Dialog */
 .dialog-wrapper {
   position: absolute;
   width: 100%;
-  z-index: 990;
+  z-index: 999;
   background: rgba(255, 255, 255, 0.9);
   height: 100%;
 }
@@ -2082,16 +2179,25 @@ select.fluid {
   font-size: 0.7em;
   color: #888888;
 }
-.dialog .dialog-close {
+/* close dialog cross */
+.dialog a.dialog-close,
+.dialog a.dialog-close:hover {
+  display: block;
   float: right;
-  right: 1em;
   margin-top: -2.5em;
-  padding: .25em .25em 0em .25em;
-  width: 1em;
-  text-align: center;
-  border: 1px solid transparent;
+  border: 0;
 }
-.dialog .dialog-close:hover {
+.dialog a.dialog-close .icon.close {
+  padding-top: 15px;
+  width: 30px;
+  height: 15px;
+  text-align: center;
+  display: block;
+  vertical-align: baseline;
+  line-height: 0;
+  border: 1px solid #eeeeee;
+}
+.dialog a.dialog-close:hover .icon.close {
   border: 1px solid #dddddd;
 }
 /* content */
@@ -2101,11 +2207,12 @@ select.fluid {
 /* inputs */
 .dialog .form-content {
   background: #FFF;
-  font-size: .813em;
-  padding: 1em 1.5em 1em 2em;
+  padding: .813em 1.25em .813em 1.5em;
 }
 .dialog label {
   clear: both;
+  font-size: 0.938em;
+  /* 14/16 */
 }
 .dialog input[type=text] {
   width: 92%;
@@ -2118,10 +2225,12 @@ select.fluid {
 .dialog textarea {
   width: 92%;
 }
-.dialog .error {
+.dialog input + .message.error {
   display: block;
-  width: 100%;
   clear: both;
+  width: 92%;
+  padding-bottom: .5em;
+  font-size: .813em;
 }
 /* submit / cancel */
 .dialog .submit-wrapper {
@@ -2133,11 +2242,12 @@ select.fluid {
 .dialog .submit-wrapper .cancel,
 .dialog .submit-wrapper .button {
   float: left;
-  margin-left: 2em;
-  font-size: 16px;
+  margin-left: 1.125em;
+  font-size: 1.125em;
 }
 .dialog .submit-wrapper .cancel {
   margin-top: .5em;
+  font-size: 1em;
 }
 /*
  * Footer
@@ -2223,6 +2333,7 @@ select.fluid {
 .cookies .message.no-cookies {
   display: none;
 }
+/* message styling per types */
 .message {
   padding: 1em;
 }
@@ -2568,17 +2679,6 @@ table.table-info td + td {
   margin-left: 50px;
   padding-left: 1em;
 }
-/* file dropzone */
-.input.file .dropzone {
-  width: 100%;
-  border: 3px dotted #dddddd;
-  height: 15em;
-  text-align: center;
-  display: block;
-  line-height: 15em;
-  margin-bottom: 1em;
-  color: #888888;
-}
 /*
 	Password fields in passbolt have complexity "progress bar"
 	and a custom layout to accomodate buttons on the left end
@@ -2615,7 +2715,7 @@ table.table-info td + td {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-  width: 90%;
+  width: 100%;
 }
 .input-password-wrapper:before,
 .input-password-wrapper:after {
@@ -2634,25 +2734,28 @@ table.table-info td + td {
   clear: both;
 }
 .input-password-wrapper .input.password input {
-  width: 63%;
+  width: 61.5%;
   float: left;
 }
 .input-password-wrapper .actions.inline {
   float: right;
-  margin-right: .5em;
-  width: 28%;
+  width: 33%;
 }
 .input-password-wrapper .actions.inline .button {
   float: left;
+  margin-left: .5em;
+  margin-right: 0;
 }
 .input-password-wrapper .password-complexity .complexity-text {
   float: right;
   clear: right;
-  width: 28%;
+  width: 31.5%;
   font-size: 11px;
+  text-align: left;
+  padding-left: 0;
 }
 .input-password-wrapper .password-complexity .progress {
-  width: 67%;
+  width: 66.5%;
   border: 1px solid #dddddd;
   height: 7px;
   display: block;
@@ -2699,13 +2802,23 @@ table.table-info td + td {
 .password-hints li.error:before {
   color: #d40101;
 }
+#passbolt-iframe-secret-edition {
+  width: 100%;
+  display: block;
+  height: 5em;
+}
 /*
 	Custom rules for the setup process pages
 	Mostly extra padding here and there
 */
 .setup {
+  /* first step */
+  /* login password step main form */
+  /* import key */
   /* last row is for cancel / submit buttons */
   /* gpg textare is tall */
+  /* big feedback message blocks */
+  /* backup step */
 }
 .setup .video-wrapper {
   margin-top: 2em;
@@ -2720,14 +2833,37 @@ table.table-info td + td {
   margin-right: 0.3em;
   margin-top: -5px;
 }
+.setup .input-password-wrapper {
+  margin-top: 1.5em;
+  width: 92%;
+}
+.setup .input-password-wrapper .input.password input {
+  width: 60%;
+}
+.setup .input-password-wrapper .password-complexity .progress {
+  width: 64%;
+}
 .setup .why-plugin-wrapper p {
   padding-bottom: 1em;
 }
-.setup .input-password-wrapper {
-  margin-top: 1.5em;
+.setup .why-plugin-wrapper input[type=text] {
+  width: 80%;
+}
+.setup .why-plugin-wrapper label {
+  font-size: 1em;
+}
+.setup .why-plugin-wrapper .checkbox {
+  padding: .5em 0;
 }
 .setup .first-password-wrapper {
   padding-top: 1em;
+}
+.setup .import-key-wrapper .input {
+  margin-top: 1em;
+  margin-right: 1em;
+}
+.setup .import-key-wrapper .input.file .help-text {
+  margin-left: 1em;
 }
 .setup .row.last {
   padding-top: 1.5em;
@@ -2751,6 +2887,70 @@ table.table-info td + td {
 }
 .setup .side-message a:hover {
   border-color: #2894df;
+}
+.setup .backup-prompt {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  margin: 2em 0;
+}
+.setup .backup-prompt:before,
+.setup .backup-prompt:after {
+  content: "";
+  display: table;
+}
+.setup .backup-prompt:after {
+  clear: both;
+}
+.setup .backup-prompt:before,
+.setup .backup-prompt:after {
+  content: "";
+  display: table;
+}
+.setup .backup-prompt:after {
+  clear: both;
+}
+.setup .backup-prompt .button {
+  margin-top: .25em;
+  float: left;
+  min-width: 110px;
+  width: 20%;
+}
+.setup .backup-prompt .button .icon {
+  padding-right: 1em;
+}
+.setup .backup-prompt .help-text {
+  float: left;
+  margin-left: 5%;
+  width: 60%;
 }
 /* hide left column when there is no space */
 @media all and (min-width: 980px) {
@@ -2793,5 +2993,17 @@ table.table-info td + td {
   .col2 {
     width: 55%;
     left: 1%;
+  }
+  .input-password-wrapper .input.password,
+  .input-password-wrapper .actions.inline {
+    position: relative;
+    float: none;
+    clear: both;
+  }
+  .input-password-wrapper .actions.inline {
+    width: 100%;
+  }
+  .input-password-wrapper .input.password input[type=password] {
+    width: 87%;
   }
 }

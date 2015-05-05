@@ -1,19 +1,47 @@
 /*
  * Notification
  */
+
+.notification-container {
+	font-size:.75em; /* 12px */
+	width:100%;
+	.message {
+		float:left;
+		margin-left:25%;
+		width:50%;
+	}
+}
+
 @media all and (min-width: 768px) {
 	.notification-container {
 		bottom:0;
 		position:absolute;
 		z-index:992;
-		width:100%;
 		height:2em;
 		margin:0;
 		padding-top:0.833em;
-		font-size:.75em; /* 12px */
-	}
-	.notification .message {
-		background:transparent;
-		font-weight:normal;
+
+		.notification .message {
+			margin:0;
+			padding:0;
+			width:60%;
+			float:none;
+			background:@background-default;
+			font-weight:normal;
+
+			/* colors for messages */
+			&.error {
+				color: @red;
+			}
+			&.success {
+				color:@green;
+			}
+			&.warning {
+				color:@orange;
+			}
+			&.notice {
+				color:@blue;
+			}
+		}
 	}
 }

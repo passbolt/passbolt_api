@@ -2,7 +2,7 @@
 .dialog-wrapper {
 	position:absolute;
 	width:100%;
-	z-index:990;
+	z-index:999;
 	background:rgba(255,255,255,0.9);
 	height: 100%;
 }
@@ -31,17 +31,27 @@
 	font-size:0.7em;
 	color:@grey-darker;
 }
-.dialog .dialog-close {
+
+/* close dialog cross */
+.dialog a.dialog-close,
+.dialog a.dialog-close:hover {
+	display:block;
 	float:right;
-	right:1em;
 	margin-top:-2.5em;
-	padding:.25em .25em 0em .25em;
-	width:1em;
-	text-align:center;
-	border:1px solid transparent;
+	border:0;
 }
-.dialog .dialog-close:hover{
-	border:1px solid @border-default;
+.dialog a.dialog-close .icon.close {
+	padding-top:15px;
+	width:30px;
+	height:15px;
+	text-align:center;
+	display:block;
+	vertical-align: baseline;
+	line-height: 0;
+	border:1px solid @background-lighter;
+}
+.dialog a.dialog-close:hover .icon.close {
+	border:1px solid @background-light;
 }
 
 /* content */
@@ -52,11 +62,11 @@
 /* inputs */
 .dialog .form-content {
 	background:#FFF;
-	font-size:.813em;
-	padding:1em 1.5em 1em 2em;
+	padding:.813em 1.25em .813em 1.5em;
 }
 .dialog label {
 	clear:both;
+	font-size:0.938em; /* 14/16 */
 }
 .dialog input[type=text] {
 	width:92%;
@@ -70,10 +80,12 @@
 	width:92%;
 }
 
-.dialog .error {
+.dialog input + .message.error {
 	display:block;
-	width:100%;
 	clear:both;
+	width:92%;
+	padding-bottom:.5em;
+	font-size:.813em;
 }
 /* submit / cancel */
 .dialog .submit-wrapper {
@@ -85,10 +97,11 @@
 .dialog .submit-wrapper .cancel,
 .dialog .submit-wrapper .button {
 	float:left;
-	margin-left:2em;
-	font-size:16px;
+	margin-left:1.125em;
+	font-size:1.125em;
 }
 .dialog .submit-wrapper .cancel {
 	margin-top:.5em;
+	font-size:1em;
 }
 

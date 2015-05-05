@@ -13,4 +13,4 @@ fi
 ( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/app ; php $OPENSHIFT_DATA_DIR/composer.phar install )
 
 echo "Installing Passbolt"
-(cd $OPENSHIFT_REPO_DIR; sh $OPENSHIFT_REPO_DIR/app/Console/cake install)
+(cd $OPENSHIFT_REPO_DIR; sh $OPENSHIFT_REPO_DIR/app/Console/cake install --no-dev)

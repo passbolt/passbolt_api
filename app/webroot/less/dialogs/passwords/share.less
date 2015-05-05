@@ -1,89 +1,130 @@
 /* password share tab */
-.dialog .share-tab .form-content {
-	padding:1em;
-}
+.dialog .share-tab {
+	.form-content {
+		padding:1em;
+	}
 
-/* list of existing permissions settings */
-.dialog .share-tab .scroll {
-	max-height:21.25em;
-}
-.dialog .share-tab .row {
-	.clearfix();
-	padding:.5em;
-	border-bottom:1px dotted @border-default;
-}
-.dialog .share-tab .row:last-child {
-	border:0;
-}
-.dialog .share-tab .row .avatar img {
-	width:36px;
-	height:36px;
-	float:left;
-}
-.dialog .share-tab .row .user,
-.dialog .share-tab .row .group {
-	width:55%;
-	float:left;
-	padding-left:1em;
-}
-.dialog .share-tab .row .name {
-	display:block
-}
-.dialog .share-tab .row .details a{
-	color:@font-light;
-}
-.dialog .share-tab .row .rights {
-	float:left;
-	margin-top:.5em;
-}
-.dialog .share-tab .row .actions {
-	float:right;
-	margin-top:.55em;
-}
-.dialog .share-tab .row .actions a {
-	font-size:1.125em;
-	padding:.25em .5em .2em .5em;
-	border:1px solid transparent;
-}
-.dialog .share-tab .row .actions a:hover {
-	border:1px solid @border-default;
-}
+	.permission-edit {
+		padding:0em;
+	}
 
-.dialog .share-tab .row.inherited-permission .inherited-actions {
-	display:none;
-	float:right;
-}
+	/* list of existing permissions settings */
+	.permissions.scroll {
+		height:19em;
+		margin:0;
+	}
 
-.dialog .share-tab .row.inherited-permission:hover .inherited-actions {
-	display:block;
-}
+	.row {
+		.clearfix();
+		font-size:.813em;
+		padding:.825em .5em .5em 1em;
+		border-bottom:1px dotted @border-default;
 
-.dialog .share-tab .row.inherited-permission .inherited-actions a {
-	color: @font-light;
-}
+		&:last-child {
+			border:0;
+		}
 
-/* form to add new permissions */
-.dialog .share-tab .form-content.permission-add {
-	padding:0 1.5em 1em 1.5em;
-	.clearfix();
-}
-.dialog .share-tab .form-content.permission-add .autocomplete input {
-	width:53%;
-	margin-right:4%;
-	float:left;
-	font-size:1em;
-}
-.dialog .share-tab .form-content.permission-add .autocomplete-content {
-	width:52%;
-}
-.dialog .share-tab .form-content.permission-add .perm-type {
-	margin-right:4%;
-}
-.dialog .share-tab .form-content.permission-add .actions input {
-	padding:0.3em 1em;
-}
-.dialog .share-tab .form-content.permission-add .checkbox {
-	clear: both;
-	display:block;
-	float:left;
+		/* user summary */
+		.avatar img {
+			width:36px;
+			height:36px;
+			float:left;
+		}
+		.user,
+		.group {
+			width:55%;
+			float:left;
+			padding-left:1em;
+		}
+		.name {
+			display:block
+		}
+		.details a {
+			color:@font-light;
+		}
+		.rights {
+			float:left;
+			margin-top:.5em;
+			width:25%;
+			select {
+				width:95%;
+				font-size: 1em;
+			}
+		}
+		/* row actions */
+		.actions {
+			float: right;
+			margin-top: 1em;
+			a {
+				font-size: 1.125em;
+				padding: .25em .5em .2em .5em;
+				border: 1px solid transparent;
+			}
+			a:hover {
+				border: 1px solid @border-default;
+			}
+		}
+		&.inherited-permission .inherited-actions {
+			display:none;
+			float:right;
+		}
+
+		&.inherited-permission:hover .inherited-actions {
+			display:block;
+		}
+
+		&.inherited-permission .inherited-actions a {
+			color: @font-light;
+		}
+	}
+
+	/* message */
+	.message {
+		font-size:0.813em;
+		padding-left:2em;
+	}
+
+	/* form to add new permissions */
+	.form-content.permission-add {
+		padding:0 1.5em 1em 1.5em;
+		.clearfix();
+
+		label {
+			padding-bottom: .5em;
+			padding-top:1em;
+		}
+		.autocomplete input {
+			width:45%;
+			margin-right:2%;
+			float:left;
+		}
+		.autocomplete-content {
+			width:52%;
+		}
+		.perm-type {
+			margin-right:4%;
+		}
+		.actions {
+			.clearfix();
+		}
+		.actions input {
+			padding:0.3em 1em;
+		}
+		.checkbox {
+			clear: both;
+			display:block;
+			float:left;
+		}
+		.select select{
+			width:7em;
+			font-size: 1em;
+		}
+		.button {
+			font-size: 1em;
+			line-height: 1.5em;
+		}
+		.message {
+			padding-left:0;
+		}
+	}
 }

@@ -2,11 +2,10 @@
  * Main Workspace - Table View
  */
 .tableview {
-	position:relative;
-	font-size:.9375em; /* 15px */
-	height:100%;
+	position: relative;
+	font-size: .9375em; /* 15px */
+	height: 100%;
 }
-
 /* additional space to avoid scrollbar bump */
 .tableview table {
 	padding-right:.625em;
@@ -26,7 +25,7 @@
 /* main content */
 .tableview-content {
 	top:2em;
-	bottom:0;
+	bottom:45px;
 	padding:0;
 	position:absolute;
 	width:100%;
@@ -43,7 +42,7 @@
 .tableview table th,
 .tableview table td {
 	text-align:left;
-	padding:.25em 0;
+	padding:.25em .125em;
     vertical-align: middle;
 	.ellipsis();
 }
@@ -74,7 +73,7 @@
 .tableview table tbody tr.selected,
 .tableview table tbody tr:hover {
 	height:1em;
-	background:#ffffcc;
+	background:#fffacc;
 }
 .tableview table .checkbox label {
 	display:none;

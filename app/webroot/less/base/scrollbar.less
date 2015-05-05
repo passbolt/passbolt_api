@@ -3,21 +3,24 @@
  */
 .scroll {
 	overflow-y:scroll;
-	background: 
-		-webkit-linear-gradient(white 30%, hsla(0,0%,100%,0)), 
-		-webkit-linear-gradient(hsla(0,0%,100%,0), white 70%) bottom, 
-		-webkit-radial-gradient(50% 0, rgba(0,0,0,.2), transparent 70%), 
-		-webkit-radial-gradient(50% 100%, rgba(0,0,0,.2), transparent 70%) bottom;
+	background:
+		linear-gradient(white 30%, rgba(255,255,255,0)),
+		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+		radial-gradient(farthest-side at 75% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+		radial-gradient(farthest-side at 75% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
 	background-repeat: no-repeat;
-	background-size: 100% 2.5em, 100% 2.5em, 100% .31250em, 100% .31250em;
+	background-color: white;
+	background-size: 100% 10px, 100% 10px, 100% 5px, 100% 5px;
+
+	/* Opera doesn't support this in the shorthand */
 	background-attachment: local, local, scroll, scroll;
 }
 
 /*
  * Scrollbar styling with native webkit support
- */
+
 .cssscrollbar ::-webkit-scrollbar {
-	width:.625em; /* 10px */
+	width:.625em;
 }
 .cssscrollbar ::-webkit-scrollbar-track {
 	background:@scrollbar-background;
@@ -28,10 +31,10 @@
 .cssscrollbar ::-webkit-scrollbar-thumb:window-inactive {
 	background:@scrollbar-background;
 }
-
+*/
 /*
  * Styles needed by jScrollPane fallback
- */
+
 .no-cssscrollbar .jspContainer {
 	overflow: hidden;
 	position: relative;
@@ -80,4 +83,4 @@
 	float: left;
 	height: 100%;
 }
-
+*/
