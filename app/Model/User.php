@@ -398,7 +398,8 @@ class User extends AppModel {
 						$conditions = array(
 							'conditions' => array(
 								'User.active' => true,
-								'User.deleted' => false
+								'User.deleted' => false,
+								'Role.name' => array(Role::USER, Role::ADMIN),
 							)
 						);
 						// If filter on group.
