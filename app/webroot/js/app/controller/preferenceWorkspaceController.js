@@ -3,6 +3,7 @@ steal(
 	'app/controller/component/preferenceMenuController.js',
 	'app/controller/component/preferenceBreadcrumbController.js',
 	'app/controller/component/profileController.js',
+	'app/controller/component/profileKeysController.js',
 	'app/controller/form/user/createFormController.js',
 	'app/controller/form/user/passwordFormController.js',
 	'app/controller/form/user/avatarFormController.js',
@@ -56,6 +57,11 @@ steal(
 					'id': 'js_preference_wk_profile_controller',
 					'label': 'profile',
 					'user': passbolt.model.User.getCurrent()
+				});
+
+				self.profileCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileKeysController, {
+					'id': 'js_preference_wk_profile_keys_controller',
+					'label': 'keys'
 				});
 			},
 
@@ -141,6 +147,31 @@ steal(
 					}
 				});
 				form.load(user);
+			},
+
+			/**
+			 * Observe when the user requests a section.
+			 * @param el
+			 * @param ev
+			 * @param section
+			 */
+			'{mad.bus} request_profile_section': function (el, ev, section) {
+				var tabId = null;
+				switch (section) {
+					case 'keys' :
+						tabId = 'js_preference_wk_profile_keys_controller';
+						break;
+					case 'profile' :
+						tabId = 'js_preference_wk_profile_controller';
+						break;
+				}
+				if (tabId) {
+					this.preferenceTabsCtl.enableTab(tabId);
+					if (section == 'keys') {
+						var userId = passbolt.model.User.getCurrent().id;
+						mad.bus.trigger('passbolt.keys_preferences.init', userId);
+					}
+				}
 			},
 
 			/* ************************************************************** */

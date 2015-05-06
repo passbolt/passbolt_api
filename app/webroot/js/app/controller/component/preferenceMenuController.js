@@ -30,16 +30,16 @@ steal(
 					'label': __('My profile'),
 					'cssClasses': ['selected'],
 					'action': function () {
-
+						mad.bus.trigger('request_profile_section', 'profile');
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('Manage your keys'),
+					'action': function () {
+						mad.bus.trigger('request_profile_section', 'keys');
 					}
 				})
-				//new mad.model.Action({
-				//	'id': uuid(),
-				//	'label': __('Manage your keys'),
-				//	'action': function () {
-				//
-				//	}
-				//})
 			];
 			this.load(menuItems);
 		}
