@@ -187,6 +187,17 @@ steal(
 			mad.controller.component.DialogController.closeLatest();
 		},
 
+		/**
+		 * Observe when the app is ready.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} app_ready': function (el, ev) {
+			// Remove the loading component.
+			$('html').removeClass('loading');
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */

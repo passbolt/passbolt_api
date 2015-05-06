@@ -9,10 +9,10 @@
  */
 ?>
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 loading" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 loading" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 loading" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js loading" lang="en"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title><?php echo $this->fetch('title'); ?></title>
@@ -35,7 +35,8 @@
 <body>
 <!-- main -->
 <div id="container" class="page">
-<?php echo $this->fetch('content'); ?>
+	<?php echo $this->element('loader'); ?>
+	<?php echo $this->fetch('content'); ?>
 </div>
 <!-- footer -->
 <footer>
