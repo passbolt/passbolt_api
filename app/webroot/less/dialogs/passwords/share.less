@@ -35,12 +35,16 @@
 			width:55%;
 			float:left;
 			padding-left:1em;
+			padding-right:1em;
 		}
 		.name {
-			display:block
+			display:block;
+			.ellipsis();
 		}
 		.details a {
 			color:@font-light;
+			.ellipsis();
+			display:block;
 		}
 		.rights {
 			float:left;
@@ -99,7 +103,7 @@
 			float:left;
 		}
 		.autocomplete-content {
-			width:52%;
+			width:45%;
 		}
 		.perm-type {
 			margin-right:4%;
@@ -125,6 +129,22 @@
 		}
 		.message {
 			padding-left:0;
+		}
+	}
+}
+
+/* hide icons if there is no space */
+@media all and (max-width: 480px) {
+	.dialog .share-tab {
+		.row .user,
+		.row .group {
+			width:45%;
+		}
+		.form-content.permission-add {
+			.autocomplete input,
+			.autocomplete-content {
+				width:90%;
+			}
 		}
 	}
 }
