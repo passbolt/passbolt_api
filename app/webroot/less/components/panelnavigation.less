@@ -1,0 +1,32 @@
+/* tree.less */
+.panel .navigation {
+	font-size:.938em;
+
+	&.first {
+		border-bottom:1px dotted @border-default;
+		padding:.625em;
+		padding-right:.3125em;
+		margin-bottom:.625em;
+	}
+	&.last {
+		padding-right:.3125em; /* 5px */
+	}
+	a {
+		 color: @font-default;
+		 display: block;
+		 a:hover {
+			 text-decoration: none;
+		 }
+	 }
+	.row:hover {
+		background:@background-lighter;
+	}
+	.selected {
+		font-weight:bold;
+	}
+
+	/* shortcut */
+	&.shortcuts a {
+		padding:.125em .313em; /* 2px 5px */
+	}
+}
