@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "== DEPLOY STARTS ===="
 
-echo "= install composer dependencies ="
+echo "= installing composer dependencies ="
 export COMPOSER_HOME="$OPENSHIFT_DATA_DIR/.composer"
 
 if [ ! -f "$OPENSHIFT_DATA_DIR/composer.phar" ]; then
@@ -10,7 +10,8 @@ else
 	php $OPENSHIFT_DATA_DIR/composer.phar self-update
 fi
 
-( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/app ; php $OPENSHIFT_DATA_DIR/composer.phar install )
+echo "= installing composer dependencies ="
+( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/app ; php $OPENSHIFT_DATA_DIR/composer.phar install --no-dev)
 
-echo "Installing Passbolt"
-(cd $OPENSHIFT_REPO_DIR; sh $OPENSHIFT_REPO_DIR/app/Console/cake install --no-dev)
+echo "=Installing Passbolt="
+(cd $OPENSHIFT_REPO_DIR; sh $OPENSHIFT_REPO_DIR/app/Console/cake install)
