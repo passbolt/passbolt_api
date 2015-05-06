@@ -37,10 +37,33 @@ steal(
 			 */
 			'afterStart': function() {
 				var self = this;
+				this.section = '';
 
+				this.menuItems = Array();
 				// Instanciate the preference menu
-				var preferenceWkMenu = new passbolt.controller.component.PreferenceMenuController('#js_wk_preference_menu', {});
-				preferenceWkMenu.start();
+				this.menuItems['profile'] = new mad.model.Action({
+					'id': uuid(),
+					'label': __('My profile'),
+					'cssClasses': ['selected'],
+					'action': function () {
+						mad.bus.trigger('request_profile_section', 'profile');
+					}
+				});
+				this.menuItems['keys'] = new mad.model.Action({
+					'id': uuid(),
+					'label': __('Manage your keys'),
+					'action': function () {
+						mad.bus.trigger('request_profile_section', 'keys');
+					}
+				});
+
+				this.preferenceWkMenu = new passbolt.controller.component.PreferenceMenuController('#js_wk_preference_menu', {
+					menuItems : [
+						this.menuItems['profile'],
+						this.menuItems['keys']
+					]
+				});
+				this.preferenceWkMenu.start();
 
 				// Instanciate the main tabs controller
 				this.preferenceTabsCtl = new mad.controller.component.TabController('#js_wk_preference_main', {
@@ -59,7 +82,7 @@ steal(
 					'user': passbolt.model.User.getCurrent()
 				});
 
-				self.profileCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileKeysController, {
+				self.profileKeysCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileKeysController, {
 					'id': 'js_preference_wk_profile_keys_controller',
 					'label': 'keys'
 				});
@@ -172,6 +195,9 @@ steal(
 						mad.bus.trigger('passbolt.keys_preferences.init', userId);
 					}
 				}
+				this.section = section;
+				// Select corresponding section in the menu.
+				this.preferenceWkMenu.selectItem(this.menuItems[this.section]);
 			},
 
 			/* ************************************************************** */
@@ -188,6 +214,8 @@ steal(
 				var prefScreenId = 'js_preference_wk_profile_controller';
 				var prefContainer = mad.app.getComponent('js_wk_preference_main');
 				prefContainer.enableTab(prefScreenId);
+				this.section = 'profile';
+				this.preferenceWkMenu.selectItem(this.menuItems['profile']);
 			}
 
 		});
