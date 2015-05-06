@@ -53,7 +53,7 @@ steal(
 			// Add my profile action
 			var action = new mad.model.Action({
 				'id': uuid(),
-				'label': 'Manage your keys',
+				'label': 'manage your keys',
 				//'cssClasses': ['separator-after'],
 				'action': function (menu) {
 					mad.bus.trigger('workspace_selected', 'preference');
