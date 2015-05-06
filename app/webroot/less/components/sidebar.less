@@ -2,7 +2,11 @@
  * Sidebar
  */
 .panel.aside {
-	border:1px solid @border-default;
+	position:absolute;
+	right:2em;
+	width:22em;
+	bottom:0;
+	height:100%;
 	background:@background-default;
 	.box-shadow();
 
@@ -76,5 +80,15 @@
     }
   }
 }
-
+/* place sidebar on top of everything when there is no space */
+@media all and (max-width: 980px) {
+	.panel.aside {
+		position: absolute;
+		right: 0em;
+		width: 100%;
+		bottom: 0;
+		top:0;
+		height: 100%;
+	}
+}
 

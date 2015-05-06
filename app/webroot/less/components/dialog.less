@@ -7,101 +7,114 @@
 	height: 100%;
 }
 .dialog {
-	position:relative;
-	width:30em;
-	border:1px solid @border-default;
-	background:@background-lightest;
-	margin:auto;
-	margin-top:1%;
+	position: relative;
+	max-width: 30em;
+	border: 1px solid @border-default;
+	background: @background-lightest;
+	margin: auto;
+	margin-top: 1%;
 	.box-shadow();
+
+	/* header */
+	.dialog-header {
+		padding: 0.5em 1em 0 1em;
+		height: 3em;
+		h2 {
+			margin: .25em 2em .5em .2em;
+			font-size: 1.2em;
+			.ellipsis();
+		}
+		.dialog-header-subtitle {
+			padding-top: 0.3em;
+			padding-left: 1em;
+			font-size: 0.7em;
+			color: @grey-darker;
+		}
+	}
+
+	/* close dialog cross */
+	a.dialog-close {
+		&,&:hover {
+			display: block;
+			float: right;
+			margin-top: -2.5em;
+			border: 0;
+		}
+		.icon.close {
+			padding-top: 15px;
+			width: 30px;
+			height: 15px;
+			text-align: center;
+			display: block;
+			vertical-align: baseline;
+			line-height: 0;
+			border: 1px solid @background-lighter;
+		}
+		&:hover .icon.close {
+			border:1px solid @background-light;
+		}
+	}
+
+	/* content */
+	.dialog-content {
+		position:relative;
+	}
+
+	/* inputs */
+	.form-content {
+		background:#FFF;
+		padding:.813em 1.25em .813em 1.5em;
+	}
+	label {
+		clear:both;
+		font-size:0.938em; /* 14/16 */
+	}
+	input[type=text] {
+		width:92%;
+		float:left;
+	}
+	.short input {
+		width:64%;
+		float:left;
+	}
+	textarea {
+		width:92%;
+	}
+	input + .message.error {
+		display:block;
+		clear:both;
+		width:92%;
+		padding-bottom:.5em;
+		font-size:.813em;
+	}
+
+	/* submit / cancel */
+	.submit-wrapper {
+		border-top: 1px solid @border-default;
+		clear: both;
+		width: 100%;
+		padding: .75em 0;
+
+		.cancel,
+		.button {
+			float: left;
+			margin-left: 1.125em;
+			font-size: 1.125em;
+		}
+		.cancel {
+			margin-top: .5em;
+			font-size: 1em;
+		}
+	}
 }
 
-/* header */
-.dialog .dialog-header {
-	padding:0.5em 1em 0 1em;
-    height:3em;
+/* reduce font-size for small screen */
+@media all and (max-width: 480px) {
+	.dialog {
+		margin:0;
+		border:0;
+		box-shadow: none;
+		width:100%;
+		max-width:100%;
+	}
 }
-.dialog .dialog-header h2 {
-	margin:.25em 0 .5em .2em;
-	font-size:1.2em;
-}
-.dialog .dialog-header-subtitle {
-	padding-top:0.3em;
-	padding-left:1em;
-	font-size:0.7em;
-	color:@grey-darker;
-}
-
-/* close dialog cross */
-.dialog a.dialog-close,
-.dialog a.dialog-close:hover {
-	display:block;
-	float:right;
-	margin-top:-2.5em;
-	border:0;
-}
-.dialog a.dialog-close .icon.close {
-	padding-top:15px;
-	width:30px;
-	height:15px;
-	text-align:center;
-	display:block;
-	vertical-align: baseline;
-	line-height: 0;
-	border:1px solid @background-lighter;
-}
-.dialog a.dialog-close:hover .icon.close {
-	border:1px solid @background-light;
-}
-
-/* content */
-.dialog-content {
-  position:relative;
-}
-
-/* inputs */
-.dialog .form-content {
-	background:#FFF;
-	padding:.813em 1.25em .813em 1.5em;
-}
-.dialog label {
-	clear:both;
-	font-size:0.938em; /* 14/16 */
-}
-.dialog input[type=text] {
-	width:92%;
-	float:left;
-}
-.dialog .short input {
-	width:64%;
-	float:left;
-}
-.dialog textarea {
-	width:92%;
-}
-
-.dialog input + .message.error {
-	display:block;
-	clear:both;
-	width:92%;
-	padding-bottom:.5em;
-	font-size:.813em;
-}
-/* submit / cancel */
-.dialog .submit-wrapper {
-	border-top:1px solid @border-default;
-	clear:both;
-	width:100%;
-	padding:.75em 0;
-}
-.dialog .submit-wrapper .cancel,
-.dialog .submit-wrapper .button {
-	float:left;
-	margin-left:1.125em;
-	font-size:1.125em;
-}
-.dialog .submit-wrapper .cancel {
-	margin-top:.5em;
-	font-size:1em;
-}
-

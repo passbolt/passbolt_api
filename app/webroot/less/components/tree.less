@@ -1,123 +1,92 @@
-/* tree.less */
-.panel .navigation {
-	font-size:.938em;
-}
-.panel .navigation.first {
-	border-bottom:1px dotted @border-default;
-	padding:.625em;
-	padding-right:.3125em;
-	margin-bottom:.625em;
-}
-.panel .navigation.last {
-	padding-right:.3125em; /* 5px */
-}
-.panel .navigation a {
-	color:@font-default;
-	display:block;
-}
-.panel .navigation a:hover {
-	text-decoration:none;
-}
-.panel .navigation .row {
-}
-.panel .navigation .row:hover {
-	background:@background-lighter;
-}
-.panel .navigation .row.selected {
-	font-weight:bold;
-}
 
-/* shortcut */
-.panel .navigation.shortcuts a {
-	padding:.125em .313em; /* 2px 5px */
-}
 
 /* tree */
-.tree a{
-}
-.tree ul {
-	padding-left:.625em; /* 10px */
-}
-.tree .row {
-	float:left;
-	width:100%;
-}
-.tree .node-ctrl a {
-	width:1em;
-	height:1em;
-	display:block;
-	margin-top:.15em;
-	opacity:0.5;
-	filter:alpha(opacity=50);
-	padding-left:.3125em;
-}
-.tree .node-ctrl a:hover {
-	opacity:.9;
-	filter:alpha(opacity=90);
-}
-.tree .node.open .node-ctrl a {
-	background: transparent url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
-}
-.tree .node.close .node-ctrl a {
-	background: transparent url('@{images}/controls/tree-ctrl.png') center 4px no-repeat;
-}
-.more-ctrl span,
-.node-ctrl span {
-	display:none;
-}
+.tree {
+	a{
+	}
+	ul {
+		padding-left:.625em; /* 10px */
+	}
+	.row {
+		float:left;
+		width:100%;
+	}
+	.node-ctrl a {
+		width:1em;
+		height:1em;
+		display:block;
+		margin-top:.15em;
+		opacity:0.5;
+		filter:alpha(opacity=50);
+		padding-left:.3125em;
+	}
+	.node-ctrl a:hover {
+		opacity:.9;
+		filter:alpha(opacity=90);
+	}
+	.node.open .node-ctrl a {
+		background: transparent url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
+	}
+	.node.close .node-ctrl a {
+		background: transparent url('@{images}/controls/tree-ctrl.png') center 4px no-repeat;
+	}
+	.more-ctrl span,
+	.node-ctrl span {
+		display:none;
+	}
 
-/* row layout: fixed fluid fixed */
-.tree .main-cell-wrapper {
-	float: left;
-	width: 100%;
-}
-.tree .main-cell {
-	margin: 0 1em 0 1em ;
-	padding-left:.625em;
-}
-.tree .left-cell {
-	float: left;
-	width: 1em ;
-	margin-left: -100%;
-}
-.tree .right-cell {
-	float: right;
-	width: 1em ;
-	margin-left: -1.4em;
-	padding-right:.25em;
-}
+	/* row layout: fixed fluid fixed */
+	.main-cell-wrapper {
+		float: left;
+		width: 100%;
+	}
+	.main-cell {
+		margin: 0 1em 0 1em ;
+		padding-left:.625em;
+	}
+	.left-cell {
+		float: left;
+		width: 1em ;
+		margin-left: -100%;
+	}
+	.right-cell {
+		float: right;
+		width: 1em ;
+		margin-left: -1.4em;
+		padding-right:.25em;
+	}
 
-/* don't show nodes if parent is closed */
-.tree .node.close ul{
-	display:none;
-}
+	/* don't show nodes if parent is closed */
+	.node.close ul{
+		display:none;
+	}
 
-/* ellipsis on long node text */
-.tree .main-cell span {
-	.ellipsis();
-	display:block;
-}
+	/* ellipsis on long node text */
+	.main-cell span {
+		.ellipsis();
+		display:block;
+	}
 
-/* row action is a button */
-.tree .row .right-cell a {
-	height:1em;
-	margin-top:.125em;
-	width:1em;
-}
-.tree .row:hover .right-cell a {
-	opacity:0.5;
-	filter:alpha(opacity=50);
-	border:1px solid @border-default;
-	background: transparent url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
-}
-.tree .row:hover .right-cell a:hover {
-	opacity:0.9;
-	filter:alpha(opacity=90);
-	background: @white url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
-}
-.tree .node.close .node-ctrl a {
-}
-/* Events */
-.tree .row.drop-over {
-	background-color:@background-lighter;
+	/* row action is a button */
+	.row .right-cell a {
+		height:1em;
+		margin-top:.125em;
+		width:1em;
+	}
+	.row:hover .right-cell a {
+		opacity:0.5;
+		filter:alpha(opacity=50);
+		border:1px solid @border-default;
+		background: transparent url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
+	}
+	.row:hover .right-cell a:hover {
+		opacity:0.9;
+		filter:alpha(opacity=90);
+		background: @white url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
+	}
+
+	/* Events */
+	.row.drop-over {
+		background-color:@background-lighter;
+	}
 }

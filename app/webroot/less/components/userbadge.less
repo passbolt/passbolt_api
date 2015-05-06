@@ -2,91 +2,110 @@
  * Profile user card
  */
 .user.profile {
-	max-width:18em;
-	width:80%;
-	float:right;
-	border:1px solid @border-default;
-	margin-top:.5em;
-	background:#EEE;
+	max-width: 18em;
+	width: 80%;
+	float: right;
+	border: 1px solid @border-default;
+	margin-top: .5em;
+	background: #EEE;
 	overflow: hidden;
-}
-.user.profile, /*look like a button */
-.user.profile .more {
 	.background-gradient();
-}
-.user.profile .more {
-	border-left:1px dotted @border-default;
-}
-/* fixed fluid fixed layout */
-.user.profile .left-cell, 
-.user.profile .right-cell, 
-.user.profile .center-cell-wrapper {
-	float:left;
-	height:3.125em; /* 50px */
-}
-.user.profile .center-cell-wrapper {
-	width: 100%;
-}
-.user.profile .center-cell {
-	margin: 0 1.75em 0 3.125em;
-	overflow: hidden;
-}
-.user.profile .left-cell {
-	width:3.125em;
-	margin-left: -100%;
-}
-.user.profile .right-cell {
-	width: 1.6875em;
-	margin-left: -1.75em;
-}
-/* remaing user card styling */
-.user.profile .picture img {
-	width:2.875em;	/* 46px */
-	padding:0.1250em; /* 2px */
-}
-.user.profile .details{
-	float:left;
-	height:2.8125em;
-	font-size:.9em;
-	padding:.3125em .625em; /* 5/10px */
-}
-.user.profile .details .name {
-	font-weight:bold;
-	padding-top:.0625em;
-}
-.user.profile .details .name, 
-.user.profile .details .email {
-	width:100%;
-	float:left;
-	clear:both;
-	text-overflow:clip;
-	word-wrap:break-word;
-	overflow: hidden;
-	height:1.25em;
-	float:left;
-	display:inline-block;
-}
-.user.profile .more a {
-	background:blue;
-	display:block;
-	background: transparent url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
-	margin-top:1em;
-	opacity:.5;
-	filter:alpha(opacity=50);
-}
-.user.profile .more a:hover {
-	opacity:.9;
-	filter:alpha(opacity=90);
-}
-.user.profile .more a span {
-	visibility:hidden;
-}
-.user.profile .dropdown-content {
-	top:59px;
-	max-width:18em;
-	width:80%;
-}
-.user.profile .dropdown-content.visible {
-	display:block;
+
+	.more {
+		.background-gradient();
+		border-left: 1px dotted @border-default;
+	}
+
+	/* fixed fluid fixed layout */
+	.left-cell,
+	.right-cell,
+	.center-cell-wrapper {
+		float: left;
+		height: 3.125em; /* 50px */
+	}
+	.center-cell-wrapper {
+		width: 100%;
+	}
+	.center-cell {
+		margin: 0 1.75em 0 3.125em;
+		overflow: hidden;
+	}
+	.left-cell {
+		width: 3.125em;
+		margin-left: -100%;
+	}
+	.right-cell {
+		width: 1.6875em;
+		margin-left: -1.75em;
+	}
+
+	/* remaing user card styling */
+	.picture img {
+		width: 2.875em; /* 46px */
+		padding: 0.1250em; /* 2px */
+	}
+
+	.details {
+		float: left;
+		height: 2.8125em;
+		font-size: .9em;
+		padding: .3125em .625em; /* 5/10px */
+
+		.name {
+			font-weight: bold;
+			padding-top: .0625em;
+		}
+		.name,
+		.email {
+			width: 100%;
+			float: left;
+			clear: both;
+			text-overflow: clip;
+			word-wrap: break-word;
+			overflow: hidden;
+			height: 1.25em;
+			float: left;
+			display: inline-block;
+		}
+	}
+	.more a {
+		background: blue;
+		display: block;
+		background: transparent url('@{images}/controls/tree-ctrl.png') center -9px no-repeat;
+		margin-top: 1em;
+		opacity: .5;
+		filter: alpha(opacity=50);
+
+		&:hover {
+			opacity: .9;
+			filter: alpha(opacity=90);
+		}
+		span {
+			visibility: hidden;
+		}
+	}
+	.dropdown-content {
+		top: 59px;
+		max-width: 18em;
+		width: 80%;
+
+		&.visible {
+			display: block;
+		}
+	}
 }
 
+/* hide left column when there is no space */
+@media all and (max-width: 980px) {
+	.user.profile {
+		display:block;
+		width:auto;
+
+		.center-cell {
+			display:none;
+		}
+		.right-cell {
+			display:none;
+		}
+	}
+}

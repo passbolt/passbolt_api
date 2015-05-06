@@ -1412,6 +1412,9 @@ select.fluid {
 /*
  * Page layout
  */
+.page {
+  min-width: 320px;
+}
 .page,
 .panel,
 .header {
@@ -1480,7 +1483,7 @@ select.fluid {
   overflow: hidden;
 }
 .col2 {
-  width: 47%;
+  width: 50%;
   left: 18%;
 }
 .col3,
@@ -1491,13 +1494,6 @@ select.fluid {
 .col2_3 {
   width: 81.5%;
   left: 18%;
-}
-.panel.aside {
-  position: absolute;
-  right: 2em;
-  width: 20em;
-  bottom: 0;
-  height: 100%;
 }
 /* if the other grid is used
    don't center the grid inside main panel */
@@ -1517,8 +1513,14 @@ select.fluid {
     left: 1%;
   }
   .col2 {
-    width: 55%;
+    width: 72%;
     left: 1%;
+  }
+}
+/* reduce font-size for small screen */
+@media all and (max-width: 480px) {
+  .page {
+    font-size: .835em;
   }
 }
 /*
@@ -2041,7 +2043,7 @@ select.fluid {
 }
 /* Small Progress bar */
 .progress-bar {
-  background: #ffffff;
+  background: transparent;
   width: 100%;
   height: 2px;
   display: block;
@@ -2098,7 +2100,7 @@ select.fluid {
   position: absolute;
   display: block;
   width: 100%;
-  bottom: 2em;
+  bottom: 2.125em;
   z-index: 991;
 }
 /*
@@ -2155,7 +2157,7 @@ select.fluid {
 }
 .dialog {
   position: relative;
-  width: 30em;
+  max-width: 30em;
   border: 1px solid #dddddd;
   background: #f3f3f3;
   margin: auto;
@@ -2163,23 +2165,31 @@ select.fluid {
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
+  /* header */
+  /* close dialog cross */
+  /* content */
+  /* inputs */
+  /* submit / cancel */
 }
-/* header */
 .dialog .dialog-header {
   padding: 0.5em 1em 0 1em;
   height: 3em;
 }
 .dialog .dialog-header h2 {
-  margin: .25em 0 .5em .2em;
+  margin: .25em 2em .5em .2em;
   font-size: 1.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
 }
-.dialog .dialog-header-subtitle {
+.dialog .dialog-header .dialog-header-subtitle {
   padding-top: 0.3em;
   padding-left: 1em;
   font-size: 0.7em;
   color: #888888;
 }
-/* close dialog cross */
 .dialog a.dialog-close,
 .dialog a.dialog-close:hover {
   display: block;
@@ -2200,11 +2210,9 @@ select.fluid {
 .dialog a.dialog-close:hover .icon.close {
   border: 1px solid #dddddd;
 }
-/* content */
-.dialog-content {
+.dialog .dialog-content {
   position: relative;
 }
-/* inputs */
 .dialog .form-content {
   background: #FFF;
   padding: .813em 1.25em .813em 1.5em;
@@ -2232,7 +2240,6 @@ select.fluid {
   padding-bottom: .5em;
   font-size: .813em;
 }
-/* submit / cancel */
 .dialog .submit-wrapper {
   border-top: 1px solid #dddddd;
   clear: both;
@@ -2248,6 +2255,16 @@ select.fluid {
 .dialog .submit-wrapper .cancel {
   margin-top: .5em;
   font-size: 1em;
+}
+/* reduce font-size for small screen */
+@media all and (max-width: 480px) {
+  .dialog {
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 /*
  * Footer
@@ -2739,7 +2756,7 @@ table.table-info td + td {
 }
 .input-password-wrapper .actions.inline {
   float: right;
-  width: 33%;
+  width: 32%;
 }
 .input-password-wrapper .actions.inline .button {
   float: left;
@@ -2802,10 +2819,29 @@ table.table-info td + td {
 .password-hints li.error:before {
   color: #d40101;
 }
-#passbolt-iframe-secret-edition {
-  width: 100%;
-  display: block;
-  height: 5em;
+@media all and (max-width: 400px) {
+  .input-password-wrapper .input.password,
+  .input-password-wrapper .actions.inline {
+    position: relative;
+    float: none;
+    clear: both;
+  }
+  .input-password-wrapper .actions.inline {
+    width: 50%;
+    float: left;
+  }
+  .input-password-wrapper .input.password input[type=password] {
+    width: 87%;
+  }
+  .input-password-wrapper .password-complexity .progress {
+    display: none;
+  }
+  .input-password-wrapper .password-complexity .complexity-text {
+    float: left;
+    width: 50%;
+    font-size: .831em;
+    margin-top: .5em;
+  }
 }
 /*
 	Custom rules for the setup process pages

@@ -1,38 +1,51 @@
 /* search */
 .search {
 	margin-top:1em;
-}
-.search legend,
-.search label {
-	display:none;
-	width:10em;
-}
-.search input[type=search] {
-	float:left;
-	width:70%;
-	margin-right:.25em;
-	margin-bottom:0;
-	margin-top:0.0625em;
-	height:1.0625em;
-}
-.search .submit {
-	float:left;
-	border:1px solid @border-3;
-}
-.search button {
- 	height:2em;
-	min-width:4em;
-}
-.search button .icon {
-	font-size:1.1em;
-}
-.search button .icon:before {
-	margin-top:-0.1em;
-}
 
+	legend, label {
+		display:none;
+		width:10em;
+	}
+	input[type=search] {
+		float:left;
+		width:70%;
+		margin-right:.25em;
+		margin-bottom:0;
+		margin-top:0.0625em;
+		height:1.0625em;
+	}
+
+	.submit {
+		float:left;
+		border:1px solid @border-3;
+	}
+
+	button {
+		height:2.125em;
+		min-width:4em;
+		.icon {
+			font-size:1.125em;
+		}
+		.icon:before {
+			margin-top:-0.1em;
+		}
+	}
+}
 /* remove webkit search input decoration and cancel button */
 input[type="search"]::-webkit-search-decoration, 
 input[type="search"]::-webkit-search-cancel-button {
 	display: none;
 }
 
+/* rescale on small screen */
+@media all and (max-width: 480px) {
+	.search {
+		input[type=search] {
+			width: 60%;
+		}
+		button {
+			height: 2.25em;
+			font-size: 1.125em;
+		}
+	}
+}

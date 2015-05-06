@@ -64,7 +64,7 @@
 .tableview table .m-cell {
 	width:10em;
 	max-width:10em;
-    vertical-align: middle;
+	vertical-align: middle;
 }
 .tableview table .l-cell {
 	width:12em;
@@ -85,4 +85,31 @@
 .tableview table th span,
 .tableview table td span {
 	vertical-align:6%;
+}
+/* hide secondary actions if there is no space */
+@media all and (max-width: 600px) {
+	.tableview table tbody {
+		td {
+			display:block;
+			&.s-cell, &.s2-cell, &.m-cell, &.l-cell {
+				max-width:90%;
+				width:90%;
+				padding:.5em;
+			}
+			&.s-cell {
+				display:none;
+			}
+		}
+		tr:nth-child(odd) {
+			background:@background-lightest;
+		}
+	}
+	.tableview thead  {
+		display:none;
+	}
+	.tableview-content {
+		top:0;
+		border:0;
+		bottom:0px;
+	}
 }

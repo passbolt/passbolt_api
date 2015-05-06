@@ -1412,6 +1412,9 @@ select.fluid {
 /*
  * Page layout
  */
+.page {
+  min-width: 320px;
+}
 .page,
 .panel,
 .header {
@@ -1480,7 +1483,7 @@ select.fluid {
   overflow: hidden;
 }
 .col2 {
-  width: 47%;
+  width: 50%;
   left: 18%;
 }
 .col3,
@@ -1491,13 +1494,6 @@ select.fluid {
 .col2_3 {
   width: 81.5%;
   left: 18%;
-}
-.panel.aside {
-  position: absolute;
-  right: 2em;
-  width: 20em;
-  bottom: 0;
-  height: 100%;
 }
 /* if the other grid is used
    don't center the grid inside main panel */
@@ -1517,8 +1513,14 @@ select.fluid {
     left: 1%;
   }
   .col2 {
-    width: 55%;
+    width: 72%;
     left: 1%;
+  }
+}
+/* reduce font-size for small screen */
+@media all and (max-width: 480px) {
+  .page {
+    font-size: .835em;
   }
 }
 /*
@@ -1684,11 +1686,11 @@ select.fluid {
   border: 1px solid #bbbbbb;
 }
 .search button {
-  height: 2em;
+  height: 2.125em;
   min-width: 4em;
 }
 .search button .icon {
-  font-size: 1.1em;
+  font-size: 1.125em;
 }
 .search button .icon:before {
   margin-top: -0.1em;
@@ -1697,6 +1699,16 @@ select.fluid {
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button {
   display: none;
+}
+/* rescale on small screen */
+@media all and (max-width: 480px) {
+  .search input[type=search] {
+    width: 60%;
+  }
+  .search button {
+    height: 2.25em;
+    font-size: 1.125em;
+  }
 }
 /*
  * Profile user card
@@ -1709,8 +1721,16 @@ input[type="search"]::-webkit-search-cancel-button {
   margin-top: .5em;
   background: #EEE;
   overflow: hidden;
+  background: #eeeeee;
+  background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -ms-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(background-lightest), to(#eeeeee));
+  background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
+  background-image: linear-gradient(top, #f3f3f3, #eeeeee);
+  /* fixed fluid fixed layout */
+  /* remaing user card styling */
 }
-.user.profile,
 .user.profile .more {
   background: #eeeeee;
   background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
@@ -1719,11 +1739,8 @@ input[type="search"]::-webkit-search-cancel-button {
   background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: linear-gradient(top, #f3f3f3, #eeeeee);
-}
-.user.profile .more {
   border-left: 1px dotted #dddddd;
 }
-/* fixed fluid fixed layout */
 .user.profile .left-cell,
 .user.profile .right-cell,
 .user.profile .center-cell-wrapper {
@@ -1746,7 +1763,6 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 1.6875em;
   margin-left: -1.75em;
 }
-/* remaing user card styling */
 .user.profile .picture img {
   width: 2.875em;
   /* 46px */
@@ -1798,6 +1814,19 @@ input[type="search"]::-webkit-search-cancel-button {
 .user.profile .dropdown-content.visible {
   display: block;
 }
+/* hide left column when there is no space */
+@media all and (max-width: 980px) {
+  .user.profile {
+    display: block;
+    width: auto;
+  }
+  .user.profile .center-cell {
+    display: none;
+  }
+  .user.profile .right-cell {
+    display: none;
+  }
+}
 /*
  * Breadcrumbs
  */
@@ -1829,30 +1858,53 @@ input[type="search"]::-webkit-search-cancel-button {
 .breadcrumbs div.main-cell {
   display: inline;
 }
+@media all and (max-width: 600px) {
+  .breadcrumbs {
+    display: none;
+  }
+}
 /* actions */
-.actions-wrapper {
+.header.third .actions-wrapper {
   margin-top: .5em;
 }
-.actions-wrapper .actions .button {
+.header.third .actions-wrapper .actions .button {
   font-size: .875em;
   min-width: 4em;
 }
-.actions-wrapper .actions li {
+.header.third .actions-wrapper .actions li {
   display: inline;
 }
-.actions-wrapper .actions.secondary {
+.header.third .actions-wrapper .actions.secondary {
   float: right;
 }
-.actions-wrapper .actions.secondary .button {
+.header.third .actions-wrapper .actions.secondary .button {
   font-size: .875em;
   min-width: 1em;
 }
-.actions-wrapper a.button {
+.header.third .actions-wrapper .actions a.button {
   float: left;
+}
+/* hide secondary actions if there is no space */
+@media all and (max-width: 980px) {
+  .header.third .actions-wrapper .actions.secondary {
+    display: none;
+  }
+}
+/* hide icons if there is no space */
+@media all and (max-width: 980px) {
+  .header.third .actions-wrapper .actions i {
+    display: none;
+  }
+  .header.third .actions-wrapper .actions i + span {
+    margin-left: 0;
+  }
+  .header.third .actions-wrapper .actions .disabled {
+    display: none;
+  }
 }
 /* Small Progress bar */
 .progress-bar {
-  background: #ffffff;
+  background: transparent;
   width: 100%;
   height: 2px;
   display: block;
@@ -1909,7 +1961,7 @@ input[type="search"]::-webkit-search-cancel-button {
   position: absolute;
   display: block;
   width: 100%;
-  bottom: 2em;
+  bottom: 2.125em;
   z-index: 991;
 }
 /*
@@ -2095,7 +2147,7 @@ div.secret-copy > pre {
 }
 .dialog {
   position: relative;
-  width: 30em;
+  max-width: 30em;
   border: 1px solid #dddddd;
   background: #f3f3f3;
   margin: auto;
@@ -2103,23 +2155,31 @@ div.secret-copy > pre {
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
+  /* header */
+  /* close dialog cross */
+  /* content */
+  /* inputs */
+  /* submit / cancel */
 }
-/* header */
 .dialog .dialog-header {
   padding: 0.5em 1em 0 1em;
   height: 3em;
 }
 .dialog .dialog-header h2 {
-  margin: .25em 0 .5em .2em;
+  margin: .25em 2em .5em .2em;
   font-size: 1.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
 }
-.dialog .dialog-header-subtitle {
+.dialog .dialog-header .dialog-header-subtitle {
   padding-top: 0.3em;
   padding-left: 1em;
   font-size: 0.7em;
   color: #888888;
 }
-/* close dialog cross */
 .dialog a.dialog-close,
 .dialog a.dialog-close:hover {
   display: block;
@@ -2140,11 +2200,9 @@ div.secret-copy > pre {
 .dialog a.dialog-close:hover .icon.close {
   border: 1px solid #dddddd;
 }
-/* content */
-.dialog-content {
+.dialog .dialog-content {
   position: relative;
 }
-/* inputs */
 .dialog .form-content {
   background: #FFF;
   padding: .813em 1.25em .813em 1.5em;
@@ -2172,7 +2230,6 @@ div.secret-copy > pre {
   padding-bottom: .5em;
   font-size: .813em;
 }
-/* submit / cancel */
 .dialog .submit-wrapper {
   border-top: 1px solid #dddddd;
   clear: both;
@@ -2188,6 +2245,16 @@ div.secret-copy > pre {
 .dialog .submit-wrapper .cancel {
   margin-top: .5em;
   font-size: 1em;
+}
+/* reduce font-size for small screen */
+@media all and (max-width: 480px) {
+  .dialog {
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 /* dropdown */
 .dropdown {
@@ -2492,6 +2559,7 @@ div.secret-copy > pre {
 /* tree.less */
 .panel .navigation {
   font-size: .938em;
+  /* shortcut */
 }
 .panel .navigation.first {
   border-bottom: 1px dotted #dddddd;
@@ -2507,21 +2575,27 @@ div.secret-copy > pre {
   color: #333333;
   display: block;
 }
-.panel .navigation a:hover {
+.panel .navigation a a:hover {
   text-decoration: none;
 }
 .panel .navigation .row:hover {
   background: #eeeeee;
 }
-.panel .navigation .row.selected {
+.panel .navigation .selected {
   font-weight: bold;
 }
-/* shortcut */
 .panel .navigation.shortcuts a {
   padding: .125em .313em;
   /* 2px 5px */
 }
 /* tree */
+.tree {
+  /* row layout: fixed fluid fixed */
+  /* don't show nodes if parent is closed */
+  /* ellipsis on long node text */
+  /* row action is a button */
+  /* Events */
+}
 .tree ul {
   padding-left: .625em;
   /* 10px */
@@ -2549,11 +2623,10 @@ div.secret-copy > pre {
 .tree .node.close .node-ctrl a {
   background: transparent url('../img/controls/tree-ctrl.png') center 4px no-repeat;
 }
-.more-ctrl span,
-.node-ctrl span {
+.tree .more-ctrl span,
+.tree .node-ctrl span {
   display: none;
 }
-/* row layout: fixed fluid fixed */
 .tree .main-cell-wrapper {
   float: left;
   width: 100%;
@@ -2573,11 +2646,9 @@ div.secret-copy > pre {
   margin-left: -1.4em;
   padding-right: .25em;
 }
-/* don't show nodes if parent is closed */
 .tree .node.close ul {
   display: none;
 }
-/* ellipsis on long node text */
 .tree .main-cell span {
   white-space: nowrap;
   overflow: hidden;
@@ -2586,7 +2657,6 @@ div.secret-copy > pre {
   -ms-text-overflow: ellipsis;
   display: block;
 }
-/* row action is a button */
 .tree .row .right-cell a {
   height: 1em;
   margin-top: .125em;
@@ -2603,7 +2673,6 @@ div.secret-copy > pre {
   filter: alpha(opacity=90);
   background: #ffffff url('../img/controls/tree-ctrl.png') center -9px no-repeat;
 }
-/* Events */
 .tree .row.drop-over {
   background-color: #eeeeee;
 }
@@ -2644,7 +2713,11 @@ div.secret-copy > pre {
  * Sidebar
  */
 .panel.aside {
-  border: 1px solid #dddddd;
+  position: absolute;
+  right: 2em;
+  width: 22em;
+  bottom: 0;
+  height: 100%;
   background: #ffffff;
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
@@ -2778,6 +2851,17 @@ div.secret-copy > pre {
 .panel.aside .user .detailed-information li .value {
   line-height: 1.8em;
 }
+/* place sidebar on top of everything when there is no space */
+@media all and (max-width: 980px) {
+  .panel.aside {
+    position: absolute;
+    right: 0em;
+    width: 100%;
+    bottom: 0;
+    top: 0;
+    height: 100%;
+  }
+}
 /* tabs */
 .tabs {
   border-bottom: 1px solid #dddddd;
@@ -2910,6 +2994,34 @@ div.secret-copy > pre {
 .tableview table th span,
 .tableview table td span {
   vertical-align: 6%;
+}
+/* hide secondary actions if there is no space */
+@media all and (max-width: 600px) {
+  .tableview table tbody td {
+    display: block;
+  }
+  .tableview table tbody td.s-cell,
+  .tableview table tbody td.s2-cell,
+  .tableview table tbody td.m-cell,
+  .tableview table tbody td.l-cell {
+    max-width: 90%;
+    width: 90%;
+    padding: .5em;
+  }
+  .tableview table tbody td.s-cell {
+    display: none;
+  }
+  .tableview table tbody tr:nth-child(odd) {
+    background: #f3f3f3;
+  }
+  .tableview thead {
+    display: none;
+  }
+  .tableview-content {
+    top: 0;
+    border: 0;
+    bottom: 0px;
+  }
 }
 /**
  * Tooltips!
@@ -3195,7 +3307,7 @@ div.secret-copy > pre {
 }
 .input-password-wrapper .actions.inline {
   float: right;
-  width: 33%;
+  width: 32%;
 }
 .input-password-wrapper .actions.inline .button {
   float: left;
@@ -3258,10 +3370,29 @@ div.secret-copy > pre {
 .password-hints li.error:before {
   color: #d40101;
 }
-#passbolt-iframe-secret-edition {
-  width: 100%;
-  display: block;
-  height: 5em;
+@media all and (max-width: 400px) {
+  .input-password-wrapper .input.password,
+  .input-password-wrapper .actions.inline {
+    position: relative;
+    float: none;
+    clear: both;
+  }
+  .input-password-wrapper .actions.inline {
+    width: 50%;
+    float: left;
+  }
+  .input-password-wrapper .input.password input[type=password] {
+    width: 87%;
+  }
+  .input-password-wrapper .password-complexity .progress {
+    display: none;
+  }
+  .input-password-wrapper .password-complexity .complexity-text {
+    float: left;
+    width: 50%;
+    font-size: .831em;
+    margin-top: .5em;
+  }
 }
 /**
  * Based on Farbtastic Color Picker 1.2
@@ -3418,12 +3549,24 @@ div.secret-copy > pre {
   width: 55%;
   float: left;
   padding-left: 1em;
+  padding-right: 1em;
 }
 .dialog .share-tab .row .name {
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
 }
 .dialog .share-tab .row .details a {
   color: #888888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  display: block;
 }
 .dialog .share-tab .row .rights {
   float: left;
@@ -3520,7 +3663,7 @@ div.secret-copy > pre {
   float: left;
 }
 .dialog .share-tab .form-content.permission-add .autocomplete-content {
-  width: 52%;
+  width: 45%;
 }
 .dialog .share-tab .form-content.permission-add .perm-type {
   margin-right: 4%;
@@ -3592,6 +3735,17 @@ div.secret-copy > pre {
 }
 .dialog .share-tab .form-content.permission-add .message {
   padding-left: 0;
+}
+/* hide icons if there is no space */
+@media all and (max-width: 480px) {
+  .dialog .share-tab .row .user,
+  .dialog .share-tab .row .group {
+    width: 45%;
+  }
+  .dialog .share-tab .form-content.permission-add .autocomplete input,
+  .dialog .share-tab .form-content.permission-add .autocomplete-content {
+    width: 90%;
+  }
 }
 .dialog .organize-tab .current-folder {
   background: #f3f3f3;
@@ -3666,7 +3820,7 @@ div.secret-copy > pre {
   float: left;
   width: 55px;
   height: 55px;
-  border: 1px solid #333;
+  border: 1px solid #dddddd;
 }
 .panel.aside .user .header h3 {
   float: left;
@@ -3682,7 +3836,7 @@ div.secret-copy > pre {
 }
 .panel.aside .user .header h3 span.username {
   font-size: 0.8em;
-  color: #666666;
+  color: #888888;
   font-weight: normal;
 }
 .panel.aside .user li.key {
@@ -3904,29 +4058,32 @@ div.secret-copy > pre {
   font-size: 0.8em;
   display: block;
 }
-.loading-screen {
+html.loading .loading-screen {
+  display: block;
   width: 100%;
   height: 100%;
   position: absolute;
   z-index: 999;
   background: #ffffff;
 }
-.loading-screen-holder {
+html.loading .loading-screen .loading-screen-holder {
   width: 20%;
   margin: auto;
   margin-top: 7em;
 }
-.loading-screen .logo {
+html.loading .loading-screen .logo {
   width: 187px;
   height: 37px;
   background: transparent url('../img/logo/logo.png') 0 0 no-repeat;
   margin: 2em 0;
 }
-.loading-screen .logo span {
+html.loading .loading-screen .logo span {
   display: none;
 }
-.loading-screen p {
+html.loading .loading-screen p {
   margin: 1em 0;
   font-size: .75em;
 }
-/* initial loading state bar */
+.loading-screen {
+  display: none;
+}

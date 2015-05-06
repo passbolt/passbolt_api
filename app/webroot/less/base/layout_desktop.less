@@ -1,6 +1,9 @@
 /*
  * Page layout
  */
+.page {
+	min-width:320px;
+}
 .page,
 .panel,
 .header {
@@ -68,7 +71,7 @@
 	overflow:hidden;
 }
 .col2 {
-	width:47%;
+	width:50%;
 	left:18%;
 }
 .col3,
@@ -79,13 +82,6 @@
 .col2_3 {
 	width:81.5%;
 	left:18%;
-}
-.panel.aside {
-	position:absolute;
-	right:2em;
-	width:20em;
-	bottom:0;
-	height:100%;
 }
 
 /* if the other grid is used
@@ -106,8 +102,15 @@
 		left:1%;
 	}
 	.col2 {
-		width:55%;
+		width:72%;
 		left:1%;
+	}
+
+}
+/* reduce font-size for small screen */
+@media all and (max-width: 480px) {
+	.page {
+		font-size:.835em;
 	}
 
 }

@@ -1,23 +1,46 @@
 /* actions */
-.actions-wrapper {
+.header.third .actions-wrapper {
 	margin-top:.5em;
+
+	.actions {
+		.button {
+			font-size: .875em;
+			min-width: 4em;
+		}
+		li {
+			display: inline;
+		}
+		&.secondary {
+			float: right;
+		}
+		&.secondary .button {
+			font-size: .875em;
+			min-width: 1em;
+		}
+		a.button {
+			float: left;
+		}
+	}
 }
-.actions-wrapper .actions .button {
-	font-size:.875em;
-	min-width:4em;
+/* hide secondary actions if there is no space */
+@media all and (max-width: 980px) {
+	.header.third .actions-wrapper {
+		.actions.secondary {
+			display:none;
+		}
+	}
 }
-.actions-wrapper .actions li {
-	display:inline;
-}
-.actions-wrapper .actions icons {
-}
-.actions-wrapper .actions.secondary {
-	float:right;
-}
-.actions-wrapper .actions.secondary .button {
-	font-size:.875em;
-	min-width:1em;
-}
-.actions-wrapper a.button {
-	float:left;
+/* hide icons if there is no space */
+@media all and (max-width: 980px) {
+	.header.third .actions-wrapper {
+		.actions i {
+			display: none;
+		}
+		.actions i + span {
+			margin-left: 0;
+		}
+		.actions .disabled {
+			display: none;
+		}
+	}
 }
