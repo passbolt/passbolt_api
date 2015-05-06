@@ -382,14 +382,16 @@ class ShareController extends AppController {
 	}
 
 	public function send_email() {
-		$this->EmailNotificator->passwordSharedNotification('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce', array(
+/* For manual email testing
+ * $this->EmailNotificator->passwordSharedNotification('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce', array(
 				'resource_id' => '50d77ff9-fdd8-4035-b7c6-1b63d7a10fce',
 				'sharer_id' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
 			));
 
 		$this->EmailNotificator->accountCreationNotification('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce', array(
-				'creator_id' => '533d37a0-bc80-4945-9b11-1663c0a895dc'
+				'creator_id' => '533d37a0-bc80-4945-9b11-1663c0a895dc',
+				'token' => 'walou'
 			));
-		die();
+		die();*/
 	}
 }

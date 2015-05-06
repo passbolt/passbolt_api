@@ -53,8 +53,8 @@ steal(
 				'uri': 'uri',
 				'modified': 'modified',
 				'owner': 'Creator.username',
-				'copyLogin': 'id',
-				'copySecret': 'id',
+				//'copyLogin': 'id',
+				//'copySecret': 'id',
 				'Category': 'Category'
 			});
 
@@ -183,7 +183,7 @@ steal(
 					'css': ['m-cell'],
 					'label': __('Owner')
 				}
-			}, {
+			}/*, {
 				'name': 'copyLogin',
 				'index': 'copyLogin',
 				'header': {
@@ -217,7 +217,7 @@ steal(
 					);
 					copyPwd.start();
 				}
-			}];
+			}*/];
 
 			this._super(el, options);
 		},

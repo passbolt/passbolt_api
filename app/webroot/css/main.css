@@ -3767,41 +3767,6 @@ div.secret-copy > pre {
 .folder-add .input.text {
   width: 25em;
 }
-/*
- * Password workspace
- * @todo better namespacing
- */
-/* drag n drop */
-#js_dragged_resource {
-  padding: 6px 10px;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-#js_dragged_resource span.name {
-  font-weight: bold;
-}
-/* sidebar */
-.panel.aside .resource .detailed-information li.password .value {
-  height: 1.6em;
-  padding-top: 0.2em;
-}
-/* unused collumn
-	@todo: remove html
-*/
-.js_grid_column_owner,
-.js_grid_column_copyLogin,
-.js_grid_column_copySecret {
-  display: none;
-}
-/* hide left column when there is no space */
-@media all and (max-width: 980px) {
-  .tableview .js_grid_column_modified {
-    display: none;
-  }
-}
 .panel.aside .user .header {
   /*
  * For IE 6/7 only
@@ -3908,6 +3873,41 @@ div.secret-copy > pre {
 .tableview-content td.cell_avatar img {
   width: 25px !important;
   height: 25px !important;
+}
+/*
+ * Password workspace
+ * @todo better namespacing
+ */
+/* drag n drop */
+#js_dragged_resource {
+  padding: 6px 10px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+#js_dragged_resource span.name {
+  font-weight: bold;
+}
+/* sidebar */
+.panel.aside .resource .detailed-information li.password .value {
+  height: 1.6em;
+  padding-top: 0.2em;
+}
+/* unused collumn
+	@todo: remove html
+*/
+.js_grid_column_owner,
+.js_grid_column_copyLogin,
+.js_grid_column_copySecret {
+  display: none;
+}
+/* hide left column when there is no space */
+@media all and (max-width: 980px) {
+  .tableview .js_grid_column_modified {
+    display: none;
+  }
 }
 .passbolt_controller_preference_workspace_controller .section.detailed-information {
   /*

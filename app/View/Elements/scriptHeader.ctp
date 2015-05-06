@@ -8,7 +8,7 @@
  * @since        version 2.12.9
  */
 ?>
-<script src="/js/lib/compat/modernizr.js"></script>
+<script src="js/lib/compat/modernizr.js"></script>
 <script type="application/javascript">
 var cakephpConfig = {
 	app : {
