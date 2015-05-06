@@ -19,29 +19,14 @@ steal(
 	 */
 	mad.controller.component.MenuController.extend('passbolt.controller.component.PreferenceMenuController', /** @static */ {
 
-		'defaults': {}
+		'defaults': {
+			menuItems: null
+		}
 
 	}, /** @prototype */ {
 
 		'afterStart': function() {
-			var menuItems = [
-				new mad.model.Action({
-					'id': uuid(),
-					'label': __('My profile'),
-					'cssClasses': ['selected'],
-					'action': function () {
-						mad.bus.trigger('request_profile_section', 'profile');
-					}
-				}),
-				new mad.model.Action({
-					'id': uuid(),
-					'label': __('Manage your keys'),
-					'action': function () {
-						mad.bus.trigger('request_profile_section', 'keys');
-					}
-				})
-			];
-			this.load(menuItems);
+			this.load(this.options.menuItems);
 		}
 	});
 
