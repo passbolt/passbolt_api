@@ -41,7 +41,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li.password a.copy-clipboard click': function (el, ev) {
+		'li.password .secret-copy > a click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			this.element.trigger('password_clicked', [ev]);

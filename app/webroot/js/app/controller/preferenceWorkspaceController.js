@@ -3,6 +3,7 @@ steal(
 	'app/controller/component/preferenceMenuController.js',
 	'app/controller/component/preferenceBreadcrumbController.js',
 	'app/controller/component/profileController.js',
+	'app/controller/component/profileKeysController.js',
 	'app/controller/form/user/createFormController.js',
 	'app/controller/form/user/passwordFormController.js',
 	'app/controller/form/user/avatarFormController.js',
@@ -36,10 +37,33 @@ steal(
 			 */
 			'afterStart': function() {
 				var self = this;
+				this.section = '';
 
+				this.menuItems = Array();
 				// Instanciate the preference menu
-				var preferenceWkMenu = new passbolt.controller.component.PreferenceMenuController('#js_wk_preference_menu', {});
-				preferenceWkMenu.start();
+				this.menuItems['profile'] = new mad.model.Action({
+					'id': uuid(),
+					'label': __('My profile'),
+					'cssClasses': ['selected'],
+					'action': function () {
+						mad.bus.trigger('request_profile_section', 'profile');
+					}
+				});
+				this.menuItems['keys'] = new mad.model.Action({
+					'id': uuid(),
+					'label': __('Manage your keys'),
+					'action': function () {
+						mad.bus.trigger('request_profile_section', 'keys');
+					}
+				});
+
+				this.preferenceWkMenu = new passbolt.controller.component.PreferenceMenuController('#js_wk_preference_menu', {
+					menuItems : [
+						this.menuItems['profile'],
+						this.menuItems['keys']
+					]
+				});
+				this.preferenceWkMenu.start();
 
 				// Instanciate the main tabs controller
 				this.preferenceTabsCtl = new mad.controller.component.TabController('#js_wk_preference_main', {
@@ -56,6 +80,11 @@ steal(
 					'id': 'js_preference_wk_profile_controller',
 					'label': 'profile',
 					'user': passbolt.model.User.getCurrent()
+				});
+
+				self.profileKeysCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileKeysController, {
+					'id': 'js_preference_wk_profile_keys_controller',
+					'label': 'keys'
 				});
 			},
 
@@ -143,6 +172,34 @@ steal(
 				form.load(user);
 			},
 
+			/**
+			 * Observe when the user requests a section.
+			 * @param el
+			 * @param ev
+			 * @param section
+			 */
+			'{mad.bus} request_profile_section': function (el, ev, section) {
+				var tabId = null;
+				switch (section) {
+					case 'keys' :
+						tabId = 'js_preference_wk_profile_keys_controller';
+						break;
+					case 'profile' :
+						tabId = 'js_preference_wk_profile_controller';
+						break;
+				}
+				if (tabId) {
+					this.preferenceTabsCtl.enableTab(tabId);
+					if (section == 'keys') {
+						var userId = passbolt.model.User.getCurrent().id;
+						mad.bus.trigger('passbolt.keys_preferences.init', userId);
+					}
+				}
+				this.section = section;
+				// Select corresponding section in the menu.
+				this.preferenceWkMenu.selectItem(this.menuItems[this.section]);
+			},
+
 			/* ************************************************************** */
 			/* LISTEN TO THE STATE CHANGES */
 			/* ************************************************************** */
@@ -157,6 +214,8 @@ steal(
 				var prefScreenId = 'js_preference_wk_profile_controller';
 				var prefContainer = mad.app.getComponent('js_wk_preference_main');
 				prefContainer.enableTab(prefScreenId);
+				this.section = 'profile';
+				this.preferenceWkMenu.selectItem(this.menuItems['profile']);
 			}
 
 		});
