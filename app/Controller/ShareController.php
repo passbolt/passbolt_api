@@ -366,13 +366,13 @@ class ShareController extends AppController {
 			'all',
 			array_merge(
 				array('conditions' => array('User.id' => $addedUsers)),
-				$this->User->getFindFields('User::edit')
+				$this->User->getFindFields('User::edit')['fields']['User']
 			));
 		$removed = $this->User->find(
 			'all',
 			array_merge(
 				array('conditions' => array('User.id' => $removedUsers)),
-				$this->User->getFindFields('User::edit')
+				$this->User->getFindFields('User::edit')['fields']['User']
 			));
 
 		// Get new permissions.
