@@ -32,7 +32,7 @@
 <body>
 <!-- main -->
 <div id="container" class="page">
-	<?php  if($this->params['controller'] == 'users'): ?>
+	<?php if($this->params['controller'] == 'pages'): ?>
 	<?php echo $this->element('loader'); ?>
 	<?php endif; ?>
 	<?php echo $this->fetch('content'); ?>
