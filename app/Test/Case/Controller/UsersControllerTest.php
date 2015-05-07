@@ -29,7 +29,8 @@ class UsersControllerTest extends ControllerTestCase {
 			'app.role',
 			'app.authenticationToken',
 			'app.authenticationLog',
-			'app.authenticationBlacklist'
+			'app.authenticationBlacklist',
+			'app.cakeSessions',
 		);
 
 	public $user;
