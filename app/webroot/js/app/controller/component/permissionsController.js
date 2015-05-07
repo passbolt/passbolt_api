@@ -174,7 +174,13 @@ steal(
 				'keywords': value
 			}).then(function(users) {
 				var returnValue = [];
-				users.each(function(user, i){
+				var currentUser = passbolt.model.User.getCurrent();
+				users.each(function(user, i) {
+					// Doesn't include the current user in the list.
+					// TODO : doesn't include somebody who already have permissions.
+					if (user.id == currentUser.id)
+						return;
+					// Otherwise, add user in autocomplete.
 					returnValue.push(new mad.model.Model({
 						id: user.id,
 						label: user.username,
