@@ -145,7 +145,7 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} workspace_showSidebar': function(el, ev, show) {
-				if(show) {
+				if (show) {
 					if(this.state.is(null)) {
 						this.options.state = 'ready';
 					} else {

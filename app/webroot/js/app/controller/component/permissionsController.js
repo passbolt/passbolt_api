@@ -275,7 +275,7 @@ steal(
 		 */
 		permissionChange: function(id, data) {
 			// Try to delete a just added permission.
-			if (this.options.changes[id] !== undefined && data.delete !== undefined && data.delete) {
+			if (this.options.changes[id] !== undefined && data['delete'] !== undefined && data['delete']) {
 				// Remove the changes from the list of changes.
 				delete this.options.changes[id];
 				// Hide the user feedback if there is no more changes.
@@ -389,8 +389,8 @@ steal(
 		 */
 		' request_permission_delete': function (el, ev, permission) {
 			this.permissionChange(permission.id, {
-				id: permission.id,
-				delete: 1
+				"id" : permission.id,
+				"delete" : 1
 			});
 			this.permList.removeItem(permission);
 		},
@@ -471,7 +471,6 @@ steal(
 
 			// Extract the new permissions users ids.
 			for (var i in this.options.changes) {
-				this.options.changes[i];
 				if (typeof this.options.changes[i].Permission.isNew != 'undefined'
 					&& this.options.changes[i].Permission.isNew) {
 					usersIds.push(this.options.changes[i].Permission.aro_foreign_key);
