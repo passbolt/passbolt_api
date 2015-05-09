@@ -47,6 +47,9 @@ steal(
 			var self = this;
 			// temporary for update demonstration
 			this.options.data.Resource = this.options.data.Resource || {};
+			// Force loading the validation rules at the form init.
+			// This is to avoid doing it while the user starts typing.
+			passbolt.model.Resource.getValidationRules(self.options.action);
 
 			// Add category id hidden field
 			this.addElement(
@@ -93,7 +96,7 @@ steal(
 				}).start(),
 				new mad.form.FeedbackController($('#js_field_description_feedback'), {}).start()
 			);
-
+			$('#js_field_name').focus();
 
 			// Notify the plugin that the resource is ready to be edited.
 			mad.bus.trigger('passbolt.plugin.resource_edition');
