@@ -32,10 +32,14 @@ steal(
 		'trigger': function (eventName, eventData) {
 			var data = typeof eventData != 'undefined' ? eventData : {};
 			this.element.trigger(eventName, data);
+
 			// Trigger the event to the plugin
-			var event = document.createEvent('CustomEvent');
-			event.initCustomEvent(eventName, true, true, data);
-			document.documentElement.dispatchEvent(event);
+			// If not on rhino (compilation)
+			if(!steal.isRhino) {
+				var event = document.createEvent('CustomEvent');
+				event.initCustomEvent(eventName, true, true, data);
+				document.documentElement.dispatchEvent(event);
+			}
 		},
 
 		/**

@@ -72,7 +72,7 @@ steal(
 						var secret = self.options.selectedRs[0].Secret[0].data;
 						mad.bus.trigger('passbolt.secret.decrypt', secret);
 					}
-				}),
+				})
 				//new mad.model.Action({
 				//	'id': uuid(),
 				//	'label': __('organize'),
