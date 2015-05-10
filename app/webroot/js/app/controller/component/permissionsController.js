@@ -414,7 +414,7 @@ steal(
 		 * @param {passbolt.model.User || passbolt.model.Group} permission The permission to remove
 		 * @return {void}
 		 */
-		'{permAroAutocpltList} item_selected': function(el, ev, data) {
+		'{permAroAutocpltTxtbx} item_selected': function(el, ev, data) {
 			// update the field model reference functions of the given autocomplete result (can be a User or a Group)
 			this.permAroHiddenTxtbx.setModelReference(data.model + '.id');
 			// set the value of the hidden field aro_foreign_key
