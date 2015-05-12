@@ -5,21 +5,21 @@ steal(
 ).then(function () {
 
 	/*
-	 * @class passbolt.controller.component.PreferenceBreadcrumbController
+	 * @class passbolt.controller.component.SettingsBreadcrumbController
 	 * @inherits {mad.controller.ComponentController}
 	 * @parent index
 	 *
-	 * The preference Breadcrumb will allow the user to know where he is.
+	 * The settings Breadcrumb will allow the user to know where he is.
 	 *
 	 * @constructor
-	 * Instantiate the preference breadcrumb controller
+	 * Instantiate the settings breadcrumb controller
 	 *
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller.  These get added to
 	 * this.options and merged with defaults static variable
-	 * @return {passbolt.controller.component.PreferenceBreadcrumbController}
+	 * @return {passbolt.controller.component.SettingsBreadcrumbController}
 	 */
-	mad.controller.ComponentController.extend('passbolt.controller.component.PreferenceBreadcrumbController', /** @static */ {
+	mad.controller.ComponentController.extend('passbolt.controller.component.SettingsBreadcrumbController', /** @static */ {
 
 		'defaults': {
 			// Template

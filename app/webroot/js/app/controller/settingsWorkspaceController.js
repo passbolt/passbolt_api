@@ -1,32 +1,36 @@
 steal(
 	'mad/controller/componentController.js',
-	'app/controller/component/preferenceMenuController.js',
-	'app/controller/component/preferenceBreadcrumbController.js',
+	'app/controller/component/settingsMenuController.js',
+	'app/controller/component/settingsBreadcrumbController.js',
 	'app/controller/component/profileController.js',
-	'app/controller/component/profileKeysController.js',
+	'app/controller/component/keysController.js',
 	'app/controller/form/user/createFormController.js',
 	'app/controller/form/user/passwordFormController.js',
 	'app/controller/form/user/avatarFormController.js',
-	'app/view/template/preferenceWorkspace.ejs'
+	'app/view/template/settingsWorkspace.ejs'
 ).then(function () {
 
 		/*
-		 * @class passbolt.controller.PreferenceWorkspaceController
+		 * @class passbolt.controller.SettingsWorkspaceController
 		 * @inherits {mad.controller.ComponentController}
 		 * @parent index
 		 *
 		 * @constructor
-		 * Instanciates a new Preference Workspace Controller
+		 * Instanciates a new Settings Workspace Controller
 		 *
 		 * @param {HTMLElement} element the element this instance operates on.
 		 * @param {Object} [options] option values for the controller.  These get added to
 		 * this.options and merged with defaults static variable
-		 * @return {passbolt.controller.PreferenceWorkspaceController}
+		 * @return {passbolt.controller.SettingsWorkspaceController}
 		 */
-		mad.controller.ComponentController.extend('passbolt.controller.PreferenceWorkspaceController', /** @static */ {
+		mad.controller.ComponentController.extend('passbolt.controller.SettingsWorkspaceController', /** @static */ {
 			defaults: {
-				'label': 'Preference',
-				'templateUri': 'app/view/template/preferenceWorkspace.ejs'
+				'label': 'Settings',
+				'templateUri': 'app/view/template/settingsWorkspace.ejs',
+				'sections' : [
+					'profile',
+					'keys'
+				]
 			}
 		}, /** @prototype */ {
 
@@ -40,50 +44,49 @@ steal(
 				this.section = '';
 
 				this.menuItems = Array();
-				// Instanciate the preference menu
+				// Instantiate the settings menu
 				this.menuItems['profile'] = new mad.model.Action({
 					'id': uuid(),
 					'label': __('My profile'),
-					'cssClasses': ['selected'],
 					'action': function () {
-						mad.bus.trigger('request_profile_section', 'profile');
+						mad.bus.trigger('request_settings_section', 'profile');
 					}
 				});
 				this.menuItems['keys'] = new mad.model.Action({
 					'id': uuid(),
 					'label': __('Manage your keys'),
 					'action': function () {
-						mad.bus.trigger('request_profile_section', 'keys');
+						mad.bus.trigger('request_settings_section', 'keys');
 					}
 				});
 
-				this.preferenceWkMenu = new passbolt.controller.component.PreferenceMenuController('#js_wk_preference_menu', {
+				this.settingsWkMenu = new passbolt.controller.component.SettingsMenuController('#js_wk_settings_menu', {
 					menuItems : [
 						this.menuItems['profile'],
 						this.menuItems['keys']
 					]
 				});
-				this.preferenceWkMenu.start();
+				this.settingsWkMenu.start();
 
 				// Instanciate the main tabs controller
-				this.preferenceTabsCtl = new mad.controller.component.TabController('#js_wk_preference_main', {
+				this.settingsTabsCtl = new mad.controller.component.TabController('#js_wk_settings_main', {
 					'autoMenu': false // do not generate automatically the associated tab nav
 				});
-				this.preferenceTabsCtl.start();
+				this.settingsTabsCtl.start();
 
 				// Instantiate the password workspace breadcrumb controller
-				this.breadcrumCtl = new passbolt.controller.component.PreferenceBreadcrumbController($('#js_wsp_preference_breadcrumb'), {});
+				this.breadcrumCtl = new passbolt.controller.component.SettingsBreadcrumbController($('#js_wsp_settings_breadcrumb'), {});
 				this.breadcrumCtl.start();
 				this.breadcrumCtl.load();
 
-				self.profileCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileController, {
-					'id': 'js_preference_wk_profile_controller',
+				self.profileCtl = self.settingsTabsCtl.addComponent(passbolt.controller.component.ProfileController, {
+					'id': 'js_settings_wk_profile_controller',
 					'label': 'profile',
 					'user': passbolt.model.User.getCurrent()
 				});
 
-				self.profileKeysCtl = self.preferenceTabsCtl.addComponent(passbolt.controller.component.ProfileKeysController, {
-					'id': 'js_preference_wk_profile_keys_controller',
+				self.profileKeysCtl = self.settingsTabsCtl.addComponent(passbolt.controller.component.KeysController, {
+					'id': 'js_settings_wk_profile_keys_controller',
 					'label': 'keys'
 				});
 			},
@@ -178,26 +181,35 @@ steal(
 			 * @param ev
 			 * @param section
 			 */
-			'{mad.bus} request_profile_section': function (el, ev, section) {
+			'{mad.bus} request_settings_section': function (el, ev, section) {
 				var tabId = null;
-				switch (section) {
-					case 'keys' :
-						tabId = 'js_preference_wk_profile_keys_controller';
-						break;
-					case 'profile' :
-						tabId = 'js_preference_wk_profile_controller';
-						break;
-				}
-				if (tabId) {
-					this.preferenceTabsCtl.enableTab(tabId);
-					if (section == 'keys') {
-						var userId = passbolt.model.User.getCurrent().id;
-						mad.bus.trigger('passbolt.keys_preferences.init', userId);
+				var sectionIsValid = $.inArray(section, this.options.sections) != -1;
+				if (sectionIsValid) {
+					switch (section) {
+						case 'keys' :
+							tabId = 'js_settings_wk_profile_keys_controller';
+							break;
+						case 'profile' :
+							tabId = 'js_settings_wk_profile_controller';
+							break;
 					}
+					if (tabId) {
+						this.settingsTabsCtl.enableTab(tabId);
+						if (section == 'keys') {
+							var userId = passbolt.model.User.getCurrent().id;
+							mad.bus.trigger('passbolt.keys_settings.init', userId);
+						}
+					}
+
+					// Set class on top container.
+					$('#container')
+						.removeClass(this.options.sections.join(" "))
+						.addClass(section);
+
+					this.section = section;
+					// Select corresponding section in the menu.
+					this.settingsWkMenu.selectItem(this.menuItems[this.section]);
 				}
-				this.section = section;
-				// Select corresponding section in the menu.
-				this.preferenceWkMenu.selectItem(this.menuItems[this.section]);
 			},
 
 			/* ************************************************************** */
@@ -210,13 +222,30 @@ steal(
 			 * @return {void}
 			 */
 			'stateReady': function (go) {
-				// Enable the target preference screen
-				var prefScreenId = 'js_preference_wk_profile_controller';
-				var prefContainer = mad.app.getComponent('js_wk_preference_main');
-				prefContainer.enableTab(prefScreenId);
-				this.section = 'profile';
-				this.preferenceWkMenu.selectItem(this.menuItems['profile']);
-			}
+				// Load profile section by default.
+				mad.bus.trigger('request_settings_section', 'profile');
+			},
 
+			/**
+			 * state disabled.
+			 * @param go
+			 */
+			'stateDisabled': function (go) {
+				this._super(go);
+				// Remove container class.
+				$('#container')
+					.removeClass(this.options.sections.join(" "));
+			},
+
+			/**
+			 * state hidden.
+			 * @param go
+			 */
+			'stateHidden': function (go) {
+				this._super(go);
+				// Remove container class.
+				$('#container')
+					.removeClass(this.options.sections.join(" "));
+			}
 		});
 	});

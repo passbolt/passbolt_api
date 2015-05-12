@@ -103,7 +103,7 @@ steal(
 			else if (this.workspace == 'people') {
 				mad.bus.trigger('filter_users_browser', filter);
 			}
-			else if (this.workspace == 'preference') {
+			else if (this.workspace == 'settings') {
 				// Switch to people workspace.
 				mad.bus.trigger('workspace_selected', 'people');
 				// Filters on the given workspace.

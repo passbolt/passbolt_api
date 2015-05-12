@@ -3,21 +3,21 @@ steal(
 ).then(function () {
 
 	/*
-	 * @class passbolt.controller.PreferenceMenuController
+	 * @class passbolt.controller.SettingsMenuController
 	 * @inherits mad.controller.component.MenuController
 	 * @parent index 
 	 * 
-	 * Our preference menu component.
+	 * Our settings menu component.
 	 * 
 	 * @constructor
-	 * Creates a new Preference Menu Controller.
+	 * Creates a new Settings Menu Controller.
 	 * 
 	 * @param {HTMLElement} element the element this instance operates on.
 	 * @param {Object} [options] option values for the controller. These get added to
 	 * this.options and merged with defaults static variable 
-	 * @return {passbolt.controller.PreferenceMenuController}
+	 * @return {passbolt.controller.SettingsMenuController}
 	 */
-	mad.controller.component.MenuController.extend('passbolt.controller.component.PreferenceMenuController', /** @static */ {
+	mad.controller.component.MenuController.extend('passbolt.controller.component.SettingsMenuController', /** @static */ {
 
 		'defaults': {
 			menuItems: null

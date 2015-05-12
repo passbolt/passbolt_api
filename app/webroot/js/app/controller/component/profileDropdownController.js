@@ -44,7 +44,7 @@ steal(
 				'label': 'my profile',
 				//'cssClasses': ['separator-after'],
 				'action': function (menu) {
-					mad.bus.trigger('workspace_selected', 'preference');
+					mad.bus.trigger('workspace_selected', 'settings');
 					self.view.close();
 				}
 			});
@@ -56,8 +56,8 @@ steal(
 				'label': 'manage your keys',
 				//'cssClasses': ['separator-after'],
 				'action': function (menu) {
-					mad.bus.trigger('workspace_selected', 'preference');
-					mad.bus.trigger('request_profile_section', 'keys');
+					mad.bus.trigger('workspace_selected', 'settings');
+					mad.bus.trigger('request_settings_section', 'keys');
 					self.view.close();
 				}
 			});

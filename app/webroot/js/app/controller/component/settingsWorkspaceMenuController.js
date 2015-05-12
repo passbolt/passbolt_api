@@ -1,26 +1,26 @@
 steal(
 	'mad/controller/componentController.js',
-	'app/view/template/component/preferenceWorkspaceMenu.ejs'
+	'app/view/template/component/settingsWorkspaceMenu.ejs'
 ).then(function () {
 
 		/*
-		 * @class passbolt.controller.component.PreferenceWorkspaceMenuController
+		 * @class passbolt.controller.component.SettingsWorkspaceMenuController
 		 * @inherits mad.controller.component.ComponentController
 		 * @parent index
 		 *
-		 * Our passbolt preference workspace menu controller
+		 * Our passbolt settings workspace menu controller
 		 *
 		 * @constructor
-		 * Creates a new preference workspace menu controller
+		 * Creates a new settings workspace menu controller
 		 *
 		 * @param {HTMLElement} element the element this instance operates on.
 		 * @param {Object} [options] option values for the controller.  These get added to
 		 * this.options and merged with defaults static variable
-		 * @return {passbolt.controller.component.PreferenceWorkspaceMenuController}
+		 * @return {passbolt.controller.component.SettingsWorkspaceMenuController}
 		 */
-		mad.controller.ComponentController.extend('passbolt.controller.component.PreferenceWorkspaceMenuController', /** @static */ {
+		mad.controller.ComponentController.extend('passbolt.controller.component.SettingsWorkspaceMenuController', /** @static */ {
 			'defaults': {
-				'label': 'Preference Workspace Menu Controller'
+				'label': 'Settings Workspace Menu Controller'
 			}
 
 		}, /** @prototype */ {
@@ -33,7 +33,7 @@ steal(
 				var self = this;
 
 				// Manage edition action
-				this.options.editionButton = new mad.controller.component.ButtonController($('#js_preference_wk_menu_edition_button'))
+				this.options.editionButton = new mad.controller.component.ButtonController($('#js_settings_wk_menu_edition_button'))
 					.start();
 
 				this.on();

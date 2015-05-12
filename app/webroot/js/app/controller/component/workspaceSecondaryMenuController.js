@@ -64,7 +64,7 @@ steal(
 		 * @param workspace
 		 */
 		'{mad.bus} workspace_selected': function (el, event, workspace) {
-			if (workspace == 'preference') {
+			if (workspace == 'settings') {
 				this.options.viewSidebarButton.stateHidden(true);
 			}
 			else {
