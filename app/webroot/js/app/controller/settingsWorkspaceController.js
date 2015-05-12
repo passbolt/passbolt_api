@@ -195,10 +195,6 @@ steal(
 					}
 					if (tabId) {
 						this.settingsTabsCtl.enableTab(tabId);
-						if (section == 'keys') {
-							var userId = passbolt.model.User.getCurrent().id;
-							mad.bus.trigger('passbolt.keys_settings.init', userId);
-						}
 					}
 
 					// Set class on top container.

@@ -1,5 +1,6 @@
 steal(
-	'mad/controller/componentController.js'
+	'mad/controller/componentController.js',
+	'app/model/gpgkey.js'
 ).then(function () {
 
 	/*
@@ -31,6 +32,16 @@ steal(
 		'afterStart': function() {
 			var self = this;
 			this._super();
+		},
+
+		/**
+		 * Before render.
+		 */
+		'beforeRender': function() {
+			var self = this;
+			this._super();
+			// Set user key data.
+			self.setViewData('gpgkey', passbolt.model.User.getCurrent().Gpgkey);
 		}
 
 		/* ************************************************************** */
