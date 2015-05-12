@@ -5,16 +5,16 @@ steal(
 ).then(function () {
 
 		/*
-		 * @class passbolt.model.Resource
+		 * @class passbolt.model.Gpgkey
 		 * @inherits {mad.model.Model}
 		 * @parent index
 		 *
-		 * The resource model
+		 * The gpgkey model
 		 *
 		 * @constructor
-		 * Creates a resource
+		 * Creates a gpgkey
 		 * @param {array} data
-		 * @return {passbolt.model.Resource}
+		 * @return {passbolt.model.Gpgkey}
 		 */
 		mad.model.Model('passbolt.model.Gpgkey', /** @static */ {
 
