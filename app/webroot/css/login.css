@@ -878,6 +878,21 @@ span + .icon {
 .icon.download:before {
   content: '\1F4E5';
 }
+.icon.check:before {
+  content: '\2713';
+}
+.icon.cross:before {
+  content: '\274C';
+}
+.icon.block:before {
+  content: '\1F6AB';
+}
+.icon.circle-help:before {
+  content: '\E704';
+}
+.icon.warning:before {
+  content: '\26A0';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -981,7 +996,8 @@ label {
   color: #bbb;
 }
 /* moz placeholder */
-:-moz-placeholder {
+:-moz-placeholder,
+::-moz-placeholder {
   color: #bbb;
 }
 /*
@@ -1329,6 +1345,58 @@ a.button.disabled:focus {
   border: 1px solid #bbbbbb;
 }
 /* duo */
+.duo-wrapper {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+.duo-wrapper:before,
+.duo-wrapper:after {
+  content: "";
+  display: table;
+}
+.duo-wrapper:after {
+  clear: both;
+}
+.duo-wrapper:before,
+.duo-wrapper:after {
+  content: "";
+  display: table;
+}
+.duo-wrapper:after {
+  clear: both;
+}
+.duo-wrapper .button {
+  float: left;
+}
 .button.duo:nth-child(1) {
   margin-right: 0;
   -webkit-border-top-right-radius: 0;
@@ -1424,7 +1492,7 @@ html body .button.processing {
  * 2. The use of `table` rather than `block` is only necessary if using
  *	`:before` to contain the top-margins of child elements.
  */
-  padding: 0 10px;
+  padding: 0;
 }
 .grid-responsive-12 .row:before,
 .grid .row:before,
@@ -1852,6 +1920,22 @@ html body .button.processing {
 }
 .message.warning {
   background: #ffefc1;
+}
+/* big side info message blocks on setup or profile pages */
+.side-message {
+  margin-left: 1em;
+  font-size: 1em;
+  margin-right: 2em;
+}
+.side-message ul,
+.side-message p {
+  padding-bottom: 1em;
+}
+.side-message a {
+  border-color: #333333;
+}
+.side-message a:hover {
+  border-color: #2894df;
 }
 .plugin-check {
   padding: 1em;

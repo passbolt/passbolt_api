@@ -1,10 +1,10 @@
-table.table-info {
+table.table-info,
+table.table-info.vertical {
 	border-collapse: separate;
 
 	td {
-		border:.25em solid @background-default;
-		padding:.25em .5em;
-		padding-right:1em;
+		padding:.625em;
+		padding-right:1.25em;
 		color:@font-light;
 
 		&.warning {
@@ -27,8 +27,27 @@ table.table-info {
 
 	td + td {
 		color:@black;
-		padding-right:.5em;
-		padding:.25em .5em;
+		padding-right:.625em;
 	}
 
+}
+
+/* horizontal tableview */
+table.table-info.horizontal {
+	width:100%;
+	border-collapse: separate;
+	padding:0;
+	border:1px solid @border-default;
+	margin-bottom:1em;
+
+	td, th {
+		padding:.5em;
+		margin:0;
+	}
+	th{
+		border-bottom:1px solid @border-default;
+	}
+	tbody tr:nth-child(even) {
+		background:@background-lightest;
+	}
 }

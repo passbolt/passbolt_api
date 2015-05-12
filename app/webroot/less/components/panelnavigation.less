@@ -1,4 +1,4 @@
-/* tree.less */
+/* left panel navigation */
 .panel .navigation {
 	font-size:.938em;
 
@@ -11,22 +11,22 @@
 	&.last {
 		padding-right:.3125em; /* 5px */
 	}
-	a {
-		 color: @font-default;
-		 display: block;
-		 a:hover {
-			 text-decoration: none;
-		 }
-	 }
-	.row:hover {
-		background:@background-lighter;
+	.row a {
+		padding:.125em .313em; /* 2px 5px */
+		color: @font-default;
+		display: block;
+		a:hover {
+			text-decoration: none;
+			background:@background-lighter;
+		}
+	}
+	ul ul {
+		margin-left:.666666em;
 	}
 	.selected {
 		font-weight:bold;
 	}
-
-	/* shortcut */
-	&.shortcuts a {
-		padding:.125em .313em; /* 2px 5px */
+	.selected li {
+		font-weight:normal;
 	}
 }

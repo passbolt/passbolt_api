@@ -70,28 +70,9 @@
 		padding-top:1.5em;
 	}
 
-	/* gpg textare is tall */
-	.gpgkey textarea {
-		height:24em;
-		width:95%;
-	}
-
 	/* big feedback message blocks */
 	.side-message {
 		margin-top:3em;
-		margin-left:1em;
-		font-size:1em;
-		margin-right:2em;
-
-		ul, p {
-			padding-bottom:1em;
-		}
-		a {
-			border-color:@black;
-		}
-		a:hover {
-			border-color:@blue;
-		}
 	}
 
 	/* backup step */
@@ -115,9 +96,8 @@
 	}
 }
 
-/* hide left column when there is no space */
+/* Scrolling in middle panel in full width */
 @media all and (min-width: 980px) {
-
 	.setup .panel.middle {
 		overflow-y: scroll;
 	}
