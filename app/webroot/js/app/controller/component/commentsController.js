@@ -79,6 +79,9 @@ steal(
 		 * @param resource
 		 */
 		'{mad.bus} request_delete_comment' : function (model, ev, resource) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			resource.destroy(function(){
 				mad.bus.trigger('comment_deleted', resource);
 			});
@@ -91,6 +94,9 @@ steal(
 		 * @param resource
 		 */
 		'{mad.bus} comment_deleted' : function (model, ev, resource) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// Todo : user feedback
 			// Todo : nice animation on remove
 			this.commentsListController.removeItem(resource);

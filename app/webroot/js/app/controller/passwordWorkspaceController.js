@@ -47,9 +47,24 @@ steal(
 		 * @see {mad.controller.ComponentController}
 		 */
 		'afterStart': function() {
-			// Instantiate the secondary workspace menu controller
-			this.secMenu = new passbolt.controller.component.WorkspaceSecondaryMenuController('#js_wsp_secondary_menu', {});
-			this.secMenu.start();
+			// Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
+			var primWkMenu = mad.helper.ComponentHelper.create(
+				$('#js_wsp_primary_menu_wrapper'),
+				'last',
+				passbolt.controller.component.PasswordWorkspaceMenuController, {
+					'selectedRs': this.options.selectedRs
+				}
+			);
+			primWkMenu.start();
+
+			// Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
+			var secWkMenu = mad.helper.ComponentHelper.create(
+				$('#js_wsp_secondary_menu_wrapper'),
+				'last',
+				passbolt.controller.component.WorkspaceSecondaryMenuController,
+				{}
+			);
+			secWkMenu.start();
 
 			// Instanciate the passwords filter controller
 			var rsShortcut = new passbolt.controller.component.ResourceShortcutsController('#js_wsp_pwd_rs_shortcuts', {});
@@ -85,11 +100,14 @@ steal(
 		},
 
 		/**
-		 * Get the selected resources.
-		 * @return {can.Model.List}
+		 * Destroy the workspace.
 		 */
-		'getSelectedResources': function() {
-			return this.options.selectedRs;
+		'destroy': function() {
+			// Be sure that the primary & secondary workspace menus controllers will be destroyed also.
+			$('#js_wsp_primary_menu_wrapper').empty();
+			$('#js_wsp_secondary_menu_wrapper').empty();
+
+			this._super();
 		},
 
 		/**
@@ -113,6 +131,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// Update the breadcrumb with the new filter.
 			this.breadcrumCtl.load(filter);
 		},
@@ -125,6 +146,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} category_selected': function (el, ev, category) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// reset the selected resources
 			this.options.selectedRs.splice(0, this.options.selectedRs.length);
 			// Set the new filter
@@ -146,6 +170,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} copy_login_clipboard': function (el, ev, resource) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_login_clipboard');
 		},
@@ -158,6 +185,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} copy_secret_clipboard': function (el, ev, resource) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// @todo make the copy
 			steal.dev.log('the password workspace listen to the event copy_secret_clipboard');
 		},
@@ -169,6 +199,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_category_creation': function (el, ev, data) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var category = new passbolt.model.Category({ parent_id: data.id });
 
 			// get the dialog
@@ -197,6 +230,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_category_edition': function (el, ev, category) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit a Category')})
 				.start();
@@ -215,6 +251,8 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_category_sharing': function (el, ev, category) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
 
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Share a Category')})
@@ -234,6 +272,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_category_deletion': function (el, ev, category) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			category.destroy();
 		},
 
@@ -245,6 +286,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_creation': function (el, ev, categories) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			if(typeof categories == 'undefined') {
 				categories = [];
 			} else if (!$.isArray(categories)) {
@@ -279,6 +323,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_edition': function (el, ev, resource) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit Password')})
 				.start();
@@ -299,6 +346,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_deletion': function (el, ev) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			for (var i=2; i<arguments.length; i++) {
 				var rs = arguments[i];
 				if (!(rs instanceof passbolt.model.Resource)) {
@@ -317,6 +367,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_resource_sharing': function (el, ev, resource) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Share Password')})
 				.start();
@@ -336,6 +389,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_favorite': function (el, ev, instance) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// gather the data to create a new favorite
 			var data = {
 				'foreign_model': 'resource',
@@ -358,6 +414,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_unfavorite': function (el, ev, instance) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			instance.Favorite.destroy(function() {
 				instance.Favorite = null;
 				can.trigger(passbolt.model.Resource, 'updated', instance);

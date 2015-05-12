@@ -537,6 +537,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_users_browser': function (element, evt, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var self = this;
 			// store the filter
 			this.filter = filter;

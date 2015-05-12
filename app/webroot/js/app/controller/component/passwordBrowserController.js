@@ -746,6 +746,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var self = this;
 			// store the filter
 			this.filter = filter;
@@ -764,7 +767,7 @@ steal(
 				});
 			}
 
-			// change the state of the component to loading 
+			// change the state of the component to loading
 			this.setState('loading');
 
 			// load resources functions of the filter

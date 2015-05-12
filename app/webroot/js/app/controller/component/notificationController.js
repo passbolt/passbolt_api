@@ -61,6 +61,9 @@ steal(
 		 * @param {array} notif
 		 */
 		'{mad.bus} passbolt_notify': function (el, ev, notif) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.load(new passbolt.model.Notification(notif));
 		}
 

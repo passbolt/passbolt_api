@@ -43,6 +43,15 @@ steal(
 				var self = this;
 				this.section = '';
 
+				// Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
+				var component = mad.helper.ComponentHelper.create(
+					$('#js_wsp_primary_menu_wrapper'),
+					'last',
+					passbolt.controller.component.SettingsWorkspaceMenuController,
+					{}
+				);
+				component.start();
+
 				this.menuItems = Array();
 				// Instantiate the settings menu
 				this.menuItems['profile'] = new mad.model.Action({
@@ -91,6 +100,16 @@ steal(
 				});
 			},
 
+			/**
+			 * Destroy the workspace.
+			 */
+			'destroy': function() {
+				// Be sure that the primary workspace menu controller will be destroyed also.
+				$('#js_wsp_primary_menu_wrapper').empty();
+
+				this._super();
+			},
+
 			/* ************************************************************** */
 			/* LISTEN TO THE APP EVENTS */
 			/* ************************************************************** */
@@ -102,6 +121,9 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} request_profile_edition': function (el, ev) {
+				// @todo fixed in future canJs.
+				if (!this.element) return;
+
 				var self = this;
 
 				var user = passbolt.model.User.getCurrent();
@@ -130,6 +152,9 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} request_user_password_edition': function (el, ev, user) {
+				// @todo fixed in future canJs.
+				if (!this.element) return;
+
 				var self = this;
 
 				// get the dialog
