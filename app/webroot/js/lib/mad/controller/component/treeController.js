@@ -48,7 +48,7 @@ steal(
 			'map': null,
 			// the top tag of the tree
 			'tag': 'ul',
-			// callbacks associated to the events which could occured
+			// callbacks associated to the events which could occurred
 			'callbacks': {
 				'item_selected': null,
 				'item_right_selected': null,
