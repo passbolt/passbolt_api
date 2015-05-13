@@ -127,9 +127,9 @@
 					<div class="author profile picture"><a href="#"><img src="img/user.png"/></a></div>
 					<div class="input textarea required">
 						<label for="Comment">Add a comment</label>
-						<input name="data[comment][parent_id]" class="required" maxlength="36" type="hidden" id="CommentParentId"/>
-						<input name="data[comment][foreign_id]" class="required" maxlength="36" type="hidden" id="CommentForeignId"/>
-						<input name="data[comment][foreign_model]" class="required" maxlength="36" type="hidden" id="CommentForeignId"/>
+						<input name="data[comment][parent_id]" class="required" type="hidden" id="CommentParentId"/>
+						<input name="data[comment][foreign_id]" class="required" type="hidden" id="CommentForeignId"/>
+						<input name="data[comment][foreign_model]" class="required" type="hidden" id="CommentForeignId"/>
 						<textarea name="data[comment][content]" class="required" maxlength="150" id="CommentContent" placeholder="add a comment"></textarea>
 					</div>
 					<div class="metadata">

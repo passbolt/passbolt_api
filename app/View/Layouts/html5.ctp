@@ -12,7 +12,6 @@
 <html class="no-js alpha version loading" lang="en">
 <head>
   <meta charset="utf-8">
-  <title><?php echo $this->fetch('title'); ?></title>
   <!--
            ____                  __          ____
           / __ \____  _____ ____/ /_  ____  / / /_
@@ -25,7 +24,10 @@
 
    -->
   <base href="<?php echo Router::url('/',true);?>">
-	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+	<title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
+	<meta name="description" content="<?php echo Configure::read('App.punchline'); ?>">
+	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
+	<meta name="viewport" content="width=device-width">
 <?php echo $this->fetch('css'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>

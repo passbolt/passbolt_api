@@ -65,7 +65,7 @@ steal(
 				'header': {
 					'css': ['selections s-cell'],
 					'label': '<div class="input checkbox">'
-							//+ '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all">'
+							+ '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all" disabled="disabled">'
 							+ '<label for="checkbox-select-all">select all</label> \
 						</div>'
 				},

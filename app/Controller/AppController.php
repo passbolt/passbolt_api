@@ -84,8 +84,6 @@ class AppController extends Controller {
 	 * @return void
 	 */
 	public function beforeFilter() {
-		// Paranoia - Hidding PHP version number
-		$this->response->header('X-Powered-By', 'PHP');
 
 		// Add a callback detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
