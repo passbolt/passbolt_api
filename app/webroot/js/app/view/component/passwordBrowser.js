@@ -90,6 +90,7 @@ steal(
 					this.element.trigger('item_right_selected', [data, ev]);
 				}
 				return false;
-			},
+			}
+
 		});
 	});
