@@ -101,8 +101,9 @@ steal(
 		 * @param {object} data The form data
 		 */
 		' update': function(el, ev) {
-			var data = this.filterForm.getData();
-			var filter = new passbolt.model.Filter(data['passbolt.model.Filter']);
+			var data = this.filterForm.getData(),
+				filter = new passbolt.model.Filter(data['passbolt.model.Filter']);
+
 			if (this.workspace == 'password') {
 				mad.bus.trigger('filter_resources_browser', filter);
 			}
@@ -111,9 +112,7 @@ steal(
 			}
 			else if (this.workspace == 'settings') {
 				// Switch to people workspace.
-				mad.bus.trigger('workspace_selected', 'people');
-				// Filters on the given workspace.
-				mad.bus.trigger('filter_users_browser', filter);
+				mad.bus.trigger('workspace_selected', ['people', {filter: filter}]);
 			}
 		},
 
