@@ -51,16 +51,16 @@ steal(
 			var self = this;
 
 			// Instantiate the app navigation left controller
-			this.navLeftCtl = new passbolt.controller.component.AppNavigationLeftController($('#js_app_navigation_left'));
-			this.navLeftCtl.start();
+			var navLeftCtl = new passbolt.controller.component.AppNavigationLeftController($('#js_app_navigation_left'));
+			navLeftCtl.start();
 
 			// Instantiate the app navigation right controller
-			this.navRightCtl = new passbolt.controller.component.AppNavigationRightController($('#js_app_navigation_right'));
-			this.navRightCtl.start();
+			var navRightCtl = new passbolt.controller.component.AppNavigationRightController($('#js_app_navigation_right'));
+			navRightCtl.start();
 
 			// Instantiate the filter controller
-			this.filterCtl = new passbolt.controller.component.AppFilterController($('#js_app_filter'), {});
-			this.filterCtl.start();
+			var filterCtl = new passbolt.controller.component.AppFilterController($('#js_app_filter'), {});
+			filterCtl.start();
 
 			// Get logged in user.
 			passbolt.model.User.findOne({
@@ -76,65 +76,11 @@ steal(
 			});
 
 			// Instantiate the notification controller
-			this.notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {});
+			var notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {});
 
 			// Instantiate the laoding bar controller
-			this.loadingBarCtl = new passbolt.controller.component.LoadingBarController($('#js_app_loading_bar'), {});
-			this.loadingBarCtl.start();
-
-			// Instantiate workspaces container tabs element to the app
-			this.workspacesCtl = new mad.controller.component.TabController($('#js_app_panel_main'), {
-				'autoMenu': false // do not generate automatically the associated tab nav
-			});
-			this.workspacesCtl.start();
-
-			// Instantiate the password workspace component and add it to the workspaces container
-			this.passwordWk = this.workspacesCtl.addComponent(passbolt.controller.PasswordWorkspaceController, {
-				'id': 'js_passbolt_passwordWorkspace_controller',
-				'label': 'password'
-			});
-			var selectedResources = this.passwordWk.getSelectedResources();
-
-			// Instantiate the people workspace component and add it to the workspaces container
-			this.peopleWk = this.workspacesCtl.addComponent(passbolt.controller.PeopleWorkspaceController, {
-				'id': 'js_passbolt_peopleWorkspace_controller',
-				'label': 'people'
-			});
-			var selectedUsers = this.peopleWk.getSelectedUsers();
-			var selectedGroups = this.peopleWk.getSelectedGroups();
-
-			// Instantiate the settings workspace component and add it to the workspaces container
-			this.settingsWk = this.workspacesCtl.addComponent(passbolt.controller.SettingsWorkspaceController, {
-				'id': 'js_passbolt_settingsWorkspace_controller',
-				'label': 'settings'
-			});
-
-			// Instantiate workspaces menus container tabs element to the app
-			this.workspacesMenusCtl = new mad.controller.component.TabController($('#js_wsp_primary_menu'), {
-				'autoMenu': false // do not generate automatically the associated tab nav
-			});
-			this.workspacesMenusCtl.start();
-
-			// Instantiate the password workspace menu component and add it to the workspaces menus container
-			this.passwordWkMenu = this.workspacesMenusCtl.addComponent(passbolt.controller.component.PasswordWorkspaceMenuController, {
-				'id': 'js_passbolt_passwordWorkspaceMenu_controller',
-				'label': 'password',
-				'selectedRs': selectedResources
-			});
-
-			// Instantiate the people workspace menu component and add it to the workspaces menus container
-			this.peopleWkMenu = this.workspacesMenusCtl.addComponent(passbolt.controller.component.PeopleWorkspaceMenuController, {
-				'id': 'js_passbolt_peopleWorkspaceMenu_controller',
-				'label': 'people',
-				'selectedUsers': selectedUsers,
-				'selectedGroups': selectedGroups
-			});
-
-			// Instantiate the people workspace menu component and add it to the workspaces menus container
-			this.settingsWkMenu = this.workspacesMenusCtl.addComponent(passbolt.controller.component.SettingsWorkspaceMenuController, {
-				'id': 'js_passbolt_settingsWorkspaceMenu_controller',
-				'label': 'settings'
-			});
+			var loadingBarCtl = new passbolt.controller.component.LoadingBarController($('#js_app_loading_bar'), {});
+			loadingBarCtl.start();
 		},
 
 		/* ************************************************************** */
@@ -149,33 +95,27 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} workspace_selected': function (el, event, workspace) {
-			var wspMenuId = 'js_passbolt_' + workspace + 'WorkspaceMenu_controller';
-			var primWkMenuContainer = mad.app.getComponent('js_wsp_primary_menu');
+			// Destroy the existing workspace and all its components.
+			$('#js_app_panel_main').empty();
 
-			// The primary workspace is a specific case.
-			// It is only displayed for the password and people workpsaces.
-			var workspaceIsValid = $.inArray(workspace, this.options.workspaces) != -1;
-			if (workspaceIsValid) {
-				if (primWkMenuContainer.state.is('hidden')) {
-					primWkMenuContainer.setState('ready');
+			// Set class on top container.
+			$('#container')
+				.removeClass(this.options.workspaces.join(" "))
+				.addClass(workspace);
+
+			// Initialize the target workspace.
+			var workspaceId = 'js_passbolt_' + workspace + 'Workspace_controller',
+				workspaceClass = passbolt.controller[can.capitalize(workspace) + 'WorkspaceController'];
+
+			var component = mad.helper.ComponentHelper.create(
+				$('#js_app_panel_main'),
+				'last',
+				workspaceClass, {
+					'id': workspaceId,
+					'label': workspace
 				}
-				// Enable the corresponding workspace menu.
-				primWkMenuContainer.enableTab(wspMenuId);
-
-				// Set class on top container.
-				$('#container')
-					.removeClass(this.options.workspaces.join(" "))
-					.addClass(workspace);
-			}
-			// In any other case, hide the primary and secondary workspace.
-			else {
-				primWkMenuContainer.setState('hidden');
-			}
-
-			// Enable the target workspace.
-			var wspId = 'js_passbolt_' + workspace + 'Workspace_controller';
-			var workspacesContainer = mad.app.getComponent('js_app_panel_main');
-			workspacesContainer.enableTab(wspId);
+			);
+			component.start();
 		},
 
 		/**

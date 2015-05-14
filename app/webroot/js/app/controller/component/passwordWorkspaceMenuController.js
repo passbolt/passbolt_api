@@ -22,6 +22,7 @@ steal(
 
 		'defaults': {
 			'label': 'Workspace Menu Controller',
+			'tag': 'ul',
 			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
 			'selectedRs': new can.Model.List()
 		}
@@ -72,7 +73,7 @@ steal(
 						var secret = self.options.selectedRs[0].Secret[0].data;
 						mad.bus.trigger('passbolt.secret.decrypt', secret);
 					}
-				}),
+				})
 				//new mad.model.Action({
 				//	'id': uuid(),
 				//	'label': __('organize'),
@@ -199,6 +200,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function(el, ev, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var categories = filter.getForeignModels('Category');
 			var state = 'ready';
 

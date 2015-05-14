@@ -144,6 +144,9 @@ steal(
 		 * @param {mad.controller.CoponentController} component The target component
 		 */
 		'{mad.bus} passbolt_component_loading_start': function (el, ev, component) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.options.currentProcs++;
 			this.update();
 		},
@@ -155,6 +158,9 @@ steal(
 		 * @param {mad.controller.CoponentController} component The target component
 		 */
 		'{mad.bus} passbolt_component_loading_complete': function (el, ev, component) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.options.currentProcs--;
 			this.update();
 		},
@@ -165,6 +171,9 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 */
 		'{mad.bus} passbolt_ajax_request_start': function (el, ev, request) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			if (!request.silentLoading) {
 				this.options.currentProcs++;
 				this.update();
@@ -177,6 +186,9 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 */
 		'{mad.bus} passbolt_ajax_request_complete': function (el, ev, request) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			if (!request.silentLoading) {
 				this.options.currentProcs--;
 				this.update();
@@ -189,6 +201,9 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 */
 		'{mad.bus} passbolt_loading': function (el, ev) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.options.currentProcs++;
 			this.update();
 		},
@@ -199,6 +214,9 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 */
 		'{mad.bus} passbolt_loading_complete': function (el, ev) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.options.currentProcs--;
 			this.update();
 		}

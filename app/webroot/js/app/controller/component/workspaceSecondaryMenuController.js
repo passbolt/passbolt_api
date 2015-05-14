@@ -21,7 +21,8 @@ steal(
 	mad.controller.ComponentController.extend('passbolt.controller.component.WorkspaceSecondaryMenuController', /** @static */ {
 
 		'defaults': {
-			'label': 'Workspace Secondary Menu Controller'
+			'label': 'Workspace Secondary Menu Controller',
+			'tag': 'ul'
 		}
 
 	}, /** @prototype */ {
@@ -52,23 +53,11 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} workspace_showSidebar': function (el, ev, show) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			if (!show && this.options.viewSidebarButton.state.is('selected')) {
 				this.options.viewSidebarButton.setState('ready');
-			}
-		},
-
-		/**
-		 * Observe when a workspace is selected.
-		 * @param {HTMLElement} el
-		 * @param {HTMLEvent} event
-		 * @param workspace
-		 */
-		'{mad.bus} workspace_selected': function (el, event, workspace) {
-			if (workspace == 'settings') {
-				this.options.viewSidebarButton.stateHidden(true);
-			}
-			else {
-				this.options.viewSidebarButton.stateHidden(false);
 			}
 		},
 

@@ -22,6 +22,7 @@ steal(
 
 			'defaults': {
 				'label': 'User Workspace Menu Controller',
+				'tag': 'ul',
 				// the selected users, you can pass an existing list as parameter of the constructor to share the same list
 				'selectedUsers': new can.Model.List(),
 				// the selected group, you can pass an existing list as parameter of the constructor to share the same list

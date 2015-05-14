@@ -259,6 +259,9 @@ steal(
 		 * @todo #dirtycode
 		 */
 		'{mad.bus} resource_share_secret_encrypted': function(el, ev, armoreds) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var self = this;
 
 			// @todo #BUG #JMVC The event is not unbound when the element is destroyed. Check that point when updating to canJS.
@@ -414,7 +417,7 @@ steal(
 		 * @param {passbolt.model.User || passbolt.model.Group} permission The permission to remove
 		 * @return {void}
 		 */
-		'{permAroAutocpltList} item_selected': function(el, ev, data) {
+		'{permAroAutocpltTxtbx} item_selected': function(el, ev, data) {
 			// update the field model reference functions of the given autocomplete result (can be a User or a Group)
 			this.permAroHiddenTxtbx.setModelReference(data.model + '.id');
 			// set the value of the hidden field aro_foreign_key

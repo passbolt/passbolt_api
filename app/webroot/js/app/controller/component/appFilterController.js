@@ -65,6 +65,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} category_selected': function (el, ev, category) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.reset();
 		},
 
@@ -75,6 +78,9 @@ steal(
 		 * @param workspace
 		 */
 		'{mad.bus} workspace_selected': function (el, event, workspace) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.workspace = workspace;
 			if (this.workspace == 'password') {
 				this.keywordsFormElement.element.attr("placeholder", "search passwords");

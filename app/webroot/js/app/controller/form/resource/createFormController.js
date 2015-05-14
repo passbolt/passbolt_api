@@ -147,6 +147,9 @@ steal(
 		 * @todo #security #architecture refactor, check also permissionController.
 		 */
 		'{mad.bus} secret_edition_secret_encrypted': function(el, ev, armoreds) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// @todo #BUG #JMVC The event is not unbound when the element is destroyed. Check that point when updating to canJS.
 			if (!this.element) return;
 

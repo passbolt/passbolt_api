@@ -115,6 +115,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			if (filter.type != passbolt.model.Filter.SHORTCUT) {
 				this.unselectAll();
 			}

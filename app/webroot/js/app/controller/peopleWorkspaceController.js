@@ -41,6 +41,26 @@ steal(
          * @see {mad.controller.ComponentController}
          */
         'afterStart': function() {
+	        // Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
+	        var primWkMenu = mad.helper.ComponentHelper.create(
+		        $('#js_wsp_primary_menu_wrapper'),
+		        'last',
+		        passbolt.controller.component.PeopleWorkspaceMenuController, {
+			        'selectedUsers': this.options.selectedUsers,
+			        'selectedGroups': this.options.selectedGroups
+		        }
+	        );
+	        primWkMenu.start();
+
+	        // Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
+	        var secWkMenu = mad.helper.ComponentHelper.create(
+		        $('#js_wsp_secondary_menu_wrapper'),
+		        'last',
+		        passbolt.controller.component.WorkspaceSecondaryMenuController,
+		        {}
+	        );
+	        secWkMenu.start();
+
 	        // Instantiate the password workspace breadcrumb controller
 	        this.breadcrumCtl = new passbolt.controller.component.PeopleBreadcrumbController($('#js_wsp_ppl_breadcrumb'), {});
 	        this.breadcrumCtl.start();
@@ -76,19 +96,14 @@ steal(
         },
 
 		/**
-		 * Get the selected users.
-		 * @return {can.Model.List}
+		 * Destroy the workspace.
 		 */
-		'getSelectedUsers': function() {
-			return this.options.selectedUsers;
-		},
+		'destroy': function() {
+			// Be sure that the primary & secondary workspace menus controllers will be destroyed also.
+			$('#js_wsp_primary_menu_wrapper').empty();
+			$('#js_wsp_secondary_menu_wrapper').empty();
 
-		/**
-		 * Get the selected groups.
-		 * @return {can.Model.List}
-		 */
-		'getSelectedGroups': function() {
-			return this.options.selectedGroups;
+			this._super();
 		},
 
 		/* ************************************************************** */
@@ -103,6 +118,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} group_selected': function (el, ev, group) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			console.log('group selected');
 			// reset the selected resources
 			this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
@@ -130,6 +148,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_users_browser': function (el, ev, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// If the filter applied is "all groups", then empty the list of selected groups.
 			if (typeof filter.name != 'undefined') {
 				if(filter.name == 'all') {
@@ -150,6 +171,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_group_creation': function (el, ev, data) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var group = new passbolt.model.Group();
 
 			// Get the dialog
@@ -179,6 +203,8 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_group_edition': function (el, ev, group) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
 
 			// get the dialog
 			var dialog = new mad.controller.component.DialogController(null, {label: __('Edit a Group')})
@@ -206,6 +232,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_group_deletion': function (el, ev, group) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			group.destroy();
 		},
 
@@ -216,6 +245,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_user_creation': function (el, ev, data) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// create the resource which will be used by the form builder to populate the fields
 			var user = new passbolt.model.User({active:1});
 
@@ -254,6 +286,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_user_edition': function (el, ev, user) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var self = this;
 			// Retrieve the selected user
 			user = this.options.selectedUsers[0];
@@ -291,6 +326,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_user_deletion': function (el, ev) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			for (var i=2; i<arguments.length; i++) {
 				var user = arguments[i];
 				if (!(user instanceof passbolt.model.User)) {
@@ -307,6 +345,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} request_remove_user_from_group': function (el, ev, selectedUsers, selectedGroups) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			// Check Params.
 			if(selectedGroups.attr("length") == 0) {
 				return;
