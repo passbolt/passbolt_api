@@ -60,4 +60,4 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 			<?php echo $this->element('public/box-donate'); ?>
 		</div>
 	</div>
-
+</div>

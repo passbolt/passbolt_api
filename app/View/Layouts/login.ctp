@@ -11,8 +11,8 @@
 <!doctype html>
 <html class="no-js no-passboltplugin alpha version" lang="en">
 <head>
-  <meta charset="utf-8">
-  <!--
+	<meta charset="utf-8">
+	<!--
            ____                  __          ____
           / __ \____  _____ ____/ /_  ____  / / /_
          / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
@@ -20,15 +20,15 @@
        /_/    \__,_/____/____/_.___/\____/_/\__/
 
        The password management solution
-       (c) 2014 passbolt.com
+       (c) 2015 passbolt.com
 
-   -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	-->
 	<base href="<?php echo Router::url('/',true);?>">
-  <title><?php echo $this->fetch('title'); ?></title>
-  <title><?php echo $this->fetch('description'); ?></title>
-  <meta name="viewport" content="width=device-width">
-  <?php echo $this->fetch('css'); ?>
+	<title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
+	<meta name="description" content="<?php echo Configure::read('App.punchline'); ?>">
+	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
+	<meta name="viewport" content="width=device-width">
+	<?php echo $this->fetch('css'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>
