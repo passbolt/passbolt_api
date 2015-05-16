@@ -7,6 +7,8 @@
  * @package       app.Test.Case.Controller.ResourcesControllerTest
  * @since         version 2.12.9
  */
+App::uses('CakeSession', 'Model');
+App::uses('CakeSession', 'Model/Datasource');
 App::uses('AppController', 'Controller');
 App::uses('ResourcesController', 'Controller');
 App::uses('Resource', 'Model');
@@ -15,14 +17,10 @@ App::uses('Category', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 
-// uses sessions
-if (!class_exists('CakeSession')) {
-	require CAKE . 'Model/Datasource/CakeSession.php';
-}
-
 class ResourcesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
+		'app.cakeSession',
 		'app.category',
 		'app.resource',
 		'app.categoryType',
@@ -36,21 +34,18 @@ class ResourcesControllerTest extends ControllerTestCase {
 		'app.group',
 		'app.groupsUser',
 		'app.role',
+		'app.gpgkey',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist'
+		'app.authenticationBlacklist',
 	);
 
 	public function setUp() {
-		$this->User = new User();
-		$this->User->useDbConfig = 'test';
-		$this->Resource = new Resource();
-		$this->Resource->useDbConfig = 'test';
-		$this->Category = new Category();
-		$this->Category->useDbConfig = 'test';
 		parent::setUp();
-
+		$this->User = ClassRegistry::init('User');
+		$this->Resource = ClassRegistry::init('Resource');
+		$this->Category = ClassRegistry::init('Category');
 		$kk = $this->User->findByUsername('darth.vader@passbolt.com');
 		$this->User->setActive($kk);
 	}
@@ -356,7 +351,22 @@ class ResourcesControllerTest extends ControllerTestCase {
 					)
 				),
 				'Secret' => array(
-					'data' => 'This is a test'
+					array(
+						'data' => '-----BEGIN PGP MESSAGE-----
+Version: OpenPGP.js v0.7.2
+Comment: http://openpgpjs.org
+
+wcBMAwvNmZMMcWZiAQf+KJfC9t/ZYpaJxd6+dzmUN7+NZv2zZuPwMFuUX7Li
+jRWSPGzrPvO1XstYVD+gToX4gvCG6xE7u27XR1LV+lsAXE/MkzfshO7tVILS
+aDiXulTq6m9s4x9beh6tHJkowYq4umGqpOUNxlBNe7x89Q4eY+hZyNZ86XE3
+A6zzeQbG2+AWqFcqoKsS2qbdsJ9brqRHpqvjnLOskiaDg7W201mntPz7Eso5
+0UrmlMsFMd/ePrZaHuPgrZhYYceYYWr/5vL+VjD3rXUH+nhHWdHkjHG8JMr7
+7OkuVFpiKo1wgeQi+xUerUtIeV4A+4lH097OdGbTNlyAxKqLAEvCA59uf5Fl
+udI8AesOCLKUZD3umfi3U7fZizFiOVCNqwKIRDQGlSc0+tMyqEYPtji0d7ox
+a1YdhBEx6sd+aex8bJj4wbiq
+=FOdS
+-----END PGP MESSAGE-----'
+					)
 				),
 			),
 			'method' => 'post',
