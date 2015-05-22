@@ -448,7 +448,7 @@ steal(
                 .fail(function(jqXHR, status, response, request) {
                     // Notify the request caller by rejecting the promise given in parameter of
                     // the request.
-                    promise.rejectWith(promise, [jqXHR, status, response, request]);
+					promise.rejectWith(promise, [jqXHR, status, response, request]);
                 });
 		}
 
