@@ -15,20 +15,38 @@
 <div class="grid">
 	<div class="row">
 		<div class="col6 push1 information">
-			<h2>Welcome back!</h2>
+			<h2>
+				<?php echo __('Welcome back!'); ?>
+			</h2>
 			<div class="plugin-check-wrapper">
 				<div class="plugin-check firefox error">
-					<p class="message">An add-on is required to use Passbolt. Download it at <a href="https://github.com/passbolt/passbolt_ff/raw/develop/passbolt-firefox-addon.xpi">addons.mozilla.org</a>.</p>
+					<p class="message">
+						<?php echo __('An add-on is required to use Passbolt. Download it at: '); ?>
+						<a href="https://github.com/passbolt/passbolt_ff/raw/develop/passbolt-firefox-addon.xpi">addons.mozilla.org</a>.</p>
+				</div>
+			</div>
+			<div class="plugin-check-wrapper">
+				<div class="plugin-check firefox warning">
+					<p class="message">
+						<?php echo __('Firefox plugin is installed but not configured.'); ?>
+<?php if(Configure::read('App.registration.public')) : ?>
+						<a href="register"><?php echo __('Please register!');?></a>
+<?php else : ?>
+						<a href="register"><?php echo __('Please contact your domain administrator to request an invitation.');?></a>
+<?php endif; ?>
+					</p>
 				</div>
 			</div>
 			<div class="plugin-check-wrapper">
 				<div class="plugin-check firefox success">
-					<p class="message">Nice one! Firefox plugin is installed and up to date. You are good to go!.</p>
+					<p class="message">
+						<?php echo __('Nice one! Firefox plugin is installed and up to date. You are good to go!'); ?>
+					</p>
 				</div>
 			</div>
 			<p>
-				Passbolt is a simple password manager that allows you to easily share secrets with your team without making compromises on security!
-				<a href="#">learn more</a>.
+				<?php echo __('Passbolt is a simple password manager that allows you to easily share secrets with your team without making compromises on security!'); ?>
+				<a href="#"><?php echo __('Learn more!'); ?></a>
 			</p>
 		</div>
 		<div class="col4 push1 last">
@@ -43,7 +61,7 @@
 					<?php echo $this->MyForm->input('User.password', array('label' => __('Password'), 'class' =>'required fluid')); ?>
 				</fieldset>
 				<div class="actions-wrapper">
-					<div class="submit"><input class="button primary" value="login" type="submit"></div>
+					<div class="submit"><input class="button primary" value="<?php echo __('login'); ?>" type="submit"></div>
 					<!--a class="secondary" href="#">forgot password?</a-->
 				</div>
 				<?php echo $this->PassboltAuth->get(); ?>

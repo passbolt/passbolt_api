@@ -11,18 +11,37 @@
 	&.error {
 		background-color:@background-error;
 	}
-
+	&.warning {
+		background-color:@background-warning;
+	}
 	.message {
 		font-weight: normal;
 		margin-left: 180px;
 		padding:.5em 1em;
 	}
 }
-/* no plugin = display error */
-.no-passboltplugin .plugin-check.success {
+
+/*
+	no plugin = display error
+	no config = display warning
+*/
+.plugin-check {
 	display:none;
 }
-/* plugin = display success */
-.passboltplugin .plugin-check.error {
-	display:none;
+.no-passboltplugin {
+	.plugin-check.error {
+		display:block;
+	}
+}
+.passboltplugin {
+	&.no-passboltplugin-config {
+		.plugin-check.warning {
+			display:block;
+		}
+	}
+	&.passboltplugin-config {
+		.plugin-check.success {
+			display:block;
+		}
+	}
 }
