@@ -14,21 +14,25 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 <div class="grid">
 	<div class="row">
 		<div class="col6 push1 information">
-			<h2>Try passbolt today!</h2>
+			<h2><?php echo __('Try passbolt today!'); ?></h2>
 			<p>
-				Enter your details in the form.
-				We will send you an email to get you started.
+				<?php echo __('Enter your details in the form.'); ?>
+				<?php echo __('We will send you an email to get you started.'); ?>
 			</p>
 			<div class="message-wrapper">
-				<p class="message warning"><strong>Disclaimer:</strong> please note this is a demo instance of Passbolt for trial purposes only.
-					Do not use it to store sensitive data.<br>
-					<a href="#">find out more</a>.
+				<p class="message warning"><strong><?php echo __('Disclaimer:'); ?></strong>
+					<?php echo __('please note this is a demo instance of Passbolt for trial purposes only.'); ?>
+					<?php echo __('Do not use it to store sensitive data.'); ?><br>
+					<a href="#"><?php echo __('find out more.'); ?></a>
 				</p>
 			</div>
-			<p>By signing up, you agree to the
-				<a href="#">Terms of Service</a> and
-				<a href="#">Privacy Policy</a>, including
-				<a href="#">Cookie Use</a>.
+			<p>
+				<?php
+				echo __('By signing up, you agree to the %sTerms of Service%s and %sPrivacy Policy%s, including %sCookie Use%s.',
+						'<a href="#">','</a>',
+						'<a href="#">','</a>',
+						'<a href="#">','</a>'
+				); ?>
 			</p>
 		</div>
 		<div class="col4 push1 last">
@@ -43,8 +47,10 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 					<?php echo $this->MyForm->input('Profile.last_name', array('label' => __('Last name'), 'class' =>'required fluid')) ?>
 					<?php echo $this->MyForm->input('User.username', array('label' => __('Email'), 'class' =>'required fluid')) ?>
 				</fieldset>
-				<?php echo $this->MyForm->submit(__('Register'));?>
-				<span class="forgot"><a href="/login">already a member?</a></span>
+				<div class="actions-wrapper">
+					<div class="submit"><input type="submit" class="button primary big" value="<?php echo __('register'); ?>"></div>
+					<a href="/login" class="secondary"><?php echo __('already a member?'); ?></a>
+				</div>
 				<?php echo $this->MyForm->end();?>
 			</div>
 		</div>

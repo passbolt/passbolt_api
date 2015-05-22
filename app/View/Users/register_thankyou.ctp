@@ -14,20 +14,24 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 <div class="grid">
 	<div class="row">
 		<div class="col6 push1 information">
-			<h2>Thank you!</h2>
+			<h2><?php echo __('Thank you'); ?></h2>
 			<p>
-				Thank you for giving passbolt a test run! We just sent you an email, please follow the instructions to get started.
+				<?php echo __('Thank you for giving passbolt a test run! We just sent you an email, please follow the instructions to get started.'); ?>
 			</p>
 			<div class="message-wrapper">
-				<p class="message warning"><strong>Disclaimer:</strong> please note this is a demo instance of Passbolt for trial purposes only.
-					Do not use it to store sensitive data.<br>
-					<a href="#">find out more</a>.
+				<p class="message warning"><strong><?php echo __('Disclaimer:'); ?></strong>
+					<?php echo __('please note this is a demo instance of Passbolt for trial purposes only.'); ?>
+					<?php echo __('Do not use it to store sensitive data.'); ?><br>
+					<a href="#"><?php echo __('find out more.'); ?></a>
 				</p>
 			</div>
-			<p>By signing up, you agree to the
-				<a href="#">Terms of Service</a> and
-				<a href="#">Privacy Policy</a>, including
-				<a href="#">Cookie Use</a>.
+			<p>
+				<?php
+				echo __('By signing up, you agree to the %sTerms of Service%s and %sPrivacy Policy%s, including %sCookie Use%s.',
+					'<a href="#">','</a>',
+					'<a href="#">','</a>',
+					'<a href="#">','</a>'
+				); ?>
 			</p>
 		</div>
 		<div class="col4 push1 last">
@@ -36,7 +40,10 @@ $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'bloc
 			</div>
 			<div class="register thank-you form feedback">
 				<div class="graphical-feedback"><i class="icon huge paperplane"></i></div>
-				<p><strong>Email sent!</strong> Please check your spam folder if you do not hear from us after a while.</p>
+				<p>
+					<strong><?php echo __('Email sent!'); ?></strong>
+					<?php echo __('Please check your spam folder if you do not hear from us after a while.'); ?>
+				</p>
 			</div>
 		</div>
 	</div>
