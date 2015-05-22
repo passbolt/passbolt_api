@@ -385,42 +385,71 @@ steal(
 		 * Observe when the user requests to set an instance as favorite
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
+         * @param {jQuery.Deferred.Promise} promise The caller join a promise to complete, don't disapoint him !
 		 * @param {passbolt.model.Model} instance The target instance to set as favorite
 		 * @return {void}
 		 */
-		'{mad.bus} request_favorite': function (el, ev, instance) {
+		'{mad.bus} request_favorite': function (el, ev, promise, instance) {
 			// @todo fixed in future canJs.
 			if (!this.element) return;
 
-			// gather the data to create a new favorite
+			// Data expected to save a resource as favorite.
 			var data = {
 				'foreign_model': 'resource',
 				'foreign_id': instance.id
 			};
 
-			// create a new permission
+			// Save the given resource as favorite.
 			new passbolt.model.Favorite(data)
-				.save(function(favorite){
-					instance.Favorite = favorite;
-					can.trigger(passbolt.model.Resource, 'updated', instance);
-				});
+				.save()
+                .then(function(favorite){
+                    // Update the instance with the favorite data received from the back-end.
+                    instance.Favorite = favorite;
+                    // Notify can that the instance has been updated.
+                    // All subscribers will be notified about that change. By instance the password
+                    // browser (grid) will update the row of a resource.
+                    can.trigger(passbolt.model.Resource, 'updated', instance);
+                    // Notify the request caller by resolving the promise given in parameter of
+                    // the request.
+                    promise.resolve();
+                })
+                .fail(function(error){
+                    // Notify the request caller by rejecting the promise given in parameter of
+                    // the request.
+                    promise.reject();
+                });
 		},
 
 		/**
 		 * Observe when the user requests to unset an instance as favorite
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
+         * @param {jQuery.Deferred.Promise} promise The caller join a promise to complete, don't disapoint him !
 		 * @param {passbolt.model.Model} instance The target instance to unset as favorite
 		 * @return {void}
 		 */
-		'{mad.bus} request_unfavorite': function (el, ev, instance) {
+		'{mad.bus} request_unfavorite': function (el, ev, promise, instance) {
 			// @todo fixed in future canJs.
 			if (!this.element) return;
 
-			instance.Favorite.destroy(function() {
-				instance.Favorite = null;
-				can.trigger(passbolt.model.Resource, 'updated', instance);
-			});
+            // Unfavorite the given resource.
+			instance.Favorite.destroy()
+                .then(function() {
+                    // Update the resource.
+                    instance.Favorite = null;
+                    // Notify can that the instance has been updated.
+                    // All subscribers will be notified about that change. By instance the password
+                    // browser (grid) will update the row of a resource.
+                    can.trigger(passbolt.model.Resource, 'updated', instance);
+                    // Notify the request caller by resolving the promise given in parameter of
+                    // the request.
+                    promise.resolve();
+                })
+                .fail(function(jqXHR, status, response, request) {
+                    // Notify the request caller by rejecting the promise given in parameter of
+                    // the request.
+                    promise.rejectWith(promise, [jqXHR, status, response, request]);
+                });
 		}
 
 	});
