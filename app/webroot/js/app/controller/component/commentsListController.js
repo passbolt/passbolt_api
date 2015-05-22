@@ -37,7 +37,7 @@ steal(
 					'creatorAvatarPath': {
 						'key': 'Creator',
 						'func': function(creator, map, obj) {
-							return creator.Profile.avatarPath('smallest');
+							return creator.Profile.avatarPath('small');
 						}
 					},
 					'creatorName': {

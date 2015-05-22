@@ -21,14 +21,38 @@ steal(
 	mad.controller.ComponentController.extend('mad.form.FormController', /** @static */ {
 
 		'defaults': {
+			/**
+			 * Callbacks 'error' and 'submit'.
+			 */
 			'callbacks': {
 				'error': function () { },
 				'submit': function (data) { }
 			},
+
+			/**
+			 * Tag.
+			 */
 			'tag': 'form',
+
+			/**
+			 * Default action.
+			 */
             'action': null,
-			'validateOnChange': true,
+
+			/**
+			 * validateOnChange : whether the form should validate after a change in one of its field.
+			 * 3 possible values : true, false, or 'afterFirstValidation'
+			 */
+			'validateOnChange': 'afterFirstValidation',
+
+			/**
+			 * Whether the form is template based.
+			 */
 			'templateBased': false,
+
+			/**
+			 * Class for the view.
+			 */
 			'viewClass': mad.view.form.FormView
 		}
 
@@ -51,6 +75,12 @@ steal(
 			 * @type {mad.model.Model}
 			 */
 			this.data = {};
+
+			/**
+			 * Total number of validations for this form.
+			 * @type {number}
+			 */
+			this.validations = 0;
 			
 			this._super(el, options);
 		},
@@ -411,6 +441,8 @@ steal(
 			for (var i in this.elements) {
 				returnValue &= this.validateElement (this.elements[i]);
 			}
+			// Increment number of validations.
+			this.validations ++;
 			return returnValue;
 		},
 
@@ -453,7 +485,9 @@ steal(
 		 * @return {void}
 		 */
 		' changed': function (el, ev, data) {
-			if (this.options.validateOnChange) {
+			var validateOnChange = this.options.validateOnChange === true
+				|| (this.options.validateOnChange === 'afterFirstValidation' && this.validations > 0);
+			if (validateOnChange) {
 				var formEltCtls = $(ev.target).controllers(mad.form.FormElement);
 				if (formEltCtls.length) {
 					this.validateElement(formEltCtls[0]);

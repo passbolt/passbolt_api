@@ -42,6 +42,16 @@ steal(
 		}, /** @prototype */ {
 
 			/**
+			 * Init.
+			 * @param el
+			 * @param options
+			 */
+			'init': function(el, options) {
+				this._super(el, options);
+				this.setViewData('user', passbolt.model.User.getCurrent());
+			},
+
+			/**
 			 * After start hook.
 			 * Create the form elements
 			 *
