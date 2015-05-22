@@ -63,18 +63,6 @@ steal(
 			});
 			this.options.menu.insertItem(action);
 
-			//// Add my profile action
-			//var action = new mad.model.Action({
-			//	'id': uuid(),
-			//	'label': 'manage people',
-			//	'cssClasses': ['separator-after'],
-			//	'action': function (menu) {
-			//		//mad.bus.trigger('category_selected', item);
-			//		//menu.remove();
-			//	}
-			//});
-			//this.options.menu.insertItem(action);
-
 			// Add my profile action
 			var action = new mad.model.Action({
 				'id': uuid(),

@@ -167,7 +167,6 @@ steal(
 				'label': 'Copy email address',
 				'cssClasses': ['separator-after'],
 				'action': function (menu) {
-					console.log(item);
 					var data = {
 						name : 'email',
 						data : item.username
