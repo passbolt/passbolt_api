@@ -34,30 +34,6 @@ steal(
 			this.setViewData('user', this.options.user);
 		},
 
-		/**
-		 * After start.
-		 */
-		'afterStart': function() {
-			var self = this;
-			this._super();
-
-			// List defined permissions
-			//var groupList = new mad.controller.component.TreeController($('#js_wk_preference_profile_groups'), {
-			//	'cssClasses': ['groups'],
-			//	'viewClass': mad.view.component.Tree,
-			//	'itemClass': passbolt.model.Group,
-			//	//'templateUri': 'mad/view/template/component/tree.ejs',
-			//	//'itemTemplateUri': 'app/view/template/component/permission/permissionListItem.ejs',
-			//	// The map to use to make jstree working with our category model
-			//	'map': new mad.object.Map({
-			//		'id': 'id',
-			//		'label': 'name'
-			//	})
-			//});
-			//groupList.start();
-			//groupList.load(this.options.user.Group);
-		},
-
 		/* ************************************************************** */
 		/* LISTEN TO THE MODEL EVENTS */
 		/* ************************************************************** */

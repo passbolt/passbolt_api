@@ -1,7 +1,7 @@
 <li class="comment-wrapper" id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
 	<div class="comment">
 		<div class="author profile picture"><a href="#">
-		    <img src="<%= mappedItem.creatorAvatarPath %>" />
+		    <img src="<%= mappedItem.creatorAvatarPath %>" alt="comment author picture" />
 		</a></div>
 		<div class="content-wrapper">
 			<p><%= mappedItem.content %></p>

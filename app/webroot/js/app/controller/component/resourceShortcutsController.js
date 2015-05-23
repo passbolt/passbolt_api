@@ -49,11 +49,6 @@ steal(
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
-				// }), new mad.model.Action({
-					// 'id': uuid(),
-					// 'label': __('Most used'),
-					// 'action': function () {
-					// }
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('Recently modified'),
@@ -65,17 +60,6 @@ steal(
 						});
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
-//				}), new mad.model.Action({
-//					'id': uuid(),
-//					'label': __('Expiring soon'),
-//					'action': function () {
-//						var filter = new passbolt.model.Filter({
-//							'label': __('Expiring soon'),
-//							'order': 'expiry_date',
-//							'type': passbolt.model.Filter.SHORTCUT
-//						});
-//						mad.bus.trigger('filter_resources_browser', filter);
-//					}
 				}), new mad.model.Action({
 					'id': uuid(),
 					'label': __('Shared with me'),

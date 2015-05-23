@@ -59,7 +59,7 @@ steal(
 					'action': function () {
 						mad.bus.trigger("passbolt.config.debug", passbolt.model.User.getCurrent().id);
 					}
-				}),
+				})
 			];
 			this.options.menu = new mad.controller.component.MenuController($('#js-devel-sidebar-menu'))
 				.start()

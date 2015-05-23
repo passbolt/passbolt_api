@@ -20,9 +20,7 @@ steal(
 	 */
 	mad.controller.ComponentController.extend('passbolt.controller.component.KeysController', /** @static */ {
 
-		'defaults': {
-
-		}
+		'defaults': { }
 
 	}, /** @prototype */ {
 
@@ -42,19 +40,15 @@ steal(
 			this._super();
 			// Set user key data.
 			self.setViewData('gpgkey', passbolt.model.User.getCurrent().Gpgkey);
+		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE VIEW EVENTS */
+		/* ************************************************************** */
+
+		'#js_settings_keys_download click': function(el, ev) {
+			mad.bus.trigger('passbolt.settings.backup_key');
 		}
-
-		/* ************************************************************** */
-		/* LISTEN TO THE MODEL EVENTS */
-		/* ************************************************************** */
-
-
-
-		/* ************************************************************** */
-		/* LISTEN TO THE APP EVENTS */
-		/* ************************************************************** */
-
-
 	});
 
 });

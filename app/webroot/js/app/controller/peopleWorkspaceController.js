@@ -88,10 +88,16 @@ steal(
 			});
 
 			// Filter the workspace.
-			var filter = new passbolt.model.Filter({
-				'label': __('All users'),
-				'type': passbolt.model.Filter.SHORTCUT
-			});
+	        var filter = null;
+	        // A filter has been given in options.
+	        if (this.options.filter) {
+		        filter = this.options.filter;
+	        } else {
+		        filter = new passbolt.model.Filter({
+			        'label': __('All users'),
+			        'type': passbolt.model.Filter.SHORTCUT
+		        });
+	        }
 			mad.bus.trigger('filter_users_browser', filter);
         },
 

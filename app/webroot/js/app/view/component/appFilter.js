@@ -16,16 +16,6 @@ steal(
 		/* ************************************************************** */
 		/* LISTEN TO VIEW EVENTS */
 		/* ************************************************************** */
-
-		// /**
-		 // * Observe when the user want to reset the filter
-		 // * @param {HTMLElement} el The element the event occured on
-		 // * @param {HTMLEvent} ev The event which occured
-		 // * @return {void}
-		 // */
-		// '#js_filter_reset click': function (el, ev) {
-			// this.element.trigger('reset');
-		// },
 		
 		/**
 		 * Observe when the user update the filter
@@ -33,7 +23,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'{element} form submit': function(el, ev) {
+		'form submit': function(el, ev) {
 			this.element.trigger('update');
 		}
 		

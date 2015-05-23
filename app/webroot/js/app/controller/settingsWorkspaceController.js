@@ -181,6 +181,9 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} request_profile_avatar_edition': function (el, ev, user) {
+				// @todo fixed in future canJs.
+				if (!this.element) return;
+
 				var self = this;
 
 				// get the dialog
@@ -207,6 +210,9 @@ steal(
 			 * @param section
 			 */
 			'{mad.bus} request_settings_section': function (el, ev, section) {
+				// @todo fixed in future canJs.
+				if (!this.element) return;
+
 				var tabId = null;
 				var sectionIsValid = $.inArray(section, this.options.sections) != -1;
 				if (sectionIsValid) {

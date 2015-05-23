@@ -92,9 +92,12 @@ steal(
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @param {string} workspace The target workspace
+		 * @param {array} options Workspace's options
 		 * @return {void}
 		 */
-		'{mad.bus} workspace_selected': function (el, event, workspace) {
+		'{mad.bus} workspace_selected': function (el, event, workspace, options) {
+			options = typeof options != "undefined" ? options : {};
+
 			// Destroy the existing workspace and all its components.
 			$('#js_app_panel_main').empty();
 
@@ -104,16 +107,21 @@ steal(
 				.addClass(workspace);
 
 			// Initialize the target workspace.
-			var workspaceId = 'js_passbolt_' + workspace + 'Workspace_controller',
-				workspaceClass = passbolt.controller[can.capitalize(workspace) + 'WorkspaceController'];
+			var workspaceId = 'js_passbolt_' + workspace + '_workspace_controller',
+				workspaceClass = passbolt.controller[can.capitalize(workspace) + 'WorkspaceController'],
+				workspaceOptions = {
+					'id': workspaceId,
+					'label': workspace
+				};
+
+			// Extend default workspace options with the ones given in params.
+			$.extend(workspaceOptions, options);
 
 			var component = mad.helper.ComponentHelper.create(
 				$('#js_app_panel_main'),
 				'last',
-				workspaceClass, {
-					'id': workspaceId,
-					'label': workspace
-				}
+				workspaceClass,
+				workspaceOptions
 			);
 			component.start();
 		},

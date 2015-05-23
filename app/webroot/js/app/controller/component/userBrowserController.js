@@ -45,11 +45,11 @@ steal(
             // The map to use to make our grid working with our resource model
             options.map = new mad.object.Map({
                 'id': 'id',
-	            'name': 'name',
+	            	'name': 'name',
                 'username': 'username',
                 'modified': 'modified',
                 'Group': 'Group',
-				'Profile': 'Profile'
+								'Profile': 'Profile'
             });
 
             // the columns model
@@ -59,9 +59,9 @@ steal(
                 'header': {
                     'css': ['selections s-cell'],
                     'label': '<div class="input checkbox">'
-						// + '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all">'
-						+ '<label for="checkbox-select-all">select all</label> \
-					</div>'
+											 + '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all-people" disabled="disabled">'
+											+ '<label for="checkbox-select-all-people">select all</label> \
+										</div>'
                 },
                 'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
                     var availableValues = [];
@@ -85,11 +85,11 @@ steal(
 		            'css': ['s-cell'],
 		            'label': ''
 	            },
-				'titleAdapter': function (value, mappedItem, item, columnModel) {
-					return 'avatar';
-				},
+							'titleAdapter': function (value, mappedItem, item, columnModel) {
+								return 'avatar';
+							},
 	            'valueAdapter': function (value, mappedItem, item, columnModel) {
-		            return '<img src="' + item.Profile.avatarPath('small') + '" width="30" height="30">';
+		            return '<img src="' + item.Profile.avatarPath('small') + '" alt="'+ __('Picture of: ')+ mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name +'" width="30" height="30">';
 	            }
             }, {
                 'name': 'name',
@@ -167,7 +167,6 @@ steal(
 				'label': 'Copy email address',
 				'cssClasses': ['separator-after'],
 				'action': function (menu) {
-					console.log(item);
 					var data = {
 						name : 'email',
 						data : item.username

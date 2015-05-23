@@ -74,22 +74,6 @@ steal(
 						mad.bus.trigger('passbolt.secret.decrypt', secret);
 					}
 				})
-				//new mad.model.Action({
-				//	'id': uuid(),
-				//	'label': __('organize'),
-				//	'cssClasses': ['todo'],
-				//	'action': function () {
-				//		// TODO.
-				//	}
-				//}),
-				//new mad.model.Action({
-				//	'id': uuid(),
-				//	'label': __('review logs'),
-				//	'cssClasses': ['todo'],
-				//	'action': function () {
-				//		// TODO.
-				//	}
-				//})
 			];
 			this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_wk_menu_more_button'), {
 				'state': 'disabled',
