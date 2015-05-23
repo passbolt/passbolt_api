@@ -168,7 +168,7 @@ steal(
 					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
 					// part to insert the items and render widget if there is
 					var itemId = mappedItem[i].id;
-					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' div');
 					widgetOptions.value = mappedItem[i][columnModel.name];
 					$cell[widgetJQueryPlugin](widgetOptions);
 					$cell[widgetJQueryPlugin]('render');

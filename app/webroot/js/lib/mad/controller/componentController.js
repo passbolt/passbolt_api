@@ -108,6 +108,10 @@ steal(
 
 		// destructor like
 		'destroy': function () {
+            // If the component was in loading state, resolve the loading.
+            if (this.state.is('loading')) {
+                mad.bus.trigger('passbolt_component_loading_complete', [this]);
+            }
 			// unreference the component to the app
 			mad.app.unreferenceComponent(this);
 			// Unobserve any change on the state's label attribute
