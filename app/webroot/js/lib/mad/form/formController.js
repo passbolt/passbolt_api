@@ -165,6 +165,36 @@ steal(
 			if (!(element instanceof mad.form.FormElement)) {
 				throw new mad.error.WrongParametersException('element', 'mad.form.FormElement');
 			}
+
+			// Get validation rules for this model if this is the first element using a model of this type.
+			// Check if element model is already present in the form.
+			var modelPresentInForm = false;
+			var modelAttr = mad.model.Model.getModelAttributes(element.getModelReference());
+			// Get model name.
+			var modelName = modelAttr[modelAttr.length - 2].name;
+			// Loop on the already added form elements.
+			for (var eltId in this.elements) {
+				// Get model name for current element.
+				var eltModelAttr = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference());
+				var eltModelName = modelAttr[eltModelAttr.length - 2].name;
+				// If we don't find in the form elements the same model as in the new element, then we note it.
+				if (modelName == eltModelName) {
+					modelPresentInForm = true;
+					break;
+				}
+			}
+			// If model is not already present in form.
+			// (means we don't know the validation rules yet).
+			if (!modelPresentInForm) {
+				// We get the validation rules.
+				// First, get the model.
+				var model = can.getObject(modelName);
+				if (model !== undefined) {
+					// Get the validation rules.
+					model.getValidationRules(this.options.action);
+				}
+			}
+
 			// store the element with its associated model reference
 			var eltId = element.getId();
 			this.elements[eltId] = element;
