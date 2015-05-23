@@ -14,7 +14,8 @@ App::uses('Group', 'Model');
 App::uses('Role', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
-App::uses('CakeSession', 'Cake/Test/Fixture');
+App::uses('CakeSessionFixture', 'Test/Fixture');
+
 
 class UsersControllerTest extends ControllerTestCase {
 
@@ -31,7 +32,7 @@ class UsersControllerTest extends ControllerTestCase {
 			'app.authenticationToken',
 			'app.authenticationLog',
 			'app.authenticationBlacklist',
-			'app.cakeSession',
+			'core.cakeSession',
 		);
 
 	public $user;

@@ -18,10 +18,23 @@ App::uses('CakeSession', 'Model/Datasource');
 class TagsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.resource', 'app.category', 'app.categories_resource',
-		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile', 'app.file_storage',
-		'app.permission', 'app.permissions_type', 'app.permission_view',
-		'app.authenticationBlacklist', 'app.tag', 'app.itemsTag'
+		'app.resource',
+		'app.category',
+		'app.categories_resource',
+		'app.user',
+		'app.group',
+		'app.groups_user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgkey',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+		'app.authenticationBlacklist',
+		'app.tag',
+		'app.itemsTag',
+		'core.cakeSession',
 	);
 
 	public $user;
@@ -29,11 +42,11 @@ class TagsControllerTest extends ControllerTestCase {
 	public $session;
 
 	public function setUp() {
+		parent::setUp();
 		$this->User = ClassRegistry::init('User');
 		$this->Tag = ClassRegistry::init('Tag');
 		$this->ItemTag = ClassRegistry::init('ItemTag');
 		$this->Resource = ClassRegistry::init('Resource');
-		parent::setUp();
 
 		// log the user as a manager to be able to access all categories
 		$kk = $this->User->findByUsername('darth.vader@passbolt.com');

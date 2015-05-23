@@ -25,10 +25,23 @@ App::uses('CakeSession', 'Model/Datasource');
 class PermissionsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.resource', 'app.category', 'app.categories_resource', 
-		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile', 'app.file_storage',
-		'app.permission', 'app.permissions_type', 'app.permission_view',
-		'app.authenticationLog', 'app.authenticationBlacklist');
+		'app.resource',
+		'app.category',
+		'app.categories_resource',
+		'app.user',
+		'app.group',
+		'app.groups_user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgkey',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+		'app.authenticationLog',
+		'app.authenticationBlacklist',
+		'core.cakeSession',
+	);
 
 	public $user;
 

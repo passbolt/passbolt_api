@@ -25,6 +25,8 @@ class DictionariesControllerTest extends ControllerTestCase {
 		'app.groupsUser',
 		'app.role',
 		'app.authenticationBlacklist',
+		'app.gpgkey',
+		'core.cakeSession',
 	);
 
 	public $user;

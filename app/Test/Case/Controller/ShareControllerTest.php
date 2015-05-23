@@ -40,9 +40,9 @@ class ShareControllerTest extends ControllerTestCase {
 			'app.permission_view',
 			'app.authenticationLog',
 			'app.authenticationBlacklist',
-			'app.cakeSessions',
 			'app.gpgkey',
 			'app.emailQueue',
+			'core.cakeSession',
 		);
 
 	public $user;

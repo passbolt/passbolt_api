@@ -20,7 +20,6 @@ App::uses('Role', 'Model');
 class ResourcesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.cakeSession',
 		'app.category',
 		'app.resource',
 		'app.categoryType',
@@ -39,6 +38,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		'app.permissions_type',
 		'app.permission_view',
 		'app.authenticationBlacklist',
+		'core.cakeSession',
 	);
 
 	public function setUp() {

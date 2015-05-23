@@ -17,7 +17,18 @@ App::uses('CakeSession', 'Model/Datasource');
 
 class GroupsControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.user', 'app.role', 'app.group', 'app.authenticationLog', 'app.authenticationBlacklist');
+	public $fixtures = array(
+		'app.user',
+		'app.role',
+		'app.group',
+		'app.profile',
+		'app.gpgkey',
+		'app.groupsUser',
+		'app.file_storage',
+		'app.authenticationLog',
+		'app.authenticationBlacklist',
+		'core.cakeSession',
+	);
 
 	public $user;
 

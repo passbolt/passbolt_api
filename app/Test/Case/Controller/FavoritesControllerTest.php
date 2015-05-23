@@ -23,19 +23,33 @@ if (!class_exists('CakeSession')) {
 class FavoritesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.resource', 'app.category', 'app.categories_resource', 'app.secret', 'app.favorite',
-		'app.user', 'app.group', 'app.groupsUser','app.role',  
-		'app.permission', 'app.permissions_type', 'app.permission_view',
-		'app.authenticationBlacklist');
+		'app.resource',
+		'app.category',
+		'app.categories_resource',
+		'app.secret',
+		'app.favorite',
+		'app.user',
+		'app.profile',
+		'app.group',
+		'app.groupsUser',
+		'app.role',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+		'app.authenticationBlacklist',
+		'app.gpgkey',
+		'app.file_storage',
+		'core.cakeSession',
+	);
 
 	public function setUp() {
+		parent::setUp();
 		$this->User = new User();
 		$this->User->useDbConfig = 'test';
 		$this->Favorite = new Favorite();
 		$this->Favorite->useDbConfig = 'test';
 		$this->Resource = new Resource();
 		$this->Resource->useDbConfig = 'test';
-		parent::setUp();
 		
 		// log the user as a manager to be able to access all categories
 		$kk = $this->User->findByUsername('darth.vader@passbolt.com');

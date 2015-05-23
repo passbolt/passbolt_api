@@ -27,24 +27,23 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		'app.categories_resource',
 		'app.group',
 		'app.user',
+		'app.profile',
+		'app.gpgkey',
 		'app.groups_user',
 		'app.role',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist'
+		'app.authenticationBlacklist',
+		'core.cakeSession',
 	);
 
 	public function setUp() {
+		parent::setUp();
 		$this->Category = new Category();
 		$this->User = new User();
 		$this->Resource = new Resource();
 		$this->CategoryResource = new CategoryResource();
-		$this->CategoryResource->useDbConfig = 'test';
-		$this->Category->useDbConfig = 'test';
-		$this->Resource->useDbConfig = 'test';
-		$this->User->useDbConfig = 'test';
-		parent::setUp();
 		
 		// log the user as a manager to be able to access all categories
 		$kk = $this->User->findByUsername('darth.vader@passbolt.com');

@@ -36,7 +36,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist'
+		'app.authenticationBlacklist',
+		'core.cakeSession',
 	);
 
 	public function setUp() {

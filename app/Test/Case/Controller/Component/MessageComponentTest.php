@@ -33,6 +33,10 @@ class TestMessageController extends Controller {
 // Test Class
 class MessageComponentTest extends CakeTestCase {
 
+	public $fixtures = array(
+		'core.cakeSession',
+	);
+
 	public $MessageComponent = null;
 
 	public $Controller = null;

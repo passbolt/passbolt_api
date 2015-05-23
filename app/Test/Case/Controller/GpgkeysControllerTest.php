@@ -27,7 +27,8 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			'app.gpgkey',
 			'app.group',
 			'app.authenticationLog',
-			'app.authenticationBlacklist'
+			'app.authenticationBlacklist',
+			'core.cakeSession',
 		);
 
 	/**

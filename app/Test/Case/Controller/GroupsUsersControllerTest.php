@@ -34,6 +34,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		'app.permissions_type',
 		'app.permission_view',
 		'app.authenticationBlacklist',
+		'core.cakeSession',
 	);
 
 	public $uses = array(
