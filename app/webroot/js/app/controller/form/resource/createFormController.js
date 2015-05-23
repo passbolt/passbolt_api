@@ -47,9 +47,6 @@ steal(
 			var self = this;
 			// temporary for update demonstration
 			this.options.data.Resource = this.options.data.Resource || {};
-			// Force loading the validation rules at the form init.
-			// This is to avoid doing it while the user starts typing.
-			passbolt.model.Resource.getValidationRules(self.options.action);
 
 			// Add category id hidden field
 			this.addElement(
