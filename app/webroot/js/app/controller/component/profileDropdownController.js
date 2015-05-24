@@ -38,19 +38,20 @@ steal(
 			// Set current user.
 			self.options.user = passbolt.model.User.getCurrent();
 
-			// Add my profile action
+			// Add my profile action.
 			var action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'my profile',
 				//'cssClasses': ['separator-after'],
 				'action': function (menu) {
 					mad.bus.trigger('workspace_selected', 'settings');
+					mad.bus.trigger('request_settings_section', 'profile');
 					self.view.close();
 				}
 			});
 			this.options.menu.insertItem(action);
 
-			// Add my profile action
+			// Add manage your keys action.
 			var action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'manage your keys',
