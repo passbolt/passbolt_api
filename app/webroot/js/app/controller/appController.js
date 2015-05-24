@@ -49,6 +49,7 @@ steal(
 		 */
 		'afterStart': function() {
 			var self = this;
+			this.workspace = null;
 
 			// Instantiate the app navigation left controller
 			var navLeftCtl = new passbolt.controller.component.AppNavigationLeftController($('#js_app_navigation_left'));
@@ -98,6 +99,12 @@ steal(
 		'{mad.bus} workspace_selected': function (el, event, workspace, options) {
 			options = typeof options != "undefined" ? options : {};
 
+			// If workspace requested is same as current workspace, do nothing.
+			// (it is already loaded).
+			if (workspace == this.workspace) {
+				return;
+			}
+
 			// Destroy the existing workspace and all its components.
 			$('#js_app_panel_main').empty();
 
@@ -124,6 +131,9 @@ steal(
 				workspaceOptions
 			);
 			component.start();
+
+			// Remember current workspace.
+			this.workspace = workspace;
 		},
 
 		/**
