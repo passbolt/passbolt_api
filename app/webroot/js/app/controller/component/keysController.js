@@ -1,6 +1,7 @@
 steal(
 	'mad/controller/componentController.js',
-	'app/model/gpgkey.js'
+	'app/model/gpgkey.js',
+	'app/view/template/component/keys.ejs'
 ).then(function () {
 
 	/*

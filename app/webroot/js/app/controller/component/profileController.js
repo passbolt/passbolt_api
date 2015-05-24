@@ -1,5 +1,6 @@
 steal(
-	'mad/controller/componentController.js'
+	'mad/controller/componentController.js',
+	'app/view/template/component/profile.ejs'
 ).then(function () {
 
 	/*
