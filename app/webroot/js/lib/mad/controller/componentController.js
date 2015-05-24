@@ -52,7 +52,7 @@ steal(
 		 */
 		'state': null,
 
-		// Override the init and render functions to be sure the component is fully 
+		// Override the init and render functions to be sure the component is fully
 		// initialized before calling the ready state
 		'setup': function () {
 			var orgInit = this.init,
@@ -90,12 +90,12 @@ steal(
 				throw new mad.error.WrongParametersException('options.viewClass', 'mad.view.View');
 			}
 
-			// Initialize the associated state instance. Byt default use the stateName defined in 
+			// Initialize the associated state instance. Byt default use the stateName defined in
 			// the options.state
 			this.state = new mad.model.State();
 			// Observe any change on the state's current attribute
 			this.state.current.bind('change', function (ev, row, eventName, statesName) {
-				if(eventName == 'add') {
+				if (eventName == 'add') {
 					self.goNextStates(statesName);
 				}
 			});
@@ -108,10 +108,10 @@ steal(
 
 		// destructor like
 		'destroy': function () {
-            // If the component was in loading state, resolve the loading.
-            if (this.state.is('loading')) {
-                mad.bus.trigger('passbolt_component_loading_complete', [this]);
-            }
+			// If the component was in loading state, resolve the loading.
+			if (this.state.is('loading')) {
+				mad.bus.trigger('passbolt_component_loading_complete', [this]);
+			}
 			// unreference the component to the app
 			mad.app.unreferenceComponent(this);
 			// Unobserve any change on the state's label attribute
@@ -121,17 +121,17 @@ steal(
 
 		/**
 		 * Listen to any state change and dispatch to the dedicated states listener.
-		 * 
+		 *
 		 * A state listener is represented as a function in your controller.
 		 * This function should respect the following writing : state[Statename].
-		 * 
+		 *
 		 * The listener will get in parameter a boolean "go" which indicate to the function
 		 * if the controller is entering or leaving the state.
-		 * 
+		 *
 		 * Of course with the inheritance concept you can call the parent listener state
 		 * if this one is declared with the function "_super"
-		 * 
-		 * @param {mad.model.ComponentState} statesName The states 
+		 *
+		 * @param {mad.model.ComponentState} statesName The states
 		 * @param {event} event The jQuery event
 		 * @param {string} stateName The new state name
 		 */
@@ -139,7 +139,7 @@ steal(
 			var previousStates = this.state.previous.attr();
 			var currentStates = this.state.current.attr();
 
-			for(var i in previousStates) {
+			for (var i in previousStates) {
 				var previousState = previousStates[i];
 				// remove the previous state class
 				this.view.removeClass(previousState);
@@ -150,7 +150,7 @@ steal(
 				}
 			}
 
-			for(var i in currentStates) {
+			for (var i in currentStates) {
 				var currentState = currentStates[i];
 				// add the new state class
 				this.view.addClass(currentState);
@@ -174,7 +174,7 @@ steal(
 		/**
 		 * Set the component current state(s)
 		 * @see {mad.controller.ComponentController.prototype.gotNextStates}
-		 * @param {string|array} statesName the new state name or an array of states name 
+		 * @param {string|array} statesName the new state name or an array of states name
 		 * @return {void}
 		 */
 		'setState': function (statesName) {
@@ -217,14 +217,14 @@ steal(
 		 * @return {void}
 		 */
 		'refresh': function () {
-            // If the element is null don't refresh it and release a warning.
-            // It could happened when components embed other components.
-            if (this.element == null) {
-                console.warn('Try to refresh a component which doesn\'t have a DOM element.')
-                return;
-            }
+			// If the element is null don't refresh it and release a warning.
+			// It could happened when components embed other components.
+			if (this.element == null) {
+				console.warn('Try to refresh a component which doesn\'t have a DOM element.')
+				return;
+			}
 			this.element.empty();
-			if(this.options.templateBased) {
+			if (this.options.templateBased) {
 				this.beforeRender();
 				var render = this.view.render();
 				render = this.afterRender(render);
@@ -240,10 +240,10 @@ steal(
 		 * Start the component
 		 * @return {void}
 		 */
-		'start': function() {
+		'start': function () {
 			this.initView();
 			// if the component is template based, render it
-			if(this.options.templateBased) {
+			if (this.options.templateBased) {
 				this.beforeRender();
 				var render = this.view.render();
 				render = this.afterRender(render);
@@ -256,7 +256,7 @@ steal(
 			return this;
 		},
 
-		'initView': function() {
+		'initView': function () {
 			// Init the associated view
 			this.view = new this.options.viewClass(this.element, {
 				'templateUri': this.options.templateUri,
@@ -276,25 +276,27 @@ steal(
 		 * Called right after the start function
 		 * @return {void}
 		 */
-		'afterStart': function() { },
+		'afterStart': function () {
+		},
 
 		/**
 		 * Execute this function before render each component.
-		 * 
-		 * By default the beforeRender function is : 
-		 * 
+		 *
+		 * By default the beforeRender function is :
+		 *
 		 * * instantiating the associated view ;
 		 * * setting the common view data : controller (to be able to access to the associated controller), icon, label ...
-		 * 
+		 *
 		 * @return {void}
 		 */
-		'beforeRender': function() { },
+		'beforeRender': function () {
+		},
 
 		/**
 		 * Execute this function after render the component
 		 * @return {void}
 		 */
-		'afterRender': function(render) { 
+		'afterRender': function (render) {
 			return render;
 		},
 
@@ -317,7 +319,7 @@ steal(
 		 * Search the closest parent component controller.
 		 * @param {class} clazz The component controller to look for.
 		 */
-		'closest': function(clazz) {
+		'closest': function (clazz) {
 			var classCssSelector = '.' + clazz._fullName,
 				data = this.element.closest(classCssSelector).data();
 			// @todo #BUG #JMVC $(ELEMENT).data(ControllerName) doesn't work.
@@ -325,7 +327,8 @@ steal(
 				if (data.controls[i].getClass().fullName == clazz.fullName) {
 					return data.controls[i];
 				}
-			};
+			}
+			;
 			return null;
 		},
 
