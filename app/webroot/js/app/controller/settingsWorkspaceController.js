@@ -106,7 +106,8 @@ steal(
 			'destroy': function() {
 				// Be sure that the primary workspace menu controller will be destroyed also.
 				$('#js_wsp_primary_menu_wrapper').empty();
-
+				// Destroy the breadcrumb too.
+				$('#js_wsp_settings_breadcrumb').empty();
 				this._super();
 			},
 
@@ -121,7 +122,7 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} request_profile_edition': function (el, ev) {
-				// @todo fixed in future canJs.
+				// @todo #PASSBOLT-985 fixed in future canJs.
 				if (!this.element) return;
 
 				var self = this;
@@ -152,7 +153,7 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} request_user_password_edition': function (el, ev, user) {
-				// @todo fixed in future canJs.
+				// @todo #PASSBOLT-985 fixed in future canJs.
 				if (!this.element) return;
 
 				var self = this;
@@ -181,7 +182,7 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} request_profile_avatar_edition': function (el, ev, user) {
-				// @todo fixed in future canJs.
+				// @todo #PASSBOLT-985 fixed in future canJs.
 				if (!this.element) return;
 
 				var self = this;
@@ -210,7 +211,7 @@ steal(
 			 * @param section
 			 */
 			'{mad.bus} request_settings_section': function (el, ev, section) {
-				// @todo fixed in future canJs.
+				// @todo #PASSBOLT-985 fixed in future canJs.
 				if (!this.element) return;
 
 				var tabId = null;
