@@ -18,6 +18,10 @@ $config = array(
 		'name' => 'Sauvage',
 		'song' => 'http://youtu.be/DaRG0ukxYqQ'
 	),
+	// Activate specific entry points for selenium testing.
+	'App.selenium' => array(
+		'active' => false,
+	),
 	// Internationalization
 	'i18n' => array(
 		'locale' => 'en-EN',

@@ -122,7 +122,8 @@ class EmailNotificatorComponent extends Component {
 	 *   user id of the recipient
 	 * @param array $data
 	 *   variables to pass to the template which should contain
-	 *     creator_id the user who has created the account
+	 *     - creator_id the user who has created the account
+	 *     - token the token
 	 */
 	public function accountCreationNotification($toUserId, $data) {
 		// Get recipient info.
