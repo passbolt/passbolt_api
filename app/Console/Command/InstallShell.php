@@ -32,11 +32,11 @@ class InstallShell extends AppShell {
 	public function main() {
 		$this->schema();
 		// If data is requested, we install dummy data.
-		if ($this->params['data']) {
+		if (isset($this->params['data'])) {
 			$this->data();
 		}
 		else {
-			$password = $this->params['password'] ? $this->params['password'] : self::DEFAULT_ADMIN_PASSWORD;
+			$password = isset($this->params['password']) ? $this->params['password'] : self::DEFAULT_ADMIN_PASSWORD;
 			// Validate password.
 			$User = ClassRegistry::init('User');
 			$User->set(array('password' => $password));
@@ -139,5 +139,4 @@ class InstallShell extends AppShell {
 		$Role->create();
 		$Role->save(array('name' => 'admin', 'description' => 'god almighty'));
 	}
-
 }

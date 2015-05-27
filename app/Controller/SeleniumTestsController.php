@@ -10,9 +10,14 @@
 
 // Uses EmailQueue.
 App::uses('EmailQueue', 'Plugin/EmailQueue/Model');
+App::uses('ShellDispatcher', 'Console');
+App::import('Console/Command', 'AppShell');
+App::import('Console/Command', 'InstallShell');
 
 /**
  * Class SeleniumTestsController
+ * All entry points of the selenium controller can only be called if the app is in debug mode
+ * and the App.selenium.active key is set to true in the config.
  */
 class SeleniumTestsController extends AppController {
 
@@ -40,7 +45,6 @@ class SeleniumTestsController extends AppController {
 	function beforeFilter() {
 		// If Selenium mode is not activated, we redirect to home page.
 		$allowed = $this->__isSeleniumAllowed();
-		//throw new HttpException(print_r(array($allowed ? 'allowed' : 'not allowed'), true));
 		if (!$allowed) {
 			return $this->redirect('/');
 		}
@@ -48,7 +52,10 @@ class SeleniumTestsController extends AppController {
 		parent::beforeFilter();
 		// Allow ShowLastEmail entry point.
 		$this->Auth->allow(
-			'showLastEmail'
+			array(
+				'showLastEmail',
+				'resetInstance',
+			)
 		);
 		// Use table email_queue. (seems that cakephp refuses to take the default of the class).
 		$this->EmailQueue->useTable = 'email_queue';
@@ -100,5 +107,28 @@ class SeleniumTestsController extends AppController {
 		$this->layout = "Emails/$format/default";
 		// Renders the view.
 		$this->render("/Emails/$format/" . $template);
+	}
+
+
+	/**
+	 * DANGEROUS !!!! Reset passbolt instance data.
+	 * DO NOT CALL THIS ENTRY POINT IF YOU DON'T UNDERSTAND WHAT IT IS.
+	 * WE USE IT ONLY FOR OUR SELENIUM TESTS.
+	 * IF YOU CALL IT, YOU WILL LOSE ALL THE DATA OF YOUR DB. YOU ARE WARNED.
+	 * This is same as calling the cake shell : cake install
+	 * @param bool $dummy
+	 */
+	public function resetInstance($dummy = 1) {
+		$job = new InstallShell();
+		$job->silent = TRUE;
+		$job->startup();
+		// Params is initially empty.
+		$params = array();
+		// If dummy data is requested.
+		if ($dummy == 1) {
+			$job->params['data'] = 1;
+		}
+		$job->dispatchMethod('main');
+		die();
 	}
 }
