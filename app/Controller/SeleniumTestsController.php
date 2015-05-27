@@ -25,11 +25,23 @@ class SeleniumTestsController extends AppController {
 	private $configKey = 'App.selenium.active';
 
 	/**
+	 * Check if the selenium entry point is allowed by the configuration.
+	 * @return bool
+	 */
+	private function __isSeleniumAllowed() {
+		$seleniumAllowed = Configure::read($this->configKey) === true
+			&& Configure::read('debug') > 0;
+		return $seleniumAllowed;
+	}
+
+	/**
 	 * beforeFilter().
 	 */
 	function beforeFilter() {
 		// If Selenium mode is not activated, we redirect to home page.
-		if (Configure::read($this->configKey) !== true) {
+		$allowed = $this->__isSeleniumAllowed();
+		//throw new HttpException(print_r(array($allowed ? 'allowed' : 'not allowed'), true));
+		if (!$allowed) {
 			return $this->redirect('/');
 		}
 		// If selenium entry point is activated, we proceed.
@@ -50,7 +62,7 @@ class SeleniumTestsController extends AppController {
 	 */
 	public function showLastEmail($username = null) {
 		// If Selenium mode is not activated, we redirect to home page.
-		if (Configure::read($this->configKey) !== true) {
+		if (!$this->__isSeleniumAllowed()) {
 			return $this->redirect('/');
 		}
 		// If username is null, we return an error.

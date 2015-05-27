@@ -67,6 +67,25 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 	public function testShowLastEmailEntryPointNotAllowed() {
 		// Deactivate selenium entry point.
 		Configure::write('App.selenium.active', false);
+		Configure::write('debug', 0);
+		// Call the entry point.
+		$this->testAction("/seleniumTests/showLastEmail/john@passbolt.com", array(
+				'return' => 'contents',
+			), true);
+		$this->assertTrue(isset($this->headers['Location']) && !empty($this->headers['Location']));
+
+		// Test if Selenium entry point is marked as not allowed, and debug is set to true. (Should redirect too)
+		Configure::write('App.selenium.active', true);
+		Configure::write('debug', 0);
+		// Call the entry point.
+		$this->testAction("/seleniumTests/showLastEmail/john@passbolt.com", array(
+				'return' => 'contents',
+			), true);
+		$this->assertTrue(isset($this->headers['Location']) && !empty($this->headers['Location']));
+
+		// Test if Selenium entry point is marked as allowed, and debug is set to false. (Should redirect too)
+		Configure::write('App.selenium.active', false);
+		Configure::write('debug', 1);
 		// Call the entry point.
 		$this->testAction("/seleniumTests/showLastEmail/john@passbolt.com", array(
 				'return' => 'contents',
@@ -80,6 +99,7 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 	public function testShowLastEmailEntryPointAllowedUsernameNotValid() {
 		// Deactivate selenium entry point.
 		Configure::write('App.selenium.active', true);
+		Configure::write('debug', 1);
 		// Expect exception
 		$this->setExpectedException('HttpException', 'The username doesn\'t exist');
 		// Call the entry point.
@@ -95,6 +115,7 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 	public function testShowLastEmailEntryPointAllowedUsernameIsValid() {
 		// Deactivate selenium entry point.
 		Configure::write('App.selenium.active', true);
+		Configure::write('debug', 1);
 		$data = array(
 			'creator_id' => $this->anonymous['User']['id'],
 			'token' => 'xxx',
