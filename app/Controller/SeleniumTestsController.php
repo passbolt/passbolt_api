@@ -119,11 +119,13 @@ class SeleniumTestsController extends AppController {
 	 * @param bool $dummy
 	 */
 	public function resetInstance($dummy = 1) {
+		// If Selenium mode is not activated, we redirect to home page.
+		if (!$this->__isSeleniumAllowed()) {
+			return $this->redirect('/');
+		}
+		// Install job shell.
 		$job = new InstallShell();
-		$job->silent = TRUE;
 		$job->startup();
-		// Params is initially empty.
-		$params = array();
 		// If dummy data is requested.
 		if ($dummy == 1) {
 			$job->params['data'] = 1;
