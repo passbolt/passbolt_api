@@ -9,7 +9,7 @@
  */
 ?>
 <!doctype html>
-<html class="no-js alpha version loading" lang="en">
+<html class="no-js alpha version loading <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
   <meta charset="utf-8">
   <!--

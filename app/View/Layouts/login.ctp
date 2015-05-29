@@ -9,7 +9,7 @@
  */
 ?>
 <!doctype html>
-<html class="no-js no-passboltplugin alpha version" lang="en">
+<html class="no-js no-passboltplugin alpha version <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
 	<meta charset="utf-8">
 	<!--
