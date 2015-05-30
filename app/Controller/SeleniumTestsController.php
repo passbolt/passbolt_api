@@ -63,6 +63,7 @@ class SeleniumTestsController extends AppController {
 
 	/**
 	 * Show last email sent to a particular user.
+	 * Make sure you send email address URL encoded
 	 * @param string $username
 	 *
 	 * @throws Exception
@@ -73,17 +74,17 @@ class SeleniumTestsController extends AppController {
 			return $this->redirect('/');
 		}
 		// If username is null, we return an error.
-		if ($username == null) {
+		if (is_null($username)) {
 			throw new HttpException(__('Username not correct'));
 		}
 		// If username doesn't exist, we return an error.
 		$u = $this->User->findByUsername($username);
-		if (!$u) {
+		if (is_null($u)) {
 			throw new HttpException(__('The username doesn\'t exist'));
 		}
 		// If email is not found, we return an error.
 		$email = $this->EmailQueue->findByTo($username);
-		if (!$email) {
+		if (is_null($email)) {
 			throw new HttpException(__('No email was sent to this user'));
 		}
 		// Get template used.

@@ -2415,7 +2415,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .notification-container {
   font-size: .75em;
   /* 12px */
-  width: 100%;
+  width: 80%;
 }
 .notification-container .message {
   float: left;

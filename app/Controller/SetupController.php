@@ -31,7 +31,7 @@ class SetupController extends AppController {
 		$this->layout = 'html5';
 
 		// check if the id is provided
-		if (!$userId) {
+		if (is_null($userId)) {
 			throw new BadRequestException(__('User id not provided'));
 		}
 
@@ -41,13 +41,13 @@ class SetupController extends AppController {
 		}
 
 		// Check if token is provided.
-		if (!$token) {
+		if (is_null($token)) {
 			throw new BadRequestException(__('Token not provided'));
 		}
 
 		// Check if token is valid.
 		$token = $this->AuthenticationToken->checkTokenIsValid($token, $userId);
-		if (!$token) {
+		if (is_null($token)) {
 			throw new NotFoundException(__('Token not found'));
 		}
 
@@ -56,7 +56,7 @@ class SetupController extends AppController {
 		$o = $this->User->getFindOptions('Setup::userInfo', Role::GUEST, $data);
 		$user = $this->User->find('first', $o);
 
-		if (!$user) {
+		if (is_null($user)) {
 			throw new NotFoundException(__('User not found'));
 		}
 

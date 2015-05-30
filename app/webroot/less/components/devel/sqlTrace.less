@@ -1,3 +1,35 @@
 .dialog-wrapper-devel-sql-trace .dialog {
-  width: 90%;
+	max-width: 90%;
+	.dialog-content {
+		background:@background-default;
+		padding:1em;
+	}
+}
+.cake-sql-log {
+	margin-top:1em;
+
+	td,th {
+		overflow:visible;
+		white-space:normal;
+		border:1px solid #eee;
+		padding:1em;
+	}
+	th {
+		 padding:.5em;
+		 font-weigth:bold;
+	 }
+	thead {
+		background:#eee;
+	}
+}
+
+.page ~ .devel-sql-trace{
+	position:absolute;
+	margin-top:55%;
+	padding-bottom:4em;
+}
+.page.login ~ .devel-sql-trace,
+.page.register ~ .devel-sql-trace{
+	position:relative;
+	margin-top:0;
 }

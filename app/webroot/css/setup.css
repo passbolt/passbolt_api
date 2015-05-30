@@ -2177,7 +2177,7 @@ select.fluid {
 .notification-container {
   font-size: .75em;
   /* 12px */
-  width: 100%;
+  width: 80%;
 }
 .notification-container .message {
   float: left;
@@ -3109,6 +3109,14 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   float: left;
   margin-left: 5%;
   width: 60%;
+}
+/*
+	plugin-check behavior is different here
+	there is no warning because the addon is not configured
+	since we're setting it up. So no-passboltplugin-config is still success
+*/
+.passboltplugin .setup .plugin-check.success {
+  display: block;
 }
 /* Scrolling in middle panel in full width */
 @media all and (min-width: 980px) {

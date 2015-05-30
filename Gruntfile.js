@@ -94,23 +94,11 @@ module.exports = function(grunt) {
 						'abstractions/**','base/**','components/**','dialogs/**',
 						'pages/config.less','pages/loading.less','pages/login.less','pages/passwords.less',
 						'pages/users.less', 'pages/settings.less', 'pages/setup.less', 'setup.less',
-						'pages/login.less', 'login.less', 'main.less'
+						'pages/login.less', 'login.less', 'main.less', 'devel.less'
 					],
 					dest: '<%= config.webroot %>/less',
 					expand: true
-				}/*,{
-					// CSS minified
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/build/css',
-					src: ['**'],
-					dest: '<%= config.webroot %>/css',
-					expand: true
-				},{
-					// CSS sources
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/css',
-					src: ['**'],
-					dest: '<%= config.webroot %>/css',
-					expand: true
-				}*/]
+				}]
 			}
 		},
 		watch: {

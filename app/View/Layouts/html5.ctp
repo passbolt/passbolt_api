@@ -9,7 +9,7 @@
  */
 ?>
 <!doctype html>
-<html class="no-js alpha version loading <?php echo User::get('Role.name'); ?>" lang="en">
+<html class="no-js alpha version loading no-passboltplugin <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
   <meta charset="utf-8">
   <!--
@@ -29,11 +29,12 @@
 	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
 	<meta name="viewport" content="width=device-width">
 <?php echo $this->fetch('css'); ?>
+<?php if(Configure::read('debug') > 0) echo $this->html->css('devel'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>
 <!-- main -->
-<div id="container" class="page">
+<div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
 	<?php if($this->params['controller'] == 'pages'): ?>
 	<?php echo $this->element('loader'); ?>
 	<?php endif; ?>

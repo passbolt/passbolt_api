@@ -96,6 +96,17 @@
 	}
 }
 
+/*
+	plugin-check behavior is different here
+	there is no warning because the addon is not configured
+	since we're setting it up. So no-passboltplugin-config is still success
+*/
+.passboltplugin {
+	.setup .plugin-check.success {
+		display:block;
+	}
+}
+
 /* Scrolling in middle panel in full width */
 @media all and (min-width: 980px) {
 	.setup .panel.middle {

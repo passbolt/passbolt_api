@@ -1,3 +1,37 @@
+/* palette */
+/* borders */
+/* font */
+/* background */
+/* shadows */
+/* body */
+body {
+  color: #333333;
+}
+/* links */
+a:link,
+a:visited {
+  color: #333333;
+}
+a:hover {
+  color: #2894df;
+}
+a:active,
+a:focus {
+  outline: 0;
+  color: #2894df;
+  border: 0;
+}
+p a {
+  border-bottom: 1px solid #dddddd;
+}
+p a:hover {
+  border-bottom: 1px solid #2894df;
+}
+/* scrollbar */
+/* todos */
+.todo {
+  background: #ffffcc !important;
+}
 .devel-sidebar-toggle-button,
 .devel-sidebar-toggle-button:hover {
   position: absolute;
@@ -24,16 +58,21 @@
   right: 0;
   bottom: 0;
   width: 250px;
-  padding: 5px;
   background-color: #070707;
   z-index: 99;
   display: none;
 }
 .devel-sidebar-menu-wrapper ul li a {
   color: #C0C0C0;
+  display: block;
+  border-bottom: 1px solid #222;
+  padding: .5em 1em;
+}
+.devel-sidebar-menu-wrapper ul li a:hover {
+  background: #222;
 }
 .dialog-wrapper-devel-components-browser .dialog {
-  width: 90%;
+  max-width: 90%;
   height: 90%;
 }
 .dialog-wrapper-devel-components-browser .dialog-content {
@@ -43,5 +82,36 @@
   bottom: 0;
 }
 .dialog-wrapper-devel-sql-trace .dialog {
-  width: 90%;
+  max-width: 90%;
+}
+.dialog-wrapper-devel-sql-trace .dialog .dialog-content {
+  background: #ffffff;
+  padding: 1em;
+}
+.cake-sql-log {
+  margin-top: 1em;
+}
+.cake-sql-log td,
+.cake-sql-log th {
+  overflow: visible;
+  white-space: normal;
+  border: 1px solid #eee;
+  padding: 1em;
+}
+.cake-sql-log th {
+  padding: .5em;
+  font-weigth: bold;
+}
+.cake-sql-log thead {
+  background: #eee;
+}
+.page ~ .devel-sql-trace {
+  position: absolute;
+  margin-top: 55%;
+  padding-bottom: 4em;
+}
+.page.login ~ .devel-sql-trace,
+.page.register ~ .devel-sql-trace {
+  position: relative;
+  margin-top: 0;
 }

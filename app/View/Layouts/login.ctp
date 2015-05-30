@@ -29,10 +29,11 @@
 	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
 	<meta name="viewport" content="width=device-width">
 	<?php echo $this->fetch('css'); ?>
+<?php if(Configure::read('debug') > 0) echo $this->html->css('devel'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>
-<div class="container login page">
+<div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
 <?php echo $this->element('public/disclaimers'); ?>
 <!-- header -->
 <header>
@@ -50,6 +51,11 @@
 </footer>
 </div>
 <?php echo $this->fetch('scriptBottom'); ?>
-<?php //echo $this->element('debug');?>
+<?php
+// load devel materials.
+if(Configure::read('debug')) {
+	echo $this->element('devel/sqlTrace');
+}
+?>
 </body>
 </html>

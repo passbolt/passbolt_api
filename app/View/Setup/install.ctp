@@ -8,6 +8,7 @@
  * @since		version 2.12.9
  */
 $this->assign('title',	__('Install'));
+$this->assign('page_classes','setup install');
 $this->Html->css('setup', null, array('block' => 'css'));
 $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'block'=>'scriptHeader'));
 $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scriptBottom'));
