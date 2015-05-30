@@ -47,7 +47,7 @@ class SetupController extends AppController {
 
 		// Check if token is valid.
 		$token = $this->AuthenticationToken->checkTokenIsValid($token, $userId);
-		if (is_null($token)) {
+		if (empty($token)) {
 			throw new NotFoundException(__('Token not found'));
 		}
 
@@ -56,7 +56,7 @@ class SetupController extends AppController {
 		$o = $this->User->getFindOptions('Setup::userInfo', Role::GUEST, $data);
 		$user = $this->User->find('first', $o);
 
-		if (is_null($user)) {
+		if (ampty($user)) {
 			throw new NotFoundException(__('User not found'));
 		}
 
