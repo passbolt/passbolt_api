@@ -104,6 +104,22 @@ Console/cake EmailQueue.sender
 ```
 You can also see the corresponding documentation here https://github.com/lorenzo/cakephp-email-queue
 
+Test suite
+=========
+To execute the test suite, you will need to install phpunit.
+The simplest way is to do it through composer. A composer file is already included at the root of the passbolt installation.
+```
+cd /var/www/passbolt
+composer install
+```
+
+This will install all the dev dependencies, including phpunit.
+After this is installed, do not forget to add the autoload.php in the /app/Config/bootstrap.php file :
+
+```
+require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+```
+
 Credits
 =========
 
