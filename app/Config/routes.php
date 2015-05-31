@@ -63,6 +63,14 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
 	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
 
 /**
+ * Debug pages
+ */
+	Router::connect('/debug', array('controller' => 'pages', 'action' => 'debug', 'config'));
+	Router::connect('/debug/config', array('controller' => 'pages', 'action' => 'debug', 'config'));
+	Router::connect('/pages/debug', array('controller' => 'pages', 'action' => 'debug', 'config'));
+	Router::connect('/pages/debug/*', array('controller' => 'pages', 'action' => 'debug', 'config'));
+
+/**
  * ...and connect the rest of 'Pages' controller's URLs.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));

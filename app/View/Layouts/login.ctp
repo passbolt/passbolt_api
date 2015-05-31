@@ -53,7 +53,7 @@
 <?php echo $this->fetch('scriptBottom'); ?>
 <?php
 // load devel materials.
-if(Configure::read('debug')) {
+if(Configure::read('debug') >= 2) {
 	echo $this->element('devel/sqlTrace');
 }
 ?>

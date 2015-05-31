@@ -1512,7 +1512,7 @@ select.fluid {
   height: 4.5em;
 }
 .header.third {
-  top: 7em;
+  top: 6.875em;
   height: 3em;
 }
 /* main workspace panel */
@@ -1527,7 +1527,7 @@ select.fluid {
 }
 /* its position depends on how many headers are there */
 .header.second + .panel.main {
-  top: 7em;
+  top: 6.875em;
 }
 .header.third + .panel.main {
   top: 10em;
@@ -1550,6 +1550,9 @@ select.fluid {
   left: 18%;
   overflow: hidden;
 }
+.panel.middle.scroll {
+  overflow-y: scroll;
+}
 .col2 {
   width: 50%;
   left: 18%;
@@ -1567,7 +1570,7 @@ select.fluid {
    don't center the grid inside main panel */
 .panel.main .grid-responsive-12 {
   float: left;
-  width: 100%;
+  width: 99%;
 }
 /* hide left column when there is no space */
 @media all and (max-width: 980px) {

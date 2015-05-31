@@ -56,7 +56,7 @@ class SetupController extends AppController {
 		$o = $this->User->getFindOptions('Setup::userInfo', Role::GUEST, $data);
 		$user = $this->User->find('first', $o);
 
-		if (ampty($user)) {
+		if (empty($user)) {
 			throw new NotFoundException(__('User not found'));
 		}
 
