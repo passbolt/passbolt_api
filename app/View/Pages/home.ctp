@@ -29,5 +29,6 @@
 
 	$this->Html->script($frontUri, array('block' => 'scriptBottom'));
 ?>
-    <div id="js_app_controller">
-	</div>
+<?php echo $this->element('loader'); ?>
+<div id="js_app_controller">
+</div>

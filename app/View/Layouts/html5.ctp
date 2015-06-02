@@ -35,9 +35,6 @@
 <body>
 <!-- main -->
 <div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
-	<?php if($this->params['controller'] == 'pages'): ?>
-	<?php echo $this->element('loader'); ?>
-	<?php endif; ?>
 	<?php echo $this->fetch('content'); ?>
 </div>
 <!-- footer -->
@@ -49,7 +46,7 @@
 <?php echo $this->fetch('scriptBottom'); ?>
 <?php
 // load devel materials.
-if(Configure::read('debug')) {
+if(Configure::read('debug') >= 2) {
 	echo $this->element('devel/sqlTrace');
 }
 ?>

@@ -120,8 +120,6 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  */
 	//Configure::write('App.fullBaseUrl', 'http://example.com');
 
-	Configure::write('App.fullBaseUrl', 'http://webserver.local/passbolt-demo');
-
 /**
  * Web path to the public images directory under webroot.
  * If not set defaults to 'img/'

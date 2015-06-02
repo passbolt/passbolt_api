@@ -44,6 +44,16 @@ class PagesController extends AppController {
  */
 	public $uses = array();
 
+	/**
+	 * beforeFilter
+	 */
+	function beforeFilter(){
+		parent::beforeFilter();
+		if (Configure::read('debug') > 0) {
+			$this->Auth->allow(array('debug'));
+		}
+	}
+
 /**
  * Displays a view
  *
@@ -54,6 +64,7 @@ class PagesController extends AppController {
  */
 	public function display() {
 		//$this->layout = 'demo';
+
 		$path = func_get_args();
 
 		$count = count($path);
@@ -87,5 +98,14 @@ class PagesController extends AppController {
 			}
 			throw new NotFoundException();
 		}
+	}
+
+	/**
+	 * Display the debug pages
+	 */
+	function debug($page) {
+		$this->viewPath = 'pages/debug';
+		$this->view = 'config';
+		$this->layout = 'debug';
 	}
 }
