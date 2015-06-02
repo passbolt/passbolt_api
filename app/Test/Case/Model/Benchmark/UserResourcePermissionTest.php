@@ -10,13 +10,32 @@
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
 
+// Uses sessions
+// App::uses('CakeSession', 'Model/Datasource'); // doesn't work here
+if (!class_exists('CakeSession')) {
+	require CAKE . 'Model/Datasource/CakeSession.php';
+}
+
 class UserResourcePermissionTest extends CakeTestCase {
 
 	private $config = array(
 		'users' => 10,
 	);
 	
-	public $fixtures = array('app.resource', 'app.category', 'app.userPermission', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.categoriesResource', 'app.permissionsType', 'app.permission', 'app.dummyResource');
+	public $fixtures = array(
+		'app.resource',
+		'app.category',
+		'app.userPermission',
+		'app.role',
+		'app.group',
+		'app.groupsUser',
+		'app.categoryType',
+		'app.categoriesResource',
+		'app.permissionsType',
+		'app.permission',
+		'app.dummyResource',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();

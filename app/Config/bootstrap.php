@@ -146,3 +146,9 @@ CakeLog::config('error', array(
  * Load our custom Exception renderer
  */
 App::uses('AppExceptionRenderer', 'Lib/Error');
+
+/**
+ * Testsuite
+ */
+require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+

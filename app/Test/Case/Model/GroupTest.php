@@ -11,7 +11,16 @@ App::uses('Group', 'Model');
 
 class GroupTest extends CakeTestCase {
 
-	public $fixtures = array('app.group', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.group',
+		'app.user',
+		'app.role',
+		'app.gpgkey',
+		'app.profile',
+		'app.file_storage',
+		'app.groupsUser',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();

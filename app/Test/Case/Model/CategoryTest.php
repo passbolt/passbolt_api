@@ -15,7 +15,16 @@ class CategoryTest extends AppTestCase {
 
 	public $autoFixtures = true;
 
-	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.category',
+		'app.category_type',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.gpgKey',
+		'app.file_storage',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();

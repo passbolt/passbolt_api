@@ -16,7 +16,18 @@ if (!class_exists('CakeSession')) {
 
 class CategoryResourceTest extends CakeTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.user', 'app.role', 'app.groups_user');
+	public $fixtures = array(
+		'app.category',
+		'app.resource',
+		'app.categories_resource',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.gpgKey',
+		'app.file_storage',
+		'app.groups_user',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();

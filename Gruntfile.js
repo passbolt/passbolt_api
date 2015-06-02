@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 		bower: grunt.file.readJSON('./.bowerrc'),
 		clean: {
 			css: [
-				'<%= config.webroot %>/css/*.css'
+				'<%= config.webroot %>/css/*.css', '!<%= config.webroot %>/css/cake.generic.css'
 			],
 			'js': [
 				'<%= config.webroot %>/js/app/production.js'

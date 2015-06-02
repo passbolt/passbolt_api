@@ -14,7 +14,23 @@ class PermissionnableTest extends CakeTestCase {
 
 	public $autoFixtures = true;
 
-	public $fixtures = array('app.resource', 'app.user', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.category', 'app.categoriesResource', 'app.permissionsType', 'app.permission', 'app.permission_view');
+	public $fixtures = array(
+		'app.resource',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.gpgKey',
+		'app.file_storage',
+		'app.group',
+		'app.groupsUser',
+		'app.categoryType',
+		'app.category',
+		'app.categoriesResource',
+		'app.permissionsType',
+		'app.permission',
+		'app.permission_view',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();

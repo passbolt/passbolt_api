@@ -15,11 +15,13 @@ class SecretTest extends CakeTestCase {
 		'app.secret',
 		'app.resource',
 		'app.user',
+		'app.gpgKey',
 		'app.profile',
 		'app.groupsUser',
 		'app.fileStorage',
 		'app.group',
-		'app.role'
+		'app.role',
+		'core.cakeSession'
 	);
 
 	public function setUp() {

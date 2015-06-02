@@ -25,6 +25,7 @@ class UserTest extends CakeTestCase {
 		'app.file_storage',
 		'app.gpgkey',
 		'app.role',
+		'core.cakeSession'
 	);
 
 	public $autoFixtures = true;

@@ -12,7 +12,18 @@ App::uses('AppTestCase', 'Test');
 
 class CommentTest extends AppTestCase {
 
-	public $fixtures = array('app.comment', 'app.resource', 'app.user', 'app.role', 'app.profile',  'app.file_storage');
+	public $fixtures = array(
+		'app.comment',
+		'app.resource',
+		'app.user',
+		'app.role',
+		'app.gpgKey',
+		'app.group',
+		'app.groupsUser',
+		'app.profile',
+		'app.file_storage',
+		'core.cakeSession'
+	);
 
 	public $autoFixtures = true;
 

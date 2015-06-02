@@ -2,6 +2,7 @@
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
+/app/tmp/cache/
 /app/tmp/cache/models/*
 /app/tmp/cache/persistent/*
 /app/tmp/cache/views/*
@@ -19,6 +20,8 @@ app/Plugin/*
 !/app/Vendor/RandomTool.php
 !/app/Vendor/openpgp-php
 /lib/Cake/Console/Templates/skel/tmp/
+/vendor
+Plugin/
 /build
 /dist
 /tags

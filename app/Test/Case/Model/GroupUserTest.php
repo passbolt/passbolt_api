@@ -24,6 +24,8 @@ class GroupUserTest extends CakeTestCase {
 		'app.role',
 		'app.group',
 		'app.groups_user',
+		'app.gpgkey',
+		'core.cakeSession'
 	);
 
 	public function setUp() {

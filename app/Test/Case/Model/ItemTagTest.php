@@ -14,7 +14,17 @@ App::uses('User', 'Model');
 
 class ItemTagTest extends CakeTestCase {
 
-	public $fixtures = array('app.tag', 'app.resource', 'app.itemsTag', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.tag',
+		'app.resource',
+		'app.itemsTag',
+		'app.groupsUser',
+		'app.group',
+		'app.user',
+		'app.role',
+		'app.gpgkey',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();

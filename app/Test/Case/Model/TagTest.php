@@ -12,7 +12,16 @@ App::uses('AppTestCase', 'Test');
 
 class TagTest extends AppTestCase {
 
-	public $fixtures = array('app.tag', 'app.user', 'app.role', 'app.profile', 'app.file_storage');
+	public $fixtures = array('app.tag',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgKey',
+		'app.groupsUser',
+		'app.group',
+		'core.cakeSession'
+	);
 
 	public $autoFixtures = true;
 

@@ -12,7 +12,17 @@ App::uses('AppTestCase', 'Test');
 
 class ResourceTest extends AppTestCase {
 
-	public $fixtures = array('app.resource', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.resource',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.gpgKey',
+		'app.file_storage',
+		'app.groupsUser',
+		'app.group',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();
