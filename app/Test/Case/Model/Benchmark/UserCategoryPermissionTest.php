@@ -16,7 +16,19 @@ class UserCategoryPermissionTest extends CakeTestCase {
 		'users' => 10,
 	);
 	
-	public $fixtures = array('app.category', 'app.resource', 'app.userPermission', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.categoriesResource', 'app.permissionsType', 'app.permission', 'app.dummyCategory');
+	public $fixtures = array(
+		'app.category',
+		'app.resource',
+		'app.userPermission',
+		'app.role',
+		'app.group',
+		'app.groupsUser',
+		'app.categoryType',
+		'app.categoriesResource',
+		'app.permissionsType',
+		'app.permission',
+		'app.dummyCategory'
+		);
 	
 	public function setUp() {
 		parent::setUp();

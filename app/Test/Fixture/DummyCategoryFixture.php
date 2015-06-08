@@ -25,7 +25,7 @@ class DummyCategoryFixture extends CategoryFixture {
 
 	public $import = 'Category';
 
-	public function init() {
+	public function init($db) {
 		parent::init();
 
 		$this->Category = ClassRegistry::init('Category');
@@ -38,7 +38,7 @@ class DummyCategoryFixture extends CategoryFixture {
 		$this->Permission->useDbConfig = 'test';
 	}
 
-	public function insert() {
+	public function insert($db) {
 		$model = new Category(null, null, 'test');
 		$this->db = $model->getDataSource();
 		parent::insert($this->db);
