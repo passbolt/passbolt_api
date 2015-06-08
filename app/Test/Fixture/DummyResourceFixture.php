@@ -45,7 +45,7 @@ class DummyResourceFixture extends ResourceFixture {
 		$this->Permission->useDbConfig = 'test';
 	}
 
-	public function insert() {
+	public function insert($db) {
 		$model = new Resource(null, null, 'test');
 		$this->db = $model->getDataSource();
 		parent::insert($this->db);
