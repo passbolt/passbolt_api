@@ -79,12 +79,12 @@ class SeleniumTestsController extends AppController {
 		}
 		// If username doesn't exist, we return an error.
 		$u = $this->User->findByUsername($username);
-		if (is_null($u)) {
+		if (empty($u)) {
 			throw new HttpException(__('The username doesn\'t exist'));
 		}
 		// If email is not found, we return an error.
 		$email = $this->EmailQueue->findByTo($username);
-		if (is_null($email)) {
+		if (empty($email)) {
 			throw new HttpException(__('No email was sent to this user'));
 		}
 		// Get template used.
