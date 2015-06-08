@@ -3,17 +3,17 @@
  * EmailNotification Component
  * This class offers tools to send notification emails.
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.EmailNotificationComponent
- * @since        version 2.12.7
+ * @copyright 	(c) 2015-present Passbolt.com
+ * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
  */
-
 class EmailNotificatorComponent extends Component {
 
-	/**
-	 * Initialize
-	 */
+/**
+ * Initialize
+ *
+ * @param Controller $controller
+ * @param Array $settings
+ */
 	public function initialize(Controller $controller, $settings = array()) {
 		$this->Controller = $controller;
 		$this->Permission = Common::getModel('Permission');
@@ -24,6 +24,13 @@ class EmailNotificatorComponent extends Component {
 		parent::initialize($controller);
 	}
 
+/**
+ * Return the email author information like name and avatar
+ * 	This data is required in the email template
+ *
+ * @param string $userId UUID
+ * @return Array $author, empty if not found or null on error
+ */
 	private function _getAuthorInfo($userId) {
 		$author = $this->User->find(
 			'first',
@@ -53,23 +60,22 @@ class EmailNotificatorComponent extends Component {
 		return $author;
 	}
 
-	/**
-	 * Send a notification email regarding a new password that has been shared with the user.
-	 *
-	 * @param uuid $toUserId
-	 *   user id of the recipient
-	 * @param array $data
-	 *   variables to pass to the template which should contain
-	 *     resource_id the resource id
-	 *     sharer_id the user who is sharing the resource
-	 */
+/**
+ * Send a notification email regarding a new password that has been shared with the user.
+ *
+ * @param string $toUserId uuid of the recipient
+ * @param array $data
+ *   variables to pass to the template which should contain
+ *     resource_id the resource id
+ *     sharer_id the user who is sharing the resource
+ */
 	public function passwordSharedNotification($toUserId, $data) {
 		// get resource.
 		$resource = $this->Resource->find(
 			'first',
 			array(
 				'conditions' => array(
-					'Resource.id' =>$data['resource_id']
+					'Resource.id' => $data['resource_id']
 				),
 				'fields' => array(
 					'Resource.name',
@@ -92,8 +98,7 @@ class EmailNotificatorComponent extends Component {
 		);
 
 		$recipient = $this->User->find(
-			'first',
-			array(
+			'first', array(
 				'conditions' => array(
 					'User.id' => $toUserId
 				),
@@ -115,16 +120,16 @@ class EmailNotificatorComponent extends Component {
 		);
 	}
 
-	/**
-	 * Send a notification email regarding a new account created for a user.
-	 *
-	 * @param uuid $toUserId
-	 *   user id of the recipient
-	 * @param array $data
-	 *   variables to pass to the template which should contain
-	 *     - creator_id the user who has created the account
-	 *     - token the token
-	 */
+/**
+ * Send a notification email regarding a new account created for a user.
+ *
+ * @param uuid $toUserId
+ *   user id of the recipient
+ * @param array $data
+ *   variables to pass to the template which should contain
+ *     - creator_id the user who has created the account
+ *     - token the token
+ */
 	public function accountCreationNotification($toUserId, $data) {
 		// Get recipient info.
 		$recipient = $this->User->find(

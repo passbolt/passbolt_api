@@ -25,7 +25,7 @@ class DummyCategoryFixture extends CategoryFixture {
 
 	public $import = 'Category';
 
-	public function init($db) {
+	public function init() {
 		parent::init();
 
 		$this->Category = ClassRegistry::init('Category');

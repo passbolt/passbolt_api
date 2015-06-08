@@ -2,15 +2,11 @@
 /**
  * IpAddress Component
  * Class used for working with IP addresses
- * The functions found in the class below are inspired from :
- * http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.Controller.Component.IpAddressComponent
- * @since				 version 2.13.03
+ * @copyright		(c) 2015-present Passbolt.com
+ * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
+ * @link				http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
  */
-
 class IpAddressComponent extends Component {
 
 /**

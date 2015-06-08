@@ -1,21 +1,18 @@
 <?php
-
 /**
  * Filter Component
- * Class used for working with filter
+ * Class used for extracting search filter parameters from requests of JS client
  *
- * @copyright         Copyright 2012, Passbolt.com
- * @license             http://www.passbolt.com/license
- * @package             app.Controller.Component.IpAddressComponent
- * @since                 version 2.13.03
+ * @copyright 	(c) 2015-present Passbolt.com
+ * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
  */
 class FilterComponent extends Component {
 
 /**
  * Check if the request contains a filter and extract it
  *
- * @param {array} $params The parameters of the request
- * @return {array} The extract filter or null
+ * @param Array $params The parameters of the request
+ * @return Array The extract filter or null
  */
 	public static function fromRequest($params = null) {
 		$returnValue = array();
@@ -28,7 +25,7 @@ class FilterComponent extends Component {
 		if (isset($params['fltr_case'])) {
 			$returnValue['case'] = $params['fltr_case'];
 		}
-		// extrat the order to apply to the result
+		// extract the order to apply to the result
 		if (isset($params['fltr_order'])) {
 			$returnValue['order'] = $params['fltr_order'];
 		}

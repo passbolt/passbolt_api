@@ -3,14 +3,13 @@
  * Blacklist Component
  * Manages blacklisting of ip addresses in the system. 
  *
- * @copyright		 copyright 2012 Passbolt.com
- * @package			 app.Controller.BlacklistComponent
- * @since				 version 2.13.03
- * @license			 http://www.passbolt.com/license
+ * @copyright 	(c) 2015-present Passbolt.com
+ * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
  */
 class BlacklistComponent extends Component {
 
 /**
+ * @var string $ip
  * stores ip of user for current authentication
  */
 	public $ip = null;
@@ -23,6 +22,7 @@ class BlacklistComponent extends Component {
 /**
  * startup function
  * @param Controller $controller. the calling controller
+ * @param Array $settings
  */
 	public function initialize(Controller $controller, $settings=array()) {
 		$this->controller = $controller;

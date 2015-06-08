@@ -21,7 +21,7 @@ class AuthenticationLog extends AppModel {
  * @param string $ip, the provenance ip
  * @param bool $status, the status of the authentication. 
  * @param string $data optional data that we'd like to store
- * @return bool true if the log was succesful, false otherwise
+ * @return bool true if the log was successful, false otherwise
  */
 	public function add ($username, $ip, $status, $data=null) {
 		$u = $this->User->findByUsername($username);
@@ -48,7 +48,7 @@ class AuthenticationLog extends AppModel {
  * @param string username the username. Keep it null if not needed
  * @param string ip the ip. keep it null if not needed
  * @param timestamp sinceTimestamp since which date/time we want to check the failed attempts. null means forever.
- * @return int the count of failed attempts. false if the parameters are not right.
+ * @return integer the count of failed attempts. false if the parameters are not right.
  */
 	public function getFailedAuthenticationCount($username=null, $ip=null, $sinceTimestamp=null) {
 		$conditions = array();

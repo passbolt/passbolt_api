@@ -4,70 +4,84 @@
  * Throttles the authentications. 
  * This component prevents a user to do bruteforce attacks on the login by introducing compulsory time intervals between two login
  *
- * @copyright		 copyright 2012 Passbolt.com
- * @package			 app.Controller.Common
- * @since				 version 2.13.03
- * @license			 http://www.passbolt.com/license
+ * @copyright 	(c) 2015-present Passbolt.com
+ * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
  */
 class PassboltAuthComponent extends AuthComponent {
 
 /**
- * shortcut to AuthenticationLog model
+ * @var AuthenticationLog model reference
  */
 	public $AuthenticationLog;
 
 /**
- * shortcut to controller
+ * @var Controller $controller reference to the controller using this component
  */
 	public $controller;
 
 /**
- * stores ip of user for current authentication (is populated by __setContext)
+ * @var string $ip
+ * 		Stores the ip of the user for the current authentication attempt,
+ * 		it is populated by __setContext method
  */
 	public $ip = null;
 
 /**
- * stores current username for authentication (is populated by __setContext)
+ * @var string $username
+ * 		Stores current username for authentication,
+ * 		it is populated by __setContext method
  */
 	public $username = null;
 
 /**
- * stores request object (is populated by __setContext)
+ * @var cakeRequest $request
+ * 		Stores cakephp request object,
+ * 		it is populated by __setContext method
  */
 	public $request = null;
 
 /**
- * stores last successful authentication object (AuthenticationLog)(is populated by __setContext)
+ * @var AuthenticationLog $lastSuccessfulAuth
+ * 		Stores last successful authentication object,
+ * 		it is populated by __setContext method
  */
 	public $lastSuccessfulAuth = null;
 
 /**
- * stores last failed authentication object (AuthenticationLog)(is populated by __setContext)
+ * @var AuthenticationLog
+ * 		Stores the last failed authentication object,
+ * 		it is populated by __setContext method
  */
 	public $lastFailedAuth = null;
 
 /**
- * stores authentication attempt number (is populated by __setContext)
+ * @var integer $authenticationAttempt
+ * 		Stores authentication attempt number,
+ * 		it is populated by __setContext method
  */
 	public $authenticationAttempt = 0;
 
 /**
- * defines the throttle strategy. 
+ * @var array $throttle defines the delay in seconds between each attempts
+ * 	it is used in case of throttle strategy
+ * @todo remove not used?
  */
 	public $throttle = array(5, 15, 45, 60);
 
 /**
- * defines if the current ip should be blacklisted
+ * @var boolean $doBlacklist defines if the current ip should be blacklisted in case of failed authentication attempt
  */
 	public $doBlacklist = false;
 
 /**
- * defines the time during which the current ip should be blacklisted (only if $doBlacklist is true)
+ * @var integer $blacklistTime defines the time during which the current ip should be blacklisted,
+ * 		only used if $doBlacklist is set to true
  */
 	public $blacklistTime = null;
 
 /**
- * defines the throttle strategy. 
+ * @var array $throttlingStrategies defines the throttle/blacklist strategies
+ *		e.g. how much time the user need to wait after a failed authentication attempt
  */
 	public $throttlingStrategies = array(
 		'throttle' => array(
@@ -101,8 +115,11 @@ class PassboltAuthComponent extends AuthComponent {
 	);
 
 /**
- * startup function
- * @param Controller $controller. the calling controller
+ * Called after the Controller::beforeFilter() and before the controller action
+ *
+ * @param Controller $controller Controller with components to startup
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::startup
  */
 	public function startup(Controller $controller) {
 		$this->controller = $controller;
@@ -111,8 +128,9 @@ class PassboltAuthComponent extends AuthComponent {
 	}
 
 /**
- * get the throttle time interval corresponding to the attempt number
- * @param int $attempt, the attempt number
+ * Get the throttle time interval corresponding to the attempt number
+ *
+ * @param integer $attempt, the attempt number
  * @return int $interval, the interval in seconds
  */
 	public function getThrottleInterval($attempt) {

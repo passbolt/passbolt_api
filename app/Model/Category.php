@@ -235,7 +235,7 @@ class Category extends AppModel {
  * can be moved among its sieblings, can also change parent
  *
  * @param uuid $id the if of the category
- * @param int $position the position from 1 to n
+ * @param integer $position the position from 1 to n
  * @param uuid $parentId the parent Id (if we wish to change it)
  * @return bool true or false
  *

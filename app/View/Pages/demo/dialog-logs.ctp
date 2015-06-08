@@ -45,7 +45,7 @@
 			last seen from 127.0.0.1 <a href="#">(more)</a>
 		</div>
 		<div class="footnotes">
-			<span class="copyright">2012-2013 &copy; bolt software pvt. ltd.</span> &bullet;
+			<span class="copyright">2012-2013 &copy; Passbolt.</span> &bullet;
 			<a href="#help">help</a> <a href="#privacy">privacy</a> &bullet; <a href="#tos">TOS</a>
 		</div>
 	</div>

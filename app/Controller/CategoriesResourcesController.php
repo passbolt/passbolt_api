@@ -17,7 +17,7 @@ class CategoriesResourcesController extends AppController {
  * Get a categoryResource
  * Renders a json object of the resource
  *
- * @param int $id the id of the resource
+ * @param integer $id the id of the resource
  * @return void
  */
 	public function view($id=null) {
@@ -47,7 +47,7 @@ class CategoriesResourcesController extends AppController {
 
 /**
  * Delete a categoryResource
- * @param int id the id of the resource to delete
+ * @param integer id the id of the resource to delete
  */
 	public function delete($id = null) {
 		// check if the category id is provided
