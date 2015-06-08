@@ -11,6 +11,7 @@
 /app/tmp/sessions/*
 /app/tmp/tests/*
 /app/tmp/image-processing/*
+app/tmp/file-storage-test/*
 /app/composer.phar
 /app/webroot/img/public/*
 app/Plugin/*
