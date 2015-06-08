@@ -17,7 +17,7 @@ class TagTest extends AppTestCase {
 		'app.role',
 		'app.profile',
 		'app.file_storage',
-		'app.gpgKey',
+		'app.gpgkey',
 		'app.groupsUser',
 		'app.group',
 		'core.cakeSession'

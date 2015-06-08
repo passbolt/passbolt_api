@@ -15,7 +15,7 @@ class SecretTest extends CakeTestCase {
 		'app.secret',
 		'app.resource',
 		'app.user',
-		'app.gpgKey',
+		'app.gpgkey',
 		'app.profile',
 		'app.groupsUser',
 		'app.fileStorage',

@@ -17,7 +17,7 @@ class ResourceTest extends AppTestCase {
 		'app.user',
 		'app.role',
 		'app.profile',
-		'app.gpgKey',
+		'app.gpgkey',
 		'app.file_storage',
 		'app.groupsUser',
 		'app.group',

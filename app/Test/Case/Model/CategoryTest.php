@@ -11,6 +11,10 @@ App::uses('Category', 'Model');
 App::uses('User', 'Model');
 App::uses('AppTestCase', 'Test');
 
+if (!class_exists('CakeSession')) {
+	require CAKE . 'Model/Datasource/CakeSession.php';
+}
+
 class CategoryTest extends AppTestCase {
 
 	public $autoFixtures = true;
@@ -21,7 +25,7 @@ class CategoryTest extends AppTestCase {
 		'app.user',
 		'app.role',
 		'app.profile',
-		'app.gpgKey',
+		'app.gpgkey',
 		'app.file_storage',
 		'core.cakeSession'
 	);

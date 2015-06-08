@@ -76,7 +76,7 @@ class DataShell extends AppShell {
 	public function export() {
 		// Export passbolt schema data
 		$noFixtureTables = array(
-			'gpgKeys'
+			'gpgkeys'
 		);
 		$options = array(
 			"name" => "",
