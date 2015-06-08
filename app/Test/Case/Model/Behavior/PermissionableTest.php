@@ -19,7 +19,7 @@ class PermissionnableTest extends CakeTestCase {
 		'app.user',
 		'app.role',
 		'app.profile',
-		'app.gpgKey',
+		'app.gpgkey',
 		'app.file_storage',
 		'app.group',
 		'app.groupsUser',

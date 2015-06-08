@@ -21,9 +21,10 @@ class CategoryResourceTest extends CakeTestCase {
 		'app.resource',
 		'app.categories_resource',
 		'app.user',
+		'app.group',
 		'app.role',
 		'app.profile',
-		'app.gpgKey',
+		'app.gpgkey',
 		'app.file_storage',
 		'app.groups_user',
 		'core.cakeSession'

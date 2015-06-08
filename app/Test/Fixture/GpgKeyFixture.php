@@ -7,11 +7,38 @@
  * @package     app.Test.Fixture.GpgKeyFixture
  * @since       version 2.12.9
  */
-class GpgKeyFixture extends CakeTestFixture {
+class GpgkeyFixture extends CakeTestFixture {
 
 	public $useDbConfig = 'test';
 
 	public $import = 'Gpgkey';
+
+	/**
+	 * Fields
+	 *
+	 * @var array
+
+	public $fields = array(
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4096, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'bits' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 8, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'uid' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'key_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 8, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'fingerprint' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 51, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'type' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 16, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'expires' => array('type' => 'datetime', 'null' => true, 'default' => null),
+		'key_created' => array('type' => 'datetime', 'null' => true, 'default' => null),
+		'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+	); */
 
 	public function init() {
 		$this->records = array(

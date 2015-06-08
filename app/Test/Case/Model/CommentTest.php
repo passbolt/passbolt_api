@@ -17,7 +17,7 @@ class CommentTest extends AppTestCase {
 		'app.resource',
 		'app.user',
 		'app.role',
-		'app.gpgKey',
+		'app.gpgkey',
 		'app.group',
 		'app.groupsUser',
 		'app.profile',
