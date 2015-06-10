@@ -104,7 +104,7 @@ class PagesController extends AppController {
 	 * Display the debug pages
 	 */
 	function debug($page) {
-		$this->viewPath = 'pages/debug';
+		$this->viewPath = 'Pages/debug';
 		$this->view = 'config';
 		$this->layout = 'debug';
 	}
