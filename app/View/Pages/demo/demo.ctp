@@ -25,7 +25,7 @@
 </head>
 <body>
 <div id="container" class="page">
-<?php echo $this->element('demo/loading-screen'); ?>
+<?php echo $this->element('demo/launching-screen'); ?>
 <?php echo $this->element('demo/loading-bar'); ?>
 <?php echo $this->element('demo/notification'); ?>
 <?php echo $this->element('demo/contextual-menu'); ?>

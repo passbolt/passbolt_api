@@ -92,7 +92,7 @@ module.exports = function(grunt) {
 					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/less',
 					src: [
 						'abstractions/**','base/**','components/**','dialogs/**',
-						'pages/loading.less','pages/login.less','pages/passwords.less',
+						'pages/launching.less','pages/login.less','pages/passwords.less',
 						'pages/users.less', 'pages/settings.less', 'pages/setup.less', 'setup.less',
 						'pages/login.less', 'login.less', 'main.less', 'devel.less'
 					],

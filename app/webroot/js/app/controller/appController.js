@@ -27,7 +27,7 @@ steal(
 	 * @class passbolt.controller.AppController
 	 * @inherits mad.controller.AppController
 	 * @parent index
-	 * 
+	 *
 	 * The passbolt application controller.
 	 */
 	mad.controller.AppController.extend('passbolt.controller.AppController', /** @static */ {
@@ -80,7 +80,9 @@ steal(
 			var notifCtl = new passbolt.controller.component.NotificationController($('#js_app_notificator'), {});
 
 			// Instantiate the laoding bar controller
-			var loadingBarCtl = new passbolt.controller.component.LoadingBarController($('#js_app_loading_bar'), {});
+			var loadingBarCtl = new passbolt.controller.component.LoadingBarController($('#js_app_loading_bar'), {
+				'state': 'ready'
+			});
 			loadingBarCtl.start();
 		},
 
@@ -150,6 +152,34 @@ steal(
 		},
 
 		/**
+		 * Observe when the application processus have been all completed.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} passbolt_application_loading_completed': function (el, ev, options) {
+			if(!$('html').hasClass('loaded')) {
+				$('html')
+					.removeClass('loading')
+					.addClass('loaded');
+			}
+		},
+
+		/**
+		 * Observe when the user wants to close the latest dialog.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'{mad.bus} passbolt_application_loading': function (el, ev, options) {
+			if (!$('html').hasClass('loading')) {
+				$('html')
+					.removeClass('loaded')
+					.addClass('loading');
+			}
+		},
+
+		/**
 		 * Observe when the user wants to close the latest dialog.
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
@@ -159,20 +189,22 @@ steal(
 			mad.controller.component.DialogController.closeLatest();
 		},
 
-		/**
-		 * Observe when the app is ready.
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		'{mad.bus} app_ready': function (el, ev) {
-			// Remove the loading component.
-			$('html').removeClass('loading');
-		},
-
 		/* ************************************************************** */
 		/* LISTEN TO THE STATE CHANGES */
 		/* ************************************************************** */
+
+		/**
+		 * Listen to the change relative to the state Loading
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateLoading': function (go) {
+			// If the view has already been instanciated.
+			// Notify it that the component is now loading.
+			if (this.view) {
+				this.view.loading(go);
+			}
+		},
 
 		/**
 		 * The application is ready.
@@ -182,7 +214,8 @@ steal(
 		'stateReady': function (go) {
 			// Select the password workspace
 			mad.bus.trigger('workspace_selected', 'password');
-			mad.bus.trigger('app_ready');
+			// When the application is ready, remove the launching screen.
+			$('html').removeClass('launching');
 		}
 
 	});

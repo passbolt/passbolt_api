@@ -111,17 +111,24 @@ steal(
 				// Even if the bar is not in "progressing" state, complete it.
 				this.state.addState('completing');
 				this.loading_complete(function() {
-					// Release the component to its initial state.
+					// Broadcast an event on the app event bus to notify all other components about the
+					// the completion of the currents processus.
+					mad.bus.trigger('passbolt_application_loading_completed', [this]);
+					// Mark the loading bar component as ready.
 					self.state.setState('ready');
 				});
 			} else {
-				// Update the loading bar depending on the latest change.
-				// New processus are loading. Each new processus or completed processus will fill
-				// the loading bar. 50% at loading. 50% while completed.
+				// Update the loading bar depending on the latest changes.
+				// If there was no other processus currently loading.
 				if (!this.state.is('progressing')) {
+					// Broadcast an event on the app event bus to notify all other components that some
+					// processus are currently in action.
+					mad.bus.trigger('passbolt_application_loading', [this]);
 					this.state.addState('progressing');
 				}
 
+				// A new processus will fill the loading bar at 50%.
+				// The other 50% will be filled while the processus will be completed.
 				var procSpace = ( 100 / this.options.maxProcs ) * 1/2;
 				var spaceLeft = ( this.options.maxProcs - ( this.options.maxProcs - this.options.currentProcs ) ) * procSpace;
 				this.view.update(100 - spaceLeft, true, function() {
@@ -129,7 +136,7 @@ steal(
 				});
 			}
 
-			// Remind the number of processus the component had to treat.
+			// The processus which are still active.
 			this.options.previousProcs = currentProcs;
 		},
 

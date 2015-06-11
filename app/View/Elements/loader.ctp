@@ -1,5 +1,5 @@
-<div class="loading-screen">
-	<div class="loading-screen-holder">
+<div class="launching-screen">
+	<div class="launching-screen-holder">
 		<div class="logo">
 			<h1><span>Passbolt</span></h1>
 		</div>

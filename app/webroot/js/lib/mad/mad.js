@@ -29,6 +29,7 @@ steal(
 	'mad/model/attribute.js',
 	'mad/view'
 ).then(
+	'mad/array/array.js',
 	'mad/bootstrap/appBootstrap.js',
 	'mad/config/config.js',
 	'mad/error/exception.js',

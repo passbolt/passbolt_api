@@ -96,7 +96,7 @@ steal(
 			// Observe any change on the state's current attribute
 			this.state.current.bind('change', function (ev, row, eventName, statesName) {
 				if (eventName == 'add') {
-					self.goNextStates(statesName);
+					self.goNextStates();
 				}
 			});
 
@@ -130,32 +130,49 @@ steal(
 		 *
 		 * Of course with the inheritance concept you can call the parent listener state
 		 * if this one is declared with the function "_super"
-		 *
-		 * @param {mad.model.ComponentState} statesName The states
-		 * @param {event} event The jQuery event
-		 * @param {string} stateName The new state name
 		 */
-		'goNextStates': function (statesName) {
-			var previousStates = this.state.previous.attr();
-			var currentStates = this.state.current.attr();
+		'goNextStates': function () {
+			// List of states the component is leaving.
+			var leaving = [],
+				// List of states the component is entering on.
+				entering = [],
+				// List of current states.
+				previous = this.state.previous.attr(),
+				// List of previous states.
+				current = this.state.current.attr(),
+				// List of changes the component is statying on.
+				staying = mad.array.intersect(previous, current);
 
-			for (var i in previousStates) {
-				var previousState = previousStates[i];
-				// remove the previous state class
-				this.view.removeClass(previousState);
-				// leave the previous state
-				var previousStateListener = this['state' + $.String.capitalize(previousState)];
+			// Check which states the component is leaving.
+			leaving = previous.filter(function(item) {
+				return staying.indexOf(item) == -1;
+			});
+
+			// Check which states the component is entering on.
+			entering = current.filter(function(item) {
+				return staying.indexOf(item) == -1;
+			});
+
+			// Treat the states the component is going to leave.
+			for (var i in leaving) {
+				// Eemove the previous state class.
+				this.element.removeClass(leaving[i]);
+
+				// Execute the function 'stateStateName' if it exists, passing a boolean set a false
+				// to the function to notify it that the component is leaving the state.
+				var previousStateListener = this['state' + $.String.capitalize(leaving[i])];
 				if (previousStateListener) {
 					previousStateListener.call(this, false);
 				}
 			}
 
-			for (var i in currentStates) {
-				var currentState = currentStates[i];
-				// add the new state class
-				this.view.addClass(currentState);
-				// enter in the new state
-				var newStateListener = this['state' + $.String.capitalize(currentState)];
+			// Treat the states the component is going to enter on.
+			for (var i in entering) {
+				// Add the new state class.
+				this.element.addClass(entering[i]);
+				// Execute the function 'stateStateName' if it exists, passing a boolean set a true
+				// to the function to notify it that the component is entering on the state.
+				var newStateListener = this['state' + $.String.capitalize(entering[i])];
 				if (newStateListener) {
 					newStateListener.call(this, true);
 				}
@@ -233,29 +250,44 @@ steal(
 			this.afterStart();
 			// Switch the element in its default state
 			this.setState(this.options.state);
+
 			return this;
 		},
 
 		/**
 		 * Start the component
-		 * @return {void}
+		 * @return {mad.controller.ComponentController}
 		 */
 		'start': function () {
+			// Shift the component into its loading state.
+			this.setState('loading');
+
+			// Call the before start hook.
+			this.beforeStart();
+
+			// Start by initializing the component's view.
 			this.initView();
-			// if the component is template based, render it
+
+			// If the component is template based, render it.
 			if (this.options.templateBased) {
 				this.beforeRender();
 				var render = this.view.render();
 				render = this.afterRender(render);
 				this.view.insertInDom(render);
 			}
+
+			// Call the after start hook.
 			this.afterStart();
-			// Switch the element in its default state
+
+			// Switch the element to its default start state.
 			this.setState(this.options.state);
 
 			return this;
 		},
 
+		/**
+		 * Initialize the coponent view.
+		 */
 		'initView': function () {
 			// Init the associated view
 			this.view = new this.options.viewClass(this.element, {
@@ -273,7 +305,16 @@ steal(
 		},
 
 		/**
-		 * Called right after the start function
+		 * Called right before the component is started.
+		 *
+		 * @return {void}
+		 */
+		'beforeStart': function () {
+		},
+
+		/**
+		 * Called right after the component has been started.
+		 *
 		 * @return {void}
 		 */
 		'afterStart': function () {
@@ -342,10 +383,18 @@ steal(
 		 * @return {void}
 		 */
 		'stateLoading': function (go) {
-			this.view.loading(go);
+			// If the view has already been instanciated.
+			// Notify it that the component is now loading.
+			if (this.view) {
+				this.view.loading(go);
+			}
+			// While entering the loading state.
+			// Broadcast an event on the application event bus to notify all other components.
 			if (go) {
 				mad.bus.trigger('passbolt_component_loading_start', [this]);
 			}
+			// While leaving the loading state.
+			// Broadcast an event on the application event bus to notify all other components.
 			else {
 				mad.bus.trigger('passbolt_component_loading_complete', [this]);
 			}
