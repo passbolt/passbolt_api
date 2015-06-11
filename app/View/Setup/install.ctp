@@ -36,7 +36,7 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 		</div>
 	</div>
 	<div class="col2_3">
-		<h2><?php echo __('Welcome to passbolt! Let\'s take 5 min to setup your system.') ?></h2>
+		<h2 id="js_step_title"><?php echo __('Welcome to passbolt! Let\'s take 5 min to setup your system.') ?></h2>
 	</div>
 </div>
 
