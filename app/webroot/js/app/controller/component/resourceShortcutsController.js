@@ -27,7 +27,7 @@ steal(
 		'afterStart': function() {
 			var menuItems = [
 				new mad.model.Action({
-					'id': uuid(),
+					'id': 'js_pwd_wsp_filter_all',
 					'label': __('All items'),
 					'cssClasses': ['selected'],
 					'action': function () {
@@ -39,7 +39,7 @@ steal(
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
 				}), new mad.model.Action({
-					'id': uuid(),
+					'id': 'js_pwd_wsp_filter_favorite',
 					'label': __('Favorite'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
@@ -50,7 +50,7 @@ steal(
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
 				}), new mad.model.Action({
-					'id': uuid(),
+					'id': 'js_pwd_wsp_filter_modified',
 					'label': __('Recently modified'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
@@ -61,7 +61,7 @@ steal(
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
 				}), new mad.model.Action({
-					'id': uuid(),
+					'id': 'js_pwd_wsp_filter_share',
 					'label': __('Shared with me'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
@@ -72,7 +72,7 @@ steal(
 						mad.bus.trigger('filter_resources_browser', filter);
 					}
 				}), new mad.model.Action({
-					'id': uuid(),
+					'id': 'js_pwd_wsp_filter_own',
 					'label': __('Items I own'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
