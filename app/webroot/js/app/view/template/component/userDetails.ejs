@@ -16,7 +16,7 @@
 				<span class="label"><%= __('Password') %></span>
 				<span class="value">**********</span>
 			</li>
-			<li class="password">
+			<li class="role">
 				<span class="label"><%= __('Role') %></span>
 				<span class="value"><%= user.Role.name.charAt(0).toUpperCase() + user.Role.name.slice(1); %></span>
 			</li>
@@ -54,7 +54,7 @@
 					</a>
 				</span>
 			</li>
-			<li>
+			<li class="gpgkey">
 				<textarea class="code"><%= user.Gpgkey.key %></textarea>
 			</li>
 		</ul>

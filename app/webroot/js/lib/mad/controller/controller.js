@@ -56,26 +56,31 @@ steal(
 			}
 
 			// The id is not given in the options.
+			// If one is defined in the template, get this one.
+			// Otherwise generate a unique identifier.
 			if (typeof options.id == 'undefined' || options.id == null || options.id == '') {
-				// The id is maybe set directly on the templates.
+				// Id found in the template.
 				var elId = this.element.attr('id');
-				if (typeof elId == 'undefined' || elId == '') {
+				// Get this one.
+				if (typeof elId != 'undefined' && elId != '') {
+					options.id = elId;
+				}
+				// Otherwise generate a unique identifier.
+				else {
 					options.id = uuid();
 					this.element.attr('id', options.id);
-				} else {
-					options.id = elId;
 				}
 			}
 			// The id is given in the options.
 			else {
 				// The id is maybe set directly on the templates.
 				var elId = this.element.attr('id');
+				// Override the template id by the one defined in the options.
+				// But warn the developper about that case.
 				if (elId != '') {
-					//console.warn('Controller id defined in options & templates for options.id = ' + options.id);
+					console.warn('Controller id is defined by options and by template, the template id will be overriden by the option id.');
 				}
-				else {
-					options.id = elId;
-				}
+				this.element.attr('id', options.id);
 			}
 
 			// set the options

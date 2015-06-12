@@ -67,7 +67,7 @@ steal(
 			secWkMenu.start();
 
 			// Instanciate the passwords filter controller
-			var rsShortcut = new passbolt.controller.component.ResourceShortcutsController('#js_wsp_pwd_rs_shortcuts', {});
+			var rsShortcut = new passbolt.controller.component.ResourceShortcutsController('#js_wsp_pwd_filter_shortcuts', {});
 			rsShortcut.start();
 
 			// Removed the lines below for #PASSBOLT-787
@@ -76,7 +76,7 @@ steal(
 			//this.catChooser.start();
 
 			// Instantiate the password workspace breadcrumb controller
-			this.breadcrumCtl = new passbolt.controller.component.PasswordBreadcrumbController($('#js_wsp_pwd_breadcrumb'), {});
+			this.breadcrumCtl = new passbolt.controller.component.PasswordBreadcrumbController($('#js_wsp_password_breadcrumb'), {});
 			this.breadcrumCtl.start();
 
 			// Instanciate the passwords browser controller

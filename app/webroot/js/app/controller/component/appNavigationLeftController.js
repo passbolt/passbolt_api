@@ -30,21 +30,21 @@ steal(
 		'afterStart': function () {
 			var menuItems = [
 				new mad.model.Action({
-					'id': uuid(),
+					'id': 'js_app_nav_left_home_link',
 					'label': __('home'),
 					'cssClasses': ['home'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'password');
 					}
 				}), new mad.model.Action({
-					'id': uuid(),
+					'id': 'js_app_nav_left_pwd_wsp_link',
 					'label': __('passwords'),
 					'cssClasses': ['passwords'],
 					'action': function () {
 						mad.bus.trigger('workspace_selected', 'password');
 					}
 				}), new mad.model.Action({
-					'id': uuid(),
+					'id':  'js_app_nav_left_user_wsp_link',
 					'label': __('users'),
 					'cssClasses': ['users'],
 					'action': function () {

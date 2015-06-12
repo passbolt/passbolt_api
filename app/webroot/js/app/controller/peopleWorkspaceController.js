@@ -62,11 +62,11 @@ steal(
 	        secWkMenu.start();
 
 	        // Instantiate the password workspace breadcrumb controller
-	        this.breadcrumCtl = new passbolt.controller.component.PeopleBreadcrumbController($('#js_wsp_ppl_breadcrumb'), {});
+	        this.breadcrumCtl = new passbolt.controller.component.PeopleBreadcrumbController($('#js_wsp_users_breadcrumb'), {});
 	        this.breadcrumCtl.start();
 
 			// Instanciate the users filter controller.
-			var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_group_shortcuts', {});
+			var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_filter_shortcuts', {});
 			userShortcut.start();
 
 			// Removed group choosed for #PASSBOLT-787
@@ -77,13 +77,14 @@ steal(
             //this.grpChooser.start();
 
             // Instanciate the passwords browser controller.
-            var userBrowserController = new passbolt.controller.component.UserBrowserController('#js_wsp_ppl_browser', {
+            var userBrowserController = new passbolt.controller.component.UserBrowserController('#js_wsp_users_browser', {
                 'selectedUsers': this.options.selectedUsers
             });
             userBrowserController.start();
 
 			// Instanciate the resource details controller
 			var userDetails = new passbolt.controller.component.UserDetailsController($('.js_wsp_users_sidebar_second', this.element), {
+				'id': 'js_user_details',
 				'selectedUsers': this.options.selectedUsers
 			});
 
