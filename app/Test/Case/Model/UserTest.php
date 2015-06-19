@@ -196,15 +196,44 @@ class UserTest extends CakeTestCase {
 		$this->assertEqual(User::isAdmin(), true, 'User::Admin should return true, admin@passbolt.com is an admin');
 	}
 
-	public function testGetFindConditions() {
-		$f = $this->User->getFindConditions('User::view');
-		$this->assertEquals(count($f), true, 'testGetFindCondition userView should return something');
-		$f = $this->User->getFindConditions('User::index');
-		$this->assertEquals(count($f), true, 'testGetFindCondition userIndex should return something');
-		$f = $this->User->getFindConditions('User:activation');
-		$this->assertEquals(count($f), true, 'testGetFindCondition User::activation should return something');
-		$f = $this->User->getFindConditions('testoqwidoqdhwqohdowqhid');
-		$this->assertEquals(count($f), true, 'testGetFindCondition bogus should return something');
+	public function testGuestGetFindConditions() {
+		$should_find = array(
+			'Setup::userInfo', 'User::view', 'User::activation'
+		);
+		foreach ($should_find as $find) {
+			$f = $this->User->getFindConditions($find, Role::GUEST);
+			$this->assertEquals(count($f), true, 'testGetFindCondition '.$find.' for Guest should return something');
+		}
+		$should_not_find = array(
+			'Bogus::stuff','User::index'
+		);
+		try {
+			$f = $this->User->getFindConditions($find, Role::USER);
+			$this->assertEquals($f, false, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+		} catch (Exception $e) {
+			$this->assertEquals(true, true, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+		}
+	}
+
+	public function testUserGetFindConditions() {
+		$should_find = array(
+			'User::index', 'User::view', 'User::activation'
+		);
+		foreach ($should_find as $find) {
+			$f = $this->User->getFindConditions($find, Role::USER);
+			$this->assertEquals(count($f), true, 'testGetFindCondition '.$find.' for Guest should return something');
+		}
+		$should_not_find = array(
+			'Bogus::stuff', 'Setup::userInfo'
+		);
+		foreach ($should_not_find as $find) {
+			try {
+				$f = $this->User->getFindConditions($find, Role::USER);
+				$this->assertEquals($f, false, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+			} catch (Exception $e) {
+				$this->assertEquals(true, true, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+			}
+		}
 	}
 
 	public function testGetFindFields() {

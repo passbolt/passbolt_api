@@ -234,7 +234,7 @@ class User extends AppModel {
 
 		// If user is unspecified or ANONYMOUS is requested
 		if ($user == null || $user == User::ANONYMOUS) {
-			$u = $_this->find('first', User::getFindOptions(User::ANONYMOUS));
+			$u = $_this->find('first', User::getFindOptions('User::activation', Role::GUEST));
 		} else {
 			// if the user is specified and have a valid ID find it
 			if (is_string($user) && Common::isUuid($user)) {
@@ -329,7 +329,7 @@ class User extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = User::ANONYMOUS, $role = Role::GUEST, $data = null) {
+	public static function getFindConditions($case = null, $role = Role::GUEST, $data = null) {
 		$conditions = array();
 
 		switch ($role) {
@@ -355,26 +355,28 @@ class User extends AppModel {
 							)
 						);
 						break;
+					case 'User::activation':
+						$conditions = array(
+							'conditions' => array(
+								'User.username' => User::ANONYMOUS,
+								'User.active' => true
+							)
+						);
+						break;
+					default:
+						throw new Exception('User::getFindCondition does not exist for role:'. $role .' and case:'. $case );
+						break;
 				}
 				break;
 
 			case Role::USER:
 			case Role::ADMIN:
+			case Role::ROOT:
 				switch ($case) {
 					case 'User::activation':
 						$conditions = array(
 							'conditions' => array(
 								'User.id' => $data['User']['id']
-							)
-						);
-						break;
-
-					case User::ANONYMOUS:
-					default:
-						$conditions = array(
-							'conditions' => array(
-								'User.username' => User::ANONYMOUS,
-								'User.active' => true
 							)
 						);
 						break;
@@ -427,27 +429,14 @@ class User extends AppModel {
 						break;
 
 					default:
-						$conditions = array(
-							'conditions' => array()
-						);
-				}
-				break;
-
-			default :
-				switch ($case) {
-					case User::ANONYMOUS:
-					default:
-						$conditions = array(
-							'conditions' => array(
-								'User.username' => User::ANONYMOUS,
-								'User.active' => true
-							)
-						);
+						throw new Exception('User::getFindCondition does not exist for role:'. $role .' and case:'. $case );
 						break;
-
 				}
 				break;
 
+			default:
+				throw new Exception('User::getFindCondition does not exist for role:'. $role );
+				break;
 		}
 
 		return $conditions;
@@ -458,12 +447,11 @@ class User extends AppModel {
  *
  * @param string $case context ex: login, activation
  *
- * @return $condition array
+ * @return empty|$condition array
  * @access public
  */
-	public static function getFindFields($case = User::ANONYMOUS, $role = Role::USER) {
+	public static function getFindFields($case = null, $role = Role::USER) {
 		switch ($case) {
-			case User::ANONYMOUS:
 			case 'User::view':
 			case 'User::index':
 			default:

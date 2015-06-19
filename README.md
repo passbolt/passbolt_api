@@ -21,25 +21,30 @@ Clone the repository and associated submodules
 	cd passbolt
 	git submodule update --init
 ```
+
 Copy the core configuration file, change the cypher seed and salt
 ```
 	cp app/Config/core.php.default app/Config/core.php
 ```
+
 Copy the database configuration file and edit the credentials
 ```
 	cp app/Config/database.php.default app/Config/database.php
 	nano app/Config/database.php
 ```
+
 Copy the app configuration file
 ```
 	cp app/Config/app.php.default app/Config/app.php
 ```
+
 Install Composer app files (to install vendor and plugin dependencies).
 You will need a working version of composer. See https://getcomposer.org
 ```
 	cd app
 	composer install --no-dev
 ```
+
 Run the install script from the cakephp root with the data flag set
 if you want to install test data.
 ```
@@ -90,34 +95,31 @@ Prepare the production release
 ```
 CSS minified files should have been generated as the Javascript minified file.
 
+
 Emails settings
-=========
+===============
+
 For images that are send in emails, we need to tell cakephp what is the base url.
 To fix this, add/uncomment this line in Config/core.php
 ```
-Configure::write('App.fullBaseUrl', 'http://{your domain without slash}');
+	Configure::write('App.fullBaseUrl', 'http://{your domain without slash}');
 ```
 Emails are placed in a queue that needs to be processed by a CakePhp Shell. To do so, execute the following command, or launch it at regular intervals through cron.
 From your app folder :
 ```
-Console/cake EmailQueue.sender
+	Console/cake EmailQueue.sender
 ```
 You can also see the corresponding documentation here https://github.com/lorenzo/cakephp-email-queue
 
+
 Test suite
-=========
+==========
+
 To execute the test suite, you will need to install phpunit.
 The simplest way is to do it through composer. A composer file is already included at the root of the passbolt installation.
 ```
 cd /var/www/passbolt
 composer install
-```
-
-This will install all the dev dependencies, including phpunit.
-After this is installed, do not forget to add the autoload.php in the /app/Config/bootstrap.php file :
-
-```
-require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 ```
 
 Credits

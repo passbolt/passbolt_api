@@ -1,7 +1,13 @@
+# Node and bower temp folders
+/node_modules
 /bower_components
+
+# APP Configuration files
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
+
+# Cake temp files
 /app/tmp/cache/
 /app/tmp/cache/models/*
 /app/tmp/cache/persistent/*
@@ -11,26 +17,26 @@
 /app/tmp/sessions/*
 /app/tmp/tests/*
 /app/tmp/image-processing/*
-app/tmp/file-storage-test/*
+/app/tmp/file-storage-test/*
+
+# Plugins
+/Plugin
+/plugins
+/app/Plugin/*
+
+# Vendors
+/Vendor
+/vendors
+/app/Vendor/*
+
+# Misc
 /app/composer.phar
 /app/webroot/img/public/*
-app/Plugin/*
-!app/Plugin/DataExtras
-!/app/Plugin/api_generator
-/app/Vendor/*
-!/app/Vendor/RandomTool.php
-!/app/Vendor/openpgp-php
 /lib/Cake/Console/Templates/skel/tmp/
-/vendor
-Plugin/
-/build
-/dist
-/tags
 /app/webroot/js/app/config/config.json
 /app/webroot/js/lib/mad/docs/
 /app/webroot/js/lib/mad/docs.html
 !empty
-/node_modules/
 
 
 # OS generated files #
