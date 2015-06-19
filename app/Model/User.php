@@ -118,7 +118,7 @@ class User extends AppModel {
 			),
 			'current_password' => array(
 				'validPassword' => array(
-					'rule' => array('validPassword', true),
+					'rule' => array('isCurrentPassword', true),
 					'shared' => false,
 					'required' => false,
 					'message' => __('Password provided is not valid'),
@@ -126,11 +126,13 @@ class User extends AppModel {
 			),
 		);
 		switch ($case) {
-			case 'editPassword':
-				$rules = array(
-					'password' => $default['password'],
-				);
-				break;
+
+// @todo cleanup after #PASSBOLT-360
+//			case 'editPassword':
+//				$rules = array(
+//					'password' => $default['password'],
+//				);
+//				break;
 
 			default:
 			case 'default' :
@@ -140,26 +142,30 @@ class User extends AppModel {
 		return $rules;
 	}
 
-
 	/**
-	 * Check if the password is valid
-	 * @param $check
-	 * @return bool
+	 * Check if the provided password is the same as current. Used when editing passwords.
+	 * @param $check the form data provided for validation
+	 * @return bool true if the passwords are matching
 	 */
-	public function validPassword($check) {
-		if ($check['current_password'] == null) {
+	public function isCurrentPassword($check) {
+		// check that a password is provided as 'current_password'
+		// the field 'password' is used to store the new password value
+		if (!isset($check['current_password']) || empty($check['current_password'])) {
 			return false;
-		} else {
-			$userId = $this->id;
-			if (!$userId) {
-				return false;
-			}
-			$currentUserPass = $this->field('password', array('id' => $userId));
-			$hashedPass = Security::hash($check['current_password'], 'blowfish', $currentUserPass);
-			// Check that current password is valid.
-			$valid = $currentUserPass == $hashedPass;
-			return $valid;
 		}
+		// check if a user record is available
+		if (isset($this->data['User']['id']) && !empty($this->data['User']['id'])) {
+			$userId = $this->data['User']['id'];
+		} elseif (isset($this->id) && !empty($this->id)) {
+			$userId = $this->id;
+		} else {
+			return false;
+		}
+
+		// check that the hashes are matching
+		$current = $this->field('password', array('id' => $userId));
+		$hash = Security::hash($check['current_password'], Configure::read('HashType'), $current);
+		return ($current === $hash);
 	}
 
 /**

@@ -510,6 +510,7 @@ class UsersController extends AppController {
 		$this->set('data', $user);
 	}
 
+// @todo cleanup after #PASSBOLT-360
 ///**
 // * edit password entry point for users
 // *
