@@ -32,7 +32,7 @@ class Inflector {
  */
 	protected static $_plural = array(
 		'rules' => array(
-			'/(s)tatus$/i' => '\1\2tatuses',
+			'/(s)tatus$/i' => '\1tatuses',
 			'/(quiz)$/i' => '\1zes',
 			'/^(ox)$/i' => '\1\2en',
 			'/([m|l])ouse$/i' => '\1ice',
@@ -44,7 +44,7 @@ class Inflector {
 			'/sis$/i' => 'ses',
 			'/([ti])um$/i' => '\1a',
 			'/(p)erson$/i' => '\1eople',
-			'/(m)an$/i' => '\1en',
+			'/(?<!u)(m)an$/i' => '\1en',
 			'/(c)hild$/i' => '\1hildren',
 			'/(buffal|tomat)o$/i' => '\1\2oes',
 			'/(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us$/i' => '\1i',
@@ -56,7 +56,17 @@ class Inflector {
 			'/$/' => 's',
 		),
 		'uninflected' => array(
-			'.*[nrlm]ese', '.*deer', '.*fish', '.*measles', '.*ois', '.*pox', '.*sheep', 'people'
+			'.*[nrlm]ese',
+			'.*data',
+			'.*deer',
+			'.*fish',
+			'.*measles',
+			'.*ois',
+			'.*pox',
+			'.*sheep',
+			'people',
+			'feedback',
+			'stadia'
 		),
 		'irregular' => array(
 			'atlas' => 'atlases',
@@ -68,6 +78,7 @@ class Inflector {
 			'cookie' => 'cookies',
 			'corpus' => 'corpuses',
 			'cow' => 'cows',
+			'criterion' => 'criteria',
 			'ganglion' => 'ganglions',
 			'genie' => 'genies',
 			'genus' => 'genera',
@@ -96,7 +107,8 @@ class Inflector {
 			'hero' => 'heroes',
 			'tooth' => 'teeth',
 			'goose' => 'geese',
-			'foot' => 'feet'
+			'foot' => 'feet',
+			'sieve' => 'sieves'
 		)
 	);
 
@@ -143,7 +155,8 @@ class Inflector {
 			'/s$/i' => ''
 		),
 		'uninflected' => array(
-			'.*[nrlm]ese', '.*deer', '.*fish', '.*measles', '.*ois', '.*pox', '.*sheep', '.*ss'
+			'.*data',
+			'.*[nrlm]ese', '.*deer', '.*fish', '.*measles', '.*ois', '.*pox', '.*sheep', '.*ss', 'feedback'
 		),
 		'irregular' => array(
 			'foes' => 'foe',
@@ -162,9 +175,9 @@ class Inflector {
 		'Foochowese', 'gallows', 'Genevese', 'Genoese', 'Gilbertese', 'graffiti',
 		'headquarters', 'herpes', 'hijinks', 'Hottentotese', 'information', 'innings',
 		'jackanapes', 'Kiplingese', 'Kongoese', 'Lucchese', 'mackerel', 'Maltese', '.*?media',
-		'metadata', 'mews', 'moose', 'mumps', 'Nankingese', 'news', 'nexus', 'Niasese',
+		'mews', 'moose', 'mumps', 'Nankingese', 'news', 'nexus', 'Niasese',
 		'Pekingese', 'Piedmontese', 'pincers', 'Pistoiese', 'pliers', 'Portuguese',
-		'proceedings', 'rabies', 'rice', 'rhinoceros', 'salmon', 'Sarawakese', 'scissors',
+		'proceedings', 'rabies', 'research', 'rice', 'rhinoceros', 'salmon', 'Sarawakese', 'scissors',
 		'sea[- ]bass', 'series', 'Shavese', 'shears', 'siemens', 'species', 'swine', 'testes',
 		'trousers', 'trout', 'tuna', 'Vermontese', 'Wenchowese', 'whiting', 'wildebeest',
 		'Yengeese'
@@ -176,56 +189,63 @@ class Inflector {
  * @var array
  */
 	protected static $_transliteration = array(
-		'/ä|æ|ǽ/' => 'ae',
-		'/ö|œ/' => 'oe',
-		'/ü/' => 'ue',
-		'/Ä/' => 'Ae',
-		'/Ü/' => 'Ue',
-		'/Ö/' => 'Oe',
 		'/À|Á|Â|Ã|Å|Ǻ|Ā|Ă|Ą|Ǎ/' => 'A',
-		'/à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª/' => 'a',
-		'/Ç|Ć|Ĉ|Ċ|Č/' => 'C',
-		'/ç|ć|ĉ|ċ|č/' => 'c',
-		'/Ð|Ď|Đ/' => 'D',
-		'/ð|ď|đ/' => 'd',
-		'/È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě/' => 'E',
-		'/è|é|ê|ë|ē|ĕ|ė|ę|ě/' => 'e',
-		'/Ĝ|Ğ|Ġ|Ģ/' => 'G',
-		'/ĝ|ğ|ġ|ģ/' => 'g',
-		'/Ĥ|Ħ/' => 'H',
-		'/ĥ|ħ/' => 'h',
-		'/Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ/' => 'I',
-		'/ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı/' => 'i',
-		'/Ĵ/' => 'J',
-		'/ĵ/' => 'j',
-		'/Ķ/' => 'K',
-		'/ķ/' => 'k',
-		'/Ĺ|Ļ|Ľ|Ŀ|Ł/' => 'L',
-		'/ĺ|ļ|ľ|ŀ|ł/' => 'l',
-		'/Ñ|Ń|Ņ|Ň/' => 'N',
-		'/ñ|ń|ņ|ň|ŉ/' => 'n',
-		'/Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ/' => 'O',
-		'/ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º/' => 'o',
-		'/Ŕ|Ŗ|Ř/' => 'R',
-		'/ŕ|ŗ|ř/' => 'r',
-		'/Ś|Ŝ|Ş|Ș|Š/' => 'S',
-		'/ś|ŝ|ş|ș|š|ſ/' => 's',
-		'/Ţ|Ț|Ť|Ŧ/' => 'T',
-		'/ţ|ț|ť|ŧ/' => 't',
-		'/Ù|Ú|Û|Ũ|Ū|Ŭ|Ů|Ű|Ų|Ư|Ǔ|Ǖ|Ǘ|Ǚ|Ǜ/' => 'U',
-		'/ù|ú|û|ũ|ū|ŭ|ů|ű|ų|ư|ǔ|ǖ|ǘ|ǚ|ǜ/' => 'u',
-		'/Ý|Ÿ|Ŷ/' => 'Y',
-		'/ý|ÿ|ŷ/' => 'y',
-		'/Ŵ/' => 'W',
-		'/ŵ/' => 'w',
-		'/Ź|Ż|Ž/' => 'Z',
-		'/ź|ż|ž/' => 'z',
 		'/Æ|Ǽ/' => 'AE',
-		'/ß/' => 'ss',
+		'/Ä/' => 'Ae',
+		'/Ç|Ć|Ĉ|Ċ|Č/' => 'C',
+		'/Ð|Ď|Đ/' => 'D',
+		'/È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě/' => 'E',
+		'/Ĝ|Ğ|Ġ|Ģ|Ґ/' => 'G',
+		'/Ĥ|Ħ/' => 'H',
+		'/Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ|І/' => 'I',
 		'/Ĳ/' => 'IJ',
-		'/ĳ/' => 'ij',
+		'/Ĵ/' => 'J',
+		'/Ķ/' => 'K',
+		'/Ĺ|Ļ|Ľ|Ŀ|Ł/' => 'L',
+		'/Ñ|Ń|Ņ|Ň/' => 'N',
+		'/Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ/' => 'O',
 		'/Œ/' => 'OE',
-		'/ƒ/' => 'f'
+		'/Ö/' => 'Oe',
+		'/Ŕ|Ŗ|Ř/' => 'R',
+		'/Ś|Ŝ|Ş|Ș|Š/' => 'S',
+		'/ẞ/' => 'SS',
+		'/Ţ|Ț|Ť|Ŧ/' => 'T',
+		'/Þ/' => 'TH',
+		'/Ù|Ú|Û|Ũ|Ū|Ŭ|Ů|Ű|Ų|Ư|Ǔ|Ǖ|Ǘ|Ǚ|Ǜ/' => 'U',
+		'/Ü/' => 'Ue',
+		'/Ŵ/' => 'W',
+		'/Ý|Ÿ|Ŷ/' => 'Y',
+		'/Є/' => 'Ye',
+		'/Ї/' => 'Yi',
+		'/Ź|Ż|Ž/' => 'Z',
+		'/à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª/' => 'a',
+		'/ä|æ|ǽ/' => 'ae',
+		'/ç|ć|ĉ|ċ|č/' => 'c',
+		'/ð|ď|đ/' => 'd',
+		'/è|é|ê|ë|ē|ĕ|ė|ę|ě/' => 'e',
+		'/ƒ/' => 'f',
+		'/ĝ|ğ|ġ|ģ|ґ/' => 'g',
+		'/ĥ|ħ/' => 'h',
+		'/ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı|і/' => 'i',
+		'/ĳ/' => 'ij',
+		'/ĵ/' => 'j',
+		'/ķ/' => 'k',
+		'/ĺ|ļ|ľ|ŀ|ł/' => 'l',
+		'/ñ|ń|ņ|ň|ŉ/' => 'n',
+		'/ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º/' => 'o',
+		'/ö|œ/' => 'oe',
+		'/ŕ|ŗ|ř/' => 'r',
+		'/ś|ŝ|ş|ș|š|ſ/' => 's',
+		'/ß/' => 'ss',
+		'/ţ|ț|ť|ŧ/' => 't',
+		'/þ/' => 'th',
+		'/ù|ú|û|ũ|ū|ŭ|ů|ű|ų|ư|ǔ|ǖ|ǘ|ǚ|ǜ/' => 'u',
+		'/ü/' => 'ue',
+		'/ŵ/' => 'w',
+		'/ý|ÿ|ŷ/' => 'y',
+		'/є/' => 'ye',
+		'/ї/' => 'yi',
+		'/ź|ż|ž/' => 'z',
 	);
 
 /**
@@ -286,7 +306,7 @@ class Inflector {
  *
  * ### Usage:
  *
- * {{{
+ * ```
  * Inflector::rules('plural', array('/^(inflect)or$/i' => '\1ables'));
  * Inflector::rules('plural', array(
  *     'rules' => array('/^(inflect)ors$/i' => '\1ables'),
@@ -294,11 +314,11 @@ class Inflector {
  *     'irregular' => array('red' => 'redlings')
  * ));
  * Inflector::rules('transliteration', array('/å/' => 'aa'));
- * }}}
+ * ```
  *
  * @param string $type The type of inflection, either 'plural', 'singular' or 'transliteration'
  * @param array $rules Array of rules to be added.
- * @param boolean $reset If true, will unset default inflections for all
+ * @param bool $reset If true, will unset default inflections for all
  *        new rules that are being defined in $rules.
  * @return void
  */
@@ -366,8 +386,10 @@ class Inflector {
 			self::$_plural['cacheIrregular'] = '(?:' . implode('|', array_keys(self::$_plural['merged']['irregular'])) . ')';
 		}
 
-		if (preg_match('/(.*)\\b(' . self::$_plural['cacheIrregular'] . ')$/i', $word, $regs)) {
-			self::$_cache['pluralize'][$word] = $regs[1] . substr($word, 0, 1) . substr(self::$_plural['merged']['irregular'][strtolower($regs[2])], 1);
+		if (preg_match('/(.*?(?:\\b|_))(' . self::$_plural['cacheIrregular'] . ')$/i', $word, $regs)) {
+			self::$_cache['pluralize'][$word] = $regs[1] .
+				substr($regs[2], 0, 1) .
+				substr(self::$_plural['merged']['irregular'][strtolower($regs[2])], 1);
 			return self::$_cache['pluralize'][$word];
 		}
 
@@ -415,8 +437,10 @@ class Inflector {
 			self::$_singular['cacheIrregular'] = '(?:' . implode('|', array_keys(self::$_singular['merged']['irregular'])) . ')';
 		}
 
-		if (preg_match('/(.*)\\b(' . self::$_singular['cacheIrregular'] . ')$/i', $word, $regs)) {
-			self::$_cache['singularize'][$word] = $regs[1] . substr($word, 0, 1) . substr(self::$_singular['merged']['irregular'][strtolower($regs[2])], 1);
+		if (preg_match('/(.*?(?:\\b|_))(' . self::$_singular['cacheIrregular'] . ')$/i', $word, $regs)) {
+			self::$_cache['singularize'][$word] = $regs[1] .
+				substr($regs[2], 0, 1) .
+				substr(self::$_singular['merged']['irregular'][strtolower($regs[2])], 1);
 			return self::$_cache['singularize'][$word];
 		}
 
@@ -459,7 +483,8 @@ class Inflector {
  */
 	public static function underscore($camelCasedWord) {
 		if (!($result = self::_cache(__FUNCTION__, $camelCasedWord))) {
-			$result = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $camelCasedWord));
+			$underscoredWord = preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $camelCasedWord);
+			$result = mb_strtolower($underscoredWord);
 			self::_cache(__FUNCTION__, $camelCasedWord, $result);
 		}
 		return $result;
@@ -475,7 +500,11 @@ class Inflector {
  */
 	public static function humanize($lowerCaseAndUnderscoredWord) {
 		if (!($result = self::_cache(__FUNCTION__, $lowerCaseAndUnderscoredWord))) {
-			$result = ucwords(str_replace('_', ' ', $lowerCaseAndUnderscoredWord));
+			$result = explode(' ', str_replace('_', ' ', $lowerCaseAndUnderscoredWord));
+			foreach ($result as &$word) {
+				$word = mb_strtoupper(mb_substr($word, 0, 1)) . mb_substr($word, 1);
+			}
+			$result = implode(' ', $result);
 			self::_cache(__FUNCTION__, $lowerCaseAndUnderscoredWord, $result);
 		}
 		return $result;
@@ -514,7 +543,7 @@ class Inflector {
 /**
  * Returns camelBacked version of an underscored string.
  *
- * @param string $string
+ * @param string $string String to convert.
  * @return string in variable form
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/inflector.html#Inflector::variable
  */

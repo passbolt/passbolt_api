@@ -56,7 +56,8 @@ class Sqlite extends DboSource {
  */
 	protected $_baseConfig = array(
 		'persistent' => false,
-		'database' => null
+		'database' => null,
+		'flags' => array()
 	);
 
 /**
@@ -71,6 +72,7 @@ class Sqlite extends DboSource {
 		'integer' => array('name' => 'integer', 'limit' => null, 'formatter' => 'intval'),
 		'biginteger' => array('name' => 'bigint', 'limit' => 20),
 		'float' => array('name' => 'float', 'formatter' => 'floatval'),
+		'decimal' => array('name' => 'decimal', 'formatter' => 'floatval'),
 		'datetime' => array('name' => 'datetime', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'),
 		'timestamp' => array('name' => 'timestamp', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'),
 		'time' => array('name' => 'time', 'format' => 'H:i:s', 'formatter' => 'date'),
@@ -100,12 +102,12 @@ class Sqlite extends DboSource {
 /**
  * Connects to the database using config['database'] as a filename.
  *
- * @return boolean
+ * @return bool
  * @throws MissingConnectionException
  */
 	public function connect() {
 		$config = $this->config;
-		$flags = array(
+		$flags = $config['flags'] + array(
 			PDO::ATTR_PERSISTENT => $config['persistent'],
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 		);
@@ -124,7 +126,7 @@ class Sqlite extends DboSource {
 /**
  * Check whether the SQLite extension is installed/loaded
  *
- * @return boolean
+ * @return bool
  */
 	public function enabled() {
 		return in_array('sqlite', PDO::getAvailableDrivers());
@@ -133,7 +135,7 @@ class Sqlite extends DboSource {
 /**
  * Returns an array of tables in the database. If there are no tables, an error is raised and the application exits.
  *
- * @param mixed $data
+ * @param mixed $data Unused.
  * @return array Array of table names in the database
  */
 	public function listSources($data = null) {
@@ -200,10 +202,10 @@ class Sqlite extends DboSource {
 /**
  * Generates and executes an SQL UPDATE statement for given model, fields, and values.
  *
- * @param Model $model
- * @param array $fields
- * @param array $values
- * @param mixed $conditions
+ * @param Model $model The model instance to update.
+ * @param array $fields The fields to update.
+ * @param array $values The values to set columns to.
+ * @param mixed $conditions array of conditions to use.
  * @return array
  */
 	public function update(Model $model, $fields = array(), $values = null, $conditions = null) {
@@ -225,7 +227,7 @@ class Sqlite extends DboSource {
  * primary key, where applicable.
  *
  * @param string|Model $table A string or model class representing the table to be truncated
- * @return boolean SQL TRUNCATE TABLE statement, false if not applicable.
+ * @return bool SQL TRUNCATE TABLE statement, false if not applicable.
  */
 	public function truncate($table) {
 		if (in_array('sqlite_sequence', $this->listSources())) {
@@ -277,7 +279,7 @@ class Sqlite extends DboSource {
 			return 'binary';
 		}
 		if (strpos($col, 'numeric') !== false || strpos($col, 'decimal') !== false) {
-			return 'float';
+			return 'decimal';
 		}
 		return 'text';
 	}
@@ -285,7 +287,7 @@ class Sqlite extends DboSource {
 /**
  * Generate ResultSet
  *
- * @param mixed $results
+ * @param mixed $results The results to modify.
  * @return void
  */
 	public function resultSet($results) {
@@ -295,14 +297,19 @@ class Sqlite extends DboSource {
 		$index = 0;
 		$j = 0;
 
-		//PDO::getColumnMeta is experimental and does not work with sqlite3,
-		//	so try to figure it out based on the querystring
+		// PDO::getColumnMeta is experimental and does not work with sqlite3,
+		// so try to figure it out based on the querystring
 		$querystring = $results->queryString;
-		if (stripos($querystring, 'SELECT') === 0) {
-			$last = strripos($querystring, 'FROM');
-			if ($last !== false) {
-				$selectpart = substr($querystring, 7, $last - 8);
-				$selects = String::tokenize($selectpart, ',', '(', ')');
+		if (stripos($querystring, 'SELECT') === 0 && stripos($querystring, 'FROM') > 0) {
+			$selectpart = substr($querystring, 7);
+			$selects = array();
+			foreach (String::tokenize($selectpart, ',', '(', ')') as $part) {
+				$fromPos = stripos($part, ' FROM ');
+				if ($fromPos !== false) {
+					$selects[] = trim(substr($part, 0, $fromPos));
+					break;
+				}
+				$selects[] = $part;
 			}
 		} elseif (strpos($querystring, 'PRAGMA table_info') === 0) {
 			$selects = array('cid', 'name', 'type', 'notnull', 'dflt_value', 'pk');
@@ -369,8 +376,8 @@ class Sqlite extends DboSource {
 /**
  * Returns a limit statement in the correct format for the particular database.
  *
- * @param integer $limit Limit of results returned
- * @param integer $offset Offset from which to start results
+ * @param int $limit Limit of results returned
+ * @param int $offset Offset from which to start results
  * @return string SQL limit/offset statement
  */
 	public function limit($limit, $offset = null) {
@@ -393,7 +400,7 @@ class Sqlite extends DboSource {
  */
 	public function buildColumn($column) {
 		$name = $type = null;
-		$column = array_merge(array('null' => true), $column);
+		$column += array('null' => true);
 		extract($column);
 
 		if (empty($name) || empty($type)) {
@@ -425,7 +432,7 @@ class Sqlite extends DboSource {
  * Sets the database encoding
  *
  * @param string $enc Database encoding
- * @return boolean
+ * @return bool
  */
 	public function setEncoding($enc) {
 		if (!in_array($enc, array("UTF-8", "UTF-16", "UTF-16le", "UTF-16be"))) {
@@ -446,9 +453,9 @@ class Sqlite extends DboSource {
 /**
  * Removes redundant primary key indexes, as they are handled in the column def of the key.
  *
- * @param array $indexes
- * @param string $table
- * @return string
+ * @param array $indexes The indexes to build.
+ * @param string $table The table name.
+ * @return string The completed index.
  */
 	public function buildIndex($indexes, $table = null) {
 		$join = array();
@@ -507,7 +514,7 @@ class Sqlite extends DboSource {
 							$key['name'] = 'PRIMARY';
 						}
 						$index[$key['name']]['column'] = $keyCol[0]['name'];
-						$index[$key['name']]['unique'] = intval($key['unique'] == 1);
+						$index[$key['name']]['unique'] = (int)$key['unique'] === 1;
 					} else {
 						if (!is_array($index[$key['name']]['column'])) {
 							$col[] = $index[$key['name']]['column'];
@@ -524,8 +531,8 @@ class Sqlite extends DboSource {
 /**
  * Overrides DboSource::renderStatement to handle schema generation with SQLite-style indexes
  *
- * @param string $type
- * @param array $data
+ * @param string $type The type of statement being rendered.
+ * @param array $data The data to convert to SQL.
  * @return string
  */
 	public function renderStatement($type, $data) {
@@ -547,7 +554,7 @@ class Sqlite extends DboSource {
 /**
  * PDO deals in objects, not resources, so overload accordingly.
  *
- * @return boolean
+ * @return bool
  */
 	public function hasResult() {
 		return is_object($this->_result);
@@ -575,7 +582,7 @@ class Sqlite extends DboSource {
 /**
  * Check if the server support nested transactions
  *
- * @return boolean
+ * @return bool
  */
 	public function nestedTransactionSupported() {
 		return $this->useNestedTransactions && version_compare($this->getVersion(), '3.6.8', '>=');

@@ -18,8 +18,6 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('Scaffold', 'View');
-
 /**
  * Scaffolding is a set of automatic actions for starting web development work faster.
  *
@@ -28,7 +26,8 @@ App::uses('Scaffold', 'View');
  * and afford the web developer an early look at the data, and the possibility to over-ride
  * scaffolded actions with custom-made ones.
  *
- * @package       Cake.Controller
+ * @package Cake.Controller
+ * @deprecated 3.0.0 Dynamic scaffolding will be removed and replaced in 3.0
  */
 class Scaffold {
 
@@ -77,7 +76,7 @@ class Scaffold {
 /**
  * Valid session.
  *
- * @var boolean
+ * @var bool
  */
 	protected $_validSession = null;
 
@@ -400,7 +399,7 @@ class Scaffold {
 				}
 			} else {
 				throw new MissingActionException(array(
-					'controller' => $this->controller->name,
+					'controller' => get_class($this->controller),
 					'action' => $request->action
 				));
 			}

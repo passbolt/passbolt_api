@@ -28,6 +28,11 @@ App::uses('JsonView', 'View');
  */
 class JsonViewTest extends CakeTestCase {
 
+/**
+ * setUp method
+ *
+ * @return void
+ **/
 	public function setUp() {
 		parent::setUp();
 		Configure::write('debug', 0);
@@ -157,6 +162,20 @@ class JsonViewTest extends CakeTestCase {
 	}
 
 /**
+ * Custom error handler for use while testing methods that use json_encode
+ * @param int $errno
+ * @param string $errstr
+ * @param string $errfile
+ * @param int $errline
+ * @param array $errcontext
+ * @return void
+ * @throws CakeException
+ **/
+	public function jsonEncodeErrorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+		throw new CakeException($errstr, 0, $errno, $errfile, $errline);
+	}
+
+/**
  * Test render with a valid string in _serialize.
  *
  * @dataProvider renderWithoutViewProvider
@@ -175,6 +194,31 @@ class JsonViewTest extends CakeTestCase {
 		$this->assertSame($expected, $output);
 	}
 
+/**
+ * Test render with _jsonOptions setting.
+ *
+ * @return void
+ */
+	public function testRenderWithoutViewJsonOptions() {
+		$this->skipIf(!version_compare(PHP_VERSION, '5.3.0', '>='), 'Needs PHP5.3+ for these constants to be tested');
+
+		$Request = new CakeRequest();
+		$Response = new CakeResponse();
+		$Controller = new Controller($Request, $Response);
+
+		// Test render with encode <, >, ', &, and " for RFC4627-compliant to be serialized.
+		$data = array('rfc4627_escape' => '<tag> \'quote\' "double-quote" &');
+		$serialize = 'rfc4627_escape';
+		$expected = json_encode('<tag> \'quote\' "double-quote" &', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+
+		$Controller->set($data);
+		$Controller->set('_serialize', $serialize);
+		$Controller->set('_jsonOptions', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+		$View = new JsonView($Controller);
+		$output = $View->render(false);
+
+		$this->assertSame($expected, $output);
+	}
 /**
  * Test that rendering with _serialize does not load helpers.
  *
@@ -306,4 +350,56 @@ class JsonViewTest extends CakeTestCase {
 		$this->assertSame($expected, $output);
 		$this->assertSame('application/javascript', $Response->type());
 	}
+
+/**
+ * JsonViewTest::testRenderInvalidJSON()
+ *
+ * @return void
+ */
+	public function testRenderInvalidJSON() {
+		$Request = new CakeRequest();
+		$Response = new CakeResponse();
+		$Controller = new Controller($Request, $Response);
+
+		// non utf-8 stuff
+		$data = array('data' => array('foo' => 'bar' . chr('0x97')));
+
+		$Controller->set($data);
+		$Controller->set('_serialize', 'data');
+		$View = new JsonView($Controller);
+
+		// Use a custom error handler
+		set_error_handler(array($this, 'jsonEncodeErrorHandler'));
+
+		try {
+			$View->render();
+			restore_error_handler();
+			$this->fail('Failed asserting that exception of type "CakeException" is thrown.');
+		} catch (CakeException $e) {
+			restore_error_handler();
+			$this->assertRegExp('/UTF-8/', $e->getMessage());
+			return;
+		}
+	}
+
+/**
+ * JsonViewTest::testRenderJSONBoolFalse()
+ *
+ * @return void
+ */
+	public function testRenderJSONBoolFalse() {
+		$Request = new CakeRequest();
+		$Response = new CakeResponse();
+		$Controller = new Controller($Request, $Response);
+
+		// encoding a false, ensure this doesn't trigger exception
+		$data = false;
+
+		$Controller->set($data);
+		$Controller->set('_serialize', 'data');
+		$View = new JsonView($Controller);
+		$output = $View->render();
+		$this->assertSame('null', $output);
+	}
+
 }

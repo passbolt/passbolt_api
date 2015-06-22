@@ -25,7 +25,7 @@ class SecurityTest extends CakeTestCase {
 /**
  * sut property
  *
- * @var mixed null
+ * @var mixed
  */
 	public $sut = null;
 
@@ -114,10 +114,10 @@ class SecurityTest extends CakeTestCase {
 		$key = 'someKey';
 		$hash = 'someHash';
 
-		$this->assertSame(strlen(Security::hash($key, null, false)), 40);
-		$this->assertSame(strlen(Security::hash($key, 'sha1', false)), 40);
-		$this->assertSame(strlen(Security::hash($key, null, true)), 40);
-		$this->assertSame(strlen(Security::hash($key, 'sha1', true)), 40);
+		$this->assertSame(40, strlen(Security::hash($key, null, false)));
+		$this->assertSame(40, strlen(Security::hash($key, 'sha1', false)));
+		$this->assertSame(40, strlen(Security::hash($key, null, true)));
+		$this->assertSame(40, strlen(Security::hash($key, 'sha1', true)));
 
 		$result = Security::hash($key, null, $hash);
 		$this->assertSame($result, 'e38fcb877dccb6a94729a81523851c931a46efb1');
@@ -127,25 +127,25 @@ class SecurityTest extends CakeTestCase {
 
 		$hashType = 'sha1';
 		Security::setHash($hashType);
-		$this->assertSame(Security::$hashType, $hashType);
-		$this->assertSame(strlen(Security::hash($key, null, true)), 40);
-		$this->assertSame(strlen(Security::hash($key, null, false)), 40);
+		$this->assertSame($hashType, Security::$hashType);
+		$this->assertSame(40, strlen(Security::hash($key, null, true)));
+		$this->assertSame(40, strlen(Security::hash($key, null, false)));
 
-		$this->assertSame(strlen(Security::hash($key, 'md5', false)), 32);
-		$this->assertSame(strlen(Security::hash($key, 'md5', true)), 32);
+		$this->assertSame(32, strlen(Security::hash($key, 'md5', false)));
+		$this->assertSame(32, strlen(Security::hash($key, 'md5', true)));
 
 		$hashType = 'md5';
 		Security::setHash($hashType);
-		$this->assertSame(Security::$hashType, $hashType);
-		$this->assertSame(strlen(Security::hash($key, null, false)), 32);
-		$this->assertSame(strlen(Security::hash($key, null, true)), 32);
+		$this->assertSame($hashType, Security::$hashType);
+		$this->assertSame(32, strlen(Security::hash($key, null, false)));
+		$this->assertSame(32, strlen(Security::hash($key, null, true)));
 
 		if (!function_exists('hash') && !function_exists('mhash')) {
-			$this->assertSame(strlen(Security::hash($key, 'sha256', false)), 32);
-			$this->assertSame(strlen(Security::hash($key, 'sha256', true)), 32);
+			$this->assertSame(32, strlen(Security::hash($key, 'sha256', false)));
+			$this->assertSame(32, strlen(Security::hash($key, 'sha256', true)));
 		} else {
-			$this->assertSame(strlen(Security::hash($key, 'sha256', false)), 64);
-			$this->assertSame(strlen(Security::hash($key, 'sha256', true)), 64);
+			$this->assertSame(64, strlen(Security::hash($key, 'sha256', false)));
+			$this->assertSame(64, strlen(Security::hash($key, 'sha256', true)));
 		}
 
 		Security::setHash($_hashType);
@@ -167,8 +167,8 @@ class SecurityTest extends CakeTestCase {
 		$hashType = 'blowfish';
 		Security::setHash($hashType);
 
-		$this->assertSame(Security::$hashType, $hashType);
-		$this->assertSame(strlen(Security::hash($key, null, false)), 60);
+		$this->assertSame($hashType, Security::$hashType);
+		$this->assertSame(60, strlen(Security::hash($key, null, false)));
 
 		$password = $submittedPassword = $key;
 		$storedPassword = Security::hash($password);
@@ -300,6 +300,128 @@ class SecurityTest extends CakeTestCase {
 		$txt = 'The quick brown fox jumped over the lazy dog.';
 		$key = 'too small';
 		Security::rijndael($txt, $key, 'encrypt');
+	}
+
+/**
+ * Test encrypt/decrypt.
+ *
+ * @return void
+ */
+	public function testEncryptDecrypt() {
+		$txt = 'The quick brown fox';
+		$key = 'This key is longer than 32 bytes long.';
+		$result = Security::encrypt($txt, $key);
+		$this->assertNotEquals($txt, $result, 'Should be encrypted.');
+		$this->assertNotEquals($result, Security::encrypt($txt, $key), 'Each result is unique.');
+		$this->assertEquals($txt, Security::decrypt($result, $key));
+	}
+
+/**
+ * Test that changing the key causes decryption to fail.
+ *
+ * @return void
+ */
+	public function testDecryptKeyFailure() {
+		$txt = 'The quick brown fox';
+		$key = 'This key is longer than 32 bytes long.';
+		$result = Security::encrypt($txt, $key);
+
+		$key = 'Not the same key. This one will fail';
+		$this->assertFalse(Security::decrypt($txt, $key), 'Modified key will fail.');
+	}
+
+/**
+ * Test that decrypt fails when there is an hmac error.
+ *
+ * @return void
+ */
+	public function testDecryptHmacFailure() {
+		$txt = 'The quick brown fox';
+		$key = 'This key is quite long and works well.';
+		$salt = 'this is a delicious salt!';
+		$result = Security::encrypt($txt, $key, $salt);
+
+		// Change one of the bytes in the hmac.
+		$result[10] = 'x';
+		$this->assertFalse(Security::decrypt($result, $key, $salt), 'Modified hmac causes failure.');
+	}
+
+/**
+ * Test that changing the hmac salt will cause failures.
+ *
+ * @return void
+ */
+	public function testDecryptHmacSaltFailure() {
+		$txt = 'The quick brown fox';
+		$key = 'This key is quite long and works well.';
+		$salt = 'this is a delicious salt!';
+		$result = Security::encrypt($txt, $key, $salt);
+
+		$salt = 'humpty dumpty had a great fall.';
+		$this->assertFalse(Security::decrypt($result, $key, $salt), 'Modified salt causes failure.');
+	}
+
+/**
+ * Test that short keys cause errors
+ *
+ * @expectedException CakeException
+ * @expectedExceptionMessage Invalid key for encrypt(), key must be at least 256 bits (32 bytes) long.
+ * @return void
+ */
+	public function testEncryptInvalidKey() {
+		$txt = 'The quick brown fox jumped over the lazy dog.';
+		$key = 'this is too short';
+		Security::encrypt($txt, $key);
+	}
+
+/**
+ * Test encrypting falsey data
+ *
+ * @return void
+ */
+	public function testEncryptDecryptFalseyData() {
+		$key = 'This is a key that is long enough to be ok.';
+
+		$result = Security::encrypt('', $key);
+		$this->assertSame('', Security::decrypt($result, $key));
+
+		$result = Security::encrypt(false, $key);
+		$this->assertSame('', Security::decrypt($result, $key));
+
+		$result = Security::encrypt(null, $key);
+		$this->assertSame('', Security::decrypt($result, $key));
+
+		$result = Security::encrypt(0, $key);
+		$this->assertSame('0', Security::decrypt($result, $key));
+
+		$result = Security::encrypt('0', $key);
+		$this->assertSame('0', Security::decrypt($result, $key));
+	}
+
+/**
+ * Test that short keys cause errors
+ *
+ * @expectedException CakeException
+ * @expectedExceptionMessage Invalid key for decrypt(), key must be at least 256 bits (32 bytes) long.
+ * @return void
+ */
+	public function testDecryptInvalidKey() {
+		$txt = 'The quick brown fox jumped over the lazy dog.';
+		$key = 'this is too short';
+		Security::decrypt($txt, $key);
+	}
+
+/**
+ * Test that empty data cause errors
+ *
+ * @expectedException CakeException
+ * @expectedExceptionMessage The data to decrypt cannot be empty.
+ * @return void
+ */
+	public function testDecryptInvalidData() {
+		$txt = '';
+		$key = 'This is a key that is long enough to be ok.';
+		Security::decrypt($txt, $key);
 	}
 
 }

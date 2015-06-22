@@ -95,7 +95,7 @@ class Profile extends AppModel {
 					'message'	=> __('First name should only contain alphabets and the special characters : - \'')
 				),
 				'size' => array(
-					'rule' => array('between', 3, 64),
+					'rule' => array('lengthBetween', 3, 64),
 					'message' => __('First name should be between %s and %s characters long'),
 				)
 			),
@@ -107,7 +107,7 @@ class Profile extends AppModel {
 					'message'	=> __('Last name should only contain alphabets and the special characters : - \'')
 				),
 				'size' => array(
-					'rule' => array('between', 3, 64),
+					'rule' => array('lengthBetween', 3, 64),
 					'message' => __('Last name should be between %s and %s characters long'),
 				)
 			),
@@ -182,24 +182,42 @@ class Profile extends AppModel {
 	 * @return mixed
 	 */
 	public function afterFind($results, $primary = false) {
-		if (empty($results['Avatar'])) {
-			$Avatar = ClassRegistry::init('ProfileAvatar');
-			$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
-			$defaultAvatars = array();
-			if (empty($sizes)) {
-				return $results;
-			}
-			foreach ($sizes as $size => $filters) {
-				$url = $Avatar->imageUrl(array(), $size);
-				if ($url) {
-					$defaultAvatars[$size] = $url;
+		$Avatar = ClassRegistry::init('ProfileAvatar');
+		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
+		$defaultAvatars = array();
+		if (empty($sizes)) {
+			return $results;
+		}
+
+		if ($primary === false) {
+			foreach ($results as $key => $result) {
+				if (empty($result['Profile']['Avatar'])) {
+					foreach ($sizes as $size => $filters) {
+						$url = $Avatar->imageUrl(array(), $size);
+						if ($url) {
+							$defaultAvatars[$size] = $url;
+						}
+					}
+					$results[$key]['Profile']['Avatar'] = array(
+						'url' => $defaultAvatars,
+					);
 				}
 			}
-
-			$results['Avatar'] = array(
-				'url' => $defaultAvatars,
-			);
 		}
+		else {
+			if (empty($results['Avatar'])) {
+				foreach ($sizes as $size => $filters) {
+					$url = $Avatar->imageUrl(array(), $size);
+					if ($url) {
+						$defaultAvatars[$size] = $url;
+					}
+				}
+				$results['Avatar'] = array(
+					'url' => $defaultAvatars,
+				);
+			}
+		}
+
 		return $results;
 	}
 }

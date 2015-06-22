@@ -34,7 +34,7 @@ class ServerShell extends AppShell {
 /**
  * Default ListenPort
  *
- * @var integer
+ * @var int
  */
 	const DEFAULT_PORT = 80;
 
@@ -92,7 +92,7 @@ class ServerShell extends AppShell {
 		}
 
 		// for windows
-		if (substr($this->_documentRoot, -1, 1) == DIRECTORY_SEPARATOR) {
+		if (substr($this->_documentRoot, -1, 1) === DIRECTORY_SEPARATOR) {
 			$this->_documentRoot = substr($this->_documentRoot, 0, strlen($this->_documentRoot) - 1);
 		}
 		if (preg_match("/^([a-z]:)[\\\]+(.+)$/i", $this->_documentRoot, $m)) {
@@ -141,29 +141,25 @@ class ServerShell extends AppShell {
 	}
 
 /**
- * Get and configure the optionparser.
+ * Gets the option parser instance and configures it.
  *
  * @return ConsoleOptionParser
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 
-		$parser->addOption('host', array(
-			'short' => 'H',
-			'help' => __d('cake_console', 'ServerHost')
-		));
-		$parser->addOption('port', array(
-			'short' => 'p',
-			'help' => __d('cake_console', 'ListenPort')
-		));
-		$parser->addOption('document_root', array(
-			'short' => 'd',
-			'help' => __d('cake_console', 'DocumentRoot')
-		));
-
 		$parser->description(array(
 			__d('cake_console', 'PHP Built-in Server for CakePHP'),
-			__d('cake_console', '<warning>[WARN] Don\'t use this at the production environment</warning>'),
+			__d('cake_console', '<warning>[WARN] Don\'t use this at the production environment</warning>')
+		))->addOption('host', array(
+			'short' => 'H',
+			'help' => __d('cake_console', 'ServerHost')
+		))->addOption('port', array(
+			'short' => 'p',
+			'help' => __d('cake_console', 'ListenPort')
+		))->addOption('document_root', array(
+			'short' => 'd',
+			'help' => __d('cake_console', 'DocumentRoot')
 		));
 
 		return $parser;

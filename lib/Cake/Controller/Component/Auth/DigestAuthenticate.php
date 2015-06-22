@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -30,13 +28,13 @@ App::uses('BasicAuthenticate', 'Controller/Component/Auth');
  * ### Using Digest auth
  *
  * In your controller's components array, add auth + the required settings.
- * {{{
+ * ```
  *	public $components = array(
  *		'Auth' => array(
  *			'authenticate' => array('Digest')
  *		)
  *	);
- * }}}
+ * ```
  *
  * In your login function just call `$this->Auth->login()` without any checks for POST data. This
  * will send the authentication headers, and trigger the login dialog in the browser/client.
@@ -62,6 +60,7 @@ class DigestAuthenticate extends BasicAuthenticate {
  *
  * - `fields` The fields to use to identify a user by.
  * - `userModel` The model name of the User, defaults to User.
+ * - `userFields` Array of fields to retrieve from User model, null to retrieve all. Defaults to null.
  * - `scope` Additional conditions to use when looking up and authenticating users,
  *    i.e. `array('User.is_active' => 1).`
  * - `recursive` The value of the recursive key passed to find(). Defaults to 0.
@@ -80,6 +79,7 @@ class DigestAuthenticate extends BasicAuthenticate {
 			'password' => 'password'
 		),
 		'userModel' => 'User',
+		'userFields' => null,
 		'scope' => array(),
 		'recursive' => 0,
 		'contain' => null,
@@ -156,7 +156,7 @@ class DigestAuthenticate extends BasicAuthenticate {
  * Parse the digest authentication headers and split them up.
  *
  * @param string $digest The raw digest authentication headers.
- * @return array An array of digest authentication headers
+ * @return array|null An array of digest authentication headers
  */
 	public function parseAuthData($digest) {
 		if (substr($digest, 0, 7) === 'Digest ') {
@@ -164,7 +164,7 @@ class DigestAuthenticate extends BasicAuthenticate {
 		}
 		$keys = $match = array();
 		$req = array('nonce' => 1, 'nc' => 1, 'cnonce' => 1, 'qop' => 1, 'username' => 1, 'uri' => 1, 'response' => 1);
-		preg_match_all('/(\w+)=([\'"]?)([a-zA-Z0-9@=.\/_-]+)\2/', $digest, $match, PREG_SET_ORDER);
+		preg_match_all('/(\w+)=([\'"]?)([a-zA-Z0-9\:\#\%\?\&@=\.\/_-]+)\2/', $digest, $match, PREG_SET_ORDER);
 
 		foreach ($match as $i) {
 			$keys[$i[1]] = $i[3];

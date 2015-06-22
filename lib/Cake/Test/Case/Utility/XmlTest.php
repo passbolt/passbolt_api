@@ -82,7 +82,7 @@ class XmlTest extends CakeTestCase {
 /**
  * autoFixtures property
  *
- * @var boolean
+ * @var bool
  */
 	public $autoFixtures = false;
 
@@ -165,6 +165,28 @@ class XmlTest extends CakeTestCase {
 
 		$obj = Xml::build($xml, array('return' => 'domdocument', 'encoding' => null));
 		$this->assertNotRegExp('/encoding/', $obj->saveXML());
+	}
+
+/**
+ * Test that the readFile option disables local file parsing.
+ *
+ * @expectedException XmlException
+ * @return void
+ */
+	public function testBuildFromFileWhenDisabled() {
+		$xml = CAKE . 'Test' . DS . 'Fixture' . DS . 'sample.xml';
+		$obj = Xml::build($xml, array('readFile' => false));
+	}
+
+/**
+ * Test that the readFile option disables local file parsing.
+ *
+ * @expectedException XmlException
+ * @return void
+ */
+	public function testBuildFromUrlWhenDisabled() {
+		$xml = 'http://www.google.com';
+		$obj = Xml::build($xml, array('readFile' => false));
 	}
 
 /**
@@ -783,7 +805,7 @@ XML;
 			'pubDate' => 'Tue, 31 Aug 2010 01:42:00 -0500',
 			'guid' => 'http://bakery.cakephp.org/articles/view/alertpay-automated-sales-via-ipn'
 		);
-		$this->assertSame($rssAsArray['rss']['channel']['item'][1], $expected);
+		$this->assertSame($expected, $rssAsArray['rss']['channel']['item'][1]);
 
 		$rss = array(
 			'rss' => array(
@@ -849,7 +871,7 @@ XML;
 				'params' => ''
 			)
 		);
-		$this->assertSame(Xml::toArray($xml), $expected);
+		$this->assertSame($expected, Xml::toArray($xml));
 
 		$xml = Xml::build('<methodCall><methodName>test</methodName><params><param><value><array><data><value><int>12</int></value><value><string>Egypt</string></value><value><boolean>0</boolean></value><value><int>-31</int></value></data></array></value></param></params></methodCall>');
 		$expected = array(
@@ -873,7 +895,7 @@ XML;
 				)
 			)
 		);
-		$this->assertSame(Xml::toArray($xml), $expected);
+		$this->assertSame($expected, Xml::toArray($xml));
 
 		$xmlText = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -915,7 +937,7 @@ XML;
 				)
 			)
 		);
-		$this->assertSame(Xml::toArray($xml), $expected);
+		$this->assertSame($expected, Xml::toArray($xml));
 
 		$xml = Xml::fromArray($expected, 'tags');
 		$this->assertXmlStringEqualsXmlString($xmlText, $xml->asXML());
@@ -1039,7 +1061,7 @@ XML;
 		);
 		$expected = '<' . '?xml version="1.0" encoding="UTF-8"?><root><ns:attr xmlns:ns="http://cakephp.org">1</ns:attr></root>';
 		$xmlResponse = Xml::fromArray($xml);
-		$this->assertEquals(str_replace(array("\r", "\n"), '', $xmlResponse->asXML()), $expected);
+		$this->assertEquals($expected, str_replace(array("\r", "\n"), '', $xmlResponse->asXML()));
 
 		$xml = array(
 			'root' => array(

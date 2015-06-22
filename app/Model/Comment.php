@@ -103,7 +103,7 @@ class Comment extends AppModel {
 					'message'	=> __('Content should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? !')
 				),
 				'size' => array(
-					'rule' => array('between', 3, 255),
+					'rule' => array('lengthBetween', 3, 255),
 					'message' => __('Username should be between %s and %s characters long'),
 				)
 			)

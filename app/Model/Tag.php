@@ -53,7 +53,7 @@ class Tag extends AppModel {
 					'message' => __('Name should only contain alphabets, numbers, spaces and the special characters \' " -')
 				),
 				'size' => array(
-					'rule' => array('between', 3, 64),
+					'rule' => array('lengthBetween', 3, 64),
 					'message' => __('Name should be between %s and %s characters long'),
 				)
 			)

@@ -232,6 +232,53 @@ class PaginatorHelperTest extends CakeTestCase {
 	}
 
 /**
+ * testSortLinksWithLockOption method
+ *
+ * @return void
+ */
+	public function testSortLinksWithLockOption() {
+		Router::reload();
+		Router::parse('/');
+		Router::setRequestInfo(array(
+			array('plugin' => null, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'url' => array('url' => 'accounts/')),
+			array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/')
+		));
+		$this->Paginator->options(array('url' => array('param')));
+		$this->Paginator->request['paging'] = array(
+			'Article' => array(
+				'current' => 9,
+				'count' => 62,
+				'prevPage' => false,
+				'nextPage' => true,
+				'pageCount' => 7,
+				'options' => array(
+					'page' => 1,
+					'order' => array('date' => 'asc'),
+					'conditions' => array()
+				),
+				'paramType' => 'named'
+			)
+		);
+
+		$result = $this->Paginator->sort('distance', null, array('lock' => true));
+		$expected = array(
+			'a' => array('href' => '/officespace/accounts/index/param/sort:distance/direction:asc'),
+			'Distance',
+			'/a'
+		);
+		$this->assertTags($result, $expected);
+
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = 'distance';
+		$result = $this->Paginator->sort('distance', null, array('lock' => true));
+		$expected = array(
+			'a' => array('href' => '/officespace/accounts/index/param/sort:distance/direction:asc', 'class' => 'asc locked'),
+			'Distance',
+			'/a'
+		);
+		$this->assertTags($result, $expected);
+	}
+
+/**
  * test that sort() works with virtual field order options.
  *
  * @return void
@@ -959,6 +1006,23 @@ class PaginatorHelperTest extends CakeTestCase {
 			)
 		);
 
+		$result = $this->Paginator->prev('<i class="fa fa-angle-left"></i>', array('escape' => false), null, array('class' => 'prev disabled'));
+		$expected = array(
+			'span' => array('class' => 'prev disabled'),
+			'i' => array('class' => 'fa fa-angle-left'),
+			'/i',
+			'/span'
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Paginator->prev('<i class="fa fa-angle-left"></i>', array('escape' => false), null, array('escape' => true));
+		$expected = array(
+			'span' => array('class' => 'prev'),
+			'&lt;i class=&quot;fa fa-angle-left&quot;&gt;&lt;/i&gt;',
+			'/span'
+		);
+		$this->assertTags($result, $expected);
+
 		$result = $this->Paginator->prev('<< Previous', null, '<strong>Disabled</strong>');
 		$expected = array(
 			'span' => array('class' => 'prev'),
@@ -1196,6 +1260,14 @@ class PaginatorHelperTest extends CakeTestCase {
 				'paramType' => 'named'
 			)
 		);
+		$result = $this->Paginator->sort('title', 'Title', array('model' => 'Client'));
+		$expected = array(
+			'a' => array('href' => '/index/sort:title/direction:asc'),
+			'Title',
+			'/a'
+		);
+		$this->assertTags($result, $expected);
+
 		$result = $this->Paginator->next('Next', array('model' => 'Client'));
 		$expected = array(
 			'span' => array('class' => 'next'),
@@ -1209,6 +1281,39 @@ class PaginatorHelperTest extends CakeTestCase {
 		$result = $this->Paginator->next('Next', array('model' => 'Server'), 'No Next', array('model' => 'Server'));
 		$expected = array(
 			'span' => array('class' => 'next'), 'No Next', '/span'
+		);
+		$this->assertTags($result, $expected);
+	}
+
+/**
+ * Test creating paging links for missing models.
+ *
+ * @return void
+ */
+	public function testPagingLinksMissingModel() {
+		$result = $this->Paginator->sort('title', 'Title', array('model' => 'Missing'));
+		$expected = array(
+			'a' => array('href' => '/index/sort:title/direction:asc'),
+			'Title',
+			'/a'
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Paginator->next('Next', array('model' => 'Missing'));
+		$expected = array(
+			'span' => array('class' => 'next'),
+			'a' => array('href' => '/index/page:2', 'rel' => 'next'),
+			'Next',
+			'/a',
+			'/span'
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Paginator->prev('Prev', array('model' => 'Missing'));
+		$expected = array(
+			'span' => array('class' => 'prev'),
+			'Prev',
+			'/span'
 		);
 		$this->assertTags($result, $expected);
 	}
@@ -2684,9 +2789,9 @@ class PaginatorHelperTest extends CakeTestCase {
 				'paramType' => 'named',
 			)
 		);
-		$this->assertFalse($this->Paginator->numbers());
-		$this->assertFalse($this->Paginator->first());
-		$this->assertFalse($this->Paginator->last());
+		$this->assertSame('', $this->Paginator->numbers());
+		$this->assertSame('', $this->Paginator->first());
+		$this->assertSame('', $this->Paginator->last());
 	}
 
 /**
@@ -2716,4 +2821,110 @@ class PaginatorHelperTest extends CakeTestCase {
 		$expected = '0 of 1';
 		$this->assertEquals($expected, $result);
 	}
+
+/**
+ * Verify that no next and prev links are created for single page results
+ *
+ * @return void
+ */
+	public function testMetaPage0() {
+		$this->Paginator->request['paging'] = array(
+			'Article' => array(
+				'page' => 1,
+				'prevPage' => false,
+				'nextPage' => false,
+				'pageCount' => 1,
+			)
+		);
+		$expected = '';
+		$result = $this->Paginator->meta();
+		$this->assertSame($expected, $result);
+	}
+
+/**
+ * Verify that page 1 only has a next link
+ *
+ * @return void
+ */
+	public function testMetaPage1() {
+		$this->Paginator->request['paging'] = array(
+			'Article' => array(
+				'page' => 1,
+				'prevPage' => false,
+				'nextPage' => true,
+				'pageCount' => 2,
+				'options' => array(),
+				'paramType' => 'querystring'
+			)
+		);
+		$expected = '<link href="/?page=2" rel="next" />';
+		$result = $this->Paginator->meta();
+		$this->assertSame($expected, $result);
+	}
+
+/**
+ * Verify that the method will append to a block
+ *
+ * @return void
+ */
+	public function testMetaPage1InlineFalse() {
+		$this->Paginator->request['paging'] = array(
+			'Article' => array(
+				'page' => 1,
+				'prevPage' => false,
+				'nextPage' => true,
+				'pageCount' => 2,
+				'options' => array(),
+				'paramType' => 'querystring'
+			)
+		);
+		$expected = '<link href="/?page=2" rel="next" />';
+		$this->Paginator->meta(array('block' => true));
+		$result = $this->View->fetch('meta');
+		$this->assertSame($expected, $result);
+	}
+
+/**
+ * Verify that the last page only has a prev link
+ *
+ * @return void
+ */
+	public function testMetaPage1Last() {
+		$this->Paginator->request['paging'] = array(
+			'Article' => array(
+				'page' => 2,
+				'prevPage' => true,
+				'nextPage' => false,
+				'pageCount' => 2,
+				'options' => array(),
+				'paramType' => 'querystring'
+			)
+		);
+		$expected = '<link href="/" rel="prev" />';
+		$result = $this->Paginator->meta();
+		$this->assertSame($expected, $result);
+	}
+
+/**
+ * Verify that a page in the middle has both links
+ *
+ * @return void
+ */
+	public function testMetaPage10Last() {
+		$this->Paginator->request['paging'] = array(
+			'Article' => array(
+				'page' => 5,
+				'prevPage' => true,
+				'nextPage' => true,
+				'pageCount' => 10,
+				'options' => array(),
+				'paramType' => 'querystring'
+			)
+		);
+		$expected = '<link href="/?page=4" rel="prev" />';
+		$expected .= '<link href="/?page=6" rel="next" />';
+		$result = $this->Paginator->meta();
+		$this->assertSame($expected, $result);
+	}
+
 }

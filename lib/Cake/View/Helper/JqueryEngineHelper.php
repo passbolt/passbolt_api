@@ -145,7 +145,7 @@ class JqueryEngineHelper extends JsBaseEngineHelper {
  * Create javascript selector for a CSS rule
  *
  * @param string $selector The selector that is targeted
- * @return JqueryEngineHelper instance of $this. Allows chained methods.
+ * @return $this
  */
 	public function get($selector) {
 		if ($selector === 'window' || $selector === 'document') {
@@ -171,7 +171,7 @@ class JqueryEngineHelper extends JsBaseEngineHelper {
  */
 	public function event($type, $callback, $options = array()) {
 		$defaults = array('wrap' => true, 'stop' => true);
-		$options = array_merge($defaults, $options);
+		$options += $defaults;
 
 		$function = 'function (event) {%s}';
 		if ($options['wrap'] && $options['stop']) {
@@ -243,7 +243,7 @@ class JqueryEngineHelper extends JsBaseEngineHelper {
  *
  * If the 'update' key is set, success callback will be overridden.
  *
- * @param string|array $url
+ * @param string|array $url URL
  * @param array $options See JsHelper::request() for options.
  * @return string The completed ajax call.
  * @see JsBaseEngineHelper::request() for options list.
@@ -345,7 +345,7 @@ class JqueryEngineHelper extends JsBaseEngineHelper {
  * @see JsBaseEngineHelper::serializeForm() for option list.
  */
 	public function serializeForm($options = array()) {
-		$options = array_merge(array('isForm' => false, 'inline' => false), $options);
+		$options += array('isForm' => false, 'inline' => false);
 		$selector = $this->selection;
 		if (!$options['isForm']) {
 			$selector = $this->selection . '.closest("form")';

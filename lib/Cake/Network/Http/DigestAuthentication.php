@@ -26,8 +26,8 @@ class DigestAuthentication {
 /**
  * Authentication
  *
- * @param HttpSocket $http
- * @param array $authInfo
+ * @param HttpSocket $http Http socket instance.
+ * @param array &$authInfo Authentication info.
  * @return void
  * @link http://www.ietf.org/rfc/rfc2617.txt
  */
@@ -43,9 +43,9 @@ class DigestAuthentication {
 /**
  * Retrieve information about the authentication
  *
- * @param HttpSocket $http
- * @param array $authInfo
- * @return boolean
+ * @param HttpSocket $http Http socket instance.
+ * @param array &$authInfo Authentication info.
+ * @return bool
  */
 	protected static function _getServerInformation(HttpSocket $http, &$authInfo) {
 		$originalRequest = $http->request;
@@ -70,8 +70,8 @@ class DigestAuthentication {
 /**
  * Generate the header Authorization
  *
- * @param HttpSocket $http
- * @param array $authInfo
+ * @param HttpSocket $http Http socket instance.
+ * @param array &$authInfo Authentication info.
  * @return string
  */
 	protected static function _generateHeader(HttpSocket $http, &$authInfo) {

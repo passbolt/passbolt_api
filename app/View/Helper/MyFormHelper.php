@@ -30,7 +30,7 @@ class MyFormHelper extends FormHelper {
 		return parent::submit($caption, $options) . "\n";
 	}
 
-	public function end($options = NULL) {
+	public function end($options = NULL, $secureAttributes = Array()) {
 		return parent::end() . "\n";
 	}
 

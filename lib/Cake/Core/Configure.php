@@ -62,7 +62,7 @@ class Configure {
  * - Include app/Config/bootstrap.php.
  * - Setup error/exception handlers.
  *
- * @param boolean $boot
+ * @param bool $boot Whether to do bootstrapping.
  * @return void
  */
 	public static function bootstrap($boot = true) {
@@ -113,6 +113,7 @@ class Configure {
 
 /**
  * Set app's default configs
+ *
  * @return void
  */
 	protected static function _appDefaults() {
@@ -129,7 +130,7 @@ class Configure {
  * Used to store a dynamic variable in Configure.
  *
  * Usage:
- * {{{
+ * ```
  * Configure::write('One.key1', 'value of the Configure::One[key1]');
  * Configure::write(array('One.key1' => 'value of the Configure::One[key1]'));
  * Configure::write('One', array(
@@ -141,13 +142,13 @@ class Configure {
  *     'One.key1' => 'value of the Configure::One[key1]',
  *     'One.key2' => 'value of the Configure::One[key2]'
  * ));
- * }}}
+ * ```
  *
- * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::write
  * @param string|array $config The key to write, can be a dot notation value.
  * Alternatively can be an array containing key(s) and value(s).
  * @param mixed $value Value to set for var
- * @return boolean True if write was successful
+ * @return bool True if write was successful
+ * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::write
  */
 	public static function write($config, $value = null) {
 		if (!is_array($config)) {
@@ -173,14 +174,14 @@ class Configure {
  * possible to store `null` values in Configure.
  *
  * Usage:
- * {{{
+ * ```
  * Configure::read('Name'); will return all values for Name
  * Configure::read('Name.key'); will return only the value of Configure::Name[key]
- * }}}
+ * ```
  *
- * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::read
  * @param string $var Variable to obtain. Use '.' to access array elements.
  * @return mixed value stored in configure, or null.
+ * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::read
  */
 	public static function read($var = null) {
 		if ($var === null) {
@@ -193,7 +194,7 @@ class Configure {
  * Returns true if given variable is set in Configure.
  *
  * @param string $var Variable name to check for
- * @return boolean True if variable is there
+ * @return bool True if variable is there
  */
 	public static function check($var = null) {
 		if (empty($var)) {
@@ -206,14 +207,14 @@ class Configure {
  * Used to delete a variable from Configure.
  *
  * Usage:
- * {{{
+ * ```
  * Configure::delete('Name'); will delete the entire Configure::Name
  * Configure::delete('Name.key'); will delete only the Configure::Name[key]
- * }}}
+ * ```
  *
- * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::delete
  * @param string $var the var to be deleted
  * @return void
+ * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::delete
  */
 	public static function delete($var = null) {
 		self::$_values = Hash::remove(self::$_values, $var);
@@ -240,7 +241,7 @@ class Configure {
 /**
  * Gets the names of the configured reader objects.
  *
- * @param string $name
+ * @param string $name Name to check. If null returns all configured reader names.
  * @return array Array of the configured reader objects.
  */
 	public static function configured($name = null) {
@@ -255,7 +256,7 @@ class Configure {
  * and make any future attempts to use it cause an Exception.
  *
  * @param string $name Name of the reader to drop.
- * @return boolean Success
+ * @return bool Success
  */
 	public static function drop($name) {
 		if (!isset(self::$_readers[$name])) {
@@ -283,12 +284,12 @@ class Configure {
  * If using `default` config and no reader has been configured for it yet,
  * one will be automatically created using PhpReader
  *
- * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::load
  * @param string $key name of configuration resource to load.
  * @param string $config Name of the configured reader to use to read the resource identified by $key.
- * @param boolean $merge if config files should be merged instead of simply overridden
- * @return mixed false if file not found, void if load successful.
+ * @param bool $merge if config files should be merged instead of simply overridden
+ * @return bool False if file not found, true if load successful.
  * @throws ConfigureException Will throw any exceptions the reader raises.
+ * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::load
  */
 	public static function load($key, $config = 'default', $merge = true) {
 		$reader = self::_getReader($config);
@@ -331,7 +332,7 @@ class Configure {
  * @param string $config The name of the configured adapter to dump data with.
  * @param array $keys The name of the top-level keys you want to dump.
  *   This allows you save only some data stored in Configure.
- * @return boolean success
+ * @return bool success
  * @throws ConfigureException if the adapter does not implement a `dump` method.
  */
 	public static function dump($key, $config = 'default', $keys = array()) {
@@ -390,7 +391,7 @@ class Configure {
  * @param string $name The storage name for the saved configuration.
  * @param string $cacheConfig The cache configuration to save into. Defaults to 'default'
  * @param array $data Either an array of data to store, or leave empty to store all values.
- * @return boolean Success
+ * @return bool Success
  */
 	public static function store($name, $cacheConfig = 'default', $data = null) {
 		if ($data === null) {
@@ -405,7 +406,7 @@ class Configure {
  *
  * @param string $name Name of the stored config file to load.
  * @param string $cacheConfig Name of the Cache configuration to read from.
- * @return boolean Success.
+ * @return bool Success.
  */
 	public static function restore($name, $cacheConfig = 'default') {
 		$values = Cache::read($name, $cacheConfig);
@@ -418,12 +419,13 @@ class Configure {
 /**
  * Clear all values stored in Configure.
  *
- * @return boolean success.
+ * @return bool success.
  */
 	public static function clear() {
 		self::$_values = array();
 		return true;
 	}
+
 /**
  * Set the error and exception handlers.
  *
@@ -444,4 +446,5 @@ class Configure {
 			set_exception_handler($exception['handler']);
 		}
 	}
+
 }

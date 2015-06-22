@@ -107,6 +107,12 @@ require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
 
 
 /**
+ * To prefer app translation over plugin translation, you can set
+ *
+ * Configure::write('I18n.preferApp', true);
+ */
+
+/**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter. By default CakePHP bundles two filters:
  *
  * - AssetDispatcher filter will serve your asset files (css, images, js, etc) from your themes and plugins
@@ -116,8 +122,9 @@ require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
  *
  * Configure::write('Dispatcher.filters', array(
  *		'MyCacheFilter', //  will use MyCacheFilter class from the Routing/Filter package in your app.
+ *		'MyCacheFilter' => array('prefix' => 'my_cache_'), //  will use MyCacheFilter class from the Routing/Filter package in your app with settings array.
  *		'MyPlugin.MyFilter', // will use MyFilter class from the Routing/Filter package in MyPlugin plugin.
- * 		array('callable' => $aFunction, 'on' => 'before', 'priority' => 9), // A valid PHP callback type to be called on beforeDispatch
+ *		array('callable' => $aFunction, 'on' => 'before', 'priority' => 9), // A valid PHP callback type to be called on beforeDispatch
  *		array('callable' => $anotherMethod, 'on' => 'after'), // A valid PHP callback type to be called on afterDispatch
  *
  * ));

@@ -48,8 +48,8 @@ class SessionHelper extends AppHelper {
  *
  * In your view: `$this->Session->check('Controller.sessKey');`
  *
- * @param string $name
- * @return boolean
+ * @param string $name Session key to check.
+ * @return bool
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::check
  */
 	public function check($name) {
@@ -77,17 +77,17 @@ class SessionHelper extends AppHelper {
  * You can pass additional information into the flash message generation. This allows you
  * to consolidate all the parameters for a given type of flash message into the view.
  *
- * {{{
+ * ```
  * echo $this->Session->flash('flash', array('params' => array('class' => 'new-flash')));
- * }}}
+ * ```
  *
  * The above would generate a flash message with a custom class name. Using $attrs['params'] you
  * can pass additional data into the element rendering that will be made available as local variables
  * when the element is rendered:
  *
- * {{{
+ * ```
  * echo $this->Session->flash('flash', array('params' => array('name' => $user['User']['name'])));
- * }}}
+ * ```
  *
  * This would pass the current user's name into the flash message, so you could create personalized
  * messages without the controller needing access to that data.
@@ -95,19 +95,19 @@ class SessionHelper extends AppHelper {
  * Lastly you can choose the element that is rendered when creating the flash message. Using
  * custom elements allows you to fully customize how flash messages are generated.
  *
- * {{{
+ * ```
  * echo $this->Session->flash('flash', array('element' => 'my_custom_element'));
- * }}}
+ * ```
  *
  * If you want to use an element from a plugin for rendering your flash message you can do that using the
  * plugin param:
  *
- * {{{
+ * ```
  * echo $this->Session->flash('flash', array(
  *		'element' => 'my_custom_element',
  *		'params' => array('plugin' => 'my_plugin')
  * ));
- * }}}
+ * ```
  *
  * @param string $key The [Message.]key you are rendering in the view.
  * @param array $attrs Additional attributes to use for the creation of this flash message.
@@ -120,6 +120,7 @@ class SessionHelper extends AppHelper {
 
 		if (CakeSession::check('Message.' . $key)) {
 			$flash = CakeSession::read('Message.' . $key);
+			CakeSession::delete('Message.' . $key);
 			$message = $flash['message'];
 			unset($flash['message']);
 
@@ -144,7 +145,6 @@ class SessionHelper extends AppHelper {
 				$tmpVars['message'] = $message;
 				$out = $this->_View->element($flash['element'], $tmpVars, $options);
 			}
-			CakeSession::delete('Message.' . $key);
 		}
 		return $out;
 	}
@@ -152,7 +152,7 @@ class SessionHelper extends AppHelper {
 /**
  * Used to check is a session is valid in a view
  *
- * @return boolean
+ * @return bool
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::valid
  */
 	public function valid() {

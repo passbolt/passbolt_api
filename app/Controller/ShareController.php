@@ -152,7 +152,7 @@ class ShareController extends AppController {
 					throw new Exception(__('Could not validate model Permission during creation'));
 				}
 				$this->Permission->create();
-				$s = $this->Permission->save($data);
+				$s = $this->Permission->save($data, array('atomic' => false));
 				if (!$s) {
 					throw new Exception(__('Could not save model Permission'));
 				}

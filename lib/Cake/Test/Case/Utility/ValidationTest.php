@@ -29,7 +29,7 @@ class CustomValidator {
  * Makes sure that a given $email address is valid and unique
  *
  * @param string $email
- * @return boolean
+ * @return bool
  */
 	public static function customValidate($check) {
 		return (bool)preg_match('/^[0-9]{3}$/', $check);
@@ -203,17 +203,17 @@ class ValidationTest extends CakeTestCase {
 	}
 
 /**
- * testBetween method
+ * testLengthBetween method
  *
  * @return void
  */
-	public function testBetween() {
-		$this->assertTrue(Validation::between('abcdefg', 1, 7));
-		$this->assertTrue(Validation::between('', 0, 7));
-		$this->assertTrue(Validation::between('אกあアꀀ豈', 1, 7));
+	public function testLengthBetween() {
+		$this->assertTrue(Validation::lengthBetween('abcdefg', 1, 7));
+		$this->assertTrue(Validation::lengthBetween('', 0, 7));
+		$this->assertTrue(Validation::lengthBetween('אกあアꀀ豈', 1, 7));
 
-		$this->assertFalse(Validation::between('abcdefg', 1, 6));
-		$this->assertFalse(Validation::between('ÆΔΩЖÇ', 1, 3));
+		$this->assertFalse(Validation::lengthBetween('abcdefg', 1, 6));
+		$this->assertFalse(Validation::lengthBetween('ÆΔΩЖÇ', 1, 3));
 	}
 
 /**
@@ -1462,10 +1462,11 @@ class ValidationTest extends CakeTestCase {
 		$this->assertTrue(Validation::date('2008', array('y')));
 		$this->assertTrue(Validation::date('2013', array('y')));
 		$this->assertTrue(Validation::date('2104', array('y')));
+		$this->assertTrue(Validation::date('1899', array('y')));
 		$this->assertFalse(Validation::date('20009', array('y')));
 		$this->assertFalse(Validation::date(' 2012', array('y')));
 		$this->assertFalse(Validation::date('3000', array('y')));
-		$this->assertFalse(Validation::date('1899', array('y')));
+		$this->assertFalse(Validation::date('1799', array('y')));
 	}
 
 /**
@@ -1662,7 +1663,7 @@ class ValidationTest extends CakeTestCase {
 	public function testDecimalLocaleSet() {
 		$this->skipIf(DS === '\\', 'The locale is not supported in Windows and affects other tests.');
 		$restore = setlocale(LC_NUMERIC, 0);
-		$this->skipIf(setlocale(LC_NUMERIC, 'de_DE') === false, "The German locale isn't available.");
+		$this->skipIf(setlocale(LC_NUMERIC, 'da_DK') === false, "The Danish locale isn't available.");
 
 		$this->assertTrue(Validation::decimal(1.54), '1.54 should be considered a valid float');
 		$this->assertTrue(Validation::decimal('1.54'), '"1.54" should be considered a valid float');
@@ -1766,7 +1767,6 @@ class ValidationTest extends CakeTestCase {
 
 		$this->assertTrue(Validation::email('abc.efg@cakephp.org', true));
 		$this->assertFalse(Validation::email('abc.efg@caphpkeinvalid.com', true));
-		$this->assertFalse(Validation::email('abc@example.abcd', true));
 	}
 
 /**
@@ -1974,8 +1974,19 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::inList('three', array('one', 'two')));
 		$this->assertFalse(Validation::inList('1one', array(0, 1, 2, 3)));
 		$this->assertFalse(Validation::inList('one', array(0, 1, 2, 3)));
-		$this->assertFalse(Validation::inList('2', array(1, 2, 3)));
-		$this->assertTrue(Validation::inList('2', array(1, 2, 3), false));
+		$this->assertTrue(Validation::inList('2', array(1, 2, 3)));
+		$this->assertFalse(Validation::inList('2x', array(1, 2, 3)));
+		$this->assertFalse(Validation::inList(2, array('1', '2x', '3')));
+		$this->assertFalse(Validation::inList('One', array('one', 'two')));
+
+		// No hexadecimal for numbers.
+		$this->assertFalse(Validation::inList('0x7B', array('ABC', '123')));
+		$this->assertFalse(Validation::inList('0x7B', array('ABC', 123)));
+
+		// case insensitive
+		$this->assertTrue(Validation::inList('one', array('One', 'Two'), true));
+		$this->assertTrue(Validation::inList('Two', array('one', 'two'), true));
+		$this->assertFalse(Validation::inList('three', array('one', 'two'), true));
 	}
 
 /**
@@ -2094,14 +2105,24 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::multiple(array('foo', 'bar', 'baz', 'squirrel'), array('min' => 10)));
 
 		$this->assertTrue(Validation::multiple(array(0, 5, 9), array('in' => range(0, 10), 'max' => 5)));
-		$this->assertFalse(Validation::multiple(array('0', '5', '9'), array('in' => range(0, 10), 'max' => 5)));
-		$this->assertTrue(Validation::multiple(array('0', '5', '9'), array('in' => range(0, 10), 'max' => 5), false));
+		$this->assertTrue(Validation::multiple(array('0', '5', '9'), array('in' => range(0, 10), 'max' => 5)));
+
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5)));
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 11), array('in' => range(0, 10), 'max' => 5)));
 
 		$this->assertFalse(Validation::multiple(array(0, 5, 9), array('in' => range(0, 10), 'max' => 5, 'min' => 3)));
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 6, 2, 1), array('in' => range(0, 10), 'max' => 5, 'min' => 2)));
 		$this->assertFalse(Validation::multiple(array(0, 5, 9, 8, 11), array('in' => range(0, 10), 'max' => 5, 'min' => 2)));
+
+		$this->assertFalse(Validation::multiple(array('2x', '3x'), array('in' => array(1, 2, 3, 4, 5))));
+		$this->assertFalse(Validation::multiple(array(2, 3), array('in' => array('1x', '2x', '3x', '4x'))));
+		$this->assertFalse(Validation::multiple(array('one'), array('in' => array('One', 'Two'))));
+		$this->assertFalse(Validation::multiple(array('Two'), array('in' => array('one', 'two'))));
+
+		// case insensitive
+		$this->assertTrue(Validation::multiple(array('one'), array('in' => array('One', 'Two')), true));
+		$this->assertTrue(Validation::multiple(array('Two'), array('in' => array('one', 'two')), true));
+		$this->assertFalse(Validation::multiple(array('three'), array('in' => array('one', 'two')), true));
 	}
 
 /**
@@ -2358,9 +2379,13 @@ class ValidationTest extends CakeTestCase {
 	public function testMimeType() {
 		$image = CORE_PATH . 'Cake' . DS . 'Test' . DS . 'test_app' . DS . 'webroot' . DS . 'img' . DS . 'cake.power.gif';
 		$File = new File($image, false);
+
 		$this->skipIf(!$File->mime(), 'Cannot determine mimeType');
+
 		$this->assertTrue(Validation::mimeType($image, array('image/gif')));
 		$this->assertTrue(Validation::mimeType(array('tmp_name' => $image), array('image/gif')));
+		$this->assertTrue(Validation::mimeType(array('tmp_name' => $image), '#image/.+#'));
+		$this->assertTrue(Validation::mimeType($image, array('image/GIF')));
 
 		$this->assertFalse(Validation::mimeType($image, array('image/png')));
 		$this->assertFalse(Validation::mimeType(array('tmp_name' => $image), array('image/png')));

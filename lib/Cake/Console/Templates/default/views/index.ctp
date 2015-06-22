@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -19,12 +17,15 @@
 <div class="<?php echo $pluralVar; ?> index">
 	<h2><?php echo "<?php echo __('{$pluralHumanName}'); ?>"; ?></h2>
 	<table cellpadding="0" cellspacing="0">
+	<thead>
 	<tr>
 	<?php foreach ($fields as $field): ?>
 		<th><?php echo "<?php echo \$this->Paginator->sort('{$field}'); ?>"; ?></th>
 	<?php endforeach; ?>
 		<th class="actions"><?php echo "<?php echo __('Actions'); ?>"; ?></th>
 	</tr>
+	</thead>
+	<tbody>
 	<?php
 	echo "<?php foreach (\${$pluralVar} as \${$singularVar}): ?>\n";
 	echo "\t<tr>\n";
@@ -47,17 +48,18 @@
 		echo "\t\t<td class=\"actions\">\n";
 		echo "\t\t\t<?php echo \$this->Html->link(__('View'), array('action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
 		echo "\t\t\t<?php echo \$this->Html->link(__('Edit'), array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
-		echo "\t\t\t<?php echo \$this->Form->postLink(__('Delete'), array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), null, __('Are you sure you want to delete # %s?', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?>\n";
+		echo "\t\t\t<?php echo \$this->Form->postLink(__('Delete'), array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), array('confirm' => __('Are you sure you want to delete # %s?', \${$singularVar}['{$modelClass}']['{$primaryKey}']))); ?>\n";
 		echo "\t\t</td>\n";
 	echo "\t</tr>\n";
 
 	echo "<?php endforeach; ?>\n";
 	?>
+	</tbody>
 	</table>
 	<p>
 	<?php echo "<?php
 	echo \$this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+		'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
 	));
 	?>"; ?>
 	</p>

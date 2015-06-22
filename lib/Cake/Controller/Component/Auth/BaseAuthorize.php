@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -79,8 +77,8 @@ abstract class BaseAuthorize {
  * Checks user authorization.
  *
  * @param array $user Active user data
- * @param CakeRequest $request
- * @return boolean
+ * @param CakeRequest $request Request instance.
+ * @return bool
  */
 	abstract public function authorize($user, CakeRequest $request);
 
@@ -107,7 +105,7 @@ abstract class BaseAuthorize {
  * that need to get information about the plugin, controller, and action being invoked.
  *
  * @param CakeRequest $request The request a path is needed for.
- * @param string $path
+ * @param string $path Path format.
  * @return string the action path for the given request.
  */
 	public function action(CakeRequest $request, $path = '/:plugin/:controller/:action') {
@@ -126,25 +124,25 @@ abstract class BaseAuthorize {
  *
  * Create additional mappings for a standard CRUD operation:
  *
- * {{{
+ * ```
  * $this->Auth->mapActions(array('create' => array('add', 'register'));
- * }}}
+ * ```
  *
  * Or equivalently:
  *
- * {{{
+ * ```
  * $this->Auth->mapActions(array('register' => 'create', 'add' => 'create'));
- * }}}
+ * ```
  *
  * Create mappings for custom CRUD operations:
  *
- * {{{
+ * ```
  * $this->Auth->mapActions(array('range' => 'search'));
- * }}}
+ * ```
  *
  * You can use the custom CRUD operations to create additional generic permissions
  * that behave like CRUD operations. Doing this will require additional columns on the
- * permissions lookup. For example if one wanted an additional search CRUD operation 
+ * permissions lookup. For example if one wanted an additional search CRUD operation
  * one would create and additional column '_search' in the aros_acos table. One could
  * create a custom admin CRUD operation for administration functions similarly if needed.
  *

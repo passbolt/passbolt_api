@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -33,4 +31,8 @@ function _scaffoldError() {<br />
 
 </pre>
 
-<?php echo $this->element('exception_stack_trace'); ?>
+<?php
+if (isset($error) && $error instanceof Exception) {
+	echo $this->element('exception_stack_trace'); 
+}
+?>

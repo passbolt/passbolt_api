@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -17,6 +15,7 @@
  */
 
 $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
+$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,7 +23,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 	<?php echo $this->Html->charset(); ?>
 	<title>
 		<?php echo $cakeDescription ?>:
-		<?php echo $title_for_layout; ?>
+		<?php echo $this->fetch('title'); ?>
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
@@ -51,9 +50,12 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			<?php echo $this->Html->link(
 					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
 					'http://www.cakephp.org/',
-					array('target' => '_blank', 'escape' => false)
+					array('target' => '_blank', 'escape' => false, 'id' => 'cake-powered')
 				);
 			?>
+			<p>
+				<?php echo $cakeVersion; ?>
+			</p>
 		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>

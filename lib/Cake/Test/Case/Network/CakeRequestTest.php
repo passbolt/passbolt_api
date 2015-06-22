@@ -31,7 +31,7 @@ class TestCakeRequest extends CakeRequest {
  * reConstruct method
  *
  * @param string $url
- * @param boolean $parseEnvironment
+ * @param bool $parseEnvironment
  * @return void
  */
 	public function reConstruct($url = 'some/path', $parseEnvironment = true) {
@@ -1044,13 +1044,20 @@ class CakeRequestTest extends CakeTestCase {
 
 		$request->return = false;
 		$this->assertFalse($request->isCallMe());
+
+		$request->addDetector('extension', array('param' => 'ext', 'options' => array('pdf', 'png', 'txt')));
+		$request->params['ext'] = 'pdf';
+		$this->assertTrue($request->is('extension'));
+
+		$request->params['ext'] = 'exe';
+		$this->assertFalse($request->isExtension());
 	}
 
 /**
  * Helper function for testing callbacks.
  *
  * @param $request
- * @return boolean
+ * @return bool
  */
 	public function detectCallback($request) {
 		return (bool)$request->return;
@@ -1062,12 +1069,14 @@ class CakeRequestTest extends CakeTestCase {
  * @return void
  */
 	public function testHeader() {
+		$_SERVER['HTTP_X_THING'] = '';
 		$_SERVER['HTTP_HOST'] = 'localhost';
 		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-ca) AppleWebKit/534.8+ (KHTML, like Gecko) Version/5.0 Safari/533.16';
 		$request = new CakeRequest('/', false);
 
 		$this->assertEquals($_SERVER['HTTP_HOST'], $request->header('host'));
 		$this->assertEquals($_SERVER['HTTP_USER_AGENT'], $request->header('User-Agent'));
+		$this->assertSame('', $request->header('X-thing'));
 	}
 
 /**
@@ -1350,6 +1359,24 @@ class CakeRequestTest extends CakeTestCase {
 		$this->assertEquals('/cakephp/', $request->webroot);
 		$this->assertEquals('bananas/eat/tasty_banana', $request->url);
 		$this->assertEquals('/cakephp/bananas/eat/tasty_banana', $request->here);
+	}
+
+	/**
+	 * Test that even if mod_rewrite is on, and the url contains index.php
+	 * and there are numerous //s that the base/webroot is calculated correctly.
+	 *
+	 * @return void
+	 */
+	public function testBaseUrlWithModRewriteAndExtraSlashes() {
+		$_SERVER['REQUEST_URI'] = '/cakephp/webroot///index.php/bananas/eat';
+		$_SERVER['PHP_SELF'] = '/cakephp/webroot///index.php/bananas/eat';
+		$_SERVER['PATH_INFO'] = '/bananas/eat';
+		$request = new CakeRequest();
+
+		$this->assertEquals('/cakephp', $request->base);
+		$this->assertEquals('/cakephp/', $request->webroot);
+		$this->assertEquals('bananas/eat', $request->url);
+		$this->assertEquals('/cakephp/bananas/eat', $request->here);
 	}
 
 /**
@@ -1989,26 +2016,6 @@ class CakeRequestTest extends CakeTestCase {
 	}
 
 /**
- * Test using param()
- *
- * @return void
- */
-	public function testReadingParams() {
-		$request = new CakeRequest();
-		$request->addParams(array(
-			'controller' => 'posts',
-			'admin' => true,
-			'truthy' => 1,
-			'zero' => '0',
-		));
-		$this->assertFalse($request->param('not_set'));
-		$this->assertTrue($request->param('admin'));
-		$this->assertEquals(1, $request->param('truthy'));
-		$this->assertEquals('posts', $request->param('controller'));
-		$this->assertEquals('0', $request->param('zero'));
-	}
-
-/**
  * Test the data() method reading
  *
  * @return void
@@ -2068,6 +2075,100 @@ class CakeRequestTest extends CakeTestCase {
 
 		$request->data('Post.empty', '');
 		$this->assertSame('', $request->data['Post']['empty']);
+	}
+
+/**
+ * Test reading params
+ *
+ * @dataProvider paramReadingDataProvider
+ */
+	public function testParamReading($toRead, $expected) {
+		$request = new CakeRequest('/');
+		$request->addParams(array(
+			'action' => 'index',
+			'foo' => 'bar',
+			'baz' => array(
+				'a' => array(
+					'b' => 'c',
+				),
+			),
+			'admin' => true,
+			'truthy' => 1,
+			'zero' => '0',
+		));
+		$this->assertEquals($expected, $request->param($toRead));
+	}
+
+/**
+ * Data provider for testing reading values with CakeRequest::param()
+ *
+ * @return array
+ */
+	public function paramReadingDataProvider() {
+		return array(
+			array(
+				'action',
+				'index',
+			),
+			array(
+				'baz',
+				array(
+					'a' => array(
+						'b' => 'c',
+					),
+				),
+			),
+			array(
+				'baz.a.b',
+				'c',
+			),
+			array(
+				'does_not_exist',
+				false,
+			),
+			array(
+				'admin',
+				true,
+			),
+			array(
+				'truthy',
+				1,
+			),
+			array(
+				'zero',
+				'0',
+			),
+		);
+	}
+
+/**
+ * test writing request params with param()
+ *
+ * @return void
+ */
+	public function testParamWriting() {
+		$request = new CakeRequest('/');
+		$request->addParams(array(
+			'action' => 'index',
+		));
+
+		$this->assertInstanceOf('CakeRequest', $request->param('some', 'thing'), 'Method has not returned $this');
+
+		$request->param('Post.null', null);
+		$this->assertNull($request->params['Post']['null']);
+
+		$request->param('Post.false', false);
+		$this->assertFalse($request->params['Post']['false']);
+
+		$request->param('Post.zero', 0);
+		$this->assertSame(0, $request->params['Post']['zero']);
+
+		$request->param('Post.empty', '');
+		$this->assertSame('', $request->params['Post']['empty']);
+
+		$this->assertSame('index', $request->action);
+		$request->param('action', 'edit');
+		$this->assertSame('edit', $request->action);
 	}
 
 /**
@@ -2135,6 +2236,36 @@ class CakeRequestTest extends CakeTestCase {
 
 		$result = $request->here(false);
 		$this->assertEquals('/posts/base_path/1/name:value?test=value', $result);
+	}
+
+/**
+ * Test the here() with space in URL
+ *
+ * @return void
+ */
+	public function testHereWithSpaceInUrl() {
+		Configure::write('App.base', '');
+		$_GET = array('/admin/settings/settings/prefix/Access_Control' => '');
+		$request = new CakeRequest('/admin/settings/settings/prefix/Access%20Control');
+
+		$result = $request->here();
+		$this->assertEquals('/admin/settings/settings/prefix/Access%20Control', $result);
+	}
+
+/**
+ * Test the input() method.
+ *
+ * @return void
+ */
+	public function testSetInput() {
+		$request = new CakeRequest('/');
+
+		$request->setInput('I came from setInput');
+		$result = $request->input();
+		$this->assertEquals('I came from setInput', $result);
+
+		$result = $request->input();
+		$this->assertEquals('I came from setInput', $result);
 	}
 
 /**
@@ -2217,38 +2348,44 @@ XML;
 	}
 
 /**
- * Test onlyAllow method
+ * Test allowMethod method
  *
  * @return void
  */
-	public function testOnlyAllow() {
+	public function testAllowMethod() {
 		$_SERVER['REQUEST_METHOD'] = 'PUT';
 		$request = new CakeRequest('/posts/edit/1');
 
+		$this->assertTrue($request->allowMethod(array('put')));
+
+		// BC check
 		$this->assertTrue($request->onlyAllow(array('put')));
 
 		$_SERVER['REQUEST_METHOD'] = 'DELETE';
+		$this->assertTrue($request->allowMethod('post', 'delete'));
+
+		// BC check
 		$this->assertTrue($request->onlyAllow('post', 'delete'));
 	}
 
 /**
- * Test onlyAllow throwing exception
+ * Test allowMethod throwing exception
  *
  * @return void
  */
-	public function testOnlyAllowException() {
+	public function testAllowMethodException() {
 		$_SERVER['REQUEST_METHOD'] = 'PUT';
 		$request = new CakeRequest('/posts/edit/1');
 
 		try {
-			$request->onlyAllow('POST', 'DELETE');
+			$request->allowMethod('POST', 'DELETE');
 			$this->fail('An expected exception has not been raised.');
 		} catch (MethodNotAllowedException $e) {
 			$this->assertEquals(array('Allow' => 'POST, DELETE'), $e->responseHeader());
 		}
 
 		$this->setExpectedException('MethodNotAllowedException');
-		$request->onlyAllow('POST');
+		$request->allowMethod('POST');
 	}
 
 /**

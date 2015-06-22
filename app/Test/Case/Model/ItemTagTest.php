@@ -21,7 +21,9 @@ class ItemTagTest extends CakeTestCase {
 		'app.groupsUser',
 		'app.group',
 		'app.user',
+		'app.profile',
 		'app.role',
+		'app.file_storage',
 		'app.gpgkey',
 		'core.cakeSession'
 	);

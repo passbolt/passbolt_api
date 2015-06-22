@@ -80,7 +80,7 @@ class Resource extends AppModel {
 						'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \''),
 					),
 					'size' => array(
-						'rule' => array('between', 3, 64),
+						'rule' => array('lengthBetween', 3, 64),
 						'message' => __('Name should be between %s and %s characters long'),
 					)
 				),
@@ -91,7 +91,7 @@ class Resource extends AppModel {
 						'message' => __('Username should only contain alphabets, numbers only and the special characters : - _'),
 					),
 					'size' => array(
-						'rule' => array('between', 3, 64),
+						'rule' => array('lengthBetween', 3, 64),
 						'message' => __('Username should be between %s and %s characters long'),
 					)
 				),
@@ -125,7 +125,7 @@ class Resource extends AppModel {
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! - _ ( ) [ ] \' " /')
 				),
 				'size' => array(
-					'rule' => array('between', 3, 255),
+					'rule' => array('lengthBetween', 3, 255),
 					'message' => __('Username should be between %s and %s characters long'),
 				)
 			),

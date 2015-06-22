@@ -17,6 +17,7 @@
  */
 
 App::uses('Hash', 'Utility');
+App::uses('CakePlugin', 'Core');
 
 /**
  * Ini file configuration engine.
@@ -33,10 +34,10 @@ App::uses('Hash', 'Utility');
  * You can nest properties as deeply as needed using `.`'s. In addition to using `.` you
  * can use standard ini section notation to create nested structures:
  *
- * {{{
+ * ```
  * [section]
  * key = value
- * }}}
+ * ```
  *
  * Once loaded into Configure, the above would be accessed using:
  *
@@ -152,7 +153,7 @@ class IniReader implements ConfigReaderInterface {
  * @param string $key The identifier to write to. If the key has a . it will be treated
  *  as a plugin prefix.
  * @param array $data The data to convert to ini file.
- * @return integer Bytes saved.
+ * @return int Bytes saved.
  */
 	public function dump($key, $data) {
 		$result = array();
@@ -181,7 +182,7 @@ class IniReader implements ConfigReaderInterface {
 /**
  * Converts a value into the ini equivalent
  *
- * @param mixed $value to export.
+ * @param mixed $val Value to export.
  * @return string String value for ini file.
  */
 	protected function _value($val) {
@@ -218,7 +219,7 @@ class IniReader implements ConfigReaderInterface {
 		}
 
 		if ($plugin) {
-			$file = App::pluginPath($plugin) . 'Config' . DS . $key;
+			$file = CakePlugin::path($plugin) . 'Config' . DS . $key;
 		} else {
 			$file = $this->_path . $key;
 		}

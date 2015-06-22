@@ -24,7 +24,6 @@ App::uses('ExceptionRenderer', 'Error');
 App::uses('Router', 'Routing');
 
 /**
- *
  * Error Handler provides basic error and exception handling for your application. It captures and
  * handles all unhandled exceptions and errors. Displays helpful framework errors when debug > 1.
  *
@@ -97,12 +96,20 @@ App::uses('Router', 'Routing');
 class ErrorHandler {
 
 /**
+ * Whether to give up rendering an exception, if the renderer itself is
+ * throwing exceptions.
+ *
+ * @var bool
+ */
+	protected static $_bailExceptionRendering = false;
+
+/**
  * Set as the default exception handler by the CakePHP bootstrap process.
  *
  * This will either use custom exception renderer class if configured,
  * or use the default ExceptionRenderer.
  *
- * @param Exception $exception
+ * @param Exception $exception The exception to render.
  * @return void
  * @see http://php.net/manual/en/function.set-exception-handler.php
  */
@@ -126,12 +133,15 @@ class ErrorHandler {
 				$e->getMessage(),
 				$e->getTraceAsString()
 			);
+
+			self::$_bailExceptionRendering = true;
 			trigger_error($message, E_USER_ERROR);
 		}
 	}
 
 /**
  * Generates a formatted error message
+ *
  * @param Exception $exception Exception instance
  * @return string Formatted message
  */
@@ -159,9 +169,9 @@ class ErrorHandler {
 /**
  * Handles exception logging
  *
- * @param Exception $exception
- * @param array $config
- * @return boolean
+ * @param Exception $exception The exception to render.
+ * @param array $config An array of configuration for logging.
+ * @return bool
  */
 	protected static function _log(Exception $exception, $config) {
 		if (empty($config['log'])) {
@@ -186,12 +196,12 @@ class ErrorHandler {
  * You can use Configure::write('Error.level', $value); to set what type of errors will be handled here.
  * Stack traces for errors can be enabled with Configure::write('Error.trace', true);
  *
- * @param integer $code Code of error
+ * @param int $code Code of error
  * @param string $description Error description
  * @param string $file File on which error occurred
- * @param integer $line Line that triggered the error
+ * @param int $line Line that triggered the error
  * @param array $context Context
- * @return boolean true if error was handled
+ * @return bool true if error was handled
  */
 	public static function handleError($code, $description, $file = null, $line = null, $context = null) {
 		if (error_reporting() === 0) {
@@ -229,11 +239,13 @@ class ErrorHandler {
 /**
  * Generate an error page when some fatal error happens.
  *
- * @param integer $code Code of error
+ * @param int $code Code of error
  * @param string $description Error description
  * @param string $file File on which error occurred
- * @param integer $line Line that triggered the error
- * @return boolean
+ * @param int $line Line that triggered the error
+ * @return bool
+ * @throws FatalErrorException If the Exception renderer threw an exception during rendering, and debug > 0.
+ * @throws InternalErrorException If the Exception renderer threw an exception during rendering, and debug is 0.
  */
 	public static function handleFatalError($code, $description, $file, $line) {
 		$logMessage = 'Fatal Error (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
@@ -249,17 +261,25 @@ class ErrorHandler {
 		}
 
 		if (Configure::read('debug')) {
-			call_user_func($exceptionHandler, new FatalErrorException($description, 500, $file, $line));
+			$exception = new FatalErrorException($description, 500, $file, $line);
 		} else {
-			call_user_func($exceptionHandler, new InternalErrorException());
+			$exception = new InternalErrorException();
 		}
+
+		if (self::$_bailExceptionRendering) {
+			self::$_bailExceptionRendering = false;
+			throw $exception;
+		}
+
+		call_user_func($exceptionHandler, $exception);
+
 		return false;
 	}
 
 /**
  * Map an error code into an Error word, and log location.
  *
- * @param integer $code Error code to map
+ * @param int $code Error code to map
  * @return array Array of error word, and log location.
  */
 	public static function mapErrorCode($code) {

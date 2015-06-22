@@ -75,7 +75,7 @@ class ContainableBehavior extends ModelBehavior {
  *
  * `Model->find('all', array('contain' => array('Model1', 'Model2')));`
  *
- * {{{
+ * ```
  * Model->find('all', array('contain' => array(
  * 	'Model1' => array('Model11', 'Model12'),
  * 	'Model2',
@@ -84,7 +84,7 @@ class ContainableBehavior extends ModelBehavior {
  * 		'Model32',
  * 		'Model33' => array('Model331', 'Model332')
  * )));
- * }}}
+ * ```
  *
  * @param Model $Model Model using the behavior
  * @param array $query Query parameters as set by cake
@@ -188,7 +188,7 @@ class ContainableBehavior extends ModelBehavior {
 		foreach (array('hasOne', 'belongsTo') as $type) {
 			if (!empty($Model->{$type})) {
 				foreach ($Model->{$type} as $assoc => $data) {
-					if ($Model->useDbConfig == $Model->{$assoc}->useDbConfig && !empty($data['fields'])) {
+					if ($Model->useDbConfig === $Model->{$assoc}->useDbConfig && !empty($data['fields'])) {
 						foreach ((array)$data['fields'] as $field) {
 							$query['fields'][] = (strpos($field, '.') === false ? $assoc . '.' : '') . $field;
 						}
@@ -203,7 +203,7 @@ class ContainableBehavior extends ModelBehavior {
 					$field = $Model->primaryKey;
 				} elseif (preg_match('/^.+\.\-\-[^-]+\-\-$/', $field)) {
 					list($modelName, $field) = explode('.', $field);
-					if ($Model->useDbConfig == $Model->{$modelName}->useDbConfig) {
+					if ($Model->useDbConfig === $Model->{$modelName}->useDbConfig) {
 						$field = $modelName . '.' . (
 							($field === '--primaryKey--') ? $Model->$modelName->primaryKey : $field
 						);
@@ -263,7 +263,7 @@ class ContainableBehavior extends ModelBehavior {
  * @param Model $Model Model on which binding restriction is being applied
  * @param array $contain Parameters to use for restricting this model
  * @param array $containments Current set of containments
- * @param boolean $throwErrors Whether non-existent bindings show throw errors
+ * @param bool $throwErrors Whether non-existent bindings show throw errors
  * @return array Containments
  */
 	public function containments(Model $Model, $contain, $containments = array(), $throwErrors = null) {
@@ -365,7 +365,7 @@ class ContainableBehavior extends ModelBehavior {
  *
  * @param Model $Model Model
  * @param array $map Map of relations for given model
- * @param array|boolean $fields If array, fields to initially load, if false use $Model as primary model
+ * @param array|bool $fields If array, fields to initially load, if false use $Model as primary model
  * @return array Fields
  */
 	public function fieldDependencies(Model $Model, $map, $fields = array()) {

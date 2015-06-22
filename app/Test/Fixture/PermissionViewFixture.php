@@ -14,4 +14,8 @@ class PermissionViewFixture extends CakeTestFixture {
 		return true;
 	}
 
+	public function truncate($db) {
+		return true;
+	}
+
 }

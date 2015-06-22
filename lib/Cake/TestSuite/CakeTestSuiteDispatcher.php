@@ -37,7 +37,7 @@ class CakeTestSuiteDispatcher {
 		'codeCoverage' => false,
 		'case' => null,
 		'core' => false,
-		'app' => true,
+		'app' => false,
 		'plugin' => null,
 		'output' => 'html',
 		'show' => 'groups',
@@ -63,7 +63,7 @@ class CakeTestSuiteDispatcher {
 /**
  * boolean to set auto parsing of params.
  *
- * @var boolean
+ * @var bool
  */
 	protected $_paramsParsed = false;
 
@@ -130,17 +130,33 @@ class CakeTestSuiteDispatcher {
 /**
  * Checks for the existence of the test framework files
  *
- * @return boolean true if found, false otherwise
+ * @return bool true if found, false otherwise
  */
 	public function loadTestFramework() {
 		if (class_exists('PHPUnit_Framework_TestCase')) {
 			return true;
 		}
-		foreach (App::path('vendors') as $vendor) {
+		$phpunitPath = 'phpunit' . DS . 'phpunit';
+		if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+			$composerGlobalDir[] = env('APPDATA') . DS . 'Composer' . DS . 'vendor' . DS;
+		} else {
+			$composerGlobalDir[] = env('HOME') . DS . '.composer' . DS . 'vendor' . DS;
+		}
+		$vendors = array_merge(App::path('vendors'), $composerGlobalDir);
+		foreach ($vendors as $vendor) {
 			$vendor = rtrim($vendor, DS);
-			if (is_dir($vendor . DS . 'PHPUnit')) {
+			if (is_dir($vendor . DS . $phpunitPath)) {
+				ini_set('include_path', $vendor . DS . $phpunitPath . PATH_SEPARATOR . ini_get('include_path'));
+				break;
+			} elseif (is_dir($vendor . DS . 'PHPUnit')) {
 				ini_set('include_path', $vendor . PATH_SEPARATOR . ini_get('include_path'));
 				break;
+			} elseif (is_file($vendor . DS . 'phpunit.phar')) {
+				$backup = $GLOBALS['_SERVER']['SCRIPT_NAME'];
+				$GLOBALS['_SERVER']['SCRIPT_NAME'] = '-';
+				$included = include_once $vendor . DS . 'phpunit.phar';
+				$GLOBALS['_SERVER']['SCRIPT_NAME'] = $backup;
+				return $included;
 			}
 		}
 		include 'PHPUnit' . DS . 'Autoload.php';
@@ -252,8 +268,8 @@ class CakeTestSuiteDispatcher {
 /**
  * Sets a static timestamp
  *
- * @param boolean $reset to set new static timestamp.
- * @return integer timestamp
+ * @param bool $reset to set new static timestamp.
+ * @return int timestamp
  */
 	public static function time($reset = false) {
 		static $now;

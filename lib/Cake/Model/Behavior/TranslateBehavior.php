@@ -121,7 +121,7 @@ class TranslateBehavior extends ModelBehavior {
 		$this->_joinTable = $joinTable;
 		$this->_runtimeModel = $RuntimeModel;
 
-		if (is_string($query['fields']) && "COUNT(*) AS {$db->name('count')}" == $query['fields']) {
+		if (is_string($query['fields']) && $query['fields'] === "COUNT(*) AS {$db->name('count')}") {
 			$query['fields'] = "COUNT(DISTINCT({$db->name($Model->escapeField())})) {$db->alias}count";
 			$query['joins'][] = array(
 				'type' => 'INNER',
@@ -157,8 +157,7 @@ class TranslateBehavior extends ModelBehavior {
 			);
 			foreach ($fields as $key => $value) {
 				$field = (is_numeric($key)) ? $value : $key;
-				if (
-					$isAllFields ||
+				if ($isAllFields ||
 					in_array($Model->alias . '.' . $field, $query['fields']) ||
 					in_array($field, $query['fields'])
 				) {
@@ -274,7 +273,7 @@ class TranslateBehavior extends ModelBehavior {
  *
  * @param Model $Model Model find was run on
  * @param array $results Array of model results.
- * @param boolean $primary Did the find originate on $model.
+ * @param bool $primary Did the find originate on $model.
  * @return array Modified results
  */
 	public function afterFind(Model $Model, $results, $primary = false) {
@@ -329,7 +328,7 @@ class TranslateBehavior extends ModelBehavior {
  *
  * @param Model $Model Model invalidFields was called on.
  * @param array $options Options passed from Model::save().
- * @return boolean
+ * @return bool
  * @see Model::save()
  */
 	public function beforeValidate(Model $Model, $options = array()) {
@@ -346,7 +345,7 @@ class TranslateBehavior extends ModelBehavior {
  *
  * @param Model $Model Model save was called on.
  * @param array $options Options passed from Model::save().
- * @return boolean true.
+ * @return bool true.
  * @see Model::save()
  */
 	public function beforeSave(Model $Model, $options = array()) {
@@ -367,7 +366,7 @@ class TranslateBehavior extends ModelBehavior {
  * and to allow translations to be persisted even when validation
  * is disabled.
  *
- * @param Model $Model
+ * @param Model $Model Model using this behavior.
  * @return void
  */
 	protected function _setRuntimeData(Model $Model) {
@@ -400,7 +399,7 @@ class TranslateBehavior extends ModelBehavior {
  * Restores model data to the original data.
  * This solves issues with saveAssociated and validate = first.
  *
- * @param Model $model
+ * @param Model $Model Model using this behavior.
  * @return void
  */
 	public function afterValidate(Model $Model) {
@@ -415,7 +414,7 @@ class TranslateBehavior extends ModelBehavior {
  * afterSave Callback
  *
  * @param Model $Model Model the callback is called on
- * @param boolean $created Whether or not the save created a record.
+ * @param bool $created Whether or not the save created a record.
  * @param array $options Options passed from Model::save().
  * @return void
  */
@@ -437,6 +436,10 @@ class TranslateBehavior extends ModelBehavior {
 			$tempData = $this->_prepareTranslations($Model, $tempData);
 		}
 		$locale = $this->_getLocale($Model);
+		$atomic = array();
+		if (isset($options['atomic'])) {
+			$atomic = array('atomic' => $options['atomic']);
+		}
 
 		foreach ($tempData as $field => $value) {
 			unset($conditions['content']);
@@ -466,10 +469,11 @@ class TranslateBehavior extends ModelBehavior {
 					$RuntimeModel->save(array(
 						$RuntimeModel->alias => array_merge(
 							$conditions, array('id' => $translations[$_locale])
-						)
+						),
+						$atomic
 					));
 				} else {
-					$RuntimeModel->save(array($RuntimeModel->alias => $conditions));
+					$RuntimeModel->save(array($RuntimeModel->alias => $conditions), $atomic);
 				}
 			}
 		}
@@ -479,7 +483,7 @@ class TranslateBehavior extends ModelBehavior {
  * Prepares the data to be saved for translated records.
  * Add blank fields, and populates data for multi-locale saves.
  *
- * @param Model $Model Model instance
+ * @param Model $Model Model using this behavior
  * @param array $data The sparse data that was provided.
  * @return array The fully populated data to save.
  */
@@ -569,11 +573,11 @@ class TranslateBehavior extends ModelBehavior {
  * *Note* You should avoid binding translations that overlap existing model properties.
  * This can cause un-expected and un-desirable behavior.
  *
- * @param Model $Model instance of model
+ * @param Model $Model using this behavior of model
  * @param string|array $fields string with field or array(field1, field2=>AssocName, field3)
- * @param boolean $reset Leave true to have the fields only modified for the next operation.
+ * @param bool $reset Leave true to have the fields only modified for the next operation.
  *   if false the field will be added for all future queries.
- * @return boolean
+ * @return bool
  * @throws CakeException when attempting to bind a translating called name. This is not allowed
  *   as it shadows Model::$name.
  */
@@ -585,7 +589,8 @@ class TranslateBehavior extends ModelBehavior {
 		$RuntimeModel = $this->translateModel($Model);
 		$default = array(
 			'className' => $RuntimeModel->alias,
-			'foreignKey' => 'foreign_key'
+			'foreignKey' => 'foreign_key',
+			'order' => 'id'
 		);
 
 		foreach ($fields as $key => $value) {
@@ -642,7 +647,7 @@ class TranslateBehavior extends ModelBehavior {
 /**
  * Update runtime setting for a given field.
  *
- * @param Model $Model Model instance
+ * @param Model $Model Model using this behavior
  * @param string $field The field to update.
  * @return void
  */
@@ -664,10 +669,10 @@ class TranslateBehavior extends ModelBehavior {
  * Unbind translation for fields, optionally unbinds hasMany association for
  * fake field
  *
- * @param Model $Model instance of model
+ * @param Model $Model using this behavior of model
  * @param string|array $fields string with field, or array(field1, field2=>AssocName, field3), or null for
  *    unbind all original translations
- * @return boolean
+ * @return bool
  */
 	public function unbindTranslation(Model $Model, $fields = null) {
 		if (empty($fields) && empty($this->settings[$Model->alias])) {

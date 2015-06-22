@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -28,7 +26,7 @@ class Permission extends AppModel {
 /**
  * Explicitly disable in-memory query caching
  *
- * @var boolean
+ * @var bool
  */
 	public $cacheQueries = false;
 
@@ -71,7 +69,7 @@ class Permission extends AppModel {
  * @param string $aro ARO The requesting object identifier.
  * @param string $aco ACO The controlled object identifier.
  * @param string $action Action (defaults to *)
- * @return boolean Success (true if ARO has access to action in ACO, false otherwise)
+ * @return bool Success (true if ARO has access to action in ACO, false otherwise)
  */
 	public function check($aro, $aco, $action = '*') {
 		if (!$aro || !$aco) {
@@ -83,7 +81,7 @@ class Permission extends AppModel {
 		$acoPath = $this->Aco->node($aco);
 
 		if (!$aroPath) {
-			trigger_error(__d('cake_dev',
+			$this->log(__d('cake_dev',
 					"%s - Failed ARO node lookup in permissions check. Node references:\nAro: %s\nAco: %s",
 					'DbAcl::check()',
 					print_r($aro, true),
@@ -94,7 +92,7 @@ class Permission extends AppModel {
 		}
 
 		if (!$acoPath) {
-			trigger_error(__d('cake_dev',
+			$this->log(__d('cake_dev',
 					"%s - Failed ACO node lookup in permissions check. Node references:\nAro: %s\nAco: %s",
 					'DbAcl::check()',
 					print_r($aro, true),
@@ -105,7 +103,7 @@ class Permission extends AppModel {
 		}
 
 		if ($action !== '*' && !in_array('_' . $action, $permKeys)) {
-			trigger_error(__d('cake_dev', "ACO permissions key %s does not exist in %s", $action, 'DbAcl::check()'), E_USER_NOTICE);
+			$this->log(__d('cake_dev', "ACO permissions key %s does not exist in %s", $action, 'DbAcl::check()'), E_USER_NOTICE);
 			return false;
 		}
 
@@ -166,8 +164,8 @@ class Permission extends AppModel {
  * @param string $aro ARO The requesting object identifier.
  * @param string $aco ACO The controlled object identifier.
  * @param string $actions Action (defaults to *) Invalid permissions will result in an exception
- * @param integer $value Value to indicate access type (1 to give access, -1 to deny, 0 to inherit)
- * @return boolean Success
+ * @param int $value Value to indicate access type (1 to give access, -1 to deny, 0 to inherit)
+ * @return bool Success
  * @throws AclException on Invalid permission key.
  */
 	public function allow($aro, $aco, $actions = '*', $value = 1) {
@@ -176,7 +174,7 @@ class Permission extends AppModel {
 		$save = array();
 
 		if (!$perms) {
-			trigger_error(__d('cake_dev', '%s - Invalid node', 'DbAcl::allow()'), E_USER_WARNING);
+			$this->log(__d('cake_dev', '%s - Invalid node', 'DbAcl::allow()'), E_USER_WARNING);
 			return false;
 		}
 		if (isset($perms[0])) {

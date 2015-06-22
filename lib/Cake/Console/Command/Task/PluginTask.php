@@ -1,7 +1,5 @@
 <?php
 /**
- * The Plugin Task handles creating an empty plugin, ready to be used
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -73,7 +71,7 @@ class PluginTask extends AppShell {
 /**
  * Interactive interface
  *
- * @param string $plugin
+ * @param string $plugin The plugin name.
  * @return void
  */
 	protected function _interactive($plugin = null) {
@@ -90,7 +88,7 @@ class PluginTask extends AppShell {
  * Bake the plugin, create directories and files
  *
  * @param string $plugin Name of the plugin in CamelCased format
- * @return boolean
+ * @return bool
  */
 	public function bake($plugin) {
 		$pathOptions = App::path('plugins');
@@ -108,18 +106,25 @@ class PluginTask extends AppShell {
 			$Folder = new Folder($this->path . $plugin);
 			$directories = array(
 				'Config' . DS . 'Schema',
-				'Model' . DS . 'Behavior',
-				'Model' . DS . 'Datasource',
 				'Console' . DS . 'Command' . DS . 'Task',
+				'Console' . DS . 'Templates',
 				'Controller' . DS . 'Component',
 				'Lib',
-				'View' . DS . 'Helper',
+				'Locale' . DS . 'eng' . DS . 'LC_MESSAGES',
+				'Model' . DS . 'Behavior',
+				'Model' . DS . 'Datasource',
 				'Test' . DS . 'Case' . DS . 'Controller' . DS . 'Component',
-				'Test' . DS . 'Case' . DS . 'View' . DS . 'Helper',
+				'Test' . DS . 'Case' . DS . 'Lib',
 				'Test' . DS . 'Case' . DS . 'Model' . DS . 'Behavior',
+				'Test' . DS . 'Case' . DS . 'Model' . DS . 'Datasource',
+				'Test' . DS . 'Case' . DS . 'View' . DS . 'Helper',
 				'Test' . DS . 'Fixture',
-				'Vendor',
-				'webroot'
+				'View' . DS . 'Elements',
+				'View' . DS . 'Helper',
+				'View' . DS . 'Layouts',
+				'webroot' . DS . 'css',
+				'webroot' . DS . 'js',
+				'webroot' . DS . 'img',
 			);
 
 			foreach ($directories as $directory) {
@@ -184,7 +189,7 @@ class PluginTask extends AppShell {
 /**
  * find and change $this->path to the user selection
  *
- * @param array $pathOptions
+ * @param array $pathOptions The list of paths to look in.
  * @return void
  */
 	public function findPath($pathOptions) {
@@ -203,7 +208,7 @@ class PluginTask extends AppShell {
 			}
 			$prompt = __d('cake_console', 'Choose a plugin path from the paths above.');
 			$choice = $this->in($prompt, null, 1);
-			if (intval($choice) > 0 && intval($choice) <= $max) {
+			if ((int)$choice > 0 && (int)$choice <= $max) {
 				$valid = true;
 			}
 		}
@@ -211,18 +216,21 @@ class PluginTask extends AppShell {
 	}
 
 /**
- * get the option parser for the plugin task
+ * Gets the option parser instance and configures it.
  *
- * @return void
+ * @return ConsoleOptionParser
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-		return $parser->description(__d('cake_console',
-			'Create the directory structure, AppModel and AppController classes for a new plugin. ' .
-			'Can create plugins in any of your bootstrapped plugin paths.'
-		))->addArgument('name', array(
+
+		$parser->description(
+			__d('cake_console',	'Create the directory structure, AppModel and AppController classes for a new plugin. ' .
+			'Can create plugins in any of your bootstrapped plugin paths.')
+		)->addArgument('name', array(
 			'help' => __d('cake_console', 'CamelCased name of the plugin to create.')
 		));
+
+		return $parser;
 	}
 
 }

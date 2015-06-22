@@ -112,7 +112,7 @@ class User extends AppModel {
 					'message'    => __('A password is required'),
 				),
 				'size' => array(
-					'rule' => array('between', 8, 20),
+					'rule' => array('lengthBetween', 8, 20),
 					'message' => __('Password should be between %s and %s characters long'),
 				)
 			),

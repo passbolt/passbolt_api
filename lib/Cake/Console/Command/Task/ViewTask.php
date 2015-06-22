@@ -151,7 +151,7 @@ class ViewTask extends BakeTask {
 					unset($methods[$i]);
 				}
 			}
-			if ($method[0] === '_' || $method == strtolower($this->controllerName . 'Controller')) {
+			if ($method[0] === '_' || $method === strtolower($this->controllerName . 'Controller')) {
 				unset($methods[$i]);
 			}
 		}
@@ -206,7 +206,7 @@ class ViewTask extends BakeTask {
 		$this->Controller->connection = $this->connection;
 		$this->controllerName = $this->Controller->getName();
 
-		$prompt = __d('cake_console', "Would you like bake to build your views interactively?\nWarning: Choosing no will overwrite %s views if it exist.", $this->controllerName);
+		$prompt = __d('cake_console', "Would you like bake to build your views interactively?\nWarning: Choosing no will overwrite %s views if they exist.", $this->controllerName);
 		$interactive = $this->in($prompt, array('y', 'n'), 'n');
 
 		if (strtolower($interactive) === 'n') {
@@ -248,7 +248,7 @@ class ViewTask extends BakeTask {
  *	'singularHumanName', 'pluralHumanName', 'fields', 'foreignKeys',
  *	'belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany'
  *
- * @return array Returns an variables to be made available to a view template
+ * @return array Returns a variables to be made available to a view template
  */
 	protected function _loadController() {
 		if (!$this->controllerName) {
@@ -298,7 +298,7 @@ class ViewTask extends BakeTask {
  * Bake a view file for each of the supplied actions
  *
  * @param array $actions Array of actions to make files for.
- * @param array $vars
+ * @param array $vars The template variables.
  * @return void
  */
 	public function bakeActions($actions, $vars) {
@@ -342,7 +342,7 @@ class ViewTask extends BakeTask {
  *
  * @param string $action Action to bake
  * @param string $content Content to write
- * @return boolean Success
+ * @return bool Success
  */
 	public function bake($action, $content = '') {
 		if ($content === true) {
@@ -412,13 +412,14 @@ class ViewTask extends BakeTask {
 	}
 
 /**
- * get the option parser for this task
+ * Gets the option parser instance and configures it.
  *
  * @return ConsoleOptionParser
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-		return $parser->description(
+
+		$parser->description(
 			__d('cake_console', 'Bake views for a controller, using built-in or custom templates.')
 		)->addArgument('controller', array(
 			'help' => __d('cake_console', 'Name of the controller views to bake. Can be Plugin.name as a shortcut for plugin baking.')
@@ -443,14 +444,18 @@ class ViewTask extends BakeTask {
 			'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
 		))->addSubcommand('all', array(
 			'help' => __d('cake_console', 'Bake all CRUD action views for all controllers. Requires models and controllers to exist.')
-		))->epilog(__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.'));
+		))->epilog(
+			__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.')
+		);
+
+		return $parser;
 	}
 
 /**
  * Returns associations for controllers models.
  *
- * @param Model $model
- * @return array $associations
+ * @param Model $model The Model instance.
+ * @return array associations
  */
 	protected function _associations(Model $model) {
 		$keys = array('belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany');

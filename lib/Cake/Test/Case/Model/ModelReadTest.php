@@ -2179,10 +2179,10 @@ class ModelReadTest extends BaseModelTest {
 
 		$this->assertEquals($expected, $result);
 
-		$result = $TestModel->unbindModel(array('hasMany' => array('Child')));
+		$result = $TestModel->unbindModel(array('hasMany' => 'Child'));
 		$this->assertTrue($result);
 
-		$result = $TestModel->Sample->unbindModel(array('belongsTo' => array('Apple')));
+		$result = $TestModel->Sample->unbindModel(array('belongsTo' => 'Apple'));
 		$this->assertTrue($result);
 
 		$result = $TestModel->find('all');
@@ -6301,7 +6301,6 @@ class ModelReadTest extends BaseModelTest {
 		$TestModel = new User();
 		$TestModel->cacheQueries = false;
 		$TestModel->order = null;
-
 		$expected = array(
 			'conditions' => array(
 				'user' => 'larry'
@@ -6552,11 +6551,42 @@ class ModelReadTest extends BaseModelTest {
 	}
 
 /**
+ * Test that find() with array conditions works when there is only one element.
+ *
+ * @return void
+ */
+	public function testFindAllArrayConditions() {
+		$this->loadFixtures('User');
+		$TestModel = new User();
+		$TestModel->cacheQueries = false;
+
+		$result = $TestModel->find('all', array(
+			'conditions' => array('User.id' => array(3)),
+		));
+		$expected = array(
+			array(
+				'User' => array(
+					'id' => '3',
+					'user' => 'larry',
+					'password' => '5f4dcc3b5aa765d61d8327deb882cf99',
+					'created' => '2007-03-17 01:20:23',
+					'updated' => '2007-03-17 01:22:31'
+			))
+		);
+		$this->assertEquals($expected, $result);
+
+		$result = $TestModel->find('all', array(
+			'conditions' => array('User.user' => array('larry')),
+		));
+		$this->assertEquals($expected, $result);
+	}
+
+/**
  * test find('list') method
  *
  * @return void
  */
-	public function testGenerateFindList() {
+	public function testFindList() {
 		$this->loadFixtures('Article', 'Apple', 'Post', 'Author', 'User', 'Comment');
 
 		$TestModel = new Article();
@@ -6827,6 +6857,32 @@ class ModelReadTest extends BaseModelTest {
 	}
 
 /**
+ * Test that find(list) works with array conditions that have only one element.
+ *
+ * @return void
+ */
+	public function testFindListArrayCondition() {
+		$this->loadFixtures('User');
+		$TestModel = new User();
+		$TestModel->cacheQueries = false;
+
+		$result = $TestModel->find('list', array(
+			'fields' => array('id', 'user'),
+			'conditions' => array('User.id' => array(3)),
+		));
+		$expected = array(
+			3 => 'larry'
+		);
+		$this->assertEquals($expected, $result);
+
+		$result = $TestModel->find('list', array(
+			'fields' => array('id', 'user'),
+			'conditions' => array('User.user' => array('larry')),
+		));
+		$this->assertEquals($expected, $result);
+	}
+
+/**
  * testFindField method
  *
  * @return void
@@ -6847,9 +6903,7 @@ class ModelReadTest extends BaseModelTest {
 			'user' => 'mariano'
 		));
 		$this->assertEquals('mariano', $result);
-
 		$TestModel->order = null;
-
 		$result = $TestModel->field('COUNT(*) AS count', true);
 		$this->assertEquals(4, $result);
 
@@ -6907,7 +6961,6 @@ class ModelReadTest extends BaseModelTest {
 		$Article = new Article();
 		$Article->order = null;
 		$Article->recursive = -1;
-
 		$expected = count($Article->find('all', array(
 			'fields' => array('Article.user_id'),
 			'group' => 'Article.user_id')
@@ -7763,7 +7816,6 @@ class ModelReadTest extends BaseModelTest {
 			'limit' => 1
 		));
 		$this->assertEquals(2, $result['Post']['id']);
-
 		$Post->order = null;
 
 		$Post->virtualFields = array('other_field' => 'Post.id + 1');
@@ -7782,6 +7834,38 @@ class ModelReadTest extends BaseModelTest {
 		$Post->virtualFields = array('other_field' => 'COUNT(Post.id) + 1');
 		$result = $Post->field('other_field');
 		$this->assertEquals(4, $result);
+	}
+
+/**
+ * Test virtualfields that contain subqueries get correctly
+ * quoted allowing reserved words to be used.
+ *
+ * @return void
+ */
+	public function testVirtualFieldSubqueryReservedWords() {
+		$this->loadFixtures('User');
+		$user = ClassRegistry::init('User');
+		$user->cacheMethods = false;
+		$ds = $user->getDataSource();
+
+		$sub = $ds->buildStatement(
+			array(
+				'fields' => array('Table.user'),
+				'table' => $ds->fullTableName($user),
+				'alias' => 'Table',
+				'limit' => 1,
+				'conditions' => array(
+					"Table.id > 1"
+				)
+			),
+			$user
+		);
+		$user->virtualFields = array(
+			'sub_test' => $sub
+		);
+
+		$result = $user->find('first');
+		$this->assertNotEmpty($result);
 	}
 
 /**
@@ -7993,4 +8077,247 @@ class ModelReadTest extends BaseModelTest {
 		$this->assertEquals(1, count($result));
 	}
 
+/**
+ * test after find callback on related model
+ * 
+ * @return void 
+ */
+	public function testRelatedAfterFindCallback() {
+		$this->loadFixtures('Something', 'SomethingElse', 'JoinThing');
+		$Something = new Something();
+
+		$Something->bindModel(array(
+			'hasMany' => array(
+				'HasMany' => array(
+					'className' => 'JoinThing',
+					'foreignKey' => 'something_id'
+				)
+			),
+			'hasOne' => array(
+				'HasOne' => array(
+					'className' => 'JoinThing',
+					'foreignKey' => 'something_id'
+				)
+			)
+		));
+
+		$results = $Something->find('all');
+
+		$expected = array(
+			array(
+				'Something' => array(
+					'id' => '1',
+					'title' => 'First Post',
+					'body' => 'First Post Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:39:23',
+					'updated' => '2007-03-18 10:41:31'
+				),
+				'HasOne' => array(
+					'id' => '1',
+					'something_id' => '1',
+					'something_else_id' => '2',
+					'doomed' => true,
+					'created' => '2007-03-18 10:39:23',
+					'updated' => '2007-03-18 10:41:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				),
+				'HasMany' => array(
+					array(
+						'id' => '1',
+						'something_id' => '1',
+						'something_else_id' => '2',
+						'doomed' => true,
+						'created' => '2007-03-18 10:39:23',
+						'updated' => '2007-03-18 10:41:31',
+						'afterFind' => 'Successfully added by AfterFind'
+					)
+				),
+				'SomethingElse' => array(
+					array(
+						'id' => '2',
+						'title' => 'Second Post',
+						'body' => 'Second Post Body',
+						'published' => 'Y',
+						'created' => '2007-03-18 10:41:23',
+						'updated' => '2007-03-18 10:43:31',
+						'afterFind' => 'Successfully added by AfterFind',
+						'JoinThing' => array(
+							'doomed' => true,
+							'something_id' => '1',
+							'something_else_id' => '2',
+							'afterFind' => 'Successfully added by AfterFind'
+						)
+					)
+				)
+			),
+			array(
+				'Something' => array(
+					'id' => '2',
+					'title' => 'Second Post',
+					'body' => 'Second Post Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:41:23',
+					'updated' => '2007-03-18 10:43:31'
+				),
+				'HasOne' => array(
+					'id' => '2',
+					'something_id' => '2',
+					'something_else_id' => '3',
+					'doomed' => false,
+					'created' => '2007-03-18 10:41:23',
+					'updated' => '2007-03-18 10:43:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				),
+				'HasMany' => array(
+					array(
+						'id' => '2',
+						'something_id' => '2',
+						'something_else_id' => '3',
+						'doomed' => false,
+						'created' => '2007-03-18 10:41:23',
+						'updated' => '2007-03-18 10:43:31',
+						'afterFind' => 'Successfully added by AfterFind'
+					)
+				),
+				'SomethingElse' => array(
+					array(
+						'id' => '3',
+						'title' => 'Third Post',
+						'body' => 'Third Post Body',
+						'published' => 'Y',
+						'created' => '2007-03-18 10:43:23',
+						'updated' => '2007-03-18 10:45:31',
+						'afterFind' => 'Successfully added by AfterFind',
+						'JoinThing' => array(
+							'doomed' => false,
+							'something_id' => '2',
+							'something_else_id' => '3',
+							'afterFind' => 'Successfully added by AfterFind'
+						)
+					)
+				)
+			),
+			array(
+				'Something' => array(
+					'id' => '3',
+					'title' => 'Third Post',
+					'body' => 'Third Post Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:43:23',
+					'updated' => '2007-03-18 10:45:31'
+				),
+				'HasOne' => array(
+					'id' => '3',
+					'something_id' => '3',
+					'something_else_id' => '1',
+					'doomed' => true,
+					'created' => '2007-03-18 10:43:23',
+					'updated' => '2007-03-18 10:45:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				),
+				'HasMany' => array(
+					array(
+						'id' => '3',
+						'something_id' => '3',
+						'something_else_id' => '1',
+						'doomed' => true,
+						'created' => '2007-03-18 10:43:23',
+						'updated' => '2007-03-18 10:45:31',
+						'afterFind' => 'Successfully added by AfterFind'
+					)
+				),
+				'SomethingElse' => array(
+					array(
+						'id' => '1',
+						'title' => 'First Post',
+						'body' => 'First Post Body',
+						'published' => 'Y',
+						'created' => '2007-03-18 10:39:23',
+						'updated' => '2007-03-18 10:41:31',
+						'afterFind' => 'Successfully added by AfterFind',
+						'JoinThing' => array(
+							'doomed' => true,
+							'something_id' => '3',
+							'something_else_id' => '1',
+							'afterFind' => 'Successfully added by AfterFind'
+						)
+					)
+				)
+			)
+		);
+		$this->assertEquals($expected, $results, 'Model related with has* afterFind callback fails');
+
+		$JoinThing = new JoinThing();
+		$JoinThing->unbindModel(array(
+			'belongsTo' => array(
+				'Something'
+			)
+		));
+		$results = $JoinThing->find('all');
+
+		$expected = array(
+			array(
+				'JoinThing' => array(
+					'id' => '1',
+					'something_id' => '1',
+					'something_else_id' => '2',
+					'doomed' => true,
+					'created' => '2007-03-18 10:39:23',
+					'updated' => '2007-03-18 10:41:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				),
+				'SomethingElse' => array(
+					'id' => '2',
+					'title' => 'Second Post',
+					'body' => 'Second Post Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:41:23',
+					'updated' => '2007-03-18 10:43:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				)
+			),
+			array(
+				'JoinThing' => array(
+					'id' => '2',
+					'something_id' => '2',
+					'something_else_id' => '3',
+					'doomed' => false,
+					'created' => '2007-03-18 10:41:23',
+					'updated' => '2007-03-18 10:43:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				),
+				'SomethingElse' => array(
+					'id' => '3',
+					'title' => 'Third Post',
+					'body' => 'Third Post Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:43:23',
+					'updated' => '2007-03-18 10:45:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				)
+			),
+			array(
+				'JoinThing' => array(
+					'id' => '3',
+					'something_id' => '3',
+					'something_else_id' => '1',
+					'doomed' => true,
+					'created' => '2007-03-18 10:43:23',
+					'updated' => '2007-03-18 10:45:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				),
+				'SomethingElse' => array(
+					'id' => '1',
+					'title' => 'First Post',
+					'body' => 'First Post Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:39:23',
+					'updated' => '2007-03-18 10:41:31',
+					'afterFind' => 'Successfully added by AfterFind'
+				)
+			)
+		);
+		$this->assertEquals($expected, $results, 'Model related with belongsTo afterFind callback fails');
+	}
 }
