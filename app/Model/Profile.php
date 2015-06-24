@@ -182,42 +182,17 @@ class Profile extends AppModel {
 	 * @return mixed
 	 */
 	public function afterFind($results, $primary = false) {
-		$Avatar = ClassRegistry::init('ProfileAvatar');
-		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
-		$defaultAvatars = array();
-		if (empty($sizes)) {
-			return $results;
-		}
-
 		if ($primary === false) {
 			foreach ($results as $key => $result) {
-				if (empty($result['Profile']['Avatar'])) {
-					foreach ($sizes as $size => $filters) {
-						$url = $Avatar->imageUrl(array(), $size);
-						if ($url) {
-							$defaultAvatars[$size] = $url;
-						}
-					}
-					$results[$key]['Profile']['Avatar'] = array(
-						'url' => $defaultAvatars,
-					);
-				}
+				$results[$key]['Profile']['Avatar'] =
+					empty($result['Profile']['Avatar']) ? array() : $result['Profile']['Avatar'];
+				$results[$key]['Profile']['Avatar'] = $this->Avatar->addPathsInfo($result['Profile']['Avatar']);
 			}
 		}
 		else {
-			if (empty($results['Avatar'])) {
-				foreach ($sizes as $size => $filters) {
-					$url = $Avatar->imageUrl(array(), $size);
-					if ($url) {
-						$defaultAvatars[$size] = $url;
-					}
-				}
-				$results['Avatar'] = array(
-					'url' => $defaultAvatars,
-				);
-			}
+			$results['Avatar'] = empty($results['Avatar']) ? array() : $results['Avatar'];
+			$results['Avatar'] = $this->Avatar->addPathsInfo($results['Avatar']);
 		}
-
 		return $results;
 	}
 }

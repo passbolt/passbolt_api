@@ -25,7 +25,7 @@ steal(
 		 * @return {string} The image path
 		 */
 		'imagePath': function(version) {
-			if (typeof this.id == 'undefined') {
+			if (typeof this.url == 'undefined') {
 				return '';
 			}
 			if (typeof this.url[version] == 'undefined') {

@@ -3,6 +3,13 @@ App::uses('ImageStorage', 'FileStorage.Model');
 
 class ProfileAvatar extends ImageStorage {
 
+	/**
+	 * Defines which key to use while returning an avatar object
+	 * to tell the path for the avatar image.
+	 * @var string
+	 */
+	public $imagePathKey = 'url';
+
 /**
  * Details of use table
  *
@@ -55,24 +62,13 @@ class ProfileAvatar extends ImageStorage {
 	 * @return mixed
 	 */
 	public function afterFind($results, $primary = false) {
-		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
 		if (isset($results[0])) {
 			foreach ($results as $key => $result) {
-				$url = array();
-				foreach($sizes as $size => $data) {
-					$url[$size] = $this->imageUrl($result, $size);
-				}
-				$url['default'] = $this->imageUrl($results);
-				$results[$key]['url'] = $url;
+				$results[$key] = $this->addPathsInfo($result);
 			}
 		}
 		else {
-			$url = array();
-			foreach($sizes as $size => $data) {
-				$url[$size] = $this->imageUrl($results, $size);
-			}
-			$url['default'] = $this->imageUrl($results);
-			$results['url'] = $url;
+			$results = $this->addPathsInfo($results);
 		}
 		return $results;
 	}
@@ -182,4 +178,27 @@ class ProfileAvatar extends ImageStorage {
 		return str_replace('\\', '/', $path);
 	}
 
+
+	/**
+	 * Add avatar path information for each available size to the model.
+	 * @param array $avatar
+	 *   a ProfileAvatar model
+	 * @return array
+	 *   ProfileAvatar with added information.
+	 */
+	public function addPathsInfo($avatar = array()) {
+		// Get available sizes.
+		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
+		$avatarsPath = array();
+		// Add path for each available size.
+		foreach ($sizes as $size => $filters) {
+			$url = $this->imageUrl($avatar, $size);
+			$avatarsPath[$size] = $url ? $url : '';
+		}
+		// Default path.
+		$avatarsPath['default'] = $this->imageUrl($avatar);
+		// Transform original model to add paths.
+		$avatar[$this->imagePathKey] = $avatarsPath;
+		return $avatar;
+	}
 }

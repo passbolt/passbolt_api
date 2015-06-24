@@ -47,7 +47,7 @@ steal(
 			 * @return {string} The image path
 			 */
 			'avatarPath': function(version) {
-				if (typeof this.Avatar != 'undefined' && this.Avatar.id) {
+				if (typeof this.Avatar != 'undefined' && this.Avatar.url != undefined) {
 					return this.Avatar.imagePath(version);
 				} else {
 					return "img/avatar/user.png";
