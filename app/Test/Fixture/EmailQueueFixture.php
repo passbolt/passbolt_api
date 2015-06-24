@@ -31,7 +31,7 @@ class EmailQueueFixture extends CakeTestFixture {
 		'headers' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'sent' => array('type' => 'boolean', 'null' => false, 'default' => null),
 		'locked' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'send_tries' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 2),
+		'send_tries' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 2, 'unsigned' => false),
 		'send_at' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
