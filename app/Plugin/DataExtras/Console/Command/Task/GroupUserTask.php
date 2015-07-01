@@ -51,7 +51,7 @@ class GroupUserTask extends ModelTask {
 		$gu[] = array('GroupUser' => array(
 			'id' => '53865f1f-33d8-4206-a198-2173c0a895dc',
 			'group_id' => $groups['dev'],
-			'user_id' => $users['rem'],
+			'user_id' => $users['ada'],
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		));
 		$gu[] = array('GroupUser' => array(
@@ -69,7 +69,7 @@ class GroupUserTask extends ModelTask {
 		$gu[] = array('GroupUser' => array(
 			'id' => '53865f1f-3c0c-47c8-a8e6-2173c0a895dc',
 			'group_id' => $groups['dtl'],
-			'user_id' => $users['rem'],
+			'user_id' => $users['ada'],
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		));
 		$gu[] = array('GroupUser' => array(
@@ -87,7 +87,7 @@ class GroupUserTask extends ModelTask {
 		$gu[] = array('GroupUser' => array(
 			'id' => '53865fa5-0624-49d5-a802-204fc0a895dc',
 			'group_id' => $groups['cak'],
-			'user_id' => $users['rem'],
+			'user_id' => $users['ada'],
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c', 'modified_by' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c'
 		));
 		$gu[] = array('GroupUser' => array(

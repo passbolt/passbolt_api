@@ -298,9 +298,10 @@ hcciUFw5
 
 	// Test update add with wrong secrets data provided. (not matching the user ids).
 	public function testUpdateAddSecretForWrongUserProvided() {
-		// Get Remy. he is the wrong user. #specialdedicace #remoisi
+
+		$ada = $this->User->findByUsername('ada@passbolt.com');
+
 		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$rm = $this->User->findByUsername('remy@passbolt.com');
 		$ce = $this->User->findByUsername('cedric@passbolt.com');
 		$fbRs = $this->Resource->findByName('facebook account');
 
@@ -322,7 +323,7 @@ hcciUFw5
 			'Secrets' => array(
 				array(
 					'Secret' => array (
-						'user_id' =>$rm['User']['id'],
+						'user_id' => $ada['User']['id'],
 						'resource_id' => $fbRs['Resource']['id'],
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)

@@ -154,7 +154,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$expectedPermissions = array(
 			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
 			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
-			'50e6b4af-ad14-4659-a60d-23a4d7a10fce', // user remy (remy bertot have admin rights on others)
+			'50e6b4af-ad14-4659-a60d-23a4d7a10fce', // user ada (ada lovelace have admin rights on others)
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
 			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
 			'50e6b4af-b124-40e3-988e-23a4d7a10fce', // group freelancers (freelancers have readonly rights on projects > others)
@@ -178,7 +178,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
 			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
 			'50e6b4af-c390-4e5e-a8f8-23a4d7a10fce', // user jean rene (ean rené can access projects > cakephp > cp-project1 > cpp1-pwd1 in readonly)
-			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user remy (remy bertot has admin rights on cakephp > cp-project1)
+			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user ada (ada lovelace has admin rights on cakephp > cp-project1)
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
 			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
 			'50e6b4af-8ab8-4533-a4b4-23a4d7a10fce', // group developers cakephp (developers cakephp can access projects > cakephp in readonly)
@@ -207,7 +207,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$expectedPermissions = array(
 			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
 			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
-			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user remy (remy bertot has admin rights on cakephp > cp-project1)
+			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user ada (ada lovelace has admin rights on cakephp > cp-project1)
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
 			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
 			'50e6b4af-8ab8-4533-a4b4-23a4d7a10fce', // group developers cakephp (developers cakephp can access projects > cakephp in readonly)

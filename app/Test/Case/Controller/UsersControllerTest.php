@@ -77,7 +77,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testLogin() {
 		// check if we get form
 		$result = $this->testAction('/login', array('return' => 'view', 'method' => 'GET'), true);
-		$this->assertEqual(
+		$this->assertEquals(
 			preg_match('/(<form)/', $result),
 			true,
 			'/users/login with no data sent should return a form'
@@ -97,7 +97,7 @@ class UsersControllerTest extends ControllerTestCase {
 			array('return' => 'vars', 'method' => 'POST', 'data' => $data),
 			true
 		);
-		$this->assertEqual(
+		$this->assertEquals(
 			$this->User->get('User.username'),
 			'test@passbolt.com',
 			"login test should have returned test@passbolt.com but has returned {$this->User->get('User.username')}"
@@ -109,7 +109,7 @@ class UsersControllerTest extends ControllerTestCase {
 			array('return' => 'view', 'method' => 'POST', 'data' => $data),
 			true
 		);
-		$this->assertEqual(
+		$this->assertEquals(
 			$this->headers['Location'],
 			Router::url('/', true),
 			"Login should have redirected to / but has not"
@@ -117,7 +117,7 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testIndexNoAllowed() {
-		$this->expectException('HttpException', 'You need to login to access this location');
+		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		// test with anonymous user
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
 	}
@@ -128,17 +128,17 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setActive($kk);
 
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::SUCCESS, '/users return something');
+		$this->assertEquals($result->header->status, Message::SUCCESS, '/users return something');
 
 		// @todo empty database and test if index throws warning for no
 		$this->User->deleteAll(array('User.active' => '1'));
 		$this->User->deleteAll(array('User.active' => '0'));
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::NOTICE, '/users return a warning');
+		$this->assertEquals($result->header->status, Message::NOTICE, '/users return a warning');
 	}
 
 	public function testViewNoAllowed() {
-		$this->expectException('HttpException', 'You need to login to access this location');
+		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		// test with anonymous user
 		$result = json_decode(
 			$this->testAction(
@@ -158,7 +158,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($kk);
 
-		$this->expectException('HttpException', 'The user id is invalid');
+		$this->setExpectedException('HttpException', 'The user id is invalid');
 		$result = json_decode(
 			$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'GET'), true)
 		);
@@ -169,7 +169,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($kk);
 
-		$this->expectException('HttpException', 'The user does not exist');
+		$this->setExpectedException('HttpException', 'The user does not exist');
 		$result = json_decode(
 			$this->testAction(
 				'/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
@@ -191,7 +191,7 @@ class UsersControllerTest extends ControllerTestCase {
 				true
 			)
 		);
-		$this->assertEqual($result->header->status, Message::SUCCESS, '/users return something');
+		$this->assertEquals($result->header->status, Message::SUCCESS, '/users return something');
 
 		$result = json_decode(
 			$this->testAction(
@@ -200,7 +200,7 @@ class UsersControllerTest extends ControllerTestCase {
 				true
 			)
 		);
-		$this->assertEqual(
+		$this->assertEquals(
 			$result->header->status,
 			Message::SUCCESS,
 			'/users/view asking for self should return something'
@@ -212,7 +212,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($kk);
 
-		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		// test with anonymous user
 		$result = json_decode(
 			$this->testAction(
@@ -341,7 +341,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testAddWithoutProfileInfo() {
 		$kk = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($kk);
-		$this->expectException('HttpException', 'Profile data are missing');
+		$this->setExpectedException('HttpException', 'Profile data are missing');
 		$result = json_decode(
 			$this->testAction(
 				'/users.json',
@@ -370,7 +370,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$id = $kk['User']['id'];
 
-		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		// test with anonymous user
 		$result = json_decode(
 			$this->testAction(
@@ -397,7 +397,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user id is missing');
+		$this->setExpectedException('HttpException', 'The user id is missing');
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'put'), true));
 	}
 
@@ -405,7 +405,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user id is invalid');
+		$this->setExpectedException('HttpException', 'The user id is invalid');
 		$result = json_decode(
 			$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'put'), true)
 		);
@@ -415,7 +415,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user does not exist');
+		$this->setExpectedException('HttpException', 'The user does not exist');
 		$result = json_decode(
 			$this->testAction(
 				'/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
@@ -432,7 +432,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$id = $kk['User']['id'];
 		$data['User']['username'] = 'user@34@passbolt.com';
 
-		$this->expectException('HttpException', 'Could not validate User');
+		$this->setExpectedException('HttpException', 'Could not validate User');
 		$resRaw = $this->testAction(
 			"/users/$id.json",
 			array(
@@ -448,7 +448,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$id = $kk['User']['id'];
 
@@ -532,7 +532,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setActive($ad);
 		$id = $ad['User']['id'];
 
-		$this->expectException('HttpException', 'Current Password must be provided');
+		$this->setExpectedException('HttpException', 'Current Password must be provided');
 		$data['User']['password'] = 'test12345678';
 		$resRaw = $this->testAction(
 			"/users/$id.json",
@@ -572,7 +572,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setActive($kk);
 		$id = $kk['User']['id'];
 
-		$this->expectException('HttpException', 'Could not validate User');
+		$this->setExpectedException('HttpException', 'Could not validate User');
 		$data['User']['current_password'] = 'wrongpassword';
 		$data['User']['password'] = 'test12345678';
 		$resRaw = $this->testAction(
@@ -590,7 +590,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$u = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($u);
 
-		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		// test with anonymous user
 		$result = json_decode(
 			$this->testAction(
@@ -608,7 +608,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user id is missing');
+		$this->setExpectedException('HttpException', 'The user id is missing');
 		$result = json_decode(
 			$this->testAction('/users.json', array('return' => 'contents', 'method' => 'delete'), true)
 		);
@@ -618,7 +618,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user id is invalid');
+		$this->setExpectedException('HttpException', 'The user id is invalid');
 		$result = json_decode(
 			$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'delete'), true)
 		);
@@ -628,7 +628,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user does not exist');
+		$this->setExpectedException('HttpException', 'The user does not exist');
 		$result = json_decode(
 			$this->testAction(
 				'/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
@@ -659,7 +659,7 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 
 		$deleted = $this->User->findByUsername('user@passbolt.com');
-		$this->assertEqual(
+		$this->assertEquals(
 			1,
 			$deleted['User']['deleted'],
 			"delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}"
@@ -687,7 +687,7 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 
 		$deleted = $this->User->findByUsername('user@passbolt.com');
-		$this->assertEqual(
+		$this->assertEquals(
 			1,
 			$deleted['User']['deleted'],
 			"delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}"
@@ -702,7 +702,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$id = $kk['User']['id'];
 
-		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		// test with anonymous user
 		$_FILES['file-0'] = array(
 			'file' => array(
@@ -726,7 +726,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user id is missing');
+		$this->setExpectedException('HttpException', 'The user id is missing');
 		$result = json_decode($this->testAction('/users/avatar.json', array('return' => 'contents', 'method' => 'post'), true));
 	}
 
@@ -734,7 +734,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user id is invalid');
+		$this->setExpectedException('HttpException', 'The user id is invalid');
 		$result = json_decode(
 			$this->testAction('/users/avatar/badId.json', array('return' => 'contents', 'method' => 'post'), true)
 		);
@@ -744,7 +744,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'The user does not exist');
+		$this->setExpectedException('HttpException', 'The user does not exist');
 		$result = json_decode(
 			$this->testAction(
 				'/users/avatar/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
@@ -758,7 +758,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$kk = $this->User->findByUsername('user@passbolt.com');
 		$id = $kk['User']['id'];
 
@@ -850,12 +850,12 @@ class UsersControllerTest extends ControllerTestCase {
 
 		// Verify that user is not active.
 		$u = $this->User->findById($user['User']['id']);
-		$this->assertEqual($u['User']['active'], 0, 'The user created should be inactive by default');
+		$this->assertEquals($u['User']['active'], 0, 'The user created should be inactive by default');
 
 		// Check that there is an entry in the table authenticationToken.
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
-		$this->assertEqual((bool)$at, true, 'There should be an authentication token created for the user');
+		$this->assertEquals((bool)$at, true, 'There should be an authentication token created for the user');
 	}
 
 	public function testAccountValidation() {
@@ -888,14 +888,14 @@ class UsersControllerTest extends ControllerTestCase {
 
 		// Get user and check if deactivated.
 		$u = $this->User->findById($user['User']['id']);
-		$this->assertEqual($u['User']['active'], true, 'The user should be activated after account validation, but is not');
+		$this->assertEquals($u['User']['active'], true, 'The user should be activated after account validation, but is not');
 
 		// Check Authentication Token is not active anymore.
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
-		$this->assertEqual($at['AuthenticationToken']['active'], 0, 'The authentication token should be deactivated after account activation, but it is not');
+		$this->assertEquals($at['AuthenticationToken']['active'], 0, 'The authentication token should be deactivated after account activation, but it is not');
 
 		// Check that the user returned is the right one.
-		$this->assertEqual($json['body']['User']['username'], $user['User']['username'], 'The authentication token should be deactivated after account activation, but it is not');
+		$this->assertEquals($json['body']['User']['username'], $user['User']['username'], 'The authentication token should be deactivated after account activation, but it is not');
 
 	}
 
@@ -933,7 +933,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		// Get user and check if deactivated.
 		$p = $this->User->Profile->findByUserId($user['User']['id']);
-		$this->assertEqual($p['Profile']['first_name'], 'Rene', "After account validation the user first_name should be rene, but is {$p['Profile']['first_name']}");
+		$this->assertEquals($p['Profile']['first_name'], 'Rene', "After account validation the user first_name should be rene, but is {$p['Profile']['first_name']}");
 	}
 
 	public function testAccountValidationWithGpgkeyEdit() {
@@ -1018,11 +1018,11 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 
 		// Get user and check if deactivated.
 		$p = $this->Gpgkey->findByUserId($user['User']['id']);
-		$this->assertEqual($p['Gpgkey']['key'], $dummyKey['key'], "After account validation the key was supposed to be set, but is not");
+		$this->assertEquals($p['Gpgkey']['key'], $dummyKey['key'], "After account validation the key was supposed to be set, but is not");
 	}
 
 	public function testAccountValidationWrongUserId() {
-		$this->expectException('HttpException', 'The user does not exist');
+		$this->setExpectedException('HttpException', 'The user does not exist');
 		$validate = $this->testAction(
 			'/users/validateAccount/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
 			array(
@@ -1041,7 +1041,7 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-		$this->expectException('HttpException', 'Invalid token');
+		$this->setExpectedException('HttpException', 'Invalid token');
 		$validate = $this->testAction(
 			'/users/validateAccount/' . $user['User']['id'] . '.json',
 			array(
@@ -1065,7 +1065,7 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 //
 //		$id = $kk['User']['id'];
 //
-//		$this->expectException('HttpException', 'You are not authorized to access that location');
+//		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 //		// test with anonymous user
 //		$result = json_decode(
 //			$this->testAction(
@@ -1088,7 +1088,7 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 //		$ad = $this->User->findByUsername('admin@passbolt.com');
 //		$this->User->setActive($ad);
 //
-//		$this->expectException('HttpException', 'The user id is missing');
+//		$this->setExpectedException('HttpException', 'The user id is missing');
 //		$result = json_decode($this->testAction('/users/password.json', array('return' => 'contents', 'method' => 'put'), true));
 //	}
 //
@@ -1096,7 +1096,7 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 //		$ad = $this->User->findByUsername('admin@passbolt.com');
 //		$this->User->setActive($ad);
 //
-//		$this->expectException('HttpException', 'The user id is invalid');
+//		$this->setExpectedException('HttpException', 'The user id is invalid');
 //		$result = json_decode(
 //			$this->testAction('/users/password/badId.json', array('return' => 'contents', 'method' => 'put'), true)
 //		);
@@ -1106,7 +1106,7 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 //		$ad = $this->User->findByUsername('admin@passbolt.com');
 //		$this->User->setActive($ad);
 //
-//		$this->expectException('HttpException', 'The user does not exist');
+//		$this->setExpectedException('HttpException', 'The user does not exist');
 //		$result = json_decode(
 //			$this->testAction(
 //				'/users/password/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
@@ -1120,7 +1120,7 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 //		$ad = $this->User->findByUsername('admin@passbolt.com');
 //		$this->User->setActive($ad);
 //
-//		$this->expectException('HttpException', 'No data were provided');
+//		$this->setExpectedException('HttpException', 'No data were provided');
 //		$kk = $this->User->findByUsername('user@passbolt.com');
 //		$id = $kk['User']['id'];
 //

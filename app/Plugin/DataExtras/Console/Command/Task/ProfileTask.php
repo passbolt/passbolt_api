@@ -20,6 +20,58 @@ class ProfileTask extends ModelTask {
 		$UserTask = $this->Tasks->load('Data.User');
 		$users = $UserTask::getAlias();
 
+		// Anonymous user / default for non logged-in user
+		$c[] = array('Profile' => array(
+			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'user_id' => $users['ano'],
+			'gender' => 'm',
+			'date_of_birth' => '1980-12-14',
+			'title' => 'Mr',
+			'first_name' => 'Anonymous',
+			'last_name' => 'User'
+		));
+
+		// One user per role
+		$c[] = array('Profile' => array(
+			'id' => '533d3505-a170-4f57-b14b-1768c0a895dc',
+			'user_id' => $users['gue'],
+			'gender' => 'm',
+			'date_of_birth' => '1980-12-11',
+			'title' => 'Mr',
+			'first_name' => 'Guest',
+			'last_name' => 'User'
+		));
+		$c[] = array('Profile' => array(
+			'id' => '528c2dab-cccm-416d-802b-71668cebc04d',
+			'user_id' => $users['usr'],
+			'gender' => 'm',
+			'date_of_birth' => '1980-12-12',
+			'title' => 'Mr',
+			'first_name' => 'Default',
+			'last_name' => 'User'
+		));
+		$c[] = array('Profile' => array(
+			'id' => '528c2dab-ccca-416d-802b-71668cebc04d',
+			'user_id' => $users['ins'],
+			'gender' => 'm',
+			'date_of_birth' => '1980-12-13',
+			'title' => 'Mr',
+			'first_name' => 'Root',
+			'last_name' => 'User'
+		));
+
+		// famous scientists
+		$c[] = array('Profile' => array(
+			'id' => '528c2dab-ccci-416d-802b-71668cebc04d',
+			'user_id' => $users['ada'],
+			'gender' => 'f',
+			'date_of_birth' => '1815-12-10',
+			'title' => 'Ms',
+			'first_name' => 'Ada',
+			'last_name' => 'Lovelace'
+		));
+
+		// to migrate
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-c358-416d-802b-71668cebc04d',
 			'user_id' => $users['utt'],
@@ -30,15 +82,6 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'Test'
 		));
 
-		$c[] = array('Profile' => array(
-			'id' => '528c2dab-ccca-416d-802b-71668cebc04d',
-			'user_id' => $users['ins'],
-			'gender' => 'm',
-			'date_of_birth' => '1980-12-14',
-			'title' => 'Mr',
-			'first_name' => 'Root',
-			'last_name' => 'Abaga'
-		));
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccb-416d-802b-71668cebc04d',
@@ -58,16 +101,6 @@ class ProfileTask extends ModelTask {
 			'title' => 'Mr',
 			'first_name' => 'Great',
 			'last_name' => 'Manager'
-		));
-
-		$c[] = array('Profile' => array(
-			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'user_id' => $users['ano'],
-			'gender' => 'm',
-			'date_of_birth' => '1980-12-14',
-			'title' => 'Mr',
-			'first_name' => 'Anon',
-			'last_name' => 'Ymous'
 		));
 
 		$c[] = array('Profile' => array(
@@ -110,15 +143,7 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'Djerouni'
 		));
 
-		$c[] = array('Profile' => array(
-			'id' => '528c2dab-ccci-416d-802b-71668cebc04d',
-			'user_id' => $users['rem'],
-			'gender' => 'm',
-			'date_of_birth' => '1980-12-14',
-			'title' => 'Mr',
-			'first_name' => 'Remy',
-			'last_name' => 'Bertot'
-		));
+
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-cccj-416d-802b-71668cebc04d',
@@ -150,25 +175,9 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'Bergamotte'
 		));
 
-		$c[] = array('Profile' => array(
-			'id' => '528c2dab-cccm-416d-802b-71668cebc04d',
-			'user_id' => $users['usr'],
-			'gender' => 'm',
-			'date_of_birth' => '1980-12-14',
-			'title' => 'Mr',
-			'first_name' => 'User',
-			'last_name' => 'Lambda'
-		));
 
-		$c[] = array('Profile' => array(
-			'id' => '533d3505-a170-4f57-b14b-1768c0a895dc',
-			'user_id' => $users['gue'],
-			'gender' => 'm',
-			'date_of_birth' => '1980-12-14',
-			'title' => 'Mr',
-			'first_name' => 'Guest',
-			'last_name' => 'Star'
-		));
+
+
 
 		$c[] = array('Profile' => array(
 			'id' => '528c2dab-ccco-416d-802b-71668cebc04d',

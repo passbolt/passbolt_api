@@ -373,7 +373,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$adminCat = $this->Category->findByName('administration');
 
 		// Looking at the matrix of permission should not be able to READ administration
-		$user = $this->User->findByUsername('remy@passbolt.com');
+		$user = $this->User->findByUsername('ada@passbolt.com');
 		$this->User->setActive($user);
 
 		$this->expectException('HttpException', 'The category does not exist');
@@ -412,8 +412,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 	public function testEditAndParentCategoryPermission() {
 		$adminCat = $this->Category->findByName('administration');
 
-		// Looking at the matrix of permission Remy should be able to update "projects" but has no CREATE right for "administration"
-		$user = $this->User->findByUsername('remy@passbolt.com');
+		// Looking at the matrix of permission ada should be able to update "projects" but has no CREATE right for "administration"
+		$user = $this->User->findByUsername('ada@passbolt.com');
 		$this->User->setActive($user);
 
 		$this->expectException('HttpException', 'You are not authorized to create a category into the given parent category');
@@ -473,7 +473,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$adminCat = $this->Category->findByName('administration');
 
 		// Looking at the matrix of permission should not be able to READ administration
-		$user = $this->User->findByUsername('remy@passbolt.com');
+		$user = $this->User->findByUsername('ada@passbolt.com');
 		$this->User->setActive($user);
 
 		$this->expectException('HttpException', 'The category does not exist');

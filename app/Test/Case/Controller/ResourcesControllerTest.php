@@ -114,7 +114,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 			'ismail@passbolt.com',
 			'manager.nogroup@passbolt.com',
 			'myriam@passbolt.com',
-			'remy@passbolt.com'
+			'ada@passbolt.com'
 		);
 
 		foreach ($usersNames as $username) {

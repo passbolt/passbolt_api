@@ -41,8 +41,8 @@ class CategoryFixture extends CakeTestFixture {
 			'name' => 'utest',
 			'category_type_id' => null,
 			'deleted' => 0,
-			'created' => '2015-06-24 15:41:02',
-			'modified' => '2015-06-24 15:41:02',
+			'created' => '2015-07-01 13:39:56',
+			'modified' => '2015-07-01 13:39:56',
 			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
@@ -54,8 +54,8 @@ class CategoryFixture extends CakeTestFixture {
 			'name' => 'utest1',
 			'category_type_id' => null,
 			'deleted' => 0,
-			'created' => '2015-06-24 15:41:02',
-			'modified' => '2015-06-24 15:41:02',
+			'created' => '2015-07-01 13:39:56',
+			'modified' => '2015-07-01 13:39:56',
 			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),
@@ -67,8 +67,8 @@ class CategoryFixture extends CakeTestFixture {
 			'name' => 'utest2',
 			'category_type_id' => null,
 			'deleted' => 0,
-			'created' => '2015-06-24 15:41:02',
-			'modified' => '2015-06-24 15:41:02',
+			'created' => '2015-07-01 13:39:56',
+			'modified' => '2015-07-01 13:39:56',
 			'created_by' => '',
 			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
 		),

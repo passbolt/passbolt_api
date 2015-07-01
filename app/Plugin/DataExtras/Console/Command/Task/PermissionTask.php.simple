@@ -62,7 +62,7 @@ class PermissionTask extends ModelTask {
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'rem' => array(
+			'ada' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,

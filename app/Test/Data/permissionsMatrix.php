@@ -73,7 +73,7 @@ return array(
 			),
 			array(
 				'aconame' => 'cp-project1',
-				'aroname' => 'remy@passbolt.com',
+				'aroname' => 'ada@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
@@ -83,7 +83,7 @@ return array(
 			),
 			array(
 				'aconame' => 'cp-project2',
-				'aroname' => 'remy@passbolt.com',
+				'aroname' => 'ada@passbolt.com',
 				'result' => PermissionType::UPDATE
 			),
 			array(
@@ -125,7 +125,7 @@ return array(
 			),
 			array(
 				'aconame' => 'cpp1-pwd1',
-				'aroname' => 'remy@passbolt.com',
+				'aroname' => 'ada@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
@@ -135,7 +135,7 @@ return array(
 			),
 			array(
 				'aconame' => 'cpp2-pwd1',
-				'aroname' => 'remy@passbolt.com',
+				'aroname' => 'ada@passbolt.com',
 				'result' => PermissionType::UPDATE
 			),
 			array(

@@ -164,7 +164,7 @@ class User extends AppModel {
 
 		// check that the hashes are matching
 		$current = $this->field('password', array('id' => $userId));
-		$hash = Security::hash($check['current_password'], Configure::read('HashType'), $current);
+		$hash = Security::hash($check['current_password'], Configure::read('Auth.HashType'), $current);
 		return ($current === $hash);
 	}
 
@@ -178,7 +178,7 @@ class User extends AppModel {
 	public function beforeSave($options=null) {
 		// Encrypt the password.
 		if (isset($this->data['User']['password'])) {
-			$this->data['User']['password'] = Security::hash($this->data['User']['password'], Configure::read('HashType'), false);
+			$this->data['User']['password'] = Security::hash($this->data['User']['password'], Configure::read('Auth.HashType'), false);
 		}
 		return true;
 	}

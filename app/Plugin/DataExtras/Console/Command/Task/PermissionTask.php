@@ -144,7 +144,7 @@ class PermissionTask extends ModelTask {
 			'aco' => 'Category',
 			'aco_foreign_key' => $cat['cp1'],
 			'aro' => 'User',
-			'aro_foreign_key' => $users['rem'],
+			'aro_foreign_key' => $users['ada'],
 			'type' => PermissionType::ADMIN,
 		));
 		// Frank has denied right on project
@@ -180,7 +180,7 @@ class PermissionTask extends ModelTask {
 			'aco' => 'Category',
 			'aco_foreign_key' => $cat['oth'],
 			'aro' => 'User',
-			'aro_foreign_key' => $users['rem'],
+			'aro_foreign_key' => $users['ada'],
 			'type' => PermissionType::ADMIN,
 		));
 		//  Freelancers have read only rights to projects others
