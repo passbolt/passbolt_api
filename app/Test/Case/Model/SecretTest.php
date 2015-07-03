@@ -47,7 +47,7 @@ class SecretTest extends CakeTestCase {
 			} else {
 				$msg = 'validation of the secret user_id with "' . $testcase . '" should not validate';
 			}
-			$this->assertEqual($this->Secret->validates(array('fieldList' => array('user_id'))), $result, $msg);
+			$this->assertEquals($this->Secret->validates(array('fieldList' => array('user_id'))), $result, $msg);
 		}
 	}
 
@@ -65,7 +65,7 @@ class SecretTest extends CakeTestCase {
 			$this->Secret->set($secret);
 			if($result) $msg = 'validation of the secret resource_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the secret resource_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->Secret->validates(array('fieldList' => array('resource_id'))), $result, $msg);
+			$this->assertEquals($this->Secret->validates(array('fieldList' => array('resource_id'))), $result, $msg);
 		}
 	}
 
@@ -104,7 +104,7 @@ hcciUFw5
 			$validate = $this->Secret->validates(array('fieldList' => array('data')));
 			$msg .= print_r($secret, true);
 			$msg .= print_r($this->Secret->invalidFields(), true);
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 }

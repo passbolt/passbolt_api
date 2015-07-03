@@ -84,7 +84,7 @@ class CategoryTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the category name with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Category->validates(array('fieldList' => array('name'))), $result, $msg);
+			$this->assertEquals($this->Category->validates(array('fieldList' => array('name'))), $result, $msg);
 		}
 	}
 
@@ -108,7 +108,7 @@ class CategoryTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the category parent with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Category->validates(array('fieldList' => array('parent_id'))), $result, $msg);
+			$this->assertEquals($this->Category->validates(array('fieldList' => array('parent_id'))), $result, $msg);
 		}
 	}
 
@@ -132,7 +132,7 @@ class CategoryTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the category type with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Category->validates(array('fieldList' => array('category_type_id'))), $result, $msg);
+			$this->assertEquals($this->Category->validates(array('fieldList' => array('category_type_id'))), $result, $msg);
 		}
 	}
 

@@ -46,8 +46,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->User = ClassRegistry::init('User');
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Category = ClassRegistry::init('Category');
-		$kk = $this->User->findByUsername('darth.vader@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('dame@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function testViewResourceIdIsMissing() {
@@ -56,7 +56,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 	public function testViewResourceIdNotValid() {
 		// test an error bad id
-		$this->expectException('HttpException', 'The resource id is invalid');
+		$this->setExpectedException('HttpException', 'The resource id is invalid');
 		$result = json_decode($this->testAction("/resources/badid.json?children=true", array(
 			'method' => 'get',
 			'return' => 'contents'
@@ -65,7 +65,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 	public function testViewResourceDoesNotExist() {
 		// test when a wrong id is provided
-		$this->expectException('HttpException', 'The resource does not exist');
+		$this->setExpectedException('HttpException', 'The resource does not exist');
 		$result = json_decode($this->testAction("/resources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'get',
 			'return' => 'contents'
@@ -75,11 +75,11 @@ class ResourcesControllerTest extends ControllerTestCase {
 	public function testViewAndPermission() {
 		$res = $this->Resource->findByName('cpp1-pwd1');
 
-		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findByUsername('ismail@passbolt.com');
+		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findByUsername('irene@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'The resource does not exist');
+		$this->setExpectedException('HttpException', 'The resource does not exist');
 		$result = json_decode($this->testAction("/resources/{$res['Resource']['id']}.json", array(
 			'method' => 'Get',
 			'return' => 'contents'
@@ -98,7 +98,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testIndexFilterCategoryDoesntExist() {
-		$this->expectException('HttpException', 'The category doesn\'t exist');
+		$this->setExpectedException('HttpException', 'The category doesn\'t exist');
 		$catId = '50d22ff7-5239-4dd2-94d1-1c63d7a10fce';
 		$url = '/resources.json?recursive=true&fltr_model_category=' . $catId;
 		json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
@@ -107,14 +107,14 @@ class ResourcesControllerTest extends ControllerTestCase {
 	public function testIndexAndPermission() {
 		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../Data/permissionsMatrix.php');
 		$usersNames = array(
-			'a-usr1@companya.com',
-			'cedric@passbolt.com',
-			'darth.vader@passbolt.com',
-			'kevin@passbolt.com',
-			'ismail@passbolt.com',
-			'manager.nogroup@passbolt.com',
-			'myriam@passbolt.com',
-			'ada@passbolt.com'
+            'ada@passbolt.com',
+            'betty@passbolt.com',
+            'carol@passbolt.com',
+			'hedy@passbolt.com',
+			'dame@passbolt.com',
+			'irene@passbolt.com',
+			'lynne@passbolt.com',
+			'marlyn@passbolt.com',
 		);
 
 		foreach ($usersNames as $username) {
@@ -214,7 +214,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAddWithCategoryBadId() {
-		$this->expectException('HttpException', 'Could not validate CategoryResource');
+		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
@@ -235,7 +235,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAddWithCategoryDoesNotExist() {
-		$this->expectException('HttpException', 'Could not validate CategoryResource');
+		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
 		// Test with wrong id for category
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
@@ -259,12 +259,12 @@ class ResourcesControllerTest extends ControllerTestCase {
 	public function testAddAndPermission() {
 		$cat = $this->Category->findByName('administration');
 
-		// Looking at the matrix of permission Myriam should be able to read but not to create into the category marketing
-		$user = $this->User->findByUsername('myriam@passbolt.com');
+		// Looking at the matrix of permission marlyn should be able to read but not to create into the category marketing
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
 		$this->User->setActive($user);
 
 		// Error : name is empty
-		$this->expectException('HttpException', 'You are not authorized to create a resource into the category');
+		$this->setExpectedException('HttpException', 'You are not authorized to create a resource into the category');
 		$result = json_decode($this->testAction('/resources/add.json', array(
 			'data' => array(
 				'Resource' => array(
@@ -381,7 +381,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	public function testEditWithCategoryBadId() {
 		$resource = $this->Resource->findByName("facebook account");
 		$id = $resource['Resource']['id'];
-		$this->expectException('HttpException', 'Could not validate CategoryResource');
+		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
 		// Test with a bad format of category
 		$result = json_decode($this->testAction("/resources/$id.json", array(
 			'data' => array(
@@ -402,12 +402,12 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	public function testEditAndPermission() {
 		$resource = $this->Resource->findByName("tetris license");
 
-		// Looking at the matrix of permission Myriam should be able to read but not to update the resource tetris license
-		$user = $this->User->findByUsername('myriam@passbolt.com');
+		// Looking at the matrix of permission marlyn should be able to read but not to update the resource tetris license
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
 		$this->User->setActive($user);
 
 		// Error : name is empty
-		$this->expectException('HttpException', 'You are not authorized to edit this resource');
+		$this->setExpectedException('HttpException', 'You are not authorized to edit this resource');
 		$result = json_decode($this->testAction("/resources/{$resource['Resource']['id']}.json", array(
 			'data' => array(
 				'Resource' => array(
@@ -470,7 +470,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	}
 
 	public function testDeleteResourceIdIsMissing() {
-		$this->expectException('HttpException', 'The resource id is missing');
+		$this->setExpectedException('HttpException', 'The resource id is missing');
 		$result = json_decode($this->testAction("/resources.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
@@ -478,7 +478,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	}
 
 	public function testDeleteResourceIdNotValid() {
-		$this->expectException('HttpException', 'The resource id is invalid');
+		$this->setExpectedException('HttpException', 'The resource id is invalid');
 		$result = json_decode($this->testAction("/resources/badid.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
@@ -486,7 +486,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	}
 
 	public function testDeleteResourceDoesNotExist() {
-		$this->expectException('HttpException', 'The resource does not exist');
+		$this->setExpectedException('HttpException', 'The resource does not exist');
 		$result = json_decode($this->testAction("/resources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
@@ -494,14 +494,14 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	}
 
 	public function testDeleteAndPermission() {
-		// Looking at the matrix of permission Myriam should be able to read but not to delete the resource facebook
-		$user = $this->User->findByUsername('myriam@passbolt.com');
+		// Looking at the matrix of permission marlyn should be able to read but not to delete the resource facebook
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
 		$this->User->setActive($user);
 
 		$res = $this->Resource->findByName('bank password');
 
 		// Error : name is empty
-		$this->expectException('HttpException', 'You are not authorized to delete this resource');
+		$this->setExpectedException('HttpException', 'You are not authorized to delete this resource');
 		$result = json_decode($this->testAction("/resources/{$res['Resource']['id']}.json", array(
 			'method' => 'delete',
 			'return' => 'contents'

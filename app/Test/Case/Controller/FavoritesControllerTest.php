@@ -52,13 +52,13 @@ class FavoritesControllerTest extends ControllerTestCase {
 		$this->Resource->useDbConfig = 'test';
 		
 		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('darth.vader@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('dame@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function testAddNotCommentable() {
 		$model = 'User';
-		$this->expectException('HttpException', "The model {$model} is not favoritable");
+		$this->setExpectedException('HttpException', "The model {$model} is not favoritable");
 		$this->testAction("/favorites/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
@@ -68,7 +68,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testAddIdIsNotValid() {
 		$model = 'Resource';
-		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('HttpException', 'The Resource id is invalid');
 		$this->testAction("/favorites/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
@@ -76,7 +76,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
-		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/favorites/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
@@ -92,7 +92,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testDeleteIdIsNotValid() {
 		$model = 'Resource';
-		$this->expectException('HttpException', 'The starred id is not valid');
+		$this->setExpectedException('HttpException', 'The starred id is not valid');
 		$this->testAction("/favorites/badId.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
@@ -100,7 +100,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
-		$this->expectException('HttpException', 'The record is not in your starred item list');
+		$this->setExpectedException('HttpException', 'The record is not in your starred item list');
 		$this->testAction("/favorites/$id.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 

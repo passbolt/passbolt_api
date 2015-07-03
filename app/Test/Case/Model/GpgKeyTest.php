@@ -15,7 +15,6 @@ class GpgkeyTest extends CakeTestCase {
 
 	public $autoFixtures = true;
 
-	public $lisa;
 
 	/**
 	 * Setup
@@ -25,11 +24,6 @@ class GpgkeyTest extends CakeTestCase {
 		parent::setUp();
 		$this->Gpgkey = ClassRegistry::init('Gpgkey');
 		$this->User = ClassRegistry::init('User');
-
-		// setup lisa
-		$k = $this->Gpgkey->find('first', array('conditions' => array('key_id' => 'E513B181')));
-		$this->assertEqual(!empty($k), true, 'Should find lisa key');
-		$this->lisa = $k;
 	}
 
 	/**
@@ -38,7 +32,7 @@ class GpgkeyTest extends CakeTestCase {
 	*/
 	public function testSetup() {
 		$k = $this->Gpgkey->find('first', array('conditions' => array('key_id' => '00000000')));
-		$this->assertEqual(empty($k), true, 'Should not find any key');
+		$this->assertEquals(empty($k), true, 'Should not find any key');
 	}
 
 	/**
@@ -46,7 +40,7 @@ class GpgkeyTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testUserIdValidation() {
-		$user = $this->User->findByUsername('utest@passbolt.com');
+		$user = $this->User->findByUsername('user@passbolt.com');
 		$testcases = array(
 			'' => false,
 			'?!#' => false,
@@ -62,7 +56,7 @@ class GpgkeyTest extends CakeTestCase {
 			if($result) $msg = 'validation of the user_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the user_id with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('user_id')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -71,7 +65,6 @@ class GpgkeyTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testKeyValidation() {
-		$user = $this->User->findByUsername('utest@passbolt.com');
 		$testcases = array(
 			'' => false,
 			'?!#' => false,
@@ -114,7 +107,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of the key with ' . $testcase . ' should validate';
 			else $msg = 'validation of the  key with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('key')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -177,7 +170,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of the bits with ' . $testcase . ' should validate';
 			else $msg = 'validation of the bits with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('bits')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -188,10 +181,10 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 	public function testUidValidation() {
 		$testcases = array(
 			'' => false,
-			'kevin' => true,
-			'<kevin@enova-tech.net>' => true,
-			'kevin <kevin@enova-tech.net>' => true,
-			'jeannot (comment1) <kevin@enova-tech.net>' => true,
+			'user' => true,
+			'<user@passbolt.net>' => true,
+			'user <user@passbolt.net>' => true,
+			'user (user1) <user@passbolt.net>' => true,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$gpgkey = array('Gpgkey' => array('uid' => $testcase));
@@ -199,7 +192,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of the uid with ' . $testcase . ' should validate';
 			else $msg = 'validation of the uid with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('uid')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -219,7 +212,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of the key_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the key_id with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('key_id')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -240,7 +233,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of the fingerprint with ' . $testcase . ' should validate';
 			else $msg = 'validation of the fingerprint with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('fingerprint')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -261,7 +254,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of expires with ' . $testcase . ' should validate';
 			else $msg = 'validation of expires with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('expires')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -282,7 +275,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of key_created with ' . $testcase . ' should validate';
 			else $msg = 'validation of key_created with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('key_created')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -307,7 +300,7 @@ UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 			if($result) $msg = 'validation of type with ' . $testcase . ' should validate';
 			else $msg = 'validation of type with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('type')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 }

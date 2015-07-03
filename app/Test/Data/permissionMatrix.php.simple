@@ -4,17 +4,17 @@ return array(
 		'Resource' => array(
 			array(
 				'aconame' => 'facebook account',
-				'aroname' => 'darth.vader@passbolt.com',
+				'aroname' => 'dame@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
 				'aconame' => 'facebook account',
-				'aroname' => 'myriam@passbolt.com',
+				'aroname' => 'marlyn@passbolt.com',
 				'result' => PermissionType::DENY
 			),
 			array(
 				'aconame' => 'dp1-pwd1',
-				'aroname' => 'cedric@passbolt.com',
+				'aroname' => 'carol@passbolt.com',
 				'result' => PermissionType::READ
 			),
 			array(
@@ -24,7 +24,7 @@ return array(
 			),
 			array(
 				'aconame' => 'cpp1-pwd1',
-				'aroname' => 'manager.nogroup@passbolt.com',
+				'aroname' => 'lynne@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
@@ -34,12 +34,12 @@ return array(
 			),
 			array(
 				'aconame' => 'shared resource',
-				'aroname' => 'a-usr1@companya.com',
+				'aroname' => 'hedy@passbolt.com',
 				'result' => PermissionType::UPDATE
 			),
 			array(
 				'aconame' => 'dp2-pwd1',
-				'aroname' => 'cedric@passbolt.com',
+				'aroname' => 'carol@passbolt.com',
 				'result' => PermissionType::DENY
 			)
 		)

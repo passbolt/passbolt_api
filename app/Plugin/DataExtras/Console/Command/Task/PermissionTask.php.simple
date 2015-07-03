@@ -31,32 +31,32 @@ class PermissionTask extends ModelTask {
 				'tetris license' => PermissionType::ADMIN,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'mng' => array(
+			'lyn' => array(
 				'facebook account' => PermissionType::ADMIN,
 				'bank password' => PermissionType::ADMIN,
 				'salesforce account' => PermissionType::ADMIN,
 				'tetris license' => PermissionType::ADMIN,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'utt' => array(
+			'kat' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'tst' => array(
+			'edi' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'ins' => array(
+			'roo' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'dar' => array(
+			'dam' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
@@ -68,31 +68,31 @@ class PermissionTask extends ModelTask {
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'aur' => array(
+			'gra' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'myr' => array(
+			'mar' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'ism' => array(
+			'ire' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'kev' => array(
+			'bet' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'ced' => array(
+			'car' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
@@ -116,7 +116,7 @@ class PermissionTask extends ModelTask {
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'au1' => array(
+			'hed' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,

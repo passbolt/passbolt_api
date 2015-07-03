@@ -39,9 +39,8 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		$this->Gpgkey = ClassRegistry::init('Gpgkey');
 		parent::setUp();
 
-		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	/**
@@ -57,7 +56,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 				),
 				true
 			));
-		$this->assertEqual(
+		$this->assertEquals(
 			$result->header->status,
 			Message::SUCCESS,
 			'/gpgkeys.json return something'
@@ -76,7 +75,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 				),
 				true
 			));
-		$this->assertEqual(
+		$this->assertEquals(
 			$result->header->status,
 			Message::NOTICE,
 			'/gpgkeys.json return a warning'
@@ -101,7 +100,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 				),
 				true
 			));
-		$this->assertEqual(
+		$this->assertEquals(
 			$result->header->status,
 			Message::SUCCESS,
 			'/gpgkeys.json return something'
@@ -121,7 +120,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 				),
 				true
 			));
-		$this->assertEqual(
+		$this->assertEquals(
 			$result->header->status,
 			Message::NOTICE,
 			'/gpgkeys.json return something'
@@ -156,7 +155,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Normal test view.
 	 */
 	public function testView() {
-		$gpgkey = $this->Gpgkey->findByUserId('bbd56042-cccc-11e1-a0c5-080027796c4a');
+		$gpgkey = $this->Gpgkey->findByUserId('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce');
 		$result = json_decode(
 			$this->testAction("/gpgkeys/{$gpgkey['Gpgkey']['user_id']}.json",
 				array(
@@ -165,7 +164,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 				),
 				true)
 		);
-		$this->assertEqual($result->header->status, Message::SUCCESS,'/gpgkey return something');
+		$this->assertEquals($result->header->status, Message::SUCCESS,'/gpgkey return something');
 	}
 
 	/**
@@ -173,8 +172,8 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 */
 	public function testAdd() {
 		$pubKey = file_get_contents(APP . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc');
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($user);
 		$json = json_decode(
 			$this->testAction('/gpgkeys.json',
 			array(
@@ -198,7 +197,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			'first',
 			array (
 				'conditions' => array(
-					'Gpgkey.user_id' => $kk['User']['id'],
+					'Gpgkey.user_id' => $user['User']['id'],
 					'Gpgkey.deleted' => false
 				)
 			));
@@ -215,8 +214,8 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 */
 	public function testAddRemovePreviousKeys() {
 		$pubKey = file_get_contents(APP . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc');
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($user);
 
 		// Number of insertion rounds.
 		$rounds = 3;
@@ -238,7 +237,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			$this->assertEquals(
 				Message::SUCCESS,
 				$result['header']['status'],
-				"Add : /gpgkeys.json : The test should return sucess but is returning " . print_r($result, true)
+				"Add : /gpgkeys.json : The test should return success but is returning " . print_r($result, true)
 			);
 		}
 
@@ -248,7 +247,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			'count',
 			array (
 				'conditions' => array(
-					'Gpgkey.user_id' => $kk['User']['id'],
+					'Gpgkey.user_id' => $user['User']['id'],
 					'Gpgkey.deleted' => true
 				)
 			));
@@ -266,8 +265,8 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 */
 	public function testAddInvalidKey() {
 		$pubKey = 'invalidkey';
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($user);
 		$this->setExpectedException('HttpException', 'Could not validate gpgkey data');
 		$this->testAction('/gpgkeys.json',
 			array(

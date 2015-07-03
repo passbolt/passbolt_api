@@ -32,8 +32,8 @@ class CommentTask extends ModelTask {
 			'content' => 'this is a short comment',
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
-			'created_by' => $users['ism'],
-			'modified_by' => $users['ism'],
+			'created_by' => $users['ire'],
+			'modified_by' => $users['ire'],
 		));
 		$c[] = array('Comment'=>array(
 			'id' => 'aaa00001-cccc-11d1-a0c5-080027796c4c',
@@ -43,8 +43,8 @@ class CommentTask extends ModelTask {
 			'content' => 'this is a reply to the short comment',
 			'created' => '2012-11-25 13:39:26',
 			'modified' => '2012-11-25 13:39:26',
-			'created_by' => $users['myr'],
-			'modified_by' => $users['myr'],
+			'created_by' => $users['mar'],
+			'modified_by' => $users['mar'],
 		));
 		return $c;
 	}

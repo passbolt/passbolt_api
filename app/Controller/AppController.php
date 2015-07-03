@@ -126,7 +126,6 @@ class AppController extends Controller {
 		if (User::isAnonymous()) {
 			if ($this->request->is('Json')) {
 				$this->Message->error(__('You need to login to access this location'), array('code' => 403));
-				echo 'json';
 				return true; // no need to redirect to login
 			}
 			return false;

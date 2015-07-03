@@ -26,23 +26,23 @@ class PermissionTask extends ModelTask {
 		$CategoryTask = $this->Tasks->load('Data.Category');
 		$cat = $CategoryTask::getAlias();
 
-		// User test@passbolt.com as admin of the root unit test category
+		// User kathleen@passbolt.com as admin of the root unit test category
 		// Sand box for unit tests
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4ae-ea4c-4baf-aaf4-23a4d7a10dee',
 			'aco' => 'Category',
 			'aco_foreign_key' => $cat['utt'],
 			'aro' => 'User',
-			'aro_foreign_key' => $users['utt'],
+			'aro_foreign_key' => $users['kay'],
 			'type' => PermissionType::ADMIN
 		));
-		// Manager.nogroup has admin right on everything
+		// kathleen has admin right on everything
 		$ps[] = array('Permission' => array(
 			'id' => '533d2ecb-3ec8-4437-9ca5-0aafc0a895dc',
 			'aco' => 'Category',
 			'aco_foreign_key' => $cat['root'],
 			'aro' => 'User',
-			'aro_foreign_key' => $users['mng'],
+			'aro_foreign_key' => $users['lyn'],
 			'type' => PermissionType::ADMIN
 		));
 		// Group Management has admin rights on everything
@@ -117,7 +117,7 @@ class PermissionTask extends ModelTask {
 			'aco' => 'Resource',
 			'aco_foreign_key' => $rDrupalPwd2['Resource']['id'],
 			'aro' => 'User',
-			'aro_foreign_key' => $users['ced'],
+			'aro_foreign_key' => $users['car'],
 			'type' => PermissionType::DENY
 		));
 		// Group cakephp has access to category cakephp in readonly
@@ -192,7 +192,7 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $groups['fre'],
 			'type' => PermissionType::READ,
 		));
-		// Jean René has readonly access rights on cp-project2
+		// Jean has readonly access rights on cp-project2
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-b598-42f7-b105-23a4d7a10fce',
 			'aco' => 'Category',
@@ -201,7 +201,7 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $users['jea'],
 			'type' => PermissionType::READ,
 		));
-		// Jean René has create access rights on "jean rené private"
+		// Jean has create access rights on "Jean private"
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-c390-4f2e-a8f8-23a4d7a10fcc',
 			'aco' => 'Category',
@@ -210,7 +210,7 @@ class PermissionTask extends ModelTask {
 			'aro_foreign_key' => $users['jea'],
 			'type' => PermissionType::CREATE,
 		));
-		// Jean René has readonly access rights on cpp1-pwd1
+		// Jean has readonly access rights on cpp1-pwd1
 		$rCpp1Pwd1 = $this->Resource->findByName("cpp1-pwd1");
 		$ps[] = array('Permission' => array(
 			'id' => '50e6b4af-c390-4e5e-a8f8-23a4d7a10fce',

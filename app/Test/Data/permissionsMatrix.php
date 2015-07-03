@@ -63,12 +63,12 @@ return array(
 		'Category' => array(
 			array(
 				'aconame' => 'marketing',
-				'aroname' => 'darth.vader@passbolt.com',
+				'aroname' => 'dame@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
 				'aconame' => 'd-project2',
-				'aroname' => 'cedric@passbolt.com',
+				'aroname' => 'carol@passbolt.com',
 				'result' => PermissionType::READ
 			),
 			array(
@@ -78,7 +78,7 @@ return array(
 			),
 			array(
 				'aconame' => 'cp-project1',
-				'aroname' => 'manager.nogroup@passbolt.com',
+				'aroname' => 'lynne@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
@@ -88,39 +88,39 @@ return array(
 			),
 			array(
 				'aconame' => 'marketing',
-				'aroname' => 'cedric@passbolt.com',
+				'aroname' => 'carol@passbolt.com',
 				'result' => null
 			),
 			array(
 				'aconame' => 'cp-project2',
-				'aroname' => 'frank@passbolt.com',
+				'aroname' => 'frances@passbolt.com',
 				'result' => PermissionType::DENY
 			),
 			array(
-				'aconame' => 'pv-jean_rene',
-				'aroname' => 'jean-rene@test.com',
+				'aconame' => 'pv-jean_bartik',
+				'aroname' => 'jean@passbolt.com',
 				'result' => PermissionType::CREATE
 			),
 			array(
 				'aconame' => 'Bolt Softwares Pvt. Ltd.',
-				'aroname' => 'jean-rene@test.com',
+				'aroname' => 'jean@passbolt.com',
 				'result' => null
 			),
 		),
 		'Resource' => array(
 			array(
 				'aconame' => 'facebook account',
-				'aroname' => 'darth.vader@passbolt.com',
+				'aroname' => 'dame@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
 				'aconame' => 'facebook account',
-				'aroname' => 'myriam@passbolt.com',
+				'aroname' => 'marlyn@passbolt.com',
 				'result' => PermissionType::DENY
 			),
 			array(
 				'aconame' => 'dp1-pwd1',
-				'aroname' => 'cedric@passbolt.com',
+				'aroname' => 'carol@passbolt.com',
 				'result' => PermissionType::READ
 			),
 			array(
@@ -130,7 +130,7 @@ return array(
 			),
 			array(
 				'aconame' => 'cpp1-pwd1',
-				'aroname' => 'manager.nogroup@passbolt.com',
+				'aroname' => 'lynne@passbolt.com',
 				'result' => PermissionType::ADMIN
 			),
 			array(
@@ -140,12 +140,12 @@ return array(
 			),
 			array(
 				'aconame' => 'shared resource',
-				'aroname' => 'a-usr1@companya.com',
+				'aroname' => 'hedy@passbolt.com',
 				'result' => PermissionType::UPDATE
 			),
 			array(
 				'aconame' => 'dp2-pwd1',
-				'aroname' => 'cedric@passbolt.com',
+				'aroname' => 'carol@passbolt.com',
 				'result' => PermissionType::DENY
 			)
 		)

@@ -26,26 +26,23 @@ class UserTask extends ModelTask {
 			'gue' => $User->findByUsername('guest@passbolt.com'),
 			'usr' => $User->findByUsername('user@passbolt.com'),
 			'adm' => $User->findByUsername('admin@passbolt.com'),
-			'ins' => $User->findByUsername('root@passbolt.com'),
+			'roo' => $User->findByUsername('root@passbolt.com'),
 
 			// famous scientists
 			'ada' => $User->findByUsername('ada@passbolt.com'),
+            'bet' => $User->findByUsername('betty@passbolt.com'),
+            'car' => $User->findByUsername('carol@passbolt.com'),
+            'dam' => $User->findByUsername('dame@passbolt.com'),
+            'edi' => $User->findByUsername('edith@passbolt.com'),
+            'fra' => $User->findByUsername('frances@passbolt.com'),
+            'gra' => $User->findByUsername('grace@passbolt.com'),
+            'hed' => $User->findByUsername('hedy@passbolt.com'),
+            'ire' => $User->findByUsername('irene@passbolt.com'),
+            'jea' => $User->findByUsername('jean@passbolt.com'),
+            'kay' => $User->findByUsername('kathleen@passbolt.com'),
+            'lyn' => $User->findByUsername('lynne@passbolt.com'),
+            'mar' => $User->findByUsername('marlyn@passbolt.com'),
 
-			// to migrate
-			'mng' => $User->findByUsername('manager.nogroup@passbolt.com'),
-			'utt' => $User->findByUsername('utest@passbolt.com'),
-			'tst' => $User->findByUsername('test@passbolt.com'),
-			'dar' => $User->findByUsername('darth.vader@passbolt.com'),
-			'aur' => $User->findByUsername('aurelie@passbolt.com'),
-			'myr' => $User->findByUsername('myriam@passbolt.com'),
-			'ism' => $User->findByUsername('ismail@passbolt.com'),
-			'kev' => $User->findByUsername('kevin@passbolt.com'),
-			'ced' => $User->findByUsername('cedric@passbolt.com'),
-			'fra' => $User->findByUsername('frank@passbolt.com'),
-			'jea' => $User->findByUsername('jean-rene@test.com'),
-			'au1' => $User->findByUsername('a-usr1@companya.com'),
-			// 'ala' => $User->findByUsername('alan@passbolt.com'),
-			// 'ras' => $User->findByUsername('rasterman@passbolt.com')
 		);
 		foreach ($aliases as $name=>$obj){
 			$aliases[$name] = $obj['User']['id'];
@@ -88,7 +85,7 @@ class UserTask extends ModelTask {
 		$us[] = array('User' => array(
 			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c51',
 			'username' => 'root@passbolt.com',
-			'role_id' => '142c1340-c5cd-11e1-a0c5-080027796c4c', // ROOT
+			'role_id' => '142c1340-c5cd-11e1-a0c5-080027796c4c',
 			'password' => 'password',
 			'active' => 1
 		));
@@ -101,100 +98,90 @@ class UserTask extends ModelTask {
 			'password' => 'password',
 			'active' => 1
 		));
-
-		// to migrate
-		$us[] = array('User' => array(
-			'id' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
-			'username' => 'utest@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c', // USER
-			'password' => 'password',
-			'active' => 1
-		));
-
-		$us[] = array('User' => array(
-			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c4c',
-			'username' => 'darth.vader@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-		$us[] = array('User' => array(
-			//533d32c0-1f30-438c-8f26-1768c0a895dc
-			'id' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
-			'username' => 'manager.nogroup@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-
-		$us[] = array('User' => array(
-			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e',
-			'username' => 'test@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-		$us[] = array('User' => array(
-			'id' => '50cdea9c-f214-4549-9807-2f4fd7a10fce',
-			'username' => 'aurelie@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-		$us[] = array('User' => array(
-			'id' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
-			'username' => 'ismail@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-		$us[] = array('User' => array(
-			'id' => '50cdea9c-fa10-47af-aaa8-2f4fd7a10fce',
-			'username' => 'myriam@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-
-		$us[] = array('User' => array(
-			'id' => '50cdea9c-aa88-46cb-a09b-2f4fd7a10fce',
-			'username' => 'kevin@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-		$us[] = array('User' => array(
-			'id' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce',
-			'username' => 'cedric@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-		$us[] = array('User' => array(
-			'id' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
-			'username' => 'jean-rene@test.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-
-		$us[] = array('User' => array(
-			'id' => '533d37a0-aa11-4945-9b11-1663a0a895dc',
-			'username' => 'a-usr1@companya.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-		$us[] = array('User' => array(
-			// 533d346d-d378-4acc-affd-1663c0a895dc
-			'id' => '533d346d-d378-4acc-affd-1663c0a895dc',
-			'username' => 'frank@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'password' => 'password',
-			'active' => 1
-		));
-
-		
+        $us[] = array('User' => array(
+            'id' => '50cdea9c-aa88-46cb-a09b-2f4fd7a10fce',
+            'username' => 'betty@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce',
+            'username' => 'carol@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => 'dada6042-c5cd-11e1-a0c5-080027796c4c',
+            'username' => 'dame@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e',
+            'username' => 'edith@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '533d346d-d378-4acc-affd-1663c0a895dc',
+            'username' => 'frances@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '50cdea9c-f214-4549-9807-2f4fd7a10fce',
+            'username' => 'grace@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '533d37a0-aa11-4945-9b11-1663a0a895dc',
+            'username' => 'hedy@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
+            'username' => 'irene@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
+            'username' => 'jean@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
+            'username' => 'kathleen@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
+            'username' => 'lynne@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
+        $us[] = array('User' => array(
+            'id' => '50cdea9c-fa10-47af-aaa8-2f4fd7a10fce',
+            'username' => 'marlyn@passbolt.com',
+            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'password' => 'password',
+            'active' => 1
+        ));
 		return $us;
 	}
 }
