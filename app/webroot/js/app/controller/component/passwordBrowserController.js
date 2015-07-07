@@ -43,34 +43,34 @@ steal(
 
 		// Constructor like
 		'init': function (el, options) {
-			
+
 			// The map to use to make our grid working with our resource model
 			options.map = new mad.object.Map({
 				'id': 'id',
 				'name': 'name',
 				'username': 'username',
+				'secret': 'Secret',
 				'uri': 'uri',
 				'modified': 'modified',
-				'expires': 'expiry_date',
 				'owner': 'Creator.username',
-				'copyLogin': 'id',
-				'copySecret': 'id',
+				//'copyLogin': 'id',
+				//'copySecret': 'id',
 				'Category': 'Category'
 			});
-			
+
 			// the columns model
 			options.columnModel = [{
 				'name': 'multipleSelect',
 				'index': 'multipleSelect',
 				'header': {
 					'css': ['selections s-cell'],
-					'label': '<div class="input checkbox"> \
-							<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all"> \
-							<label for="checkbox-select-all">select all</label> \
+					'label': '<div class="input checkbox">'
+							+ '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all" disabled="disabled">'
+							+ '<label for="checkbox-select-all">select all</label> \
 						</div>'
 				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
-					var availableValues = [];
+					var availableValues = {};
 					availableValues[item.id] = '';
 					var checkbox = mad.helper.ComponentHelper.create(
 						cellElement,
@@ -95,7 +95,7 @@ steal(
 						</a>'
 				},
 				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
-					var availableValues = [];
+					var availableValues = {};
 					availableValues[item.id] = '';
 					var favorite = mad.helper.ComponentHelper.create(
 						cellElement,
@@ -114,13 +114,6 @@ steal(
 				'header': {
 					'css': ['m-cell'],
 					'label': __('Resource')
-				},
-				'valueAdapter': function (value, item, columnModel, rowNum) {
-					var returnValue = value;
-					can.each(item.Category, function (category, i) {
-						returnValue += ' <span class="password_browser_category_label">' + category.name + '</span>';
-					});
-					return returnValue;
 				}
 			}, {
 				'name': 'username',
@@ -128,6 +121,30 @@ steal(
 				'header': {
 					'css': ['m-cell'],
 					'label': __('Username')
+				}
+			}, {
+				'name': 'secret',
+				'index': 'secret',
+				'header': {
+					'css': ['m-cell', 'password'],
+					'label': __('Password')
+				},
+				'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+					var secret = '';
+					if (typeof cellValue[0] != 'undefined') {
+						secret = cellValue[0].data
+					}
+					mad.helper.HtmlHelper.create(
+						cellElement,
+						'inside_replace',
+						'<div class="secret-copy">' +
+							'<a href="#copy_secret">' +
+								'<span>copy password to clipboard</span>' +
+							'</a>' +
+							'<pre>' + secret + '</pre>' +
+						'</div>'
+
+					);
 				}
 			}, {
 				'name': 'uri',
@@ -143,30 +160,30 @@ steal(
 					'css': ['m-cell'],
 					'label': __('Modified')
 				},
-				'valueAdapter': function (value, item, columnModel, rowNum) {
+				'valueAdapter': function (value, mappedItem, item, columnModel) {
 					return moment(value).fromNow();
 				}
 			}, {
-				'name': 'expires',
-				'index': 'expires',
-				'header': {
-					'css': ['m-cell'],
-					'label': __('Expires')
-				},
-				'valueAdapter': function (value, item, columnModel, rowNum) {
-					if (typeof value == 'undefined') {
-						return '-';
-					}
-					return moment(value).fromNow();
-				}
-			}, {
+//				'name': 'expires',
+//				'index': 'expires',
+//				'header': {
+//					'css': ['m-cell'],
+//					'label': __('Expires')
+//				},
+//				'valueAdapter': function (value, mappedItem, item, columnModel) {
+//					if (typeof value == 'undefined' || value == null) {
+//						return '-';
+//					}
+//					return moment(value).fromNow();
+//				}
+//			}, {
 				'name': 'owner',
 				'index': 'owner',
 				'header': {
 					'css': ['m-cell'],
 					'label': __('Owner')
 				}
-			}, {
+			}/*, {
 				'name': 'copyLogin',
 				'index': 'copyLogin',
 				'header': {
@@ -200,9 +217,136 @@ steal(
 					);
 					copyPwd.start();
 				}
-			}];
-			
+			}*/];
+
 			this._super(el, options);
+		},
+
+		/**
+		 * Show the contextual menu
+		 * @param {passbolt.model.Resource} item The item to show the contextual menu for
+		 * @param {string} x The x position where the menu will be rendered
+		 * @param {string} y The y position where the menu will be rendered
+		 * @return {void}
+		 */
+		'showContextualMenu': function (item, x, y) {
+			// Get the offset position of the clicked item.
+			var $item = $('td span', '#' + item.id);
+			var item_offset = $item.offset();
+
+
+			// Instantiate the contextual menu menu.
+			var contextualMenu = new mad.controller.component.ContextualMenuController(null, {
+				'state': 'hidden',
+				'source': $item[0],
+				'coordinates': {
+					x: x,
+					y: item_offset.top
+				}
+			});
+			contextualMenu.start();
+
+			// get the permission on the category.
+			var canRead = passbolt.model.Permission.isAllowedTo(item, passbolt.READ),
+				canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE),
+				canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
+
+
+			// Add Copy username action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy username',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var data = {
+						name : 'username',
+						data : item.username
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Copy password action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy password',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var secret = item.Secret[0].data;
+					mad.bus.trigger('passbolt.secret.decrypt', secret);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Copy url action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Copy URL',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'action': function (menu) {
+					var data = {
+						name : 'URL',
+						data : item.uri
+					};
+					mad.bus.trigger('passbolt.clipboard', data);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Open URL in a new tab action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Open URL in a new tab',
+				'initial_state': !canRead ? 'disabled' : 'ready',
+				'cssClasses': ['separator-after'],
+				'action': function (menu) {
+					var uri = item.uri;
+					var win = window.open(uri, '_blank');
+					win.focus();
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Rename action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Edit',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_edition', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Add Share action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Share',
+				'initial_state': !canAdmin ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_sharing', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Delete action.
+			var action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Delete',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_resource_deletion', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+
+			// Display the menu.
+			contextualMenu.setState('ready');
 		},
 
 		/**
@@ -261,6 +405,9 @@ steal(
 			
 			// if the resource has not been removed from the grid, update it
 			this._super(resource);
+			if (this.options.selectedRs.length > 0) {
+				this.select(this.options.selectedRs[0]);
+			}
 		},
 
 		/**
@@ -329,6 +476,12 @@ steal(
 		 */
 		'select': function (item, silent) {
 			silent = typeof silent == 'undefined' ? false : silent;
+
+			// Added the lines below to prevent multiple selection.
+			if (this.options.selectedRs.length > 0) {
+				this.unselect(this.options.selectedRs[0]);
+			}
+			// End of multiple selection prevention.
 
 			// add the resource to the list of selected items
 			this.options.selectedRs.push(item);
@@ -461,6 +614,19 @@ steal(
 		/* ************************************************************** */
 
 		/**
+		 * Observe when a password cell is clicked.
+		 *
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {mixed} item The selected item instance or its id
+		 * @param {HTMLEvent} ev The source event which occured
+		 * @return {void}
+		 */
+		' password_clicked': function (el, ev, item, srcEvent) {
+			mad.bus.trigger('request_secret_view', item);
+		},
+
+		/**
 		 * Observe when an item is selected in the grid.
 		 * This event comes from the grid view
 		 * @param {HTMLElement} el The element the event occured on
@@ -471,13 +637,43 @@ steal(
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
 			var self = this;
-			
+
 			// switch to select state
 			this.setState('selection');
 			
 			if (this.beforeSelect(item)) {
 				this.select(item);
 			}
+		},
+
+		/**
+		 * An item has been right selected
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} item The right selected item instance or its id
+		 * @param {HTMLEvent} srcEvent The source event which occured
+		 * @return {void}
+		 */
+		' item_right_selected': function (el, ev, item, srcEvent) {
+			// Select item.
+			this.select(item);
+			// Show contextual menu.
+			this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+		},
+
+		/**
+		 * A password has been clicked.
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Resource} item The right selected item instance or its id
+		 * @param {HTMLEvent} srcEvent The source event which occured
+		 * @return {void}
+		 */
+		' password_clicked': function (el, ev, item, srcEvent) {
+			// Get secret out of Resource object.
+			var secret = item.Secret[0].data;
+			// Request decryption. (delegated to plugin).
+			mad.bus.trigger('passbolt.secret.decrypt', secret);
 		},
 
 		/**
@@ -490,7 +686,7 @@ steal(
 		 */
 		'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
 			var self = this;
-			
+
 			// if the grid is in initial state, switch it to selected
 			if (this.state.is('ready')) {
 				this.setState('selection');
@@ -550,6 +746,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var self = this;
 			// store the filter
 			this.filter = filter;
@@ -568,7 +767,7 @@ steal(
 				});
 			}
 
-			// change the state of the component to loading 
+			// change the state of the component to loading
 			this.setState('loading');
 
 			// load resources functions of the filter
@@ -577,26 +776,6 @@ steal(
 				'recursive': true
 			}, function (resources, response, request) {
 				// TODO The callback is out of date, an other filter has been performed
-				// load the resources in the browser
-				self.load(resources);
-				// change the state to ready
-				self.setState('ready');
-			});
-		},
-
-		/**
-		 * Observe when the application is ready and load the tree with the roots
-		 * categories
-		 * @param {jQuery} element The source element
-		 * @param {Event} event The jQuery event
-		 * @return {void}
-		 */
-		'{mad.bus} app_ready': function (ui, event) {
-			var self = this;
-
-			this.setState('loading');
-			// load default resources
-			passbolt.model.Resource.findAll({}, function (resources, response, request) {
 				// load the resources in the browser
 				self.load(resources);
 				// change the state to ready
@@ -614,7 +793,7 @@ steal(
 		 * @param {boolean} go Enter or leave the state
 		 * @return {void}
 		 */
-		'stateReady': function (go) { 
+		'stateReady': function (go) {
 			// nothing to do
 		},
 

@@ -17,7 +17,18 @@ App::uses('CakeSession', 'Model/Datasource');
 
 class GroupsControllerTest extends ControllerTestCase {
 
-	public $fixtures = array('app.user', 'app.role', 'app.group', 'app.authenticationLog', 'app.authenticationBlacklist');
+	public $fixtures = array(
+		'app.user',
+		'app.role',
+		'app.group',
+		'app.profile',
+		'app.gpgkey',
+		'app.groupsUser',
+		'app.file_storage',
+		'app.authenticationLog',
+		'app.authenticationBlacklist',
+		'core.cakeSession',
+	);
 
 	public $user;
 
@@ -34,8 +45,8 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->session->init();
 		
 		// log the user as a manager to be able to access all features
-		$kk = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function tearDown() {
@@ -47,11 +58,11 @@ class GroupsControllerTest extends ControllerTestCase {
 	 // */
 	public function testIndex() {
 		$result = json_decode($this->testAction('/groups.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::SUCCESS, '/groups.json return something');
+		$this->assertEquals($result->header->status, Message::SUCCESS, '/groups.json return something');
 
 		$this->Group->deleteAll(array('id <>' => null));
 		$result = json_decode($this->testAction('/groups.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::NOTICE, '/groups.json return a warning');
+		$this->assertEquals($result->header->status, Message::NOTICE, '/groups.json return a warning');
 	}
 
 	public function testViewGroupIdIsMissing() {
@@ -59,19 +70,19 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewGroupIdNotValid() {
-		$this->expectException('HttpException', 'The group id is invalid');
+		$this->setExpectedException('HttpException', 'The group id is invalid');
 		$this->testAction("/groups/badid.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewGroupDoesNotExist() {
-		$this->expectException('HttpException', 'The group does not exist');
+		$this->setExpectedException('HttpException', 'The group does not exist');
 		$this->testAction("/groups/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testView() {
 		$group = $this->Group->findByName('accounting dpt');
 		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json",array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEqual($result->header->status, Message::SUCCESS,'/groups return something');
+		$this->assertEquals($result->header->status, Message::SUCCESS,'/groups return something');
 	}
 
 	public function testAddNoAllowed() {
@@ -79,7 +90,7 @@ class GroupsControllerTest extends ControllerTestCase {
 		$u = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($u);
 
-		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		$result = json_decode($this->testAction('/groups.json', array(
 					'data' => array(
 						'Group' => array(
@@ -94,8 +105,8 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		// log the user as a manager to be able to access all features
-		$kk = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($user);
 		$result = json_decode($this->testAction('/groups.json', array(
 					'data' => array(
 						'Group' => array(
@@ -122,7 +133,7 @@ class GroupsControllerTest extends ControllerTestCase {
 		$group = $this->Group->findByName('accounting dpt');
 		$id = $group['Group']['id'];
 
-		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		$result = json_decode($this->testAction("/groups/$id.json", array(
 					'data' => array(
 						'Group' => array(
@@ -136,26 +147,26 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateGroupIdIsMissing() {
-		$this->expectException('HttpException', 'The group id is missing');
+		$this->setExpectedException('HttpException', 'The group id is missing');
 		$this->testAction("/groups.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testUpdateGroupIdIsNotValid() {
-		$this->expectException('HttpException', 'The group id is invalid');
+		$this->setExpectedException('HttpException', 'The group id is invalid');
 		$this->testAction("/groups/badId.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testUpdateGroupDoesNotExist() {
 		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
-		$this->expectException('HttpException', 'The group does not exist');
+		$this->setExpectedException('HttpException', 'The group does not exist');
 		$this->testAction("/groups/$id.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testUpdateNoDataProvided() {
 		$model = 'resource';
 		$group = $this->Group->findByName('accounting dpt');
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$this->testAction("/groups/{$group['Group']['id']}.json", array(
 			 'method' => 'put',
 			 'return' => 'contents'
@@ -186,24 +197,24 @@ class GroupsControllerTest extends ControllerTestCase {
 
 		$group = $this->Group->findByName('accounting dpt');
 
-		$this->expectException('HttpException', 'You are not authorized to access that location');
+		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json", array('method' => 'delete','return' => 'contents')), true);
 	}
 
 	public function testDeleteGroupIdIsMissing() {
-		$this->expectException('HttpException', 'The group id is missing');
+		$this->setExpectedException('HttpException', 'The group id is missing');
 		$this->testAction("/groups.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteGroupIdIsNotValid() {
-		$this->expectException('HttpException', 'The group id is invalid');
+		$this->setExpectedException('HttpException', 'The group id is invalid');
 		$this->testAction("/groups/badId.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteGroupDoesNotExist() {
 		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
-		$this->expectException('HttpException', 'The group does not exist');
+		$this->setExpectedException('HttpException', 'The group does not exist');
 		$this->testAction("/groups/$id.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 	
@@ -215,6 +226,6 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /groups/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
 		$deleted = $this->Group->findByName('accounting dpt');
-		$this->assertEqual(1, $deleted['Group']['deleted'], "delete /groups/{$group['Group']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['Group']['deleted']}");
+		$this->assertEquals(1, $deleted['Group']['deleted'], "delete /groups/{$group['Group']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['Group']['deleted']}");
 	}
 }

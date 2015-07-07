@@ -27,42 +27,42 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		'app.categories_resource',
 		'app.group',
 		'app.user',
+		'app.profile',
+		'app.gpgkey',
 		'app.groups_user',
 		'app.role',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist'
+		'app.authenticationBlacklist',
+		'app.file_storage',
+		'core.cakeSession'
 	);
 
 	public function setUp() {
+		parent::setUp();
 		$this->Category = new Category();
 		$this->User = new User();
 		$this->Resource = new Resource();
 		$this->CategoryResource = new CategoryResource();
-		$this->CategoryResource->useDbConfig = 'test';
-		$this->Category->useDbConfig = 'test';
-		$this->Resource->useDbConfig = 'test';
-		$this->User->useDbConfig = 'test';
-		parent::setUp();
 		
 		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
-		$this->User->setActive($kk);
+        $user = $this->User->findByUsername('dame@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function testViewCatResIdIsMissing() {
-		$this->expectException('HttpException', 'The categoryResource id is missing');
+		$this->setExpectedException('HttpException', 'The categoryResource id is missing');
 		$this->testAction("/categoriesResources.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewCatResIdNotValid() {
-		$this->expectException('HttpException', 'The categoryResource id is invalid');
+		$this->setExpectedException('HttpException', 'The categoryResource id is invalid');
 		$this->testAction("/categoriesResources/badid.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewCatResDoesNotExist() {
-		$this->expectException('HttpException', 'The categoryResource does not exist');
+		$this->setExpectedException('HttpException', 'The categoryResource does not exist');
 		$this->testAction("/categoriesResources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -75,7 +75,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAddNoDataProvided() {
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$this->testAction('/categoriesResources.json', array(
 			 'method' => 'post',
 			 'return' => 'contents'
@@ -89,7 +89,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 				'resource_id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56ca',
 			)
 		);
-		$this->expectException('HttpException', 'Could not validate data');
+		$this->setExpectedException('HttpException', 'Could not validate data');
 		$this->testAction('/categoriesResources.json', array(
 			'data' => $data,
 			'method' => 'post',
@@ -124,17 +124,17 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteCatResIdIsMissing() {
-		$this->expectException('HttpException', 'The categoryResource id is missing');
+		$this->setExpectedException('HttpException', 'The categoryResource id is missing');
 		$this->testAction("/categoriesResources.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCatResIdNotValid() {
-		$this->expectException('HttpException', 'The categoryResource id is invalid');
+		$this->setExpectedException('HttpException', 'The categoryResource id is invalid');
 		$this->testAction("/categoriesResources/badid.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCatResDoesNotExist() {
-		$this->expectException('HttpException', 'The categoryResource does not exist');
+		$this->setExpectedException('HttpException', 'The categoryResource does not exist');
 		$this->testAction("/categoriesResources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
@@ -147,7 +147,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /categoriesResources/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
 		$found = $this->CategoryResource->findById($id);
-		$this->assertEqual(
+		$this->assertEquals(
 			count($found), 0,
 			"delete /categoriesResources/$id.json : This test should have fetched 0 elements from the database but it is not the case. Is the element properly deleted ?"
 		);

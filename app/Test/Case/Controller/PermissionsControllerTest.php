@@ -25,10 +25,23 @@ App::uses('CakeSession', 'Model/Datasource');
 class PermissionsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.resource', 'app.category', 'app.categories_resource', 
-		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile',
-		'app.permission', 'app.permissions_type', 'app.permission_view',
-		'app.authenticationLog', 'app.authenticationBlacklist');
+		'app.resource',
+		'app.category',
+		'app.categories_resource',
+		'app.user',
+		'app.group',
+		'app.groups_user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgkey',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+		'app.authenticationLog',
+		'app.authenticationBlacklist',
+		'core.cakeSession',
+	);
 
 	public $user;
 
@@ -61,8 +74,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->session->init();
 		
 		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('dame@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function tearDown() {
@@ -74,34 +87,34 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testViewAcoPermissionsNotExistingModel() {
 		$model = 'NotExistingModel';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
-		$this->expectException('HttpException', "The model {$model} is not permissionable");
+		$this->setExpectedException('HttpException', "The model {$model} is not permissionable");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
 
 	public function testViewAcoPermissionsNotPermissionableModel() {
 		$model = 'User';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
-		$this->expectException('HttpException', "The model {$model} is not permissionable");
+		$this->setExpectedException('HttpException', "The model {$model} is not permissionable");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
 
 	public function testViewAcoPermissionsModelIdIsMissing() {
 		$model = 'Resource';
-		$this->expectException('HttpException', "The {$model} id is missing");
+		$this->setExpectedException('HttpException', "The {$model} id is missing");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
 
 	public function testViewAcoPermissionsModelIdIsInvalid() {
 		$model = 'Resource';
 		$id = 'badId';
-		$this->expectException('HttpException', "The {$model} id is invalid");
+		$this->setExpectedException('HttpException', "The {$model} id is invalid");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
 
 	public function testViewAcoPermissionsModelInstanceDoesNotExist() {
 		$model = 'Resource';
 		$id = '00000000-0000-0000-0000-000000000000';
-		$this->expectException('HttpException', "The {$model} does not exist");
+		$this->setExpectedException('HttpException', "The {$model} does not exist");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
 
@@ -119,11 +132,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$id = $category['Category']['id'];
 		
 		// If the user is not allowed to access a category, this category is simply hidden to him
-		$this->expectException('HttpException', "The Category does not exist");
+		$this->setExpectedException('HttpException', "The Category does not exist");
 		
 		// log the user who is not allowed to access the category
-		$kk = $this->User->findByUsername('test@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('edith@passbolt.com');
+		$this->User->setActive($user);
 		
 		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $getOptions), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/category/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
@@ -139,9 +152,9 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
-			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
-			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
-			'50e6b4af-ad14-4659-a60d-23a4d7a10fce', // user remy (remy bertot have admin rights on others)
+			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
+			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
+			'50e6b4af-ad14-4659-a60d-23a4d7a10fce', // Ada lovelace have admin rights on others
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
 			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
 			'50e6b4af-b124-40e3-988e-23a4d7a10fce', // group freelancers (freelancers have readonly rights on projects > others)
@@ -162,10 +175,10 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Check mix group and user
 		// Check permission on the resource cpp1-pwd1
 		$expectedPermissions = array(
-			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
-			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
+			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
+			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
 			'50e6b4af-c390-4e5e-a8f8-23a4d7a10fce', // user jean rene (ean rené can access projects > cakephp > cp-project1 > cpp1-pwd1 in readonly)
-			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user remy (remy bertot has admin rights on cakephp > cp-project1)
+			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // Ada lovelace has admin rights on cakephp > cp-project1
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
 			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
 			'50e6b4af-8ab8-4533-a4b4-23a4d7a10fce', // group developers cakephp (developers cakephp can access projects > cakephp in readonly)
@@ -192,9 +205,9 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
-			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // franck zappa has deny rights on projects
-			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user manager.nogroup (manager with no group should have access to everything in aucr mode)
-			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // user remy (remy bertot has admin rights on cakephp > cp-project1)
+			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
+			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
+			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // Ada lovelace has admin rights on cakephp > cp-project1
 			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
 			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
 			'50e6b4af-8ab8-4533-a4b4-23a4d7a10fce', // group developers cakephp (developers cakephp can access projects > cakephp in readonly)
@@ -216,7 +229,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testAddAcoPermissionsNotExistingModel() {
 		$model = 'notExistingModel';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
-		$this->expectException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
+		$this->setExpectedException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array('method' => 'post', 'return' => 'contents')), true);
 	}
@@ -224,14 +237,14 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testAddAcoPermissionsNotPermissionableModel() {
 		$model = 'user';
 		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
-		$this->expectException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
+		$this->setExpectedException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array('method' => 'post', 'return' => 'contents')), true);
 	}
 
 	public function testAddAcoPermissionsModelIdIsMissing() {
 		$model = 'resource';
-		$this->expectException('HttpException', "The " . ucfirst($model) . " id is missing");
+		$this->setExpectedException('HttpException', "The " . ucfirst($model) . " id is missing");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model.json", array('method' => 'post', 'return' => 'contents')), true);
 	}
@@ -239,14 +252,14 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testAddAcoPermissionsModelIdIsInvalid() {
 		$model = 'resource';
 		$id = 'badId';
-		$this->expectException('HttpException', "The " . ucfirst($model) . " id is invalid");
+		$this->setExpectedException('HttpException', "The " . ucfirst($model) . " id is invalid");
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array('method' => 'post', 'return' => 'contents')), true);
 	}
 
 	public function testAddAcoPermissionsModelInstanceDoesNotExist() {
 		$model = 'resource';
 		$id = '00000000-0000-0000-0000-000000000000';
-		$this->expectException('HttpException', "Your are not allowed to add a permission to the Resource");
+		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Resource");
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array('method' => 'post', 'return' => 'contents')), true);
 	}
 
@@ -259,11 +272,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$id = $category['Category']['id'];
 		
 		// If the user is not allowed to access a category, this category is simply hidden to him
-		$this->expectException('HttpException', "Your are not allowed to add a permission to the Category");
+		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Category");
 		
 		// log the user who is not allowed to access the category
-		$kk = $this->User->findByUsername('test@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('edith@passbolt.com');
+		$this->User->setActive($user);
 		
 		$data = array(
 			'Permission' => array(
@@ -284,8 +297,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 	
 	public function testAddAcoPermissionsOnResource() {	
 		// log with a user who has right on the unit test sandbox category
-		$kk = $this->User->findByUsername('utest@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('kathleen@passbolt.com');
+		$this->User->setActive($user);
 		
 		// Add a permisision for a given user to a given category
 		$model = 'resource';
@@ -298,7 +311,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 				'type' => PermissionType::READ
 			),
 			'User' => array(
-				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // test@passbolt.com, but we can put any other users
+				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // edith@passbolt.com, but we can put any other users
 			)
 		);
 		
@@ -316,19 +329,27 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'data'=> $data
 		)), true);
 
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(
+			Message::SUCCESS,
+			$srvResult['header']['status'],
+			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
+		);
 		// check the permission has well been inserted
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		)), true);
-		$this->assertEquals($expectedCount, count($srvResult['body']), "/permissions/$model/$id.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body']));
+		$this->assertEquals(
+			$expectedCount,
+			count($srvResult['body']),
+			"/permissions/$model/$id.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body'])
+		);
 	}
 
 	public function testAddAcoPermissionsOnResourceExistingPermission() {	
 		// log with a user who has right on the unit test sandbox category
-		$kk = $this->User->findByUsername('utest@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('kathleen@passbolt.com');
+		$this->User->setActive($user);
 		
 		// Add a permisision for a given user to a given category
 		$model = 'resource';
@@ -354,7 +375,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 
-		$this->expectException('HttpException', "A direct permission already exists");
+		$this->setExpectedException('HttpException', "A direct permission already exists");
 		// try to insert a second time the same permission should return an error
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'post',
@@ -363,22 +384,81 @@ class PermissionsControllerTest extends ControllerTestCase {
 		)), true);
 	}
 
+	public function testSimulateAcoPermissionsOnResource() {
+		// log with a user who has right on the unit test sandbox category
+		$user = $this->User->findByUsername('kathleen@passbolt.com');
+		$this->User->setActive($user);
+
+		// Add a permisision for a given user to a given category
+		$model = 'resource';
+		$resName = 'utest1-pwd1';
+		$resource = $this->Resource->findByName($resName);
+
+		$id = $resource['Resource']['id'];
+		$data = array(
+			'Permission' => array(
+				'type' => PermissionType::READ
+			),
+			'User' => array(
+				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // test@passbolt.com, but we can put any other users
+			)
+		);
+
+		// check how many permissions are already existing before the new insertion
+		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+					'method' => 'get',
+					'return' => 'contents'
+				)), true);
+
+		$realCount = count($srvResult['body']);
+		// insert the new permission
+		$srvSimulatedResult = json_decode($this->testAction("/permissions/simulate/$model/$id.json", array(
+					'method' => 'post',
+					'return' => 'contents',
+					'data'=> $data
+				)), true);
+		$simulatedCount = count($srvSimulatedResult['body']);
+
+		$this->assertEquals(
+			Message::SUCCESS,
+			$srvResult['header']['status'],
+			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
+		);
+
+		$this->assertEquals(
+			$simulatedCount,
+			count($srvResult['body']) + 1,
+			"/permissions/$model/$id.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
+		);
+
+		// check the permission was not actually inserted (was only a simulation).
+		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+					'method' => 'get',
+					'return' => 'contents'
+				)), true);
+		$this->assertEquals(
+			$realCount,
+			count($srvResult['body']),
+			"/permissions/$model/$id.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
+		);
+	}
+
 	public function testEditPermissionIdIsMissing() {
 		$model = 'resource';
-		$this->expectException('HttpException', "The permission id is missing");
+		$this->setExpectedException('HttpException', "The permission id is missing");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions.json", array('method' => 'put', 'return' => 'contents')), true);
 	}
 
 	public function testEditPermissionIdIsInvalid() {
 		$id = 'badId';
-		$this->expectException('HttpException', "The permission id is invalid");
+		$this->setExpectedException('HttpException', "The permission id is invalid");
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", array('method' => 'put', 'return' => 'contents')), true);
 	}
 
 	public function testEditPermissionDoesNotExist() {
 		$id = '00000000-0000-0000-0000-000000000000';
-		$this->expectException('HttpException', "The permission does not exist");
+		$this->setExpectedException('HttpException', "The permission does not exist");
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", array('method' => 'put', 'return' => 'contents')), true);
 	}
 
@@ -389,11 +469,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
 		
 		// If the user is not allowed to access a category, this category is simply hidden to him
-		$this->expectException('HttpException', "You are not allowed to edit this permission");
+		$this->setExpectedException('HttpException', "You are not allowed to edit this permission");
 		
 		// log the user who is not allowed to access the category
-		$kk = $this->User->findByUsername('test@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('edith@passbolt.com');
+		$this->User->setActive($user);
 		
 		$postOptions = array(
 			'method' => 'put',
@@ -424,8 +504,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		
 		// log the user with a user who belongs to the human resource group
-		$kk = $this->User->findByUsername('ismail@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('irene@passbolt.com');
+		$this->User->setActive($user);
 		
 		// try to access to the category administration
 		$category = $this->Category->findByName('administration');
@@ -434,20 +514,20 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testDeletePermissionIdIsMissing() {
 		$model = 'resource';
-		$this->expectException('HttpException', "The permission id is missing");
+		$this->setExpectedException('HttpException', "The permission id is missing");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions.json", array('method' => 'delete', 'return' => 'contents')), true);
 	}
 
 	public function testDeletePermissionIdIsInvalid() {
 		$id = 'badId';
-		$this->expectException('HttpException', "The permission id is invalid");
+		$this->setExpectedException('HttpException', "The permission id is invalid");
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", array('method' => 'delete', 'return' => 'contents')), true);
 	}
 
 	public function testDeletePermissionDoesNotExist() {
 		$id = '00000000-0000-0000-0000-000000000000';
-		$this->expectException('HttpException', "The permission does not exist");
+		$this->setExpectedException('HttpException', "The permission does not exist");
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", array('method' => 'delete', 'return' => 'contents')), true);
 	}
 
@@ -458,11 +538,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
 		
 		// If the user is not allowed to access a category, this category is simply hidden to him
-		$this->expectException('HttpException', "You are not allowed to delete this permission");
+		$this->setExpectedException('HttpException', "You are not allowed to delete this permission");
 		
 		// log the user who is not allowed to access the category
-		$kk = $this->User->findByUsername('test@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('edith@passbolt.com');
+		$this->User->setActive($user);
 		
 		$postOptions = array(
 			'method' => 'delete',
@@ -482,8 +562,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
 // 		
 		// // log the user who is not allowed to access the category
-		// $kk = $this->User->findByUsername('test@passbolt.com');
-		// $this->User->setActive($kk);
+		// $user = $this->User->findByUsername('edith@passbolt.com');
+		// $this->User->setActive($user);
 // 		
 		// $postOptions = array(
 			// 'method' => 'delete',
@@ -507,8 +587,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// $this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 // 		
 		// // log the user with a user who belongs to the human resource group
-		// $kk = $this->User->findByUsername('ismail@passbolt.com');
-		// $this->User->setActive($kk);
+		// $user = $this->User->findByUsername('irene@passbolt.com');
+		// $this->User->setActive($user);
 // 		
 		// // try to access to the category administration
 		// $category = $this->Category->findByName('administration');

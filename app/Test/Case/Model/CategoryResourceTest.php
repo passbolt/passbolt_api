@@ -16,7 +16,19 @@ if (!class_exists('CakeSession')) {
 
 class CategoryResourceTest extends CakeTestCase {
 
-	public $fixtures = array('app.category', 'app.resource', 'app.categories_resource', 'app.user', 'app.role', 'app.groups_user');
+	public $fixtures = array(
+		'app.category',
+		'app.resource',
+		'app.categories_resource',
+		'app.user',
+		'app.group',
+		'app.role',
+		'app.profile',
+		'app.gpgkey',
+		'app.file_storage',
+		'app.groups_user',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -58,7 +70,7 @@ class CategoryResourceTest extends CakeTestCase {
 			if (!$validation) {
 				$msg .= print_r($this->CategoryResource->invalidFields(), true);
 			}
-			$this->assertEqual($validation, $result, "$msg");
+			$this->assertEquals($validation, $result, "$msg");
 		}
 	}
 
@@ -92,7 +104,7 @@ class CategoryResourceTest extends CakeTestCase {
 			if (!$validation) {
 				$msg .= print_r($this->CategoryResource->invalidFields(), true);
 			}
-			$this->assertEqual($validation, $result, $msg);
+			$this->assertEquals($validation, $result, $msg);
 		}
 	}
 
@@ -107,7 +119,7 @@ class CategoryResourceTest extends CakeTestCase {
 		$this->CategoryResource->create();
 		$this->CategoryResource->set($cr);
 		$validation = $this->CategoryResource->validates(array('fieldList' => array('category_id', 'resource_id')));
-		$this->assertEqual($validation, false, print_r($this->CategoryResource->invalidFields(), true));
+		$this->assertEquals($validation, false, print_r($this->CategoryResource->invalidFields(), true));
 	}
 
 }

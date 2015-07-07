@@ -1,5 +1,5 @@
-<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
+<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
 	<a class="tag link" href="#">
-		<span><%= Tag.name %></span>
+		<span><%= mappedItem.Tag.name %></span>
 	</a>
 </li>

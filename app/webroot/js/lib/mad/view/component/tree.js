@@ -16,6 +16,15 @@ steal(
 		},
 
 		/**
+		 * Get item element
+		 * @param item
+		 * @returns {jQuery}
+		 */
+		'getItemElement': function(item) {
+			return $('#' + item.id, this.element);
+		},
+
+		/**
 		 * Insert an item in the tree
 		 * @param {mad.model.Model} item The item to insert
 		 * @param {string} refItemId The reference item id. By default the grid view object
@@ -23,8 +32,7 @@ steal(
 		 * @param {string} position The position of the newly created item. You can pass in one
 		 * of those strings: "before", "after", "inside", "first", "last". By dhe default value 
 		 * is set to last.
-		 * @return {void}
-		 * @todo does not require a map in this case
+		 * @return {jQuery}
 		 */
 		'insertItem': function (item, refItemId, position) {
 			position = position || 'last';
@@ -38,22 +46,27 @@ steal(
 				$refList = $refElement.find('ul:first');
 			}
 
-			// map the jmvc model objects into the desired format
+			// map the given data to the desired format
 			var mappedItem = this.getController().getMap().mapObject(item);
-			mappedItem.hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
-			mappedItem.item = item;
-			mappedItem.itemClass = this.getController().getItemClass();
+			this.getController().setViewData('itemClass', this.getController().getItemClass());
+			this.getController().setViewData('item', item);
+			this.getController().setViewData('mappedItem', mappedItem);
 
-			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, mappedItem);
-			var $child = null;
-			if(position == 'first') {
-				$child = $(itemRender).prependTo($refList);
-			}
-			else {
-				$child = $(itemRender).appendTo($refList);
-			}
+			// the item has children
+			var hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
+			this.getController().setViewData('hasChildren', hasChildren);
 
-			if (mappedItem.hasChildren) {
+			// some css classes has been defined on the item merge them
+			var cssClasses = [];
+			if (typeof mappedItem['cssClasses'] != 'undefined') {
+				cssClasses = cssClasses.concat(mappedItem['cssClasses']);
+			}
+			this.getController().setViewData('cssClasses', cssClasses);
+
+			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, this.getController().getViewData());
+			var $child = mad.helper.HtmlHelper.create($refList, position, itemRender);
+
+			if (hasChildren) {
 				can.each(item.children, function (item, i) {
 					self.insertItem(item, mappedItem.id, 'last');
 				});
@@ -67,7 +80,36 @@ steal(
 		 * @return {void}
 		 */
 		'removeItem': function (item) {
-			var $item = $('#' + item.id, this.element).remove();
+			var $item = this.getItemElement(item).remove();
+		},
+
+
+		/**
+		 * Refresh an item in the tree
+		 * @param {mad.model.Model} item The item to refresh
+		 */
+		'refreshItem': function (item, refItemId, position) {
+			var self = this;
+			var $item = this.getItemElement(item);
+
+			// map the given data to the desired format
+			var mappedItem = this.getController().getMap().mapObject(item);
+			this.getController().setViewData('itemClass', this.getController().getItemClass());
+			this.getController().setViewData('item', item);
+			this.getController().setViewData('mappedItem', mappedItem);
+			var hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
+			this.getController().setViewData('hasChildren', hasChildren);
+
+			var itemRender = mad.view.View.render(this.getController().options.itemTemplateUri, this.getController().getViewData());
+			$item.replaceWith(itemRender);
+
+			if (hasChildren) {
+				can.each(item.children, function (item, i) {
+					self.insertItem(item, mappedItem.id, 'last');
+				});
+			}
+
+			return $item;
 		},
 
 		/**
@@ -79,38 +121,37 @@ steal(
 		},
 
 		/**
+		 * Unselect all.
+		 */
+		'unselectAll': function() {
+			$('.row.selected', this.element).removeClass('selected');
+		},
+
+		/**
 		 * An item has been selected
-		 * @event item_selected
 		 * @param {mixed} item The selected item instance or its id
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} srcEvent The jQuery source event
 		 * @return {void}
 		 */
-		'itemSelected': function (item, element, srcEvent) {
-			this.element.trigger('item_selected', [item, srcEvent]);
+		'selectItem': function (item) {
+			this.unselectAll();
+			var $item = this.getItemElement(item);
+			$('.row:first', $item).addClass('selected');
 		},
 
 		/**
 		 * An item has been right selected
-		 * @event item_right_selected
 		 * @param {mixed} item The selected item instance or its id
-		 * @param {HTMLElement} element The element the event occured on
-		 * @param {Event} srcEvent The jQuery source event
 		 * @return {void}
 		 */
-		'itemRightSelected': function (item, element, srcEvent) {
-			element.trigger('item_right_selected', [item, srcEvent]);
+		'rightSelectItem': function (item) {
 		},
 
 		/**
 		 * An item has been hovered
-		 * @event item_hovered
 		 * @param {mixed} item The selected item instance or its id
-		 * @param {HTMLElement} element The element the event occured on
 		 * @return {void}
 		 */
-		'itemHovered': function (item, element, srcEvent) {
-			this.element.trigger('item_hovered', [item, srcEvent]);
+		'hoverItem': function (item, element, srcEvent) {
 		},
 
 		/* ************************************************************** */
@@ -119,11 +160,12 @@ steal(
 
 		/**
 		 * An item has been selected
+		 * @event item_selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li .main-cell-wrapper click': function (el, ev) {
+		'li .main-cell a click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
@@ -135,17 +177,18 @@ steal(
 				data = li[0].id;
 			}
 
-			this.itemSelected(data, el, ev);
+			this.element.trigger('item_selected', [data, ev]);
 			return false;
 		},
 
 		/**
 		 * An item has been selected
+		 * @event item_right_selected
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li .main-cell-wrapper contextmenu': function (el, ev) {
+		'li a contextmenu': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
@@ -157,7 +200,7 @@ steal(
 				} else {
 					data = li[0].id;
 				}
-				this.itemRightSelected(data, el, ev);
+				this.element.trigger('item_right_selected', [data, ev]);
 			}
 
 			return false;
@@ -165,11 +208,12 @@ steal(
 
 		/**
 		 * An item has been hovered
+		 * @event item_hovered
 		 * @param {HTMLElement} el The element the event occured on
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'li .main-cell-wrapper hover': function (el, ev) {
+		'li a hover': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 
@@ -180,7 +224,8 @@ steal(
 			} else {
 				data = li[0].id;
 			}
-			this.itemHovered(data, el, ev);
+
+			this.element.trigger('item_hovered', [data, ev]);
 			return false;
 		}
 

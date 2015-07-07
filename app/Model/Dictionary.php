@@ -11,6 +11,14 @@ App::uses('I18n', 'I18n');
 class Dictionary extends AppModel {
 
 /**
+ * Details of use table
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/model-attributes.html
+ */
+	public $useTable = false;
+
+/**
  * Get Dictionary
  *
  * @param $l locale such as en_EN, fr_FR

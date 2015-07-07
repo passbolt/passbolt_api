@@ -18,7 +18,6 @@ App::uses('CakeLog', 'Log');
 App::uses('Dispatcher', 'Routing');
 App::uses('Router', 'Routing');
 App::uses('Set', 'Utility');
-App::uses('CakeLog', 'Log');
 
 /**
  * Object class provides a few generic methods used in several subclasses.
@@ -84,7 +83,7 @@ class Object {
 		if ($arrayUrl && !isset($extra['data'])) {
 			$extra['data'] = array();
 		}
-		$extra = array_merge(array('autoRender' => 0, 'return' => 1, 'bare' => 1, 'requested' => 1), $extra);
+		$extra += array('autoRender' => 0, 'return' => 1, 'bare' => 1, 'requested' => 1);
 		$data = isset($extra['data']) ? $extra['data'] : null;
 		unset($extra['data']);
 
@@ -95,7 +94,7 @@ class Object {
 			$request = new CakeRequest($url);
 		} elseif (is_array($url)) {
 			$params = $url + array('pass' => array(), 'named' => array(), 'base' => false);
-			$params = array_merge($params, $extra);
+			$params = $extra + $params;
 			$request = new CakeRequest(Router::reverse($params));
 		}
 		if (isset($data)) {
@@ -139,7 +138,7 @@ class Object {
  * Stop execution of the current script. Wraps exit() making
  * testing easier.
  *
- * @param integer|string $status see http://php.net/exit for values
+ * @param int|string $status see http://php.net/exit for values
  * @return void
  */
 	protected function _stop($status = 0) {
@@ -151,10 +150,10 @@ class Object {
  * for more information on writing to logs.
  *
  * @param string $msg Log message
- * @param integer $type Error type constant. Defined in app/Config/core.php.
+ * @param int $type Error type constant. Defined in app/Config/core.php.
  * @param null|string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
- * @return boolean Success of log write
+ * @return bool Success of log write
  */
 	public function log($msg, $type = LOG_ERR, $scope = null) {
 		if (!is_string($msg)) {
@@ -191,14 +190,13 @@ class Object {
  *
  * @param array $properties The name of the properties to merge.
  * @param string $class The class to merge the property with.
- * @param boolean $normalize Set to true to run the properties through Hash::normalize() before merging.
+ * @param bool $normalize Set to true to run the properties through Hash::normalize() before merging.
  * @return void
  */
 	protected function _mergeVars($properties, $class, $normalize = true) {
 		$classProperties = get_class_vars($class);
 		foreach ($properties as $var) {
-			if (
-				isset($classProperties[$var]) &&
+			if (isset($classProperties[$var]) &&
 				!empty($classProperties[$var]) &&
 				is_array($this->{$var}) &&
 				$this->{$var} != $classProperties[$var]

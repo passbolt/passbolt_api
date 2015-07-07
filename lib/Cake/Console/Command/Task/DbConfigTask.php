@@ -199,11 +199,11 @@ class DbConfigTask extends AppShell {
 /**
  * Output verification message and bake if it looks good
  *
- * @param array $config
- * @return boolean True if user says it looks good, false otherwise
+ * @param array $config The config data.
+ * @return bool True if user says it looks good, false otherwise
  */
 	protected function _verify($config) {
-		$config = array_merge($this->_defaultConfig, $config);
+		$config += $this->_defaultConfig;
 		extract($config);
 		$this->out();
 		$this->hr();
@@ -247,7 +247,7 @@ class DbConfigTask extends AppShell {
  * Assembles and writes database.php
  *
  * @param array $configs Configuration settings to use
- * @return boolean Success
+ * @return bool Success
  */
 	public function bake($configs) {
 		if (!is_dir($this->path)) {
@@ -264,7 +264,7 @@ class DbConfigTask extends AppShell {
 			$temp = get_class_vars(get_class($db));
 
 			foreach ($temp as $configName => $info) {
-				$info = array_merge($this->_defaultConfig, $info);
+				$info += $this->_defaultConfig;
 
 				if (!isset($info['schema'])) {
 					$info['schema'] = null;
@@ -296,7 +296,7 @@ class DbConfigTask extends AppShell {
 
 		foreach ($oldConfigs as $key => $oldConfig) {
 			foreach ($configs as $config) {
-				if ($oldConfig['name'] == $config['name']) {
+				if ($oldConfig['name'] === $config['name']) {
 					unset($oldConfigs[$key]);
 				}
 			}
@@ -307,7 +307,7 @@ class DbConfigTask extends AppShell {
 		$out .= "class DATABASE_CONFIG {\n\n";
 
 		foreach ($configs as $config) {
-			$config = array_merge($this->_defaultConfig, $config);
+			$config += $this->_defaultConfig;
 			extract($config);
 
 			if (strpos($datasource, 'Database/') === false) {
@@ -368,15 +368,18 @@ class DbConfigTask extends AppShell {
 	}
 
 /**
- * get the option parser
+ * Gets the option parser instance and configures it.
  *
  * @return ConsoleOptionParser
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-		return $parser->description(
-				__d('cake_console', 'Bake new database configuration settings.')
-			);
+
+		$parser->description(
+			__d('cake_console', 'Bake new database configuration settings.')
+		);
+
+		return $parser;
 	}
 
 }

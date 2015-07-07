@@ -11,11 +11,24 @@ App::uses('Category', 'Model');
 App::uses('User', 'Model');
 App::uses('AppTestCase', 'Test');
 
+if (!class_exists('CakeSession')) {
+	require CAKE . 'Model/Datasource/CakeSession.php';
+}
+
 class CategoryTest extends AppTestCase {
 
 	public $autoFixtures = true;
 
-	public $fixtures = array('app.category', 'app.category_type', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.category',
+		'app.category_type',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.gpgkey',
+		'app.file_storage',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -71,7 +84,7 @@ class CategoryTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the category name with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Category->validates(array('fieldList' => array('name'))), $result, $msg);
+			$this->assertEquals($this->Category->validates(array('fieldList' => array('name'))), $result, $msg);
 		}
 	}
 
@@ -95,7 +108,7 @@ class CategoryTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the category parent with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Category->validates(array('fieldList' => array('parent_id'))), $result, $msg);
+			$this->assertEquals($this->Category->validates(array('fieldList' => array('parent_id'))), $result, $msg);
 		}
 	}
 
@@ -119,7 +132,7 @@ class CategoryTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the category type with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Category->validates(array('fieldList' => array('category_type_id'))), $result, $msg);
+			$this->assertEquals($this->Category->validates(array('fieldList' => array('category_type_id'))), $result, $msg);
 		}
 	}
 

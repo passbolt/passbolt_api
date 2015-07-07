@@ -1,3 +1,4 @@
+
 steal(
 	'mad/controller/componentController.js',
 	'mad/view/form/formElementView.js'
@@ -29,6 +30,8 @@ steal(
 			'validate': true,
 			// The element should be validated following the given function. Priority max.
 			'validateFunction': null,
+			// The default value of the component.
+			'defaultValue': null,
 			'value': null,
 			'callbacks': {
 				'changed': function (el, ev, value) {}
@@ -43,6 +46,7 @@ steal(
 			 * The value of the Form Element
 			 * @type {mixed}
 			 */
+			this.defaultValue = options.value;
 			this.value = options.value;
 			this._super(el, options);
 		},
@@ -145,6 +149,21 @@ steal(
 		 */
 		'stateError': function (go) {
 			// override the function to catch the state switch to error
+		},
+
+		/**
+		 * Listen to the change relative to the state Disabled
+		 * @param {boolean} go Enter or leave the state
+		 * @return {void}
+		 */
+		'stateDisabled': function (go) {
+			if (go) {
+				this.element.attr('disabled', 'disabled')
+					.addClass('disabled');
+			} else {
+				this.element.removeAttr('disabled')
+					.removeClass('disabled');
+			}
 		},
 
 		/* ************************************************************** */

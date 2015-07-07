@@ -16,7 +16,23 @@ if (!class_exists('CakeSession')) {
 
 class PermissionTest extends CakeTestCase {
 
-	public $fixtures = array('app.resource', 'app.user', 'app.role', 'app.group', 'app.groupsUser', 'app.categoryType', 'app.category', 'app.categoriesResource', 'app.permissionsType', 'app.permission', 'app.permission_view');
+	public $fixtures = array(
+		'app.resource',
+		'app.user',
+		'app.profile',
+		'app.file_storage',
+		'app.role',
+		'app.group',
+		'app.groupsUser',
+		'app.categoryType',
+		'app.category',
+		'app.categoriesResource',
+		'app.permissionsType',
+		'app.permission',
+		'app.permission_view',
+		'app.gpgkey',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();

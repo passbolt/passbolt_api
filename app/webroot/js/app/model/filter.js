@@ -23,6 +23,10 @@ steal(
 	mad.model.Model('passbolt.model.Filter', /** @static */	{
 
 		'attributes': {
+			// Label of the filter
+			'label': 'string',
+			// Filter type
+			'type': 'string',
 			// Filter by keywords
 			'keywords': 'string',
 			// Filter on a specific case (modified ... )
@@ -33,7 +37,13 @@ steal(
 			'order': 'array',
 			// Prefix the filter param by
 			'requestPrefix': 'string'
-		}
+		},
+
+		// Available shortcut types
+		'SHORTCUT': 1,
+		'FOREIGN_MODEL': 2,
+		'KEYWORD': 3,
+		'TAG': 4
 
 	}, /** @prototype */ {
 

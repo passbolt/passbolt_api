@@ -29,7 +29,7 @@ steal(
 			'modified': 'string',
 			'description': 'string',
 			'Category': 'passbolt.model.Category.models',
-			'Secret': 'passbolt.model.Secret.model',
+			'Secret': 'passbolt.model.Secret.models',
 			'Favorite': 'passbolt.model.Favorite.model',
 			'ItemTag': 'passbolt.model.ItemTag.models',
 			'Creator': 'passbolt.model.User.model',

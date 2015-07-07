@@ -3,9 +3,9 @@
  * Tag Resource Model
  *
  * @copyright         Copyright 2012, Passbolt.com
- * @package             app.Model.ResourceTag
- * @since                 version 2.12.11
- * @license             http://www.passbolt.com/license
+ * @package           app.Model.ItemTag
+ * @since             version 2.12.11
+ * @license           http://www.passbolt.com/license
  */
 
 App::uses('Tag', 'Model');
@@ -13,6 +13,12 @@ App::uses('Resource', 'Model');
 
 class ItemTag extends AppModel {
 
+/**
+ * Details of use table
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/model-attributes.html
+ */
 	public $useTable = 'items_tags';
 
 /**

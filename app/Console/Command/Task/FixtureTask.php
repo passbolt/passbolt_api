@@ -119,7 +119,12 @@ class FixtureTask extends BakeTask {
 				return $this->all();
 			}
 			$model = $this->_modelName($this->args[0]);
-			$this->bake($model);
+			// Load the model.
+			$this->loadModel($model);
+			// Extract the use table from the model.
+			$useTable = isset($this->$model->useTable) ? $this->$model->useTable : false;
+
+			$this->bake($model, $useTable);
 		}
 	}
 

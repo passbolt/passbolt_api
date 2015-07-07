@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -18,4 +16,5 @@
 ?>
 <?php echo $this->fetch('content'); ?>
 
-This email was sent using the CakePHP Framework, http://cakephp.org.
+This email was sent by <?php echo Router::url('/',true); ?>. You can choose which messages you wish to receive, from your profile in the "email notifications" section.
+

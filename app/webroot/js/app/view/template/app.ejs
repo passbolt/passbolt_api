@@ -26,7 +26,7 @@
 
     <div class="col1">
         <div class="logo">
-            <img src="img/logo/acme.png" alt="passbolt"/>
+            <img src="img/logo/logo.png" alt="passbolt"/>
         </div>
     </div>
 
@@ -36,58 +36,25 @@
     </div>
 
     <div class="col3 profile-wrapper">
-        <div class="user profile dropdown">
-            <div class="center-cell-wrapper todo">
-                <div class="details center-cell">
-                    <span class="name">Mr Splashy Pants</span>
-                    <span class="email">splashy@passbolt.com</span>
-                </div>
-            </div>
-            <div class="picture left-cell">
-                <img src="img/user.png" alt="your picture"/>
-            </div>
-            <div class="more right-cell">
-                <a href="#" data-dropdown-content-id="cc1d4fae-7dec-11d0-a765-00a0c91e6bf6"><span>more</span></a>
-            </div>
-            <div class="dropdown-content right" id="cc1d4fae-7dec-11d0-a765-00a0c91e6bf6">
-                <ul>
-                    <li>
-                        <a href="#">my profile</a>
-                    </li>
-                    <li>
-                        <a href="#">manage or generate new keys</a>
-                    </li>
-                    <li>
-                        <a href="#" class="separator">manage people</a>
-                    </li>
-                    <li>
-                        <a href="#">logout</a>
-                    </li>
-                </ul>
-            </div>
+        <div id="js_app_profile_dropdown" class="user profile dropdown">
         </div>
     </div>
 </div>
 
 <div class="header third">
-	
+
 	<div class="col1 workspace-title-wrapper">
 		<h1 class="workspace-title">Passwords</h1>
 	</div>
-	
+
 	<div class="col2_3 actions-wrapper">
-		<ul id="js_wsp_primary_menu" class="actions">
-		</ul>
-		<ul id="js_wsp_secondary_menu" class="actions secondary">
-		</ul>
+		<div id="js_wsp_primary_menu_wrapper" class="actions">
+		</div>
+		<div id="js_wsp_secondary_menu_wrapper" class="actions secondary">
+		</div>
 	</div>
-	
+
 </div>
 
 <div id="js_app_panel_main" class="panel main">
-</div>
-
-<div class="footer">
-    <span class="copyright"><%== mad.Config.read('app.copyright') %></span> &bullet;
-    <span class="version"><%= mad.Config.read('app.version.number') %></span>
 </div>

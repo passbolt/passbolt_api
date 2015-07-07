@@ -30,6 +30,7 @@ App::uses('ModelTask', 'Console/Command/Task');
  * ModelTaskTest class
  *
  * @package	   Cake.Test.Case.Console.Command.Task
+ * @property   ModelTask $Task
  */
 class ModelTaskTest extends CakeTestCase {
 
@@ -314,7 +315,7 @@ class ModelTaskTest extends CakeTestCase {
 		$this->Task->initValidations();
 		$this->Task->interactive = true;
 		$this->Task->expects($this->any())->method('in')
-			->will($this->onConsecutiveCalls('24', 'y', '18', 'n'));
+			->will($this->onConsecutiveCalls('25', 'y', '19', 'n'));
 
 		$result = $this->Task->fieldValidation('text', array('type' => 'string', 'length' => 10, 'null' => false));
 		$expected = array('notEmpty' => 'notEmpty', 'maxLength' => 'maxLength');
@@ -332,7 +333,7 @@ class ModelTaskTest extends CakeTestCase {
 		$this->Task->interactive = true;
 
 		$this->Task->expects($this->any())->method('in')
-			->will($this->onConsecutiveCalls('999999', '24', 'n'));
+			->will($this->onConsecutiveCalls('999999', '25', 'n'));
 
 		$this->Task->expects($this->at(10))->method('out')
 			->with($this->stringContains('make a valid'));
@@ -359,6 +360,100 @@ class ModelTaskTest extends CakeTestCase {
 	}
 
 /**
+ * Test that skipping fields during rule choice works when doing interactive field validation.
+ *
+ * @return void
+ */
+	public function testSkippingChoiceInteractiveFieldValidation() {
+		$this->Task->initValidations();
+		$this->Task->interactive = true;
+		$this->Task->expects($this->any())->method('in')
+			->will($this->onConsecutiveCalls('25', 'y', 's'));
+
+		$result = $this->Task->fieldValidation('text', array('type' => 'string', 'length' => 10, 'null' => false));
+		$expected = array('notEmpty' => 'notEmpty', '_skipFields' => true);
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * Test that skipping fields after rule choice works when doing interactive field validation.
+ *
+ * @return void
+ */
+	public function testSkippingAnotherInteractiveFieldValidation() {
+		$this->Task->initValidations();
+		$this->Task->interactive = true;
+		$this->Task->expects($this->any())->method('in')
+			->will($this->onConsecutiveCalls('25', 's'));
+
+		$result = $this->Task->fieldValidation('text', array('type' => 'string', 'length' => 10, 'null' => false));
+		$expected = array('notEmpty' => 'notEmpty', '_skipFields' => true);
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * Test the validation generation routine with skipping the rest of the fields
+ * when doing interactive field validation.
+ *
+ * @return void
+ */
+	public function testInteractiveDoValidationWithSkipping() {
+		$this->Task->expects($this->any())
+			->method('in')
+			->will($this->onConsecutiveCalls('36', '25', 'n', '11', 's'));
+		$this->Task->interactive = true;
+		$Model = $this->getMock('Model');
+		$Model->primaryKey = 'id';
+		$Model->expects($this->any())
+			->method('schema')
+			->will($this->returnValue(array(
+					'id' => array(
+						'type' => 'integer',
+						'length' => 11,
+						'null' => false,
+						'key' => 'primary',
+					),
+					'name' => array(
+						'type' => 'string',
+						'length' => 20,
+						'null' => false,
+					),
+					'email' => array(
+						'type' => 'string',
+						'length' => 255,
+						'null' => false,
+					),
+					'some_date' => array(
+						'type' => 'date',
+						'length' => '',
+						'null' => false,
+					),
+					'some_time' => array(
+						'type' => 'time',
+						'length' => '',
+						'null' => false,
+					),
+					'created' => array(
+						'type' => 'datetime',
+						'length' => '',
+						'null' => false,
+					)
+				)
+			));
+
+		$result = $this->Task->doValidation($Model);
+		$expected = array(
+			'name' => array(
+				'notEmpty' => 'notEmpty'
+			),
+			'email' => array(
+				'email' => 'email',
+			),
+		);
+		$this->assertEquals($expected, $result);
+	}
+
+/**
  * test the validation Generation routine
  *
  * @return void
@@ -366,39 +461,42 @@ class ModelTaskTest extends CakeTestCase {
 	public function testNonInteractiveDoValidation() {
 		$Model = $this->getMock('Model');
 		$Model->primaryKey = 'id';
-		$Model->expects($this->any())->method('schema')->will($this->returnValue(array(
-			'id' => array(
-				'type' => 'integer',
-				'length' => 11,
-				'null' => false,
-				'key' => 'primary',
-			),
-			'name' => array(
-				'type' => 'string',
-				'length' => 20,
-				'null' => false,
-			),
-			'email' => array(
-				'type' => 'string',
-				'length' => 255,
-				'null' => false,
-			),
-			'some_date' => array(
-				'type' => 'date',
-				'length' => '',
-				'null' => false,
-			),
-			'some_time' => array(
-				'type' => 'time',
-				'length' => '',
-				'null' => false,
-			),
-			'created' => array(
-				'type' => 'datetime',
-				'length' => '',
-				'null' => false,
+		$Model->expects($this->any())
+			->method('schema')
+			->will($this->returnValue(array(
+				'id' => array(
+					'type' => 'integer',
+					'length' => 11,
+					'null' => false,
+					'key' => 'primary',
+				),
+				'name' => array(
+					'type' => 'string',
+					'length' => 20,
+					'null' => false,
+				),
+				'email' => array(
+					'type' => 'string',
+					'length' => 255,
+					'null' => false,
+				),
+				'some_date' => array(
+					'type' => 'date',
+					'length' => '',
+					'null' => false,
+				),
+				'some_time' => array(
+					'type' => 'time',
+					'length' => '',
+					'null' => false,
+				),
+				'created' => array(
+					'type' => 'datetime',
+					'length' => '',
+					'null' => false,
+				)
 			)
-		)));
+		));
 		$this->Task->interactive = false;
 
 		$result = $this->Task->doValidation($Model);
@@ -954,8 +1052,8 @@ TEXT;
 		$this->Task->args = array('all');
 		$this->Task->expects($this->once())->method('_checkUnitTest')->will($this->returnValue(true));
 
-		$this->Task->Fixture->expects($this->exactly(5))->method('bake');
-		$this->Task->Test->expects($this->exactly(5))->method('bake');
+		$this->Task->Fixture->expects($this->exactly(6))->method('bake');
+		$this->Task->Test->expects($this->exactly(6))->method('bake');
 
 		$filename = '/my/path/BakeArticle.php';
 		$this->Task->expects($this->at(1))->method('createFile')
@@ -984,6 +1082,10 @@ TEXT;
 		$filename = '/my/path/CategoryThread.php';
 		$this->Task->expects($this->at(5))->method('createFile')
 			->with($filename, $this->stringContains('class CategoryThread'));
+
+		$filename = '/my/path/NumberTree.php';
+		$this->Task->expects($this->at(6))->method('createFile')
+			->with($filename, $this->stringContains('class NumberTree'));
 
 		$this->Task->execute();
 
@@ -1118,7 +1220,7 @@ TEXT;
 		$this->Task->path = '/my/path/';
 		$this->Task->args = array('all');
 		$this->Task->expects($this->once())->method('_checkUnitTest')->will($this->returnValue(true));
-		$this->Task->skipTables = array('bake_tags');
+		$this->Task->skipTables = array('bake_tags', 'number_trees');
 
 		$this->Task->Fixture->expects($this->exactly(4))->method('bake');
 		$this->Task->Test->expects($this->exactly(4))->method('bake');

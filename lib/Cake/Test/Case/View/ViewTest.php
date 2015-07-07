@@ -22,6 +22,8 @@ App::uses('Controller', 'Controller');
 App::uses('CacheHelper', 'View/Helper');
 App::uses('HtmlHelper', 'View/Helper');
 App::uses('ErrorHandler', 'Error');
+App::uses('CakeEventManager', 'Event');
+App::uses('CakeEventListener', 'Event');
 
 /**
  * ViewPostsController class
@@ -40,7 +42,7 @@ class ViewPostsController extends Controller {
 /**
  * uses property
  *
- * @var mixed null
+ * @var mixed
  */
 	public $uses = null;
 
@@ -163,7 +165,7 @@ class TestView extends View {
  * paths method
  *
  * @param string $plugin Optional plugin name to scan for view files.
- * @param boolean $cached Set to true to force a refresh of view paths.
+ * @param bool $cached Set to true to force a refresh of view paths.
  * @return array paths
  */
 	public function paths($plugin = null, $cached = true) {
@@ -236,6 +238,61 @@ class TestObjectWithToString {
  * An object without the magic method __toString() for testing with view blocks.
  */
 class TestObjectWithoutToString {
+}
+
+/**
+ * Class TestViewEventListener
+ *
+ * An event listener to test cakePHP events
+ */
+class TestViewEventListener implements CakeEventListener {
+
+/**
+ * type of view before rendering has occurred
+ *
+ * @var string
+ */
+	public $beforeRenderViewType;
+
+/**
+ * type of view after rendering has occurred
+ *
+ * @var string
+ */
+	public $afterRenderViewType;
+
+/**
+ * implementedEvents method
+ *
+ * @return array
+ */
+	public function implementedEvents() {
+		return array(
+				'View.beforeRender' => 'beforeRender',
+				'View.afterRender' => 'afterRender'
+				);
+	}
+
+/**
+ * beforeRender method
+ *
+ * @param CakeEvent $event the event being sent
+ * @return void
+ */
+	public function beforeRender($event) {
+		$this->beforeRenderViewType = $event->subject()->getCurrentType();
+	}
+
+/**
+ * afterRender method
+ *
+ * @param CakeEvent $event the event being sent
+ * @return void
+ */
+	public function afterRender($event) {
+		$this->afterRenderViewType = $event->subject()->getCurrentType();
+	}
+
 }
 
 /**
@@ -809,6 +866,30 @@ class ViewTest extends CakeTestCase {
 	}
 
 /**
+ * Test element events
+ *
+ * @return void
+ */
+	public function testViewEvent() {
+		$View = new View($this->PostsController);
+		$View->autoLayout = false;
+		$listener = new TestViewEventListener();
+
+		$View->getEventManager()->attach($listener);
+
+		$View->render('index');
+		$this->assertEquals(View::TYPE_VIEW, $listener->beforeRenderViewType);
+		$this->assertEquals(View::TYPE_VIEW, $listener->afterRenderViewType);
+
+		$this->assertEquals($View->getCurrentType(), View::TYPE_VIEW);
+		$View->element('test_element', array(), array('callbacks' => true));
+		$this->assertEquals($View->getCurrentType(), View::TYPE_VIEW);
+
+		$this->assertEquals(View::TYPE_ELEMENT, $listener->beforeRenderViewType);
+		$this->assertEquals(View::TYPE_ELEMENT, $listener->afterRenderViewType);
+	}
+
+/**
  * Test __get allowing access to helpers.
  *
  * @return void
@@ -1020,7 +1101,7 @@ class ViewTest extends CakeTestCase {
 		$this->PostsController->set('url', 'flash');
 		$this->PostsController->set('message', 'yo what up');
 		$this->PostsController->set('pause', 3);
-		$this->PostsController->set('page_title', 'yo what up');
+		$this->PostsController->set('pageTitle', 'yo what up');
 
 		$View = new TestView($this->PostsController);
 		$result = $View->render(false, 'flash');
@@ -1631,19 +1712,6 @@ TEXT;
  *
  * @return void
  */
-	public function testPropertySetting() {
-		$this->assertFalse(isset($this->View->pageTitle));
-		$this->View->pageTitle = 'test';
-		$this->assertTrue(isset($this->View->pageTitle));
-		$this->assertTrue(!empty($this->View->pageTitle));
-		$this->assertEquals('test', $this->View->pageTitle);
-	}
-
-/**
- * Test that setting arbitrary properties still works.
- *
- * @return void
- */
 	public function testPropertySettingMagicGet() {
 		$this->assertFalse(isset($this->View->action));
 		$this->View->request->params['action'] = 'login';
@@ -1676,7 +1744,7 @@ TEXT;
 	}
 
 /**
- * Tests that a vew block uses default value when not assigned and uses assigned value when it is
+ * Tests that a view block uses default value when not assigned and uses assigned value when it is
  *
  * @return void
  */
@@ -1688,6 +1756,22 @@ TEXT;
 		$expected = 'My Title';
 		$this->View->assign('title', $expected);
 		$result = $this->View->fetch('title', $default);
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * Tests that a view variable uses default value when not assigned and uses assigned value when it is
+ *
+ * @return void
+ */
+	public function testViewVarDefaultValue() {
+		$default = 'Default';
+		$result = $this->View->get('title', $default);
+		$this->assertEquals($default, $result);
+
+		$expected = 'Back to the Future';
+		$this->View->set('title', $expected);
+		$result = $this->View->get('title', $default);
 		$this->assertEquals($expected, $result);
 	}
 }

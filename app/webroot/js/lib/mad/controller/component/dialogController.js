@@ -21,51 +21,66 @@ steal(
 	mad.controller.component.FreeCompositeController.extend('mad.controller.component.DialogController', /** @static */ {
 
 		'defaults': {
-			'singleton': null,
 			'label': 'Dialog Controller',
 			'viewClass': mad.view.component.Dialog,
-			'cssClasses': ['popup'],
+			'cssClasses': ['dialog-wrapper'],
 			'tag': 'div'
+		},
+
+		/**
+		 * Close the latest dialog.
+		 */
+		'closeLatest': function() {
+			$('.dialog-wrapper:last').remove();
 		}
 
 	}, /** @prototype */ {
 		
 		// constructor like
 		'init': function(el, options) {
-			// if an instance of popup already exist return this instance
-			if(mad.controller.component.DialogController.singleton != null) {
-				return mad.controller.component.DialogController.singleton;
+			// Create the DOM entry point for the dialog
+			var refElt = mad.app.element,
+				position = 'first';
+
+			// If a dialog already exist, position the new one right after.
+			var $existingDialog = $('.dialog-wrapper:last');
+			if ($existingDialog.length) {
+				refElt = $existingDialog;
+				position = "after";
 			}
-			
-			// create the DOM entry point for the popup
-			var $el = mad.helper.HtmlHelper.create(
-				mad.app.element,
-				'first',
-				'<div id="js_dialog" />'
-			);
-			
-			// Changing the element force us to recall setup which is called before all init functions
+
+			// Insert the element in the page DOM.
+			var $el = mad.helper.HtmlHelper.create(refElt, position, '<div />');
+
+			// Changing the element force us to recall the setup which is called before all init functions
 			// and make the magic things (bind event ...)
-			this.setup($el);
+			this.setup($el, options);
 			this._super($el, options);
-			mad.controller.component.DialogController.singleton = this; 
 		},
-		
-		// destructor like
-		'destroy': function() {
-			mad.controller.component.DialogController.singleton = null;
-			this._super();
-		},
-		
+
 		/**
-		 * Add a component to the popup container
-		 * @param {Object} Class The class of the component to add
+		 * Add a component to the dialog container
+		 * @param {mad.controller.ComponentController} Class The class of the component to add, or the html to
+		 *   display.
 		 * @param {Object} options Option of the component
 		 */
 		'add': function(Class, options) {
+			if (typeof options == 'undefined' || options == null) {
+				options = {};
+			}
+
 			var component = this.addComponent(Class, options, 'js_dialog_content');
 			component.start();
+
 			return component;
+		},
+
+		/**
+		 * Set the title
+		 * @param {string} title The new title
+		 */
+		'setTitle': function(title) {
+			this.view.setTitle(title);
 		}
 	});
 });

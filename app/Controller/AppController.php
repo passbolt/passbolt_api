@@ -38,39 +38,7 @@ class AppController extends Controller {
 			),
 		),
 		'Cookie',
-		'Auth' => array(
-			'className' => 'PassboltAuth',
-			'throttlingStrategies' => array(
-				'throttle' => array(
-					1 => array(
-						'throttleTime' => '5'
-					),
-					2 => array(
-						'throttleTime' => '15'
-					),
-					3 => array(
-						'throttleTime' => '45'
-					),
-					4 => array(
-						'throttleTime' => '60'
-					)
-				),
-				'blacklist' => array(
-					20 => array(
-						'interval' => '60',
-						'blacklistTime' => '600'
-					),
-					50 => array(
-						'interval' => '1200',
-						'blacklistTime' => '2400'
-					),
-					100 => array(
-						'interval' => '3600',
-						'blacklistTime' => '7200'
-					)
-				)
-			)
-		),
+		'Auth',
 		'Message',
 		'Mailer',
 		'IpAddress',
@@ -78,8 +46,10 @@ class AppController extends Controller {
 	);
 
 	public $helpers = array(
-		'Html', 'Form',
-		'MyForm'
+		'Html',
+		'Form',
+		'MyForm',
+		'FileStorage.Image'
 	);
 
 	/**
@@ -89,13 +59,10 @@ class AppController extends Controller {
 	 * @return void
 	 */
 	public function beforeFilter() {
-		// Paranoia - Hidding PHP version number
-		$this->response->header('X-Powered-By', 'PHP');
-
 		// Add a callback detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
-					return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
-				}));
+			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
+		}));
 
 		// Set default layout
 		if (isset($this->request->params['plugin']) && $this->request->params['plugin'] == 'api_generator') {
@@ -105,6 +72,17 @@ class AppController extends Controller {
 				$this->layout = 'json';
 				$this->view = '/Json/default';
 			} else {
+				// Get roles, to load in the layout js variables.
+				// Only for admin and user.
+				$Role = Common::getModel('Role');
+				$this->set('roles', $Role->find('all', array(
+                    'conditions' => array(
+						'name' => array(
+                            Role::ADMIN,
+                            Role::USER
+                        ),
+                    ),
+                )));
 				$this->layout = 'html5';
 			}
 		}
@@ -113,12 +91,10 @@ class AppController extends Controller {
 		// or use what is in the session
 		User::get();
 
-		// Auth component initilization
-		$this->Auth->authenticate = Configure::read('Auth.authenticate');
-		//$this->Auth->loginAction = Configure::read('Auth.loginAction');
-		$this->Auth->loginRedirect = Configure::read('Auth.loginRedirect');
-		//$this->Auth->logoutRedirect = Configure::read('Auth.logoutRedirect');
-		$this->Auth->authorize = array('Controller'); //@see AppController::isAuthorized
+		// Auth component initialization
+		foreach (Configure::read('Auth') as $key => $authConf) {
+			$this->Auth->{$key} = $authConf;
+		}
 
 		// @todo this will be remove via the initial auth check
 		// User::set() will load default config
@@ -127,6 +103,10 @@ class AppController extends Controller {
 		} else {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
+
+        // Before sanitizing, keep the original data.
+        $this->request->dataRaw = $this->request->data;
+        //$this->request->queryRaw = $this->request->query;
 
 		// Sanitize user input.
 		// Create a very restrictive configuration.
@@ -139,7 +119,7 @@ class AppController extends Controller {
 		if (isset($this->request->params['pass']) && !empty($this->request->params['pass'])) {
 			$this->request->params['pass'] = $this->HtmlPurifier->purifyHtml($this->request->params['pass'], 'nohtml');
 		}
-		// Sanitize any post data.
+		// Sanitize post data, except exceptions.
 		if (isset($this->request->data) && !empty($this->request->data)) {
 			$this->request->data = $this->HtmlPurifier->purifyHtml($this->request->data, 'nohtml');
 		}
@@ -184,7 +164,6 @@ class AppController extends Controller {
 		if ($action == null) {
 			$action = $this->action;
 		}
-		//echo $controller.':'.$action;
 		$whitelist = Configure::read('Auth.whitelist');
 		return (isset($whitelist[$controller][$action]));
 	}

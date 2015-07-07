@@ -128,7 +128,7 @@ abstract class JsBaseEngineHelper extends AppHelper {
 		$defaultOptions = array(
 			'prefix' => '', 'postfix' => '',
 		);
-		$options = array_merge($defaultOptions, $options);
+		$options += $defaultOptions;
 
 		return $options['prefix'] . json_encode($data) . $options['postfix'];
 	}
@@ -137,7 +137,8 @@ abstract class JsBaseEngineHelper extends AppHelper {
  * Converts a PHP-native variable of any type to a JSON-equivalent representation
  *
  * @param mixed $val A PHP variable to be converted to JSON
- * @param boolean $quoteString If false, leaves string values unquoted
+ * @param bool $quoteString If false, leaves string values unquoted
+ * @param string $key Key name.
  * @return string a JavaScript-safe/JSON representation of $val
  */
 	public function value($val = array(), $quoteString = null, $key = 'value') {
@@ -475,7 +476,7 @@ abstract class JsBaseEngineHelper extends AppHelper {
 	abstract public function serializeForm($options = array());
 
 /**
- * Parse an options assoc array into an JavaScript object literal.
+ * Parse an options assoc array into a JavaScript object literal.
  * Similar to object() but treats any non-integer value as a string,
  * does not include `{ }`
  *

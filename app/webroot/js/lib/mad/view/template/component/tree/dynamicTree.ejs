@@ -1,14 +1,15 @@
 <%
-var cssClasses = ['node'];
-if(hasChildren) cssClasses.push('close');
+if (hasChildren) {
+    cssClasses.push('close');
+}
 %>
 
-<li id="<%= id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses.join(' ') %>">
+<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="node <%= cssClasses.join(' ') %>">
 	<div class="row">
 
 		<div class="main-cell-wrapper">
 			<div class="main-cell">
-				<a href="#"><span><%= label %></span></a>
+				<a href="#"><span><%= mappedItem.label %></span></a>
 			</div>
 		</div>
 

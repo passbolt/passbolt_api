@@ -1,6 +1,11 @@
+
+# Local config
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
+
+# Cake temp files
+/app/tmp/cache/
 /app/tmp/cache/models/*
 /app/tmp/cache/persistent/*
 /app/tmp/cache/views/*
@@ -9,12 +14,46 @@
 /app/tmp/purifier/*
 /app/tmp/sessions/*
 /app/tmp/tests/*
-/lib/Cake/Console/Templates/skel/tmp/
+/app/tmp/image-processing/*
+/app/tmp/file-storage-test/*
+
+# Plugins
+/Plugin
 /plugins
+/app/Plugin/*
+!/app/Plugin/DataExtras
+!/app/Plugin/api_generator
+
+# Vendors
+/vendor
+/Vendor
 /vendors
+/app/Vendor/*
+!/app/Vendor/RandomTool.php
+!/app/Vendor/openpgp-php
+
+# bower and grunt
+/bower_components
+/node_modules
+
+# Misc
+/app/composer.phar
+/app/webroot/img/public/*
+/lib/Cake/Console/Templates/skel/tmp/
 /build
 /dist
 /tags
+*.mo
+/app/webroot/js/app/config/config.json
+/app/webroot/js/lib/mad/docs/
+/app/webroot/js/lib/mad/docs.html
+
+
+# IDE and editor specific files #
+#################################
+/nbproject
+.idea
+
 
 # OS generated files #
 ######################
@@ -27,10 +66,52 @@ Icon?
 ehthumbs.db
 Thumbs.db
 /.settings
-
-/app/webroot/js/app/config/config.json
-/app/webroot/js/lib/mad/docs/
-/app/webroot/js/lib/mad/docs.html
-!empty
 /.idea/*
-/node_modules/
+
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+
+.buildpath
+*.iml
+
+## Directory-based project format:
+.idea/
+# if you remove the above rule, at least ignore the following:
+
+# User-specific stuff:
+# .idea/workspace.xml
+# .idea/tasks.xml
+# .idea/dictionaries
+
+# Sensitive or high-churn files:
+# .idea/dataSources.ids
+# .idea/dataSources.xml
+# .idea/sqlDataSources.xml
+# .idea/dynamic.xml
+# .idea/uiDesigner.xml
+
+# Gradle:
+# .idea/gradle.xml
+# .idea/libraries
+
+# Mongo Explorer plugin:
+# .idea/mongoSettings.xml
+
+## File-based project format:
+*.ipr
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties

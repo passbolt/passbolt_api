@@ -17,7 +17,7 @@ class GroupsUsersController extends AppController {
 	 * Get a groupUser
 	 * Renders a json object of the resource
 	 *
-	 * @param int $id the id of the resource
+	 * @param integer $id the id of the resource
 	 * @return void
 	 */
 	public function view($id=null) {
@@ -47,7 +47,7 @@ class GroupsUsersController extends AppController {
 
 	/**
 	 * Delete a groupUser
-	 * @param int id the id of the resource to delete
+	 * @param integer id the id of the resource to delete
 	 */
 	public function delete($id = null) {
 		// check if the group id is provided

@@ -39,7 +39,7 @@ class CakeValidationRule {
 /**
  * Holds whether the record being validated exists in datasource or not
  *
- * @var boolean
+ * @var bool
  */
 	protected $_recordExists = false;
 
@@ -81,7 +81,7 @@ class CakeValidationRule {
 /**
  * The 'allowEmpty' key
  *
- * @var boolean
+ * @var bool
  */
 	public $allowEmpty = null;
 
@@ -95,7 +95,7 @@ class CakeValidationRule {
 /**
  * The 'last' key
  *
- * @var boolean
+ * @var bool
  */
 	public $last = true;
 
@@ -118,7 +118,7 @@ class CakeValidationRule {
 /**
  * Checks if the rule is valid
  *
- * @return boolean
+ * @return bool
  */
 	public function isValid() {
 		if (!$this->_valid || (is_string($this->_valid) && !empty($this->_valid))) {
@@ -131,7 +131,7 @@ class CakeValidationRule {
 /**
  * Returns whether the field can be left blank according to this rule
  *
- * @return boolean
+ * @return bool
  */
 	public function isEmptyAllowed() {
 		return $this->skip() || $this->allowEmpty === true;
@@ -140,7 +140,7 @@ class CakeValidationRule {
 /**
  * Checks if the field is required according to the `required` property
  *
- * @return boolean
+ * @return bool
  */
 	public function isRequired() {
 		if (in_array($this->required, array('create', 'update'), true)) {
@@ -157,8 +157,8 @@ class CakeValidationRule {
  * Checks whether the field failed the `field should be present` validation
  *
  * @param string $field Field name
- * @param array $data Data to check rule against
- * @return boolean
+ * @param array &$data Data to check rule against
+ * @return bool
  */
 	public function checkRequired($field, &$data) {
 		return (
@@ -174,8 +174,8 @@ class CakeValidationRule {
  * Checks if the allowEmpty key applies
  *
  * @param string $field Field name
- * @param array $data data to check rule against
- * @return boolean
+ * @param array &$data data to check rule against
+ * @return bool
  */
 	public function checkEmpty($field, &$data) {
 		if (empty($data[$field]) && $data[$field] != '0' && $this->allowEmpty === true) {
@@ -187,7 +187,7 @@ class CakeValidationRule {
 /**
  * Checks if the validation rule should be skipped
  *
- * @return boolean True if the ValidationRule can be skipped
+ * @return bool True if the ValidationRule can be skipped
  */
 	public function skip() {
 		if (!empty($this->on)) {
@@ -202,7 +202,7 @@ class CakeValidationRule {
  * Returns whether this rule should break validation process for associated field
  * after it fails
  *
- * @return boolean
+ * @return bool
  */
 	public function isLast() {
 		return (bool)$this->last;
@@ -245,8 +245,8 @@ class CakeValidationRule {
  * If called with no parameters it will return whether this rule
  * is configured for update operations or not.
  *
- * @param boolean $exists Boolean to indicate if records exists
- * @return boolean
+ * @param bool $exists Boolean to indicate if records exists
+ * @return bool
  */
 	public function isUpdate($exists = null) {
 		if ($exists === null) {
@@ -259,9 +259,9 @@ class CakeValidationRule {
  * Dispatches the validation rule to the given validator method
  *
  * @param string $field Field name
- * @param array $data Data array
- * @param array $methods Methods list
- * @return boolean True if the rule could be dispatched, false otherwise
+ * @param array &$data Data array
+ * @param array &$methods Methods list
+ * @return bool True if the rule could be dispatched, false otherwise
  */
 	public function process($field, &$data, &$methods) {
 		$this->_valid = true;
@@ -299,8 +299,8 @@ class CakeValidationRule {
 /**
  * Returns passed options for this rule
  *
- * @param string|integer $key Array index
- * @return array
+ * @param string|int $key Array index
+ * @return array|null
  */
 	public function getOptions($key) {
 		if (!isset($this->_passedOptions[$key])) {
@@ -334,7 +334,7 @@ class CakeValidationRule {
  * Parses the rule and sets the rule and ruleParams
  *
  * @param string $field Field name
- * @param array $data Data array
+ * @param array &$data Data array
  * @return void
  */
 	protected function _parseRule($field, &$data) {

@@ -71,10 +71,9 @@ class FavoritesController extends AppController {
 	 * Unfav/unstar a given record for a given model
 	 *
 	 * @param UUID $id of the resource
-	 * @param string $model name
 	 * @return void
 	 */
-	function delete($id) {
+	function delete($id = null) {
 		// check the HTTP request method
 		if (!$this->request->is('delete')) {
 			$this->Message->error(__('Invalid request method, should be DELETE'));

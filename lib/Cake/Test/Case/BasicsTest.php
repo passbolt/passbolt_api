@@ -20,6 +20,7 @@ require_once CAKE . 'basics.php';
 
 App::uses('Folder', 'Utility');
 App::uses('CakeResponse', 'Network');
+App::uses('Debugger', 'Utility');
 
 /**
  * BasicsTest class
@@ -380,6 +381,14 @@ class BasicsTest extends CakeTestCase {
 		$expected = 'Some string with multiple arguments';
 		$this->assertEquals($expected, $result);
 
+		$result = __('Some string with %s and a null argument', null);
+		$expected = 'Some string with %s and a null argument';
+		$this->assertEquals($expected, $result);
+
+		$result = __('Some string with multiple %s%s, first being null', null, 'arguments');
+		$expected = 'Some string with multiple arguments, first being null';
+		$this->assertEquals($expected, $result);
+
 		$result = __('Some string with %s %s', array('multiple', 'arguments'));
 		$expected = 'Some string with multiple arguments';
 		$this->assertEquals($expected, $result);
@@ -394,6 +403,181 @@ class BasicsTest extends CakeTestCase {
 
 		$result = __('Testing %.2f number', 1.2345);
 		$expected = 'Testing 1.23 number';
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * testTranslatePercent
+ *
+ * @return void
+ */
+	public function testTranslatePercent() {
+		$result = __('%s are 100% real fruit', 'Apples');
+		$expected = 'Apples are 100% real fruit';
+		$this->assertEquals($expected, $result, 'Percent sign at end of word should be considered literal');
+
+		$result = __('%s are %d% real fruit', 'Apples', 100);
+		$expected = 'Apples are 100% real fruit';
+		$this->assertEquals($expected, $result, 'A digit marker should not be misinterpreted');
+
+		$result = __('%s are %s% real fruit', 'Apples', 100);
+		$expected = 'Apples are 100% real fruit';
+		$this->assertEquals($expected, $result, 'A string marker should not be misinterpreted');
+
+		$result = __('%nonsense %s', 'Apples');
+		$expected = '%nonsense Apples';
+		$this->assertEquals($expected, $result, 'A percent sign at the start of the string should be considered literal');
+
+		$result = __('%s are awesome%', 'Apples');
+		$expected = 'Apples are awesome%';
+		$this->assertEquals($expected, $result, 'A percent sign at the end of the string should be considered literal');
+
+		$result = __('%2$d %1$s entered the bowl', 'Apples', 2);
+		$expected = '2 Apples entered the bowl';
+		$this->assertEquals($expected, $result, 'Positional replacement markers should not be misinterpreted');
+
+		$result = __('%.2f% of all %s agree', 99.44444, 'Cats');
+		$expected = '99.44% of all Cats agree';
+		$this->assertEquals($expected, $result, 'significant-digit placeholder should not be misinterpreted');
+	}
+
+/**
+ * testTranslateWithFormatSpecifiers
+ *
+ * @return void
+ */
+	public function testTranslateWithFormatSpecifiers() {
+		$expected = 'Check,   one, two, three';
+		$result = __('Check, %+10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check,    +1, two, three';
+		$result = __('Check, %+5d, two, three', 1);
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check, @@one, two, three';
+		$result = __('Check, %\'@+10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check, one, two  , three';
+		$result = __('Check, %-10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check, one, two##, three';
+		$result = __('Check, %\'#-10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check,   one, two, three';
+		$result = __d('default', 'Check, %+10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check, @@one, two, three';
+		$result = __d('default', 'Check, %\'@+10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check, one, two  , three';
+		$result = __d('default', 'Check, %-10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+
+		$expected = 'Check, one, two##, three';
+		$result = __d('default', 'Check, %\'#-10s, three', 'one, two');
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * testTranslateDomainPluralWithFormatSpecifiers
+ *
+ * @return void
+ */
+	public function testTranslateDomainPluralWithFormatSpecifiers() {
+		$result = __dn('core', '%+5d item.', '%+5d items.', 1, 1);
+		$expected = '   +1 item.';
+		$this->assertEquals($expected, $result);
+
+		$result = __dn('core', '%-5d item.', '%-5d items.', 10, 10);
+		$expected = '10    items.';
+		$this->assertEquals($expected, $result);
+
+		$result = __dn('core', '%\'#+5d item.', '%\'*+5d items.', 1, 1);
+		$expected = '###+1 item.';
+		$this->assertEquals($expected, $result);
+
+		$result = __dn('core', '%\'#+5d item.', '%\'*+5d items.', 90, 90);
+		$expected = '**+90 items.';
+		$this->assertEquals($expected, $result);
+
+		$result = __dn('core', '%\'#+5d item.', '%\'*+5d items.', 9000, 9000);
+		$expected = '+9000 items.';
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * test testTranslatePluralWithFormatSpecifiers
+ *
+ * @return void
+ */
+	public function testTranslatePluralWithFormatSpecifiers() {
+		Configure::write('Config.language', 'rule_1_po');
+
+		$result = __n('%-5d = 1', '%-5d = 0 or > 1', 10);
+		$expected = '%-5d = 0 or > 1 (translated)';
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * test testTranslateDomainCategoryWithFormatSpecifiers
+ *
+ * @return void
+ */
+	public function testTranslateDomainCategoryWithFormatSpecifiers() {
+		Configure::write('Config.language', 'rule_1_po');
+
+		$result = __dc('default', '%+10s world', 6, 'hello');
+		$expected = '     hello world';
+		$this->assertEquals($expected, $result);
+
+		$result = __dc('default', '%-10s world', 6, 'hello');
+		$expected = 'hello      world';
+		$this->assertEquals($expected, $result);
+
+		$result = __dc('default', '%\'@-10s world', 6, 'hello');
+		$expected = 'hello@@@@@ world';
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * test testTranslateDomainCategoryPluralWithFormatSpecifiers
+ *
+ * @return void
+ */
+	public function testTranslateDomainCategoryPluralWithFormatSpecifiers() {
+		Configure::write('Config.language', 'rule_1_po');
+
+		$result = __dcn('default', '%-5d = 1', '%-5d = 0 or > 1', 0, 6);
+		$expected = '%-5d = 0 or > 1 (translated)';
+		$this->assertEquals($expected, $result);
+
+		$result = __dcn('default', '%-5d = 1', '%-5d = 0 or > 1', 1, 6);
+		$expected = '%-5d = 1 (translated)';
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * test testTranslateCategoryWithFormatSpecifiers
+ *
+ * @return void
+ */
+	public function testTranslateCategoryWithFormatSpecifiers() {
+		$result = __c('Some string with %+10s', 6, 'arguments');
+		$expected = 'Some string with  arguments';
+		$this->assertEquals($expected, $result);
+
+		$result = __c('Some string with %-10s: args', 6, 'arguments');
+		$expected = 'Some string with arguments : args';
+		$this->assertEquals($expected, $result);
+
+		$result = __c('Some string with %\'*-10s: args', 6, 'arguments');
+		$expected = 'Some string with arguments*: args';
 		$this->assertEquals($expected, $result);
 	}
 
@@ -771,7 +955,7 @@ EXPECTED;
 		if (php_sapi_name() === 'cli') {
 			$expected = sprintf($expectedText, str_replace(CAKE_CORE_INCLUDE_PATH, '', __FILE__), __LINE__ - 18);
 		} else {
-			$expected = sprintf($expectedHtml, str_replace(CAKE_CORE_INCLUDE_PATH, '', __FILE__), __LINE__ - 19);
+			$expected = sprintf($expectedHtml, str_replace(CAKE_CORE_INCLUDE_PATH, '', __FILE__), __LINE__ - 20);
 		}
 		$this->assertEquals($expected, $result);
 
@@ -859,7 +1043,7 @@ EXPECTED;
  * @return void
  */
 	public function testPr() {
-		$this->skipIf(php_sapi_name() == 'cli', 'Skipping web test in cli mode');
+		$this->skipIf(php_sapi_name() === 'cli', 'Skipping web test in cli mode');
 		ob_start();
 		pr('this is a test');
 		$result = ob_get_clean();
@@ -963,6 +1147,24 @@ EXPECTED;
 			'g' => "te'''st"
 			);
 		$this->assertEquals($expected, stripslashes_deep($nested));
+	}
+
+/**
+ * Tests that the stackTrace() method is a shortcut for Debugger::trace()
+ *
+ * @return void
+ */
+	public function testStackTrace() {
+		ob_start();
+		list(, $expected) = array(stackTrace(), Debugger::trace());
+		$result = ob_get_clean();
+		$this->assertEquals($expected, $result);
+
+		$opts = array('args' => true);
+		ob_start();
+		list(, $expected) = array(stackTrace($opts), Debugger::trace($opts));
+		$result = ob_get_clean();
+		$this->assertEquals($expected, $result);
 	}
 
 /**

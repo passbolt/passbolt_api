@@ -47,6 +47,42 @@ class SmtpTransport extends AbstractTransport {
 	protected $_content;
 
 /**
+ * The response of the last sent SMTP command.
+ *
+ * @var array
+ */
+	protected $_lastResponse = array();
+
+/**
+ * Returns the response of the last sent SMTP command.
+ *
+ * A response consists of one or more lines containing a response
+ * code and an optional response message text:
+ * ```
+ * array(
+ *     array(
+ *         'code' => '250',
+ *         'message' => 'mail.example.com'
+ *     ),
+ *     array(
+ *         'code' => '250',
+ *         'message' => 'PIPELINING'
+ *     ),
+ *     array(
+ *         'code' => '250',
+ *         'message' => '8BITMIME'
+ *     ),
+ *     // etc...
+ * )
+ * ```
+ *
+ * @return array
+ */
+	public function getLastResponse() {
+		return $this->_lastResponse;
+	}
+
+/**
  * Send mail
  *
  * @param CakeEmail $email CakeEmail
@@ -68,7 +104,7 @@ class SmtpTransport extends AbstractTransport {
 /**
  * Set the configuration
  *
- * @param array $config
+ * @param array $config Configuration options.
  * @return array Returns configs
  */
 	public function config($config = null) {
@@ -86,6 +122,25 @@ class SmtpTransport extends AbstractTransport {
 		);
 		$this->_config = array_merge($default, $this->_config, $config);
 		return $this->_config;
+	}
+
+/**
+ * Parses and stores the reponse lines in `'code' => 'message'` format.
+ *
+ * @param array $responseLines Response lines to parse.
+ * @return void
+ */
+	protected function _bufferResponseLines(array $responseLines) {
+		$response = array();
+		foreach ($responseLines as $responseLine) {
+			if (preg_match('/^(\d{3})(?:[ -]+(.*))?$/', $responseLine, $match)) {
+				$response[] = array(
+					'code' => $match[1],
+					'message' => isset($match[2]) ? $match[2] : null
+				);
+			}
+		}
+		$this->_lastResponse = array_merge($this->_lastResponse, $response);
 	}
 
 /**
@@ -136,20 +191,96 @@ class SmtpTransport extends AbstractTransport {
  */
 	protected function _auth() {
 		if (isset($this->_config['username']) && isset($this->_config['password'])) {
-			$authRequired = $this->_smtpSend('AUTH LOGIN', '334|503');
-			if ($authRequired == '334') {
-				if (!$this->_smtpSend(base64_encode($this->_config['username']), '334')) {
+			$replyCode = $this->_smtpSend('AUTH LOGIN', '334|500|502|504');
+			if ($replyCode == '334') {
+				try {
+					$this->_smtpSend(base64_encode($this->_config['username']), '334');
+				} catch (SocketException $e) {
 					throw new SocketException(__d('cake_dev', 'SMTP server did not accept the username.'));
 				}
-				if (!$this->_smtpSend(base64_encode($this->_config['password']), '235')) {
+				try {
+					$this->_smtpSend(base64_encode($this->_config['password']), '235');
+				} catch (SocketException $e) {
 					throw new SocketException(__d('cake_dev', 'SMTP server did not accept the password.'));
 				}
-			} elseif ($authRequired == '504') {
-				throw new SocketException(__d('cake_dev', 'SMTP authentication method not allowed, check if SMTP server requires TLS'));
-			} elseif ($authRequired != '503') {
-				throw new SocketException(__d('cake_dev', 'SMTP does not require authentication.'));
+			} elseif ($replyCode == '504') {
+				throw new SocketException(__d('cake_dev', 'SMTP authentication method not allowed, check if SMTP server requires TLS.'));
+			} else {
+				throw new SocketException(__d('cake_dev', 'AUTH command not recognized or not implemented, SMTP server may not require authentication.'));
 			}
 		}
+	}
+
+/**
+ * Prepares the `MAIL FROM` SMTP command.
+ *
+ * @param string $email The email address to send with the command.
+ * @return string
+ */
+	protected function _prepareFromCmd($email) {
+		return 'MAIL FROM:<' . $email . '>';
+	}
+
+/**
+ * Prepares the `RCPT TO` SMTP command.
+ *
+ * @param string $email The email address to send with the command.
+ * @return string
+ */
+	protected function _prepareRcptCmd($email) {
+		return 'RCPT TO:<' . $email . '>';
+	}
+
+/**
+ * Prepares the `from` email address.
+ *
+ * @return array
+ */
+	protected function _prepareFromAddress() {
+		$from = $this->_cakeEmail->returnPath();
+		if (empty($from)) {
+			$from = $this->_cakeEmail->from();
+		}
+		return $from;
+	}
+
+/**
+ * Prepares the recipient email addresses.
+ *
+ * @return array
+ */
+	protected function _prepareRecipientAddresses() {
+		$to = $this->_cakeEmail->to();
+		$cc = $this->_cakeEmail->cc();
+		$bcc = $this->_cakeEmail->bcc();
+		return array_merge(array_keys($to), array_keys($cc), array_keys($bcc));
+	}
+
+/**
+ * Prepares the message headers.
+ *
+ * @return array
+ */
+	protected function _prepareMessageHeaders() {
+		return $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'readReceipt', 'to', 'cc', 'subject'));
+	}
+
+/**
+ * Prepares the message body.
+ *
+ * @return string
+ */
+	protected function _prepareMessage() {
+		$lines = $this->_cakeEmail->message();
+		$messages = array();
+		foreach ($lines as $line) {
+			if ((!empty($line)) && ($line[0] === '.')) {
+				$messages[] = '.' . $line;
+			} else {
+				$messages[] = $line;
+			}
+		}
+		return implode("\r\n", $messages);
 	}
 
 /**
@@ -159,18 +290,12 @@ class SmtpTransport extends AbstractTransport {
  * @throws SocketException
  */
 	protected function _sendRcpt() {
-		$from = $this->_cakeEmail->returnPath();
-		if (empty($from)) {
-			$from = $this->_cakeEmail->from();
-		}
-		$this->_smtpSend('MAIL FROM:<' . key($from) . '>');
+		$from = $this->_prepareFromAddress();
+		$this->_smtpSend($this->_prepareFromCmd(key($from)));
 
-		$to = $this->_cakeEmail->to();
-		$cc = $this->_cakeEmail->cc();
-		$bcc = $this->_cakeEmail->bcc();
-		$emails = array_merge(array_keys($to), array_keys($cc), array_keys($bcc));
+		$emails = $this->_prepareRecipientAddresses();
 		foreach ($emails as $email) {
-			$this->_smtpSend('RCPT TO:<' . $email . '>');
+			$this->_smtpSend($this->_prepareRcptCmd($email));
 		}
 	}
 
@@ -183,18 +308,9 @@ class SmtpTransport extends AbstractTransport {
 	protected function _sendData() {
 		$this->_smtpSend('DATA', '354');
 
-		$headers = $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'readReceipt', 'to', 'cc', 'subject'));
-		$headers = $this->_headersToString($headers);
-		$lines = $this->_cakeEmail->message();
-		$messages = array();
-		foreach ($lines as $line) {
-			if ((!empty($line)) && ($line[0] === '.')) {
-				$messages[] = '.' . $line;
-			} else {
-				$messages[] = $line;
-			}
-		}
-		$message = implode("\r\n", $messages);
+		$headers = $this->_headersToString($this->_prepareMessageHeaders());
+		$message = $this->_prepareMessage();
+
 		$this->_smtpSend($headers . "\r\n\r\n" . $message . "\r\n\r\n\r\n.");
 		$this->_content = array('headers' => $headers, 'message' => $message);
 	}
@@ -224,11 +340,13 @@ class SmtpTransport extends AbstractTransport {
  * Protected method for sending data to SMTP connection
  *
  * @param string $data data to be sent to SMTP server
- * @param string|boolean $checkCode code to check for in server response, false to skip
+ * @param string|bool $checkCode code to check for in server response, false to skip
  * @return void
  * @throws SocketException
  */
 	protected function _smtpSend($data, $checkCode = '250') {
+		$this->_lastResponse = array();
+
 		if ($data !== null) {
 			$this->_socket->write($data . "\r\n");
 		}
@@ -243,6 +361,8 @@ class SmtpTransport extends AbstractTransport {
 			}
 			$responseLines = explode("\r\n", rtrim($response, "\r\n"));
 			$response = end($responseLines);
+
+			$this->_bufferResponseLines($responseLines);
 
 			if (preg_match('/^(' . $checkCode . ')(.)/', $response, $code)) {
 				if ($code[2] === '-') {

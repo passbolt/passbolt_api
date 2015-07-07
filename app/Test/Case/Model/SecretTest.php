@@ -11,7 +11,18 @@ App::uses('Secret', 'Model');
 
 class SecretTest extends CakeTestCase {
 
-	public $fixtures = array('app.secret', 'app.resource', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.secret',
+		'app.resource',
+		'app.user',
+		'app.gpgkey',
+		'app.profile',
+		'app.groupsUser',
+		'app.fileStorage',
+		'app.group',
+		'app.role',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -36,7 +47,7 @@ class SecretTest extends CakeTestCase {
 			} else {
 				$msg = 'validation of the secret user_id with "' . $testcase . '" should not validate';
 			}
-			$this->assertEqual($this->Secret->validates(array('fieldList' => array('user_id'))), $result, $msg);
+			$this->assertEquals($this->Secret->validates(array('fieldList' => array('user_id'))), $result, $msg);
 		}
 	}
 
@@ -54,7 +65,7 @@ class SecretTest extends CakeTestCase {
 			$this->Secret->set($secret);
 			if($result) $msg = 'validation of the secret resource_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the secret resource_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->Secret->validates(array('fieldList' => array('resource_id'))), $result, $msg);
+			$this->assertEquals($this->Secret->validates(array('fieldList' => array('resource_id'))), $result, $msg);
 		}
 	}
 
@@ -65,8 +76,20 @@ class SecretTest extends CakeTestCase {
 	public function testDataValidation() {
 		$testcases = array(
 			'' => false,
-			'!#*' => true,
-			'blabla' => true
+			'!#*' => false,
+			'-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----' => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$secret = array('Secret' => array(
@@ -81,7 +104,7 @@ class SecretTest extends CakeTestCase {
 			$validate = $this->Secret->validates(array('fieldList' => array('data')));
 			$msg .= print_r($secret, true);
 			$msg .= print_r($this->Secret->invalidFields(), true);
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 }

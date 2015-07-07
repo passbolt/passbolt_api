@@ -21,14 +21,38 @@ steal(
 	mad.controller.ComponentController.extend('mad.form.FormController', /** @static */ {
 
 		'defaults': {
+			/**
+			 * Callbacks 'error' and 'submit'.
+			 */
 			'callbacks': {
 				'error': function () { },
 				'submit': function (data) { }
 			},
+
+			/**
+			 * Tag.
+			 */
 			'tag': 'form',
+
+			/**
+			 * Default action.
+			 */
             'action': null,
-			'validateOnChange': true,
+
+			/**
+			 * validateOnChange : whether the form should validate after a change in one of its field.
+			 * 3 possible values : true, false, or 'afterFirstValidation'
+			 */
+			'validateOnChange': 'afterFirstValidation',
+
+			/**
+			 * Whether the form is template based.
+			 */
 			'templateBased': false,
+
+			/**
+			 * Class for the view.
+			 */
 			'viewClass': mad.view.form.FormView
 		}
 
@@ -51,8 +75,32 @@ steal(
 			 * @type {mad.model.Model}
 			 */
 			this.data = {};
+
+			/**
+			 * Total number of validations for this form.
+			 * @type {number}
+			 */
+			this.validations = 0;
 			
 			this._super(el, options);
+		},
+
+		/**
+		 * Implements beforeRender hook.
+		 */
+		'beforeRender': function() {
+			this.setViewData('action', this.options.action);
+		},
+
+		/**
+		 * Reset the form.
+		 * @return {void}
+		 */
+		'reset': function () {
+			// Reset all the form elements value.
+			for (var eltId in this.elements) {
+				this.elements[eltId].setValue(this.options.defaultValue);
+			}
 		},
 
 		/**
@@ -117,6 +165,36 @@ steal(
 			if (!(element instanceof mad.form.FormElement)) {
 				throw new mad.error.WrongParametersException('element', 'mad.form.FormElement');
 			}
+
+			// Get validation rules for this model if this is the first element using a model of this type.
+			// Check if element model is already present in the form.
+			var modelPresentInForm = false;
+			var modelAttr = mad.model.Model.getModelAttributes(element.getModelReference());
+			// Get model name.
+			var modelName = modelAttr[modelAttr.length - 2].name;
+			// Loop on the already added form elements.
+			for (var eltId in this.elements) {
+				// Get model name for current element.
+				var eltModelAttr = mad.model.Model.getModelAttributes(this.elements[eltId].getModelReference());
+				var eltModelName = modelAttr[eltModelAttr.length - 2].name;
+				// If we don't find in the form elements the same model as in the new element, then we note it.
+				if (modelName == eltModelName) {
+					modelPresentInForm = true;
+					break;
+				}
+			}
+			// If model is not already present in form.
+			// (means we don't know the validation rules yet).
+			if (!modelPresentInForm) {
+				// We get the validation rules.
+				// First, get the model.
+				var model = can.getObject(modelName);
+				if (model !== undefined) {
+					// Get the validation rules.
+					model.getValidationRules(this.options.action);
+				}
+			}
+
 			// store the element with its associated model reference
 			var eltId = element.getId();
 			this.elements[eltId] = element;
@@ -233,10 +311,10 @@ steal(
 									obj[attrName] = val;
 									leafValue.push(obj);
 								});
-								// construct the return format functon of the sub models references
+								// construct the return format function of the sub models references
 								can.getObject(subModelPath, returnValue[fieldAttrs[0].name], true, leafValue);
 							} else {
-								// construct the return format functon of the sub models references
+								// construct the return format function of the sub models references
 								can.getObject(subModelPath + '.' + attrName , returnValue[fieldAttrs[0].name], true, eltValue);
 							}
 						}
@@ -249,6 +327,53 @@ steal(
 			}
 
 			return returnValue;
+		},
+
+		/**
+		 * Read and process server errors.
+		 * @param errors
+		 */
+		'showErrors':function(errors) {
+			console.log(errors);
+			for (var i in this.elements) {
+				var element = this.elements[i];
+				//console.log(element);
+				var eltModelRef = element.getModelReference();
+				if (eltModelRef) {
+					var fieldAttrs = mad.model.Model.getModelAttributes(eltModelRef),
+						// model name
+						modelFullName = fieldAttrs[fieldAttrs.length-2].name,
+						// the attribute name
+						attrName = fieldAttrs[fieldAttrs.length-1].name,
+						// model name
+						modelName = modelFullName.substr(modelFullName.lastIndexOf('.') + 1),
+						// element id
+						eltId = element.getId();
+
+					for (var j in errors) {
+						if (errors[j][modelName] != undefined && errors[j][modelName][attrName] != undefined) {
+							var error = errors[j][modelName][attrName][0];
+
+							var eltStates = ['error'];
+							if (element.state.is('hidden')) {
+								eltStates.push('hidden');
+							}
+							// switch the state of the element to error
+							element.setState(eltStates);
+							// set the feedback message, and switch the feedback element state to error
+							if (this.feedbackElements[eltId]) {
+								this.feedbackElements[eltId]
+									.setMessage(error)
+									.setState('error');
+							}
+							// Update the view.
+							this.view.setElementState(this.elements[eltId], 'error');
+						}
+					}
+
+				}
+			}
+
 		},
 
 		/**
@@ -346,6 +471,8 @@ steal(
 			for (var i in this.elements) {
 				returnValue &= this.validateElement (this.elements[i]);
 			}
+			// Increment number of validations.
+			this.validations ++;
 			return returnValue;
 		},
 
@@ -388,7 +515,9 @@ steal(
 		 * @return {void}
 		 */
 		' changed': function (el, ev, data) {
-			if (this.options.validateOnChange) {
+			var validateOnChange = this.options.validateOnChange === true
+				|| (this.options.validateOnChange === 'afterFirstValidation' && this.validations > 0);
+			if (validateOnChange) {
 				var formEltCtls = $(ev.target).controllers(mad.form.FormElement);
 				if (formEltCtls.length) {
 					this.validateElement(formEltCtls[0]);

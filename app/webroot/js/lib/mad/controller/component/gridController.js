@@ -31,7 +31,7 @@ steal(
 		'defaults': {
 			'label': 'Grid Component',
 			'viewClass': mad.view.component.Grid,
-			'cssClasses': ['mad_grid'],
+			'cssClasses': ['tableview'],
 			'templateUri': 'mad/view/template/component/grid.ejs',
 			'itemTemplateUri': 'mad/view/template/component/grid/gridItem.ejs',
 
@@ -42,7 +42,7 @@ steal(
 			// the map to use to map JMVC model to the grid data model
 			'map': null,
 			// the top tag of the grid
-			'tag': 'table',
+			'tag': 'div',
 			// callbacks associated to the events which could occured
 			'callbacks': {
 				'item_selected': null,
@@ -138,10 +138,7 @@ steal(
 		 * @return {void}
 		 */
 		'insertItem': function (item, refItemId, position) {
-			if (this.getItemClass() == null) {
-				throw new mad.error.Exception('The associated itemClass can not be null');
-			}
-			if (!(item instanceof this.getItemClass())) {
+			if (this.getItemClass() != null && !(item instanceof this.getItemClass())) {
 				throw new mad.error.WrongParametersException('item', this.getItemClass().fullName);
 			}
 
@@ -158,7 +155,7 @@ steal(
 
 				if(columnModel.cellAdapter) {
 					var itemId = mappedItem.id;
-					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' div');
 					var cellValue = mappedItem[columnModel.name];
 					columnModel.cellAdapter($cell, cellValue, mappedItem, item, columnModel);
 				}
@@ -171,7 +168,7 @@ steal(
 					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
 					// part to insert the items and render widget if there is
 					var itemId = mappedItem[i].id;
-					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' div');
 					widgetOptions.value = mappedItem[i][columnModel.name];
 					$cell[widgetJQueryPlugin](widgetOptions);
 					$cell[widgetJQueryPlugin]('render');
@@ -197,7 +194,7 @@ steal(
 
 				if(columnModel.cellAdapter) {
 					var itemId = mappedItem.id;
-					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' div');
 					var cellValue = mappedItem[columnModel.name];
 					columnModel.cellAdapter($cell, cellValue, mappedItem, item, columnModel);
 				}
@@ -210,7 +207,7 @@ steal(
 					// Ok it is costing : + z*n (z #columWidget; n #items) with this 
 					// part to insert the items and render widget if there is
 					var itemId = mappedItem[i].id;
-					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' span');
+					var $cell = $('#' + itemId + ' .js_grid_column_' + columnModel.name + ' div');
 					widgetOptions.value = mappedItem[i][columnModel.name];
 					$cell[widgetJQueryPlugin](widgetOptions);
 					$cell[widgetJQueryPlugin]('render');
@@ -229,6 +226,7 @@ steal(
 			can.each(items, function (item, i) {
 				self.insertItem(item);
 			});
+			return this;
 		},
 
 		/* ************************************************************** */

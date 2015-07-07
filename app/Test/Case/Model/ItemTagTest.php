@@ -14,7 +14,19 @@ App::uses('User', 'Model');
 
 class ItemTagTest extends CakeTestCase {
 
-	public $fixtures = array('app.tag', 'app.resource', 'app.itemsTag', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.tag',
+		'app.resource',
+		'app.itemsTag',
+		'app.groupsUser',
+		'app.group',
+		'app.user',
+		'app.profile',
+		'app.role',
+		'app.file_storage',
+		'app.gpgkey',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -39,11 +51,11 @@ class ItemTagTest extends CakeTestCase {
 		$this->ItemTag->set($tr);
 		$save = $this->ItemTag->save($tr);
 		$validation = $this->ItemTag->validates(array('fieldList' => array('tag_id', 'foreign_model', 'foreign_id')));
-		$this->assertEqual($validation, false, 'It should not be possible to associate a resource and a tag twice');
+		$this->assertEquals($validation, false, 'It should not be possible to associate a resource and a tag twice');
 
 		$this->ItemTag->set($tr);
 		$validation = $this->ItemTag->uniqueCombi(array('foreign_id' => '408bb871-5168-49d4-a676-fb098cebc04d'));
-		$this->assertEqual($validation, false, 'It should not be possible to associate a resource and a tag twice');
+		$this->assertEquals($validation, false, 'It should not be possible to associate a resource and a tag twice');
 	}
 
 /**
@@ -52,11 +64,11 @@ class ItemTagTest extends CakeTestCase {
  */
 	public function testTagExist() {
 		$result = $this->ItemTag->tagExists(null);
-		$this->assertEqual($result, false, 'Tag null should not be found');
+		$this->assertEquals($result, false, 'Tag null should not be found');
 		$result = $this->ItemTag->tagExists(array('tag_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
-		$this->assertEqual($result, false, 'Not existing tag should not be found');
+		$this->assertEquals($result, false, 'Not existing tag should not be found');
 		$result = $this->ItemTag->tagExists(array('tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c'));
-		$this->assertEqual($result, true, 'Facebook tag should be found');
+		$this->assertEquals($result, true, 'Facebook tag should be found');
 	}
 
 /**
@@ -66,11 +78,11 @@ class ItemTagTest extends CakeTestCase {
 	public function testResourceExist() {
 		$this->ItemTag->data['ItemTag']['foreign_model'] = 'Resource';
 		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource','foreign_id' => ''));
-		$this->assertEqual($result, false, 'Empty ressource should not be found');
+		$this->assertEquals($result, false, 'Empty ressource should not be found');
 		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource','foreign_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
-		$this->assertEqual($result, false, 'Not existing resource should not be found');
+		$this->assertEquals($result, false, 'Not existing resource should not be found');
 		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource', 'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d'));
-		$this->assertEqual($result, true, 'Facebook password should be found');
+		$this->assertEquals($result, true, 'Facebook password should be found');
 	}
 
 /**
@@ -89,7 +101,7 @@ class ItemTagTest extends CakeTestCase {
 			$this->ItemTag->set($itemTag);
 			if($result) $msg = 'validation of the id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->ItemTag->validates(array('fieldList' => array('id'))), $result, $msg);
+			$this->assertEquals($this->ItemTag->validates(array('fieldList' => array('id'))), $result, $msg);
 		}
 	}
 
@@ -109,7 +121,7 @@ class ItemTagTest extends CakeTestCase {
 			$this->ItemTag->set($itemTag);
 			if($result) $msg = 'validation of the tag_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the tag_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->ItemTag->validates(array('fieldList' => array('tag_id'))), $result, $msg);
+			$this->assertEquals($this->ItemTag->validates(array('fieldList' => array('tag_id'))), $result, $msg);
 		}
 	}
 
@@ -131,7 +143,7 @@ class ItemTagTest extends CakeTestCase {
 			$this->ItemTag->set($itemTag);
 			if($result) $msg = 'validation of the resource_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the resource_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->ItemTag->validates(array('fieldList' => array('foreign_id'))), $result, $msg);
+			$this->assertEquals($this->ItemTag->validates(array('fieldList' => array('foreign_id'))), $result, $msg);
 		}
 	}
 

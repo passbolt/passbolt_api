@@ -17,7 +17,16 @@ if (!class_exists('CakeSession')) {
 
 class UserTest extends CakeTestCase {
 
-	public $fixtures = array('app.user', 'app.role');
+	public $fixtures = array(
+		'app.group',
+		'app.groups_user',
+		'app.user',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgkey',
+		'app.role',
+		'core.cakeSession'
+	);
 
 	public $autoFixtures = true;
 
@@ -52,7 +61,7 @@ class UserTest extends CakeTestCase {
 			} else {
 				$msg = 'validation of the username with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->User->validates(array('fieldList' => array('username'))), $result, $msg);
+			$this->assertEquals($this->User->validates(array('fieldList' => array('username'))), $result, $msg);
 		}
 	}
 
@@ -65,8 +74,8 @@ class UserTest extends CakeTestCase {
 		$testcases = array(
 			''       => false,
 			'?!#'    => false,
-			'testss' => true,
-			't2stss' => true
+			'abcdefghijkl' => true,
+			'32abcde,-fghijkl20' => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$user = array('User' => array('password' => $testcase, 'password_confirm' => $testcase));
@@ -76,8 +85,46 @@ class UserTest extends CakeTestCase {
 			} else {
 				$msg = 'validation of user password with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->User->validates(array('fieldList' => array('password'))), $result, $msg);
+			$this->assertEquals($this->User->validates(array('fieldList' => array('password'))), $result, $msg);
 		}
+	}
+
+	/**
+	 * Test the custom validation rule that checks that a password is the same than the current one
+	 * Used when editing passwords
+	 */
+	public function testIsCurrentPasswordValidationRule() {
+		// check that current_password is set
+		$check = array();
+		$this->assertEquals($this->User->isCurrentPassword($check),false,'Empty password should not validate');
+		$check = array('current_password' => null);
+		$this->assertEquals($this->User->isCurrentPassword($check),false,'Empty password should not validate');
+		$check = array('current_password' => '');
+		$this->assertEquals($this->User->isCurrentPassword($check),false,'Empty password should not validate');
+
+		// check the user id is set
+		$check = array('current_password' => 'check');
+		$this->assertEquals($this->User->isCurrentPassword($check),false,'Password should not validate when current user is not active');
+
+		// check getting the right user based on id
+		$param = array('conditions' => array('username' => 'user@passbolt.com'));
+		$user = $this->User->find('first', $param);
+		$this->User->set($user);
+		$this->User->data = array();
+		// check with wrong password
+		$this->assertEquals($this->User->isCurrentPassword($check),false,'Password should not validate if it is not the current one');
+		// check with good password
+		$check = array('current_password' => 'password');
+		$this->assertEquals($this->User->isCurrentPassword($check),true,'Password should validate if it is the current one');
+
+		// check getting the right user based on data
+		$param = array('conditions' => array('username' => 'user@passbolt.com'));
+		$user = $this->User->find('first', $param);
+		$this->User->set($user);
+		$this->User->id = null;
+		$check = array('current_password' => 'password');
+		$this->assertEquals($this->User->isCurrentPassword($check),true,'Password should validate if it is the current one');
+
 	}
 
 	/**
@@ -88,8 +135,8 @@ class UserTest extends CakeTestCase {
 	public function testBeforeSave() {
 		$user = array('User' => array('password' => 'test1'));
 		$this->User->set($user);
-		$this->assertEqual($this->User->beforeSave(), true, 'Before save should return true');
-		$this->assertNotEqual(
+		$this->assertEquals($this->User->beforeSave(), true, 'Before save should return true');
+		$this->assertNotEquals(
 			$this->User->data['User']['password'],
 			$user['User']['password'],
 			'Before save should return true'
@@ -109,51 +156,80 @@ class UserTest extends CakeTestCase {
 
 		// Get an ANONYMOUS user
 		$user = User::get();
-		$this->assertEqual(is_array($user), true, 'User::get should return an array');
-		$this->assertEqual(!isset($user['User']['password']), true, 'User::get should never return a password');
-		$this->assertEqual(
+		$this->assertEquals(is_array($user), true, 'User::get should return an array');
+		$this->assertEquals(!isset($user['User']['password']), true, 'User::get should never return a password');
+		$this->assertEquals(
 			$user['User']['username'],
 			User::ANONYMOUS,
 			'User::get in default context should return an anonymous but returning ' . $user['User']['username']
 		);
-		$this->assertEqual(
+		$this->assertEquals(
 			User::isAnonymous(),
 			true,
 			'User::get in default context should return an anonymous but returning ' . $user['User']['username']
 		);
-		$this->assertEqual(isset($user['Role']), true, 'User::get should return role');
-		$this->assertEqual(
+		$this->assertEquals(isset($user['Role']), true, 'User::get should return role');
+		$this->assertEquals(
 			$user['Role']['name'],
 			Role::GUEST,
 			'User::get in default context should return a user with guest role'
 		);
-		$this->assertEqual($user, $Session->read(AuthComponent::$sessionKey), 'User::get should set user in session');
+		$this->assertEquals($user, $Session->read(AuthComponent::$sessionKey), 'User::get should set user in session');
 
-		$this->assertEqual(
+		$this->assertEquals(
 			User::get('id'),
 			$user['User']['id'],
 			'User::get(id) in default context should return a user with guest role'
 		);
-		$this->assertEqual(
+		$this->assertEquals(
 			User::get('User.id'),
 			$user['User']['id'],
 			'User::get(user.id) in default context should return a user with guest role'
 		);
-		$this->assertEqual(
+		$this->assertEquals(
 			User::get('Role.name'),
 			Role::GUEST,
 			'User::get(role.name) in default context should return a user with guest role'
 		);
-		$this->assertEqual(User::get('whatever'), false, 'User::get(whaterver) should return false');
-		$this->assertEqual(User::get('Whatever.stuff'), false, 'User::get(whaterver.stuff) should return false');
+		$this->assertEquals(User::get('whatever'), false, 'User::get(whaterver) should return false');
+		$this->assertEquals(User::get('Whatever.stuff'), false, 'User::get(whaterver.stuff) should return false');
 	}
 
+	/**
+	 * Test Set Active
+	 */
 	public function testSetActive() {
 		// Try to get a user that doesn't exist
 		$user = User::setActive(String::UUID());
-		$this->assertEqual($user, false, 'User::setActive should return false');
+		$this->assertEquals($user, false, 'User::setActive should return false');
 	}
 
+	/**
+	 * Test Set Inactive
+	 */
+	public function testSetInactive() {
+		// get anonymous user
+		$u0 = $this->User->get();
+
+		// get a user from the fixtures and set it as current user
+		$param = array('conditions' => array('username' => 'user@passbolt.com'));
+		$user = $this->User->find('first', $param);
+		$this->User->setActive($user);
+		$u1 = $this->User->get();
+
+		// set u1 inactive and get a new one
+		$this->User->setInactive();
+		$u2 = $this->User->get();
+
+		$this->assertNotEquals($u1, $u2, 'User::setInactive should work');
+		$this->assertNotEquals($u1, $u0, 'User::setInactive should work');
+		$this->assertEquals($u2, $u0, 'User::setInactive should work');
+
+	}
+
+	/**
+	 * Test guest role check
+	 */
 	public function testisGuest() {
 		// Make sure there is no active sessions
 		App::import('Model', 'CakeSession');
@@ -161,7 +237,7 @@ class UserTest extends CakeTestCase {
 		$Session->delete(AuthComponent::$sessionKey);
 
 		// Get an ANONYMOUS user
-		$this->assertEqual(User::isGuest(), true, 'User::isGuest should return true');
+		$this->assertEquals(User::isGuest(), true, 'User::isGuest should return true');
 
 		// Get admin user
 		$param = array(
@@ -169,44 +245,133 @@ class UserTest extends CakeTestCase {
 		);
 		$user = $this->User->find('first', $param);
 		$this->User->setActive($user);
-		$this->assertEqual(User::isGuest(), false, 'User::isGuest should return false, admin@passbolt.com is an admin');
+		$this->assertEquals(User::isGuest(), false, 'User::isGuest should return false, admin@passbolt.com is an admin');
 	}
 
+	/**
+	 * Test admin role check
+	 */
 	public function testIsAdmin() {
-		// Make sure there is no active sessions
-		App::import('Model', 'CakeSession');
-		$Session = new CakeSession();
-		$Session->delete(AuthComponent::$sessionKey);
-
-		// Get admin user
-		$param = array(
-			'conditions' => array('username' => 'admin@passbolt.com')
-		);
+		// Check if admin@passbolt have role admin
+		$this->User->setInactive();
+		$param = array('conditions' => array('username' => 'admin@passbolt.com'));
 		$user = $this->User->find('first', $param);
 		$this->User->setActive($user);
-		$this->assertEqual(User::isAdmin(), true, 'User::Admin should return true, admin@passbolt.com is an admin');
+		$this->assertEquals(User::isAdmin(), true, 'User::Admin should return true, admin@passbolt.com is an admin');
+
+		// Check if user@passbolt does not have role admin
+		$this->User->setInactive();
+		$param = array('conditions' => array('username' => 'user@passbolt.com'));
+		$user = $this->User->find('first', $param);
+		$this->User->setActive($user);
+		$this->assertEquals(User::isAdmin(), false, 'User::Admin should return false, user@passbolt.com is not an admin');
+
 	}
 
-	public function testGetFindConditions() {
-		$f = $this->User->getFindConditions('User::view');
-		$this->assertEquals(count($f), true, 'testGetFindCondition userView should return something');
-		$f = $this->User->getFindConditions('User::index');
-		$this->assertEquals(count($f), true, 'testGetFindCondition userIndex should return something');
-		$f = $this->User->getFindConditions('User:activation');
-		$this->assertEquals(count($f), true, 'testGetFindCondition User::activation should return something');
-		$f = $this->User->getFindConditions('testoqwidoqdhwqohdowqhid');
-		$this->assertEquals(count($f), true, 'testGetFindCondition bogus should return something');
+	/**
+	 * Test Root role check
+	 */
+	function testIsRoot() {
+		// Get root user and check role
+		$this->User->setInactive();
+		$param = array('conditions' => array('username' => 'root@passbolt.com'));
+		$user = $this->User->find('first', $param);
+		$this->User->setActive($user);
+		$this->assertEquals(User::isRoot(), true, 'User::Root should return true, root@passbolt.com is root');
+
+		// Get admin user and check it is not root
+		$param = array('conditions' => array('username' => 'admin@passbolt.com'));
+		$user = $this->User->find('first', $param);
+		$this->User->setActive($user);
+		$this->assertEquals(User::isRoot(), false, 'User::Root should return false, admin@passbolt.com is not root');
+
+	}
+
+	/**
+	 * Test getting find conditions for guest role
+	 */
+	public function testGuestGetFindConditions() {
+		$should_find = array(
+			'Setup::userInfo', 'User::view', 'User::activation'
+		);
+		foreach ($should_find as $find) {
+			$f = $this->User->getFindConditions($find, Role::GUEST);
+			$this->assertEquals(count($f), true, 'testGetFindCondition '.$find.' for Guest should return something');
+		}
+		$should_not_find = array(
+			'Bogus::stuff','User::index'
+		);
+		try {
+			$f = $this->User->getFindConditions($find, Role::USER);
+			$this->assertEquals(true, false, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+		} catch (Exception $e) {
+			$this->assertEquals(true, true, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+		}
+	}
+
+	/**
+	 * Test getting find conditions for guest role with additional data
+	 */
+	public function testGuestGetFindConditionsWithParameters() {
+		$should_find = array(
+			'User::view' => array('User.id' => String::uuid())
+		);
+		foreach ($should_find as $find => $data) {
+			$f = $this->User->getFindConditions($find, Role::GUEST, $data);
+			$this->assertEquals(count($f), true, 'testGetFindCondition '.$find.' for Guest should return something');
+			$this->assertEquals($f['conditions'], array_merge($f['conditions'],$data), 'testGetFindCondition '.$find.' for Guest with parameter set should work');
+		}
+	}
+
+	/**
+	 * Test getting find conditions for user role with additional data
+	 */
+	public function testUserGetFindConditionsWithParameters() {
+		$should_find = array(
+			'User::view' => array('User.id' => String::uuid()),
+			'User::view' => array('User.active' => true)
+		);
+		foreach ($should_find as $find => $data) {
+			$f = $this->User->getFindConditions($find, Role::USER, $data);
+			$this->assertEquals(count($f), true, 'testGetFindCondition '.$find.' for Guest should return something');
+			$this->assertEquals($f['conditions'], array_merge($f['conditions'],$data), 'testGetFindCondition '.$find.' for Guest with parameter set should work');
+		}
+	}
+
+	/**
+	 * Test getting find conditions for user role
+	 */
+	public function testUserGetFindConditions() {
+		$should_find = array(
+			'User::index', 'User::view', 'User::activation'
+		);
+		foreach ($should_find as $find) {
+			$f = $this->User->getFindConditions($find, Role::USER);
+			$this->assertEquals(count($f), true, 'testGetFindCondition '.$find.' for Guest should return something');
+		}
+		$should_not_find = array(
+			'Bogus::stuff', 'Setup::userInfo'
+		);
+		foreach ($should_not_find as $find) {
+			try {
+				$f = $this->User->getFindConditions($find, Role::USER);
+				$this->assertEquals($f, false, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+			} catch (Exception $e) {
+				$this->assertEquals(true, true, 'testGetFindCondition '.$find.' for Guest should throw an exception');
+			}
+		}
 	}
 
 	public function testGetFindFields() {
-		$f = $this->User->getFindFields('User::view');
-		$this->assertEquals(count($f), true, 'testGetFindFields userView return something');
-		$f = $this->User->getFindFields('User::index');
-		$this->assertEquals(count($f), true, 'testGetFindFields userIndex return something');
-		$f = $this->User->getFindFields('User::activation');
-		$this->assertEquals(count($f), true, 'testGetFindFields User::activation return something');
-		$f = $this->User->getFindFields('testdqwodjqodqodwjqidqjdow');
-		$this->assertEquals(count($f), true, 'testGetFindFields bogus return something');
+
+		$should_find = array(
+			'User::index', 'User::view', 'User::activation', 'Bogus::stuff',
+			'User::validateAccount', 'User::edit', 'User::save', 'User::delete', 'User::editPassword'
+		);
+		foreach ($should_find as $find) {
+			$f = $this->User->getFindFields($find);
+			$this->assertEquals(count($f), true, 'testGetFindFields ' . $find . ' should return something');
+		}
 	}
 
 	public function testCreatedBy() {
@@ -219,7 +384,7 @@ class UserTest extends CakeTestCase {
 			array(
 				'username' => 'testSave@passbolt.com',
 				'role_id'  => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
-				'password' => 'this will be replaced at runtime',
+				'password' => 'abcdefgh',
 				'active'   => 1
 			)
 		);
@@ -231,7 +396,8 @@ class UserTest extends CakeTestCase {
 			'conditions' => array('username' => 'testSave@passbolt.com')
 		);
 		$user = $this->User->find('first', $param);
-		$this->assertEqual(
+
+		$this->assertEquals(
 			$anon['User']['id'],
 			$user['User']['created_by'],
 			'The user should be marked as being created by anonymous'
@@ -243,22 +409,27 @@ class UserTest extends CakeTestCase {
 		$param = array(
 			'conditions' => array('username' => 'user@passbolt.com')
 		);
-		$kevin = $this->User->find('first', $param);
-		$this->User->setActive($kevin);
+		$u = $this->User->find('first', $param);
+		$this->User->setActive($u);
 
 		// change username and save
-		$kevin['User']['username'] = 'kk@passbolt.com';
-		$this->User->save($kevin);
+		$data = array(
+			'User' => array(
+				'id' => $u['User']['id'],
+				'username' => 'user_edited@passbolt.com'
+			)
+		);
+		$this->User->save($data);
 
 		// find it again
 		$param = array(
-			'conditions' => array('username' => 'kk@passbolt.com')
+			'conditions' => array('username' => 'user_edited@passbolt.com')
 		);
-		$kk = $this->User->find('first', $param);
+		$user = $this->User->find('first', $param);
 
-		$this->assertEqual(
-			$kevin['User']['id'],
-			$kk['User']['modified_by'],
+		$this->assertEquals(
+            $u['User']['id'],
+			$user['User']['modified_by'],
 			'user should be mark as the one who updated his record'
 		);
 	}

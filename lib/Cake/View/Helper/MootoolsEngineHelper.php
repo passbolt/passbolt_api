@@ -118,7 +118,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * Create javascript selector for a CSS rule
  *
  * @param string $selector The selector that is targeted
- * @return MootoolsEngineHelper instance of $this. Allows chained methods.
+ * @return $this
  */
 	public function get($selector) {
 		$this->_multipleSelection = false;
@@ -150,7 +150,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  */
 	public function event($type, $callback, $options = array()) {
 		$defaults = array('wrap' => true, 'stop' => true);
-		$options = array_merge($defaults, $options);
+		$options += $defaults;
 
 		$function = 'function (event) {%s}';
 		if ($options['wrap'] && $options['stop']) {
@@ -225,13 +225,13 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
 	}
 
 /**
- * Create an new Request.
+ * Create a new Request.
  *
  * Requires `Request`. If you wish to use 'update' key you must have ```Request.HTML```
  * if you wish to do Json requests you will need ```JSON``` and ```Request.JSON```.
  *
- * @param string|array $url
- * @param array $options
+ * @param string|array $url URL
+ * @param array $options Options list.
  * @return string The completed ajax call.
  */
 	public function request($url, $options = array()) {
@@ -361,7 +361,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * @see JsBaseEngineHelper::serializeForm()
  */
 	public function serializeForm($options = array()) {
-		$options = array_merge(array('isForm' => false, 'inline' => false), $options);
+		$options += array('isForm' => false, 'inline' => false);
 		$selection = $this->selection;
 		if (!$options['isForm']) {
 			$selection = '$(' . $this->selection . '.form)';

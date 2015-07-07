@@ -12,7 +12,18 @@ App::uses('AppTestCase', 'Test');
 
 class CommentTest extends AppTestCase {
 
-	public $fixtures = array('app.comment', 'app.resource', 'app.user', 'app.role', 'app.profile');
+	public $fixtures = array(
+		'app.comment',
+		'app.resource',
+		'app.user',
+		'app.role',
+		'app.gpgkey',
+		'app.group',
+		'app.groupsUser',
+		'app.profile',
+		'app.file_storage',
+		'core.cakeSession'
+	);
 
 	public $autoFixtures = true;
 
@@ -32,9 +43,9 @@ class CommentTest extends AppTestCase {
  */
 	public function testFixtures() {
 		$c = $this->Comment->find('first', array('conditions' => array('id' => String::Uuid())));
-		$this->assertEqual(empty($c), true, 'Shouldnt find a comment that does not exist');
+		$this->assertEquals(empty($c), true, 'Shouldnt find a comment that does not exist');
 		$c = $this->Comment->find('first', array('conditions' => array('content' => 'this is a short comment')));
-		$this->assertEqual(is_array($c), true, 'Default comment should be present in the database');
+		$this->assertEquals(is_array($c), true, 'Default comment should be present in the database');
 	}
 
 /**
@@ -54,7 +65,7 @@ class CommentTest extends AppTestCase {
 			$this->Comment->set($comment);
 			if($result) $msg = 'validation of the id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->Comment->validates(array('fieldList' => array('id'))), $result, $msg);
+			$this->assertEquals($this->Comment->validates(array('fieldList' => array('id'))), $result, $msg);
 		}
 	}
 
@@ -75,7 +86,7 @@ class CommentTest extends AppTestCase {
 			$this->Comment->set($comment);
 			if($result) $msg = 'validation of the parent_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the parent_id with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->Comment->validates(array('fieldList' => array('parent_id'))), $result, $msg);
+			$this->assertEquals($this->Comment->validates(array('fieldList' => array('parent_id'))), $result, $msg);
 		}
 	}
 
@@ -92,7 +103,7 @@ class CommentTest extends AppTestCase {
 			$this->Comment->set($comment);
 			if($result) $msg = 'comment on foreign model ' . $testcase . ' should be allowed';
 			else $msg = 'comment on foreign model' . $testcase . ' should not be allowed';
-			$this->assertEqual($this->Comment->validates(array('fieldList' => array('foreign_model'))), $result, $msg);
+			$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_model'))), $result, $msg);
 		}
 	}
 
@@ -113,7 +124,7 @@ class CommentTest extends AppTestCase {
 		unset($this->Comment->validate['foreign_model']['inlist']);
 		$this->Comment->set($testcase);
 		$msg = 'comment on empty foreign_id and moel should not be allowed';
-		$this->assertEqual($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
+		$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
 
 		$testcase = array(
 			'Comment' => array(
@@ -125,7 +136,7 @@ class CommentTest extends AppTestCase {
 		unset($this->Comment->validate['foreign_model']['inlist']);
 		$this->Comment->set($testcase);
 		$msg = 'comment on empty foreign_id and moel should not be allowed';
-		$this->assertEqual($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
+		$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
 
 		// test with a good resource
 		$testcase = array(
@@ -136,7 +147,7 @@ class CommentTest extends AppTestCase {
 		);
 		$this->Comment->set($testcase);
 		$msg = 'comment on Ressource 509bb871-5168-49d4-a676-fb098cebc04d should be allowed';
-		$this->assertEqual($this->Comment->validates(array('fieldList' => array('foreign_id'))), true, $msg);
+		$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_id'))), true, $msg);
 
 		// test with a bad resource
 		$testcase = array(
@@ -147,7 +158,7 @@ class CommentTest extends AppTestCase {
 		);
 		$this->Comment->set($testcase);
 		$msg = 'comment on Ressource 509bb871-0000-49d4-a676-fb098cebc04d should be allowed';
-		$this->assertEqual($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
+		$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
 	}
 
 /**
@@ -194,7 +205,7 @@ class CommentTest extends AppTestCase {
 			$this->Comment->set($comment);
 			if($result) $msg = 'comment with content ' . $testcase . ' should be allowed';
 			else $msg = 'comment with content ' . $testcase . ' should not be allowed';
-			$this->assertEqual($this->Comment->validates(array('fieldList' => array('content'))), $result, $msg);
+			$this->assertEquals($this->Comment->validates(array('fieldList' => array('content'))), $result, $msg);
 		}
 	}
 }

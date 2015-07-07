@@ -11,7 +11,16 @@ App::uses('Group', 'Model');
 
 class GroupTest extends CakeTestCase {
 
-	public $fixtures = array('app.group', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.group',
+		'app.user',
+		'app.role',
+		'app.gpgkey',
+		'app.profile',
+		'app.file_storage',
+		'app.groupsUser',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -39,7 +48,7 @@ class GroupTest extends CakeTestCase {
 			} else {
 				$msg = 'validation of the group name with "' . $testcase . '" should not validate';
 			}
-			$this->assertEqual($this->Group->validates(array('fieldList' => array('name'))), $result, $msg);
+			$this->assertEquals($this->Group->validates(array('fieldList' => array('name'))), $result, $msg);
 		}
 	}
 }

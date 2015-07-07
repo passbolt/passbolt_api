@@ -42,8 +42,8 @@ steal('funcunit').then(function () {
 				'name': 'children',
 				'index': 'children',
 				'label': 'children',
-				'valueAdapter': function (value, item, columnModel, rowNum) {
-					var returnValue = item.children.length;
+				'valueAdapter': function (value, mappedItem, item, columnModel) {
+					var returnValue = mappedItem.children.length;
 					return returnValue;
 				}
 			}];

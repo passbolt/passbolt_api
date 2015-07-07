@@ -44,16 +44,26 @@ class PagesController extends AppController {
  */
 	public $uses = array();
 
+	/**
+	 * beforeFilter
+	 */
+	function beforeFilter(){
+		parent::beforeFilter();
+		if (Configure::read('debug') > 0) {
+			$this->Auth->allow(array('debug'));
+		}
+	}
+
 /**
  * Displays a view
  *
- * @param mixed What page to display
  * @return void
  * @throws NotFoundException When the view file could not be found
  *	or MissingViewException in debug mode.
  */
 	public function display() {
 		//$this->layout = 'demo';
+
 		$path = func_get_args();
 
 		$count = count($path);
@@ -64,9 +74,15 @@ class PagesController extends AppController {
 
 		if (!empty($path[0])) {
 			$page = $path[0];
+			if(strpos($page,'demo') !== false) {
+				$this->layout = 'demo';
+			}
 		}
 		if (!empty($path[1])) {
 			$subpage = $path[1];
+			if(strpos($subpage,'email-') !== false) {
+				$this->layout = 'demo';
+			}
 		}
 		if (!empty($path[$count - 1])) {
 			$title_for_layout = Inflector::humanize($path[$count - 1]);
@@ -81,5 +97,14 @@ class PagesController extends AppController {
 			}
 			throw new NotFoundException();
 		}
+	}
+
+	/**
+	 * Display the debug pages
+	 */
+	function debug($page) {
+		$this->viewPath = 'Pages/debug';
+		$this->view = 'config';
+		$this->layout = 'debug';
 	}
 }

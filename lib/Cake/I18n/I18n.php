@@ -74,7 +74,7 @@ class I18n {
  * Set to true when I18N::_bindTextDomain() is called for the first time.
  * If a translation file is found it is set to false again
  *
- * @var boolean
+ * @var bool
  */
 	protected $_noLocale = false;
 
@@ -86,6 +86,68 @@ class I18n {
 	protected $_categories = array(
 		'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_MONETARY', 'LC_NUMERIC', 'LC_TIME', 'LC_MESSAGES'
 	);
+
+/**
+ * Constants for the translation categories.
+ *
+ * The constants may be used in translation fetching
+ * instead of hardcoded integers.
+ * Example:
+ * ```
+ *	I18n::translate('CakePHP is awesome.', null, null, I18n::LC_MESSAGES)
+ * ```
+ *
+ * To keep the code more readable, I18n constants are preferred over
+ * hardcoded integers.
+ */
+/**
+ * Constant for LC_ALL.
+ *
+ * @var int
+ */
+	const LC_ALL = 0;
+
+/**
+ * Constant for LC_COLLATE.
+ *
+ * @var int
+ */
+	const LC_COLLATE = 1;
+
+/**
+ * Constant for LC_CTYPE.
+ *
+ * @var int
+ */
+	const LC_CTYPE = 2;
+
+/**
+ * Constant for LC_MONETARY.
+ *
+ * @var int
+ */
+	const LC_MONETARY = 3;
+
+/**
+ * Constant for LC_NUMERIC.
+ *
+ * @var int
+ */
+	const LC_NUMERIC = 4;
+
+/**
+ * Constant for LC_TIME.
+ *
+ * @var int
+ */
+	const LC_TIME = 5;
+
+/**
+ * Constant for LC_MESSAGES.
+ *
+ * @var int
+ */
+	const LC_MESSAGES = 6;
 
 /**
  * Escape string
@@ -123,13 +185,16 @@ class I18n {
  * @param string $domain Domain The domain of the translation. Domains are often used by plugin translations.
  *    If null, the default domain will be used.
  * @param string $category Category The integer value of the category to use.
- * @param integer $count Count Count is used with $plural to choose the correct plural form.
+ * @param int $count Count Count is used with $plural to choose the correct plural form.
  * @param string $language Language to translate string to.
  *    If null it checks for language in session followed by Config.language configuration variable.
+ * @param string $context Context The context of the translation, e.g a verb or a noun.
  * @return string translated string.
  * @throws CakeException When '' is provided as a domain.
  */
-	public static function translate($singular, $plural = null, $domain = null, $category = 6, $count = null, $language = null) {
+	public static function translate($singular, $plural = null, $domain = null, $category = self::LC_MESSAGES,
+		$count = null, $language = null, $context = null
+	) {
 		$_this = I18n::getInstance();
 
 		if (strpos($singular, "\r\n") !== false) {
@@ -192,8 +257,10 @@ class I18n {
 			}
 		}
 
-		if (!empty($_this->_domains[$domain][$_this->_lang][$_this->category][$singular])) {
-			if (($trans = $_this->_domains[$domain][$_this->_lang][$_this->category][$singular]) || ($plurals) && ($trans = $_this->_domains[$domain][$_this->_lang][$_this->category][$plural])) {
+		if (!empty($_this->_domains[$domain][$_this->_lang][$_this->category][$singular][$context])) {
+			if (($trans = $_this->_domains[$domain][$_this->_lang][$_this->category][$singular][$context]) ||
+				($plurals) && ($trans = $_this->_domains[$domain][$_this->_lang][$_this->category][$plural][$context])
+			) {
 				if (is_array($trans)) {
 					if (isset($trans[$plurals])) {
 						$trans = $trans[$plurals];
@@ -247,8 +314,10 @@ class I18n {
  * Attempts to find the plural form of a string.
  *
  * @param string $header Type
- * @param integer $n Number
- * @return integer plural match
+ * @param int $n Number
+ * @return int plural match
+ * @link http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html
+ * @link https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
  */
 	protected function _pluralGuess($header, $n) {
 		if (!is_string($header) || $header === "nplurals=1;plural=0;" || !isset($header[0])) {
@@ -289,7 +358,15 @@ class I18n {
 			}
 		} elseif (strpos($header, "plurals=5")) {
 			return $n == 1 ? 0 : ($n == 2 ? 1 : ($n >= 3 && $n <= 6 ? 2 : ($n >= 7 && $n <= 10 ? 3 : 4)));
+		} elseif (strpos($header, "plurals=6")) {
+			return $n == 0 ? 0 :
+				($n == 1 ? 1 :
+				($n == 2 ? 2 :
+				($n % 100 >= 3 && $n % 100 <= 10 ? 3 :
+				($n % 100 >= 11 ? 4 : 5))));
 		}
+
+		return 0;
 	}
 
 /**
@@ -310,7 +387,9 @@ class I18n {
 				$pluginDomain = Inflector::underscore($plugin);
 				if ($pluginDomain === $domain) {
 					$searchPaths[] = CakePlugin::path($plugin) . 'Locale' . DS;
-					$searchPaths = array_reverse($searchPaths);
+					if (!Configure::read('I18n.preferApp')) {
+						$searchPaths = array_reverse($searchPaths);
+					}
 					break;
 				}
 			}
@@ -407,6 +486,7 @@ class I18n {
 		// Binary files extracted makes non-standard local variables
 		if ($data = file_get_contents($filename)) {
 			$translations = array();
+			$context = null;
 			$header = substr($data, 0, 20);
 			$header = unpack('L1magic/L1version/L1count/L1o_msg/L1o_trn', $header);
 			extract($header);
@@ -425,6 +505,10 @@ class I18n {
 
 					if (strpos($msgstr, "\000")) {
 						$msgstr = explode("\000", $msgstr);
+					}
+
+					if ($msgid != '') {
+						$msgstr = array($context => $msgstr);
 					}
 					$translations[$msgid] = $msgstr;
 
@@ -453,12 +537,15 @@ class I18n {
 		$type = 0;
 		$translations = array();
 		$translationKey = '';
+		$translationContext = null;
 		$plural = 0;
 		$header = '';
 
 		do {
 			$line = trim(fgets($file));
 			if ($line === '' || $line[0] === '#') {
+				$translationContext = null;
+
 				continue;
 			}
 			if (preg_match("/msgid[[:space:]]+\"(.+)\"$/i", $line, $regs)) {
@@ -467,31 +554,33 @@ class I18n {
 			} elseif (preg_match("/msgid[[:space:]]+\"\"$/i", $line, $regs)) {
 				$type = 2;
 				$translationKey = '';
+			} elseif (preg_match("/msgctxt[[:space:]]+\"(.+)\"$/i", $line, $regs)) {
+				$translationContext = $regs[1];
 			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && ($type == 1 || $type == 2 || $type == 3)) {
 				$type = 3;
 				$translationKey .= stripcslashes($regs[1]);
 			} elseif (preg_match("/msgstr[[:space:]]+\"(.+)\"$/i", $line, $regs) && ($type == 1 || $type == 3) && $translationKey) {
-				$translations[$translationKey] = stripcslashes($regs[1]);
+				$translations[$translationKey][$translationContext] = stripcslashes($regs[1]);
 				$type = 4;
 			} elseif (preg_match("/msgstr[[:space:]]+\"\"$/i", $line, $regs) && ($type == 1 || $type == 3) && $translationKey) {
 				$type = 4;
-				$translations[$translationKey] = '';
+				$translations[$translationKey][$translationContext] = '';
 			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && $type == 4 && $translationKey) {
-				$translations[$translationKey] .= stripcslashes($regs[1]);
+				$translations[$translationKey][$translationContext] .= stripcslashes($regs[1]);
 			} elseif (preg_match("/msgid_plural[[:space:]]+\".*\"$/i", $line, $regs)) {
 				$type = 6;
 			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && $type == 6 && $translationKey) {
 				$type = 6;
 			} elseif (preg_match("/msgstr\[(\d+)\][[:space:]]+\"(.+)\"$/i", $line, $regs) && ($type == 6 || $type == 7) && $translationKey) {
 				$plural = $regs[1];
-				$translations[$translationKey][$plural] = stripcslashes($regs[2]);
+				$translations[$translationKey][$translationContext][$plural] = stripcslashes($regs[2]);
 				$type = 7;
 			} elseif (preg_match("/msgstr\[(\d+)\][[:space:]]+\"\"$/i", $line, $regs) && ($type == 6 || $type == 7) && $translationKey) {
 				$plural = $regs[1];
-				$translations[$translationKey][$plural] = '';
+				$translations[$translationKey][$translationContext][$plural] = '';
 				$type = 7;
 			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && $type == 7 && $translationKey) {
-				$translations[$translationKey][$plural] .= stripcslashes($regs[1]);
+				$translations[$translationKey][$translationContext][$plural] .= stripcslashes($regs[1]);
 			} elseif (preg_match("/msgstr[[:space:]]+\"(.+)\"$/i", $line, $regs) && $type == 2 && !$translationKey) {
 				$header .= stripcslashes($regs[1]);
 				$type = 5;
@@ -501,9 +590,10 @@ class I18n {
 			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && $type == 5) {
 				$header .= stripcslashes($regs[1]);
 			} else {
-				unset($translations[$translationKey]);
+				unset($translations[$translationKey][$translationContext]);
 				$type = 0;
 				$translationKey = '';
+				$translationContext = null;
 				$plural = 0;
 			}
 		} while (!feof($file));
@@ -579,6 +669,27 @@ class I18n {
 		}
 
 		return $definitions;
+	}
+
+/**
+ * Puts the parameters in raw translated strings
+ *
+ * @param string $translated The raw translated string
+ * @param array $args The arguments to put in the translation
+ * @return string Translated string with arguments
+ */
+	public static function insertArgs($translated, array $args) {
+		$len = count($args);
+		if ($len === 0 || ($len === 1 && $args[0] === null)) {
+			return $translated;
+		}
+
+		if (is_array($args[0])) {
+			$args = $args[0];
+		}
+
+		$translated = preg_replace('/(?<!%)%(?![%\'\-+bcdeEfFgGosuxX\d\.])/', '%%', $translated);
+		return vsprintf($translated, $args);
 	}
 
 /**

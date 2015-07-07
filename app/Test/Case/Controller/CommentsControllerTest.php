@@ -22,25 +22,38 @@ if (!class_exists('CakeSession')) {
 class CommentsControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-		'app.comment', 'app.resource', 'app.category', 'app.categories_resource',
-		'app.user', 'app.group', 'app.groups_user', 'app.role', 'app.profile',
-		'app.permission', 'app.permissions_type', 'app.permission_view',
-		'app.authenticationBlacklist');
+		'app.comment',
+		'app.resource',
+		'app.category',
+		'app.categories_resource',
+		'app.user',
+		'app.group',
+		'app.groups_user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+		'app.authenticationBlacklist',
+		'app.gpgkey',
+		'core.cakeSession',
+	);
 
 	public function setUp() {
+		parent::setUp();
 		$this->User = ClassRegistry::init('User');
 		$this->Comment = ClassRegistry::init('Comment');
 		$this->Resource = ClassRegistry::init('Resource');
-		parent::setUp();
 
 		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
-		$this->User->setActive($kk);
+        $user = $this->User->findByUsername('dame@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function testViewNotCommentable() {
 		$model = 'User';
-		$this->expectException('HttpException', "The model {$model} is not commentable");
+		$this->setExpectedException('HttpException', "The model {$model} is not commentable");
 		$this->testAction("/comments/$model/badId.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -53,11 +66,11 @@ class CommentsControllerTest extends ControllerTestCase {
 	 */
 	public function testViewIdIsNotValid() {
 		$model = 'Resource';
-		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('HttpException', 'The Resource id is invalid');
 		$this->testAction("/comments/$model/badId.json", array('method' => 'get', 'return' => 'contents'));
 
 		$id = '00000000-1111-1111-1111-000000000000';
-		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('HttpException', 'The Resource id is invalid');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -68,7 +81,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$id = '534a914c-4f55-4e61-ba16-12c1c0a895dc';
 
-		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -76,13 +89,13 @@ class CommentsControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$res = $this->Resource->findByName('cpp1-pwd1');
 
-		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findByUsername('ismail@passbolt.com');
+		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findByUsername('irene@passbolt.com');
 		$this->User->setActive($user);
 
 		$id = $res['Resource']['id'];
 
-		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -106,7 +119,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public function testAddNotCommentable() {
 		$model = 'User';
-		$this->expectException('HttpException', "The model {$model} is not commentable");
+		$this->setExpectedException('HttpException', "The model {$model} is not commentable");
 		$this->testAction("/comments/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
@@ -116,7 +129,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public function testAddIdIsNotValid() {
 		$model = 'Resource';
-		$this->expectException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('HttpException', 'The Resource id is invalid');
 		$this->testAction("/comments/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
@@ -124,14 +137,14 @@ class CommentsControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
 
-		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
 	public function testAddNoDataProvided() {
 		$model = 'resource';
 		$rs = $this->Resource->findByName('salesforce account');
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$this->testAction("/comments/$model/{$rs['Resource']['id']}.json", array(
 			 'method' => 'post',
 			 'return' => 'contents'
@@ -142,8 +155,8 @@ class CommentsControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$res = $this->Resource->findByName('cpp1-pwd1');
 
-		// Looking at the matrix of permission Isma should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findByUsername('ismail@passbolt.com');
+		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findByUsername('irene@passbolt.com');
 		$this->User->setActive($user);
 
 		$id = $res['Resource']['id'];
@@ -155,7 +168,7 @@ class CommentsControllerTest extends ControllerTestCase {
 			))
 		);
 
-		$this->expectException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$srvResult = json_decode($this->testAction("/comments/$model/$id.json", $postOptions), true);
 	}
 
@@ -211,21 +224,21 @@ class CommentsControllerTest extends ControllerTestCase {
 		// $result = $this->Comment->find('threaded', $findOptions);
 		// $path = $this->Comment->inNestedArray($srvResult['body']['Comment']['id'], $result);
 		// $this->assertTrue(!empty($path), "The result should contain the comment {$srvResult['body']['Comment']['id']}, but it is not found.");
-		// $this->assertEqual($path[0], $postOptionsCopy['data']['Comment']['parent_id'], "The comment {$srvResult['body']['Comment']['id']} should be a child of the comment {$postOptionsCopy['data']['Comment']['parent_id']}");
+		// $this->assertEquals($path[0], $postOptionsCopy['data']['Comment']['parent_id'], "The comment {$srvResult['body']['Comment']['id']} should be a child of the comment {$postOptionsCopy['data']['Comment']['parent_id']}");
 	}
 
 	public function testEditCommentIdIsMissing() {
-		$this->expectException('HttpException', 'The comment id is missing');
+		$this->setExpectedException('HttpException', 'The comment id is missing');
 		$this->testAction("/comments.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testEditCommentIdNotValid() {
-		$this->expectException('HttpException', 'The comment id is invalid');
+		$this->setExpectedException('HttpException', 'The comment id is invalid');
 		$this->testAction("/comments/badid.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testEditCommentIdDoesNotExist() {
-		$this->expectException('HttpException', 'The comment does not exist');
+		$this->setExpectedException('HttpException', 'The comment does not exist');
 		$this->testAction("/comments/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
@@ -238,7 +251,7 @@ class CommentsControllerTest extends ControllerTestCase {
 			))
 		);
 		$id = 'aaa00001-cccc-11d1-a0c5-080027796c4c'; // has to exist, and user has not to be owner
-		$this->expectException('HttpException', 'Your are not allowed to edit this comment');
+		$this->setExpectedException('HttpException', 'Your are not allowed to edit this comment');
 		$this->testAction("/comments/$id.json", $putOptions);
 	}
 
@@ -274,17 +287,17 @@ class CommentsControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteCommentIdIsMissing() {
-		$this->expectException('HttpException', 'The comment id is missing');
+		$this->setExpectedException('HttpException', 'The comment id is missing');
 		$this->testAction("/comments.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCommentIdNotValid() {
-		$this->expectException('HttpException', 'The comment id is invalid');
+		$this->setExpectedException('HttpException', 'The comment id is invalid');
 		$this->testAction("/comments/badid.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCommentIdDoesNotExist() {
-		$this->expectException('HttpException', 'The comment does not exist');
+		$this->setExpectedException('HttpException', 'The comment does not exist');
 		$this->testAction("/comments/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
@@ -295,7 +308,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		);
 
 		$id = 'aaa00001-cccc-11d1-a0c5-080027796c4c'; // has to exist, and user has not to be owner
-		$this->expectException('HttpException', 'Your are not allowed to delete this comment');
+		$this->setExpectedException('HttpException', 'Your are not allowed to delete this comment');
 		$this->testAction("/comments/$id.json", $putOptions);
 	}
 

@@ -29,13 +29,15 @@ class CategoriesControllerTest extends ControllerTestCase {
 		'app.categoriesResource',
 		'app.user',
 		'app.profile',
+		'app.file_storage',
 		'app.group',
 		'app.groupsUser',
 		'app.role',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist'
+		'app.authenticationBlacklist',
+		'core.cakeSession',
 	);
 
 	public function setUp() {
@@ -46,14 +48,14 @@ class CategoriesControllerTest extends ControllerTestCase {
 		parent::setUp();
 
 		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('dark.vador@passbolt.com');
-		$this->User->setActive($kk);
+        $user = $this->User->findByUsername('dame@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function testIndexNoChildrenPermission() {
 		// Test that users won't get top categories if they're not allowed.
-		// Looking at the matrix of permission Jean rené should not be able to read the category 'Bolt Softwares Pvt. Ltd'
-		$user = $this->User->findByUsername('jean-rene@test.com');
+		// Looking at the matrix of permission Jean Bartik should not be able to read the category 'Bolt Softwares Pvt. Ltd'
+		$user = $this->User->findByUsername('jean@passbolt.com');
 		$this->User->setActive($user);
 
 		// test when no parameters are provided (default behaviour : children=false)
@@ -64,7 +66,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$debug = print_r($result, true);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
 		$this->assertEmpty($this->Category->inNestedArray('Bolt Softwares Pvt. Ltd.', $result['body'], 'name'), '/categories/index.json : The server result should not contain Bolt Softwares Pvt. Ltd.');
-		$this->assertNotEmpty($this->Category->inNestedArray('pv-jean_rene', $result['body'], 'name'), '/categories/index.json : The server result should contain pv-jean_rene');
+		$this->assertNotEmpty($this->Category->inNestedArray('pv-jean_bartik', $result['body'], 'name'), '/categories/index.json : The server result should contain pv-jean_bartik');
 	}
 
 	public function testIndex() {
@@ -95,7 +97,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testViewCategoryIdNotValid() {
 		// test an error bad id
-		$this->expectException('HttpException', 'The category id is invalid');
+		$this->setExpectedException('HttpException', 'The category id is invalid');
 		$result = json_decode($this->testAction("/categories/badid.json?children=true", array(
 			'method' => 'get',
 			'return' => 'contents'
@@ -104,7 +106,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testViewCategoryDoesNotExist() {
 		// test when a wrong id is provided
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 		$result = json_decode($this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'get',
 			'return' => 'contents'
@@ -115,11 +117,11 @@ class CategoriesControllerTest extends ControllerTestCase {
 		// Error : name is empty
 		$cat = $this->Category->findByName('d-project1');
 
-		// Looking at the matrix of permission Isma should not be able to read the category d-project1
-		$user = $this->User->findByUsername('ismail@passbolt.com');
+		// Looking at the matrix of permission Irene should not be able to read the category d-project1
+		$user = $this->User->findByUsername('irene@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 		$result = json_decode($this->testAction("/categories/{$cat['Category']['id']}.json", array(
 			'method' => 'Get',
 			'return' => 'contents'
@@ -182,12 +184,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testChildrenCategoryIdIsMissing() {
-		$this->expectException('HttpException', 'The category id is missing');
+		$this->setExpectedException('HttpException', 'The category id is missing');
 		$this->testAction("/categories/children.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testChildrenCategoryDoesNotExist() {
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 		$this->testAction("/categories/children/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'get',
 			'return' => 'contents'
@@ -195,7 +197,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testChildrenCategoryIdNotValid() {
-		$this->expectException('HttpException', 'The category id is invalid');
+		$this->setExpectedException('HttpException', 'The category id is invalid');
 		$this->testAction("/categories/children/badid.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -233,7 +235,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAddNoDataProvided() {
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$this->testAction('/categories.json', array(
 			'method' => 'post',
 			'return' => 'contents'
@@ -242,7 +244,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testAddInvalidDataProvided() {
 		// Error : name is empty
-		$this->expectException('HttpException', 'Could not validate category data');
+		$this->setExpectedException('HttpException', 'Could not validate category data');
 		$result = json_decode($this->testAction('/categories/add.json', array(
 			'data' => array(
 				'Category' => array(
@@ -255,12 +257,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAddAndPermission() {
-		// Looking at the matrix of permission Cedric should be able to read but not to create into the category d-project1
-		$user = $this->User->findByUsername('cedric@passbolt.com');
+		// Looking at the matrix of permission Carol should be able to read but not to create into the category d-project1
+		$user = $this->User->findByUsername('carol@passbolt.com');
 		$this->User->setActive($user);
 
 		// Error : name is empty
-		$this->expectException('HttpException', 'You are not authorized to create a category into the given parent category');
+		$this->setExpectedException('HttpException', 'You are not authorized to create a category into the given parent category');
 		$cat = $this->Category->findByName('d-project1');
 		$result = json_decode($this->testAction('/categories/add.json', array(
 			'data' => array(
@@ -340,12 +342,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testEditCategoryIdIsMissing() {
-		$this->expectException('HttpException', 'The category id is missing');
+		$this->setExpectedException('HttpException', 'The category id is missing');
 		$this->testAction("/categories.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testEditCategoryIdNotValid() {
-		$this->expectException('HttpException', 'The category id is invalid');
+		$this->setExpectedException('HttpException', 'The category id is invalid');
 		$this->testAction("/categories/badid.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
@@ -355,12 +357,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$id = $cat['Category']['id'];
 
 		// without parameters
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$this->testAction("/categories/$id.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testEditCategoryDoesNotExist() {
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 		$this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'put',
 			'return' => 'contents'
@@ -371,10 +373,10 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$adminCat = $this->Category->findByName('administration');
 
 		// Looking at the matrix of permission should not be able to READ administration
-		$user = $this->User->findByUsername('remy@passbolt.com');
+		$user = $this->User->findByUsername('ada@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 
 		$id = $adminCat['Category']['id'];
 		$result = json_decode($this->testAction("/categories/$id.json", array(
@@ -389,11 +391,11 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testEditAndPermission() {
-		// Looking at the matrix of permission Cedric should be able to read but not to edit the category d-project1
-		$user = $this->User->findByUsername('cedric@passbolt.com');
+		// Looking at the matrix of permission Carol should be able to read but not to edit the category d-project1
+		$user = $this->User->findByUsername('carol@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'You are not authorized to edit this category');
+		$this->setExpectedException('HttpException', 'You are not authorized to edit this category');
 		$cat = $this->Category->findByName('d-project1');
 		$id = $cat['Category']['id'];
 		$result = json_decode($this->testAction("/categories/$id.json", array(
@@ -410,11 +412,11 @@ class CategoriesControllerTest extends ControllerTestCase {
 	public function testEditAndParentCategoryPermission() {
 		$adminCat = $this->Category->findByName('administration');
 
-		// Looking at the matrix of permission Remy should be able to update "projects" but has no CREATE right for "administration"
-		$user = $this->User->findByUsername('remy@passbolt.com');
+		// Looking at the matrix of permission ada should be able to update "projects" but has no CREATE right for "administration"
+		$user = $this->User->findByUsername('ada@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'You are not authorized to create a category into the given parent category');
+		$this->setExpectedException('HttpException', 'You are not authorized to create a category into the given parent category');
 		$projectsCat = $this->Category->findByName('projects');
 		$id = $projectsCat['Category']['id'];
 		$result = json_decode($this->testAction("/categories/$id.json", array(
@@ -449,17 +451,17 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteCategoryIdIsMissing() {
-		$this->expectException('HttpException', 'The category id is missing');
+		$this->setExpectedException('HttpException', 'The category id is missing');
 		$this->testAction("/categories.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCategoryIdNotValid() {
-		$this->expectException('HttpException', 'The category id is invalid');
+		$this->setExpectedException('HttpException', 'The category id is invalid');
 		$this->testAction("/categories/badid.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCategoryDoesNotExist() {
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 		$id = '50d77ff7-bdad-4c03-8687-1b63d7a10fce';
 		$result = json_decode($this->testAction("/categories/$id.json", array(
 			'method' => 'Delete',
@@ -471,10 +473,10 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$adminCat = $this->Category->findByName('administration');
 
 		// Looking at the matrix of permission should not be able to READ administration
-		$user = $this->User->findByUsername('remy@passbolt.com');
+		$user = $this->User->findByUsername('ada@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 
 		$id = $adminCat['Category']['id'];
 		$result = json_decode($this->testAction("/categories/$id.json", array(
@@ -484,12 +486,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteAndPermission() {
-		// Looking at the matrix of permission Jean-René should be able to create but not delete the category jean rené private
-		$user = $this->User->findByUsername('jean-rene@test.com');
+		// Looking at the matrix of permission Jean Bartik should be able to create but not delete the category Jean private
+		$user = $this->User->findByUsername('jean@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'You are not authorized to delete this category');
-		$cat = $this->Category->findByName('pv-jean_rene');
+		$this->setExpectedException('HttpException', 'You are not authorized to delete this category');
+		$cat = $this->Category->findByName('pv-jean_bartik');
 
 		$id = $cat['Category']['id'];
 		$result = json_decode($this->testAction("/categories/$id.json", array(
@@ -514,17 +516,17 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testMoveCategoryIdIsMissing() {
-		$this->expectException('HttpException', 'The category id is missing');
+		$this->setExpectedException('HttpException', 'The category id is missing');
 		$this->testAction("/categories/move.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testMoveCategoryIdNotValid() {
-		$this->expectException('HttpException', 'The category id is invalid');
+		$this->setExpectedException('HttpException', 'The category id is invalid');
 		$this->testAction("/categories/move/badid.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testMoveCategoryDoesNotExist() {
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 		$this->testAction("/categories/move/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'put',
 			'return' => 'contents'
@@ -533,7 +535,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testMoveParentCategoryIdNotValid() {
 		$hr = $this->Category->findByName('human resource');
-		$this->expectException('HttpException', 'The parent category id invalid');
+		$this->setExpectedException('HttpException', 'The parent category id invalid');
 		$this->testAction("/categories/move/{$hr['Category']['id']}/1/badParentId.json", array(
 			'method' => 'put',
 			'return' => 'contents'
@@ -542,7 +544,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testMoveParentCategoryDoesNotExist() {
 		$hr = $this->Category->findByName('human resource');
-		$this->expectException('HttpException', 'The parent category does not exist');
+		$this->setExpectedException('HttpException', 'The parent category does not exist');
 		$this->testAction("/categories/move/{$hr['Category']['id']}/1/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'put',
 			'return' => 'contents'
@@ -628,17 +630,17 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testTypeCategoryIdIsMissing() {
-		$this->expectException('HttpException', 'The category id is missing');
+		$this->setExpectedException('HttpException', 'The category id is missing');
 		$this->testAction("/categories/type.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testTypeCategoryIdNotValid() {
-		$this->expectException('HttpException', 'The category id is invalid');
+		$this->setExpectedException('HttpException', 'The category id is invalid');
 		$this->testAction("/categories/type/badid.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testTypeCategoryDoesNotExist() {
-		$this->expectException('HttpException', 'The category does not exist');
+		$this->setExpectedException('HttpException', 'The category does not exist');
 		$this->testAction("/categories/type/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
 			'method' => 'put',
 			'return' => 'contents'
@@ -647,7 +649,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testTypeNameDoesNotExist() {
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$this->expectException('HttpException', 'The type does not exist');
+		$this->setExpectedException('HttpException', 'The type does not exist');
 		$this->testAction("/categories/type/{$root['Category']['id']}/badname.json", array(
 			'method' => 'put',
 			'return' => 'contents'
@@ -655,12 +657,12 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testTypeAndPermission() {
-		// Looking at the matrix of permission Jean-René should be able to create but not delete the category jean rené private
-		$user = $this->User->findByUsername('jean-rene@test.com');
+		// Looking at the matrix of permission Jean Bartik should be able to create but not delete the category Jean private
+		$user = $this->User->findByUsername('jean@passbolt.com');
 		$this->User->setActive($user);
 
-		$this->expectException('HttpException', 'You are not authorized to change the type of this category');
-		$cat = $this->Category->findByName('pv-jean_rene');
+		$this->setExpectedException('HttpException', 'You are not authorized to change the type of this category');
+		$cat = $this->Category->findByName('pv-jean_bartik');
 
 		$id = $cat['Category']['id'];
 		$result = json_decode($this->testAction("/categories/type/$id/default.json", array(

@@ -1,0 +1,47 @@
+.plugin-check {
+	padding:1em;
+
+	&.firefox {
+		background:transparent url('@{images}/third_party/firefox_logo.png') 1.5em center no-repeat;
+		background-size: 150px auto; /* 150px */
+	}
+	&.success {
+		background-color:@background-success;
+	}
+	&.error {
+		background-color:@background-error;
+	}
+	&.warning {
+		background-color:@background-warning;
+	}
+	.message {
+		font-weight: normal;
+		margin-left: 180px;
+		padding:.5em 1em;
+	}
+}
+
+/*
+	no plugin = display error
+	no config = display warning
+*/
+.plugin-check {
+	display:none;
+}
+.no-passboltplugin {
+	.plugin-check.error {
+		display:block;
+	}
+}
+.passboltplugin {
+	&.no-passboltplugin-config {
+		.plugin-check.warning {
+			display:block;
+		}
+	}
+	&.passboltplugin-config {
+		.plugin-check.success {
+			display:block;
+		}
+	}
+}

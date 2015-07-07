@@ -15,6 +15,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+App::uses('CakePlugin', 'Core');
+
 /**
  * PHP Reader allows Configure to load configuration values from
  * files containing simple PHP arrays.
@@ -49,7 +51,7 @@ class PhpReader implements ConfigReaderInterface {
  * Read a config file and return its contents.
  *
  * Files with `.` in the name will be treated as values in plugins. Instead of reading from
- * the initialized path, plugin keys will be located using App::pluginPath().
+ * the initialized path, plugin keys will be located using CakePlugin::path().
  *
  * @param string $key The identifier to read from. If the key has a . it will be treated
  *  as a plugin prefix.
@@ -81,7 +83,7 @@ class PhpReader implements ConfigReaderInterface {
  * @param string $key The identifier to write to. If the key has a . it will be treated
  *  as a plugin prefix.
  * @param array $data Data to dump.
- * @return integer Bytes saved.
+ * @return int Bytes saved.
  */
 	public function dump($key, $data) {
 		$contents = '<?php' . "\n" . '$config = ' . var_export($data, true) . ';';
@@ -105,7 +107,7 @@ class PhpReader implements ConfigReaderInterface {
 		$key .= '.php';
 
 		if ($plugin) {
-			$file = App::pluginPath($plugin) . 'Config' . DS . $key;
+			$file = CakePlugin::path($plugin) . 'Config' . DS . $key;
 		} else {
 			$file = $this->_path . $key;
 		}

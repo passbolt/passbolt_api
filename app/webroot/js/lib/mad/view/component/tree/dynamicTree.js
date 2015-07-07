@@ -53,7 +53,7 @@ steal(
 		 * @param {HTMLEvent} ev The event which occured
 		 * @return {void}
 		 */
-		'div.node-ctrl a click': function (el, ev) {
+		'.node-ctrl a click': function (el, ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			var data = null,
@@ -73,6 +73,27 @@ steal(
 			else {
 				this.element.trigger('item_closed', data);
 			}
+		},
+
+		/**
+		 * Contextual menu
+		 * @param {HTMLElement} el The element the event occured on
+		 * @param {HTMLEvent} ev The event which occured
+		 * @return {void}
+		 */
+		'.more-ctrl a click': function (el, ev) {
+			ev.stopPropagation();
+			ev.preventDefault();
+			var data = null,
+				li = el.parents('li');
+
+			if (this.getController().getItemClass()) {
+				data = li.data(this.getController().getItemClass().fullName);
+			} else {
+				data = li[0].id;
+			}
+
+			this.element.trigger('item_right_selected', [data, ev]);
 		}
 
 	});

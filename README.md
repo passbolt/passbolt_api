@@ -5,11 +5,15 @@
 	  /_/    \__,_/____/____/_.___/\____/_/\__/
 	
 	The password management solution
-	(c) 2012-2013 passbolt.com
-
+	(c) 2012-2015 passbolt.com
 
 Install
 =========
+
+You will need to install php5 and the following modules directly or using pear/pecl
+- mod_rewrite http://book.cakephp.org/2.0/en/installation/url-rewriting.html
+- gd / imagemagick
+- gnupg http://php.net/manual/en/gnupg.installation.php
 
 Clone the repository and associated submodules
 ```
@@ -17,22 +21,35 @@ Clone the repository and associated submodules
 	cd passbolt
 	git submodule update --init
 ```
+
 Copy the core configuration file, change the cypher seed and salt
 ```
 	cp app/Config/core.php.default app/Config/core.php
 ```
+
 Copy the database configuration file and edit the credentials
 ```
 	cp app/Config/database.php.default app/Config/database.php
 	nano app/Config/database.php
 ```
+
 Copy the app configuration file
 ```
 	cp app/Config/app.php.default app/Config/app.php
 ```
-Run the install script
+
+Install Composer app files (to install vendor and plugin dependencies).
+You will need a working version of composer. See https://getcomposer.org
 ```
-	./app/Console/cake install
+	cd app
+	composer install --no-dev
+```
+
+Run the install script from the cakephp root with the data flag set
+if you want to install test data.
+```
+  cd ..
+	./app/Console/cake install [--data=1]
 ```
 Check if it works!
 
@@ -40,7 +57,7 @@ Check if it works!
 How to edit the LESS/CSS files?
 =========
 
-Install grunt
+Install grunt and grunt
 ```
 	npm install -g grunt-cli
 ```
@@ -48,12 +65,62 @@ Install the needed modules defined in the grunt config
 ```
 	npm install
 ```
+Install the styleguide
+```
+	bower install
+	grunt styleguide-deploy
+```
 Make sure Grunt watch for less changes and compile them into CSS
 ```
 	grunt watch
 ```
 Edit one LESS file to see if it works!
+Make sure that if you need to make change the styleguide to request changes upstream.
 
+
+Prepare the production release
+=========
+
+Install grunt if it hasn't yet been installed
+```
+	npm install -g grunt-cli
+```
+Install the needed modules defined in the grunt config
+```
+	npm install
+```
+Prepare the production release
+```
+	grunt production
+```
+CSS minified files should have been generated as the Javascript minified file.
+
+
+Emails settings
+===============
+
+For images that are send in emails, we need to tell cakephp what is the base url.
+To fix this, add/uncomment this line in Config/core.php
+```
+	Configure::write('App.fullBaseUrl', 'http://{your domain without slash}');
+```
+Emails are placed in a queue that needs to be processed by a CakePhp Shell. To do so, execute the following command, or launch it at regular intervals through cron.
+From your app folder :
+```
+	Console/cake EmailQueue.sender
+```
+You can also see the corresponding documentation here https://github.com/lorenzo/cakephp-email-queue
+
+
+Test suite
+==========
+
+To execute the test suite, you will need to install phpunit.
+The simplest way is to do it through composer. A composer file is already included at the root of the passbolt installation.
+```
+cd /var/www/passbolt
+composer install
+```
 
 Credits
 =========

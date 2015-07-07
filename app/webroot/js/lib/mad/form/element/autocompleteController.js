@@ -83,6 +83,8 @@ steal(
 			this.setValue(data.label);
 			// hide the autocomplete list
 			this.options.list.setState('hidden');
+			// Trigger the event on the main component.
+			this.element.trigger('item_selected', [data, ev]);
 		}
 
 	});

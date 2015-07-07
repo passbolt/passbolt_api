@@ -34,6 +34,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		'app.permissions_type',
 		'app.permission_view',
 		'app.authenticationBlacklist',
+		'core.cakeSession',
 	);
 
 	public $uses = array(
@@ -50,22 +51,22 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		parent::setUp();
 
 		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($user);
 	}
 
 	public function testViewGroUsrIdIsMissing() {
-		$this->expectException('HttpException', 'The groupUser id is missing');
+		$this->setExpectedException('HttpException', 'The groupUser id is missing');
 		$this->testAction("/groupsUsers.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewGroUsrIdNotValid() {
-		$this->expectException('HttpException', 'The groupUser id is invalid');
+		$this->setExpectedException('HttpException', 'The groupUser id is invalid');
 		$this->testAction("/groupsUsers/badid.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewGroUsrDoesNotExist() {
-		$this->expectException('HttpException', 'The groupUser does not exist');
+		$this->setExpectedException('HttpException', 'The groupUser does not exist');
 		$this->testAction("/groupsUsers/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -78,7 +79,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testAddNoDataProvided() {
-		$this->expectException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data were provided');
 		$this->testAction('/categoriesResources.json', array(
 				'method' => 'post',
 				'return' => 'contents'
@@ -92,7 +93,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 				'user_id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56ca',
 			)
 		);
-		$this->expectException('HttpException', 'Could not validate data');
+		$this->setExpectedException('HttpException', 'Could not validate data');
 		$this->testAction('/groupsUsers.json', array(
 				'data' => $data,
 				'method' => 'post',
@@ -102,7 +103,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		$gro = $this->Group->findByName('developers');
-		$usr = $this->User->findByUsername('aurelie@passbolt.com');
+		$usr = $this->User->findByUsername('grace@passbolt.com');
 		$data = array(
 			'GroupUser' => array(
 				'group_id' => $gro['Group']['id'],
@@ -128,17 +129,17 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteCatResIdIsMissing() {
-		$this->expectException('HttpException', 'The groupUser id is missing');
+		$this->setExpectedException('HttpException', 'The groupUser id is missing');
 		$this->testAction("/groupsUsers.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCatResIdNotValid() {
-		$this->expectException('HttpException', 'The groupUser id is invalid');
+		$this->setExpectedException('HttpException', 'The groupUser id is invalid');
 		$this->testAction("/groupsUsers/badid.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteCatResDoesNotExist() {
-		$this->expectException('HttpException', 'The groupUser does not exist');
+		$this->setExpectedException('HttpException', 'The groupUser does not exist');
 		$this->testAction("/groupsUsers/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
@@ -151,7 +152,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /groupsUsers/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
 		$found = $this->GroupUser->findById($id);
-		$this->assertEqual(
+		$this->assertEquals(
 			count($found), 0,
 			"delete /groupsUsers/$id.json : This test should have fetched 0 elements from the database but it is not the case. Is the element properly deleted ?"
 		);

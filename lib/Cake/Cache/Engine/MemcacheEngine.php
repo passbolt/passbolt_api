@@ -21,7 +21,8 @@
  * control you have over expire times far in the future. See MemcacheEngine::write() for
  * more information.
  *
- * @package       Cake.Cache.Engine
+ * @package Cake.Cache.Engine
+ * @deprecated 3.0.0 You should use the Memcached adapter instead.
  */
 class MemcacheEngine extends CacheEngine {
 
@@ -58,7 +59,7 @@ class MemcacheEngine extends CacheEngine {
  * To reinitialize the settings call Cache::engine('EngineName', [optional] settings = array());
  *
  * @param array $settings array of setting for the engine
- * @return boolean True if the engine has been successfully initialized, false if not
+ * @return bool True if the engine has been successfully initialized, false if not
  */
 	public function init($settings = array()) {
 		if (!class_exists('Memcache')) {
@@ -103,7 +104,7 @@ class MemcacheEngine extends CacheEngine {
  * @return array Array containing host, port
  */
 	protected function _parseServerString($server) {
-		if ($server[0] === 'u') {
+		if (strpos($server, 'unix://') === 0) {
 			return array($server, 0);
 		}
 		if (substr($server, 0, 1) === '[') {
@@ -130,8 +131,8 @@ class MemcacheEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param mixed $value Data to be cached
- * @param integer $duration How long to cache the data, in seconds
- * @return boolean True if the data was successfully cached, false on failure
+ * @param int $duration How long to cache the data, in seconds
+ * @return bool True if the data was successfully cached, false on failure
  * @see http://php.net/manual/en/memcache.set.php
  */
 	public function write($key, $value, $duration) {
@@ -155,7 +156,7 @@ class MemcacheEngine extends CacheEngine {
  * Increments the value of an integer cached key
  *
  * @param string $key Identifier for the data
- * @param integer $offset How much to increment
+ * @param int $offset How much to increment
  * @return New incremented value, false otherwise
  * @throws CacheException when you try to increment with compress = true
  */
@@ -172,7 +173,7 @@ class MemcacheEngine extends CacheEngine {
  * Decrements the value of an integer cached key
  *
  * @param string $key Identifier for the data
- * @param integer $offset How much to subtract
+ * @param int $offset How much to subtract
  * @return New decremented value, false otherwise
  * @throws CacheException when you try to decrement with compress = true
  */
@@ -189,7 +190,7 @@ class MemcacheEngine extends CacheEngine {
  * Delete a key from the cache
  *
  * @param string $key Identifier for the data
- * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
+ * @return bool True if the value was successfully deleted, false if it didn't exist or couldn't be removed
  */
 	public function delete($key) {
 		return $this->_Memcache->delete($key);
@@ -198,8 +199,9 @@ class MemcacheEngine extends CacheEngine {
 /**
  * Delete all keys from the cache
  *
- * @param boolean $check
- * @return boolean True if the cache was successfully cleared, false otherwise
+ * @param bool $check If true no deletes will occur and instead CakePHP will rely
+ *   on key TTL values.
+ * @return bool True if the cache was successfully cleared, false otherwise
  */
 	public function clear($check) {
 		if ($check) {
@@ -230,8 +232,8 @@ class MemcacheEngine extends CacheEngine {
  * Connects to a server in connection pool
  *
  * @param string $host host ip address or name
- * @param integer $port Server port
- * @return boolean True if memcache server was connected
+ * @param int $port Server port
+ * @return bool True if memcache server was connected
  */
 	public function connect($host, $port = 11211) {
 		if ($this->_Memcache->getServerStatus($host, $port) === 0) {
@@ -281,7 +283,8 @@ class MemcacheEngine extends CacheEngine {
  * Increments the group value to simulate deletion of all keys under a group
  * old values will remain in storage until they expire.
  *
- * @return boolean success
+ * @param string $group The group to clear.
+ * @return bool success
  */
 	public function clearGroup($group) {
 		return (bool)$this->_Memcache->increment($this->settings['prefix'] . $group);

@@ -23,7 +23,6 @@ steal(
 	mad.controller.ComponentController.extend('passbolt.controller.component.AppFilterController', /** @static */ {
 
 		'defaults': {
-			// 'templateBased': false,
 			'viewClass': passbolt.view.component.AppFilter
 		}
 
@@ -43,12 +42,7 @@ steal(
 				modelReference: 'passbolt.model.Filter.keywords'
 			}));
 			this.keywordsFormElement.start();
-			
-			// Instantiate the list which will carry the filter tags
-			// this.listFormElement = this.filterForm.addElement(new mad.form.element.ListController('#js_filter_tags', {
-				// modelReference: 'passbolt.model.Filter.tags'
-			// }));
-			// this.listFormElement.start();
+			this.workspace = 'password';
 		},
 
 		/**
@@ -57,7 +51,6 @@ steal(
 		 */
 		'reset': function () {
 			this.keywordsFormElement.setValue('');
-			// this.listFormElement.setValue([]);
 		},
 
 		/* ************************************************************** */
@@ -72,8 +65,29 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} category_selected': function (el, ev, category) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.reset();
-			// this.listFormElement.setValue([category]);
+		},
+
+		/**
+		 * Observe when a workspace is selected.
+		 * @param {HTMLElement} el
+		 * @param {HTMLEvent} event
+		 * @param workspace
+		 */
+		'{mad.bus} workspace_selected': function (el, event, workspace) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
+			this.workspace = workspace;
+			if (this.workspace == 'password') {
+				this.keywordsFormElement.element.attr("placeholder", "search passwords");
+			}
+			else {
+				this.keywordsFormElement.element.attr("placeholder", "search people");
+			}
 		},
 
 		/* ************************************************************** */
@@ -87,9 +101,19 @@ steal(
 		 * @param {object} data The form data
 		 */
 		' update': function(el, ev) {
-			var data = this.filterForm.getData();
-			var filter = new passbolt.model.Filter(data['passbolt.model.Filter']);
-			mad.bus.trigger('filter_resources_browser', filter);
+			var data = this.filterForm.getData(),
+				filter = new passbolt.model.Filter(data['passbolt.model.Filter']);
+
+			if (this.workspace == 'password') {
+				mad.bus.trigger('filter_resources_browser', filter);
+			}
+			else if (this.workspace == 'people') {
+				mad.bus.trigger('filter_users_browser', filter);
+			}
+			else if (this.workspace == 'settings') {
+				// Switch to people workspace.
+				mad.bus.trigger('workspace_selected', ['people', {filter: filter}]);
+			}
 		},
 
 		/**

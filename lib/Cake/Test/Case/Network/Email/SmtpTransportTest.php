@@ -63,7 +63,7 @@ class SmtpTestTransport extends SmtpTransport {
  */
 	public function __call($method, $args) {
 		$method = '_' . $method;
-		return $this->$method();
+		return call_user_func_array(array($this, $method), $args);
 	}
 
 }
@@ -130,6 +130,7 @@ class SmtpTransportTest extends CakeTestCase {
  * testConnectEhloTlsOnNonTlsServer method
  *
  * @expectedException SocketException
+ * @expectedExceptionMessage SMTP server did not accept the connection or trying to connect to non TLS SMTP server using TLS.
  * @return void
  */
 	public function testConnectEhloTlsOnNonTlsServer() {
@@ -150,6 +151,7 @@ class SmtpTransportTest extends CakeTestCase {
  * testConnectEhloNoTlsOnRequiredTlsServer method
  *
  * @expectedException SocketException
+ * @expectedExceptionMessage SMTP authentication method not allowed, check if SMTP server requires TLS.
  * @return void
  */
 	public function testConnectEhloNoTlsOnRequiredTlsServer() {
@@ -189,6 +191,7 @@ class SmtpTransportTest extends CakeTestCase {
  * testConnectFail method
  *
  * @expectedException SocketException
+ * @expectedExceptionMessage SMTP server did not accept the connection.
  * @return void
  */
 	public function testConnectFail() {
@@ -219,6 +222,90 @@ class SmtpTransportTest extends CakeTestCase {
 		$this->socket->expects($this->at(6))->method('write')->with("c3Rvcnk=\r\n");
 		$this->socket->expects($this->at(7))->method('read')->will($this->returnValue(false));
 		$this->socket->expects($this->at(8))->method('read')->will($this->returnValue("235 OK\r\n"));
+		$this->SmtpTransport->config(array('username' => 'mark', 'password' => 'story'));
+		$this->SmtpTransport->auth();
+	}
+
+/**
+ * testAuthNotRecognized method
+ *
+ * @expectedException SocketException
+ * @expectedExceptionMessage AUTH command not recognized or not implemented, SMTP server may not require authentication.
+ * @return void
+ */
+	public function testAuthNotRecognized() {
+		$this->socket->expects($this->at(0))->method('write')->with("AUTH LOGIN\r\n");
+		$this->socket->expects($this->at(1))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(2))->method('read')->will($this->returnValue("500 5.3.3 Unrecognized command\r\n"));
+		$this->SmtpTransport->config(array('username' => 'mark', 'password' => 'story'));
+		$this->SmtpTransport->auth();
+	}
+
+/**
+ * testAuthNotImplemented method
+ *
+ * @expectedException SocketException
+ * @expectedExceptionMessage AUTH command not recognized or not implemented, SMTP server may not require authentication.
+ * @return void
+ */
+	public function testAuthNotImplemented() {
+		$this->socket->expects($this->at(0))->method('write')->with("AUTH LOGIN\r\n");
+		$this->socket->expects($this->at(1))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(2))->method('read')->will($this->returnValue("502 5.3.3 Command not implemented\r\n"));
+		$this->SmtpTransport->config(array('username' => 'mark', 'password' => 'story'));
+		$this->SmtpTransport->auth();
+	}
+
+/**
+ * testAuthBadSequence method
+ *
+ * @expectedException SocketException
+ * @expectedExceptionMessage SMTP Error: 503 5.5.1 Already authenticated
+ * @return void
+ */
+	public function testAuthBadSequence() {
+		$this->socket->expects($this->at(0))->method('write')->with("AUTH LOGIN\r\n");
+		$this->socket->expects($this->at(1))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(2))->method('read')->will($this->returnValue("503 5.5.1 Already authenticated\r\n"));
+		$this->SmtpTransport->config(array('username' => 'mark', 'password' => 'story'));
+		$this->SmtpTransport->auth();
+	}
+
+/**
+ * testAuthBadUsername method
+ *
+ * @expectedException SocketException
+ * @expectedExceptionMessage SMTP server did not accept the username.
+ * @return void
+ */
+	public function testAuthBadUsername() {
+		$this->socket->expects($this->at(0))->method('write')->with("AUTH LOGIN\r\n");
+		$this->socket->expects($this->at(1))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(2))->method('read')->will($this->returnValue("334 Login\r\n"));
+		$this->socket->expects($this->at(3))->method('write')->with("bWFyaw==\r\n");
+		$this->socket->expects($this->at(4))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(5))->method('read')->will($this->returnValue("535 5.7.8 Authentication failed\r\n"));
+		$this->SmtpTransport->config(array('username' => 'mark', 'password' => 'story'));
+		$this->SmtpTransport->auth();
+	}
+
+/**
+ * testAuthBadPassword method
+ *
+ * @expectedException SocketException
+ * @expectedExceptionMessage SMTP server did not accept the password.
+ * @return void
+ */
+	public function testAuthBadPassword() {
+		$this->socket->expects($this->at(0))->method('write')->with("AUTH LOGIN\r\n");
+		$this->socket->expects($this->at(1))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(2))->method('read')->will($this->returnValue("334 Login\r\n"));
+		$this->socket->expects($this->at(3))->method('write')->with("bWFyaw==\r\n");
+		$this->socket->expects($this->at(4))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(5))->method('read')->will($this->returnValue("334 Pass\r\n"));
+		$this->socket->expects($this->at(6))->method('write')->with("c3Rvcnk=\r\n");
+		$this->socket->expects($this->at(7))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(8))->method('read')->will($this->returnValue("535 5.7.8 Authentication failed\r\n"));
 		$this->SmtpTransport->config(array('username' => 'mark', 'password' => 'story'));
 		$this->SmtpTransport->auth();
 	}
@@ -362,4 +449,92 @@ class SmtpTransportTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
+/**
+ * testGetLastResponse method
+ *
+ * @return void
+ */
+	public function testGetLastResponse() {
+		$this->assertEmpty($this->SmtpTransport->getLastResponse());
+
+		$this->socket->expects($this->any())->method('connect')->will($this->returnValue(true));
+		$this->socket->expects($this->at(0))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(1))->method('read')->will($this->returnValue("220 Welcome message\r\n"));
+		$this->socket->expects($this->at(2))->method('write')->with("EHLO localhost\r\n");
+		$this->socket->expects($this->at(3))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(4))->method('read')->will($this->returnValue("250-PIPELINING\r\n"));
+		$this->socket->expects($this->at(5))->method('read')->will($this->returnValue("250-SIZE 102400000\r\n"));
+		$this->socket->expects($this->at(6))->method('read')->will($this->returnValue("250-VRFY\r\n"));
+		$this->socket->expects($this->at(7))->method('read')->will($this->returnValue("250-ETRN\r\n"));
+		$this->socket->expects($this->at(8))->method('read')->will($this->returnValue("250-STARTTLS\r\n"));
+		$this->socket->expects($this->at(9))->method('read')->will($this->returnValue("250-AUTH PLAIN LOGIN\r\n"));
+		$this->socket->expects($this->at(10))->method('read')->will($this->returnValue("250-AUTH=PLAIN LOGIN\r\n"));
+		$this->socket->expects($this->at(11))->method('read')->will($this->returnValue("250-ENHANCEDSTATUSCODES\r\n"));
+		$this->socket->expects($this->at(12))->method('read')->will($this->returnValue("250-8BITMIME\r\n"));
+		$this->socket->expects($this->at(13))->method('read')->will($this->returnValue("250 DSN\r\n"));
+		$this->SmtpTransport->connect();
+
+		$expected = array(
+			array('code' => '250', 'message' => 'PIPELINING'),
+			array('code' => '250', 'message' => 'SIZE 102400000'),
+			array('code' => '250', 'message' => 'VRFY'),
+			array('code' => '250', 'message' => 'ETRN'),
+			array('code' => '250', 'message' => 'STARTTLS'),
+			array('code' => '250', 'message' => 'AUTH PLAIN LOGIN'),
+			array('code' => '250', 'message' => 'AUTH=PLAIN LOGIN'),
+			array('code' => '250', 'message' => 'ENHANCEDSTATUSCODES'),
+			array('code' => '250', 'message' => '8BITMIME'),
+			array('code' => '250', 'message' => 'DSN')
+		);
+		$result = $this->SmtpTransport->getLastResponse();
+		$this->assertEquals($expected, $result);
+
+		$email = new CakeEmail();
+		$email->from('noreply@cakephp.org', 'CakePHP Test');
+		$email->to('cake@cakephp.org', 'CakePHP');
+
+		$this->socket->expects($this->at(0))->method('write')->with("MAIL FROM:<noreply@cakephp.org>\r\n");
+		$this->socket->expects($this->at(1))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(2))->method('read')->will($this->returnValue("250 OK\r\n"));
+		$this->socket->expects($this->at(3))->method('write')->with("RCPT TO:<cake@cakephp.org>\r\n");
+		$this->socket->expects($this->at(4))->method('read')->will($this->returnValue(false));
+		$this->socket->expects($this->at(5))->method('read')->will($this->returnValue("250 OK\r\n"));
+
+		$this->SmtpTransport->setCakeEmail($email);
+		$this->SmtpTransport->sendRcpt();
+
+		$expected = array(
+			array('code' => '250', 'message' => 'OK'),
+		);
+		$result = $this->SmtpTransport->getLastResponse();
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * testBufferResponseLines method
+ *
+ * @return void
+ */
+	public function testBufferResponseLines() {
+		$reponseLines = array(
+			'123',
+			"456\tFOO",
+			'FOOBAR',
+			'250-PIPELINING',
+			'250-ENHANCEDSTATUSCODES',
+			'250-8BITMIME',
+			'250 DSN',
+		);
+		$this->SmtpTransport->bufferResponseLines($reponseLines);
+
+		$expected = array(
+			array('code' => '123', 'message' => null),
+			array('code' => '250', 'message' => 'PIPELINING'),
+			array('code' => '250', 'message' => 'ENHANCEDSTATUSCODES'),
+			array('code' => '250', 'message' => '8BITMIME'),
+			array('code' => '250', 'message' => 'DSN')
+		);
+		$result = $this->SmtpTransport->getLastResponse();
+		$this->assertEquals($expected, $result);
+	}
 }

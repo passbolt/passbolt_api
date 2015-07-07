@@ -15,16 +15,26 @@ steal(
 		 * @param {string} url Url of the config file to load
 		 * @return {void}
 		 */
-		'load': function (url) {
+		'loadFile': function (url) {
+			var self = this;
 			var jsonFile = steal.idToUri(url).toString();
 			$.ajax({
 				url: jsonFile,
 				async: false,
 				dataType: 'json',
 				success: function (data) {
-					$.extend(true, mad.config, data);
+					self.load(data);
 				}
 			});
+		},
+
+		/**
+		 * Load a config
+		 * @param {array} config The config array
+		 * @return {void}
+		 */
+		'load': function (config) {
+			$.extend(true, mad.config, config);
 		},
 
 		/**

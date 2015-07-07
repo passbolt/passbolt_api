@@ -31,7 +31,9 @@ steal(
 				'foreign_id': 'string',
 				'content': 'string',
 				'created': 'string',
-				'modified': 'string'
+				'modified': 'string',
+				'Creator': 'passbolt.model.User.model',
+				'Modifier': 'passbolt.model.User.model'
 			},
 
 			'create': function (attrs, success, error) {

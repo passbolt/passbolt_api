@@ -1,6 +1,6 @@
 steal(
 	'jquery/model',
-	// 'app/model/group.js',
+	'app/model/imageStorage.js',
 	'mad/model/serializer/cakeSerializer.js'
 ).then(function () {
 
@@ -25,7 +25,8 @@ steal(
 			attributes: {
 				'id': 'string',
 				'first_name': 'string',
-				'last_name': 'string'
+				'last_name': 'string',
+				'Avatar': 'passbolt.model.ImageStorage.model'
 			},
 
 			'findAll': function (params, success, error) {
@@ -38,5 +39,27 @@ steal(
 				});
 			}
 
-		}, /** @prototype */ { });
+		}, /** @prototype */ {
+
+			/**
+			 * Get the avatar image path
+			 * @param {string} version (optional) The version to get
+			 * @return {string} The image path
+			 */
+			'avatarPath': function(version) {
+				if (typeof this.Avatar != 'undefined' && this.Avatar.url != undefined) {
+					return this.Avatar.imagePath(version);
+				} else {
+					return "img/avatar/user.png";
+				}
+			},
+
+			/**
+			 * Return the user full name.
+			 * @returns {string}
+			 */
+			'fullName': function() {
+				return this.first_name + ' ' + this.last_name;
+			}
+		});
 	});

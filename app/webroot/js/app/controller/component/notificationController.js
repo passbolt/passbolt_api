@@ -26,9 +26,8 @@ steal(
 		'defaults': {
 			'label': 'Notification Controller',
 			'viewClass': passbolt.view.component.Notification,
-			// The notification to display
-			'notification': null,
-			'status': 'hidden'
+            'status': 'hidden',
+			'notifications': []
 		}
 
 	}, /** @prototype */ {
@@ -38,15 +37,14 @@ steal(
 		 * @param {passbolt.model.Notification} notification
 		 */
 		'load': function (notification) {
-			this.options.notification = notification;
-			this.setViewData(this.options.notification);
+			this.options.notifications.push(notification);
 
 			// The component is not already started, start it
 			if(this.view == null) {
 				this.start();
 			}
-			// Otherwise refresh it
-			else {
+			// If the component is not ready restart it, otherwise the view will take care of the notifications queue.
+			else if (this.state.is('hidden')) {
 				this.refresh();
 				this.setState('ready');
 			}
@@ -63,6 +61,9 @@ steal(
 		 * @param {array} notif
 		 */
 		'{mad.bus} passbolt_notify': function (el, ev, notif) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			this.load(new passbolt.model.Notification(notif));
 		}
 

@@ -9,13 +9,10 @@
  */
 ?>
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html class="no-js no-passboltplugin alpha version <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
-  <meta charset="utf-8">
-  <!--
+	<meta charset="utf-8">
+	<!--
            ____                  __          ____
           / __ \____  _____ ____/ /_  ____  / / /_
          / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
@@ -23,18 +20,20 @@
        /_/    \__,_/____/____/_.___/\____/_/\__/
 
        The password management solution
-       (c) 2014 passbolt.com
+       (c) 2015 passbolt.com
 
-   -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title><?php echo $this->fetch('title'); ?></title>
-  <title><?php echo $this->fetch('description'); ?></title>
-  <meta name="viewport" content="width=device-width">
-  <?php echo $this->fetch('css'); ?>
+	-->
+	<base href="<?php echo Router::url('/',true);?>">
+	<title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
+	<meta name="description" content="<?php echo Configure::read('App.punchline'); ?>">
+	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
+	<meta name="viewport" content="width=device-width">
+	<?php echo $this->fetch('css'); ?>
+<?php if(Configure::read('debug') > 0) echo $this->html->css('devel'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>
-<div class="container login page">
+<div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
 <?php echo $this->element('public/disclaimers'); ?>
 <!-- header -->
 <header>
@@ -52,6 +51,11 @@
 </footer>
 </div>
 <?php echo $this->fetch('scriptBottom'); ?>
-<?php //echo $this->element('debug');?>
+<?php
+// load devel materials.
+if(Configure::read('debug') >= 2) {
+	echo $this->element('devel/sqlTrace');
+}
+?>
 </body>
 </html>

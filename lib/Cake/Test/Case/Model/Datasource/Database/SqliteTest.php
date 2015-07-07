@@ -68,7 +68,7 @@ class SqliteTest extends CakeTestCase {
 /**
  * Do not automatically load fixtures for each test, they will be loaded manually using CakeTestCase::loadFixtures
  *
- * @var boolean
+ * @var bool
  */
 	public $autoFixtures = false;
 
@@ -365,6 +365,12 @@ class SqliteTest extends CakeTestCase {
 				'default' => '',
 				'length' => '5,2',
 			),
+			'decimal_field' => array(
+				'type' => 'decimal',
+				'null' => true,
+				'default' => '0.000',
+				'length' => '6,3',
+			),
 			'huge_int' => array(
 				'type' => 'biginteger',
 				'null' => true,
@@ -510,6 +516,48 @@ class SqliteTest extends CakeTestCase {
 		$result = $db->limit(10, 300000000000000000000000000000);
 		$scientificNotation = sprintf('%.1E', 300000000000000000000000000000);
 		$this->assertNotContains($scientificNotation, $result);
+	}
+
+/**
+ * Test that fields are parsed out in a reasonable fashion.
+ *
+ * @return void
+ */
+	public function testFetchRowColumnParsing() {
+		$this->loadFixtures('User');
+		$sql = 'SELECT "User"."id", "User"."user", "User"."password", "User"."created", (1 + 1) AS "two" ' .
+			'FROM "users" AS "User" WHERE ' .
+			'"User"."id" IN (SELECT MAX("id") FROM "users") ' .
+			'OR "User.id" IN (5, 6, 7, 8)';
+		$result = $this->Dbo->fetchRow($sql);
+
+		$expected = array(
+			'User' => array(
+				'id' => 4,
+				'user' => 'garrett',
+				'password' => '5f4dcc3b5aa765d61d8327deb882cf99',
+				'created' => '2007-03-17 01:22:23'
+			),
+			0 => array(
+				'two' => 2
+			)
+		);
+		$this->assertEquals($expected, $result);
+
+		$sql = 'SELECT "User"."id", "User"."user" ' .
+			'FROM "users" AS "User" WHERE "User"."id" = 4 ' .
+			'UNION ' .
+			'SELECT "User"."id", "User"."user" ' .
+			'FROM "users" AS "User" WHERE "User"."id" = 3';
+		$result = $this->Dbo->fetchRow($sql);
+
+		$expected = array(
+			'User' => array(
+				'id' => 3,
+				'user' => 'larry',
+			),
+		);
+		$this->assertEquals($expected, $result);
 	}
 
 }

@@ -1,3 +1,5 @@
+<% var role = passbolt.model.User.getCurrent().Role.name; %>
+<% if (role == 'admin') { %>
 <li>
 	<a id="js_user_wk_menu_creation_button" href="#" class="button">
 		<i class="icon create"></i>
@@ -16,18 +18,12 @@
 		<span><%= __('delete') %></span>
 	</a>
 </li>
-
 <li>
-	<div class="dropdown">
-		<a id="js_user_wk_menu_more_button" href="http://localhost/passbolt/demo/#" class="button todo">
+	<div class="dropdown" style="display: none">
+		<a id="js_user_wk_menu_more_button" href="#" class="button">
 			<span><%= __('more') %></span>
 			<i class="icon after arrowdown"></i>
 		</a>
-		<ul class="dropdown-content">
-			<li><a href="#">copy login to clipboard</a></li>
-			<li><a href="#">copy password to clipboard</a></li>
-			<li><a href="#">organize</a></li>
-			<li><a href="#">review logs</a></li>
-		</ul>
 	</div>
 </li>
+<% } %>

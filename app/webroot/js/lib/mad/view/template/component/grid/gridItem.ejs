@@ -2,10 +2,10 @@
 
 <% for (var i in columnModels) { %>
 
-	<td class="js_grid_column_<%= columnModels[i].name %> <%= columnModels[i].header.css.join(' ') %>">
-		<span>
+	<td class="js_grid_column_<%= columnModels[i].name %> cell_<%= columnModels[i].name %> <%= columnModels[i].header.css.join(' ') %>">
+		<div title="<%== titles[columnModels[i].name] %>">
 			<%== values[columnModels[i].name] %>
-		</span>
+		</div>
 	</td>
 
 <% } %>

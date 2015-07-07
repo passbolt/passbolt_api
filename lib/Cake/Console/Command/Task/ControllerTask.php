@@ -188,6 +188,7 @@ class ControllerTask extends BakeTask {
 				if (strtolower($wannaUseSession) === 'y') {
 					array_push($components, 'Session');
 				}
+				array_unique($components);
 			}
 		} else {
 			list($wannaBakeCrud, $wannaBakeAdminCrud) = $this->_askAboutMethods();
@@ -224,10 +225,10 @@ class ControllerTask extends BakeTask {
 /**
  * Confirm a to be baked controller with the user
  *
- * @param string $controllerName
- * @param string $useDynamicScaffold
- * @param array $helpers
- * @param array $components
+ * @param string $controllerName The name of the controller.
+ * @param string $useDynamicScaffold Whether or not to use dynamic scaffolds.
+ * @param array $helpers The list of helpers to include.
+ * @param array $components The list of components to include.
  * @return void
  */
 	public function confirmController($controllerName, $useDynamicScaffold, $helpers, $components) {
@@ -247,10 +248,10 @@ class ControllerTask extends BakeTask {
 		);
 
 		foreach ($properties as $var => $title) {
-			if (count($$var)) {
+			if (count(${$var})) {
 				$output = '';
-				$length = count($$var);
-				foreach ($$var as $i => $propElement) {
+				$length = count(${$var});
+				foreach (${$var} as $i => $propElement) {
 					if ($i != $length - 1) {
 						$output .= ucfirst($propElement) . ', ';
 					} else {
@@ -285,7 +286,7 @@ class ControllerTask extends BakeTask {
  *
  * @param string $controllerName Controller name
  * @param string $admin Admin route to use
- * @param boolean $wannaUseSession Set to true to use sessions, false otherwise
+ * @param bool $wannaUseSession Set to true to use sessions, false otherwise
  * @return string Baked actions
  */
 	public function bakeActions($controllerName, $admin = null, $wannaUseSession = true) {
@@ -451,14 +452,14 @@ class ControllerTask extends BakeTask {
 				return $this->_stop();
 			}
 
-			if (!$enteredController || intval($enteredController) > count($controllers)) {
+			if (!$enteredController || (int)$enteredController > count($controllers)) {
 				$this->err(__d('cake_console', "The Controller name you supplied was empty,\nor the number you selected was not an option. Please try again."));
 				$enteredController = '';
 			}
 		}
 
-		if (intval($enteredController) > 0 && intval($enteredController) <= count($controllers)) {
-			$controllerName = $controllers[intval($enteredController) - 1];
+		if ((int)$enteredController > 0 && (int)$enteredController <= count($controllers)) {
+			$controllerName = $controllers[(int)$enteredController - 1];
 		} else {
 			$controllerName = Inflector::camelize($enteredController);
 		}
@@ -466,37 +467,42 @@ class ControllerTask extends BakeTask {
 	}
 
 /**
- * get the option parser.
+ * Gets the option parser instance and configures it.
  *
- * @return void
+ * @return ConsoleOptionParser
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-		return $parser->description(
-				__d('cake_console', 'Bake a controller for a model. Using options you can bake public, admin or both.')
-			)->addArgument('name', array(
-				'help' => __d('cake_console', 'Name of the controller to bake. Can use Plugin.name to bake controllers into plugins.')
-			))->addOption('public', array(
-				'help' => __d('cake_console', 'Bake a controller with basic crud actions (index, view, add, edit, delete).'),
-				'boolean' => true
-			))->addOption('admin', array(
-				'help' => __d('cake_console', 'Bake a controller with crud actions for one of the Routing.prefixes.'),
-				'boolean' => true
-			))->addOption('plugin', array(
-				'short' => 'p',
-				'help' => __d('cake_console', 'Plugin to bake the controller into.')
-			))->addOption('connection', array(
-				'short' => 'c',
-				'help' => __d('cake_console', 'The connection the controller\'s model is on.')
-			))->addOption('theme', array(
-				'short' => 't',
-				'help' => __d('cake_console', 'Theme to use when baking code.')
-			))->addOption('force', array(
-				'short' => 'f',
-				'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
-			))->addSubcommand('all', array(
-				'help' => __d('cake_console', 'Bake all controllers with CRUD methods.')
-			))->epilog(__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.'));
+
+		$parser->description(
+			__d('cake_console', 'Bake a controller for a model. Using options you can bake public, admin or both.'
+		))->addArgument('name', array(
+			'help' => __d('cake_console', 'Name of the controller to bake. Can use Plugin.name to bake controllers into plugins.')
+		))->addOption('public', array(
+			'help' => __d('cake_console', 'Bake a controller with basic crud actions (index, view, add, edit, delete).'),
+			'boolean' => true
+		))->addOption('admin', array(
+			'help' => __d('cake_console', 'Bake a controller with crud actions for one of the Routing.prefixes.'),
+			'boolean' => true
+		))->addOption('plugin', array(
+			'short' => 'p',
+			'help' => __d('cake_console', 'Plugin to bake the controller into.')
+		))->addOption('connection', array(
+			'short' => 'c',
+			'help' => __d('cake_console', 'The connection the controller\'s model is on.')
+		))->addOption('theme', array(
+			'short' => 't',
+			'help' => __d('cake_console', 'Theme to use when baking code.')
+		))->addOption('force', array(
+			'short' => 'f',
+			'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
+		))->addSubcommand('all', array(
+			'help' => __d('cake_console', 'Bake all controllers with CRUD methods.')
+		))->epilog(
+			__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.')
+		);
+
+		return $parser;
 	}
 
 }

@@ -12,7 +12,16 @@ App::uses('AppTestCase', 'Test');
 
 class TagTest extends AppTestCase {
 
-	public $fixtures = array('app.tag', 'app.user', 'app.role', 'app.profile');
+	public $fixtures = array('app.tag',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgkey',
+		'app.groupsUser',
+		'app.group',
+		'core.cakeSession'
+	);
 
 	public $autoFixtures = true;
 
@@ -31,9 +40,9 @@ class TagTest extends AppTestCase {
  */
 	public function testFixtures() {
 		$t = $this->Tag->find('first', array('conditions' => array('name' => String::Uuid())));
-		$this->assertEqual(empty($t), true, 'Shouldnt find a tag that does not exist');
+		$this->assertEquals(empty($t), true, 'Shouldnt find a tag that does not exist');
 		$t = $this->Tag->find('first', array('conditions' => array('name' => 'facebook')));
-		$this->assertEqual(is_array($t), true, 'Facebook Tag should be present in the database');
+		$this->assertEquals(is_array($t), true, 'Facebook Tag should be present in the database');
 	}
 
 /**
@@ -83,7 +92,7 @@ class TagTest extends AppTestCase {
 			} else {
 				$msg = 'name with content "' . $testcase . '" should not be allowed';
 			}
-			$this->assertEqual($this->Tag->validates(array('fieldList' => array('name'))), $result, $msg);
+			$this->assertEquals($this->Tag->validates(array('fieldList' => array('name'))), $result, $msg);
 		}
 	}
 }

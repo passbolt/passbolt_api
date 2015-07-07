@@ -81,6 +81,9 @@ class TextHelper extends AppHelper {
 
 /**
  * Call methods from String utility class
+ *
+ * @param string $method Method to call.
+ * @param array $params Parameters to pass to method.
  * @return mixed Whatever is returned by called method, or false on failure
  */
 	public function __call($method, $params) {
@@ -104,14 +107,14 @@ class TextHelper extends AppHelper {
 		$this->_placeholders = array();
 		$options += array('escape' => true);
 
-		$pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-:]+(?:[/?][^\s<]*)?)#ui';
+		$pattern = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-_:]+(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))#i';
 		$text = preg_replace_callback(
 			$pattern,
 			array(&$this, '_insertPlaceHolder'),
 			$text
 		);
 		$text = preg_replace_callback(
-			'#(?<!href="|">)(?<!\b[[:punct:]])(?<!http://|https://|ftp://|nntp://)www.[^\n\%\ <]+[^<\n\%\,\.\ <](?<!\))#i',
+			'#(?<!href="|">)(?<!\b[[:punct:]])(?<!http://|https://|ftp://|nntp://|//)www\.[^\n\%\ <]+[^<\n\%\,\.\ <](?<!\))#i',
 			array(&$this, '_insertPlaceHolder'),
 			$text
 		);
@@ -187,7 +190,7 @@ class TextHelper extends AppHelper {
 
 		$atom = '[\p{L}0-9!#$%&\'*+\/=?^_`{|}~-]';
 		$text = preg_replace_callback(
-			'/(?<=\s|^|\()(' . $atom . '*(?:\.' . $atom . '+)*@[\p{L}0-9-]+(?:\.[\p{L}0-9-]+)+)/ui',
+			'/(?<=\s|^|\(|\>|\;)(' . $atom . '*(?:\.' . $atom . '+)*@[\p{L}0-9-]+(?:\.[\p{L}0-9-]+)+)/ui',
 			array(&$this, '_insertPlaceholder'),
 			$text
 		);
@@ -218,12 +221,11 @@ class TextHelper extends AppHelper {
  * Highlights a given phrase in a text. You can specify any expression in highlighter that
  * may include the \1 expression to include the $phrase found.
  *
- * @see String::highlight()
- *
  * @param string $text Text to search the phrase in
  * @param string $phrase The phrase that will be searched
  * @param array $options An array of html attributes and options.
  * @return string The highlighted text
+ * @see String::highlight()
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::highlight
  */
 	public function highlight($text, $phrase, $options = array()) {
@@ -256,14 +258,36 @@ class TextHelper extends AppHelper {
 /**
  * Strips given text of all links (<a href=....)
  *
- * @see String::stripLinks()
- *
  * @param string $text Text
  * @return string The text without links
+ * @see String::stripLinks()
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::stripLinks
  */
 	public function stripLinks($text) {
 		return $this->_engine->stripLinks($text);
+	}
+
+/**
+ * Truncates text.
+ *
+ * Cuts a string to the length of $length and replaces the last characters
+ * with the ellipsis if the text is longer than length.
+ *
+ * ### Options:
+ *
+ * - `ellipsis` Will be used as Ending and appended to the trimmed string (`ending` is deprecated)
+ * - `exact` If false, $text will not be cut mid-word
+ * - `html` If true, HTML tags would be handled correctly
+ *
+ * @param string $text String to truncate.
+ * @param int $length Length of returned string, including ellipsis.
+ * @param array $options An array of html attributes and options.
+ * @return string Trimmed string.
+ * @see String::truncate()
+ * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::truncate
+ */
+	public function truncate($text, $length = 100, $options = array()) {
+		return $this->_engine->truncate($text, $length, $options);
 	}
 
 /**
@@ -277,29 +301,27 @@ class TextHelper extends AppHelper {
  * - `ellipsis` Will be used as Beginning and prepended to the trimmed string
  * - `exact` If false, $text will not be cut mid-word
  *
- * @see String::truncate()
- *
  * @param string $text String to truncate.
- * @param integer $length Length of returned string, including ellipsis.
+ * @param int $length Length of returned string, including ellipsis.
  * @param array $options An array of html attributes and options.
  * @return string Trimmed string.
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::truncate
+ * @see String::tail()
+ * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::tail
  */
-	public function truncate($text, $length = 100, $options = array()) {
-		return $this->_engine->truncate($text, $length, $options);
+	public function tail($text, $length = 100, $options = array()) {
+		return $this->_engine->tail($text, $length, $options);
 	}
 
 /**
  * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
  * determined by radius.
  *
- * @see String::excerpt()
- *
  * @param string $text String to search the phrase in
  * @param string $phrase Phrase that will be searched for
- * @param integer $radius The amount of characters that will be returned on each side of the founded phrase
+ * @param int $radius The amount of characters that will be returned on each side of the founded phrase
  * @param string $ending Ending that will be appended
  * @return string Modified string
+ * @see String::excerpt()
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::excerpt
  */
 	public function excerpt($text, $phrase, $radius = 100, $ending = '...') {
@@ -307,17 +329,16 @@ class TextHelper extends AppHelper {
 	}
 
 /**
- * Creates a comma separated list where the last two items are joined with 'and', forming natural English
+ * Creates a comma separated list where the last two items are joined with 'and', forming natural language.
  *
- * @see String::toList()
- *
- * @param array $list The list to be joined
- * @param string $and The word used to join the last and second last items together with. Defaults to 'and'
- * @param string $separator The separator used to join all the other items together. Defaults to ', '
+ * @param array $list The list to be joined.
+ * @param string $and The word used to join the last and second last items together with. Defaults to 'and'.
+ * @param string $separator The separator used to join all the other items together. Defaults to ', '.
  * @return string The glued together string.
+ * @see String::toList()
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::toList
  */
-	public function toList($list, $and = 'and', $separator = ', ') {
+	public function toList($list, $and = null, $separator = ', ') {
 		return $this->_engine->toList($list, $and, $separator);
 	}
 

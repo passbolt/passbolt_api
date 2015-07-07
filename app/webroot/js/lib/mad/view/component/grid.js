@@ -85,6 +85,8 @@ steal(
 				mappedItem = this.getController().getMap().mapObject(item),
 				// the cells data (columnName -> value)
 				values = [],
+				// the cells titles data (columnName -> value)
+				titles = [],
 				// the grid column models
 				columnModels = this.getController().getColumnModel();
 
@@ -93,11 +95,13 @@ steal(
 				// the column model which describe the current column
 				var columnModel = columnModels[i],
 					// the cell value
-					cellValue = null;
+					cellValue = null,
+					// the cell title value
+					titleValue = null;
 
 				// A column adapater is provided, use it to adapt the cell value
 				if(columnModel.valueAdapter) {
-					cellValue = columnModel.valueAdapter(mappedItem[columnModel.name], mappedItem, columnModel);
+					cellValue = columnModel.valueAdapter(mappedItem[columnModel.name], mappedItem, item, columnModel);
 				} else if(columnModel.widget || columnModel.cellAdapter) {
 					// A widget will take care of the cell rendering
 					cellValue = '';
@@ -107,16 +111,26 @@ steal(
 				}
 				
 				values[columnModel.name] = cellValue;
+
+				// A column title adapter is provided, use it to adapt the title value
+				if(columnModel.titleAdapter) {
+					titleValue = columnModel.titleAdapter(mappedItem[columnModel.name], mappedItem, item, columnModel);
+				} else {
+					titleValue = cellValue;
+				}
+
+				titles[columnModel.name] = titleValue;
 			}
-			
+
 			// render the row item
 			returnValue = mad.view.View.render(this.getController().options.itemTemplateUri, {
 				'item': item,
 				'id': mappedItem.id,
-				'columnModels': columnModels, 
-				'values': values
+				'columnModels': columnModels,
+				'values': values,
+				'titles': titles
 			});
-			
+
 			return returnValue;
 		},
 
@@ -178,6 +192,7 @@ steal(
 		 */
 		'tbody tr click': function (el, ev) {
 			var data = null;
+
 			if (this.getController().getItemClass()) {
 				data = el.data(this.getController().getItemClass().fullName);
 			} else {

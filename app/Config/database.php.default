@@ -50,6 +50,10 @@
  * For MySQL, Postgres specifies the character encoding to use when connecting to the
  * database. Uses database default not specified.
  *
+ * sslmode =>
+ * For Postgres specifies whether to 'disable', 'allow', 'prefer', or 'require' SSL for the 
+ * connection. The default value is 'allow'.
+ *
  * unix_socket =>
  * For MySQL to connect via socket specify the `unix_socket` parameter instead of `host` and `port`
  *
@@ -58,6 +62,9 @@
  * For MySQL : http://dev.mysql.com/doc/refman/5.6/en/set-statement.html
  * For Postgres : http://www.postgresql.org/docs/9.2/static/sql-set.html
  * For Sql Server : http://msdn.microsoft.com/en-us/library/ms190356.aspx
+ *
+ * flags =>
+ * A key/value array of driver specific connection options.
  */
 class DATABASE_CONFIG {
 

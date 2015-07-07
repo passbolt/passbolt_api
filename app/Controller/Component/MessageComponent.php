@@ -1,13 +1,12 @@
 <?php
 /**
  * Message Component
- * This class replace $session->flash and offers more functionalities to qualify
- * the messages that will be displayed to the user or returned as part of the JSON response
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.MessageComponent
- * @since        version 2.12.7
+ * This class replace cake flash method. It offers options to qualify the end-user messages (e.g. an error, warning, etc.)
+ * But more importantly this component is also used to format the JSON API responses
+ *
+ * @copyright 	(c) 2015-present Passbolt.com
+ * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
  */
 
 // Translation
@@ -17,6 +16,9 @@ __('Warning', true);
 __('Success', true);
 __('Debug', true);
 
+/**
+ * Class Message constants
+ */
 class Message {
 	const ERROR = 'error';
 	const SUCCESS = 'success';
@@ -25,41 +27,56 @@ class Message {
 	const DEBUG = 'debug';
 }
 
+/**
+ * Class MessageComponent
+ */
 class MessageComponent extends Component {
 
-	// key used to store messages in controller/view data
+/**
+ * @var string $controllerVar key used to store messages in controller/view data
+ */
 	public $controllerVar = 'json';
 
-	// key used to store message in sessions
+/**
+ * @var string key used to store message in sessions
+ */
 	public $sessionKey = 'Messages';
 
-	// controller shortcut
+/**
+ * @var controller $Controller convenience reference to the parent controller
+ */
 	public $Controller;
 
-	// session component shortcut
+/**
+ * @var cakeSession convenience reference
+ */
 	public $Session;
 
-	// message queue
+/**
+ * @var array $message queue of messages
+ */
 	public $messages;
 
-	// redirect to referer? (for actions without views)
+/**
+ * @var bool $autoRedirect true if referer redirection is needed. Default false
+ * 	Such redirection is usefull for displaying messages when one action do not have a view
+ */
 	public $autoRedirect = false;
 
 /**
  * Initialize
- *
- * @param object $controller Controller using this component
- * @return boolean Proceed with component usage (true), or fail (false)
+ * @param Controller $controller
+ * @param array $settings
+ * @return bool status, proceed with component usage (true), or fail (false)
  * @throws exception is Session component is missing
- * @access public
  */
 	public function initialize(Controller $controller, $settings = array()) {
 		$this->Controller = $controller;
 		if (!isset($this->Controller->Session)) {
-			throw new exception('Session component not found (Message::initilize)');
+			throw new exception('Session component not found (Message::initialize)');
 		}
 		// get an existing message from the session if any
-		// this is used to display messages after a redirection
+		// this is used to gather and display queued messages after a redirection
 		$this->Session = $controller->Session;
 		if ($this->Session->check($this->sessionKey)) {
 			$this->messages = $this->Session->read($this->sessionKey);
@@ -71,31 +88,27 @@ class MessageComponent extends Component {
 	}
 
 /**
- * Reset the message component.
- * @return {void}
+ * Reset the message component by flushing any messages
  */
 	public function reset() {
 		unset($this->messages);
 		$this->messages = array();
 	}
 
-	/**
- * Add an error message in the message queue. And throw an HttpException to deliver the error
- * to the client.
- *
- * @param string $message
+/**
+ * Add an error message in the message queue and optionally throws exception
+ * @param string $message title
  * @param array $options
- * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
- * to redirect to the controler referer
- * @param integer $options ['code'] the code to use as http status code
- * @param boolean $options ['throw'] throw of not an Http Exception, by default true
- * @return void
- * @access public
+ * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ * 		integer $options['code'] the code to use as http status code
+ *		boolean $options['throw'] throw of not an Http Exception, by default true
+ * 		string $options['body'] additional message information, usually in json format
+ * @throws HttpException to deliver the error to the client
  */
 	public function error($message, $options = array()) {
 		$this->__add(Message::ERROR, $message, $options);
 
-		// If we throw an http exception
+		// We throw an exception unless specifically requested otherwise
 		if (!isset($options['throw']) || (isset($options['throw']) && $options['throw'] === true)) {
 			$code = 400;
 			if (isset($options['code'])) {
@@ -109,9 +122,9 @@ class MessageComponent extends Component {
  * Add a warning message to the queue
  *
  * @param string $message
- * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
- * to redirect to the controler referer
- * @access public
+ * @param array $options
+ * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ * 		string $options['body'] additional message information, usually in json format
  */
 	public function warning($message, $options = array()) {
 		$this->__add(Message::WARNING, $message, $options);
@@ -120,22 +133,22 @@ class MessageComponent extends Component {
 /**
  * Add a debug message to the queue
  *
- * @param string $message
- * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
- * to redirect to the controler referer
- * @access public
+ * @param string $message title
+ * @param array $options
+ * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ * 		string $options['body'] additional message information, usually in json format
  */
 	public function debug($message, $options = array()) {
 		$this->__add(Message::DEBUG, $message, $options);
 	}
 
 /**
- * Add a notice/info message to the queue
+ * Add a notice message to the queue
  *
- * @param string $message
- * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
- * to redirect to the controler referer
- * @access public
+ * @param string $message title
+ * @param array $options
+ * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ * 		string $options['body'] additional message information, usually in json format
  */
 	public function notice($message, $options = array()) {
 		$this->__add(Message::NOTICE, $message, $options);
@@ -144,10 +157,10 @@ class MessageComponent extends Component {
 /**
  * Add a success message to the queue
  *
- * @param string $message
- * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
- * to redirect to the controler referer
- * @access public
+ * @param string $message title (optional)
+ * @param array $options
+ * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ * 		string $options['body'] additional message information
  */
 	public function success($message = '', $options = array()) {
 		$this->__add(Message::SUCCESS, $message, $options);
@@ -156,10 +169,11 @@ class MessageComponent extends Component {
 /**
  * Add a message to the queue
  *
- * @param mixed $message
- * @param string $type {error, notice, etc.}
- * @param mixed $options ['redirect'] url(s), string or array to redirect to, or boolean if true
- * to redirect to the controler referer
+ * @param string $type error|notice|warning|success
+ * @param string $message title (optional)
+ * @param array $options
+ * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ * 		string $options['body'] additional message information, usually in json format
  * @access private
  */
 	private function __add($type = Message::ERROR, $message = null, $options = null) {
@@ -175,8 +189,9 @@ class MessageComponent extends Component {
 		$response['header'] = array(
 			// UUID is predictable
 			'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
-			'status' => ((empty($code)) ? $type : $type . ' ' . $code),
+			'status' => $type,
 			'title' => $title,
+			'servertime' => time(),
 			'message' => $message,
 			'controller' => $this->Controller->name,
 			'action' => $this->Controller->action
@@ -213,9 +228,9 @@ class MessageComponent extends Component {
 	}
 
 /**
- * Set body to the last message set
+ * Set the body of the last message in the queue
  *
- * @param text /json $body the content to append. Usually in json format
+ * @param string $body the content to append, usually in json format
  * @return bool true if success
  * @access public
  */
@@ -229,38 +244,43 @@ class MessageComponent extends Component {
 	}
 
 /**
- * Before redirect callback
+ * Called before Controller::redirect()
+ *		Save pending messages in session to allow a display after a redirect
  *
- * @param object $controller
- * @param mixed $url
- * @param string $status
- * @param bool $exit
- * @return void
- * @access public
+ * @param Controller $controller
+ * @param string|array $url Either the string or URL array that is being redirected to.
+ * @param integer $status The status code of the redirect
+ * @param boolean $exit Will the script exit.
+ * @return array|void Either an array or null.
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRedirect
  */
 	public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true) {
-		// save pending messages in session to display next
 		if (isset($this->messages) && !empty($this->messages)) {
 			$this->Session->write($this->sessionKey, $this->messages);
 		}
 	}
 
 /**
- * Before render callback
+ * Called before the Controller::beforeRender()
  *
- * @param object $controller
+ * @param Controller $controller Controller with components to beforeRender
  * @return void
- * @access public
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRender
  */
 	public function beforeRender(Controller $controller) {
-		// In case where the body will be updated between the call of the messageComponent function (success or whatever)
-		// and the moment the view is rendered
+		// We set the body with the view data in case the body will be updated
+		// between the moment messageComponent::__add is called and the view is rendered
+		// @todo why? instructions not clear / potentially too much data
 		if (isset($this->Controller->viewVars['data'])) {
 			$this->setBody($this->Controller->viewVars['data']);
 		}
-		// As messages are saved into session, pop the messages array and respond to the client with the last one
-		$message = array_pop($this->messages);
-		$this->Controller->set($this->controllerVar, $message);
+		// As messages are saved into session, pop the last message from the queue
+		// and set it in case it needs to be used in the view
+		// @todo why only the last one?
+		if(!empty($this->messages)) {
+			$message = array_pop($this->messages);
+			$this->Controller->set($this->controllerVar, $message);
+		}
 	}
 
 }

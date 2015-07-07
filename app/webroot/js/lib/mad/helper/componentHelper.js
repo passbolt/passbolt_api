@@ -23,9 +23,15 @@ steal(
 				// the rendered html
 				html = '',
 				// the component id
-				id = (options.id || ''),
-				// attributes to add to the tag
-				attributes = $.extend({}, Clazz.defaults.attributes, options.attributes);
+				id = (options.id || '');
+
+			// class attributes options.
+			var classAttributes = {};
+			if (typeof Clazz.defaults.attributes != 'undefined') {
+				classAttributes = Clazz.defaults.attributes;
+			}
+			// attributes to add to the tag
+			var attributes = $.extend({}, classAttributes, options.attributes);
 
 			if (refElement.length == 0) {
 				throw new mad.error.WrongParametersException('refElement');

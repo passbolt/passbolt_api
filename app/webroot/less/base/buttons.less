@@ -1,0 +1,209 @@
+/*
+	Generic button
+
+	Description	: We support <input[submit]>, <input.button>, <button> and <a.button>
+	Compatible	 : IE6+, Firefox 2+, Safari 4+, Chrome 1+, Opera 11+
+	Since				: version 3.0
+
+	:hover			 - Subtle hover highlight and box shadow
+	:active			- Inset box shadow and 1px offset
+	.disabled		- Dims the button to indicate it cannot be used
+*/
+input[type=submit],
+input.button,
+button,
+a.button {
+	position:relative;
+	font-size:100%;
+	display: inline-block;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	*display: inline;
+	vertical-align: baseline;
+	margin: 0 2px;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	padding: .5em 1.5em .5em 1.5em;
+	border:1px solid @border-2;
+	color:@font-default;
+	font-weight:bold;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+	-webkit-border-radius: .25em; 
+	-moz-border-radius: .25em;
+	border-radius: .25em;
+	.background-gradient();
+}
+
+/* size and position adjustments */
+.submit {
+	display: inline-block; /* in case there is a div wrapper */
+}
+a.button {
+	font-size:0.875em;	 /*	14px */
+	padding: .429em 1.286em .429em 1.286em ; /* 6px 20px */
+	height:1.429em;
+	margin-right:.5em;
+	-webkit-border-radius: .286em; 
+	-moz-border-radius: .286em;
+	border-radius: .286em;
+}
+a.button.big {
+	font-size:1em;
+	height:1.5em;
+	margin-top:1em;
+	min-width:3em;
+}
+input.button.primary,
+button.primary,
+a.button.primary {
+	background:@blue;
+	border:1px solid @blue;
+	color:#FFF;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+input.button.primary:hover,
+button.primary:hover,
+a.button.primary:hover,
+input.button.primary:active,
+button.primary:active,
+a.button.primary:active {
+	border:1px solid @blue-light;
+	background:@blue-light;
+}
+
+input.button.primary:focus,
+button.primary:focus,
+a.button.primary:focus {
+	border:1px solid @blue;
+	background:@blue-light;
+}
+
+a.button.cancel,
+a.button.cancel:focus,
+a.button.cancel:hover,
+a.button.cancel:active,
+a.button.dim,
+a.button.dim:focus,
+a.button.dim:hover,
+a.button.dim:active {
+	background:@background-default;
+	font-weight: normal;
+}
+
+/* hover */
+input[type=submit]:hover,
+input.button:hover,
+button:hover,
+a.button:hover {
+	text-decoration: none;
+	.background-gradient();
+	border:1px solid @border-3;
+}
+
+/* focus */
+input[type=submit]:focus,
+input.button:focus,
+button:focus,
+a.button:focus {
+	border:1px solid @blue;
+}
+
+/* active */
+input[type=submit]:active,
+input.button:active,
+button:active,
+a.button:active {
+	background:#ededed;
+	position: relative;
+	-webkit-box-shadow: inset 0 1px 2px rgba(255,255,255,.2);
+	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+	border:1px solid @border-2;
+}
+input[type=submit].disabled,
+input.button.disabled,
+button.disabled,
+a.button.disabled {
+	cursor:default;
+	color:@grey-darker;
+	background:@white;
+	border:1px solid @border-default;
+}
+
+/* inactive */
+input[type=submit].disabled:hover,
+input.button.disabled:hover,
+button.disabled:hover,
+a.button.disabled:hover,
+input[type=submit].disabled:active,
+input.button.disabled:active,
+button.disabled:active,
+a.button.disabled:active,
+input[type=submit].disabled:focus,
+input.button.disabled:focus,
+button.disabled:focus,
+a.button.disabled:focus {
+	-webkit-box-shadow:0 0 0;
+	-moz-box-shadow:0 0 0;
+	box-shadow:0 0 0;
+	top:0;
+	background:@white;
+	border:1px solid @border-default;
+}
+
+/* toggle selected */
+.toggle.button.selected {
+	background:#E0E0E0;
+	-webkit-box-shadow: inset 0 1px 2px rgba(255,255,255,.2);
+	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+	border:1px solid @border-3;
+}
+
+/* duo */
+
+.duo-wrapper {
+	.clearfix();
+	.button {
+		float:left;
+	}
+}
+.button.duo:nth-child(1) {
+	margin-right:0;
+	-webkit-border-top-right-radius: 0;
+	-webkit-border-bottom-right-radius:0;
+	-moz-border-radius-topright:0;
+	-moz-border-radius-bottomright:0;
+	border-top-right-radius:0;
+	border-bottom-right-radius:0;
+}
+.button.duo:nth-child(2) {
+	margin-left:0;
+	border-left:0;
+	-webkit-border-top-left-radius: 0;
+	-webkit-border-bottom-left-radius:0;
+	-moz-border-radius-topleft:0;
+	-moz-border-radius-bottomleft:0;
+	border-top-left-radius:0;
+	border-bottom-left-radius:0;
+}
+
+/* processing state */
+html body .button.processing {
+	background:@background-default;
+	border:1px solid @background-default;
+}
+.button.processing:after {
+	line-height:2.25em;
+	width:100%;
+	height:100%;
+	position:absolute;
+	content:" ";
+	top:-2px;
+	left:-2px;
+	background:#FFF url('@{images}/controls/loading.gif') center center no-repeat;
+	border:1px solid #CCC;
+	border-radius: 5px;
+	padding:1px;
+}

@@ -86,19 +86,6 @@ steal(
 				returnValue = this._components[componentId];
 			}
 			return returnValue;
-		},
-
-		/* ************************************************************** */
-		/* LISTEN TO THE STATE CHANGES */
-		/* ************************************************************** */
-
-		/**
-		 * The application is ready.
-		 * @param {boolean} go Enter or leave the state
-		 * @return {void}
-		 */
-		'stateReady': function (go) {
-			mad.bus.trigger('app_ready');
 		}
 
 	});

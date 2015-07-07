@@ -36,7 +36,6 @@ require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Ex
  * API and DOC Plugins
  */
 if (Configure::read('debug') > 1) {
-	CakePlugin::load('ApiGenerator');
 	CakePlugin::load('DataExtras');
 }
 
@@ -44,6 +43,26 @@ if (Configure::read('debug') > 1) {
  * Html purifier.
  */
 CakePlugin::load('HtmlPurifier', array('bootstrap' => true));
+
+/**
+ * Imagine plugin for the image manipulation.
+ */
+CakePlugin::load('Imagine', array(
+	'bootstrap' => true
+));
+
+/**
+ * File storage plugin for file manipulation.
+ */
+CakePlugin::load('FileStorage', array(
+	'bootstrap' => true
+));
+CakePlugin::load('Imagine', array(
+	'bootstrap' => true
+));
+CakePlugin::load('EmailQueue');
+
+require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
@@ -92,6 +111,12 @@ CakePlugin::load('HtmlPurifier', array('bootstrap' => true));
 
 
 /**
+ * To prefer app translation over plugin translation, you can set
+ *
+ * Configure::write('I18n.preferApp', true);
+ */
+
+/**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter. By default CakePHP bundles two filters:
  *
  * - AssetDispatcher filter will serve your asset files (css, images, js, etc) from your themes and plugins
@@ -101,8 +126,9 @@ CakePlugin::load('HtmlPurifier', array('bootstrap' => true));
  *
  * Configure::write('Dispatcher.filters', array(
  *		'MyCacheFilter', //  will use MyCacheFilter class from the Routing/Filter package in your app.
+ *		'MyCacheFilter' => array('prefix' => 'my_cache_'), //  will use MyCacheFilter class from the Routing/Filter package in your app with settings array.
  *		'MyPlugin.MyFilter', // will use MyFilter class from the Routing/Filter package in MyPlugin plugin.
- * 		array('callable' => $aFunction, 'on' => 'before', 'priority' => 9), // A valid PHP callback type to be called on beforeDispatch
+ *		array('callable' => $aFunction, 'on' => 'before', 'priority' => 9), // A valid PHP callback type to be called on beforeDispatch
  *		array('callable' => $anotherMethod, 'on' => 'after'), // A valid PHP callback type to be called on afterDispatch
  *
  * ));
@@ -131,3 +157,9 @@ CakeLog::config('error', array(
  * Load our custom Exception renderer
  */
 App::uses('AppExceptionRenderer', 'Lib/Error');
+
+/**
+ * Testsuite
+ */
+require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+

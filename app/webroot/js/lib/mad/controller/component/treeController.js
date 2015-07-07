@@ -1,5 +1,4 @@
 steal(
-	'jquery/controller',
 	'mad/controller/componentController.js',
 	'mad/view/component/tree.js',
 	'mad/object/map.js',
@@ -40,14 +39,16 @@ steal(
 			'templateBased': false,
 			'cssClasses': ['tree'],
 
-			// the itemClass which represents the items managed by the component
+			// items carried by the component
+			'items': new can.Model.List(),
+			// the itemClass which represents the items carried by the component
 			'itemClass': null,
 			// the associated map, which will be used to map the model data to the
 		    // expected view format
 			'map': null,
 			// the top tag of the tree
 			'tag': 'ul',
-			// callbacks associated to the events which could occured
+			// callbacks associated to the events which could occurred
 			'callbacks': {
 				'item_selected': null,
 				'item_right_selected': null,
@@ -56,6 +57,11 @@ steal(
 		}
 
 	}, /** @prototype */ {
+
+        'init': function(el, opts) {
+            opts.items = new opts.itemClass.List();
+            this._super(el, opts);
+        },
 
 		/**
 		 * Insert an item in the tree
@@ -87,10 +93,28 @@ steal(
 		},
 
 		/**
+		 * Refresh item
+		 * @param {mad.model.Model} item The item to refresh
+		 * @return {void}
+		 */
+		'refreshItem': function (item) {
+			if (this.getItemClass() == null) {
+				throw new mad.error.Exception('The associated itemClass can not be null');
+			}
+			if (!(item instanceof this.getItemClass())) {
+				throw new mad.error.WrongParametersException('item', this.getItemClass().fullName);
+			}
+			this.view.refreshItem(item);
+		},
+
+		/**
 		 * Reset the component by removing all items
 		 * @return {void}
 		 */
 		'reset': function () {
+			// Remove all the items from the list.
+			this.options.items.splice(0);
+			// Reset the view
 			this.view.reset();
 		},
 
@@ -101,7 +125,20 @@ steal(
 		 */
 		'load': function (items) {
 			var self = this;
-			can.each(items, function (item, i) {
+
+			// If the provided items is null, treat them as empty.
+			if (items == null) {
+				items = new this.options.itemClass.List();
+			}
+			// If the provided items are not a List but an array, transform them.
+			else if (!(items instanceof can.Model.List) && $.isArray(items)) {
+				items = new this.options.itemClass.List(items);
+			}
+
+			// Add the new items to the list of watched items.
+			this.options.items = this.options.items.concat(items);
+			// Insert the items to the component.
+			can.each(this.options.items, function (item, i) {
 				self.insertItem(item);
 			});
 		},
@@ -142,6 +179,45 @@ steal(
 			this.options.map = map;
 		},
 
+		/**
+		 * Select the given item.
+		 * @param {item}
+		 */
+		'selectItem': function (item) {
+			this.view.selectItem(item);
+		},
+
+		/**
+		 * Right select the given item.
+		 * @param {item}
+		 */
+		'rightSelectItem': function (item) {
+			this.view.rightSelectItem(item);
+		},
+
+		/**
+		 * Unselect the given item.
+		 * @param {item}
+		 */
+		'unselectItem': function (item) {
+			this.view.unselectAll();
+		},
+
+		/**
+		 * Unselect all.
+		 */
+		'unselectAll': function () {
+			this.view.unselectAll();
+		},
+
+		/**
+		 * Hover the given item.
+		 * @param {item}
+		 */
+		'hoverItem': function (item) {
+			this.view.hoverItem(item);
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE VIEW EVENTS */
 		/* ************************************************************** */
@@ -155,6 +231,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_selected': function (el, ev, item, srcEvent) {
+			this.selectItem(item);
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemSelected) {
 				this.options.callbacks.itemSelected(el, ev, item, srcEvent);
@@ -170,6 +247,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_right_selected': function (el, ev, item, srcEvent) {
+			this.rightSelectItem(item);
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemRightSelected) {
 				this.options.callbacks.itemRightSelected(el, ev, item, srcEvent);
@@ -185,6 +263,7 @@ steal(
 		 * @return {void}
 		 */
 		' item_hovered': function (el, ev, item, srcEvent) {
+			this.hoverItem(item);
 			// override this function, call _super if you want the default behavior processed
 			if (this.options.callbacks.itemHovered) {
 				this.options.callbacks.itemHovered(el, ev, item, srcEvent);

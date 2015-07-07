@@ -152,7 +152,7 @@ steal(
 		'destroy' : function (id, success, error) {
 			var params = {id:id};
 			return mad.net.Ajax.request({
-				url: APP_URL + 'permissions/{id}',
+				url: APP_URL + 'permissions/{id}.json',
 				type: 'DELETE',
 				params: params,
 				success: success,
@@ -184,7 +184,7 @@ steal(
 			});
 		},
 
-		'update' : function(id, attrs, success, error) {
+		'update': function(id, attrs, success, error) {
 			var self = this;
 			// remove not desired attributes
 			delete attrs.created;
@@ -197,6 +197,26 @@ steal(
 				url: APP_URL + '/permissions/{id}',
 				type: 'PUT',
 				params: params,
+				success: success,
+				error: error
+			}).pipe(function (data, textStatus, jqXHR) {
+				// pipe the result to convert cakephp response format into can format
+				var def = $.Deferred();
+				def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+				return def;
+			});
+		},
+
+		'share': function(aco, acoForeignKey, attrs, success, error) {
+			var self = this;
+			// format data as expected by cakePHP
+			//var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+			// add the root of the params, it will be used in the url template
+			//params.id = id;
+			return mad.net.Ajax.request({
+				url: APP_URL + 'share/' + aco + '/' + acoForeignKey + '.json',
+				type: 'PUT',
+				params: attrs,
 				success: success,
 				error: error
 			}).pipe(function (data, textStatus, jqXHR) {
@@ -264,8 +284,9 @@ steal(
 		 */
 		'isDirect': function(acoInstance) {
 			var permAcoModel = can.getObject('passbolt.model.' + this.aco);
-			if(acoInstance instanceof permAcoModel && acoInstance.id === this.aco_foreign_key)
+			if(acoInstance instanceof permAcoModel && acoInstance.id === this.aco_foreign_key) {
 				return true;
+			}
 			return false;
 		}
 	});

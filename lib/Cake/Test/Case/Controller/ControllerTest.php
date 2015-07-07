@@ -74,7 +74,7 @@ class ControllerPost extends CakeTestModel {
 /**
  * lastQuery property
  *
- * @var mixed null
+ * @var mixed
  */
 	public $lastQuery = null;
 
@@ -605,7 +605,6 @@ class ControllerTest extends CakeTestCase {
 
 		$Controller->set('title', 'someTitle');
 		$this->assertSame($Controller->viewVars['title'], 'someTitle');
-		$this->assertTrue(empty($Controller->pageTitle));
 
 		$Controller->viewVars = array();
 		$expected = array('ModelName' => 'name', 'ModelName2' => 'name2');
@@ -1030,6 +1029,30 @@ class ControllerTest extends CakeTestCase {
 		$Controller = new Controller(null);
 		$result = $Controller->referer();
 		$this->assertEquals('/', $result);
+	}
+
+/**
+ * Test that the referer is not absolute if it is '/'.
+ *
+ * This avoids the base path being applied twice on string urls.
+ *
+ * @return void
+ */
+	public function testRefererSlash() {
+		$request = $this->getMock('CakeRequest', array('referer'));
+		$request->base = '/base';
+		$request->expects($this->any())
+			->method('referer')
+			->will($this->returnValue('/'));
+		Router::setRequestInfo($request);
+
+		$controller = new Controller($request);
+		$result = $controller->referer('/', true);
+		$this->assertEquals('/', $result);
+
+		$controller = new Controller($request);
+		$result = $controller->referer('/some/path', true);
+		$this->assertEquals('/base/some/path', $result);
 	}
 
 /**

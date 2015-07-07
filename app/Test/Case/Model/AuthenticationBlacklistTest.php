@@ -38,7 +38,7 @@ class AuthenticationBlacklistTest extends CakeTestCase {
 			$this->AuthenticationBlacklist->set($ab);
 			if($result) $msg = 'validation of the ip with ' . $testcase . ' should validate';
 			else $msg = 'validation of the ip with ' . $testcase . ' should not validate';
-			$this->assertEqual($this->AuthenticationBlacklist->validates(array('fieldList' => array('ip'))), $result, $msg);
+			$this->assertEquals($this->AuthenticationBlacklist->validates(array('fieldList' => array('ip'))), $result, $msg);
 		}
 	}
 }

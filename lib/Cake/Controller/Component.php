@@ -1,7 +1,5 @@
 <?php
 /**
- *
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -92,7 +90,7 @@ class Component extends Object {
  */
 	public function __get($name) {
 		if (isset($this->_componentMap[$name]) && !isset($this->{$name})) {
-			$settings = array_merge((array)$this->_componentMap[$name]['settings'], array('enabled' => false));
+			$settings = array('enabled' => false) + (array)$this->_componentMap[$name]['settings'];
 			$this->{$name} = $this->_Collection->load($this->_componentMap[$name]['class'], $settings);
 		}
 		if (isset($this->{$name})) {
@@ -155,8 +153,8 @@ class Component extends Object {
  *
  * @param Controller $controller Controller with components to beforeRedirect
  * @param string|array $url Either the string or URL array that is being redirected to.
- * @param integer $status The status code of the redirect
- * @param boolean $exit Will the script exit.
+ * @param int $status The status code of the redirect
+ * @param bool $exit Will the script exit.
  * @return array|void Either an array or null.
  * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRedirect
  */

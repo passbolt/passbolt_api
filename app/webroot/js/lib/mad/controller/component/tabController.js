@@ -38,6 +38,9 @@ steal(
 			this.enabledId = null;
 
 			this._super(el, opts);
+
+			// Set the view vars.
+			this.setViewData('autoMenu', this.options.autoMenu);
 		},
 
 		/**

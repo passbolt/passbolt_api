@@ -24,6 +24,8 @@ class GroupUserTest extends CakeTestCase {
 		'app.role',
 		'app.group',
 		'app.groups_user',
+		'app.gpgkey',
+		'core.cakeSession'
 	);
 
 	public function setUp() {
@@ -63,7 +65,7 @@ class GroupUserTest extends CakeTestCase {
 			if (!$validation) {
 				$msg .= print_r($this->GroupUser->invalidFields(), true);
 			}
-			$this->assertEqual($validation, $result, "$msg");
+			$this->assertEquals($validation, $result, "$msg");
 		}
 	}
 
@@ -97,7 +99,7 @@ class GroupUserTest extends CakeTestCase {
 			if (!$validation) {
 				$msg .= print_r($this->GroupUser->invalidFields(), true);
 			}
-			$this->assertEqual($validation, $result, $msg);
+			$this->assertEquals($validation, $result, $msg);
 		}
 	}
 
@@ -112,7 +114,7 @@ class GroupUserTest extends CakeTestCase {
 		$this->GroupUser->create();
 		$this->GroupUser->set($cr);
 		$validation = $this->GroupUser->validates(array('fieldList' => array('group_id', 'user_id')));
-		$this->assertEqual($validation, false, print_r($this->GroupUser->invalidFields(), true));
+		$this->assertEquals($validation, false, print_r($this->GroupUser->invalidFields(), true));
 	}
 
 }

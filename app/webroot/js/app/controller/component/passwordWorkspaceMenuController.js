@@ -22,6 +22,7 @@ steal(
 
 		'defaults': {
 			'label': 'Workspace Menu Controller',
+			'tag': 'ul',
 			// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
 			'selectedRs': new can.Model.List()
 		}
@@ -33,6 +34,7 @@ steal(
 		 * @return {void}
 		 */
 		'afterStart': function () {
+			var self = this;
 			// Manage creation action
 			this.options.creationButton = new mad.controller.component.ButtonController($('#js_wk_menu_creation_button'))
 				.start();
@@ -52,9 +54,30 @@ steal(
 				'state': 'disabled'
 			}).start();
 
-			// Manage more action 
-			this.options.moreButton = new mad.controller.component.ButtonController($('#js_wk_menu_more_button'), {
-				'state': 'disabled'
+			// Manage more action
+			var moreButtonMenuItems = [
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('copy login to clipboard'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						var username = self.options.selectedRs[0].username;
+						mad.bus.trigger('passbolt.login.clipboard', username);
+					}
+				}),
+				new mad.model.Action({
+					'id': uuid(),
+					'label': __('copy password to clipboard'),
+					'cssClasses': ['todo'],
+					'action': function () {
+						var secret = self.options.selectedRs[0].Secret[0].data;
+						mad.bus.trigger('passbolt.secret.decrypt', secret);
+					}
+				})
+			];
+			this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_wk_menu_more_button'), {
+				'state': 'disabled',
+				'items': moreButtonMenuItems
 			}).start();
 
 			// @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
@@ -161,6 +184,9 @@ steal(
 		 * @return {void}
 		 */
 		'{mad.bus} filter_resources_browser': function(el, ev, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
 			var categories = filter.getForeignModels('Category');
 			var state = 'ready';
 

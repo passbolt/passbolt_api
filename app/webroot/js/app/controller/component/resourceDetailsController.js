@@ -68,13 +68,13 @@ steal(
 				});
 				commentsController.start();
 
-				// Instantiate the item tags controller for the current resource.
-				var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
-					'instance': this.options.resource,
-					'foreignModel': 'Resource',
-					'foreignId': this.options.resource.id
-				});
-				sidebarTagsController.start();
+				//// Instantiate the item tags controller for the current resource.
+				//var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
+				//	'instance': this.options.resource,
+				//	'foreignModel': 'Resource',
+				//	'foreignId': this.options.resource.id
+				//});
+				//sidebarTagsController.start();
 			},
 
 			/**
@@ -134,6 +134,19 @@ steal(
 				this._super(go);
 			},
 
+			/**
+			 * A password has been clicked.
+			 * @param {HTMLElement} el The element the event occured on
+			 * @param {HTMLEvent} ev The event which occured
+			 * @return {void}
+			 */
+			' password_clicked': function (el, ev) {
+				// Get secret out of Resource object.
+				var secret = this.options.selectedRs[0].Secret[0].data;
+				// Request decryption. (delegated to plugin).
+				mad.bus.trigger('passbolt.secret.decrypt', secret);
+			},
+
 			/* ************************************************************** */
 			/* LISTEN TO THE MODEL EVENTS */
 			/* ************************************************************** */
@@ -160,7 +173,10 @@ steal(
 			 * @return {void}
 			 */
 			'{mad.bus} workspace_showSidebar': function(el, ev, show) {
-				if(show) {
+				// @todo fixed in future canJs.
+				if (!this.element) return;
+
+				if (show) {
 					if(this.state.is(null)) {
 						this.options.state = 'ready';
 					} else {

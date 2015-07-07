@@ -31,15 +31,45 @@ steal(
 					'label': __('All users'),
 					'action': function () {
 						var filter = new passbolt.model.Filter({
-							'order': 'modified'
+							'label': __('All users'),
+							'type': passbolt.model.Filter.SHORTCUT
+						});
+						mad.bus.trigger('filter_users_browser', filter);
+					}
+				}), new mad.model.Action({
+					'id': uuid(),
+					'label': __('Recently modified'),
+					'action': function () {
+						var filter = new passbolt.model.Filter({
+							'label': __('Recently modified'),
+							'order': 'modified',
+							'type': passbolt.model.Filter.SHORTCUT
 						});
 						mad.bus.trigger('filter_users_browser', filter);
 					}
 				})
 			];
 			this.load(menuItems);
+		},
+
+		/* ************************************************************** */
+		/* LISTEN TO THE APP EVENTS */
+		/* ************************************************************** */
+
+		/**
+		 * Listen to the browser filter
+		 * @param {jQuery} element The source element
+		 * @param {Event} event The jQuery event
+		 * @param {passbolt.model.Filter} filter The filter to apply
+		 * @return {void}
+		 */
+		'{mad.bus} filter_users_browser': function (element, evt, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
+			if (filter.type != passbolt.model.Filter.SHORTCUT) {
+				this.unselectAll();
+			}
 		}
-
 	});
-
 });

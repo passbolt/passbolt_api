@@ -13,11 +13,21 @@
  */
 class Tag extends AppModel {
 
+/**
+ * Model behaviors
+ *
+ * @link http://api20.cakephp.org/class/model#
+ */
 	public $actsAs = array('Trackable');
 
+/**
+ * Details of has and belongs to many relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $hasAndBelongsToMany = array(
 		'Resource' => array(
-			'className' => 'Resource'
+			'className' => 'Resource',
+			 'joinTable' => 'items_tags',
 		)
 	);
 
@@ -43,7 +53,7 @@ class Tag extends AppModel {
 					'message' => __('Name should only contain alphabets, numbers, spaces and the special characters \' " -')
 				),
 				'size' => array(
-					'rule' => array('between', 3, 64),
+					'rule' => array('lengthBetween', 3, 64),
 					'message' => __('Name should be between %s and %s characters long'),
 				)
 			)

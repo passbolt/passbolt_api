@@ -34,7 +34,18 @@ steal(
 					'id': 'id',
 					'content': 'content',
 					'modified': 'modified',
-					'created_by': 'created_by'
+					'creatorAvatarPath': {
+						'key': 'Creator',
+						'func': function(creator, map, obj) {
+							return creator.Profile.avatarPath('small');
+						}
+					},
+					'creatorName': {
+						'key': 'Creator',
+						'func': function(creator, map, obj) {
+							return creator.Profile.fullName();
+						}
+					}
 				})
 			}
 

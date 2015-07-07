@@ -2,7 +2,7 @@
 /**
  * Main application configuration file
  *
- * @copyright    Copyright 2012, Passbolt.com 
+ * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
  * @package      app.Config.app
  * @since        version 2.12.7
@@ -10,13 +10,17 @@
 $config = array(
 	// General App Details
 	'App.name' => 'Passbolt',
-	'App.punchline' => 'The simple password management system',
-	'App.copyright' => '2013 &copy; Passbolt.com',
+	'App.punchline' => 'Passbolt is a simple password manager that allows you to easily share secrets with your team without making compromises on security! ',
+	'App.copyright' => '2015 &copy; Passbolt.com',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.version'	 => array(
-		'number' => '2.13.3',
+		'number' => '2.15.9',
 		'name' => 'Sauvage',
 		'song' => 'http://youtu.be/DaRG0ukxYqQ'
+	),
+	// Activate specific entry points for selenium testing.
+	'App.selenium' => array(
+		'active' => true,
 	),
 	// Internationalization
 	'i18n' => array(
@@ -25,27 +29,60 @@ $config = array(
 		'timezone' => 'GTM+1',
 		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
+	'Registration' => array(
+		'public' => TRUE,
+	),
 	// Authentication & Authorisation
-	'HashType' => 'blowfish',
 	'Auth' => array(
-    	'authenticate' => array(
+		'className' => 'PassboltAuth',
+		'HashType' => 'blowfish',
+		'logoutRedirect' => array(
+			'controller' => 'users',
+			'action' => 'login'
+		),
+		'loginRedirect' => array(
+			'controller' => 'pages',
+			'action' => 'display',
+			'home'
+		),
+		'authenticate' => array(
 			'Form' => array(
-            	'passwordHasher' => array(
-            		'className' => 'Blowfish'
-            	)
-            )
+				'passwordHasher' => 'Blowfish'
+			)
 		),
-		'loginRedirect' => '/login',
-		'logoutRedirect' => '/login',
-		'loginAction' => array('controller' => 'Users', 'action' => 'login'),
+		'authorize' => array('Controller'),
+		'unauthorizedRedirect' => array(
+			'controller' => 'users',
+			'action' => 'login'
+		),
+		'throttlingStrategies' => array(
+			'throttle' => array(
+				1 => array('throttleTime' => '5'),
+				2 => array('throttleTime' => '15'),
+				3 => array('throttleTime' => '45'),
+				4 => array('throttleTime' => '60')
+			),
+			'blacklist' => array(
+				20 => array(
+					'interval' => '60',
+					'blacklistTime' => '600'
+				),
+				50 => array(
+					'interval' => '1200',
+					'blacklistTime' => '2400'
+				),
+				100 => array(
+					'interval' => '3600',
+					'blacklistTime' => '7200'
+				)
+			)
+		),
 		'whitelist' => array(
-			'users' => array('login' => true, 'logout' => true)
+			'users' => array(
+				'login' => true,
+				'logout' => true
+			)
 		),
-		'bcrypt' => array(
-			'cost' => '04',
-			'salt' => 'jdwmlckzlfwsl123wldcaxss',
-			'hmac' => 'odqw1AEN9fskDeWDqwodiqwd213109icjalkdnasdjjqd'
-		)
 	),
 	'GPG' => array(
 		'trustModel' => 'always'
@@ -63,15 +100,16 @@ $config = array(
 	'ItemTag' => array(
 		'foreignModels' => array('Resource')
 	),
-    'Validation' => array(
-        'shared' => array(
+	'Validation' => array(
+		'shared' => array(
 			'Category',
+			'Comment',
+			'Group',
+			'Profile',
 			'Resource',
 			'Secret',
 			'Tag',
-			'Comment',
-			'Group',
 			'User',
-        )
-    )
+		)
+	)
 );

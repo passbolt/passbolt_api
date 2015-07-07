@@ -12,7 +12,17 @@ App::uses('AppTestCase', 'Test');
 
 class ResourceTest extends AppTestCase {
 
-	public $fixtures = array('app.resource', 'app.user', 'app.role');
+	public $fixtures = array(
+		'app.resource',
+		'app.user',
+		'app.role',
+		'app.profile',
+		'app.gpgkey',
+		'app.file_storage',
+		'app.groupsUser',
+		'app.group',
+		'core.cakeSession'
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -67,7 +77,7 @@ class ResourceTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the resource name with "' . $testcase . '" should not validate';
 			}
-			$this->assertEqual($this->Resource->validates(array('fieldList' => array('name'))), $result, $msg);
+			$this->assertEquals($this->Resource->validates(array('fieldList' => array('name'))), $result, $msg);
 		}
 	}
 
@@ -119,7 +129,7 @@ class ResourceTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the resource username with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Resource->validates(array('fieldList' => array('username'))), $result, $msg);
+			$this->assertEquals($this->Resource->validates(array('fieldList' => array('username'))), $result, $msg);
 		}
 	}
 
@@ -146,7 +156,7 @@ class ResourceTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the resource uri with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Resource->validates(array('fieldList' => array('uri'))), $result, $msg);
+			$this->assertEquals($this->Resource->validates(array('fieldList' => array('uri'))), $result, $msg);
 		}
 	}
 
@@ -171,7 +181,7 @@ class ResourceTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the resource expiry date with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Resource->validates(array('fieldList' => array('expiry_date'))), $result, $msg);
+			$this->assertEquals($this->Resource->validates(array('fieldList' => array('expiry_date'))), $result, $msg);
 		}
 	}
 
@@ -223,7 +233,7 @@ class ResourceTest extends AppTestCase {
 			} else {
 				$msg = 'validation of the resource description with ' . $testcase . ' should not validate';
 			}
-			$this->assertEqual($this->Resource->validates(array('fieldList' => array('description'))), $result, $msg);
+			$this->assertEquals($this->Resource->validates(array('fieldList' => array('description'))), $result, $msg);
 		}
 	}
 }

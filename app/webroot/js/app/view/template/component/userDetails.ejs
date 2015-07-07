@@ -1,0 +1,63 @@
+<div class="user">
+	<div class="header">
+		<img src="<%= user.Profile.Avatar.url.small %>" alt="<%= user.Profile.first_name %> <%= user.Profile.last_name %> picture"/>
+		<h3>
+			<span class="name"><%= user.Profile.first_name %> <%= user.Profile.last_name %></span>
+			<span class="username"><%= user.username %></span>
+		</h3>
+	</div>
+
+	<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>
+
+	<div class="detailed-information">
+		<h4><%= __('Information') %></h4>
+		<ul>
+			<li class="username">
+				<span class="label"><%= __('Password') %></span>
+				<span class="value">**********</span>
+			</li>
+			<li class="role">
+				<span class="label"><%= __('Role') %></span>
+				<span class="value"><%= user.Role.name.charAt(0).toUpperCase() + user.Role.name.slice(1); %></span>
+			</li>
+			<li class="modified">
+				<span class="label"><%= __('Modified') %></span>
+				<span class="value"><%= moment(user.modified).fromNow() %></span>
+			</li>
+		</ul>
+	</div>
+
+	<div class="key-information">
+		<h4><%= __('Public Key') %></h4>
+		<ul>
+			<li class="keyid">
+				<span class="label"><%= __('Key id') %></span>
+				<span class="value"><%= user.Gpgkey.key_id %></span>
+			</li>
+			<li class="type">
+				<span class="label"><%= __('Type') %></span>
+				<span class="value"><%= user.Gpgkey.type %></span>
+			</li>
+			<li class="created">
+				<span class="label"><%= __('Created') %></span>
+				<span class="value"><%= user.Gpgkey.key_created %></span>
+			</li>
+			<li class="expires">
+				<span class="label"><%= __('Expires') %></span>
+				<span class="value"><%= user.Gpgkey.expires %></span>
+			</li>
+			<li class="key">
+				<span class="label"><%= __('Public key') %></span>
+				<span class="value">
+					<a href="#" class="button copy-public-key">
+						<span>copy</span>
+					</a>
+				</span>
+			</li>
+			<li class="gpgkey">
+				<textarea class="code"><%= user.Gpgkey.key %></textarea>
+			</li>
+		</ul>
+	</div>
+</div>
+

@@ -7,9 +7,6 @@
  * 
  */
 
-// The application url
-APP_URL = document.location.protocol + '//' + document.location.hostname + document.location.pathname;
-
 steal(
 	// the mad framework
 	'mad/mad.js'

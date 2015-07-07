@@ -29,7 +29,7 @@ App::uses('CakeEmail', 'Network/Email');
  * @package       Cake.Controller.Component
  * @link          http://book.cakephp.org/2.0/en/core-libraries/components/email.html
  * @link          http://book.cakephp.org/2.0/en/core-utility-libraries/email.html
- * @deprecated    Will be removed in 3.0. Use Network/CakeEmail instead
+ * @deprecated    3.0.0 Will be removed in 3.0. Use Network/CakeEmail instead
  */
 class EmailComponent extends Component {
 
@@ -282,7 +282,7 @@ class EmailComponent extends Component {
  *  If you are rendering a template this variable will be sent to the templates as `$content`
  * @param string $template Template to use when sending email
  * @param string $layout Layout to use to enclose email body
- * @return boolean Success
+ * @return bool Success
  */
 	public function send($content = null, $template = null, $layout = null) {
 		$lib = new CakeEmail();
@@ -405,7 +405,7 @@ class EmailComponent extends Component {
  * Find the specified attachment in the list of file paths
  *
  * @param string $attachment Attachment file name to find
- * @return string Path to located file
+ * @return string|null Path to located file
  */
 	protected function _findFiles($attachment) {
 		if (file_exists($attachment)) {
@@ -423,7 +423,7 @@ class EmailComponent extends Component {
 /**
  * Format addresses to be an array with email as key and alias as value
  *
- * @param array $addresses
+ * @param array $addresses Address to format.
  * @return array
  */
 	protected function _formatAddresses($addresses) {
@@ -444,7 +444,7 @@ class EmailComponent extends Component {
  * Helps prevent header injection / manipulation on user content.
  *
  * @param string $value Value to strip
- * @param boolean $message Set to true to indicate main message content
+ * @param bool $message Set to true to indicate main message content
  * @return string Stripped value
  */
 	protected function _strip($value, $message = false) {

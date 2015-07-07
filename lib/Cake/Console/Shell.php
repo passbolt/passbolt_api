@@ -22,7 +22,6 @@ App::uses('ConsoleInputSubcommand', 'Console');
 App::uses('ConsoleOptionParser', 'Console');
 App::uses('ClassRegistry', 'Utility');
 App::uses('File', 'Utility');
-App::uses('ClassRegistry', 'Utility');
 
 /**
  * Base class for command-line utilities for automating programmer chores.
@@ -34,21 +33,21 @@ class Shell extends Object {
 /**
  * Output constant making verbose shells.
  *
- * @var integer
+ * @var int
  */
 	const VERBOSE = 2;
 
 /**
  * Output constant for making normal shells.
  *
- * @var integer
+ * @var int
  */
 	const NORMAL = 1;
 
 /**
  * Output constants for making quiet shells.
  *
- * @var integer
+ * @var int
  */
 	const QUIET = 0;
 
@@ -62,7 +61,7 @@ class Shell extends Object {
 /**
  * If true, the script will ask for permission to perform actions.
  *
- * @var boolean
+ * @var bool
  */
 	public $interactive = true;
 
@@ -168,6 +167,14 @@ class Shell extends Object {
 	public $stdin;
 
 /**
+ * The number of bytes last written to the output stream
+ * used when overwriting the previous message.
+ *
+ * @var int
+ */
+	protected $_lastWritten = 0;
+
+/**
  *  Constructs this Shell instance.
  *
  * @param ConsoleOutput $stdout A ConsoleOutput object for stdout.
@@ -239,7 +246,7 @@ class Shell extends Object {
 /**
  * If $uses is an array load each of the models in the array
  *
- * @return boolean
+ * @return bool
  */
 	protected function _loadModels() {
 		if (is_array($this->uses)) {
@@ -254,7 +261,7 @@ class Shell extends Object {
 /**
  * Lazy loads models using the loadModel() method if declared in $uses
  *
- * @param string $name
+ * @param string $name The name of the model to look for.
  * @return void
  */
 	public function __isset($name) {
@@ -303,7 +310,7 @@ class Shell extends Object {
 /**
  * Loads tasks defined in public $tasks
  *
- * @return boolean
+ * @return bool
  */
 	public function loadTasks() {
 		if ($this->tasks === true || empty($this->tasks) || empty($this->Tasks)) {
@@ -318,7 +325,7 @@ class Shell extends Object {
  * Check to see if this shell has a task with the provided name.
  *
  * @param string $task The task name to check.
- * @return boolean Success
+ * @return bool Success
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::hasTask
  */
 	public function hasTask($task) {
@@ -329,7 +336,7 @@ class Shell extends Object {
  * Check to see if this shell has a callable method by the given name.
  *
  * @param string $name The method name to check.
- * @return boolean
+ * @return bool
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::hasMethod
  */
 	public function hasMethod($name) {
@@ -446,7 +453,7 @@ class Shell extends Object {
 /**
  * Display the help in the correct format
  *
- * @param string $command
+ * @param string $command The command to get help for.
  * @return void
  */
 	protected function _displayHelp($command) {
@@ -462,6 +469,7 @@ class Shell extends Object {
 
 /**
  * Gets the option parser instance and configures it.
+ *
  * By overriding this method you can configure the ConsoleOptionParser before returning it.
  *
  * @return ConsoleOptionParser
@@ -476,7 +484,7 @@ class Shell extends Object {
 /**
  * Overload get for lazy building of tasks
  *
- * @param string $name
+ * @param string $name The property name to access.
  * @return Shell Object of Task
  */
 	public function __get($name) {
@@ -573,7 +581,7 @@ class Shell extends Object {
  * - `indent` Indent the text with the string provided. Defaults to null.
  *
  * @param string $text Text the text to format.
- * @param string|integer|array $options Array of options to use, or an integer to wrap the text to.
+ * @param string|int|array $options Array of options to use, or an integer to wrap the text to.
  * @return string Wrapped / indented text
  * @see String::wrap()
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::wrapText
@@ -593,10 +601,10 @@ class Shell extends Object {
  * present in most shells. Using Shell::QUIET for a message means it will always display.
  * While using Shell::VERBOSE means it will only display when verbose output is toggled.
  *
- * @param string|array $message A string or a an array of strings to output
- * @param integer $newlines Number of newlines to append
- * @param integer $level The message's output level, see above.
- * @return integer|boolean Returns the number of bytes returned from writing to stdout.
+ * @param string|array $message A string or an array of strings to output
+ * @param int $newlines Number of newlines to append
+ * @param int $level The message's output level, see above.
+ * @return int|bool Returns the number of bytes returned from writing to stdout.
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::out
  */
 	public function out($message = null, $newlines = 1, $level = Shell::NORMAL) {
@@ -608,17 +616,50 @@ class Shell extends Object {
 			$currentLevel = Shell::QUIET;
 		}
 		if ($level <= $currentLevel) {
-			return $this->stdout->write($message, $newlines);
+			$this->_lastWritten = $this->stdout->write($message, $newlines);
+			return $this->_lastWritten;
 		}
 		return true;
+	}
+
+/**
+ * Overwrite some already output text.
+ *
+ * Useful for building progress bars, or when you want to replace
+ * text already output to the screen with new text.
+ *
+ * **Warning** You cannot overwrite text that contains newlines.
+ *
+ * @param array|string $message The message to output.
+ * @param int $newlines Number of newlines to append.
+ * @param int $size The number of bytes to overwrite. Defaults to the
+ *    length of the last message output.
+ * @return int|bool Returns the number of bytes returned from writing to stdout.
+ */
+	public function overwrite($message, $newlines = 1, $size = null) {
+		$size = $size ? $size : $this->_lastWritten;
+
+		// Output backspaces.
+		$this->out(str_repeat("\x08", $size), 0);
+
+		$newBytes = $this->out($message, 0);
+
+		// Fill any remaining bytes with spaces.
+		$fill = $size - $newBytes;
+		if ($fill > 0) {
+			$this->out(str_repeat(' ', $fill), 0);
+		}
+		if ($newlines) {
+			$this->out($this->nl($newlines), 0);
+		}
 	}
 
 /**
  * Outputs a single or multiple error messages to stderr. If no parameters
  * are passed outputs just a newline.
  *
- * @param string|array $message A string or a an array of strings to output
- * @param integer $newlines Number of newlines to append
+ * @param string|array $message A string or an array of strings to output
+ * @param int $newlines Number of newlines to append
  * @return void
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::err
  */
@@ -629,7 +670,7 @@ class Shell extends Object {
 /**
  * Returns a single or multiple linefeeds sequences.
  *
- * @param integer $multiplier Number of times the linefeed sequence should be repeated
+ * @param int $multiplier Number of times the linefeed sequence should be repeated
  * @return string
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::nl
  */
@@ -640,8 +681,8 @@ class Shell extends Object {
 /**
  * Outputs a series of minus characters to the standard output, acts as a visual separator.
  *
- * @param integer $newlines Number of newlines to pre- and append
- * @param integer $width Width of the line, defaults to 63
+ * @param int $newlines Number of newlines to pre- and append
+ * @param int $width Width of the line, defaults to 63
  * @return void
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::hr
  */
@@ -690,7 +731,7 @@ class Shell extends Object {
  *
  * @param string $path Where to put the file.
  * @param string $contents Content to put in the file.
- * @return boolean Success
+ * @return bool Success
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::createFile
  */
 	public function createFile($path, $contents) {
@@ -728,7 +769,7 @@ class Shell extends Object {
 /**
  * Action to create a Unit Test
  *
- * @return boolean Success
+ * @return bool Success
  */
 	protected function _checkUnitTest() {
 		if (class_exists('PHPUnit_Framework_TestCase')) {
@@ -818,8 +859,8 @@ class Shell extends Object {
 /**
  * creates the singular name for use in views.
  *
- * @param string $name
- * @return string $name
+ * @param string $name The plural underscored value.
+ * @return string name
  */
 	protected function _singularName($name) {
 		return Inflector::variable(Inflector::singularize($name));
@@ -859,7 +900,7 @@ class Shell extends Object {
  * Find the correct path for a plugin. Scans $pluginPaths for the plugin you want.
  *
  * @param string $pluginName Name of the plugin you want ie. DebugKit
- * @return string $path path to the correct plugin.
+ * @return string path path to the correct plugin.
  */
 	protected function _pluginPath($pluginName) {
 		if (CakePlugin::loaded($pluginName)) {
@@ -873,7 +914,7 @@ class Shell extends Object {
  * If you don't wish to see in your stdout or stderr everything that is logged
  * through CakeLog, call this function with first param as false
  *
- * @param boolean $enable whether to enable CakeLog output or not
+ * @param bool $enable whether to enable CakeLog output or not
  * @return void
  */
 	protected function _useLogger($enable = true) {

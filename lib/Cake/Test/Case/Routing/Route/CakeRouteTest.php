@@ -874,6 +874,23 @@ class CakeRouteTest extends CakeTestCase {
 	}
 
 /**
+ * Test match() with trailing ** style routes.
+ *
+ * @return void
+ */
+	public function testMatchTrailing() {
+		$route = new CakeRoute('/pages/**', array('controller' => 'pages', 'action' => 'display'));
+		$id = 'test/ spaces/漢字/la†în';
+		$result = $route->match(array(
+			'controller' => 'pages',
+			'action' => 'display',
+			$id
+		));
+		$expected = '/pages/test/%20spaces/%E6%BC%A2%E5%AD%97/la%E2%80%A0%C3%AEn';
+		$this->assertEquals($expected, $result);
+	}
+
+/**
  * test restructuring args with pass key
  *
  * @return void
@@ -958,6 +975,36 @@ class CakeRouteTest extends CakeTestCase {
 		$result = $route->parse('/weblog');
 		$expected = array('section' => 'weblog', 'plugin' => 'blogs', 'controller' => 'posts', 'action' => 'index', 'pass' => array(), 'named' => array());
 		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * Test for __set_state magic method on CakeRoute
+ *
+ * @return void
+ */
+	public function testSetState() {
+		$route = CakeRoute::__set_state(array(
+			'keys' => array(),
+			'options' => array(),
+			'defaults' => array(
+				'controller' => 'pages',
+				'action' => 'display',
+				'home',
+			),
+			'template' => '/',
+			'_greedy' => false,
+			'_compiledRoute' => null,
+			'_headerMap' => array (
+				'type' => 'content_type',
+				'method' => 'request_method',
+				'server' => 'server_name',
+			),
+		));
+		$this->assertInstanceOf('CakeRoute', $route);
+		$this->assertSame('/', $route->match(array('controller' => 'pages', 'action' => 'display', 'home')));
+		$this->assertFalse($route->match(array('controller' => 'pages', 'action' => 'display', 'about')));
+		$expected = array('controller' => 'pages', 'action' => 'display', 'pass' => array('home'), 'named' => array());
+		$this->assertEquals($expected, $route->parse('/'));
 	}
 
 }

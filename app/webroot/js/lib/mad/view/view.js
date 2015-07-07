@@ -103,7 +103,7 @@ steal(
 		 * use this one. Else build the template uri functions of the component name.
 		 * @return {String} The component template uri
 		 */
-		'getTemplate': function (options) {
+		'getTemplate': function () {
 			
 			var returnValue = '';
 

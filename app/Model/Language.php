@@ -12,4 +12,13 @@
  * @license			 http://www.passbolt.com/license
  */
 class Language extends AppModel {
+
+	/**
+	 * Details of use table
+	 *
+	 * @var array
+	 * @link http://book.cakephp.org/2.0/en/models/model-attributes.html
+	 */
+	public $useTable = false;
+
 }

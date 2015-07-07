@@ -5,7 +5,7 @@ steal(
 
 	/*
 	 * @class passbolt.controller.ResourceActionsTabController
-	 * @inherits mad.controller.component.ComponentController
+	 * @inherits mad.controller.component.TabController
 	 * @parent index 
 	 * 
 	 * @constructor
@@ -22,16 +22,14 @@ steal(
 			'label': null,
 			'resource': null,
 			'cssClasses': ['tabs'],
+			// @todo The system is trying to get the view class of the ResourceActionsTabController.
+			// @todo But we want this component to be based on the parent viewClass & templateUri.
+			// @todo It's maybe a todo if we want to automatize this case.
 			'viewClass': mad.view.component.Tab,
-			'templateUri': 'mad/view/template/component/tab.ejs' // @todo Ouhhhh, dirty case, templateUri should be based on a weight system 1. Controller 2. View 3. auto
+			'templateUri': 'mad/view/template/component/tab.ejs'
 		}
 
 	}, /** @prototype */ {
-		
-		// Constructor like
-		'init': function(el, opts) {
-			this._super(el, opts);
-		},
 		
 		// after start
 		'afterStart': function() {
@@ -42,14 +40,15 @@ steal(
 			var editFormCtl = this.addComponent(passbolt.controller.form.resource.CreateFormController, {
 				'id': 'js_rs_edit',
 				'label': __('Edit'),
+				'action': 'edit',
 				'data': this.options.resource,
 				'callbacks' : {
 					'submit': function (data) {
 						// save the resource's changes
 						self.options.resource.attr(data['passbolt.model.Resource'])
 							.save();
-						// close the popup
-						mad.app.getComponent('js_dialog')
+						// Close the dialog which contains this component.
+						self.closest(mad.controller.component.DialogController)
 							.remove();
 					}
 				}
@@ -57,12 +56,12 @@ steal(
 			editFormCtl.start();
 			editFormCtl.load(this.options.resource);
 
-			// Add the permission controller to the tab
+			// Add the permission controller to the tab, if the user is allowed to share.
 			var permCtl = this.addComponent(passbolt.controller.component.PermissionsController, {
 				'id': 'js_rs_permission',
 				'label': 'Share',
 				'resource': this.options.resources,
-				'cssClasses': ['form-content']
+				'cssClasses': ['share-tab']
 			});
 			permCtl.start();
 			permCtl.load(this.options.resource);
@@ -84,8 +83,22 @@ steal(
 			this.refresh();
 			// // on
 			// this.on();
+		},
+
+		/**
+		 * Enable a tab
+		 * @param {string} tabId id of the tab to enable
+		 * @return {void}
+		 */
+		'enableTab': function (tabId) {
+			this._super(tabId);
+			// Change the label of the dialog which contains this component.
+			var enabledTabCtl = this.getComponent(this.enabledTabId);
+			var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
+			this.closest(mad.controller.component.DialogController)
+				.setTitle(label);
 		}
-		 
+
 	});
 
 });

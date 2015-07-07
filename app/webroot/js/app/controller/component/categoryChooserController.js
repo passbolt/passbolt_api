@@ -42,6 +42,25 @@ steal(
 	}, /** @prototype */ {
 
 		/**
+		 * Called right after the start function
+		 * @return {void}
+		 * @see {mad.controller.ComponentController}
+		 */
+		'afterStart': function() {
+			var self = this;
+
+			// Load categories.
+			this.setState('loading');
+			passbolt.model.Category.findAll({
+				'children': true
+			}, function (categories, response, request) {
+				// load the tree with the categories
+				self.load(categories);
+				self.setState('ready');
+			}, function (response) { });
+		},
+
+		/**
 		 * Show the contextual menu
 		 * @param {passbolt.model.Category} item The item to show the contextual menu for
 		 * @param {string} x The x position where the menu will be rendered
@@ -66,7 +85,8 @@ steal(
 
 			// get the permission on the category.
 			var canCreate = passbolt.model.Permission.isAllowedTo(item, passbolt.CREATE),
-				canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE);
+				canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE),
+				canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
 
 			// Add open action.
 			var action = new mad.model.Action({
@@ -78,46 +98,57 @@ steal(
 					menu.remove();
 				}
 			});
-			// Add Create resource action.
 			contextualMenu.insertItem(action);
+			// Add Create resource action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Create resource',
-				'initial_state': !canCreate ? 'disable' : 'ready',
+				'initial_state': !canCreate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_resource_creation', item);
 					menu.remove();
 				}
 			});
-			// Add Create category action.
 			contextualMenu.insertItem(action);
+			// Add Create category action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Create category',
 				'cssClasses': ['separator-after'],
-				'initial_state': !canCreate ? 'disable' : 'ready',
+				'initial_state': !canCreate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_category_creation', item);
 					menu.remove();
 				}
 			});
-			// Add Rename action.
 			contextualMenu.insertItem(action);
+			// Add Rename action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Rename...',
-				'initial_state': !canUpdate ? 'disable' : 'ready',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_category_edition', item);
 					menu.remove();
 				}
 			});
-			// Add Remove action.
 			contextualMenu.insertItem(action);
+			// Add Share action.
+			action = new mad.model.Action({
+				'id': uuid(),
+				'label': 'Share',
+				'initial_state': !canAdmin ? 'disabled' : 'ready',
+				'action': function (menu) {
+					mad.bus.trigger('request_category_sharing', item);
+					menu.remove();
+				}
+			});
+			contextualMenu.insertItem(action);
+			// Add Remove action.
 			action = new mad.model.Action({
 				'id': uuid(),
 				'label': 'Remove',
-				'initial_state': !canUpdate ? 'disable' : 'ready',
+				'initial_state': !canUpdate ? 'disabled' : 'ready',
 				'action': function (menu) {
 					mad.bus.trigger('request_category_deletion', item);
 					menu.remove();
@@ -227,30 +258,39 @@ steal(
 			this.removeItem(category);
 		},
 
+		/**
+		 * Observe when a category is updated.
+		 * @param {mad.model.Model} model The model reference
+		 * @param {HTMLEvent} ev The event which occured
+		 * @param {passbolt.model.Category} category The updated category
+		 * @return {void}
+		 */
+		'{passbolt.model.Category} updated': function (model, ev, category) {
+			this.refreshItem(category);
+		},
+
 		/* ************************************************************** */
 		/* LISTEN TO THE APP EVENTS */
 		/* ************************************************************** */
 
 		/**
-		 * Observe when the application is ready and load the tree with the roots
-		 * categories
+		 * Listen to the browser filter
 		 * @param {jQuery} element The source element
 		 * @param {Event} event The jQuery event
+		 * @param {passbolt.model.Filter} filter The filter to apply
 		 * @return {void}
 		 */
-		'{mad.bus} app_ready': function (ui, event) {
-			var self = this;
-			// load categories function of the selected database
-			this.setState('loading');
-			passbolt.model.Category.findAll({
-				'children': true
-			}, function (categories, response, request) {
-				// load the tree with the categories
-				self.load(categories);
-				self.setState('ready');
-			}, function (response) { });
+		'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+			// @todo fixed in future canJs.
+			if (!this.element) return;
+
+			if (filter.type != passbolt.model.Filter.FOREIGN_MODEL) {
+				this.unselectAll();
+			}
+			else {
+				var categories = filter.getForeignModels('Category');
+				this.selectItem(categories[0]);
+			}
 		}
-
 	});
-
 });

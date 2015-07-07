@@ -10,14 +10,19 @@
  */
 class MailerComponent extends Component {
 
-	// email object
+/**
+ * @var email
+ */
 	public $email;
 
-	// controller shortcut
+/**
+ * @var Controller $controller
+ */
 	public $Controller;
 
 /**
  * Initialize
+ *
  * @param object $controller Controller using this component
  * @return boolean Proceed with component usage (true), or fail (false)
  */
@@ -28,7 +33,8 @@ class MailerComponent extends Component {
 
 /**
  * Send an email or help debug
- * @return bool true if successfull
+ *
+ * @return bool true if successful
  */
 	public function send() {
 		if (isset($this->email)) {
