@@ -186,7 +186,7 @@ class Profile extends AppModel {
 			foreach ($results as $key => $result) {
 				$results[$key]['Profile']['Avatar'] =
 					empty($result['Profile']['Avatar']) ? array() : $result['Profile']['Avatar'];
-				$results[$key]['Profile']['Avatar'] = $this->Avatar->addPathsInfo($result['Profile']['Avatar']);
+				$results[$key]['Profile']['Avatar'] = $this->Avatar->addPathsInfo($results[$key]['Profile']['Avatar']);
 			}
 		}
 		else {
