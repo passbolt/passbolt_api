@@ -130,7 +130,7 @@ class PassboltAuthComponentTest extends CakeTestCase {
 	public function testShouldBlacklist() {
 		// Check when no entry is there in database
 		$cr = new CakeRequest();
-		$cr->data['User']['username'] = 'kevin@test.com';
+		$cr->data['User']['username'] = 'user@test.com';
 		$this->PassboltAuthComponent->__setContext($cr);
 		$res = $this->PassboltAuthComponent->shouldBlacklist();
 		$this->assertEquals($res, false, "testShouldBlacklist : the test should have returned false but returned $res");
@@ -141,7 +141,7 @@ class PassboltAuthComponentTest extends CakeTestCase {
 		for ($i = 1; $i < 20; $i++) {
 			$logs[] = array(
 				'ip' => '127.0.0.1',
-				'username' => "kevin$i@test.com",
+				'username' => "user$i@test.com",
 				'created' => date('Y-m-d H:i:s', $now + $i)
 			);
 		}
@@ -152,7 +152,7 @@ class PassboltAuthComponentTest extends CakeTestCase {
 		// scenario 2 : with one more entry (20), but out of the interval
 		$logs = array(array(
 			'ip' => '127.0.0.1',
-			'username' => "yoyo@test.com",
+			'username' => "user_more@test.com",
 			'created' => date('Y-m-d H:i:s', $now - 100)
 		));
 		$this->__populateAuthLogs($logs);
@@ -162,7 +162,7 @@ class PassboltAuthComponentTest extends CakeTestCase {
 		// scenario 3 : with one more entry (21), but within the range this time
 		$logs = array(array(
 			'ip' => '127.0.0.1',
-			'username' => "yoyo1@test.com",
+			'username' => "user_evenmore@test.com",
 			'created' => date('Y-m-d H:i:s', $now + 10)
 		));
 		$this->__populateAuthLogs($logs);
@@ -174,7 +174,7 @@ class PassboltAuthComponentTest extends CakeTestCase {
 		for ($i = 1; $i < 150; $i++) {
 			$logs[] = array(
 				'ip' => '127.0.0.1',
-				'username' => "keviiiiiin$i@test.com",
+				'username' => "user_$i@test.com",
 				'created' => date('Y-m-d H:i:s', $now - 3000)
 			);
 		}

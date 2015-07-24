@@ -27,7 +27,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testUserIdValidation() {
-		$user = $this->User->findByUsername('utest@passbolt.com');
+		$user = $this->User->findByUsername('user@passbolt.com');
 		$testcases = array(
 			'' => false,
 			'?!#' => false,
@@ -43,7 +43,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 			if($result) $msg = 'validation of the user_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the user_id with ' . $testcase . ' should not validate';
 			$validate = $this->AuthenticationToken->validates(array('fieldList' => array('user_id')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -66,7 +66,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 			if($result) $msg = 'validation of the token with ' . $testcase . ' should validate';
 			else $msg = 'validation of the token with ' . $testcase . ' should not validate';
 			$validate = $this->AuthenticationToken->validates(array('fieldList' => array('token')));
-			$this->assertEqual($validate, $result, $msg);
+			$this->assertEquals($validate, $result, $msg);
 		}
 	}
 
@@ -74,9 +74,9 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * Test createToken.
 	 */
 	public function testCreateToken() {
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$token = $this->AuthenticationToken->createToken($kk['User']['id']);
-		$this->assertEqual(!empty($token), true, 'Token should have been created, but has not');
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$token = $this->AuthenticationToken->createToken($user['User']['id']);
+		$this->assertEquals(!empty($token), true, 'Token should have been created, but has not');
 	}
 
 	/**
@@ -84,26 +84,26 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 */
 	public function testCreateTokenInvalidUser() {
 		$token = $this->AuthenticationToken->createToken('aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
-		$this->assertEqual(false, $token, 'Creation of the token should have failed');
+		$this->assertEquals(false, $token, 'Creation of the token should have failed');
 	}
 
 	/**
 	 * Test that a token is valid.
 	 */
 	public function testCheckTokenIsValid() {
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$token = $this->AuthenticationToken->createToken($kk['User']['id']);
-		$isValid = $this->AuthenticationToken->checkTokenIsValid($token['AuthenticationToken']['token'], $kk['User']['id']);
-		$this->assertEqual(is_array($isValid), true, 'The test should have returned a valid token, but has not');
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$token = $this->AuthenticationToken->createToken($user['User']['id']);
+		$isValid = $this->AuthenticationToken->checkTokenIsValid($token['AuthenticationToken']['token'], $user['User']['id']);
+		$this->assertEquals(is_array($isValid), true, 'The test should have returned a valid token, but has not');
 	}
 
 	/**
 	 * Test that a token is valid for an invalid user
 	 */
 	public function testCheckTokenIsValidInvalidUser() {
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$token = $this->AuthenticationToken->createToken($kk['User']['id']);
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$token = $this->AuthenticationToken->createToken($user['User']['id']);
 		$isValid = $this->AuthenticationToken->checkTokenIsValid($token['AuthenticationToken']['token'], 'aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
-		$this->assertEqual((bool)$isValid, false, 'The test should have returned an invalid token');
+		$this->assertEquals((bool)$isValid, false, 'The test should have returned an invalid token');
 	}
 }

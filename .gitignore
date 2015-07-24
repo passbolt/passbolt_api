@@ -1,4 +1,5 @@
-/bower_components
+
+# Local config
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
@@ -19,24 +20,25 @@
 /Plugin
 /plugins
 /app/Plugin/*
+!/app/Plugin/DataExtras
+!/app/Plugin/api_generator
 
 # Vendors
+/vendor
 /Vendor
 /vendors
 /app/Vendor/*
+!/app/Vendor/RandomTool.php
+!/app/Vendor/openpgp-php
+
+# bower and grunt
+/bower_components
+/node_modules
 
 # Misc
 /app/composer.phar
 /app/webroot/img/public/*
-app/Plugin/*
-!app/Plugin/DataExtras
-!/app/Plugin/api_generator
-/app/Vendor/*
-!/app/Vendor/RandomTool.php
-!/app/Vendor/openpgp-php
 /lib/Cake/Console/Templates/skel/tmp/
-/vendor
-Plugin/
 /build
 /dist
 /tags
@@ -44,8 +46,7 @@ Plugin/
 /app/webroot/js/app/config/config.json
 /app/webroot/js/lib/mad/docs/
 /app/webroot/js/lib/mad/docs.html
-!empty
-/node_modules/
+
 
 # IDE and editor specific files #
 #################################

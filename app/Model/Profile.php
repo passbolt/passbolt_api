@@ -184,8 +184,9 @@ class Profile extends AppModel {
 	public function afterFind($results, $primary = false) {
 		if ($primary === false) {
 			foreach ($results as $key => $result) {
-				$results[$key]['Profile']['Avatar'] =
-					empty($result['Profile']['Avatar']) ? array() : $result['Profile']['Avatar'];
+				if(empty($result['Profile']['Avatar'])) {
+					$result['Profile']['Avatar'] = array();
+				}
 				$results[$key]['Profile']['Avatar'] = $this->Avatar->addPathsInfo($results[$key]['Profile']['Avatar']);
 			}
 		}

@@ -409,27 +409,27 @@ class UserTest extends CakeTestCase {
 		$param = array(
 			'conditions' => array('username' => 'user@passbolt.com')
 		);
-		$kevin = $this->User->find('first', $param);
-		$this->User->setActive($kevin);
+		$u = $this->User->find('first', $param);
+		$this->User->setActive($u);
 
 		// change username and save
 		$data = array(
 			'User' => array(
-				'id' => $kevin['User']['id'],
-				'username' => 'kk@passbolt.com'
+				'id' => $u['User']['id'],
+				'username' => 'user_edited@passbolt.com'
 			)
 		);
 		$this->User->save($data);
 
 		// find it again
 		$param = array(
-			'conditions' => array('username' => 'kk@passbolt.com')
+			'conditions' => array('username' => 'user_edited@passbolt.com')
 		);
-		$kk = $this->User->find('first', $param);
+		$user = $this->User->find('first', $param);
 
 		$this->assertEquals(
-			$kevin['User']['id'],
-			$kk['User']['modified_by'],
+            $u['User']['id'],
+			$user['User']['modified_by'],
 			'user should be mark as the one who updated his record'
 		);
 	}

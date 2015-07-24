@@ -19,7 +19,7 @@ class AuthenticationLogTask extends ModelTask {
 	protected function getData() {
 		$User = ClassRegistry::init('User');
 		$users = array();
-		$users['test'] = $User->findByUsername('test@passbolt.com');
+		$users['test'] = $User->findByUsername('user@passbolt.com');
 		
 		$rs[] = array('AuthenticationLog' => array(
 			'id' => Common::uuid(),

@@ -52,7 +52,7 @@ class UsersController extends AppController {
 		if ($this->Auth->redirect() == '/logout' || $this->Auth->redirect() == '/login') {
 			$this->redirect('/');
 		} else {
-			$this->redirect($this->Auth->redirect());
+			return $this->redirect($this->Auth->redirectUrl());
 		}
 	}
 

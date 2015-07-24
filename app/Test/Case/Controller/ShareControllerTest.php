@@ -74,8 +74,8 @@ class ShareControllerTest extends ControllerTestCase {
 		$this->session->init();
 
 		// log the user as a manager to be able to access all categories
-		$dv = $this->User->findByUsername('darth.vader@passbolt.com');
-		$this->User->setActive($dv);
+		$steve = $this->User->findByUsername('dame@passbolt.com');
+		$this->User->setActive($steve);
 	}
 
 	public function tearDown() {
@@ -157,9 +157,8 @@ class ShareControllerTest extends ControllerTestCase {
 		$resource = $this->Resource->findByName('facebook account');
 		$acoInstanceId = $resource['Resource']['id'];
 
-		// log the user as a manager to be able to access all categories
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$this->User->setActive($kk);
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$this->User->setActive($user);
 
 		$aco = 'Resource';
 		$this->setExpectedException('HttpException', 'Your are not allowed to add a permission to the Resource');
@@ -234,14 +233,13 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateAddSecretsNotProvided() {
-		// Get Kevin.
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
+		$user = $this->User->findByUsername('user@passbolt.com');
 
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $kk['User']['id'],
+						'aro_foreign_key' => $user['User']['id'],
 						'type' => PermissionType::ADMIN,
 					)
 				)
@@ -298,17 +296,18 @@ hcciUFw5
 
 	// Test update add with wrong secrets data provided. (not matching the user ids).
 	public function testUpdateAddSecretForWrongUserProvided() {
-		// Get Remy. he is the wrong user. #specialdedicace #remoisi
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
-		$rm = $this->User->findByUsername('remy@passbolt.com');
-		$ce = $this->User->findByUsername('cedric@passbolt.com');
+
+		$ada = $this->User->findByUsername('ada@passbolt.com');
+		$user = $this->User->findByUsername('betty@passbolt.com');
+		$ce = $this->User->findByUsername('carol@passbolt.com');
+
 		$fbRs = $this->Resource->findByName('facebook account');
 
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $kk['User']['id'],
+						'aro_foreign_key' => $user['User']['id'],
 						'type' => PermissionType::ADMIN,
 					),
 				),
@@ -322,7 +321,7 @@ hcciUFw5
 			'Secrets' => array(
 				array(
 					'Secret' => array (
-						'user_id' =>$rm['User']['id'],
+						'user_id' => $ada['User']['id'],
 						'resource_id' => $fbRs['Resource']['id'],
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -341,7 +340,7 @@ hcciUFw5
 				),
 				array(
 					'Secret' => array (
-						'user_id' =>$kk['User']['id'],
+						'user_id' =>$user['User']['id'],
 						'resource_id' => $fbRs['Resource']['id'],
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -365,15 +364,14 @@ hcciUFw5
 	}
 
 	public function testUpdateAddValid() {
-		// Get Kevin.
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
+		$user = $this->User->findByUsername('user@passbolt.com');
 		$fbRs = $this->Resource->findByName('facebook account');
 
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $kk['User']['id'],
+						'aro_foreign_key' => $user['User']['id'],
 						'type' => PermissionType::ADMIN,
 					),
 				),
@@ -381,7 +379,7 @@ hcciUFw5
 			'Secrets' => array(
 				array(
 					'Secret' => array (
-						'user_id' =>$kk['User']['id'],
+						'user_id' =>$user['User']['id'],
 						'resource_id' => $fbRs['Resource']['id'],
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -411,7 +409,7 @@ hcciUFw5
 		$exist = $this->Permission->find('first', array(
 				'conditions' => array(
 					'aco_foreign_key' => $fbRs['Resource']['id'],
-					'aro_foreign_key' => $kk['User']['id'],
+					'aro_foreign_key' => $user['User']['id'],
 					'type' => PermissionType::ADMIN,
 				)
 			));
@@ -452,8 +450,7 @@ hcciUFw5
 	}
 
 	public function testSimulate() {
-		// Get Kevin.
-		$kk = $this->User->findByUsername('kevin@passbolt.com');
+		$user = $this->User->findByUsername('user@passbolt.com');
 		$fbRs = $this->Resource->findByName('facebook account');
 		$acoInstanceId = $fbRs['Resource']['id'];
 
@@ -461,7 +458,7 @@ hcciUFw5
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $kk['User']['id'],
+						'aro_foreign_key' => $user['User']['id'],
 						'type' => PermissionType::ADMIN,
 					),
 				),

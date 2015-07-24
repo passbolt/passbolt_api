@@ -12,8 +12,8 @@ class ModelTask extends AppShell {
 
 	public function execute() {
 		$User = ClassRegistry::init('User');
-		$kk = $User->findByUsername('root@passbolt.com');
-		$User->setActive($kk);
+		$user = $User->findByUsername('root@passbolt.com');
+		$User->setActive($user);
 
 		$Model = ClassRegistry::init($this->model);
 

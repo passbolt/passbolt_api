@@ -55,7 +55,7 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 		parent::setUp();
 		$this->EmailNotification = Common::getModel('EmailNotification');
 		$this->User = Common::getModel('User');
-		$this->myriam = $this->User->findByUsername('myriam@passbolt.com');
+		$this->marlyn = $this->User->findByUsername('marlyn@passbolt.com');
 		$this->anonymous = $this->User->findByUsername('anonymous@passbolt.com');
 		$this->EmailNotificatorComponent = $this->__getEmailNotificatorComponent();
 	}
@@ -121,9 +121,9 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 			'token' => 'xxx',
 		);
 		// Put an email in the queue.
-		$this->EmailNotificatorComponent->accountCreationNotification($this->myriam['User']['id'], $data);
+		$this->EmailNotificatorComponent->accountCreationNotification($this->marlyn['User']['id'], $data);
 		// Call the entry point.
-		$res = $this->testAction("/seleniumTests/showLastEmail/myriam@passbolt.com", array(
+		$res = $this->testAction("/seleniumTests/showLastEmail/marlyn@passbolt.com", array(
 				'return' => 'contents',
 			), true);
 		// Assert that there is no redirection.

@@ -30,14 +30,14 @@ class RoleTest extends CakeTestCase {
  */
 	public function testConstants() {
 		$r = $this->Role->find('first', array('conditions' => array('name' => String::Uuid())));
-		$this->assertEqual(empty($r), true, 'Shouldnt find a role that does not exist');
+		$this->assertEquals(empty($r), true, 'Shouldnt find a role that does not exist');
 		$r = $this->Role->find('first', array('conditions' => array('name' => Role::ADMIN)));
-		$this->assertEqual(is_array($r), true, 'Default admin role should be present in the database');
+		$this->assertEquals(is_array($r), true, 'Default admin role should be present in the database');
 		$r = $this->Role->find('first', array('conditions' => array('name' => Role::GUEST)));
-		$this->assertEqual(is_array($r), true, 'Default guest role should be present in the database');
+		$this->assertEquals(is_array($r), true, 'Default guest role should be present in the database');
 		$r = $this->Role->find('first', array('conditions' => array('name' => Role::USER)));
-		$this->assertEqual(is_array($r), true, 'Default user role should be present in the database');
+		$this->assertEquals(is_array($r), true, 'Default user role should be present in the database');
 		$r = $this->Role->find('first', array('conditions' => array('name' => Role::ROOT)));
-		$this->assertEqual(is_array($r), true, 'Default root role should be present in the database');
+		$this->assertEquals(is_array($r), true, 'Default root role should be present in the database');
 	}
 }

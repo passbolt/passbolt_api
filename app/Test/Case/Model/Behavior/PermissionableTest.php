@@ -42,7 +42,7 @@ class PermissionnableTest extends CakeTestCase {
 
 	public function testGetPermission() {
 		// log the user as a manager to be able to access all the db.
-		$adminUser = $this->User->findByUsername('darth.vader@passbolt.com');
+		$adminUser = $this->User->findByUsername('dame@passbolt.com');
 		$this->User->setActive($adminUser);
 
 		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../../Data/permissionsMatrix.php');
@@ -54,15 +54,25 @@ class PermissionnableTest extends CakeTestCase {
 					if ($aroType == 'User') {
 						$aroFindFunc = 'findByUsername';
 					}
-					$aroInstance = $this->$aroType->$aroFindFunc($testcase['aroname']);
-					$acoInstance = $this->$acoType->$acoFindFunc($testcase['aconame']);
+					$aroInstance = $this->{$aroType}->{$aroFindFunc}($testcase['aroname']);
+					$acoInstance = $this->{$acoType}->{$acoFindFunc}($testcase['aconame']);
 
-					// Get the permission.
-					$permission = $this->$acoType->getPermission($acoInstance[$acoType]['id'], $aroInstance[$aroType]['id'], $aroType);
-					$permission = $permission ? $permission['Permission']['type'] : null;
-					$this->assertTrue($testcase['result'] == $permission,
-						"permissions for {$acoType} {$testcase['aconame']} and category {$aroType} {$testcase['aroname']} returned {$permission} but should have returned {$testcase['result']}"
-					);
+					if(empty($aroInstance)) {
+						$this->assertTrue(false, 'Aro:' . $testcase['aroname'] . ' (type:' . $aroType .') could not be found.');
+					}
+					else if(empty($acoInstance)) {
+						$this->assertTrue(false, 'Aro:' . $testcase['aconame'] . ' (type:' . $acoType .') could not be found.');
+					} else {
+						// Get the permission.
+						$permission = $this->{$acoType}->getPermission(
+							$acoInstance[$acoType]['id'],
+							$aroInstance[$aroType]['id'], $aroType
+						);
+						$permission = $permission ? $permission['Permission']['type'] : null;
+						$this->assertTrue($testcase['result'] == $permission,
+							"permissions for {$acoType} {$testcase['aconame']} and category {$aroType} {$testcase['aroname']} returned {$permission} but should have returned {$testcase['result']}"
+						);
+					}
 				}
 			}
 		}
@@ -70,7 +80,7 @@ class PermissionnableTest extends CakeTestCase {
 
 	public function testIsAuthorized() {
 		// log the user as a manager to be able to access all the db.
-		$adminUser = $this->User->findByUsername('darth.vader@passbolt.com');
+		$adminUser = $this->User->findByUsername('dame@passbolt.com');
 		$this->User->setActive($adminUser);
 
 		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../../Data/permissionsMatrix.php');
@@ -85,14 +95,24 @@ class PermissionnableTest extends CakeTestCase {
 					$aroInstance = $this->$aroType->$aroFindFunc($testcase['aroname']);
 					$acoInstance = $this->$acoType->$acoFindFunc($testcase['aconame']);
 
-					// Check the user authorization.
-					foreach (PermissionType::getAll() as $permissionName => $permissionType) {
-						$isAuthorized = $this->$acoType->isAuthorized($acoInstance[$acoType]['id'], $permissionType, $aroInstance[$aroType]['id'], $aroType);
-						$expect = $testcase['result'] >= $permissionType;
-						$not = $expect ? '' : 'not';
-						$this->assertTrue($expect == $isAuthorized,
-							"{$aroType} {$testcase['aroname']} should {$not} be authorized to {$permissionName} {$acoType} {$testcase['aconame']}"
-						);
+					if(empty($aroInstance)) {
+						$this->assertTrue(false, 'Aro:' . $testcase['aroname'] . ' (type:' . $aroType .') could not be found.');
+					}
+					else if(empty($acoInstance)) {
+						$this->assertTrue(false, 'Aro:' . $testcase['aconame'] . ' (type:' . $acoType .') could not be found.');
+					} else {
+						// Check the user authorization.
+						foreach (PermissionType::getAll() as $permissionName => $permissionType) {
+							$isAuthorized = $this->$acoType->isAuthorized(
+								$acoInstance[$acoType]['id'], $permissionType,
+								$aroInstance[$aroType]['id'], $aroType
+							);
+							$expect = $testcase['result'] >= $permissionType;
+							$not = $expect ? '' : 'not';
+							$this->assertTrue($expect == $isAuthorized,
+								"{$aroType} {$testcase['aroname']} should {$not} be authorized to {$permissionName} {$acoType} {$testcase['aconame']}"
+							);
+						}
 					}
 				}
 			}

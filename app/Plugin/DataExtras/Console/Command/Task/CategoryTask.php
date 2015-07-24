@@ -54,7 +54,7 @@ class CategoryTask extends ModelTask {
 			'op1' => $Category->findByName("o-project1"),
 			'op2' => $Category->findByName("o-project2"),
 			'pvt' => $Category->findByName("private"),
-			'pjr' => $Category->findByName("pv-jean_rene"),
+			'pjr' => $Category->findByName("pv-jean_bartik"),
 
 			// Unit tests sandbox category
 			'utt' => $Category->findByName("utest")
@@ -279,7 +279,7 @@ class CategoryTask extends ModelTask {
 		$c[] = array('Category'=>array(
 			'id' => '222d3a7b-fc70-4faa-a19f-1aafc0a800dc',
 			'parent_id' => null,
-			'name' => 'pv-jean_rene',
+			'name' => 'pv-jean_bartik',
 			'category_type_id' => null,
 			'deleted' => 0,
 			'created' => '2014-05-06 03:35:39',

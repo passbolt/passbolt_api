@@ -48,7 +48,7 @@ class GroupTest extends CakeTestCase {
 			} else {
 				$msg = 'validation of the group name with "' . $testcase . '" should not validate';
 			}
-			$this->assertEqual($this->Group->validates(array('fieldList' => array('name'))), $result, $msg);
+			$this->assertEquals($this->Group->validates(array('fieldList' => array('name'))), $result, $msg);
 		}
 	}
 }
