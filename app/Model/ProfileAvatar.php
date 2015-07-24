@@ -195,8 +195,6 @@ class ProfileAvatar extends ImageStorage {
 			$url = $this->imageUrl($avatar, $size);
 			$avatarsPath[$size] = $url ? $url : '';
 		}
-		// Default path.
-		$avatarsPath['default'] = $this->imageUrl($avatar);
 		// Transform original model to add paths.
 		$avatar[$this->imagePathKey] = $avatarsPath;
 		return $avatar;
