@@ -68,7 +68,7 @@ class CategoryResourceTest extends CakeTestCase {
 			}
 			$validation = $this->CategoryResource->validates(array('fieldList' => array('category_id')));
 			if (!$validation) {
-				$msg .= print_r($this->CategoryResource->invalidFields(), true);
+				$msg .= print_r($this->CategoryResource->validationErrors, true);
 			}
 			$this->assertEquals($validation, $result, "$msg");
 		}
@@ -102,7 +102,7 @@ class CategoryResourceTest extends CakeTestCase {
 			}
 			$validation = $this->CategoryResource->validates(array('fieldList' => array('resource_id')));
 			if (!$validation) {
-				$msg .= print_r($this->CategoryResource->invalidFields(), true);
+				$msg .= print_r($this->CategoryResource->validationErrors, true);
 			}
 			$this->assertEquals($validation, $result, $msg);
 		}
@@ -119,7 +119,7 @@ class CategoryResourceTest extends CakeTestCase {
 		$this->CategoryResource->create();
 		$this->CategoryResource->set($cr);
 		$validation = $this->CategoryResource->validates(array('fieldList' => array('category_id', 'resource_id')));
-		$this->assertEquals($validation, false, print_r($this->CategoryResource->invalidFields(), true));
+		$this->assertEquals($validation, false, print_r($this->CategoryResource->validationErrors, true));
 	}
 
 }

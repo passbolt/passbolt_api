@@ -103,7 +103,7 @@ hcciUFw5
 			else $msg = 'validation of the secret data with ' . $testcase . ' should not validate';
 			$validate = $this->Secret->validates(array('fieldList' => array('data')));
 			$msg .= print_r($secret, true);
-			$msg .= print_r($this->Secret->invalidFields(), true);
+			$msg .= print_r($this->Secret->validationErrors, true);
 			$this->assertEquals($validate, $result, $msg);
 		}
 	}

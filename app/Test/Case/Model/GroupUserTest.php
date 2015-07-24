@@ -63,7 +63,7 @@ class GroupUserTest extends CakeTestCase {
 			}
 			$validation = $this->GroupUser->validates(array('fieldList' => array('group_id')));
 			if (!$validation) {
-				$msg .= print_r($this->GroupUser->invalidFields(), true);
+				$msg .= print_r($this->GroupUser->validationErrors, true);
 			}
 			$this->assertEquals($validation, $result, "$msg");
 		}
@@ -97,7 +97,7 @@ class GroupUserTest extends CakeTestCase {
 			}
 			$validation = $this->GroupUser->validates(array('fieldList' => array('user_id')));
 			if (!$validation) {
-				$msg .= print_r($this->GroupUser->invalidFields(), true);
+				$msg .= print_r($this->GroupUser->validationErrors, true);
 			}
 			$this->assertEquals($validation, $result, $msg);
 		}
@@ -114,7 +114,7 @@ class GroupUserTest extends CakeTestCase {
 		$this->GroupUser->create();
 		$this->GroupUser->set($cr);
 		$validation = $this->GroupUser->validates(array('fieldList' => array('group_id', 'user_id')));
-		$this->assertEquals($validation, false, print_r($this->GroupUser->invalidFields(), true));
+		$this->assertEquals($validation, false, print_r($this->GroupUser->validationErrors, true));
 	}
 
 }
