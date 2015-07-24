@@ -92,7 +92,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewCategoryIdIsMissing() {
-		// Unable to test missing id param because of route
+		// @todo? Unable to test missing id param because of route
 	}
 
 	public function testViewCategoryIdNotValid() {
@@ -248,7 +248,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$result = json_decode($this->testAction('/categories/add.json', array(
 			'data' => array(
 				'Category' => array(
-					'name' => ''
+					'name' => 'x'
 				)
 			),
 			'method' => 'Post',

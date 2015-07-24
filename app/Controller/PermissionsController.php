@@ -160,7 +160,7 @@ class PermissionsController extends AppController {
 		);
 		$findOptions = $this->$viewName->getFindOptions($viewCase, User::get('Role.name'), $findData);
 		$this->set('data', $this->$viewName->find('first', $findOptions));
-		$this->Message->success(__('The permission was sucessfully added'));
+		$this->Message->success(__('The permission was successfully added'));
 	}
 
 /**
@@ -394,7 +394,7 @@ class PermissionsController extends AppController {
 
 		// Delete the target permission
 		$this->Permission->delete($id);
-		$this->Message->success(__('The permission was sucessfully deleted'));
+		$this->Message->success(__('The permission was successfully deleted'));
 	}
 
 }

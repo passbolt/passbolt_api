@@ -3,9 +3,9 @@
  * IpAddress Component
  * Class used for working with IP addresses
  *
- * @copyright		(c) 2015-present Passbolt.com
- * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
- * @link				http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
+ * @link		http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
  */
 class IpAddressComponent extends Component {
 

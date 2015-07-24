@@ -70,7 +70,7 @@ class GroupsUsersController extends AppController {
 			$this->Message->error(__('Error while deleting'));
 			return;
 		}
-		$this->Message->success(__('The groupUser was sucessfully deleted'));
+		$this->Message->success(__('The groupUser was successfully deleted'));
 	}
 
 	/**
@@ -108,6 +108,6 @@ class GroupsUsersController extends AppController {
 		}
 		$fields = $this->GroupUser->getFindFields('add', User::get('Role.name'));
 		$this->set('data', $this->GroupUser->findById($cr['GroupUser']['id'], $fields['fields']));
-		$this->Message->success(__('The groupUser was sucessfully added'));
+		$this->Message->success(__('The groupUser was successfully added'));
 	}
 }

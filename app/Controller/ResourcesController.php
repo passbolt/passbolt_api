@@ -170,7 +170,7 @@ class ResourcesController extends AppController {
 			$this->Message->error(__('Error while deleting'));
 			return;
 		}
-		$this->Message->success(__('The resource was sucessfully deleted'));
+		$this->Message->success(__('The resource was successfully deleted'));
 	}
 
 /**
@@ -262,7 +262,7 @@ class ResourcesController extends AppController {
 		}
 
 		$datasource->commit();
-		$this->Message->success(__('The resource was sucessfully saved'));
+		$this->Message->success(__('The resource was successfully saved'));
 
 		// Return the just created resource
 		$data = array(
@@ -401,7 +401,7 @@ class ResourcesController extends AppController {
 				}
 			}
 		}
-		$this->Message->success(__('The resource was sucessfully updated'));
+		$this->Message->success(__('The resource was successfully updated'));
 		$data = array(
 			'Resource.id' => $resource['Resource']['id']
 		);

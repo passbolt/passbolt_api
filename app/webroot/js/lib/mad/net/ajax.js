@@ -81,7 +81,7 @@ mad.net.Ajax.request({
 				// pipe it to intercept server before any other treatments
 				.pipe(
 
-					// the request has been performed sucessfully
+					// the request has been performed successfully
 					function (data, textStatus, jqXHR) {
 						var response = new mad.net.Response(data),
 							// the deferred to return

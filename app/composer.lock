@@ -1,11 +1,52 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9d6e595b92955c7ad3b5a297e11819ee",
+    "hash": "12c91ac7d6680f0ba95d39be4c251873",
     "packages": [
+        {
+            "name": "burzum/cakephp-html-purifier",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/burzum/cakephp-html-purifier.git",
+                "reference": "32e2c672206b316b801aeb3377e67c9f06be9269"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/burzum/cakephp-html-purifier/zipball/32e2c672206b316b801aeb3377e67c9f06be9269",
+                "reference": "32e2c672206b316b801aeb3377e67c9f06be9269",
+                "shasum": ""
+            },
+            "require": {
+                "ezyang/htmlpurifier": "*",
+                "php": ">=5.3.2"
+            },
+            "type": "cakephp-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Florian Krämer",
+                    "homepage": "http://florian-kraemer.net"
+                }
+            ],
+            "description": "HtmlPurifier plugin for CakePHP",
+            "homepage": "http://github.com/burzum/cakephp-html-purifier",
+            "keywords": [
+                "Purifier",
+                "html",
+                "markup",
+                "sensitization",
+                "tidy",
+                "validation"
+            ],
+            "time": "2014-02-25 01:57:53"
+        },
         {
             "name": "burzum/cakephp-imagine-plugin",
             "version": "dev-master",
@@ -55,12 +96,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/burzum/cakephp-file-storage.git",
-                "reference": "bb352b440b5c95a1788e41da7e4f39370bd98936"
+                "reference": "e5107ae75d11c495e650104da58b012975fa278b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/burzum/cakephp-file-storage/zipball/bb352b440b5c95a1788e41da7e4f39370bd98936",
-                "reference": "bb352b440b5c95a1788e41da7e4f39370bd98936",
+                "url": "https://api.github.com/repos/burzum/cakephp-file-storage/zipball/e5107ae75d11c495e650104da58b012975fa278b",
+                "reference": "e5107ae75d11c495e650104da58b012975fa278b",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +137,7 @@
                 "storage",
                 "upload"
             ],
-            "time": "2015-01-26 18:26:26"
+            "time": "2015-04-30 14:36:49"
         },
         {
             "name": "composer/installers",
@@ -192,6 +233,50 @@
                 "zikula"
             ],
             "time": "2015-02-18 17:17:01"
+        },
+        {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "time": "2013-11-30 08:25:19"
         },
         {
             "name": "imagine/imagine",
@@ -385,6 +470,7 @@
         "burzum/cakephp-imagine-plugin": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }

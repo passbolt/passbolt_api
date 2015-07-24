@@ -142,7 +142,7 @@ class CommentsController extends AppController {
 		$findData = array('Comment' => array('id' => $this->Comment->id));
 		$findOptions = $this->Comment->getFindOptions('view', User::get('Role.name'), $findData);
 		$this->set('data', $this->Comment->find('first', $findOptions));
-		$this->Message->success(__('The comment was sucessfully added'));
+		$this->Message->success(__('The comment was successfully added'));
 	}
 
 /**
@@ -205,7 +205,7 @@ class CommentsController extends AppController {
 		$findData = array('Comment' => array('id' => $this->Comment->id));
 		$findOptions = $this->Comment->getFindConditions('view', User::get('Role.name'), $findData);
 		$this->set('data', $this->Comment->find('first', $findOptions));
-		$this->Message->success(__('The comment was sucessfully updated'));
+		$this->Message->success(__('The comment was successfully updated'));
 	}
 
 /**
@@ -247,6 +247,6 @@ class CommentsController extends AppController {
 		
 		// Delete the target comment and by cascading its children
 		$this->Comment->delete($id, true);
-		$this->Message->success(__('The comment was sucessfully deleted'));
+		$this->Message->success(__('The comment was successfully deleted'));
 	}
 }

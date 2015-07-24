@@ -30,13 +30,7 @@ class AppController extends Controller {
 	public $components = array(
 		'Session',
 		'Paginator',
-		'HtmlPurifier.HtmlPurifier' => array(
-			'config' => array(
-				'nohtml' => array(
-					'HTML.AllowedElements' => '',
-				),
-			),
-		),
+		'HtmlPurifier',
 		'Cookie',
 		'Auth',
 		'Message',
@@ -104,29 +98,8 @@ class AppController extends Controller {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
 
-        // Before sanitizing, keep the original data.
-        $this->request->dataRaw = $this->request->data;
-        //$this->request->queryRaw = $this->request->query;
-
 		// Sanitize user input.
-		// Create a very restrictive configuration.
-		Purifier::config('nohtml', array(
-				'HTML.AllowedElements' => '',
-				'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
-			)
-		);
-		// Sanitize any controller parameters.
-		if (isset($this->request->params['pass']) && !empty($this->request->params['pass'])) {
-			$this->request->params['pass'] = $this->HtmlPurifier->purifyHtml($this->request->params['pass'], 'nohtml');
-		}
-		// Sanitize post data, except exceptions.
-		if (isset($this->request->data) && !empty($this->request->data)) {
-			$this->request->data = $this->HtmlPurifier->purifyHtml($this->request->data, 'nohtml');
-		}
-		// Sanitize any get data.
-		if (isset($this->request->query) && !empty($this->request->query)) {
-			$this->request->query = $this->HtmlPurifier->purifyHtml($this->request->query, 'nohtml');
-		}
+		$this->sanitize();
 	}
 
 	/**
@@ -167,4 +140,31 @@ class AppController extends Controller {
 		$whitelist = Configure::read('Auth.whitelist');
 		return (isset($whitelist[$controller][$action]));
 	}
+
+	public function sanitize() {
+
+		// Before sanitizing, keep the original data.
+		$this->request->dataRaw = $this->request->data;
+		//$this->request->queryRaw = $this->request->query;
+
+		// Create a very restrictive configuration.
+		Purifier::config('nohtml', array(
+			'HTML.AllowedElements' => '',
+			'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
+		));
+
+		// Sanitize any controller parameters.
+		if (isset($this->request->params['pass']) && !empty($this->request->params['pass'])) {
+			$this->request->params['pass'] = $this->HtmlPurifier->cleanRecursive($this->request->params['pass'], 'nohtml');
+		}
+		// Sanitize post data, except exceptions.
+		if (isset($this->request->data) && !empty($this->request->data)) {
+			$this->request->data = $this->HtmlPurifier->cleanRecursive($this->request->data, 'nohtml');
+		}
+		// Sanitize any get data.
+		if (isset($this->request->query) && !empty($this->request->query)) {
+			$this->request->query = $this->HtmlPurifier->cleanRecursive($this->request->query, 'nohtml');
+		}
+	}
+
 }

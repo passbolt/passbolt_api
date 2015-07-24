@@ -237,8 +237,6 @@ class GroupsController extends AppController {
 			return;
 		}
 		$this->Group->commit();
-		$this->Message->success(__('The group was sucessfully deleted'));
+		$this->Message->success(__('The group was successfully deleted'));
 	}
-
-
 }
