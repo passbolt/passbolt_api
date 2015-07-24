@@ -204,7 +204,7 @@ class CategoriesController extends AppController {
 		$data = array('Category' => array('id' => $category['Category']['id']));
 		$options = $this->Category->getFindOptions('addResult', User::get('Role.name'), $data);
 		$this->set('data', $this->Category->find('first', $options));
-		$this->Message->success(__('The category was sucessfully added'));
+		$this->Message->success(__('The category was successfully added'));
 	}
 
 /**
@@ -273,7 +273,7 @@ class CategoriesController extends AppController {
 			return;
 		}
 
-		$this->Message->success(__('The category was sucessfully updated'));
+		$this->Message->success(__('The category was successfully updated'));
 	}
 
 /**
@@ -310,7 +310,7 @@ class CategoriesController extends AppController {
 
 		// delete
 		if ($this->Category->delete($id)) {
-			$this->Message->success(__('The category was succesfully deleted'));
+			$this->Message->success(__('The category was successfully deleted'));
 		} else {
 			$this->Message->error(__('The category could not be deleted.'));
 		}
@@ -325,9 +325,6 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function move($id = null, $position = null, $parentId = null) {
-		$position = Sanitize::clean($position);
-		$parentId = Sanitize::clean($parentId);
-
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -370,7 +367,7 @@ class CategoriesController extends AppController {
 		$result = $this->Category->move($id, $position, $parentId);
 		// deliver some results
 		if ($result) {
-			$this->Message->success(__('The category was sucessfully moved'));
+			$this->Message->success(__('The category was successfully moved'));
 		} else {
 			$this->Message->error(__('The category could not be moved'));
 		}
@@ -383,8 +380,6 @@ class CategoriesController extends AppController {
  * @param varchar $typeName , the name of the type
  */
 	public function type($id = null, $typeName = null) {
-		$typeName = Sanitize::clean($typeName);
-
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
@@ -422,6 +417,6 @@ class CategoriesController extends AppController {
 			$this->Message->error(__('The type could not be changed'));
 			return;
 		}
-		$this->Message->success(__('The type was succesfully set'));
+		$this->Message->success(__('The type was successfully set'));
 	}
 }

@@ -70,7 +70,7 @@ class CategoriesResourcesController extends AppController {
 			$this->Message->error(__('Error while deleting'));
 			return;
 		}
-		$this->Message->success(__('The categoryResource was sucessfully deleted'));
+		$this->Message->success(__('The categoryResource was successfully deleted'));
 	}
 
 /**
@@ -90,7 +90,6 @@ class CategoriesResourcesController extends AppController {
 		}
 
 		// set the data for validation and save
-		$this->request->data = Sanitize::clean($this->request->data);
 		$crpost = $this->request->data;
 		$this->CategoryResource->set($crpost);
 
@@ -109,6 +108,6 @@ class CategoriesResourcesController extends AppController {
 		}
 		$fields = $this->CategoryResource->getFindFields('add', User::get('Role.name'));
 		$this->set('data', $this->CategoryResource->findById($cr['CategoryResource']['id'], $fields['fields']));
-		$this->Message->success(__('The categoryResource was sucessfully added'));
+		$this->Message->success(__('The categoryResource was successfully added'));
 	}
 }

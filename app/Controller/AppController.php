@@ -9,8 +9,8 @@
  * @license      http://www.passbolt.com/license
  */
 
-App::uses('Sanitize', 'Utility');
 App::uses('Controller', 'Controller');
+App::uses('Purifier', 'HtmlPurifier.Lib');
 App::import('Model','User');
 
 /**
@@ -30,6 +30,7 @@ class AppController extends Controller {
 	public $components = array(
 		'Session',
 		'Paginator',
+		'HtmlPurifier',
 		'Cookie',
 		'Auth',
 		'Message',
@@ -69,13 +70,13 @@ class AppController extends Controller {
 				// Only for admin and user.
 				$Role = Common::getModel('Role');
 				$this->set('roles', $Role->find('all', array(
-							'conditions' => array(
-								'name' => array(
-									Role::ADMIN,
-									Role::USER
-								),
-							),
-						)));
+                    'conditions' => array(
+						'name' => array(
+                            Role::ADMIN,
+                            Role::USER
+                        ),
+                    ),
+                )));
 				$this->layout = 'html5';
 			}
 		}
@@ -97,20 +98,9 @@ class AppController extends Controller {
 			$this->Session->write('Config.language', Configure::read('Config.language'));
 		}
 
-		// Before sanitizing, keep the original data.
-		$this->request->dataRaw = $this->request->data;
-		$this->request->queryRaw = $this->request->query;
-
-		// Sanitize post data, except exceptions.
-		if (isset($this->request->data) && !empty($this->request->data)) {
-			$this->request->data = Sanitize::clean($this->request->data);
-		}
-		// sanitize any get data
-		if (isset($this->request->query) && !empty($this->request->query)) {
-			$this->request->query = Sanitize::clean($this->request->query);
-		}
+		// Sanitize user input.
+		$this->sanitize();
 	}
-
 
 	/**
 	 * Authorization check main callback
@@ -147,8 +137,34 @@ class AppController extends Controller {
 		if ($action == null) {
 			$action = $this->action;
 		}
-		//echo $controller.':'.$action;
 		$whitelist = Configure::read('Auth.whitelist');
 		return (isset($whitelist[$controller][$action]));
 	}
+
+	public function sanitize() {
+
+		// Before sanitizing, keep the original data.
+		$this->request->dataRaw = $this->request->data;
+		//$this->request->queryRaw = $this->request->query;
+
+		// Create a very restrictive configuration.
+		Purifier::config('nohtml', array(
+			'HTML.AllowedElements' => '',
+			'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
+		));
+
+		// Sanitize any controller parameters.
+		if (isset($this->request->params['pass']) && !empty($this->request->params['pass'])) {
+			$this->request->params['pass'] = $this->HtmlPurifier->cleanRecursive($this->request->params['pass'], 'nohtml');
+		}
+		// Sanitize post data, except exceptions.
+		if (isset($this->request->data) && !empty($this->request->data)) {
+			$this->request->data = $this->HtmlPurifier->cleanRecursive($this->request->data, 'nohtml');
+		}
+		// Sanitize any get data.
+		if (isset($this->request->query) && !empty($this->request->query)) {
+			$this->request->query = $this->HtmlPurifier->cleanRecursive($this->request->query, 'nohtml');
+		}
+	}
+
 }

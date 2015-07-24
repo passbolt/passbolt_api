@@ -11,6 +11,7 @@
 /app/tmp/cache/views/*
 /app/tmp/gpg/*
 /app/tmp/logs/*
+/app/tmp/purifier/*
 /app/tmp/sessions/*
 /app/tmp/tests/*
 /app/tmp/image-processing/*

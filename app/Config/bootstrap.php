@@ -40,6 +40,11 @@ if (Configure::read('debug') > 1) {
 }
 
 /**
+ * Html purifier.
+ */
+CakePlugin::load('HtmlPurifier', array('bootstrap' => true));
+
+/**
  * Imagine plugin for the image manipulation.
  */
 CakePlugin::load('Imagine', array(
@@ -56,7 +61,6 @@ CakePlugin::load('Imagine', array(
 	'bootstrap' => true
 ));
 CakePlugin::load('EmailQueue');
-
 
 require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
 

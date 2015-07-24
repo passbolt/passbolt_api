@@ -8,6 +8,12 @@
 	"require": {
 		"burzum/file-storage": "dev-master",
 		"burzum/cakephp-imagine-plugin": "dev-master",
-		"lorenzo/cakephp-email-queue": "1.0"
-	}
+		"lorenzo/cakephp-email-queue": "1.0",
+        "burzum/cakephp-html-purifier" : "1.0"
+	},
+    "extra": {
+        "installer-paths": {
+            "Plugin/HtmlPurifier": ["burzum/cakephp-html-purifier"]
+        }
+    }
 }

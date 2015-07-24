@@ -39,7 +39,7 @@ class FavoritesController extends AppController {
 
 		// the foreign instance does not exist
 		// the authorization to access the record is provided by the permissionable behavior, so if a user is not authorized to
-		// access the instance reccord, the exists method should return false
+		// access the instance record, the exists method should return false
 		$this->loadModel($foreignModelName);
 		if (!$this->$foreignModelName->exists($foreignId)) {
 			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));

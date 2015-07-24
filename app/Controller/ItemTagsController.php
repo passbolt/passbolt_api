@@ -74,6 +74,13 @@ class ItemTagsController extends AppController {
 		$this->Message->success();
 	}
 
+	/**
+	 * Edit several tag/item associations
+	 *
+	 * @param null|string $foreignModelName
+	 * @param null|UUID $foreignId
+	 * @return mixed
+	 */
 	public function updateBulk($foreignModelName = null, $foreignId = null) {
 		$datasource = ConnectionManager::getDataSource('default');
 		$datasource->begin();
@@ -299,7 +306,7 @@ class ItemTagsController extends AppController {
 		$findOptions = $this->ItemTag->getFindOptions('ItemTag.view', User::get('Role.name'), $findData);
 		$this->set('data', $this->ItemTag->find('first', $findOptions));
 
-		$this->Message->success(__('The tag was sucessfully added'));
+		$this->Message->success(__('The tag was successfully added'));
 	}
 
 
@@ -346,7 +353,7 @@ class ItemTagsController extends AppController {
 
 		// Delete the target itemTag
 		$this->ItemTag->delete($id, true);
-		$this->Message->success(__('The ItemTag was sucessfully deleted'));
+		$this->Message->success(__('The ItemTag was successfully deleted'));
 	}
 
 }

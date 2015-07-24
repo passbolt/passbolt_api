@@ -9,5 +9,5 @@
  * @since        version 2.12.7
  */
 class CategoryTypesController extends AppController {
-
+ // @todo delete
 }

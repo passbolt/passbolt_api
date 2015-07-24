@@ -791,7 +791,7 @@ class UsersController extends AppController {
 			return $this->Message->error(__('Error while deleting user'));
 		}
 		$this->User->commit();
-		$this->Message->success(__('The user was sucessfully deleted'));
+		$this->Message->success(__('The user was successfully deleted'));
 	}
 
 }
