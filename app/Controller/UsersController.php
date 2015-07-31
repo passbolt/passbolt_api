@@ -223,7 +223,7 @@ class UsersController extends AppController {
 		$fields = $this->User->getFindFields('User::save', User::get('Role.name'));
 		// check if the data is valid
 		if (!$this->User->validates()) {
-			$invalidFields = $this->User->invalidFields();
+			$invalidFields = $this->User->validationErrors;
 			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
 			throw new ValidationException(__('Could not validate user data'), $finalInvalidFields);
 		}
@@ -244,7 +244,7 @@ class UsersController extends AppController {
 		$this->User->Profile->set($userData);
 		if (!$this->User->Profile->validates()) {
 			$this->User->rollback();
-			$invalidFields = $this->User->Profile->invalidFields();
+			$invalidFields = $this->User->Profile->validationErrors;
 			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
 			throw new ValidationException(__('Could not validate profile'), $finalInvalidFields);
 		}
@@ -391,7 +391,7 @@ class UsersController extends AppController {
 			$this->User->id = $id;
 			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
 			if (!$this->User->validates(array('fieldList' => array($fields['fields'])))) {
-				$invalidFields = $this->User->invalidFields();
+				$invalidFields = $this->User->validationErrors;
 				$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
 				// Return error message, with list of invalid fields.
 				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
@@ -421,7 +421,7 @@ class UsersController extends AppController {
 			$this->User->Profile->set($profile);
 			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->rollback();
-				$invalidFields = $this->User->Profile->invalidFields();
+				$invalidFields = $this->User->Profile->validationErrors;
 				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
 				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
 			}
@@ -665,7 +665,7 @@ class UsersController extends AppController {
 			// If validation failed.
 			if (!$v) {
 				$this->User->rollback();
-				$invalidFields = $this->User->Profile->invalidFields();
+				$invalidFields = $this->User->Profile->validationErrors;
 				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
 				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
 			}
@@ -691,7 +691,7 @@ class UsersController extends AppController {
 			// If validation failed.
 			if (!$v) {
 				$this->User->rollback();
-				$invalidFields = $this->User->invalidFields();
+				$invalidFields = $this->User->validationErrors;
 				$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
 				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
 			}

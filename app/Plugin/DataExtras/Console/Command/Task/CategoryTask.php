@@ -25,7 +25,7 @@ class CategoryTask extends ModelTask {
 		foreach ($data as $item) {
 			$Model->create();
 			if (!$m = $Model->save($item)) {
-				pr($Model->invalidFields());
+				pr($Model->validationErrors);
 				$errorMsg = mysql_error();
 				echo $errorMsg;
 			}
