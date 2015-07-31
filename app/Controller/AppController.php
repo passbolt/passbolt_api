@@ -59,26 +59,19 @@ class AppController extends Controller {
 		}));
 
 		// Set default layout
-		if (isset($this->request->params['plugin']) && $this->request->params['plugin'] == 'api_generator') {
-			$this->layout = 'html5';
+		if ($this->request->is('json')) {
+			$this->layout = 'json';
+			$this->view = '/Json/default';
 		} else {
-			if ($this->request->is('json')) {
-				$this->layout = 'json';
-				$this->view = '/Json/default';
-			} else {
-				// Get roles, to load in the layout js variables.
-				// Only for admin and user.
-				$Role = Common::getModel('Role');
-				$this->set('roles', $Role->find('all', array(
-                    'conditions' => array(
-						'name' => array(
-                            Role::ADMIN,
-                            Role::USER
-                        ),
-                    ),
-                )));
-				$this->layout = 'html5';
-			}
+			// Get roles, to load in the layout js variables.
+			// Only for admin and user.
+			$Role = Common::getModel('Role');
+			$this->set('roles', $Role->find('all', array(
+				'conditions' => array(
+					'name' => array(Role::ADMIN, Role::USER),
+				),
+			)));
+			$this->layout = 'html5';
 		}
 
 		// Set active user Anonymous
@@ -141,6 +134,10 @@ class AppController extends Controller {
 		return (isset($whitelist[$controller][$action]));
 	}
 
+	/**
+	 * This perform the HTML sanitization of all user input
+	 * @access public
+	 */
 	public function sanitize() {
 
 		// Before sanitizing, keep the original data.
