@@ -53,6 +53,7 @@ class AppController extends Controller {
 	 * @return void
 	 */
 	public function beforeFilter() {
+
 		// Add a callback detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
 			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
@@ -65,12 +66,14 @@ class AppController extends Controller {
 		} else {
 			// Get roles, to load in the layout js variables.
 			// Only for admin and user.
+			// TODO move to the view
 			$Role = Common::getModel('Role');
 			$this->set('roles', $Role->find('all', array(
 				'conditions' => array(
 					'name' => array(Role::ADMIN, Role::USER),
 				),
 			)));
+			// default layout
 			$this->layout = 'html5';
 		}
 
@@ -78,10 +81,8 @@ class AppController extends Controller {
 		// or use what is in the session
 		User::get();
 
-		// Auth component initialization
-		foreach (Configure::read('Auth') as $key => $authConf) {
-			$this->Auth->{$key} = $authConf;
-		}
+		// Authentication initialization
+		$this->initAuth();
 
 		// @todo this will be remove via the initial auth check
 		// User::set() will load default config
@@ -128,7 +129,7 @@ class AppController extends Controller {
 			$controller = strtolower($this->name);
 		}
 		if ($action == null) {
-			$action = $this->action;
+			$action = strtolower($this->action);
 		}
 		$whitelist = Configure::read('Auth.whitelist');
 		return (isset($whitelist[$controller][$action]));
@@ -164,4 +165,17 @@ class AppController extends Controller {
 		}
 	}
 
+	public function initAuth() {
+		foreach (Configure::read('Auth') as $key => $authConf) {
+			$this->Auth->{$key} = $authConf;
+		}
+
+		// Set the headers send in any case where GPG Auth is requested
+		// @todo not hardcoded but from config
+		$this->response->header('X-GPGAuth-Version','1.3.0');
+		$this->response->header('X-GPGAuth-Verify-URL','/auth/verify');
+		$this->response->header('X-GPGAuth-Pubkey-URL','/auth/passbolt.com.pub');
+		$this->response->header('X-GPGAuth-Login-URL','/login');
+		$this->response->header('X-GPGAuth-Logout-URL','/logout');
+	}
 }

@@ -32,40 +32,6 @@ class UsersController extends AppController {
 	}
 
 /**
- * Login
- *
- * @access public
- */
-	public function login() {
-		// check if the user Authentication worked
-		// someone can not remain anonymous forever
-		if (!$this->Auth->login() || User::isAnonymous()) {
-			$this->layout = 'login';
-			$this->view = '/Users/login';
-			if ($this->request->is('post')) {
-				$this->request->data['User']['password'] = null;
-				$this->Message->error(__('Invalid username or password, try again'), array('throw' => false));
-			}
-			return;
-		}
-		// avoid looping if the requested URL is logout
-		if ($this->Auth->redirect() == '/logout' || $this->Auth->redirect() == '/login') {
-			$this->redirect('/');
-		} else {
-			return $this->redirect($this->Auth->redirectUrl());
-		}
-	}
-
-/**
- * Logout
- *
- * @access public
- */
-	public function logout() {
-		$this->redirect($this->Auth->logout());
-	}
-
-/**
  * Register page.
  */
 	public function register() {

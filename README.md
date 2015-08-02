@@ -14,6 +14,7 @@ You will need to install php5 and the following modules directly or using pear/p
 - mod_rewrite http://book.cakephp.org/2.0/en/installation/url-rewriting.html
 - gd / imagemagick
 - gnupg http://php.net/manual/en/gnupg.installation.php
+- curl (for testing) http://php.net/manual/en/curl.installation.php
 
 Clone the repository and associated submodules
 ```
@@ -53,6 +54,12 @@ if you want to install test data.
 ```
 Check if it works!
 
+How to regenerate the fixtures
+=========
+
+```
+./app/Console/cake DataExtras.data export
+```
 
 How to edit the LESS/CSS files?
 =========
@@ -67,6 +74,7 @@ Install the needed modules defined in the grunt config
 ```
 Install the styleguide
 ```
+	npm install -g bower
 	bower install
 	grunt styleguide-deploy
 ```

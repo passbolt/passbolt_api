@@ -4,7 +4,7 @@
  * Manages blacklisting of ip addresses in the system. 
  *
  * @copyright 	(c) 2015-present Passbolt.com
- * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
+ * @licence		GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
  */
 class BlacklistComponent extends Component {
 

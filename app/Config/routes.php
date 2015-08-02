@@ -59,8 +59,11 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
-	Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
-	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
+
+	Router::connect('/login', array('controller' => 'auth', 'action' => 'login'));
+	Router::connect('/logout', array('controller' => 'auth', 'action' => 'logout'));
+	Router::connect('/users/login', array('controller' => 'auth', 'action' => 'login'));
+	Router::connect('/users/logout', array('controller' => 'auth', 'action' => 'logout'));
 
 /**
  * Debug pages
