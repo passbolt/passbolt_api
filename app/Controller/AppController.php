@@ -171,11 +171,10 @@ class AppController extends Controller {
 		}
 
 		// Set the headers send in any case where GPG Auth is requested
-		// @todo not hardcoded but from config
 		$this->response->header('X-GPGAuth-Version','1.3.0');
+		$this->response->header('X-GPGAuth-Login-URL','/auth/login');
+		$this->response->header('X-GPGAuth-Logout-URL','/auth/logout');
 		$this->response->header('X-GPGAuth-Verify-URL','/auth/verify');
-		$this->response->header('X-GPGAuth-Pubkey-URL','/auth/passbolt.com.pub');
-		$this->response->header('X-GPGAuth-Login-URL','/login');
-		$this->response->header('X-GPGAuth-Logout-URL','/logout');
+		$this->response->header('X-GPGAuth-Pubkey-URL','/auth/verify');
 	}
 }

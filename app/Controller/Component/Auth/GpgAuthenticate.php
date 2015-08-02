@@ -48,7 +48,7 @@ class GpgAuthenticate extends BaseAuthenticate
             // check if the nonce is in valid format to avoid decrypting and returning something sensitive
             list($version, $length, $uuid, $version2) = explode('|', $nonce);
             if ($version == $version2 && $version = 'gpgauthv1.3.0' && Common::isUuid($uuid) && $length == 36) {
-                $response->header('X-GPGAuth-Verify-Response', $uuid);
+                $response->header('X-GPGAuth-Verify-Response', $nonce);
             } else {
                 $response->header('X-GPGAuth-Error', 'true');
                 return false;
