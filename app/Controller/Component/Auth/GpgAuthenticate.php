@@ -16,6 +16,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
     protected $_config;
     protected $_gpg;
+    protected $_response;
 
     /**
      * Authenticate
@@ -28,31 +29,31 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         // Init gpg object and load server key
         $this->_initKeyring();
+        $this->_response = &$response;
+
 
         // Begin process by checking if the user exist and his key is valid
         $response->header('X-GPGAuth-Authenticated', 'false');
         $response->header('X-GPGAuth-Progress', 'stage0');
         $user = $this->_identifyUserWithFingerprint($request);
-        if (!$user) {
-            $response->header('X-GPGAuth-Error', 'true');
-            return false;
+        if ($user === false) {
+            return $this->__error();
         }
 
         // Step 0. Server authentication
         // The user is asking the server to identify itself by decrypting a token
         // that was encrypted by the client using the server public key
         if (isset($request->data['gpg_auth']['server_verify_token'])) {
-            $nonce = $this->_gpg->decrypt(
-                $request->data['gpg_auth']['server_verify_token'], $this->_config['serverKey']['passphrase']);
-
-            // check if the nonce is in valid format to avoid decrypting and returning something sensitive
-            list($version, $length, $uuid, $version2) = explode('|', $nonce);
-            if ($version == $version2 && $version = 'gpgauthv1.3.0' && Common::isUuid($uuid) && $length == 36) {
-                $response->header('X-GPGAuth-Verify-Response', $nonce);
-            } else {
-                $response->header('X-GPGAuth-Error', 'true');
-                return false;
+            try {
+                $nonce = $this->_gpg->decrypt($request->data['gpg_auth']['server_verify_token']);
+                // check if the nonce is in valid format to avoid returning something sensitive decrypted
+                if($this->__checkNonce($nonce)) {
+                    $response->header('X-GPGAuth-Verify-Response', $nonce);
+                }
+            } catch (Exception $e) {
+                return $this->__error('Decryption failed');
             }
+            return false;
         }
 
         // Stage 1.
@@ -60,20 +61,23 @@ class GpgAuthenticate extends BaseAuthenticate
         // We therefore send an encrypted message that must be returned next time in order to verify
         $AuthenticationToken = Common::getModel('AuthenticationToken');
         if (!isset($request->data['gpg_auth']['user_token_result'])) {
-            $this->header('X-GPGAuth-Progress', 'stage1');
             // set encryption and signature keys
-            $this->_setUserKey($request->data['gpg_auth']['keyid'],$user);
+            $this->_setUserKey($request->data['gpg_auth']['keyid'], $user);
             $this->_gpg->addsignkey(
                 $this->_config['serverKey']['fingerprint'], $this->_config['serverKey']['passphrase']);
 
             // generate token
             $token = $AuthenticationToken->createToken($user['User']['id'], AuthenticationToken::UUID);
-            $token = 'gpgauthv1.3.0|36|'. $token .'|gpgauthv1.3.0';
+            if(!isset($token['AuthenticationToken']['token'])) {
+                return $this->__error('Failed to create token');
+            }
+            $token = 'gpgauthv1.3.0|36|'. $token['AuthenticationToken']['token'] .'|gpgauthv1.3.0';
 
             // encrypt and sign and send
             $msg = $this->_gpg->encryptsign($token);
             $msg = quotemeta(urlencode($msg));
-            $response->header('X-GPGAuth-User-Auth-Token', $msg);
+            $this->_response->header('X-GPGAuth-Progress', 'stage1');
+            $this->_response->header('X-GPGAuth-User-Auth-Token', $msg);
             return false;
         }
 
@@ -118,9 +122,11 @@ class GpgAuthenticate extends BaseAuthenticate
         }
 
         // set the key to be used for decrypting
-        if(!$this->_gpg->adddecryptkey($keyid,$this->_config['serverKey']['passphrase'])) {
+        if(!$this->_gpg->adddecryptkey($keyid, $this->_config['serverKey']['passphrase'])) {
             throw new CakeException('The GPG Server key defined in the config cannot be used to decrypt');
         }
+
+        $this->_gpg->seterrormode(gnupg::ERROR_EXCEPTION);
     }
 
     /**
@@ -171,12 +177,14 @@ class GpgAuthenticate extends BaseAuthenticate
     protected function _identifyUserWithFingerprint(CakeRequest $request) {
         // First we check if we can get the user with the key fingerprint
         if (!isset($request->data['gpg_auth']['keyid'])) {
+            $this->__debug('not key id set');
             return false;
         }
         $keyid = $request->data['gpg_auth']['keyid'];
 
         // validate the fingerprint format
         if (!Gpgkey::isValidFingerprint($keyid)) {
+            $this->__debug('invalid fingerprint');
             return false;
         }
 
@@ -187,10 +195,56 @@ class GpgAuthenticate extends BaseAuthenticate
         ));
         $user = $User->find('first', User::getFindOptions('User::GpgAuth', Role::USER, $user));
         if(empty($user)) {
+            $this->__debug('user nor found');
             return false;
         }
 
         return $user;
     }
 
+    /**
+     * Set a debug message in header if debug is enabled
+     * @param string $s debug message
+     */
+    private function __debug($s = null) {
+        if(isset($s) && Configure::read('debug')) {
+            $this->_response->header('X-GPGAuth-Debug',$s);
+        }
+    }
+
+    /**
+     * @param null $msg
+     * @return false (to be used as authenticated final result
+     */
+    private function __error($msg = null) {
+        $this->__debug($msg);
+        $this->_response->header('X-GPGAuth-Error', 'true');
+        return false;
+    }
+
+    /**
+     * @param $nonce
+     * @return bool|false
+     */
+    private function __checkNonce($nonce) {
+        $result = explode('|', $nonce);
+        $err_msg = 'Invalid verify token format, ';
+        if(sizeof($result) != 4) {
+            return $this->__error($err_msg . 'sections missing or wrong delimiters');
+        }
+        list($version, $length, $uuid, $version2) = $result;
+        if($version != $version2) {
+            return $this->__error($err_msg . 'version numbers don\'t match');
+        }
+        if($version != 'gpgauthv1.3.0') {
+            return $this->__error($err_msg . 'wrong version number');
+        }
+        if($version != Common::isUuid($uuid)) {
+            return $this->__error($err_msg . 'not a UUID');
+        }
+        if($length != 36) {
+            return $this->__error($err_msg . 'wrong token data length');
+        }
+        return true;
+    }
 }

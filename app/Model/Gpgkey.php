@@ -427,7 +427,7 @@ class Gpgkey extends AppModel {
 
     static public function isValidFingerprint($fingerprint) {
         // we expect a SHA1 fingerprint
-        $pattern = '/(A-F,0-9){40}/';
+        $pattern = '/[A-Fa-f0-9]{40}/';
         return preg_match($pattern, $fingerprint);
     }
 }
