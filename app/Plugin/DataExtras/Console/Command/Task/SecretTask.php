@@ -93,8 +93,10 @@ class SecretTask extends ModelTask {
 			)));
 
 		$res = gnupg_init();
+		gnupg_seterrormode($res,GNUPG_ERROR_WARNING);
 		gnupg_import($res, $key['Gpgkey']['key']);
 		gnupg_addencryptkey($res , $key['Gpgkey']['fingerprint']);
+
 		$encrypted = gnupg_encrypt ($res , $password);
 
 		return $encrypted;

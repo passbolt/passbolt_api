@@ -55,18 +55,12 @@
 				<h1><a href="#"><span>Passbolt</span></a></h1>
 			</div>
 			<div class="users login form">
-			<?php echo $this->MyForm->create('User');?>
-				<fieldset>
-					<legend><?php echo __('Please enter your username and password'); ?></legend>
-					<?php echo $this->MyForm->input('User.username', array('label' => __('Username'), 'class' =>'required fluid')); ?>
-					<?php echo $this->MyForm->input('User.password', array('label' => __('Password'), 'class' =>'required fluid')); ?>
-				</fieldset>
-				<div class="actions-wrapper">
-					<div class="submit"><input class="button primary" value="<?php echo __('login'); ?>" type="submit"></div>
-					<!--a class="secondary" href="#">forgot password?</a-->
+				<div class="feedback">
+					<i class="icon huge download" ></i>
 				</div>
-				<?php echo $this->PassboltAuth->get(); ?>
-			<?php echo $this->MyForm->end();?>
+				<div class="actions-wrapper center">
+					<a class="button primary big" href="https://github.com/passbolt/passbolt_ff/raw/develop/passbolt-firefox-addon.xpi">Download the plugin</a>
+				</div>
 			</div>
 		</div>
 	</div>

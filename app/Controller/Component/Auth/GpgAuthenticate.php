@@ -61,6 +61,9 @@ class GpgAuthenticate extends BaseAuthenticate
         // We therefore send an encrypted message that must be returned next time in order to verify
         $AuthenticationToken = Common::getModel('AuthenticationToken');
         if (!isset($request->data['gpg_auth']['user_token_result'])) {
+            // set the stage
+            $this->_response->header('X-GPGAuth-Progress', 'stage1');
+
             // set encryption and signature keys
             $this->_setUserKey($request->data['gpg_auth']['keyid'], $user);
             $this->_gpg->addsignkey(
@@ -76,29 +79,31 @@ class GpgAuthenticate extends BaseAuthenticate
             // encrypt and sign and send
             $msg = $this->_gpg->encryptsign($token);
             $msg = quotemeta(urlencode($msg));
-            $this->_response->header('X-GPGAuth-Progress', 'stage1');
             $this->_response->header('X-GPGAuth-User-Auth-Token', $msg);
             return false;
         }
 
         // Stage 2.
         // Check if the token provided at stage 1 have been decrypted and is still valid
-        $result = $AuthenticationToken->checkTokenIsValid(
-            $request->data['gpg_auth']['user_token_result'], $user['User']['id']);
-        if (!$result) {
-            // we tell the client via the headers that the process failed
-            header('X-GPGAuth-Progress: stage2');
-            $response->header('X-GPGAuth-Error', 'true');
-            return false;
+        if (isset($request->data['gpg_auth']['user_token_result'])) {
+            $this->_response->header('X-GPGAuth-Progress','stage2');
+            if (!(Common::isUuid($request->data['gpg_auth']['user_token_result']))) {
+                return $this->__error('The user token result is not a valid UUID');
+            }
+            if (!($AuthenticationToken->checkTokenIsValid(
+                    $request->data['gpg_auth']['user_token_result'], $user['User']['id'])
+            )) {
+                return $this->__error('The user token result could not be found ' .
+                    't='.$request->data['gpg_auth']['user_token_result'] . ' u=' . $user['User']['id']);
+            }
         }
 
         // Completed
         // we set the user to active and provide some success feedback
         User::setActive($user);
-        $response->header('X-GPGAuth-Progress', 'complete');
-        $response->header('X-GPGAuth-Authenticated', 'true');
-        $response->header('X-GPGAuth-Refer', '/'); // @todo default or controller referer
-
+        $this->_response->header('X-GPGAuth-Progress', 'complete');
+        $this->_response->header('X-GPGAuth-Authenticated', 'true');
+        $this->_response->header('X-GPGAuth-Refer', '/'); // @todo default or controller referer
         return true;
     }
 
@@ -229,7 +234,7 @@ class GpgAuthenticate extends BaseAuthenticate
     private function __checkNonce($nonce) {
         $result = explode('|', $nonce);
         $err_msg = 'Invalid verify token format, ';
-        if(sizeof($result) != 4) {
+        if(count($result) != 4) {
             return $this->__error($err_msg . 'sections missing or wrong delimiters');
         }
         list($version, $length, $uuid, $version2) = $result;

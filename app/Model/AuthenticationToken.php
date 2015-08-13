@@ -127,7 +127,7 @@ class AuthenticationToken extends AppModel {
 				$token = md5($rdStr + time());
 				break;
 			case self::UUID:
-				$token = String::uuid();
+				$token = Common::uuid();
 				break;
 		}
 		return $token;
@@ -142,6 +142,7 @@ class AuthenticationToken extends AppModel {
 	 * @return array or null if doesn't exist.
 	 */
 	public function checkTokenIsValid($token, $userId) {
+		// @todo check token expiracy
 		$token = $this->find('first', array(
 				'conditions' => array(
 					'AuthenticationToken.user_id' => $userId,
@@ -171,6 +172,7 @@ class AuthenticationToken extends AppModel {
 		$this->setValidationRules($type);
 		$v = $this->validates();
 		if (!$v) {
+
 			return false;
 		}
 		$this->create();

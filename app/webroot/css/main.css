@@ -110,6 +110,33 @@ i.no-text + span {
 .inline {
   display: inline-block;
 }
+/* make something spin */
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+@-moz-keyframes rotate {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(-360deg);
+  }
+}
+.rotate {
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: rotate;
+  -moz-animation-duration: 4s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+}
 /* palette */
 /* borders */
 /* font */
@@ -936,6 +963,18 @@ span + .icon {
 .icon.warning:before {
   content: '\26A0';
 }
+.icon.rocket:before {
+  content: '\1F680';
+}
+.icon.cycle:before {
+  content: '\1F504';
+}
+.icon.hourglass:before {
+  content: '\23F3';
+}
+.icon.retry:before {
+  content: '\27F3';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -1413,6 +1452,10 @@ form .input .message.warning {
 form .input .message.notice {
   color: #2894df;
 }
+form .input .message.helptext {
+  color: #888888;
+  font-weight: normal;
+}
 .input.error label {
   color: #d40101;
 }
@@ -1464,9 +1507,6 @@ input[type=file] {
 }
 /* file upload input */
 /* layout and shortcuts */
-input.big {
-  font-size: 20px;
-}
 select.fluid,
 textarea.fluid,
 input[type=password].fluid,
@@ -1475,6 +1515,9 @@ input[type=text].fluid {
 }
 select.fluid {
   width: 97.5%;
+}
+.submit-wrapper {
+  margin-top: .5em;
 }
 /* shortcut classes for layout */
 /*
@@ -4307,41 +4350,6 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 .folder-add .input.text {
   width: 25em;
 }
-/*
- * Password workspace
- * @todo better namespacing
- */
-/* drag n drop */
-#js_dragged_resource {
-  padding: 6px 10px;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-#js_dragged_resource span.name {
-  font-weight: bold;
-}
-/* sidebar */
-.panel.aside .resource .detailed-information li.password .value {
-  height: 1.6em;
-  padding-top: 0.2em;
-}
-/* unused collumn
-	@todo: remove html
-*/
-.js_grid_column_owner,
-.js_grid_column_copyLogin,
-.js_grid_column_copySecret {
-  display: none;
-}
-/* hide left column when there is no space */
-@media all and (max-width: 980px) {
-  .tableview .js_grid_column_modified {
-    display: none;
-  }
-}
 /* sidebar / user details in overview */
 .panel.aside .user .header {
   /*
@@ -4454,6 +4462,41 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* login history icon collumn centerign */
 .login-history td:first-child {
   text-align: center;
+}
+/*
+ * Password workspace
+ * @todo better namespacing
+ */
+/* drag n drop */
+#js_dragged_resource {
+  padding: 6px 10px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+#js_dragged_resource span.name {
+  font-weight: bold;
+}
+/* sidebar */
+.panel.aside .resource .detailed-information li.password .value {
+  height: 1.6em;
+  padding-top: 0.2em;
+}
+/* unused collumn
+	@todo: remove html
+*/
+.js_grid_column_owner,
+.js_grid_column_copyLogin,
+.js_grid_column_copySecret {
+  display: none;
+}
+/* hide left column when there is no space */
+@media all and (max-width: 980px) {
+  .tableview .js_grid_column_modified {
+    display: none;
+  }
 }
 /* TODO replace by page level selector */
 .page.settings .main.panel .middle {
