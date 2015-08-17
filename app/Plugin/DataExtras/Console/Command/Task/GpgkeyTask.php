@@ -45,9 +45,12 @@ class GpgkeyTask extends ModelTask {
 		$prefix = $u['User']['username'];
 		$uprefix = explode('@', $prefix);
 		$gpgkeyPath = APP . 'Config' . DS . 'gpg' . DS;
-		$keyFileName = $gpgkeyPath . 'passbolt_dummy_key.asc';
 		if (file_exists($gpgkeyPath . $uprefix[0] . '_public.key')) {
 			$keyFileName = $gpgkeyPath . $uprefix[0] . '_public.key';
+		} else {
+			$keyFileName = $gpgkeyPath . 'passbolt_dummy_key.asc';
+			$msg = 'could not find key' . $gpgkeyPath . $uprefix[0] . '_public.key' . ' for ' . $u['User']['username'] . ' using dummy one.';
+			$this->out($msg);
 		}
 		return $keyFileName;
 	}
