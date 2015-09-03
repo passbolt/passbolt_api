@@ -98,8 +98,10 @@ Or launch it at regular intervals through cron. For example in :
 
 You can add a call to the script to run every minutes:
 ```
-	1 * * * * /var/www/passbolt/app/Console/cake EmailQueue.sender >> /var/log/passbolt.log
+	* * * * * /var/www/passbolt/app/Console/cake EmailQueue.sender > /var/log/passbolt.log
 ```
+
+See more: ﻿https://en.wikipedia.org/wiki/Cron
 
 
 Frequently Asked Questions
