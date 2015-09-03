@@ -156,6 +156,9 @@ module.exports = function(grunt) {
 	// Bower deploy
 	grunt.registerTask('styleguide-deploy', ['copy:styleguide']);
 
+	// Run 'grunt js' to prepare the javascript
+	grunt.registerTask('js', ['clean:js', 'shell:jsmin']);
+
 	// Run 'grunt production' to prepare the production release
 	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);
 

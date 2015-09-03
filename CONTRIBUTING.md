@@ -55,9 +55,6 @@ CakePHP tests requires [PHPUnit](http://www.phpunit.de/manual/current/en/install
 
     ./lib/Cake/Console/cake test core AllTests --stderr
 
-To run the sniffs for CakePHP coding standards:
-
-    phpcs -p --extensions=php --standard=CakePHP ./lib/Cake
 
 Check the [cakephp-codesniffer](https://github.com/cakephp/cakephp-codesniffer)
 repository to setup the CakePHP standard. The [README](https://github.com/cakephp/cakephp-codesniffer/blob/master/README.md) contains installation info
