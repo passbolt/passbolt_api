@@ -176,7 +176,7 @@ steal(
 		'required': function (value) {
 			var xregexp = XRegExp("^[\s\n\t ]*$");
 			if (typeof value == 'undefined' || value === null || xregexp.test(value)) {
-				return __('Required');
+				return __('This information is required');
 			}
 			return true;
 		},

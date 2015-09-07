@@ -73,6 +73,11 @@ class Resource extends AppModel {
 					)
 				),
 				'name' => array(
+					'required' => array(
+						'allowEmpty' => false,
+						'rule'       => array('notEmpty'),
+						'message'    => __('A name is required')
+					),
 					'alphaNumericAndSpecial' => array(
 						'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
 						'required' => 'create',
@@ -85,6 +90,11 @@ class Resource extends AppModel {
 					)
 				),
 				'username' => array(
+					'required' => array(
+						'allowEmpty' => false,
+						'rule'       => array('notEmpty'),
+						'message'    => __('A username is required')
+					),
 					'alphaNumeric' => array(
 						'rule' => '/^[a-zA-Z0-9\-_]*$/',
 						'required' => 'create',
@@ -126,7 +136,7 @@ class Resource extends AppModel {
 				),
 				'size' => array(
 					'rule' => array('lengthBetween', 3, 255),
-					'message' => __('Username should be between %s and %s characters long'),
+					'message' => __('Description should be between %s and %s characters long'),
 				)
 			),
 		);
