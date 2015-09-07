@@ -110,6 +110,33 @@ i.no-text + span {
 .inline {
   display: inline-block;
 }
+/* make something spin */
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+@-moz-keyframes rotate {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(-360deg);
+  }
+}
+.rotate {
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: rotate;
+  -moz-animation-duration: 4s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+}
 /* palette */
 /* borders */
 /* font */
@@ -936,6 +963,18 @@ span + .icon {
 .icon.warning:before {
   content: '\26A0';
 }
+.icon.rocket:before {
+  content: '\1F680';
+}
+.icon.cycle:before {
+  content: '\1F504';
+}
+.icon.hourglass:before {
+  content: '\23F3';
+}
+.icon.retry:before {
+  content: '\27F3';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -1413,6 +1452,10 @@ form .input .message.warning {
 form .input .message.notice {
   color: #2894df;
 }
+form .input .message.helptext {
+  color: #888888;
+  font-weight: normal;
+}
 .input.error label {
   color: #d40101;
 }
@@ -1464,9 +1507,6 @@ input[type=file] {
 }
 /* file upload input */
 /* layout and shortcuts */
-input.big {
-  font-size: 20px;
-}
 select.fluid,
 textarea.fluid,
 input[type=password].fluid,
@@ -1475,6 +1515,9 @@ input[type=text].fluid {
 }
 select.fluid {
   width: 97.5%;
+}
+.submit-wrapper {
+  margin-top: .5em;
 }
 /* shortcut classes for layout */
 /*
@@ -2687,6 +2730,7 @@ div.secret-copy > pre {
 .dialog textarea {
   width: 92%;
 }
+.dialog textarea + .message.error,
 .dialog input + .message.error {
   display: block;
   clear: both;

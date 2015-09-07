@@ -4,7 +4,6 @@
 /* header */
 .page.register, /* register use the same layout */
 .page.login {
-
 	h2 {
 		font-size:2em;
 		margin-top:1em;
@@ -23,9 +22,14 @@
 
 	.form {
 		background: #EEE;
-		padding: 4% 0% 9% 5%;
+		padding: 4% 5% 9% 5%;
 		margin-top: 1%;
 
+	  	form {
+		  input[type=text], input[type=password] {
+			width:90%;
+		  }
+		}
 		fieldset {
 			margin: 0;
 			border: 0;
@@ -41,6 +45,10 @@
 			input {
 				padding:.7em 1.5em;
 			}
+		}
+
+		.actions-wrapper.center {
+			text-align:center;
 		}
 	}
 
@@ -74,20 +82,24 @@
 	}
 
 	.feedback {
-		.icon.paperplane.huge {
+		.icon.huge {
 			font-size:160px;
 			color:#CCC;
 			text-align:center;
 			display:block;
-			width:95%;
-			padding:.1em 0 0 0;
-			line-height: 160px;
+		  	height:160px;
+			padding:0;
+			margin:0 0 .1em 0;
+			line-height: 195px;
+		  	width:195px;
+		  	margin:auto;
+
 		}
 		p {
 			text-align: center;
-			width:85%;
-			padding:0 0 0 5%;
+			width:100%;
 			font-size: 1.250em;
+		  	font-weight:bold;
 		}
 	}
 }

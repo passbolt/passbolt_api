@@ -124,3 +124,31 @@ i.no-text + span {
 .inline {
 	display:inline-block;
 }
+
+/* make something spin */
+@-webkit-keyframes rotate {
+  from {
+	-webkit-transform: rotate(0deg);
+  }
+  to {
+	-webkit-transform: rotate(-360deg);
+  }
+}
+@-moz-keyframes rotate {
+  from {
+	-moz-transform: rotate(0deg);
+  }
+  to {
+	-moz-transform: rotate(-360deg);
+  }
+}
+.rotate {
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: rotate;
+  -moz-animation-duration: 4s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+}
