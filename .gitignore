@@ -31,7 +31,7 @@
 /app/Vendor/*
 !/app/Vendor/RandomTool.php
 !/app/Vendor/openpgp-php
-!/app/webroot/js/lib
+!/app/webroot/js/lib/*
 
 # bower and grunt
 /bower_components
