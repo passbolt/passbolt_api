@@ -29,9 +29,9 @@
 /Vendor
 /vendors
 /app/Vendor/*
+/app/webroot/js/lib/*
 !/app/Vendor/RandomTool.php
 !/app/Vendor/openpgp-php
-!/app/webroot/js/lib/*
 
 # bower and grunt
 /bower_components
