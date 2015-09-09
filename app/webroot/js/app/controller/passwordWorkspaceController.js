@@ -205,8 +205,9 @@ steal(
 			var category = new passbolt.model.Category({ parent_id: data.id });
 
 			// get the dialog
-			var dialog = new mad.controller.component.DialogController(null, {label: __('Create a new Category')})
-				.start();
+			var dialog = new mad.controller.component.DialogController(null, {
+				label: __('Create a new Category'), cssClasses : ['dialog-wrapper']
+				}).start();
 
 			// attach the component to the dialog
 			var form = dialog.add(passbolt.controller.form.category.CreateFormController, {
@@ -298,8 +299,9 @@ steal(
 			var resource = new passbolt.model.Resource({ Category: categories });
 
 			// get the dialog
-			var dialog = new mad.controller.component.DialogController(null, {label: __('Create Password')})
-				.start();
+			var dialog = new mad.controller.component.DialogController(null, {
+				label: __('Create Password'), cssClasses : ['create-password-dialog','dialog-wrapper']
+			}).start();
 
 			// attach the component to the dialog
 			var form = dialog.add(passbolt.controller.form.resource.CreateFormController, {

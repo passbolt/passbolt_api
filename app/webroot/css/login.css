@@ -110,6 +110,33 @@ i.no-text + span {
 .inline {
   display: inline-block;
 }
+/* make something spin */
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+@-moz-keyframes rotate {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(-360deg);
+  }
+}
+.rotate {
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 4s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: rotate;
+  -moz-animation-duration: 4s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+}
 /* palette */
 /* borders */
 /* font */
@@ -893,6 +920,18 @@ span + .icon {
 .icon.warning:before {
   content: '\26A0';
 }
+.icon.rocket:before {
+  content: '\1F680';
+}
+.icon.cycle:before {
+  content: '\1F504';
+}
+.icon.hourglass:before {
+  content: '\23F3';
+}
+.icon.retry:before {
+  content: '\27F3';
+}
 /** notification messages **/
 .notification_status .icon.success:before {
   content: '\2713';
@@ -1110,6 +1149,10 @@ form .input .message.warning {
 form .input .message.notice {
   color: #2894df;
 }
+form .input .message.helptext {
+  color: #888888;
+  font-weight: normal;
+}
 .input.error label {
   color: #d40101;
 }
@@ -1161,9 +1204,6 @@ input[type=file] {
 }
 /* file upload input */
 /* layout and shortcuts */
-input.big {
-  font-size: 20px;
-}
 select.fluid,
 textarea.fluid,
 input[type=password].fluid,
@@ -1172,6 +1212,9 @@ input[type=text].fluid {
 }
 select.fluid {
   width: 97.5%;
+}
+.submit-wrapper {
+  margin-top: .5em;
 }
 /* shortcut classes for layout */
 /*
@@ -1943,7 +1986,22 @@ html body .button.processing {
 .plugin-check.firefox {
   background: transparent url('../img/third_party/firefox_logo.png') 1.5em center no-repeat;
   background-size: 150px auto;
-  /* 150px */
+}
+.plugin-check.chrome {
+  background: transparent url('../img/third_party/ChromeWebStore.png') 0.5em center no-repeat;
+  background-size: 180px auto;
+}
+.plugin-check.gpg {
+  background: transparent url('../img/third_party/gnupg_logo_disabled.png') 2em center no-repeat;
+  background-size: 150px auto;
+}
+.plugin-check.gpg.success {
+  background: #edf7eb url('../img/third_party/gnupg_logo.png') 2em center no-repeat;
+  background-size: 150px auto;
+}
+.plugin-check.chrome.error {
+  background: #ffe4e4 url('../img/third_party/ChromeWebStore_disabled.png') 0.5em center no-repeat;
+  background-size: 180px auto;
 }
 .plugin-check.success {
   background-color: #edf7eb;
@@ -1953,6 +2011,9 @@ html body .button.processing {
 }
 .plugin-check.warning {
   background-color: #ffefc1;
+}
+.plugin-check.notice {
+  background-color: #daecf9;
 }
 .plugin-check .message {
   font-weight: normal;
@@ -1972,6 +2033,7 @@ html body .button.processing {
 .passboltplugin.no-passboltplugin-config .plugin-check.warning {
   display: block;
 }
+.passboltplugin.passboltplugin-config .plugin-check.gpg.notice,
 .passboltplugin.passboltplugin-config .plugin-check.success {
   display: block;
 }
@@ -2022,8 +2084,14 @@ html body .button.processing {
 .page.register .form,
 .page.login .form {
   background: #EEE;
-  padding: 4% 0% 9% 5%;
+  padding: 4% 5% 9% 5%;
   margin-top: 1%;
+}
+.page.register .form form input[type=text],
+.page.login .form form input[type=text],
+.page.register .form form input[type=password],
+.page.login .form form input[type=password] {
+  width: 90%;
 }
 .page.register .form fieldset,
 .page.login .form fieldset {
@@ -2045,6 +2113,10 @@ html body .button.processing {
 .page.register .form .submit input,
 .page.login .form .submit input {
   padding: .7em 1.5em;
+}
+.page.register .form .actions-wrapper.center,
+.page.login .form .actions-wrapper.center {
+  text-align: center;
 }
 .page.register .chrome-plugin-block p img,
 .page.login .chrome-plugin-block p img {
@@ -2078,20 +2150,23 @@ html body .button.processing {
   padding-top: .5em;
   padding-bottom: 2.5em;
 }
-.page.register .feedback .icon.paperplane.huge,
-.page.login .feedback .icon.paperplane.huge {
+.page.register .feedback .icon.huge,
+.page.login .feedback .icon.huge {
   font-size: 160px;
   color: #CCC;
   text-align: center;
   display: block;
-  width: 95%;
-  padding: .1em 0 0 0;
-  line-height: 160px;
+  height: 160px;
+  padding: 0;
+  margin: 0 0 .1em 0;
+  line-height: 195px;
+  width: 195px;
+  margin: auto;
 }
 .page.register .feedback p,
 .page.login .feedback p {
   text-align: center;
-  width: 85%;
-  padding: 0 0 0 5%;
+  width: 100%;
   font-size: 1.250em;
+  font-weight: bold;
 }
