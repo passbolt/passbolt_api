@@ -25,6 +25,9 @@ module.exports = function(grunt) {
 			],
 			'js': [
 				'<%= config.webroot %>/js/app/production.js'
+			],
+			'lib': [
+				'<%= config.webroot %>/js/lib/**'
 			]
 		},
 		lesslint: {
@@ -99,6 +102,15 @@ module.exports = function(grunt) {
 					dest: '<%= config.webroot %>/less',
 					expand: true
 				}]
+			},
+			lib : {
+				cwd: '<%= bower.directory %>',
+				src: [
+					'**',
+					'!**passbolt_styldeguide/**'
+				],
+				dest: '<%= config.webroot %>/js/lib/',
+				expand: true
 			}
 		},
 		watch: {
@@ -153,8 +165,10 @@ module.exports = function(grunt) {
 	// Run 'grunt css' to compile LESS into CSS, combine and minify
 	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
 
-	// Bower deploy
+	// Bower styleguide deploy
 	grunt.registerTask('styleguide-deploy', ['copy:styleguide']);
+	// Bower libs deploy
+	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib']);
 
 	// Run 'grunt production' to prepare the production release
 	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);
