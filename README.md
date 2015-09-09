@@ -45,6 +45,13 @@ You will need a working version of composer. See https://getcomposer.org
 	composer install --no-dev
 ```
 
+Install the front-end dependencies. You will need to have bower and grunt installed.
+```
+	bower install
+	grunt lib-deploy
+```
+
+
 Run the install script from the cakephp root with the data flag set
 if you want to install test data.
 ```
