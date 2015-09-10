@@ -4,7 +4,7 @@ import 'app/component/comments_list';
 import 'app/form/comment/create';
 
 /**
- * @inherits mad.controller.component.ComponentController
+ * @inherits mad.component.Component
  * @parent index
  *
  * @constructor
@@ -15,7 +15,7 @@ import 'app/form/comment/create';
  * this.options and merged with defaults static variable
  * 	 - foreignModel : the model the comment system will be plugged to
  * 	 - foreign Id : the resource id (foreign key) the comment system will be plugged to
- * @return {passbolt.controller.CommentsController}
+ * @return {passbolt.component.Comments}
  */
 var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.component.Comments', /** @static */ {
 	defaults: {
@@ -33,7 +33,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	/**
 	 * Called right after the start function
 	 * @return {void}
-	 * @see {mad.controller.ComponentController}
+	 * @see {mad.component.Component}
 	 */
 	afterStart: function () {
 		// create a form to add a comment and plug it onto the current resource

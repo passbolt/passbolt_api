@@ -5,18 +5,18 @@ import 'app/model/comment';
 
 
 /**
- * @inherits mad.controller.component.TreeController
+ * @inherits mad.component.Tree
  * @parent index
  *
  * @constructor
- * Creates a new Comments List Controller
+ * Creates a new Comments List
  *
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
  * 	 - foreignModel : the model the comment list system will be plugged to
  * 	 - foreign Id : the resource id (foreign key) the comment list system will be plugged to
- * @return {passbolt.controller.component.CommentsListsController}
+ * @return {passbolt.component.CommentsList}
  */
 var CommentsList = passbolt.component.CommentsList = mad.Component.Tree.extend('passbolt.component.CommentsList', /** @static */ {
 	defaults: {

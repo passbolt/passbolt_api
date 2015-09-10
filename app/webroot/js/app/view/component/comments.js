@@ -5,7 +5,7 @@ import 'app/view/template/component/comments.ejs';
 /**
  * @inherits mad.view.View
  */
-var Comments = mad.view.component.Comments = mad.View.extend('mad.view.component.Comments', /** @static */ {
+var Comments = passbolt.view.component.Comments = mad.View.extend('passbolt.view.component.Comments', /** @static */ {
 
 }, /** @prototype */ {
 
