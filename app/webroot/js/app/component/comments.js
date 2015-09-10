@@ -1,7 +1,7 @@
 import 'app/model/comment';
 import 'app/view/component/comments';
-import 'app/controller/component/comments_list';
-import 'app/controller/form/comment/create';
+import 'app/component/comments_list';
+import 'app/form/comment/create';
 
 /**
  * @inherits mad.controller.component.ComponentController
@@ -99,3 +99,5 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	}
 
 });
+
+export default Comments;
