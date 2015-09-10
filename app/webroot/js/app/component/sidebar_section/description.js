@@ -3,7 +3,6 @@ import 'app/component/form/resource/edit_description';
 import 'app/view/component/sidebar_section/description';
 import 'app/model/resource';
 
-passbolt.component.sidebarSection = {} || passbolt.component.sidebarSection;
 
 /**
  * @inherits mad.component.SidebarSection

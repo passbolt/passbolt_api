@@ -2,7 +2,6 @@ import 'app/view/component/sidebar_section/tags';
 import 'app/component/sidebar_section';
 import 'app/component/tags';
 
-passbolt.component.sidebarSection = {} || passbolt.component.sidebarSection;
 
 /**
  * @inherits mad.controller.component.SidebarSection
