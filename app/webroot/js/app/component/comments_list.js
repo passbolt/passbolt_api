@@ -18,7 +18,7 @@ import 'app/model/comment';
  * 	 - foreign Id : the resource id (foreign key) the comment list system will be plugged to
  * @return {passbolt.component.CommentsList}
  */
-var CommentsList = passbolt.component.CommentsList = mad.Component.Tree.extend('passbolt.component.CommentsList', /** @static */ {
+var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('passbolt.component.CommentsList', /** @static */ {
 	defaults: {
 		label: 'Comments List Controller',
 		viewClass: passbolt.view.component.CommentsList,

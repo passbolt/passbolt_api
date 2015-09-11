@@ -1,9 +1,9 @@
 import 'app/component/tags_list';
 import 'app/component/form/tag/edit';
-import 'app/view/template/component/tags.ejs';
+import 'app/view/template/component/tags.ejs!';
 
 
-/*
+/**
  * @inherits mad.controller.ComponentController
  * @parent index
  *

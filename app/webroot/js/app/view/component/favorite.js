@@ -5,7 +5,7 @@ import 'app/view/template/component/favorite.ejs';
 /**
  * @inherits mad.view.View
  */
-var Favorite = mad.view.component.Favorite = mad.View.extend('mad.view.component.Favorite', /** @static */ {
+var Favorite = passbolt.view.component.Favorite = mad.View.extend('passbolt.view.component.Favorite', /** @static */ {
 
 }, /** @prototype */ {
 

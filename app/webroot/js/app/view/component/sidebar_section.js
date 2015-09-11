@@ -3,7 +3,7 @@ import 'mad/view';
 /*
  * @inherits mad.view.View
  */
-var SidebarSection = mad.view.component.SidebarSection = mad.View.extend('mad.view.component.SidebarSection', /** @static */ {
+var SidebarSection = passbolt.view.component.SidebarSection = mad.View.extend('passbolt.view.component.SidebarSection', /** @static */ {
 
 }, /** @prototype */ {
 

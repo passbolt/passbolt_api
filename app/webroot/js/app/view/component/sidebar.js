@@ -14,7 +14,7 @@ import 'app/component/sidebar_section';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.Sidebar}
  */
-var Sidebar = mad.view.component.Sidebar = mad.View.extend('mad.view.component.Sidebar', /** @static */ {
+var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.component.Sidebar', /** @static */ {
 
 	defaults: {
 		label: 'Sidebar Controller',
