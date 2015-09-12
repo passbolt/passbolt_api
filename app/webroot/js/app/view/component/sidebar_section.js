@@ -1,6 +1,6 @@
 import 'mad/view';
 
-/*
+/**
  * @inherits mad.view.View
  */
 var SidebarSection = passbolt.view.component.SidebarSection = mad.View.extend('passbolt.view.component.SidebarSection', /** @static */ {
