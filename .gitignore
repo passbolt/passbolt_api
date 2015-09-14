@@ -33,9 +33,10 @@
 !/app/Vendor/RandomTool.php
 !/app/Vendor/openpgp-php
 
-# bower and grunt
+# bower, composer, grunt
 /bower_components
 /node_modules
+composer.lock
 
 # Misc
 /app/composer.phar
