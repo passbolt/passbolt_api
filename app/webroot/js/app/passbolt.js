@@ -15,7 +15,6 @@ import 'app/component/app';
 import appConfig from 'app/config/config.json';
 
 $(document).ready(function () {
-
 	// Load the config packaged with the front-end application.
 	mad.Config.load(appConfig);
 
