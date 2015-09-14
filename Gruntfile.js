@@ -132,6 +132,19 @@ module.exports = function(grunt) {
 					spawn: false
 				}
 			}
+		},
+		"steal-build": {
+			default: {
+				options: {
+					system: {
+						config: "./app/webroot/js/stealconfig.js",
+						main: "app/passbolt"
+					},
+					buildOptions: {
+						minify: false
+					}
+				}
+			}
 		}
 	});
 
@@ -163,6 +176,8 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
+	grunt.loadNpmTasks("steal-tools");
+
 	// ========================================================================
 	// Register Tasks
 
@@ -183,6 +198,9 @@ module.exports = function(grunt) {
 
 	// Run 'grunt production' to prepare the production release
 	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);
+
+	// Build mad & all the demos apps to ensure that everything compile
+	grunt.registerTask("build", ["steal-build"]);
 
 	// 'grunt' will check code quality, and if no errors,
 	// compile LESS to CSS, and minify and concatonate all JS and CSS

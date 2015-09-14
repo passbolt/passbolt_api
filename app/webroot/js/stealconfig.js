@@ -52,7 +52,7 @@ steal.config({
 System.config({
     buildConfig: {
         map: {
-            "can/util/util": "js/lib/can/util/domless/domless"
+            "can/util/util": "lib/can/util/domless/domless"
         }
     }
 });
