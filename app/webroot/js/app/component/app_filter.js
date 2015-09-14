@@ -1,6 +1,6 @@
 import 'mad/component/component';
 import 'mad/form/element/list';
-import 'app/view/component/app_filter;
+import 'app/view/component/app_filter';
 
 
 /**

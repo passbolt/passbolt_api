@@ -1,4 +1,4 @@
-import 'mad/component/app.js';
+import 'mad/component/component';
 // the main workspaces of the application
 import 'app/component/settings_workspace';
 import 'app/component/password_workspace_menu';
@@ -28,7 +28,7 @@ import 'app/view/template/app.ejs!'
  *
  * The passbolt application controller.
  */
-var App = passbolt.component.App = mad.component.App.extend('passbolt.component.App', /** @static */ {
+var App = passbolt.component.App = mad.Component.extend('passbolt.component.App', /** @static */ {
 	defaults: {
 		// List of available workspaces.
 		workspaces:[

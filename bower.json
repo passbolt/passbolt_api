@@ -23,6 +23,7 @@
 		"can": "git@github.com:bitovi/canjs.git",
 		"steal": "^0.10.4",
 		"jquery": "^1.11.3",
+		"jquery-ui": "^1.11.4",
 		"underscore": "~1.8.3",
 		"moment": "git@github.com:moment/moment.git",
 		"xregexp": "git@github.com:slevithan/xregexp.git",

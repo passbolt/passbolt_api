@@ -7,7 +7,7 @@
  * @package      app.View.Elements.scriptBottom
  * @since        version 2.12.9
  */
-	echo $this->fetch('scriptBottom'); 
+	echo $this->fetch('scriptBottom');
   if (!Configure::read('debug')) :
 ?>
 <script>
