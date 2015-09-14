@@ -1,0 +1,96 @@
+import 'mad/form/form.js';
+import 'app/view/component/comments.js';
+import 'app/view/template/form/comment/add.ejs!';
+
+/**
+ * @inherits {mad.Form}
+ * @parent index
+ *
+ * @constructor
+ * Instanciate a Comment Create Form
+ *
+ * @param {HTMLElement} element the element this instance operates on.
+ * @param {Object} [options] option values for the controller.  These get added to
+ * this.options and merged with defaults static variable
+ * @return {passbolt.controller.form.comment.Create}
+ */
+var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comment.Create', /** @static */ {
+	defaults: {
+		templateBased: true,
+		/**
+		 * the foreign Model on which to plug the comments system
+		 */
+		foreignModel : null,
+		/**
+		 * The foreign id where to plug the new comments
+		 */
+		foreignId		 : null,
+		/**
+		 * default callback
+		 */
+		callbacks: {
+			submit: function (data) {
+				// TODO : validate
+				var instance = new passbolt.model.Comment(data['passbolt.model.Comment'])
+					.save();
+			}
+		}
+	}
+}, /** @prototype */ {
+
+	/**
+	 * Init.
+	 * @param el
+	 * @param options
+	 */
+	init: function(el, options) {
+		this._super(el, options);
+		this.setViewData('user', passbolt.model.User.getCurrent());
+	},
+
+	/**
+	 * After start hook.
+	 * Create the form elements
+	 *
+	 * @return {void}
+	 */
+	afterStart: function () {
+		// parent_id hidden field
+		this.addElement(
+			new mad.form.element.Textbox($('.js_comment_parent_id', this.element), {
+				modelReference: 'passbolt.model.Comment.parent_id'
+			}).start()
+		);
+
+		// foreign_model hidden field
+		this.addElement(
+			new mad.form.element.Textbox($('.js_comment_foreign_model', this.element), {
+				modelReference: 'passbolt.model.Comment.foreign_model'
+			}).start().setValue('Resource')
+		);
+
+		// foreign_id hidden field
+		this.addElement(
+			new mad.form.element.Textbox($('.js_comment_foreign_id', this.element), {
+				modelReference: 'passbolt.model.Comment.foreign_id'
+			}).start().setValue(this.options.foreignId)
+		);
+
+		//
+		this.addElement(
+			new mad.form.element.Textbox($('.js_comment_content', this.element), {
+				modelReference: 'passbolt.model.Comment.content'
+			}).start(),
+			new mad.form.Feedback($('.js_comment_content_feedback', this.element), {}).start()
+		);
+	}
+
+	/* ************************************************************** */
+	/* LISTEN TO THE VIEW EVENTS */
+	/* ************************************************************** */
+
+
+
+});
+
+export default Create;

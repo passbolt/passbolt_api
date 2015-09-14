@@ -1,0 +1,24 @@
+<ul>
+	<li class="comment-wrapper">
+		<div class="comment add">
+			<div class="author profile picture"><a href="#"><img src="<%= user.Profile.Avatar.url.small %>" alt="<%= user.Profile.first_name %> <%= user.Profile.last_name %> avatar"></a></div>
+			<div class="form-content">
+				<div class="input textarea required">
+					<label for="comment-text">Add a comment</label>
+					<input name="data[comment][parent_id]" class="js_comment_parent_id required" type="hidden" >
+					<input name="data[comment][foreign_id]" class="js_comment_foreign_id required" type="hidden" >
+					<input name="data[comment][foreign_model]" class="js_comment_foreign_model required" type="hidden" >
+					<textarea id="comment-text" name="data[comment][content]" class="js_comment_content required" maxlength="150"  placeholder="add a comment"></textarea>
+          <div class="js_comment_content_feedback message"></div>
+				</div>
+				<div class="metadata">
+					<span class="author username"><a href="#">You</a></span>
+					<span class="modified">right now</span>
+				</div>
+				<div class="actions">
+					<a href="#" class="button comment-submit"><span>send</span></a>
+				</div>
+			</div>
+		</div>
+	</li>
+</ul>
