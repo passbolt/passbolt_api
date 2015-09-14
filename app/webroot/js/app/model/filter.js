@@ -1,7 +1,7 @@
 import 'mad/model/model';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The Filter model used for the search
@@ -17,7 +17,7 @@ import 'mad/model/model';
  * @param {array} options
  * @return {passbolt.model.Filter}
  */
-var Filter = passbolt.model.Filter = mad.model.Model.extend('passbolt.model.Filter', /** @static */ {
+var Filter = passbolt.model.Filter = mad.Model.extend('passbolt.model.Filter', /** @static */ {
 
 	attributes: {
 		// Label of the filter

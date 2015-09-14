@@ -33,12 +33,12 @@ var STRENGTH = {
 };
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The SecretStrength model
  */
-var SecretStrength = passbolt.model.SecretStrength = mad.model.Model.extend('passbolt.model.SecretStrength', /** @static */ {
+var SecretStrength = passbolt.model.SecretStrength = mad.Model.extend('passbolt.model.SecretStrength', /** @static */ {
 
 	attributes: {
 		id: 'string',

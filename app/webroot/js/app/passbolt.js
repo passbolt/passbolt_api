@@ -1,4 +1,4 @@
-/*
+/**
  * @page passbolt Passbolt
  * @tag passbolt
  * @parent index
@@ -6,17 +6,22 @@
  * The passbolt page
  * 
  */
-import 'mad';
-import 'app/bootstrap/bootstrap';
+import 'mad/mad';
+import 'mad/bootstrap';
+import passbolt from 'app/util/util'; // @todo rename to setting maybe.
+import 'app/error/error_handler';
 import 'app/component/app';
-import 'app/net/response_handler';
+import appConfig from 'app/config/config.json';
 
 $(document).ready(function () {
 
-	//load the bootstrap of the application
-	var boot = new passbolt.Bootstrap({
-		'config': ['app/config/config.json']
-	});
+	// Load the config packaged with the front-end application.
+	mad.Config.load(appConfig);
 
+	// Load the dynamic config served by the back-end.
+	mad.Config.load(cakephpConfig);
+
+	// Start the application bootstrap.
+	var bootstrap = new mad.Bootstrap();
 });
 

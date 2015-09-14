@@ -2,7 +2,7 @@ import 'mad/model/model';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The group model
@@ -13,7 +13,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Group}
  */
-var Group = passbolt.model.Group = mad.model.Model.extend('passbolt.model.Group', /** @static */ {
+var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** @static */ {
 
 	validateRules: {
 		name: ['alphanum', 'required']

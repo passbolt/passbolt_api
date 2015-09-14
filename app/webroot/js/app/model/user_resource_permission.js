@@ -5,7 +5,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * User resource permission model
@@ -15,7 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.UserResourcePermission}
  */
-var UserResourcePermission = passbolt.model.UserResourcePermission = mad.model.Model.extend('passbolt.model.UserResourcePermission', /** @static */ {
+var UserResourcePermission = passbolt.model.UserResourcePermission = mad.Model.extend('passbolt.model.UserResourcePermission', /** @static */ {
 	attributes: {
 		'permission_id': 'string',
 		'permission_type': 'number'

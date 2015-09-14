@@ -2,34 +2,35 @@ import 'mad/component/component';
 // the main workspaces of the application
 //import 'app/component/settings_workspace';
 //import 'app/component/password_workspace_menu';
-import 'app/component/password_workspace';
+//import 'app/component/password_workspace';
 //import 'app/component/people_workspace';
 //import 'app/component/people_workspace_menu';
 //import 'app/component/settings_workspace_menu';
 // common components of the application
 import 'app/component/app_navigation_left';
 import 'app/component/app_navigation_right';
-import 'app/component/app_filter';
+//import 'app/component/app_filter';
 import 'app/component/profile_dropdown';
-import 'app/component/notification';
-import 'app/component/loading_bar';
-// the ressources workspace models
-import 'app/model/category';
-import 'app/model/favorite';
-import 'app/model/resource';
-import 'app/model/filter';
-// the application template
+//import 'app/component/notification';
+//import 'app/component/loading_bar';
+//// the ressources workspace models
+//import 'app/model/category';
+//import 'app/model/favorite';
+//import 'app/model/resource';
+//import 'app/model/filter';
+//// the application template
 import 'app/view/template/app.ejs!';
 
-
 /**
- * @inherits mad.controller.AppController
- * @parent index
- *
- * The passbolt application controller.
- */
+* @inherits mad.controller.AppController
+* @parent index
+*
+* The passbolt application controller.
+*/
 var App = passbolt.component.App = mad.Component.extend('passbolt.component.App', /** @static */ {
+
 	defaults: {
+        templateUri: 'app/view/template/app.ejs',
 		// List of available workspaces.
 		workspaces:[
 			'password',
@@ -57,31 +58,31 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		var navRightCtl = new passbolt.component.AppNavigationRight($('#js_app_navigation_right'));
 		navRightCtl.start();
 
-		// Instantiate the filter controller
-		var filterCtl = new passbolt.component.AppFilter($('#js_app_filter'), {});
-		filterCtl.start();
+		//// Instantiate the filter controller
+		//var filterCtl = new passbolt.component.AppFilter($('#js_app_filter'), {});
+		//filterCtl.start();
 
 		// Get logged in user.
 		passbolt.model.User.findOne({
-			'id': mad.Config.read('user.id')
+			id: mad.Config.read('user.id')
 		}).then(function(user) {
 			// Set current user.
 			passbolt.model.User.setCurrent(user);
 			// Instantiate the profile controller.
 			self.profileDropDownCtl = new passbolt.component.ProfileDropdown($('#js_app_profile_dropdown'), {
-				'user': user
+				user: user
 			});
 			self.profileDropDownCtl.start();
 		});
-
-		// Instantiate the notification controller
-		var notifCtl = new passbolt.component.Notification($('#js_app_notificator'), {});
-
-		// Instantiate the laoding bar controller
-		var loadingBarCtl = new passbolt.component.LoadingBar($('#js_app_loading_bar'), {
-			'state': 'ready'
-		});
-		loadingBarCtl.start();
+        //
+		//// Instantiate the notification controller
+		//var notifCtl = new passbolt.component.Notification($('#js_app_notificator'), {});
+        //
+		//// Instantiate the laoding bar controller
+		//var loadingBarCtl = new passbolt.component.LoadingBar($('#js_app_loading_bar'), {
+		//	'state': 'ready'
+		//});
+		//loadingBarCtl.start();
 	},
 
 	/* ************************************************************** */
@@ -210,10 +211,12 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @return {void}
 	 */
 	stateReady: function (go) {
-		// Select the password workspace
-		mad.bus.trigger('workspace_selected', 'password');
-		// When the application is ready, remove the launching screen.
+		//// Select the password workspace
+		//mad.bus.trigger('workspace_selected', 'password');
+		//// When the application is ready, remove the launching screen.
 		$('html').removeClass('launching');
 	}
 
 });
+
+export default App;

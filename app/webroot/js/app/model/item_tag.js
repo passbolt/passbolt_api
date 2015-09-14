@@ -4,7 +4,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The itemTag model
@@ -14,7 +14,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.ItemTag}
  */
-var ItemTag = passbolt.model.ItemTag = mad.model.Model.extend('passbolt.model.ItemTag', /** @static */ {
+var ItemTag = passbolt.model.ItemTag = mad.Model.extend('passbolt.model.ItemTag', /** @static */ {
 
 	validateRules: {
 		foreign_model: ['text'],

@@ -4,7 +4,7 @@ import 'app/model/permission_type';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * Group resource permission model
@@ -14,7 +14,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.GroupResourcePermission}
  */
-var GroupResourcePermission = passbolt.model.GroupResourcePermission = mad.model.Model.extend('passbolt.model.GroupResourcePermission', /** @static */ {
+var GroupResourcePermission = passbolt.model.GroupResourcePermission = mad.Model.extend('passbolt.model.GroupResourcePermission', /** @static */ {
 	attributes: {
 		'permission_id': 'string',
 		'permission_type': 'number'

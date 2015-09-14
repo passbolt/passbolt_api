@@ -5,7 +5,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The favorite model
@@ -15,7 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Favorite}
  */
-var Favorite = passbolt.model.Favorite = mad.model.Model.extend('passbolt.model.Favorite', /** @static */ {
+var Favorite = passbolt.model.Favorite = mad.Model.extend('passbolt.model.Favorite', /** @static */ {
 
 	validateRules: {
 		user_id: [],

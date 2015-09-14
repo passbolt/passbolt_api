@@ -2,7 +2,7 @@ import 'mad/model/model';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The CategoryResource model
@@ -12,7 +12,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} options
  * @return {passbolt.model.CategoryResource}
  */
-var CategoryResource = passbolt.model.CategoryResource = mad.model.Model.extend('passbolt.model.CategoryResource', /** @static */ {
+var CategoryResource = passbolt.model.CategoryResource = mad.Model.extend('passbolt.model.CategoryResource', /** @static */ {
 
 	/* ************************************************************** */
 	/* MODEL DEFINITION */

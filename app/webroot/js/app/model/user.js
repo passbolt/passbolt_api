@@ -1,10 +1,10 @@
 import 'mad/model/model';
 import 'app/model/profile';
+import 'app/model/image_storage';
 import 'mad/model/serializer/cake_serializer';
 
-
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The user model
@@ -15,7 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.User}
  */
-var User = passbolt.model.User = mad.model.Model.extend('passbolt.model.User', /** @static */ {
+var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @static */ {
 
 	/**
 	 * Stores the current user. (the one logged in).

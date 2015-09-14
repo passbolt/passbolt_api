@@ -5,7 +5,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * Group category permission model
@@ -15,7 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.GroupCategoryPermission}
  */
-var GroupCategoryPermission = passbolt.model.GroupCategoryPermission = mad.model.Model.extend('passbolt.model.GroupCategoryPermission', /** @static */ {
+var GroupCategoryPermission = passbolt.model.GroupCategoryPermission = mad.Model.extend('passbolt.model.GroupCategoryPermission', /** @static */ {
 	attributes: {
 		'permission_id': 'string',
 		'permission_type': 'number'

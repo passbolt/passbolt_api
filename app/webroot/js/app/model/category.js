@@ -3,7 +3,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The Category model
@@ -13,7 +13,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} options
  * @return {passbolt.model.Category}
  */
-var Category = passbolt.model.Category = mad.model.Model.extend('passbolt.model.Category', /** @static */ {
+var Category = passbolt.model.Category = mad.Model.extend('passbolt.model.Category', /** @static */ {
 
 /* ************************************************************** */
 /* MODEL DEFINITION */
@@ -140,7 +140,7 @@ var Category = passbolt.model.Category = mad.model.Model.extend('passbolt.model.
 	 * @return {passbolt.model.Category.List}
 	 */
 	getSubCategories: function () {
-		return mad.model.Model.nestedToList(this, 'children');
+		return mad.Model.nestedToList(this, 'children');
 	},
 
 	/**

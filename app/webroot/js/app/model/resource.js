@@ -5,7 +5,7 @@ import 'app/model/item_tag';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The resource model
@@ -15,7 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Resource}
  */
-var Resource = passbolt.model.Resource = mad.model.Model.extend('passbolt.model.Resource', /** @static */ {
+var Resource = passbolt.model.Resource = mad.Model.extend('passbolt.model.Resource', /** @static */ {
 
 	attributes: {
 		id: 'string',
@@ -126,7 +126,7 @@ var Resource = passbolt.model.Resource = mad.model.Model.extend('passbolt.model.
 		var self = this;
 		// Listen when a category is destroyed
 		passbolt.model.Category.bind('destroyed', function(ev, category) {
-			var destroyedCategories = mad.model.Model.nestedToList(category, 'children', 'id');
+			var destroyedCategories = mad.Model.nestedToList(category, 'children', 'id');
 			var toUpdate = false;
 			can.each(self.Category, function(resourceCategory, i) {
 				if(destroyedCategories.indexOf(resourceCategory.id) != -1) {

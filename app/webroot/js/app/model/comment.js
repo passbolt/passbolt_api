@@ -3,7 +3,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The comment model
@@ -13,7 +13,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Comment}
  */
-var Comment = passbolt.model.Comment = mad.model.Model.extend('passbolt.model.Comment', /** @static */ {
+var Comment = passbolt.model.Comment = mad.Model.extend('passbolt.model.Comment', /** @static */ {
 
 	validateRules: {
 		parent_id: ['text'],

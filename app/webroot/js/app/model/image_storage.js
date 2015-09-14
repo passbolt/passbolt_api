@@ -1,7 +1,7 @@
 import 'mad/model/model';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The Image Storage model
@@ -11,7 +11,7 @@ import 'mad/model/model';
  * @param {array} options
  * @return {passbolt.model.ImageStorage}
  */
-var ImageStorage = passbolt.model.ImageStorage = mad.model.Model.extend('passbolt.model.ImageStorage', /** @static */ {
+var ImageStorage = passbolt.model.ImageStorage = mad.Model.extend('passbolt.model.ImageStorage', /** @static */ {
 
 }, /** @prototype */ {
 

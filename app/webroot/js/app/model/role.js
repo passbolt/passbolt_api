@@ -2,7 +2,7 @@ import 'mad/model/model';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The role model
@@ -12,7 +12,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Role}
  */
-var Role = passbolt.model.Role = mad.model.Model.extend('passbolt.model.Role', /** @static */ {
+var Role = passbolt.model.Role = mad.Model.extend('passbolt.model.Role', /** @static */ {
 
 	attributes: {
 		id: 'string',

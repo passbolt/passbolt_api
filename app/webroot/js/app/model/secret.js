@@ -4,7 +4,7 @@ import 'app/model/secret_strength';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The secret model
@@ -14,7 +14,7 @@ import 'app/model/secret_strength';
  * @param {array} data
  * @return {passbolt.model.Secret}
  */
-var Secret = passbolt.model.Secret = mad.model.Model.extend('passbolt.model.Secret', /** @static */ {
+var Secret = passbolt.model.Secret = mad.Model.extend('passbolt.model.Secret', /** @static */ {
 
 	attributes: {
 		'id': 'string',

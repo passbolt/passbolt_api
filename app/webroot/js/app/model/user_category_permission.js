@@ -6,7 +6,7 @@ import 'mad/model/serializer/cake_serializer';
 
 /**
  * @class passbolt.model.UserCategoryPermission
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * User category permission model
@@ -16,7 +16,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.UserCategoryPermission}
  */
-var UserCategoryPermission = passbolt.model.UserCategoryPermission = mad.model.Model.extend('passbolt.model.UserCategoryPermission', /** @static */ {
+var UserCategoryPermission = passbolt.model.UserCategoryPermission = mad.Model.extend('passbolt.model.UserCategoryPermission', /** @static */ {
 	attributes: {
 		'permission_id': 'string',
 		'permission_type': 'number'

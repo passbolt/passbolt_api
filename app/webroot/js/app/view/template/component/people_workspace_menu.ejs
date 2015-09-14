@@ -1,0 +1,29 @@
+<% var role = passbolt.model.User.getCurrent().Role.name; %>
+<% if (role == 'admin') { %>
+<li>
+	<a id="js_user_wk_menu_creation_button" href="#" class="button">
+		<i class="icon create"></i>
+		<span><%= __('create') %></span>
+	</a>
+</li>
+<li>
+	<a id="js_user_wk_menu_edition_button" href="#" class="button">
+		<i class="icon edit"></i>
+		<span><%= __('edit') %></span>
+	</a>
+</li>
+<li>
+	<a id="js_user_wk_menu_deletion_button" href="#" class="button">
+		<i class="icon delete"></i>
+		<span><%= __('delete') %></span>
+	</a>
+</li>
+<li>
+	<div class="dropdown" style="display: none">
+		<a id="js_user_wk_menu_more_button" href="#" class="button">
+			<span><%= __('more') %></span>
+			<i class="icon after arrowdown"></i>
+		</a>
+	</div>
+</li>
+<% } %>

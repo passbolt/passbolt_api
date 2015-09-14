@@ -68,6 +68,16 @@ module.exports = function(grunt) {
 					stderr: false
 				},
 				command: '(cd ./app/webroot/js; ./js ./steal/buildjs ./app/passbolt.html)'
+			},
+			mad_lib_patch: {
+				options: {
+					stderr: false
+				},
+				command: [
+					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-system_preload_template.patch;)',
+					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-util_string_get_object_set_object.patch;)'
+					//'(cd ./node_modules/documentjs; patch -p1 < ./app/webroot/js/lib/mad/patches/patches/documentjs-demo_tag_url_and_sharp.patch;)'
+				].join('&&')
 			}
 		},
 		copy: {
@@ -113,6 +123,7 @@ module.exports = function(grunt) {
 				expand: true
 			}
 		},
+
 		watch: {
 			less: {
 				files: ['Gruntfile.js', 'package.json', '<%= config.webroot %>/less/*.less','<%= config.webroot %>/less/**/*.less'],
@@ -168,7 +179,7 @@ module.exports = function(grunt) {
 	// Bower styleguide deploy
 	grunt.registerTask('styleguide-deploy', ['copy:styleguide']);
 	// Bower libs deploy
-	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib']);
+	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
 
 	// Run 'grunt production' to prepare the production release
 	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);

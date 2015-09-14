@@ -4,7 +4,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The profile model
@@ -15,7 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Profile}
  */
-var Profile = passbolt.model.Profile = mad.model.Model.extend('passbolt.model.Profile', /** @static */ {
+var Profile = passbolt.model.Profile = mad.Model.extend('passbolt.model.Profile', /** @static */ {
 
 	validateRules: {
 	},

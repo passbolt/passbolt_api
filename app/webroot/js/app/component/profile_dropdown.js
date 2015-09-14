@@ -1,19 +1,21 @@
 import 'mad/component/component';
+import 'mad/component/button_dropdown';
+import 'app/model/user';
+
 import 'app/view/template/component/profile_dropdown.ejs!';
 
-
 /**
- * @inherits mad.component.Component
- * @parent index
- *
- * @constructor
- * Creates a new Profile Dropdown
- *
- * @param {HTMLElement} element the element this instance operates on.
- * @param {Object} [options] option values for the controller.  These get added to
- * this.options and merged with defaults static variable
- * @return {passbolt.component.ProfileDropdown}
- */
+* @inherits mad.component.Component
+* @parent index
+*
+* @constructor
+* Creates a new Profile Dropdown
+*
+* @param {HTMLElement} element the element this instance operates on.
+* @param {Object} [options] option values for the controller.  These get added to
+* this.options and merged with defaults static variable
+* @return {passbolt.component.ProfileDropdown}
+*/
 var ProfileDropdown = passbolt.component.ProfileDropdown = mad.component.ButtonDropdown.extend('passbolt.component.ProfileDropdown', /** @static */ {
 
 	defaults: {

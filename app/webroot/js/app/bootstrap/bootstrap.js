@@ -1,14 +1,21 @@
-window.passbolt = {};
 import 'mad/bootstrap';
-import appConfig from "app/config/config.json";
-//import 'app/error/error_handler';
+import passbolt from 'app/util/util'; // @todo rename to setting maybe.
+import 'app/error/error_handler';
+import 'app/component/app';
+import appConfig from 'app/config/config.json';
 
 /**
- * @inherits mad.Bootstrap
  * @parent passbolt.core
  *
  * The Passbolt application bootstrap.
  */
+
+// Load the config packaged with the front-end application.
 mad.Config.load(appConfig);
-passbolt.bootstrap = mad.Bootstrap.extend('passbolt.Bootstrap', {});
-var bootstrap = new passbolt.Bootstrap();
+
+// Load the dynamic config served by the back-end.
+console.log(cakephpConfig);
+mad.Config.load(cakephpConfig);
+
+// Start the application bootstrap.
+var bootstrap = new mad.Bootstrap();

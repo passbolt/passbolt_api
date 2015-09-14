@@ -13,7 +13,7 @@ passbolt.UPDATE = 7;
 passbolt.ADMIN 	= 15;
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The permission model
@@ -23,7 +23,7 @@ passbolt.ADMIN 	= 15;
  * @param {array} data
  * @return {passbolt.model.PermissionType}
  */
-var PermissionType = passbolt.model.PermissionType = mad.model.Model.extend('passbolt.model.PermissionType', /** @static */ {
+var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.model.PermissionType', /** @static */ {
 
 	validateRules: {
 		serial: [

@@ -3,7 +3,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The GroupUser model
@@ -13,7 +13,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} options
  * @return {passbolt.model.GroupUser}
  */
-var GroupUser = passbolt.model.GroupUser = mad.model.Model.extend('passbolt.model.GroupUser', /** @static */ {
+var GroupUser = passbolt.model.GroupUser = mad.Model.extend('passbolt.model.GroupUser', /** @static */ {
 
 	/* ************************************************************** */
 	/* MODEL DEFINITION */

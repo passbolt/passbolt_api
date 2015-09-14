@@ -4,7 +4,7 @@ import 'mad/model/serializer/cake_serializer';
 
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The gpgkey model
@@ -14,7 +14,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Gpgkey}
  */
-var Gpgkey = passbolt.model.Gpgkey = mad.model.Model.extend('passbolt.model.Gpgkey', /** @static */ {
+var Gpgkey = passbolt.model.Gpgkey = mad.Model.extend('passbolt.model.Gpgkey', /** @static */ {
 
 	attributes: {
 		id: 'string',

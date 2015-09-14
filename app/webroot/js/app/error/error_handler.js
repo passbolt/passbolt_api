@@ -1,5 +1,5 @@
 import "mad/error/error_handler";
-window.passbolt = {};
+
 /**
  * @inherits jQuery.Class
  * @parent mad.core

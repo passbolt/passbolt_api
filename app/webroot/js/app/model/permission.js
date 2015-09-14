@@ -8,7 +8,7 @@ import 'app/model/user_resource_permission';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The permission model
@@ -18,7 +18,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Permission}
  */
-var Permission = passbolt.model.Permission = mad.model.Model.extend('passbolt.model.Permission', /** @static */ {
+var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Permission', /** @static */ {
 
 	validateRules: {
 		// 'aco_foreign_key': ['required', 'uid'],
@@ -203,7 +203,7 @@ var Permission = passbolt.model.Permission = mad.model.Model.extend('passbolt.mo
 
 	/**
 	 * Check if the permission is a direct permission for the given aco and aro instances.
-	 * @param {mad.model.Model} obj The target instance to test if the permission is direct for it. The instance
+	 * @param {mad.Model} obj The target instance to test if the permission is direct for it. The instance
 	 * can be of whatever type (Resource, Category ...)
 	 * @return {boolean}
 	 */

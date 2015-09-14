@@ -2,7 +2,7 @@ import 'mad/model/model';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.model.Model}
+ * @inherits {mad.Model}
  * @parent index
  *
  * The Tag model
@@ -12,7 +12,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Tag}
  */
-var Tag = passbolt.model.Tag = mad.model.Model.extend('passbolt.model.Tag', /** @static */ {
+var Tag = passbolt.model.Tag = mad.Model.extend('passbolt.model.Tag', /** @static */ {
 
 	validateRules: {
 		name: ['text']
