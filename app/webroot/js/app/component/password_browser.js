@@ -1,9 +1,9 @@
 import 'mad/component/grid';
+import 'mad/form/element/checkbox';
 import 'app/model/resource';
 import 'app/model/category';
 import 'app/component/favorite';
 import 'app/view/component/password_browser';
-
 
 /**
  * @inherits {mad.component.Grid}
@@ -41,7 +41,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	init: function (el, options) {
 
 		// The map to use to make our grid working with our resource model
-		options.map = new mad.object.Map({
+		options.map = new mad.Map({
 			'id': 'id',
 			'name': 'name',
 			'username': 'username',
@@ -68,10 +68,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var availableValues = {};
 				availableValues[item.id] = '';
-				var checkbox = mad.helper.ComponentHelper.create(
+				var checkbox = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
-					mad.form.element.Checkbox, {
+					mad.form.Checkbox, {
 						'id': 'multiple_select_checkbox_' + item.id,
 						'name': 'test',
 						'cssClasses': ['js_checkbox_multiple_select'],
@@ -93,7 +93,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var availableValues = {};
 				availableValues[item.id] = '';
-				var favorite = mad.helper.ComponentHelper.create(
+				var favorite = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
 					passbolt.component.Favorite, {
@@ -130,7 +130,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				if (typeof cellValue[0] != 'undefined') {
 					secret = cellValue[0].data
 				}
-				mad.helper.HtmlHelper.create(
+				mad.helper.Html.create(
 					cellElement,
 					'inside_replace',
 					'<div class="secret-copy">' +
@@ -188,7 +188,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			},
 			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 				return;
-				var copyLogin = mad.helper.ComponentHelper.create(
+				var copyLogin = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
 					passbolt.controller.component.CopyLoginButtonController,
@@ -205,7 +205,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			},
 			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
 				return;
-				var copyPwd = mad.helper.ComponentHelper.create(
+				var copyPwd = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
 					passbolt.controller.component.CopySecretButtonController,

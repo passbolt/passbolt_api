@@ -1,7 +1,6 @@
 import 'mad/view/view';
 import 'app/view/template/component/app_filter.ejs!';
 
-
 /**
  * @inherits mad.view.View
  */

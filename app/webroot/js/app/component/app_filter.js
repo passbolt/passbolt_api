@@ -1,7 +1,10 @@
 import 'mad/component/component';
-//import 'mad/form/element/list';
+import 'mad/form/form';
+import 'mad/form/element/textbox';
 import 'app/view/component/app_filter';
+import 'app/model/filter';
 
+import 'app/view/template/component/app_filter.ejs!';
 
 /**
  * @inherits {mad.component.Component}
@@ -21,6 +24,7 @@ import 'app/view/component/app_filter';
 var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.component.AppFilter', /** @static */ {
 
 	defaults: {
+        templateUri: 'app/view/template/component/app_filter.ejs',
 		viewClass: passbolt.view.component.AppFilter
 	}
 
@@ -31,9 +35,9 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * Init the embedded components
 	 */
 	afterStart: function (options) {
-		//// Instantiate the filter form
-		//this.filterForm = new mad.form.Form('#js_app_filter_form', {});
-		//this.filterForm.start();
+		// Instantiate the filter form
+		this.filterForm = new mad.Form('#js_app_filter_form', {});
+		this.filterForm.start();
 
 		// Instantiate the textbox which will get the user search
 		this.keywordsFormElement = this.filterForm.addElement(new mad.form.Textbox('#js_app_filter_keywords', {

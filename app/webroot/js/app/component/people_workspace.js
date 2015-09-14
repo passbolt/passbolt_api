@@ -53,7 +53,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.component.Compone
         primWkMenu.start();
 
         // Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
-        var secWkMenu = mad.helper.ComponentHelper.create(
+        var secWkMenu = mad.helper.Component.create(
             $('#js_wsp_secondary_menu_wrapper'),
             'last',
             passbolt.controller.component.WorkspaceSecondaryMenuController,

@@ -1,6 +1,8 @@
 import 'mad/component/button';
 import 'app/view/component/favorite';
 
+import 'app/view/template/component/favorite.ejs!';
+
 /**
  * @inherits {mad.component.Component}
  * @parent index
@@ -19,7 +21,8 @@ var Favorite = passbolt.component.Favorite = mad.Component.extend('passbolt.comp
 		'label': 'Favorite',
 		'viewClass': passbolt.view.component.Favorite,
 		// The associated model instance browser
-		'instance': null
+		'instance': null,
+        templateUri: 'app/view/template/component/favorite.ejs'
 	}
 }, /** @prototype */ {
 

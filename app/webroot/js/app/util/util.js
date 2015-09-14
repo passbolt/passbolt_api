@@ -12,4 +12,14 @@ if (passbolt.model == undefined) {
     passbolt.model = {};
 }
 
+// Define the view namespace.
+if (passbolt.view == undefined) {
+    passbolt.view = {};
+}
+
+// Define the view component namespace.
+if (passbolt.view.component == undefined) {
+    passbolt.view.component = {};
+}
+
 export default passbolt;

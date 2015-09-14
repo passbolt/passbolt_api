@@ -1,14 +1,15 @@
 import 'mad/component/component';
+import 'app/component/password_workspace_menu';
 //import 'app/component/password_breadcrumb';
 //import 'app/component/category_actions_tab';
 //import 'app/component/category_chooser';
 import 'app/component/password_browser';
-import 'app/component/resource_actions_tab';
-import 'app/component/resource_details';
-import 'app/component/resource_shortcuts';
+//import 'app/component/resource_actions_tab';
+//import 'app/component/resource_details';
+//import 'app/component/resource_shortcuts';
 //import 'app/component/workspace_secondary_menu';
 //import 'app/form/category/create';
-import 'app/form/resource/create';
+//import 'app/form/resource/create';
 import 'app/model/filter';
 
 import 'app/view/template/password_workspace.ejs!';
@@ -25,11 +26,11 @@ import 'app/view/template/password_workspace.ejs!';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.PasswordWorkspace}
  */
-var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.component.Component.extend('passbolt.component.PasswordWorkspace', /** @static */ {
+var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.extend('passbolt.component.PasswordWorkspace', /** @static */ {
 
 	defaults: {
 		label: 'Password',
-		templateUri: 'app/view/template/passwordWorkspace.ejs',
+		templateUri: 'app/view/template/password_workspace.ejs',
 		// The current selected resources
 		selectedRs: new can.Model.List(),
 		// The current filter
@@ -45,53 +46,53 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.component.Com
 	 */
 	afterStart: function() {
 		// Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
-		//var primWkMenu = mad.helper.ComponentHelper.create(
-		//	$('#js_wsp_primary_menu_wrapper'),
-		//	'last',
-		//	passbolt.component.PasswordWorkspaceMenu, {
-		//		'selectedRs': this.options.selectedRs
-		//	}
-		//);
-		//primWkMenu.start();
-
-		// Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
-		var secWkMenu = mad.helper.ComponentHelper.create(
-			$('#js_wsp_secondary_menu_wrapper'),
+		var primWkMenu = mad.helper.Component.create(
+			$('#js_wsp_primary_menu_wrapper'),
 			'last',
-			passbolt.component.WorkspaceSecondaryMenu,
-			{}
+			passbolt.component.PasswordWorkspaceMenu, {
+				'selectedRs': this.options.selectedRs
+			}
 		);
-		secWkMenu.start();
+		primWkMenu.start();
 
-		// Instanciate the passwords filter controller
-		var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
-		rsShortcut.start();
-
-		// Removed the lines below for #PASSBOLT-787
-		//// Instanciate the categories chooser controller
-		//this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
-		//this.catChooser.start();
-
-		// Instantiate the password workspace breadcrumb controller
-		this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
-		this.breadcrumCtl.start();
+		//// Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
+		//var secWkMenu = mad.helper.Component.create(
+		//	$('#js_wsp_secondary_menu_wrapper'),
+		//	'last',
+		//	passbolt.component.WorkspaceSecondaryMenu,
+		//	{}
+		//);
+		//secWkMenu.start();
+        //
+		//// Instanciate the passwords filter controller
+		//var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
+		//rsShortcut.start();
+        //
+		//// Removed the lines below for #PASSBOLT-787
+		////// Instanciate the categories chooser controller
+		////this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
+		////this.catChooser.start();
+        //
+		//// Instantiate the password workspace breadcrumb controller
+		//this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
+		//this.breadcrumCtl.start();
 
 		// Instanciate the passwords browser controller
 		var passwordBrowserController = new passbolt.component.PasswordBrowser('#js_wsp_pwd_browser', {
-			'selectedRs': this.options.selectedRs
+			selectedRs: this.options.selectedRs
 		});
 		passwordBrowserController.start();
 
-		// Instanciate the resource details controller
-		var resourceDetails = new passbolt.component.ResourceDetails($('.js_wsp_pwd_sidebar_second', this.element), {
-			'selectedRs': this.options.selectedRs
-		});
+		//// Instanciate the resource details controller
+		//var resourceDetails = new passbolt.component.ResourceDetails($('.js_wsp_pwd_sidebar_second', this.element), {
+		//	'selectedRs': this.options.selectedRs
+		//});
 
 		// Filter the workspace.
 		var filter = new passbolt.model.Filter({
-			'label': __('All items'),
-			'order': 'modified',
-			'type': passbolt.model.Filter.SHORTCUT
+			label: __('All items'),
+			order: 'modified',
+			type: passbolt.model.Filter.SHORTCUT
 		});
 		mad.bus.trigger('filter_resources_browser', filter);
 	},
@@ -120,20 +121,20 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.component.Com
 	/* LISTEN TO THE APP EVENTS */
 	/* ************************************************************** */
 
-	/**
-	 * Listen to the browser filter
-	 * @param {jQuery} element The source element
-	 * @param {Event} event The jQuery event
-	 * @param {passbolt.model.Filter} filter The filter to apply
-	 * @return {void}
-	 */
-	'{mad.bus} filter_resources_browser': function (element, evt, filter) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
-		// Update the breadcrumb with the new filter.
-		this.breadcrumCtl.load(filter);
-	},
+	///**
+	// * Listen to the browser filter
+	// * @param {jQuery} element The source element
+	// * @param {Event} event The jQuery event
+	// * @param {passbolt.model.Filter} filter The filter to apply
+	// * @return {void}
+	// */
+	//'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+	//	// @todo fixed in future canJs.
+	//	if (!this.element) return;
+    //
+	//	// Update the breadcrumb with the new filter.
+	//	this.breadcrumCtl.load(filter);
+	//},
 
 	/**
 	 * Observe when category is selected
