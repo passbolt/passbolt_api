@@ -1,6 +1,6 @@
-import 'mad/view';
+import 'mad/view/view';
 import 'app/view/component/sidebar_section';
-import 'app/view/template/component/sidebar_section/tags.ejs';
+import 'app/view/template/component/sidebar_section/tags.ejs!';
 
 /*
  * @inherits passbolt.view.component.SidebarSection

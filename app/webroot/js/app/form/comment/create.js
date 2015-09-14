@@ -1,5 +1,5 @@
-import 'mad/form/form.js';
-import 'app/view/component/comments.js';
+import 'mad/form/form';
+import 'app/view/component/comments';
 import 'app/view/template/form/comment/add.ejs!';
 
 /**

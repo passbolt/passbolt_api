@@ -1,6 +1,6 @@
-import 'mad/form/form.js';
-import 'app/component/secret_strength';
-import 'app/form/secret/create';
+import 'mad/form/form';
+//import 'app/component/secret_strength';
+//import 'app/form/secret/create';
 import 'app/view/template/form/resource/create.ejs!';
 
 

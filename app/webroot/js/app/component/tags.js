@@ -1,5 +1,5 @@
 import 'app/component/tags_list';
-import 'app/component/form/tag/edit';
+//import 'app/form/tag/edit';
 import 'app/view/template/component/tags.ejs!';
 
 

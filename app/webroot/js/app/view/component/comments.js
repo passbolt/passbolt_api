@@ -1,5 +1,5 @@
-import 'mad/view';
-import 'app/view/template/component/comments.ejs';
+import 'mad/view/view';
+import 'app/view/template/component/comments.ejs!';
 
 
 /**

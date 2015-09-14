@@ -1,5 +1,5 @@
-import 'mad/view';
-import 'app/view/template/component/favorite.ejs';
+import 'mad/view/view';
+import 'app/view/template/component/favorite.ejs!';
 
 
 /**

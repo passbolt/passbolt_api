@@ -1,13 +1,13 @@
 import 'mad/component/component';
-import 'app/component/password_breadcrumb';
-import 'app/component/category_actions_tab';
-import 'app/component/category_chooser';
+//import 'app/component/password_breadcrumb';
+//import 'app/component/category_actions_tab';
+//import 'app/component/category_chooser';
 import 'app/component/password_browser';
 import 'app/component/resource_actions_tab';
 import 'app/component/resource_details';
 import 'app/component/resource_shortcuts';
-import 'app/component/workspace_secondary_menu';
-import 'app/form/category/create';
+//import 'app/component/workspace_secondary_menu';
+//import 'app/form/category/create';
 import 'app/form/resource/create';
 import 'app/model/filter';
 

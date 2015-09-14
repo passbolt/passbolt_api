@@ -1,4 +1,4 @@
-import 'mad/view';
+import 'mad/view/view';
 import 'app/view/template/component/permissions.ejs!';
 
 

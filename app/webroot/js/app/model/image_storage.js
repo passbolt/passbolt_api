@@ -1,4 +1,4 @@
-import 'mad/model';
+import 'mad/model/model';
 
 /**
  * @inherits {mad.model.Model}

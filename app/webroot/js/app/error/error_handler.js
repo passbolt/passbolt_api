@@ -1,5 +1,5 @@
 import "mad/error/error_handler";
-
+window.passbolt = {};
 /**
  * @inherits jQuery.Class
  * @parent mad.core
@@ -7,7 +7,8 @@ import "mad/error/error_handler";
  * Common error handler.
  * Use the console as logger.
  */
-var ErrorHandler = passbolt.error.ErrorHandler = mad.error.ErrorHandler.extend('mad.error.ErrorHandler', /** @static */ {
+passbolt.error = passbolt.error || {};
+var ErrorHandler = passbolt.error.ErrorHandler = mad.error.ErrorHandler.extend('passbolt.error.ErrorHandler', /** @static */ {
 
 });
 

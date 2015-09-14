@@ -1,5 +1,7 @@
+window.passbolt = {};
 import 'mad/bootstrap';
-import 'app/error/error_handler';
+import appConfig from "app/config/config.json";
+//import 'app/error/error_handler';
 
 /**
  * @inherits mad.Bootstrap
@@ -7,4 +9,6 @@ import 'app/error/error_handler';
  *
  * The Passbolt application bootstrap.
  */
-mad.Bootstrap.extend('passbolt.Bootstrap', {});
+mad.Config.load(appConfig);
+passbolt.bootstrap = mad.Bootstrap.extend('passbolt.Bootstrap', {});
+var bootstrap = new passbolt.Bootstrap();

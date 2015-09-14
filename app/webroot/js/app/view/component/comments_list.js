@@ -1,6 +1,6 @@
-import 'mad/view';
+import 'mad/view/view';
 import 'mad/view/component/tree';
-import 'app/view/template/component/comments.ejs';
+import 'app/view/template/component/comments.ejs!';
 
 steal(
 	'mad/view',

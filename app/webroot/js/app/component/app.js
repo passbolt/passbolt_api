@@ -19,7 +19,7 @@ import 'app/model/favorite';
 import 'app/model/resource';
 import 'app/model/filter';
 // the application template
-import 'app/view/template/app.ejs';
+import 'app/view/template/app.ejs!';
 
 
 /**

@@ -1,4 +1,4 @@
-import 'mad/controller/component';
+import 'mad/component/component';
 import 'app/view/component/loading_bar';
 
 /**

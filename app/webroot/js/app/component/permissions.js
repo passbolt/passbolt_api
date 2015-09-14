@@ -3,8 +3,8 @@ import 'app/model/group';
 import 'app/model/user';
 import 'app/model/permission';
 import 'app/model/permission_type';
-import 'app/view/template/form/permission/addForm.ejs!';
-import 'app/view/template/component/permission/permissionListItem.ejs!';
+import 'app/view/template/form/permission/add.ejs!';
+import 'app/view/template/component/permission/permission_list_item.ejs!';
 
 
 /**

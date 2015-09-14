@@ -3,8 +3,8 @@ import 'mad/view/component/tree';
 import 'app/view/component/resource_details';
 import 'app/component/comments';
 import 'app/component/sidebar_section';
-import 'app/component/sidebar_sections/tags';
-import 'app/component/sidebar_sections/description';
+import 'app/component/sidebar_section/tags';
+import 'app/component/sidebar_section/description';
 import 'app/view/template/component/resource_details.ejs!';
 
 /**

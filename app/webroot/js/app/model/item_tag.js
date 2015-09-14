@@ -1,4 +1,4 @@
-import 'jquery/model';
+import 'mad/model/model';
 import 'app/model/tag';
 import 'mad/model/serializer/cake_serializer';
 

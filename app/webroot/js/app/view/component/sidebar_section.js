@@ -1,4 +1,4 @@
-import 'mad/view';
+import 'mad/view/view';
 
 /**
  * @inherits mad.view.View

@@ -1,5 +1,5 @@
-import 'jquery/model';
-import 'app/model/image_storage.js';
+import 'mad/model/model';
+import 'app/model/image_storage';
 import 'mad/model/serializer/cake_serializer';
 
 

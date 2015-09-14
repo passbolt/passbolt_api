@@ -1,5 +1,5 @@
 import 'app/component/sidebar_section';
-import 'app/component/form/resource/edit_description';
+import 'app/form/resource/edit_description';
 import 'app/view/component/sidebar_section/description';
 import 'app/model/resource';
 

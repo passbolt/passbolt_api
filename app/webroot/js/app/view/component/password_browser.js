@@ -1,4 +1,4 @@
-import 'jquery/event/drag';
+//import 'jquery/event/drag';
 import 'mad/view/component/grid';
 import 'app/view/template/component/resource/dragged_resource.ejs!';
 

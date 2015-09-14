@@ -1,4 +1,4 @@
-import 'mad/component/component.js';
+import 'mad/component/component';
 import 'app/view/template/component/workspace_secondary_menu.ejs!';
 
 

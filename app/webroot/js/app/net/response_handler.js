@@ -1,3 +1,4 @@
+import 'mad';
 /**
  * @inherits {mad.net.ResponseHandler}
  * @parent index
