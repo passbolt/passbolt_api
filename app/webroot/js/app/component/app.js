@@ -1,11 +1,11 @@
 import 'mad/component/component';
 // the main workspaces of the application
-import 'app/component/settings_workspace';
-import 'app/component/password_workspace_menu';
+//import 'app/component/settings_workspace';
+//import 'app/component/password_workspace_menu';
 import 'app/component/password_workspace';
-import 'app/component/people_workspace';
-import 'app/component/people_workspace_menu';
-import 'app/component/settings_workspace_menu';
+//import 'app/component/people_workspace';
+//import 'app/component/people_workspace_menu';
+//import 'app/component/settings_workspace_menu';
 // common components of the application
 import 'app/component/app_navigation_left';
 import 'app/component/app_navigation_right';
@@ -19,7 +19,7 @@ import 'app/model/favorite';
 import 'app/model/resource';
 import 'app/model/filter';
 // the application template
-import 'app/view/template/app.ejs!'
+import 'app/view/template/app.ejs';
 
 
 /**

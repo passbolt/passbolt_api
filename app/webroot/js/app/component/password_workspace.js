@@ -45,14 +45,14 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.component.Com
 	 */
 	afterStart: function() {
 		// Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
-		var primWkMenu = mad.helper.ComponentHelper.create(
-			$('#js_wsp_primary_menu_wrapper'),
-			'last',
-			passbolt.component.PasswordWorkspaceMenu, {
-				'selectedRs': this.options.selectedRs
-			}
-		);
-		primWkMenu.start();
+		//var primWkMenu = mad.helper.ComponentHelper.create(
+		//	$('#js_wsp_primary_menu_wrapper'),
+		//	'last',
+		//	passbolt.component.PasswordWorkspaceMenu, {
+		//		'selectedRs': this.options.selectedRs
+		//	}
+		//);
+		//primWkMenu.start();
 
 		// Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
 		var secWkMenu = mad.helper.ComponentHelper.create(
