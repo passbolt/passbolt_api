@@ -306,7 +306,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // add the user to the list of selected items
         this.options.selectedUsers.push(item);
         // check the checkbox (if it is not already done)
-        mad.app.getComponent('multiple_select_checkbox_' + item.id)
+        mad.getControl('multiple_select_checkbox_' + item.id)
             .setValue([item.id]);
         // make the item selected in the view
         this.view.selectItem(item);
@@ -337,7 +337,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         silent = typeof silent == 'undefined' ? false : silent;
 
         // uncheck the associated checkbox (if it is not already done)
-        mad.app.getComponent('multiple_select_checkbox_' + item.id)
+        mad.getControl('multiple_select_checkbox_' + item.id)
             .reset();
         // unselect the item in grid
         this.view.unselectItem(item);
