@@ -97,7 +97,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{creationButton} click': function (el, ev) {
+    '{creationButton.element} click': function (el, ev) {
         var resource = this.options.creationButton.getValue();
         mad.bus.trigger('request_resource_creation', resource);
     },
@@ -108,7 +108,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{editionButton} click': function (el, ev) {
+    '{editionButton.element} click': function (el, ev) {
         var resource = this.options.editionButton.getValue();
         mad.bus.trigger('request_resource_edition', resource);
     },
@@ -119,7 +119,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{deletionButton} click': function (el, ev) {
+    '{deletionButton.element} click': function (el, ev) {
         var resources = this.options.deletionButton.getValue();
         mad.bus.trigger('request_resource_deletion', resources);
     },
@@ -130,7 +130,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{sharingButton} click': function (el, ev) {
+    '{sharingButton.element} click': function (el, ev) {
         var resource = this.options.sharingButton.getValue();
         mad.bus.trigger('request_resource_sharing', resource);
     },
@@ -142,7 +142,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {passbolt.model.Resource} resource The selected resource
      * @return {void}
      */
-    '{selectedRs} add': function (el, ev, resource) {
+    '{selectedRs.element} add': function (el, ev, resource) {
         // if more than one resource selected, or no resource selected
         if (this.options.selectedRs.length == 0) {
             this.setState('ready');
@@ -164,7 +164,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {passbolt.model.Resource} resource The unselected resource
      * @return {void}
      */
-    '{selectedRs} remove': function (el, ev, resource) {
+    '{selectedRs.element} remove': function (el, ev, resource) {
         // if more than one resource selected, or no resource selected
         if (this.options.selectedRs.length == 0) {
             this.setState('ready');
