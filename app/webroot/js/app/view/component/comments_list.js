@@ -6,7 +6,7 @@ import 'app/view/template/component/comments.ejs!';
  * @class passbolt.view.component.CommentsList
  * @inherits mad.view.component.Tree.extend
  */
-var CommentsList = passbolt.view.component.CommentsList = mad.View.extend('passbolt.view.component.CommentsList', /** @static */ {
+var CommentsList = passbolt.view.component.CommentsList = mad.view.component.Tree.extend('passbolt.view.component.CommentsList', /** @static */ {
 
 }, /** @prototype */ {
 
