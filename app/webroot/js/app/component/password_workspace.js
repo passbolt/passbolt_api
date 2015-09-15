@@ -6,7 +6,7 @@ import 'app/component/password_workspace_menu';
 import 'app/component/password_browser';
 //import 'app/component/resource_actions_tab';
 //import 'app/component/resource_details';
-//import 'app/component/resource_shortcuts';
+import 'app/component/resource_shortcuts';
 //import 'app/component/workspace_secondary_menu';
 //import 'app/form/category/create';
 //import 'app/form/resource/create';
@@ -65,8 +65,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		//secWkMenu.start();
         //
 		//// Instanciate the passwords filter controller
-		//var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
-		//rsShortcut.start();
+		var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
+		rsShortcut.start();
         //
 		//// Removed the lines below for #PASSBOLT-787
 		////// Instanciate the categories chooser controller
