@@ -1,10 +1,10 @@
 
 import 'mad/view/component/tree';
-import 'app/view/component/resource_details';
-import 'app/component/comments';
+//import 'app/view/component/resource_details';
+//import 'app/component/comments';
 import 'app/component/sidebar_section';
-import 'app/component/sidebar_section/tags';
-import 'app/component/sidebar_section/description';
+//import 'app/component/sidebar_section/tags';
+//import 'app/component/sidebar_section/description';
 import 'app/view/template/component/resource_details.ejs!';
 
 /**
@@ -26,7 +26,9 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 		// the resource to bind the component on
 		resource: null,
 		// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-		selectedRs: new can.Model.List()
+		selectedRs: new can.Model.List(),
+		// template uri.
+		'templateUri': 'app/view/template/component/resource_details.ejs'
 	}
 
 }, /** @prototype */ {
@@ -50,19 +52,19 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	 * @see {mad.controller.ComponentController}
 	 */
 	afterStart: function () {
-		// Instantiate the description controller for the current resource.
-		var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), {
-			'resource': this.options.resource
-		});
-		descriptionController.start();
+		//// Instantiate the description controller for the current resource.
+		//var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), {
+		//	'resource': this.options.resource
+		//});
+		//descriptionController.start();
 
-		// Instantiate the comments controller for the current resource.
-		var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
-			'resource': this.options.resource,
-			'foreignModel': 'Resource',
-			'foreignId': this.options.resource.id
-		});
-		commentsController.start();
+		//// Instantiate the comments controller for the current resource.
+		//var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
+		//	'resource': this.options.resource,
+		//	'foreignModel': 'Resource',
+		//	'foreignId': this.options.resource.id
+		//});
+		//commentsController.start();
 
 		//// Instantiate the item tags controller for the current resource.
 		//var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {

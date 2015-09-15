@@ -1,5 +1,5 @@
 import 'mad/view/component/tree';
-import 'app/component/comments';
+//import 'app/component/comments';
 
 passbolt.component.sidebarSection = passbolt.component.sidebarSection || {};
 
