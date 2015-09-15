@@ -1,4 +1,3 @@
-
 import 'mad/view/component/tree';
 import 'app/view/component/resource_details';
 import 'app/component/comments';
