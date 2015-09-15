@@ -2,6 +2,8 @@ import 'mad/form/form';
 import 'app/model/resource';
 import 'app/view/template/form/resource/edit_description.ejs!';
 
+passbolt.form.resource = passbolt.form.resource || {};
+
 /**
  * @inherits {mad.Form}
  * @parent index
@@ -18,6 +20,7 @@ var EditDescription = passbolt.form.resource.EditDescription = mad.Form.extend('
 
 	defaults : {
 		templateBased : true,
+		templateUri : 'app/view/template/form/resource/edit_description.ejs',
 		// The current resource
 		resource: null,
 		// Description field.

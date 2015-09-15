@@ -5,7 +5,7 @@ import 'app/view/template/component/sidebar_section/description.ejs!';
 /*
  * @inherits passbolt.view.component.SidebarSection
  */
-var Description = passbolt.view.component.sidebarSection.Description = mad.View.extend('passbolt.view.component.sidebarSection.Description', /** @static */ {
+var Description = passbolt.view.component.sidebarSection.Description = passbolt.view.component.SidebarSection.extend('passbolt.view.component.sidebarSection.Description', /** @static */ {
 
 }, /** @prototype */ {
 

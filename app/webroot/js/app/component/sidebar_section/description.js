@@ -2,6 +2,7 @@ import 'app/component/sidebar_section';
 import 'app/form/resource/edit_description';
 import 'app/view/component/sidebar_section/description';
 import 'app/model/resource';
+import 'app/view/template/component/sidebar_section/description.ejs!';
 
 /**
  * @inherits mad.component.SidebarSection
@@ -19,6 +20,7 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 	defaults : {
 		label : 'Sidebar Section Description Controller',
 		viewClass : passbolt.view.component.sidebarSection.Description,
+		templateUri : 'app/view/template/component/sidebar_section/description.ejs',
 		// Current resource instance.
 		resource : null,
 		// Form to edit the description.
@@ -46,9 +48,7 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 		var self = this;
 
 		// create a form to edit the description
-		this.options.editDescriptionFormCtrl = new passbolt.component.form.resource.EditDescription($('#js_rs_details_edit_description', this.element), {
-			'templateBased': true,
-			'templateUri': 'app/view/template/form/resource/editDescription.ejs',
+		this.options.editDescriptionFormCtrl = new passbolt.form.resource.EditDescription($('#js_rs_details_edit_description', this.element), {
 			'resource': this.options.resource,
 			'state': 'hidden',
 			'data': {
