@@ -7,7 +7,7 @@ import 'app/view/template/component/breadcrumb/breadcrumb.ejs!';
 import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 
 /**
- * @inherits {mad.component.Component}
+ * @inherits {mad.Component}
  * @parent index
  *
  * @constructor
@@ -18,7 +18,7 @@ import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.PeopleBreadcrumb}
  */
-var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.component.Component.extend('passbolt.component.PeopleBreadcrumb', /** @static */ {
+var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.extend('passbolt.component.PeopleBreadcrumb', /** @static */ {
 
     defaults: {
         categories: passbolt.model.Category.List,

@@ -4,7 +4,7 @@ import 'app/component/comments_list';
 import 'app/form/comment/create';
 
 /**
- * @inherits mad.component.Component
+ * @inherits mad.Component
  * @parent index
  *
  * @constructor
@@ -33,7 +33,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	/**
 	 * Called right after the start function
 	 * @return {void}
-	 * @see {mad.component.Component}
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		// create a form to add a comment and plug it onto the current resource

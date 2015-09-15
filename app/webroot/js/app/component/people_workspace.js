@@ -1,18 +1,18 @@
 import 'mad/component/component';
 import 'app/component/people_workspace_menu';
 import 'app/component/people_breadcrumb'; // to migrate
-import 'app/component/group_chooser'; // to migrate
+//import 'app/component/group_chooser'; // @roadmap
 import 'app/component/user_browser'; // to migrate
 import 'app/component/user_shortcuts'; // to migrate
-import 'app/component/user_details'; // to migrate
-import 'app/form/user/create'; // to migrate
-import 'app/form/group/create'; // to migrate
+//import 'app/component/user_details'; // to migrate
+//import 'app/form/user/create'; // to migrate
+//import 'app/form/group/create'; // to migrate
 import 'app/model/user'; // to migrate
 
 import 'app/view/template/people_workspace.ejs!';
 
 /**
- * @inherits {mad.component.Component}
+ * @inherits {mad.Component}
  * @parent index
  *
  * @constructor
@@ -23,7 +23,7 @@ import 'app/view/template/people_workspace.ejs!';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.PeopleWorkspace}
  */
-var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.component.Component.extend('passbolt.component.PeopleWorkspace', /** @static */ {
+var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend('passbolt.component.PeopleWorkspace', /** @static */ {
 
     defaults: {
         label: 'People',

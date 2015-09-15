@@ -5,7 +5,7 @@ import 'app/view/template/component/notification.ejs!';
 
 
 /**
- * @inherits mad.component.Component
+ * @inherits mad.Component
  * @parent index
  * @see {mad.view.View}
  *
@@ -18,7 +18,7 @@ import 'app/view/template/component/notification.ejs!';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.Notification}
  */
-var Notification = passbolt.component.Notification = mad.component.Component.extend('passbolt.component.Notification', /** @static */ {
+var Notification = passbolt.component.Notification = mad.Component.extend('passbolt.component.Notification', /** @static */ {
 
 	defaults: {
 		label: 'Notification Component',

@@ -15,7 +15,7 @@ import 'app/model/filter';
 import 'app/view/template/password_workspace.ejs!';
 
 /**
- * @inherits {mad.component.Component}
+ * @inherits {mad.Component}
  * @parent index
  *
  * @constructor
@@ -42,7 +42,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	/**
 	 * Called right after the start function
 	 * @return {void}
-	 * @see {mad.component.Component}
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		// Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed

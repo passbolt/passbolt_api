@@ -8,7 +8,7 @@ import 'app/component/sidebar_section/description';
 import 'app/view/template/component/resource_details.ejs!';
 
 /**
- * @inherits mad.component.Component
+ * @inherits mad.Component
  * @parent index
  *
  * @constructor

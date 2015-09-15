@@ -6,7 +6,7 @@ import 'app/view/template/component/password_workspace_menu.ejs!';
 
 /**
  * @class passbolt.controller.component.PeopleWorkspaceMenu
- * @inherits mad.component.ComponentController
+ * @inherits mad.ComponentController
  * @parent index
  *
  * Our passbolt password workspace menu controller

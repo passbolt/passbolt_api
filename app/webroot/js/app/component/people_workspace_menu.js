@@ -1,6 +1,6 @@
 import 'mad/component/component';
 
-import 'app/view/template/people_workspace_menu.ejs!';
+import 'app/view/template/component/people_workspace_menu.ejs!';
 
 /**
  * @class passbolt.controller.component.PeopleWorkspaceMenu
@@ -17,7 +17,7 @@ import 'app/view/template/people_workspace_menu.ejs!';
  * this.options and merged with defaults static variable
  * @return {passbolt.controller.component.PeopleWorkspaceMenuController}
  */
-var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.component.Component.extend('passbolt.component.PeopleWorkspaceMenu', /** @static */ {
+var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component.extend('passbolt.component.PeopleWorkspaceMenu', /** @static */ {
 
     defaults: {
         label: 'User Workspace Menu Controller',

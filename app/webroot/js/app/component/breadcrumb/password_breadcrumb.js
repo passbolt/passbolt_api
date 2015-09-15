@@ -5,7 +5,7 @@ import 'app/view/template/component/breadcrumb/breadcrumbItem.ejs!';
 
 
 /**
- * @inherits {mad.component.Component}
+ * @inherits {mad.Component}
  * @parent index
  *
  * The password Breadcrumb will allow the user to know where he is.
@@ -18,7 +18,7 @@ import 'app/view/template/component/breadcrumb/breadcrumbItem.ejs!';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.PasswordBreadcrumb}
  */
-var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.component.Component.extend('passbolt.component.PasswordBreadcrumb', /** @static */ {
+var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.extend('passbolt.component.PasswordBreadcrumb', /** @static */ {
 
 	defaults: {
 		categories: passbolt.model.Category.List,
@@ -35,7 +35,7 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.component.Co
 	/**
 	 * Called right after the start function
 	 * @return {void}
-	 * @see {mad.component.Component}
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		// Create and render menu in the created container.

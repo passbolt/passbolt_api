@@ -20,7 +20,7 @@ import 'app/view/template/component/tags.ejs!';
  *
  * @return {passbolt.component.Tags}
  */
-var Tags = passbolt.component.Tags = mad.component.Component.extend('passbolt.component.Tags', /** @static */ {
+var Tags = passbolt.component.Tags = mad.Component.extend('passbolt.component.Tags', /** @static */ {
 
 	defaults: {
 		label: 'Tags Component',

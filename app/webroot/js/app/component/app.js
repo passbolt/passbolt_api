@@ -3,7 +3,7 @@ import 'mad/component/component';
 //import 'app/component/settings_workspace';
 //import 'app/component/password_workspace_menu';
 import 'app/component/password_workspace';
-//import 'app/component/people_workspace';
+import 'app/component/people_workspace';
 //import 'app/component/people_workspace_menu';
 //import 'app/component/settings_workspace_menu';
 // common components of the application
