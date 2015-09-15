@@ -41,7 +41,7 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
         // Create and render menu in the created container.
         var menuSelector = '#' + this.getId() + ' ul';
         this.options.menu = new mad.component.Menu(menuSelector, {
-            itemTemplateUri: 'app/view/template/component/breadcrumb/breadcrumbItem.ejs'
+            itemTemplateUri: 'app/view/template/component/breadcrumb/breadcrumb_item.ejs'
         });
         this.options.menu.start();
     },
