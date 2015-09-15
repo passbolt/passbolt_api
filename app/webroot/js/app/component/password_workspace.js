@@ -84,9 +84,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		passwordBrowserController.start();
 
 		//// Instanciate the resource details controller
-		//var resourceDetails = new passbolt.component.ResourceDetails($('.js_wsp_pwd_sidebar_second', this.element), {
-		//	'selectedRs': this.options.selectedRs
-		//});
+		var resourceDetails = new passbolt.component.ResourceDetails($('.js_wsp_pwd_sidebar_second', this.element), {
+			'selectedRs': this.options.selectedRs
+		});
 
 		// Filter the workspace.
 		var filter = new passbolt.model.Filter({

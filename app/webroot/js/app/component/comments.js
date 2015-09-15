@@ -1,7 +1,8 @@
 import 'app/model/comment';
 import 'app/view/component/comments';
 import 'app/component/comments_list';
-//import 'app/form/comment/create';
+import 'app/form/comment/create';
+import 'app/view/template/component/comments.ejs!';
 
 /**
  * @inherits mad.Component
@@ -23,10 +24,11 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 		label					: 'Comments Controller',
 		viewClass				: passbolt.view.component.Comments,
 		// the resource to bind the component on
-		resource				: this.options.resource,
+		resource				: null,
 		foreignModel 			: null,
 		foreignId 				: null,
-		commentsListController	: null
+		commentsListController	: null,
+		templateUri				: 'app/view/template/component/comments.ejs',
 	}
 
 }, /** @prototype */ {
@@ -39,8 +41,6 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	afterStart: function () {
 		// create a form to add a comment and plug it onto the current resource
 		this.addForm = new passbolt.form.comment.Create($('#js_rs_details_comments_add_form', this.element), {
-			'templateBased'	: true,
-			'templateUri'	: 'app/view/template/form/comment/addForm.ejs',
 			'foreignModel'	: this.options.foreignModel,
 			'foreignId'		: this.options.foreignId
 		});

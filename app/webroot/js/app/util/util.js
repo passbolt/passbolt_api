@@ -22,4 +22,9 @@ if (passbolt.view.component == undefined) {
     passbolt.view.component = {};
 }
 
+// Define the component namespace.
+if (passbolt.form == undefined) {
+	passbolt.form = {};
+}
+
 export default passbolt;

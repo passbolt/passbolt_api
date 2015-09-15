@@ -1,5 +1,8 @@
 import 'mad/view/view';
 
+
+passbolt.view.component.sidebarSection = passbolt.view.component.sidebarSection || {};
+
 /**
  * @inherits mad.view.View
  */
