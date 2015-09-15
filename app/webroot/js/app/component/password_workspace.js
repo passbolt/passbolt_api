@@ -5,9 +5,9 @@ import 'app/component/breadcrumb/password_breadcrumb';
 //import 'app/component/category_chooser';
 import 'app/component/password_browser';
 //import 'app/component/resource_actions_tab';
-//import 'app/component/resource_details';
+import 'app/component/resource_details';
 import 'app/component/resource_shortcuts';
-//import 'app/component/workspace_secondary_menu';
+import 'app/component/workspace_secondary_menu';
 //import 'app/form/category/create';
 //import 'app/form/resource/create';
 import 'app/model/filter';
@@ -56,13 +56,13 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		primWkMenu.start();
 
 		//// Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
-		//var secWkMenu = mad.helper.Component.create(
-		//	$('#js_wsp_secondary_menu_wrapper'),
-		//	'last',
-		//	passbolt.component.WorkspaceSecondaryMenu,
-		//	{}
-		//);
-		//secWkMenu.start();
+		var secWkMenu = mad.helper.Component.create(
+			$('#js_wsp_secondary_menu_wrapper'),
+			'last',
+			passbolt.component.WorkspaceSecondaryMenu,
+			{}
+		);
+		secWkMenu.start();
         //
 		//// Instanciate the passwords filter controller
 		var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
