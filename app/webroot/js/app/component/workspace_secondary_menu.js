@@ -1,6 +1,6 @@
 import 'mad/component/component';
-import 'mad/component/toggle_button';
 import 'app/view/template/component/workspace_secondary_menu.ejs!';
+
 
 /**
  * @inherits mad.Component
@@ -19,7 +19,7 @@ import 'app/view/template/component/workspace_secondary_menu.ejs!';
 var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Component.extend('passbolt.component.WorkspaceSecondaryMenu', /** @static */ {
 
 	defaults: {
-		label: 'Workspace Secondary Menu Controller',
+		label: 'Workspace Secondary Menu',
 		templateUri: 'app/view/template/component/workspace_secondary_menu.ejs',
 		tag: 'ul'
 	}

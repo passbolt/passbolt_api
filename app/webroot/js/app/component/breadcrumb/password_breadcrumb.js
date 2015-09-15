@@ -1,7 +1,7 @@
 import 'mad/component/component';
 import 'app/model/category';
 import 'app/view/template/component/breadcrumb/breadcrumb.ejs!';
-import 'app/view/template/component/breadcrumb/breadcrumbItem.ejs!';
+import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 
 
 /**
@@ -41,7 +41,7 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 		// Create and render menu in the created container.
 		var menuSelector = '#' + this.getId() + ' ul';
 		this.options.menu = new mad.component.Menu(menuSelector, {
-			'itemTemplateUri': 'app/view/template/component/breadcrumb/breadcrumbItem.ejs'
+			'itemTemplateUri': 'app/view/template/component/breadcrumb/breadcrumb_item.ejs'
 		});
 		this.options.menu.start();
 	},
@@ -128,7 +128,6 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 	 */
 	load: function (filter) {
 		var menuItems = this.parseFilter(filter);
-
 		this.options.menu.reset();
 		this.options.menu.load(menuItems);
 	}

@@ -1,6 +1,7 @@
 import 'mad/component/component';
 import 'mad/component/button';
 import 'mad/component/button_dropdown';
+import 'app/model/permission';
 
 import 'app/view/template/component/password_workspace_menu.ejs!';
 
