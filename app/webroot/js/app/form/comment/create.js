@@ -12,7 +12,7 @@ import 'app/view/template/form/comment/add.ejs!';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.controller.form.comment.Create}
+ * @return {passbolt.form.comment.Create}
  */
 var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comment.Create', /** @static */ {
 	defaults: {

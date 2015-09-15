@@ -141,7 +141,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * Listen when the plugin has encrypted the secrets.
 	 * @todo #security #architecture refactor, check also permissionController.
 	 */
-	'{mad.bus} secret_edition_secret_encrypted': function(el, ev, armoreds) {
+	'{mad.bus.element} secret_edition_secret_encrypted': function(el, ev, armoreds) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 

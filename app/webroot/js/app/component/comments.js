@@ -75,7 +75,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	 * @param ev
 	 * @param resource
 	 */
-	'{mad.bus} request_delete_comment' : function (model, ev, resource) {
+	'{mad.bus.element} request_delete_comment' : function (model, ev, resource) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 
@@ -90,7 +90,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	 * @param ev
 	 * @param resource
 	 */
-	'{mad.bus} comment_deleted' : function (model, ev, resource) {
+	'{mad.bus.element} comment_deleted' : function (model, ev, resource) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 

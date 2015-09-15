@@ -534,7 +534,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {passbolt.model.Filter} filter The filter to apply
      * @return {void}
      */
-    '{mad.bus} filter_users_browser': function (element, evt, filter) {
+    '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
         // @todo fixed in future canJs.
         if (!this.element) return;
 

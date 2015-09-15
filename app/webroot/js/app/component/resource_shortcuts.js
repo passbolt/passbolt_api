@@ -95,7 +95,7 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 	 * @param {passbolt.model.Filter} filter The filter to apply
 	 * @return {void}
 	 */
-	'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 

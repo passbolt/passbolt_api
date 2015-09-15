@@ -186,7 +186,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {passbolt.model.Filter} filter The unselected resource
      * @return {void}
      */
-    '{mad.bus} filter_resources_browser': function(el, ev, filter) {
+    '{mad.bus.element} filter_resources_browser': function(el, ev, filter) {
         // @todo fixed in future canJs.
         if (!this.element) return;
 

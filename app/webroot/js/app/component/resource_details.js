@@ -169,7 +169,7 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	 * @param {passbolt.model.Resource} resource The updated resource
 	 * @return {void}
 	 */
-	'{mad.bus} workspace_showSidebar': function(el, ev, show) {
+	'{mad.bus.element} workspace_showSidebar': function(el, ev, show) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 

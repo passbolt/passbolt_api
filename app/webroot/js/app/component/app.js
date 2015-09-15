@@ -98,7 +98,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param {array} options Workspace's options
 	 * @return {void}
 	 */
-	'{mad.bus} workspace_selected': function (el, event, workspace, options) {
+	'{mad.bus.element} workspace_selected': function (el, event, workspace, options) {
 		options = typeof options != "undefined" ? options : {};
 
 		// If workspace requested is same as current workspace, do nothing.
@@ -146,7 +146,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param {array} options (optional) Options to give to the dialog controller
 	 * @return {void}
 	 */
-	'{mad.bus} request_dialog': function (el, ev, options) {
+	'{mad.bus.element} request_dialog': function (el, ev, options) {
 		var options = options || {};
 		new mad.component.Dialog(null, options).start();
 	},
@@ -157,7 +157,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'{mad.bus} passbolt_application_loading_completed': function (el, ev, options) {
+	'{mad.bus.element} passbolt_application_loading_completed': function (el, ev, options) {
 		if(!$('html').hasClass('loaded')) {
 			$('html')
 				.removeClass('loading')
@@ -171,7 +171,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'{mad.bus} passbolt_application_loading': function (el, ev, options) {
+	'{mad.bus.element} passbolt_application_loading': function (el, ev, options) {
 		if (!$('html').hasClass('loading')) {
 			$('html')
 				.removeClass('loaded')
@@ -185,7 +185,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'{mad.bus} request_dialog_close_latest': function (el, ev, options) {
+	'{mad.bus.element} request_dialog_close_latest': function (el, ev, options) {
 		mad.component.Dialog.closeLatest();
 	},
 

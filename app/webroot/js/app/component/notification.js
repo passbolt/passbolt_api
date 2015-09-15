@@ -57,7 +57,7 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {array} notif
 	 */
-	'{mad.bus} passbolt_notify': function (el, ev, notif) {
+	'{mad.bus.element} passbolt_notify': function (el, ev, notif) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 
