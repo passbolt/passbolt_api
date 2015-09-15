@@ -1,14 +1,14 @@
 import 'mad/component/component';
 import 'app/component/people_workspace_menu';
 import 'app/component/workspace_secondary_menu';
-import 'app/component/people_breadcrumb'; // to migrate
+import 'app/component/people_breadcrumb';
 //import 'app/component/group_chooser'; // @roadmap
-import 'app/component/user_browser'; // to migrate
-import 'app/component/user_shortcuts'; // to migrate
-//import 'app/component/user_details'; // to migrate
+import 'app/component/user_browser';
+import 'app/component/user_shortcuts';
+import 'app/component/user_details';
 //import 'app/form/user/create'; // to migrate
 //import 'app/form/group/create'; // to migrate
-import 'app/model/user'; // to migrate
+import 'app/model/user';
 
 import 'app/view/template/people_workspace.ejs!';
 

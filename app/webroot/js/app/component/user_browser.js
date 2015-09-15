@@ -1,4 +1,5 @@
 import 'mad/component/grid';
+import 'mad/form/element/checkbox';
 import 'app/model/user';
 import 'app/model/group';
 import 'app/model/profile';
@@ -64,10 +65,10 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
                 var availableValues = [];
                 availableValues[item.id] = '';
-                var checkbox = mad.helper.ComponentHelper.create(
+                var checkbox = mad.helper.Component.create(
                     cellElement,
                     'inside_replace',
-                    mad.form.element.CheckboxController, {
+                    mad.form.Checkbox, {
                         id: 'multiple_select_checkbox_' + item.id,
                         name: 'test',
                         cssClasses: ['js_checkbox_multiple_select'],

@@ -3,7 +3,6 @@ import 'app/form/resource/edit_description';
 import 'app/view/component/sidebar_section/description';
 import 'app/model/resource';
 
-
 /**
  * @inherits mad.component.SidebarSection
  * @parent index

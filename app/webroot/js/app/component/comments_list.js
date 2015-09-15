@@ -3,7 +3,6 @@ import 'app/view/component/comments_list';
 import 'app/view/component/comments';
 import 'app/model/comment';
 
-
 /**
  * @inherits mad.component.Tree
  * @parent index
@@ -75,4 +74,5 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
 		mad.bus.trigger('request_delete_comment', data);
 	}
 });
+
 export default CommentsList;

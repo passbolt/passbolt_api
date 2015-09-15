@@ -1,7 +1,7 @@
 import 'app/model/comment';
 import 'app/view/component/comments';
 import 'app/component/comments_list';
-import 'app/form/comment/create';
+//import 'app/form/comment/create';
 
 /**
  * @inherits mad.Component
@@ -18,6 +18,7 @@ import 'app/form/comment/create';
  * @return {passbolt.component.Comments}
  */
 var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.component.Comments', /** @static */ {
+
 	defaults: {
 		label					: 'Comments Controller',
 		viewClass				: passbolt.view.component.Comments,

@@ -2,7 +2,6 @@ import 'mad/component/component';
 import 'mad/component/toggle_button';
 import 'app/view/template/component/workspace_secondary_menu.ejs!';
 
-
 /**
  * @inherits mad.Component
  * @parent index

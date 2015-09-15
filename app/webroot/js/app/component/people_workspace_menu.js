@@ -1,4 +1,5 @@
 import 'mad/component/component';
+import 'mad/component/button';
 
 import 'app/view/template/component/people_workspace_menu.ejs!';
 
@@ -43,16 +44,16 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
 
         if (userRole == 'admin') {
             // Manage creation action
-            this.options.creationButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_creation_button'))
+            this.options.creationButton = new mad.component.Button($('#js_user_wk_menu_creation_button'))
                 .start();
 
             // Manage edition action
-            this.options.editionButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_edition_button'), {
+            this.options.editionButton = new mad.component.Button($('#js_user_wk_menu_edition_button'), {
                 state: 'disabled'
             }).start();
 
             // Manage deletion action
-            this.options.deletionButton = new mad.controller.component.ButtonController($('#js_user_wk_menu_deletion_button'), {
+            this.options.deletionButton = new mad.component.Button($('#js_user_wk_menu_deletion_button'), {
                 state: 'disabled'
             }).start();
 
@@ -71,7 +72,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                     }
                 })
             ];
-            this.options.moreButton = new mad.controller.component.ButtonDropdownController($('#js_user_wk_menu_more_button'), {
+            this.options.moreButton = new mad.component.ButtonDropdown($('#js_user_wk_menu_more_button'), {
                 state: 'disabled',
                 items: moreButtonMenuItems
             }).start();

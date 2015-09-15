@@ -64,7 +64,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 		// Get logged in user.
 		passbolt.model.User.findOne({
-			id: mad.Config.read('user.id')
+			id: mad.Config.read('user.id'),
+			async: false
 		}).then(function(user) {
 			// Set current user.
 			passbolt.model.User.setCurrent(user);
@@ -212,8 +213,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 */
 	stateReady: function (go) {
 		// Select the password workspace
-		mad.bus.trigger('workspace_selected', 'password');
-		//mad.bus.trigger('workspace_selected', 'people');
+		//mad.bus.trigger('workspace_selected', 'password');
+		mad.bus.trigger('workspace_selected', 'people');
 		// When the application is ready, remove the launching screen.
 		$('html').removeClass('launching');
 	}
