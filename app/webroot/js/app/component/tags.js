@@ -38,7 +38,7 @@ var Tags = passbolt.component.Tags = mad.Component.extend('passbolt.component.Ta
 		var self = this;
 
 		// create a form to edit the tags and plug it onto the current resource
-		this.editForm = new passbolt.controller.form.tag.Edit($('.tags-edit', this.element), {
+		this.editForm = new passbolt.form.tag.Edit($('.tags-edit', this.element), {
 			'templateBased': true,
 			'templateUri': 'app/view/template/form/tag/edit.ejs',
 			'foreignModel': this.options.foreignModel,

@@ -1,4 +1,5 @@
 import 'mad/component/component';
+import 'mad/component/dialog';
 import 'app/component/people_workspace_menu';
 import 'app/component/workspace_secondary_menu';
 import 'app/component/people_breadcrumb';
@@ -6,7 +7,7 @@ import 'app/component/people_breadcrumb';
 import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_details';
-//import 'app/form/user/create'; // to migrate
+import 'app/form/user/create';
 //import 'app/form/group/create'; // to migrate
 import 'app/model/user';
 
@@ -125,7 +126,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * @param {passbolt.model.Group} group The selected group
      * @return {void}
      */
-    '{mad.bus} group_selected': function (el, ev, group) {
+    '{mad.bus.element} group_selected': function (el, ev, group) {
         // @todo fixed in future canJs.
         if (!this.element) return;
 
@@ -185,11 +186,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var group = new passbolt.model.Group();
 
         // Get the dialog
-        var dialog = new mad.controller.component.DialogController(null, {label: __('Create a new Group')})
+        var dialog = new mad.component.Dialog(null, {label: __('Create a new Group')})
             .start();
 
         // Attach the component to the dialog.
-        var form = dialog.add(passbolt.controller.form.group.CreateFormController, {
+        var form = dialog.add(passbolt.form.group.Create, {
             data: group,
             callbacks : {
                 submit: function (data) {
@@ -215,11 +216,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         if (!this.element) return;
 
         // get the dialog
-        var dialog = new mad.controller.component.DialogController(null, {label: __('Edit a Group')})
+        var dialog = new mad.component.Dialog(null, {label: __('Edit a Group')})
             .start();
 
         // attach the component to the dialog
-        var form = dialog.add(passbolt.controller.form.group.CreateFormController, {
+        var form = dialog.add(passbolt.form.group.Create, {
             data: group,
             callbacks : {
                 submit: function (data) {
@@ -260,11 +261,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var user = new passbolt.model.User({active:1});
 
         // get the dialog
-        var dialog = new mad.controller.component.DialogController(null, {label: __('Add User')})
+        var dialog = new mad.component.Dialog(null, {label: __('Add User')})
             .start();
 
         // attach the component to the dialog
-        var form = dialog.add(passbolt.controller.form.user.CreateFormController, {
+        var form = dialog.add(passbolt.form.user.Create, {
             data: user,
             action: 'create',
             callbacks : {
@@ -301,10 +302,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         // Retrieve the selected user
         user = this.options.selectedUsers[0];
         // get the dialog
-        var dialog = new mad.controller.component.DialogController(null, {label: __('Edit User')})
+        var dialog = new mad.component.Dialog(null, {label: __('Edit User')})
             .start();
         // attach the component to the dialog
-        var form = dialog.add(passbolt.controller.form.user.CreateFormController, {
+        var form = dialog.add(passbolt.form.user.Create, {
             data: user,
             action: 'edit',
             callbacks : {

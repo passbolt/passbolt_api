@@ -137,7 +137,7 @@ var UserDetails = passbolt.component.UserDetails = mad.Component.extend('passbol
 	 * Observe when the user desire to hide the sidebar
 	 * @param {passbolt.model.User} user The updated user
 	 */
-	'{mad.bus} workspace_showSidebar': function(el, ev, show) {
+	'{mad.bus.element} workspace_showSidebar': function(el, ev, show) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 

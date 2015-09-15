@@ -92,7 +92,7 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 		// Change the label of the dialog which contains this component.
 		var enabledTabCtl = this.getComponent(this.enabledTabId);
 		var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
-		this.closest(mad.controller.component.DialogController)
+		this.closest(mad.component.Dialog)
 			.setTitle(label);
 	}
 });

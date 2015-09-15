@@ -51,7 +51,7 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'{mad.bus} workspace_showSidebar': function (el, ev, show) {
+	'{mad.bus.element} workspace_showSidebar': function (el, ev, show) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 

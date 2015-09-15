@@ -92,7 +92,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{creationButton} click': function (el, ev) {
+    '{creationButton.element} click': function (el, ev) {
         /*var category = this.options.creationButton.getValue();*/
         mad.bus.trigger('request_user_creation'/*, category*/);
     },
@@ -103,7 +103,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{editionButton} click': function (el, ev) {
+    '{editionButton.element} click': function (el, ev) {
         /*var category = this.options.editionButton.getValue();*/
         mad.bus.trigger('request_user_edition'/*, category*/);
     },
@@ -114,7 +114,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{deletionButton} click': function (el, ev) {
+    '{deletionButton.element} click': function (el, ev) {
         var users = this.options.selectedUsers;
         mad.bus.trigger('request_user_deletion', users);
     },
@@ -126,7 +126,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {passbolt.model.User} user The selected user
      * @return {void}
      */
-    '{selectedUsers} add': function (el, ev, user) {
+    '{selectedUsers.element} add': function (el, ev, user) {
         // if no user selected.
         if (this.options.selectedUsers.length == 0) {
             this.setState('ready');
@@ -160,7 +160,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {passbolt.model.User} user The unselected user
      * @return {void}
      */
-    '{selectedUsers} remove': function (el, ev, user) {
+    '{selectedUsers.element} remove': function (el, ev, user) {
         // if more than one resource selected, or no resource selected
         if (this.options.selectedUsers.length == 0) {
             this.setState('ready');

@@ -255,7 +255,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @todo #security #architecture refactor, check also resource createFormController.
 	 * @todo #dirtycode
 	 */
-	'{mad.bus} resource_share_secret_encrypted': function(el, ev, armoreds) {
+	'{mad.bus.element} resource_share_secret_encrypted': function(el, ev, armoreds) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 

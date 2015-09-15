@@ -66,7 +66,7 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * @param {passbolt.model.Category} category The selected category
 	 * @return {void}
 	 */
-	'{mad.bus} category_selected': function (el, ev, category) {
+	'{mad.bus.element} category_selected': function (el, ev, category) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 
@@ -79,7 +79,7 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * @param {HTMLEvent} event
 	 * @param workspace
 	 */
-	'{mad.bus} workspace_selected': function (el, event, workspace) {
+	'{mad.bus.element} workspace_selected': function (el, event, workspace) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
 
