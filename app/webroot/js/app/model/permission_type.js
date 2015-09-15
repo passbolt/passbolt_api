@@ -64,13 +64,15 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 	 */
 	toString: function(permId) {
 		var returnValue = '';
+		if (permId == undefined) {
+			console.error('Warning, PermissionType.toString called without permId');
+			return 'can read';
+		}
 		switch (permId) {
-			case passbolt.DENY
-				.toString():
+			case passbolt.DENY.toString():
 				returnValue = this.PERMISSION_TYPES[permId];
 				break;
-			case passbolt.ADMIN
-				.toString():
+			case passbolt.ADMIN.toString():
 				returnValue = __('is %s', this.PERMISSION_TYPES[permId]);
 				break;
 			default:
