@@ -1,6 +1,6 @@
 import 'mad/component/component';
 import 'app/component/password_workspace_menu';
-//import 'app/component/password_breadcrumb';
+import 'app/component/breadcrumb/password_breadcrumb';
 //import 'app/component/category_actions_tab';
 //import 'app/component/category_chooser';
 import 'app/component/password_browser';
@@ -74,8 +74,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		////this.catChooser.start();
         //
 		//// Instantiate the password workspace breadcrumb controller
-		//this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
-		//this.breadcrumCtl.start();
+		this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
+		this.breadcrumCtl.start();
 
 		// Instanciate the passwords browser controller
 		var passwordBrowserController = new passbolt.component.PasswordBrowser('#js_wsp_pwd_browser', {
@@ -121,20 +121,17 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	/* LISTEN TO THE APP EVENTS */
 	/* ************************************************************** */
 
-	///**
-	// * Listen to the browser filter
-	// * @param {jQuery} element The source element
-	// * @param {Event} event The jQuery event
-	// * @param {passbolt.model.Filter} filter The filter to apply
-	// * @return {void}
-	// */
-	//'{mad.bus} filter_resources_browser': function (element, evt, filter) {
-	//	// @todo fixed in future canJs.
-	//	if (!this.element) return;
-    //
-	//	// Update the breadcrumb with the new filter.
-	//	this.breadcrumCtl.load(filter);
-	//},
+	/**
+	* Listen to the browser filter
+	* @param {jQuery} element The source element
+	* @param {Event} event The jQuery event
+	* @param {passbolt.model.Filter} filter The filter to apply
+	* @return {void}
+	*/
+	'{mad.bus} filter_resources_browser': function (element, evt, filter) {
+		// Update the breadcrumb with the new filter.
+		this.breadcrumCtl.load(filter);
+	},
 
 	/**
 	 * Observe when category is selected
