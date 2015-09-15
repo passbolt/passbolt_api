@@ -51,27 +51,27 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	 * @see {mad.controller.ComponentController}
 	 */
 	afterStart: function () {
-		//// Instantiate the description controller for the current resource.
-		//var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), {
-		//	'resource': this.options.resource
-		//});
-		//descriptionController.start();
+		// Instantiate the description controller for the current resource.
+		var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), {
+			'resource': this.options.resource
+		});
+		descriptionController.start();
 
-		//// Instantiate the comments controller for the current resource.
-		//var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
-		//	'resource': this.options.resource,
-		//	'foreignModel': 'Resource',
-		//	'foreignId': this.options.resource.id
-		//});
-		//commentsController.start();
+		// Instantiate the comments controller for the current resource.
+		var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
+			'resource': this.options.resource,
+			'foreignModel': 'Resource',
+			'foreignId': this.options.resource.id
+		});
+		commentsController.start();
 
-		//// Instantiate the item tags controller for the current resource.
-		//var sidebarTagsController = new passbolt.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
-		//	'instance': this.options.resource,
-		//	'foreignModel': 'Resource',
-		//	'foreignId': this.options.resource.id
-		//});
-		//sidebarTagsController.start();
+		// Instantiate the item tags controller for the current resource.
+		var sidebarTagsController = new passbolt.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
+			'instance': this.options.resource,
+			'foreignModel': 'Resource',
+			'foreignId': this.options.resource.id
+		});
+		sidebarTagsController.start();
 	},
 
 	/**

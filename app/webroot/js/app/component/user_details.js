@@ -1,7 +1,7 @@
 import 'mad/view/component/tree';
 import 'app/view/component/user_details';
-import 'app/component/sidebar_section';
-import 'app/component/sidebar_section/description';
+//import 'app/component/sidebar_section';
+//import 'app/component/sidebar_section/description';
 import 'app/view/template/component/user_details.ejs!';
 
 /*
