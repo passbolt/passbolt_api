@@ -23,7 +23,7 @@ var TagsList = passbolt.component.TagsList = mad.Component.extend('passbolt.comp
 		// The list of tags to take care
 		tags: null,
 		// The map to use to make jstree working with our category model
-		map: new mad.object.Map({
+		map: new mad.Map({
 			id: 'id',
 			Tag:'Tag'
 		})

@@ -8,7 +8,7 @@ import 'app/view/template/component/permission/permission_list_item.ejs!';
 
 
 /**
- * @inherits mad.component.Component
+ * @inherits mad.Component
  * @parent index
  *
  * @constructor
@@ -19,7 +19,7 @@ import 'app/view/template/component/permission/permission_list_item.ejs!';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.Permissions}
  */
-var Permissions = passbolt.component.Permissions = mad.component.Component.extend('passbolt.component.Permissions', /** @static */ {
+var Permissions = passbolt.component.Permissions = mad.Component.extend('passbolt.component.Permissions', /** @static */ {
 
 	defaults: {
 		label: 'Permissions Controller',
@@ -47,7 +47,7 @@ var Permissions = passbolt.component.Permissions = mad.component.Component.exten
 			'templateUri': 'mad/view/template/component/tree.ejs',
 			'itemTemplateUri': 'app/view/template/component/permission/permission_list_item.ejs',
 			// The map to use to make jstree working with our category model
-			'map': new mad.object.Map({
+			'map': new mad.Map({
 				'id': 'id',
 				'isDirect': {
 					'key': 'aro_foreign_key',

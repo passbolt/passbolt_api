@@ -17,7 +17,7 @@ import 'app/view/component/password_browser';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.controller.component.PasswordBrowserController}
+ * @return {passbolt.component.PasswordBrowserController}
  */
 var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.extend('passbolt.component.PasswordBrowser', /** @static */ {
 
@@ -191,7 +191,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				var copyLogin = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
-					passbolt.controller.component.CopyLoginButtonController,
+					passbolt.component.CopyLoginButtonController,
 					{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 				);
 				copyLogin.start();
@@ -208,7 +208,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				var copyPwd = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
-					passbolt.controller.component.CopySecretButtonController,
+					passbolt.component.CopySecretButtonController,
 					{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 				);
 				copyPwd.start();
@@ -522,13 +522,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/* ************************************************************** */
 
 	/**
-	 * Observe when a resource is created.
-	 * If the created resource belong to a displayed category, add the resource to the grid.
-	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {passbolt.model.Resource} resource The created resource
-	 * @return {void}
-	 */
+	* Observe when a resource is created.
+	* If the created resource belong to a displayed category, add the resource to the grid.
+	* @param {mad.model.Model} model The model reference
+	* @param {HTMLEvent} ev The event which occured
+	* @param {passbolt.model.Resource} resource The created resource
+	* @return {void}
+	*/
 	'{passbolt.model.Resource} created': function (model, ev, resource) {
 		var self = this;
 
@@ -551,15 +551,15 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
-	 * Observe when a resource is updated.
-	 * If the resource is displayed by he grid, refresh it.
-	 * note : We listen the model directly, listening on changes on
-	 * a list seems too much here (one event for each updated attribute)
-	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {passbolt.model.Resource} resource The updated resource
-	 * @return {void}
-	 */
+	* Observe when a resource is updated.
+	* If the resource is displayed by he grid, refresh it.
+	* note : We listen the model directly, listening on changes on
+	* a list seems too much here (one event for each updated attribute)
+	* @param {mad.model.Model} model The model reference
+	* @param {HTMLEvent} ev The event which occured
+	* @param {passbolt.model.Resource} resource The updated resource
+	* @return {void}
+	*/
 	'{passbolt.model.Resource} updated': function (model, ev, resource) {
 		if (this.options.resources.indexOf(resource) != -1) {
 			this.refreshItem(resource);
@@ -567,13 +567,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
-	 * Observe when resources are removed from the list of displayed resources and
-	 * remove it from the grid
-	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {passbolt.model.Resource} resources The removed resource
-	 * @return {void}
-	 */
+	* Observe when resources are removed from the list of displayed resources and
+	* remove it from the grid
+	* @param {mad.model.Model} model The model reference
+	* @param {HTMLEvent} ev The event which occured
+	* @param {passbolt.model.Resource} resources The removed resource
+	* @return {void}
+	*/
 	'{resources} remove': function (model, ev, resources) {
 		var self = this;
 		can.each(resources, function (resource, i) {
@@ -582,13 +582,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
-	 * Observe when a category is removed. And remove from the grid all the resources
-	 * which are not belonging to a displayed Category.
-	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {passbolt.model.Category} category The removed category
-	 * @return {void}
-	 */
+	* Observe when a category is removed. And remove from the grid all the resources
+	* which are not belonging to a displayed Category.
+	* @param {mad.model.Model} model The model reference
+	* @param {HTMLEvent} ev The event which occured
+	* @param {passbolt.model.Category} category The removed category
+	* @return {void}
+	*/
 	'{passbolt.model.Category} destroyed': function (model, ev, category) {
 		var self = this;
 
@@ -610,27 +610,14 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/* ************************************************************** */
 
 	/**
-	 * Observe when a password cell is clicked.
-	 *
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {mixed} item The selected item instance or its id
-	 * @param {HTMLEvent} ev The source event which occured
-	 * @return {void}
-	 */
-	' password_clicked': function (el, ev, item, srcEvent) {
-		mad.bus.trigger('request_secret_view', item);
-	},
-
-	/**
-	 * Observe when an item is selected in the grid.
-	 * This event comes from the grid view
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {mixed} item The selected item instance or its id
-	 * @param {HTMLEvent} ev The source event which occured
-	 * @return {void}
-	 */
+	* Observe when an item is selected in the grid.
+	* This event comes from the grid view
+	* @param {HTMLElement} el The element the event occured on
+	* @param {HTMLEvent} ev The event which occured
+	* @param {mixed} item The selected item instance or its id
+	* @param {HTMLEvent} ev The source event which occured
+	* @return {void}
+	*/
 	' item_selected': function (el, ev, item, srcEvent) {
 		var self = this;
 
@@ -643,13 +630,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
-	 * An item has been right selected
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {passbolt.model.Resource} item The right selected item instance or its id
-	 * @param {HTMLEvent} srcEvent The source event which occured
-	 * @return {void}
-	 */
+	* An item has been right selected
+	* @param {HTMLElement} el The element the event occured on
+	* @param {HTMLEvent} ev The event which occured
+	* @param {passbolt.model.Resource} item The right selected item instance or its id
+	* @param {HTMLEvent} srcEvent The source event which occured
+	* @return {void}
+	*/
 	' item_right_selected': function (el, ev, item, srcEvent) {
 		// Select item.
 		this.select(item);
@@ -658,13 +645,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
-	 * A password has been clicked.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {passbolt.model.Resource} item The right selected item instance or its id
-	 * @param {HTMLEvent} srcEvent The source event which occured
-	 * @return {void}
-	 */
+	* A password has been clicked.
+	* @param {HTMLElement} el The element the event occured on
+	* @param {HTMLEvent} ev The event which occured
+	* @param {passbolt.model.Resource} item The right selected item instance or its id
+	* @param {HTMLEvent} srcEvent The source event which occured
+	* @return {void}
+	*/
 	' password_clicked': function (el, ev, item, srcEvent) {
 		// Get secret out of Resource object.
 		var secret = item.Secret[0].data;
@@ -672,14 +659,27 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		mad.bus.trigger('passbolt.secret.decrypt', secret);
 	},
 
+    ///**
+    // * Observe when a password cell is clicked.
+    // *
+    // * @param {HTMLElement} el The element the event occured on
+    // * @param {HTMLEvent} ev The event which occured
+    // * @param {mixed} item The selected item instance or its id
+    // * @param {HTMLEvent} ev The source event which occured
+    // * @return {void}
+    // */
+    //' password_clicked': function (el, ev, item, srcEvent) {
+    //    mad.bus.trigger('request_secret_view', item);
+    //},
+
 	/**
-	 * Listen to the check event on any checkbox form element components.
-	 *
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {mixed} rsId The id of the resource which has been checked
-	 * @return {void}
-	 */
+	* Listen to the check event on any checkbox form element components.
+	*
+	* @param {HTMLElement} el The element the event occured on
+	* @param {HTMLEvent} ev The event which occured
+	* @param {mixed} rsId The id of the resource which has been checked
+	* @return {void}
+	*/
 	'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
 		var self = this;
 
@@ -702,13 +702,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
-	 * Listen to the uncheck event on any checkbox form element components.
-	 *
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {mixed} rsId The id of the resource which has been unchecked
-	 * @return {void}
-	 */
+	* Listen to the uncheck event on any checkbox form element components.
+	*
+	* @param {HTMLElement} el The element the event occured on
+	* @param {HTMLEvent} ev The event which occured
+	* @param {mixed} rsId The id of the resource which has been unchecked
+	* @return {void}
+	*/
 	'.js_checkbox_multiple_select unchecked': function (el, ev, rsId) {
 		var self = this;
 
@@ -735,12 +735,12 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/* ************************************************************** */
 
 	/**
-	 * Listen to the browser filter
-	 * @param {jQuery} element The source element
-	 * @param {Event} event The jQuery event
-	 * @param {passbolt.model.Filter} filter The filter to apply
-	 * @return {void}
-	 */
+	* Listen to the browser filter
+	* @param {jQuery} element The source element
+	* @param {Event} event The jQuery event
+	* @param {passbolt.model.Filter} filter The filter to apply
+	* @return {void}
+	*/
 	'{mad.bus} filter_resources_browser': function (element, evt, filter) {
 		// @todo fixed in future canJs.
 		if (!this.element) return;
@@ -784,29 +784,29 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/* ************************************************************** */
 
 	/**
-	 * Listen to the change relative to the state Ready.
-	 * The ready state is fired automatically after the Component is rendered
-	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
-	 */
+	* Listen to the change relative to the state Ready.
+	* The ready state is fired automatically after the Component is rendered
+	* @param {boolean} go Enter or leave the state
+	* @return {void}
+	*/
 	'stateReady': function (go) {
 		// nothing to do
 	},
 
 	/**
-	 * Listen to the change relative to the state selected
-	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
-	 */
+	* Listen to the change relative to the state selected
+	* @param {boolean} go Enter or leave the state
+	* @return {void}
+	*/
 	'stateSelection': function (go) {
 		// nothing to do
 	},
 
 	/**
-	 * Listen to the change relative to the state multipleSelected
-	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
-	 */
+	* Listen to the change relative to the state multipleSelected
+	* @param {boolean} go Enter or leave the state
+	* @return {void}
+	*/
 	'stateMultipleSelection': function (go) {
 		// nothing to do
 	}

@@ -2,7 +2,7 @@ import 'mad/component/component';
 import 'app/view/component/loading_bar';
 
 /**
- * @inherits mad.component.Component
+ * @inherits mad.Component
  * @parent index
  * @see {mad.view.View}
  *
@@ -15,7 +15,7 @@ import 'app/view/component/loading_bar';
  * this.options and merged with defaults static variable
  * @return {passbolt.component.LoadingBar}
  */
-var LoadingBar = passbolt.component.LoadingBar = mad.component.Component.extend('passbolt.component.LoadingBar', /** @static */ {
+var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.component.LoadingBar', /** @static */ {
 
 	defaults: {
 		label: 'Loading Bar Component',

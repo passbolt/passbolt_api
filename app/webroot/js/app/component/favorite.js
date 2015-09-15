@@ -4,7 +4,7 @@ import 'app/view/component/favorite';
 import 'app/view/template/component/favorite.ejs!';
 
 /**
- * @inherits {mad.component.Component}
+ * @inherits {mad.Component}
  * @parent index
  *
  *

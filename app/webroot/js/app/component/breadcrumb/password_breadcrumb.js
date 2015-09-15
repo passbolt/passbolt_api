@@ -5,7 +5,7 @@ import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 
 
 /**
- * @inherits {mad.component.Component}
+ * @inherits {mad.Component}
  * @parent index
  *
  * The password Breadcrumb will allow the user to know where he is.
@@ -35,7 +35,7 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 	/**
 	 * Called right after the start function
 	 * @return {void}
-	 * @see {mad.component.Component}
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		// Create and render menu in the created container.

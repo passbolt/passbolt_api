@@ -7,7 +7,7 @@ import 'app/model/filter';
 import 'app/view/template/component/app_filter.ejs!';
 
 /**
- * @inherits {mad.component.Component}
+ * @inherits {mad.Component}
  * @parent index
  *
  * The application Filter will allow the user to filter the different workspaces of the application through a

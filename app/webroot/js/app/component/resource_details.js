@@ -8,7 +8,7 @@ import 'app/component/sidebar_section';
 import 'app/view/template/component/resource_details.ejs!';
 
 /**
- * @inherits mad.component.Component
+ * @inherits mad.Component
  * @parent index
  *
  * @constructor
@@ -67,7 +67,7 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 		//commentsController.start();
 
 		//// Instantiate the item tags controller for the current resource.
-		//var sidebarTagsController = new passbolt.controller.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
+		//var sidebarTagsController = new passbolt.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
 		//	'instance': this.options.resource,
 		//	'foreignModel': 'Resource',
 		//	'foreignId': this.options.resource.id

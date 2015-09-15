@@ -2,7 +2,6 @@
 import 'mad/view/component/grid';
 import 'app/view/template/component/resource/dragged_resource.ejs!';
 
-
 /*
  * @inherits mad.view.Grid
  */

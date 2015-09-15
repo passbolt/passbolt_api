@@ -1,9 +1,9 @@
 import 'mad/component/component';
 
-import 'app/view/template/people_workspace_menu.ejs!';
+import 'app/view/template/component/people_workspace_menu.ejs!';
 
 /**
- * @class passbolt.controller.component.PeopleWorkspaceMenu
+ * @class passbolt.component.PeopleWorkspaceMenu
  * @inherits mad.controller.component.ComponentController
  * @parent index
  *
@@ -15,9 +15,9 @@ import 'app/view/template/people_workspace_menu.ejs!';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.controller.component.PeopleWorkspaceMenuController}
+ * @return {passbolt.component.PeopleWorkspaceMenuController}
  */
-var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.component.Component.extend('passbolt.component.PeopleWorkspaceMenu', /** @static */ {
+var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component.extend('passbolt.component.PeopleWorkspaceMenu', /** @static */ {
 
     defaults: {
         label: 'User Workspace Menu Controller',
@@ -25,7 +25,8 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.component
         // the selected users, you can pass an existing list as parameter of the constructor to share the same list
         selectedUsers: new can.Model.List(),
         // the selected group, you can pass an existing list as parameter of the constructor to share the same list
-        selectedGroups: new can.Model.List()
+        selectedGroups: new can.Model.List(),
+        templateUri: 'app/view/template/component/people_workspace_menu.ejs'
     }
 
 }, /** @prototype */ {

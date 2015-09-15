@@ -5,7 +5,7 @@ import 'app/model/user';
 import 'app/view/template/component/profile_dropdown.ejs!';
 
 /**
-* @inherits mad.component.Component
+* @inherits mad.Component
 * @parent index
 *
 * @constructor

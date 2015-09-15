@@ -24,4 +24,3 @@ $(document).ready(function () {
 	// Start the application bootstrap.
 	var bootstrap = new mad.Bootstrap();
 });
-

@@ -4,7 +4,7 @@ import 'mad/view/component/tree';
 passbolt.component.sidebarSection = passbolt.component.sidebarSection || {};
 
 /*
- * @inherits mad.component.Component
+ * @inherits mad.Component
  * @parent index
  *
  * @constructor
