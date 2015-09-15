@@ -28,7 +28,7 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
 		foreignModel:null,
 		foreignId:null,
 		// The map to use to make jstree working with our category model
-		map: new mad.object.Map({
+		map: new mad.Map({
 			id: 'id',
 			content: 'content',
 			modified: 'modified',

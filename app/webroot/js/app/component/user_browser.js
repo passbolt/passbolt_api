@@ -5,7 +5,7 @@ import 'app/model/profile';
 import 'app/view/component/user_browser';
 
 /*
- * @class passbolt.controller.component.UserBrowserController
+ * @class passbolt.component.UserBrowserController
  * @inherits {mad.controller.component.GridController}
  * @parent index
  *
@@ -17,7 +17,7 @@ import 'app/view/component/user_browser';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.controller.component.UserBrowserController}
+ * @return {passbolt.component.UserBrowserController}
  */
 var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('passbolt.component.UserBrowser', /** @static */ {
 
@@ -41,7 +41,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     init: function (el, options) {
 
         // The map to use to make our grid working with our resource model
-        options.map = new mad.object.Map({
+        options.map = new mad.Map({
             id: 'id',
             name: 'name',
             username: 'username',

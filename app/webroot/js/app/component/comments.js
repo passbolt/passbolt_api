@@ -50,7 +50,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 
 		// Instantiate the comments List controller
 		// It will take care of listing the comments
-		this.commentsList = new passbolt.controller.component.commentsList($('#js_rs_details_comments_list', this.element), {
+		this.commentsList = new passbolt.component.CommentsList($('#js_rs_details_comments_list', this.element), {
 			'resource'		: this.options.resource,
 			'foreignModel'	: this.options.foreignModel,
 			'foreignId'		: this.options.foreignId

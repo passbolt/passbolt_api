@@ -17,7 +17,7 @@ import 'app/view/component/password_browser';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.controller.component.PasswordBrowserController}
+ * @return {passbolt.component.PasswordBrowserController}
  */
 var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.extend('passbolt.component.PasswordBrowser', /** @static */ {
 
@@ -191,7 +191,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				var copyLogin = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
-					passbolt.controller.component.CopyLoginButtonController,
+					passbolt.component.CopyLoginButtonController,
 					{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 				);
 				copyLogin.start();
@@ -208,7 +208,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				var copyPwd = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
-					passbolt.controller.component.CopySecretButtonController,
+					passbolt.component.CopySecretButtonController,
 					{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
 				);
 				copyPwd.start();

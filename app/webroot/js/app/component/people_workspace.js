@@ -1,5 +1,6 @@
 import 'mad/component/component';
 import 'app/component/people_workspace_menu';
+import 'app/component/workspace_secondary_menu';
 import 'app/component/people_breadcrumb'; // to migrate
 //import 'app/component/group_chooser'; // @roadmap
 import 'app/component/user_browser'; // to migrate
@@ -45,7 +46,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var primWkMenu = mad.helper.Component.create(
             $('#js_wsp_primary_menu_wrapper'),
             'last',
-            passbolt.controller.component.PeopleWorkspaceMenu, {
+            passbolt.component.PeopleWorkspaceMenu, {
                 selectedUsers: this.options.selectedUsers,
                 selectedGroups: this.options.selectedGroups
             }
@@ -56,34 +57,34 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var secWkMenu = mad.helper.Component.create(
             $('#js_wsp_secondary_menu_wrapper'),
             'last',
-            passbolt.controller.component.WorkspaceSecondaryMenuController,
+            passbolt.component.WorkspaceSecondaryMenu,
             {}
         );
         secWkMenu.start();
 
         // Instantiate the password workspace breadcrumb controller
-        this.breadcrumCtl = new passbolt.controller.component.PeopleBreadcrumbController($('#js_wsp_users_breadcrumb'), {});
+        this.breadcrumCtl = new passbolt.component.PeopleBreadcrumb($('#js_wsp_users_breadcrumb'), {});
         this.breadcrumCtl.start();
 
         // Instanciate the users filter controller.
-        var userShortcut = new passbolt.controller.component.UserShortcutsController('#js_wsp_users_filter_shortcuts', {});
+        var userShortcut = new passbolt.component.UserShortcuts('#js_wsp_users_filter_shortcuts', {});
         userShortcut.start();
 
         // Removed group choosed for #PASSBOLT-787
         //// Instanciate the group chooser controller.
-        //this.grpChooser = new passbolt.controller.component.GroupChooserController('#js_wsp_users_group_chooser', {
+        //this.grpChooser = new passbolt.component.GroupChooserController('#js_wsp_users_group_chooser', {
         //'selectedGroups': this.options.selectedGroups
         //});
         //this.grpChooser.start();
 
         // Instanciate the passwords browser controller.
-        var userBrowserController = new passbolt.controller.component.UserBrowserController('#js_wsp_users_browser', {
+        var userBrowserController = new passbolt.component.UserBrowser('#js_wsp_users_browser', {
             selectedUsers: this.options.selectedUsers
         });
         userBrowserController.start();
 
         // Instanciate the resource details controller
-        var userDetails = new passbolt.controller.component.UserDetailsController($('.js_wsp_users_sidebar_second', this.element), {
+        var userDetails = new passbolt.component.UserDetails($('.js_wsp_users_sidebar_second', this.element), {
             id: 'js_user_details',
             selectedUsers: this.options.selectedUsers
         });

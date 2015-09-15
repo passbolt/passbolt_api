@@ -5,7 +5,7 @@ import 'mad/component/button_dropdown';
 import 'app/view/template/component/password_workspace_menu.ejs!';
 
 /**
- * @class passbolt.controller.component.PeopleWorkspaceMenu
+ * @class passbolt.component.PeopleWorkspaceMenu
  * @inherits mad.ComponentController
  * @parent index
  *
@@ -17,7 +17,7 @@ import 'app/view/template/component/password_workspace_menu.ejs!';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.controller.component.PeopleWorkspaceMenuController}
+ * @return {passbolt.component.PeopleWorkspaceMenuController}
  */
 var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Component.extend('passbolt.component.PasswordWorkspaceMenu', /** @static */ {
 

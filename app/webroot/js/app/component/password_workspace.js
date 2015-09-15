@@ -70,7 +70,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
         //
 		//// Removed the lines below for #PASSBOLT-787
 		////// Instanciate the categories chooser controller
-		////this.catChooser = new passbolt.controller.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
+		////this.catChooser = new passbolt.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
 		////this.catChooser.start();
         //
 		//// Instantiate the password workspace breadcrumb controller
