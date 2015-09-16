@@ -135,12 +135,12 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 		});
 	},
 
-	updatePassword : function(id, attrs, success, error) {
+	updatePassword : function(attrs, success, error) {
 		var self = this;
 		// format data as expected by cakePHP
 		var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 		// add the root of the params, it will be used in the url template
-		params.id = id;
+		params.id = attrs['id'];
 
 		return mad.net.Ajax.request({
 			url: APP_URL + 'users/password/{id}',
@@ -156,13 +156,13 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 		});
 	},
 
-	updateAvatar : function(id, attrs, success, error) {
+	updateAvatar : function(attrs, success, error) {
 		var self = this;
 
 		// Build the params.
 		var params = new FormData();
 		params.append('file-0', attrs.newAvatar);
-		params.id = id;
+		params.id = attrs['id'];
 
 		return mad.net.Ajax.request({
 			url: APP_URL + 'users/avatar/{id}',

@@ -26,9 +26,9 @@ import 'app/view/template/settings_workspace.ejs!';
  */
 var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.extend('passbolt.component.SettingsWorkspace', /** @static */ {
 	defaults: {
-		'label': 'Settings',
-		'templateUri': 'app/view/template/settings_workspace.ejs',
-		'sections' : [
+		label: 'Settings',
+		templateUri: 'app/view/template/settings_workspace.ejs',
+		sections : [
 			'profile',
 			'keys'
 		]
@@ -104,7 +104,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	/**
 	 * Destroy the workspace.
 	 */
-	'destroy': function() {
+	destroy: function() {
 		// Be sure that the primary workspace menu controller will be destroyed also.
 		$('#js_wsp_primary_menu_wrapper').empty();
 		// Destroy the breadcrumb too.
@@ -185,8 +185,6 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	'{mad.bus} request_profile_avatar_edition': function (el, ev, user) {
 		// @todo #PASSBOLT-985 fixed in future canJs.
 		if (!this.element) return;
-
-		var self = this;
 
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {label: __('Edit Avatar')})
