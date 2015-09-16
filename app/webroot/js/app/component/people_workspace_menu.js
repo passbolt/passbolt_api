@@ -64,7 +64,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                     label: __('remove user from group'),
                     initial_state: 'disabled',
                     cssClasses: null,
-                    action: function () {
+                    	action: function () {
                         mad.bus.trigger(
                             'request_remove_user_from_group',
                             [self.options.selectedUsers, self.options.selectedGroups]
@@ -126,7 +126,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {passbolt.model.User} user The selected user
      * @return {void}
      */
-    '{selectedUsers.element} add': function (el, ev, user) {
+    '{selectedUsers} add': function (el, ev, user) {
         // if no user selected.
         if (this.options.selectedUsers.length == 0) {
             this.setState('ready');
@@ -160,7 +160,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {passbolt.model.User} user The unselected user
      * @return {void}
      */
-    '{selectedUsers.element} remove': function (el, ev, user) {
+    '{selectedUsers} remove': function (el, ev, user) {
         // if more than one resource selected, or no resource selected
         if (this.options.selectedUsers.length == 0) {
             this.setState('ready');

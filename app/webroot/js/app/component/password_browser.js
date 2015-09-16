@@ -223,7 +223,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {passbolt.model.Resource} item The item to show the contextual menu for
 	 * @param {string} x The x position where the menu will be rendered
 	 * @param {string} y The y position where the menu will be rendered
-	 * @return {void}
 	 */
 	showContextualMenu: function (item, x, y) {
 		// Get the offset position of the clicked item.
@@ -353,7 +352,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {string} position The position of the newly created item. You can pass in one
 	 * of those strings: "before", "after", "inside", "first", "last". By dhe default value
 	 * is set to last.
-	 * @return {void}
 	 */
 	insertItem: function (resource, refResourceId, position) {
 		// add the resource to the list of observed resources
@@ -365,7 +363,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/**
 	 * Remove an item to the grid
 	 * @param {mad.model.Model} item The item to remove
-	 * @return {void}
 	 */
 	removeItem: function (item) {
 		// remove the item to the grid
@@ -375,7 +372,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/**
 	 * Refresh item
 	 * @param {mad.model.Model} item The item to refresh
-	 * @return {void}
 	 */
 	refreshItem: function (resource) {
 		var self = this;
@@ -408,7 +404,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 	/**
 	 * reset
-	 * @return {void}
 	 */
 	reset: function () {
 		// reset the list of observed resources
@@ -421,7 +416,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * Load resources in the grid
 	 * @param {passbolt.model.Resource.List} resources The list of resources to
 	 * load into the grid
-	 * @return {void}
 	 */
 	load: function (resources) {
 		// load the resources
@@ -431,7 +425,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/**
 	 * Before selecting an item
 	 * @param {mad.model.Model} item The item to select
-	 * @return {void}
 	 */
 	beforeSelect: function (item) {
 		var self = this,
@@ -457,7 +450,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/**
 	 * Before unselecting an item
 	 * @param {mad.model.Model} item The item to unselect
-	 * @return {void}
 	 */
 	beforeUnselect: function (item) {
 		var returnValue = true;
@@ -468,26 +460,28 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * Select an item
 	 * @param {mad.model.Model} item The item to select
 	 * @param {boolean} silent Do not propagate any event (default:false)
-	 * @return {void}
 	 */
 	select: function (item, silent) {
 		silent = typeof silent == 'undefined' ? false : silent;
 
-		// Added the lines below to prevent multiple selection.
+		// Unselect the previously selected user, if one.
 		if (this.options.selectedRs.length > 0) {
 			this.unselect(this.options.selectedRs[0]);
 		}
-		// End of multiple selection prevention.
 
-		// add the resource to the list of selected items
+		// Add the resource to the list of selected items.
 		this.options.selectedRs.push(item);
-		// check the checkbox (if it is not already done)
-		mad.getControl('multiple_select_checkbox_' + item.id)
-			.setValue([item.id]);
-		// make the item selected in the view
+
+		// Check the checkbox (if it is not already done).
+		var id = 'multiple_select_checkbox_' + item.id,
+			checkbox = mad.getControl(id, 'mad.form.Checkbox');
+
+		checkbox.setValue([item.id]);
+
+		// Make the item selected in the view.
 		this.view.selectItem(item);
 
-		// notice the application about this selection
+		// Notify the application about this selection.
 		if (!silent) {
 			mad.bus.trigger('resource_selected', item);
 		}
@@ -497,21 +491,24 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * Unselect an item
 	 * @param {mad.model.Model} item The item to unselect
 	 * @param {boolean} silent Do not propagate any event (default:false)
-	 * @return {void}
 	 */
 	unselect: function (item, silent) {
 		silent = typeof silent == 'undefined' ? false : silent;
 
-		// uncheck the associated checkbox (if it is not already done)
-		mad.getControl('multiple_select_checkbox_' + item.id)
-			.reset();
-		// unselect the item in grid
+		// Uncheck the associated checkbox (if it is not already done).
+		var id = 'multiple_select_checkbox_' + item.id,
+			checkbox = mad.getControl(id, 'mad.form.Checkbox');
+
+		// Uncheck the checkbox by reseting it. Brutal.
+		checkbox.reset();
+
+		// Unselect the item in grid.
 		this.view.unselectItem(item);
 
-		// remove the resource from the previously selected resources
+		// Remove the resource from the previously selected resources.
 		mad.model.List.remove(this.options.selectedRs, item);
 
-		// notice the app about the just unselected resource
+		// Notify the app about the just unselected resource.
 		if (!silent) {
 			mad.bus.trigger('resource_unselected', item);
 		}

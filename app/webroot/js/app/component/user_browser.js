@@ -127,7 +127,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {passbolt.model.User} item The item to show the contextual menu for
      * @param {string} x The x position where the menu will be rendered
      * @param {string} y The y position where the menu will be rendered
-     * @return {void}
      */
     showContextualMenu: function (item, x, y) {
         // Get the offset position of the clicked item.
@@ -209,7 +208,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {string} position The position of the newly created item. You can pass in one
      * of those strings: "before", "after", "inside", "first", "last". By dhe default value
      * is set to last.
-     * @return {void}
      */
     insertItem: function (user, refUserId, position) {
         // add the resource to the list of observed resources
@@ -233,7 +231,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Remove an item to the grid
      * @param {mad.model.Model} item The item to remove
-     * @return {void}
      */
     removeItem: function (item) {
         // remove the item to the grid
@@ -242,7 +239,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
     /**
      * reset
-     * @return {void}
      */
     reset: function () {
         // reset the list of observed resources
@@ -255,7 +251,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * Load resources in the grid
      * @param {passbolt.model.Resource.List} resources The list of resources to
      * load into the grid
-     * @return {void}
      */
     load: function (users) {
         // load the resources
@@ -265,7 +260,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Before selecting an item
      * @param {mad.model.Model} item The item to select
-     * @return {void}
      */
     beforeSelect: function (item) {
         var self = this,
@@ -292,27 +286,27 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * Select an item
      * @param {mad.model.Model} item The item to select
      * @param {boolean} silent Do not propagate any event (default:false)
-     * @return {void}
      */
     select: function (item, silent) {
         var self = this;
         silent = typeof silent == 'undefined' ? false : silent;
 
-        // Added the lines below to prevent multiple selection.
+        // Unselect the previously selected user, if one.
         if (this.options.selectedUsers.length > 0) {
             this.unselect(this.options.selectedUsers[0]);
         }
-        // End of multiple selection prevention.
 
-        // add the user to the list of selected items
+        // Add the user to the list of selected items.
         this.options.selectedUsers.push(item);
-        // check the checkbox (if it is not already done)
-        mad.getControl('multiple_select_checkbox_' + item.id)
+
+        // Check the checkbox (if it is not already done).
+        mad.getControl('multiple_select_checkbox_' + item.id, 'mad.form.Checkbox')
             .setValue([item.id]);
-        // make the item selected in the view
+
+        // Make the item selected in the view.
         this.view.selectItem(item);
 
-        // notice the application about this selection
+        // Notify the application about this selection.
         if (!silent) {
             mad.bus.trigger('user_selected', item);
         }
@@ -321,7 +315,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Before unselecting an item
      * @param {mad.model.Model} item The item to unselect
-     * @return {void}
      */
     beforeUnselect: function (item) {
         var returnValue = true;
@@ -332,21 +325,24 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * Unselect an item
      * @param {mad.model.Model} item The item to unselect
      * @param {boolean} silent Do not propagate any event (default:false)
-     * @return {void}
      */
     unselect: function (item, silent) {
         silent = typeof silent == 'undefined' ? false : silent;
 
-        // uncheck the associated checkbox (if it is not already done)
-        mad.getControl('multiple_select_checkbox_' + item.id)
-            .reset();
-        // unselect the item in grid
+        // Uncheck the associated checkbox (if it is not already done).
+		var controlId = 'multiple_select_checkbox_' + item.id,
+        	checkbox = mad.getControl(controlId, 'mad.form.Checkbox');
+
+		// Uncheck the checkbox by reseting it. Brutal.
+		checkbox.reset();
+
+        // Unselect the item in grid.
         this.view.unselectItem(item);
 
-        // remove the resource from the previously selected resources
+        // Remove the resource from the previously selected resources.
         mad.model.List.remove(this.options.selectedUsers, item);
 
-        // notice the app about the just unselected resource
+        // Notify the app about the just unselected resource.
         if (!silent) {
             mad.bus.trigger('user_unselected', item);
         }
@@ -362,7 +358,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {mad.model.Model} model The model reference
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.Resource} resource The created resource
-     * @return {void}
      */
     '{passbolt.model.User} created': function (model, ev, user) {
         var self = this;
@@ -378,7 +373,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {mad.model.Model} model The model reference
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.User} user The updated user
-     * @return {void}
      */
     '{passbolt.model.User} updated': function (model, ev, user) {
         if (this.options.users.indexOf(user) != -1) {
@@ -392,7 +386,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {mad.model.Model} model The model reference
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.User} users The removed user
-     * @return {void}
      */
     '{users} remove': function (model, ev, users) {
         var self = this;
@@ -407,7 +400,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {mad.model.Model} model The model reference
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.Category} category The removed category
-     * @return {void}
      */
     '{passbolt.model.GroupUser} destroyed': function (model, ev, groupUser) {
         // Remove user from the list of users in the grid.
@@ -437,7 +429,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {HTMLEvent} ev The event which occured
      * @param {mixed} item The selected item instance or its id
      * @param {HTMLEvent} ev The source event which occured
-     * @return {void}
      */
     ' item_selected': function (el, ev, item, srcEvent) {
         var self = this;
@@ -456,7 +447,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.User} item The right selected item instance or its id
      * @param {HTMLEvent} srcEvent The source event which occured
-     * @return {void}
      */
     ' item_right_selected': function (el, ev, item, srcEvent) {
         // Select item.
@@ -471,7 +461,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      * @param {mixed} rsId The id of the resource which has been checked
-     * @return {void}
      */
     '.js_checkbox_multiple_select checked': function (el, ev, userId) {
         var self = this;
@@ -500,7 +489,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      * @param {mixed} userId The id of the user which has been unchecked
-     * @return {void}
      */
     '.js_checkbox_multiple_select unchecked': function (el, ev, userId) {
         var self = this;
@@ -532,7 +520,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {jQuery} element The source element
      * @param {Event} event The jQuery event
      * @param {passbolt.model.Filter} filter The filter to apply
-     * @return {void}
      */
     '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
         // @todo fixed in future canJs.
@@ -575,7 +562,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * Listen to the change relative to the state Ready.
      * The ready state is fired automatically after the Component is rendered
      * @param {boolean} go Enter or leave the state
-     * @return {void}
      */
     stateReady: function (go) {
         // nothing to do
@@ -584,7 +570,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Listen to the change relative to the state selected
      * @param {boolean} go Enter or leave the state
-     * @return {void}
      */
     stateSelection: function (go) {
         // nothing to do
@@ -593,7 +578,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Listen to the change relative to the state multipleSelected
      * @param {boolean} go Enter or leave the state
-     * @return {void}
      */
     stateMultipleSelection: function (go) {
         // nothing to do
