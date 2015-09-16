@@ -300,8 +300,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         this.options.selectedUsers.push(item);
 
         // Check the checkbox (if it is not already done).
-        mad.getControl('multiple_select_checkbox_' + item.id, 'mad.form.Checkbox')
-            .setValue([item.id]);
+        var checkbox = mad.getControl('multiple_select_checkbox_' + item.id, 'mad.form.Checkbox');
+        checkbox.setValue([item.id]);
 
         // Make the item selected in the view.
         this.view.selectItem(item);
@@ -431,7 +431,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {HTMLEvent} ev The source event which occured
      */
     ' item_selected': function (el, ev, item, srcEvent) {
-		console.log('selected');
         // switch to select state
         this.setState('selection');
 
