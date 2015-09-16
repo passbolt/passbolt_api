@@ -30,11 +30,11 @@
 					</tr>
 					<tr>
 						<td><%= __('Modified') %></td>
-						<td><%= moment(user.Profile.modified).fromNow(); %></td>
+						<td><%= moment(new Date(user.Profile.modified)).fromNow(); %></td>
 					</tr>
 					<tr>
 						<td><%= __('Created') %></td>
-						<td><%= moment(user.Profile.created).fromNow(); %></td>
+						<td><%= moment(new Date(user.Profile.created)).fromNow(); %></td>
 					</tr>
 					<tr>
 						<td><%= __('Public key') %></td>

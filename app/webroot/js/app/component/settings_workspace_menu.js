@@ -46,7 +46,7 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'{editionButton} click': function (el, ev) {
+	'{editionButton.element} click': function (el, ev) {
 		mad.bus.trigger('request_profile_edition');
 	}
 

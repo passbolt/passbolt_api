@@ -19,7 +19,9 @@ import 'app/view/template/component/keys.ejs!';
  */
 var Keys = passbolt.component.Keys = mad.Component.extend('passbolt.component.Keys', /** @static */ {
 
-	defaults: { }
+	defaults: {
+		templateUri: 'app/view/template/component/keys.ejs'
+	}
 
 }, /** @prototype */ {
 

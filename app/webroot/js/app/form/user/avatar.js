@@ -17,7 +17,8 @@ passbolt.form.user = passbolt.form.user ? passbolt.form.user : {};
  */
 var AvatarForm = passbolt.form.user.Avatar = mad.Form.extend('passbolt.form.user.Avatar', /** @static */ {
 	defaults: {
-		templateBased: true
+		templateBased: true,
+		templateUri: 'app/view/template/form/user/avatar.ejs'
 	}
 }, /** @prototype */ {
 
