@@ -1,11 +1,19 @@
+import 'mad/component/component';
+import 'mad/form/form';
+import 'mad/form/feedback';
+import 'mad/form/element/autocomplete';
+import 'mad/form/element/dropdown';
+import 'mad/form/element/checkbox';
+import 'mad/form/element/textbox';
 import 'app/view/component/permissions';
 import 'app/model/group';
 import 'app/model/user';
 import 'app/model/permission';
 import 'app/model/permission_type';
+
+import 'app/view/template/component/permissions.ejs!';
 import 'app/view/template/form/permission/add.ejs!';
 import 'app/view/template/component/permission/permission_list_item.ejs!';
-
 
 /**
  * @inherits mad.Component
@@ -31,7 +39,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		// the autocomplete list
 		permAroAutocpltList: null,
 		// list of changes.
-		changes: []
+		changes: [],
+		templateUri: 'app/view/template/component/permissions.ejs'
 	}
 
 }, /** @prototype */ {
@@ -109,10 +118,10 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		this.permList.start();
 
 		// form add permission
-		this.addFormController = new mad.form.Form($('#js_permission_add_form', this.element), {
+		this.addFormController = new mad.Form($('#js_permission_add_form', this.element), {
 			'templateBased': true,
 			'cssClasses': ['perm-create-form', 'clearfix'],
-			'templateUri': 'app/view/template/form/permission/addForm.ejs',
+			'templateUri': 'app/view/template/form/permission/add.ejs',
 			'validateOnChange': false,
 			'callbacks': {
 				'submit': function(data) {
@@ -126,13 +135,13 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		var permCreateFormFeedback = new mad.form.Feedback($('#js_perm_create_form_feedback'), {}).start();
 
 		// Add an hidden element to the form to carry the aro id
-		this.permAroHiddenTxtbx = new mad.form.element.Textbox($('#js_perm_create_form_aro', this.element), {
+		this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {
 			modelReference: 'passbolt.model.Permission.aro_foreign_key'
 		}).start();
 		this.addFormController.addElement(this.permAroHiddenTxtbx);
 
 		// Add an autocomplete element to the form to search the target aro
-		this.options.permAroAutocpltTxtbx = new mad.form.element.Autocomplete($('#js_perm_create_form_aro_auto_cplt', this.element), {
+		this.options.permAroAutocpltTxtbx = new mad.form.Autocomplete($('#js_perm_create_form_aro_auto_cplt', this.element), {
 			modelReference: 'passbolt.model.Permission.aro_foreign_label',
 			changeTimeout: 400,
 			callbacks: {
@@ -148,7 +157,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
 			availablePermissionTypes[permType] = passbolt.model.PermissionType.toString(permType);
 		}
-		var permTypeCtl = new mad.form.element.Dropdown($('#js_perm_create_form_type', this.element), {
+		var permTypeCtl = new mad.form.Dropdown($('#js_perm_create_form_type', this.element), {
 				emptyValue: false,
 				modelReference: 'passbolt.model.Permission.type',
 				availableValues: availablePermissionTypes
@@ -204,7 +213,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		this.permList.insertItem(permission);
 
 		// Add a selectbox to display the permission type (and allow to change)
-		new mad.form.element.Dropdown($('.js_share_rs_perm_type', permSelector), {
+		new mad.form.Dropdown($('.js_share_rs_perm_type', permSelector), {
 			emptyValue: false,
 			modelReference: 'passbolt.model.Permission.type',
 			availableValues: availablePermissionTypes

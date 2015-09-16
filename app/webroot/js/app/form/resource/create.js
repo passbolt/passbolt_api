@@ -1,8 +1,9 @@
 import 'mad/form/form';
 //import 'app/component/secret_strength';
-//import 'app/form/secret/create';
+import 'app/form/secret/create';
 import 'app/view/template/form/resource/create.ejs!';
 
+passbolt.form.resource = passbolt.form.resource || {};
 
 /**
  * @inherits {mad.Form}
