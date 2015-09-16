@@ -66,7 +66,7 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'{viewSidebarButton} click': function (el, ev) {
+	'{viewSidebarButton.element} click': function (el, ev) {
 		var showSidebar = !mad.Config.read('ui.workspace.showSidebar');
 		mad.Config.write('ui.workspace.showSidebar', showSidebar);
 		mad.bus.trigger('workspace_showSidebar', showSidebar);

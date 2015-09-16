@@ -23,7 +23,8 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		// @todo should be dynamic functions of creation or update
 		action: 'create',
 		secretsForms: [],
-		resource: null
+		resource: null,
+		templateUri: 'app/view/template/form/resource/create.ejs'
 	}
 }, /** @prototype */ {
 

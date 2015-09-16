@@ -9,7 +9,7 @@ import 'app/component/resource_details';
 import 'app/component/resource_shortcuts';
 import 'app/component/workspace_secondary_menu';
 //import 'app/form/category/create';
-//import 'app/form/resource/create';
+import 'app/form/resource/create';
 import 'app/model/filter';
 
 import 'app/view/template/password_workspace.ejs!';

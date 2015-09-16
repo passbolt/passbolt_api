@@ -79,7 +79,7 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 			}).start().setValue(this.options.foreignId)
 		);
 
-		//
+		// feedback.
 		this.addElement(
 			new mad.form.Textbox($('.js_comment_content', this.element), {
 				modelReference: 'passbolt.model.Comment.content'
