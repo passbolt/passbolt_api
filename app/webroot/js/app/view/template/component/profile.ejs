@@ -1,0 +1,57 @@
+<div class="grid grid-responsive-12">
+	<div class="row">
+		<div class="profile col8">
+			<h3><%= __('Profile') %></h3>
+			<div class="section profile-detailed-information">
+				<div class="avatar">
+					<div class="value">
+						<img src="<%= user.Profile.avatarPath('medium') %>" alt="profile picture" />
+					</div>
+					<div class="edit">
+						<a class="edit-avatar-action" href="#" title="<%= __('Change Avatar') %>">
+							<i class="icon camera"></i>
+							<span class="help-text">Click here to upload a new picture.</span>
+						</a>
+					</div>
+				</div>
+				<table class="table-info">
+					<tbody>
+					<tr>
+						<td><%= __('Name') %></td>
+						<td><%= user.Profile.first_name %> <%= user.Profile.last_name %></td>
+					</tr>
+					<tr>
+						<td><%= __('Email') %></td>
+						<td><%= user.username %></td>
+					</tr>
+					<tr>
+						<td><%= __('Role') %></td>
+						<td><%= user.Role.name %></td>
+					</tr>
+					<tr>
+						<td><%= __('Modified') %></td>
+						<td><%= moment(user.Profile.modified).fromNow(); %></td>
+					</tr>
+					<tr>
+						<td><%= __('Created') %></td>
+						<td><%= moment(user.Profile.created).fromNow(); %></td>
+					</tr>
+					<tr>
+						<td><%= __('Public key') %></td>
+						<td>
+							<%= user.Gpgkey.key_id %>
+							<p><em>Note: Sorry it is not possible to change your key at the moment. <a href="#">learn more ›</a></em></p>
+						</td>
+					</tr>
+					<!--<tr>-->
+					<!--<td><%= __('Groups') %></span>-->
+					<!--<div class="value">-->
+					<!--<ul id="js_wk_preference_profile_groups"></ul>-->
+					<!--</div>-->
+					<!--</tr>-->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

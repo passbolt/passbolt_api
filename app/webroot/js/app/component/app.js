@@ -1,6 +1,6 @@
 import 'mad/component/component';
 // the main workspaces of the application
-//import 'app/component/settings_workspace';
+import 'app/component/settings_workspace';
 //import 'app/component/password_workspace_menu';
 import 'app/component/password_workspace';
 import 'app/component/people_workspace';
@@ -213,8 +213,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 */
 	stateReady: function (go) {
 		// Select the password workspace
-		//mad.bus.trigger('workspace_selected', 'password');
-		mad.bus.trigger('workspace_selected', 'people');
+		mad.bus.trigger('workspace_selected', 'password');
+		//mad.bus.trigger('workspace_selected', 'people');
 		// When the application is ready, remove the launching screen.
 		$('html').removeClass('launching');
 	}
