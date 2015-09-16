@@ -58,24 +58,25 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
             }).start();
 
             // Manage more actions.
-            var moreButtonMenuItems = [
-                new mad.model.Action({
-                    id: 'js_ppl_wk_remove_user_from_group',
-                    label: __('remove user from group'),
-                    initial_state: 'disabled',
-                    cssClasses: null,
-                    	action: function () {
-                        mad.bus.trigger(
-                            'request_remove_user_from_group',
-                            [self.options.selectedUsers, self.options.selectedGroups]
-                        );
-                    }
-                })
-            ];
-            this.options.moreButton = new mad.component.ButtonDropdown($('#js_user_wk_menu_more_button'), {
-                state: 'disabled',
-                items: moreButtonMenuItems
-            }).start();
+			// #PASSBOLT-787
+            //var moreButtonMenuItems = [
+            //    new mad.model.Action({
+            //        id: 'js_ppl_wk_remove_user_from_group',
+            //        label: __('remove user from group'),
+            //        initial_state: 'disabled',
+            //        cssClasses: null,
+            //        	action: function () {
+            //            mad.bus.trigger(
+            //                'request_remove_user_from_group',
+            //                [self.options.selectedUsers, self.options.selectedGroups]
+            //            );
+            //        }
+            //    })
+            //];
+            //this.options.moreButton = new mad.component.ButtonDropdown($('#js_user_wk_menu_more_button'), {
+            //    state: 'disabled',
+            //    items: moreButtonMenuItems
+            //}).start();
         }
 
         // @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
@@ -143,13 +144,14 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
         if (passbolt.model.User.getCurrent().Role.name == 'admin') {
             // Enable or disable the "remove user from group" if a group is selected.
             // Active if at least a group is selected.
-            if (this.options.selectedGroups.length > 0) {
-                this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'ready');
-            }
-            // Disabled if no group selected.
-            else {
-                this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'disabled');
-            }
+			// #PASSBOLT-787
+            //if (this.options.selectedGroups.length > 0) {
+            //    this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'ready');
+            //}
+            //// Disabled if no group selected.
+            //else {
+            //    this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'disabled');
+            //}
         }
     },
 
@@ -193,9 +195,10 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                 this.options.deletionButton
                     .setValue(this.options.selectedUsers)
                     .setState('ready');
-                this.options.moreButton
-                    .setValue(this.options.selectedUsers[0])
-                    .setState('ready');
+				// #PASSBOLT-787
+				//this.options.moreButton
+                 //   .setValue(this.options.selectedUsers[0])
+                 //   .setState('ready');
             } else {
                 this.options.editionButton
                     .setValue(null)
@@ -203,9 +206,10 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                 this.options.deletionButton
                     .setValue(null)
                     .setState('disabled');
-                this.options.moreButton
-                    .setValue(null)
-                    .setState('disabled');
+				// #PASSBOLT-787
+                //this.options.moreButton
+                //    .setValue(null)
+                //    .setState('disabled');
             }
         }
     },
@@ -223,8 +227,9 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                 this.options.deletionButton
                     .setValue(this.options.selectedUsers)
                     .setState('ready');
-                this.options.moreButton
-                    .setState('disabled');
+				// #PASSBOLT-787
+                //this.options.moreButton
+                //    .setState('disabled');
             } else {
                 this.options.editionButton
                     .setValue(null)

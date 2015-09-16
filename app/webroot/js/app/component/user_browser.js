@@ -288,11 +288,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {boolean} silent Do not propagate any event (default:false)
      */
     select: function (item, silent) {
-        var self = this;
         silent = typeof silent == 'undefined' ? false : silent;
 
-        // Unselect the previously selected user, if one.
-        if (this.options.selectedUsers.length > 0) {
+        // Unselect the previously selected user, if not in multipleSelection.
+        if (!this.state.is('multipleSelection') &&
+			this.options.selectedUsers.length > 0) {
             this.unselect(this.options.selectedUsers[0]);
         }
 
@@ -431,8 +431,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {HTMLEvent} ev The source event which occured
      */
     ' item_selected': function (el, ev, item, srcEvent) {
-        var self = this;
-
+		console.log('selected');
         // switch to select state
         this.setState('selection');
 
@@ -463,8 +462,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {mixed} rsId The id of the resource which has been checked
      */
     '.js_checkbox_multiple_select checked': function (el, ev, userId) {
-        var self = this;
-
         // if the grid is in initial state, switch it to selected
         if (this.state.is('ready')) {
             this.setState('selection');

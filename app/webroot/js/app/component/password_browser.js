@@ -464,8 +464,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	select: function (item, silent) {
 		silent = typeof silent == 'undefined' ? false : silent;
 
-		// Unselect the previously selected user, if one.
-		if (this.options.selectedRs.length > 0) {
+		// Unselect the previously selected resources, if not in multipleSelection.
+		if (!this.state.is('multipleSelection') &&
+			this.options.selectedRs.length > 0) {
 			this.unselect(this.options.selectedRs[0]);
 		}
 
