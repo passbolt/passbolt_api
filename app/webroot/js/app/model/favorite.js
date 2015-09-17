@@ -3,7 +3,6 @@ import 'app/model/category';
 import 'app/model/secret';
 import 'mad/model/serializer/cake_serializer';
 
-
 /**
  * @inherits {mad.Model}
  * @parent index
