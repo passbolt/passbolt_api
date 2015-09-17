@@ -1,4 +1,5 @@
 import 'mad/component/grid';
+import 'mad/component/contextual_menu';
 import 'mad/form/element/checkbox';
 import 'app/model/resource';
 import 'app/model/category';
@@ -25,7 +26,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// the type of the item rendered by the grid
 		itemClass: passbolt.model.Resource,
 		// the view class to use. Overriden so we can put our own logic.
-		viewClass: passbolt.view.component.passwordBrowser,
+		viewClass: passbolt.view.component.PasswordBrowser,
 		// the list of resources displayed by the grid
 		resources: new can.Model.List(),
 		// the list of displayed categories
