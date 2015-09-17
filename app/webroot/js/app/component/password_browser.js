@@ -2,6 +2,7 @@ import 'mad/component/grid';
 import 'mad/form/element/checkbox';
 import 'app/model/resource';
 import 'app/model/category';
+import 'app/model/favorite';
 import 'app/component/favorite';
 import 'app/view/component/password_browser';
 
@@ -244,7 +245,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		var canRead = passbolt.model.Permission.isAllowedTo(item, passbolt.READ),
 			canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE),
 			canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
-		
+
 		// Add Copy username action.
 		var action = new mad.model.Action({
 			id: uuid(),
