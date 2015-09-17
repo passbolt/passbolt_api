@@ -42,90 +42,90 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// The map to use to make our grid working with our resource model
 		options.map = new mad.Map({
-			'id': 'id',
-			'name': 'name',
-			'username': 'username',
-			'secret': 'Secret',
-			'uri': 'uri',
-			'modified': 'modified',
-			'owner': 'Creator.username',
-			//'copyLogin': 'id',
-			//'copySecret': 'id',
-			'Category': 'Category'
+			id: 'id',
+			name: 'name',
+			username: 'username',
+			secret: 'Secret',
+			uri: 'uri',
+			modified: 'modified',
+			owner: 'Creator.username',
+			//'copyLogin: 'id',
+			//'copySecret: 'id',
+			Category: 'Category'
 		});
 
 		// the columns model
 		options.columnModel = [{
-			'name': 'multipleSelect',
-			'index': 'multipleSelect',
-			'header': {
-				'css': ['selections s-cell'],
-				'label': '<div class="input checkbox">'
+			name: 'multipleSelect',
+			index: 'multipleSelect',
+			header: {
+				css: ['selections s-cell'],
+				label: '<div class="input checkbox">'
 						+ '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all" disabled="disabled">'
 						+ '<label for="checkbox-select-all">select all</label> \
 					</div>'
 			},
-			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var availableValues = {};
 				availableValues[item.id] = '';
 				var checkbox = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
 					mad.form.Checkbox, {
-						'id': 'multiple_select_checkbox_' + item.id,
-						'name': 'test',
-						'cssClasses': ['js_checkbox_multiple_select'],
-						'availableValues': availableValues
+						id: 'multiple_select_checkbox_' + item.id,
+						name: 'test',
+						cssClasses: ['js_checkbox_multiple_select'],
+						availableValues: availableValues
 					}
 				);
 				checkbox.start();
 			}
 		}, {
-			'name': 'favorite',
-			'index': 'favorite',
-			'header': {
-				'css': ['selections s-cell'],
-				'label': '<a href="#"> \
+			name: 'favorite',
+			index: 'favorite',
+			header: {
+				css: ['selections s-cell'],
+				label: '<a href="#"> \
 						<i class="icon fav no-text"></i> \
 						<span>fav</span> \
 					</a>'
 			},
-			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var availableValues = {};
 				availableValues[item.id] = '';
 				var favorite = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
 					passbolt.component.Favorite, {
-						'id': 'favorite_' + item.id,
-						'name': 'test2',
-						'instance': item
+						id: 'favorite_' + item.id,
+						name: 'test2',
+						instance: item
 					}
 				);
 				favorite.start();
 			}
 		}, {
-			'name': 'name',
-			'index': 'name',
-			'header': {
-				'css': ['m-cell'],
-				'label': __('Resource')
+			name: 'name',
+			index: 'name',
+			header: {
+				css: ['m-cell'],
+				label: __('Resource')
 			}
 		}, {
-			'name': 'username',
-			'index': 'username',
-			'header': {
-				'css': ['m-cell'],
-				'label': __('Username')
+			name: 'username',
+			index: 'username',
+			header: {
+				css: ['m-cell'],
+				label: __('Username')
 			}
 		}, {
-			'name': 'secret',
-			'index': 'secret',
-			'header': {
-				'css': ['m-cell', 'password'],
-				'label': __('Password')
+			name: 'secret',
+			index: 'secret',
+			header: {
+				css: ['m-cell', 'password'],
+				label: __('Password')
 			},
-			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var secret = '';
 				if (typeof cellValue[0] != 'undefined') {
 					secret = cellValue[0].data
@@ -139,77 +139,76 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 						'</a>' +
 						'<pre>' + secret + '</pre>' +
 					'</div>'
-
 				);
 			}
 		}, {
-			'name': 'uri',
-			'index': 'uri',
-			'header': {
-				'css': ['l-cell'],
-				'label': __('URI')
+			name: 'uri',
+			index: 'uri',
+			header: {
+				css: ['l-cell'],
+				label: __('URI')
 			}
 		}, {
-			'name': 'modified',
-			'index': 'modified',
-			'header': {
-				'css': ['m-cell'],
-				'label': __('Modified')
+			name: 'modified',
+			index: 'modified',
+			header: {
+				css: ['m-cell'],
+				label: __('Modified')
 			},
-			'valueAdapter': function (value, mappedItem, item, columnModel) {
+			valueAdapter: function (value, mappedItem, item, columnModel) {
 				return moment(value).fromNow();
 			}
 		}, {
-//				'name': 'expires',
-//				'index': 'expires',
-//				'header': {
-//					'css': ['m-cell'],
-//					'label': __('Expires')
+//				name: 'expires',
+//				index: 'expires',
+//				header: {
+//					css: ['m-cell'],
+//					label: __('Expires')
 //				},
-//				'valueAdapter': function (value, mappedItem, item, columnModel) {
+//				valueAdapter: function (value, mappedItem, item, columnModel) {
 //					if (typeof value == 'undefined' || value == null) {
 //						return '-';
 //					}
 //					return moment(value).fromNow();
 //				}
 //			}, {
-			'name': 'owner',
-			'index': 'owner',
-			'header': {
-				'css': ['m-cell'],
-				'label': __('Owner')
+			name: 'owner',
+			index: 'owner',
+			header: {
+				css: ['m-cell'],
+				label: __('Owner')
 			}
 		}/*, {
-			'name': 'copyLogin',
-			'index': 'copyLogin',
-			'header': {
-				'css': ['s-cell'],
-				'label': ''
+			name: 'copyLogin',
+			index: 'copyLogin',
+			header: {
+				css: ['s-cell'],
+				label: ''
 			},
-			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				return;
 				var copyLogin = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
 					passbolt.component.CopyLoginButtonController,
-					{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
+					{ state: 'hidden', value: item, browser: mad.app.getComponent('js_passbolt_password_browser') }
 				);
 				copyLogin.start();
 			}
 		}, {
-			'name': 'copySecret',
-			'index': 'copySecret',
-			'header': {
-				'css': ['s-cell'],
-				'label': ''
+			name: 'copySecret',
+			index: 'copySecret',
+			header: {
+				css: ['s-cell'],
+				label: ''
 			},
-			'cellAdapter': function (cellElement, cellValue, mappedItem, item, columnModel) {
+			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				return;
 				var copyPwd = mad.helper.Component.create(
 					cellElement,
 					'inside_replace',
 					passbolt.component.CopySecretButtonController,
-					{ 'state': 'hidden', 'value': item, 'browser': mad.app.getComponent('js_passbolt_password_browser') }
+					{ state: 'hidden', value: item, browser: mad.app.getComponent('js_passbolt_password_browser') }
 				);
 				copyPwd.start();
 			}
@@ -232,9 +231,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// Instantiate the contextual menu menu.
 		var contextualMenu = new mad.component.ContextualMenu(null, {
-			'state': 'hidden',
-			'source': $item[0],
-			'coordinates': {
+			state: 'hidden',
+			source: $item[0],
+			coordinates: {
 				x: x,
 				y: item_offset.top
 			}
@@ -245,14 +244,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		var canRead = passbolt.model.Permission.isAllowedTo(item, passbolt.READ),
 			canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE),
 			canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
-
-
+		
 		// Add Copy username action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'Copy username',
-			'initial_state': !canRead ? 'disabled' : 'ready',
-			'action': function (menu) {
+			id: uuid(),
+			label: 'Copy username',
+			initial_state: !canRead ? 'disabled' : 'ready',
+			action: function (menu) {
 				var data = {
 					name : 'username',
 					data : item.username
@@ -264,10 +262,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		contextualMenu.insertItem(action);
 		// Add Copy password action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'Copy password',
-			'initial_state': !canRead ? 'disabled' : 'ready',
-			'action': function (menu) {
+			id: uuid(),
+			label: 'Copy password',
+			initial_state: !canRead ? 'disabled' : 'ready',
+			action: function (menu) {
 				var secret = item.Secret[0].data;
 				mad.bus.trigger('passbolt.secret.decrypt', secret);
 				menu.remove();
@@ -276,10 +274,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		contextualMenu.insertItem(action);
 		// Add Copy url action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'Copy URL',
-			'initial_state': !canRead ? 'disabled' : 'ready',
-			'action': function (menu) {
+			id: uuid(),
+			label: 'Copy URL',
+			initial_state: !canRead ? 'disabled' : 'ready',
+			action: function (menu) {
 				var data = {
 					name : 'URL',
 					data : item.uri
@@ -292,11 +290,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// Add Open URL in a new tab action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'Open URL in a new tab',
-			'initial_state': !canRead ? 'disabled' : 'ready',
-			'cssClasses': ['separator-after'],
-			'action': function (menu) {
+			id: uuid(),
+			label: 'Open URL in a new tab',
+			initial_state: !canRead ? 'disabled' : 'ready',
+			cssClasses: ['separator-after'],
+			action: function (menu) {
 				var uri = item.uri;
 				var win = window.open(uri, '_blank');
 				win.focus();
@@ -307,10 +305,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// Add Rename action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'Edit',
-			'initial_state': !canUpdate ? 'disabled' : 'ready',
-			'action': function (menu) {
+			id: uuid(),
+			label: 'Edit',
+			initial_state: !canUpdate ? 'disabled' : 'ready',
+			action: function (menu) {
 				mad.bus.trigger('request_resource_edition', item);
 				menu.remove();
 			}
@@ -319,10 +317,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// Add Share action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'Share',
-			'initial_state': !canAdmin ? 'disabled' : 'ready',
-			'action': function (menu) {
+			id: uuid(),
+			label: 'Share',
+			initial_state: !canAdmin ? 'disabled' : 'ready',
+			action: function (menu) {
 				mad.bus.trigger('request_resource_sharing', item);
 				menu.remove();
 			}
@@ -330,10 +328,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		contextualMenu.insertItem(action);
 		// Add Delete action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'Delete',
-			'initial_state': !canUpdate ? 'disabled' : 'ready',
-			'action': function (menu) {
+			id: uuid(),
+			label: 'Delete',
+			initial_state: !canUpdate ? 'disabled' : 'ready',
+			action: function (menu) {
 				mad.bus.trigger('request_resource_deletion', item);
 				menu.remove();
 			}
@@ -525,7 +523,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {mad.model.Model} model The model reference
 	* @param {HTMLEvent} ev The event which occured
 	* @param {passbolt.model.Resource} resource The created resource
-	* @return {void}
 	*/
 	'{passbolt.model.Resource} created': function (model, ev, resource) {
 		var self = this;
@@ -556,7 +553,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {mad.model.Model} model The model reference
 	* @param {HTMLEvent} ev The event which occured
 	* @param {passbolt.model.Resource} resource The updated resource
-	* @return {void}
 	*/
 	'{passbolt.model.Resource} updated': function (model, ev, resource) {
 		if (this.options.resources.indexOf(resource) != -1) {
@@ -570,7 +566,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {mad.model.Model} model The model reference
 	* @param {HTMLEvent} ev The event which occured
 	* @param {passbolt.model.Resource} resources The removed resource
-	* @return {void}
 	*/
 	'{resources} remove': function (model, ev, resources) {
 		var self = this;
@@ -585,7 +580,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {mad.model.Model} model The model reference
 	* @param {HTMLEvent} ev The event which occured
 	* @param {passbolt.model.Category} category The removed category
-	* @return {void}
 	*/
 	'{passbolt.model.Category} destroyed': function (model, ev, category) {
 		var self = this;
@@ -614,7 +608,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {HTMLEvent} ev The event which occured
 	* @param {mixed} item The selected item instance or its id
 	* @param {HTMLEvent} ev The source event which occured
-	* @return {void}
 	*/
 	' item_selected': function (el, ev, item, srcEvent) {
 		var self = this;
@@ -633,7 +626,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {HTMLEvent} ev The event which occured
 	* @param {passbolt.model.Resource} item The right selected item instance or its id
 	* @param {HTMLEvent} srcEvent The source event which occured
-	* @return {void}
 	*/
 	' item_right_selected': function (el, ev, item, srcEvent) {
 		// Select item.
@@ -648,7 +640,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {HTMLEvent} ev The event which occured
 	* @param {passbolt.model.Resource} item The right selected item instance or its id
 	* @param {HTMLEvent} srcEvent The source event which occured
-	* @return {void}
 	*/
 	' password_clicked': function (el, ev, item, srcEvent) {
 		// Get secret out of Resource object.
@@ -676,7 +667,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {HTMLElement} el The element the event occured on
 	* @param {HTMLEvent} ev The event which occured
 	* @param {mixed} rsId The id of the resource which has been checked
-	* @return {void}
 	*/
 	'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
 		var self = this;
@@ -705,7 +695,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {HTMLElement} el The element the event occured on
 	* @param {HTMLEvent} ev The event which occured
 	* @param {mixed} rsId The id of the resource which has been unchecked
-	* @return {void}
 	*/
 	'.js_checkbox_multiple_select unchecked': function (el, ev, rsId) {
 		var self = this;
@@ -737,7 +726,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {jQuery} element The source element
 	* @param {Event} event The jQuery event
 	* @param {passbolt.model.Filter} filter The filter to apply
-	* @return {void}
 	*/
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
 		// @todo fixed in future canJs.
@@ -766,8 +754,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// load resources functions of the filter
 		passbolt.model.Resource.findAll({
-			'filter': this.filter,
-			'recursive': true
+			filter: this.filter,
+			recursive: true
 		}, function (resources, response, request) {
 			// TODO The callback is out of date, an other filter has been performed
 			// load the resources in the browser
@@ -785,27 +773,24 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* Listen to the change relative to the state Ready.
 	* The ready state is fired automatically after the Component is rendered
 	* @param {boolean} go Enter or leave the state
-	* @return {void}
 	*/
-	'stateReady': function (go) {
+	stateReady: function (go) {
 		// nothing to do
 	},
 
 	/**
 	* Listen to the change relative to the state selected
 	* @param {boolean} go Enter or leave the state
-	* @return {void}
 	*/
-	'stateSelection': function (go) {
+	stateSelection: function (go) {
 		// nothing to do
 	},
 
 	/**
 	* Listen to the change relative to the state multipleSelected
 	* @param {boolean} go Enter or leave the state
-	* @return {void}
 	*/
-	'stateMultipleSelection': function (go) {
+	stateMultipleSelection: function (go) {
 		// nothing to do
 	}
 
