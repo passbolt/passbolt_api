@@ -1,4 +1,3 @@
-<% console.log(passbolt.model.User.getCurrent()); %>
 <% var role = passbolt.model.User.getCurrent().Role.name; %>
 <% if (role == 'admin') { %>
 <li>
@@ -19,12 +18,13 @@
 		<span><%= __('delete') %></span>
 	</a>
 </li>
-<li>
-	<div class="dropdown" style="display: none">
+
+<!-- #PASSBOLT-787<li>
+	<div class="dropdown">
 		<a id="js_user_wk_menu_more_button" href="#" class="button">
 			<span><%= __('more') %></span>
 			<i class="icon after arrowdown"></i>
 		</a>
 	</div>
-</li>
+</li>-->
 <% } %>

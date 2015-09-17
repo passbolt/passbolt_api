@@ -95,7 +95,6 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * Observe when the user wants to create a new instance (Resource, User depending of the active workspace)
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
-     * @return {void}
      */
     '{creationButton.element} click': function (el, ev) {
         var resource = this.options.creationButton.getValue();
@@ -106,7 +105,6 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * Observe when the user wants to edit an instance (Resource, User depending of the active workspace)
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
-     * @return {void}
      */
     '{editionButton.element} click': function (el, ev) {
         var resource = this.options.editionButton.getValue();
@@ -117,7 +115,6 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * Observe when the user wants to delete an instance (Resource, User depending of the active workspace)
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
-     * @return {void}
      */
     '{deletionButton.element} click': function (el, ev) {
         var resources = this.options.deletionButton.getValue();
@@ -128,7 +125,6 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * Observe when the user wants to share an instance (Resource, User depending of the active workspace)
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
-     * @return {void}
      */
     '{sharingButton.element} click': function (el, ev) {
         var resource = this.options.sharingButton.getValue();
@@ -140,9 +136,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.Resource} resource The selected resource
-     * @return {void}
      */
-    '{selectedRs.element} add': function (el, ev, resource) {
+    '{selectedRs} add': function (el, ev, resource) {
         // if more than one resource selected, or no resource selected
         if (this.options.selectedRs.length == 0) {
             this.setState('ready');
@@ -162,9 +157,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.Resource} resource The unselected resource
-     * @return {void}
      */
-    '{selectedRs.element} remove': function (el, ev, resource) {
+    '{selectedRs} remove': function (el, ev, resource) {
         // if more than one resource selected, or no resource selected
         if (this.options.selectedRs.length == 0) {
             this.setState('ready');
@@ -184,7 +178,6 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.Filter} filter The unselected resource
-     * @return {void}
      */
     '{mad.bus.element} filter_resources_browser': function(el, ev, filter) {
         // @todo fixed in future canJs.
@@ -221,9 +214,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
     /**
      * Listen to the change relative to the state selected
      * @param {boolean} go Enter or leave the state
-     * @return {void}
      */
-    'stateSelection': function (go) {
+    stateSelection: function (go) {
         if (go) {
             // Is the resource editable ?
             var updatable = passbolt.model.Permission.isAllowedTo(this.options.selectedRs[0], passbolt.UPDATE);
@@ -261,9 +253,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
     /**
      * Listen to the change relative to the state multiSelection
      * @param {boolean} go Enter or leave the state
-     * @return {void}
      */
-    'stateMultiSelection': function (go) {
+    stateMultiSelection: function (go) {
         if (go) {
             // Is the resource editable ?
             var canUpdate = passbolt.model.Permission.isAllowedTo(this.options.selectedRs, passbolt.UPDATE);

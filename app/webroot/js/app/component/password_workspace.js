@@ -4,7 +4,7 @@ import 'app/component/breadcrumb/password_breadcrumb';
 //import 'app/component/category_actions_tab';
 //import 'app/component/category_chooser';
 import 'app/component/password_browser';
-//import 'app/component/resource_actions_tab';
+import 'app/component/resource_actions_tab';
 import 'app/component/resource_details';
 import 'app/component/resource_shortcuts';
 import 'app/component/workspace_secondary_menu';

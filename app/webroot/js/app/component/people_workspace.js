@@ -8,8 +8,10 @@ import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_details';
 import 'app/form/user/create';
-//import 'app/form/group/create'; // to migrate
+//import 'app/form/group/create'; // @roadmap
 import 'app/model/user';
+//import 'app/model/group'; // @roadmap
+import 'app/model/filter';
 
 import 'app/view/template/people_workspace.ejs!';
 
@@ -301,9 +303,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var self = this;
         // Retrieve the selected user
         user = this.options.selectedUsers[0];
+
         // get the dialog
         var dialog = new mad.component.Dialog(null, {label: __('Edit User')})
             .start();
+
         // attach the component to the dialog
         var form = dialog.add(passbolt.form.user.Create, {
             data: user,

@@ -23,7 +23,7 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 		// @todo But we want this component to be based on the parent viewClass & templateUri.
 		// @todo It's maybe a todo if we want to automatize this case.
 		viewClass: mad.view.component.Tab,
-		templateUri: 'mad/view/template/component/tab.ejs'
+		templateUri: 'mad/view/template/component/tab/tab.ejs'
 	}
 
 }, /** @prototype */ {
@@ -35,12 +35,12 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 
 		// Add the edition form controller to the tab
 		var editFormCtl = this.addComponent(passbolt.form.resource.Create, {
-			'id': 'js_rs_edit',
-			'label': __('Edit'),
-			'action': 'edit',
-			'data': this.options.resource,
-			'callbacks' : {
-				'submit': function (data) {
+			id: 'js_rs_edit',
+			label: __('Edit'),
+			action: 'edit',
+			data: this.options.resource,
+			callbacks: {
+				submit: function (data) {
 					// save the resource's changes
 					self.options.resource.attr(data['passbolt.model.Resource'])
 						.save();
@@ -55,10 +55,10 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 
 		// Add the permission controller to the tab, if the user is allowed to share.
 		var permCtl = this.addComponent(passbolt.component.Permissions, {
-			'id': 'js_rs_permission',
-			'label': 'Share',
-			'resource': this.options.resources,
-			'cssClasses': ['share-tab']
+			id: 'js_rs_permission',
+			label: 'Share',
+			resource: this.options.resources,
+			cssClasses: ['share-tab']
 		});
 		permCtl.start();
 		permCtl.load(this.options.resource);
