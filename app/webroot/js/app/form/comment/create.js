@@ -37,7 +37,8 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 					.save();
 			}
 		},
-		templateUri: 'app/view/template/form/comment/add.ejs'
+		templateUri: 'app/view/template/form/comment/add.ejs',
+		commentContentField: null
 	}
 }, /** @prototype */ {
 
@@ -80,20 +81,26 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 		);
 
 		// feedback.
+		this.options.commentContentField = new mad.form.Textbox($('.js_comment_content', this.element), {
+			modelReference: 'passbolt.model.Comment.content'
+		}).start();
 		this.addElement(
-			new mad.form.Textbox($('.js_comment_content', this.element), {
-				modelReference: 'passbolt.model.Comment.content'
-			}).start(),
+			this.options.commentContentField,
 			new mad.form.Feedback($('.js_comment_content_feedback', this.element), {}).start()
 		);
-	}
+	},
 
 	/* ************************************************************** */
 	/* LISTEN TO THE VIEW EVENTS */
 	/* ************************************************************** */
 
-
-
+	/**
+	 * State ready.
+	 * Empty the comment content field.
+	 */
+	'stateReady': function() {
+		this.options.commentContentField.setValue('');
+	}
 });
 
 export default Create;
