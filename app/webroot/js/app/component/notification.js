@@ -3,7 +3,6 @@ import 'app/model/notification';
 import 'app/view/component/notification';
 import 'app/view/template/component/notification.ejs!';
 
-
 /**
  * @inherits mad.Component
  * @parent index
@@ -24,7 +23,8 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 		label: 'Notification Component',
 		viewClass: passbolt.view.component.Notification,
 		status: 'hidden',
-		notifications: []
+		notifications: [],
+		templateUri: 'app/view/template/component/notification.ejs'
 	}
 
 }, /** @prototype */ {

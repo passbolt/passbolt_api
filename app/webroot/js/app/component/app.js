@@ -1,24 +1,18 @@
 import 'mad/component/component';
 // the main workspaces of the application
 import 'app/component/settings_workspace';
-//import 'app/component/password_workspace_menu';
 import 'app/component/password_workspace';
 import 'app/component/people_workspace';
-//import 'app/component/people_workspace_menu';
-//import 'app/component/settings_workspace_menu';
 // common components of the application
 import 'app/component/app_navigation_left';
 import 'app/component/app_navigation_right';
 import 'app/component/app_filter';
 import 'app/component/profile_dropdown';
-//import 'app/component/notification';
+import 'app/component/notification';
 //import 'app/component/loading_bar';
-//// the ressources workspace models
-//import 'app/model/category';
-//import 'app/model/favorite';
-//import 'app/model/resource';
-//import 'app/model/filter';
-//// the application template
+// model
+import 'app/model/user';
+// the application template
 import 'app/view/template/app.ejs!';
 
 /**
@@ -75,10 +69,10 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 			});
 			self.profileDropDownCtl.start();
 		});
-        //
-		//// Instantiate the notification controller
-		//var notifCtl = new passbolt.component.Notification($('#js_app_notificator'), {});
-        //
+
+		// Instantiate the notification controller
+		var notifCtl = new passbolt.component.Notification($('#js_app_notificator'), {});
+
 		//// Instantiate the laoding bar controller
 		//var loadingBarCtl = new passbolt.component.LoadingBar($('#js_app_loading_bar'), {
 		//	'state': 'ready'
