@@ -324,8 +324,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		if (!this.element) return;
 
 		// get the dialog
-		var dialog = new mad.component.Dialog(null, {label: __('Edit Password')})
-			.start();
+		var dialog = new mad.component.Dialog(null, {
+			label: __('Edit Password'),  cssClasses : ['edit-password-dialog','dialog-wrapper']
+		}).start();
 
 		// Instanciate the Resource Actions Tab Controller into the dialog
 		var tab = dialog.add(passbolt.component.ResourceActionsTab, {
