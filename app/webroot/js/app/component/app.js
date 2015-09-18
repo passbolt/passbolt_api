@@ -9,7 +9,7 @@ import 'app/component/app_navigation_right';
 import 'app/component/app_filter';
 import 'app/component/profile_dropdown';
 import 'app/component/notification';
-//import 'app/component/loading_bar';
+import 'app/component/loading_bar';
 // model
 import 'app/model/user';
 // the application template
@@ -73,11 +73,11 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		// Instantiate the notification controller
 		var notifCtl = new passbolt.component.Notification($('#js_app_notificator'), {});
 
-		//// Instantiate the laoding bar controller
-		//var loadingBarCtl = new passbolt.component.LoadingBar($('#js_app_loading_bar'), {
-		//	'state': 'ready'
-		//});
-		//loadingBarCtl.start();
+		// Instantiate the laoding bar controller
+		var loadingBarCtl = new passbolt.component.LoadingBar($('#js_app_loading_bar'), {
+			'state': 'ready'
+		});
+		loadingBarCtl.start();
 	},
 
 	/* ************************************************************** */
