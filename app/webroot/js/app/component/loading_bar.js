@@ -25,7 +25,8 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 		previousProcs: 0,
 		maxProcs: 0,
 		loadingPercent: 0,
-		postponedUpdate: false
+		postponedUpdate: false,
+		progressionLeft: 100
 	}
 
 }, /** @prototype */ {
@@ -46,6 +47,7 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	 */
 	loading_complete: function (callback) {
 		var self = this;
+		this.options.progressionLeft = 100;
 		this.view.update(100, true, function () {
 			self.view.update(0, false);
 			if (callback) {
@@ -128,7 +130,14 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 			// The other 50% will be filled while the processus will be completed.
 			var procSpace = ( 100 / this.options.maxProcs ) * 1/2;
 			var spaceLeft = ( this.options.maxProcs - ( this.options.maxProcs - this.options.currentProcs ) ) * procSpace;
-			this.view.update(100 - spaceLeft, true, function() {
+
+			// The loading bar should only progress.
+			if (spaceLeft <= this.options.progressionLeft) {
+				this.options.progressionLeft = spaceLeft;
+			}
+
+			// Update the view.
+			this.view.update(100 - this.options.progressionLeft, true, function() {
 				self.state.removeState('updating');
 			});
 		}
