@@ -130,6 +130,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
 		// Update the breadcrumb with the new filter.
 		this.breadcrumCtl.load(filter);
+		// When filtering the resources browser, unselect all the resources.
+		this.options.selectedRs.splice(0, this.options.selectedRs.length);
 	},
 
 	/**
@@ -434,17 +436,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 				// the request.
 				promise.rejectWith(promise, [jqXHR, status, response, request]);
 			});
-	},
-
-	/**
-	 * Listen to the browser filter
-	 * @param {jQuery} element The source element
-	 * @param {Event} event The jQuery event
-	 * @param {passbolt.model.Filter} filter The filter to apply
-	 */
-	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
-		// When filtering the resources browser, unselect all the resources.
-		this.options.selectedRs.splice(0, this.options.selectedRs.length);
 	}
 
 });
