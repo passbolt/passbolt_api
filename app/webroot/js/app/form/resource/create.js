@@ -40,8 +40,6 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	/**
 	 * After start hook.
 	 * Create the form elements
-	 *
-	 * @return {void}
 	 */
 	afterStart: function () {
 		var self = this;

@@ -16,6 +16,10 @@ import 'mad/model/serializer/cake_serializer';
  * @return {passbolt.model.Resource}
  */
 var Resource = passbolt.model.Resource = mad.Model.extend('passbolt.model.Resource', /** @static */ {
+	/**
+	 * The rules to validate this model are available on the server.
+	 */
+	checkServerRules: true,
 
 	attributes: {
 		id: 'string',
@@ -124,6 +128,7 @@ var Resource = passbolt.model.Resource = mad.Model.extend('passbolt.model.Resour
 	 */
 	init: function () {
 		var self = this;
+
 		// Listen when a category is destroyed
 		passbolt.model.Category.bind('destroyed', function(ev, category) {
 			var destroyedCategories = mad.Model.nestedToList(category, 'children', 'id');
