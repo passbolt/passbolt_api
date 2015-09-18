@@ -34,7 +34,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 
 	/**
 	 * before start hook.
-	 * @return {void}
 	 */
 	beforeRender: function () {
 		this._super();
@@ -47,7 +46,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 
 	/**
 	 * Called right after the start function
-	 * @return {void}
 	 * @see {mad.controller.ComponentController}
 	 */
 	afterStart: function () {
@@ -77,7 +75,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	/**
 	 * Load details of a resource
 	 * @param {passbolt.model.Resource} resource The resource to load
-	 * @return {void}
 	 */
 	load: function (resource) {
 		// push the new resource in the options to be able to listen the resource
@@ -121,7 +118,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	/**
 	 * Listen to the change relative to the state Ready
 	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
 	 */
 	stateReady: function(go) {
 		if(go) {
@@ -135,7 +131,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	 * A password has been clicked.
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
 	 */
 	' password_clicked': function (el, ev) {
 		// Get secret out of Resource object.
@@ -151,7 +146,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	/**
 	 * Observe when an resource is updated
 	 * @param {passbolt.model.Resource} resource The updated resource
-	 * @return {void}
 	 */
 	'{resource} updated': function (resource) {
 		// The reference of the resource does not change, refresh the component
@@ -167,7 +161,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	/**
 	 * Observe when the user desire to hide the sidebar
 	 * @param {passbolt.model.Resource} resource The updated resource
-	 * @return {void}
 	 */
 	'{mad.bus.element} workspace_showSidebar': function(el, ev, show) {
 		// @todo fixed in future canJs.
@@ -197,7 +190,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Resource} resource The selected resource
-	 * @return {void}
 	 */
 	'{selectedRs} add': function (el, ev, resource) {
 		// if more than one resource selected, or no resource selected
@@ -223,7 +215,6 @@ var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend(
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Resource} resource The unselected resource
-	 * @return {void}
 	 */
 	'{selectedRs} remove': function (el, ev, resource) {
 		// if more than one resource selected, or no resource selected

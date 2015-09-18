@@ -41,7 +41,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 
 	/**
 	 * Called right after the start function
-	 * @return {void}
 	 * @see {mad.Component}
 	 */
 	afterStart: function() {
@@ -138,7 +137,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Category} category The selected category
-	 * @return {void}
 	 */
 	'{mad.bus.element} category_selected': function (el, ev, category) {
 		// @todo fixed in future canJs.
@@ -162,7 +160,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Resource} resource The selected resource
-	 * @return {void}
 	 */
 	'{mad.bus.element} copy_login_clipboard': function (el, ev, resource) {
 		// @todo fixed in future canJs.
@@ -177,7 +174,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Resource} resource The selected resource
-	 * @return {void}
 	 */
 	'{mad.bus.element} copy_secret_clipboard': function (el, ev, resource) {
 		// @todo fixed in future canJs.
@@ -191,7 +187,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * Observe when the user requests a category creation
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_category_creation': function (el, ev, data) {
 		// @todo fixed in future canJs.
@@ -223,7 +218,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * Observe when the user requests a category edition
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_category_edition': function (el, ev, category) {
 		// @todo fixed in future canJs.
@@ -244,7 +238,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * Observe when the user requests a category sharing
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_category_sharing': function (el, ev, category) {
 		// @todo fixed in future canJs.
@@ -265,7 +258,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * Observe when the user requests a category deletion
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_category_deletion': function (el, ev, category) {
 		// @todo fixed in future canJs.
@@ -279,7 +271,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Category} categories The target categories to insert the resource
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_resource_creation': function (el, ev, categories) {
 		// @todo fixed in future canJs.
@@ -317,7 +308,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Resource} resource The target resource to edit
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_resource_edition': function (el, ev, resource) {
 		// @todo fixed in future canJs.
@@ -341,7 +331,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Resource} rs1 A target resource to delete
 	 * @param {passbolt.model.Resource} [rs2 ...] Other resources to delete
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_resource_deletion': function (el, ev) {
 		// @todo fixed in future canJs.
@@ -362,7 +351,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Resource} rs1 A target resource to delete
 	 * @param {passbolt.model.Resource} [rs2 ...] Other resources to delete
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_resource_sharing': function (el, ev, resource) {
 		// @todo fixed in future canJs.
@@ -385,7 +373,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {jQuery.Deferred.Promise} promise The caller join a promise to complete, don't disapoint him !
 	 * @param {passbolt.model.Model} instance The target instance to set as favorite
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_favorite': function (el, ev, promise, instance) {
 		// @todo fixed in future canJs.
@@ -424,7 +411,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {jQuery.Deferred.Promise} promise The caller join a promise to complete, don't disapoint him !
 	 * @param {passbolt.model.Model} instance The target instance to unset as favorite
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_unfavorite': function (el, ev, promise, instance) {
 		// @todo fixed in future canJs.
@@ -448,6 +434,17 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 				// the request.
 				promise.rejectWith(promise, [jqXHR, status, response, request]);
 			});
+	},
+
+	/**
+	 * Listen to the browser filter
+	 * @param {jQuery} element The source element
+	 * @param {Event} event The jQuery event
+	 * @param {passbolt.model.Filter} filter The filter to apply
+	 */
+	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
+		// When filtering the resources browser, unselect all the resources.
+		this.options.selectedRs.splice(0, this.options.selectedRs.length);
 	}
 
 });
