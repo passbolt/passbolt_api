@@ -9,7 +9,7 @@
  */
 ?>
 
-	<script src="js/lib/modernizr/modernizr.js"></script>
+	<script src="js/lib/modernizr/modernizr-custom.min.js"></script>
 	<script type="application/javascript">
 	var cakephpConfig = {
 		app : {

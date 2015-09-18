@@ -27,7 +27,17 @@ module.exports = function(grunt) {
 				'<%= config.webroot %>/js/app/production.js'
 			],
 			'lib': [
-				'<%= config.webroot %>/js/lib/**'
+				'<%= config.webroot %>/js/lib/can',
+				'<%= config.webroot %>/js/lib/jquery',
+				'<%= config.webroot %>/js/lib/jquery-ui',
+				'<%= config.webroot %>/js/lib/jscrollpane',
+				'<%= config.webroot %>/js/lib/mad',
+				'<%= config.webroot %>/js/lib/moment',
+				'<%= config.webroot %>/js/lib/mousewheel',
+				'<%= config.webroot %>/js/lib/passbolt_styleguide',
+				'<%= config.webroot %>/js/lib/steal',
+				'<%= config.webroot %>/js/lib/underscore',
+				'<%= config.webroot %>/js/lib/xregexp'
 			]
 		},
 		lesslint: {
@@ -123,7 +133,6 @@ module.exports = function(grunt) {
 				expand: true
 			}
 		},
-
 		watch: {
 			less: {
 				files: ['Gruntfile.js', 'package.json', '<%= config.webroot %>/less/*.less','<%= config.webroot %>/less/**/*.less'],
@@ -177,6 +186,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.loadNpmTasks("steal-tools");
+
+	grunt.loadNpmTasks("grunt-modernizr");
 
 	// ========================================================================
 	// Register Tasks
