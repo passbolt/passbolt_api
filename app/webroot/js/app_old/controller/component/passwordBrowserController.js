@@ -279,10 +279,10 @@ steal(
 				}
 			});
 			contextualMenu.insertItem(action);
-			// Add Copy url action.
+			// Add Copy uri action.
 			var action = new mad.model.Action({
 				'id': uuid(),
-				'label': 'Copy URL',
+				'label': 'Copy URI',
 				'initial_state': !canRead ? 'disabled' : 'ready',
 				'action': function (menu) {
 					var data = {
@@ -295,10 +295,10 @@ steal(
 			});
 			contextualMenu.insertItem(action);
 
-			// Add Open URL in a new tab action.
+			// Add Open URI in a new tab action.
 			var action = new mad.model.Action({
 				'id': uuid(),
-				'label': 'Open URL in a new tab',
+				'label': 'Open URI in a new tab',
 				'initial_state': !canRead ? 'disabled' : 'ready',
 				'cssClasses': ['separator-after'],
 				'action': function (menu) {
