@@ -13,13 +13,13 @@
 		"hostname": "demo-passbolt.rhcloud.com",
 		"controllerElt": "#js_app_controller",	
 		"namespace": "passbolt",
-		"ControllerClassName": "passbolt.controller.AppController"
+		"ControllerClassName": "passbolt.component.App"
 	},
 	"notification": {
 		"timeout": 10000
 	},
 	"error": {
-		"ErrorHandlerClassName": "passbolt.helper.ErrorHandler"
+		"ErrorHandlerClassName": "passbolt.error.ErrorHandler"
 	},
 	"event": {
 		"eventBusControllerElt": "#js_bus_controller"

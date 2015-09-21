@@ -25,6 +25,19 @@ module.exports = function(grunt) {
 			],
 			'js': [
 				'<%= config.webroot %>/js/app/production.js'
+			],
+			'lib': [
+				'<%= config.webroot %>/js/lib/can',
+				'<%= config.webroot %>/js/lib/jquery',
+				'<%= config.webroot %>/js/lib/jquery-ui',
+				'<%= config.webroot %>/js/lib/jscrollpane',
+				'<%= config.webroot %>/js/lib/mad',
+				'<%= config.webroot %>/js/lib/moment',
+				'<%= config.webroot %>/js/lib/mousewheel',
+				'<%= config.webroot %>/js/lib/passbolt_styleguide',
+				'<%= config.webroot %>/js/lib/steal',
+				'<%= config.webroot %>/js/lib/underscore',
+				'<%= config.webroot %>/js/lib/xregexp'
 			]
 		},
 		lesslint: {
@@ -65,6 +78,16 @@ module.exports = function(grunt) {
 					stderr: false
 				},
 				command: '(cd ./app/webroot/js; ./js ./steal/buildjs ./app/passbolt.html)'
+			},
+			mad_lib_patch: {
+				options: {
+					stderr: false
+				},
+				command: [
+					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-system_preload_template.patch;)',
+					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-util_string_get_object_set_object.patch;)'
+					//'(cd ./node_modules/documentjs; patch -p1 < ./app/webroot/js/lib/mad/patches/patches/documentjs-demo_tag_url_and_sharp.patch;)'
+				].join('&&')
 			}
 		},
 		copy: {
@@ -99,6 +122,15 @@ module.exports = function(grunt) {
 					dest: '<%= config.webroot %>/less',
 					expand: true
 				}]
+			},
+			lib : {
+				cwd: '<%= bower.directory %>',
+				src: [
+					'**',
+					'!**passbolt_styldeguide/**'
+				],
+				dest: '<%= config.webroot %>/js/lib/',
+				expand: true
 			}
 		},
 		watch: {
@@ -107,6 +139,19 @@ module.exports = function(grunt) {
 				tasks: ['css'],
 				options: {
 					spawn: false
+				}
+			}
+		},
+		"steal-build": {
+			default: {
+				options: {
+					system: {
+						config: "./app/webroot/js/stealconfig.js",
+						main: "app/passbolt"
+					},
+					buildOptions: {
+						minify: false
+					}
 				}
 			}
 		}
@@ -140,6 +185,10 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
+	grunt.loadNpmTasks("steal-tools");
+
+	grunt.loadNpmTasks("grunt-modernizr");
+
 	// ========================================================================
 	// Register Tasks
 
@@ -153,11 +202,16 @@ module.exports = function(grunt) {
 	// Run 'grunt css' to compile LESS into CSS, combine and minify
 	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
 
-	// Bower deploy
+	// Bower styleguide deploy
 	grunt.registerTask('styleguide-deploy', ['copy:styleguide']);
+	// Bower libs deploy
+	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
 
 	// Run 'grunt production' to prepare the production release
 	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);
+
+	// Build mad & all the demos apps to ensure that everything compile
+	grunt.registerTask("build", ["steal-build"]);
 
 	// 'grunt' will check code quality, and if no errors,
 	// compile LESS to CSS, and minify and concatonate all JS and CSS

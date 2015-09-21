@@ -29,12 +29,15 @@
 /Vendor
 /vendors
 /app/Vendor/*
+/app/webroot/js/lib/*
+!/app/webroot/js/lib/modernizr
 !/app/Vendor/RandomTool.php
 !/app/Vendor/openpgp-php
 
-# bower and grunt
+# bower, composer, grunt
 /bower_components
 /node_modules
+composer.lock
 
 # Misc
 /app/composer.phar
