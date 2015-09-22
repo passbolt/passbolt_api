@@ -6,11 +6,11 @@
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.plugins.DataExtras.Console.Command.Task.PermissionTask
+ * @package      app.plugins.DataUnitTests.Console.Command.Task.PermissionTask
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Permission', 'Model');
 
@@ -20,7 +20,7 @@ class PermissionTask extends ModelTask {
 
 	protected function getData() {
 		$this->Resource = ClassRegistry::init('Resource');
-		$UserTask = $this->Tasks->load('Data.User');
+		$UserTask = $this->Tasks->load('DataUnitTests.User');
 		$users = $UserTask::getAlias();
 
 		$permissions = array(
@@ -38,7 +38,7 @@ class PermissionTask extends ModelTask {
 				'tetris license' => PermissionType::ADMIN,
 				'shared resource' => PermissionType::ADMIN,
 			),
-			'kat' => array(
+			'kay' => array(
 				'facebook account' => PermissionType::READ,
 				'salesforce account' => PermissionType::READ,
 				'tetris license' => PermissionType::UPDATE,
@@ -122,7 +122,6 @@ class PermissionTask extends ModelTask {
 				'tetris license' => PermissionType::UPDATE,
 				'shared resource' => PermissionType::ADMIN,
 			),
-
 		);
 
 		$ps = array();

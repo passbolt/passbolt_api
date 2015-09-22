@@ -8,7 +8,7 @@
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('User', 'Model');
 

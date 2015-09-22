@@ -36,7 +36,9 @@ require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Ex
  * API and DOC Plugins
  */
 if (Configure::read('debug') > 1) {
-	CakePlugin::load('DataExtras');
+	CakePlugin::load('DataDefault');
+	CakePlugin::load('DataSeleniumTests');
+	CakePlugin::load('DataUnitTests');
 }
 
 /**

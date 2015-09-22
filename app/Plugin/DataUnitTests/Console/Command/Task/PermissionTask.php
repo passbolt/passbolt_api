@@ -4,11 +4,11 @@
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.plugins.DataExtras.Console.Command.Task.PermissionTask
+ * @package      app.plugins.DataUnitTests.Console.Command.Task.PermissionTask
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Permission', 'Model');
 
@@ -19,11 +19,11 @@ class PermissionTask extends ModelTask {
 	protected function getData() {
 		$this->Resource = ClassRegistry::init('Resource');
 
-		$GroupTask = $this->Tasks->load('Data.Group');
+		$GroupTask = $this->Tasks->load('DataUnitTests.Group');
 		$groups = $GroupTask::getAlias();
-		$UserTask = $this->Tasks->load('Data.User');
+		$UserTask = $this->Tasks->load('DataUnitTests.User');
 		$users = $UserTask::getAlias();
-		$CategoryTask = $this->Tasks->load('Data.Category');
+		$CategoryTask = $this->Tasks->load('DataUnitTests.Category');
 		$cat = $CategoryTask::getAlias();
 
 		// User kathleen@passbolt.com as admin of the root unit test category

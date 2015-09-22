@@ -4,11 +4,11 @@
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.plugins.DataExtras.Console.Command.Task.CommentTask
+ * @package      app.plugins.DataUnitTests.Console.Command.Task.CommentTask
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Comment', 'Model');
 App::uses('Resource', 'Model');
@@ -20,7 +20,7 @@ class CommentTask extends ModelTask {
 	protected function getData() {
 		$this->Resource = ClassRegistry::init('Resource');
 
-		$UserTask = $this->Tasks->load('Data.User');
+		$UserTask = $this->Tasks->load('DataUnitTests.User');
 		$users = $UserTask::getAlias();
 
 		$rs = $this->Resource->findByName("salesforce account");

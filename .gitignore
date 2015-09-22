@@ -22,6 +22,9 @@
 /plugins
 /app/Plugin/*
 !/app/Plugin/DataExtras
+!/app/Plugin/DataDefault
+!/app/Plugin/DataSeleniumTests
+!/app/Plugin/DataUnitTests
 !/app/Plugin/api_generator
 
 # Vendors

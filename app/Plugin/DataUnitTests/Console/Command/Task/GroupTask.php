@@ -4,11 +4,11 @@
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.plugins.DataExtras.Console.Command.Task.GroupTask
+ * @package      app.plugins.DataUnitTests.Console.Command.Task.GroupTask
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Group', 'Model');
 
@@ -21,7 +21,7 @@ class GroupTask extends ModelTask {
 		$aliases = array (
 			'man' => $Group->findByName('management'),
 			'acc' => $Group->findByName('accounting dpt'),
-			'hr' => $Group->findByName('human resources'),
+			'hr'  => $Group->findByName('human resources'),
 			'dev' => $Group->findByName('developers'),
 			'dtl' => $Group->findByName('developers team leads'),
 			'dru' => $Group->findByName('developers drupal'),

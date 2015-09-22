@@ -4,11 +4,11 @@
  *
  * @copyright    copyright 2012 Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.plugins.DataExtras.Console.Command.Task.AvatarTask
+ * @package      app.plugins.DataUnitTests.Console.Command.Task.AvatarTask
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Profile', 'Model');
 App::uses('User', ' Model');
@@ -20,7 +20,7 @@ class AvatarTask extends ModelTask {
 
 	public function execute() {
 		$User = ClassRegistry::init('User');
-		$UserTask = $this->Tasks->load('Data.User');
+		$UserTask = $this->Tasks->load('DataUnitTests.User');
 		$users = $UserTask::getAlias();
 
 		// For all users, if an image has been defined insert it as profile avatar.

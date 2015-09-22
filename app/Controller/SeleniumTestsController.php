@@ -110,7 +110,6 @@ class SeleniumTestsController extends AppController {
 		$this->render("/Emails/$format/" . $template);
 	}
 
-
 	/**
 	 * DANGEROUS !!!! Reset passbolt instance data.
 	 * DO NOT CALL THIS ENTRY POINT IF YOU DON'T UNDERSTAND WHAT IT IS.
@@ -119,7 +118,7 @@ class SeleniumTestsController extends AppController {
 	 * This is same as calling the cake shell : cake install
 	 * @param bool $dummy
 	 */
-	public function resetInstance($dummy = 1) {
+	public function resetInstance($dummy = 'default') {
 		// If Selenium mode is not activated, we redirect to home page.
 		if (!$this->__isSeleniumAllowed()) {
 			return $this->redirect('/');
@@ -128,8 +127,8 @@ class SeleniumTestsController extends AppController {
 		$job = new InstallShell();
 		$job->startup();
 		// If dummy data is requested.
-		if ($dummy == 1) {
-			$job->params['data'] = 1;
+		if ($dummy == 'default') {
+			$job->params['data'] = 'default';
 		}
 		$job->dispatchMethod('main');
 		die();

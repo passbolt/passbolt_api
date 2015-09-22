@@ -8,7 +8,7 @@
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Secret', 'Model');
 App::uses('Resource', 'Model');
@@ -112,6 +112,7 @@ class SecretTask extends ModelTask {
 
 		// Insertion for all users who can access to available resources.
 		// We insert dummy data, same secret for everyone.
+		$s = [];
 		foreach($rs as $r) {
 			$password = $this->getDummyPassword();
 			foreach ($us as $u) {

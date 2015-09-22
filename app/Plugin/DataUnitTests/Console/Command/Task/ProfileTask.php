@@ -8,7 +8,7 @@
  * @since        version 2.12.11
  */
 
-require_once(ROOT . DS . APP_DIR . DS  . 'Plugin' . DS . 'DataExtras' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
+require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Profile', 'Model');
 
@@ -17,7 +17,7 @@ class ProfileTask extends ModelTask {
 	public $model = 'Profile';
 
 	protected function getData() {
-		$UserTask = $this->Tasks->load('Data.User');
+		$UserTask = $this->Tasks->load('DataUnitTests.User');
 		$users = $UserTask::getAlias();
 
 		// Anonymous user / default for non logged-in user
