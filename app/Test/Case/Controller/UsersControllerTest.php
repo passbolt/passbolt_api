@@ -19,8 +19,7 @@ App::uses('CakeSessionFixture', 'Test/Fixture');
 
 class UsersControllerTest extends ControllerTestCase {
 
-	public $fixtures
-		= array(
+	public $fixtures = array(
 			'app.groups_user',
 			'app.group',
 			'app.user',
@@ -952,8 +951,6 @@ Version: OpenPGP.js v0.7.2
 
 Comment: http://openpgpjs.org
 
-
-
 xsBNBFVDPCsBCACEoD8M8/OWckxRtN4dlB/LzDXQLKYtKprCSwXq9adTiTmI
 S7QjVyL01j3e8mWw2rM8qQPf8Tcc2sXw6JoQD85Ul87W887ruSG9yeV/1rjh
 m34q3ZMMtudwuZnwrFRyMHOonbllZ6nC+ikhW7yOtEjPjGU5IUAeOHZuGdB1
@@ -966,13 +963,13 @@ AhsDAh4BAAA47gf/c7ImdYBOsQnptgtLnMpQxkvkMdeYPtBpF89QWwy6HIHP
 pO9KfBDC44/K1+RT4UUGx5HsdUPGQGrDUp1RttCyykNsy2dduhkFTl6fap59
 Zalk6jUkkJ7aVapgFhKhCsiIyhuR/DBEi+kTX4YE8OvPsAKHRc+tutUNX8hv
 16CUKIoZpNbSiKeSlDHrUsE3tsYUo00n79Jmcudh/mMkul21B31tMXE4Kn3+
-		pVoRAuS16OVNgiA4B87Gowy9Ze2MR+f5c6M7vQSgY8L24itHTgmNsmewAHSQ
+pVoRAuS16OVNgiA4B87Gowy9Ze2MR+f5c6M7vQSgY8L24itHTgmNsmewAHSQ
 9XYjlQ8HeU2xUcG/tYklrI2bZ4Mtp26iKhGHb0ZLq8NoITtidm1A693tTc7A
 TQRVQzwuAQgAjv2zqTpq4pg+46T+rQWhOTSZNtafslTgbMWmp8nZ0nXKo0xr
-		+Eui7SWtDKBszC6HpFiF/RWEgtpwzuuLP4OcF4a8+PLh2yUBBTqwJcn3NroU
++Eui7SWtDKBszC6HpFiF/RWEgtpwzuuLP4OcF4a8+PLh2yUBBTqwJcn3NroU
 baa8YgqYnfhgfDePWSJlXZlujnVJMT+E0W1zajvP8EYc0zhG5hgE0CO/U2K4
 SBZV37fCDjKtIbHJd7jJtry/BPpyoLKIWDXmhw/PhLazL7iysFu+0QOt6eFK
-		/SUG3kyjJ7qo1e6kQ301U9ezGE87pHbS6/zAvtFPo2+5PWwAc/y/Ty8PYEKH
+/SUG3kyjJ7qo1e6kQ301U9ezGE87pHbS6/zAvtFPo2+5PWwAc/y/Ty8PYEKH
 G6HYzpd6EqW0J0x1W6E9JzXGU/L2QWIc+KwfnDMVgZAnt40CsrnNrQARAQAB
 wsBfBBgBCAATBQJVQzw0CRAQR1dh7QZAagIbDAAAp48H/jxI1rj9IEMYiWVR
 KocPnXQ9BDkCX6Ty8tOn/e8i7Mxpiml1GX7pxigbSI1Si2uWayl7TH572M7Q
@@ -984,11 +981,11 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 
 =nhkC
 
-		-----END PGP PUBLIC KEY BLOCK-----',
+-----END PGP PUBLIC KEY BLOCK-----',
 
 		    'fingerprint' => '5d6c70eb8d024c622cbfea9f10475761ed06406a',
 		    'key_id' => '10475761ed06406a',
-		    'bits' => 2048,
+		    'bits' => '2048',
 		    'type' => 'rsa',
 		    'uid' => 'kevin muller <kevin.muller@clickonfrench.com>',
 		    'key_created' => '2015-05-01T08:41:15.000Z',
