@@ -29,11 +29,77 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 
 }, /** @prototype */ {
 
+	_getNotificationSettings: function(notification) {
+		var notifSettings = mad.Config.read('notification.messages.' + notification.title);
+		if (can.getObject('severity', notifSettings) == undefined) {
+			notifSettings.severity = 'notice';
+		}
+		if (can.getObject('group', notifSettings) == undefined) {
+			notifSettings.group = 'main';
+		}
+		if (can.getObject('msg', notifSettings) == undefined) {
+			notifSettings.msg = '--';
+		}
+		return notifSettings;
+	},
+
+	_buildMessage: function(notification, settings) {
+		var msg = can.getObject('msg', settings);
+		var variables = msg.match(/%([^%]*)%/g);
+		var data = notification.data;
+		for (let i in variables) {
+			let dataKey = variables[i].replace(/%/g, '');
+			let value = can.getObject(dataKey, data);
+			if (value == undefined) {
+				value = 'undefined';
+			}
+			msg = msg.replace(variables[i], value);
+		}
+		return msg;
+	},
+
+	_populateNotification: function(notification, settings) {
+		if (!mad.Config.read('notification.messages.' + notification.title)) {
+			return null;
+		}
+		notification.message = this._buildMessage(notification, settings);
+		// Status is equal to the status given, or if not defined the severity defined in the config.
+		notification.status = (notification.status != undefined) ? notification.status : settings.severity;
+		// Set severity.
+		notification.severity = settings.severity;
+
+		// TODO : set uuid
+		// TODO : check if notification should be displayed according to the severity.
+		return notification;
+	},
+
+	_checkShouldBeDisplayed: function(notification, settings) {
+		var displaySeverity = mad.Config.read('notification.displaySeverity');
+		if (displaySeverity == undefined) {
+			return false;
+		}
+		if (displaySeverity.indexOf(notification.severity) != -1) {
+			return true;
+		}
+		return false;
+	},
+
 	/**
 	 * Load a notification
 	 * @param {passbolt.model.Notification} notification
 	 */
 	load: function (notification) {
+		// Check if notification should be processed.
+		var title = notification.title;
+		var notifSettings = this._getNotificationSettings(notification);
+		var notification = this._populateNotification(notification, notifSettings);
+		var display = this._checkShouldBeDisplayed(notification, notifSettings);
+		if (notification === null) {
+			return;
+		}
+		if (display === false) {
+			return;
+		}
 		this.options.notifications.push(notification);
 
 		// The component is not already started, start it

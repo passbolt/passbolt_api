@@ -19,20 +19,15 @@ mad.net.ResponseHandler.extend('passbolt.net.ResponseHandler', /** @static */ {
 	 * @return {void}
 	 */
 	'_success': function () {
-		// send a notification on the events bus if the request is a POST, PUT or DELETE
-		switch (this.request.type.toUpperCase()) {
-		case 'POST':
-		case 'PUT':
-		case 'DELETE':
-			if (mad.bus) {
-				mad.bus.trigger('passbolt_notify', {
-					'status': this.response.getStatus(),
-					'title': this.response.getMessage()
-				});
-			}
-			break;
+		// send a notification on the event bus for any successful response.
+		// the notification system will take care of filtering what should be displayed.
+		if (mad.bus) {
+			mad.bus.trigger('passbolt_notify', {
+				'title': this.response.header.title,
+				'status': this.response.header.status,
+				'data': this.response
+			});
 		}
-
 		this._super();
 	},
 
