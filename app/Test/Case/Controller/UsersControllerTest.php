@@ -41,9 +41,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->User = Common::getModel('User');
-		$this->User->useDbConfig = 'test';
 		$this->Gpgkey = Common::getModel('Gpgkey');
-		$this->Gpgkey->useDbConfig = 'test';
 		$u = $this->User->get();
 		$this->session = new CakeSession();
 		$this->session->init();

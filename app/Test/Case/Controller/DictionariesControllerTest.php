@@ -35,8 +35,7 @@ class DictionariesControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->User = new User();
-		$this->User->useDbConfig = 'test';
+		$this->User = Common::getModel('User');
 		$u = $this->User->get();
 		$this->session = new CakeSession();
 		$this->session->init();

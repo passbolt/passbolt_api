@@ -4,7 +4,7 @@
  *
  * @copyright    Copyright 2012, Passbolt.com
  * @license      http://www.passbolt.com/license
- * @package      app.Model.GpgKey
+ * @package      app.Model.Gpgkey
  * @since        version 2.12.9
  */
 

@@ -52,23 +52,15 @@ class ShareControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->User = new User();
-		$this->User->useDbConfig = 'test';
+		$this->User = Common::getModel('User');
 		$u = $this->User->get();
-		$this->Resource = new Resource();
-		$this->Resource->useDbConfig = 'test';
-		$this->Category = new Category();
-		$this->Category->useDbConfig = 'test';
-		$this->Permission = new Permission();
-		$this->Permission->useDbConfig = 'test';
-		$this->UserResourcePermission = new UserResourcePermission();
-		$this->UserResourcePermission->useDbConfig = 'test';
-		$this->GroupResourcePermission = new GroupResourcePermission();
-		$this->GroupResourcePermission->useDbConfig = 'test';
-		$this->UserCategoryPermission = new UserCategoryPermission();
-		$this->UserCategoryPermission->useDbConfig = 'test';
-		$this->GroupCategoryPermission = new GroupCategoryPermission();
-		$this->GroupCategoryPermission->useDbConfig = 'test';
+		$this->Resource = Common::getModel('Resource');
+		$this->Category = Common::getModel('Category');
+		$this->Permission = Common::getModel('Permission');
+		$this->UserResourcePermission = Common::getModel('UserResourcePermission');
+		$this->GroupResourcePermission = Common::getModel('GroupResourcePermission');
+		$this->UserCategoryPermission = Common::getModel('UserCategoryPermission');
+		$this->GroupCategoryPermission = Common::getModel('GroupCategoryPermission');
 
 		$this->session = new CakeSession();
 		$this->session->init();
