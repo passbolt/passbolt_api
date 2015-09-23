@@ -44,7 +44,7 @@ class GpgkeyTask extends ModelTask {
 		$u = $User->findById($userId);
 		$prefix = $u['User']['username'];
 		$uprefix = explode('@', $prefix);
-		$gpgkeyPath = APP . 'Config' . DS . 'gpg' . DS;
+		$gpgkeyPath = Configure::read('GPG.testKeys.path');
 		if (file_exists($gpgkeyPath . $uprefix[0] . '_public.key')) {
 			$keyFileName = $gpgkeyPath . $uprefix[0] . '_public.key';
 		} else {

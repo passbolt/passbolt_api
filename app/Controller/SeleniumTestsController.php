@@ -115,10 +115,10 @@ class SeleniumTestsController extends AppController {
 	 * DO NOT CALL THIS ENTRY POINT IF YOU DON'T UNDERSTAND WHAT IT IS.
 	 * WE USE IT ONLY FOR OUR SELENIUM TESTS.
 	 * IF YOU CALL IT, YOU WILL LOSE ALL THE DATA OF YOUR DB. YOU ARE WARNED.
-	 * This is same as calling the cake shell : cake install
-	 * @param bool $dummy
+	 * This is same as calling the cake shell : cake install [--data=[default|...]]
+	 * @param string $dummy data set name
 	 */
-	public function resetInstance($dummy = 'default') {
+	public function resetInstance($dummy = 'seleniumtests') {
 		// If Selenium mode is not activated, we redirect to home page.
 		if (!$this->__isSeleniumAllowed()) {
 			return $this->redirect('/');
@@ -127,9 +127,10 @@ class SeleniumTestsController extends AppController {
 		$job = new InstallShell();
 		$job->startup();
 		// If dummy data is requested.
-		if ($dummy == 'default') {
-			$job->params['data'] = 'default';
+		if($dummy == 'default' || $dummy == 'seleniumtests' || $dummy == 'unittests') {
+			$job->params['data'] = $dummy;
 		}
+
 		$job->dispatchMethod('main');
 		die();
 	}

@@ -168,6 +168,6 @@ require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 /**
  * GPG Keyring
  */
-if(Configure::read('Auth.gpg.env.setenv')) {
-	putenv('GNUPGHOME='. Configure::read('Auth.gpg.env.home'));
+if(Configure::read('GPG.env.setenv')) {
+	putenv('GNUPGHOME='. Configure::read('GPG.env.home'));
 }

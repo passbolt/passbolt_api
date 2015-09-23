@@ -171,7 +171,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Test adding a key.
 	 */
 	public function testAdd() {
-		$pubKey = file_get_contents(APP . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc');
+		$pubKey = file_get_contents( Configure::read('GPG.testKeys.path') . 'passbolt_dummy_key.asc');
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($user);
 		$json = json_decode(
@@ -213,7 +213,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Test that adding a key removes the user previous keys.
 	 */
 	public function testAddRemovePreviousKeys() {
-		$pubKey = file_get_contents(APP . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc');
+		$pubKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'passbolt_dummy_key.asc');
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($user);
 
