@@ -136,7 +136,7 @@ class PermissionableBehavior extends ModelBehavior {
 					'aco_foreign_key' => $model->id,
 					'aro' => 'User',
 					'aro_foreign_key' => User::get('User.id'),
-					'type' => PermissionType::ADMIN
+					'type' => PermissionType::OWNER
 				)
 			);
 			$Permission->create();

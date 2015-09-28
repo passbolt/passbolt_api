@@ -5,17 +5,17 @@ return array(
 			array(
 				'aconame' => 'administration',
 				'aroname' => 'management',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'accounts',
 				'aroname' => 'management',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cp-project1',
 				'aroname' => 'management',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cp-project1',
@@ -32,7 +32,7 @@ return array(
 			array(
 				'aconame' => 'bank password',
 				'aroname' => 'management',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'salesforce account',
@@ -64,7 +64,7 @@ return array(
 			array(
 				'aconame' => 'marketing',
 				'aroname' => 'dame@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'd-project2',
@@ -74,12 +74,12 @@ return array(
 			array(
 				'aconame' => 'cp-project1',
 				'aroname' => 'ada@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cp-project1',
 				'aroname' => 'lynne@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cp-project2',
@@ -111,7 +111,7 @@ return array(
 			array(
 				'aconame' => 'facebook account',
 				'aroname' => 'dame@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'facebook account',
@@ -126,12 +126,12 @@ return array(
 			array(
 				'aconame' => 'cpp1-pwd1',
 				'aroname' => 'ada@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cpp1-pwd1',
 				'aroname' => 'lynne@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cpp2-pwd1',

@@ -5,7 +5,7 @@ return array(
 			array(
 				'aconame' => 'facebook account',
 				'aroname' => 'dame@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'facebook account',
@@ -20,12 +20,12 @@ return array(
 			array(
 				'aconame' => 'cpp1-pwd1',
 				'aroname' => 'ada@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cpp1-pwd1',
 				'aroname' => 'lynne@passbolt.com',
-				'result' => PermissionType::ADMIN
+				'result' => PermissionType::OWNER
 			),
 			array(
 				'aconame' => 'cpp2-pwd1',

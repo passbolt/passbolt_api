@@ -34,7 +34,7 @@ class PermissionTask extends ModelTask {
 			'aco_foreign_key' => $cat['utt'],
 			'aro' => 'User',
 			'aro_foreign_key' => $users['kay'],
-			'type' => PermissionType::ADMIN
+			'type' => PermissionType::OWNER
 		));
 		// kathleen has admin right on everything
 		$ps[] = array('Permission' => array(
@@ -43,7 +43,7 @@ class PermissionTask extends ModelTask {
 			'aco_foreign_key' => $cat['root'],
 			'aro' => 'User',
 			'aro_foreign_key' => $users['lyn'],
-			'type' => PermissionType::ADMIN
+			'type' => PermissionType::OWNER
 		));
 		// Group Management has admin rights on everything
 		$ps[] = array('Permission' => array(
@@ -52,7 +52,7 @@ class PermissionTask extends ModelTask {
 			'aco_foreign_key' => $cat['root'],
 			'aro' => 'Group',
 			'aro_foreign_key' => $groups['man'],
-			'type' => PermissionType::ADMIN
+			'type' => PermissionType::OWNER
 		));
 		// Group human resources have read only rights on administration
 		$ps[] = array('Permission' => array(
@@ -145,7 +145,7 @@ class PermissionTask extends ModelTask {
 			'aco_foreign_key' => $cat['cp1'],
 			'aro' => 'User',
 			'aro_foreign_key' => $users['ada'],
-			'type' => PermissionType::ADMIN,
+			'type' => PermissionType::OWNER,
 		));
 		// Frank has denied right on project
 		$ps[] = array('Permission' => array(
@@ -181,7 +181,7 @@ class PermissionTask extends ModelTask {
 			'aco_foreign_key' => $cat['oth'],
 			'aro' => 'User',
 			'aro_foreign_key' => $users['ada'],
-			'type' => PermissionType::ADMIN,
+			'type' => PermissionType::OWNER,
 		));
 		//  Freelancers have read only rights to projects others
 		$ps[] = array('Permission' => array(

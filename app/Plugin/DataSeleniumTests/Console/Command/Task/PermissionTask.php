@@ -19,124 +19,160 @@ class PermissionTask extends ModelTask {
 	public $model = 'Permission';
 
 	protected function getData() {
-		$this->Resource = ClassRegistry::init('Resource');
-		$UserTask = $this->Tasks->load('DataUnitTests.User');
-		$users = $UserTask::getAlias();
-
 		$permissions = array(
-			'adm' => array(
-				'facebook account' => PermissionType::ADMIN,
-				'bank password' => PermissionType::ADMIN,
-				'salesforce account' => PermissionType::ADMIN,
-				'tetris license' => PermissionType::ADMIN,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.apache') => array(
+				Common::uuid('user.id.ada') => PermissionType::OWNER,
+				Common::uuid('user.id.betty') => PermissionType::UPDATE,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				//Common::uuid('user.id.edith') => PermissionType::DENY,
 			),
-			'lyn' => array(
-				'facebook account' => PermissionType::ADMIN,
-				'bank password' => PermissionType::ADMIN,
-				'salesforce account' => PermissionType::ADMIN,
-				'tetris license' => PermissionType::ADMIN,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.april') => array(
+				//Common::uuid('user.id.ada') => PermissionType::DENY,
+				Common::uuid('user.id.betty') => PermissionType::OWNER,
+				Common::uuid('user.id.carol') => PermissionType::UPDATE,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				Common::uuid('user.id.edith') => PermissionType::READ,
 			),
-			'kay' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.bower') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				//Common::uuid('user.id.betty') => PermissionType::DENY,
+				Common::uuid('user.id.carol') => PermissionType::OWNER,
+				Common::uuid('user.id.dame') => PermissionType::UPDATE,
+				Common::uuid('user.id.edith') => PermissionType::READ,
 			),
-			'edi' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.centos') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				//Common::uuid('user.id.carol') => PermissionType::DENY,
+				Common::uuid('user.id.dame') => PermissionType::OWNER,
+				Common::uuid('user.id.edith') => PermissionType::UPDATE,
 			),
-			'roo' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.canjs') => array(
+				Common::uuid('user.id.ada') => PermissionType::UPDATE,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				//Common::uuid('user.id.dame') => PermissionType::DENY,
+				Common::uuid('user.id.edith') => PermissionType::OWNER,
 			),
-			'dam' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.cakephp') => array(
+				Common::uuid('user.id.ada') => PermissionType::OWNER,
+				Common::uuid('user.id.betty') => PermissionType::UPDATE,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				//Common::uuid('user.id.edith') => PermissionType::DENY,
 			),
-			'ada' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.chai') => array(
+				//Common::uuid('user.id.ada') => PermissionType::DENY,
+				Common::uuid('user.id.betty') => PermissionType::OWNER,
+				Common::uuid('user.id.carol') => PermissionType::UPDATE,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				Common::uuid('user.id.edith') => PermissionType::READ,
 			),
-			'gra' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.composer') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				//Common::uuid('user.id.betty') => PermissionType::DENY,
+				Common::uuid('user.id.carol') => PermissionType::OWNER,
+				Common::uuid('user.id.dame') => PermissionType::UPDATE,
+				Common::uuid('user.id.edith') => PermissionType::READ,
 			),
-			'mar' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.debian') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				//Common::uuid('user.id.carol') => PermissionType::DENY,
+				Common::uuid('user.id.dame') => PermissionType::OWNER,
+				Common::uuid('user.id.edith') => PermissionType::UPDATE,
 			),
-			'ire' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.docker') => array(
+				Common::uuid('user.id.ada') => PermissionType::UPDATE,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				//Common::uuid('user.id.dame') => PermissionType::DENY,
+				Common::uuid('user.id.edith') => PermissionType::OWNER,
 			),
-			'bet' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.enlightenment') => array(
+				Common::uuid('user.id.ada') => PermissionType::OWNER,
+				Common::uuid('user.id.betty') => PermissionType::UPDATE,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				//Common::uuid('user.id.edith') => PermissionType::DENY,
 			),
-			'car' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.fosdem') => array(
+				//Common::uuid('user.id.ada') => PermissionType::DENY,
+				Common::uuid('user.id.betty') => PermissionType::OWNER,
+				Common::uuid('user.id.carol') => PermissionType::UPDATE,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				Common::uuid('user.id.edith') => PermissionType::READ,
 			),
-			'fra' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.framasoft') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				//Common::uuid('user.id.betty') => PermissionType::DENY,
+				Common::uuid('user.id.carol') => PermissionType::OWNER,
+				Common::uuid('user.id.dame') => PermissionType::UPDATE,
+				Common::uuid('user.id.edith') => PermissionType::READ,
 			),
-			'jea' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.fsfe') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				//Common::uuid('user.id.carol') => PermissionType::DENY,
+				Common::uuid('user.id.dame') => PermissionType::OWNER,
+				Common::uuid('user.id.edith') => PermissionType::UPDATE,
 			),
-			'usr' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.ftp') => array(
+				Common::uuid('user.id.ada') => PermissionType::UPDATE,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				//Common::uuid('user.id.dame') => PermissionType::DENY,
+				Common::uuid('user.id.edith') => PermissionType::OWNER,
 			),
-			'hed' => array(
-				'facebook account' => PermissionType::READ,
-				'salesforce account' => PermissionType::READ,
-				'tetris license' => PermissionType::UPDATE,
-				'shared resource' => PermissionType::ADMIN,
+			Common::uuid('resource.id.grogle') => array(
+				Common::uuid('user.id.ada') => PermissionType::OWNER,
+				Common::uuid('user.id.betty') => PermissionType::UPDATE,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				//Common::uuid('user.id.edith') => PermissionType::DENY,
 			),
+			Common::uuid('resource.id.grunt') => array(
+				//Common::uuid('user.id.ada') => PermissionType::DENY,
+				Common::uuid('user.id.betty') => PermissionType::OWNER,
+				Common::uuid('user.id.carol') => PermissionType::UPDATE,
+				Common::uuid('user.id.dame') => PermissionType::READ,
+				Common::uuid('user.id.edith') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.gnupg') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				//Common::uuid('user.id.betty') => PermissionType::DENY,
+				Common::uuid('user.id.carol') => PermissionType::OWNER,
+				Common::uuid('user.id.dame') => PermissionType::UPDATE,
+				Common::uuid('user.id.edith') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.git') => array(
+				Common::uuid('user.id.ada') => PermissionType::READ,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				//Common::uuid('user.id.carol') => PermissionType::DENY,
+				Common::uuid('user.id.dame') => PermissionType::OWNER,
+				Common::uuid('user.id.edith') => PermissionType::UPDATE,
+			),
+			Common::uuid('resource.id.inkscape') => array(
+				Common::uuid('user.id.ada') => PermissionType::UPDATE,
+				Common::uuid('user.id.betty') => PermissionType::READ,
+				Common::uuid('user.id.carol') => PermissionType::READ,
+				//Common::uuid('user.id.dame') => PermissionType::DENY,
+				Common::uuid('user.id.edith') => PermissionType::OWNER,
+			)
 		);
 
 		$ps = array();
 
-		// Give access to 4 passwords to each user.
-		foreach($permissions as $userAlias => $perms) {
-			foreach($perms as $resourceName => $permissionType) {
-				$resource = $this->Resource->findByName($resourceName);
+		foreach($permissions as $resourceID => $users) {
+				foreach($users as $userID => $permission) {
 				$ps[] = array('Permission' => array(
-					'id' => Common::uuid(),
+					'id' => Common::uuid('user.id.permissions.'.$resourceID.'.'.$userID),
 					'aco' => 'Resource',
-					'aco_foreign_key' => $resource['Resource']['id'],
+					'aco_foreign_key' => $resourceID,
 					'aro' => 'User',
-					'aro_foreign_key' => $users[$userAlias],
-					'type' => $permissionType
+					'aro_foreign_key' => $userID,
+					'type' => $permission
 				));
 			}
 		}

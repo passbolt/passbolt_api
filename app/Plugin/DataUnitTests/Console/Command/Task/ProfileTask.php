@@ -17,13 +17,11 @@ class ProfileTask extends ModelTask {
 	public $model = 'Profile';
 
 	protected function getData() {
-		$UserTask = $this->Tasks->load('DataUnitTests.User');
-		$users = $UserTask::getAlias();
 
 		// Anonymous user / default for non logged-in user
 		$c[] = array('Profile' => array(
-			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'user_id' => $users['ano'],
+			'id' => Common::uuid('profile.id.anonymous'),
+			'user_id' => Common::uuid('user.id.anonymous'),
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-10',
 			'title' => 'Mr',
@@ -33,8 +31,8 @@ class ProfileTask extends ModelTask {
 
 		// One user per role
 		$c[] = array('Profile' => array(
-			'id' => '533d3505-a170-4f57-b14b-1768c0a895dc',
-			'user_id' => $users['gue'],
+			'id' => Common::uuid('profile.id.guest'),
+			'user_id' => Common::uuid('user.id.guest'),
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-11',
 			'title' => 'Mr',
@@ -42,8 +40,8 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'User'
 		));
 		$c[] = array('Profile' => array(
-			'id' => '528c2dab-cccm-416d-802b-71668cebc04d',
-			'user_id' => $users['usr'],
+			'id' => Common::uuid('profile.id.user'),
+			'user_id' => Common::uuid('user.id.user'),
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-12',
 			'title' => 'Mr',
@@ -51,8 +49,8 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'User'
 		));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-ccco-416d-802b-71668cebc04d',
-            'user_id' => $users['adm'],
+            'id' => Common::uuid('profile.id.admin'),
+            'user_id' => Common::uuid('user.id.admin'),
             'gender' => 'm',
             'date_of_birth' => '1980-12-13',
             'title' => 'Mr',
@@ -60,8 +58,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'User'
         ));
 		$c[] = array('Profile' => array(
-			'id' => '528c2dab-ccca-416d-802b-71668cebc04d',
-			'user_id' => $users['roo'],
+			'id' => Common::uuid('profile.id.root'),
+			'user_id' => Common::uuid('user.id.root'),
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-14',
 			'title' => 'Mr',
@@ -71,8 +69,8 @@ class ProfileTask extends ModelTask {
 
 		// famous scientists
 		$c[] = array('Profile' => array(
-			'id' => '528c2dab-ccci-416d-802b-71668cebc04d',
-			'user_id' => $users['ada'],
+			'id' => Common::uuid('profile.id.ada'),
+			'user_id' => Common::uuid('user.id.ada'),
 			'gender' => 'f',
 			'date_of_birth' => '1815-12-10',
 			'title' => 'Ms',
@@ -80,8 +78,8 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'Lovelace'
 		));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-cccj-416d-802b-71668cebc04d',
-            'user_id' => $users['bet'],
+            'id' => Common::uuid('profile.id.betty'),
+            'user_id' => Common::uuid('user.id.betty'),
             'gender' => 'f',
             'date_of_birth' => '1917-03-07',
             'title' => 'Ms',
@@ -89,8 +87,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Holberton'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-ccck-416d-802b-71668cebc04d',
-            'user_id' => $users['car'],
+            'id' => Common::uuid('profile.id.carol'),
+            'user_id' => Common::uuid('user.id.carol'),
             'gender' => 'f',
             'date_of_birth' => '1955-01-01',
             'title' => 'Ms',
@@ -98,8 +96,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Shaw'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-cccb-416d-802b-71668cebc04d',
-            'user_id' => $users['dam'],
+            'id' => Common::uuid('profile.id.dame'),
+            'user_id' => Common::uuid('user.id.dame'),
             'gender' => 'f',
             'date_of_birth' => '1933-09-16',
             'title' => 'Ms',
@@ -107,8 +105,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Shirley'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-ccce-416d-802b-71668cebc04d',
-            'user_id' => $users['edi'],
+            'id' => Common::uuid('profile.id.edith'),
+            'user_id' => Common::uuid('user.id.edith'),
             'gender' => 'f',
             'date_of_birth' => '1983-10-29',
             'title' => 'Ms',
@@ -116,8 +114,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Clarke'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-cccp-416d-802b-71668cebc04d',
-            'user_id' => $users['fra'],
+            'id' => Common::uuid('profile.id.frances'),
+            'user_id' => Common::uuid('user.id.frances'),
             'gender' => 'f',
             'date_of_birth' => '1932-08-04',
             'title' => 'Ms',
@@ -125,8 +123,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Allen'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-cccf-416d-802b-71668cebc04d',
-            'user_id' => $users['gra'],
+            'id' => Common::uuid('profile.id.grace'),
+            'user_id' => Common::uuid('user.id.grace'),
             'gender' => 'f',
             'date_of_birth' => '1906-12-09',
             'title' => 'Ms',
@@ -134,8 +132,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Hopper'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-facp-416d-802b-71668cebc04d',
-            'user_id' => $users['hed'],
+            'id' => Common::uuid('profile.id.hedy'),
+            'user_id' => Common::uuid('user.id.hedy'),
             'gender' => 'f',
             'date_of_birth' => '1980-12-14',
             'title' => 'Ms',
@@ -143,8 +141,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Lamarr'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-cccg-416d-802b-71668cebc04d',
-            'user_id' => $users['ire'],
+            'id' => Common::uuid('profile.id.irene'),
+            'user_id' => Common::uuid('user.id.irene'),
             'gender' => 'f',
             'date_of_birth' => '1980-12-14',
             'title' => 'Ms',
@@ -152,8 +150,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Greif'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-cccl-416d-802b-71668cebc04d',
-            'user_id' => $users['jea'],
+            'id' => Common::uuid('profile.id.jean'),
+            'user_id' => Common::uuid('user.id.jean'),
             'gender' => 'f',
             'date_of_birth' => '1924-12-27',
             'title' => 'Ms',
@@ -161,8 +159,8 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Bartik'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-c358-416d-802b-71668cebc04d',
-            'user_id' => $users['kay'],
+            'id' => Common::uuid('profile.id.kathleen'),
+            'user_id' => Common::uuid('user.id.kathleen'),
             'gender' => 'f',
             'date_of_birth' => '1921-02-12',
             'title' => 'Ms',
@@ -170,17 +168,17 @@ class ProfileTask extends ModelTask {
             'last_name' => 'Antonelli'
         ));
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-cccc-416d-802b-71668cebc04d',
-            'user_id' => $users['lyn'],
+            'id' => Common::uuid('profile.id.lynne'),
+            'user_id' => Common::uuid('user.id.lynne'),
             'gender' => 'f',
             'date_of_birth' => '1961-06-30',
             'title' => 'Ms',
-            'first_name' => 'Lynn',
+            'first_name' => 'Lynne',
             'last_name' => 'Jolitz'
         ));
 		$c[] = array('Profile' => array(
-			'id' => '528c2dab-ccch-416d-802b-71668cebc04d',
-			'user_id' => $users['mar'],
+			'id' => Common::uuid('profile.id.marlyn'),
+			'user_id' => Common::uuid('user.id.marlyn'),
 			'gender' => 'f',
 			'date_of_birth' => '1922-01-01',
 			'title' => 'Ms',

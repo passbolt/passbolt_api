@@ -70,8 +70,8 @@ class DataShell extends AppShell {
 					// resource and permission are different though
 					'DataSeleniumTests.Resource',
 					'DataSeleniumTests.Permission',
-					'DataUnitTests.Secret',
-					'DataUnitTests.Comment'
+					'DataSeleniumTests.Secret',
+					//'DataUnitTests.Comment'
 				);
 			case 'unittests':
 				return array(
@@ -84,7 +84,6 @@ class DataShell extends AppShell {
 					'DataUnitTests.Profile',
 					'DataUnitTests.Avatar',
 					'DataUnitTests.Resource',
-					'DataUnitTests.Secret',
 					'DataUnitTests.Comment',
 					// testing only
 					'DataUnitTests.CategoryType',
@@ -94,7 +93,8 @@ class DataShell extends AppShell {
 					'DataUnitTests.GroupUser',
 					'DataUnitTests.Tag',
 					'DataUnitTests.ItemTag',
-					'DataUnitTests.Permission'
+					'DataUnitTests.Permission',
+					'DataUnitTests.Secret',
 				);
 		}
 	}

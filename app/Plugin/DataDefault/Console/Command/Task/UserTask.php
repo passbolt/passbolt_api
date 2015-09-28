@@ -17,38 +17,33 @@ class UserTask extends ModelTask {
 	public $model = 'User';
 
 	public static function getAlias() {
-		$User = ClassRegistry::init('User');
+
 		$aliases = array (
-			// anonymous user
-			'ano' => $User->findByUsername('anonymous@passbolt.com'),
-
-			// admin
-			'adm' => $User->findByUsername('admin@passbolt.com'),
-
+			'adm' => Common::uuid('user.id.admin'),
+			'ano' => Common::uuid('user.id.anonymous'),
 		);
-		foreach ($aliases as $name=>$obj){
-			$aliases[$name] = $obj['User']['id'];
-		}
 		return $aliases;
 	}
 	
 	protected function getData() {
-		// anonymous user
+		// admin
 		$us[] = array('User' => array(
-			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'username' => 'anonymous@passbolt.com',
-			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'id' => Common::uuid('user.id.admin'),
+			'username' => 'admin@passbolt.com',
+			'role_id' => Common::uuid('role.id.admin'),
 			'password' => 'password',
-			'active' => 1
+			'active' => 1,
+			'created_by' => Common::uuid('user.id.admin')
 		));
 
-		// one user per default roles
+		// anonymous user
 		$us[] = array('User' => array(
-			'id' => '533d37a0-bc80-4945-9b11-1663c0a895dc',
-			'username' => 'admin@passbolt.com',
-			'role_id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
+			'id' => Common::uuid('user.id.anonymous'),
+			'username' => 'anonymous@passbolt.com',
+			'role_id' => Common::uuid('role.id.anonymous'),
 			'password' => 'password',
-			'active' => 1
+			'active' => 1,
+			'created_by' => Common::uuid('user.id.admin')
 		));
 
 		return $us;

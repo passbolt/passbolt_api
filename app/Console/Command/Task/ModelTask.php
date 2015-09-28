@@ -14,7 +14,6 @@ class ModelTask extends AppShell {
 		$User = ClassRegistry::init('User');
 		$user = $User->findByUsername('root@passbolt.com');
 		$User->setActive($user);
-
 		$Model = ClassRegistry::init($this->model);
 
 		$data = $this->getData();
@@ -26,7 +25,8 @@ class ModelTask extends AppShell {
 			}
 			$instance = $Model->save();
 			if (!$instance) {
-				$this->out('<error>Unable to insert ' . $item[$this->model]['id'] . '</error>');
+				$this->out('<error>Unable to insert ' . pr($item[$this->model]) . '</error>');
+				die;
 			}
 		}
 	}

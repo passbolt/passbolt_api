@@ -157,7 +157,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Normal test view.
 	 */
 	public function testView() {
-		$gpgkey = $this->Gpgkey->findByUserId('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce');
+		$gpgkey = $this->Gpgkey->findByUserId(Common::uuid('user.id.ada'));
 		$result = json_decode(
 			$this->testAction("/gpgkeys/{$gpgkey['Gpgkey']['user_id']}.json",
 				array(

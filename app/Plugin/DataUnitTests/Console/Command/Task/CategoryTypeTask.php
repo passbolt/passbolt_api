@@ -23,8 +23,8 @@ class CategoryTypeTask extends ModelTask {
 			'description' => 'default category type description',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => Common::uuid('user.id.anonymous'),
+			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$ct[] = array('CategoryType' => array(
 			'id' => '0234f3a4-c5cd-11e1-a0c5-081127796c4c',
@@ -32,8 +32,8 @@ class CategoryTypeTask extends ModelTask {
 			'description' => 'database category type description',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => Common::uuid('user.id.anonymous'),
+			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$ct[] = array('CategoryType' => array(
 			'id' => '0234f3a4-c5cd-11e1-a0c5-080027456c4c',
@@ -41,8 +41,8 @@ class CategoryTypeTask extends ModelTask {
 			'description' => 'ssh category type description',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => Common::uuid('user.id.anonymous'),
+			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		return $ct;
 	}

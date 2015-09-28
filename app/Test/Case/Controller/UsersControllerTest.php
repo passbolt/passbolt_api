@@ -16,7 +16,6 @@ App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
 App::uses('CakeSessionFixture', 'Test/Fixture');
 
-
 class UsersControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
@@ -139,7 +138,7 @@ class UsersControllerTest extends ControllerTestCase {
 		// test with anonymous user
 		$result = json_decode(
 			$this->testAction(
-				'/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',
+				'/users/'. Common::uuid('user.id.user') . '.json',
 				array('return' => 'contents', 'method' => 'GET'),
 				true
 			)
@@ -183,7 +182,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$result = json_decode(
 			$this->testAction(
-				'/users/50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce.json',
+				'/users/'. Common::uuid('user.id.user') . '.json',
 				array('return' => 'contents', 'method' => 'GET'),
 				true
 			)
@@ -219,7 +218,7 @@ class UsersControllerTest extends ControllerTestCase {
 						'User' => array(
 							'username' => 'testadd1@passbolt.com',
 							'password' => 'test1',
-							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
 					),
@@ -242,7 +241,7 @@ class UsersControllerTest extends ControllerTestCase {
 						'User' => array(
 							'username' => 'testadd1@passbolt.com',
 							'password' => 'abcedfghijk',
-							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
 						'Profile' => array(
@@ -347,7 +346,7 @@ class UsersControllerTest extends ControllerTestCase {
 						'User' => array(
 							'username' => 'testprofile@passbolt.com',
 							'password' => 'abcedfghijk',
-							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
 					),
@@ -378,7 +377,7 @@ class UsersControllerTest extends ControllerTestCase {
 							'id'       => $user['User']['id'],
 							'username' => 'user-modified@passbolt.com',
 							'password' => 'abcedfghijk',
-							'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
 					),
@@ -825,7 +824,7 @@ class UsersControllerTest extends ControllerTestCase {
 				'data'   => array(
 					'User' => array(
 						'username' => $username,
-						'role_id'  => '0208f57a-c5cd-11e1-a0c5-080027796c4c'
+						'role_id'  => Common::uuid('role.id.user')
 					),
 					'Profile' => array(
 						'first_name' => 'Jean',

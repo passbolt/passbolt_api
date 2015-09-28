@@ -384,7 +384,7 @@ class UserTest extends CakeTestCase {
 		$this->User->set(
 			array(
 				'username' => 'testSave@passbolt.com',
-				'role_id'  => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+				'role_id'  => Common::uuid('role.id.anonymous'),
 				'password' => 'abcdefgh',
 				'active'   => 1
 			)

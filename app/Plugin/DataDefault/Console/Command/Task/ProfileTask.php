@@ -17,13 +17,10 @@ class ProfileTask extends ModelTask {
 	public $model = 'Profile';
 
 	protected function getData() {
-		$UserTask = $this->Tasks->load('DataDefault.User');
-		$users = $UserTask::getAlias();
-
 		// Anonymous user / default for non logged-in user
 		$c[] = array('Profile' => array(
-			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'user_id' => $users['ano'],
+			'id' => Common::uuid('profile.id.anonymous'),
+			'user_id' => Common::uuid('user.id.anonymous'),
 			'gender' => 'm',
 			'date_of_birth' => '1980-12-10',
 			'title' => 'Mr',
@@ -33,8 +30,8 @@ class ProfileTask extends ModelTask {
 
         // Admin
         $c[] = array('Profile' => array(
-            'id' => '528c2dab-ccco-416d-802b-71668cebc04d',
-            'user_id' => $users['adm'],
+            'id' => Common::uuid('profile.id.admin'),
+            'user_id' => Common::uuid('user.id.admin'),
             'gender' => 'm',
             'date_of_birth' => '1980-12-13',
             'title' => 'Mr',

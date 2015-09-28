@@ -28,7 +28,7 @@ class ItemTagTask extends ModelTask {
 			'foreign_model' => 'Resource',
 			'foreign_id' => $rs['Resource']['id'],
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$tag = $this->Tag->findByName('facebook');
 		$rs = $this->Resource->findByName('facebook account');
@@ -38,7 +38,7 @@ class ItemTagTask extends ModelTask {
 			'foreign_model' => 'Resource',
 			'foreign_id' => $rs['Resource']['id'],
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$tag = $this->Tag->findByName('social');
 		$rs = $this->Resource->findByName('facebook account');
@@ -48,7 +48,7 @@ class ItemTagTask extends ModelTask {
 			'foreign_model' => 'Resource',
 			'foreign_id' => $rs['Resource']['id'],
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$tag = $this->Tag->findByName('drupal');
 		$rs = $this->Resource->findByName('dp1-pwd1');
@@ -58,7 +58,7 @@ class ItemTagTask extends ModelTask {
 			'foreign_model' => 'Resource',
 			'foreign_id' => $rs['Resource']['id'],
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		return $rts;
 	}

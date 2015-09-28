@@ -79,7 +79,7 @@ class ShareControllerTest extends ControllerTestCase {
 	private function _updateCall($resourceName = '', $data = array(), $aco = '') {
 		$resourceId = '';
 		if ($resourceName == 'fakeidrs') {
-			$resourceId = '0208f3a4-c5cd-11e1-a0c5-080027796c4c'; // Non existing id.
+			$resourceId = Common::uuid('role.id.anonymous'); // Non existing id.
 		}
 		elseif ($resourceName == 'wrongidrs') {
 			$resourceId = '0208f3a4-c5cd-11e1-a0c5-080Y27796c4c'; // Non existing id.
@@ -175,7 +175,7 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateDeleteNonExistingResource() {
-		$fakeResourceId = '0208f3a4-c5cd-11e1-a0c5-080027796c4c';
+		$fakeResourceId = Common::uuid('role.id.anonymous');
 		$data = array(
 			'Permissions' => array(
 				array(
@@ -232,7 +232,7 @@ class ShareControllerTest extends ControllerTestCase {
 				array(
 					'Permission' => array (
 						'aro_foreign_key' => $user['User']['id'],
-						'type' => PermissionType::ADMIN,
+						'type' => PermissionType::OWNER,
 					)
 				)
 			),
@@ -300,13 +300,13 @@ hcciUFw5
 				array(
 					'Permission' => array (
 						'aro_foreign_key' => $user['User']['id'],
-						'type' => PermissionType::ADMIN,
+						'type' => PermissionType::OWNER,
 					),
 				),
 				array(
 					'Permission' => array (
 						'aro_foreign_key' => $ce['User']['id'],
-						'type' => PermissionType::ADMIN,
+						'type' => PermissionType::OWNER,
 					),
 				)
 			),
@@ -364,7 +364,7 @@ hcciUFw5
 				array(
 					'Permission' => array (
 						'aro_foreign_key' => $user['User']['id'],
-						'type' => PermissionType::ADMIN,
+						'type' => PermissionType::OWNER,
 					),
 				),
 			),
@@ -402,7 +402,7 @@ hcciUFw5
 				'conditions' => array(
 					'aco_foreign_key' => $fbRs['Resource']['id'],
 					'aro_foreign_key' => $user['User']['id'],
-					'type' => PermissionType::ADMIN,
+					'type' => PermissionType::OWNER,
 				)
 			));
 
@@ -451,7 +451,7 @@ hcciUFw5
 				array(
 					'Permission' => array (
 						'aro_foreign_key' => $user['User']['id'],
-						'type' => PermissionType::ADMIN,
+						'type' => PermissionType::OWNER,
 					),
 				),
 			),

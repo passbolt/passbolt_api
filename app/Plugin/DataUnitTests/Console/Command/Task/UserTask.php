@@ -17,168 +17,164 @@ class UserTask extends ModelTask {
 	public $model = 'User';
 
 	public static function getAlias() {
-		$User = ClassRegistry::init('User');
 		$aliases = array (
 			// anonymous user
-			'ano' => $User->findByUsername('anonymous@passbolt.com'),
+			'ano' => Common::uuid('user.id.anonymous'),
 
 			// one user per default roles
-			'gue' => $User->findByUsername('guest@passbolt.com'),
-			'usr' => $User->findByUsername('user@passbolt.com'),
-			'adm' => $User->findByUsername('admin@passbolt.com'),
-			'roo' => $User->findByUsername('root@passbolt.com'),
+			'gue' => Common::uuid('user.id.guest'),
+			'usr' => Common::uuid('user.id.user'),
+			'adm' => Common::uuid('user.id.admin'),
+			'roo' => Common::uuid('user.id.root'),
 
 			// famous scientists
-			'ada' => $User->findByUsername('ada@passbolt.com'),
-            'bet' => $User->findByUsername('betty@passbolt.com'),
-            'car' => $User->findByUsername('carol@passbolt.com'),
-            'dam' => $User->findByUsername('dame@passbolt.com'),
-            'edi' => $User->findByUsername('edith@passbolt.com'),
-            'fra' => $User->findByUsername('frances@passbolt.com'),
-            'gra' => $User->findByUsername('grace@passbolt.com'),
-            'hed' => $User->findByUsername('hedy@passbolt.com'),
-            'ire' => $User->findByUsername('irene@passbolt.com'),
-            'jea' => $User->findByUsername('jean@passbolt.com'),
-            'kay' => $User->findByUsername('kathleen@passbolt.com'),
-            'lyn' => $User->findByUsername('lynne@passbolt.com'),
-            'mar' => $User->findByUsername('marlyn@passbolt.com'),
+			'ada' => Common::uuid('user.id.ada'),
+            'bet' => Common::uuid('user.id.betty'),
+            'car' => Common::uuid('user.id.carol'),
+            'dam' => Common::uuid('user.id.dame'),
+            'edi' => Common::uuid('user.id.edith'),
+            'fra' => Common::uuid('user.id.frances'),
+            'gra' => Common::uuid('user.id.grace'),
+            'hed' => Common::uuid('user.id.hedy'),
+            'ire' => Common::uuid('user.id.irene'),
+            'jea' => Common::uuid('user.id.jean'),
+            'kay' => Common::uuid('user.id.kathleen'),
+            'lyn' => Common::uuid('user.id.lynne'),
+            'mar' => Common::uuid('user.id.marlyn'),
 
 		);
-		foreach ($aliases as $name=>$obj){
-			$aliases[$name] = $obj['User']['id'];
-		}
 		return $aliases;
 	}
 	
 	protected function getData() {
 		// anonymous user
 		$us[] = array('User' => array(
-			'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
+			'id' => Common::uuid('user.id.anonymous'),
 			'username' => 'anonymous@passbolt.com',
-			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => Common::uuid('role.id.anonymous'),
 			'password' => 'password',
 			'active' => 1
 		));
 
 		// one user per default roles
 		$us[] = array('User' => array(
-			'id' => '533d3564-03e8-4963-94a7-178cc0a895dc',
+			'id' => Common::uuid('user.id.guest'),
 			'username' => 'guest@passbolt.com',
-			'role_id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => Common::uuid('role.id.anonymous'),
 			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce',
+			'id' => Common::uuid('user.id.user'),
 			'username' => 'user@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => Common::uuid('role.id.user'),
 			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => '533d37a0-bc80-4945-9b11-1663c0a895dc',
+			'id' => Common::uuid('user.id.admin'),
 			'username' => 'admin@passbolt.com',
-			'role_id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => Common::uuid('role.id.admin'),
 			'password' => 'password',
 			'active' => 1
 		));
 		$us[] = array('User' => array(
-			'id' => 'dada6042-c5cd-11e1-a0c5-080027796c51',
+			'id' => Common::uuid('user.id.root'),
 			'username' => 'root@passbolt.com',
-			'role_id' => '142c1340-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => Common::uuid('role.id.root'),
 			'password' => 'password',
 			'active' => 1
 		));
 
 		// famous scientists
 		$us[] = array('User' => array(
-			'id' => '50cdea9c-a34c-406f-a9f1-2f4fd7a10fce',
+			'id' => Common::uuid('user.id.ada'),
 			'username' => 'ada@passbolt.com',
-			'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+			'role_id' => Common::uuid('role.id.user'),
 			'password' => 'password',
 			'active' => 1
 		));
         $us[] = array('User' => array(
-            'id' => '50cdea9c-aa88-46cb-a09b-2f4fd7a10fce',
+            'id' => Common::uuid('user.id.betty'),
             'username' => 'betty@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce',
+            'id' => Common::uuid('user.id.carol'),
             'username' => 'carol@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => 'dada6042-c5cd-11e1-a0c5-080027796c4c',
+            'id' => Common::uuid('user.id.dame'),
             'username' => 'dame@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e',
+            'id' => Common::uuid('user.id.edith'),
             'username' => 'edith@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '533d346d-d378-4acc-affd-1663c0a895dc',
+            'id' => Common::uuid('user.id.frances'),
             'username' => 'frances@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '50cdea9c-f214-4549-9807-2f4fd7a10fce',
+            'id' => Common::uuid('user.id.grace'),
             'username' => 'grace@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '533d37a0-aa11-4945-9b11-1663a0a895dc',
+            'id' => Common::uuid('user.id.hedy'),
             'username' => 'hedy@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
+            'id' => Common::uuid('user.id.irene'),
             'username' => 'irene@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '50cdea9c-4380-4eb6-b4cc-2f4fd7a10fce',
+            'id' => Common::uuid('user.id.jean'),
             'username' => 'jean@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => 'eeee6042-c5cd-11e1-a0c5-080027796c51',
+            'id' => Common::uuid('user.id.kathleen'),
             'username' => 'kathleen@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '533d32c0-1f30-438c-8f26-1768c0a895dc',
+            'id' => Common::uuid('user.id.lynne'),
             'username' => 'lynne@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));
         $us[] = array('User' => array(
-            'id' => '50cdea9c-fa10-47af-aaa8-2f4fd7a10fce',
+            'id' => Common::uuid('user.id.marlyn'),
             'username' => 'marlyn@passbolt.com',
-            'role_id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
+            'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
             'active' => 1
         ));

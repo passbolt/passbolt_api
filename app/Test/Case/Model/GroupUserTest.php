@@ -51,7 +51,7 @@ class GroupUserTest extends CakeTestCase {
 			$cr = array(
 				'GroupUser' => array(
 					'group_id' => $testcase,
-					'user_id' => '50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce' // user_id is passed here because when we don't pass it test fails for obscure reasons
+					'user_id' => Common::uuid('user.id.carol') // user_id is passed here because when we don't pass it test fails for obscure reasons
 				)
 			);
 			$this->GroupUser->create();
@@ -79,7 +79,7 @@ class GroupUserTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'50cdea9c-7e80-4eb6-b4cc-2f4fd7a10fce' => true
+			Common::uuid('user.id.carol') => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$cr = array(

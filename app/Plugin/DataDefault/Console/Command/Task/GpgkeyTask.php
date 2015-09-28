@@ -16,22 +16,6 @@ class GpgkeyTask extends ModelTask {
 
 	public $model = 'Gpgkey';
 
-	public function execute() {
-		$Model = ClassRegistry::init($this->model);
-		$data = $this->getData();
-		foreach ($data as $item) {
-			$Model->create();
-			$Model->set($item);
-			if (!$Model->validates()) {
-				var_dump($Model->validationErrors);
-			}
-			$instance = $Model->save();
-			if (!$instance) {
-				$this->out('<error>Unable to insert ' . $item[$this->model]['name'] . '</error>');
-			}
-		}
-	}
-
 	/**
 	 * Get path of the key for the given user.
 	 *
@@ -70,6 +54,7 @@ class GpgkeyTask extends ModelTask {
 	public function getData() {
 		$User = Common::getModel('User');
 		$us = $User->find('all');
+
 		$Model = ClassRegistry::init($this->model);
 
 		$k = array();
