@@ -1,4 +1,5 @@
 import 'mad/component/component';
+import 'app/util/common'
 // the main workspaces of the application
 import 'app/component/settings_workspace';
 import 'app/component/password_workspace';
