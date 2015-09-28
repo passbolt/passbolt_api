@@ -26,7 +26,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		'app.category',
 		'app.resource',
 		'app.category_type',
-		'app.categoriesResource',
+		'app.categories_resource',
 		'app.user',
 		'app.profile',
 		'app.file_storage',
@@ -41,11 +41,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 	);
 
 	public function setUp() {
-		$this->Category = new Category();
-		$this->User = new User();
-		$this->Category->useDbConfig = 'test';
-		$this->User->useDbConfig = 'test';
 		parent::setUp();
+		$this->User = ClassRegistry::init('User');
+		$this->Category = ClassRegistry::init('Category');
 
 		// log the user as a manager to be able to access all categories
         $user = $this->User->findByUsername('dame@passbolt.com');
@@ -129,6 +127,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testView() {
+		//$this->Category->query('select * from ')
+
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$id = $root['Category']['id'];
 
@@ -202,8 +202,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testChildren() {
-		$category = new Category();
-		$category->useDbConfig = 'test';
+		$category = Common::getModel('Category');
 
 		$root = $category->findByName('Bolt Softwares Pvt. Ltd.');
 		$id = $root['Category']['id'];
@@ -276,7 +275,11 @@ class CategoriesControllerTest extends ControllerTestCase {
 		)), true);
 	}
 
-	public function testAdd() {
+	/**
+	 * Test adding a category
+	 */
+	public function testAddComplete() {
+
 		// check the response when a category is added (without parent_id)
 		$result = json_decode($this->testAction('/categories.json', array(
 			'data' => array(
@@ -285,6 +288,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
+
 
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		$this->assertEquals('Aramboooool', $result['body']['Category']['name'], "The test should return Aramboooool but is returning {$result['body']['Category']['name']}");
@@ -297,7 +301,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 				'Category' => array(
 					'name' => 'category-test',
 					'parent_id' => $parentId,
-					'position' => 1
+					'position' => '1'
 				)
 			),
 			'method' => 'post',
@@ -314,12 +318,13 @@ class CategoriesControllerTest extends ControllerTestCase {
 				'Category' => array(
 					'name' => 'category-test2',
 					'parent_id' => $parentId,
-					'position' => 2
+					'position' => '2'
 				)
 			),
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
+
 		$catTest2 = $this->Category->findById($result['body']['Category']['id']);
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		$this->assertEquals($catTest['Category']['lft'] + 2, $catTest2['Category']['lft']);
@@ -330,7 +335,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 				'Category' => array(
 					'name' => 'Salvador Do Mundo',
 					'parent_id' => $parentId,
-					'position' => 50
+					'position' => '50'
 				)
 			),
 			'method' => 'post',

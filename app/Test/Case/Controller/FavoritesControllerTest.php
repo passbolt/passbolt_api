@@ -44,12 +44,9 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->User = new User();
-		$this->User->useDbConfig = 'test';
-		$this->Favorite = new Favorite();
-		$this->Favorite->useDbConfig = 'test';
-		$this->Resource = new Resource();
-		$this->Resource->useDbConfig = 'test';
+		$this->User = Common::getModel('User');
+		$this->Favorite = Common::getModel('Favorite');
+		$this->Resource = Common::getModel('Resource');
 		
 		// log the user as a manager to be able to access all categories
 		$user = $this->User->findByUsername('dame@passbolt.com');

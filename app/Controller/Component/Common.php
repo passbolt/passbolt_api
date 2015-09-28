@@ -31,14 +31,16 @@ class Common extends Object {
  * @param string $seed, used to create deterministic UUID
  * @return string UUID
  */
-	public static function uuid($seed=null) {
+	public static function uuid($seed = null) {
+		$pattern = '/^(.{8})(.{4})(.{1})(.{3})(.{1})(.{3})(.{12})$/';
 		if (isset($seed)) {
-			$pattern = '/^(.{8})(.{4})(.{4})(.{4})(.{12})$/';
-			$replacement = '${1}-${2}-${3}-${4}-${5}';
-			$string = md5($seed);
-			return preg_replace($pattern,$replacement,$string);
+			$string = substr(sha1($seed),0,32);
+			$replacement = '${1}-${2}-3${4}-a${6}-${7}'; // v5
+		} else {
+			$string = bin2hex(openssl_random_pseudo_bytes(16));
+			$replacement = '${1}-${2}-4${4}-a${6}-${7}'; // v4
 		}
-		return String::uuid();
+		return preg_replace($pattern,$replacement,$string);
 	}
 
 /**

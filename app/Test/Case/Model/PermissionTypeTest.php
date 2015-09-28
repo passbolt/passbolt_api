@@ -27,6 +27,6 @@ class PermissionTypeTest extends CakeTestCase {
 		$this->assertEquals(true, PermissionType::DENY < PermissionType::READ, 'PermissionType::DENY should be inferior to PermissionType::READ');
 		$this->assertEquals(true, PermissionType::READ < PermissionType::CREATE, 'PermissionType::READ should be inferior to PermissionType::CREATE');
 		$this->assertEquals(true, PermissionType::CREATE < PermissionType::UPDATE, 'PermissionType::CREATE should be inferior to PermissionType::UPDATE');
-		$this->assertEquals(true, PermissionType::UPDATE < PermissionType::ADMIN, 'PermissionType::UPDATE should be inferior to PermissionType::ADMIN');
+		$this->assertEquals(true, PermissionType::UPDATE < PermissionType::OWNER, 'PermissionType::UPDATE should be inferior to PermissionType::OWNER');
 	}
 }

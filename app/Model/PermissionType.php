@@ -30,7 +30,7 @@ class PermissionType extends AppModel {
 	const READ	= '1';
 	const CREATE = '3';
 	const UPDATE = '7';
-	const ADMIN	= '15';
+	const OWNER	= '15';
 
 /**
  * Check if the given type is a valid permission type
@@ -43,7 +43,7 @@ class PermissionType extends AppModel {
 			case self::READ:
 			case self::CREATE:
 			case self::UPDATE:
-			case self::ADMIN:
+			case self::OWNER:
 				return true;
 			break;
 			default:
@@ -58,7 +58,7 @@ class PermissionType extends AppModel {
 			'READ' => self::READ,
 			'CREATE' => self::CREATE,
 			'UPDATE' => self::UPDATE,
-			'ADMIN' => self::ADMIN,
+			'ADMIN' => self::OWNER,
 		);
 	}
 }

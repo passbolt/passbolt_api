@@ -95,37 +95,39 @@ class GpgkeysControllerTest extends ControllerTestCase {
 					'return' => 'contents',
 					'method' => 'GET',
 					'data' => array(
-						'modified_after' => $date
+						'modified_after' => strval($date)
 					)
 				),
 				true
 			));
+
 		$this->assertEquals(
 			$result->header->status,
 			Message::SUCCESS,
-			'/gpgkeys.json return something'
+			'Gpgkeys Controller should return something when modified after is in the past'
 		);
 
 		// Test filter modified_after with a date in the future.
 		$date = strtotime('2020-12-14 00:00:00');
-		$result = json_decode(
+
+		$result2 = json_decode(
 			$this->testAction(
 				"/gpgkeys.json",
 				array(
 					'return' => 'contents',
 					'method' => 'GET',
 					'data' => array(
-						'modified_after' => $date
+						'modified_after' => strval($date)
 					)
 				),
 				true
 			));
-		$this->assertEquals(
-			$result->header->status,
-			Message::NOTICE,
-			'/gpgkeys.json return something'
-		);
 
+		$this->assertEquals(
+			$result2->header->status,
+			Message::NOTICE,
+			'Gpgkeys Controller should return nothing when modified after filter date is in the future'
+		);
 
 	}
 
@@ -155,7 +157,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Normal test view.
 	 */
 	public function testView() {
-		$gpgkey = $this->Gpgkey->findByUserId('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce');
+		$gpgkey = $this->Gpgkey->findByUserId(Common::uuid('user.id.ada'));
 		$result = json_decode(
 			$this->testAction("/gpgkeys/{$gpgkey['Gpgkey']['user_id']}.json",
 				array(
@@ -171,7 +173,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Test adding a key.
 	 */
 	public function testAdd() {
-		$pubKey = file_get_contents(APP . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc');
+		$pubKey = file_get_contents( Configure::read('GPG.testKeys.path') . 'passbolt_dummy_key.asc');
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($user);
 		$json = json_decode(
@@ -213,7 +215,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Test that adding a key removes the user previous keys.
 	 */
 	public function testAddRemovePreviousKeys() {
-		$pubKey = file_get_contents(APP . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc');
+		$pubKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'passbolt_dummy_key.asc');
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($user);
 
@@ -225,7 +227,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 					array(
 						'data' => array(
 							'Gpgkey' => array(
-								'key' =>$pubKey
+								'key' => $pubKey
 							),
 						),
 						'method' => 'post',
@@ -242,7 +244,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		}
 
 		// Count the number of deleted keys.
-		// Logically, it should be equal to $round - 1.
+		// Logically, it should be equal to $round.
 		$nbDeletedKeys = $this->Gpgkey->find(
 			'count',
 			array (
@@ -255,8 +257,8 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		// Assertion.
 		$this->assertEquals (
 			$nbDeletedKeys,
-			$rounds - 1,
-			"Add : /gpgkeys.json : after add, the number of deleted keys in the db should be " . ($rounds - 1)
+			$rounds,
+			"Add : /gpgkeys.json : after add, the number of deleted keys in the db should be " . ($rounds)
 		);
 	}
 

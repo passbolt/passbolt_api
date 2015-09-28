@@ -9,10 +9,13 @@
  */
 App::uses('Category', 'Model');
 App::uses('User', 'Model');
+App::uses('Resource', 'Model');
+App::uses('Category', 'Model');
+App::uses('PermissionType', 'Model');
 
 class PermissionnableTest extends CakeTestCase {
 
-	public $autoFixtures = true;
+	//public $autoFixtures = true;
 
 	public $fixtures = array(
 		'app.resource',
@@ -22,11 +25,11 @@ class PermissionnableTest extends CakeTestCase {
 		'app.gpgkey',
 		'app.file_storage',
 		'app.group',
-		'app.groupsUser',
-		'app.categoryType',
+		'app.groups_user',
+		'app.category_type',
 		'app.category',
-		'app.categoriesResource',
-		'app.permissionsType',
+		'app.categories_resource',
+		'app.permissions_type',
 		'app.permission',
 		'app.permission_view',
 		'core.cakeSession'
@@ -34,13 +37,14 @@ class PermissionnableTest extends CakeTestCase {
 
 	public function setUp() {
 		parent::setUp();
+		$this->User = ClassRegistry::init('User');
+		$this->Group = ClassRegistry::init('Group');
 		$this->Category = ClassRegistry::init('Category');
 		$this->Resource = ClassRegistry::init('Resource');
-		$this->Group = ClassRegistry::init('Group');
-		$this->User = ClassRegistry::init('User');
 	}
 
 	public function testGetPermission() {
+
 		// log the user as a manager to be able to access all the db.
 		$adminUser = $this->User->findByUsername('dame@passbolt.com');
 		$this->User->setActive($adminUser);
