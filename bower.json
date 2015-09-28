@@ -29,6 +29,7 @@
 		"xregexp": "git@github.com:slevithan/xregexp.git",
 		"underscore": "~1.8.3",
 		"jscrollpane": "git@github.com:vitch/jScrollPane.git",
-		"mousewheel": "git@github.com:jquery/jquery-mousewheel.git"
+		"mousewheel": "git@github.com:jquery/jquery-mousewheel.git",
+		"jsSHA": "~2.0.1"
 	}
 }
