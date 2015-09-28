@@ -194,7 +194,7 @@ class MessageComponent extends Component {
 		// Set the header of the message
 		$response['header'] = array(
 			// UUID is predictable
-			'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
+			'id' => Common::uuid($title),
 			'status' => $type,
 			'title' => $title,
 			'servertime' => time(),
