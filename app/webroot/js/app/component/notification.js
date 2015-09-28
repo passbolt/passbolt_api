@@ -1,6 +1,7 @@
 import 'mad/component/component';
 import 'app/model/notification';
 import 'app/view/component/notification';
+import 'app/util/common';
 import 'app/view/template/component/notification.ejs!';
 
 /**
@@ -29,20 +30,41 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 
 }, /** @prototype */ {
 
+	/**
+	 * Get settings for a given notification.
+	 * @param notification
+	 * @returns {*}
+	 * @private
+	 */
 	_getNotificationSettings: function(notification) {
 		var notifSettings = mad.Config.read('notification.messages.' + notification.title);
-		if (can.getObject('severity', notifSettings) == undefined) {
-			notifSettings.severity = 'notice';
+		if (notifSettings == undefined) {
+			return null;
 		}
+		// Severity is taken from the configuration.
+		// If there is no configuration, then from the message status.
+		// If no status, then it is the default : notice.
+		if (can.getObject('severity', notifSettings) == undefined) {
+			notifSettings.severity = (notification.status != undefined) ? notification.status : 'notice';
+		}
+		// If no group is provided, then it is put in the main.
 		if (can.getObject('group', notifSettings) == undefined) {
 			notifSettings.group = 'main';
 		}
+		// If no message is provided, we return null.
 		if (can.getObject('msg', notifSettings) == undefined) {
-			notifSettings.msg = '--';
+			return null;
 		}
 		return notifSettings;
 	},
 
+	/**
+	 * Build the message string for a given notification, and given settings.
+	 * @param notification
+	 * @param settings
+	 * @returns {*|Object}
+	 * @private
+	 */
 	_buildMessage: function(notification, settings) {
 		var msg = can.getObject('msg', settings);
 		var variables = msg.match(/%([^%]*)%/g);
@@ -58,6 +80,13 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 		return msg;
 	},
 
+	/**
+	 * Populate a notification object from given settings.
+	 * @param notification
+	 * @param settings
+	 * @returns {*}
+	 * @private
+	 */
 	_populateNotification: function(notification, settings) {
 		if (!mad.Config.read('notification.messages.' + notification.title)) {
 			return null;
@@ -67,31 +96,58 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 		notification.status = (notification.status != undefined) ? notification.status : settings.severity;
 		// Set severity.
 		notification.severity = settings.severity;
+		// Generate id.
+		notification.id = passbolt.Common.uuid(notification.title);
 
-		// TODO : set uuid
-		// TODO : check if notification should be displayed according to the severity.
 		return notification;
 	},
 
+	/**
+	 * Check whether a notification should be displayed depending on the configuration given.
+	 * @param notification
+	 * @param settings
+	 * @returns {boolean}
+	 * @private
+	 */
 	_checkShouldBeDisplayed: function(notification, settings) {
+		// Check the settings provided in the configuration file.
 		var displaySeverity = mad.Config.read('notification.displaySeverity');
+		// If settings are not provided, we return false. (should not be displayed).
 		if (displaySeverity == undefined) {
 			return false;
 		}
+		// If the notification severity is included in the severity options in the config, we return true.
 		if (displaySeverity.indexOf(notification.severity) != -1) {
 			return true;
 		}
+
 		return false;
 	},
 
 	/**
-	 * Load a notification
+	 * Load a notification.
+	 * Basically receive a configuration and get the corresponding configuration for the given notification.
+	 * The configuration is provided in the configuration file.
+	 * The strategy is the following :
+	 * 1. We check if a configuration is given for the received notification (conf retrieved with the title).
+	 *   a. If no configuration, we do nothing.
+	 *   b. If there is a configuration, we continue.
+	 * 2. From the configuration given, and the defaults, populate the configuration with the missing information.
+	 *   - message : the final message, formatted, translated, and with variables replaced by their match in data.
+	 *   - status : type of notification
+	 *   - severity : the severity of the notification. With this information we can then configure whether or not to display the notif.
+	 *   - id : is recalculated locally as per the title, always in a previsible way (for css and tests).
+	 * 3. Check whether or not the notification should be displayed on the interface.
+	 *    This is decided through the severity and the severityDisplay settings.
+	 * Once it is confirmed that the message should be displayed, push it on the interface.
 	 * @param {passbolt.model.Notification} notification
 	 */
 	load: function (notification) {
 		// Check if notification should be processed.
-		var title = notification.title;
 		var notifSettings = this._getNotificationSettings(notification);
+		if (notifSettings === null) {
+			return;
+		}
 		var notification = this._populateNotification(notification, notifSettings);
 		var display = this._checkShouldBeDisplayed(notification, notifSettings);
 		if (notification === null) {
@@ -118,15 +174,13 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 	/* ************************************************************** */
 
 	/**
-	 * Listen the event passbolt_notify and display any notification
+	 * Listen the event passbolt_notify and display load the corresponding notification.
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
-	 * @param {array} notif
+	 * @param {array} notification
 	 */
 	'{mad.bus.element} passbolt_notify': function (el, ev, notif) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
+		// When we receive a notification, we load it in the main system.
 		this.load(new passbolt.model.Notification(notif));
 	}
 
