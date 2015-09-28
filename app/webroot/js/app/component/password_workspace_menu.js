@@ -65,7 +65,10 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
                 'cssClasses': ['todo'],
                 'action': function () {
                     var username = self.options.selectedRs[0].username;
-                    mad.bus.trigger('passbolt.login.clipboard', username);
+                    mad.bus.trigger('passbolt.clipboard', {
+						'name': 'username',
+						'data': username
+					});
                 }
             }),
             new mad.model.Action({
