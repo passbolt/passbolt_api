@@ -1,0 +1,39 @@
+{
+	"notification": {
+		"timeout": 10000,
+		"displaySeverity": [
+			"success",
+			"error"
+		],
+		"messages": {
+			"app_resources_index_success": {
+				"msg": "passwords have been loaded",
+				"severity": "notice"
+			},
+			"app_resources_add_success": {
+				"msg": "The password %body.Resource.name% has been created"
+			},
+			"app_resources_delete_success": {
+				"msg": "The password has been deleted"
+			},
+			"app_users_add_success": {
+				"msg": "The user %body.User.username% has been added successfully"
+			},
+			"app_users_delete_success": {
+				"msg": "The user has been deleted"
+			},
+			"app_users_edit_success": {
+				"msg": "The user %body.User.username% has been updated successfully"
+			},
+			"app_users_editavatar_success": {
+				"msg": "The picture for user %body.User.username% has been updated successfully"
+			},
+			"plugin_secret_copy_success": {
+				"msg": "The password has been copied to your clipboard"
+			},
+			"plugin_clipboard_copy_success": {
+				"msg": "The %name% has been copied to your clipboard"
+			}
+		}
+	}
+}

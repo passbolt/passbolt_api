@@ -13,10 +13,13 @@ import 'app/error/error_handler';
 import 'app/net/response_handler';
 import 'app/component/app';
 import appConfig from 'app/config/config.json';
+import notifConfig from 'app/config/notification.json';
 
 $(document).ready(function () {
 	// Load the config packaged with the front-end application.
 	mad.Config.load(appConfig);
+	// Load notifications config.
+	mad.Config.load(notifConfig);
 
 	// Load the dynamic config served by the back-end.
 	mad.Config.load(cakephpConfig);
