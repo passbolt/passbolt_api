@@ -37,7 +37,8 @@ module.exports = function(grunt) {
 				'<%= config.webroot %>/js/lib/passbolt_styleguide',
 				'<%= config.webroot %>/js/lib/steal',
 				'<%= config.webroot %>/js/lib/underscore',
-				'<%= config.webroot %>/js/lib/xregexp'
+				'<%= config.webroot %>/js/lib/xregexp',
+				'<%= config.webroot %>/js/lib/jsSHA'
 			]
 		},
 		lesslint: {
