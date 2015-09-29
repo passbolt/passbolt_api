@@ -336,7 +336,7 @@ button,
 input,
 select,
 textarea {
-  font-family: sans-serif;
+  font-family: "Open Sans", Verdana, sans-serif;
 }
 /* ==========================================================================
    Links
@@ -1360,7 +1360,7 @@ textarea {
   background: #ffffff;
   width: 14em;
   /* 20 char (default input length) x .7em (average char length) */
-  padding: .563em .625em .375em .625em;
+  padding: .375em .625em .375em .625em;
   display: inline-block;
   margin-bottom: .5em;
   -webkit-appearance: none;

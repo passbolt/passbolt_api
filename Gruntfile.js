@@ -127,7 +127,7 @@ module.exports = function(grunt) {
 				cwd: '<%= bower.directory %>',
 				src: [
 					'**',
-					'!**passbolt_styldeguide/**'
+					'!**passbolt_styleguide/**'
 				],
 				dest: '<%= config.webroot %>/js/lib/',
 				expand: true
@@ -186,8 +186,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.loadNpmTasks("steal-tools");
-
-	grunt.loadNpmTasks("grunt-modernizr");
 
 	// ========================================================================
 	// Register Tasks
