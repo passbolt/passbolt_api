@@ -1,4 +1,5 @@
 import jsSHA from 'sha1';
+import XRegExp from 'xregexp';
 import 'mad/component/component';
 
 /**
