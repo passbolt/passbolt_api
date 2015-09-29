@@ -10,7 +10,6 @@
 	$this->assign('title', __('Passbolt - The simple password management system'));
 
 	$this->Html->script('lib/jquery/dist/jquery.js', array('block' => 'scriptBottom'));
-	$this->Html->script('lib/xregexp/min/xregexp-all-min.js', array('block' => 'scriptBottom'));
 	$this->Html->script('lib/jquery-ui/jquery-ui.js', array('block' => 'scriptBottom'));
 	$this->Html->script('lib/moment/min/moment.min.js', array('block' => 'scriptBottom'));
 	$this->Html->css('main', null, array('inline' => false));

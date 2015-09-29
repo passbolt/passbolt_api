@@ -18,7 +18,7 @@
 		"tests"
 	],
 	"dependencies": {
-		"passbolt_styleguide": "~0.0.1",
+		"passbolt_styleguide": "~0.1.2",
 		"mad": "git@bitbucket.org:passbolt/mad.git",
 		"can": "git@github.com:bitovi/canjs.git",
 		"steal": "^0.10.4",
