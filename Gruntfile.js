@@ -188,8 +188,6 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks("steal-tools");
 
-	grunt.loadNpmTasks("grunt-modernizr");
-
 	// ========================================================================
 	// Register Tasks
 
@@ -216,6 +214,6 @@ module.exports = function(grunt) {
 
 	// 'grunt' will check code quality, and if no errors,
 	// compile LESS to CSS, and minify and concatonate all JS and CSS
-	grunt.registerTask('default', [ 'clean', 'less', 'cssmin']);
+	grunt.registerTask('default', [ 'clean:css', 'less', 'cssmin']);
 
 };
