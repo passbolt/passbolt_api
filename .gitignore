@@ -51,7 +51,6 @@ composer.lock
 /tags
 *.mo
 /app/webroot/js/app/config/config.json
-/app/webroot/js/app/config/notification.json
 /app/webroot/js/lib/mad/docs/
 /app/webroot/js/lib/mad/docs.html
 
