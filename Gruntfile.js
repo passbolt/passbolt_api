@@ -89,6 +89,12 @@ module.exports = function(grunt) {
 					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-util_string_get_object_set_object.patch;)'
 					//'(cd ./node_modules/documentjs; patch -p1 < ./app/webroot/js/lib/mad/patches/patches/documentjs-demo_tag_url_and_sharp.patch;)'
 				].join('&&')
+			},
+			bowerupdate: {
+				options: {
+					stderr: false
+				},
+				command: 'bower update'
 			}
 		},
 		copy: {
@@ -191,29 +197,27 @@ module.exports = function(grunt) {
 	// ========================================================================
 	// Register Tasks
 
-	// Run 'grunt test' to view lesslint recommendations
-	grunt.registerTask('test', ['lesslint']);
-
 	// Run 'grunt csslint' to check LESS quality, and if no errors then
 	// compile LESS into CSS, combine and minify
-	grunt.registerTask('csslint', ['lesslint', 'clean:css', 'less', 'cssmin']);
+	grunt.registerTask('csslint', ['lesslint', 'css']);
 
 	// Run 'grunt css' to compile LESS into CSS, combine and minify
 	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
 
 	// Bower styleguide deploy
-	grunt.registerTask('styleguide-deploy', ['copy:styleguide']);
+	grunt.registerTask('styleguide-deploy', ['shell:bowerupdate','copy:styleguide','css']);
+
 	// Bower libs deploy
-	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
+	grunt.registerTask('lib-deploy', ['shell:bowerupdate', 'clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
 
 	// Run 'grunt production' to prepare the production release
-	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);
+	grunt.registerTask('production', ['css', 'clean:js', 'shell:jsmin']);
 
 	// Build mad & all the demos apps to ensure that everything compile
 	grunt.registerTask("build", ["steal-build"]);
 
 	// 'grunt' will check code quality, and if no errors,
 	// compile LESS to CSS, and minify and concatonate all JS and CSS
-	grunt.registerTask('default', [ 'clean:css', 'less', 'cssmin']);
+	grunt.registerTask('default', ['css']);
 
 };

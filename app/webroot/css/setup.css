@@ -2236,7 +2236,7 @@ select.fluid {
   .notification-container {
     bottom: 0;
     position: absolute;
-    z-index: 992;
+    z-index: 991;
     height: 2em;
     margin: 0;
     padding-top: 0.833em;

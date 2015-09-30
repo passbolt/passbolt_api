@@ -2474,7 +2474,7 @@ input[type="search"]::-webkit-search-cancel-button {
   .notification-container {
     bottom: 0;
     position: absolute;
-    z-index: 992;
+    z-index: 991;
     height: 2em;
     margin: 0;
     padding-top: 0.833em;
@@ -3200,7 +3200,7 @@ div.secret-copy > pre {
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
-  z-index: 999;
+  z-index: 993;
   left: 11.25em;
   display: none;
 }
