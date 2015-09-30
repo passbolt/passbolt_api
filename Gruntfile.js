@@ -128,7 +128,7 @@ module.exports = function(grunt) {
 				cwd: '<%= bower.directory %>',
 				src: [
 					'**',
-					'!**passbolt_styldeguide/**'
+					'!**passbolt_styleguide/**'
 				],
 				dest: '<%= config.webroot %>/js/lib/',
 				expand: true
