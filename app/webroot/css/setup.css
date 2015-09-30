@@ -336,7 +336,7 @@ button,
 input,
 select,
 textarea {
-  font-family: sans-serif;
+  font-family: "Open Sans", Verdana, sans-serif;
 }
 /* ==========================================================================
    Links
@@ -809,9 +809,6 @@ p {
   font-weight: normal;
   font-style: normal;
 }
-a.no-text {
-  text-decoration: none;
-}
 .icon:before,
 .icon.social:before {
   font-family: "entypo";
@@ -864,6 +861,9 @@ span + .icon {
   margin-right: 1.357em;
 }
 /* no text */
+a.no-text {
+  text-decoration: none;
+}
 .button .icon.no-text {
   padding-right: .9em;
 }
@@ -1356,16 +1356,18 @@ input[type=password],
 input[type=search],
 textarea {
   font-size: 16px;
+  line-height: 24px;
   color: #333333;
   background: #ffffff;
   width: 14em;
   /* 20 char (default input length) x .7em (average char length) */
-  padding: .563em .625em .375em .625em;
+  padding: .375em .625em .375em .625em;
   display: inline-block;
   margin-bottom: .5em;
   -webkit-appearance: none;
   border: 1px solid #cccccc;
   border-top: 1px solid #bbbbbb;
+  vertical-align: middle;
 }
 textarea:hover,
 input[type=password]:hover,
@@ -1491,7 +1493,7 @@ select:disabled {
 .input.date:after {
   position: absolute;
   content: ' ';
-  z-index: 99999;
+  z-index: 790;
   width: 20px;
   height: 20px;
   background: transparent url('../img/controls/calendar.png') center center no-repeat;
@@ -2211,7 +2213,7 @@ select.fluid {
 	  it is situated at the bottom of the workspace
 */
 .update-loading-bar {
-  position: absolute;
+  position: fixed;
   display: block;
   width: 100%;
   bottom: 2.125em;
@@ -2265,9 +2267,10 @@ select.fluid {
 .dialog-wrapper {
   position: absolute;
   width: 100%;
-  z-index: 999;
-  background: rgba(255, 255, 255, 0.9);
   height: 100%;
+  z-index: 800;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: auto;
 }
 .dialog {
   position: relative;
@@ -2276,6 +2279,8 @@ select.fluid {
   background: #f3f3f3;
   margin: auto;
   margin-top: 1%;
+  /* some space for the footer / notification area in case it is really tall */
+  margin-bottom: 3em;
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
@@ -2397,7 +2402,7 @@ select.fluid {
   border-top: 1px solid #dddddd;
   bottom: 0;
   position: fixed;
-  z-index: 990;
+  z-index: 890;
 }
 .plugin-check {
   padding: 1em;
@@ -2637,7 +2642,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* Base styles for the tooltip's directional arrow */
 .tooltip:before,
 [data-tooltip]:before {
-  z-index: 1001;
+  z-index: 990;
   border: 6px solid transparent;
   background: transparent;
   content: "";
@@ -2645,7 +2650,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* Base styles for the tooltip's content area */
 .tooltip:after,
 [data-tooltip]:after {
-  z-index: 1000;
+  z-index: 990;
   padding: 8px;
   width: 160px;
   background-color: #000;
