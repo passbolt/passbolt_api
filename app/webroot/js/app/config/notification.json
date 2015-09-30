@@ -7,7 +7,7 @@
 		],
 		"messages": {
 			"app_resources_index_success": {
-				"msg": "passwords have been loaded",
+				"msg": "The passwords have been loaded",
 				"severity": "notice"
 			},
 			"app_resources_add_success": {
@@ -32,10 +32,10 @@
 				"msg": "The picture for user %body.User.username% has been updated successfully"
 			},
 			"plugin_secret_copy_success": {
-				"msg": "The password has been copied to your clipboard"
+				"msg": "The password has been copied to clipboard"
 			},
 			"plugin_clipboard_copy_success": {
-				"msg": "The %name% has been copied to your clipboard"
+				"msg": "The %name% has been copied to clipboard"
 			}
 		}
 	}
