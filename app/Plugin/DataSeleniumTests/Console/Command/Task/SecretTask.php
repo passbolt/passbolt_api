@@ -129,7 +129,7 @@ class SecretTask extends ModelTask {
                 if ($isAuthorized) {
                     $passwordEncrypted = $this->encryptPassword($password, $u['User']['id']);
                     $s[] = array('Secret'=>array(
-                        'id' => Common::uuid('secret.id.'.$r['Resource']['name']),
+                        'id' => Common::uuid(),
                         'user_id' => $u['User']['id'],
                         'resource_id' => $r['Resource']['id'],
                         'data' => $passwordEncrypted,

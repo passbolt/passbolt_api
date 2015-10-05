@@ -13,7 +13,7 @@
 			<div class="label"><%= __('Password') %></div>
 			<div class="value">
 				<div class="secret-copy">
-					<a id="sidebar_secret_copy_<%= resource.Secret[0].id %>" href="#copy_secret">
+					<a id="sidebar_secret_copy_<%= resource.id %>" href="#copy_secret">
 						<span>copy password to clipboard</span>
 					</a>
 					<pre><%= resource.Secret[0].data %></pre>
