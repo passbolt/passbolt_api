@@ -46,30 +46,24 @@
   }
 }
 /* tabel view adjustments for avatar */
-.tableview-header {
-  th.cell_multipleSelect {
-    width: 3%;
+.page.people {
+  .tableview-header {
+    th.cell_avatar {
+      width:45px;
+    }
   }
-  th.cell_avatar {
-    width: 3%;
-  }
-}
-.tableview-content {
-  td.cell_multipleSelect {
-    width: 3%
-  }
-  td.cell_avatar {
-    text-align: right;
-    padding-right: 1em;
-    width: 3%;
-    max-width: 20px;
-    img {
-      width: 25px !important;
-      height: 25px !important;
+  .tableview-content {
+    td.cell_avatar {
+      margin:0;
+      text-align: left;
+      width:45px;
+      img {
+        width: 25px !important;
+        height: 25px !important;
+      }
     }
   }
 }
-
 /* login history icon collumn centerign */
 .login-history td:first-child {
 	text-align: center;

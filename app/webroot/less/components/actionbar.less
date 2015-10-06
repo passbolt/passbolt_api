@@ -25,6 +25,7 @@
 /* hide secondary actions if there is no space */
 @media all and (max-width: 980px) {
 	.header.third .actions-wrapper {
+	  	.dropdown,
 		.actions.secondary {
 			display:none;
 		}
@@ -43,4 +44,23 @@
 			display: none;
 		}
 	}
+}
+/* hide text and only show icon if there is even less space */
+@media all and (max-width: 540px) {
+  .header.third .actions-wrapper {
+	.actions i {
+	  display: block;
+	}
+	.actions a.button {
+	  min-width:1em;
+	  font-size:1em;
+	}
+	.actions i + span {
+	  margin-left: 0;
+	  display: none;
+	}
+	.actions .disabled {
+	  display: none;
+	}
+  }
 }

@@ -20,10 +20,8 @@
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden,
-i.no-text + span {
-  display: none !important;
-  visibility: hidden;
+.hidden {
+  display: none;
 }
 /*
  * Hide only visually, but have it available for screenreaders: h5bp.com/v
@@ -37,13 +35,13 @@ i.no-text + span {
   padding: 0;
   position: absolute;
   width: 1px;
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
 }
-/*
- * Extends the .visuallyhidden class to allow the element to be focusable
- * when navigated to via the keyboard: h5bp.com/p
- */
-.visuallyhidden.focusable:active,
-.visuallyhidden.focusable:focus {
+.visuallyhidden .focusable:active,
+.visuallyhidden .focusable:focus {
   clip: auto;
   height: auto;
   margin: 0;
@@ -821,6 +819,47 @@ span + .icon {
 a.no-text {
   text-decoration: none;
 }
+.no-text + span,
+.no-text span {
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
+}
+.no-text + span .focusable:active,
+.no-text span .focusable:active,
+.no-text + span .focusable:focus,
+.no-text span .focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+.no-text + span .focusable:active,
+.no-text span .focusable:active,
+.no-text + span .focusable:focus,
+.no-text span .focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
 .button .icon.no-text {
   padding-right: .9em;
 }
@@ -931,6 +970,9 @@ a.no-text {
 }
 .icon.retry:before {
   content: '\27F3';
+}
+.icon.copy:before {
+  content: '\E736';
 }
 /** notification messages **/
 .notification_status .icon.success:before {
