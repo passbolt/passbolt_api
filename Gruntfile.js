@@ -9,7 +9,8 @@ module.exports = function(grunt) {
 	var config = {
 	//	webroot			 : 'webroot',
 		webroot : 'app/webroot',
-		styleguide	 : 'passbolt_styleguide'
+		styleguide	 : 'passbolt-styleguide',
+		modules_path : 'node_modules'
 	}
 
 	// ========================================================================
@@ -18,7 +19,6 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		config : config,
 		pkg: grunt.file.readJSON('package.json'),
-		bower: grunt.file.readJSON('./.bowerrc'),
 		clean: {
 			css: [
 				'<%= config.webroot %>/css/*.css', '!<%= config.webroot %>/css/cake.generic.css'
@@ -30,15 +30,14 @@ module.exports = function(grunt) {
 				'<%= config.webroot %>/js/lib/can',
 				'<%= config.webroot %>/js/lib/jquery',
 				'<%= config.webroot %>/js/lib/jquery-ui',
-				'<%= config.webroot %>/js/lib/jscrollpane',
 				'<%= config.webroot %>/js/lib/mad',
 				'<%= config.webroot %>/js/lib/moment',
-				'<%= config.webroot %>/js/lib/mousewheel',
-				'<%= config.webroot %>/js/lib/passbolt_styleguide',
+				'<%= config.webroot %>/js/lib/jquery-mousewheel',
+				'<%= config.webroot %>/js/lib/<%= config.styleguide %>',
 				'<%= config.webroot %>/js/lib/steal',
 				'<%= config.webroot %>/js/lib/underscore',
 				'<%= config.webroot %>/js/lib/xregexp',
-				'<%= config.webroot %>/js/lib/jsSHA'
+				'<%= config.webroot %>/js/lib/jssha'
 			]
 		},
 		lesslint: {
@@ -89,37 +88,31 @@ module.exports = function(grunt) {
 					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-util_string_get_object_set_object.patch;)'
 					//'(cd ./node_modules/documentjs; patch -p1 < ./app/webroot/js/lib/mad/patches/patches/documentjs-demo_tag_url_and_sharp.patch;)'
 				].join('&&')
-			},
-			bowerupdate: {
-				options: {
-					stderr: false
-				},
-				command: 'bower update'
 			}
 		},
 		copy: {
 			styleguide : {
 				files: [{
 					// Fonts
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/fonts',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/fonts',
 					src: '*',
 					dest: '<%= config.webroot %>/fonts',
 					expand: true
 				},{
 					// Images for webroots (favicons, etc.)
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/img/webroot',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/img/webroot',
 					src: '*',
 					dest: '<%= config.webroot %>',
 					expand: true
 				},{
 					// Images
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/img',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/img',
 					src: ['default/**','logo/**','third_party/**','avatar/**','controls/**'],
 					dest: '<%= config.webroot %>/img',
 					expand: true
 				},{
 					// Less
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/less',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/less',
 					src: [
 						'abstractions/**','base/**','components/**','dialogs/**',
 						'pages/launching.less','pages/login.less','pages/passwords.less',
@@ -131,10 +124,19 @@ module.exports = function(grunt) {
 				}]
 			},
 			lib : {
-				cwd: '<%= bower.directory %>',
+				nonull: true,
+				cwd: '<%= config.modules_path %>/',
 				src: [
-					'**',
-					'!**passbolt_styleguide/**'
+					'can/**',
+					'jquery/**',
+					'jquery-ui/**',
+					'mad/**',
+					'moment/**',
+					'jquery-mousewheel/**',
+					'steal/**',
+					'underscore/**',
+					'xregexp/**',
+					'jssha/**'
 				],
 				dest: '<%= config.webroot %>/js/lib/',
 				expand: true
@@ -204,11 +206,11 @@ module.exports = function(grunt) {
 	// Run 'grunt css' to compile LESS into CSS, combine and minify
 	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
 
-	// Bower styleguide deploy
-	grunt.registerTask('styleguide-deploy', ['shell:bowerupdate','copy:styleguide','css']);
+	// Npm styleguide deploy
+	grunt.registerTask('styleguide-deploy', ['copy:styleguide','css']);
 
-	// Bower libs deploy
-	grunt.registerTask('lib-deploy', ['shell:bowerupdate', 'clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
+	// Npm libs deploy
+	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
 
 	// Run 'grunt production' to prepare the production release
 	grunt.registerTask('production', ['css', 'clean:js', 'shell:jsmin']);

@@ -38,52 +38,57 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
     afterStart: function () {
         var self = this;
 
-        // Manage creation action
-        this.options.creationButton = new mad.component.Button($('#js_wk_menu_creation_button'))
-            .start();
+		// Manage edition action
+		this.options.secretCopyButton = new mad.component.Button($('#js_wk_menu_secretcopy_button'), {
+			state: 'disabled'
+		}).start();
 
-        // Manage edition action
-        this.options.editionButton = new mad.component.Button($('#js_wk_menu_edition_button'), {
-            'state': 'disabled'
-        }).start();
-
-        // Manage deletion action
-        this.options.deletionButton = new mad.component.Button($('#js_wk_menu_deletion_button'), {
-            'state': 'disabled'
-        }).start();
+		// Manage edition action
+		this.options.editButton = new mad.component.Button($('#js_wk_menu_edition_button'), {
+			state: 'disabled'
+		}).start();
 
         // Manage sharing action
-        this.options.sharingButton = new mad.component.Button($('#js_wk_menu_sharing_button'), {
-            'state': 'disabled'
+        this.options.shareButton = new mad.component.Button($('#js_wk_menu_sharing_button'), {
+            state: 'disabled'
         }).start();
 
         // Manage more action
         var moreButtonMenuItems = [
             new mad.model.Action({
-                'id': uuid(),
-                'label': __('copy login to clipboard'),
-                'cssClasses': ['todo'],
-                'action': function () {
+                id: uuid(),
+                label: __('copy login to clipboard'),
+                cssClasses: [],
+                action: function () {
                     var username = self.options.selectedRs[0].username;
                     mad.bus.trigger('passbolt.clipboard', {
-						'name': 'username',
-						'data': username
+						name: 'username',
+						data: username
 					});
                 }
             }),
-            new mad.model.Action({
-                'id': uuid(),
-                'label': __('copy password to clipboard'),
-                'cssClasses': ['todo'],
-                'action': function () {
-                    var secret = self.options.selectedRs[0].Secret[0].data;
-                    mad.bus.trigger('passbolt.secret.decrypt', secret);
-                }
-            })
+			new mad.model.Action({
+				id: uuid(),
+				label: __('copy password to clipboard'),
+				cssClasses: [],
+				action: function () {
+					var secret = self.options.selectedRs[0].Secret[0].data;
+					mad.bus.trigger('passbolt.secret.decrypt', secret);
+				}
+			}),
+			new mad.model.Action({
+				id: 'js_wk_menu_delete_action',
+				label: __('delete'),
+				cssClasses: [],
+				action: function () {
+					self.element.trigger('delete_action_clicked');
+				}
+			})
         ];
         this.options.moreButton = new mad.component.ButtonDropdown($('#js_wk_menu_more_button'), {
-            'state': 'disabled',
-            'items': moreButtonMenuItems
+
+            state: 'disabled',
+            items: moreButtonMenuItems
         }).start();
 
         // @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
@@ -94,43 +99,44 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
 
-    /**
-     * Observe when the user wants to create a new instance (Resource, User depending of the active workspace)
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     */
-    '{creationButton.element} click': function (el, ev) {
-        var resource = this.options.creationButton.getValue();
-        mad.bus.trigger('request_resource_creation', resource);
-    },
+	/**
+	 * Observe when the user wants to copy the secret a resource.
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 */
+	'{secretCopyButton.element} click': function (el, ev) {
+		var resource = this.options.editButton.getValue();
+		var secret = resource.Secret[0].data;
+		mad.bus.trigger('passbolt.secret.decrypt', secret);
+	},
 
     /**
-     * Observe when the user wants to edit an instance (Resource, User depending of the active workspace)
+     * Observe when the user wants to edit a resource.
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      */
-    '{editionButton.element} click': function (el, ev) {
-        var resource = this.options.editionButton.getValue();
+    '{editButton.element} click': function (el, ev) {
+        var resource = this.options.editButton.getValue();
         mad.bus.trigger('request_resource_edition', resource);
     },
 
     /**
-     * Observe when the user wants to delete an instance (Resource, User depending of the active workspace)
+     * Observe when the user wants to delete a resource.
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      */
-    '{deletionButton.element} click': function (el, ev) {
-        var resources = this.options.deletionButton.getValue();
+    ' delete_action_clicked': function (el, ev) {
+        var resources = this.options.selectedRs;
         mad.bus.trigger('request_resource_deletion', resources);
     },
 
     /**
-     * Observe when the user wants to share an instance (Resource, User depending of the active workspace)
+     * Observe when the user wants to share a resrouce.
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      */
-    '{sharingButton.element} click': function (el, ev) {
-        var resource = this.options.sharingButton.getValue();
+    '{shareButton.element} click': function (el, ev) {
+        var resource = this.options.shareButton.getValue();
         mad.bus.trigger('request_resource_sharing', resource);
     },
 
@@ -176,40 +182,6 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
         }
     },
 
-    /**
-     * Observe when a filter is applied on the wsp
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @param {passbolt.model.Filter} filter The unselected resource
-     */
-    '{mad.bus.element} filter_resources_browser': function(el, ev, filter) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
-        var categories = filter.getForeignModels('Category');
-        var state = 'ready';
-
-        // If no categories selected, it's allowed to create password.
-        if (!categories) {
-            // Reset the value carried by the button.
-            this.options.creationButton.setValue(new can.List([]));
-        } else {
-            // The button will now carry the latest selected categories.
-            this.options.creationButton.setValue(categories);
-
-            // If the user doesn't have the permission to create into the selected category.
-            // Or if multiple categories selected.
-            if (categories.length > 1 || (
-                categories.length == 1 &&
-                !passbolt.model.Permission.isAllowedTo(categories[0], passbolt.CREATE))
-            ) {
-                state = 'disabled';
-            }
-        }
-
-        this.options.creationButton.setState(state);
-    },
-
     /* ************************************************************** */
     /* LISTEN TO THE STATE CHANGES */
     /* ************************************************************** */
@@ -225,31 +197,33 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
             // Is the resource administrable ?
             var administrable = passbolt.model.Permission.isAllowedTo(this.options.selectedRs[0], passbolt.ADMIN);
 
-            this.options.editionButton
+			this.options.secretCopyButton
+				.setValue(this.options.selectedRs[0])
+				.setState('ready');
+            this.options.editButton
                 .setValue(this.options.selectedRs[0])
                 .setState(updatable ? 'ready' : 'disabled');
-            this.options.deletionButton
-                .setValue(this.options.selectedRs)
-                .setState(updatable ? 'ready' : 'disabled');
-            this.options.sharingButton
+            this.options.shareButton
                 .setValue(this.options.selectedRs)
                 .setState(administrable ? 'ready' : 'disabled');
             this.options.moreButton
                 .setValue(this.options.selectedRs[0])
                 .setState('ready');
+			this.options.moreButton.setItemState('js_wk_menu_delete_action', updatable ? 'ready' : 'disabled')
         } else {
-            this.options.editionButton
+			this.options.secretCopyButton
+				.setValue(null)
+				.setState('disabled');
+            this.options.editButton
                 .setValue(null)
                 .setState('disabled');
-            this.options.deletionButton
-                .setValue(null)
-                .setState('disabled');
-            this.options.sharingButton
+            this.options.shareButton
                 .setValue(null)
                 .setState('disabled');
             this.options.moreButton
                 .setValue(null)
                 .setState('disabled');
+			this.options.moreButton.setItemState('js_wk_menu_delete_action', 'disabled');
         }
     },
 
@@ -264,24 +238,24 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
             // Is the resource administrable ?
             var canAdmin = passbolt.model.Permission.isAllowedTo(this.options.selectedRs, passbolt.ADMIN);
 
-            this.options.editionButton
+			this.options.secretCopyButton
+				.setValue(null)
+				.setState('disabled');
+            this.options.editButton
                 .setState('disabled');
-            this.options.deletionButton
-                .setValue(this.options.selectedRs)
-                .setState(canUpdate ? 'ready' : 'disabled');
-            this.options.sharingButton
+            this.options.shareButton
                 .setValue(this.options.selectedRs)
                 .setState(canAdmin ? 'ready' : 'disabled');
             this.options.moreButton
                 .setState('disabled');
         } else {
-            this.options.editionButton
+			this.options.secretCopyButton
+				.setValue(null)
+				.setState('disabled');
+            this.options.editButton
                 .setValue(null)
                 .setState('disabled');
-            this.options.deletionButton
-                .setValue(null)
-                .setState('disabled');
-            this.options.sharingButton
+            this.options.shareButton
                 .setValue(null)
                 .setState('disabled');
         }

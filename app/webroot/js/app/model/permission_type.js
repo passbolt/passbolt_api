@@ -62,7 +62,7 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 	 * Get permission type formated.
 	 * @return {string}
 	 */
-	toString: function(permId) {
+	formatToString: function(permId) {
 		var returnValue = '';
 		if (permId == undefined) {
 			console.error('Warning, PermissionType.toString called without permId');
