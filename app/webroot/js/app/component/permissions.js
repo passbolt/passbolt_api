@@ -84,7 +84,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 				'permLabel': {
 					'key': 'type',
 					'func': function(type, map, obj) {
-						return passbolt.model.PermissionType.toString(type);
+						return passbolt.model.PermissionType.formatToString(type);
 					}
 				},
 				'acoLabel': {
@@ -155,7 +155,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		// Add a selectbox element to the form to carry permission type
 		var availablePermissionTypes = {};
 		for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
-			availablePermissionTypes[permType] = passbolt.model.PermissionType.toString(permType);
+			availablePermissionTypes[permType] = passbolt.model.PermissionType.formatToString(permType);
 		}
 		var permTypeCtl = new mad.form.Dropdown($('#js_perm_create_form_type', this.element), {
 				emptyValue: false,
@@ -206,7 +206,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			availablePermissionTypes = {};
 
 		for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
-			availablePermissionTypes[permType] = passbolt.model.PermissionType.toString(permType);
+			availablePermissionTypes[permType] = passbolt.model.PermissionType.formatToString(permType);
 		}
 
 		// Add the permission to the list of permissions
