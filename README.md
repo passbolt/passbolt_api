@@ -140,8 +140,6 @@ Install the needed modules defined in the grunt config
 
 Install the styleguide
 ```
-	npm install -g bower
-	bower install
 	grunt styleguide-deploy
 ```
 
