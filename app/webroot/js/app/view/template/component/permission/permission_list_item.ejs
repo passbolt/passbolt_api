@@ -9,7 +9,7 @@ if (mappedItem.isDirect) {
 // Get the available permission types.
 var availablePermissionTypes = {};
 for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
-    availablePermissionTypes[permType] = passbolt.model.PermissionType.toString(permType);
+    availablePermissionTypes[permType] = passbolt.model.PermissionType.formatToString(permType);
 }
 %>
 
