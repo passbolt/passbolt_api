@@ -2398,6 +2398,14 @@ input[type="search"]::-webkit-search-cancel-button {
   }
 }
 /* actions */
+.header.third .main-action-wrapper {
+  margin-top: .5em;
+  padding-left: .625em;
+}
+.header.third .main-action-wrapper .button {
+  font-size: .875em;
+  min-width: 4em;
+}
 .header.third .actions-wrapper {
   margin-top: .5em;
 }
