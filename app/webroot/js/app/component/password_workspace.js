@@ -13,6 +13,7 @@ import 'app/form/resource/create';
 import 'app/model/filter';
 
 import 'app/view/template/password_workspace.ejs!';
+import 'app/view/template/component/create_button.ejs!';
 
 /**
  * @inherits {mad.Component}
@@ -54,7 +55,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		);
 		primWkMenu.start();
 
-		//// Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
+		// Instantiate the secondary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
 		var secWkMenu = mad.helper.Component.create(
 			$('#js_wsp_secondary_menu_wrapper'),
 			'last',
@@ -62,16 +63,29 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 			{}
 		);
 		secWkMenu.start();
-        //
-		//// Instanciate the passwords filter controller
+
+		// Instantiate the create button controller.
+		this.options.createButton = mad.helper.Component.create(
+			$('.main-action-wrapper'),
+			'last',
+			mad.component.Button, {
+				id: 'js_wsp_create_button',
+				templateBased: true,
+				templateUri: 'app/view/template/component/create_button.ejs',
+				tag: 'a',
+				cssClasses: ['button']
+			}
+		).start();
+
+		// Instanciate the passwords filter controller
 		var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
 		rsShortcut.start();
-        //
-		//// Removed the lines below for #PASSBOLT-787
-		////// Instanciate the categories chooser controller
-		////this.catChooser = new passbolt.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
-		////this.catChooser.start();
-        //
+
+		// Removed the lines below for #PASSBOLT-787
+		// Instanciate the categories chooser controller
+		//this.catChooser = new passbolt.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
+		//this.catChooser.start();
+
 		//// Instantiate the password workspace breadcrumb controller
 		this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
 		this.breadcrumCtl.start();
@@ -94,6 +108,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 			type: passbolt.model.Filter.SHORTCUT
 		});
 		mad.bus.trigger('filter_resources_browser', filter);
+
+		this.on();
 	},
 
 	/**
@@ -103,6 +119,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		// Be sure that the primary & secondary workspace menus controllers will be destroyed also.
 		$('#js_wsp_primary_menu_wrapper').empty();
 		$('#js_wsp_secondary_menu_wrapper').empty();
+		$('.main-action-wrapper').empty();
 
 		this._super();
 	},
@@ -121,6 +138,16 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	/* ************************************************************** */
 
 	/**
+	 * Observe when the user wants to create a new instance (Resource, User depending of the active workspace)
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 */
+	'{createButton.element} click': function (el, ev) {
+		var category = this.options.createButton.getValue();
+		mad.bus.trigger('request_resource_creation', category);
+	},
+
+	/**
 	* Listen to the browser filter
 	* @param {jQuery} element The source element
 	* @param {Event} event The jQuery event
@@ -132,6 +159,31 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		this.breadcrumCtl.load(filter);
 		// When filtering the resources browser, unselect all the resources.
 		this.options.selectedRs.splice(0, this.options.selectedRs.length);
+
+		// Change the state of the create but regarding the selected categories.
+		var categories = filter.getForeignModels('Category');
+		var createButtonState = 'ready';
+
+		// If no categories selected, the user is allowed to create password. These
+		// passwords won't be associated to any category.
+		if (!categories) {
+			// Reset the value carried by the button.
+			this.options.createButton.setValue(new can.List([]));
+		} else {
+			// The button will now carry the latest selected categories.
+			this.options.createButton.setValue(categories);
+
+			// If the user doesn't have the permission to create into the selected category.
+			// Or if multiple categories selected.
+			if (categories.length > 1 || (
+				categories.length == 1 &&
+				!passbolt.model.Permission.isAllowedTo(categories[0], passbolt.CREATE))
+			) {
+				createButtonState = 'disabled';
+			}
+		}
+
+		this.options.createButton.setState(createButtonState);
 	},
 
 	/**
