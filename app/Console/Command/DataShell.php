@@ -15,6 +15,10 @@ App::uses('CakeSchema', 'Model');
 
 class DataShell extends AppShell {
 
+	/**
+	 * Define the parameters accepted by the task
+	 * @return ConsoleOptionParser
+	 */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 		$parser
@@ -25,6 +29,15 @@ class DataShell extends AppShell {
 			))
 			->description(__('Data import/export shell for the passbolt application.'));
 		return $parser;
+	}
+
+	/**
+	 * Display a welcome message
+	 */
+	protected function _welcome() {
+		parent::_welcome();
+		$this->out('Installing data set:' . $this->params['data']);
+		$this->hr();
 	}
 
 	/**
@@ -167,6 +180,8 @@ class DataShell extends AppShell {
 			}
 			$this->dispatchShell("bake fixture --count 1000 --records --schema {$name}");
 		}
+
+		$this->out('Data deployed!');
 	}
 
 }
