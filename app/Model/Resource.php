@@ -122,21 +122,25 @@ class Resource extends AppModel {
 			),
 			'uri' => array(
 				'url' => array(
-					'rule' => AppValidation::getVadalidationUrlRegex(),
-					'message' => __('The format of the uri is not valid.'),
+					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'message' => __('URI should contain only alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /.'),
 					'allowEmpty' => true,
-				),
-			),
-			'description' => array(
-				'alphaNumericAndSpecial' => array(
-					'rule' => "/^[\p{L}\d ,.:;?!\-_\(\[\)\]'\"\/]*$/u",
-					'required' => false,
-					'allowEmpty' => true,
-					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! - _ ( ) [ ] \' " /')
 				),
 				'size' => array(
 					'rule' => array('lengthBetween', 3, 255),
-					'message' => __('Description should be between %s and %s characters long'),
+					'message' => __('URI should be between %s and %s characters long', 3, 255),
+				)
+			),
+			'description' => array(
+				'alphaNumericAndSpecial' => array(
+					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'required' => false,
+					'allowEmpty' => true,
+					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /')
+				),
+				'size' => array(
+					'rule' => array('lengthBetween', 3, 255),
+					'message' => __('Description should be between %s and %s characters long', 3, 255),
 				)
 			),
 		);
