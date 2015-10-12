@@ -142,12 +142,6 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * @todo #security #architecture refactor, check also permissionController.
 	 */
 	'{mad.bus.element} secret_edition_secret_encrypted': function(el, ev, armoreds) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
-		// @todo #BUG #JMVC The event is not unbound when the element is destroyed. Check that point when updating to canJS.
-		if (!this.element) return;
-
 		var data = this.getData();
 		data['passbolt.model.Resource'].Secret = [];
 
