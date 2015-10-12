@@ -129,6 +129,7 @@ class SeleniumTestsController extends AppController {
 		// If dummy data is requested.
 		if($dummy == 'default' || $dummy == 'seleniumtests' || $dummy == 'unittests') {
 			$job->params['data'] = $dummy;
+			$job->params['quick'] = 'true';
 		}
 
 		$job->dispatchMethod('main');

@@ -16,6 +16,7 @@
 /app/tmp/tests/*
 /app/tmp/image-processing/*
 /app/tmp/file-storage-test/*
+/app/tmp/schema
 
 # Plugins
 /Plugin
