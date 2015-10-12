@@ -157,11 +157,10 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	 * @param {mad.controller.CoponentController} component The target component
 	 */
 	'{mad.bus.element} passbolt_component_loading_start': function (el, ev, component) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
-		this.options.currentProcs++;
-		this.update();
+		if (!component.options.silentLoading) {
+			this.options.currentProcs++;
+			this.update();
+		}
 	},
 
 	/**
@@ -171,11 +170,10 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	 * @param {mad.controller.CoponentController} component The target component
 	 */
 	'{mad.bus.element} passbolt_component_loading_complete': function (el, ev, component) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
-		this.options.currentProcs--;
-		this.update();
+		if (!component.options.silentLoading) {
+			this.options.currentProcs--;
+			this.update();
+		}
 	},
 
 	/**
@@ -184,9 +182,6 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	 * @param {HTMLEvent} ev The event which occured
 	 */
 	'{mad.bus.element} passbolt_ajax_request_start': function (el, ev, request) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		if (!request.silentLoading) {
 			this.options.currentProcs++;
 			this.update();
@@ -199,9 +194,6 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	 * @param {HTMLEvent} ev The event which occured
 	 */
 	'{mad.bus.element} passbolt_ajax_request_complete': function (el, ev, request) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		if (!request.silentLoading) {
 			this.options.currentProcs--;
 			this.update();
@@ -214,9 +206,6 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	 * @param {HTMLEvent} ev The event which occured
 	 */
 	'{mad.bus.element} passbolt_loading': function (el, ev) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		this.options.currentProcs++;
 		this.update();
 	},
@@ -227,9 +216,6 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	 * @param {HTMLEvent} ev The event which occured
 	 */
 	'{mad.bus.element} passbolt_loading_complete': function (el, ev) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		this.options.currentProcs--;
 		this.update();
 	}

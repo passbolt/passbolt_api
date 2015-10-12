@@ -11,7 +11,6 @@ import 'app/form/user/avatar';
 
 import 'app/view/template/settings_workspace.ejs!';
 
-
 /**
  * @inherits {mad.Component}
  * @parent index
@@ -31,7 +30,9 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 		sections : [
 			'profile',
 			'keys'
-		]
+		],
+		// Override the silentLoading parameter.
+		silentLoading: false
 	}
 }, /** @prototype */ {
 
@@ -40,7 +41,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * @return {void}
 	 * @see {mad.controller.ComponentController}
 	 */
-	'afterStart': function() {
+	afterStart: function() {
 		var self = this;
 		this.section = '';
 
@@ -56,16 +57,16 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 		this.menuItems = Array();
 		// Instantiate the settings menu
 		this.menuItems['profile'] = new mad.model.Action({
-			'id': uuid(),
-			'label': __('My profile'),
-			'action': function () {
+			id: uuid(),
+			label: __('My profile'),
+			action: function () {
 				mad.bus.trigger('request_settings_section', 'profile');
 			}
 		});
 		this.menuItems['keys'] = new mad.model.Action({
-			'id': uuid(),
-			'label': __('Manage your keys'),
-			'action': function () {
+			id: uuid(),
+			label: __('Manage your keys'),
+			action: function () {
 				mad.bus.trigger('request_settings_section', 'keys');
 			}
 		});
@@ -80,7 +81,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 		// Instanciate the main tabs controller
 		this.settingsTabsCtl = new mad.component.Tab('#js_wk_settings_main', {
-			'autoMenu': false // do not generate automatically the associated tab nav
+			autoMenu: false // do not generate automatically the associated tab nav
 		});
 		this.settingsTabsCtl.start();
 
@@ -90,14 +91,14 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 		this.breadcrumCtl.load();
 
 		self.profileCtl = self.settingsTabsCtl.addComponent(passbolt.component.Profile, {
-			'id': 'js_settings_wk_profile_controller',
-			'label': 'profile',
-			'user': passbolt.model.User.getCurrent()
+			id: 'js_settings_wk_profile_controller',
+			label: 'profile',
+			user: passbolt.model.User.getCurrent()
 		});
 
 		self.profileKeysCtl = self.settingsTabsCtl.addComponent(passbolt.component.Keys, {
-			'id': 'js_settings_wk_profile_keys_controller',
-			'label': 'keys'
+			id: 'js_settings_wk_profile_keys_controller',
+			label: 'keys'
 		});
 	},
 
@@ -248,7 +249,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * @param {boolean} go Enter or leave the state
 	 * @return {void}
 	 */
-	'stateReady': function (go) {
+	stateReady: function (go) {
 		// Load profile section by default.
 		mad.bus.trigger('request_settings_section', 'profile');
 	},
@@ -257,7 +258,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * state disabled.
 	 * @param go
 	 */
-	'stateDisabled': function (go) {
+	stateDisabled: function (go) {
 		this._super(go);
 		// Remove container class.
 		$('#container')
@@ -268,7 +269,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * state hidden.
 	 * @param go
 	 */
-	'stateHidden': function (go) {
+	stateHidden: function (go) {
 		this._super(go);
 		// Remove container class.
 		$('#container')

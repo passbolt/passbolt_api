@@ -34,7 +34,9 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         templateUri: 'app/view/template/people_workspace.ejs',
         selectedUsers: new can.Model.List(),
         selectedGroups: new can.Model.List(),
-        filter: new passbolt.model.Filter()
+        filter: new passbolt.model.Filter(),
+		// Override the silentLoading parameter.
+		silentLoading: false
     }
 
 }, /** @prototype */ {

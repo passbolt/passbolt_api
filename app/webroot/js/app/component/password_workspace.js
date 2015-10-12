@@ -35,7 +35,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		// The current selected resources
 		selectedRs: new can.Model.List(),
 		// The current filter
-		filter: new passbolt.model.Filter()
+		filter: new passbolt.model.Filter(),
+		// Override the silentLoading parameter.
+		silentLoading: false
 	}
 
 }, /** @prototype */ {
