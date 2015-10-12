@@ -26,7 +26,7 @@
  * Path to the schema files directory.
  */
 if (!defined('SCHEMATMP')) {
-	define('SCHEMATMP', APP . 'tmp' . DS . 'Schema' . DS);
+	define('SCHEMATMP', APP . 'tmp' . DS . 'schema' . DS);
 }
 
 // Setup a 'default' cache configuration for use in the application.
