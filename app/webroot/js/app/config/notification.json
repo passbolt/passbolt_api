@@ -36,6 +36,12 @@
 			},
 			"plugin_clipboard_copy_success": {
 				"msg": "The %name% has been copied to clipboard"
+			},
+			"app_favorites_add_success": {
+				"msg": "The password has been added as a favorite"
+			},
+			"app_favorites_delete_success": {
+				"msg": "The password has been removed from favorites"
 			}
 		}
 	}
