@@ -86,7 +86,7 @@ class Resource extends AppModel {
 					),
 					'size' => array(
 						'rule' => array('lengthBetween', 3, 64),
-						'message' => __('Name should be between %s and %s characters long'),
+						'message' => __('Name should be between %s and %s characters long', 3, 64),
 					)
 				),
 				'username' => array(
@@ -102,7 +102,7 @@ class Resource extends AppModel {
 					),
 					'size' => array(
 						'rule' => array('lengthBetween', 3, 64),
-						'message' => __('Username should be between %s and %s characters long'),
+						'message' => __('Username should be between %s and %s characters long', 3, 64),
 					)
 				),
 			'expiry_date' => array(
@@ -123,7 +123,7 @@ class Resource extends AppModel {
 			'uri' => array(
 				'url' => array(
 					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
-					'message' => __('URI should contain only alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /.'),
+					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /.'),
 					'allowEmpty' => true,
 				),
 				'size' => array(
