@@ -757,7 +757,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// load resources functions of the filter
 		passbolt.model.Resource.findAll({
 			filter: this.filter,
-			recursive: true
+			recursive: true,
+			silentLoading:false
 		}, function (resources, response, request) {
 			// TODO The callback is out of date, an other filter has been performed
 			// load the resources in the browser
