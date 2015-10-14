@@ -37,7 +37,7 @@ Getting the code
 
 Clone the repository and associated submodules
 ```
-	git clone git@github.com:passbolt/passbolt
+	git clone git@bitbucket.org:passbolt/passbolt
 	cd passbolt
 	git submodule update --init
 ```
