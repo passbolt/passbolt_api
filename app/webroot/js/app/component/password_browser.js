@@ -34,7 +34,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// categories: new passbolt.model.Category.List()
 		categories: [],
 		// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-		selectedRs: new can.Model.List()
+		selectedRs: new can.Model.List(),
+		// Prefix each row id with resource_
+		prefixItemId: 'resource_'
 	}
 
 }, /** @prototype */ {
@@ -227,7 +229,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 */
 	showContextualMenu: function (item, x, y) {
 		// Get the offset position of the clicked item.
-		var $item = $('td span', '#' + item.id);
+		var $item = $('td span', '#' + this.options.prefixItemId + item.id);
 		var item_offset = $item.offset();
 
 
