@@ -46,6 +46,7 @@ composer.lock
 # Misc
 /app/composer.phar
 /app/webroot/img/public/*
+!/app/webroot/img/public/empty
 /lib/Cake/Console/Templates/skel/tmp/
 /build
 /dist
