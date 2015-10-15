@@ -36,7 +36,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
 		selectedRs: new can.Model.List(),
 		// Prefix each row id with resource_
-		prefixItemId: 'resource_'
+		prefixItemId: 'resource_',
+        // Override the silentLoading parameter.
+        silentLoading: false
 	}
 
 }, /** @prototype */ {

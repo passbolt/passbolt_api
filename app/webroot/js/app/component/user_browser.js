@@ -33,7 +33,9 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // categories: new passbolt.model.Category.List()
         groups: [],
         // the selected resources, you can pass an existing list as parameter of the constructor to share the same list
-        selectedUsers: new can.Model.List()
+        selectedUsers: new can.Model.List(),
+        // Override the silentLoading parameter.
+        silentLoading: false
     }
 
 }, /** @prototype */ {
