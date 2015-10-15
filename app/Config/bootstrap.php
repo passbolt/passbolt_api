@@ -170,7 +170,7 @@ App::uses('AppExceptionRenderer', 'Lib/Error');
 /**
  * Testsuite
  */
-require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+require_once APP . 'Vendor/autoload.php';
 
 /**
  * GPG Keyring
