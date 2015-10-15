@@ -44,7 +44,11 @@
 </div>
 </footer>
 <?php echo $this->fetch('scriptBottom'); ?>
+<?php if(Configure::read('App.js.compile')) : ?>
+<script type="text/javascript" src="/js/lib/steal/steal.production.js" config="js/stealconfig.js" main="app/passbolt"></script>
+<?php else: ?>
 <script type="text/javascript" src="/js/lib/steal/steal.js" config="js/stealconfig.js" main="passbolt"></script>
+<?php endif; ?>
 <?php
 // load devel materials.
 if(Configure::read('debug') >= 2) {

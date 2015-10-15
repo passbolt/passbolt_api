@@ -22,6 +22,10 @@ $config = array(
 	'App.selenium' => array(
 		'active' => true,
 	),
+	// Javascript
+	'App.js' => array(
+	    'compile' => false
+	),
 	// Internationalization
 	'i18n' => array(
 		'locale' => 'en-EN',
