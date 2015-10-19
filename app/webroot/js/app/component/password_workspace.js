@@ -1,4 +1,5 @@
 import 'mad/component/component';
+import 'mad/component/confirm';
 import 'app/component/password_workspace_menu';
 import 'app/component/breadcrumb/password_breadcrumb';
 //import 'app/component/category_actions_tab';
@@ -389,16 +390,23 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Resource} [rs2 ...] Other resources to delete
 	 */
 	'{mad.bus.element} request_resource_deletion': function (el, ev) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
-		for (var i=2; i<arguments.length; i++) {
-			var rs = arguments[i];
-			if (!(rs instanceof passbolt.model.Resource)) {
-				throw passbolt.Exception.get('The parameter [%0] should be an instance of passbolt.model.Resource', i);
+		var args = arguments;
+		var confirm = new mad.component.Confirm(
+			null,
+			{
+				label: __('Do you really want to delete password ?'),
+				content: __('Please confirm you really want to delete the password. After clicking ok, it will be deleted permanently.'),
+				action: function() {
+					for (var i=2; i < args.length; i++) {
+						var rs = args[i];
+						if (!(rs instanceof passbolt.model.Resource)) {
+							throw passbolt.Exception.get('The parameter [%0] should be an instance of passbolt.model.Resource', i);
+						}
+						rs.destroy();
+					}
+				}
 			}
-			rs.destroy();
-		}
+		).start();
 	},
 
 	/**

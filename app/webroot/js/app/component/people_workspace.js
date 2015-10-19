@@ -341,16 +341,23 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * @return {void}
      */
     '{mad.bus.element} request_user_deletion': function (el, ev) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
-        for (var i=2; i<arguments.length; i++) {
-            var user = arguments[i];
-            if (!(user instanceof passbolt.model.User)) {
-                throw new mad.error.Exception('The parameter ' + i + ' should be an instance of passbolt.model.User');
-            }
-            user.destroy();
-        }
+		var args = arguments;
+		var confirm = new mad.component.Confirm(
+			null,
+			{
+				label: __('Do you really want to delete user ?'),
+				content: __('Please confirm you really want to delete the user. After clicking ok, it will be deleted permanently.'),
+				action: function() {
+					for (var i=2; i < args.length; i++) {
+						var user = args[i];
+						if (!(user instanceof passbolt.model.User)) {
+							throw new mad.error.Exception('The parameter ' + i + ' should be an instance of passbolt.model.User');
+						}
+						user.destroy();
+					}
+				}
+			}
+		).start();
     },
 
     /**
