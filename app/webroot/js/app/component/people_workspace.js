@@ -1,5 +1,6 @@
 import 'mad/component/component';
 import 'mad/component/dialog';
+import 'mad/component/confirm';
 import 'app/component/people_workspace_menu';
 import 'app/component/workspace_secondary_menu';
 import 'app/component/people_breadcrumb';
