@@ -12,7 +12,7 @@ fi
 
 
 echo "= installing composer dependencies ="
-( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/app ; rm -fr `$OPENSHIFT_DATA_DIR/composer.phar`/* ; $OPENSHIFT_DATA_DIR/composer.phar install --no-dev)
+( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/app ; rm -fr `$OPENSHIFT_DATA_DIR/composer.phar config cache-dir`/* ; $OPENSHIFT_DATA_DIR/composer.phar install --no-dev)
 
 echo "=Installing Passbolt="
 (cd $OPENSHIFT_REPO_DIR; sh $OPENSHIFT_REPO_DIR/app/Console/cake install)

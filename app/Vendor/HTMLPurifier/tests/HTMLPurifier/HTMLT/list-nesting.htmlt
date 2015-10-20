@@ -1,7 +1,0 @@
---INI--
-Core.LexerImpl = DirectLex
---HTML--
-<ul><li>Sublist 1</li><ul><li>Bullet</li></ul><li>Sublist 2</li><ol><li>Billet</li></ol></ul>
---EXPECT--
-<ul><li>Sublist 1<ul><li>Bullet</li></ul></li><li>Sublist 2<ol><li>Billet</li></ol></li></ul>
---# vim: et sw=4 sts=4

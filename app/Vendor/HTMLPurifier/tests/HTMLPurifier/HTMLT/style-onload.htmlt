@@ -1,6 +1,0 @@
---INI--
-Core.CollectErrors = true
---HTML--
-<style/onload    =    !-alert&#x28;1&#x29;>
---EXPECT--
---# vim: et sw=4 sts=4
