@@ -10,6 +10,9 @@ else
 	php $OPENSHIFT_DATA_DIR/composer.phar self-update
 fi
 
+echo "= installing front end dependencies ="
+(cd $OPENSHIFT_DATA_DIR ; npm install ; grunt lib-deploy)
+
 echo "= installing composer dependencies ="
 ( unset GIT_DIR ; cd $OPENSHIFT_REPO_DIR/app ; php $OPENSHIFT_DATA_DIR/composer.phar install --no-dev)
 
