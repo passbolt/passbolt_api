@@ -175,7 +175,7 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateDeleteNonExistingResource() {
-		$fakeResourceId = Common::uuid('role.id.anonymous');
+		$fakeResourceId = '0208f3a4-c5cd-11e1-a0c5-080027796c4c';
 		$data = array(
 			'Permissions' => array(
 				array(
