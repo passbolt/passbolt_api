@@ -64,12 +64,29 @@ var PasswordBrowser = passbolt.view.component.PasswordBrowser = mad.view.compone
 
 	/**
 	 * Right click has been detected. (contextual menu).
+	 * we just stop the event here, as we do not want to base our contextual menu on this event, but on the mouse down event instead.
 	 * @event item_right_selected
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {bool}
 	 */
 	'tbody tr contextmenu': function (el, ev) {
+		ev.stopPropagation();
+		ev.preventDefault();
+		return false;
+	},
+
+	/**
+	 * Mousedown event.
+	 * We use this event to display the contextual menu
+	 * instead of the event "contextmenu" which is based on the mouseup.
+	 * This gives a smoother feeling.
+	 * @param el
+	 * @param ev
+	 * @returns {boolean}
+	 */
+	'tbody tr mousedown': function (el, ev) {
+		var self = this;
 		ev.stopPropagation();
 		ev.preventDefault();
 
@@ -81,7 +98,14 @@ var PasswordBrowser = passbolt.view.component.PasswordBrowser = mad.view.compone
 			} else {
 				data = tr[0].id;
 			}
-			this.element.trigger('item_right_selected', [data, ev]);
+			// We trigger the event item_right_selected, and
+			// we use setTimeout 0 to do it at the end of the execution thread.
+			setTimeout(
+				function() {
+					self.element.trigger('item_right_selected', [data, ev]);
+				},
+				0
+			);
 		}
 		return false;
 	}

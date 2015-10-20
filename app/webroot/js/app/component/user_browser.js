@@ -26,7 +26,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // the type of the item rendered by the grid
         itemClass: passbolt.model.User,
         // Specific view for userBrowser. To handle specific behaviours like drag n drop.
-        viewClass: passbolt.view.component.userBrowser,
+        viewClass: passbolt.view.component.UserBrowser,
         // the list of resources displayed by the grid
         users: new can.Model.List(),
         // the list of displayed categories
@@ -137,7 +137,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
 
         // Instantiate the contextual menu menu.
-        var contextualMenu = new mad.controller.component.ContextualMenuController(null, {
+        var contextualMenu = new mad.component.ContextualMenu(null, {
             state: 'hidden',
             source: $item[0],
             coordinates: {
