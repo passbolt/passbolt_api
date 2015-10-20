@@ -13,7 +13,7 @@
 	},
     "extra": {
         "installer-paths": {
-            "Plugin/HtmlPurifier": ["burzum/cakephp-html-purifier"]
+            "Plugin/HTMLPurifier": ["burzum/cakephp-html-purifier"]
         }
     }
 }

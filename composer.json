@@ -5,6 +5,9 @@
 	"keywords": ["framework"],
 	"homepage": "http://cakephp.org",
 	"license": "MIT",
+	"config": {
+	  "vendor-dir": "Vendor"
+	},
 	"authors": [
 		{
 			"name": "CakePHP Community",
