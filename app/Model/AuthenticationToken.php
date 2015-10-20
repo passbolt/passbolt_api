@@ -158,9 +158,8 @@ class AuthenticationToken extends AppModel {
 
 	/**
 	 * Create a token for a given user.
-	 *
 	 * @param uuid $userId
-	 *
+	 * @param string $type MD5 or UUID
 	 * @return array result of the save function for token
 	 */
 	public function createToken($userId, $type = self::MD5) {
@@ -168,11 +167,11 @@ class AuthenticationToken extends AppModel {
 			'user_id' => $userId,
 			'token' => self::generateToken($type),
 		);
+
 		$this->set($token);
 		$this->setValidationRules($type);
 		$v = $this->validates();
 		if (!$v) {
-
 			return false;
 		}
 		$this->create();

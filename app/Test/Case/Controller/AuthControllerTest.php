@@ -223,8 +223,11 @@ class AuthControllerTest extends ControllerTestCase {
 
 
         $AuthenticationToken = Common::getModel('AuthenticationToken');
-        $token = $AuthenticationToken->createToken('50cdea9c-a34c-406f-a9f1-2f4fd7a10fce', AuthenticationToken::UUID);
-        $r = $AuthenticationToken->checkTokenIsValid($token['AuthenticationToken']['token'],'50cdea9c-a34c-406f-a9f1-2f4fd7a10fce');
+
+        $token = $AuthenticationToken->createToken(Common::uuid('user.id.ada'), AuthenticationToken::UUID);
+
+        $this->assertTrue($token != false, 'Token should not be false');
+        $r = $AuthenticationToken->checkTokenIsValid($token['AuthenticationToken']['token'], Common::uuid('user.id.ada'));
         $this->assertFalse(empty($r), 'r should not be empty');
 
         // Send it back!
@@ -260,11 +263,11 @@ class AuthControllerTest extends ControllerTestCase {
         // @TODO from fixtures?
         // keys to be used in the tests
         $this->_keys = array(
-            'server' => Configure::read('Auth.gpg.serverKey'),
+            'server' => Configure::read('GPG.serverKey'),
             'user' => array(
                 'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
-                'public' => APP . 'Config' . DS . 'gpg' . DS . 'ada_public.key',
-                'private' => APP . 'Config' . DS . 'gpg' . DS . 'ada_private.key',
+                'public' => Configure::read('GPG.testKeys.path') . 'ada_public.key',
+                'private' => Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key',
                 'passphrase' => ''
             )
         );

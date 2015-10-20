@@ -40,8 +40,8 @@ class AuthController extends AppController {
         if ($this->request->is('post')) {
             $this->Auth->login();
         } else {
-            $key['fingerprint'] = Configure::read('Auth.gpg.serverKey.fingerprint');
-            $file = new File(Configure::read('Auth.gpg.serverKey.public'));
+            $key['fingerprint'] = Configure::read('GPG.serverKey.fingerprint');
+            $file = new File(Configure::read('GPG.serverKey.public'));
             if($file->exists()) {
                 $key['keydata'] = $file->read();
                 $this->set('data',$key);

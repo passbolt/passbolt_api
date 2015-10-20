@@ -25,8 +25,8 @@ class GpgAuthenticate extends BaseAuthenticate
      * @param CakeResponse $response
      * @return Array|false the user or false if authentication failed
      */
-    public function authenticate(CakeRequest $request, CakeResponse $response)
-    {
+    public function authenticate(CakeRequest $request, CakeResponse $response) {
+
         // Init gpg object and load server key
         $this->_initKeyring();
         $this->_response = &$response;
@@ -35,6 +35,7 @@ class GpgAuthenticate extends BaseAuthenticate
         // Begin process by checking if the user exist and his key is valid
         $response->header('X-GPGAuth-Authenticated', 'false');
         $response->header('X-GPGAuth-Progress', 'stage0');
+
         $user = $this->_identifyUserWithFingerprint($request);
         if ($user === false) {
             return $this->__error();
@@ -113,7 +114,7 @@ class GpgAuthenticate extends BaseAuthenticate
      */
     protected function _initKeyring() {
         // load base configuration
-        $this->_config = Configure::read('Auth.gpg');
+        $this->_config = Configure::read('GPG');
         if(!isset($this->_config['serverKey']['fingerprint'])) {
             throw new CakeException('The GnuPG config for the server is not available');
         }

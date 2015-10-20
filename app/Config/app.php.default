@@ -50,10 +50,10 @@ $config = array(
 			'home'
 		),
 		'authenticate' => array(
-			'Form' => array(
-				'passwordHasher' => 'Blowfish'
-			)
-//			'Gpg'
+//			'Form' => array(
+//				'passwordHasher' => 'Blowfish'
+//			)
+			'Gpg'
 		),
 		'authorize' => array('Controller'),
 		'unauthorizedRedirect' => array(
