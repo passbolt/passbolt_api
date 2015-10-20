@@ -14,17 +14,13 @@ $config = array(
 	'App.copyright' => '2015 &copy; Passbolt.com',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.version'	 => array(
-		'number' => '2.15.9',
+		'number' => '2.15.11',
 		'name' => 'Sauvage',
 		'song' => 'http://youtu.be/DaRG0ukxYqQ'
 	),
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => array(
 		'active' => true,
-	),
-	// Javascript
-	'App.js' => array(
-	    'compile' => false
 	),
 	// Internationalization
 	'i18n' => array(
@@ -84,6 +80,11 @@ $config = array(
 		),
 		'whitelist' => array(
 			'users' => array(
+				'login' => true,
+				'logout' => true,
+				'verify' => true
+			),
+			'auth' => array(
 				'login' => true,
 				'logout' => true,
 				'verify' => true
