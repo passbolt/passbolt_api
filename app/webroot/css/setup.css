@@ -20,10 +20,8 @@
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden,
-i.no-text + span {
-  display: none !important;
-  visibility: hidden;
+.hidden {
+  display: none;
 }
 /*
  * Hide only visually, but have it available for screenreaders: h5bp.com/v
@@ -37,13 +35,13 @@ i.no-text + span {
   padding: 0;
   position: absolute;
   width: 1px;
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
 }
-/*
- * Extends the .visuallyhidden class to allow the element to be focusable
- * when navigated to via the keyboard: h5bp.com/p
- */
-.visuallyhidden.focusable:active,
-.visuallyhidden.focusable:focus {
+.visuallyhidden .focusable:active,
+.visuallyhidden .focusable:focus {
   clip: auto;
   height: auto;
   margin: 0;
@@ -336,7 +334,7 @@ button,
 input,
 select,
 textarea {
-  font-family: sans-serif;
+  font-family: "Open Sans", Verdana, sans-serif;
 }
 /* ==========================================================================
    Links
@@ -809,9 +807,6 @@ p {
   font-weight: normal;
   font-style: normal;
 }
-a.no-text {
-  text-decoration: none;
-}
 .icon:before,
 .icon.social:before {
   font-family: "entypo";
@@ -864,6 +859,50 @@ span + .icon {
   margin-right: 1.357em;
 }
 /* no text */
+a.no-text {
+  text-decoration: none;
+}
+.no-text + span,
+.no-text span {
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
+}
+.no-text + span .focusable:active,
+.no-text span .focusable:active,
+.no-text + span .focusable:focus,
+.no-text span .focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+.no-text + span .focusable:active,
+.no-text span .focusable:active,
+.no-text + span .focusable:focus,
+.no-text span .focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
 .button .icon.no-text {
   padding-right: .9em;
 }
@@ -974,6 +1013,9 @@ span + .icon {
 }
 .icon.retry:before {
   content: '\27F3';
+}
+.icon.copy:before {
+  content: '\E736';
 }
 /** notification messages **/
 .notification_status .icon.success:before {
@@ -1356,16 +1398,18 @@ input[type=password],
 input[type=search],
 textarea {
   font-size: 16px;
+  line-height: 24px;
   color: #333333;
   background: #ffffff;
   width: 14em;
   /* 20 char (default input length) x .7em (average char length) */
-  padding: .563em .625em .375em .625em;
+  padding: .375em .625em .375em .625em;
   display: inline-block;
   margin-bottom: .5em;
   -webkit-appearance: none;
   border: 1px solid #cccccc;
   border-top: 1px solid #bbbbbb;
+  vertical-align: middle;
 }
 textarea:hover,
 input[type=password]:hover,
@@ -1491,7 +1535,7 @@ select:disabled {
 .input.date:after {
   position: absolute;
   content: ' ';
-  z-index: 99999;
+  z-index: 790;
   width: 20px;
   height: 20px;
   background: transparent url('../img/controls/calendar.png') center center no-repeat;
@@ -2211,7 +2255,7 @@ select.fluid {
 	  it is situated at the bottom of the workspace
 */
 .update-loading-bar {
-  position: absolute;
+  position: fixed;
   display: block;
   width: 100%;
   bottom: 2.125em;
@@ -2234,7 +2278,7 @@ select.fluid {
   .notification-container {
     bottom: 0;
     position: absolute;
-    z-index: 992;
+    z-index: 991;
     height: 2em;
     margin: 0;
     padding-top: 0.833em;
@@ -2265,9 +2309,10 @@ select.fluid {
 .dialog-wrapper {
   position: absolute;
   width: 100%;
-  z-index: 999;
-  background: rgba(255, 255, 255, 0.9);
   height: 100%;
+  z-index: 800;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: auto;
 }
 .dialog {
   position: relative;
@@ -2276,6 +2321,8 @@ select.fluid {
   background: #f3f3f3;
   margin: auto;
   margin-top: 1%;
+  /* some space for the footer / notification area in case it is really tall */
+  margin-bottom: 3em;
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
@@ -2347,6 +2394,7 @@ select.fluid {
 .dialog textarea {
   width: 92%;
 }
+.dialog textarea + .message.error,
 .dialog input + .message.error {
   display: block;
   clear: both;
@@ -2355,6 +2403,7 @@ select.fluid {
   font-size: .813em;
 }
 .dialog .submit-wrapper {
+  margin: 0;
   border-top: 1px solid #dddddd;
   clear: both;
   width: 100%;
@@ -2395,7 +2444,7 @@ select.fluid {
   border-top: 1px solid #dddddd;
   bottom: 0;
   position: fixed;
-  z-index: 990;
+  z-index: 890;
 }
 .plugin-check {
   padding: 1em;
@@ -2635,7 +2684,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* Base styles for the tooltip's directional arrow */
 .tooltip:before,
 [data-tooltip]:before {
-  z-index: 1001;
+  z-index: 990;
   border: 6px solid transparent;
   background: transparent;
   content: "";
@@ -2643,7 +2692,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* Base styles for the tooltip's content area */
 .tooltip:after,
 [data-tooltip]:after {
-  z-index: 1000;
+  z-index: 990;
   padding: 8px;
   width: 160px;
   background-color: #000;

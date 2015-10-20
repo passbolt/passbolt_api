@@ -6,17 +6,12 @@
 	font-size: .9375em; /* 15px */
 	height: 100%;
 }
-/* additional space to avoid scrollbar bump */
-.tableview table {
-	padding-right:.625em;
-}
-.no-cssscrollbar .tableview table {
-	padding-right:1em; /* 16px fallback */
-}
 
 /* header */
 .tableview-header {
-	height:2em;
+	height:2.125em;
+	overflow-y:scroll;
+  	padding-top:.125em;
 }
 .tableview-header table {
 	width:100%;
@@ -24,67 +19,74 @@
 
 /* main content */
 .tableview-content {
-	top:2em;
+	top:2.125em;
 	bottom:45px;
 	padding:0;
 	position:absolute;
 	width:100%;
 	border-top:1px solid #DDD;
+	overflow-y:scroll;
 }
 .tableview-content table {
 	width:100%;
 }
 
-.tableview table thead th:last-child {
-	padding-right:17px;
-}
 /* rows */
-.tableview table th,
-.tableview table td {
-	text-align:left;
-	padding:.25em .125em;
-    vertical-align: middle;
+.tableview table {
+  th, td {
+	  text-align:left;
+	  padding:.25em;
+	  vertical-align: middle;
+  }
+  th {
+	  font-weight:bold;
+  }
+  td div {
 	.ellipsis();
-}
-.tableview table th {
-	font-weight:bold;
-}
-.tableview table .s-cell {
+  }
+  .s-cell {
+	  width:15px;
+	  max-width: 15px;
+  }
+  .s2-cell {
+	  width:40px;
+	  max-width:40px;
+  }
+  .m-cell {
+	  width:10em;
+	  max-width:10em;
+	  vertical-align: middle;
+  }
+  .l-cell {
+	  width:12em;
+	  max-width:12em;
+  }
+  tbody tr.selected,
+  tbody tr:hover {
+	  height:1em;
+	  background:#fffacc;
+  }
+  .checkbox label {
+	  display:none;
+  }
+  .checkbox input{
+	  margin-top:0;
+	  float:left;
+  }
+  th span,
+  td span {
+	  vertical-align:6%;
+  }
+
+  /* fav fix */
+  th.cell_favorite,
+  td.cell_favorite {
 	width:20px;
-	max-width:20px;
-}
-.tableview table .s-cell.favorites {
-	width:25px;
-	max-width:25px;
-}
-.tableview table .s2-cell {
-	width:40px;
-	max-width:40px;
-}
-.tableview table .m-cell {
-	width:10em;
-	max-width:10em;
-	vertical-align: middle;
-}
-.tableview table .l-cell {
-	width:12em;
-	max-width:12em;
-}
-.tableview table tbody tr.selected,
-.tableview table tbody tr:hover {
-	height:1em;
-	background:#fffacc;
-}
-.tableview table .checkbox label {
-	display:none;
-}
-.tableview table .checkbox input{
-	margin-top:0px;
-	float:left;
-}
-.tableview table th span,
-.tableview table td span {
-	vertical-align:6%;
+	max-width: 20px;
+	i:before {
+	  vertical-align: -1px;
+	}
+  }
 }
 /* hide secondary actions if there is no space */
 @media all and (max-width: 600px) {

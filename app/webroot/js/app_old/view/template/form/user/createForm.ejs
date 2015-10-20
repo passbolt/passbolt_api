@@ -1,0 +1,100 @@
+<% var role = passbolt.model.User.getCurrent().Role.name; %>
+<% var user = this.controller.options.data; %>
+<div class="form-content">
+
+	<input type="hidden" name="passbolt.model.User.Group.id" id="js_field_group_id" class="form_field" />
+	<input type="hidden" name="passbolt.model.User.active" id="js_field_user_active" class="form_field" />
+
+	<div class="input text required">
+		<label for="js_field_first_name"><%= __('First Name') %></label>
+		<input name="passbolt.model.User.Profile.first_name" class="required" maxlength="50" type="text" id="js_field_first_name" placeholder="first name"/>
+		<div id="js_field_first_name_feedback" class="message">
+		</div>
+	</div>
+
+	<div class="input text required">
+		<label for="js_field_last_name"><%= __('Last Name') %></label>
+		<input name="passbolt.model.User.Profile.last_name" class="required" maxlength="50" type="text" id="js_field_last_name" placeholder="last name"/>
+		<div id="js_field_last_name_feedback" class="message">
+		</div>
+	</div>
+
+	<div class="input text required clearfix">
+		<label for="js_field_username"><%= __('Username / Email') %></label>
+		<input name="passbolt.model.User.username" class="required" maxlength="50" type="text" id="js_field_username" placeholder="email"<% if (action != 'create') { %> disabled<% } %> />
+		<div id="js_field_username_feedback" class="message">
+		</div>
+	</div>
+
+    <% if (action != 'create') { %>
+	<% if (role != 'admin' || (role == 'admin' && user.id == passbolt.model.User.getCurrent().id)) { %>
+	<div class="input text input-current-password-wrapper clearfix">
+		<div class="input current_password required short">
+			<label for="js_field_current_password"><%= __('Current login password') %></label>
+			<input name="passbolt.model.User.current_password" class="required" maxlength="50" type="password" id="js_field_current_password" placeholder="password"/>
+			<input class="required" maxlength="50" type="text" id="js_field_current_password_clear" placeholder="password"/>
+		</div>
+		<ul class="actions inline">
+			<li>
+				<a href="#" id="js_show_curr_pwd_button" class="button toggle">
+					<i class="icon eye big no-text"></i>
+					<span><%= __('view') %></span>
+				</a>
+			</li>
+		</ul>
+		<div id="js_field_current_password_feedback" class="message"></div>
+	</div>
+	<% } %>
+
+	<div class="input text input-password-wrapper clearfix">
+		<div class="input password required short">
+			<label for="js_field_password"><%= __('New login password') %></label>
+			<input name="passbolt.model.User.password" class="required" maxlength="50" type="password" id="js_field_password" placeholder="password"/>
+			<input class="required" maxlength="50" type="text" id="js_field_password_clear" placeholder="password"/>
+		</div>
+		<ul class="actions inline">
+			<li>
+				<a href="#" id="js_show_pwd_button" class="button toggle">
+					<i class="icon eye big no-text"></i>
+					<span><%= __('view') %></span>
+				</a>
+			</li>
+			<li>
+				<a href="#" id="js_gen_pwd_button" class="button">
+					<i class="icon key big no-text"></i>
+					<span><%= __('generate') %></span>
+				</a>
+			</li>
+		</ul>
+		<div id="js_user_pwd_strength" class="password-complexity">
+		</div>
+	</div>
+	<% } %>
+
+	<div class="input text required">
+		<label for="js_field_role_id"><%= __('Role') %></label>
+		<div id="js_field_role_id">
+			<input name="passbolt.model.User.role_id" value="<%= cakephpConfig.roles.admin %>" type="checkbox" />
+			<span>This user is an administrator</span>
+		</div>
+		<% if (action == 'create') { %>
+		<em>Note: administrators can not see passwords as such but they can edit the password properties, like the name and description. They can also manage other users and the organization settings.</em>
+		<% } %>
+		<div id="js_field_role_id_feedback" class="message">
+		</div>
+	</div>
+	<% if (action == 'create') { %>
+	<div class="input text required">
+		<label for="js_field_last_name"><%= __('Password') %></label>
+		<input name="passbolt.model.User.email_user" type="radio" class="required" maxlength="50" id="js_field_email_user" checked="checked"/>
+		<span>Send an email to the user you have just created. It will allow them to set up their password.</span>
+		<div id="js_field_email_user_feedback" class="message">
+		</div>
+	</div>
+	<% } %>
+</div>
+
+<div class="submit-wrapper clearfix">
+    <input type="submit" class="button primary" value="<%= __('save')%>" />
+    <a href="#" class="js-dialog-cancel cancel"><%= __('cancel')%></a>
+</div>

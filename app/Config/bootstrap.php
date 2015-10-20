@@ -22,6 +22,13 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+/**
+ * Path to the schema files directory.
+ */
+if (!defined('SCHEMATMP')) {
+	define('SCHEMATMP', APP . 'tmp' . DS . 'schema' . DS);
+}
+
 // Setup a 'default' cache configuration for use in the application.
 Cache::config('default', array('engine' => 'File'));
 
@@ -35,8 +42,10 @@ require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Ex
 /**
  * API and DOC Plugins
  */
-if (Configure::read('debug') > 1) {
-	CakePlugin::load('DataExtras');
+if (Configure::read('debug') > 0) {
+	CakePlugin::load('DataDefault');
+	CakePlugin::load('DataSeleniumTests');
+	CakePlugin::load('DataUnitTests');
 }
 
 /**
@@ -161,11 +170,11 @@ App::uses('AppExceptionRenderer', 'Lib/Error');
 /**
  * Testsuite
  */
-require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+require_once APP . 'Vendor/autoload.php';
 
 /**
  * GPG Keyring
  */
-if(Configure::read('Auth.gpg.env.setenv')) {
-	putenv('GNUPGHOME='. Configure::read('Auth.gpg.env.home'));
+if(Configure::read('GPG.env.setenv')) {
+	putenv('GNUPGHOME='. Configure::read('GPG.env.home'));
 }

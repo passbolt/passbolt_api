@@ -31,40 +31,40 @@ class RoleFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
-			'name' => 'guest',
-			'description' => 'Non logged-in user',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
-		),
-		array(
-			'id' => '0208f57a-c5cd-11e1-a0c5-080027796c4c',
-			'name' => 'user',
-			'description' => 'Logged in default user',
-			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
-		),
-		array(
-			'id' => '142c1188-c5cd-11e1-a0c5-080027796c4c',
+			'id' => '23d941d5-3676-3443-afdb-aaf2456f3b49',
 			'name' => 'admin',
 			'description' => 'Organization administrator',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
-			'id' => '142c1340-c5cd-11e1-a0c5-080027796c4c',
+			'id' => '49aad81e-4f70-3380-a92e-12292597409f',
+			'name' => 'guest',
+			'description' => 'Non logged-in user',
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
+			'id' => '857760a6-4f9d-3f1b-a292-95b630bcf03f',
 			'name' => 'root',
 			'description' => 'Super Administrator',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c',
-			'modified_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
+			'id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+			'name' => 'user',
+			'description' => 'Logged in default user',
+			'created' => '2012-07-04 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 	);
 

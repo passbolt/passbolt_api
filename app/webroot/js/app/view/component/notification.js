@@ -1,58 +1,56 @@
-steal(
-	'mad/view'
-).then(function () {
+import 'mad/view/view';
 
-	/*
-	 * @class passbolt.view.component.Notification
-	 * @inherits mad.view.View
+/**
+ * @inherits mad.view.View
+ */
+var Notification = passbolt.view.component.Notification = mad.View.extend('passbolt.view.component.Notification', /** @static */ {
+
+	defaults: {
+		timeout: 2500,
+		notifications: []
+	}
+
+}, /** @prototype */ {
+
+	// constructor like
+	init: function(elt, opts, notifications) {
+		var timeoutConf = mad.Config.read('notification.timeout');
+		if (typeof timeoutConf != 'undefined') {
+			this.options.timeout = timeoutConf;
+		}
+		this._super(elt, opts);
+	},
+
+	/**
+	 * Load a new notification
 	 */
-	mad.view.View.extend('passbolt.view.component.Notification', /** @static */ {
+	load: function(notification) {
+		this.notifications.push(notification);
+	},
 
-		'defaults': {
-			'timeout': 2500,
-			'notifications': []
-		}
+	/**
+	 * Override mad.view.View.render() function.
+	 */
+	render: function () {
+		var self = this;
 
-	}, /** @prototype */ {
+		// Set the view data with the next notification in the queue.
+		var notifications = this.getController().options.notifications,
+			notification = notifications.shift();
+		this.getController().setViewData(notification);
 
-		// constructor like
-		'init': function(elt, opts, notifications) {
-			var timeoutConf = mad.Config.read('notification.timeout');
-			if (typeof timeoutConf != 'undefined') {
-				this.options.timeout = timeoutConf;
+		// Hide the notification after a defined timeout.
+		setTimeout(function () {
+			if (notifications.length) {
+				self.getController().refresh();
+			} else {
+				self.getController().setState('hidden');
 			}
-			this._super(elt, opts);
-		},
+		}, self.options.timeout);
 
-		/**
-		 * Load a new notification
-		 */
-		'load': function(notification) {
-			this.notifications.push(notification);
-		},
+		return this._super();
+	}
 
-		/**
-		 * Override mad.view.View.render() function.
-		 */
-		'render': function () {
-			var self = this;
-
-			// Set the view data with the next notification in the queue.
-			var notifications = this.getController().options.notifications,
-				notification = notifications.shift();
-			this.getController().setViewData(notification);
-
-			// Hide the notification after a defined timeout.
-			setTimeout(function () {
-				if (notifications.length) {
-					self.getController().refresh();
-				} else {
-					self.getController().setState('hidden');
-				}
-			}, self.options.timeout);
-
-			return this._super();
-		}
-
-	});
 });
+
+export default Notification;

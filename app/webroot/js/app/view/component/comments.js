@@ -1,44 +1,42 @@
-steal(
-	'mad/view',
-	'app/view/template/component/comments.ejs'
-).then(function () {
+import 'mad/view/view';
+import 'app/view/template/component/comments.ejs!';
 
-		/*
-		 * @class passbolt.view.component.Comments
-		 * @inherits mad.view.View
-		 */
-		mad.view.View.extend('passbolt.view.component.Comments', /** @static */ {
+/**
+ * @inherits mad.view.View
+ */
+var Comments = passbolt.view.component.Comments = mad.View.extend('passbolt.view.component.Comments', /** @static */ {
 
-		}, /** @prototype */ {
+}, /** @prototype */ {
 
-			'init': function (el, options) {
-				this._super(el, options);
-			},
+	init: function (el, options) {
+		this._super(el, options);
+	},
 
-			/* ************************************************************** */
-			/* LISTEN TO THE VIEW EVENTS */
-			/* ************************************************************** */
+	/* ************************************************************** */
+	/* LISTEN TO THE VIEW EVENTS */
+	/* ************************************************************** */
 
 
-			/**
-			 * Observe when the user clicks on the plus button, to add a comment
-			 * @param {HTMLElement} el The element the event occured on
-			 * @param {HTMLEvent} ev The event which occured
-			 * @return {void}
-			 */
-			'.icon.create click': function (el, ev) {
-				// Displays the add comment form
-				this.getController().addFormController.setState('ready');
-			},
+	/**
+	 * Observe when the user clicks on the plus button, to add a comment
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 * @return {void}
+	 */
+	'.icon.create click': function (el, ev) {
+		// Displays the add comment form
+		this.getController().addForm.setState('ready');
+	},
 
-			/**
-			 * Observe when the user clicks on submit to save the comment
-			 * @param {HTMLElement} el The element the event occured on
-			 * @param {HTMLEvent} ev The event which occured
-			 * @return {void}
-			 */
-			'a.button.comment-submit click': function (el, ev) {
-				el.trigger('submit');
-			}
-		});
-	});
+	/**
+	 * Observe when the user clicks on submit to save the comment
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 * @return {void}
+	 */
+	'a.button.comment-submit click': function (el, ev) {
+		el.trigger('submit');
+	}
+});
+
+export default Comments;

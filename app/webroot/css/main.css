@@ -20,10 +20,8 @@
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden,
-i.no-text + span {
-  display: none !important;
-  visibility: hidden;
+.hidden {
+  display: none;
 }
 /*
  * Hide only visually, but have it available for screenreaders: h5bp.com/v
@@ -37,13 +35,13 @@ i.no-text + span {
   padding: 0;
   position: absolute;
   width: 1px;
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
 }
-/*
- * Extends the .visuallyhidden class to allow the element to be focusable
- * when navigated to via the keyboard: h5bp.com/p
- */
-.visuallyhidden.focusable:active,
-.visuallyhidden.focusable:focus {
+.visuallyhidden .focusable:active,
+.visuallyhidden .focusable:focus {
   clip: auto;
   height: auto;
   margin: 0;
@@ -336,7 +334,7 @@ button,
 input,
 select,
 textarea {
-  font-family: sans-serif;
+  font-family: "Open Sans", Verdana, sans-serif;
 }
 /* ==========================================================================
    Links
@@ -809,9 +807,6 @@ p {
   font-weight: normal;
   font-style: normal;
 }
-a.no-text {
-  text-decoration: none;
-}
 .icon:before,
 .icon.social:before {
   font-family: "entypo";
@@ -864,6 +859,50 @@ span + .icon {
   margin-right: 1.357em;
 }
 /* no text */
+a.no-text {
+  text-decoration: none;
+}
+.no-text + span,
+.no-text span {
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  /*
+   * Extends the .visuallyhidden class to allow the element to be focusable
+   * when navigated to via the keyboard: h5bp.com/p
+   */
+}
+.no-text + span .focusable:active,
+.no-text span .focusable:active,
+.no-text + span .focusable:focus,
+.no-text span .focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+.no-text + span .focusable:active,
+.no-text span .focusable:active,
+.no-text + span .focusable:focus,
+.no-text span .focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
 .button .icon.no-text {
   padding-right: .9em;
 }
@@ -974,6 +1013,9 @@ span + .icon {
 }
 .icon.retry:before {
   content: '\27F3';
+}
+.icon.copy:before {
+  content: '\E736';
 }
 /** notification messages **/
 .notification_status .icon.success:before {
@@ -1356,16 +1398,18 @@ input[type=password],
 input[type=search],
 textarea {
   font-size: 16px;
+  line-height: 24px;
   color: #333333;
   background: #ffffff;
   width: 14em;
   /* 20 char (default input length) x .7em (average char length) */
-  padding: .563em .625em .375em .625em;
+  padding: .375em .625em .375em .625em;
   display: inline-block;
   margin-bottom: .5em;
   -webkit-appearance: none;
   border: 1px solid #cccccc;
   border-top: 1px solid #bbbbbb;
+  vertical-align: middle;
 }
 textarea:hover,
 input[type=password]:hover,
@@ -1491,7 +1535,7 @@ select:disabled {
 .input.date:after {
   position: absolute;
   content: ' ';
-  z-index: 99999;
+  z-index: 790;
   width: 20px;
   height: 20px;
   background: transparent url('../img/controls/calendar.png') center center no-repeat;
@@ -2169,19 +2213,18 @@ select.fluid {
   width: 70%;
   margin-right: .25em;
   margin-bottom: 0;
-  margin-top: 0.0625em;
-  height: 1.0625em;
+  padding: .313em .625em;
 }
 .search .submit {
   float: left;
   border: 1px solid #bbbbbb;
 }
 .search button {
-  height: 2.125em;
-  min-width: 4em;
+  height: 2.25em;
+  min-width: 4.25em;
 }
 .search button .icon {
-  font-size: 1.125em;
+  font-size: 1.25em;
 }
 .search button .icon:before {
   margin-top: -0.1em;
@@ -2324,7 +2367,7 @@ input[type="search"]::-webkit-search-cancel-button {
 .breadcrumbs {
   height: 2em;
   padding: .1875em 0 .1875em 0;
-  margin-bottom: .1875em;
+  margin-bottom: 0;
   border-bottom: 1px solid #dddddd;
 }
 .breadcrumbs ul {
@@ -2355,6 +2398,14 @@ input[type="search"]::-webkit-search-cancel-button {
   }
 }
 /* actions */
+.header.third .main-action-wrapper {
+  margin-top: .5em;
+  padding-left: .625em;
+}
+.header.third .main-action-wrapper .button {
+  font-size: .875em;
+  min-width: 4em;
+}
 .header.third .actions-wrapper {
   margin-top: .5em;
 }
@@ -2377,6 +2428,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 /* hide secondary actions if there is no space */
 @media all and (max-width: 980px) {
+  .header.third .actions-wrapper .dropdown,
   .header.third .actions-wrapper .actions.secondary {
     display: none;
   }
@@ -2388,6 +2440,23 @@ input[type="search"]::-webkit-search-cancel-button {
   }
   .header.third .actions-wrapper .actions i + span {
     margin-left: 0;
+  }
+  .header.third .actions-wrapper .actions .disabled {
+    display: none;
+  }
+}
+/* hide text and only show icon if there is even less space */
+@media all and (max-width: 540px) {
+  .header.third .actions-wrapper .actions i {
+    display: block;
+  }
+  .header.third .actions-wrapper .actions a.button {
+    min-width: 1em;
+    font-size: 1em;
+  }
+  .header.third .actions-wrapper .actions i + span {
+    margin-left: 0;
+    display: none;
   }
   .header.third .actions-wrapper .actions .disabled {
     display: none;
@@ -2449,7 +2518,7 @@ input[type="search"]::-webkit-search-cancel-button {
 	  it is situated at the bottom of the workspace
 */
 .update-loading-bar {
-  position: absolute;
+  position: fixed;
   display: block;
   width: 100%;
   bottom: 2.125em;
@@ -2472,7 +2541,7 @@ input[type="search"]::-webkit-search-cancel-button {
   .notification-container {
     bottom: 0;
     position: absolute;
-    z-index: 992;
+    z-index: 991;
     height: 2em;
     margin: 0;
     padding-top: 0.833em;
@@ -2551,7 +2620,8 @@ input[type="search"]::-webkit-search-cancel-button {
   	Copy secret component
   		This is what is used to copy a secret in the clipboard
 */
-div.secret-copy {
+#container.page div.secret-copy {
+  overflow: visible;
   display: table-cell;
   vertical-align: middle;
   /*
@@ -2586,33 +2656,33 @@ div.secret-copy {
  *	`:before` to contain the top-margins of child elements.
  */
 }
-div.secret-copy:before,
-div.secret-copy:after {
+#container.page div.secret-copy:before,
+#container.page div.secret-copy:after {
   content: "";
   display: table;
 }
-div.secret-copy:after {
+#container.page div.secret-copy:after {
   clear: both;
 }
-div.secret-copy:before,
-div.secret-copy:after {
+#container.page div.secret-copy:before,
+#container.page div.secret-copy:after {
   content: "";
   display: table;
 }
-div.secret-copy:after {
+#container.page div.secret-copy:after {
   clear: both;
 }
-div.secret-copy > a {
+#container.page div.secret-copy > a {
   background: transparent url('../img/controls/password-dots.png') no-repeat left top;
   display: inline-block;
   width: 92px;
   height: 20px;
   float: left;
 }
-div.secret-copy > a:hover {
+#container.page div.secret-copy > a:hover {
   background: transparent url('../img/controls/password-dots.png') no-repeat left bottom;
 }
-div.secret-copy > a:after {
+#container.page div.secret-copy > a:after {
   background: transparent url('../img/logo/icon-20_grey.png') no-repeat center center;
   display: inline-block;
   content: '';
@@ -2621,13 +2691,13 @@ div.secret-copy > a:after {
   float: right;
   margin-right: -30px;
 }
-div.secret-copy > a:hover:after {
+#container.page div.secret-copy > a:hover:after {
   background: transparent url('../img/logo/icon-20.png') no-repeat center center;
 }
-div.secret-copy > a > span {
+#container.page div.secret-copy > a > span {
   display: none;
 }
-div.secret-copy > pre {
+#container.page div.secret-copy > pre {
   display: none;
 }
 .autocomplete-content {
@@ -2636,7 +2706,7 @@ div.secret-copy > pre {
   float: left;
   position: absolute;
   min-width: 13em;
-  z-index: 998;
+  z-index: 898;
   padding-top: .25em;
   width: 100%;
 }
@@ -2648,9 +2718,10 @@ div.secret-copy > pre {
 .dialog-wrapper {
   position: absolute;
   width: 100%;
-  z-index: 999;
-  background: rgba(255, 255, 255, 0.9);
   height: 100%;
+  z-index: 800;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: auto;
 }
 .dialog {
   position: relative;
@@ -2659,6 +2730,8 @@ div.secret-copy > pre {
   background: #f3f3f3;
   margin: auto;
   margin-top: 1%;
+  /* some space for the footer / notification area in case it is really tall */
+  margin-bottom: 3em;
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
@@ -2730,6 +2803,7 @@ div.secret-copy > pre {
 .dialog textarea {
   width: 92%;
 }
+.dialog textarea + .message.error,
 .dialog input + .message.error {
   display: block;
   clear: both;
@@ -2738,6 +2812,7 @@ div.secret-copy > pre {
   font-size: .813em;
 }
 .dialog .submit-wrapper {
+  margin: 0;
   border-top: 1px solid #dddddd;
   clear: both;
   width: 100%;
@@ -2769,7 +2844,7 @@ div.secret-copy > pre {
 }
 .dropdown.pressed .button {
   background: #ffffff;
-  z-index: 999;
+  z-index: 801;
   border-bottom: 0;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -2784,7 +2859,7 @@ div.secret-copy > pre {
   float: left;
   position: absolute;
   min-width: 13em;
-  z-index: 998;
+  z-index: 800;
   padding-top: .25em;
 }
 .button + .dropdown-content {
@@ -2841,7 +2916,7 @@ div.secret-copy > pre {
 .dropdownmenu {
   list-style: none;
   position: absolute;
-  z-index: 2;
+  z-index: 800;
   background: #ffffff;
   border: 1px solid #dddddd;
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
@@ -3193,7 +3268,7 @@ div.secret-copy > pre {
   -moz-box-shadow: 0px 0px 10px 0px #dddddd;
   -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
   box-shadow: 0px 0px 10px 0px #dddddd;
-  z-index: 999;
+  z-index: 993;
   left: 11.25em;
   display: none;
 }
@@ -3320,10 +3395,18 @@ div.secret-copy > pre {
 }
 .panel.aside .resource li .value,
 .panel.aside .user li .value {
-  width: 50%;
+  width: 60%;
   display: inline-block;
   float: left;
   height: 1.8em;
+}
+.panel.aside .resource li span,
+.panel.aside .user li span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
 }
 .panel.aside .resource textarea.resource_description,
 .panel.aside .user textarea.resource_description {
@@ -3421,58 +3504,51 @@ div.secret-copy > pre {
   /* 15px */
   height: 100%;
 }
-/* additional space to avoid scrollbar bump */
-.tableview table {
-  padding-right: .625em;
-}
-.no-cssscrollbar .tableview table {
-  padding-right: 1em;
-  /* 16px fallback */
-}
 /* header */
 .tableview-header {
-  height: 2em;
+  height: 2.125em;
+  overflow-y: scroll;
+  padding-top: .125em;
 }
 .tableview-header table {
   width: 100%;
 }
 /* main content */
 .tableview-content {
-  top: 2em;
+  top: 2.125em;
   bottom: 45px;
   padding: 0;
   position: absolute;
   width: 100%;
   border-top: 1px solid #DDD;
+  overflow-y: scroll;
 }
 .tableview-content table {
   width: 100%;
 }
-.tableview table thead th:last-child {
-  padding-right: 17px;
-}
 /* rows */
+.tableview table {
+  /* fav fix */
+}
 .tableview table th,
 .tableview table td {
   text-align: left;
-  padding: .25em .125em;
+  padding: .25em;
   vertical-align: middle;
+}
+.tableview table th {
+  font-weight: bold;
+}
+.tableview table td div {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
 }
-.tableview table th {
-  font-weight: bold;
-}
 .tableview table .s-cell {
-  width: 20px;
-  max-width: 20px;
-}
-.tableview table .s-cell.favorites {
-  width: 25px;
-  max-width: 25px;
+  width: 15px;
+  max-width: 15px;
 }
 .tableview table .s2-cell {
   width: 40px;
@@ -3496,12 +3572,21 @@ div.secret-copy > pre {
   display: none;
 }
 .tableview table .checkbox input {
-  margin-top: 0px;
+  margin-top: 0;
   float: left;
 }
 .tableview table th span,
 .tableview table td span {
   vertical-align: 6%;
+}
+.tableview table th.cell_favorite,
+.tableview table td.cell_favorite {
+  width: 20px;
+  max-width: 20px;
+}
+.tableview table th.cell_favorite i:before,
+.tableview table td.cell_favorite i:before {
+  vertical-align: -1px;
 }
 /* hide secondary actions if there is no space */
 @media all and (max-width: 600px) {
@@ -3634,7 +3719,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* Base styles for the tooltip's directional arrow */
 .tooltip:before,
 [data-tooltip]:before {
-  z-index: 1001;
+  z-index: 990;
   border: 6px solid transparent;
   background: transparent;
   content: "";
@@ -3642,7 +3727,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* Base styles for the tooltip's content area */
 .tooltip:after,
 [data-tooltip]:after {
-  z-index: 1000;
+  z-index: 990;
   padding: 8px;
   width: 160px;
   background-color: #000;
@@ -3808,7 +3893,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   border-top: 1px solid #dddddd;
   bottom: 0;
   position: fixed;
-  z-index: 990;
+  z-index: 890;
 }
 /*
 	Password fields in passbolt have complexity "progress bar"
@@ -4350,6 +4435,41 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 .folder-add .input.text {
   width: 25em;
 }
+/*
+ * Password workspace
+ * @todo better namespacing
+ */
+/* drag n drop */
+#js_dragged_resource {
+  padding: 6px 10px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+#js_dragged_resource span.name {
+  font-weight: bold;
+}
+/* sidebar */
+.panel.aside .resource .detailed-information li.password .value {
+  height: 1.6em;
+  padding-top: 0.2em;
+}
+/* unused collumn
+	@todo: remove html
+*/
+.js_grid_column_owner,
+.js_grid_column_copyLogin,
+.js_grid_column_copySecret {
+  display: none;
+}
+/* hide left column when there is no space */
+@media all and (max-width: 980px) {
+  .tableview .js_grid_column_modified {
+    display: none;
+  }
+}
 /* sidebar / user details in overview */
 .panel.aside .user .header {
   /*
@@ -4440,63 +4560,21 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   top: 1.6em;
 }
 /* tabel view adjustments for avatar */
-.tableview-header th.cell_multipleSelect {
-  width: 3%;
+.page.people .tableview-header th.cell_avatar {
+  width: 45px;
 }
-.tableview-header th.cell_avatar {
-  width: 3%;
+.page.people .tableview-content td.cell_avatar {
+  margin: 0;
+  text-align: left;
+  width: 45px;
 }
-.tableview-content td.cell_multipleSelect {
-  width: 3%;
-}
-.tableview-content td.cell_avatar {
-  text-align: right;
-  padding-right: 1em;
-  width: 3%;
-  max-width: 20px;
-}
-.tableview-content td.cell_avatar img {
+.page.people .tableview-content td.cell_avatar img {
   width: 25px !important;
   height: 25px !important;
 }
 /* login history icon collumn centerign */
 .login-history td:first-child {
   text-align: center;
-}
-/*
- * Password workspace
- * @todo better namespacing
- */
-/* drag n drop */
-#js_dragged_resource {
-  padding: 6px 10px;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-#js_dragged_resource span.name {
-  font-weight: bold;
-}
-/* sidebar */
-.panel.aside .resource .detailed-information li.password .value {
-  height: 1.6em;
-  padding-top: 0.2em;
-}
-/* unused collumn
-	@todo: remove html
-*/
-.js_grid_column_owner,
-.js_grid_column_copyLogin,
-.js_grid_column_copySecret {
-  display: none;
-}
-/* hide left column when there is no space */
-@media all and (max-width: 980px) {
-  .tableview .js_grid_column_modified {
-    display: none;
-  }
 }
 /* TODO replace by page level selector */
 .page.settings .main.panel .middle {

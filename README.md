@@ -37,7 +37,7 @@ Getting the code
 
 Clone the repository and associated submodules
 ```
-	git clone git@github.com:passbolt/passbolt
+	git clone git@bitbucket.org:passbolt/passbolt
 	cd passbolt
 	git submodule update --init
 ```
@@ -74,7 +74,7 @@ Run the install script from the cakephp root with the data flag set
 if you want to install the test data add the relevant parameter.
 ```
   cd ..
-	./app/Console/cake install [--data=1]
+	./app/Console/cake install [--data=[default|unittests|seleniumtests]]
 ```
 
 Check if it works!
@@ -140,8 +140,6 @@ Install the needed modules defined in the grunt config
 
 Install the styleguide
 ```
-	npm install -g bower
-	bower install
 	grunt styleguide-deploy
 ```
 
@@ -174,14 +172,14 @@ https://github.com/passbolt/passbolt_selenium
 How to regenerate the fixtures?
 -------------------------------
 
-The fixtures are generated from the DataExtra plugin. It is better you change the data there
-and rexport the content as fixtures.
+The fixtures are generated from the Data shell and plugins tasks. It is better you change the unit tests data tasks,
+install the data set and rexport the content as fixtures.
 ```
-./app/Console/cake DataExtras.data export
+./app/Console/cake install --data=unittests
+./app/Console/cake data export
 ```
 
-Note that the tests are tightly coupled with the extra data set.
-If you change it you may need to change the tests. You can add more record safely of course.
+Note that the tests are tightly coupled with the data. If you change it you may need to change the tests. You can add more record safely of course.
 
 
 How do I recompile the Javascript?

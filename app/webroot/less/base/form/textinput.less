@@ -12,16 +12,18 @@ input[type=text],
 input[type=password],
 input[type=search],
 textarea {
-	font-size: 16px;
+	font-size: 16px; // we dont rely on parent font size for consistancy
+    line-height: 24px;
 	color: @font-default;
 	background: @background-default;
 	width: 14em; /* 20 char (default input length) x .7em (average char length) */
-	padding: .563em .625em .375em .625em;
+	padding: .375em .625em .375em .625em;
 	display: inline-block;
 	margin-bottom: .5em;
 	-webkit-appearance: none;
 	border: 1px solid @border-2;
 	border-top: 1px solid @border-3;
+	vertical-align: middle;
 }
 textarea:hover,
 input[type=password]:hover,

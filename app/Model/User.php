@@ -613,4 +613,91 @@ class User extends AppModel {
 		}
 		return $fields;
 	}
+
+	/**
+	 * Add a user and its profile, and create an authentication token.
+	 * @param $data
+	 *   user and profile data.
+	 *
+	 * @return array
+	 *   a user object
+	 *
+	 * @throws Exception
+	 * @throws ValidationException
+	 */
+	public function __add($data) {
+		$userData = $data;
+		// If role id is not provided, we assign a default one
+		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
+			$userData['User']['role_id'] = $this->Role->field('Role.id', array('name' => Role::USER));
+		}
+		// Assign a temporary and random password.
+		$userData['User']['password'] = Common::randomString(15);
+		// User is not activated by default.
+		$userData['User']['active'] = FALSE;
+		// Validates user information
+		$this->set($userData);
+		// Get fields.
+		$fields = $this->getFindFields('User::save', User::get('Role.name'));
+		// check if the data is valid
+		if (!$this->validates()) {
+			$invalidFields = $this->validationErrors;
+			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
+			throw new ValidationException(__('Could not validate user data'), $finalInvalidFields);
+		}
+
+		$this->begin();
+		$user = $this->save(
+			$userData,
+			[
+				'validate' => false,
+				'fieldList' => $fields['fields'],
+				'atomic' => false,
+			]
+		);
+		if ($user == false) {
+			$this->rollback();
+			throw new Exception(__('The user could not be saved'));
+		}
+
+		if (!isset($userData['Profile']) || empty($userData['Profile'])) {
+			$this->rollback();
+			throw new Exception(__('Profile data are missing'));
+		}
+		// Validates profile information
+		$userData['Profile']['user_id'] = $this->id;
+		$this->Profile->set($userData);
+		if (!$this->Profile->validates()) {
+			$this->rollback();
+			$invalidFields = $this->Profile->validationErrors;
+			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
+			throw new ValidationException(__('Could not validate profile'), $finalInvalidFields);
+		}
+
+		$fields = $this->Profile->getFindFields('User::save', User::get('Role.name'));
+		$profile = $this->Profile->save(
+			$userData['Profile'],
+			[
+				'validate' => false,
+				'fieldList' => $fields['fields'],
+				'atomic' => false,
+			]
+		);
+		if ($profile == false) {
+			$this->rollback();
+			throw new Exception(__('The profile could not be saved'));
+		}
+
+		// Create token for user.
+		$token = $this->AuthenticationToken->createToken($this->id);
+		if (!$token) {
+			$this->rollback();
+			throw new Exception(__('The account token could not be created'));
+		}
+
+		// Everything fine, we commit.
+		$this->commit();
+
+		return array_merge($user, $profile, $token);
+	}
 }

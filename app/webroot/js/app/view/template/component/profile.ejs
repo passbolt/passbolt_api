@@ -5,7 +5,7 @@
 			<div class="section profile-detailed-information">
 				<div class="avatar">
 					<div class="value">
-						<img src="<%= user.Profile.avatarPath('medium'); %>" alt="profile picture" />
+						<img src="<%= user.Profile.avatarPath('medium') %>" alt="profile picture" />
 					</div>
 					<div class="edit">
 						<a class="edit-avatar-action" href="#" title="<%= __('Change Avatar') %>">
@@ -30,11 +30,11 @@
 					</tr>
 					<tr>
 						<td><%= __('Modified') %></td>
-						<td><%= moment(user.Profile.modified).fromNow(); %></td>
+						<td><%= moment(new Date(user.Profile.modified)).fromNow(); %></td>
 					</tr>
 					<tr>
 						<td><%= __('Created') %></td>
-						<td><%= moment(user.Profile.created).fromNow(); %></td>
+						<td><%= moment(new Date(user.Profile.created)).fromNow(); %></td>
 					</tr>
 					<tr>
 						<td><%= __('Public key') %></td>

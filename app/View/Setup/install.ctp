@@ -10,7 +10,6 @@
 $this->assign('title',	__('Install'));
 $this->assign('page_classes','setup install');
 $this->Html->css('setup', null, array('block' => 'css'));
-$this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'block'=>'scriptHeader'));
 $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scriptBottom'));
 ?>
 
@@ -88,9 +87,9 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 					</div>
 				</div>
 				<div class="col5 last">
-					<div class="video-wrapper">
-						<iframe width="400" height="300" src="https://www.youtube.com/embed/u-vDLf7cmf0" frameborder="0" allowfullscreen></iframe>
-					</div>
+<!--					<div class="video-wrapper">-->
+<!--						<iframe width="400" height="300" src="https://www.youtube.com/embed/u-vDLf7cmf0" frameborder="0" allowfullscreen></iframe>-->
+<!--					</div>-->
 				</div>
 			</div>
 		</div>

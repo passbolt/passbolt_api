@@ -332,7 +332,7 @@ class ResourcesController extends AppController {
 		}
 
 		// Update the associated secrets.
-		if (isset($resourcepost['Secret'])) {
+		if (isset($resourcepost['Secret']) && !empty($resourcepost['Secret'])) {
 			$secrets = array();
 
 			// Delete all the previous secrets.
@@ -368,7 +368,7 @@ class ResourcesController extends AppController {
 		}
 
 		// Save the relations
-		if (isset($resourcepost['Category'])) {
+		if (isset($resourcepost['Category']) && !empty($resourcepost['Category'])) {
 			// If relations are given with the resource
 			// we start by deleting previous associations
 			$delete = $this->Resource->CategoryResource->deleteAll(array(

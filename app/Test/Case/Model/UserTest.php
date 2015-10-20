@@ -25,7 +25,8 @@ class UserTest extends CakeTestCase {
 		'app.file_storage',
 		'app.gpgkey',
 		'app.role',
-		'core.cakeSession'
+		'core.cakeSession',
+		'app.authentication_token'
 	);
 
 	public $autoFixtures = true;
@@ -383,7 +384,7 @@ class UserTest extends CakeTestCase {
 		$this->User->set(
 			array(
 				'username' => 'testSave@passbolt.com',
-				'role_id'  => '0208f3a4-c5cd-11e1-a0c5-080027796c4c',
+				'role_id'  => Common::uuid('role.id.anonymous'),
 				'password' => 'abcdefgh',
 				'active'   => 1
 			)
@@ -434,4 +435,46 @@ class UserTest extends CakeTestCase {
 		);
 	}
 
+	/**
+	 * Test __add() function with valid parameters.
+	 */
+	public function testAdd() {
+		$data = [
+			'Profile' => [
+				'first_name' => 'john',
+				'last_name' => 'doe',
+			],
+			'User' => [
+				'username' => 'john.doe@passbolt.com'
+			]
+		];
+		$user = $this->User->__add($data);
+		$this->assertEquals($user['User']['username'], $data['User']['username'], 'User should have been created with the same email');
+	}
+
+	/**
+	 * Test __add() function with invalid parameters.
+	 * An exception should be returned
+	 * No user should be created in the database due to rollback.
+	 */
+	public function testAddWithValidationError() {
+		$data = [
+			'Profile' => [
+				'first_name' => 'john1',
+				'last_name' => 'doe',
+			],
+			'User' => [
+				'username' => 'john.doe@passbolt.com'
+			]
+		];
+		$this->setExpectedException('ValidationException', 'Could not validate profile');
+		$this->User->__add($data);
+		// Check that no user is inside the user table.
+		$user = $this->User->find('all', [
+				'conditions' => [
+					'username' => $data['User']['username']
+				]
+			]);
+		$this->assertEmpty($user, 'After a validation error, the user should not have been created in the database');
+	}
 }

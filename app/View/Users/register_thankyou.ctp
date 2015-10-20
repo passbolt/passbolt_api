@@ -10,7 +10,6 @@
 $this->assign('title',	__('Register'));
 $this->Html->css('login', null, array('block' => 'css'));
 $this->assign('page_classes','register thank-you');
-$this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'block'=>'scriptHeader'));
 ?>
 <div class="grid">
 	<div class="row">

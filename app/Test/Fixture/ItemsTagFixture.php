@@ -35,7 +35,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'foreign_model' => 'Resource',
 			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
 			'id' => '10be2d3a-0468-432b-b58f-3153d7a83fce',
@@ -43,7 +43,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'foreign_model' => 'Resource',
 			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
@@ -51,7 +51,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'foreign_model' => 'Resource',
 			'foreign_id' => '509bb871-b964-48ab-94fe-fb098cebc04d',
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
@@ -59,7 +59,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'foreign_model' => 'Resource',
 			'foreign_id' => '50d77ffb-d254-49e4-ac86-1b63d7a10fce',
 			'created' => '2012-11-25 13:39:25',
-			'created_by' => 'bbd56042-c5cd-11e1-a0c5-080027796c4c'
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 	);
 

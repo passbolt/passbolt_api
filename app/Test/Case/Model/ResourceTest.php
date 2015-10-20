@@ -142,9 +142,11 @@ class ResourceTest extends AppTestCase {
 		// Quick test, the uri validator is part of the Cake core.
 		$testcases = array(
 			'' => true,
+			't' => false,
 			'?!#' => false,
-			'test' => false,
-			'test@test.com' => false,
+			'test' => true,
+			'test@test.com' => true,
+			'test<' => false,
 			'http://www.passbolt.com' => true,
 			'192.168.10.3' => true
 		);
@@ -196,7 +198,7 @@ class ResourceTest extends AppTestCase {
 			// Not empty
 			'' => true,
 			// Email are not accepted
-			'test@test.com' => false,
+			'test@test.com' => true,
 			// too short
 			'sh' => false,
 			// too long

@@ -43,11 +43,8 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		$this->User = ClassRegistry::init('User');
-		$this->User->useDbConfig = 'test';
 		$this->Group = ClassRegistry::init('Group');
-		$this->Group->useDbConfig = 'test';
 		$this->GroupUser = ClassRegistry::init('GroupUser');
-		$this->GroupUser->useDbConfig = 'test';
 		parent::setUp();
 
 		// log the user as a manager to be able to access all categories

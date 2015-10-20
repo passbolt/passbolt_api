@@ -16,7 +16,7 @@
 	<title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
 	<meta name="robots" content="noindex,nofollow">
 	<meta name="viewport" content="width=device-width">
-	<?php echo $this->Html->script('lib/can/lib/jquery.1.8.3.js'); ?>
+	<?php echo $this->Html->script('lib/jquery/dist/jquery.js'); ?>
 	<?php echo $this->html->css('main'); ?>
 	<?php echo $this->html->css('devel'); ?>
 </head>

@@ -39,8 +39,8 @@ class CommentFixture extends CakeTestFixture {
 			'content' => 'this is a short comment',
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
-			'created_by' => '50cdea9c-af80-4e5e-86d0-2f4fd7a10fce',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
 			'id' => 'aaa00001-cccc-11d1-a0c5-080027796c4c',
@@ -50,8 +50,8 @@ class CommentFixture extends CakeTestFixture {
 			'content' => 'this is a reply to the short comment',
 			'created' => '2012-11-25 13:39:26',
 			'modified' => '2012-11-25 13:39:26',
-			'created_by' => '50cdea9c-fa10-47af-aaa8-2f4fd7a10fce',
-			'modified_by' => 'dada6042-c5cd-11e1-a0c5-080027796c51'
+			'created_by' => '917c2b89-d573-3c7c-ac4f-51f519d0164f',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 	);
 

@@ -7,52 +7,111 @@
  * @package      app.Console.Command.InstallShell
  * @since        version 2.12.11
  */
+App::uses('AppShell', 'Console/Command');
 
-class InstallShell extends AppShell {
+class InstallShell extends AppShell
+{
 
-	const DEFAULT_ADMIN_PASSWORD = 'ILovePassbolt!';
-
-	public function getOptionParser() {
+	/**
+	 * @return ConsoleOptionParser
+	 */
+	public function getOptionParser()
+	{
 		$parser = parent::getOptionParser();
-		$parser->addOption('data', array(
-				'help' => 'Dummy data from plugin dataExtras. Useful for development.',
-				'boolean' => true,
-				'default' => false,
+		$parser
+			->addOption('data', array(
+				'help' => 'Baseline data, minimal by default. Useful for testing and development.',
+				'default' => 'default',
 				'short' => 'd',
 			))
 			->addOption('password', array(
-					'help' => 'Password for admin user (only for non data install).',
-					'default' => '',
-					'short' => 'p',
-				))
-			->description(__('Installation shell for the application.'));
+				'help' => 'Password for admin user (only for non data install).',
+				'default' => '',
+				'short' => 'p',
+			))
+			->addOption('quick', array(
+				'help' => 'Use a database dump if any to speed things up.',
+				'default' => 'false',
+			))
+			->addOption('cache', array(
+				'help' => 'Create a database dump to enable cache option use later on',
+				'default' => 'true',
+				'short' => 'c',
+			))
+			->addOption('delete-avatars', array(
+				'help' => 'Delete existing public avatars',
+				'default' => 'true',
+				'short' => 'a',
+			))
+			->description(__('Installation shell for the passbolt application.'));
+
 		return $parser;
 	}
 
-	public function main() {
-		$this->schema();
-		// If data is requested, we install dummy data.
-		if (isset($this->params['data'])) {
-			$this->data();
-		}
-		else {
-			$password = isset($this->params['password']) ? $this->params['password'] : self::DEFAULT_ADMIN_PASSWORD;
-			// Validate password.
-			$User = ClassRegistry::init('User');
-			$User->set(array('password' => $password));
-			if (!$User->validates(array('fieldList' => array('password')))) {
-				$this->out("<error>Password is in wrong format</error>");
-				$this->out("<info>Debug info :\n" . print_r($User->invalidFields()['password'], true) . "</info>");
-				return;
-			}
-			$this->createRoles();
-			$this->createAnonUser();
-			$this->createAdminUser($password);
-		}
-		$this->out("\npassbolt installation success");
+	/**
+	 * Display the passbolt ascii banner
+	 */
+	protected function __welcome()
+	{
+		$this->out('     ____                  __          ____  ');
+		$this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
+		$this->out('   / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/ ');
+		$this->out('  / ____/ /_/ (__  |__  ) /_/ / /_/ / / /    ');
+		$this->out(' /_/    \__,_/____/____/_.___/\____/_/\__/   ');
+		$this->out('');
+		$this->out(' The open source password management solution for teams');
+		$this->out(' (c) 2015-present passbolt.com');
+		$this->out('');
+		$this->hr();
 	}
 
-	public function schema() {
+	/**
+	 * Main shell entry point
+	 */
+	public function main()
+	{
+		$this->__welcome();
+		$done = false;
+
+		// try to build from cache if requested and possible
+		if ($this->params['quick'] != 'false') {
+			$done = $this->__installFromCache();
+			if ($done) return true;
+		}
+
+		// Delete existing avatar if requested
+		if (isset($this->params['delete-avatars']) && $this->params['delete-avatars'] == 'true') {
+			$this->deleteAvatars();
+		}
+
+		// otherwise build from scratch
+		if (!$done) {
+			// create the schema & insert dummy data
+			$this->schema();
+			$this->data($this->params['data']);
+
+			// @TODO in case of default install request admin password details
+			// see. createAdminUser
+
+			if (!isset($this->params['cache']) || $this->params['cache'] == 'true') {
+				$this->__setCache();
+			}
+		}
+
+		// that's all folks
+		$this->hr();
+		$this->out('');
+		$this->out(' Passbolt installation success! Enjoy! ☮');
+		$this->out('');
+	}
+
+	/**
+	 * Install the database schema
+	 */
+	public function schema()
+	{
+		$this->out('Installing schema / database');
+		$this->hr();
 		$this->dispatchShell('schema create --force_drop --force_create -q');
 		$this->out('passbolt schema deployed');
 		$this->dispatchShell('schema create sessions --force_drop --force_create -q');
@@ -61,82 +120,61 @@ class InstallShell extends AppShell {
 		$this->out('plugins schemas deployed');
 	}
 
-	public function data() {
-		CakePlugin::load('DataExtras');
-		$this->dispatchShell('DataExtras.Data import');
-		$this->out('data deployed');
+	/**
+	 * Insert the dummy data in database (dispatch)
+	 * @param string $options
+	 */
+	public function data($options = 'default')
+	{
+		//CakePlugin::load('DataExtras');
+		$this->dispatchShell('data import --data=' . $options);
 	}
 
-	public function createAdminUser($password) {
-		$User = ClassRegistry::init('User');
-		$Role = ClassRegistry::init('Role');
-		$User->create();
-		$u = $User->save(array(
-				'username' => 'admin@passbolt.com',
-				'active' => true,
-				'password' => $password,
-				'role_id' => $Role->field('id', array('name' => 'admin')),
-			));
-		if (!$u) {
-			$this->out("<error>Could not save user</error>");
+	/**
+	 * Build the cache for further use
+	 * @return bool
+	 */
+	protected function __installFromCache()
+	{
+		$cmd = 'sql import';
+		if (isset($this->params['data'])) {
+			$cmd .= ' --data=' . $this->params['data'];
 		}
+		return $this->dispatchShell($cmd);
 
-		$Profile = ClassRegistry::init('Profile');
-		$Profile->create();
-		$p = $Profile->save(array(
-				'first_name' => 'admin',
-				'last_name' => 'admin',
-				'user_id' => $u['User']['id'],
-			));
-		if (!$p) {
-			$this->out("<error>Could not save profile</error>");
-		}
-
-		$gpgkeyPath = APP . 'Config' . DS . 'gpg' . DS . 'passbolt_dummy_key.asc';
-		$keyContent = file_get_contents($gpgkeyPath);
-		$Gpgkey = ClassRegistry::init('Gpgkey');
-		$gpgkey = $Gpgkey->save(array(
-				'user_id' => $u['User']['id'],
-				'key' => $keyContent,
-			));
-		if (!$gpgkey) {
-			$this->out("<error>Could not save gpg key</error>");
-		}
 	}
 
-	public function createAnonUser() {
-		$User = ClassRegistry::init('User');
-		$Role = ClassRegistry::init('Role');
-		$User->create();
-		$u = $User->save(array(
-				'username' => 'anonymous@passbolt.com',
-				'active' => true,
-				'password' => 'thYu!76hn54(§7yhT(',
-				'role_id' => $Role->field('id', array('name' => 'guest')),
-			));
-		if (!$u) {
-			$this->out("<error>Could not save user</error>");
+	/**
+	 * Build the cache for further use
+	 * @return bool
+	 */
+	public function __setCache()
+	{
+		$cmd = 'sql export';
+		if (isset($this->params['data'])) {
+			$cmd .= ' --data=' . $this->params['data'];
 		}
-
-		$Profile = ClassRegistry::init('Profile');
-		$Profile->create();
-		$p = $Profile->save(array(
-				'first_name' => 'anon',
-				'last_name' => 'ymous',
-				'user_id' => $u['User']['id'],
-			));
-		if (!$p) {
-			$this->out("<error>Could not save profile</error>");
-		}
+		return $this->dispatchShell($cmd);
 	}
 
-	public function createRoles() {
-		$Role = ClassRegistry::init('Role');
-		$Role->create();
-		$Role->save(array('name' => 'guest', 'description' => 'guest user'));
-		$Role->create();
-		$Role->save(array('name' => 'user', 'description' => 'normal user'));
-		$Role->create();
-		$Role->save(array('name' => 'admin', 'description' => 'god almighty'));
+	/**
+	 * Delete the avatars from public image director
+	 */
+	public function deleteAvatars()
+	{
+		$path = IMAGES . 'public' . DS . 'imagess';
+		if (PHP_OS === 'Windows') {
+			exec("rd /s /q {$path}", $output, $status);
+		} else {
+			exec("rm -rf {$path}", $output, $status);
+		}
+		if($status == 1) {
+			$this->out(' Ooops, something went wrong when trying to delete the avatars!');
+			return false;
+		}
+		else {
+			$this->out(' Avatar deleted!');
+			return true;
+		}
 	}
 }

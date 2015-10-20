@@ -1,29 +1,26 @@
-steal(
-	'mad/view',
-	'app/view/template/component/favorite.ejs'
-).then(function () {
+import 'mad/view/view';
+import 'app/view/template/component/favorite.ejs!';
 
-	/*
-	 * @class passbolt.view.component.Favorite
-	 * @inherits mad.view.View
+
+/**
+ * @inherits mad.view.View
+ */
+var Favorite = passbolt.view.component.Favorite = mad.View.extend('passbolt.view.component.Favorite', /** @static */ {
+
+}, /** @prototype */ {
+
+	/* ************************************************************** */
+	/* LISTEN TO THE VIEW EVENTS */
+	/* ************************************************************** */
+
+	/**
+	 *
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 * @return {void}
 	 */
-	mad.view.View.extend('passbolt.view.component.Favorite', /** @static */ {
+	' click': function (el, ev) {
+		this.element.trigger('trigger');
+	}
 
-	}, /** @prototype */ {
-
-		/* ************************************************************** */
-		/* LISTEN TO THE VIEW EVENTS */
-		/* ************************************************************** */
-
-		/**
-		 * 
-		 * @param {HTMLElement} el The element the event occured on
-		 * @param {HTMLEvent} ev The event which occured
-		 * @return {void}
-		 */
-		' click': function (el, ev) {
-			this.element.trigger('trigger');
-		}
-
-	});
 });

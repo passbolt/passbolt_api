@@ -41,13 +41,13 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->Category = new Category();
-		$this->User = new User();
-		$this->Resource = new Resource();
-		$this->CategoryResource = new CategoryResource();
-		
+		$this->User = ClassRegistry::init('User');
+		$this->Resource = ClassRegistry::init('Resource');
+		$this->Category = ClassRegistry::init('Category');
+		$this->CategoryResource = ClassRegistry::init('CategoryResource');
+
 		// log the user as a manager to be able to access all categories
-        $user = $this->User->findByUsername('dame@passbolt.com');
+		$user = $this->User->findByUsername('dame@passbolt.com');
 		$this->User->setActive($user);
 	}
 

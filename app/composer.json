@@ -6,10 +6,10 @@
 		"vendor-dir": "Vendor"
 	},
 	"require": {
-		"burzum/file-storage": "dev-master",
-		"burzum/cakephp-imagine-plugin": "dev-master",
-		"lorenzo/cakephp-email-queue": "1.0",
-        "burzum/cakephp-html-purifier" : "1.0"
+		"burzum/file-storage": "0.*",
+		"burzum/cakephp-imagine-plugin": "1.x",
+        "burzum/cakephp-html-purifier" : "1.1.0",
+        "lorenzo/cakephp-email-queue": "1.0"
 	},
     "extra": {
         "installer-paths": {

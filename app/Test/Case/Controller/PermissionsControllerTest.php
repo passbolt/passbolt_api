@@ -50,25 +50,15 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 		
-		$this->User = new User();
-		$this->User->useDbConfig = 'test';
+		$this->User = Common::getModel('User');
 		$u = $this->User->get();
-		// $this->Group = new Group();
-		// $this->Group->useDbConfig = 'test';
-		$this->Resource = new Resource();
-		$this->Resource->useDbConfig = 'test';
-		$this->Category = new Category();
-		$this->Category->useDbConfig = 'test';
-		$this->Permission = new Permission();
-		$this->Permission->useDbConfig = 'test';
-		$this->UserResourcePermission = new UserResourcePermission();
-		$this->UserResourcePermission->useDbConfig = 'test';
-		$this->GroupResourcePermission = new GroupResourcePermission();
-		$this->GroupResourcePermission->useDbConfig = 'test';
-		$this->UserCategoryPermission = new UserCategoryPermission();
-		$this->UserCategoryPermission->useDbConfig = 'test';
-		$this->GroupCategoryPermission = new GroupCategoryPermission();
-		$this->GroupCategoryPermission->useDbConfig = 'test';
+		$this->Resource = Common::getModel('Resource');
+		$this->Category = Common::getModel('Category');
+		$this->Permission = Common::getModel('Permission');
+		$this->UserResourcePermission = Common::getModel('UserResourcePermission');
+		$this->GroupResourcePermission = Common::getModel('GroupResourcePermission');
+		$this->UserCategoryPermission = Common::getModel('UserCategoryPermission');
+		$this->GroupCategoryPermission = Common::getModel('GroupCategoryPermission');
 		
 		$this->session = new CakeSession();
 		$this->session->init();
@@ -86,14 +76,14 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testViewAcoPermissionsNotExistingModel() {
 		$model = 'NotExistingModel';
-		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
+		$id = Common::uuid('user.id.user');
 		$this->setExpectedException('HttpException', "The model {$model} is not permissionable");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
 
 	public function testViewAcoPermissionsNotPermissionableModel() {
 		$model = 'User';
-		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
+		$id = Common::uuid('user.id.user');
 		$this->setExpectedException('HttpException', "The model {$model} is not permissionable");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
@@ -228,7 +218,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testAddAcoPermissionsNotExistingModel() {
 		$model = 'notExistingModel';
-		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
+		$id = Common::uuid('user.id.user');
 		$this->setExpectedException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array('method' => 'post', 'return' => 'contents')), true);
@@ -236,7 +226,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testAddAcoPermissionsNotPermissionableModel() {
 		$model = 'user';
-		$id = '50cdab9c-4380-4eb6-b4cc-2f4fd7a10fce';
+		$id = Common::uuid('user.id.user');
 		$this->setExpectedException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions/addAcoPermissions/$model/$id.json", array('method' => 'post', 'return' => 'contents')), true);
@@ -311,7 +301,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 				'type' => PermissionType::READ
 			),
 			'User' => array(
-				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // edith@passbolt.com, but we can put any other users
+				'id' => Common::uuid('user.id.edith') // edith@passbolt.com, but we can put any other users
 			)
 		);
 		
@@ -362,7 +352,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 				'type' => PermissionType::READ
 			),
 			'User' => array(
-				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // test@passbolt.com, but we can put any other users
+				'id' => Common::uuid('user.id.edith') // test@passbolt.com, but we can put any other users
 			)
 		);
 		
@@ -400,7 +390,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 				'type' => PermissionType::READ
 			),
 			'User' => array(
-				'id' => 'bbd56042-c5cd-11e1-a0c5-080027796c4e' // test@passbolt.com, but we can put any other users
+				'id' => Common::uuid('user.id.edith') // test@passbolt.com, but we can put any other users
 			)
 		);
 
@@ -532,7 +522,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 	}
 
 	// test edit aco permissions action with a not allowed user
-	// not allowed => Permission.type < PermissionType::ADMIN
+	// not allowed => Permission.type < PermissionType::OWNER
 	public function testDeletePermissionNotAllowed() {	
 		// try to get permissions on a Resource with a not allowed user
 		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration

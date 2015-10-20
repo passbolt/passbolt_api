@@ -185,10 +185,16 @@ class MessageComponent extends Component {
 		$type = strtolower($type);
 		$title = __($type, true);
 
+		// By default, the title is the controller name.
+		$title = strtolower('app_' . $this->Controller->name . '_' . $this->Controller->action . '_' . $type);
+		if (isset($options['title']) && !empty($options['title'])) {
+			$title = $options['title'];
+		}
+
 		// Set the header of the message
 		$response['header'] = array(
 			// UUID is predictable
-			'id' => Common::uuid($this->Controller->name . $this->Controller->action . $type),
+			'id' => Common::uuid($title),
 			'status' => $type,
 			'title' => $title,
 			'servertime' => time(),

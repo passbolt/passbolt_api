@@ -9,7 +9,8 @@ module.exports = function(grunt) {
 	var config = {
 	//	webroot			 : 'webroot',
 		webroot : 'app/webroot',
-		styleguide	 : 'passbolt_styleguide'
+		styleguide	 : 'passbolt-styleguide',
+		modules_path : 'node_modules'
 	}
 
 	// ========================================================================
@@ -18,13 +19,25 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		config : config,
 		pkg: grunt.file.readJSON('package.json'),
-		bower: grunt.file.readJSON('./.bowerrc'),
 		clean: {
 			css: [
 				'<%= config.webroot %>/css/*.css', '!<%= config.webroot %>/css/cake.generic.css'
 			],
 			'js': [
 				'<%= config.webroot %>/js/app/production.js'
+			],
+			'lib': [
+				'<%= config.webroot %>/js/lib/can',
+				'<%= config.webroot %>/js/lib/jquery',
+				'<%= config.webroot %>/js/lib/jquery-ui',
+				'<%= config.webroot %>/js/lib/mad',
+				'<%= config.webroot %>/js/lib/moment',
+				'<%= config.webroot %>/js/lib/jquery-mousewheel',
+				'<%= config.webroot %>/js/lib/<%= config.styleguide %>',
+				'<%= config.webroot %>/js/lib/steal',
+				'<%= config.webroot %>/js/lib/underscore',
+				'<%= config.webroot %>/js/lib/xregexp',
+				'<%= config.webroot %>/js/lib/jssha'
 			]
 		},
 		lesslint: {
@@ -65,31 +78,41 @@ module.exports = function(grunt) {
 					stderr: false
 				},
 				command: '(cd ./app/webroot/js; ./js ./steal/buildjs ./app/passbolt.html)'
+			},
+			mad_lib_patch: {
+				options: {
+					stderr: false
+				},
+				command: [
+					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-system_preload_template.patch;)',
+					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-util_string_get_object_set_object.patch;)'
+					//'(cd ./node_modules/documentjs; patch -p1 < ./app/webroot/js/lib/mad/patches/patches/documentjs-demo_tag_url_and_sharp.patch;)'
+				].join('&&')
 			}
 		},
 		copy: {
 			styleguide : {
 				files: [{
 					// Fonts
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/fonts',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/fonts',
 					src: '*',
 					dest: '<%= config.webroot %>/fonts',
 					expand: true
 				},{
 					// Images for webroots (favicons, etc.)
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/img/webroot',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/img/webroot',
 					src: '*',
 					dest: '<%= config.webroot %>',
 					expand: true
 				},{
 					// Images
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/img',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/img',
 					src: ['default/**','logo/**','third_party/**','avatar/**','controls/**'],
 					dest: '<%= config.webroot %>/img',
 					expand: true
 				},{
 					// Less
-					cwd: '<%= bower.directory %>/<%= config.styleguide %>/src/less',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/less',
 					src: [
 						'abstractions/**','base/**','components/**','dialogs/**',
 						'pages/launching.less','pages/login.less','pages/passwords.less',
@@ -99,6 +122,24 @@ module.exports = function(grunt) {
 					dest: '<%= config.webroot %>/less',
 					expand: true
 				}]
+			},
+			lib : {
+				nonull: true,
+				cwd: '<%= config.modules_path %>/',
+				src: [
+					'can/**',
+					'jquery/**',
+					'jquery-ui/**',
+					'mad/**',
+					'moment/**',
+					'jquery-mousewheel/**',
+					'steal/**',
+					'underscore/**',
+					'xregexp/**',
+					'jssha/**'
+				],
+				dest: '<%= config.webroot %>/js/lib/',
+				expand: true
 			}
 		},
 		watch: {
@@ -107,6 +148,19 @@ module.exports = function(grunt) {
 				tasks: ['css'],
 				options: {
 					spawn: false
+				}
+			}
+		},
+		"steal-build": {
+			default: {
+				options: {
+					system: {
+						config: "./app/webroot/js/stealconfig.js",
+						main: "app/passbolt"
+					},
+					buildOptions: {
+						minify: false
+					}
 				}
 			}
 		}
@@ -140,30 +194,35 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
+	grunt.loadNpmTasks("steal-tools");
+
 	// ========================================================================
 	// Register Tasks
 
-	// Run 'grunt test' to view lesslint recommendations
-	grunt.registerTask('test', ['lesslint']);
-
 	// Run 'grunt csslint' to check LESS quality, and if no errors then
 	// compile LESS into CSS, combine and minify
-	grunt.registerTask('csslint', ['lesslint', 'clean:css', 'less', 'cssmin']);
+	grunt.registerTask('csslint', ['lesslint', 'css']);
 
 	// Run 'grunt css' to compile LESS into CSS, combine and minify
 	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
 
-	// Bower deploy
-	grunt.registerTask('styleguide-deploy', ['copy:styleguide']);
+	// Npm styleguide deploy
+	grunt.registerTask('styleguide-deploy', ['copy:styleguide','css']);
+
+	// Npm libs deploy
+	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
 
 	// Run 'grunt js' to prepare the javascript
 	grunt.registerTask('js', ['clean:js', 'shell:jsmin']);
 
 	// Run 'grunt production' to prepare the production release
-	grunt.registerTask('production', ['clean:css', 'less', 'cssmin', 'clean:js', 'shell:jsmin']);
+	grunt.registerTask('production', ['css', 'clean:js', 'shell:jsmin']);
+
+	// Build mad & all the demos apps to ensure that everything compile
+	grunt.registerTask("build", ["steal-build"]);
 
 	// 'grunt' will check code quality, and if no errors,
 	// compile LESS to CSS, and minify and concatonate all JS and CSS
-	grunt.registerTask('default', [ 'clean', 'less', 'cssmin']);
+	grunt.registerTask('default', ['css']);
 
 };

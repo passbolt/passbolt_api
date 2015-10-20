@@ -16,12 +16,16 @@
 /app/tmp/tests/*
 /app/tmp/image-processing/*
 /app/tmp/file-storage-test/*
+/app/tmp/schema
 
 # Plugins
 /Plugin
 /plugins
 /app/Plugin/*
 !/app/Plugin/DataExtras
+!/app/Plugin/DataDefault
+!/app/Plugin/DataSeleniumTests
+!/app/Plugin/DataUnitTests
 !/app/Plugin/api_generator
 
 # Vendors
@@ -29,16 +33,20 @@
 /Vendor
 /vendors
 /app/Vendor/*
+/app/webroot/js/lib/*
+!/app/webroot/js/lib/modernizr
 !/app/Vendor/RandomTool.php
 !/app/Vendor/openpgp-php
 
-# bower and grunt
+# bower, composer, grunt
 /bower_components
 /node_modules
+composer.lock
 
 # Misc
 /app/composer.phar
 /app/webroot/img/public/*
+!/app/webroot/img/public/empty
 /lib/Cake/Console/Templates/skel/tmp/
 /build
 /dist

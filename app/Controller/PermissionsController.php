@@ -41,7 +41,7 @@ class PermissionsController extends AppController {
 
 		// the aco instance instance does not exist
 		$this->loadModel($acoModelName);
-		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::ADMIN)) {
+		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::OWNER)) {
 			$this->Message->error(__('Your are not allowed to add a permission to the %s', $acoModelName), array('code' => 403));
 			return;
 		}
@@ -294,7 +294,7 @@ class PermissionsController extends AppController {
 
 		// check the user has ADMIN right on the aco foreign instance
 		$this->loadModel($acoModelName);
-		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::ADMIN)) {
+		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::OWNER)) {
 			$this->Message->error(__('You are not allowed to edit this permission'));
 		}
 		// print_r($this->request->data);
@@ -388,7 +388,7 @@ class PermissionsController extends AppController {
 
 		// check the user has ADMIN right on the aco foreign instance
 		$this->loadModel($acoModelName);
-		if (!$this->$acoModelName->isAuthorized($acoForeignKey, PermissionType::ADMIN)) {
+		if (!$this->$acoModelName->isAuthorized($acoForeignKey, PermissionType::OWNER)) {
 			$this->Message->error(__('You are not allowed to delete this permission', $acoForeignKey));
 		}
 
