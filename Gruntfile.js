@@ -77,7 +77,7 @@ module.exports = function(grunt) {
 				options: {
 					stderr: false
 				},
-				command: '(cd ./app/webroot/js; ./js ./steal/buildjs ./app/passbolt.html)'
+				command: '(cd ./app/webroot/js; ./js ./lib/steal/buildjs ./app/passbolt.html)'
 			},
 			mad_lib_patch: {
 				options: {

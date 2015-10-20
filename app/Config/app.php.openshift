@@ -24,7 +24,7 @@ $config = array(
 	),
 	// Javascript
 	'App.js' => array(
-	    'compile' => true
+	    'build' => 'production'
 	),
 	// Internationalization
 	'i18n' => array(

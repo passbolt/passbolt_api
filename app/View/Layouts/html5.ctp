@@ -44,8 +44,8 @@
 </div>
 </footer>
 <?php echo $this->fetch('scriptBottom'); ?>
-<?php if(Configure::read('App.js.compile')) : ?>
-<script type="text/javascript" src="/js/lib/steal/steal.production.js" config="js/stealconfig.js" main="app/passbolt"></script>
+<?php if(Configure::read('App.js.build') === 'production') : ?>
+<script type="text/javascript" src="/js/lib/steal/steal.production.js" config="js/stealconfig.js" main="app/passbolt" env="production"></script>
 <?php else: ?>
 <script type="text/javascript" src="/js/lib/steal/steal.js" config="js/stealconfig.js" main="passbolt"></script>
 <?php endif; ?>

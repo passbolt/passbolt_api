@@ -35,7 +35,8 @@ steal.config({
         "mad": "lib/mad/src/mad.js",
         "mad/*": "lib/mad/src/*.js",
         "xregexp": "lib/xregexp/xregexp-all.js",
-		"sha1": "lib/jsSHA/src/sha.js"
+		"sha1": "lib/jsSHA/src/sha.js",
+		"moment": "lib/moment/moment.js"
     },
     "meta": {
         "mocha": {
