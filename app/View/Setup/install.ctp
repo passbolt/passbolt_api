@@ -87,9 +87,9 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 					</div>
 				</div>
 				<div class="col5 last">
-					<div class="video-wrapper">
-						<iframe width="400" height="300" src="https://www.youtube.com/embed/u-vDLf7cmf0" frameborder="0" allowfullscreen></iframe>
-					</div>
+<!--					<div class="video-wrapper">-->
+<!--						<iframe width="400" height="300" src="https://www.youtube.com/embed/u-vDLf7cmf0" frameborder="0" allowfullscreen></iframe>-->
+<!--					</div>-->
 				</div>
 			</div>
 		</div>
