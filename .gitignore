@@ -32,7 +32,6 @@
 /vendor
 /Vendor
 /vendors
-/app/Vendor/*
 !/app/webroot/js/lib/modernizr
 !/app/Vendor/RandomTool.php
 !/app/Vendor/openpgp-php

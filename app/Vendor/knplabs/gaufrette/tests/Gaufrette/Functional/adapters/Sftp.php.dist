@@ -1,0 +1,12 @@
+<?php
+
+$configuration  = new Ssh\Configuration();
+$authentication = new Ssh\Authentication\None();
+
+$session   = new Ssh\Session($configuration, $authentication);
+$directory = '/some/directory';
+$adapter   = new Gaufrette\Adapter\Sftp($session->getSftp(), '/some/directory');
+
+ssh2_exec($session->getresource(), sprintf('rm -r %s/*', $directory));
+
+return $adapter;
