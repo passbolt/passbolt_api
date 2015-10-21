@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>can.Construct.proxy demo</title>
+	</head>
+	<body>
+	    <h1>proxy Demo</h1>
+        <p>Open the console to see the status messages.</p>
+		<script type='text/javascript'  src="../../node_modules/steal/steal.js" main="@empty">
+        </script>
+		<script type='text/javascript'>
+			steal('can/construct/proxy', function(can) {
+				var Person = can.Construct({
+					defaultName : 'John',
+					getPerson : function() {
+						return new this(this.defaultName);
+					}
+				},{
+					init : function(name) {
+						this.name = name;
+					},
+
+					process : function() {
+						return 'Running processor (for ' + this.name + ')';
+					},
+
+					logName : function(text) {
+						console.log( (text || '') + this.name);
+					}
+				});
+
+				var staticCallback = Person.proxy('getPerson'),
+					personInstance = staticCallback();
+				console.log(personInstance.name); // -> John
+
+				var instanceCallback = personInstance.proxy('logName', 'Hi I am ');
+				instanceCallback(); // -> Hi I am John
+
+				var pipedCallback = personInstance.proxy([
+					'process',
+					function(processResult) {
+						return processResult + ' + anonymus processor. Name is: ';
+					},
+					'logName'
+				]);
+				pipedCallback();
+				// Running processor (for John) + anonymus processor. Name is: John
+			});
+		</script>
+	</body>
+</html>

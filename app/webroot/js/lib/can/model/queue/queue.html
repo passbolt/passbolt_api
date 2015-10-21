@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Model Queue Demo</title>
+		<style type='text/css'>
+		body {font-family: verdana}
+		li {border: solid 1px gray; padding: 5px; width: 250px;}
+		li a {color: red; font-weight: bold;}
+		p {width: 400px;}
+		</style>
+	</head>
+	<body>
+		<div id="demo-instructions">
+			<h1>Model Queue Demo</h1>
+			<p>This demo shows how queue works with the model</p>
+		</div>
+		<div id="demo-html">
+
+		</div>
+
+
+		<script type='text/javascript' src="../../node_modules/steal/steal.js" main="@empty">
+		</script>
+		<script type='text/javascript' id="demo-source">
+		steal('can/model',
+			'can/util/fixture',
+			'can/model/queue', 
+			function(){
+				
+				var counter = 0;
+
+				can.fixture.delay = 1000;
+
+				can.fixture('/people', function(req){
+					var attrs   = req.data;
+					attrs.id    = ++counter;
+					attrs.foo   = "bar";
+					attrs.extra = "EXTRA!";
+					return attrs;
+				})
+
+				var Person = can.Model({
+					create  : "POST /people",
+					update  : "PUT /people/{id}",
+					destroy : "DESTROY /people/{id}"
+				}, {})
+				p = new Person({name: "Mihael", socialnetworks : {twitter : 'retro'}});
+				p.save(function(){
+					console.log("Changed arguments are preserved after save call returns", p.attr())
+				});
+				p.attr('socialnetworks.twitter', 'mihaelkonjevic');
+				p.save(function(){
+					console.log("Changed arguments are preserved after save call returns", p.attr())
+				});
+				p.attr('foo', 'baz');
+			})
+		</script>
+	</body>
+</html>

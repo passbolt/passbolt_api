@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="//code.jquery.com/qunit/qunit-1.14.0.css"/>
+		<title>can/event Test All</title>
+	</head>
+	<body>
+
+		<h1 id="qunit-header">can/event test all</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<ol id="qunit-tests"></ol>
+		<div id="qunit-fixture"></div>
+		<script type="text/javascript" src="../node_modules/steal/steal.js" main="@empty"></script>
+		<script type="text/javascript" src="//code.jquery.com/qunit/qunit-1.14.0.js"></script>
+		<script type='text/javascript'>
+			if (typeof QUnit === 'undefined') {
+				document.write(unescape('%3Clink rel="stylesheet" type="text/css" href="../../bower_components/qunit/qunit/qunit.css" /%3E'));
+				document.write(unescape('%3Cscript type="text/javascript" src="../../bower_components/qunit/qunit/qunit.js" %3E%3C/script%3E'));
+			}
+
+			QUnit.config.autostart = false;
+			steal(
+				'can/event/event_test.js', 
+				function() {
+					can.dev.logLevel = 3;
+					QUnit.start();
+				}
+			).then(
+				'can/event/namespace/namespace_test.js'
+			).then(
+				'can/event/propagate/propagate_test.js',
+				'can/event/delegate/delegate_test.js'
+			);
+		</script>
+	</body>
+</html>

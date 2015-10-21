@@ -1,0 +1,43 @@
+<body>
+	<script  type='text/stache' can-autorender id='demo'>
+		<table id="websites">
+		  {{#data.websites}}
+		    <tr>
+		      <td width='40%'>{{name}}</td>
+			  <td width='70%'>{{url}}</td>
+			</tr>
+		  {{/data.websites}}
+		</table>
+	</script>
+</body>
+<script src="../../node_modules/steal/steal.js"></script>
+<script type='text/javascript'>
+steal("can/util", "can/component", "can/util/fixture",
+	 "can/model", "can/view/autorender","can/view/stache",function (can) {
+
+
+
+var websitesCompute = can.compute(function(){
+	console.log("whaaaaa?");
+	var list = new can.List();
+	setTimeout(function(){
+		list.push({id:1,name:"CanJS",url:"http://canjs.us"},{id: 2,name:"jQuery++",url:"http://jquerypp.com"});
+	},1000);
+	return list;
+});
+websitesCompute.bind("change", function(ev, items){
+	console.log(items.length);
+});
+console.log(websitesCompute()._cid);
+
+websitesCompute().bind("length", function(){
+	console.log("items added!");
+});
+
+console.log("setting");
+$("#demo").viewModel().attr("data",{websites: websitesCompute});
+
+
+
+});
+</script>

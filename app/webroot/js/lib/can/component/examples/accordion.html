@@ -1,0 +1,106 @@
+<div id="demo">
+<div id='out'></div>
+<script id="app" type="text/mustache">
+	<accordion>
+		<panel title="Contacts">
+			<button>Change title attribute to "Users"</button>
+			<ul>
+				<li>Justin</li>
+				<li>Brian</li>
+			</ul>
+		</panel>
+		<panel title="Libraries">
+			<ul>
+				<li>CanJS</li>
+				<li>JavaScriptMVC</li>
+			</ul>
+		</panel>
+	</accordion>
+</script>
+</div>
+
+<script>
+	DEMO_HTML = document.getElementById("demo").innerHTML
+</script>
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script id="demo-source">
+steal("can/component",function(){
+
+can.Component.extend({
+	tag: "accordion",
+	viewModel: {
+		// Contains a list of all panel scopes within the
+		// tabs element.
+		panels: [],
+		// When a `<panel>` element is inserted into the document,
+		// it calls this method to add the panel's scope to the
+		// panels array.
+		addPanel: function(panel){
+			// If this is the first panel, activate it.
+			if( this.attr("panels").length === 0 ) {
+				this.makeActive(panel)
+			} 
+			this.attr("panels").push(panel);
+		},
+		// When a `<panel>` element is removed from the document,
+		// it calls this method to remove the panel's scope from
+		// the panels array.
+		removePanel: function(panel){
+			var panels = this.attr("panels");
+			can.batch.start();
+			panels.splice(panels.indexOf(panel),1);
+			// if the panel was active, make the first item active
+			if(panel === this.attr("active")){
+				if(panels.length){
+					this.makeActive(panels[0]);
+				} else {
+					this.removeAttr("active")
+				}
+			}
+			can.batch.stop()
+		},
+		makeActive: function(panel){
+			this.attr("active",panel);
+			this.attr("panels").each(function(panel){
+				panel.attr("active", false)
+			})
+			panel.attr("active",true);
+			
+		},
+		// this is scope, not mustache
+		// consider removing scope as arg
+		isActive: function( panel ) {
+			return this.attr('active') == panel
+		}
+	}
+});
+
+can.Component.extend({
+	template: 
+		"<h2 can-click='makeActive'>{{title}}</h2>"+
+		"{{#if active}}<content></content>{{/if}}",
+	tag:"panel",
+	viewModel: {
+		active: false,
+		title: "@"
+	},
+	events: {
+		inserted: function(){
+			this.element.parent().viewModel().addPanel( this.viewModel );
+		},
+		removed: function(){
+			this.element.parent().viewModel().removePanel( this.viewModel );
+		}
+	}
+});
+
+$("#out").html( can.view("app",{}) );
+
+$("#out").on("click","button", function(){
+	$(this).parent().attr("title", "Users")
+	$(this).remove();
+})
+
+});
+</script>
+

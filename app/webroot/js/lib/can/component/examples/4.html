@@ -1,0 +1,180 @@
+<style>
+		* {
+			font: 13px/16px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+		    color: #333;
+		}
+		table {
+		    margin: 5px auto;
+		    margin-bottom: 15px;
+		    width: 95%;
+		}
+		td {
+		    border-top: 1px solid #eee;
+		    padding: 5px;
+		}
+		tr:last-child {
+		    border-bottom: 1px solid #eee;
+		}
+		tr:nth-child(odd) {
+		    background-color: #fcfcf1;
+		}
+		thead th {
+		    background-color: #ccc;
+		    color: #666;
+		    padding: 5px;
+		    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+		}
+		#next-prev { margin: 5px auto;text-align: center;display: block; }
+		#next-prev a {
+		    border-radius: 3px;
+		    padding: 4px 14px;
+		    text-decoration: none;
+		    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+		    background-color: #f5f5f5;
+		    border: 1px solid #bbbbbb;
+		    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+		}
+		#next-prev a.enabled {
+		    color: #ffffff;
+		    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		    background-color: #49afcd;
+		    border-color: #2f96b4 #2f96b4 #1f6377;
+		}
+	</style>
+
+<table id="websites"></table>
+<div id='next-prev'></div>
+
+<script id="sites" type="text/mustache">
+  {{#websites}}
+    <tr>
+      <td width='40%'>{{name}}</td>
+	  <td width='70%'>{{url}}</td>
+	</tr>
+  {{/websites}}
+</script>
+
+<script id="next-prev-stache" type="text/mustache">
+  <a href="javascript://" 
+     class="prev {{#paginate.canPrev}}enabled{{/paginate.canPrev}}">Prev</a>
+  <a href="javascript://" 
+     class="next {{#paginate.canNext}}enabled{{/paginate.canNext}}">Next</a>
+</script>
+
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script type='text/javascript'>
+steal("can/util", "can/component", "can/map/setter", "can/util/fixture",
+	 "can/model", function (can) {
+
+
+var websites = [{id:1,name:"CanJS",url:"http://canjs.us"},{id: 2,name:"jQuery++",url:"http://jquerypp.com"},
+	          {id:3,name:"JavaScriptMVC",url:"http://javascriptmvc.com"},{id: 4,name:"Bitovi",url:"http://bitovi.com"},
+	          {id:5,name:"FuncUnit",url:"http://funcunit.com"},{id: 6,name:"StealJS",url:"http://stealjs.com"},
+	          {id:7,name:"jQuery",url:"http://jquery.com"},{id: 8,name:"Mootools",url:"http://mootools.com"},
+	          {id:9,name:"Dojo",url:"http://dojo.com"},{id: 10,name:"YUI",url:"http://yui.com"},
+	          {id:11,name:"DoneJS",url:"http://donejs.com"},{id: 12,name:"Mindjet Connect",url:"http://connect.mindjet.com"},
+	          {id:13,name:"JSFiddle",url:"http://jsfiddle.net"},{id: 14,name:"Zepto",url:"http://zepto.com"},
+	          {id:15,name:"Spill",url:"http://spill.com"},{id: 16,name:"Github",url:"http://github.com"}]
+can.fixture("/websites", function (request) {
+  var start = request.data.offset || 0
+  end = start + (request.data.limit || websites.length);
+  return {
+    count: websites.length,
+    data: websites.slice(start, end)
+  }
+});
+	 	
+var Website = can.Model.extend({
+  findAll: "/websites"
+}, {});
+
+
+
+var Paginate = can.Map.extend({
+  count: Infinity,
+  offset: 0,
+  limit: 5,
+  next: function () {
+    this.attr('offset', this.offset + this.limit);
+  },
+  prev: function () {
+    this.attr('offset', this.offset - this.limit)
+  },
+  setOffset: function (newOffset) {
+    return newOffset < 0 ?
+      0 :
+      Math.min(newOffset, !isNaN(this.count - 1) ?
+        this.count - 1 :
+        Infinity)
+  },
+  setCount: function (newCount, success, error) {
+    return newCount < 0 ? 0 : newCount;
+  },
+  canNext: function () {
+    return this.attr('offset') < this.attr('count') -
+      this.attr('limit')
+  },
+  canPrev: function () {
+    return this.attr('offset') > 0
+  },
+  page: function (newVal) {
+    if (newVal === undefined) {
+      return Math.floor(this.attr('offset') / this.attr('limit')) + 1;
+    } else {
+      this.attr('offset', (parseInt(newVal) - 1) * this.attr('limit'));
+    }
+  },
+  pageCount: function () {
+    return this.attr('count') ?
+      Math.ceil(this.attr('count') / this.attr('limit')) : null;
+  }
+});
+
+paginate = new Paginate();
+
+var websitesCompute = can.compute(function(){
+	var param = {
+		limit: paginate.attr('limit'),
+		offset: paginate.attr('offset')
+	}
+	return Website.findAll(param);
+});
+
+var writeWebsites = function(websites){
+	$("#websites").html( can.view("sites",{
+	  websites: websites
+	}));
+	paginate.attr("count", websites.count)
+}
+
+websitesCompute.bind("change", function(ev, websitesDeferred){
+	websitesDeferred.then(writeWebsites)
+})
+
+websitesCompute().then(writeWebsites)
+
+
+
+
+
+var NextPrev = can.Control({
+  init: function(){
+    this.element.html( 
+       can.view('next-prev-stache',this.options) );     
+  },
+  ".next click" : function(){
+    this.options.paginate.next();
+  },
+  ".prev click" : function(){
+    this.options.paginate.prev();
+  }
+});
+
+
+new NextPrev("#next-prev",{
+	paginate: paginate
+});
+
+
+})
+</script>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+	<body>
+<script type="text/mustache" id="people">
+	People(can.List):
+	<ul>
+		{{#each people}}
+		<li>{{this}}</li>
+		{{/each}}
+	</ul>
+
+	Events triggered:
+	<ul id="events"></ul>
+	<button id="reverse">Reverse!</button>
+</script>
+
+		<script src="../node_modules/steal/steal.js" main="@empty"></script>
+		<script type="text/javascript"> 
+steal('can/list', 'can/view/mustache', function() {
+
+	var people = new can.List(['Alexis', 'Justin', 'David']);
+
+	$('body').append(can.view('people', {
+		people: people
+	}));
+
+	var events = $('#events');
+
+	people.bind('change', function(ev, i, how, val, old) {
+		var msg = '<li>"change" fired. "' + how + '" for ';
+		msg += (how === 'remove' ? old : val).join(', ') + '</li>';
+		events.append(msg);
+	});
+
+	people.bind('length', function(ev, len) {
+		events.append('<li>"length" fired. New length is ' + len + '</li>');
+	});
+
+	people.bind('add', function(ev, list, i) {
+		events.append('<li>"add" fired. New list is ' + list.join(', ') + '</li>');
+	});
+
+	people.bind('remove', function(ev, list, i) {
+		events.append('<li>"remove" fired. New list is ' + list.join(', ') + '</li>');
+	});
+
+	$('#reverse').click(function() {
+		events.empty();
+		people.reverse();
+	});
+
+});
+		</script>
+	</body>
+</html>

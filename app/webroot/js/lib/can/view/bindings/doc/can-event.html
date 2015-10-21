@@ -1,0 +1,38 @@
+<div id='out'></div>
+<script src="../../../node_modules/steal/steal.js"></script>
+<script>
+steal("can/view/bindings",function(){
+		
+var template = can.mustache(
+  "<div><button can-click='{up}'>&uarr;</button></div>"+
+  "<div><input "+
+               "can-enter='update' "+
+               "can-blur='update' "+
+               "value='{{age}}'/></div>"+
+  "<div><button can-click='{down}'>&darr;</button></div>"+
+  "<p>The age {{age}}</p>");
+
+var age = can.compute(31, function(newVal){
+  return +newVal
+});
+
+var data = {
+  age: age,
+  up: function(){
+    age( age()+1 );
+  },
+  down: function(){
+    age( age()-1 );
+  },
+  update: function(context, el, ev){
+    age( el.val() );
+  }
+};
+
+
+
+$("#out").html( template( data ) );
+
+});
+</script>
+

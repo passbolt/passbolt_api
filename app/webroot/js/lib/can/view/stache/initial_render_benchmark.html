@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<style>
+		p {
+		  font: 12px/16px Arial;
+		  margin: 10px 10px 15px;    
+		}
+		
+		button {
+		  font: bold 14px/14px Arial;  
+		  margin-left: 10px;
+		}
+		
+		#grid {
+		  margin: 10px;
+		}
+		
+		#timing {
+		  clear: both;
+		  padding-top: 10px;
+		}
+		
+		.box-view {
+		  width: 20px; height: 20px;
+		  float: left;
+		  position: relative;
+		  margin: 8px;    
+		}
+		
+		.box {
+		  border-radius: 100px;
+		  width: 20px; height: 10px;
+		  padding: 5px 0;
+		  color: #fff;
+		  font: 10px/10px Arial;
+		  text-align: center;
+		  position: absolute;
+		}   
+
+	</style>
+</head>
+<body>
+<button id='start'>Start</button>
+<button id='stop'>Stop</button>
+<div id='timing'></div>
+<script type="text/javascript" src="../../lib/steal/steal.js"></script>
+<script type="text/javascript">
+
+	steal("can/view/stache", function(stache){
+
+		var items = new can.List(),
+			Box = can.Map.extend({
+				foo: 'foo'
+			});
+
+		// items.__type = function(val) {
+		//   return val;
+		// };
+
+		for (var i = 0; i < 200; i++) {
+			items.push({
+				boxes: []
+			});
+		
+			for (var j = 0; j < 10; j++) {
+				// debugger;
+				items[i].boxes.push(new Box());
+			}
+		}
+
+		var template = can.stache(
+			'{{#each items}}<div>{{#each boxes}}' +
+			'<div>{{foo}}</div>' +
+			'{{/each}}</div>{{/each}}');
+
+		go = function() {
+			var d = new Date();
+			var t = template({
+				items: items
+			});
+			console.log(new Date() - d);
+			document.body.appendChild(t);
+		};
+	});
+	
+	
+</script>
+</body>
+</html>

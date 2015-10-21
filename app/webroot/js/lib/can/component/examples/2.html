@@ -1,0 +1,66 @@
+<script id="sites" type="text/mustache" can-autorender>
+  <table id="websites">
+  {{#websites}}
+    <tr>
+      <td width='40%'>{{name}}</td>
+	  <td width='70%'>{{url}}</td>
+	</tr>
+  {{/websites}}
+  </table>
+</script>
+<script src="../../node_modules/steal/steal.js"></script>
+<script type='text/javascript'>
+steal("can/util", "can/component", "can/util/fixture",
+	 "can/model", "can/view/autorender",function (can) {
+
+
+var websites = [{id:1,name:"CanJS",url:"http://canjs.us"},{id: 2,name:"jQuery++",url:"http://jquerypp.com"},
+	          {id:3,name:"JavaScriptMVC",url:"http://javascriptmvc.com"},{id: 4,name:"Bitovi",url:"http://bitovi.com"},
+	          {id:5,name:"FuncUnit",url:"http://funcunit.com"},{id: 6,name:"StealJS",url:"http://stealjs.com"},
+	          {id:7,name:"jQuery",url:"http://jquery.com"},{id: 8,name:"Mootools",url:"http://mootools.com"},
+	          {id:9,name:"Dojo",url:"http://dojo.com"},{id: 10,name:"YUI",url:"http://yui.com"},
+	          {id:11,name:"DoneJS",url:"http://donejs.com"},{id: 12,name:"Mindjet Connect",url:"http://connect.mindjet.com"},
+	          {id:13,name:"JSFiddle",url:"http://jsfiddle.net"},{id: 14,name:"Zepto",url:"http://zepto.com"},
+	          {id:15,name:"Spill",url:"http://spill.com"},{id: 16,name:"Github",url:"http://github.com"}];
+	          
+can.fixture("/websites", function (request) {
+  var start = request.data.offset || 0;
+  end = start + (request.data.limit || websites.length);
+  return {
+    count: websites.length,
+    data: websites.slice(start, end)
+  };
+});
+	 	
+var Website = can.Model.extend({
+  findAll: "/websites"
+}, {});
+
+
+
+var Paginate = can.Map.extend({
+  count: Infinity,
+  offset: 0,
+  limit: 5,
+  next: function () {
+    this.attr('offset', this.offset + this.limit);
+  }
+});
+
+paginate = new Paginate();
+
+var websitesCompute = can.compute(function(){
+	var param = {
+		limit: paginate.attr('limit'),
+		offset: paginate.attr('offset')
+	};
+	return new Website.List(param);
+});
+
+$("#sites").scope().attr({
+  websites: websitesCompute
+});
+
+
+});
+</script>

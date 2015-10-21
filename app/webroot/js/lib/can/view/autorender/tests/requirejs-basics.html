@@ -1,0 +1,29 @@
+<script>
+	window.isReady = window.parent.isReady || function(el) {
+		console.log(el.length);
+		console.log(el.html());
+	};
+	window.hasError = window.parent.hasError || function(error) {
+		console.log("error in autoload", error)
+	};
+	window.removeMyself = window.parent.removeMyself;
+</script>
+<script type='text/stache' id='basics' can-autorender>
+	<can-import from="./requirejs-basics"/>
+	<my-component></my-component>
+</script>
+<script src='../../../bower_components/requirejs/require.js'></script>
+<script>
+	require.config({
+		paths: {
+			"can": "../../../dist/amd/can",
+			"jquery": "../../../node_modules/jquery/dist/jquery"
+		}
+	});
+
+	require(['can/view/autorender'],function(ready){
+		ready(function() {
+			isReady($("body my-component"), can.viewModel('my-component'));
+		}, hasError);
+	});
+</script>

@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<style>
+		p {
+		  font: 12px/16px Arial;
+		  margin: 10px 10px 15px;    
+		}
+		
+		button {
+		  font: bold 14px/14px Arial;  
+		  margin-left: 10px;
+		}
+		
+		#grid {
+		  margin: 10px;
+		}
+		
+		#timing {
+		  clear: both;
+		  padding-top: 10px;
+		}
+		
+		.box-view {
+		  width: 20px; height: 20px;
+		  float: left;
+		  position: relative;
+		  margin: 8px;    
+		}
+		
+		.box {
+		  border-radius: 100px;
+		  width: 20px; height: 10px;
+		  padding: 5px 0;
+		  color: #fff;
+		  font: 10px/10px Arial;
+		  text-align: center;
+		  position: absolute;
+		}   
+
+	</style>
+</head>
+<body>
+<button id='start'>Start</button>
+<button id='stop'>Stop</button>
+<script type="text/javascript" src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script type="text/javascript">
+	
+	steal("can/view/mustache", function(){
+		
+		
+		
+		var template = can.view.mustache(
+			"{{#each boxes}}"+
+				"<div class='box-view'>"+
+					"<div class='box' id='box-{{number}}'  style='top: {{top}}px; left: {{left}}px; background: rgb(0,0,{{color}});'>"+
+						"{{content}}"+
+					"</div>"+
+				"</div>"+
+			"{{/each}}");
+			
+			
+		var boxes = [],
+			Box = can.Map.extend({
+				count: 0,
+				content: 0,
+				tick: function(){
+					var count = this.attr("count")+1
+					this.attr({
+						count: count,
+						left: Math.cos(count / 10) * 10,
+						top: Math.sin(count / 10) * 10,
+						color: count % 255,
+						content: count
+					})
+				}
+			});
+		
+		for(var i =0; i < 100; i++) {
+			boxes.push( new Box({ number: i }) );
+		}
+		
+		var frag = template({boxes: boxes});
+		var div = document.createElement("div")
+		document.body.appendChild(div)
+		div.appendChild(frag)
+	
+		var count = 0;
+		
+	
+		$("#start").click(function(){
+			var start = new Date();
+			setTimeout(function(){
+				count++
+				for(var n = 0 ; n < boxes.length; n++) {
+            		boxes[n].tick();
+            	}
+            	
+            	if(count < 100) {
+            		setTimeout(arguments.callee, 0);
+            	} else {
+            		console.log("100 spinning boxes spinning 100 times", new Date - start)
+            		count = 0;
+            	}
+            	
+			},0)
+		})
+			
+            	
+            
+			
+	})
+	
+	
+</script>
+</body>
+</html>

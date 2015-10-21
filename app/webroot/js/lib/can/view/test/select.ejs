@@ -1,0 +1,10 @@
+<select id="test-dropdown">
+  <option value="none">
+    <%= domainList.attr('length') %> domains...
+  </option>
+  <% domainList.each(function(domain) { %>
+  <option value="<%= domain.attr('id') %>">
+      <%= domain.attr('name') %>
+  </option>
+  <% }); %>
+</select>

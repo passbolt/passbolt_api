@@ -1,0 +1,17 @@
+<!-- bind to changes in the todo list -->
+<% this.each(function( todo ) { %>
+  <!-- add the todo to the element's data -->
+  <li <%= (el) -> el.data('todo',todo) %>>
+    <!-- if the todo is complete, mark as checked -->
+    <input type="checkbox" class="complete"
+    <%= todo.attr('complete') ? 'checked' : '' %>>
+
+    <!-- if the todo is complete, add 'done' to the className -->
+    <span class="<%= todo.attr('complete') ? 'done' : '' %>">
+            <%= todo.attr('name') %>
+          </span>
+
+    <!-- a destroy link -->
+    <a href="javascript://" class='destroy'>X</a>
+  </li>
+<% }) %>

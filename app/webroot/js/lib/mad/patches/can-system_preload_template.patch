@@ -1,0 +1,12 @@
+diff -ur a/view/ejs/system.js b/view/ejs/system.js
+--- a/view/ejs/system.js	2015-05-21 04:26:17.000000000 +0530
++++ b/view/ejs/system.js	2015-06-28 09:06:36.551592207 +0530
+@@ -3,7 +3,7 @@
+
+ 	function translate(load) {
+ 		return "define(['can/view/ejs/ejs'],function(can){" +
+-			"return can.view.preloadStringRenderer('" + load.metadata.pluginArgument + "'," +
++			"return can.view.preloadStringRenderer('" + can.view.toId(load.metadata.pluginArgument) + "'," +
+ 			'can.EJS(function(_CONTEXT,_VIEW) { ' + new can.EJS({
+ 				text: load.source,
+ 				name: load.name

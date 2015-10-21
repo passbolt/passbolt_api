@@ -1,0 +1,23 @@
+<body>
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script type='text/javascript' id="data-source"> 
+steal("can/component", function() {
+
+  can.Component.extend({
+    tag: "hello-world",
+    template: "{{#if visible}}{{message}}{{else}}Click me{{/if}}",
+    viewModel: {
+      visible: false,
+      message: "Hello There!"
+    },
+    events: {
+      click: function(){
+        this.viewModel.attr("visible", !this.viewModel.attr("visible") );
+      }
+    }
+  });
+
+  $("body").append(can.view.mustache("<hello-world/>")({}))
+})
+</script>
+</body>
