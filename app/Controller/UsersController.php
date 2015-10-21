@@ -114,6 +114,19 @@ class UsersController extends AppController {
  * Thank you page after registration.
  */
 	public function register_thankyou() {
+		// Check referer.
+		$referer = $this->referer();
+		// If no referer, we redirect to register page.
+		if (empty($referer)) {
+			$this->redirect("/register");
+			return;
+		}
+		$url = parse_url($referer);
+		// If the referer was not the register url, we also redirect to /register page.
+		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== '/register') {
+			$this->redirect("/register");
+			return;
+		}
 		$this->layout = 'login';
 	}
 
