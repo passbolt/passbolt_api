@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Controller Example</title>
+        <style type='text/css'>
+            
+        </style>
+    </head>
+    <body>
+<div id="demo-html">
+<form action='' id='createRecipes'>
+<input type='text' name='name'/>
+<input type='submit' value='Create Recipe'/>
+<ul id="list"></ul>
+</form>
+</div>
+<script type='text/javascript' src='../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
+steal("can/control/plugin", 
+  "can/model",
+  "can/util/fixture",
+  function(){
+	  	
+can.fixture.delay = 2000;
+can.fixture("POST /recipes",function(){
+  return {};
+})
+
+can.Model('Recipe',{
+  create : "/recipes"
+},{});
+
+can.Control('Creator', {
+  "{recipe} created" : function(recipe, event){
+    this.element.find('#list').append('<li>'+
+      this.element.find('[type=text]').val()+'</li>');
+	this.element[0].reset();
+    this.element.find("[type=submit]").val("Create Recipe")
+    this.update({recipe : new Recipe()});
+  },
+  "submit" : function(el, ev){
+ 	ev.preventDefault();
+    var recipe = this.options.recipe;
+    recipe.attr({ name: $('.name').val() });
+	this.element.find("[type=submit]").val("Saving...")
+    recipe.save();
+  }
+});
+
+$('#createRecipes').creator({recipe: new Recipe()})
+
+})
+</script>
+    </body>
+</html>

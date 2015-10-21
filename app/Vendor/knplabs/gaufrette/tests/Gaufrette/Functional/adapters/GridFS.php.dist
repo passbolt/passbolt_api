@@ -1,0 +1,10 @@
+<?php
+
+$mongo = new Mongo('localhost');
+
+$db = $mongo->selectDB('gaufrette');
+
+$grid = $db->getGridFS();
+$grid->remove();
+
+return new Gaufrette\Adapter\GridFS($grid);

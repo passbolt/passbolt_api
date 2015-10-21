@@ -1,0 +1,71 @@
+{
+    "name":         "knplabs/gaufrette",
+    "type":         "library",
+    "description":  "PHP5 library that provides a filesystem abstraction layer",
+    "keywords":     ["file", "filesystem", "media", "abstraction"],
+    "minimum-stability": "dev",
+    "homepage":     "http://knplabs.com",
+    "license":      "MIT",
+    "authors": [
+        {
+            "name": "KnpLabs Team",
+            "homepage": "http://knplabs.com"
+        },
+        {
+            "name":     "The contributors",
+            "homepage": "http://github.com/knplabs/Gaufrette/contributors"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.php.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "require-dev": {
+        "aws/aws-sdk-php": "~2",
+        "amazonwebservices/aws-sdk-for-php": "1.5.*",
+        "rackspace/php-opencloud"  : "1.9.*",
+        "google/apiclient": "~1.1",
+        "phpspec/phpspec": "2.0.*",
+        "phpseclib/phpseclib": "dev-master",
+        "doctrine/dbal": ">=2.3",
+        "dropbox-php/dropbox-php": "*",
+        "herzult/php-ssh": "*",
+        "phpunit/phpunit": "3.7.*",
+        "microsoft/windowsazure": "dev-master",
+        "mikey179/vfsStream": "~1.2.0"
+    },
+    "suggest": {
+        "knplabs/knp-gaufrette-bundle": "to use with Symfony2",
+        "dropbox-php/dropbox-php": "to use the Dropbox adapter",
+        "rackspace/php-opencloud"  : "to use Opencloud adapter",
+        "google/apiclient": "to use GoogleCloudStorage adapter",
+        "herzult/php-ssh": "to use SFtp adapter",
+        "phpseclib/phpseclib": "to use PhpseclibSftp adapter",
+        "aws/aws-sdk-php": "to use the Amazon S3 adapter",
+        "amazonwebservices/aws-sdk-for-php": "to use the legacy Amazon S3 adapters",
+        "doctrine/dbal": "to use the Doctrine DBAL adapter",
+        "microsoft/windowsazure": "to use Microsoft Azure Blob Storage adapter",
+        "ext-zip": "to use the Zip adapter",
+        "ext-apc": "to use the APC adapter",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
+        "ext-mongo": "*",
+        "ext-fileinfo": "This extension is used to automatically detect the content-type of a file in the AwsS3, OpenCloud, AzureBlogStorage and GoogleCloudStorage adapters"
+    },
+    "autoload": {
+        "psr-0": { "Gaufrette": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}

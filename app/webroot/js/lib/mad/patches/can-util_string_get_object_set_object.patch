@@ -1,0 +1,30 @@
+diff -ur a/util/string/string.js b/util/string/string.js
+--- a/util/string/string.js	2015-05-21 04:26:17.000000000 +0530
++++ b/util/string/string.js	2015-06-28 15:45:30.617045892 +0530
+@@ -41,7 +41,7 @@
+ 				.replace(strQuote, '&#34;')
+ 				.replace(strSingleQuote, '&#39;');
+ 		},
+-		getObject: function (name, roots, add) {
++		getObject: function (name, roots, add, value) {
+ 			// The parts of the name we are looking up
+ 			// `['App','Models','Recipe']`
+ 			var parts = name ? name.split('.') : [],
+@@ -80,6 +80,17 @@
+ 					current = getNext(current, parts[i], true);
+ 				}
+ 			}
++			// When associate a value to the just created property.
++			if (add === true && typeof value != 'undefined') {
++				current = roots[0];
++				container = undefined;
++
++				for (i = 0; i < length && isContainer(current); i++) {
++					container = current;
++					current = getNext(current, parts[i], true);
++				}
++				container[parts[i-1]] = value;
++			}
+ 			return current;
+ 		},
+ 		capitalize: function (s, cache) {

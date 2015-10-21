@@ -5,9 +5,10 @@
 /app/Config/app.php
 
 # Cake temp files
-/app/tmp/cache/
 /app/tmp/cache/models/*
+!/app/tmp/cache/models/empty
 /app/tmp/cache/persistent/*
+!/app/tmp/cache/persistent/empty
 /app/tmp/cache/views/*
 /app/tmp/gpg/*
 /app/tmp/logs/*
@@ -21,22 +22,14 @@
 # Plugins
 /Plugin
 /plugins
-/app/Plugin/*
-!/app/Plugin/DataExtras
-!/app/Plugin/DataDefault
-!/app/Plugin/DataSeleniumTests
-!/app/Plugin/DataUnitTests
-!/app/Plugin/api_generator
+
 
 # Vendors
 /vendor
-/Vendor
+/Vendor/*
+!/Vendor/composer
+!/Vendor/autoload.php
 /vendors
-/app/Vendor/*
-/app/webroot/js/lib/*
-!/app/webroot/js/lib/modernizr
-!/app/Vendor/RandomTool.php
-!/app/Vendor/openpgp-php
 
 # bower, composer, grunt
 /bower_components

@@ -1,0 +1,59 @@
+<?php
+
+$oauth = new Dropbox_OAuth_PHP('XXXXXXXXXXXXXXX', 'XXXXXXXXXXXXXXX');
+
+$cache = __DIR__.'/dropbox.cache';
+
+$checkOAuth = function ($oauth) {
+    $dropbox = new \Dropbox_API($oauth);
+    $result  = $dropbox->getAccountInfo();
+
+    return isset($result['uid']);
+};
+
+$createTokens = true;
+
+if (file_exists($cache)) {
+    $tokens = unserialize(file_get_contents($cache));
+    $oauth->setToken($tokens);
+
+    if ($checkOAuth($oauth)) {
+        $createTokens = false;
+    } else {
+        fwrite(STDOUT, 'Need to recreate tokens.'.PHP_EOL);
+    }
+}
+
+if ($createTokens) {
+    $tokens = $oauth->getRequestToken();
+
+    fwrite(STDOUT, 'Visit the following URL and accept the application:'.PHP_EOL);
+    fwrite(STDOUT, $oauth->getAuthorizeUrl().PHP_EOL);
+    fwrite(STDOUT, 'Once you\'re done, press a key.'.PHP_EOL);
+
+    fwrite(STDOUT, 'Visit the following url in a browser, login if necessary, and click "Allow":'.PHP_EOL);
+    fwrite(STDOUT, $oauth->getAuthorizeUrl().PHP_EOL.PHP_EOL);
+    fwrite(STDOUT, 'Press enter when this is done...');
+    fgets(STDIN);
+
+    $tokens = $oauth->getAccessToken();
+    $oauth->setToken($tokens);
+
+    if ($checkOAuth($oauth)) {
+        file_put_contents($cache, serialize($tokens));
+        fwrite(STDOUT, 'OAuth token ready!'.PHP_EOL);
+    } else {
+        fwrite(STDOUT, 'Error with token.'.PHP_EOL);
+    }
+
+    file_put_contents($cache, serialize($tokens));
+}
+
+$dropbox = new Dropbox_API($oauth, Dropbox_API::ROOT_SANDBOX);
+
+$directory = $dropbox->getMetaData('/');
+foreach ($directory['contents'] as $file) {
+    $dropbox->delete($file['path']);
+}
+
+return new Gaufrette\Adapter\Dropbox($dropbox);

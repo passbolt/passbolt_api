@@ -1,0 +1,11 @@
+<ul>
+<% unordered.each(function(item) { %>
+	<li>
+		<% if(item.ol) { %>
+		<%== can.view.render(can.test.path('view/ejs/test/indirect2.ejs'), { ordered: item.ol }) %>
+		<% } else { %>
+		<%= item.toString() %>
+		<% } %>
+	</li>
+<% }) %>
+</ul>

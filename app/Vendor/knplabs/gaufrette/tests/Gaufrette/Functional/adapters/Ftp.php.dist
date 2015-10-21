@@ -1,0 +1,16 @@
+<?php
+
+$adapter = new Gaufrette\Adapter\Ftp(/* ... */);
+
+foreach ($adapter->keys() as $key) {
+    if (!$adapter->isDirectory($key)) {
+        $adapter->delete($key);
+    }
+}
+$keys = $adapter->keys();
+rsort($keys);
+foreach ($keys as $key) {
+    $adapter->delete($key);
+}
+
+return $adapter;

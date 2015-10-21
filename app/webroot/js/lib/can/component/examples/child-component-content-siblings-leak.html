@@ -1,0 +1,50 @@
+<div id='out'></div>
+<script src="../../node_modules/steal/steal.js"></script>
+<script>
+steal('can/view/stache', function(){
+
+
+
+	var items = [];
+
+	for (var i = 0; i < 1000; i++) {
+		items.push({
+			// Random 5 character String
+			name: Math.random().toString(36)
+				.replace(/[^a-z]+/g, '').substr(0, 5)
+		});
+	}
+
+	var viewModel = window.viewModel = new can.Map({
+		show: false,
+		items: items
+	})
+
+	can.Component.extend({
+		tag: 'grandparent-component',
+		template: can.stache('{{#if show}}{{#items}}<child-component>\n:)\n</child-component>{{/items}}{{/if}}'),
+		scope: viewModel
+	});
+
+	/*can.Component.extend({
+		tag: 'parent-component',
+		template: can.stache('{{#items}}<child-component>\n:)\n</child-component>{{/items}}'),
+		scope: {
+			items: items
+		}
+	});*/
+
+	can.Component.extend({
+		tag: 'child-component',
+		template: can.stache('<div>\n<content/>\n</div>\n<div></div>')
+	});
+
+	$('#out').html(can.stache('<grandparent-component></grandparent-component>'));
+
+	setInterval(function () {
+		viewModel.attr('show', ! viewModel.attr('show'));
+		console.log(Object.keys(can.view.nodeLists.nodeMap).length)
+	}, 5000);
+
+});
+</script>

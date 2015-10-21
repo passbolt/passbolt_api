@@ -1,0 +1,13 @@
+<tr id="<%= id %>">
+
+<% for (var i in columnModels) { %>
+
+	<td class="js_grid_column_<%= columnModels[i].name %> cell_<%= columnModels[i].name %> <%= columnModels[i].header.css.join(' ') %>">
+		<div title="<%== titles[columnModels[i].name] %>">
+			<%== values[columnModels[i].name] %>
+		</div>
+	</td>
+
+<% } %>
+
+</tr>

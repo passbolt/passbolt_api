@@ -1,0 +1,68 @@
+<div id="app"></div>
+<script src="../node_modules/steal/steal.js" main="@empty"></script>
+<script type="text/mustache" id="info-template">
+	<input type='radio' can-value="toggling" value="moreInfoShowing"/> moreInfoShowing</br>
+	<input type='radio' can-value="toggling" value="moreInfoVisible"/> moreInfoVisible</br>
+	
+	
+	<button can-click="toggle">Toggle {{toggling}}</button>
+	<div fade-in-when="{{toggling}}">
+		More Info
+	</div>
+</script>
+<script>
+	steal("can/view/mustache", "can/view/bindings",function(){
+		
+		can.view.attr("fade-in-when", function( el, attrData ) {
+			var fadeInCompute,
+				// handler for when the compute changes
+				handler = function(ev, newVal, oldVal){
+					if(newVal && !oldVal) {
+						$(el).fadeIn("slow")
+					} else if(!newVal){
+						$(el).hide()
+					}
+				}
+				teardownComputeBinding = function(){
+					fadeInCompute && fadeInCompute.unbind(handler)
+				},
+				setupComputeBinging = function(){
+					var attrValue = el.getAttribute("fade-in-when");
+					fadeInCompute = attrData.scope.computeData(attrValue).compute;
+					console.log("Listening to ", attrValue, "in the scope")
+					fadeInCompute.bind("change",handler);
+					
+					handler( {}, fadeInCompute() , undefined);
+				}
+			
+			$(el).bind("attributes", function(ev){
+				
+				if( ev.attributeName == "fade-in-when" ) {
+					teardownComputeBinding();
+					// fadeInWhen might have been removed
+					if( el.getAttribute("fade-in-when") ) {
+						setupComputeBinging();
+					}
+				}
+				
+			}).bind("remove", function(){
+				teardownComputeBinding && teardownComputeBinding();
+			})
+			setupComputeBinging()
+		})
+		
+		var toggles = {
+			toggling: can.compute("moreInfoShowing"),
+			moreInfoShowing: can.compute(true),
+			moreInfoVisible: can.compute(false),
+			toggle: function(){
+				var compute = toggles[toggles.toggling()];
+				compute(!compute())
+			}
+		};
+		
+		$("#app").html( can.view("info-template",toggles) )
+		
+	})
+	
+</script>

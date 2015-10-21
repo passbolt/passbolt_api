@@ -1,0 +1,49 @@
+<body>
+<div id='out'></div>
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+
+
+
+<script type='text/mustache' id='app-template'>
+<h1>{{#me}}{{first}} {{last}}{{/me}}</h1>
+<name-editor first="me.first" last="me.last">
+	Editing {{honorific}}
+</name-editor>
+</script>
+<script type='text/javascript'> 
+steal("can/component", function() {
+
+	can.Component.extend({
+		tag: "name-editor",
+		viewModel: {
+			firstPH: "first",
+			lastPH: "last",
+			honorific: function(){
+				if( this.attr('first') == "Justin" ) {
+					return "Mr."
+				} else {
+					return "Mrs."
+				}
+			}
+		},
+		template: 
+			"<form><content/>"+
+				"<input can-value='first'/>"+
+				"<input can-value='last'/>"+
+			"</form>"	
+	});
+
+	var me = new can.Map({
+		first: "Justin",
+		last: "Meyer"
+	})
+
+    $("#out").html(can.view("app-template",{
+    	me: new can.Map({
+			first: "Justin",
+			last: "Meyer"
+		})
+    }))
+})
+</script>
+</body>

@@ -1,0 +1,9 @@
+<?php
+
+$adapter = new Gaufrette\Adapter\MogileFS('gaufrette', array('localhost:7001'));
+
+foreach ($adapter->keys() as $key) {
+    $adapter->delete($key);
+}
+
+return $adapter;

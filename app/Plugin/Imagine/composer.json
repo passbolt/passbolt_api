@@ -1,0 +1,22 @@
+{
+	"name": "burzum/cakephp-imagine-plugin",
+	"type": "cakephp-plugin",
+	"description": "Imagine Plugin for CakePHP",
+	"keywords": ["cakephp","media","image","image-processing"],
+	"homepage": "https://github.com/burzum/cakephp-imagine-plugin",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Florian Krämer",
+			"homepage": "http://florian-kraemer.net"
+		}
+	],
+	"require": {
+		"php": ">=5.3.2",
+		"imagine/imagine": "*",
+		"composer/installers": "*"
+	},
+	"extra": {
+		"installer-name" : "Imagine"
+	}
+}

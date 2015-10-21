@@ -1,0 +1,14 @@
+<div class="template">
+{{#items}}
+	<div class="loop">
+		{{#item.children}}
+			<div class="node">
+				{{>'view/ejs/recursive.ejs'}}
+			</div>
+		{{/item.children}}
+		{{^item.children}}
+			<div class="leaf">L</div>
+		{{/item.children}}
+	</div>
+{{/items}}
+</div>

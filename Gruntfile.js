@@ -77,7 +77,7 @@ module.exports = function(grunt) {
 				options: {
 					stderr: false
 				},
-				command: '(cd ./app/webroot/js; ./js ./steal/buildjs ./app/passbolt.html)'
+				command: '(cd ./app/webroot/js; ./js ./lib/steal/buildjs ./app/passbolt.html)'
 			},
 			mad_lib_patch: {
 				options: {
@@ -124,22 +124,70 @@ module.exports = function(grunt) {
 				}]
 			},
 			lib : {
-				nonull: true,
-				cwd: '<%= config.modules_path %>/',
-				src: [
-					'can/**',
-					'jquery/**',
-					'jquery-ui/**',
-					'mad/**',
-					'moment/**',
-					'jquery-mousewheel/**',
-					'steal/**',
-					'underscore/**',
-					'xregexp/**',
-					'jssha/**'
-				],
-				dest: '<%= config.webroot %>/js/lib/',
-				expand: true
+				files: [{
+					// steal
+					cwd: '<%= config.modules_path %>/steal/',
+					src: ['steal.js', 'steal.production.js', 'ext/**', 'src/**'],
+					dest: '<%= config.webroot %>/js/lib/steal/',
+					nonull: true,
+					expand: true
+				}, {
+					// canjs
+					cwd: '<%= config.modules_path %>/can/',
+					src: ['*/**', 'can.js'],
+					dest: '<%= config.webroot %>/js/lib/can/',
+					nonull: true,
+					expand: true
+				}, {
+					// mad
+					cwd: '<%= config.modules_path %>/mad/',
+					src: ['src/**', 'patches/**'],
+					dest: '<%= config.webroot %>/js/lib/mad/',
+					nonull: true,
+					expand: true
+				}, {
+					// Jquery
+					cwd: '<%= config.modules_path %>/jquery/',
+					src: 'dist/jquery.js',
+					dest: '<%= config.webroot %>/js/lib/jquery/',
+					nonull: true,
+					expand: true
+				}, {
+					// moment
+					cwd: '<%= config.modules_path %>/moment/',
+					src: ['locale/**', 'moment.js'],
+					dest: '<%= config.webroot %>/js/lib/moment/',
+					nonull: true,
+					expand: true
+				}, {
+					// jquery-mousewheel
+					cwd: '<%= config.modules_path %>/jquery-mousewheel/',
+					src: 'jquery.mousewheel.js',
+					dest: '<%= config.webroot %>/js/lib/jquery-mousewheel/',
+					nonull: true,
+					expand: true
+				}, {
+					// underscore
+					cwd: '<%= config.modules_path %>/underscore/',
+					src: 'underscore.js',
+					dest: '<%= config.webroot %>/js/lib/underscore/',
+					nonull: true,
+					expand: true
+				}, {
+					// xregexp
+					cwd: '<%= config.modules_path %>/xregexp/',
+					src: 'xregexp-all.js',
+					dest: '<%= config.webroot %>/js/lib/xregexp/',
+					nonull: true,
+					expand: true
+				}, {
+					// jssha
+					cwd: '<%= config.modules_path %>/jssha/',
+					src: 'src/**',
+					dest: '<%= config.webroot %>/js/lib/jssha/',
+					nonull: true,
+					expand: true
+				}]
 			}
 		},
 		watch: {

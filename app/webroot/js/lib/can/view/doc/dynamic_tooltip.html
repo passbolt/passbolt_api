@@ -1,0 +1,110 @@
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+<style>
+    /* use a class instead of disable the button so mouseover events are fired */
+	.disabled {
+		opacity: 0.5;
+	}
+</style>
+<div id="demo">
+<div id="app"></div>
+<script type="text/mustache" id="app-template">
+	<table>
+		<thead>
+			<td></td><td>Name</td><td>Email</td>
+		</thead>
+		<tbody>
+			{{#each users}}
+			<tr>
+				<td><input can-change="toggle" type="checkbox"/></td>
+				<td>{{name}}</td>
+				<td>{{email}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="3">
+					<button tooltip="{{deleteTooltip}}"
+							{{^selected.length}}class="disabled"{{/selected.length}}
+							can-click="notImplemented">
+						Delete
+					</button>
+					<button 
+						tooltip="{{archiveTooltip}}"
+						{{^selected.length}}class="disabled"{{/selected.length}}
+						can-click="notImplemented">
+						Archive
+					</button>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</script>
+</div>
+<script>DEMO_HTML = document.getElementById("demo").innerHTML</script>
+<script>
+	steal("can/view/mustache","can/view/bindings", "jquery-ui",function(){
+		
+		can.view.attr("tooltip", function( el, attrData ) {
+			// A helper that updates or sets up the tooltip
+			var updateTooltip = function(){
+				$(el).tooltip({
+					content: el.getAttribute("tooltip"), 
+					items: "[tooltip]"
+				})
+			}
+			// When the tooltip attribute changes, update the tooltip
+			$(el).bind("attributes", function(ev){
+				if(ev.attributeName === "tooltip") {
+					updateTooltip();
+				}
+			})
+			// Setup the tooltip
+			updateTooltip();
+			
+		})
+		
+		var users = new can.List([
+			{ name: "Justin Meyer", email: "justin@bitovi" },
+			{ name: "Brian Moschel", email: "brian@bitovi" },
+			{ name: "Bitovi", email: "contact@bitovi" },
+		])
+		
+		var selected = new can.List();
+		
+		$("#app").html( can.view("app-template",{
+			selected: selected,
+			users: users,
+			toggle: function(user){
+				var index = selected.indexOf( user );
+				
+				if( index >= 0 ) {
+					selected.splice(index, 1)
+				} else {
+					selected.push(user)
+				}
+			},
+			deleteTooltip: function(){
+				var selectedCount = selected.attr("length");
+				if(selectedCount) {
+					return "Delete "+selectedCount+" users";
+				} else {
+					return "Select users to delete them.";
+				}
+			},
+			archiveTooltip: function(){
+				var selectedCount = selected.attr("length");
+				if(selectedCount) {
+					return "Archive "+selectedCount+" users";
+				} else {
+					return "Select users to archive them.";
+				}
+			},
+			notImplemented: function(){
+				alert("we didn't make this work for this demo")
+			}
+		}) )
+	})
+	
+</script>

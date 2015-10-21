@@ -1,0 +1,25 @@
+<body>
+<div id='out'></div>
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script type='text/javascript'> 
+steal("can/component", function() {
+
+    can.Component.extend({
+      tag: "my-paginate",
+      viewModel: {
+        offset: 0,
+        limit: 20,
+        next: function(){
+          this.attr("offset", this.offset + this.limit);
+        },
+        page: function(){
+          return Math.floor(this.attr('offset') / this.attr('limit')) + 1;
+        }
+      },
+      template: "Page {{page}} <button can-click='next'>Next</button>"
+    })
+
+    $("#out").html(can.view.mustache("<my-paginate/>")({}))
+})
+</script>
+</body>

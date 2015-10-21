@@ -1,0 +1,477 @@
+[
+    {
+        "name": "composer/installers",
+        "version": "v1.0.21",
+        "version_normalized": "1.0.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/composer/installers.git",
+            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/composer/installers/zipball/d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+            "shasum": ""
+        },
+        "replace": {
+            "roundcube/plugin-installer": "*",
+            "shama/baton": "*"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev",
+            "phpunit/phpunit": "4.1.*"
+        },
+        "time": "2015-02-18 17:17:01",
+        "type": "composer-installer",
+        "extra": {
+            "class": "Composer\\Installers\\Installer",
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Composer\\Installers\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kyle Robinson Young",
+                "email": "kyle@dontkry.com",
+                "homepage": "https://github.com/shama"
+            }
+        ],
+        "description": "A multi-framework Composer library installer",
+        "homepage": "http://composer.github.com/installers/",
+        "keywords": [
+            "Craft",
+            "Dolibarr",
+            "Hurad",
+            "MODX Evo",
+            "OXID",
+            "SMF",
+            "Thelia",
+            "WolfCMS",
+            "agl",
+            "aimeos",
+            "annotatecms",
+            "bitrix",
+            "cakephp",
+            "chef",
+            "codeigniter",
+            "concrete5",
+            "croogo",
+            "dokuwiki",
+            "drupal",
+            "elgg",
+            "fuelphp",
+            "grav",
+            "installer",
+            "joomla",
+            "kohana",
+            "laravel",
+            "lithium",
+            "magento",
+            "mako",
+            "mediawiki",
+            "modulework",
+            "moodle",
+            "phpbb",
+            "piwik",
+            "ppi",
+            "puppet",
+            "roundcube",
+            "shopware",
+            "silverstripe",
+            "symfony",
+            "typo3",
+            "wordpress",
+            "zend",
+            "zikula"
+        ]
+    },
+    {
+        "name": "lorenzo/cakephp-email-queue",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/lorenzo/cakephp-email-queue.git",
+            "reference": "4d6ee9141a0d6726d407c23a59a74bdb3a0c4075"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/lorenzo/cakephp-email-queue/zipball/4d6ee9141a0d6726d407c23a59a74bdb3a0c4075",
+            "reference": "4d6ee9141a0d6726d407c23a59a74bdb3a0c4075",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*"
+        },
+        "time": "2014-03-13 13:42:41",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "EmailQueue"
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "José Lorenzo Rodríguez",
+                "role": "Author"
+            }
+        ],
+        "description": "Queue, preview and and send emails stored in the database",
+        "homepage": "https://github.com/lorenzo/cakephp-email-queue",
+        "keywords": [
+            "cakephp",
+            "cron",
+            "email",
+            "preview",
+            "queue"
+        ]
+    },
+    {
+        "name": "knplabs/gaufrette",
+        "version": "0.2.0",
+        "version_normalized": "0.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/KnpLabs/Gaufrette.git",
+            "reference": "9d52413665284f9c96e0cef399fc14e68ac0aa5a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/KnpLabs/Gaufrette/zipball/9d52413665284f9c96e0cef399fc14e68ac0aa5a",
+            "reference": "9d52413665284f9c96e0cef399fc14e68ac0aa5a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "amazonwebservices/aws-sdk-for-php": "1.5.*",
+            "aws/aws-sdk-php": "~2",
+            "doctrine/dbal": ">=2.3",
+            "dropbox-php/dropbox-php": "*",
+            "google/apiclient": "~1.1",
+            "herzult/php-ssh": "*",
+            "microsoft/windowsazure": "dev-master",
+            "mikey179/vfsstream": "~1.2.0",
+            "phpseclib/phpseclib": "dev-master",
+            "phpspec/phpspec": "2.0.*",
+            "phpunit/phpunit": "3.7.*",
+            "rackspace/php-opencloud": "1.9.*"
+        },
+        "suggest": {
+            "amazonwebservices/aws-sdk-for-php": "to use the legacy Amazon S3 adapters",
+            "aws/aws-sdk-php": "to use the Amazon S3 adapter",
+            "doctrine/dbal": "to use the Doctrine DBAL adapter",
+            "dropbox-php/dropbox-php": "to use the Dropbox adapter",
+            "ext-apc": "to use the APC adapter",
+            "ext-curl": "*",
+            "ext-fileinfo": "This extension is used to automatically detect the content-type of a file in the AwsS3, OpenCloud, AzureBlogStorage and GoogleCloudStorage adapters",
+            "ext-mbstring": "*",
+            "ext-mongo": "*",
+            "ext-zip": "to use the Zip adapter",
+            "google/apiclient": "to use GoogleCloudStorage adapter",
+            "herzult/php-ssh": "to use SFtp adapter",
+            "knplabs/knp-gaufrette-bundle": "to use with Symfony2",
+            "microsoft/windowsazure": "to use Microsoft Azure Blob Storage adapter",
+            "phpseclib/phpseclib": "to use PhpseclibSftp adapter",
+            "rackspace/php-opencloud": "to use Opencloud adapter"
+        },
+        "time": "2015-05-26 08:25:40",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Gaufrette": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "The contributors",
+                "homepage": "http://github.com/knplabs/Gaufrette/contributors"
+            },
+            {
+                "name": "KnpLabs Team",
+                "homepage": "http://knplabs.com"
+            }
+        ],
+        "description": "PHP5 library that provides a filesystem abstraction layer",
+        "homepage": "http://knplabs.com",
+        "keywords": [
+            "abstraction",
+            "file",
+            "filesystem",
+            "media"
+        ]
+    },
+    {
+        "name": "burzum/file-storage",
+        "version": "0.5.2",
+        "version_normalized": "0.5.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/burzum/cakephp-file-storage.git",
+            "reference": "e5107ae75d11c495e650104da58b012975fa278b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/burzum/cakephp-file-storage/zipball/e5107ae75d11c495e650104da58b012975fa278b",
+            "reference": "e5107ae75d11c495e650104da58b012975fa278b",
+            "shasum": ""
+        },
+        "require": {
+            "knplabs/gaufrette": "*",
+            "php": ">=5.3.2"
+        },
+        "suggest": {
+            "burzum/cakephp-imagine-plugin": "Required if you want to use the image processing feature of FileStorage",
+            "cakedc/migrations": "If you want to use the database migrations that come with FileStorage"
+        },
+        "time": "2015-04-30 14:36:49",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "FileStorage"
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Florian Krämer",
+                "homepage": "http://florian-kraemer.net"
+            }
+        ],
+        "description": "This plugin is giving you the possibility to store files in virtually and kind of storage backend. This plugin is wrapping the Gaufrette library (https://github.com/KnpLabs/Gaufrette) library in a CakePHP fashion and provides a simple way to use the storage adapters through the StorageManager class.",
+        "homepage": "http://github.com/burzum/cakephp-file-storage-plugin",
+        "keywords": [
+            "abstraction",
+            "cakephp",
+            "file",
+            "filesystem",
+            "media",
+            "storage",
+            "upload"
+        ]
+    },
+    {
+        "name": "imagine/imagine",
+        "version": "v0.6.3",
+        "version_normalized": "0.6.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/avalanche123/Imagine.git",
+            "reference": "149041d2a1b517107bfe270ca2b1a17aa341715d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/149041d2a1b517107bfe270ca2b1a17aa341715d",
+            "reference": "149041d2a1b517107bfe270ca2b1a17aa341715d",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "sami/sami": "dev-master"
+        },
+        "suggest": {
+            "ext-gd": "to use the GD implementation",
+            "ext-gmagick": "to use the Gmagick implementation",
+            "ext-imagick": "to use the Imagick implementation"
+        },
+        "time": "2015-09-19 16:54:05",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-develop": "0.7-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Imagine": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bulat Shakirzyanov",
+                "email": "mallluhuct@gmail.com",
+                "homepage": "http://avalanche123.com"
+            }
+        ],
+        "description": "Image processing for PHP 5.3",
+        "homepage": "http://imagine.readthedocs.org/",
+        "keywords": [
+            "drawing",
+            "graphics",
+            "image manipulation",
+            "image processing"
+        ]
+    },
+    {
+        "name": "burzum/cakephp-imagine-plugin",
+        "version": "1.0.6",
+        "version_normalized": "1.0.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/burzum/cakephp-imagine-plugin.git",
+            "reference": "49f205b3e882b193ff0e40e1a81ef08889281287"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/burzum/cakephp-imagine-plugin/zipball/49f205b3e882b193ff0e40e1a81ef08889281287",
+            "reference": "49f205b3e882b193ff0e40e1a81ef08889281287",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "imagine/imagine": "*",
+            "php": ">=5.3.2"
+        },
+        "time": "2014-09-15 21:46:01",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "Imagine"
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Florian Krämer",
+                "homepage": "http://florian-kraemer.net"
+            }
+        ],
+        "description": "Imagine Plugin for CakePHP",
+        "homepage": "https://github.com/burzum/cakephp-imagine-plugin",
+        "keywords": [
+            "cakephp",
+            "image",
+            "image-processing",
+            "media"
+        ]
+    },
+    {
+        "name": "ezyang/htmlpurifier",
+        "version": "v4.7.0",
+        "version_normalized": "4.7.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ezyang/htmlpurifier.git",
+            "reference": "ae1828d955112356f7677c465f94f7deb7d27a40"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/ae1828d955112356f7677c465f94f7deb7d27a40",
+            "reference": "ae1828d955112356f7677c465f94f7deb7d27a40",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2"
+        },
+        "time": "2015-08-05 01:03:42",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "HTMLPurifier": "library/"
+            },
+            "files": [
+                "library/HTMLPurifier.composer.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL"
+        ],
+        "authors": [
+            {
+                "name": "Edward Z. Yang",
+                "email": "admin@htmlpurifier.org",
+                "homepage": "http://ezyang.com"
+            }
+        ],
+        "description": "Standards compliant HTML filter written in PHP",
+        "homepage": "http://htmlpurifier.org/",
+        "keywords": [
+            "html"
+        ]
+    },
+    {
+        "name": "burzum/cakephp-html-purifier",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/burzum/cakephp-html-purifier.git",
+            "reference": "45e02e810c2fdb7d2949af08d9d32ddc52dfeee9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/burzum/cakephp-html-purifier/zipball/45e02e810c2fdb7d2949af08d9d32ddc52dfeee9",
+            "reference": "45e02e810c2fdb7d2949af08d9d32ddc52dfeee9",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "ezyang/htmlpurifier": "*",
+            "php": ">=5.3.2"
+        },
+        "time": "2014-09-18 23:05:30",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "HtmlPurifier"
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Florian Krämer",
+                "homepage": "http://florian-kraemer.net"
+            }
+        ],
+        "description": "HtmlPurifier plugin for CakePHP",
+        "homepage": "http://github.com/burzum/cakephp-html-purifier",
+        "keywords": [
+            "Purifier",
+            "html",
+            "markup",
+            "sensitization",
+            "tidy",
+            "validation"
+        ]
+    }
+]

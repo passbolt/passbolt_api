@@ -1,0 +1,7 @@
+<form>
+	{{#items}}
+		{{ !item.attr('is_done') }}
+			<div id="{{ item.title }}"></div>
+		{{/item}}
+	{{/items}}
+</form>

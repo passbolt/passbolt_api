@@ -1,0 +1,111 @@
+<div id='out'></div>
+<style type="text/css">
+body, html {
+	margin: 0;
+	padding: 0;
+}
+table {
+	border-spacing: 0;
+}
+th {
+	text-align: center;
+}
+td {
+	text-align: right;
+	cell-
+}
+td, th {
+	padding: 5px;
+	font-size: 10px;
+	font-family: monospace;
+}
+button {
+	cursor: pointer;
+}
+</style>
+<script src="../../node_modules/steal/steal.js"></script>
+<script>
+steal('can/view/stache', 'can/list/sort', 'can/view/bindings', function(){
+
+var template = can.view.stache(
+	'<table>' +
+		'<tr>' +
+			'{{#each rows.0}}' +
+				'<th>' +
+					'<button comparator-index="{{@index}}" can-click="changeComparator">' +
+						'&#9660;' +
+					'</button>' +
+				'</th>' +
+			'{{/each}}' +
+		'</tr>' +
+		'{{#each rows}}' +
+			'<tr>' +
+				'{{#each .}}' +
+					'<td style="background-color: rgb({{color}}, {{color}}, {{color}});">' +
+						'{{num}}' +
+					'</td>' +
+				'{{/each}}' +
+			'</tr>' +
+		'{{/each}}' +
+	'</table>'
+);
+
+var rows = new can.List();
+var rowCount = 25;
+var colCount = 25;
+rows.comparator = 'cols.0.num';
+
+for (var i = 0; i < rowCount; i++) {
+
+	var row = new can.List();
+
+	for (var j = 0; j < colCount; j++) {
+
+		var randomNumber = Math.round(Math.random() * 100);
+
+		var cell = new can.Map({
+			num: randomNumber,
+			color: function () {
+				var percentage = this.attr('num') / 100;
+				return 256 - Math.round(156 * percentage);
+			}
+		});
+		row.push(cell);
+	}
+
+	// Push into the list after the values are generated, so that the
+	// items can be pushed in at the correct index based on the comparator.
+	rows.push(row);
+}
+
+var data = {
+	rows: rows,
+	changeComparator: function (map, el) {
+		var index = el.attr('comparator-index');
+
+		rows.comparator = index + '.num';
+		rows.sort();
+		can.trigger(rows, 'length', [rows.length]);
+	}
+};
+
+$("#out").html( template( data , {}) );
+
+
+// Increment every number by a few every couple of secs
+// This will result in the color of the cell being changed
+
+setInterval(function () {
+	can.batch.start();
+	rows.each(function (row) {
+		row.each(function (td) {
+			td.attr('num', td.attr('num')+1);
+		});
+	})
+	can.batch.stop();
+}, 2000);
+
+
+
+});
+</script>

@@ -1,0 +1,147 @@
+<style type="text/css">
+body {font-family: verdana}
+tabs {
+	margin-top: 20px;
+}
+button {clear: both;}
+tabs ul {
+    padding: 0px; margin: 0px;
+}
+tabs li {
+    float: left;
+    padding: 10px;
+    background-color: #F6F6F6;
+    list-style: none;
+    margin-left: 10px;
+}
+tabs li {
+    color: #1C94C4;
+    font-weight: bold;
+    text-decoration: none;
+}
+tabs li.active {
+    color: #F6A828;
+    cursor: default;
+}
+panel {
+   
+    clear: both;
+    display: block;
+}
+/* clearfix from jQueryUI */
+tabs ul:after  { content: "."; display: block; height: 1px; clear: both; visibility: hidden; }
+tabs ul { display: inline-block; }
+</style>
+<div id="demo-html">
+<div id='out'></div>
+<script id="app" type="text/mustache">
+  <p><button can-click="addVegies">Add Vegetables</button></p>
+  <tabs>
+    {{#each foodTypes}}
+      <panel title='{{title}}'>{{content}}</panel>
+    {{/each}}
+  </tabs>
+</script>
+</div>
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script id="demo-source">
+steal("can/component",function(){
+	
+can.Component.extend({
+	tag: "tabs",
+	template: 	
+		"<ul>"+
+			// Create an LI for each item in the panel's viewModel object
+    		"{{#panels}}"+
+    			"<li {{#isActive}}class='active'{{/isActive}} "+
+    			    "can-click='makeActive'>"+
+    			  "{{title}}"+
+    			"</li>"+
+    		"{{/panels}}"+
+    	"</ul>"+
+    	"<content></content>",
+	viewModel: {
+		// Contains a list of all panel scopes within the
+		// tabs element.
+		panels: [],
+		// When a `<panel>` element is inserted into the document,
+		// it calls this method to add the panel's viewModel to the
+		// panels array.
+		addPanel: function(panel){
+			// If this is the first panel, activate it.
+			if( this.attr("panels").length === 0 ) {
+				this.makeActive(panel)
+			} 
+			this.attr("panels").push(panel);
+		},
+		// When a `<panel>` element is removed from the document,
+		// it calls this method to remove the panel's viewModel from
+		// the panels array.
+		removePanel: function(panel){
+			var panels = this.attr("panels");
+			can.batch.start();
+			panels.splice(panels.indexOf(panel),1);
+			// if the panel was active, make the first item active
+			if(panel === this.attr("active")){
+				if(panels.length){
+					this.makeActive(panels[0]);
+				} else {
+					this.removeAttr("active")
+				}
+			}
+			can.batch.stop()
+		},
+		makeActive: function(panel){
+			this.attr("active",panel);
+			this.attr("panels").each(function(panel){
+				panel.attr("active", false)
+			});
+			panel.attr("active",true);
+			
+		},
+		// this is viewModel, not mustache
+		// consider removing viewModel as arg
+		isActive: function( panel ) {
+			return this.attr('active') == panel
+		}
+	}
+});
+
+can.Component.extend({
+	template: "{{#if active}}<content></content>{{/if}}",
+	tag:"panel",
+	viewModel: {
+		active: false,
+		title: "@"
+	},
+	events: {
+		inserted: function(){
+			this.element.parent().viewModel().addPanel( this.viewModel );
+		},
+		removed: function(){
+			this.element.parent().viewModel().removePanel( this.viewModel );
+		}
+	}
+});
+
+var foodTypes= new can.List([
+	{title: "Fruits", content: "oranges, apples"},
+	{title: "Breads", content: "pasta, cereal"},
+	{title: "Sweets", content: "ice cream, candy"}
+]);
+window.foodTypes = foodTypes;
+
+$("#out").html( can.view("app",{
+	foodTypes: foodTypes,
+	addVegies: function(){
+		foodTypes.push({
+			title: "Vegetables",
+			content: "Carrots, peas, kale"
+		})
+	}
+}));
+
+
+});
+</script>
+

@@ -24,7 +24,7 @@ $config = array(
 	),
 	// Javascript
 	'App.js' => array(
-	    'compile' => true
+	    'build' => 'production'
 	),
 	// Internationalization
 	'i18n' => array(
@@ -89,21 +89,22 @@ $config = array(
 				'verify' => true
 			)
 		),
-		'gpg' => array(
-			'env' => array(
-				'setenv' => 1,
-				'home' => '/home/www-data/.gnupg'
-			),
-			'serverKey' => array(
-				'fingerprint' => 'A0771BE5B573C18A4692AD5AEDB35494D8462294',
-				'public' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_public.key',
-				'private' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_private.key',
-				'passphrase' => ''
-			)
-		)
 	),
 	'GPG' => array(
-		'trustModel' => 'always'
+		'trustModel' => 'always',
+		'env' => array(
+			'setenv' => 1,
+			'home' => '/home/www-data/.gnupg'
+		),
+		'testKeys' => array(
+			'path' => APP . 'Plugin' . DS . 'DataUnitTests'	. DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS
+		),
+		'serverKey' => array(
+			'fingerprint' => 'A0771BE5B573C18A4692AD5AEDB35494D8462294',
+			'public' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_public.key',
+			'private' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_private.key',
+			'passphrase' => ''
+		)
 	),
 	'Permission' => array(
 		'acoModels' => array('Resource', 'Category'),

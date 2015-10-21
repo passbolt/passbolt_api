@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>can.view.mustache demo</title>
+</head>
+<body>
+	
+<script id="template" type="text/mustache">
+<p> My fav color is <span {{ (el) -> el.css('color', 'blue') }}>blue</span></p>
+	<p>My fav teacher is: <span>{{ name }}</span></p>
+	<p>My fav book is: <span>{{{ book }}}</span></p>
+	<p>Comments {{! 'ignored' }}</p>
+</script>
+
+<div id="demo"></div>
+<button id="button">Click to change</button>
+
+<script type='text/javascript' src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script type='text/javascript'>
+	steal('can/view/mustache', 'can/map','can/compute', function() {
+
+		var teacher = new can.Map({
+			name: "<strong>Mrs Peters</strong>",
+			book: "Harry Potter",
+			movie: false
+		});
+
+		var template = can.view("#template", teacher);
+		can.$('#demo').append(template);
+
+		can.$('#button').click(function(){
+			teacher.attr('name', 'Mr Scott')
+			teacher.attr('book', '<strong>Eat, Pray, Love</strong>')
+		});
+
+	});
+</script>
+</body>
+</html>

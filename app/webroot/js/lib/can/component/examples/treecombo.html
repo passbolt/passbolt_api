@@ -1,0 +1,184 @@
+<style>
+	.breadcrumb li {
+	  display: inline-block;
+	  padding: 5px 0px;
+	}
+	.breadcrumb li:before {
+	  content: ">";
+	  font-weight: normal; 
+	}
+	.breadcrumb li:hover {
+	  font-weight: bold;  
+	  cursor: pointer;
+	}
+	.breadcrumb li:last-child {
+	  font-weight: bold;  
+	}
+	.breadcrumb li:first-child:before {
+	   content: ""
+	}
+	.breadcrumb li:last-child:hover {
+	  text-decoration: none;
+	  cursor: default;
+	}
+	.options li {
+	  padding: 3px 5px;
+	}
+	.options li.checked {
+	  background-color: yellow;
+	}
+	#selected {
+	  margin-top: 20px;
+	  border-top: solid 1px silver;
+	}
+	#selected li{
+	  padding-left: 10px; 
+	}
+</style>
+<div id='out'></div>
+<script id="app" type="text/mustache">
+  <div><treecombo items='locations' title='Locations'/></div>
+</script>
+<script id="tree-combo-stash" type='text/mustache'>
+  <ul class='breadcrumb'>
+    <li can-click='emptyBreadcrumb'>{{title}}</li>
+    {{#each breadcrumb}}
+      <li can-click='updateBreadcrumb'>{{title}}</li>
+    {{/each}}
+  </ul>
+  <ul class='options'>
+    <content>
+      {{#selectableItems}}
+        <li {{#isSelected}}class='active'{{/isSelected}} can-click='toggle'>
+          <input type='checkbox' {{#isSelected}}checked{{/isSelected}}/>
+            {{title}}
+          {{#if children.length}}
+            <button class='showChildren' can-click='showChildren'>+</button>
+          {{/if}}
+        </li>
+      {{/selectableItems}}
+    </content>
+  </ul>
+</script>
+<script src="../../node_modules/steal/steal.js" main="@empty"></script>
+<script type='text/javascript'>
+steal("can/util", "can/component", "can/map/setter", "can/util/fixture",
+  "can/model", function (can) {
+
+can.Component.extend({
+	tag: "treecombo",
+	template: can.view("tree-combo-stash"),
+	viewModel: {
+		items: [],
+		breadcrumb: [],
+		selected: [],
+		title: "@",
+		selectableItems: function(){
+			var breadcrumb = this.attr("breadcrumb");
+	      	
+			// if there's an item in the breadcrumb
+			if(breadcrumb.attr('length')){
+			
+				// return the last item's children
+				return breadcrumb.attr(""+(breadcrumb.length-1)+'.children');
+			} else{
+		    
+				// return the top list of items
+				return this.attr('items');
+			}
+		},
+		showChildren: function( item, el, ev ) {
+			ev.stopPropagation();
+			this.attr('breadcrumb').push(item)
+		},
+		emptyBreadcrumb: function( ) {
+			this.attr("breadcrumb").attr([], true)
+		},
+		updateBreadcrumb: function( item ){
+			var breadcrumb = this.attr("breadcrumb"),
+				index = breadcrumb.indexOf(item);
+			breadcrumb.splice(index+1, breadcrumb.length - index- 1 );
+		},
+		toggle: function(item){
+			var selected = this.attr('selected'),
+				index = selected.indexOf(item);
+		    if(index === -1 ){
+		    	selected.push(item);
+		    } else {
+		      	selected.splice(index, 1) 
+		    }
+		}
+	},
+	helpers: {
+		isSelected: function( options ){
+			if(this.attr("selected").indexOf( options.context ) > -1){
+				return options.fn();
+			} else {
+				return options.inverse()
+			}
+		}
+	}
+})
+
+
+
+
+var base = new can.Map({
+	locations: [
+	  { id: 1, title: "Midwest", children: [
+	    { id: 5, title: "Illinois", children: [
+	      { id: 23423, title: "Chicago"}, { id: 4563, title: "Springfield"},
+	      { id: 4564, title: "Naperville"} 
+	      ]
+	    },
+	    { id: 6, title: "Wisconsin", children: [
+	      { id: 232423, title: "Milwaulkee"}, { id: 45463, title: "Green Bay"},
+	      { id: 45464, title: "Madison"} 
+	      ]
+	    }]
+	  },
+	  { id: 2, title: "East Coast", children: [
+	    { id: 25, title: "New York", children: [
+	      { id: 3413, title: "New York"}, { id: 4613, title: "Rochester"},
+	      { id: 4516, title: "Syracuse"} 
+	      ]
+	    },
+	    { id: 6, title: "Pennsylvania", children: [
+	      { id: 2362423, title: "Philadelphia"}, { id: 454663, title: "Harrisburg"},
+	      { id: 454664, title: "Scranton"} 
+	      ]
+	    }]
+	  },
+	  { id: 3, title: "West Coast", children: [
+	    { id: 75, title: "California", children: [
+	      { id: 347813, title: "Los Angeles"}, { id: 463213, title: "Sunnyvale"},
+	      { id: 457516, title: "San Diego"} 
+	      ]
+	    },
+	    { id: 66, title: "Oregon", children: [
+	      { id: 23621, title: "Bend"}, { id: 1111, title: "Salem"},
+	      { id: 45461, title: "Eugene"} 
+	      ]
+	    }]
+	  },
+	  { id: 4, title: "South", children: [
+	    { id: 65, title: "Texas", children: [
+	      { id: 343413, title: "Austin"}, { id: 463413, title: "Dalas"},
+	      { id: 498516, title: "El Paso"} 
+	      ]
+	    },
+	    { id: 6, title: "Florida", children: [
+	      { id: 2360, title: "Orlando"}, { id: 4540, title: "Tampa"},
+	      { id: 4064, title: "Miami"} 
+	      ]
+	    }]
+	  }]
+})
+
+$("#out").html( can.view("app",base) ) ;
+	
+	
+	
+
+})
+</script>

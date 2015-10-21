@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<script type="text/javascript" src="../lib/steal/steal.js"></script>
+<script type="text/javascript">
+
+	steal('can', function(can) {
+		var person = new can.Map({
+			first: 'Bob',
+			last: 'Marley'
+		});
+
+		go = function() {
+			for(var i = 0; i < 1; i++) {
+				var c = new can.Compute(function() {
+					return person.attr('first') + person.attr('last');
+				});
+
+				c.bind('change', function() {});
+			}
+		}
+
+	});
+
+</script>
+</body>
+</html>
