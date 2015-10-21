@@ -39,7 +39,6 @@ Clone the repository and associated submodules
 ```
 	git clone git@bitbucket.org:passbolt/passbolt
 	cd passbolt
-	git submodule update --init
 ```
 
 Configuration
@@ -63,12 +62,6 @@ Copy the app configuration file and check the settings
 
 Installation script
 -------------------
-
-Install Composer app files (to install vendor and plugin dependencies).
-```
-	cd app
-	composer install --no-dev
-```
 
 Run the install script from the cakephp root with the data flag set
 if you want to install the test data add the relevant parameter.
@@ -182,8 +175,23 @@ install the data set and rexport the content as fixtures.
 Note that the tests are tightly coupled with the data.
 If you change it you may need to change the tests. You can add more record safely of course.
 
+How to update the PHP libraries
+-------------------
+To update the PHP libraries, go to /app, and
+```
+	composer install --no-dev
+```
+Then execute all the unit tests and selenium tests, and if everything passes it can be commited and pushed on the git repo.
 
-How do I recompile the Javascript?
+How to update the Javascript libraries
+-------------------
+```
+	npm install && npm update
+	grunt lib-deploy
+```
+Then execute all the selenium tests, and if everything passes it can be commited and pushed on the git repo.
+
+How do I recompile the Javascript build?
 ----------------------------------
 
 Install grunt if it hasn't yet been installed
