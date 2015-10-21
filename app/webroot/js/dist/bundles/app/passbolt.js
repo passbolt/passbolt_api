@@ -28842,10 +28842,6 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29030,6 +29026,8 @@ define('app/component/sidebar_section', ['mad/view/component/tree'], function ($
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29044,6 +29042,8 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -30535,18 +30535,17 @@ define('app/view/component/user_browser', [
 });
 /*app/component/user_browser*/
 define('app/component/user_browser', [
+    'moment',
     'mad/component/grid',
     'mad/form/element/checkbox',
     'app/model/user',
     'app/model/group',
     'app/model/profile',
     'app/view/component/user_browser'
-], function ($__0, $__1, $__2, $__3, $__4, $__5) {
+], function ($__0, $__2, $__3, $__4, $__5, $__6, $__7) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
-    if (!$__1 || !$__1.__esModule)
-        $__1 = { default: $__1 };
     if (!$__2 || !$__2.__esModule)
         $__2 = { default: $__2 };
     if (!$__3 || !$__3.__esModule)
@@ -30555,12 +30554,17 @@ define('app/component/user_browser', [
         $__4 = { default: $__4 };
     if (!$__5 || !$__5.__esModule)
         $__5 = { default: $__5 };
-    $__0;
-    $__1;
+    if (!$__6 || !$__6.__esModule)
+        $__6 = { default: $__6 };
+    if (!$__7 || !$__7.__esModule)
+        $__7 = { default: $__7 };
+    var moment = $__0.default;
     $__2;
     $__3;
     $__4;
     $__5;
+    $__6;
+    $__7;
     var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('passbolt.component.UserBrowser', {
             defaults: {
                 itemClass: passbolt.model.User,
