@@ -1,3 +1,4 @@
+import moment from 'moment';
 import 'mad/component/grid';
 import 'mad/form/element/checkbox';
 import 'app/model/user';
