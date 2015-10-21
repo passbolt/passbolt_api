@@ -165,60 +165,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				return moment(value).fromNow();
 			}
 		}, {
-//				name: 'expires',
-//				index: 'expires',
-//				header: {
-//					css: ['m-cell'],
-//					label: __('Expires')
-//				},
-//				valueAdapter: function (value, mappedItem, item, columnModel) {
-//					if (typeof value == 'undefined' || value == null) {
-//						return '-';
-//					}
-//					return moment(value).fromNow();
-//				}
-//			}, {
 			name: 'owner',
 			index: 'owner',
 			header: {
 				css: ['m-cell'],
 				label: __('Owner')
 			}
-		}/*, {
-			name: 'copyLogin',
-			index: 'copyLogin',
-			header: {
-				css: ['s-cell'],
-				label: ''
-			},
-			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
-				return;
-				var copyLogin = mad.helper.Component.create(
-					cellElement,
-					'inside_replace',
-					passbolt.component.CopyLoginButtonController,
-					{ state: 'hidden', value: item, browser: mad.app.getComponent('js_passbolt_password_browser') }
-				);
-				copyLogin.start();
-			}
-		}, {
-			name: 'copySecret',
-			index: 'copySecret',
-			header: {
-				css: ['s-cell'],
-				label: ''
-			},
-			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
-				return;
-				var copyPwd = mad.helper.Component.create(
-					cellElement,
-					'inside_replace',
-					passbolt.component.CopySecretButtonController,
-					{ state: 'hidden', value: item, browser: mad.app.getComponent('js_passbolt_password_browser') }
-				);
-				copyPwd.start();
-			}
-		}*/];
+		}];
 
 		this._super(el, options);
 	},
@@ -229,16 +182,15 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {string} x The x position where the menu will be rendered
 	 * @param {string} y The y position where the menu will be rendered
 	 */
-	showContextualMenu: function (item, x, y) {
+	showContextualMenu: function (item, x, y, eventTarget) {
 		// Get the offset position of the clicked item.
-		var $item = $('td span', '#' + this.options.prefixItemId + item.id);
+		var $item = $('#' + this.options.prefixItemId + item.id);
 		var item_offset = $item.offset();
-
 
 		// Instantiate the contextual menu menu.
 		var contextualMenu = new mad.component.ContextualMenu(null, {
 			state: 'hidden',
-			source: $item[0],
+			source: eventTarget,
 			coordinates: {
 				x: x,
 				y: item_offset.top
@@ -253,7 +205,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// Add Copy username action.
 		var action = new mad.model.Action({
-			id: uuid(),
+			id: 'js_password_browser_menu_copy_username',
 			label: 'Copy username',
 			initial_state: !canRead ? 'disabled' : 'ready',
 			action: function (menu) {
@@ -268,7 +220,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		contextualMenu.insertItem(action);
 		// Add Copy password action.
 		var action = new mad.model.Action({
-			id: uuid(),
+            id: 'js_password_browser_menu_copy_password',
 			label: 'Copy password',
 			initial_state: !canRead ? 'disabled' : 'ready',
 			action: function (menu) {
@@ -280,7 +232,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		contextualMenu.insertItem(action);
 		// Add Copy URI action.
 		var action = new mad.model.Action({
-			id: uuid(),
+            id: 'js_password_browser_menu_copy_uri',
 			label: 'Copy URI',
 			initial_state: !canRead ? 'disabled' : 'ready',
 			action: function (menu) {
@@ -296,7 +248,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// Add Open URI in a new tab action.
 		var action = new mad.model.Action({
-			id: uuid(),
+            id: 'js_password_browser_menu_open_uri',
 			label: 'Open URI in a new tab',
 			initial_state: !canRead ? 'disabled' : 'ready',
 			cssClasses: ['separator-after'],
@@ -309,9 +261,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		});
 		contextualMenu.insertItem(action);
 
-		// Add Rename action.
+		// Add Edit action.
 		var action = new mad.model.Action({
-			id: uuid(),
+            id: 'js_password_browser_menu_edit',
 			label: 'Edit',
 			initial_state: !canUpdate ? 'disabled' : 'ready',
 			action: function (menu) {
@@ -323,7 +275,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// Add Share action.
 		var action = new mad.model.Action({
-			id: uuid(),
+            id: 'js_password_browser_menu_share',
 			label: 'Share',
 			initial_state: !canAdmin ? 'disabled' : 'ready',
 			action: function (menu) {
@@ -334,7 +286,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		contextualMenu.insertItem(action);
 		// Add Delete action.
 		var action = new mad.model.Action({
-			id: uuid(),
+            id: 'js_password_browser_menu_delete',
 			label: 'Delete',
 			initial_state: !canUpdate ? 'disabled' : 'ready',
 			action: function (menu) {
@@ -616,8 +568,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {HTMLEvent} ev The source event which occured
 	*/
 	' item_selected': function (el, ev, item, srcEvent) {
-		var self = this;
-
 		// switch to select state
 		this.setState('selection');
 
@@ -633,11 +583,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {passbolt.model.Resource} item The right selected item instance or its id
 	* @param {HTMLEvent} srcEvent The source event which occured
 	*/
-	' item_right_selected': function (el, ev, item, srcEvent) {
-		// Select item.
+    ' item_right_selected': function (el, ev, item, srcEvent) {
+        // Select item.
 		this.select(item);
 		// Show contextual menu.
-		this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+		this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY, srcEvent.target);
 	},
 
 	/**
