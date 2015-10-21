@@ -26,7 +26,9 @@
 
 # Vendors
 /vendor
-/Vendor
+/Vendor/*
+!/Vendor/composer
+!/Vendor/autoload.php
 /vendors
 
 # bower, composer, grunt
