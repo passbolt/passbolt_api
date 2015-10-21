@@ -27456,12 +27456,12 @@ define('app/component/password_browser', [
                 ];
                 this._super(el, options);
             },
-            showContextualMenu: function (item, x, y) {
-                var $item = $('td span', '#' + this.options.prefixItemId + item.id);
+            showContextualMenu: function (item, x, y, eventTarget) {
+                var $item = $('#' + this.options.prefixItemId + item.id);
                 var item_offset = $item.offset();
                 var contextualMenu = new mad.component.ContextualMenu(null, {
                         state: 'hidden',
-                        source: $item[0],
+                        source: eventTarget,
                         coordinates: {
                             x: x,
                             y: item_offset.top
@@ -27470,7 +27470,7 @@ define('app/component/password_browser', [
                 contextualMenu.start();
                 var canRead = passbolt.model.Permission.isAllowedTo(item, passbolt.READ), canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE), canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_password_browser_menu_copy_username',
                         label: 'Copy username',
                         initial_state: !canRead ? 'disabled' : 'ready',
                         action: function (menu) {
@@ -27484,7 +27484,7 @@ define('app/component/password_browser', [
                     });
                 contextualMenu.insertItem(action);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_password_browser_menu_copy_password',
                         label: 'Copy password',
                         initial_state: !canRead ? 'disabled' : 'ready',
                         action: function (menu) {
@@ -27495,7 +27495,7 @@ define('app/component/password_browser', [
                     });
                 contextualMenu.insertItem(action);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_password_browser_menu_copy_uri',
                         label: 'Copy URI',
                         initial_state: !canRead ? 'disabled' : 'ready',
                         action: function (menu) {
@@ -27509,7 +27509,7 @@ define('app/component/password_browser', [
                     });
                 contextualMenu.insertItem(action);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_password_browser_menu_open_uri',
                         label: 'Open URI in a new tab',
                         initial_state: !canRead ? 'disabled' : 'ready',
                         cssClasses: ['separator-after'],
@@ -27522,7 +27522,7 @@ define('app/component/password_browser', [
                     });
                 contextualMenu.insertItem(action);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_password_browser_menu_edit',
                         label: 'Edit',
                         initial_state: !canUpdate ? 'disabled' : 'ready',
                         action: function (menu) {
@@ -27532,7 +27532,7 @@ define('app/component/password_browser', [
                     });
                 contextualMenu.insertItem(action);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_password_browser_menu_share',
                         label: 'Share',
                         initial_state: !canAdmin ? 'disabled' : 'ready',
                         action: function (menu) {
@@ -27542,7 +27542,7 @@ define('app/component/password_browser', [
                     });
                 contextualMenu.insertItem(action);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_password_browser_menu_delete',
                         label: 'Delete',
                         initial_state: !canUpdate ? 'disabled' : 'ready',
                         action: function (menu) {
@@ -27663,7 +27663,6 @@ define('app/component/password_browser', [
                 });
             },
             ' item_selected': function (el, ev, item, srcEvent) {
-                var self = this;
                 this.setState('selection');
                 if (this.beforeSelect(item)) {
                     this.select(item);
@@ -27671,7 +27670,7 @@ define('app/component/password_browser', [
             },
             ' item_right_selected': function (el, ev, item, srcEvent) {
                 this.select(item);
-                this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+                this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY, srcEvent.target);
             },
             ' password_clicked': function (el, ev, item, srcEvent) {
                 var secret = item.Secret[0].data;
@@ -28842,6 +28841,8 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -28873,6 +28874,8 @@ define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/v
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/comment/create*/
 define('app/form/comment/create', [
     'mad/form/form',
@@ -29026,8 +29029,6 @@ define('app/component/sidebar_section', ['mad/view/component/tree'], function ($
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29042,8 +29043,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -30651,12 +30650,12 @@ define('app/component/user_browser', [
                 ];
                 this._super(el, options);
             },
-            showContextualMenu: function (item, x, y) {
-                var $item = $('td span', '#' + item.id);
+            showContextualMenu: function (item, x, y, eventTarget) {
+                var $item = $('#' + item.id);
                 var item_offset = $item.offset();
                 var contextualMenu = new mad.component.ContextualMenu(null, {
                         state: 'hidden',
-                        source: $item[0],
+                        source: eventTarget,
                         coordinates: {
                             x: x,
                             y: item_offset.top
@@ -30808,7 +30807,7 @@ define('app/component/user_browser', [
             },
             ' item_right_selected': function (el, ev, item, srcEvent) {
                 this.select(item);
-                this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+                this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY, srcEvent.target);
             },
             '.js_checkbox_multiple_select checked': function (el, ev, userId) {
                 if (this.state.is('ready')) {
@@ -32307,12 +32306,13 @@ define('app/config/config.json', [], function () {
                 'name': 'Sauvage',
                 'song': 'http://youtu.be/DaRG0ukxYqQ'
             },
-            'url': 'http://passbolt.dev',
-            'hostname': 'passbolt.dev',
+            'url': 'http://192.168.99.100:8081',
+            'hostname': '192.168.99.100:8081',
             'controllerElt': '#js_app_controller',
             'namespace': 'passbolt',
             'ControllerClassName': 'passbolt.component.App'
         },
+        'notification': { 'timeout': 6000 },
         'error': { 'ErrorHandlerClassName': 'passbolt.error.ErrorHandler' },
         'event': { 'eventBusControllerElt': '#js_bus_controller' },
         'i18n': { 'lang': 'EN-en' },

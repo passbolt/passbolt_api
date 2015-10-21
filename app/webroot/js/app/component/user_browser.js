@@ -130,17 +130,17 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {passbolt.model.User} item The item to show the contextual menu for
      * @param {string} x The x position where the menu will be rendered
      * @param {string} y The y position where the menu will be rendered
+     * @param {HTMLElement} eventTarget The element the event occurred on
      */
-    showContextualMenu: function (item, x, y) {
+    showContextualMenu: function (item, x, y, eventTarget) {
         // Get the offset position of the clicked item.
-        var $item = $('td span', '#' + item.id);
+        var $item = $('#' + item.id);
         var item_offset = $item.offset();
-
 
         // Instantiate the contextual menu menu.
         var contextualMenu = new mad.component.ContextualMenu(null, {
             state: 'hidden',
-            source: $item[0],
+            source: eventTarget,
             coordinates: {
                 x: x,
                 y: item_offset.top
@@ -453,7 +453,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // Select item.
         this.select(item);
         // Show contextual menu.
-        this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY);
+        this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY, srcEvent.target);
     },
 
     /**

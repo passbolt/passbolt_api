@@ -182,6 +182,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {passbolt.model.Resource} item The item to show the contextual menu for
 	 * @param {string} x The x position where the menu will be rendered
 	 * @param {string} y The y position where the menu will be rendered
+     * @param {HTMLElement} eventTarget The element the event occurred on
 	 */
 	showContextualMenu: function (item, x, y, eventTarget) {
 		// Get the offset position of the clicked item.
