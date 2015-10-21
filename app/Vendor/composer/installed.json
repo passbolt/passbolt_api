@@ -97,99 +97,6 @@
         ]
     },
     {
-        "name": "ezyang/htmlpurifier",
-        "version": "v4.7.0",
-        "version_normalized": "4.7.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/ezyang/htmlpurifier.git",
-            "reference": "ae1828d955112356f7677c465f94f7deb7d27a40"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/ae1828d955112356f7677c465f94f7deb7d27a40",
-            "reference": "ae1828d955112356f7677c465f94f7deb7d27a40",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2"
-        },
-        "time": "2015-08-05 01:03:42",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "HTMLPurifier": "library/"
-            },
-            "files": [
-                "library/HTMLPurifier.composer.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL"
-        ],
-        "authors": [
-            {
-                "name": "Edward Z. Yang",
-                "email": "admin@htmlpurifier.org",
-                "homepage": "http://ezyang.com"
-            }
-        ],
-        "description": "Standards compliant HTML filter written in PHP",
-        "homepage": "http://htmlpurifier.org/",
-        "keywords": [
-            "html"
-        ]
-    },
-    {
-        "name": "burzum/cakephp-html-purifier",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/burzum/cakephp-html-purifier.git",
-            "reference": "45e02e810c2fdb7d2949af08d9d32ddc52dfeee9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/burzum/cakephp-html-purifier/zipball/45e02e810c2fdb7d2949af08d9d32ddc52dfeee9",
-            "reference": "45e02e810c2fdb7d2949af08d9d32ddc52dfeee9",
-            "shasum": ""
-        },
-        "require": {
-            "composer/installers": "*",
-            "ezyang/htmlpurifier": "*",
-            "php": ">=5.3.2"
-        },
-        "time": "2014-09-18 23:05:30",
-        "type": "cakephp-plugin",
-        "extra": {
-            "installer-name": "HtmlPurifier"
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Florian Krämer",
-                "homepage": "http://florian-kraemer.net"
-            }
-        ],
-        "description": "HtmlPurifier plugin for CakePHP",
-        "homepage": "http://github.com/burzum/cakephp-html-purifier",
-        "keywords": [
-            "Purifier",
-            "html",
-            "markup",
-            "sensitization",
-            "tidy",
-            "validation"
-        ]
-    },
-    {
         "name": "lorenzo/cakephp-email-queue",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -472,6 +379,99 @@
             "image",
             "image-processing",
             "media"
+        ]
+    },
+    {
+        "name": "ezyang/htmlpurifier",
+        "version": "v4.7.0",
+        "version_normalized": "4.7.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ezyang/htmlpurifier.git",
+            "reference": "ae1828d955112356f7677c465f94f7deb7d27a40"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/ae1828d955112356f7677c465f94f7deb7d27a40",
+            "reference": "ae1828d955112356f7677c465f94f7deb7d27a40",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2"
+        },
+        "time": "2015-08-05 01:03:42",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "HTMLPurifier": "library/"
+            },
+            "files": [
+                "library/HTMLPurifier.composer.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL"
+        ],
+        "authors": [
+            {
+                "name": "Edward Z. Yang",
+                "email": "admin@htmlpurifier.org",
+                "homepage": "http://ezyang.com"
+            }
+        ],
+        "description": "Standards compliant HTML filter written in PHP",
+        "homepage": "http://htmlpurifier.org/",
+        "keywords": [
+            "html"
+        ]
+    },
+    {
+        "name": "burzum/cakephp-html-purifier",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/burzum/cakephp-html-purifier.git",
+            "reference": "45e02e810c2fdb7d2949af08d9d32ddc52dfeee9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/burzum/cakephp-html-purifier/zipball/45e02e810c2fdb7d2949af08d9d32ddc52dfeee9",
+            "reference": "45e02e810c2fdb7d2949af08d9d32ddc52dfeee9",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*",
+            "ezyang/htmlpurifier": "*",
+            "php": ">=5.3.2"
+        },
+        "time": "2014-09-18 23:05:30",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "HtmlPurifier"
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Florian Krämer",
+                "homepage": "http://florian-kraemer.net"
+            }
+        ],
+        "description": "HtmlPurifier plugin for CakePHP",
+        "homepage": "http://github.com/burzum/cakephp-html-purifier",
+        "keywords": [
+            "Purifier",
+            "html",
+            "markup",
+            "sensitization",
+            "tidy",
+            "validation"
         ]
     }
 ]

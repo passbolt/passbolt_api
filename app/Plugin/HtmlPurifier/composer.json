@@ -1,0 +1,23 @@
+{
+	"name": "burzum/cakephp-html-purifier",
+	"type": "cakephp-plugin",
+	"description": "HtmlPurifier plugin for CakePHP",
+	"keywords": ["html", "sensitization", "purifier", "validation", "tidy", "markup"],
+	"homepage": "http://github.com/burzum/cakephp-html-purifier",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Florian Krämer",
+			"homepage": "http://florian-kraemer.net"
+		}
+	],
+	"minimum-stability": "stable",
+	"require": {
+		"php": ">=5.3.2",
+		"ezyang/htmlpurifier": "*",
+		"composer/installers": "*"
+	},
+	"extra": {
+		"installer-name": "HtmlPurifier"
+	}
+}

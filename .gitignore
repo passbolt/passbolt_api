@@ -28,9 +28,6 @@
 /vendor
 /Vendor
 /vendors
-!/app/webroot/js/lib/modernizr
-!/app/Vendor/RandomTool.php
-!/app/Vendor/openpgp-php
 
 # bower, composer, grunt
 /bower_components
