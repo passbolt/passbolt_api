@@ -57,6 +57,23 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 			'foreignId'		: this.options.foreignId
 		});
 		this.commentsList.start();
+
+        // Load comments.
+        // If no comments, display the add form by default.
+        var self = this;
+        // load the comments for the given context
+        passbolt.model.Comment.findAll({
+            'foreignModel'	: this.options.foreignModel,
+            'foreignId'		: this.options.foreignId
+        }, function (comments, response, request) {
+            if (comments.length > 0) {
+                // load the tree with the comments
+                self.commentsList.load(comments);
+            }
+            else {
+                self.addForm.setState('visible');
+            }
+        });
 	},
 
 	'{passbolt.model.Comment} created': function (model, ev, resource) {
@@ -75,9 +92,6 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	 * @param resource
 	 */
 	'{mad.bus.element} request_delete_comment' : function (model, ev, resource) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		resource.destroy(function(){
 			mad.bus.trigger('comment_deleted', resource);
 		});
@@ -90,9 +104,6 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	 * @param resource
 	 */
 	'{mad.bus.element} comment_deleted' : function (model, ev, resource) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// Todo : user feedback
 		// Todo : nice animation on remove
 		this.commentsList.removeItem(resource);

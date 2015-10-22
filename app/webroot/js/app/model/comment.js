@@ -15,12 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  */
 var Comment = passbolt.model.Comment = mad.Model.extend('passbolt.model.Comment', /** @static */ {
 
-	validateRules: {
-		parent_id: ['text'],
-		foreign_model: ['text'],
-		foreign_id: ['text'],
-		content: ['text']
-	},
+    checkServerRules: true,
 
 	attributes: {
 		id: 'string',

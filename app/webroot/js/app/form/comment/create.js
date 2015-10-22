@@ -94,6 +94,7 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 	/* LISTEN TO THE VIEW EVENTS */
 	/* ************************************************************** */
 
+
 	/**
 	 * State ready.
 	 * Empty the comment content field.

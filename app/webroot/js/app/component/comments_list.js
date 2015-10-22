@@ -26,6 +26,7 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
 		itemTemplateUri: 'js/app/view/template/component/comment/comment_item.ejs',
 		foreignModel:null,
 		foreignId:null,
+        selfLoad:false,
 		// The map to use to make jstree working with our category model
 		map: new mad.Map({
 			id: 'id',
@@ -51,16 +52,17 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
 	// Constructor like
 	init: function (el, opts) {
 		this._super(el, opts);
-		var self = this;
-
-		// load the comments for the given context
-		passbolt.model.Comment.findAll({
-			'foreignModel'	: this.options.foreignModel,
-			'foreignId'		: this.options.foreignId
-		}, function (comments, response, request) {
-			// load the tree with the comments
-			self.load(comments);
-		});
+        if(this.options.selfLoad === true) {
+            var self = this;
+            // load the comments for the given context
+            passbolt.model.Comment.findAll({
+                'foreignModel'	: this.options.foreignModel,
+                'foreignId'		: this.options.foreignId
+            }, function (comments, response, request) {
+                // load the tree with the comments
+                self.load(comments);
+            });
+        }
 	},
 
 	/**

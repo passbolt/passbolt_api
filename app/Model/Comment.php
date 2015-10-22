@@ -99,12 +99,12 @@ class Comment extends AppModel {
 				'alphaNumeric' => array(
 					'required' => true,
 					'allowEmpty' => false,
-					'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]'\"?!]*$/u",
-					'message'	=> __('Content should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? !')
+					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'message'	=> __('Content should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? @ !')
 				),
 				'size' => array(
 					'rule' => array('lengthBetween', 3, 255),
-					'message' => __('Username should be between %s and %s characters long'),
+					'message' => __('Comment should be between %s and %s characters long', 3, 255),
 				)
 			)
 		);
