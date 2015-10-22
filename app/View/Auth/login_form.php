@@ -30,7 +30,7 @@ $this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptH
                 <div class="plugin-check firefox warning">
                     <p class="message">
                         <?php echo __('Firefox plugin is installed but not configured.'); ?>
-                        <?php if(Configure::read('App.registration.public')) : ?>
+                        <?php if(Configure::read('Registration.public')) : ?>
                             <a href="register"><?php echo __('Please register!');?></a>
                         <?php else : ?>
                             <a href="register"><?php echo __('Please contact your domain administrator to request an invitation.');?></a>

@@ -71,14 +71,19 @@ class AuthController extends AppController {
      */
     public function partials($case) {
         if($this->request->isAjax()) {
-            $this->layout = 'empty';
-            switch($case) {
-                case 'register' :
-                    $this->render('/auth/partials/register');
-                return;
+            $allowed_case = array(
+                'default', 'noconfig', 'stage0'
+            );
+            foreach ($allowed_case as $c) {
+                if ($c === $case) {
+                    $this->render('../Elements/public/auth/' . $case);
+                    return;
+                }
             }
+            $this->render('../Elements/public/auth/default');
+            return;
         }
         $this->redirect('/auth/login');
-        return;
+        return false;
     }
 }

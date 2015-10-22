@@ -17,7 +17,6 @@
 		"moment": "^2.10.0",
 		"jquery-mousewheel": "^3.1.13",
 		"jssha": "~2.0.1"
-
 	},
 	"devDependencies": {
 		"grunt": "~0.4.2",

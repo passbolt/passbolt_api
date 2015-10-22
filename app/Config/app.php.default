@@ -34,7 +34,7 @@ $config = array(
 		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
 	'Registration' => array(
-		'public' => TRUE,
+		'public' => true,
 	),
 	// Authentication & Authorisation
 	'Auth' => array(
@@ -105,6 +105,7 @@ $config = array(
 			'path' => APP . 'Plugin' . DS . 'DataUnitTests'	. DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS
 		),
 		'serverKey' => array(
+			'id' => 'D8462294',
 			'fingerprint' => 'A0771BE5B573C18A4692AD5AEDB35494D8462294',
 			'public' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_public.key',
 			'private' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_private.key',
