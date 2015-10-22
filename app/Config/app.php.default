@@ -16,7 +16,7 @@ $config = array(
 	'App.version'	 => array(
 		'number' => '2.15.9',
 		'name' => 'Sauvage',
-		'song' => 'http://youtu.be/DaRG0ukxYqQ'
+		'song' => 'http://youtu.be/DaRG0ukxYqQ',
 	),
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => array(
@@ -24,14 +24,14 @@ $config = array(
 	),
 	// Javascript
 	'App.js' => array(
-		'build' => 'development'
+		'build' => 'development',
 	),
 	// Internationalization
 	'i18n' => array(
 		'locale' => 'en-EN',
 		'language' => 'en',
 		'timezone' => 'GTM+1',
-		'dictionary' => 'jsDictionary' // default dictionary file name
+		'dictionary' => 'jsDictionary', // default dictionary file name
 	),
 	'Registration' => array(
 		'public' => TRUE,
@@ -42,82 +42,81 @@ $config = array(
 		'HashType' => 'blowfish',
 		'logoutRedirect' => array(
 			'controller' => 'users',
-			'action' => 'login'
+			'action' => 'login',
 		),
 		'loginRedirect' => array(
 			'controller' => 'pages',
 			'action' => 'display',
-			'home'
+			'home',
 		),
 		'authenticate' => array(
 			'Form' => array(
-				'passwordHasher' => 'Blowfish'
+				'passwordHasher' => 'Blowfish',
 			)
-//			'Gpg'
 		),
 		'authorize' => array('Controller'),
 		'unauthorizedRedirect' => array(
 			'controller' => 'users',
-			'action' => 'login'
+			'action' => 'login',
 		),
 		'throttlingStrategies' => array(
 			'throttle' => array(
 				1 => array('throttleTime' => '5'),
 				2 => array('throttleTime' => '15'),
 				3 => array('throttleTime' => '45'),
-				4 => array('throttleTime' => '60')
+				4 => array('throttleTime' => '60'),
 			),
 			'blacklist' => array(
 				20 => array(
 					'interval' => '60',
-					'blacklistTime' => '600'
+					'blacklistTime' => '600',
 				),
 				50 => array(
 					'interval' => '1200',
-					'blacklistTime' => '2400'
+					'blacklistTime' => '2400',
 				),
 				100 => array(
 					'interval' => '3600',
-					'blacklistTime' => '7200'
-				)
-			)
+					'blacklistTime' => '7200',
+				),
+			),
 		),
 		'whitelist' => array(
 			'users' => array(
 				'login' => true,
 				'logout' => true,
-				'verify' => true
-			)
-		)
+				'verify' => true,
+			),
+		),
 	),
 	'GPG' => array(
 		'trustModel' => 'always',
 		'env' => array(
 			'setenv' => 1,
-			'home' => '/home/www-data/.gnupg'
+			'home' => '/home/www-data/.gnupg',
 		),
 		'testKeys' => array(
-			'path' => APP . 'Plugin' . DS . 'DataUnitTests'	. DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS
+			'path' => APP . 'Plugin' . DS . 'DataUnitTests'	. DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS,
 		),
 		'serverKey' => array(
 			'fingerprint' => 'A0771BE5B573C18A4692AD5AEDB35494D8462294',
 			'public' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_public.key',
 			'private' => APP . 'Config' . DS . 'gpg' . DS . 'server_default_unsecure_private.key',
-			'passphrase' => ''
-		)
+			'passphrase' => '',
+		),
 	),
 	'Permission' => array(
 		'acoModels' => array('Resource', 'Category'),
-		'aroModels' => array('User', 'Group')
+		'aroModels' => array('User', 'Group'),
 	),
 	'Comment' => array(
-		'foreignModels' => array('Resource')
+		'foreignModels' => array('Resource'),
 	),
 	'Favorite' => array(
-		'foreignModels' => array('Resource')
+		'foreignModels' => array('Resource'),
 	),
 	'ItemTag' => array(
-		'foreignModels' => array('Resource')
+		'foreignModels' => array('Resource'),
 	),
 	'Validation' => array(
 		'shared' => array(
@@ -129,6 +128,6 @@ $config = array(
 			'Secret',
 			'Tag',
 			'User',
-		)
-	)
+		),
+	),
 );
