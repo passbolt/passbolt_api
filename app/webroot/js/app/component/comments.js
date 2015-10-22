@@ -81,7 +81,6 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 		if (resource.foreign_id == this.options.resource.id) {
 			this.addForm.setState('hidden');
 			this.commentsList.insertItem(resource, null, 'first');
-			return; // break
 		}
 	},
 
