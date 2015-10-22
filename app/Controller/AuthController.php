@@ -9,7 +9,6 @@ class AuthController extends AppController {
 
     /**
      * Login
-     *
      * @access public
      */
     public function login() {
@@ -67,4 +66,19 @@ class AuthController extends AppController {
         $this->redirect($this->Auth->logout());
     }
 
+    /**
+     * Used to return partial login components to be used by the plugin to update the login page
+     */
+    public function partials($case) {
+        if($this->request->isAjax()) {
+            $this->layout = 'empty';
+            switch($case) {
+                case 'register' :
+                    $this->render('/auth/partials/register');
+                return;
+            }
+        }
+        $this->redirect('/auth/login');
+        return;
+    }
 }

@@ -7,11 +7,10 @@ module.exports = function(grunt) {
 	// High level variables
 
 	var config = {
-	//	webroot			 : 'webroot',
 		webroot : 'app/webroot',
-		styleguide	 : 'passbolt-styleguide',
+		styleguide : 'passbolt-styleguide',
 		modules_path : 'node_modules'
-	}
+	};
 
 	// ========================================================================
 	// Configure task options
@@ -56,12 +55,12 @@ module.exports = function(grunt) {
 		cssmin: {
 			options: {
 				banner: '/**!\n'+
-								' * @name\t\t<%= pkg.name %>\n'+
-								' * @version\t\tv<%= pkg.version %>\n' +
-								' * @date\t\t<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-								' * @copyright\t<%= pkg.copyright %>\n' +
-								' * @source\t\t<%= pkg.repository %>\n'+
-								' * @license\t\t<%= pkg.license %>\n */\n',
+						' * @name\t\t<%= pkg.name %>\n'+
+						' * @version\t\tv<%= pkg.version %>\n' +
+						' * @date\t\t<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+						' * @copyright\t<%= pkg.copyright %>\n' +
+						' * @source\t\t<%= pkg.repository %>\n'+
+						' * @license\t\t<%= pkg.license %>\n */\n',
 				footer: '/* @license-end */'
 			},
 			minify: {
@@ -88,6 +87,12 @@ module.exports = function(grunt) {
 					'(cd ./app/webroot/js/lib/can; patch -p1 < ../mad/patches/can-util_string_get_object_set_object.patch;)'
 					//'(cd ./node_modules/documentjs; patch -p1 < ./app/webroot/js/lib/mad/patches/patches/documentjs-demo_tag_url_and_sharp.patch;)'
 				].join('&&')
+			},
+			updatestyleguide: {
+				options: {
+					stderr: false
+				},
+				command: 'rm -rf <%= config.modules_path %>/<%= config.styleguide %>; npm install'
 			}
 		},
 		copy: {
@@ -207,7 +212,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
 
 	// Npm styleguide deploy
-	grunt.registerTask('styleguide-deploy', ['copy:styleguide','css']);
+	grunt.registerTask('styleguide-deploy', ['shell:updatestyleguide','copy:styleguide','css']);
 
 	// Npm libs deploy
 	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);

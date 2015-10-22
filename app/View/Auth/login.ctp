@@ -14,10 +14,10 @@
 	$this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));
 ?>
 <div class="grid">
-	<div class="row">
+	<div class="row js_main-login-section">
 		<div class="col6 push1 information">
 			<h2>
-				<?php echo __('Welcome back!'); ?>
+				<?php echo __('Download the plugin to get started!'); ?>
 			</h2>
 			<div class="plugin-check-wrapper">
 				<div class="plugin-check firefox error">
@@ -38,22 +38,10 @@
 					</p>
 				</div>
 			</div>
-			<div class="plugin-check-wrapper">
-				<div class="plugin-check firefox success">
-					<p class="message">
-						<?php echo __('Nice one! Firefox plugin is installed and up to date. You are good to go!'); ?>
-					</p>
-				</div>
-			</div>
-			<p>
-				<?php echo __('Passbolt is a simple password manager that allows you to easily share secrets with your team without making compromises on security!'); ?>
-				<a href="#"><?php echo __('Learn more!'); ?></a>
-			</p>
+			<?php echo $this->element('public/teaser-text'); ?>
 		</div>
 		<div class="col4 push1 last">
-			<div class="logo">
-				<h1><a href="#"><span>Passbolt</span></a></h1>
-			</div>
+			<?php echo $this->element('public/logo'); ?>
 			<div class="users login form">
 				<div class="feedback">
 					<i class="icon huge download" ></i>

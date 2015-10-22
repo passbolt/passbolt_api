@@ -26,32 +26,32 @@
  * @see http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
  * @see http://book.cakephp.org/2.0/en/development/rest.html
  */
-Router::parseExtensions('json');
-Router::mapResources('dictionaries');
-Router::mapResources('users');
-Router::mapResources('groups');
-Router::mapResources('categories');
-Router::mapResources('favorites');
-Router::mapResources('resources');
-Router::mapResources('secrets');
-Router::mapResources('permissions');
-Router::mapResources('comments');
-Router::mapResources('groupsUsers');
+	Router::parseExtensions('json');
+	Router::mapResources('dictionaries');
+	Router::mapResources('users');
+	Router::mapResources('groups');
+	Router::mapResources('categories');
+	Router::mapResources('favorites');
+	Router::mapResources('resources');
+	Router::mapResources('secrets');
+	Router::mapResources('permissions');
+	Router::mapResources('comments');
+	Router::mapResources('groupsUsers');
 
-// The line below doesn't seem to work
-// Router::mapResources('categoriesResources');
-// So we declare the routes mapping for this function manually
-Router::connect("/categoriesResources", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
-Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
-Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT"));
-Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST"));
-Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE"));
+	// The line below doesn't seem to work
+	// Router::mapResources('categoriesResources');
+	// So we declare the routes mapping for this function manually
+	Router::connect("/categoriesResources", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "view", "[method]" => "GET"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "edit", "[method]" => "PUT"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "add", "[method]" => "POST"));
+	Router::connect("/categoriesResources/*", array("controller" => 'categories_resources', "action" => "delete", "[method]" => "DELETE"));
 
-Router::connect("/groupsUsers", array("controller" => 'groups_users', "action" => "view", "[method]" => "GET"));
-Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "view", "[method]" => "GET"));
-Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "edit", "[method]" => "PUT"));
-Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "add", "[method]" => "POST"));
-Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "delete", "[method]" => "DELETE"));
+	Router::connect("/groupsUsers", array("controller" => 'groups_users', "action" => "view", "[method]" => "GET"));
+	Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "view", "[method]" => "GET"));
+	Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "edit", "[method]" => "PUT"));
+	Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "add", "[method]" => "POST"));
+	Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action" => "delete", "[method]" => "DELETE"));
 
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
@@ -60,10 +60,10 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 
-	Router::connect('/login', array('controller' => 'auth', 'action' => 'login'));
-	Router::connect('/logout', array('controller' => 'auth', 'action' => 'logout'));
-	Router::connect('/users/login', array('controller' => 'auth', 'action' => 'login'));
-	Router::connect('/users/logout', array('controller' => 'auth', 'action' => 'logout'));
+	Router::redirect('/login', array('controller' => 'auth', 'action' => 'login'));
+	Router::redirect('/logout', array('controller' => 'auth', 'action' => 'logout'));
+	Router::redirect('/users/login', array('controller' => 'auth', 'action' => 'login'));
+	Router::redirect('/users/logout', array('controller' => 'auth', 'action' => 'logout'));
 
 /**
  * Debug pages
@@ -77,7 +77,6 @@ Router::connect("/groupsUsers/*", array("controller" => 'groups_users', "action"
  * ...and connect the rest of 'Pages' controller's URLs.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-	Router::connect('/demo', array('controller' => 'pages', 'action' => 'display', 'demo', 'demo'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
