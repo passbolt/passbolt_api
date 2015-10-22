@@ -2,7 +2,7 @@
 DATA=""
 
 # Should the application deployed with data.
-if [ "$(OPENSHIFT_APP_NAME)" != 'staging' ]; then
+if [ "$(OPENSHIFT_APP_NAME)" == 'staging' ]; then
         DATA="--data=seleniumtests"
 fi
 
