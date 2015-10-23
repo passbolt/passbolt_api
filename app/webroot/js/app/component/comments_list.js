@@ -1,3 +1,4 @@
+import 'mad/component/confirm';
 import 'mad/component/tree';
 import 'app/view/component/comments_list';
 import 'app/view/component/comments';
@@ -73,7 +74,16 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
 	 * @param data
 	 */
 	' request_delete_comment': function(elt, evt, data) {
-		mad.bus.trigger('request_delete_comment', data);
+        var confirm = new mad.component.Confirm(
+            null,
+            {
+                label: __('Do you really want to delete comment ?'),
+                content: __('Please confirm you really want to delete the comment. After clicking ok, it will be deleted permanently.'),
+                action: function() {
+                    mad.bus.trigger('request_delete_comment', data);
+                }
+            }
+        ).start();
 	}
 });
 

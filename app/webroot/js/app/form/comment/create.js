@@ -90,6 +90,13 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 		);
 	},
 
+    /**
+     * Empty content of the comment content field.
+     */
+    emptyContent: function() {
+        this.options.commentContentField.setValue('');
+    },
+
 	/* ************************************************************** */
 	/* LISTEN TO THE VIEW EVENTS */
 	/* ************************************************************** */
