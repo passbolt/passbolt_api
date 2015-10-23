@@ -181,13 +181,28 @@ var Tree = mad.component.Tree = mad.Component.extend('mad.component.Tree', {
      * By default last.
      */
     insertItem: function (item, refItem, position) {
+        var self = this;
+
         if (this.getItemClass() == null) {
             throw mad.Exception.get('The associated itemClass can not be null');
         }
         if (!(item instanceof this.getItemClass())) {
             throw mad.Exception.get(mad.error.WRONG_PARAMETER, 'item');
         }
+        this.options.items.push(item);
         this.view.insertItem(item, refItem, position);
+
+        // Insert children.
+        // Check if there is a mapping instruction for the children field.
+        if (typeof this.options.map.map.children != undefined && this.options.map.map.children != null) {
+            // Check if the current item has children.
+            var children = this.options.map._getObjFieldPointer(item, this.options.map.map.children.key);
+            if (typeof children != undefined && children != null && children.length > 0) {
+                can.each(children, function (childItem, i) {
+                    self.insertItem(childItem, item, 'last');
+                });
+            }
+        }
     },
 
     /**
@@ -196,7 +211,11 @@ var Tree = mad.component.Tree = mad.Component.extend('mad.component.Tree', {
      * @param {mad.Model} item The item to remove
      */
     removeItem: function (item) {
-        this.view.removeItem(item);
+        var position = this.options.items.indexOf(item);
+        if (position != -1) {
+            this.options.items.splice(position, 1);
+            this.view.removeItem(item);
+        }
     },
 
     /**
@@ -242,12 +261,11 @@ var Tree = mad.component.Tree = mad.Component.extend('mad.component.Tree', {
             var itemsList = items;
             items = [];
             itemsList.each(function(item) {
-               items.push(item);
+                items.push(item);
             });
         }
 
         for (var i in items) {
-            this.options.items.push(items[i]);
             this.insertItem(items[i]);
         }
     },

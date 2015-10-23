@@ -97,13 +97,6 @@ var Tree = mad.view.component.Tree = mad.View.extend('mad.view.component.Tree', 
         // Associate to the item to the just created node
         can.data($item, control.getItemClass().fullName, item);
 
-        // If the item has children, insert them.
-        if (hasChildren) {
-            can.each(item.children, function (childItem, i) {
-                self.insertItem(childItem, item, 'last');
-            });
-        }
-
         return $item;
     },
 
