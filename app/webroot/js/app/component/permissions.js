@@ -38,7 +38,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		// The list of changes.
 		changes: [],
         // The template used to render the permissions component.
-		templateUri: 'app/view/template/component/permissions.ejs'
+		templateUri: 'app/view/template/component/permissions.ejs',
+        // Override the silentLoading parameter.
+        silentLoading: false
 	}
 
 }, /** @prototype */ {
@@ -233,7 +235,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		self.addFormController.load(this.options.acoInstance);
 
 		// get permissions for the given resource
-		passbolt.model.Permission.findAll({
+		return passbolt.model.Permission.findAll({
 			aco: this.options.acoInstance.constructor.shortName,
 			aco_foreign_key: this.options.acoInstance.id
 		}, function (permissions, response, request) {
@@ -250,10 +252,12 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	refresh: function() {
 		// reset the list in case it has already been populated
 		this.permList.reset();
+
+        // hide the user feedback.
+        $('#js_permissions_changes').addClass('hidden');
+
 		// reload the component with the updated permissions
-		this.load(this.options.acoInstance);
-		// hide the user feedback.
-		$('#js_permissions_changes').addClass('hidden');
+		return this.load(this.options.acoInstance);
 	},
 
 	/**
@@ -370,7 +374,11 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		// create a new permission
 		passbolt.model.Permission.share(aco, acoForeignKey, data)
 			.then(function() {
-				self.refresh();
+				self.refresh()
+                    .done(function() {
+                        // Switch the component in ready state.
+                        self.setState('ready');
+                    });
 			});
 	},
 
@@ -477,6 +485,11 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// If the secret needs to be encrypted for new users.
 		if (usersIds.length) {
+
+            // Switch the component in loading state.
+            // The ready state will be restored once the component will be refreshed.
+            this.setState('loading');
+
 			// ask the plugin to encrypt the secret for the new users.
 			// When the secrets are encrypted the addon will send back the event secret_share_secret_encrypted.
 			mad.bus.trigger('passbolt.resource_share.encrypt', {
@@ -485,6 +498,10 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			});
 		}
 		else {
+            // Switch the component in loading state.
+            // The ready state will be restored once the component will be refreshed.
+            this.setState('loading');
+
 			this.save();
 		}
 	}

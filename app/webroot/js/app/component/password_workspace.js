@@ -253,8 +253,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
-			label: __('Create a new Category'), cssClasses : ['dialog-wrapper']
-			}).start();
+			label: __('Create a new Category'),
+            cssClasses : ['edit-category-dialog', 'dialog-wrapper']
+		}).start();
 
 		// attach the component to the dialog
 		var form = dialog.add(passbolt.form.category.Create, {
@@ -281,8 +282,10 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		if (!this.element) return;
 
 		// get the dialog
-		var dialog = new mad.component.Dialog(null, {label: __('Edit a Category')})
-			.start();
+		var dialog = new mad.component.Dialog(null, {
+            label: __('Edit a Category'),
+            cssClasses : ['edit-category-dialog', 'dialog-wrapper']
+        }).start();
 
 		// Instanciate the Resource Actions Tab Controller into the dialog
 		var tab = dialog.add(passbolt.component.CategoryActionsTab, {
@@ -301,8 +304,10 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		if (!this.element) return;
 
 		// get the dialog
-		var dialog = new mad.component.Dialog(null, {label: __('Share a Category')})
-			.start();
+		var dialog = new mad.component.Dialog(null, {
+            label: __('Share a Category'),
+            cssClasses : ['share-category-dialog', 'dialog-wrapper']
+        }).start();
 
 		// Instanciate the Resource Actions Tab Controller into the dialog
 		var tab = dialog.add(passbolt.component.CategoryActionsTab, {
@@ -343,7 +348,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
-			label: __('Create Password'), cssClasses : ['create-password-dialog','dialog-wrapper']
+			label: __('Create Password'),
+            cssClasses : ['create-password-dialog', 'dialog-wrapper']
 		}).start();
 
 		// attach the component to the dialog
@@ -372,7 +378,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
-			label: __('Edit Password'),  cssClasses : ['edit-password-dialog','dialog-wrapper']
+			label: __('Edit Password'),
+            cssClasses : ['edit-password-dialog', 'dialog-wrapper']
 		}).start();
 
 		// Instanciate the Resource Actions Tab Controller into the dialog
@@ -421,8 +428,10 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		if (!this.element) return;
 
 		// get the dialog
-		var dialog = new mad.component.Dialog(null, {label: __('Share Password')})
-			.start();
+		var dialog = new mad.component.Dialog(null, {
+            label: __('Share Password'),
+            cssClasses : ['share-password-dialog', 'dialog-wrapper']
+        }).start();
 
 		// Instanciate the Resource Actions Tab Controller into the dialog
 		var tab = dialog.add(passbolt.component.ResourceActionsTab, {

@@ -47,7 +47,10 @@
                 "msg": "The comment has been added"
             },
             "app_comments_delete_success": {
-                "msg": "The comment has been deleted"
+              "msg": "The comment has been deleted"
+            },
+            "app_share_update_success": {
+              "msg": "The permissions have been updated successfully"
             }
 		}
 	}
