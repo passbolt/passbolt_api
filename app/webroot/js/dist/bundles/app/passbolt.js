@@ -27769,13 +27769,12 @@ define('mad/form/element/autocomplete', [
     var Autocomplete = mad.form.Autocomplete = mad.form.Textbox.extend('mad.form.Autocomplete', {
             defaults: {
                 label: 'Autocomplete Form Element Controller',
-                tag: 'input',
-                list: null
+                tag: 'input'
             }
         }, {
             afterStart: function () {
                 var listOpts = {
-                        itemClass: mad.model.Model,
+                        itemClass: mad.Model,
                         cssClasses: ['autocomplete-content'],
                         templateUri: 'mad/view/template/component/tree.ejs',
                         state: 'hidden',
@@ -27789,7 +27788,7 @@ define('mad/form/element/autocomplete', [
                 this.options.list.start();
                 this.on();
             },
-            changed: function (el, ev, data) {
+            ' changed': function (el, ev, data) {
                 var self = this;
                 if (this.options.callbacks.ajax) {
                     this.options.callbacks.ajax.apply(this, [data.value]).done(function (ajaxData) {
@@ -27799,7 +27798,7 @@ define('mad/form/element/autocomplete', [
                     });
                 }
             },
-            '{list} item_selected': function (el, ev, data) {
+            '{list.element} item_selected': function (el, ev, data) {
                 this.setValue(data.label);
                 this.options.list.setState('hidden');
                 this.element.trigger('item_selected', [
@@ -27947,7 +27946,7 @@ define('app/view/component/permissions', [
         $__1 = { default: $__1 };
     $__0;
     $__1;
-    var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbolt.view.component.Permissions', { defaults: {} }, {
+    var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbolt.view.component.Permissions', {}, {
             ' .js_perm_delete click': function (el, ev) {
                 ev.stopPropagation();
                 ev.preventDefault();
@@ -27955,7 +27954,7 @@ define('app/view/component/permissions', [
                 var permission = li.data('passbolt.model.Permission');
                 this.element.trigger('request_permission_delete', [permission]);
             },
-            '.js_share_rs_perm_type changed': function (el, ev, data) {
+            ' .js_share_rs_perm_type changed': function (el, ev, data) {
                 ev.stopPropagation();
                 ev.preventDefault();
                 var li = el.parents('li'), permission = li.data('passbolt.model.Permission');
@@ -27964,7 +27963,7 @@ define('app/view/component/permissions', [
                     data.value
                 ]);
             },
-            '#js_perm_create_form_add_btn click': function (el, ev) {
+            ' #js_perm_create_form_add_btn click': function (el, ev) {
                 ev.stopPropagation();
                 ev.preventDefault();
                 el.trigger('submit');
@@ -28222,10 +28221,9 @@ define('app/component/permissions', [
                 label: 'Permissions Controller',
                 viewClass: passbolt.view.component.Permissions,
                 acoInstance: null,
-                permAroAutocpltTxtbx: null,
-                permAroAutocpltList: null,
                 changes: [],
-                templateUri: 'app/view/template/component/permissions.ejs'
+                templateUri: 'app/view/template/component/permissions.ejs',
+                silentLoading: false
             }
         }, {
             afterStart: function () {
@@ -28343,7 +28341,7 @@ define('app/component/permissions', [
                         users.each(function (user, i) {
                             if (user.id == currentUser.id)
                                 return;
-                            returnValue.push(new mad.model.Model({
+                            returnValue.push(new mad.Model({
                                 id: user.id,
                                 label: user.username,
                                 model: 'passbolt.model.User',
@@ -28371,7 +28369,7 @@ define('app/component/permissions', [
                 this.options.acoInstance = obj;
                 this.options.changes = {};
                 self.addFormController.load(this.options.acoInstance);
-                passbolt.model.Permission.findAll({
+                return passbolt.model.Permission.findAll({
                     aco: this.options.acoInstance.constructor.shortName,
                     aco_foreign_key: this.options.acoInstance.id
                 }, function (permissions, response, request) {
@@ -28382,15 +28380,10 @@ define('app/component/permissions', [
             },
             refresh: function () {
                 this.permList.reset();
-                this.load(this.options.acoInstance);
                 $('#js_permissions_changes').addClass('hidden');
+                return this.load(this.options.acoInstance);
             },
             '{mad.bus.element} resource_share_secret_encrypted': function (el, ev, armoreds) {
-                if (!this.element)
-                    return;
-                var self = this;
-                if (!this.element)
-                    return;
                 this.save(armoreds);
             },
             permissionChange: function (id, data) {
@@ -28401,13 +28394,14 @@ define('app/component/permissions', [
                     }
                 } else {
                     this.options.changes[id] = { Permission: data };
-                    if (($permissionChanges = $('#js_permissions_changes.hidden')).length) {
+                    var $permissionChanges = $('#js_permissions_changes.hidden');
+                    if ($permissionChanges.length) {
                         $permissionChanges.removeClass('hidden');
                     }
                 }
             },
             formAddPermissionSubmit: function (formData) {
-                var self = this, fieldAttrs = mad.model.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference()), modelAttr = fieldAttrs[0];
+                var fieldAttrs = mad.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference()), modelAttr = fieldAttrs[0], user = null;
                 var userId = formData[modelAttr.modelReference.fullName].id;
                 passbolt.model.User.findOne({
                     id: userId,
@@ -28454,24 +28448,26 @@ define('app/component/permissions', [
                     }
                 }
                 passbolt.model.Permission.share(aco, acoForeignKey, data).then(function () {
-                    self.refresh();
+                    self.refresh().done(function () {
+                        self.setState('ready');
+                    });
                 });
             },
-            request_permission_delete: function (el, ev, permission) {
+            ' request_permission_delete': function (el, ev, permission) {
                 this.permissionChange(permission.id, {
-                    'id': permission.id,
-                    'delete': 1
+                    id: permission.id,
+                    delete: 1
                 });
                 this.permList.removeItem(permission);
             },
-            '{permAroAutocpltTxtbx} changed': function (el, ev, data) {
+            '{permAroAutocpltTxtbx.element} changed': function (el, ev, data) {
                 this.permAroHiddenTxtbx.setValue(null);
             },
-            '{permAroAutocpltTxtbx} item_selected': function (el, ev, data) {
+            '{permAroAutocpltTxtbx.element} item_selected': function (el, ev, data) {
                 this.permAroHiddenTxtbx.setModelReference(data.model + '.id');
                 this.permAroHiddenTxtbx.setValue(data.id);
             },
-            request_permission_edit: function (el, ev, permission, type) {
+            ' request_permission_edit': function (el, ev, permission, type) {
                 this.permissionChange(permission.id, {
                     id: permission.id,
                     type: type
@@ -28495,11 +28491,13 @@ define('app/component/permissions', [
                     }
                 }
                 if (usersIds.length) {
+                    this.setState('loading');
                     mad.bus.trigger('passbolt.resource_share.encrypt', {
                         resourceId: acoForeignKey,
                         usersIds: usersIds
                     });
                 } else {
+                    this.setState('loading');
                     this.save();
                 }
             }
@@ -30125,7 +30123,10 @@ define('app/component/password_workspace', [
                 var category = new passbolt.model.Category({ parent_id: data.id });
                 var dialog = new mad.component.Dialog(null, {
                         label: __('Create a new Category'),
-                        cssClasses: ['dialog-wrapper']
+                        cssClasses: [
+                            'edit-category-dialog',
+                            'dialog-wrapper'
+                        ]
                     }).start();
                 var form = dialog.add(passbolt.form.category.Create, {
                         data: category,
@@ -30141,14 +30142,26 @@ define('app/component/password_workspace', [
             '{mad.bus.element} request_category_edition': function (el, ev, category) {
                 if (!this.element)
                     return;
-                var dialog = new mad.component.Dialog(null, { label: __('Edit a Category') }).start();
+                var dialog = new mad.component.Dialog(null, {
+                        label: __('Edit a Category'),
+                        cssClasses: [
+                            'edit-category-dialog',
+                            'dialog-wrapper'
+                        ]
+                    }).start();
                 var tab = dialog.add(passbolt.component.CategoryActionsTab, { category: category });
                 tab.enableTab('js_cat_edit');
             },
             '{mad.bus.element} request_category_sharing': function (el, ev, category) {
                 if (!this.element)
                     return;
-                var dialog = new mad.component.Dialog(null, { label: __('Share a Category') }).start();
+                var dialog = new mad.component.Dialog(null, {
+                        label: __('Share a Category'),
+                        cssClasses: [
+                            'share-category-dialog',
+                            'dialog-wrapper'
+                        ]
+                    }).start();
                 var tab = dialog.add(passbolt.component.CategoryActionsTab, { category: category });
                 tab.enableTab('js_cat_permission');
             },
@@ -30217,7 +30230,13 @@ define('app/component/password_workspace', [
             '{mad.bus.element} request_resource_sharing': function (el, ev, resource) {
                 if (!this.element)
                     return;
-                var dialog = new mad.component.Dialog(null, { label: __('Share Password') }).start();
+                var dialog = new mad.component.Dialog(null, {
+                        label: __('Share Password'),
+                        cssClasses: [
+                            'share-password-dialog',
+                            'dialog-wrapper'
+                        ]
+                    }).start();
                 var tab = dialog.add(passbolt.component.ResourceActionsTab, { resource: resource });
                 tab.enableTab('js_rs_permission');
             },
@@ -30514,10 +30533,6 @@ define('app/view/template/component/user/dragged_user.ejs!lib/can/view/ejs/syste
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/component/user_browser*/
 define('app/view/component/user_browser', [
     'mad/view/component/grid',
@@ -30958,6 +30973,10 @@ define('app/component/user_shortcuts', ['mad/component/menu'], function ($__0) {
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/component/user_details*/
 define('app/view/component/user_details', ['mad/view/view'], function ($__0) {
     'use strict';
@@ -32400,7 +32419,8 @@ define('app/config/notification.json', [], function () {
                 'app_favorites_add_success': { 'msg': 'The password has been added as a favorite' },
                 'app_favorites_delete_success': { 'msg': 'The password has been removed from favorites' },
                 'app_comments_addforeigncomment_success': { 'msg': 'The comment has been added' },
-                'app_comments_delete_success': { 'msg': 'The comment has been deleted' }
+                'app_comments_delete_success': { 'msg': 'The comment has been deleted' },
+                'app_share_update_success': { 'msg': 'The permissions have been updated successfully' }
             }
         }
     };
