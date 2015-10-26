@@ -31,15 +31,13 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	defaults: {
 		label: 'Permissions Controller',
+        // Override the viewClass option.
 		viewClass: passbolt.view.component.Permissions,
-		// the instance to bind the component on
+		// The resource instance to bind the component on.
 		acoInstance: null,
-		// the autocomplete textbox
-		permAroAutocpltTxtbx: null,
-		// the autocomplete list
-		permAroAutocpltList: null,
-		// list of changes.
+		// The list of changes.
 		changes: [],
+        // The template used to render the permissions component.
 		templateUri: 'app/view/template/component/permissions.ejs'
 	}
 
@@ -187,7 +185,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 				if (user.id == currentUser.id)
 					return;
 				// Otherwise, add user in autocomplete.
-				returnValue.push(new mad.model.Model({
+				returnValue.push(new mad.Model({
 					id: user.id,
 					label: user.username,
 					model: 'passbolt.model.User',
@@ -264,14 +262,6 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @todo #dirtycode
 	 */
 	'{mad.bus.element} resource_share_secret_encrypted': function(el, ev, armoreds) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
-		var self = this;
-
-		// @todo #BUG #JMVC The event is not unbound when the element is destroyed. Check that point when updating to canJS.
-		if (!this.element) return;
-
 		// Share the resource with newly created armoreds.
 		this.save(armoreds);
 	},
@@ -296,7 +286,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 				Permission: data
 			};
 			// Display the user feedback if not shown already.
-			if (($permissionChanges = $('#js_permissions_changes.hidden')).length) {
+            var $permissionChanges = $('#js_permissions_changes.hidden');
+			if ($permissionChanges.length) {
 				$permissionChanges.removeClass('hidden');
 			}
 		}
@@ -307,11 +298,10 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {array} formData the data form.
 	 * @return {void}
 	 */
-	//find . -type f \( -name '*.php' -or -name '*.js' -or -name '*.ctp' -or -name '*.ejs' -or -name '*.html' \) \( -not -path "./lib/Cake/*"  -not -path ".*Vendor*" -not -path "*Plugin*" -not -path "./app/webroot/js/lib/can/*" -not -path "./app/webroot/js/steal/*" -not -path "./app/webroot/js/lib/documentjs/*"  -not -path "./app/webroot/js/lib/funcunit/*"  -not -path "./app/webroot/js/lib/jquerypp/*"  -not -path "./app/webroot/js/lib/jmvc/*" -not -path "./app/webroot/js/build/*"  -not -path "*production*"  -not -path "*.min.js"    -not -path "*node_modules*" \) | xargs wc -l
 	formAddPermissionSubmit: function(formData) {
-		var self = this,
-			fieldAttrs = mad.model.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference()),
-			modelAttr = fieldAttrs[0];
+		var fieldAttrs = mad.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference()),
+			modelAttr = fieldAttrs[0],
+            user = null;
 
 		// @todo #performance avoid this step.
 		var userId = formData[modelAttr.modelReference.fullName].id;
@@ -395,10 +385,10 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {passbolt.model.Permission} permission The permission to remove
 	 * @return {void}
 	 */
-	 request_permission_delete: function (el, ev, permission) {
+	 ' request_permission_delete': function (el, ev, permission) {
 		this.permissionChange(permission.id, {
-			"id" : permission.id,
-			"delete" : 1
+			id : permission.id,
+			delete : 1
 		});
 		this.permList.removeItem(permission);
 	},
@@ -410,7 +400,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {array} data The data typed in the autocomplete box
 	 * @return {void}
 	 */
-	'{permAroAutocpltTxtbx} changed': function(el, ev, data) {
+	'{permAroAutocpltTxtbx.element} changed': function(el, ev, data) {
 		// reset aro foreign key txtbx
 		this.permAroHiddenTxtbx.setValue(null);
 	},
@@ -422,7 +412,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {passbolt.model.User || passbolt.model.Group} permission The permission to remove
 	 * @return {void}
 	 */
-	'{permAroAutocpltTxtbx} item_selected': function(el, ev, data) {
+	'{permAroAutocpltTxtbx.element} item_selected': function(el, ev, data) {
 		// update the field model reference functions of the given autocomplete result (can be a User or a Group)
 		this.permAroHiddenTxtbx.setModelReference(data.model + '.id');
 		// set the value of the hidden field aro_foreign_key
@@ -437,7 +427,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {string} type The new permission type
 	 * @return {void}
 	 */
-	 request_permission_edit: function (el, ev, permission, type) {
+	 ' request_permission_edit': function (el, ev, permission, type) {
 		this.permissionChange(permission.id, {
 			id: permission.id,
 			type: type
