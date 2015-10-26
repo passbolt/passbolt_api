@@ -7,7 +7,7 @@ import 'app/view/template/component/permissions.ejs!';
  */
 var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbolt.view.component.Permissions', /** @static */ {
 
-	'defaults': {}
+	defaults: {}
 
 }, /** @prototype */ {
 

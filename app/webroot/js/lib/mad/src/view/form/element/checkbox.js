@@ -30,9 +30,11 @@ var Checkbox = mad.view.form.Checkbox = mad.view.form.Element.extend('mad.view.f
         this.element.find('input').each(function () {
             // if the value of the input is found in the array of value given, check the box
             if (value.indexOf($(this).val()) != -1) {
+                $(this).attr('checked', true);
                 $(this)[0].checked = true;
             } else {
                 $(this)[0].checked = false;
+                $(this).removeAttr('checked');
             }
         });
     },

@@ -122,8 +122,10 @@ var Form = mad.Form = mad.Component.extend('mad.Form', /* @static */ {
                 value = data[eltId];
             }
 
-            // set the element value
-            element.setValue(value);
+            // set the element value if exist
+            if (typeof value !== 'undefined') {
+                element.setValue(value);
+            }
         }
     },
 

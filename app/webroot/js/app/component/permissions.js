@@ -50,29 +50,29 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// List defined permissions
 		this.permList = new mad.component.Tree($('#js_permissions_list'), {
-			'cssClasses': ['permissions'],
-			'viewClass': mad.view.component.Tree,
-			'itemClass': passbolt.model.Permission,
-			'templateUri': 'mad/view/template/component/tree.ejs',
-			'itemTemplateUri': 'app/view/template/component/permission/permission_list_item.ejs',
+			cssClasses: ['permissions'],
+			viewClass: mad.view.component.Tree,
+			itemClass: passbolt.model.Permission,
+			templateUri: 'mad/view/template/component/tree.ejs',
+			itemTemplateUri: 'app/view/template/component/permission/permission_list_item.ejs',
 			// The map to use to make jstree working with our category model
-			'map': new mad.Map({
-				'id': 'id',
-				'isDirect': {
-					'key': 'aro_foreign_key',
-					'func': function(aro_foreign_key, map, obj) {
+			map: new mad.Map({
+				id: 'id',
+				isDirect: {
+					key: 'aro_foreign_key',
+					func: function(aro_foreign_key, map, obj) {
 						return obj.isDirect(self.options.acoInstance);
 					}
 				},
-				'aroLabel': {
-					'key': 'aro',
-					'func': function(aro, map, obj) {
+				aroLabel: {
+					key: 'aro',
+					func: function(aro, map, obj) {
 						return aro.toLowerCase();
 					}
 				},
-				'aroAvatarPath': {
-					'key': 'id',
-					'func': function(user, map, obj) {
+				aroAvatarPath: {
+					key: 'id',
+					func: function(user, map, obj) {
 						if (obj.aro == 'User') {
 							return obj.User.Profile.avatarPath('small');
 						} else {
@@ -80,16 +80,16 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 						}
 					}
 				},
-				'permType': 'PermissionType.serial',
-				'permLabel': {
-					'key': 'type',
-					'func': function(type, map, obj) {
+				permType: 'PermissionType.serial',
+				permLabel: {
+					key: 'type',
+					func: function(type, map, obj) {
 						return passbolt.model.PermissionType.formatToString(type);
 					}
 				},
-				'acoLabel': {
-					'key': 'aco_foreign_key',
-					'func': function(aco_foreign_key, map, obj) {
+				acoLabel: {
+					key: 'aco_foreign_key',
+					func: function(aco_foreign_key, map, obj) {
 						switch(obj.aro) {
 							case 'Group':
 								return obj['Group'].name;
@@ -100,9 +100,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 						}
 					}
 				},
-				'acoDetails': {
-					'key': 'aco_foreign_key',
-					'func': function(aco_foreign_key, map, obj) {
+				acoDetails: {
+					key: 'aco_foreign_key',
+					func: function(aco_foreign_key, map, obj) {
 						switch(obj.aro) {
 							case 'Group':
 								return __('group');
@@ -119,12 +119,12 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// form add permission
 		this.addFormController = new mad.Form($('#js_permission_add_form', this.element), {
-			'templateBased': true,
-			'cssClasses': ['perm-create-form', 'clearfix'],
-			'templateUri': 'app/view/template/form/permission/add.ejs',
-			'validateOnChange': false,
-			'callbacks': {
-				'submit': function(data) {
+			templateBased: true,
+			cssClasses: ['perm-create-form', 'clearfix'],
+			templateUri: 'app/view/template/form/permission/add.ejs',
+			validateOnChange: false,
+			callbacks: {
+				submit: function(data) {
 					self.formAddPermissionSubmit(data);
 				}
 			}
@@ -177,7 +177,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		// get all the users and groups functions of the given string
 		// start by getting all the users.
 		var request = passbolt.model.User.findAll({
-			'keywords': value
+			keywords: value
 		}).then(function(users) {
 			var returnValue = [];
 			var currentUser = passbolt.model.User.getCurrent();
@@ -201,8 +201,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	},
 
 	loadPermission: function(permission) {
-		var self = this,
-			permSelector = '#js_share_rs_perm_' + permission.id,
+		var permSelector = '#js_share_rs_perm_' + permission.id,
 			availablePermissionTypes = {};
 
 		for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
@@ -237,8 +236,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// get permissions for the given resource
 		passbolt.model.Permission.findAll({
-			'aco': this.options.acoInstance.constructor.shortName,
-			'aco_foreign_key': this.options.acoInstance.id
+			aco: this.options.acoInstance.constructor.shortName,
+			aco_foreign_key: this.options.acoInstance.id
 		}, function (permissions, response, request) {
 			for (var i=0; i<permissions.length; i++) {
 				self.loadPermission(permissions[i]);
@@ -369,10 +368,10 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			data.Secrets = [];
 			for (var userId in armoreds) {
 				data.Secrets.push({
-					'Secret': {
-						'resource_id': acoForeignKey,
-						'user_id': userId,
-						'data': armoreds[userId]
+					Secret: {
+						resource_id: acoForeignKey,
+						user_id: userId,
+						data: armoreds[userId]
 					}
 				});
 			}
@@ -396,7 +395,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {passbolt.model.Permission} permission The permission to remove
 	 * @return {void}
 	 */
-	' request_permission_delete': function (el, ev, permission) {
+	 request_permission_delete: function (el, ev, permission) {
 		this.permissionChange(permission.id, {
 			"id" : permission.id,
 			"delete" : 1
@@ -438,7 +437,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {string} type The new permission type
 	 * @return {void}
 	 */
-	' request_permission_edit': function (el, ev, permission, type) {
+	 request_permission_edit: function (el, ev, permission, type) {
 		this.permissionChange(permission.id, {
 			id: permission.id,
 			type: type
