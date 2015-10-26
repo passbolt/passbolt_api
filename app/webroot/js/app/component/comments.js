@@ -27,7 +27,6 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 		resource				: null,
 		foreignModel 			: null,
 		foreignId 				: null,
-		commentsListController	: null,
 		templateUri				: 'app/view/template/component/comments.ejs',
 	}
 
@@ -74,6 +73,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
                 self.addForm.setState('visible');
             }
         });
+        this._super();
 	},
 
 	'{passbolt.model.Comment} created': function (model, ev, resource) {
@@ -91,8 +91,8 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	 * @param resource
 	 */
 	'{mad.bus.element} request_delete_comment' : function (model, ev, resource) {
-		resource.destroy(function(){
-			mad.bus.trigger('comment_deleted', resource);
+		resource.destroy().then(function() {
+            mad.bus.trigger('comment_deleted', resource)
 		});
 	},
 
@@ -106,8 +106,11 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 		// Todo : user feedback
 		// Todo : nice animation on remove
 		this.commentsList.removeItem(resource);
+        if (this.commentsList.options.items.attr('length') == 0) {
+            this.addForm.emptyContent();
+            this.addForm.setState('visible');
+        }
 	}
-
 });
 
 export default Comments;

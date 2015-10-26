@@ -90,6 +90,13 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 		);
 	},
 
+    /**
+     * Empty content of the comment content field.
+     */
+    emptyContent: function() {
+        this.options.commentContentField.setValue('');
+    },
+
 	/* ************************************************************** */
 	/* LISTEN TO THE VIEW EVENTS */
 	/* ************************************************************** */
@@ -101,7 +108,18 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 	 */
 	'stateReady': function() {
 		this.options.commentContentField.setValue('');
-	}
+	},
+
+    /**
+     * State hidden.
+     * @param go
+     */
+    stateHidden: function (go) {
+        this._super(go);
+        // Reinitialize number of validations to avoid inline validation
+        // each time the form appears.
+        this.validations = 0;
+    }
 });
 
 export default Create;

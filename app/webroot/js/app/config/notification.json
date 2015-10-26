@@ -42,7 +42,13 @@
 			},
 			"app_favorites_delete_success": {
 				"msg": "The password has been removed from favorites"
-			}
+			},
+            "app_comments_addforeigncomment_success": {
+                "msg": "The comment has been added"
+            },
+            "app_comments_delete_success": {
+                "msg": "The comment has been deleted"
+            }
 		}
 	}
 }
