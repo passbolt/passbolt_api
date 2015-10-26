@@ -20,11 +20,11 @@ $config = array(
 	),
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => array(
-		'active' => $_ENV['OS_APP_SELENIUM_ACTIVE'],
+		'active' => 'true',
 	),
 	// Javascript
 	'App.js' => array(
-	    'build' => $_ENV['OS_APP_JS_BUILD']
+	    'build' => 'production'
 	),
 	// Internationalization
 	'i18n' => array(
