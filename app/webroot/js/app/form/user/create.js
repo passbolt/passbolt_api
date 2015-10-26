@@ -66,7 +66,7 @@ var CreateForm = passbolt.form.user.Create = mad.Form.extend('passbolt.form.user
 		// Role box.
 		// Build roles data.
 		var roles = {};
-		console.log(mad.config);
+
 		roles[cakephpConfig.roles.admin] = __('This user is an administrator');
 		roles[cakephpConfig.roles.user] = __('This user is a normal user');
 		// Role component.
@@ -83,7 +83,8 @@ var CreateForm = passbolt.form.user.Create = mad.Form.extend('passbolt.form.user
 			new mad.form.Feedback($('#js_field_role_id_feedback'), {}).start()
 		);
 		// Hide everything that is not admin.
-		$('input[type=checkbox]', $('#js_field_role_id')).not("[value='" + cakephpConfig.roles.admin + "']").hide().next('label').hide();
+        this.options.role.setValue(cakephpConfig.roles.user);
+        $('input[type=checkbox]', $('#js_field_role_id')).not("[value='" + cakephpConfig.roles.admin + "']").hide().next('label').hide();
 
 		// Add resource username field
 		this.addElement(
@@ -188,26 +189,19 @@ var CreateForm = passbolt.form.user.Create = mad.Form.extend('passbolt.form.user
 	},
 
 	/**
-	 * Observe when a role is checked. and Unselect the other one.
-	 * @param el
-	 * @param ev
-	 * @param roleId
-	 */
-	'{role} checked': function(el, ev, roleId) {
-		// Force only one value.
-		this.options.role.setValue(roleId);
-	},
-
-	/**
 	 * Observe when a role is changed. If no role is selected, select user as default.
 	 * @param el
 	 * @param ev
 	 * @param val
 	 */
-	'{role} changed': function(el, ev, val) {
-		if (val.value.length == 0) {
-			this.options.role.setValue(cakephpConfig.roles.user);
-		}
+	'{role.element} changed': function(el, ev, val) {
+        var adminSelected = $.inArray(cakephpConfig.roles.admin, val.value);
+        if (adminSelected !== -1) {
+            this.options.role.setValue(cakephpConfig.roles.admin);
+        }
+        else {
+            this.options.role.setValue(cakephpConfig.roles.user);
+        }
 	},
 
 	/**

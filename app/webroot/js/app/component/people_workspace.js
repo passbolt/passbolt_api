@@ -266,8 +266,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var user = new passbolt.model.User({active:1});
 
         // get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Add User')})
-            .start();
+        var dialog = new mad.component.Dialog(null, {
+            label: __('Add User'),
+            cssClasses : ['create-user-dialog','dialog-wrapper']
+        }).start();
 
         // attach the component to the dialog
         var form = dialog.add(passbolt.form.user.Create, {

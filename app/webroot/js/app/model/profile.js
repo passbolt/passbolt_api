@@ -17,9 +17,14 @@ import 'mad/model/serializer/cake_serializer';
  */
 var Profile = passbolt.model.Profile = mad.Model.extend('passbolt.model.Profile', /** @static */ {
 
-	validateRules: {
-	},
+    /**
+     * Get validation rules from server
+     */
+    checkServerRules: true,
 
+    /**
+     * Attributes.
+     */
 	attributes: {
 		id: 'string',
 		first_name: 'string',

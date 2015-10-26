@@ -113,7 +113,7 @@ class User extends AppModel {
 				),
 				'size' => array(
 					'rule' => array('lengthBetween', 8, 20),
-					'message' => __('Password should be between %s and %s characters long'),
+					'message' => __('Password should be between %s and %s characters long', 8, 20),
 				)
 			),
 			'current_password' => array(

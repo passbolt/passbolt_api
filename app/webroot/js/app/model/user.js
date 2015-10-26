@@ -22,12 +22,10 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 	 */
 	current : null,
 
-	/**
-	 * Validation rules.
-	 */
-	validateRules: {
-		username: ['email', 'required']
-	},
+    /**
+     * Get validation rules from server.
+     */
+    checkServerRules: true,
 
 	/**
 	 * Attributes.
