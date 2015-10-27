@@ -369,9 +369,11 @@ class UsersController extends AppController {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not retrieve profile'));
 			}
-			$profile['Profile'] = array_merge($profile['Profile'], $userData['Profile']);
-			// Reformat date of birth properly to pass validation
-			$profile['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profile['Profile']['date_of_birth']));
+			$profile['Profile'] = $userData['Profile'];
+			if (isset($profile['Profile']['date_of_birth'])) {
+				// Reformat date of birth properly to pass validation
+				$profile['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profile['Profile']['date_of_birth']));
+			}
 
 			$fields = $this->User->Profile->getFindFields('User::edit', User::get('Role.name'));
 			$fields = Hash::expand($fields);
