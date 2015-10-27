@@ -25350,7 +25350,7 @@ define('app/model/permission_type', [
                     console.error('Warning, PermissionType.toString called without permId');
                     return 'can read';
                 }
-                switch (permId) {
+                switch (permId.toString()) {
                 case passbolt.DENY.toString():
                     returnValue = this.PERMISSION_TYPES[permId];
                     break;
@@ -25360,32 +25360,6 @@ define('app/model/permission_type', [
                 default:
                     returnValue = __('can %s', this.PERMISSION_TYPES[permId]);
                     break;
-                }
-                return returnValue;
-            },
-            getPermissionTypes: function (foreignModel) {
-                var returnValue = [];
-                var allowedPermissions = {
-                        'Group': [
-                            0,
-                            1,
-                            3,
-                            7,
-                            15
-                        ],
-                        'User': [
-                            0,
-                            1,
-                            7,
-                            15
-                        ]
-                    };
-                if (typeof foreignModel != 'undefined') {
-                    for (var permType in allowedPermissions[foreignModel]) {
-                        returnValue[permType] = passbolt.model.PermissionType.PERMISSION_TYPES[permType];
-                    }
-                } else {
-                    returnValue = passbolt.model.PermissionType.PERMISSION_TYPES;
                 }
                 return returnValue;
             }
@@ -28322,9 +28296,13 @@ define('app/component/permissions', [
                     }
                 }).start();
                 this.addFormController.addElement(this.options.permAroAutocpltTxtbx, permCreateFormFeedback);
-                var availablePermissionTypes = {};
-                for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
-                    availablePermissionTypes[permType] = passbolt.model.PermissionType.formatToString(permType);
+                var availablePermissionTypes = {}, permissionTypes = [
+                        1,
+                        7,
+                        15
+                    ];
+                for (var permType in permissionTypes) {
+                    availablePermissionTypes[permissionTypes[permType]] = passbolt.model.PermissionType.formatToString(permissionTypes[permType]);
                 }
                 var permTypeCtl = new mad.form.Dropdown($('#js_perm_create_form_type', this.element), {
                         emptyValue: false,
@@ -28333,6 +28311,7 @@ define('app/component/permissions', [
                     }).start();
                 this.addFormController.addElement(permTypeCtl, permCreateFormFeedback);
                 this.on();
+                this.load(this.options.acoInstance);
             },
             autocompleteAro: function (value) {
                 var request = passbolt.model.User.findAll({ keywords: value }).then(function (users) {
@@ -28353,9 +28332,13 @@ define('app/component/permissions', [
                 return request;
             },
             loadPermission: function (permission) {
-                var permSelector = '#js_share_rs_perm_' + permission.id, availablePermissionTypes = {};
-                for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
-                    availablePermissionTypes[permType] = passbolt.model.PermissionType.formatToString(permType);
+                var permSelector = '#js_share_rs_perm_' + permission.id, availablePermissionTypes = {}, permissionTypes = [
+                        1,
+                        7,
+                        15
+                    ];
+                for (var permType in permissionTypes) {
+                    availablePermissionTypes[permissionTypes[permType]] = passbolt.model.PermissionType.formatToString(permissionTypes[permType]);
                 }
                 this.permList.insertItem(permission);
                 new mad.form.Dropdown($('.js_share_rs_perm_type', permSelector), {
@@ -28552,10 +28535,10 @@ define('app/component/resource_actions_tab', [
                         id: 'js_rs_permission',
                         label: 'Share',
                         resource: this.options.resources,
-                        cssClasses: ['share-tab']
+                        cssClasses: ['share-tab'],
+                        acoInstance: this.options.resource
                     });
                 permCtl.start();
-                permCtl.load(this.options.resource);
             },
             load: function (resource) {
                 return;
@@ -28951,6 +28934,8 @@ define('app/form/comment/create', [
         __esModule: true
     };
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/component/comments*/
 define('app/component/comments', [
     'app/model/comment',
@@ -29038,6 +29023,8 @@ define('app/component/comments', [
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/component/sidebar_section*/
 define('app/component/sidebar_section', ['mad/view/component/tree'], function ($__0) {
     'use strict';
@@ -30973,10 +30960,6 @@ define('app/component/user_shortcuts', ['mad/component/menu'], function ($__0) {
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/component/user_details*/
 define('app/view/component/user_details', ['mad/view/view'], function ($__0) {
     'use strict';

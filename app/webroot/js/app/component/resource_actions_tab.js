@@ -58,10 +58,10 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 			id: 'js_rs_permission',
 			label: 'Share',
 			resource: this.options.resources,
-			cssClasses: ['share-tab']
+			cssClasses: ['share-tab'],
+            acoInstance: this.options.resource
 		});
 		permCtl.start();
-		permCtl.load(this.options.resource);
 	},
 
 	/**

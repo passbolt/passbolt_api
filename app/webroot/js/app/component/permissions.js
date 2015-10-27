@@ -153,9 +153,10 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		this.addFormController.addElement(this.options.permAroAutocpltTxtbx, permCreateFormFeedback);
 
 		// Add a selectbox element to the form to carry permission type
-		var availablePermissionTypes = {};
-		for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
-			availablePermissionTypes[permType] = passbolt.model.PermissionType.formatToString(permType);
+		var availablePermissionTypes = {},
+            permissionTypes = [1, 7, 15]; // Hardcoded for Resource and direct permission.
+		for (var permType in permissionTypes) {
+			availablePermissionTypes[permissionTypes[permType]] = passbolt.model.PermissionType.formatToString(permissionTypes[permType]);
 		}
 		var permTypeCtl = new mad.form.Dropdown($('#js_perm_create_form_type', this.element), {
 				emptyValue: false,
@@ -166,6 +167,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// rebind the just created elements, so the controller will be able to listen events which occured on them.
 		this.on();
+
+        // Load the component for the aco instance given in options.
+        this.load(this.options.acoInstance);
 	},
 
 	/**
@@ -202,11 +206,12 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	loadPermission: function(permission) {
 		var permSelector = '#js_share_rs_perm_' + permission.id,
-			availablePermissionTypes = {};
+            availablePermissionTypes = {},
+            permissionTypes = [1, 7, 15]; // Hardcoded for Resource and direct permission.
 
-		for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
-			availablePermissionTypes[permType] = passbolt.model.PermissionType.formatToString(permType);
-		}
+        for (var permType in permissionTypes) {
+            availablePermissionTypes[permissionTypes[permType]] = passbolt.model.PermissionType.formatToString(permissionTypes[permType]);
+        }
 
 		// Add the permission to the list of permissions
 		this.permList.insertItem(permission);
