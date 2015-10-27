@@ -112,8 +112,8 @@ class CommentTest extends AppTestCase {
  * @return void
  */
 	public function testForeignIdValidation() {
-		// test with empty for foreign key check 
-		// we do double check test id and model validity 
+		// test with empty for foreign key check
+		// we do double check test id and model validity
 		$testcase = array(
 			'Comment' => array(
 				'foreign_id' => '',
@@ -171,7 +171,7 @@ class CommentTest extends AppTestCase {
 			// Not empty
 			'' => false,
 			// Email are not accepted
-			'test@test.com' => false,
+			'test@test.com' => true,
 			// too short
 			'sh' => false,
 			// too long
