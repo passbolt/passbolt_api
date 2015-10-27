@@ -35,6 +35,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         groups: [],
         // the selected resources, you can pass an existing list as parameter of the constructor to share the same list
         selectedUsers: new can.Model.List(),
+        // Prefix each row id with user_
+        prefixItemId: 'user_',
         // Override the silentLoading parameter.
         silentLoading: false
     }
@@ -134,7 +136,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     showContextualMenu: function (item, x, y, eventTarget) {
         // Get the offset position of the clicked item.
-        var $item = $('#' + item.id);
+        var $item = $('#' + this.options.prefixItemId + item.id);
         var item_offset = $item.offset();
 
         // Instantiate the contextual menu menu.
@@ -150,7 +152,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
         // Add Edit action.
         var action = new mad.model.Action({
-            id: uuid(),
+            id: 'js_user_browser_menu_copy_key',
             label: 'Copy public key',
             action: function (menu) {
                 var data = {
@@ -164,7 +166,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         contextualMenu.insertItem(action);
         // Add Edit action.
         var action = new mad.model.Action({
-            id: uuid(),
+            id: 'js_user_browser_menu_copy_email',
             label: 'Copy email address',
             cssClasses: ['separator-after'],
             action: function (menu) {
@@ -179,7 +181,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         contextualMenu.insertItem(action);
         // Add Edit action.
         var action = new mad.model.Action({
-            id: uuid(),
+            id: 'js_user_browser_menu_edit',
             label: 'Edit',
             action: function (menu) {
                 mad.bus.trigger('request_user_edition', item);
@@ -190,7 +192,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
         // Add Delete action.
         var action = new mad.model.Action({
-            id: uuid(),
+            id: 'js_user_browser_menu_delete',
             label: 'Delete',
             action: function (menu) {
                 mad.bus.trigger('request_user_deletion', item);
