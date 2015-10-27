@@ -105,9 +105,8 @@ class User extends AppModel {
 			),
 			'password' => array(
 				'required'  => array(
-					'required'   => true,
+					'required'   => 'create',
 					'allowEmpty' => false,
-					'on'         => 'create',
 					'rule'       => array('notEmpty'),
 					'message'    => __('A password is required'),
 				),
@@ -390,10 +389,13 @@ class User extends AppModel {
 					case 'User::view':
 						$conditions = array(
 							'conditions' => array(
-								'User.active' => true,
 								'User.deleted' => false
 							)
 						);
+						// if user is simple user, we do not allow him to see non active users.
+						if ($role == Role::USER) {
+							$conditions['conditions']['User.active'] = true;
+						}
 						if (isset($data['User.id'])) {
 							$conditions['conditions']['User.id'] = $data['User.id'];
 						}
@@ -405,11 +407,14 @@ class User extends AppModel {
 					case 'User::index':
 						$conditions = array(
 							'conditions' => array(
-								'User.active' => true,
 								'User.deleted' => false,
 								'Role.name' => array(Role::USER, Role::ADMIN),
 							)
 						);
+						// if user is simple user, we do not allow him to see non active users.
+						if ($role == Role::USER) {
+							$conditions['conditions']['User.active'] = true;
+						}
 						// If filter on group.
 						if (isset($data['foreignModels']['Group.id'])) {
 							$conditions['conditions']['Group.id'] = $data['foreignModels']['Group.id'];
@@ -531,6 +536,10 @@ class User extends AppModel {
 						),
 					)
 				);
+				// Add active status for admin and root roles.
+				if ($role == Role::ADMIN || $role == Role::ROOT) {
+					$fields['fields'][] = 'User.active';
+				}
 				break;
 			case 'User::activation':
 				$fields = array(
