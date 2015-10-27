@@ -96,7 +96,7 @@ class Profile extends AppModel {
 				),
 				'size' => array(
 					'rule' => array('lengthBetween', 3, 64),
-					'message' => __('First name should be between %s and %s characters long', 3, 64),
+					'message' => __('First name should be between %s and %s characters long'),
 				)
 			),
 			'last_name' => array(
@@ -108,7 +108,7 @@ class Profile extends AppModel {
 				),
 				'size' => array(
 					'rule' => array('lengthBetween', 3, 64),
-					'message' => __('Last name should be between %s and %s characters long', 3, 64),
+					'message' => __('Last name should be between %s and %s characters long'),
 				)
 			),
 		);
