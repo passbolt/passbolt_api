@@ -12,8 +12,7 @@ var Autocomplete = mad.form.Autocomplete = mad.form.Textbox.extend('mad.form.Aut
 
     defaults: {
         label: 'Autocomplete Form Element Controller',
-        tag: 'input',
-        list: null
+        tag: 'input'
     }
 
 }, /** @prototype */ {
@@ -22,7 +21,7 @@ var Autocomplete = mad.form.Autocomplete = mad.form.Textbox.extend('mad.form.Aut
         // Add an list component
         // This list will allow the autocomplete component to display the available choices
         var listOpts = {
-            itemClass: mad.model.Model,
+            itemClass: mad.Model,
             cssClasses: ['autocomplete-content'],
             templateUri: 'mad/view/template/component/tree.ejs',
             state: 'hidden',
@@ -45,7 +44,7 @@ var Autocomplete = mad.form.Autocomplete = mad.form.Textbox.extend('mad.form.Aut
      * @param {passbolt.model.Permission} permission The permission to remove
      * @return {void}
      */
-     changed: function(el, ev, data) {
+    ' changed': function(el, ev, data) {
         var self = this;
         // autocomplete the given string
         // By using the given callback
@@ -66,7 +65,7 @@ var Autocomplete = mad.form.Autocomplete = mad.form.Textbox.extend('mad.form.Aut
      * @param {mad.model.Model} instance The selected instance
      * @return {void}
      */
-    '{list} item_selected': function(el, ev, data) {
+    '{list.element} item_selected': function(el, ev, data) {
         // update the value of the autocomplete field with the selected value
         this.setValue(data.label);
         // hide the autocomplete list

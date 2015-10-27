@@ -68,7 +68,7 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 			console.error('Warning, PermissionType.toString called without permId');
 			return 'can read';
 		}
-		switch (permId) {
+		switch (permId.toString()) {
 			case passbolt.DENY.toString():
 				returnValue = this.PERMISSION_TYPES[permId];
 				break;
@@ -79,31 +79,6 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 				returnValue = __('can %s', this.PERMISSION_TYPES[permId]);
 				break;
 		}
-		return returnValue;
-	},
-
-	/**
-	 * Get the list of permission type.
-	 * @param {string} foreignModel (optional) Filter permission types by foreign model.
-	 * @return {array}
-	 */
-	getPermissionTypes: function(foreignModel) {
-		var returnValue = [];
-
-		// @todo [low] Make something generic and configurable.
-		var allowedPermissions = {
-			'Group': [0,1,3,7,15],
-			'User': [0,1,7,15]
-		};
-
-		if (typeof foreignModel != 'undefined') {
-			for (var permType in allowedPermissions[foreignModel]) {
-				returnValue[permType] = passbolt.model.PermissionType.PERMISSION_TYPES[permType];
-			}
-		} else {
-			returnValue = passbolt.model.PermissionType.PERMISSION_TYPES;
-		}
-
 		return returnValue;
 	}
 

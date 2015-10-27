@@ -21,7 +21,7 @@ var Dropdown = mad.form.Dropdown = mad.form.ChoiceElement.extend('mad.form.Dropd
         // Override the templateBased option.
         templateBased: true,
         // Override the viewClass option.
-        viewClass: mad.view.form.DropDown,
+        viewClass: mad.view.form.Dropdown,
         // Allow empty value.
         emptyValue: true
 

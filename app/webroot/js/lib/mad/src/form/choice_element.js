@@ -23,7 +23,7 @@ var ChoiceElement = mad.form.ChoiceElement = mad.form.Element.extend('mad.form.C
     /**
      * Implements beforeRender hook().
      */
-    'beforeRender': function() {
+    beforeRender: function() {
         this._super();
         this.setViewData('availableValues', this.options.availableValues);
         this.setViewData('valueClasses', this.options.valueClasses);

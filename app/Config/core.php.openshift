@@ -36,7 +36,7 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 0);
+	Configure::write('debug', $_ENV['OS_CORE_DEBUG']);
 
 /**
  * Configure the Error handler used to handle errors for your application. By default
@@ -111,8 +111,6 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  */
 	//Configure::write('App.baseUrl', env('SCRIPT_NAME'));
 
-	Configure::write('App.fullBaseUrl', 'http://demo-passbolt.rhcloud.com');
-
 /**
  * To configure CakePHP to use a particular domain URL
  * for any URL generation inside the application, set the following
@@ -121,6 +119,7 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  * useful when generating links from the CLI (e.g. sending emails)
  */
 	//Configure::write('App.fullBaseUrl', 'http://example.com');
+	Configure::write('App.fullBaseUrl', 'http://' . $_ENV['OPENSHIFT_APP_DNS']);
 
 /**
  * Web path to the public images directory under webroot.

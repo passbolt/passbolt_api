@@ -20,7 +20,7 @@ $config = array(
 	),
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => array(
-		'active' => true,
+		'active' => 'true',
 	),
 	// Javascript
 	'App.js' => array(

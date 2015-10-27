@@ -5,11 +5,7 @@ import 'app/view/template/component/permissions.ejs!';
 /**
  * @inherits mad.view.View
  */
-var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbolt.view.component.Permissions', /** @static */ {
-
-	'defaults': {}
-
-}, /** @prototype */ {
+var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbolt.view.component.Permissions', /** @static */ { }, /** @prototype */ {
 
 	/* ************************************************************** */
 	/* LISTEN TO VIEW EVENTS */
@@ -36,7 +32,7 @@ var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbol
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'.js_share_rs_perm_type changed': function(el, ev, data) {
+	' .js_share_rs_perm_type changed': function(el, ev, data) {
 		ev.stopPropagation();
 		ev.preventDefault();
 
@@ -52,7 +48,7 @@ var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbol
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'#js_perm_create_form_add_btn click': function(el, ev) {
+	' #js_perm_create_form_add_btn click': function(el, ev) {
 		ev.stopPropagation();
 		ev.preventDefault();
 
