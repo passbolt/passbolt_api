@@ -139,6 +139,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         var $item = $('#' + this.options.prefixItemId + item.id);
         var item_offset = $item.offset();
 
+        var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
+
         // Instantiate the contextual menu menu.
         var contextualMenu = new mad.component.ContextualMenu(null, {
             state: 'hidden',
@@ -168,7 +170,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         var action = new mad.model.Action({
             id: 'js_user_browser_menu_copy_email',
             label: 'Copy email address',
-            cssClasses: ['separator-after'],
+            cssClasses: (isAdmin ? ['separator-after'] : []),
             action: function (menu) {
                 var data = {
                     name: 'email',
@@ -179,27 +181,31 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             }
         });
         contextualMenu.insertItem(action);
-        // Add Edit action.
-        var action = new mad.model.Action({
-            id: 'js_user_browser_menu_edit',
-            label: 'Edit',
-            action: function (menu) {
-                mad.bus.trigger('request_user_edition', item);
-                menu.remove();
-            }
-        });
-        contextualMenu.insertItem(action);
 
-        // Add Delete action.
-        var action = new mad.model.Action({
-            id: 'js_user_browser_menu_delete',
-            label: 'Delete',
-            action: function (menu) {
-                mad.bus.trigger('request_user_deletion', item);
-                menu.remove();
-            }
-        });
-        contextualMenu.insertItem(action);
+        // Actions if the user is an admin
+        if (isAdmin) {
+            // Add Edit action.
+            var action = new mad.model.Action({
+                id: 'js_user_browser_menu_edit',
+                label: 'Edit',
+                action: function (menu) {
+                    mad.bus.trigger('request_user_edition', item);
+                    menu.remove();
+                }
+            });
+            contextualMenu.insertItem(action);
+
+            // Add Delete action.
+            var action = new mad.model.Action({
+                id: 'js_user_browser_menu_delete',
+                label: 'Delete',
+                action: function (menu) {
+                    mad.bus.trigger('request_user_deletion', item);
+                    menu.remove();
+                }
+            });
+            contextualMenu.insertItem(action);
+        }
 
         // Display the menu.
         contextualMenu.setState('ready');
