@@ -105,6 +105,9 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		// Destroy the existing workspace and all its components.
 		$('#js_app_panel_main').empty();
 
+        // Remove any existing contextual menu.
+        mad.component.ContextualMenu.remove();
+
 		// Set class on top container.
 		$('#container')
 			.removeClass(this.options.workspaces.join(" "))
