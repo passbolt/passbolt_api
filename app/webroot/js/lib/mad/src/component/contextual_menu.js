@@ -34,6 +34,14 @@ var ContextualMenu = mad.component.ContextualMenu = mad.component.DropdownMenu.e
             'x': null,
             'y': null
         }
+    },
+
+    /**
+     * Removes existing contextual menu from the dom.
+     * Static function, can be called from anywhere.
+     */
+    remove: function() {
+        $('#js_contextual_menu', $(mad.config.rootElement)).remove();
     }
 
 }, /** @prototype */ {
@@ -89,7 +97,7 @@ var ContextualMenu = mad.component.ContextualMenu = mad.component.DropdownMenu.e
      */
     destroy: function() {
         this._super();
-        $('#js_contextual_menu', $(mad.config.rootElement)).remove();
+        mad.component.ContextualMenu.remove();
     }
 });
 
