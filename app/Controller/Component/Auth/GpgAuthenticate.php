@@ -9,7 +9,7 @@
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
 App::uses('Gpgkey', 'Model');
 
-require_once APP . 'Lib' . DS . 'Gpg' . DS . 'gpg.php';
+//require_once APP . 'Lib' . DS . 'Gpg' . DS . 'gpg.php';
 
 class GpgAuthenticate extends BaseAuthenticate
 {
@@ -20,6 +20,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
     /**
      * Authenticate
+     * @TODO allow another request data format than cake data[][] since GpgAuth is gpgauth:value by default
      *
      * @param CakeRequest $request
      * @param CakeResponse $response
@@ -70,7 +71,7 @@ class GpgAuthenticate extends BaseAuthenticate
             $this->_gpg->addsignkey(
                 $this->_config['serverKey']['fingerprint'], $this->_config['serverKey']['passphrase']);
 
-            // generate token
+            // generate token, note that we only store the UUID in the DB
             $token = $AuthenticationToken->createToken($user['User']['id'], AuthenticationToken::UUID);
             if(!isset($token['AuthenticationToken']['token'])) {
                 return $this->__error('Failed to create token');
@@ -88,14 +89,14 @@ class GpgAuthenticate extends BaseAuthenticate
         // Check if the token provided at stage 1 have been decrypted and is still valid
         if (isset($request->data['gpg_auth']['user_token_result'])) {
             $this->_response->header('X-GPGAuth-Progress','stage2');
-            if (!(Common::isUuid($request->data['gpg_auth']['user_token_result']))) {
+            if (!($this->__checkNonce($request->data['gpg_auth']['user_token_result']))) {
                 return $this->__error('The user token result is not a valid UUID');
             }
-            if (!($AuthenticationToken->checkTokenIsValid(
-                    $request->data['gpg_auth']['user_token_result'], $user['User']['id'])
-            )) {
+            // extract the UUID to get the database records
+            list($version, $length, $uuid, $version2) = explode('|', $request->data['gpg_auth']['user_token_result']);
+            if (!($AuthenticationToken->checkTokenIsValid($uuid, $user['User']['id']))) {
                 return $this->__error('The user token result could not be found ' .
-                    't='.$request->data['gpg_auth']['user_token_result'] . ' u=' . $user['User']['id']);
+                    't='. $uuid . ' u=' . $user['User']['id']);
             }
         }
 

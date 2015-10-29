@@ -1,3 +1,4 @@
+
 <div class="col6 push1 information">
     <h2>
         <?php echo __('Download the plugin to get started!'); ?>

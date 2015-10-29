@@ -210,7 +210,7 @@ class AuthControllerTest extends ControllerTestCase {
         $info =  $this->_gpg->decryptverify($msg,$plaintext);
         $this->assertFalse(($info === false), 'Could not decrypt the server generated User Auth Token: ' . $msg);
         $this->assertFalse(($plaintext === ''), 'Could not decrypt the server generated User Auth Token: ' . $msg);
-        $this->assertEquals($info[0]['fingerprint'], $this->_keys['server']['fingerprint'], 'Server signature is not matching known fingerprint');
+        $this->assertEquals(strtoupper($info[0]['fingerprint']), strtoupper($this->_keys['server']['fingerprint']), 'Server signature is not matching known fingerprint');
 
         // Decrypt and check if the token is in the right format
         $result = explode('|', $plaintext);
@@ -235,7 +235,7 @@ class AuthControllerTest extends ControllerTestCase {
             Router::url('/auth/login', true),
             array(
                 'data[gpg_auth][keyid]' => $this->_keys['user']['fingerprint'],
-                'data[gpg_auth][user_token_result]' => $uuid
+                'data[gpg_auth][user_token_result]' => $plaintext
             )
         );
 
