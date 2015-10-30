@@ -11,6 +11,7 @@
 require_once(APP . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('User', 'Model');
+App::uses('Gpg', 'Model/Utility');
 
 class GpgkeyTask extends ModelTask {
 
@@ -54,6 +55,7 @@ class GpgkeyTask extends ModelTask {
 	public function getData() {
 		$User = Common::getModel('User');
 		$us = $User->find('all');
+		$Gpg = new \Passbolt\Gpg();
 
 		$Model = ClassRegistry::init($this->model);
 
@@ -61,7 +63,7 @@ class GpgkeyTask extends ModelTask {
 
 		foreach($us as $u) {
 			$keyRaw = $this->getUserKey($u['User']['id']);
-			$info = $Model->info($keyRaw);
+			$info = $Gpg->getKeyInfo($keyRaw);
 			$key = array(
 				'Gpgkey'=>array(
 					'id' => Common::uuid(),
