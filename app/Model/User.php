@@ -569,6 +569,12 @@ class User extends AppModel {
 						),
 						'Gpgkey' => array(
 							'key',
+							'bits',
+							'uid',
+							'type',
+							'key_created',
+							'fingerprint',
+							'key_id'
 						),
 					),
 				);
