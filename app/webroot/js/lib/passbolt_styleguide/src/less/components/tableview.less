@@ -1,0 +1,115 @@
+/*
+ * Main Workspace - Table View
+ */
+.tableview {
+	position: relative;
+	font-size: .9375em; /* 15px */
+	height: 100%;
+}
+/* additional space to avoid scrollbar bump */
+.tableview table {
+	padding-right:.625em;
+}
+.no-cssscrollbar .tableview table {
+	padding-right:1em; /* 16px fallback */
+}
+
+/* header */
+.tableview-header {
+	height:2em;
+}
+.tableview-header table {
+	width:100%;
+}
+
+/* main content */
+.tableview-content {
+	top:2em;
+	bottom:45px;
+	padding:0;
+	position:absolute;
+	width:100%;
+	border-top:1px solid #DDD;
+}
+.tableview-content table {
+	width:100%;
+}
+
+.tableview table thead th:last-child {
+	padding-right:17px;
+}
+/* rows */
+.tableview table th,
+.tableview table td {
+	text-align:left;
+	padding:.25em .125em;
+    vertical-align: middle;
+	.ellipsis();
+}
+.tableview table th {
+	font-weight:bold;
+}
+.tableview table .s-cell {
+	width:20px;
+	max-width:20px;
+}
+.tableview table .s-cell.favorites {
+	width:25px;
+	max-width:25px;
+}
+.tableview table .s2-cell {
+	width:40px;
+	max-width:40px;
+}
+.tableview table .m-cell {
+	width:10em;
+	max-width:10em;
+	vertical-align: middle;
+}
+.tableview table .l-cell {
+	width:12em;
+	max-width:12em;
+}
+.tableview table tbody tr.selected,
+.tableview table tbody tr:hover {
+	height:1em;
+	background:#fffacc;
+}
+.tableview table .checkbox label {
+	display:none;
+}
+.tableview table .checkbox input{
+	margin-top:0px;
+	float:left;
+}
+.tableview table th span,
+.tableview table td span {
+	vertical-align:6%;
+}
+/* hide secondary actions if there is no space */
+@media all and (max-width: 600px) {
+	.tableview table tbody {
+		td {
+			display:block;
+			&.s-cell, &.s2-cell, &.m-cell, &.l-cell {
+				max-width:90%;
+				width:90%;
+				padding:.5em;
+			}
+			&.s-cell {
+				display:none;
+			}
+		}
+		tr:nth-child(odd) {
+			background:@background-lightest;
+		}
+	}
+	.tableview thead  {
+		display:none;
+	}
+	.tableview-content {
+		top:0;
+		border:0;
+		bottom:0px;
+	}
+}

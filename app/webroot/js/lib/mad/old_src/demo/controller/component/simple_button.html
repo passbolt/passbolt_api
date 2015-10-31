@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Controller Example</title>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<button id="js_simple_button">Simple Button</button>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+<div style='clear:both'></div>
+<script type='text/javascript' src='../../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
+steal('mad/demo/init.js').then(function() {
+	var newButton = new mad.controller.component.ButtonController($('#js_simple_button', this.element), {
+		'value': 'The value of the simple button',
+		'events': {
+			'click': function (el, ev, value) {
+				alert('click on simple button value : '+value);
+			}
+		}
+	});
+	
+})
+</script>
+
+	</body>
+</html>

@@ -1,0 +1,10 @@
+/**!
+ * @name		Passbolt-styleguide
+ * @version		v0.1.2
+ * @date		2015-09-29
+ * @copyright	Copyright 2015, Bolt Software Private Ltd
+ * @source		https://github.com/passbolt/passbolt_styleguide
+ * @license		magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPL-v3-or-Later
+ */
+
+.cake-sql-log td,.cake-sql-log th{overflow:visible;white-space:normal;border:1px solid #eee;padding:1em}.cake-sql-log{margin-top:3em}.cake-sql-log thead{background:#eee}.cake-sql-log th{padding:.5em;font-weigth:bold}

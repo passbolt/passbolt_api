@@ -1,0 +1,48 @@
+<!doctype html>
+  <html>
+
+  <body></body>
+
+  <script src="test.js"></script>
+
+  <!-- set this to the path to babel.js -->
+  <script src="../node_modules/regenerator/runtime.js"></script>
+
+  <script>
+    // test promise polyfill
+    // delete window.Promise;
+  </script>
+
+  <script src="../node_modules/when/es6-shim/Promise.js"></script>
+
+  <script src="../dist/es6-module-loader.src.js"></script>
+  <script>
+    System.transpiler = 'babel';
+    System.paths['babel'] = '../node_modules/babel-core/browser.js';
+  </script>
+
+  <script>
+    // test tracing
+    System.trace = true;
+  </script>
+
+  <script>
+    runTests();
+  </script>
+
+  <script type="module">
+    window.anon = class {
+      constructor() {
+
+      }
+    }
+  </script>
+
+
+  <script>
+    setTimeout(function() {
+      test('Anonymous &lt;script type="module"> tag', function(assert) {
+        assert(typeof window.anon, 'function');
+      });
+    }, 500);
+  </script>

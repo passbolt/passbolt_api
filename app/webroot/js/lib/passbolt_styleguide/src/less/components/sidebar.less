@@ -1,0 +1,94 @@
+/**
+ * Sidebar
+ */
+.panel.aside {
+	position:absolute;
+	right:2em;
+	width:22em;
+	bottom:0;
+	height:100%;
+	background:@background-default;
+	.box-shadow();
+
+  /* general resource information */
+  .resource,
+  .user {
+    padding:.5em 1em 1em 1em;
+
+    h3 {
+      margin-top:.5em;
+			border:0;
+    }
+    h4 {
+      margin-bottom:.626em;
+      padding-bottom:.313em;
+      border-bottom:1px dotted @border-default;
+    }
+    li, p {
+      font-size:.875em;
+    }
+    li {
+      .clearfix();
+
+      .label {
+        width:30%;
+        display:inline-block;
+        margin-right:10%;
+        float: left;
+        height: 1.8em;
+      }
+      .value {
+        width:50%;
+        display:inline-block;
+        float: left;
+        height: 1.8em;
+      }
+    }
+    textarea.resource_description {
+      height: 2.3em;
+      float: left;
+      font-size: .775em;
+      min-width: 21.5em;
+      border: 1px solid @border-default;
+    }
+    /** description edit **/
+    .resource-description-edit-wrapper input[type=submit] {
+      float: right;
+      margin: 0;
+      font-size: .700em;
+      width: auto;
+      margin: 0;
+      padding: .300em .6em .300em .6em;
+    }
+    .dialog-close {
+      position:absolute;
+      right:1em;
+      top:1em;
+    }
+    .section-action {
+      float:right;
+      margin-top:-2.25em;
+      padding:0;
+    }
+    .detailed-information {
+      li {
+        .label,
+        .value {
+          line-height: 1.8em;
+        }
+      }
+    }
+  }
+}
+/* place sidebar on top of everything when there is no space */
+@media all and (max-width: 980px) {
+	.panel.aside {
+		position: absolute;
+		right: 0em;
+		width: 100%;
+		bottom: 0;
+		top:0;
+		height: 100%;
+	}
+}
+

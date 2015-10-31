@@ -1,0 +1,10 @@
+<%
+firstSideAreaWidth = typeof firstSideAreaWidth != 'undefined' ? firstSideAreaWidth : 150;
+secondSideAreaWidth = typeof secondSideAreaWidth != 'undefined' ? secondSideAreaWidth : 150;
+%>
+
+<div class="mad-container-threeColumn mad-container" style="position:relative; height:100%;">
+    <div class="mad-container-first_side" style="float:left; height:100%; border:1px solid red; width:<%= firstSideAreaWidth %>px;"></div>
+    <div class="mad-container-second_side" style="float:right; height:100%; border:1px solid red; width:<%= secondSideAreaWidth %>px;"></div>
+    <div class="mad-container-main" style="height:100%; border:1px solid red;"></div>
+</div>

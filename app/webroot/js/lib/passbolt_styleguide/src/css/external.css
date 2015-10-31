@@ -1,0 +1,28 @@
+/*
+ 	These are the styled inserted in the page the plugin is running on
+ 	to insert iframes, etc.
+ */
+/* iframe wrapper */
+.passbolt-plugin-dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+#passbolt-iframe-secret-edition {
+  width: 100%;
+  display: block;
+  height: 5em;
+}
+@media all and (max-width: 440px) {
+  #passbolt-iframe-secret-edition {
+    height: 8em;
+  }
+}
+#passbolt-iframe-login-form {
+  width: 100%;
+  min-height: 13.438em;
+  margin-top: .5em;
+}

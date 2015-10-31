@@ -1,0 +1,27 @@
+{
+  "name": "system-bower",
+  "version": "0.2.2",
+  "description": "Bower plugin for StealJS and SystemJS",
+  "main": "bower.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matthewp/system-bower.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/matthewp/system-bower/issues"
+  },
+  "homepage": "https://github.com/matthewp/system-bower",
+  "devDependencies": {
+    "bower": "^1.3.12",
+    "grunt": "^0.4.5",
+    "testee": "^0.1.7"
+  }
+}

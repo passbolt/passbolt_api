@@ -1,0 +1,20 @@
+{
+	"core": {
+		"components": ["EventBus", "Internationalization", "AppController", "Devel", "RouteListener"]
+	},
+	"app": {
+		"url": "http://passbolt.local",
+		"controllerElt": "body",
+		"namespace": "test_app",
+		"ControllerClassName": "mad.controller.AppController"
+	},
+	"error": {
+		"ErrorHandlerClassName": "mad.error.ErrorHandler"
+	},
+	"i18n": {
+		"lang": "EN-en"
+	},
+	"net": {
+		"ResponseHandlerClassName": "mad.net.ResponseHandler"
+	}
+}

@@ -1,0 +1,6 @@
+{
+  "main": "main",
+  "dependencies": {
+    "bar": ">2.0"
+  }
+}

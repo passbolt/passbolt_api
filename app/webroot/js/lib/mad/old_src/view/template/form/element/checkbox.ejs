@@ -1,0 +1,6 @@
+<% for (var value in availableValues) { var u = uuid(); %>
+<div class="input checkbox">
+	<input type="checkbox" value="<%== value %>" id="checkbox<%= u %>"/>
+	<label for="checkbox<%= u %>"><%== availableValues[value] %></label>
+</div>
+<% } %>

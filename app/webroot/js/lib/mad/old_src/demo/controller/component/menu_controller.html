@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Component Menu Controller Example</title>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<h3>Simple Menu</h3>
+	<ul id="js_demo_menu_controller"></ul>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+<script type='text/javascript' src='../../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
+steal(
+	'mad/demo/init.js'
+).then(function() {
+	
+	var data = mad.model.Action.models([
+		{'id': uuid(), 'label': 'open', 'action': function() { alert('Menu Open')}},
+		{'id': uuid(), 'label': 'create', 'action': function() { alert('Menu Create')},
+			'children' : [
+				{'id': uuid(), 'label': 'secret', 'action': function() { alert('Menu Create Secret')}},
+				{'id': uuid(), 'label': 'category', 'action': function() { alert('Menu Create Category')}} 
+			]
+		}
+	]);
+	// Instanciate the menu controller
+		var $menu = $('#js_demo_menu_controller');
+		var list = new mad.controller.component.MenuController($menu, {}, {});
+		list.load(data);
+});
+</script>
+
+	</body>
+</html>

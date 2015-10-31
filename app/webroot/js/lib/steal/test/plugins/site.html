@@ -1,0 +1,12 @@
+<body>
+	<div id='test-element'>Test Element</div>
+	<div id='test-element2'>Test Element 2</div>
+	<script>
+		window.QUnit = window.parent.QUnit;
+		window.removeMyself = window.parent.removeMyself;
+	</script>
+	<script type="text/javascript" 
+		src='../../steal.js' 
+		data-config="../config.js"
+		data-main="plugins/main"></script>
+</body>

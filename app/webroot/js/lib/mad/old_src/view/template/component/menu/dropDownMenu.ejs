@@ -1,0 +1,15 @@
+<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="<%= cssClasses.join(' ') %>">
+	<div class="row">
+		<div class="main-cell-wrapper">
+			<div class="main-cell">
+				<a href="#"><span><%= mappedItem.label %></span></a>
+			</div>
+		</div>
+	</div>
+
+<% if(hasChildren) { %>
+	<ul>
+	</ul>
+<% } %>
+
+</li>

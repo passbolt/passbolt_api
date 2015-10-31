@@ -1,0 +1,11 @@
+{
+  "name": "main",
+  "main": "foo.js",
+  "system": {
+    "buildConfig": {
+      "map": {
+        "foo": "bar"
+	  }
+	}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "app": {
+    "url": "http://192.168.56.102/mad/",
+    "controllerElt": "#demo-app",
+    "namespace": "app",
+    "ControllerClassName": "mad.DemoApp"
+  },
+  "i18n": {
+    "dictionnaryUrl": "js/app/bootstrap/en-EN.json"
+  }
+}

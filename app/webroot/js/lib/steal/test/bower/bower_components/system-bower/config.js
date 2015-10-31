@@ -1,0 +1,1 @@
+require("bower.json!bower");

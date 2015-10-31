@@ -1,0 +1,13 @@
+<body>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<div id='test-element1'>Less</div>
+	<div id='test-element2'>CSS</div>
+	<script>
+		window.QUnit = window.parent.QUnit;
+		window.removeMyself = window.parent.removeMyself;
+	</script>
+	<script type="text/javascript" 
+		src='../../steal.js' 
+		data-config="../config.js"
+		data-main="css_paths/main"></script>
+</body>

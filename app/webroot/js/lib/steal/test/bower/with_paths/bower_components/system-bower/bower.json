@@ -1,0 +1,34 @@
+{
+  "name": "system-bower",
+  "version": "0.2.2",
+  "authors": [
+    "Matthew Phillips <matthew@matthewphillips.info>"
+  ],
+  "description": "Bower plugin for SystemJS and StealJS",
+  "main": "bower.js",
+  "keywords": [
+    "systemjs",
+    "stealjs",
+    "es6",
+    "bower"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "qunit": "~1.15.0",
+    "lodash": "~2.4.1",
+    "canjs": "bitovi/canjs#2.2.4",
+    "jquery": "~2.1.1",
+    "steal": "^0.8.0",
+    "system.js": "https://github.com/bitovi/systemjs/tarball/0.16.6-bitovi.5"
+  },
+  "resolutions": {
+    "traceur": "0.0.58"
+  }
+}

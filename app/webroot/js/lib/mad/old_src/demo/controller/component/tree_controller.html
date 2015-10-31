@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Component Tree Controller Example</title>
+		<link rel="stylesheet" type="text/css" href="../../../../../../css/icons.css">
+		<link rel="stylesheet" type="text/css" href="../../../../../../css/tree.css">
+		<style type='text/css'></style>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<h3>Simple list representation</h3>
+	<ul id="js_demo_list_controller"></ul>
+	<h3>Simple tree representation</h3>
+	<ul id="js_demo_tree_controller"></ul>
+	<h3>Dynamic tree representation</h3>
+	<ul id="js_demo_dynamicTree_controller" class="tree"></ul>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+<div style='clear:both'></div>
+<script type='text/javascript' src='../../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
+steal(
+	'mad/demo/init.js',
+	'mad/test/data/model/person.js'
+).then(function() {
+return;
+	var map = new mad.object.Map({
+		'id': 'id',
+		'label': {
+			'key': 'name',
+			'func': function (value, map, rowObject) {
+				return rowObject.name + ' ' + rowObject.surname;
+			}
+		}
+	});
+	var mapWithChildren = new mad.object.Map({
+		'id': 'id',
+		'label': {
+			'key': 'name',
+			'func': function (value, map, rowObject) {
+				return rowObject.name + ' ' + rowObject.surname;
+			}
+		},
+		'children': {
+			'key': 'children',
+			'func': mad.object.Map.mapObjects
+		}
+	});			
+
+	// Instanciate a list controller
+	var list = new mad.controller.component.TreeController($('#js_demo_list_controller'), {
+		'map': map,
+		'itemClass': demo.model.Person,
+		'callbacks': {
+			'itemSelected': function (element, event, item) {
+				console.log ('selected : ', item);
+			},
+			'itemRightSelected': function (element, event, item) {
+				console.log ('right selected : ', item);
+			},
+			'itemHovered': function (element, event, item) {
+				console.log ('hovered : ', item);
+			}
+		}
+	}, {});
+	
+	list.render();
+	demo.model.Person.findAll().then(function (persons, response, request) {
+		list.load(persons);
+	});	
+	
+	// Instanciate a list controller
+	var tree = new mad.controller.component.TreeController($('#js_demo_tree_controller'), {
+		'map': mapWithChildren,
+		'itemClass': demo.model.Person,
+		'callbacks': {
+			'itemSelected': function (element, event, item) {
+				console.log ('selected : ', item);
+			},
+			'itemRightSelected': function (element, event, item) {
+				console.log ('right selected : ', item);
+			},
+			'itemHovered': function (element, event, item) {
+				console.log ('hovered : ', item);
+			}
+		}
+	}, {});
+	
+	tree.render();
+	demo.model.Person.findAll().then(function (persons, response, request) {
+		tree.load(persons);
+	});
+
+	// Instanciate a dynamic tree controller
+	var dynTree = new mad.controller.component.DynamicTreeController($('#js_demo_dynamicTree_controller'), {
+		'map': mapWithChildren,
+		'itemClass': demo.model.Person,
+		'callbacks': {
+			'itemSelected': function (element, event, item) {
+				console.log ('selected : ', item);
+			},
+			'itemRightSelected': function (element, event, item) {
+				console.log ('right selected : ', item);
+			},
+			'itemHovered': function (element, event, item) {
+				console.log ('hovered : ', item);
+			}
+		}
+	}, {});
+	
+	dynTree.render();
+	demo.model.Person.findAll().then(function (persons, response, request) {
+		dynTree.load(persons);
+	});
+});
+</script>
+
+	</body>
+</html>

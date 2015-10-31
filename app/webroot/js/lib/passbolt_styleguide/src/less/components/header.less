@@ -1,0 +1,72 @@
+/* headers */
+.header {
+	&.first {
+		background:@background-dark;
+		height: 2.375em;
+	}
+	&.second {
+		background:@background-lighter;
+	}
+
+	/* top navigation */
+	.navigation.primary {
+
+		li {
+			padding: .5em 1em 0 .25em;
+			height: 1.75em;
+			float: left;
+
+			&.right {
+				float: right;
+				margin-right: 1em;
+			}
+
+			a {
+				color: @grey;
+				text-decoration: none;
+				display: inline-block;
+
+				&:hover {
+					color: @grey-lighter;
+				}
+				&:active,
+				&:focus {
+					color: @font-focus;
+				}
+			}
+		}
+
+		/* home button is special */
+		.home {
+			a {
+				margin-top:.125em;
+				margin-left: .5em;
+				width: 1.250em;
+				height: 1.250em;
+				background: transparent url('@{images}/logo/icon-20_white.png') 0 0 no-repeat;
+			}
+			a:focus, &:hover a {
+				background: transparent url('@{images}/logo/icon-20.png') 0 0 no-repeat;
+			}
+			a span {
+				display: none;
+			}
+		}
+	}
+
+	/* logo */
+	.logo {
+		margin: 1.125em 0 0 1em;
+		max-width: 80%;
+
+		img {
+			max-width: 150px;
+		}
+	}
+
+	/* do not show h1 in header */
+	h1 {
+		display:none;
+	}
+
+}
