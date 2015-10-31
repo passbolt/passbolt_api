@@ -55,15 +55,5 @@ $this->assign('page_classes','register');
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col3 push1 github-block">
-			<?php echo $this->element('public/box-open-source'); ?>
-		</div>
-		<div class="col3 chrome-plugin-block">
-			<?php echo $this->element('public/box-chrome-extension'); ?>
-		</div>
-		<div class="col4 donate-block push1 last">
-			<?php echo $this->element('public/box-donate'); ?>
-		</div>
-	</div>
+
 </div>

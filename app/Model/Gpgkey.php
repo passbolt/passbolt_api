@@ -20,7 +20,6 @@ class Gpgkey extends AppModel {
         'User',
     );
 
-
     /**
      * Get the validation rules upon context
      *
@@ -369,5 +368,11 @@ class Gpgkey extends AppModel {
                 break;
         }
         return $fields;
+    }
+
+    static public function isValidFingerprint($fingerprint) {
+        // we expect a SHA1 fingerprint
+        $pattern = '/[A-Fa-f0-9]{40}/';
+        return preg_match($pattern, $fingerprint);
     }
 }

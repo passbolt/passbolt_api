@@ -9,7 +9,7 @@
  */
 ?>
 <!doctype html>
-<html class="no-js no-passboltplugin alpha version debug <?php echo User::get('Role.name'); ?>" lang="en">
+<html class="passbolt no-js no-passboltplugin alpha version debug <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
 	<meta charset="utf-8">
 	<base href="<?php echo Router::url('/',true);?>">

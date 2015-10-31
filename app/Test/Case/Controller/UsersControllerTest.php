@@ -52,66 +52,6 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
-	public function testLoginWrongUser() {
-		// Make sure there is no session active after each test
-		$this->User->setInactive();
-		$data = array(
-			'User' => array(
-				'username' => 'biloute@passbolt.com',
-				'password' => 'ouaich mec'
-			)
-		);
-		$result = $this->testAction(
-			'/users/login',
-			array('return' => 'view', 'method' => 'POST', 'data' => $data),
-			true
-		);
-		$this->assertTextContains('Username', $result);
-		$this->assertTextContains('Password', $result);
-	}
-
-	public function testLogin() {
-		// check if we get form
-		$result = $this->testAction('/login', array('return' => 'view', 'method' => 'GET'), true);
-		$this->assertEquals(
-			preg_match('/(<form)/', $result),
-			true,
-			'/users/login with no data sent should return a form'
-		);
-
-		// check logging in with a good user
-		$data = array(
-			'User' => array(
-				'username' => 'user@passbolt.com',
-				'password' => 'password'
-			)
-		);
-
-		// Test that the user is returned properly in the session (authentication has done its job)
-		$result = $this->testAction(
-			'/users/login',
-			array('return' => 'vars', 'method' => 'POST', 'data' => $data),
-			true
-		);
-		$this->assertEquals(
-			$this->User->get('User.username'),
-			'user@passbolt.com',
-			"login test should have returned user@passbolt.com but has returned {$this->User->get('User.username')}"
-		);
-
-		// Test that the redirection is there as it should
-		$result = $this->testAction(
-			'/users/login',
-			array('return' => 'view', 'method' => 'POST', 'data' => $data),
-			true
-		);
-		$this->assertEquals(
-			$this->headers['Location'],
-			Router::url('/', true),
-			"Login should have redirected to / but has not"
-		);
-	}
-
 	public function testIndexNoAllowed() {
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		// test with anonymous user

@@ -65,31 +65,31 @@ class AppController extends Controller {
 		} else {
 			// Get roles, to load in the layout js variables.
 			// Only for admin and user.
+			// TODO move to the view
 			$Role = Common::getModel('Role');
 			$this->set('roles', $Role->find('all', array(
 				'conditions' => array(
 					'name' => array(Role::ADMIN, Role::USER),
 				),
 			)));
+			// default layout
 			$this->layout = 'html5';
 		}
 
 		// Set active user Anonymous
 		// or use what is in the session
-		User::get();
+		//User::get();
 
-		// Auth component initialization
-		foreach (Configure::read('Auth') as $key => $authConf) {
-			$this->Auth->{$key} = $authConf;
-		}
+		// Authentication initialization
+		$this->initAuth();
 
 		// @todo this will be remove via the initial auth check
 		// User::set() will load default config
-		if ($this->Session->read('Config.language') != null) {
-			Configure::write('Config.language', $this->Session->read('Config.language'));
-		} else {
-			$this->Session->write('Config.language', Configure::read('Config.language'));
-		}
+//		if ($this->Session->read('Config.language') != null) {
+//			Configure::write('Config.language', $this->Session->read('Config.language'));
+//		} else {
+//			$this->Session->write('Config.language', Configure::read('Config.language'));
+//		}
 
 		// Sanitize user input.
 		$this->sanitize();
@@ -103,9 +103,14 @@ class AppController extends Controller {
 	 * @access public
 	 */
 	public function isAuthorized($user) {
+
+		return true;
+
 		if ($this->isWhitelisted()) {
 			return true;
 		}
+		return false;
+
 		if (User::isAnonymous()) {
 			if ($this->request->is('Json')) {
 				$this->Message->error(__('You need to login to access this location'), array('code' => 403));
@@ -128,7 +133,7 @@ class AppController extends Controller {
 			$controller = strtolower($this->name);
 		}
 		if ($action == null) {
-			$action = $this->action;
+			$action = strtolower($this->action);
 		}
 		$whitelist = Configure::read('Auth.whitelist');
 		return (isset($whitelist[$controller][$action]));
@@ -164,4 +169,17 @@ class AppController extends Controller {
 		}
 	}
 
+	public function initAuth() {
+
+		foreach (Configure::read('Auth') as $key => $authConf) {
+			$this->Auth->{$key} = $authConf;
+		}
+
+		// Set the headers send in any case where GPG Auth is requested
+		$this->response->header('X-GPGAuth-Version','1.3.0');
+		$this->response->header('X-GPGAuth-Login-URL','/auth/login');
+		$this->response->header('X-GPGAuth-Logout-URL','/auth/logout');
+		$this->response->header('X-GPGAuth-Verify-URL','/auth/verify');
+		$this->response->header('X-GPGAuth-Pubkey-URL','/auth/verify');
+	}
 }

@@ -26,13 +26,14 @@ class Common extends Object {
 	}
 
 /**
- * Return a UUID - ref. String::uuid();
+ * Return a UUID v4 or v5
  *
- * @param string $seed, used to create deterministic UUID
+ * @param string $seed, used to create UUID v5
  * @return string UUID
  */
 	public static function uuid($seed = null) {
 		$pattern = '/^(.{8})(.{4})(.{1})(.{3})(.{1})(.{3})(.{12})$/';
+
 		if (isset($seed)) {
 			$string = substr(sha1($seed),0,32);
 			$replacement = '${1}-${2}-3${4}-a${6}-${7}'; // v5
@@ -55,6 +56,7 @@ class Common extends Object {
 
 /**
  * Generate a random string.
+ * @todo check use as not cryptographically secure
  *
  * @param integer $length length of the string.
  * @return string the random string

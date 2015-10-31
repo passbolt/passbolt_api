@@ -2064,23 +2064,6 @@ html body .button.processing {
   margin-left: 180px;
   padding: .5em 1em;
 }
-/*
-	no plugin = display error
-	no config = display warning
-*/
-.plugin-check {
-  display: none;
-}
-.no-passboltplugin .plugin-check.error {
-  display: block;
-}
-.passboltplugin.no-passboltplugin-config .plugin-check.warning {
-  display: block;
-}
-.passboltplugin.passboltplugin-config .plugin-check.gpg.notice,
-.passboltplugin.passboltplugin-config .plugin-check.success {
-  display: block;
-}
 .version.alpha body:before {
   content: "alpha";
   background: #d40101 none repeat scroll 0% 0%;
@@ -2128,7 +2111,7 @@ html body .button.processing {
 .page.register .form,
 .page.login .form {
   background: #EEE;
-  padding: 4% 5% 9% 5%;
+  padding: 4% 5% 5% 5%;
   margin-top: 1%;
 }
 .page.register .form form input[type=text],

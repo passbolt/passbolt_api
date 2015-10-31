@@ -172,8 +172,7 @@ install the data set and rexport the content as fixtures.
 ./app/Console/cake data export
 ```
 
-Note that the tests are tightly coupled with the data.
-If you change it you may need to change the tests. You can add more record safely of course.
+Note that the tests are tightly coupled with the data. If you change it you may need to change the tests. You can add more record safely of course.
 
 How to update the PHP libraries
 -------------------
