@@ -7,35 +7,34 @@
  */
 class AuthController extends AppController {
 
+    public function beforeFilter() {
+        $this->Auth->allow();
+        parent::beforeFilter();
+    }
+
     /**
      * Login
      * @access public
      */
     public function login() {
         // check if the user Authentication worked
-        // someone can not remain anonymous forever
-        if (!$this->Auth->login() || User::isAnonymous()) {
+        if (!$this->Auth->login()) {
             $this->layout = 'login';
             $this->view = '/Auth/login';
-            if ($this->request->is('post')) {
-                $this->request->data['User']['password'] = null;
-                $this->Message->error(__('Invalid username or password, try again'), array('throw' => false));
-            }
-            return;
-        }
-        // avoid looping if the requested URL is logout
-        if ($this->Auth->redirectUrl() == '/logout' || $this->Auth->redirectUrl() == '/login') {
-            $this->redirect('/');
         } else {
-            return $this->redirect($this->Auth->redirectUrl());
+            if ($this->request->is('json')) {
+                // We do not redirect since the Javascript app will take care of this
+                // Also it messes up with the GPGAuth headers if we do
+            } else {
+                return $this->redirect($this->Auth->redirectUrl());
+            }
         }
     }
 
     /**
      *
      */
-    public function verify()
-    {
+    public function verify() {
         if ($this->request->is('post')) {
             $this->Auth->login();
         } else {

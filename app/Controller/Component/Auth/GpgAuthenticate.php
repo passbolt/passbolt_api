@@ -8,6 +8,7 @@
  */
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
 App::uses('Gpgkey', 'Model');
+App::uses('User', 'Model');
 
 //require_once APP . 'Lib' . DS . 'Gpg' . DS . 'gpg.php';
 
@@ -102,11 +103,12 @@ class GpgAuthenticate extends BaseAuthenticate
 
         // Completed
         // we set the user to active and provide some success feedback
-        User::setActive($user);
+        $user = User::setActive($user);
+
         $this->_response->header('X-GPGAuth-Progress', 'complete');
         $this->_response->header('X-GPGAuth-Authenticated', 'true');
         $this->_response->header('X-GPGAuth-Refer', '/'); // @todo default or controller referer
-        return true;
+        return $user;
     }
 
     /**

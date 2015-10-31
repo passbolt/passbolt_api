@@ -247,18 +247,17 @@ class User extends AppModel {
 				$user = array('User' => array('id' => $user));
 			}
 			$u = $_this->find('first', User::getFindOptions('User::activation', Role::USER, $user));
+
+			// Store current user data in session
+			App::import('Model', 'CakeSession');
+			$Session = new CakeSession();
+			$Session->renew();
+			$Session->write(AuthComponent::$sessionKey, $u);
 		}
 
 		if (empty($u)) {
 			return false;
 		}
-
-		// Store current user data in session
-		App::import('Model', 'CakeSession');
-		$Session = new CakeSession();
-		$Session->renew();
-		$Session->write(AuthComponent::$sessionKey, $u);
-
 		return $u;
 	}
 

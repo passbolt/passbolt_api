@@ -53,7 +53,6 @@ class AppController extends Controller {
 	 * @return void
 	 */
 	public function beforeFilter() {
-
 		// Add a callback detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
 			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
@@ -79,18 +78,18 @@ class AppController extends Controller {
 
 		// Set active user Anonymous
 		// or use what is in the session
-		User::get();
+		//User::get();
 
 		// Authentication initialization
 		$this->initAuth();
 
 		// @todo this will be remove via the initial auth check
 		// User::set() will load default config
-		if ($this->Session->read('Config.language') != null) {
-			Configure::write('Config.language', $this->Session->read('Config.language'));
-		} else {
-			$this->Session->write('Config.language', Configure::read('Config.language'));
-		}
+//		if ($this->Session->read('Config.language') != null) {
+//			Configure::write('Config.language', $this->Session->read('Config.language'));
+//		} else {
+//			$this->Session->write('Config.language', Configure::read('Config.language'));
+//		}
 
 		// Sanitize user input.
 		$this->sanitize();
@@ -104,9 +103,14 @@ class AppController extends Controller {
 	 * @access public
 	 */
 	public function isAuthorized($user) {
+
+		return true;
+
 		if ($this->isWhitelisted()) {
 			return true;
 		}
+		return false;
+
 		if (User::isAnonymous()) {
 			if ($this->request->is('Json')) {
 				$this->Message->error(__('You need to login to access this location'), array('code' => 403));
@@ -166,6 +170,7 @@ class AppController extends Controller {
 	}
 
 	public function initAuth() {
+
 		foreach (Configure::read('Auth') as $key => $authConf) {
 			$this->Auth->{$key} = $authConf;
 		}
