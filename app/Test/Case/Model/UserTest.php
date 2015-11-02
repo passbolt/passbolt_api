@@ -175,7 +175,7 @@ class UserTest extends CakeTestCase {
 			Role::GUEST,
 			'User::get in default context should return a user with guest role'
 		);
-		$this->assertEquals($user, $Session->read(AuthComponent::$sessionKey), 'User::get should set user in session');
+		$this->assertEquals(null, $Session->read(AuthComponent::$sessionKey), 'User::get should not set anonymous user in session');
 
 		$this->assertEquals(
 			User::get('id'),
