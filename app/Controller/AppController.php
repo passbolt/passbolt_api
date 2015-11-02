@@ -76,12 +76,23 @@ class AppController extends Controller {
 			$this->layout = 'html5';
 		}
 
-		// Set active user Anonymous
-		// or use what is in the session
-		//User::get();
-
-		// Authentication initialization
+		// Authentication initialization - set headers for gpg auth.
 		$this->initAuth();
+
+		// Check if user is logged in or not
+		// and return a json error message if not logged in but requesting a non allowed json page
+		$isLoggedIn = $this->Auth->user() !== null;
+		$isAuthorized = $isLoggedIn || $this->isWhitelisted($this->request->controller, $this->request->action);
+		if ( ! $isAuthorized ) {
+			if ($this->request->is('Json')) {
+				$this->Message->error(
+					__('You need to login to access this location'),
+					array('code' => 403)
+				);
+				return;
+			}
+		}
+
 
 		// @todo this will be remove via the initial auth check
 		// User::set() will load default config
@@ -103,21 +114,6 @@ class AppController extends Controller {
 	 * @access public
 	 */
 	public function isAuthorized($user) {
-
-		return true;
-
-		if ($this->isWhitelisted()) {
-			return true;
-		}
-		return false;
-
-		if (User::isAnonymous()) {
-			if ($this->request->is('Json')) {
-				$this->Message->error(__('You need to login to access this location'), array('code' => 403));
-				return true; // no need to redirect to login
-			}
-			return false;
-		}
 		return true;
 	}
 
