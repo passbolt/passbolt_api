@@ -49,7 +49,7 @@ class SeleniumTestsController extends AppController {
 			return $this->redirect('/');
 		}
 		// If selenium entry point is activated, we proceed.
-		parent::beforeFilter();
+
 		// Allow ShowLastEmail entry point.
 		$this->Auth->allow(
 			array(
@@ -59,6 +59,8 @@ class SeleniumTestsController extends AppController {
 		);
 		// Use table email_queue. (seems that cakephp refuses to take the default of the class).
 		$this->EmailQueue->useTable = 'email_queue';
+
+		parent::beforeFilter();
 	}
 
 	/**

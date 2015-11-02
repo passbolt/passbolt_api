@@ -17,9 +17,9 @@ class SetupController extends AppController {
 	);
 
 	function beforeFilter(){
-		parent::beforeFilter();
 		$this->Auth->allow('install');
 		$this->Auth->allow('ping');
+		parent::beforeFilter();
 	}
 
 /**
