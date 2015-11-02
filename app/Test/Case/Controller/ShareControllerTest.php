@@ -485,4 +485,63 @@ hcciUFw5
 		);
 
 	}
+
+	public function testSearchUsersToGrantIdIsMissing() {
+		$this->setExpectedException('HttpException', "The resource id is missing");
+		// go through the addAcoPermissions because of routes
+		$srvResult = json_decode($this->testAction("/share/searchUsers/resource/", array('method' => 'get', 'return' => 'contents')), true);
+	}
+
+	public function testSearchUsersToGrantIdIsInvalid() {
+		$id = 'badId';
+		$this->setExpectedException('HttpException', "The resource id is invalid");
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents')), true);
+	}
+
+	public function testSearchUsersToGrantDoesNotExist() {
+		$id = '00000000-0000-0000-0000-000000000000';
+		$this->setExpectedException('HttpException', "The resource does not exist");
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents')), true);
+	}
+
+	public function testSearchUsersToGrantWithoutOwnerAccess() {
+		$id = Common::uuid('resource.id.cpp2-pwd2');
+		$user = $this->User->findByUsername('ada@passbolt.com');
+		$this->User->setActive($user);
+
+		$this->setExpectedException('HttpException', "You are not authorized to share this resource");
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents')), true);
+	}
+
+	// test search users available to receive a new direct permission : owner should be excluded
+	public function testSearchUsersToGrantOwnerExcluded() {
+		$id = Common::uuid('resource.id.facebook-account');
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents',
+		);
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+
+		// The owner is not in the list of users who can receive a direct permission
+		$this->assertFalse(in_array(Common::uuid('user.id.irene'), $usersIds));
+	}
+
+	// test search users available to receive a new direct permission : filter by keywords
+	public function testSearchUsersToGrantFilterByKeywords() {
+		$id = Common::uuid('resource.id.facebook-account');
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents',
+			'data' => array(
+				'keywords' => 'betty'
+			)
+		);
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+
+		// The owner is not in the list of users who can receive a direct permission
+		$this->assertTrue(in_array(Common::uuid('user.id.betty'), $usersIds));
+	}
+
 }

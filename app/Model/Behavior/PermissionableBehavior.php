@@ -129,19 +129,37 @@ class PermissionableBehavior extends ModelBehavior {
 	public function afterSave(Model $model, $created, $options = Array()) {
 		if ($created) {
 			$Permission = Common::getModel('Permission');
+			$userId = null;
+
+			// When a model is marked as permissionable.
+			// A permission will be automatically created for each owner of that new instance.
+			// The created_by field is so compulsory.
+			if (! isset($model->data[$model->alias]['created_by'])) {
+				throw new Exception('The permissionable behavior requires the created_by field to be filled');
+			}
+			$userId = $model->data[$model->alias]['created_by'];
+
 			// make the creator administrator of the created instance
 			$data = array(
 				'Permission' => array(
 					'aco' => $model->alias,
 					'aco_foreign_key' => $model->id,
 					'aro' => 'User',
-					'aro_foreign_key' => User::get('User.id'),
+					'aro_foreign_key' => $userId,
 					'type' => PermissionType::OWNER
 				)
 			);
+			// If the debug mode is enabled.
+			// Generate a permission id based on the inserted instance id and the user id.
+			// It will help us to guess the permission id in the test.
+			if (Configure::read('debug') > 0) {
+				$data['Permission']['id'] = Common::uuid('permission.id.' . $model->id . '-' . $userId);
+			}
+
 			$Permission->create();
 			$Permission->set($data);
 			if (!$Permission->validates()) {
+				// @todo treat this error.
 				var_dump(User::get('User.id'));
 				var_dump($Permission->validationErrors);
 				$this->Message->error($Permission->validationErrors);

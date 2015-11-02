@@ -139,14 +139,15 @@ class CommentTest extends AppTestCase {
 		$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
 
 		// test with a good resource
+		$resourceId = Common::uuid('resource.id.facebook-account');
 		$testcase = array(
 			'Comment' => array(
-				'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+				'foreign_id' => $resourceId,
 				'foreign_model' => 'Resource'
 			)
 		);
 		$this->Comment->set($testcase);
-		$msg = 'comment on Ressource 509bb871-5168-49d4-a676-fb098cebc04d should be allowed';
+		$msg = 'comment on Ressource ' . $resourceId . ' should be allowed';
 		$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_id'))), true, $msg);
 
 		// test with a bad resource

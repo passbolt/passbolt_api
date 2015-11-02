@@ -23129,7 +23129,7 @@ define('app/model/profile', [
     $__1;
     $__2;
     var Profile = passbolt.model.Profile = mad.Model.extend('passbolt.model.Profile', {
-            validateRules: {},
+            checkServerRules: true,
             attributes: {
                 id: 'string',
                 first_name: 'string',
@@ -23187,12 +23187,7 @@ define('app/model/user', [
     $__3;
     var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', {
             current: null,
-            validateRules: {
-                username: [
-                    'email',
-                    'required'
-                ]
-            },
+            checkServerRules: true,
             attributes: {
                 id: 'string',
                 username: 'string',
@@ -24234,45 +24229,7 @@ define('app/view/template/form/user/create.ejs!lib/can/view/ejs/system', ['can/v
                     return ___v1ew.join('');
                 }));
                 ___v1ew.push(' ', can.view.pending({ scope: this }), '/>');
-                ___v1ew.push('\n\t\t<div id="js_field_username_feedback" class="message">\n\t\t</div>\n\t</div>\n    ');
-                ___v1ew.push(can.view.txt(0, 'div', 0, this, function () {
-                    var ___v1ew = [];
-                    if (action != 'create') {
-                        ___v1ew.push('\n\t');
-                        ___v1ew.push(can.view.txt(0, 'div', 0, this, function () {
-                            var ___v1ew = [];
-                            if (role != 'admin' || role == 'admin' && user.id == passbolt.model.User.getCurrent().id) {
-                                ___v1ew.push('\n\t<div class="input text input-current-password-wrapper clearfix">\n\t\t<div class="input current_password required short">\n\t\t\t<label for="js_field_current_password">');
-                                ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
-                                    return __('Current login password');
-                                }));
-                                ___v1ew.push('</label>\n\t\t\t<input name="passbolt.model.User.current_password" class="required" maxlength="50" type="password" id="js_field_current_password" placeholder="password"/>\n\t\t\t<input class="required" maxlength="50" type="text" id="js_field_current_password_clear" placeholder="password"/>\n\t\t</div>\n\t\t<ul class="actions inline">\n\t\t\t<li>\n\t\t\t\t<a href="#" id="js_show_curr_pwd_button" class="button toggle">\n\t\t\t\t\t<i class="icon eye big no-text"></i>\n\t\t\t\t\t<span>');
-                                ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
-                                    return __('view');
-                                }));
-                                ___v1ew.push('</span>\n\t\t\t\t</a>\n\t\t\t</li>\n\t\t</ul>\n\t\t<div id="js_field_current_password_feedback" class="message"></div>\n\t</div>\n\t');
-                            }
-                            ;
-                            return ___v1ew.join('');
-                        }));
-                        ___v1ew.push('\n\t<div class="input text input-password-wrapper clearfix">\n\t\t<div class="input password required short">\n\t\t\t<label for="js_field_password">');
-                        ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
-                            return __('New login password');
-                        }));
-                        ___v1ew.push('</label>\n\t\t\t<input name="passbolt.model.User.password" class="required" maxlength="50" type="password" id="js_field_password" placeholder="password"/>\n\t\t\t<input class="required" maxlength="50" type="text" id="js_field_password_clear" placeholder="password"/>\n\t\t</div>\n\t\t<ul class="actions inline">\n\t\t\t<li>\n\t\t\t\t<a href="#" id="js_show_pwd_button" class="button toggle">\n\t\t\t\t\t<i class="icon eye big no-text"></i>\n\t\t\t\t\t<span>');
-                        ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
-                            return __('view');
-                        }));
-                        ___v1ew.push('</span>\n\t\t\t\t</a>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t\t<a href="#" id="js_gen_pwd_button" class="button">\n\t\t\t\t\t<i class="icon key big no-text"></i>\n\t\t\t\t\t<span>');
-                        ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
-                            return __('generate');
-                        }));
-                        ___v1ew.push('</span>\n\t\t\t\t</a>\n\t\t\t</li>\n\t\t</ul>\n\t\t<div id="js_user_pwd_strength" class="password-complexity">\n\t\t</div>\n\t</div>\n\t');
-                    }
-                    ;
-                    return ___v1ew.join('');
-                }));
-                ___v1ew.push('\n\t<div class="input text required">\n\t\t<label for="js_field_role_id">');
+                ___v1ew.push('\n\t\t<div id="js_field_username_feedback" class="message">\n\t\t</div>\n\t</div>\n\t<div class="input text required">\n\t\t<label for="js_field_role_id">');
                 ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
                     return __('Role');
                 }));
@@ -24294,7 +24251,7 @@ define('app/view/template/form/user/create.ejs!lib/can/view/ejs/system', ['can/v
                 ___v1ew.push(can.view.txt(0, 'div', 0, this, function () {
                     var ___v1ew = [];
                     if (action == 'create') {
-                        ___v1ew.push('\n\t<div class="input text required">\n\t\t<label for="js_field_last_name">');
+                        ___v1ew.push('\n\t<div class="input text required">\n\t\t<label for="js_field_email_user">');
                         ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
                             return __('Password');
                         }));
@@ -24347,8 +24304,6 @@ define('app/form/user/create', [
     var CreateForm = passbolt.form.user.Create = mad.Form.extend('passbolt.form.user.Create', {
             defaults: {
                 templateBased: true,
-                passwordField: null,
-                currentPasswordField: null,
                 action: 'create',
                 templateUri: 'app/view/template/form/user/create.ejs'
             }
@@ -24359,92 +24314,30 @@ define('app/form/user/create', [
                 this.addElement(new mad.form.Textbox($('#js_field_first_name'), { modelReference: 'passbolt.model.User.Profile.first_name' }).start(), new mad.form.Feedback($('#js_field_first_name_feedback'), {}).start());
                 this.addElement(new mad.form.Textbox($('#js_field_last_name'), { modelReference: 'passbolt.model.User.Profile.last_name' }).start(), new mad.form.Feedback($('#js_field_last_name_feedback'), {}).start());
                 var roles = {};
-                console.log(mad.config);
                 roles[cakephpConfig.roles.admin] = __('This user is an administrator');
                 roles[cakephpConfig.roles.user] = __('This user is a normal user');
+                var valueClasses = {};
+                valueClasses[cakephpConfig.roles.admin] = 'role-admin';
+                valueClasses[cakephpConfig.roles.user] = 'role-user';
                 this.options.role = new mad.form.Checkbox($('#js_field_role_id'), {
                     name: 'role_id',
                     modelReference: 'passbolt.model.User.role_id',
-                    availableValues: roles
+                    availableValues: roles,
+                    valueClasses: valueClasses
                 }).start();
                 this.addElement(this.options.role, new mad.form.Feedback($('#js_field_role_id_feedback'), {}).start());
+                this.options.role.setValue(cakephpConfig.roles.user);
                 $('input[type=checkbox]', $('#js_field_role_id')).not('[value=\'' + cakephpConfig.roles.admin + '\']').hide().next('label').hide();
                 this.addElement(new mad.form.Textbox($('#js_field_username'), { modelReference: 'passbolt.model.User.username' }).start(), new mad.form.Feedback($('#js_field_username_feedback'), {}).start());
-                if (this.options.action != 'create') {
-                    this.options.passwordField = new mad.form.Textbox($('#js_field_password'), { modelReference: 'passbolt.model.User.password' }).start();
-                    this.addElement(this.options.passwordField);
-                    this.options.passwordClear = this.addElement(new mad.form.Textbox($('#js_field_password_clear'), { state: 'hidden' }).start());
-                    var userRole = passbolt.model.User.getCurrent().Role.name;
-                    var userId = this.options.data.id;
-                    if (userRole != 'admin' || userRole == 'admin' && userId == passbolt.model.User.getCurrent().id) {
-                        this.options.currentPasswordField = new mad.form.Textbox($('#js_field_current_password'), { modelReference: 'passbolt.model.User.current_password' }).start();
-                        this.addElement(this.options.currentPasswordField, new mad.form.Feedback($('#js_field_current_password_feedback'), {}).start());
-                        this.options.currentPasswordClear = this.addElement(new mad.form.Textbox($('#js_field_current_password_clear'), { state: 'hidden' }).start());
-                        this.options.showCurrPwdButton = new mad.component.Button($('#js_show_curr_pwd_button')).start();
-                    }
-                    this.options.showPwdButton = new mad.component.Button($('#js_show_pwd_button')).start();
-                    this.options.genPwdButton = new mad.component.Button($('#js_gen_pwd_button')).start();
-                    var secret = can.getObject('data.Secret.data', this.options);
-                    var secretStrength = passbolt.model.SecretStrength.getSecretStrength(secret);
-                    this.options.secretStrength = new passbolt.component.SecretStrength($('#js_user_pwd_strength'), { secretStrength: secretStrength }).start();
-                }
                 this.on();
             },
-            updateSecretEntropy: function (pwd) {
-                var secretStrength = passbolt.model.SecretStrength.getSecretStrength(pwd);
-                this.options.secretStrength.load(secretStrength);
-            },
-            '{passwordField} changed': function (el, ev) {
-                if (this.options.passwordField) {
-                    this.updateSecretEntropy(this.options.passwordField.getValue());
-                }
-            },
-            '{passwordClear} changed': function (el, ev) {
-                var value = this.getElement('js_field_password_clear').getValue();
-                this.getElement('js_field_password').setValue(value);
-                this.updateSecretEntropy(value);
-            },
-            '{role} checked': function (el, ev, roleId) {
-                this.options.role.setValue(roleId);
-            },
-            '{role} changed': function (el, ev, val) {
-                if (val.value.length == 0) {
+            '{role.element} changed': function (el, ev, val) {
+                var adminSelected = $.inArray(cakephpConfig.roles.admin, val.value);
+                if (adminSelected !== -1) {
+                    this.options.role.setValue(cakephpConfig.roles.admin);
+                } else {
                     this.options.role.setValue(cakephpConfig.roles.user);
                 }
-            },
-            '{showPwdButton} click': function (el, ev) {
-                var password = this.getElement('js_field_password');
-                var passwordClear = this.getElement('js_field_password_clear');
-                if (password.state.is('hidden')) {
-                    passwordClear.setState('hidden');
-                    password.setState('ready');
-                    this.options.showPwdButton.view.removeClass('selected');
-                } else {
-                    password.setState('hidden');
-                    passwordClear.setState('ready');
-                    passwordClear.setValue(password.getValue());
-                    this.options.showPwdButton.view.addClass('selected');
-                }
-            },
-            '{showCurrPwdButton} click': function (el, ev) {
-                var password = this.getElement('js_field_current_password');
-                var passwordClear = this.getElement('js_field_current_password_clear');
-                if (password.state.is('hidden')) {
-                    passwordClear.setState('hidden');
-                    password.setState('ready');
-                    this.options.showCurrPwdButton.view.removeClass('selected');
-                } else {
-                    password.setState('hidden');
-                    passwordClear.setState('ready');
-                    passwordClear.setValue(password.getValue());
-                    this.options.showCurrPwdButton.view.addClass('selected');
-                }
-            },
-            '{genPwdButton} click': function (el, ev) {
-                var value = passbolt.model.Secret.generate();
-                this.getElement('js_field_password').setValue(value);
-                this.getElement('js_field_password_clear').setValue(value);
-                this.updateSecretEntropy(value);
             }
         });
     var $__default = CreateForm;
@@ -25675,6 +25568,19 @@ define('app/model/permission', [
                     return def;
                 });
             },
+            searchUsers: function (params, success, error) {
+                return mad.net.Ajax.request({
+                    url: APP_URL + '/share/search-users/{model}/{id}.json',
+                    type: 'GET',
+                    params: params,
+                    success: success,
+                    error: error
+                }).pipe(function (data, textStatus, jqXHR) {
+                    var def = $.Deferred();
+                    def.resolveWith(this, [passbolt.model.User.models(data)]);
+                    return def;
+                });
+            },
             isAllowedTo: function (objs, requestedPermission) {
                 var permission = null;
                 var returnValue = null;
@@ -26560,6 +26466,9 @@ define('mad/component/contextual_menu', [
                     'x': null,
                     'y': null
                 }
+            },
+            remove: function () {
+                $('#js_contextual_menu', $(mad.config.rootElement)).remove();
             }
         }, {
             init: function (el, options) {
@@ -26578,7 +26487,7 @@ define('mad/component/contextual_menu', [
             },
             destroy: function () {
                 this._super();
-                $('#js_contextual_menu', $(mad.config.rootElement)).remove();
+                mad.component.ContextualMenu.remove();
             }
         });
     var $__default = ContextualMenu;
@@ -26601,10 +26510,16 @@ define('mad/form/choice_element', [
         $__1 = { default: $__1 };
     $__0;
     $__1;
-    var ChoiceElement = mad.form.ChoiceElement = mad.form.Element.extend('mad.form.ChoiceElement', { defaults: { availableValues: {} } }, {
+    var ChoiceElement = mad.form.ChoiceElement = mad.form.Element.extend('mad.form.ChoiceElement', {
+            defaults: {
+                availableValues: {},
+                valueClasses: {}
+            }
+        }, {
             beforeRender: function () {
                 this._super();
                 this.setViewData('availableValues', this.options.availableValues);
+                this.setViewData('valueClasses', this.options.valueClasses);
             }
         });
     var $__default = ChoiceElement;
@@ -26672,7 +26587,12 @@ define('mad/view/template/form/checkbox.ejs!lib/can/view/ejs/system', ['can/view
                     var ___v1ew = [];
                     for (var value in availableValues) {
                         var u = uuid();
-                        ___v1ew.push('\n<div class="input checkbox">\n\t<input type="checkbox" value="');
+                        ___v1ew.push('\n<div class="input checkbox');
+                        ___v1ew.push(can.view.txt(true, 'div', 'class', this, function () {
+                            return valueClasses[value] !== undefined ? ' ' + valueClasses[value] : '';
+                        }));
+                        ___v1ew.push('"', can.view.pending({ scope: this }), '>');
+                        ___v1ew.push('\n\t<input type="checkbox" value="');
                         ___v1ew.push(can.view.txt(true, 'input', 'value', this, function () {
                             return value;
                         }));
@@ -28314,12 +28234,13 @@ define('app/component/permissions', [
                 this.load(this.options.acoInstance);
             },
             autocompleteAro: function (value) {
-                var request = passbolt.model.User.findAll({ keywords: value }).then(function (users) {
+                var request = passbolt.model.Permission.searchUsers({
+                        keywords: value,
+                        model: this.options.acoInstance.constructor.shortName,
+                        id: this.options.acoInstance.id
+                    }).then(function (users) {
                         var returnValue = [];
-                        var currentUser = passbolt.model.User.getCurrent();
                         users.each(function (user, i) {
-                            if (user.id == currentUser.id)
-                                return;
                             returnValue.push(new mad.Model({
                                 id: user.id,
                                 label: user.username,
@@ -28842,6 +28763,10 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -28934,8 +28859,6 @@ define('app/form/comment/create', [
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/component/comments*/
 define('app/component/comments', [
     'app/model/comment',
@@ -29023,8 +28946,6 @@ define('app/component/comments', [
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/component/sidebar_section*/
 define('app/component/sidebar_section', ['mad/view/component/tree'], function ($__0) {
     'use strict';
@@ -30610,6 +30531,7 @@ define('app/component/user_browser', [
                 users: new can.Model.List(),
                 groups: [],
                 selectedUsers: new can.Model.List(),
+                prefixItemId: 'user_',
                 silentLoading: false
             }
         }, {
@@ -30690,8 +30612,9 @@ define('app/component/user_browser', [
                 this._super(el, options);
             },
             showContextualMenu: function (item, x, y, eventTarget) {
-                var $item = $('#' + item.id);
+                var $item = $('#' + this.options.prefixItemId + item.id);
                 var item_offset = $item.offset();
+                var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
                 var contextualMenu = new mad.component.ContextualMenu(null, {
                         state: 'hidden',
                         source: eventTarget,
@@ -30702,7 +30625,7 @@ define('app/component/user_browser', [
                     });
                 contextualMenu.start();
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_user_browser_menu_copy_key',
                         label: 'Copy public key',
                         action: function (menu) {
                             var data = {
@@ -30715,9 +30638,9 @@ define('app/component/user_browser', [
                     });
                 contextualMenu.insertItem(action);
                 var action = new mad.model.Action({
-                        id: uuid(),
+                        id: 'js_user_browser_menu_copy_email',
                         label: 'Copy email address',
-                        cssClasses: ['separator-after'],
+                        cssClasses: isAdmin ? ['separator-after'] : [],
                         action: function (menu) {
                             var data = {
                                     name: 'email',
@@ -30728,24 +30651,26 @@ define('app/component/user_browser', [
                         }
                     });
                 contextualMenu.insertItem(action);
-                var action = new mad.model.Action({
-                        id: uuid(),
-                        label: 'Edit',
-                        action: function (menu) {
-                            mad.bus.trigger('request_user_edition', item);
-                            menu.remove();
-                        }
-                    });
-                contextualMenu.insertItem(action);
-                var action = new mad.model.Action({
-                        id: uuid(),
-                        label: 'Delete',
-                        action: function (menu) {
-                            mad.bus.trigger('request_user_deletion', item);
-                            menu.remove();
-                        }
-                    });
-                contextualMenu.insertItem(action);
+                if (isAdmin) {
+                    var action = new mad.model.Action({
+                            id: 'js_user_browser_menu_edit',
+                            label: 'Edit',
+                            action: function (menu) {
+                                mad.bus.trigger('request_user_edition', item);
+                                menu.remove();
+                            }
+                        });
+                    contextualMenu.insertItem(action);
+                    var action = new mad.model.Action({
+                            id: 'js_user_browser_menu_delete',
+                            label: 'Delete',
+                            action: function (menu) {
+                                mad.bus.trigger('request_user_deletion', item);
+                                menu.remove();
+                            }
+                        });
+                    contextualMenu.insertItem(action);
+                }
                 contextualMenu.setState('ready');
             },
             insertItem: function (user, refUserId, position) {
@@ -31405,7 +31330,13 @@ define('app/component/people_workspace', [
                 if (!this.element)
                     return;
                 var user = new passbolt.model.User({ active: 1 });
-                var dialog = new mad.component.Dialog(null, { label: __('Add User') }).start();
+                var dialog = new mad.component.Dialog(null, {
+                        label: __('Add User'),
+                        cssClasses: [
+                            'create-user-dialog',
+                            'dialog-wrapper'
+                        ]
+                    }).start();
                 var form = dialog.add(passbolt.form.user.Create, {
                         data: user,
                         action: 'create',
@@ -31427,7 +31358,13 @@ define('app/component/people_workspace', [
                     return;
                 var self = this;
                 user = this.options.selectedUsers[0];
-                var dialog = new mad.component.Dialog(null, { label: __('Edit User') }).start();
+                var dialog = new mad.component.Dialog(null, {
+                        label: __('Edit User'),
+                        cssClasses: [
+                            'edit-user-dialog',
+                            'dialog-wrapper'
+                        ]
+                    }).start();
                 var form = dialog.add(passbolt.form.user.Create, {
                         data: user,
                         action: 'edit',
@@ -32287,6 +32224,7 @@ define('app/component/app', [
                     return;
                 }
                 $('#js_app_panel_main').empty();
+                mad.component.ContextualMenu.remove();
                 $('#container').removeClass(this.options.workspaces.join(' ')).addClass(workspace);
                 var workspaceId = 'js_passbolt_' + workspace + '_workspace_controller', workspaceClass = passbolt.component[can.capitalize(workspace) + 'Workspace'], workspaceOptions = {
                         id: workspaceId,

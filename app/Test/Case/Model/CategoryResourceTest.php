@@ -56,7 +56,7 @@ class CategoryResourceTest extends CakeTestCase {
 			$cr = array(
 				'CategoryResource' => array(
 					'category_id' => $testcase,
-					'resource_id' => '50d77ff9-c358-4dfb-be34-1b63d7a10fce' // resource_id is passed here because when we don't pass it test fails for obscure reasons
+					'resource_id' => Common::uuid('resource.id.salesforce-account') // resource_id is passed here because when we don't pass it test fails for obscure reasons
 				)
 			);
 			$this->CategoryResource->create();
@@ -84,7 +84,7 @@ class CategoryResourceTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'50d77ffb-afb4-4a73-85fd-1b63d7a10fce' => true
+			Common::uuid('resource.id.cpp2-pwd2') => true
 		);
 		foreach ($testcases as $testcase => $result) {
 			$cr = array(

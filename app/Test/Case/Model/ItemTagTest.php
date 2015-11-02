@@ -44,7 +44,7 @@ class ItemTagTest extends CakeTestCase {
 			'ItemTag' => array(
 				'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
 				'foreign_model' => 'Resource',
-				'foreign_id' => '408bb871-5168-49d4-a676-fb098cebc04d'
+				'foreign_id' => Common::uuid('resource.id.utest1-pwd1')
 			)
 		);
 		$this->ItemTag->create();
@@ -54,7 +54,7 @@ class ItemTagTest extends CakeTestCase {
 		$this->assertEquals($validation, false, 'It should not be possible to associate a resource and a tag twice');
 
 		$this->ItemTag->set($tr);
-		$validation = $this->ItemTag->uniqueCombi(array('foreign_id' => '408bb871-5168-49d4-a676-fb098cebc04d'));
+		$validation = $this->ItemTag->uniqueCombi(array('foreign_id' => Common::uuid('resource.id.utest1-pwd1')));
 		$this->assertEquals($validation, false, 'It should not be possible to associate a resource and a tag twice');
 	}
 
@@ -81,7 +81,7 @@ class ItemTagTest extends CakeTestCase {
 		$this->assertEquals($result, false, 'Empty ressource should not be found');
 		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource','foreign_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEquals($result, false, 'Not existing resource should not be found');
-		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource', 'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d'));
+		$result = $this->ItemTag->itemExists(array('foreign_model' => 'Resource', 'foreign_id' => Common::uuid('resource.id.facebook-account')));
 		$this->assertEquals($result, true, 'Facebook password should be found');
 	}
 
@@ -134,7 +134,7 @@ class ItemTagTest extends CakeTestCase {
 			'' => false, '?!#' => false, 'test' => false,
 			'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
 			'zzz00003-c5cd-11e1-a0c5-080027796c4c' => false,
-			'509bb871-5168-49d4-a676-fb098cebc04d' => true,
+			Common::uuid('resource.id.facebook-account') => true,
 		);
 		// we test unicity separately
 		unset($this->ItemTag->validate['foreign_id']['uniqueCombi']);

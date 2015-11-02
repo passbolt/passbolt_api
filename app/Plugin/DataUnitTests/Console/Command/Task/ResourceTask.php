@@ -18,10 +18,12 @@ class ResourceTask extends ModelTask {
 
 	public function execute() {
 		$Model = ClassRegistry::init($this->model);
-		// @todo work on permissionable and save
-		//$Model->hasOne = array();
-		$Model->Behaviors->disable('Permissionable');
+
+		// Disable the trackable behavior to be able to use custom created_by and modified_by values.
+		$Model->Behaviors->disable('Trackable');
+		// Retrieve the data to insert.
 		$data = $this->getData();
+
 		foreach ($data as $item) {
 			$Model->create();
 			$Model->set($item);
@@ -37,16 +39,18 @@ class ResourceTask extends ModelTask {
 
 	protected function getData() {
 		$r[] = array('Resource'=>array(
-			'id' => '408bb871-5168-49d4-a676-fb098cebc04d',
+			'id' => Common::uuid('resource.id.utest1-pwd1'),
 			'name' => 'utest1-pwd1',
 			'username' => 'unitTest1',
 			'expiry_date' => null,
 			'uri' => 'https://unit-test.com',
 			'description' => 'description',
-			'deleted' => 0
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.anonymous'),
+			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'id' => Common::uuid('resource.id.facebook-account'),
 			'name' => 'facebook account',
 			'username' => 'passbolt',
 			'expiry_date' => null,
@@ -59,7 +63,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.irene')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '509bb871-b964-48ab-94fe-fb098cebc04d',
+			'id' => Common::uuid('resource.id.bank-password'),
 			'name' => 'bank password',
 			'username' => 'passbolt',
 			'expiry_date' => null,
@@ -72,7 +76,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.irene')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ff9-c358-4dfb-be34-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.salesforce-account'),
 			'name' => 'salesforce account',
 			'username' => 'passbolt',
 			'expiry_date' => null,
@@ -85,7 +89,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ff9-fdd8-4035-b7c6-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.tetris-license'),
 			'name' => 'tetris license',
 			'username' => 'passbolt',
 			'expiry_date' => null,
@@ -98,7 +102,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffa-7278-41fc-a4bb-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.cpp1-pwd1'),
 			'name' => 'cpp1-pwd1',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -111,7 +115,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffa-9b04-42e9-9974-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.cpp1-pwd2'),
 			'name' => 'cpp1-pwd2',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -124,7 +128,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffb-40fc-472b-9fc6-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.cpp2-pwd1'),
 			'name' => 'cpp2-pwd1',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -137,7 +141,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffb-afb4-4a73-85fd-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.cpp2-pwd2'),
 			'name' => 'cpp2-pwd2',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -150,7 +154,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffb-d254-49e4-ac86-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.dp1-pwd1'),
 			'name' => 'dp1-pwd1',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -163,7 +167,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffb-d290-49e4-ac86-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.dp2-pwd1'),
 			'name' => 'dp2-pwd1',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -176,7 +180,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));		
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffd-3294-4db8-89f6-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.op1-pwd2'),
 			'name' => 'op1-pwd2',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -189,7 +193,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffd-5624-492c-842e-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.shared-resource'),
 			'name' => 'shared resource',
 			'username' => 'admin',
 			'expiry_date' => null,
@@ -202,7 +206,7 @@ class ResourceTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$r[] = array('Resource'=>array(
-			'id' => '50d77ffd-d54c-4bd3-b947-1b63d7a10fce',
+			'id' => Common::uuid('resource.id.op1-pwd1'),
 			'name' => 'op1-pwd1',
 			'username' => 'admin',
 			'expiry_date' => null,

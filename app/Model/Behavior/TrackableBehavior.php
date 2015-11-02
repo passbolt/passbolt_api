@@ -7,7 +7,7 @@
  * @package      app.Model.Behavior.TrackableBehavior
  * @since        version 2.12.7
  */
- 
+
 App::uses('User', 'Model');
 
 class TrackableBehavior extends ModelBehavior {

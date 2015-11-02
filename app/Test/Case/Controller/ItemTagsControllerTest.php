@@ -114,7 +114,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 		$tagList = array("tag1", "tag2", "tag3");
 		$tagListStr = implode(',', $tagList);
-		$id = '509bb871-5168-49d4-a676-fb098cebc04d';
+		$id = Common::uuid('resource.id.facebook-account');
 		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", array(
 					'data' => array(
 						'ItemTag' => array(
@@ -136,7 +136,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 		$tagList = array("tag1", "tag2", "tag3", "newTag");
 		$tagListStr = implode(',', $tagList);
-		$id = '509bb871-5168-49d4-a676-fb098cebc04d';
+		$id = Common::uuid('resource.id.facebook-account');
 		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", array(
 					'data' => array(
 						'ItemTag' => array(

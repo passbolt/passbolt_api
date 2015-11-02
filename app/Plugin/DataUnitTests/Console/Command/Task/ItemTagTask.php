@@ -16,47 +16,65 @@ class ItemTagTask extends ModelTask {
 
 	public $model = 'ItemTag';
 
+	public function execute() {
+		$User = ClassRegistry::init('User');
+		$user = $User->findByUsername('root@passbolt.com');
+		$User->setActive($user);
+		$Model = ClassRegistry::init($this->model);
+		$Model->Resource->Behaviors->disable('Permissionable');
+
+		$data = $this->getData();
+		foreach ($data as $item) {
+			$Model->create();
+			$Model->set($item);
+			if (!$Model->validates()) {
+				var_dump($Model->validationErrors);
+			}
+			$instance = $Model->save();
+			if (!$instance) {
+				$this->out('<error>Unable to insert ' . pr($item[$this->model]) . '</error>');
+				die;
+			}
+		}
+	}
+
 	protected function getData() {
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Tag = ClassRegistry::init('Tag');
 
 		$tag = $this->Tag->findByName('banking');
-		$rs = $this->Resource->findByName('bank password');
 		$rts[] = array('ItemTag' => array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
 			'tag_id' => $tag['Tag']['id'],
 			'foreign_model' => 'Resource',
-			'foreign_id' => $rs['Resource']['id'],
+			'foreign_id' => Common::uuid('resource.id.bank-password'),
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$tag = $this->Tag->findByName('facebook');
-		$rs = $this->Resource->findByName('facebook account');
 		$rts[] = array('ItemTag' => array(
 			'id' => '10be2d3a-0468-432b-b49f-3153d7a82fce',
 			'tag_id' => $tag['Tag']['id'],
 			'foreign_model' => 'Resource',
-			'foreign_id' => $rs['Resource']['id'],
+			'foreign_id' => Common::uuid('resource.id.facebook-account'),
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$tag = $this->Tag->findByName('social');
-		$rs = $this->Resource->findByName('facebook account');
 		$rts[] = array('ItemTag' => array(
 			'id' => '10be2d3a-0468-432b-b58f-3153d7a83fce',
 			'tag_id' => $tag['Tag']['id'],
 			'foreign_model' => 'Resource',
-			'foreign_id' => $rs['Resource']['id'],
+			'foreign_id' => Common::uuid('resource.id.facebook-account'),
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$tag = $this->Tag->findByName('drupal');
-		$rs = $this->Resource->findByName('dp1-pwd1');
 		$rts[] = array('ItemTag' => array(
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
 			'tag_id' => $tag['Tag']['id'],
 			'foreign_model' => 'Resource',
-			'foreign_id' => $rs['Resource']['id'],
+			'foreign_id' => Common::uuid('resource.id.dp1-pwd1'),
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => Common::uuid('user.id.anonymous')
 		));

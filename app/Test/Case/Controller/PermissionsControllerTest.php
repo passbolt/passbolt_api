@@ -110,38 +110,39 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test view aco permissions action with a not allowed user
 	// not allowed => Permission.type < PermissionType::READ (In other words 0)
-	public function testViewAcoPermissionsUserNotAllowed() {	
+	public function testViewAcoPermissionsUserNotAllowed() {
 		$getOptions = array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		);
-		
+
 		// try to get permissions on a Resource with a not allowed user
 		$categoryName = 'o-project1';
 		$category = $this->Category->findByName($categoryName);
 		$id = $category['Category']['id'];
-		
+
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "The Category does not exist");
-		
+
 		// log the user who is not allowed to access the category
 		$user = $this->User->findByUsername('edith@passbolt.com');
 		$this->User->setActive($user);
-		
+
 		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $getOptions), true);
 		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/category/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
-	
+
 	// test view aco permissions on Resource Aco
 	public function testViewAcoPermissionsOnResource() {
 		$getOptions = array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		);
-		
+
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
+			Common::uuid('permission.id.' . Common::uuid('resource.id.op1-pwd1') . '-' . Common::uuid('user.id.anonymous')), // Dame is the owner
 			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
 			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
 			'50e6b4af-ad14-4659-a60d-23a4d7a10fce', // Ada lovelace have admin rights on others
@@ -159,12 +160,13 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertNotNull(count($srvResult['body']), "We expect permissions for the resources {$resourceName}");
 		// All expected permissions are in the server answer
 		foreach($srvResult['body'] as $perm) {
-			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the resource $resourceName"); 
+			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the resource $resourceName");
 		}
-		
+
 		// Check mix group and user
 		// Check permission on the resource cpp1-pwd1
 		$expectedPermissions = array(
+			Common::uuid('permission.id.' . Common::uuid('resource.id.cpp1-pwd1') . '-' . Common::uuid('user.id.anonymous')), // Dame is the owner
 			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
 			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
 			'50e6b4af-c390-4e5e-a8f8-23a4d7a10fce', // user jean rene (ean rené can access projects > cakephp > cp-project1 > cpp1-pwd1 in readonly)
@@ -182,7 +184,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertNotNull(count($srvResult['body']), "We expect permissions for the resources {$resourceName}");
 		// All expected permissions are in the server answer
 		foreach($srvResult['body'] as $perm) {
-			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the resource {$resourceName}"); 
+			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the resource {$resourceName}");
 		}
 	}
 
@@ -191,7 +193,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'method' => 'get',
 			 'return' => 'contents'
 		);
-				
+
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
@@ -207,12 +209,12 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$category = $this->Category->findByName($catName);
 		$id = $category['Category']['id'];
 		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $getOptions), true);
-		
+
 		// How many results we expect
 		$this->assertNotEmpty($srvResult['body'], $expectedCount, 'We expect permissions for the category ' . $catName);
 		// All expected permissions are in the server answer
 		foreach($srvResult['body'] as $perm) {
-			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the category {$catName}"); 
+			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the category {$catName}");
 		}
 	}
 
@@ -255,19 +257,19 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test view aco permissions action with a not allowed user
 	// not allowed => Permission.type < PermissionType::READ (In other words 0)
-	public function testAddAcoPermissionsUserNotAllowed() {	
+	public function testAddAcoPermissionsUserNotAllowed() {
 		// try to get permissions on a Resource with a not allowed user
 		$categoryName = 'o-project1';
 		$category = $this->Category->findByName($categoryName);
 		$id = $category['Category']['id'];
-		
+
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Category");
-		
+
 		// log the user who is not allowed to access the category
 		$user = $this->User->findByUsername('edith@passbolt.com');
 		$this->User->setActive($user);
-		
+
 		$data = array(
 			'Permission' => array(
 				'type' => PermissionType::READ
@@ -281,15 +283,15 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'return' => 'contents',
 			 'data' => $data
 		);
-		
+
 		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $postOptions), true);
 	}
-	
-	public function testAddAcoPermissionsOnResource() {	
+
+	public function testAddAcoPermissionsOnResource() {
 		// log with a user who has right on the unit test sandbox category
 		$user = $this->User->findByUsername('kathleen@passbolt.com');
 		$this->User->setActive($user);
-		
+
 		// Add a permisision for a given user to a given category
 		$model = 'resource';
 		$resName = 'utest1-pwd1';
@@ -304,7 +306,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 				'id' => Common::uuid('user.id.edith') // edith@passbolt.com, but we can put any other users
 			)
 		);
-		
+
 		// check how many permissions are already existing before the new insertion
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'get',
@@ -336,11 +338,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 		);
 	}
 
-	public function testAddAcoPermissionsOnResourceExistingPermission() {	
+	public function testAddAcoPermissionsOnResourceExistingPermission() {
 		// log with a user who has right on the unit test sandbox category
 		$user = $this->User->findByUsername('kathleen@passbolt.com');
 		$this->User->setActive($user);
-		
+
 		// Add a permisision for a given user to a given category
 		$model = 'resource';
 		$resName = 'utest1-pwd1';
@@ -355,7 +357,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 				'id' => Common::uuid('user.id.edith') // test@passbolt.com, but we can put any other users
 			)
 		);
-		
+
 		// insert the new permission
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
 			 'method' => 'post',
@@ -454,17 +456,17 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test edit aco permissions action with a not allowed user
 	// not allowed => Permission.type < PermissionType::UPDATE
-	public function testEditUserNotAllowed() {	
+	public function testEditUserNotAllowed() {
 		// try to get permissions on a Resource with a not allowed user
 		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
-		
+
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "You are not allowed to edit this permission");
-		
+
 		// log the user who is not allowed to access the category
 		$user = $this->User->findByUsername('edith@passbolt.com');
 		$this->User->setActive($user);
-		
+
 		$postOptions = array(
 			'method' => 'put',
 			'return' => 'contents',
@@ -473,10 +475,10 @@ class PermissionsControllerTest extends ControllerTestCase {
 					'type' => PermissionType::DENY
 				)
 			)
-		);		
+		);
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
 	}
-	
+
 	public function testEdit() {
 		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
 		$postOptions = array(
@@ -488,15 +490,15 @@ class PermissionsControllerTest extends ControllerTestCase {
 				)
 			)
 		);
-		
+
 		// switch the permission of human resource on the category administration to deny
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
 		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
-		
+
 		// log the user with a user who belongs to the human resource group
 		$user = $this->User->findByUsername('irene@passbolt.com');
 		$this->User->setActive($user);
-		
+
 		// try to access to the category administration
 		$category = $this->Category->findByName('administration');
 		$this->assertEmpty($category, "The user " . User::get('name') . " should not be able to see the category administration");
@@ -523,17 +525,17 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test edit aco permissions action with a not allowed user
 	// not allowed => Permission.type < PermissionType::OWNER
-	public function testDeletePermissionNotAllowed() {	
+	public function testDeletePermissionNotAllowed() {
 		// try to get permissions on a Resource with a not allowed user
 		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
-		
+
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "You are not allowed to delete this permission");
-		
+
 		// log the user who is not allowed to access the category
 		$user = $this->User->findByUsername('edith@passbolt.com');
 		$this->User->setActive($user);
-		
+
 		$postOptions = array(
 			'method' => 'delete',
 			'return' => 'contents',
@@ -542,46 +544,46 @@ class PermissionsControllerTest extends ControllerTestCase {
 					'type' => PermissionType::DENY
 				)
 			)
-		);		
+		);
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
 	}
-
-	// // test delete aco permissions action user not allowed
-	// public function testDeleteUserNotAllowed() {	
-		// // try to get permissions on a Resource with a not allowed user
-		// $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
-// 		
-		// // log the user who is not allowed to access the category
-		// $user = $this->User->findByUsername('edith@passbolt.com');
-		// $this->User->setActive($user);
-// 		
-		// $postOptions = array(
-			// 'method' => 'delete',
-			// 'return' => 'contents'
-		// );	
-		// $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
-		// // message should be : The user is not allowed to delete the permission
-		// $this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-	// }
-// 	
-	// // test delete
-	// public function testDelete() {
-		// $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
-		// $postOptions = array(
-			// 'method' => 'delete',
-			// 'return' => 'contents'
-		// );	
-// 		
-		// // switch the permission of human resource on the category administration to deny
-		// $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
-		// $this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
-// 		
-		// // log the user with a user who belongs to the human resource group
-		// $user = $this->User->findByUsername('irene@passbolt.com');
-		// $this->User->setActive($user);
-// 		
-		// // try to access to the category administration
-		// $category = $this->Category->findByName('administration');
-		// $this->assertEmpty($category, "The user " . User::get('name') . " should not be able to see the category administration");
-	// }
+//
+//	 // test delete aco permissions action user not allowed
+//	 public function testDeleteUserNotAllowed() {
+//		 // try to get permissions on a Resource with a not allowed user
+//		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+//
+//		 // log the user who is not allowed to access the category
+//		 $user = $this->User->findByUsername('edith@passbolt.com');
+//		 $this->User->setActive($user);
+//
+//		 $postOptions = array(
+//			 'method' => 'delete',
+//			 'return' => 'contents'
+//		 );
+//		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+//		 // message should be : The user is not allowed to delete the permission
+//		 $this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+//	 }
+//
+//	 // test delete
+//	 public function testDelete() {
+//		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+//		 $postOptions = array(
+//			 'method' => 'delete',
+//			 'return' => 'contents'
+//		 );
+//
+//		 // switch the permission of human resource on the category administration to deny
+//		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+//		 $this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+//
+//		 // log the user with a user who belongs to the human resource group
+//		 $user = $this->User->findByUsername('irene@passbolt.com');
+//		 $this->User->setActive($user);
+//
+//		 // try to access to the category administration
+//		 $category = $this->Category->findByName('administration');
+//		 $this->assertEmpty($category, "The user " . User::get('name') . " should not be able to see the category administration");
+//	 }
 }

@@ -172,7 +172,7 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 			success: success,
 			error: error
 		}).pipe(function (data, textStatus, jqXHR) {
-			//pipe the result to convert cakephp response format into can format
+			// pipe the result to convert cakephp response format into can format
 			var def = $.Deferred();
 			def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
 			return def;
