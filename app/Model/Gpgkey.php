@@ -8,11 +8,7 @@
  * @since        version 2.12.9
  */
 
-require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'vendor' . DS . 'autoload.php';
-require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp.php';
-require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_rsa.php';
-require_once APP . 'Vendor' . DS . 'openpgp-php' . DS . 'lib' . DS . 'openpgp_crypt_symmetric.php';
-
+App::import('Model/Utility', 'Gpg');
 
 class Gpgkey extends AppModel {
 
@@ -23,73 +19,6 @@ class Gpgkey extends AppModel {
     public $belongsTo = array(
         'User',
     );
-
-
-    /**
-     * Get Marker from a key.
-     *
-     * @param $keyData
-     *
-     * @return mixed
-     */
-    public function getMarker($keyData) {
-        $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $keyData, $values);
-        if (!$isMarker || !isset($values[2])) {
-            return false;
-        }
-        return $values[2];
-    }
-
-    /**
-     * Check the fingerprint of a key
-     *
-     * @param string $fingerprint
-     * @return mixed array or false if error
-     * @access public
-     */
-    public function info($keyData) {
-        // Try to unarmor the key.
-        // If it cannot, means the key is in the wrong format.
-        $marker = $this->getMarker($keyData);
-        if (!$marker) {
-            return false;
-        }
-        $keyUnarmored = OpenPGP::unarmor($keyData, $marker);
-        if ($keyUnarmored == false) {
-            // Key in wrong format, we return false.
-            return false;
-        }
-
-        // Get OpenPGP_Message.
-        $msg = OpenPGP_Message::parse($keyUnarmored);
-        // Get Public key.
-        $publicKey = OpenPGP_PublicKeyPacket::parse($keyUnarmored);
-        // Get Packets for public key.
-        $publicKeyPacket = $msg->packets[0];
-        // Get self signatures.
-        $self_signatures = $publicKeyPacket->self_signatures($msg);
-        // Get userId.
-        $userIds = array();
-        foreach($msg->signatures() as $signatures) {
-            foreach($signatures as $signature) {
-                if ($signature instanceof OpenPGP_UserIDPacket) {
-                    $userIds[] = sprintf('%s', $signature);
-                }
-            }
-        }
-
-        // Build information array.
-        $i = array(
-            'fingerprint' => $publicKeyPacket->fingerprint(),
-            'bits' => OpenPGP::bitlength($self_signatures[0]->data[0]),
-            'type' => $self_signatures[0]->key_algorithm_name(),
-            'key_id' => $publicKeyPacket->key_id,
-            'key_created' => $publicKey->timestamp,
-            'uid' => $userIds[0],
-            'expires' => $publicKeyPacket->expires($msg),
-        );
-        return $i;
-    }
 
     /**
      * Get the validation rules upon context
@@ -218,10 +147,15 @@ class Gpgkey extends AppModel {
     public function checkKeyIsImportable($check) {
         if ($check['key'] == null) {
             return false;
-        } else {
-            $importable = $this->info($check['key']);
-            return $importable;
         }
+        $gpg = new Passbolt\Gpg();
+	    try {
+		    $info = $gpg->getKeyInfo($check['key']);
+	    } catch(Exception $e) {
+		    return false;
+	    }
+        return is_array($info);
+
     }
 
     /**
@@ -250,7 +184,7 @@ class Gpgkey extends AppModel {
             return false;
         } else {
             $created = strtotime($check['key_created']);
-            $now = time();
+            $now = gmdate('U');
             $inPast = $now > $created;
             return $inPast;
         }
@@ -304,7 +238,9 @@ class Gpgkey extends AppModel {
             empty($this->data['Gpgkey']['fingerprint'])
         ) {
             $data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']['key']);
-            $this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
+	        if ($data !== false) {
+		        $this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
+	        }
         }
         return true;
     }
@@ -321,7 +257,9 @@ class Gpgkey extends AppModel {
             empty($this->data['Gpgkey']['fingerprint'])
         ) {
             $data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']['key']);
-            $this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
+	        if ($data !== false) {
+		        $this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
+	        }
         }
         return true;
     }
@@ -334,7 +272,13 @@ class Gpgkey extends AppModel {
      * @return mixed
      */
     public function buildGpgkeyDataFromKey($key) {
-        $info = $this->info($key);
+	    try {
+		    $gpg = new Passbolt\Gpg();
+		    $info = $gpg->getKeyInfo($key);
+	    } catch(Exception $e) {
+			return false;
+	    }
+
         if ($info) {
             $data['Gpgkey'] = array_merge (
                 array(
@@ -343,10 +287,10 @@ class Gpgkey extends AppModel {
                 $info
             );
             if (!empty ($data['Gpgkey']['expires'])) {
-                $data['Gpgkey']['expires'] = date('Y-m-d H:i:s', $data['Gpgkey']['expires']);
+                $data['Gpgkey']['expires'] = gmdate('Y-m-d H:i:s', $data['Gpgkey']['expires']);
             }
             if (!empty ($data['Gpgkey']['key_created'])) {
-                $data['Gpgkey']['key_created'] = date('Y-m-d H:i:s', $data['Gpgkey']['key_created']);
+                $data['Gpgkey']['key_created'] = gmdate('Y-m-d H:i:s', $data['Gpgkey']['key_created']);
             }
         }
         else {
@@ -424,5 +368,11 @@ class Gpgkey extends AppModel {
                 break;
         }
         return $fields;
+    }
+
+    static public function isValidFingerprint($fingerprint) {
+        // we expect a SHA1 fingerprint
+        $pattern = '/[A-Fa-f0-9]{40}/';
+        return preg_match($pattern, $fingerprint);
     }
 }

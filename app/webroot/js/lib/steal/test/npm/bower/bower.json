@@ -1,0 +1,7 @@
+{
+  "name": "main",
+  "main": "main",
+  "dependencies": {
+    "foo": "~1.0.0"
+  }
+}

@@ -1,0 +1,22 @@
+<script>
+	if(window.parent) {
+		window.QUnit = window.parent.QUnit;
+		window.removeMyself = window.parent.removeMyself;
+	}
+	
+</script>
+<script src="../steal.js"></script>
+<script>
+	
+	steal("pathed", function(pathed){
+		if(window.QUnit) {
+			QUnit.ok(true, "called back");
+			QUnit.start();
+			removeMyself();
+		} else {
+			console.log("pathed", pathed)
+		}
+	});
+	
+	
+</script>

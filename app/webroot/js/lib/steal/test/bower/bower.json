@@ -1,0 +1,21 @@
+{
+  "name": "bower-extension",
+  "version": "0.1.1",
+  "homepage": "https://github.com/matthewp/steal",
+  "authors": [
+    "Matthew Phillips <matthew@matthewphillips.info>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "jQuery-Collapse": "~1.1.1"
+  }
+}

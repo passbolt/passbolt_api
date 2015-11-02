@@ -269,7 +269,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		$pubKey = 'invalidkey';
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($user);
-		$this->setExpectedException('HttpException', 'Could not validate gpgkey data');
+		$this->setExpectedException('HttpException', 'The gpgkey provided could not be used');
 		$this->testAction('/gpgkeys.json',
 			array(
 				'data' => array(

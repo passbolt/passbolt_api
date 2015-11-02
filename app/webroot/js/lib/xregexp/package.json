@@ -1,0 +1,53 @@
+{
+  "name": "xregexp",
+  "version": "3.0.0",
+  "description": "Extended regular expressions",
+  "homepage": "http://xregexp.com/",
+  "author": {
+    "name": "Steven Levithan",
+    "email": "steves_list@hotmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slevithan/xregexp.git"
+  },
+  "keywords": [
+    "regex",
+    "regexp"
+  ],
+  "main": "xregexp-all.js",
+  "files": [
+    "LICENSE",
+    "xregexp-all.js"
+  ],
+  "scripts": {
+    "build": "./tools/concatenate-source.sh"
+  },
+  "gitHead": "8183679d136bda6c0d015160a912ce2e54375917",
+  "bugs": {
+    "url": "https://github.com/slevithan/xregexp/issues"
+  },
+  "_id": "xregexp@3.0.0",
+  "_shasum": "a04f25d9ffe16c1aee40ed521a1b1366e8d34636",
+  "_from": "xregexp@>=3.0.0 <3.1.0",
+  "_npmVersion": "2.14.3",
+  "_nodeVersion": "3.3.1",
+  "_npmUser": {
+    "name": "slevithan",
+    "email": "steves_list@hotmail.com"
+  },
+  "dist": {
+    "shasum": "a04f25d9ffe16c1aee40ed521a1b1366e8d34636",
+    "tarball": "http://registry.npmjs.org/xregexp/-/xregexp-3.0.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "slevithan",
+      "email": "steves_list@hotmail.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/xregexp/-/xregexp-3.0.0.tgz",
+  "readme": "ERROR: No README data found!"
+}

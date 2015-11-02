@@ -29,25 +29,23 @@ class AuthenticationToken extends AppModel {
 	const TOKEN_STRING_LENGTH = 30;
 
 	/**
+	 * Token Types
+	 */
+	const MD5 = 'md5';
+	const UUID = 'UUID';
+
+	/**
 	 * Get the validation rules upon context
 	 *
 	 * @param string $case (optional) The target validation case if any.
 	 * @return array cakephp validation rules
 	 */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
+		$rules = array(
 			'id' => array(
 				'uuid' => array(
 					'rule' => 'uuid',
 					'message' => __('UUID must be in correct format')
-				)
-			),
-			'token' => array(
-				'validMD5' => array(
-					'rule' => array('checkValidMd5', true),
-					'required' => true,
-					'allowEmpty' => false,
-					'message' => __('Token has an invalid format')
 				)
 			),
 			'user_id' => array(
@@ -66,7 +64,23 @@ class AuthenticationToken extends AppModel {
 		switch ($case) {
 			default:
 			case 'default':
-				$rules = $default;
+			case self::MD5 :
+				$rules['token'] = array(
+					'validMD5' => array(
+						'rule' => array('checkValidMd5', true),
+						'required' => true,
+						'allowEmpty' => false,
+						'message' => __('Token has an invalid format')
+					)
+				);
+				break;
+			case self::UUID :
+				$rules['token'] = array(
+					'uuid' => array(
+						'rule' => 'uuid',
+						'message' => __('UUID must be in correct format')
+					)
+				);
 				break;
 		}
 		return $rules;
@@ -95,8 +109,8 @@ class AuthenticationToken extends AppModel {
 			return false;
 		} else {
 			$exists = $this->User->find('count', array(
-					'conditions' => array('User.id' => $check['user_id'])
-				));
+				'conditions' => array('User.id' => $check['user_id'])
+			));
 			return $exists > 0;
 		}
 	}
@@ -105,9 +119,17 @@ class AuthenticationToken extends AppModel {
 	 * Generate a token.
 	 * @return string
 	 */
-	public static function generateToken() {
-		$rdStr = Common::randomString(self::TOKEN_STRING_LENGTH);
-		$token = md5($rdStr + time());
+	public static function generateToken($type = self::MD5) {
+		switch($type) {
+			default:
+			case self::MD5:
+				$rdStr = Common::randomString(self::TOKEN_STRING_LENGTH);
+				$token = md5($rdStr + time());
+				break;
+			case self::UUID:
+				$token = Common::uuid();
+				break;
+		}
 		return $token;
 	}
 
@@ -120,6 +142,7 @@ class AuthenticationToken extends AppModel {
 	 * @return array or null if doesn't exist.
 	 */
 	public function checkTokenIsValid($token, $userId) {
+		// @todo check token expiracy
 		$token = $this->find('first', array(
 				'conditions' => array(
 					'AuthenticationToken.user_id' => $userId,
@@ -135,17 +158,18 @@ class AuthenticationToken extends AppModel {
 
 	/**
 	 * Create a token for a given user.
-	 *
 	 * @param uuid $userId
-	 *
+	 * @param string $type MD5 or UUID
 	 * @return array result of the save function for token
 	 */
-	public function createToken($userId) {
+	public function createToken($userId, $type = self::MD5) {
 		$token = array(
 			'user_id' => $userId,
-			'token' => self::generateToken(),
+			'token' => self::generateToken($type),
 		);
+
 		$this->set($token);
+		$this->setValidationRules($type);
 		$v = $this->validates();
 		if (!$v) {
 			return false;

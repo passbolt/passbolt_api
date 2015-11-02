@@ -1,0 +1,39 @@
+<html>
+<head>
+    <script type="text/javascript" src="js/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="node_modules/chai/chai.js"></script>
+    <script>
+        // Determine the demo to load regarding the url #extra_parameter
+        var url = location.href;
+
+        // Define which test case load.
+        // By default load all test cases.
+        if(url.indexOf('#') != -1) {
+            testName = url.substring(url.indexOf('#') + 1);
+        }
+        else {
+            testName = 'case/all';
+        }
+
+        // Configure steal to user the given demo script as main
+        steal = { main: 'test/' + testName };
+    </script>
+    <script type="text/javascript" data-mocha="bdd" config-path="stealconfig.js" src="js/lib/steal/steal.js"></script>
+</head>
+<body>
+
+<div id="test-html">
+</div>
+
+<script>
+    // Load the demo html to be accessible for @demo tag.
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", 'test/' + testName + '.html', false);
+    xmlHttp.send(null);
+    if (xmlHttp.responseText) {
+        $('#demo-html').html(xmlHttp.responseText);
+    }
+</script>
+
+</body>
+</html>

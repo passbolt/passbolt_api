@@ -10,14 +10,6 @@
 	if(Configure::Read('debug')) :
 ?>
 	<h1 style="text-align:center;">Debug is enabled.</h1>
-	<script>
-		// nudge the add-on to launch the debug screen
-		$(function(){
-			var event = document.createEvent('CustomEvent');
-			event.initCustomEvent('passbolt.config.debug', true, true, {});
-			document.documentElement.dispatchEvent(event);
-		});
-	</script>
 <?php else : ?>
 	<h1 style="text-align:center;">Debug is not enabled.</h1>
 <?php endif; ?>

@@ -1,0 +1,19 @@
+<script>
+	window.QUnit = window.parent.QUnit;
+	window.removeMyself = window.parent.removeMyself;
+</script>
+<script>
+	steal = {
+		main: ["main1","main2","main3"]
+	};
+</script>
+<script src="../../steal.js" config="./config.js"></script>
+<script>
+	steal.done().then(function(){
+		QUnit.ok(main1,"main1");
+		QUnit.ok(main2,"main2");
+		QUnit.ok(main3,"main3");
+		QUnit.start();
+		removeMyself();
+	});
+</script>

@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Form Controller Example</title>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<style type='text/css'>
+			/* Form state error style */
+			.form_field.js_state_error { border:1px solid red; }
+			.form_feedback.js_state_error { color:red; }
+			/* form style */
+			div { clear:both; }
+			label { float:left; width:200px; }
+			.form_field { float:left; width:200px; }
+			.form_feedback { float:left; width:200px; }
+		</style>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<form id="js_demo_form_controller" method="post" action="#">
+
+		<div>
+			<label>name</label>
+			<input type="text" id="js_field_name" class="form_field" />
+			<span id="js_field_name_feedback" class="form_feedback"/>
+		</div>
+
+		<div>
+			<label>surname</label>
+			<input type="text" id="js_field_surname" class="form_field" />
+			<span id="js_field_surname_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>freelancer</label>
+			<fieldset id="js_field_freelancer" class="form_field"></fieldset>
+			<span id="js_field_freelancer_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>phone</label>
+			<input type="text" id="js_field_phone" class="form_field" />
+			<span id="js_field_phone_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>email</label>
+			<input type="text" id="js_field_email" class="form_field" />
+			<span id="js_field_email_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<label>visited</label>
+			<fieldset id="js_field_visited" class="form_field"></fieldset>
+			<span id="js_field_visited_feedback" class="form_feedback"/>
+		</div>
+		
+		<div>
+			<input type="submit" value="submit" />
+		</div>
+		
+	</form>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+<script type='text/javascript'>
+steal(
+	'mad/demo/init.js'
+).then(
+	'mad/test/data/model/person.js'
+).then(function() {
+	
+	var form = new mad.form.FormController($('#js_demo_form_controller'), {
+		'callbacks': {
+			'submit': function (data) {
+				console.log(data);
+			}
+		}
+	});
+	
+	// Add a surname field element to the form
+	form.addElement(
+		new mad.form.element.TextboxController('#js_field_surname', {modelReference: 'demo.model.Person.surname'}),
+		new mad.form.FeedbackController('#js_field_surname_feedback')
+	);
+
+	// Add a name field element to the form
+	form.addElement(
+		new mad.form.element.TextboxController('#js_field_name', {modelReference: 'demo.model.Person.name'}),
+		new mad.form.FeedbackController('#js_field_name_feedback')
+	);
+
+	// Add a freelancer field element to the form
+	form.addElement(
+		new mad.form.element.RadiobuttonController('#js_field_freelancer', {
+		'modelReference': 'demo.model.Person.freelancer',
+		'availableValues': {
+				'0': 'No',
+				'1': 'Yes'
+			}
+		}),
+		new mad.form.FeedbackController('#js_field_freelancer_feedback')
+	);
+
+	// Add a phone field element to the form
+	form.addElement(
+		new mad.form.element.TextboxController('#js_field_phone', {modelReference: 'demo.model.Person.phone'}),
+		new mad.form.FeedbackController('#js_field_phone_feedback')
+	);
+
+	// Add a email field element to the form
+	form.addElement(
+		new mad.form.element.TextboxController('#js_field_email', {modelReference: 'demo.model.Person.email'}),
+		new mad.form.FeedbackController('#js_field_email_feedback')
+	);
+
+	// get all available countries
+	var availableCountries = {};
+	demo.model.Country.findAll({}, function (countries, response, request) {
+		can.each(countries, function (country, i) {
+			availableCountries[country.id] = country.label;
+		});
+	});
+
+	// Add a freelancer field element to the form
+	form.addElement(
+		new mad.form.element.CheckboxController('#js_field_visited', {
+		'modelReference': 'demo.model.Person.visited.id',
+		'availableValues': availableCountries
+		}),
+		new mad.form.FeedbackController('#js_field_visited_feedback')
+	);
+
+	var person = demo.model.Person.findOne({id: 'person_1'}, function (person, response, request) {
+		form.load(person);
+	});
+	
+});
+</script>
+
+	</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Controller Example</title>
+		<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<style type='text/css'></style>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<div id="js_demo_component"></div>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+<script type='text/javascript'>
+steal(
+	'mad/demo/init.js'
+).then(
+	'mad/test/data/data_person.js'
+).then(function() {
+	mad.controller.ComponentController.extend('demo.controller.DemoComponentController', 
+	/** @static */
+	{
+		'defaults': {
+			'templateUri': '//mad/demo/view/template/component/demoComponent.ejs'
+		}
+	},
+	/** @prototype */
+	{
+		'init': function(element, options){
+			this._super();
+			var items = getPersonSamples();
+			items[0].bind('destroyed', function(){
+				console.log('test destroy 1');
+			});
+			var items2 = getPersonSamples();
+			items2[0].bind('destroyed', function(){
+				console.log('test destroy 2');
+			});
+			console.log(items, items2);
+//			items2[0].destroy();
+			demo.model.Person.destroy(items[0].id);
+		},
+		
+		'{demo.model.Person} destroyed': function (a, b, c) {
+			console.log('common brol destroyed');
+//			console.log(a, b, c);
+		}
+		
+	});
+	
+	var demoComponent = new demo.controller.DemoComponentController($('#js_demo_component'), {});
+	demoComponent.render();
+});
+</script>
+
+	</body>
+</html>

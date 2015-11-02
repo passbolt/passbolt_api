@@ -75,10 +75,9 @@ class SecretTask extends ModelTask {
             'Gpgkey.deleted' => 0
         )));
 
-        $res = gnupg_init();
-        gnupg_import($res, $key['Gpgkey']['key']);
-        gnupg_addencryptkey($res , $key['Gpgkey']['fingerprint']);
-        $encrypted = gnupg_encrypt($res , $password);
+	    $Gpg = new \Passbolt\Gpg();
+        $Gpg->setEncryptKey($key['Gpgkey']['key']);
+	    $encrypted = $Gpg->encrypt($password);
 
         return $encrypted;
     }

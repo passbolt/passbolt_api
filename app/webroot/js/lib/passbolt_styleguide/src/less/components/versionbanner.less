@@ -1,0 +1,24 @@
+.version.alpha body:before {
+	content: "alpha";
+	background: @red none repeat scroll 0% 0%;
+}
+.version.beta body:before {
+	content: "beta";
+	background: @blue none repeat scroll 0% 0%;
+}
+.version body:before {
+	position:fixed;
+	width: 130px;
+	height: 25px;
+	bottom: 15px;
+	left: -40px;
+	text-align: center;
+	font-size: 13px;
+	font-family: sans-serif;
+	text-transform: uppercase;
+	font-weight: 700;
+	color: @white;
+	line-height: 27px;
+	transform: rotate(45deg);
+	z-index:100000;
+}

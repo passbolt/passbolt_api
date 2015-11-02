@@ -1,0 +1,33 @@
+<html>
+<head>
+    <script type="text/javascript" src="js/lib/jquery/dist/jquery.js"></script>
+    <script>
+        // Determine the demo to load regarding the url #extra_parameter
+        var url = location.href;
+        window.DEMO_NAME = url.substring(url.indexOf('#') + 1);
+
+        // Load the demo code to be accessible for @demo tag.
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", 'js/app/' + window.DEMO_NAME + '.js', false);
+        xmlHttp.send(null);
+        window.DEMO_SOURCE = xmlHttp.responseText;
+
+        // Configure steal to user the given demo script as main
+        steal = {main: "js/app/" + window.DEMO_NAME};
+    </script>
+    <script type="text/javascript" config-path="stealconfig.js" src="js/lib/steal/steal.js"></script>
+</head>
+<body>
+
+<div id="demo-html">
+</div>
+
+<script>
+    // Load the demo html to be accessible for @demo tag.
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", 'js/app/' + window.DEMO_NAME + '.html', false);
+    xmlHttp.send(null);
+    $('#demo-html').html(xmlHttp.responseText);
+</script>
+</body>
+</html>

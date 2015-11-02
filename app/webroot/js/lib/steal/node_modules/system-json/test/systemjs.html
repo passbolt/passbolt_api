@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+	<title>SystemJS tests</title>
+	<link rel="stylesheet" type="text/css" href="../bower_components/qunit/qunit/qunit.css"/>
+</head>
+<body>
+	<h1 id="qunit-header">system-npm SystemJS Test Suite</h1>
+		
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-test-area"></div>
+
+	<script src="../bower_components/es6-module-loader/dist/es6-module-loader.js"></script>
+	<script src="../bower_components/system.js/dist/system.js"></script>
+	<script src="../bower_components/qunit/qunit/qunit.js"></script>
+	<script>
+		System.baseURL = "../";
+		System.bowerDev = true;
+		QUnit.config.autostart = false;
+
+		System.import("json").then(function(){
+			return System.import("test/test");
+		}).then(null, function(err){
+			console.error("Oh no, error!", err);
+		});
+	</script>
+</body>
+</html>

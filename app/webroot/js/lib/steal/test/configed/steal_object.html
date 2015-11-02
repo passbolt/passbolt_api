@@ -1,0 +1,17 @@
+<script>
+	steal = {
+		env: "production"
+	};
+	window.QUnit = window.parent.QUnit;
+	window.removeMyself = window.parent.removeMyself;
+</script>
+<script type="text/javascript" src='../../steal.js'></script>
+<script>
+	if(window.QUnit) {
+		QUnit.equal(steal.config('env'), "production","configed to production");
+		QUnit.start();
+		removeMyself();
+	} else {
+		console.log(steal.config('env'));
+	}
+</script>

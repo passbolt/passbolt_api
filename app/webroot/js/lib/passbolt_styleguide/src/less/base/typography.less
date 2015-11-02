@@ -1,0 +1,43 @@
+/*
+ * Typography
+ */
+/* opensans */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url('@{fonts}/opensans-regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('@{fonts}/opensans-bold.woff') format('woff');
+}
+body {
+	font-family:'Open Sans', Verdana, sans-serif;
+	font-size: 100%;
+	line-height: 1.42;
+	font-weight: 400;
+}
+
+/* titles */
+h1 {
+	font-size: 1.5em; /* 24px base 16 */
+}
+h2 {
+	font-size:1.250em; /* 20px base 16 */
+}
+h3 {
+	font-size:1.125em; /* 18px base 16 */
+	display:block;
+	padding-bottom: .333em; /* 6px */
+	border-bottom:1px dotted @grey;
+}
+p {
+	margin:.25em 0;
+}
+.code {
+	font-family:"Courier New", Courier, monospace;
+	font-size:0.688em;  /* 11px base 16 */
+}

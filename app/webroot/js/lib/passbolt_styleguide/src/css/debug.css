@@ -1,0 +1,17 @@
+.cake-sql-log td,
+.cake-sql-log th {
+  overflow: visible;
+  white-space: normal;
+  border: 1px solid #eee;
+  padding: 1em;
+}
+.cake-sql-log {
+  margin-top: 3em;
+}
+.cake-sql-log thead {
+  background: #eee;
+}
+.cake-sql-log th {
+  padding: .5em;
+  font-weigth: bold;
+}

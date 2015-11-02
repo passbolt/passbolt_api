@@ -1,0 +1,67 @@
+<style>
+    .dialog{
+        position: absolute;
+        left: 30%;
+        border: 1px solid #ccc;
+        width: 40%;
+        padding: 10px;
+        background-color: #eee;
+    }
+    .dialog {
+        position: relative;
+        max-width: 30em;
+        border: 1px solid #dddddd;
+        background: #f3f3f3;
+        margin: auto;
+        margin-top: 1%;
+        margin-bottom: 3em;
+        -moz-box-shadow: 0px 0px 10px 0px #dddddd;
+        -webkit-box-shadow: 0px 0px 10px 0px #dddddd;
+        box-shadow: 0px 0px 10px 0px #dddddd;
+    }
+    .dialog-wrapper {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 800;
+        background: rgba(255, 255, 255, 0.9);
+        overflow: auto;
+    }
+    .dialog .dialog-header h2 {
+        margin: .25em 2em .5em .2em;
+        font-size: 1.2em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        -ms-text-overflow: ellipsis;
+    }
+    .dialog a.dialog-close, .dialog a.dialog-close:hover {
+        display: block;
+        float: right;
+        margin-top: -2.5em;
+        border: 0;
+    }
+    .dialog a.dialog-close .icon.close {
+        padding-top: 15px;
+        width: 30px;
+        height: 15px;
+        text-align: center;
+        display: block;
+        vertical-align: baseline;
+        line-height: 0;
+        border: 1px solid #eeeeee;
+    }
+    .no-text + span, .no-text span {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+</style>
+
+<a href="#" id="show-confirm-dialog">Show confirm dialog</a>

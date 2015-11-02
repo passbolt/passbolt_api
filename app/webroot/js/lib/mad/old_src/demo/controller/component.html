@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>Controller Example</title>
+		<style type='text/css'></style>
+	</head>
+	<body>
+		
+<!-- -----------------------------------------------------------------------
+												DEMO HTML BLOCK
+ -------------------------------------------------------------------------->
+<div id="demo-html">
+<div id="js_demo_app_controller">
+	<div id="js_demo_component"></div>
+</div>
+</div>
+
+<!-- -----------------------------------------------------------------------
+												DEMO JAVASCRIPT BLOCK
+ -------------------------------------------------------------------------->
+
+<script type='text/javascript' src='../../../../steal/steal.js'></script>
+<script type='text/javascript' id="demo-source">
+steal('mad/demo/init.js').then(function() {
+	
+	mad.controller.ComponentController.extend('demo.controller.DemoComponentController', 
+	/** @static */
+	{
+		'defaults': {
+			'templateUri': 'mad/demo/view/template/component/demoComponent.ejs'
+		}
+	},
+	/** @prototype */
+	{
+		'init': function(element, options){
+			this._super();
+		},
+		
+		/* ************************************************************** */
+		/* LISTEN TO VIEWS EVENT */
+		/* ************************************************************** */
+		
+		'button click': function (el, ev) {
+			if (this.state.is('ready')){
+				this.setState('optionsVisible');
+			} else {
+				this.setState('ready');
+			}
+		},
+		
+		/* ************************************************************** */
+		/* LISTEN TO THE STATE CHANGES */
+		/* ************************************************************** */
+		
+		'stateOptionsVisible': function (go) {
+			if (go) {
+				$('ul', this.element).show();
+				$('button').html('Hide options');
+			} else {
+				$('button').html('Show options');
+			}
+		},
+		
+		'stateReady': function (go) {
+			if (go) {
+				$('ul', this.element).hide();
+			}
+		}
+		
+	});
+	
+	var demoComponent = new demo.controller.DemoComponentController($('#js_demo_component'), {});
+	demoComponent.render();
+})
+</script>
+
+	</body>
+</html>

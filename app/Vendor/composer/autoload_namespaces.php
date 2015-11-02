@@ -6,8 +6,13 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'System' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Net' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Math' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
+    'File' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Crypt' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
 );

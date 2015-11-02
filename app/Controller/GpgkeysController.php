@@ -74,11 +74,13 @@ class GpgkeysController extends AppController {
 	 * gpgkey add entry point
 	 */
 	public function add() {
+
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
 			return;
 		}
+
 		// check if data was provided
 		if (!isset($this->request->data['Gpgkey'])) {
 			$this->Message->error(__('No data were provided'));
@@ -87,7 +89,9 @@ class GpgkeysController extends AppController {
 
 		$userId = User::get('id');
 
+		// Begin transaction.
 		$this->Gpgkey->begin();
+
 		// Check if a key already exists for the given user.
 		$existingKey = $this->Gpgkey->find('first', array(
 				'conditions' => array(
@@ -95,6 +99,7 @@ class GpgkeysController extends AppController {
 					'Gpgkey.user_id' => $userId,
 				)
 			));
+
 		// If key already exists, soft delete them.
 		if ($existingKey) {
 			$this->Gpgkey->updateAll(
@@ -108,18 +113,21 @@ class GpgkeysController extends AppController {
 
 		// set the data for validation and save
 		$gpgkeyData = $this->request->data;
-		// Modify key with raw data. We do not want a sanitized version.
-		$gpgkeyData['Gpgkey']['key'] = $this->request->dataRaw['Gpgkey']['key'];
 
-		// Only the key owner can change his key.
 		// Force the user id of the user. We are not concerned about what was given.
 		$gpgkeyData = $this->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['Gpgkey']['key']);
+
+		// If the information could not be extracted.
+		if ($gpgkeyData === false) {
+			$this->Gpgkey->rollback();
+			$this->Message->error(__('The gpgkey provided could not be used'));
+			return;
+		}
 		$gpgkeyData['Gpgkey']['user_id'] = $userId;
+
 		// Set data.
 		$this->Gpgkey->set($gpgkeyData);
 
-		// Get fields.
-		$fields = $this->Gpgkey->getFindFields('save', User::get('Role.name'));
 		// Check if the data is valid.
 		if (!$this->Gpgkey->validates()) {
 			$this->Gpgkey->rollback();
@@ -127,18 +135,28 @@ class GpgkeysController extends AppController {
 			return;
 		}
 
-		$gpgkey= $this->Gpgkey->save($gpgkeyData, false, $fields['fields']);
+		// Get fields to save.
+		$fields = $this->Gpgkey->getFindFields('save', User::get('Role.name'));
 
+		// Everything alright, we save.
+		$gpgkey = $this->Gpgkey->save($gpgkeyData, false, $fields['fields']);
+
+		// If there was a problem during a save, return error message.
 		if ($gpgkey == false) {
 			$this->Gpgkey->rollback();
 			$this->Message->error(__('The gpgkey could not be saved'));
 			return;
 		}
+
+		// We are good. Commit everything.
 		$this->Gpgkey->commit();
+
+		// Retrieve the data to return inthe response.
 		$data = array('Gpgkey.user_id' => $gpgkeyData['Gpgkey']['user_id']);
 		$options = $this->Gpgkey->getFindOptions('view', User::get('Role.name'), $data);
 		$gpgkey = $this->Gpgkey->find('first', $options);
 
+		// Send response.
 		$this->Message->success(__("The gpgkey has been saved successfully"));
 		$this->set('data', $gpgkey);
 

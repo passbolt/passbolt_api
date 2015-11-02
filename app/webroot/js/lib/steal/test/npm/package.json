@@ -1,0 +1,7 @@
+{
+  "name": "npm-test",
+  "main": "main",
+  "dependencies": {
+    "jquery": ">2.0"
+  }
+}

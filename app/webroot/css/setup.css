@@ -2486,23 +2486,6 @@ select.fluid {
   margin-left: 180px;
   padding: .5em 1em;
 }
-/*
-	no plugin = display error
-	no config = display warning
-*/
-.plugin-check {
-  display: none;
-}
-.no-passboltplugin .plugin-check.error {
-  display: block;
-}
-.passboltplugin.no-passboltplugin-config .plugin-check.warning {
-  display: block;
-}
-.passboltplugin.passboltplugin-config .plugin-check.gpg.notice,
-.passboltplugin.passboltplugin-config .plugin-check.success {
-  display: block;
-}
 .video-wrapper {
   padding: 1em;
 }
