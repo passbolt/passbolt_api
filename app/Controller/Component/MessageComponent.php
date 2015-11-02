@@ -114,7 +114,14 @@ class MessageComponent extends Component {
 			if (isset($options['code'])) {
 				$code = $options['code'];
 			}
-			throw new HttpException($message, $code);
+			// Build exception, without forgetting to set the initial headers
+			// (headers were already set for the reponse. We just carry forward the same headers in the exception).
+			$responseHeaders = $this->Controller->response->header();
+			$httpException = new HttpException($message, $code);
+			$httpException->responseHeader($responseHeaders);
+
+			// Return exception.
+			throw $httpException;
 		}
 	}
 
