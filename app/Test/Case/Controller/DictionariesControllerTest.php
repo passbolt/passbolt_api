@@ -36,17 +36,13 @@ class DictionariesControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->User = Common::getModel('User');
-		$u = $this->User->get();
-		$this->session = new CakeSession();
-		$this->session->init();
-
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$this->User->setActive($user);
 	}
 
 	public function testViewNoAllowed() {
 		// Anonymous user should not be able to access
-		$result = $this->testAction('/logout', array('return' => 'contents'), true);
+		$this->User->setInactive();
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$result = json_decode($this->testAction('/dictionaries/en-EN.json', array(
 			'return' => 'contents',
