@@ -107,6 +107,17 @@ class AppController extends Controller {
 	}
 
 	/**
+	 * Authorization check main callback
+	 * @link http://api20.cakephp.org/class/auth-component#method-AuthComponentisAuthorized
+	 * @param mixed $user The user to check the authorization of. If empty the user in the session will be used.
+	 * @return boolean True if $user is authorized, otherwise false
+	 * @access public
+	 */
+	public function isAuthorized($user) {
+		return true;
+	}
+
+	/**
 	 * Is the controller:action pair whitelisted in config? (see. App.auth.whitelist)
 	 * @param string $controller, current is used if null
 	 * @param string $action, current is used if null
