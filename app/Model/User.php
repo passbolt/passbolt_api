@@ -240,6 +240,8 @@ class User extends AppModel {
 		// If user is unspecified or ANONYMOUS is requested
 		if ($user == null || $user == User::ANONYMOUS) {
 			$u = $_this->find('first', User::getFindOptions('User::activation', Role::GUEST));
+			// If user is anonymous, reset the session so it is not logged in anymore.
+			self::setInactive();
 		} else {
 			// if the user is specified and have a valid ID find it
 			if (is_string($user) && Common::isUuid($user)) {

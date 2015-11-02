@@ -82,7 +82,7 @@ class AppController extends Controller {
 		// Check if user is logged in or not
 		// and return a json error message if not logged in but requesting a non allowed json page
 		$isLoggedIn = $this->Auth->user() !== null;
-		$isAuthorized = $isLoggedIn || $this->isWhitelisted($this->request->controller, $this->request->action);
+		$isAuthorized = $isLoggedIn || $this->isWhitelisted();
 		if ( ! $isAuthorized ) {
 			if ($this->request->is('Json')) {
 				$this->Message->error(
@@ -119,20 +119,19 @@ class AppController extends Controller {
 
 	/**
 	 * Is the controller:action pair whitelisted in config? (see. App.auth.whitelist)
-	 * @param string $controller, current is used if null
 	 * @param string $action, current is used if null
 	 * @return bool true if the controller action pair is whitelisted
 	 * @access public
 	 */
-	public function isWhitelisted($controller=null, $action=null) {
-		if ($controller == null) {
-			$controller = strtolower($this->name);
+	public function isWhitelisted($action=null) {
+		if ($action === null) {
+			$action = $this->action;
 		}
-		if ($action == null) {
-			$action = strtolower($this->action);
-		}
-		$whitelist = Configure::read('Auth.whitelist');
-		return (isset($whitelist[$controller][$action]));
+
+		// An action is whitelisted only if declared explicitely to the Auth component.
+		$isWhiteListed = in_array($action, $this->Auth->allowedActions);
+
+		return $isWhiteListed;
 	}
 
 	/**
@@ -177,5 +176,16 @@ class AppController extends Controller {
 		$this->response->header('X-GPGAuth-Logout-URL','/auth/logout');
 		$this->response->header('X-GPGAuth-Verify-URL','/auth/verify');
 		$this->response->header('X-GPGAuth-Pubkey-URL','/auth/verify');
+
+		// Alow whitelisted actions from app.php config file.
+		$whitelist = Configure::read('Auth.whitelist');
+		$controller = strtolower($this->name);
+		if (isset($whitelist[$controller]) && is_array($whitelist[$controller])) {
+			foreach($whitelist[$controller] as $action => $allowed) {
+				if ($allowed === true) {
+					$this->Auth->allow($action);
+				}
+			}
+		}
 	}
 }

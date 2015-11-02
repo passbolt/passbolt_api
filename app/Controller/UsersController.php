@@ -20,15 +20,15 @@ class UsersController extends AppController {
  * beforeFilter
  */
 	function beforeFilter(){
-		parent::beforeFilter();
-		$allow = array(
+		$allow = [
 			'validateAccount'
-		);
+		];
 		if (Configure::read('Registration.public')) {
 			$allow[] = 'register';
 			$allow[] = 'register_thankyou';
 		}
 		$this->Auth->allow($allow);
+		parent::beforeFilter();
 	}
 
 /**
@@ -547,7 +547,7 @@ class UsersController extends AppController {
 
 		// Set the data for validation and save.
 		if (!isset($data['AuthenticationToken']['token'])) {
-			return $this->Message->error(__('Token not provided') . 'test' . print_r($this->request, true));
+			return $this->Message->error(__('Token not provided'));
 		}
 
 		// Check that token is valid.
