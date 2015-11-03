@@ -33,7 +33,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'id' => '10be2d3a-0468-432b-b49f-3153d7a82fce',
 			'tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'foreign_id' => '96e26ceb-b288-39b7-a515-3b1b45cb2673',
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -41,7 +41,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'id' => '10be2d3a-0468-432b-b58f-3153d7a83fce',
 			'tag_id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-5168-49d4-a676-fb098cebc04d',
+			'foreign_id' => '96e26ceb-b288-39b7-a515-3b1b45cb2673',
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -49,7 +49,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
 			'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
 			'foreign_model' => 'Resource',
-			'foreign_id' => '509bb871-b964-48ab-94fe-fb098cebc04d',
+			'foreign_id' => '6b00d6e5-8584-3db4-a24d-7179b8dd44d5',
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -57,7 +57,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
 			'tag_id' => 'aaa01103-c5cd-11d1-a1c5-080027796c4c',
 			'foreign_model' => 'Resource',
-			'foreign_id' => '50d77ffb-d254-49e4-ac86-1b63d7a10fce',
+			'foreign_id' => '5c67e5d8-29dd-3719-aab5-5a151226255d',
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),

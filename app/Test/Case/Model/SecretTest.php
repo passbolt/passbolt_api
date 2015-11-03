@@ -57,7 +57,9 @@ class SecretTest extends CakeTestCase {
  */
 	public function testResourceIdValidation() {
 		$testcases = array(
-			'' => false, '?!#' => false, '50d77ffa-7278-41fc-a4bb-1b63d7a10fce' => true,
+			'' => false,
+			'?!#' => false,
+			Common::uuid('resource.id.cpp1-pwd1') => true,
 			'509bb871-3b14-4877-8a88-fb098cebc04b' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -93,7 +95,7 @@ hcciUFw5
 		);
 		foreach ($testcases as $testcase => $result) {
 			$secret = array('Secret' => array(
-				'resource_id' => '50d77ffa-7278-41fc-a4bb-1b63d7a10fce',
+				'resource_id' => Common::uuid('resource.id.cpp1-pwd1'),
 				'user_id' => Common::uuid('user.id.carol'),
 				'data' => $testcase
 			));

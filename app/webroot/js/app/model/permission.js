@@ -153,6 +153,33 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 	},
 
 	/**
+	 * Search the users who can receive a direct permission for a target permissionnable
+	 * instance.
+	 *
+	 * As per the requirements a user can receive only one direct permission by permissionnable
+	 * instance.
+	 *
+	 * @param params
+	 * @param success
+	 * @param error
+	 * @returns {*}
+	 */
+	searchUsers: function (params, success, error) {
+		return mad.net.Ajax.request({
+			url: APP_URL + '/share/search-users/{model}/{id}.json',
+			type: 'GET',
+			params: params,
+			success: success,
+			error: error
+		}).pipe(function (data, textStatus, jqXHR) {
+			// pipe the result to convert cakephp response format into can format
+			var def = $.Deferred();
+			def.resolveWith(this, [passbolt.model.User.models(data)]);
+			return def;
+		});
+	},
+
+	/**
 	 * Am I authorized to perform the given operation.
 	 * @param {passbolt.model.PermissionType} type
 	 */

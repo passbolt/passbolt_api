@@ -180,16 +180,13 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	autocompleteAro: function(value) {
 		// get all the users and groups functions of the given string
 		// start by getting all the users.
-		var request = passbolt.model.User.findAll({
-			keywords: value
+		var request = passbolt.model.Permission.searchUsers({
+			keywords: value,
+			model: this.options.acoInstance.constructor.shortName,
+			id: this.options.acoInstance.id
 		}).then(function(users) {
 			var returnValue = [];
-			var currentUser = passbolt.model.User.getCurrent();
 			users.each(function(user, i) {
-				// Doesn't include the current user in the list.
-				// TODO : doesn't include somebody who already have permissions.
-				if (user.id == currentUser.id)
-					return;
 				// Otherwise, add user in autocomplete.
 				returnValue.push(new mad.Model({
 					id: user.id,

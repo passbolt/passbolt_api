@@ -258,7 +258,7 @@ class CommentsControllerTest extends ControllerTestCase {
 	// test edit
 	public function testEdit() {
 		$commentParentId = 'aaa00001-cccc-11d1-a0c5-080027796c4c';
-		$resourceId = '509bb871-5168-49d4-a676-fb098cebc04d';
+		$resourceId = Common::uuid('resource.id.facebook-account');
 		$commentContent = 'new comment';
 		$commentId = null;
 
@@ -315,7 +315,7 @@ class CommentsControllerTest extends ControllerTestCase {
 	// test delete
 	public function testDelete() {
 		$commentParentId = 'aaa00001-cccc-11d1-a0c5-080027796c4c';
-		$resourceId = '509bb871-5168-49d4-a676-fb098cebc04d';
+		$resourceId = Common::uuid('resource.id.facebook-account');
 		$commentContent = 'new comment';
 		$commentId = null;
 

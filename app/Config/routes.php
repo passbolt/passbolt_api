@@ -190,6 +190,10 @@ Router::connect(
 	array('controller' => 'share',  'action' => 'update', "[method]" => "PUT"),
 	array('pass' => array('resource', 'id'))
 );
+Router::connect(
+	'/share/search-users/:model/:id',
+	array('controller' => 'share', 'action' => 'searchUsers', "[method]" => "GET"),
+	array('pass' => array('model', 'id')));
 
 /**
  * Custom route for comments controller

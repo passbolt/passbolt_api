@@ -34,7 +34,7 @@ class CommentFixture extends CakeTestFixture {
 		array(
 			'id' => 'aaa00000-cccc-11d1-a0c5-080027796c4c',
 			'parent_id' => null,
-			'foreign_id' => '50d77ff9-c358-4dfb-be34-1b63d7a10fce',
+			'foreign_id' => '349c17f6-0cbe-3c13-a19d-87452de6a811',
 			'foreign_model' => 'Resource',
 			'content' => 'this is a short comment',
 			'created' => '2012-11-25 13:39:25',
@@ -45,7 +45,7 @@ class CommentFixture extends CakeTestFixture {
 		array(
 			'id' => 'aaa00001-cccc-11d1-a0c5-080027796c4c',
 			'parent_id' => 'aaa00000-cccc-11d1-a0c5-080027796c4c',
-			'foreign_id' => '50d77ff9-c358-4dfb-be34-1b63d7a10fce',
+			'foreign_id' => '349c17f6-0cbe-3c13-a19d-87452de6a811',
 			'foreign_model' => 'Resource',
 			'content' => 'this is a reply to the short comment',
 			'created' => '2012-11-25 13:39:26',

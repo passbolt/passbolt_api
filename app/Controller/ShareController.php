@@ -381,17 +381,64 @@ class ShareController extends AppController {
 		$this->Message->success(__('Share operation successful'));
 	}
 
-	public function send_email() {
-/* For manual email testing
- * $this->EmailNotificator->passwordSharedNotification(Common::uuid('user.id.ada'), array(
-				'resource_id' => '50d77ff9-fdd8-4035-b7c6-1b63d7a10fce',
-				'sharer_id' => Common::uuid('user.id.irene'),
-			));
+/**
+ * Search users who can be granted for a target aco instance
+ * @param null $id The aco model to search users for
+ * @param null $id The aco instance to search users for
+ */
+	public function searchUsers($model = null, $id = null) {
+		$data = array();
+		$model = ucfirst($model);
 
-		$this->EmailNotificator->accountCreationNotification(Common::uuid('user.id.ada'), array(
-				'creator_id' => Common::uuid('user.id.admin'),
-				'token' => 'walou'
-			));
-		die();*/
+		// check the HTTP request method
+		if (!$this->request->is('get')) {
+			$this->Message->error(__('Invalid request method, should be GET'));
+			return;
+		}
+
+		// check if the target ACO model is permissionable
+		if (!$this->Permission->isValidAco($model)) {
+			$this->Message->error(__('The model %s is not permissionable', $model));
+			return;
+		}
+
+		// the instance id is missing
+		if (is_null($id)) {
+			$this->Message->error(__('The %s id is missing', strtolower($model)));
+			return;
+		}
+
+		// the instance id is invalid
+		if (!Common::isUuid($id)) {
+			$this->Message->error(__('The %s id is invalid', strtolower($model)));
+			return;
+		}
+
+		// find the instance
+		$resource = $this->Permission->$model->findById($id);
+		if (empty($resource)) {
+			$this->Message->error(__('The %s does not exist', strtolower($model)), array('code' => 404));
+		}
+
+		// check if user is authorized to share the resource
+		// the user can share a resource only if he is owner of this resource
+		if (!$this->Permission->$model->isAuthorized($id, PermissionType::OWNER)) {
+			$this->Message->error(__('You are not authorized to share this %s', strtolower($model)), array('code' => 403));
+			return;
+		}
+
+		// If the search should be filtered by keywords.
+		if (isset($this->request->query['keywords'])) {
+			$data['keywords'] = $this->request->query['keywords'];
+		}
+
+		// Find all the users who can receive a direct permission.
+		$data['aco_foreign_key'] = $id;
+		$data['aco'] = $model;
+		$o = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
+		$returnVal = $this->Permission->User->find('all', $o);
+
+		$this->set('data', $returnVal);
+		$this->Message->success();
 	}
 }
