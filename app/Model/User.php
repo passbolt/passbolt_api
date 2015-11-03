@@ -447,6 +447,27 @@ class User extends AppModel {
 						}
 						break;
 
+					case 'Share::searchUsers':
+						// Use already conditions already defined for the index case
+						$conditions = User::getFindConditions('User::index', $role, $data);
+						// Only return users who don't have a direct permission defined for the given aco instance
+						$conditions['joins'][] = array(
+							'table' => 'users',
+							'alias' => 'UserToGrant',
+							'type' => 'inner',
+							'conditions' => array('
+								User.id = UserToGrant.id
+								AND UserToGrant.id NOT IN (
+									SELECT Permission.aro_foreign_key
+									FROM permissions Permission
+									WHERE Permission.aco = "' . $data['aco'] . '"
+										AND Permission.aco_foreign_key = "' . $data['aco_foreign_key'] . '"
+										AND Permission.aro_foreign_key = UserToGrant.id
+								)',
+							),
+						);
+						break;
+
 					default:
 						throw new Exception('User::getFindCondition does not exist for role:'. $role .' and case:'. $case );
 						break;
