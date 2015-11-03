@@ -8,7 +8,9 @@
  * @since        version 2.12.9
  */
 
-App::import('Model/Utility', 'Gpg');
+if (!class_exists('\Passbolt\Gpg')) {
+	App::import( 'Model/Utility', 'Gpg' );
+}
 
 class Gpgkey extends AppModel {
 

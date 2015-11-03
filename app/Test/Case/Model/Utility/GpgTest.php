@@ -9,7 +9,9 @@
  */
 
 // Uses Gpg Utility.
-App::import('Model/Utility', 'Gpg');
+if (!class_exists('\Passbolt\Gpg')) {
+	App::import( 'Model/Utility', 'Gpg' );
+}
 
 class GpgTest extends CakeTestCase {
 

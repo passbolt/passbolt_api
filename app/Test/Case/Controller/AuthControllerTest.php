@@ -20,6 +20,9 @@ App::uses('Gpgkey', 'Model');
 if (!class_exists('CakeSession')) {
     require CAKE . 'Model/Datasource/CakeSession.php';
 }
+if (!class_exists('\Passbolt\Gpg')) {
+	App::import( 'Model/Utility', 'Gpg' );
+}
 
 class AuthControllerTest extends ControllerTestCase {
 
@@ -265,12 +268,16 @@ class AuthControllerTest extends ControllerTestCase {
         $this->_keys = array(
             'server' => Configure::read('GPG.serverKey'),
             'user' => array(
-                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
-                'public' => Configure::read('GPG.testKeys.path') . 'ada_public.key',
-                'private' => Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key',
+	            'public' => Configure::read('GPG.testKeys.path') . 'ada_public.key',
+	            'private' => Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key',
                 'passphrase' => ''
             )
         );
+	    // Get fingerprint and add it to array.
+	    $Gpg = new \Passbolt\Gpg();
+	    $publicKeyinfo = $Gpg->getKeyInfo(file_get_contents($this->_keys['user']['public']));
+	    $this->_keys['user']['fingerprint'] = $publicKeyinfo['fingerprint'];
+
 
         // Make sure the keys are in the keyring
         // if needed we add them for later use in the tests
