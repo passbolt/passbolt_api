@@ -75,11 +75,11 @@ class AuthController extends AppController {
             );
             foreach ($allowed_case as $c) {
                 if ($c === $case) {
-                    $this->render('../Elements/public/auth/' . $case);
+                    $this->render('../Elements/public/Auth/' . $case);
                     return;
                 }
             }
-            $this->render('../Elements/public/auth/default');
+            $this->render('../Elements/public/Auth/default');
             return;
         }
         $this->redirect('/auth/login');
