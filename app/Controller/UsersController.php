@@ -539,8 +539,9 @@ class UsersController extends AppController {
 			return $this->Message->error(__('Invalid request method, should be PUT'));
 		}
 
-		// check if data was provided
+		// Store request data in data.
 		$data = $this->request->data;
+
 		if (!isset($data['AuthenticationToken'])) {
 			return $this->Message->error(__('No data were provided'));
 		}
@@ -642,7 +643,6 @@ class UsersController extends AppController {
 
 			// Set actual user id.
 			$gpgkeyData['Gpgkey']['user_id'] = $id;
-
 			// Set data.
 			$this->User->Gpgkey->set($gpgkeyData);
 
@@ -652,8 +652,7 @@ class UsersController extends AppController {
 			// Check if the data is valid.
 			if (!$this->User->Gpgkey->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->Gpgkey->rollback();
-				$this->Message->error(__('Could not validate gpgkey data'));
-				return;
+				return $this->Message->error(__('Could not validate gpgkey data'), array('body' => $this->User->Gpgkey->validationErrors));
 			}
 			// Save the key.
 			$this->User->Gpgkey->create();

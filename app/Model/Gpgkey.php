@@ -60,6 +60,7 @@ class Gpgkey extends AppModel {
             'bits' => array(
                 'rule'    => 'numeric',
                 'required' => false,
+                'allowEmpty' => true,
                 'message' => __('The number of bits should be specified in a numeric format'),
             ),
             'uid' => array(

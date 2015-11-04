@@ -255,11 +255,18 @@ class Gpg {
 			}
 		}
 
+		$type = '';
+		$bits = '';
+		if (sizeof($self_signatures) > 0) {
+			$type = $self_signatures[0]->key_algorithm_name();
+			$bits = OpenPGP::bitlength($self_signatures[0]->data[0]);
+		}
+
 		// Build key information array.
 		$info = array(
 			'fingerprint' => $publicKeyPacket->fingerprint(),
-			'bits' => OpenPGP::bitlength($self_signatures[0]->data[0]),
-			'type' => $self_signatures[0]->key_algorithm_name(),
+			'bits' => $bits,
+			'type' => $type,
 			'key_id' => $publicKeyPacket->key_id,
 			'key_created' => $publicKey->timestamp,
 			'uid' => $userIds[0],
