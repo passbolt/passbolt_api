@@ -102,7 +102,7 @@ $config = array(
 		'serverKey' => array(
 			'fingerprint' => 'A0771BE5B573C18A4692AD5AEDB35494D8462294',
 			'public' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure.key',
-			'private' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure_private.key',git ad
+			'private' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure_private.key',
 			'passphrase' => ''
 		)
 	),
