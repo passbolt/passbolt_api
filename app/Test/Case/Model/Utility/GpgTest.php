@@ -220,6 +220,55 @@ Y163Zeuqb7k4oayBB2o188VJy/E=
 	}
 
 	/**
+	 * Test getKeyInfo() with a key without self signature. (found one while testing manually).
+	 * It should be possible to read this key, but for some reasons, our libs can't.
+	 *
+	 * @throws Exception
+	 */
+	public function testGetKeyInfoWithoutSelfSignature() {
+		$key = '-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: OpenPGP.js v0.7.2
+Comment: http://openpgpjs.org
+
+xsBNBFY6IcsBCACMAsB+QcV0K1m5A4UpjnLF/fGAWGXzTJitcnrA/iILPOK9
+879gmlIP7ZwExTJfsyvDx51b5Qx3LmU7w1neA2LyNJZ3/f/EbLt8v4ej7l3n
+FWdL1iH9yoA6+h0RXwzE+eIsE4ulEkKuGAMTVtUshiRKqUlzhnLFK1YrC8EX
+UPt5gQ92W2+yhKvnBwohlpi4yyIoFR6IGBDD9tD2fCT9v3vE9X40f+qtoo8+
+KcBnoGjxgPvKdZTGmiuo4phEqm3fbckzsxxJuqr2WizaOY3at7Mm7263brQT
+CnTkiXPJXnuyBp21HWzyRkOsm3q30oDwfZaeGMGJGEb0oMKeOwJfB8dpABEB
+AAHNHmtldmluIG11bGxlciA8a2V2aW5AdGVzdDcuY29tPsLAcgQQAQgAJgUC
+VjohzQYLCQgHAwIJEB9NiTAZf8QpBBUIAgoDFgIBAhsDAh4BAABPdQf/Y6N4
+UgsbjdU35EoGK592Nv5yGBCVlDqlypfdfNfHzlx3WECXTdyJnut1JbjF44JO
+MwOohGwXczSJUPNfoAvCydh4K2z9D2x9YoKW9C0NFmzCN3gM6p/z87F4nIqe
+OdhGJM6e9qQiTB9tc++UxaRGyCQ3KbX0CMVox86JHEkTm2T0pWwv3nGk0GUq
+kaJ4GMLvDFLBZ+vCNodVa7D+phKlQzVDAZ2+78ppySRp++zc1VgettmHt4sm
+V83dtEa5XhSFfefuvySQI/AV9w53Xu7t5e2Dx/bhxXvPu7w19H/jmI7xpLe9
+trx8QbRJNGWtANTYxfsqa+3iiPRJBR5ddjMDRM7ATQRWOiHNAQgAg2AGo1uR
+i8TxXdmW7jR2rTsTQvSUXRI0wImjBfvW+Pm6CmUg7Hv+3OdWwaddEK0i1aGz
+BviS9KR35iJvsX9GsjF3pnVZSdhSHVY1R/iJkEDq+SJMd1canll/gF/WLzYt
+s8M5VwsAO88phgPwo4W+jnDkJYxMKMBOtyVNriDvVwi8GNvI62kuVwHtm9YJ
+PpV9XS6RnTMbszxNTnFjS3y1JzwlblecX8LsJmEwb0PVHTvhvqyn8Y0u/d+1
+Diu/GcbN4SUlqtOU5qYjRTo4WzjWQKYb+kCEf/yhddv0orHT1KFEW/D20fKn
+N4x1rRQEh2WDPmkwoHTBInr/S0h2n1055QARAQABwsBfBBgBCAATBQJWOiHV
+CRAfTYkwGX/EKQIbDAAAC9QH/joSDkQtDBJv2L/PzTkIhvCypUPzrTpW0Qja
+V3hrLV4cFlR1LeYhQVS/Br2jfUU9Ui3udNBl8qGXK9teQzDFGNOpwgxGbZll
+2yBGIexb6ZgV2N6Dxj4UUPHx9hSNUPqJ+WoHaJhYZEeJs7kW068XvPTo5ojI
++FcGv60jFbAU4cl37jcdnPnYTLR7/PZjRleM5qrebOUnDOWUzuRf4NBb/hqy
+Qxuk8eQ4dXbx2lhQC30TkeENOXiRId/Iiaw/07C8j0p8nkjtVM13C/OU2BcE
+wySkFyWzuvYnPEIabBTk7PGwhbzoeIHG31o6ZtuiWGCg4AWIYpchPhuunPwE
+wJffl4U=
+=mK9R
+-----END PGP PUBLIC KEY BLOCK-----';
+
+		$gpg = new \Passbolt\Gpg();
+
+		// Get key info.
+		$keyinfo = $gpg->getKeyInfo($key);
+		$this->assertEquals($keyinfo['bits'], '');
+		$this->assertEquals($keyinfo['type'], '');
+	}
+
+	/**
 	 * Test importKeyIntoKeyring().
 	 */
 	public function testImportKeyIntoKeyring() {
