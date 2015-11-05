@@ -182,4 +182,18 @@ class AppModel extends Model {
 		$model = ClassRegistry::init($modelName);
 		return $model->exists($check[$key]);
 	}
+
+	/**
+	 * beforeSave() callback.
+	 * @param array $options
+	 *
+	 * @return bool|void
+	 */
+	public function beforeSave($options = array()) {
+		// Set atomic to false.
+		// We usually control transactions at a upper level, and for group of operations.
+		$options['atomic'] = false;
+
+		parent::beforeSave($options);
+	}
 }

@@ -562,7 +562,7 @@ class UsersController extends AppController {
 
 		// Activate user.
 		$this->User->id = $id;
-		$s = $this->User->saveField('active', TRUE);
+		$s = $this->User->saveField('active', TRUE, ['atomic' => false]);
 		if (!$s) {
 			$this->User->rollback();
 			return $this->Message->error(__('Could not update user'));
@@ -570,7 +570,7 @@ class UsersController extends AppController {
 
 		// Deactivate Token.
 		$this->User->AuthenticationToken->id = $isValid['AuthenticationToken']['id'];
-		$s = $this->User->AuthenticationToken->saveField('active', FALSE);
+		$s = $this->User->AuthenticationToken->saveField('active', FALSE, ['atomic' => false]);
 		if (!$s) {
 			$this->User->rollback();
 			return $this->Message->error(__('Could not update token'));
@@ -591,9 +591,7 @@ class UsersController extends AppController {
 			// If validation failed.
 			if (!$v) {
 				$this->User->rollback();
-				$invalidFields = $this->User->Profile->validationErrors;
-				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
-				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
+				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
 			}
 			// Save (update) profile.
 			$s = $this->User->Profile->save($profileData, false, array('fieldList' => $fields['fields']));
@@ -601,32 +599,6 @@ class UsersController extends AppController {
 			if (!$s) {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not save Profile'));
-			}
-		}
-
-		// If User information are provided, we update.
-		if (isset($data['User'])) {
-			$userData = $data['User'];
-			// Get fields.
-			$fields = $this->User->getFindFields('User::validateAccount');
-			// Set user id.
-			$this->User->id = $id;
-			// Validate User data.
-			$this->User->set($userData);
-			$v = $this->User->validates(array('fieldList' => array($fields['fields'])));
-			// If validation failed.
-			if (!$v) {
-				$this->User->rollback();
-				$invalidFields = $this->User->validationErrors;
-				$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
-				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
-			}
-			// Save (update) profile.
-			$s = $this->User->save($userData, false, array('fieldList' => $fields['fields']));
-			// If update failed.
-			if (!$s) {
-				$this->User->rollback();
-				return $this->Message->error(__('Could not save User'));
 			}
 		}
 

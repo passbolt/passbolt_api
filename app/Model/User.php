@@ -589,9 +589,6 @@ class User extends AppModel {
 			case 'User::validateAccount':
 				$fields = array(
 					'fields' => array(
-						'User' => array(
-							'password',
-						),
 						'Profile' => array(
 							'first_name',
 							'last_name',
@@ -688,8 +685,7 @@ class User extends AppModel {
 			$userData,
 			[
 				'validate' => false,
-				'fieldList' => $fields['fields'],
-				'atomic' => false,
+				'fieldList' => $fields['fields']
 			]
 		);
 		if ($user == false) {
@@ -716,8 +712,7 @@ class User extends AppModel {
 			$userData['Profile'],
 			[
 				'validate' => false,
-				'fieldList' => $fields['fields'],
-				'atomic' => false,
+				'fieldList' => $fields['fields']
 			]
 		);
 		if ($profile == false) {
