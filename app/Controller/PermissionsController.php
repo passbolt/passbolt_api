@@ -100,7 +100,7 @@ class PermissionsController extends AppController {
 			return;
 		}
 
-		$ret = $this->Permission->save($data);
+		$ret = $this->Permission->save($data, ['atomic' => false]);
 
 		return $ret;
 	}
