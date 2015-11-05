@@ -16,9 +16,9 @@ Getting started
 Prerequisite
 ------------
 
-You will need browser with the passbolt plugin.
+You will need browser with the passbolt plugin
 
-You will need a webserver with SSL enabled.
+You will need a webserver with SSL enabled
 
 You will need to install php5 and the following modules directly or using pear/pecl:
 - mod_rewrite 	http://book.cakephp.org/2.0/en/installation/url-rewriting.html
