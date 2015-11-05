@@ -159,7 +159,7 @@ ffvdXuT2n3w=
 	 */
 	public function testBitsValidation() {
 		$testcases = array(
-			'' => false,
+			'' => true,
 			'?!#' => false,
 			'12' => true,
 			'12a' => false,
