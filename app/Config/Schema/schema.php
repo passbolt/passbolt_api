@@ -295,7 +295,7 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4096, 'key' => 'unique', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'bits' => array('type' => 'integer', 'null' => false, 'default' => '2048', 'length' => 11),
+		'bits' => array('type' => 'integer', 'null' => true, 'default' => '2048', 'length' => 11),
 		'uid' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128),
 		'key_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 8),
 		'fingerprint' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 51),
