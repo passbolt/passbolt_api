@@ -15,7 +15,7 @@
 ?>
 <div class="grid">
 	<div class="row js_main-login-section">
-		<?php echo $this->element('public/auth/default'); ?>
+		<?php echo $this->element('public/Auth/default'); ?>
 	</div>
 	<div class="row">
 		<div class="col3 push1 github-block">
