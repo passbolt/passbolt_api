@@ -28763,6 +28763,8 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -28794,6 +28796,8 @@ define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/v
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/comment/create*/
 define('app/form/comment/create', [
     'mad/form/form',
@@ -28978,10 +28982,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -31433,26 +31433,26 @@ define('app/component/app_navigation_left', ['mad/component/menu'], function ($_
             afterStart: function () {
                 var menuItems = [
                         new mad.model.Action({
-                            'id': 'js_app_nav_left_home_link',
-                            'label': __('home'),
-                            'cssClasses': ['home'],
-                            'action': function () {
+                            id: 'js_app_nav_left_home_link',
+                            label: __('home'),
+                            cssClasses: ['home'],
+                            action: function () {
                                 mad.bus.trigger('workspace_selected', 'password');
                             }
                         }),
                         new mad.model.Action({
-                            'id': 'js_app_nav_left_pwd_wsp_link',
-                            'label': __('passwords'),
-                            'cssClasses': ['passwords'],
-                            'action': function () {
+                            id: 'js_app_nav_left_password_wsp_link',
+                            label: __('passwords'),
+                            cssClasses: ['passwords'],
+                            action: function () {
                                 mad.bus.trigger('workspace_selected', 'password');
                             }
                         }),
                         new mad.model.Action({
-                            'id': 'js_app_nav_left_user_wsp_link',
-                            'label': __('users'),
-                            'cssClasses': ['users'],
-                            'action': function () {
+                            id: 'js_app_nav_left_user_wsp_link',
+                            label: __('users'),
+                            cssClasses: ['users'],
+                            action: function () {
                                 mad.bus.trigger('workspace_selected', 'people');
                             }
                         })
