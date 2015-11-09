@@ -9,8 +9,8 @@
 			"name": "Sauvage",
 			"song": "http://youtu.be/DaRG0ukxYqQ"
 		},
-		"url": "http://52.11.203.62:8081",
-		"hostname": "52.11.203.62:8081",
+		"url": "http://52.32.88.103:8081",
+		"hostname": "52.32.88.103:8081",
 		"controllerElt": "#js_app_controller",	
 		"namespace": "passbolt",
 		"ControllerClassName": "passbolt.component.App"
