@@ -179,6 +179,10 @@ class User extends AppModel {
 		if (isset($this->data['User']['password'])) {
 			$this->data['User']['password'] = Security::hash($this->data['User']['password'], Configure::read('Auth.HashType'), false);
 		}
+		// If debug mode is activated, set the user id in a predictive manner.
+		if (!isset($this->data['User']['id']) && isset($this->data['User']['username']) && Configure::read('debug') > 0) {
+			$this->data['User']['id'] = Common::uuid($this->data['User']['username']);
+		}
 		return true;
 	}
 
@@ -614,6 +618,10 @@ class User extends AppModel {
 						'active',
 					)
 				);
+				// if we are in debug mode, we also allow a predictive id to be inserted.
+				if (Configure::read('debug') > 0) {
+					$fields['fields'][] = 'id';
+				}
 				break;
 			case 'User::edit':
 				$fields = array(
