@@ -216,7 +216,6 @@ class ResourcesController extends AppController {
 			$secret = $resourcepost['Secret'][0];
 			$secret['user_id'] = User::get('User.id');
 			$secret['resource_id'] = $resource['Resource']['id'];
-			$secret['data'] = $this->request->dataRaw['Secret'][0]['data'];
 
 			// Validate the secret.
 			$this->Resource->Secret->set($secret);
@@ -322,7 +321,10 @@ class ResourcesController extends AppController {
 		if (isset($resourcepost['Resource'])) {
 			$this->Resource->set($resourcepost);
 			if (!$this->Resource->validates()) {
-				return $this->Message->error(__('Could not validate Resource'));
+				return $this->Message->error(
+					__('Could not validate Resource'),
+					array('body' => $this->Resource->validationErrors)
+				);
 			}
 			$fields = $this->Resource->getFindFields('edit', User::get('Role.name'));
 			$save = $this->Resource->save($resourcepost, false, $fields['fields']);
@@ -342,20 +344,21 @@ class ResourcesController extends AppController {
 
 			// Validate the given resources.
 			foreach ($resourcepost['Secret'] as $i => $secret) {
-				// Use the raw secret data, the secret will be validated by the model.
-				$secret['data'] = $this->request->dataRaw['Secret'][$i]['data'];
 				// Force the resource id if empty.
 				if (empty($secret['resource_id'])) {
 					$secret['resource_id'] = $resource['Resource']['id'];
 				}
 				// Force the user id if empty.
 				if (empty($secret['user_id'])) {
-					$secret['user_id'] = User::get('User.id');
+					return $this->Message->error(__('user id was not provided for the secret'));
 				}
 				// Validate the data.
 				$this->Resource->Secret->set($secret);
 				if (!$this->Resource->Secret->validates()) {
-					return $this->Message->error(__('Could not validate secret model'));
+					return $this->Message->error(
+						__('Could not validate secret model'),
+						array('body' => $this->Resource->Secret->validationErrors)
+					);
 				}
 				$secrets[] = $secret;
 			}

@@ -287,14 +287,6 @@ class ShareController extends AppController {
 		$secrets = isset($this->request->data['Secrets']) ?
 			$this->request->data['Secrets'] : null;
 
-		if ($secrets) {
-			// For secrets, get raw data. We do not want the sanitized data that break the gpg format.
-			foreach($secrets as $key => $val) {
-				$rawSecrets = $this->request->dataRaw['Secrets'];
-				$secrets[$key]['Secret']['data'] = $rawSecrets[$key]['Secret']['data'];
-			}
-		}
-
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
