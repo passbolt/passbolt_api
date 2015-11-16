@@ -6,7 +6,7 @@ import 'app/component/breadcrumb/password_breadcrumb';
 //import 'app/component/category_chooser';
 import 'app/component/password_browser';
 import 'app/component/resource_actions_tab';
-import 'app/component/resource_details';
+import 'app/component/resource_sidebar';
 import 'app/component/resource_shortcuts';
 import 'app/component/workspace_secondary_menu';
 //import 'app/form/category/create';
@@ -62,8 +62,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		var secWkMenu = mad.helper.Component.create(
 			$('#js_wsp_secondary_menu_wrapper'),
 			'last',
-			passbolt.component.WorkspaceSecondaryMenu,
-			{}
+			passbolt.component.WorkspaceSecondaryMenu, {
+                selectedItems: this.options.selectedRs
+            }
 		);
 		secWkMenu.start();
 
@@ -89,20 +90,22 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		//this.catChooser = new passbolt.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
 		//this.catChooser.start();
 
-		//// Instantiate the password workspace breadcrumb controller
+		// Instantiate the password workspace breadcrumb controller
 		this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
 		this.breadcrumCtl.start();
 
-		// Instanciate the passwords browser controller
+		// Instantiate the passwords browser controller
 		var passwordBrowserController = new passbolt.component.PasswordBrowser('#js_wsp_pwd_browser', {
 			selectedRs: this.options.selectedRs
 		});
 		passwordBrowserController.start();
 
-		//// Instanciate the resource details controller
-		var resourceDetails = new passbolt.component.ResourceDetails($('.js_wsp_pwd_sidebar_second', this.element), {
-			'selectedRs': this.options.selectedRs
+		// Instanciate the resource details controller
+		var resourceSidebar = new passbolt.component.ResourceSidebar($('.js_wsp_pwd_sidebar_second', this.element), {
+			'selectedItems': this.options.selectedRs
 		});
+        // Hide the sidebar by default.
+        $('.js_wsp_pwd_sidebar_second', this.element).hide();
 
 		// Filter the workspace.
 		var filter = new passbolt.model.Filter({

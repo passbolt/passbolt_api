@@ -3,11 +3,11 @@ import 'app/component/comments';
 import 'app/component/sidebar_section';
 
 /*
- * @inherits mad.component.Component
+ * @inherits mad.View
  * @parent index
  *
  * @constructor
- * Creates a new Sidebar Component
+ * Creates a new Sidebar View
  *
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
@@ -16,38 +16,18 @@ import 'app/component/sidebar_section';
  */
 var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.component.Sidebar', /** @static */ {
 
-	defaults: {
-		label: 'Sidebar Controller',
-		viewClass: passbolt.view.component.ResourceDetails,
-		// the resource to bind the component on
-		resource: null
-	}
-
 }, /** @prototype */ {
 
-	/**
-	 * before start hook.
-	 * @return {void}
-	 */
-	beforeRender: function () {
-		this._super();
-	},
-
-	/**
-	 * Called right after the start function
-	 * @return {void}
-	 * @see {mad.controller.ComponentController}
-	 */
-	afterStart: function () {
-
-	}
-
-
-	/* ************************************************************** */
-	/* LISTEN TO THE MODEL EVENTS */
-	/* ************************************************************** */
-
-
+    /**
+     * Observe when the user clicks on the close button
+     * @param {HTMLElement} el The element the event occured on
+     * @param {HTMLEvent} ev The event which occured
+     * @return {void}
+     */
+    '.icon.close click': function(el, ev) {
+        mad.Config.write('ui.workspace.showSidebar', false);
+        mad.bus.trigger('workspace_showSidebar', false);
+    }
 });
 
 export default Sidebar;

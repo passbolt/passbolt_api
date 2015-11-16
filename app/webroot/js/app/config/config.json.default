@@ -15,6 +15,11 @@
 		"namespace": "passbolt",
 		"ControllerClassName": "passbolt.component.App"
 	},
+	"ui": {
+	    "workspace": {
+	        "showSidebar": true
+	    }
+	},
 	"notification": {
 		"timeout": 6000
 	},

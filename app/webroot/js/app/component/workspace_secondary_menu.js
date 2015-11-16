@@ -21,7 +21,11 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 	defaults: {
 		label: 'Workspace Secondary Menu',
 		templateUri: 'app/view/template/component/workspace_secondary_menu.ejs',
-		tag: 'ul'
+		tag: 'ul',
+        showSidebar: true,
+
+        // Selected users or resources.
+        selectedItems: new can.Model.List(),
 	}
 
 }, /** @prototype */ {
@@ -32,7 +36,9 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 	 */
 	afterStart: function () {
 		// Manage the display of the sidebar
-		var showSidebar = mad.Config.read('ui.workspace.showSidebar');
+		var showSidebar = this.checkShowSidebar();
+        mad.Config.write('ui.workspace.showSidebar', showSidebar);
+
 		this.options.viewSidebarButton = new mad.component.ToggleButton($('#js_wk_secondary_menu_view_sidebar_button'), {
 			state: showSidebar ? 'selected' : 'ready'
 		}).start();
@@ -41,21 +47,32 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 		this.on();
 	},
 
+    /**
+     * Check the settings to see if the sidebar should be shown or hidden.
+     * @return bool
+     */
+    checkShowSidebar: function() {
+        var showSidebar = mad.Config.read('ui.workspace.showSidebar');
+        if (showSidebar == undefined) {
+            showSidebar = this.options.showSidebar;
+        }
+        return showSidebar;
+    },
+
 	/* ************************************************************** */
 	/* LISTEN TO THE APP EVENTS */
 	/* ************************************************************** */
 
 	/**
-	 * Observe when another component wants the sidebar to be hidden.
+	 * Observe when another component wants the sidebar to be shown or hidden.
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
 	'{mad.bus.element} workspace_showSidebar': function (el, ev, show) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
+        var sidebarShouldBeVisible = this.checkShowSidebar();
 
-		if (!show && this.options.viewSidebarButton.state.is('selected')) {
+		if (!show && sidebarShouldBeVisible) {
 			this.options.viewSidebarButton.setState('ready');
 		}
 	},
@@ -67,11 +84,23 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 	 * @return {void}
 	 */
 	'{viewSidebarButton.element} click': function (el, ev) {
-		var showSidebar = !mad.Config.read('ui.workspace.showSidebar');
-		mad.Config.write('ui.workspace.showSidebar', showSidebar);
-		mad.bus.trigger('workspace_showSidebar', showSidebar);
-	}
+        // Status before click.
+		var showSidebar = this.checkShowSidebar();
+        console.log('selectedItems', this.options.selectedItems.length);
+        var isSelection = this.options.selectedItems.length > 0;
+        // New status for the sidebar (opposite to previous one).
+        var showSidebarNewStatus = showSidebar ? false : true;
+        console.log('showSidebar settings', showSidebarNewStatus);
+        console.log('isSelection', isSelection);
+        // Set new status in the settings.
+		mad.Config.write('ui.workspace.showSidebar', showSidebarNewStatus);
 
+        if ( isSelection ) {
+            console.log('trigger sidebar', showSidebarNewStatus);
+            // Trigger show sidebar event with the new status.
+            mad.bus.trigger('workspace_showSidebar', showSidebarNewStatus);
+        }
+	}
 });
 
 export default WorkspaceSecondaryMenu;

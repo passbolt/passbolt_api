@@ -3,24 +3,13 @@ import 'mad/view/view';
 /**
  * @inherits mad.view.View
  */
-var UserDetails = passbolt.view.component.UserDetails = mad.View.extend('passbolt.view.component.UserDetails', /** @static */ {
+var UserSidebar = passbolt.view.component.UserSidebar = passbolt.view.component.Sidebar.extend('passbolt.view.component.UserSidebar', /** @static */ {
 
 }, /** @prototype */ {
 
 	/* ************************************************************** */
 	/* LISTEN TO THE VIEW EVENTS */
 	/* ************************************************************** */
-
-	/**
-	 * Observe when the user clicks on the close button
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
-	 */
-	'.icon.close click': function(el, ev) {
-		mad.Config.write('ui.workspace.showSidebar', false);
-		mad.bus.trigger('workspace_showSidebar', false);
-	},
 
 	/**
 	 * Observe when the user clicks on the copy key button.
@@ -35,4 +24,4 @@ var UserDetails = passbolt.view.component.UserDetails = mad.View.extend('passbol
 	}
 });
 
-export default UserDetails;
+export default UserSidebar;

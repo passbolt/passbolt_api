@@ -7,7 +7,7 @@ import 'app/component/people_breadcrumb';
 //import 'app/component/group_chooser'; // @roadmap
 import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
-import 'app/component/user_details';
+import 'app/component/user_sidebar';
 import 'app/form/user/create';
 //import 'app/form/group/create'; // @roadmap
 import 'app/model/user';
@@ -63,8 +63,9 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var secWkMenu = mad.helper.Component.create(
             $('#js_wsp_secondary_menu_wrapper'),
             'last',
-            passbolt.component.WorkspaceSecondaryMenu,
-            {}
+            passbolt.component.WorkspaceSecondaryMenu, {
+                selectedItems: this.options.selectedUsers
+            }
         );
         secWkMenu.start();
 
@@ -90,10 +91,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         userBrowserController.start();
 
         // Instanciate the resource details controller
-        var userDetails = new passbolt.component.UserDetails($('.js_wsp_users_sidebar_second', this.element), {
+        var userSidebar = new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
             id: 'js_user_details',
-            selectedUsers: this.options.selectedUsers
+            selectedItems: this.options.selectedUsers
         });
+        $('.js_wsp_users_sidebar_second', this.element).hide();
 
         // Filter the workspace.
         var filter = null;
@@ -107,6 +109,8 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
             });
         }
         mad.bus.trigger('filter_users_browser', filter);
+
+        this.on();
     },
 
     /**

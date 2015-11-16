@@ -1,26 +1,15 @@
-import 'mad/view/view';
+import 'app/view/component/sidebar';
 
 /**
  * @inherits mad.view.View
  */
-var ResourceDetails = passbolt.view.component.ResourceDetails = mad.View.extend('passbolt.view.component.ResourceDetails', /** @static */ {
+var ResourceSidebar = passbolt.view.component.ResourceSidebar = passbolt.view.component.Sidebar.extend('passbolt.view.component.ResourceSidebar', /** @static */ {
 
 }, /** @prototype */ {
 
 	/* ************************************************************** */
 	/* LISTEN TO THE VIEW EVENTS */
 	/* ************************************************************** */
-
-	/**
-	 * Observe when the user clicks on the close button
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
-	 */
-	'.icon.close click': function(el, ev) {
-		mad.Config.write('ui.workspace.showSidebar', false);
-		mad.bus.trigger('workspace_showSidebar', false);
-	},
 
 	/**
 	 * Observe when the user clicks on any h2 element, rolldown the following p tag
@@ -45,4 +34,4 @@ var ResourceDetails = passbolt.view.component.ResourceDetails = mad.View.extend(
 	}
 });
 
-export default ResourceDetails;
+export default ResourceSidebar;
