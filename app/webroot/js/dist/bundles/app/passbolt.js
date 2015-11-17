@@ -24328,6 +24328,14 @@ define('app/form/user/create', [
                 this.addElement(this.options.role, new mad.form.Feedback($('#js_field_role_id_feedback'), {}).start());
                 this.options.role.setValue(cakephpConfig.roles.user);
                 $('input[type=checkbox]', $('#js_field_role_id')).not('[value=\'' + cakephpConfig.roles.admin + '\']').hide().next('label').hide();
+                var editingOwnProfile = false;
+                if (this.options.data != undefined && this.options.data.id == passbolt.model.User.getCurrent().id) {
+                    editingOwnProfile = true;
+                }
+                if (editingOwnProfile == true) {
+                    $('input[type=checkbox]', $('#js_field_role_id')).attr('disabled', true);
+                    $('#js_field_role_id').parent().addClass('disabled');
+                }
                 this.addElement(new mad.form.Textbox($('#js_field_username'), { modelReference: 'passbolt.model.User.username' }).start(), new mad.form.Feedback($('#js_field_username_feedback'), {}).start());
                 this.on();
             },
@@ -28433,27 +28441,89 @@ define('app/component/resource_actions_tab', [
         __esModule: true
     };
 });
-/*app/view/component/resource_details*/
-define('app/view/component/resource_details', ['mad/view/view'], function ($__0) {
+/*app/component/sidebar*/
+define('app/component/sidebar', ['mad/component/component'], function ($__0) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
     $__0;
-    var ResourceDetails = passbolt.view.component.ResourceDetails = mad.View.extend('passbolt.view.component.ResourceDetails', {}, {
-            '.icon.close click': function (el, ev) {
-                mad.Config.write('ui.workspace.showSidebar', false);
-                mad.bus.trigger('workspace_showSidebar', false);
+    var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbolt.component.Sidebar', {
+            defaults: {
+                label: 'Sidebar Component',
+                viewClass: passbolt.view.component.Sidebar,
+                selectedItem: null,
+                selectedItems: null,
+                'templateUri': 'app/view/template/component/sidebar.ejs'
+            }
+        }, {
+            beforeRender: function () {
+                this._super();
+                this.setViewData('selectedItem', this.options.selectedItem);
             },
-            'h2 click': function (el, ev) {
-                el.next('p').toggle();
+            load: function (item) {
+                this.options.selectedItem = item;
+                if (this.state.is(null)) {
+                    this.start();
+                } else {
+                    this.refresh();
+                }
+                this.on();
             },
-            'li.password .secret-copy > a click': function (el, ev) {
-                ev.stopPropagation();
-                ev.preventDefault();
-                this.element.trigger('password_clicked', [ev]);
+            isDisabled: function () {
+                if (this.state.is('disabled') || this.state.is(null) && (this.options.state == 'disabled' || $.isArray(this.options.state) && this.options.state.indexOf('disabled') != -1)) {
+                    return true;
+                }
+                return false;
+            },
+            _show: function () {
+                var showSidebarEnabled = mad.Config.read('ui.workspace.showSidebar');
+                var itemsSelected = this.options.selectedItem != null;
+                if (itemsSelected && showSidebarEnabled) {
+                    this.load(this.options.selectedItem);
+                    this.setState('ready');
+                }
+            },
+            _hide: function () {
+                this.setState('hidden');
+            },
+            stateReady: function (go) {
+                if (go) {
+                    this.view.show();
+                }
+                this._super(go);
+            },
+            '{selectedItem} updated': function (item) {
+                if (!this.isDisabled()) {
+                    this.refresh();
+                }
+            },
+            '{mad.bus.element} workspace_showSidebar': function (el, ev, show) {
+                if (show) {
+                    this._show();
+                } else {
+                    this._hide();
+                }
+            },
+            '{selectedItems} add': function (el, ev, item) {
+                if (this.options.selectedItems.length == 0 || this.options.selectedItems.length > 1) {
+                    this.options.selectedItem = null;
+                    this._hide();
+                } else {
+                    this.options.selectedItem = this.options.selectedItems[0];
+                    this._show();
+                }
+            },
+            '{selectedItems} remove': function (el, ev, itel) {
+                if (this.options.selectedItems.length == 0 || this.options.selectedItems.length > 1) {
+                    this.options.selectedItem = null;
+                    this._hide();
+                } else {
+                    this.options.selectedItem = this.options.selectedItems[0];
+                    this._show();
+                }
             }
         });
-    var $__default = ResourceDetails;
+    var $__default = Sidebar;
     return {
         get default() {
             return $__default;
@@ -28714,8 +28784,6 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -28749,6 +28817,8 @@ define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/v
 });
 /*lib/can/util/array/makeArray*/
 System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/comment/create*/
 define('app/form/comment/create', [
     'mad/form/form',
@@ -28912,6 +28982,60 @@ define('app/component/sidebar_section', ['mad/view/component/tree'], function ($
             }
         }, {});
     var $__default = SidebarSection;
+    return {
+        get default() {
+            return $__default;
+        },
+        __esModule: true
+    };
+});
+/*app/view/component/sidebar*/
+define('app/view/component/sidebar', [
+    'mad/view/component/tree',
+    'app/component/comments',
+    'app/component/sidebar_section'
+], function ($__0, $__1, $__2) {
+    'use strict';
+    if (!$__0 || !$__0.__esModule)
+        $__0 = { default: $__0 };
+    if (!$__1 || !$__1.__esModule)
+        $__1 = { default: $__1 };
+    if (!$__2 || !$__2.__esModule)
+        $__2 = { default: $__2 };
+    $__0;
+    $__1;
+    $__2;
+    var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.component.Sidebar', {}, {
+            '.icon.close click': function (el, ev) {
+                mad.Config.write('ui.workspace.showSidebar', false);
+                mad.bus.trigger('workspace_showSidebar', false);
+            }
+        });
+    var $__default = Sidebar;
+    return {
+        get default() {
+            return $__default;
+        },
+        __esModule: true
+    };
+});
+/*app/view/component/resource_sidebar*/
+define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], function ($__0) {
+    'use strict';
+    if (!$__0 || !$__0.__esModule)
+        $__0 = { default: $__0 };
+    $__0;
+    var ResourceSidebar = passbolt.view.component.ResourceSidebar = passbolt.view.component.Sidebar.extend('passbolt.view.component.ResourceSidebar', {}, {
+            'h2 click': function (el, ev) {
+                el.next('p').toggle();
+            },
+            'li.password .secret-copy > a click': function (el, ev) {
+                ev.stopPropagation();
+                ev.preventDefault();
+                this.element.trigger('password_clicked', [ev]);
+            }
+        });
+    var $__default = ResourceSidebar;
     return {
         get default() {
             return $__default;
@@ -29132,13 +29256,13 @@ define('app/component/sidebar_section/description', [
         });
     return {};
 });
-/*app/view/template/component/resource_details.ejs!lib/can/view/ejs/system*/
-define('app/view/template/component/resource_details.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
-    return can.view.preloadStringRenderer('app_view_template_component_resource_details_ejs', can.EJS(function (_CONTEXT, _VIEW) {
+/*app/view/template/component/resource_sidebar.ejs!lib/can/view/ejs/system*/
+define('app/view/template/component/resource_sidebar.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
+    return can.view.preloadStringRenderer('app_view_template_component_resource_sidebar_ejs', can.EJS(function (_CONTEXT, _VIEW) {
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<div class="resource">\n\t<h3>');
+                ___v1ew.push('<div class="sidebar resource">\n\t<h3>');
                 ___v1ew.push(can.view.txt(1, 'h3', 0, this, function () {
                     return resource.name;
                 }));
@@ -29226,15 +29350,16 @@ define('app/view/template/component/resource_details.ejs!lib/can/view/ejs/system
         }
     }));
 });
-/*app/component/resource_details*/
-define('app/component/resource_details', [
+/*app/component/resource_sidebar*/
+define('app/component/resource_sidebar', [
     'mad/view/component/tree',
-    'app/view/component/resource_details',
+    'app/component/sidebar',
+    'app/view/component/resource_sidebar',
     'app/component/comments',
     'app/component/sidebar_section',
     'app/component/sidebar_section/description',
-    'app/view/template/component/resource_details.ejs!'
-], function ($__0, $__1, $__2, $__3, $__4, $__5) {
+    'app/view/template/component/resource_sidebar.ejs!'
+], function ($__0, $__1, $__2, $__3, $__4, $__5, $__6) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
@@ -29248,123 +29373,47 @@ define('app/component/resource_details', [
         $__4 = { default: $__4 };
     if (!$__5 || !$__5.__esModule)
         $__5 = { default: $__5 };
+    if (!$__6 || !$__6.__esModule)
+        $__6 = { default: $__6 };
     $__0;
     $__1;
     $__2;
     $__3;
     $__4;
     $__5;
-    var ResourceDetails = passbolt.component.ResourceDetails = mad.Component.extend('passbolt.component.ResourceDetails', {
+    $__6;
+    var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Sidebar.extend('passbolt.component.ResourceSidebar', {
             defaults: {
                 label: 'Resource Details',
-                viewClass: passbolt.view.component.ResourceDetails,
-                resource: null,
-                selectedRs: new can.Model.List(),
-                'templateUri': 'app/view/template/component/resource_details.ejs'
+                viewClass: passbolt.view.component.ResourceSidebar,
+                'templateUri': 'app/view/template/component/resource_sidebar.ejs'
             }
         }, {
             beforeRender: function () {
                 this._super();
-                this.setViewData('resource', this.options.resource);
-                var secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.resource.Secret.data);
-                this.setViewData('secretStrength', secretStrength);
+                if (this.options.selectedItem != null) {
+                    this.setViewData('resource', this.options.selectedItem);
+                    var secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.selectedItem.Secret.data);
+                    this.setViewData('secretStrength', secretStrength);
+                }
             },
             afterStart: function () {
-                var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), { 'resource': this.options.resource });
+                this._super();
+                var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), { 'resource': this.options.selectedItem });
                 descriptionController.start();
                 var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
-                        'resource': this.options.resource,
+                        'resource': this.options.selectedItem,
                         'foreignModel': 'Resource',
-                        'foreignId': this.options.resource.id
+                        'foreignId': this.options.selectedItem.id
                     });
                 commentsController.start();
-            },
-            load: function (resource) {
-                this.options.resource = resource;
-                if (this.state.is(null)) {
-                    this.start();
-                } else {
-                    this.refresh();
-                }
-                this.on();
-            },
-            isDisabled: function () {
-                if (this.state.is('disabled') || this.state.is(null) && (this.options.state == 'disabled' || $.isArray(this.options.state) && this.options.state.indexOf('disabled') != -1)) {
-                    return true;
-                }
-                return false;
-            },
-            stateReady: function (go) {
-                if (go) {
-                    this.view.show();
-                }
-                this._super(go);
             },
             ' password_clicked': function (el, ev) {
                 var secret = this.options.selectedRs[0].Secret[0].data;
                 mad.bus.trigger('passbolt.secret.decrypt', secret);
-            },
-            '{resource} updated': function (resource) {
-                if (!this.isDisabled()) {
-                    this.refresh();
-                }
-            },
-            '{mad.bus.element} workspace_showSidebar': function (el, ev, show) {
-                if (!this.element)
-                    return;
-                if (show) {
-                    if (this.state.is(null)) {
-                        this.options.state = 'ready';
-                    } else {
-                        this.setState('ready');
-                        if (this.options.selectedRs.length == 1) {
-                            this.refresh();
-                        }
-                    }
-                } else {
-                    if (this.state.is(null)) {
-                        this.options.state = [
-                            'hidden',
-                            'disabled'
-                        ];
-                    } else {
-                        this.setState([
-                            'hidden',
-                            'disabled'
-                        ]);
-                    }
-                }
-            },
-            '{selectedRs} add': function (el, ev, resource) {
-                if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
-                    this.options.resource = null;
-                    if (!this.isDisabled()) {
-                        this.setState('hidden');
-                    }
-                } else {
-                    this.options.resource = this.options.selectedRs[0];
-                    if (!this.isDisabled()) {
-                        this.load(this.options.resource);
-                        this.setState('ready');
-                    }
-                }
-            },
-            '{selectedRs} remove': function (el, ev, resource) {
-                if (this.options.selectedRs.length == 0 || this.options.selectedRs.length > 1) {
-                    this.options.resource = null;
-                    if (!this.isDisabled() && !this.state.is(null)) {
-                        this.setState('hidden');
-                    }
-                } else {
-                    this.options.resource = this.options.selectedRs[0];
-                    if (!this.isDisabled()) {
-                        this.load(this.options.resource);
-                        this.setState('ready');
-                    }
-                }
             }
         });
-    var $__default = ResourceDetails;
+    var $__default = ResourceSidebar;
     return {
         get default() {
             return $__default;
@@ -29529,25 +29578,42 @@ define('app/component/workspace_secondary_menu', [
             defaults: {
                 label: 'Workspace Secondary Menu',
                 templateUri: 'app/view/template/component/workspace_secondary_menu.ejs',
-                tag: 'ul'
+                tag: 'ul',
+                showSidebar: true,
+                selectedItems: new can.Model.List()
             }
         }, {
             afterStart: function () {
-                var showSidebar = mad.Config.read('ui.workspace.showSidebar');
+                var showSidebar = this.checkShowSidebar();
+                mad.Config.write('ui.workspace.showSidebar', showSidebar);
                 this.options.viewSidebarButton = new mad.component.ToggleButton($('#js_wk_secondary_menu_view_sidebar_button'), { state: showSidebar ? 'selected' : 'ready' }).start();
                 this.on();
             },
+            checkShowSidebar: function () {
+                var showSidebar = mad.Config.read('ui.workspace.showSidebar');
+                if (showSidebar == undefined) {
+                    showSidebar = this.options.showSidebar;
+                }
+                return showSidebar;
+            },
             '{mad.bus.element} workspace_showSidebar': function (el, ev, show) {
-                if (!this.element)
-                    return;
-                if (!show && this.options.viewSidebarButton.state.is('selected')) {
+                var sidebarShouldBeVisible = this.checkShowSidebar();
+                if (!show && sidebarShouldBeVisible) {
                     this.options.viewSidebarButton.setState('ready');
                 }
             },
             '{viewSidebarButton.element} click': function (el, ev) {
-                var showSidebar = !mad.Config.read('ui.workspace.showSidebar');
-                mad.Config.write('ui.workspace.showSidebar', showSidebar);
-                mad.bus.trigger('workspace_showSidebar', showSidebar);
+                var showSidebar = this.checkShowSidebar();
+                console.log('selectedItems', this.options.selectedItems.length);
+                var isSelection = this.options.selectedItems.length > 0;
+                var showSidebarNewStatus = showSidebar ? false : true;
+                console.log('showSidebar settings', showSidebarNewStatus);
+                console.log('isSelection', isSelection);
+                mad.Config.write('ui.workspace.showSidebar', showSidebarNewStatus);
+                if (isSelection) {
+                    console.log('trigger sidebar', showSidebarNewStatus);
+                    mad.bus.trigger('workspace_showSidebar', showSidebarNewStatus);
+                }
             }
         });
     var $__default = WorkspaceSecondaryMenu;
@@ -29810,14 +29876,7 @@ define('app/view/template/password_workspace.ejs!lib/can/view/ejs/system', ['can
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<div class="js_workspace">\n\t<div class="panel left">\n\t\t<div class="navigation first shortcuts">\n\t\t\t<ul id="js_wsp_pwd_filter_shortcuts" class="clearfix">\n\t\t\t</ul>\n\t\t</div>\n\t\t<div class="navigation last tree categories">\n\t\t\t<ul id="js_wsp_pwd_category_chooser">\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\t<div class="panel middle">\n        <div id="js_wsp_password_breadcrumb" class="breadcrumbs">\n        </div>\n        <div id="js_wsp_pwd_browser" class="tableview">\n        </div>\n\t</div>\n\t<div id="js_pwd_details" class="panel aside js_wsp_pwd_sidebar_second" ');
-                ___v1ew.push(can.view.txt(2, 'div', 'style', this, function () {
-                    var ___v1ew = [];
-                    ___v1ew.push('style="');
-                    ___v1ew.push('display:none"');
-                    return ___v1ew.join('');
-                }));
-                ___v1ew.push('>\n\t</div>\n</div>\n');
+                ___v1ew.push('<div class="js_workspace">\n\t<div class="panel left">\n\t\t<div class="navigation first shortcuts">\n\t\t\t<ul id="js_wsp_pwd_filter_shortcuts" class="clearfix">\n\t\t\t</ul>\n\t\t</div>\n\t\t<div class="navigation last tree categories">\n\t\t\t<ul id="js_wsp_pwd_category_chooser">\n\t\t\t</ul>\n\t\t</div>\n\t</div>\n\t<div class="panel middle">\n        <div id="js_wsp_password_breadcrumb" class="breadcrumbs">\n        </div>\n        <div id="js_wsp_pwd_browser" class="tableview">\n        </div>\n\t</div>\n\t<div id="js_pwd_details" class="panel aside js_wsp_pwd_sidebar_second">\n\t</div>\n</div>\n');
                 ;
                 return ___v1ew.join('');
             }
@@ -29845,7 +29904,7 @@ define('app/component/password_workspace', [
     'app/component/breadcrumb/password_breadcrumb',
     'app/component/password_browser',
     'app/component/resource_actions_tab',
-    'app/component/resource_details',
+    'app/component/resource_sidebar',
     'app/component/resource_shortcuts',
     'app/component/workspace_secondary_menu',
     'app/form/resource/create',
@@ -29905,7 +29964,7 @@ define('app/component/password_workspace', [
             afterStart: function () {
                 var primWkMenu = mad.helper.Component.create($('#js_wsp_primary_menu_wrapper'), 'last', passbolt.component.PasswordWorkspaceMenu, { 'selectedRs': this.options.selectedRs });
                 primWkMenu.start();
-                var secWkMenu = mad.helper.Component.create($('#js_wsp_secondary_menu_wrapper'), 'last', passbolt.component.WorkspaceSecondaryMenu, {});
+                var secWkMenu = mad.helper.Component.create($('#js_wsp_secondary_menu_wrapper'), 'last', passbolt.component.WorkspaceSecondaryMenu, { selectedItems: this.options.selectedRs });
                 secWkMenu.start();
                 this.options.createButton = mad.helper.Component.create($('.main-action-wrapper'), 'last', mad.component.Button, {
                     id: 'js_wsp_create_button',
@@ -29920,7 +29979,8 @@ define('app/component/password_workspace', [
                 this.breadcrumCtl.start();
                 var passwordBrowserController = new passbolt.component.PasswordBrowser('#js_wsp_pwd_browser', { selectedRs: this.options.selectedRs });
                 passwordBrowserController.start();
-                var resourceDetails = new passbolt.component.ResourceDetails($('.js_wsp_pwd_sidebar_second', this.element), { 'selectedRs': this.options.selectedRs });
+                var resourceSidebar = new passbolt.component.ResourceSidebar($('.js_wsp_pwd_sidebar_second', this.element), { 'selectedItems': this.options.selectedRs });
+                $('.js_wsp_pwd_sidebar_second', this.element).hide();
                 var filter = new passbolt.model.Filter({
                         label: __('All items'),
                         order: 'modified',
@@ -29933,6 +29993,7 @@ define('app/component/password_workspace', [
                 $('#js_wsp_primary_menu_wrapper').empty();
                 $('#js_wsp_secondary_menu_wrapper').empty();
                 $('.main-action-wrapper').empty();
+                this.options.selectedRs.splice(0, this.options.selectedRs.length);
                 this._super();
             },
             index: function (a, b, c) {
@@ -30836,24 +30897,20 @@ define('app/component/user_shortcuts', ['mad/component/menu'], function ($__0) {
         __esModule: true
     };
 });
-/*app/view/component/user_details*/
-define('app/view/component/user_details', ['mad/view/view'], function ($__0) {
+/*app/view/component/user_sidebar*/
+define('app/view/component/user_sidebar', ['mad/view/view'], function ($__0) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
     $__0;
-    var UserDetails = passbolt.view.component.UserDetails = mad.View.extend('passbolt.view.component.UserDetails', {}, {
-            '.icon.close click': function (el, ev) {
-                mad.Config.write('ui.workspace.showSidebar', false);
-                mad.bus.trigger('workspace_showSidebar', false);
-            },
+    var UserSidebar = passbolt.view.component.UserSidebar = passbolt.view.component.Sidebar.extend('passbolt.view.component.UserSidebar', {}, {
             'a.copy-public-key click': function (el, ev) {
                 ev.stopPropagation();
                 ev.preventDefault();
                 this.element.trigger('request_copy_publickey', [ev]);
             }
         });
-    var $__default = UserDetails;
+    var $__default = UserSidebar;
     return {
         get default() {
             return $__default;
@@ -30861,13 +30918,13 @@ define('app/view/component/user_details', ['mad/view/view'], function ($__0) {
         __esModule: true
     };
 });
-/*app/view/template/component/user_details.ejs!lib/can/view/ejs/system*/
-define('app/view/template/component/user_details.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
-    return can.view.preloadStringRenderer('app_view_template_component_user_details_ejs', can.EJS(function (_CONTEXT, _VIEW) {
+/*app/view/template/component/user_sidebar.ejs!lib/can/view/ejs/system*/
+define('app/view/template/component/user_sidebar.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
+    return can.view.preloadStringRenderer('app_view_template_component_user_sidebar_ejs', can.EJS(function (_CONTEXT, _VIEW) {
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<div class="user">\n\t<div class="header">\n\t\t<img ');
+                ___v1ew.push('<div class="sidebar user">\n\t<div class="header">\n\t\t<img ');
                 ___v1ew.push(can.view.txt(2, 'img', 'src', this, function () {
                     var ___v1ew = [];
                     ___v1ew.push('src="');
@@ -30900,11 +30957,7 @@ define('app/view/template/component/user_details.ejs!lib/can/view/ejs/system', [
                 ___v1ew.push(can.view.txt(1, 'h4', 0, this, function () {
                     return __('Information');
                 }));
-                ___v1ew.push('</h4>\n\t\t<ul>\n\t\t\t<li class="username">\n\t\t\t\t<span class="label">');
-                ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
-                    return __('Password');
-                }));
-                ___v1ew.push('</span>\n\t\t\t\t<span class="value">**********</span>\n\t\t\t</li>\n\t\t\t<li class="role">\n\t\t\t\t<span class="label">');
+                ___v1ew.push('</h4>\n\t\t<ul>\n\t\t\t<li class="role">\n\t\t\t\t<span class="label">');
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return __('Role');
                 }));
@@ -30971,12 +31024,13 @@ define('app/view/template/component/user_details.ejs!lib/can/view/ejs/system', [
         }
     }));
 });
-/*app/component/user_details*/
-define('app/component/user_details', [
+/*app/component/user_sidebar*/
+define('app/component/user_sidebar', [
     'mad/view/component/tree',
-    'app/view/component/user_details',
-    'app/view/template/component/user_details.ejs!'
-], function ($__0, $__1, $__2) {
+    'app/component/sidebar',
+    'app/view/component/user_sidebar',
+    'app/view/template/component/user_sidebar.ejs!'
+], function ($__0, $__1, $__2, $__3) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
@@ -30984,42 +31038,22 @@ define('app/component/user_details', [
         $__1 = { default: $__1 };
     if (!$__2 || !$__2.__esModule)
         $__2 = { default: $__2 };
+    if (!$__3 || !$__3.__esModule)
+        $__3 = { default: $__3 };
     $__0;
     $__1;
     $__2;
-    var UserDetails = passbolt.component.UserDetails = mad.Component.extend('passbolt.component.UserDetails', {
+    $__3;
+    var UserSidebar = passbolt.component.UserSidebar = passbolt.component.Sidebar.extend('passbolt.component.UserSidebar', {
             defaults: {
                 label: 'User Details Controller',
-                viewClass: passbolt.view.component.UserDetails,
-                resource: null,
-                selectedUsers: new can.Model.List(),
-                templateUri: 'app/view/template/component/user_details.ejs'
+                viewClass: passbolt.view.component.UserSidebar,
+                templateUri: 'app/view/template/component/user_sidebar.ejs'
             }
         }, {
             beforeRender: function () {
                 this._super();
-                this.setViewData('user', this.options.user);
-            },
-            load: function (user) {
-                this.options.user = user;
-                if (this.state.is(null)) {
-                    this.start();
-                } else {
-                    this.refresh();
-                }
-                this.on();
-            },
-            isDisabled: function () {
-                if (this.state.is('disabled') || this.state.is(null) && (this.options.state == 'disabled' || $.isArray(this.options.state) && this.options.state.indexOf('disabled') != -1)) {
-                    return true;
-                }
-                return false;
-            },
-            stateReady: function (go) {
-                if (go) {
-                    this.view.show();
-                }
-                this._super(go);
+                this.setViewData('user', this.options.selectedItem);
             },
             ' request_copy_publickey': function (el, ev) {
                 var gpgKey = this.options.selectedUsers[0].Gpgkey.key;
@@ -31028,68 +31062,9 @@ define('app/component/user_details', [
                         data: gpgKey
                     };
                 mad.bus.trigger('passbolt.clipboard', data);
-            },
-            '{user} updated': function (user) {
-                if (!this.isDisabled()) {
-                    this.refresh();
-                }
-            },
-            '{mad.bus.element} workspace_showSidebar': function (el, ev, show) {
-                if (!this.element)
-                    return;
-                if (show) {
-                    if (this.state.is(null)) {
-                        this.options.state = 'ready';
-                    } else {
-                        this.setState('ready');
-                        if (this.options.selectedUsers.length == 1) {
-                            this.refresh();
-                        }
-                    }
-                } else {
-                    if (this.state.is(null)) {
-                        this.options.state = [
-                            'hidden',
-                            'disabled'
-                        ];
-                    } else {
-                        this.setState([
-                            'hidden',
-                            'disabled'
-                        ]);
-                    }
-                }
-            },
-            '{selectedUsers} add': function (el, ev, user) {
-                if (this.options.selectedUsers.length == 0 || this.options.selectedUsers.length > 1) {
-                    this.options.user = null;
-                    if (!this.isDisabled()) {
-                        this.setState('hidden');
-                    }
-                } else {
-                    this.options.user = this.options.selectedUsers[0];
-                    if (!this.isDisabled()) {
-                        this.load(this.options.user);
-                        this.setState('ready');
-                    }
-                }
-            },
-            '{selectedUsers} remove': function (el, ev, user) {
-                if (this.options.selectedUsers.length == 0 || this.options.selectedUsers.length > 1) {
-                    this.options.user = null;
-                    if (!this.isDisabled() && !this.state.is(null)) {
-                        this.setState('hidden');
-                    }
-                } else {
-                    this.options.user = this.options.selectedUsers[0];
-                    if (!this.isDisabled()) {
-                        this.load(this.options.user);
-                        this.setState('ready');
-                    }
-                }
             }
         });
-    var $__default = UserDetails;
+    var $__default = UserSidebar;
     return {
         get default() {
             return $__default;
@@ -31103,14 +31078,7 @@ define('app/view/template/people_workspace.ejs!lib/can/view/ejs/system', ['can/v
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<div class="js_users_workspace">\n    <div class="panel left">\n\t\t<div class="navigation first shortcuts">\n\t\t\t<ul id="js_wsp_users_filter_shortcuts" class="clearfix">\n\t\t\t</ul>\n\t\t</div>\n        <div class="navigation last tree groups">\n            <ul id="js_wsp_users_group_chooser">\n            </ul>\n        </div>\n    </div>\n    <div class="panel middle">\n        <div id="js_wsp_users_breadcrumb" class="breadcrumbs">\n        </div>\n        <div id="js_wsp_users_browser" class="tableview">\n        </div>\n    </div>\n    <div class="panel aside js_wsp_users_sidebar_second" ');
-                ___v1ew.push(can.view.txt(2, 'div', 'style', this, function () {
-                    var ___v1ew = [];
-                    ___v1ew.push('style="');
-                    ___v1ew.push('display:none"');
-                    return ___v1ew.join('');
-                }));
-                ___v1ew.push('>\n    </div>\n</div>');
+                ___v1ew.push('<div class="js_users_workspace">\n    <div class="panel left">\n\t\t<div class="navigation first shortcuts">\n\t\t\t<ul id="js_wsp_users_filter_shortcuts" class="clearfix">\n\t\t\t</ul>\n\t\t</div>\n        <div class="navigation last tree groups">\n            <ul id="js_wsp_users_group_chooser">\n            </ul>\n        </div>\n    </div>\n    <div class="panel middle">\n        <div id="js_wsp_users_breadcrumb" class="breadcrumbs">\n        </div>\n        <div id="js_wsp_users_browser" class="tableview">\n        </div>\n    </div>\n    <div class="panel aside js_wsp_users_sidebar_second">\n    </div>\n</div>');
                 ;
                 return ___v1ew.join('');
             }
@@ -31127,7 +31095,7 @@ define('app/component/people_workspace', [
     'app/component/people_breadcrumb',
     'app/component/user_browser',
     'app/component/user_shortcuts',
-    'app/component/user_details',
+    'app/component/user_sidebar',
     'app/form/user/create',
     'app/model/user',
     'app/model/filter',
@@ -31189,7 +31157,7 @@ define('app/component/people_workspace', [
                         selectedGroups: this.options.selectedGroups
                     });
                 primWkMenu.start();
-                var secWkMenu = mad.helper.Component.create($('#js_wsp_secondary_menu_wrapper'), 'last', passbolt.component.WorkspaceSecondaryMenu, {});
+                var secWkMenu = mad.helper.Component.create($('#js_wsp_secondary_menu_wrapper'), 'last', passbolt.component.WorkspaceSecondaryMenu, { selectedItems: this.options.selectedUsers });
                 secWkMenu.start();
                 this.breadcrumCtl = new passbolt.component.PeopleBreadcrumb($('#js_wsp_users_breadcrumb'), {});
                 this.breadcrumCtl.start();
@@ -31197,10 +31165,11 @@ define('app/component/people_workspace', [
                 userShortcut.start();
                 var userBrowserController = new passbolt.component.UserBrowser('#js_wsp_users_browser', { selectedUsers: this.options.selectedUsers });
                 userBrowserController.start();
-                var userDetails = new passbolt.component.UserDetails($('.js_wsp_users_sidebar_second', this.element), {
+                var userSidebar = new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
                         id: 'js_user_details',
-                        selectedUsers: this.options.selectedUsers
+                        selectedItems: this.options.selectedUsers
                     });
+                $('.js_wsp_users_sidebar_second', this.element).hide();
                 var filter = null;
                 if (this.options.filter) {
                     filter = this.options.filter;
@@ -31211,10 +31180,12 @@ define('app/component/people_workspace', [
                     });
                 }
                 mad.bus.trigger('filter_users_browser', filter);
+                this.on();
             },
             destroy: function () {
                 $('#js_wsp_primary_menu_wrapper').empty();
                 $('#js_wsp_secondary_menu_wrapper').empty();
+                this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
                 this._super();
             },
             '{mad.bus.element} group_selected': function (el, ev, group) {
