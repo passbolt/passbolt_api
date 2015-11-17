@@ -526,6 +526,65 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	/**
+	 * Test that an admin can update a user's role to admin
+	 */
+	public function testAdminCanUpdateSomebodysRoleToAdmin() {
+		// normal user don't have the right to add user
+		$admin = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($admin);
+		$user = $this->User->findByUsername('dame@passbolt.com');
+
+		$id = $user['User']['id'];
+		$adminRoleId = $this->User->Role->field('id', ['name' => Role::ADMIN]);
+
+		$resRaw = $this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => array(
+					'User' => array(
+						'id' => $id,
+						'role_id' => $adminRoleId,
+					),
+				),
+				'method' => 'put',
+				'return' => 'contents'
+			));
+		$result = json_decode($resRaw, true);
+
+		$user = $this->User->findByUsername("dame@passbolt.com");
+		$this->assertEquals(
+			$user['User']['role_id'],
+			$adminRoleId,
+			"Edit : /users.json : After update the role of dame@passbolt.com should be admin, but is not"
+		);
+	}
+
+	/**
+	 * Test that an admin cannot update his own role.
+	 */
+	public function testAdminCantUpdateOwnRole() {
+		// normal user don't have the right to add user
+		$admin = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($admin);
+
+		$id = $admin['User']['id'];
+
+		$this->setExpectedException('HttpException', 'Could not validate User');
+		$this->testAction(
+			"/users/$id.json",
+			array(
+				'data'   => array(
+					'User' => array(
+						'id' => $id,
+						'role_id' => $this->User->Role->field('id', ['name' => Role::ADMIN]),
+					),
+				),
+				'method' => 'put',
+				'return' => 'contents'
+			));
+	}
+
+	/**
 	 * Test update password from admin.
 	 */
 	public function testUpdatePasswordFromAdmin() {
