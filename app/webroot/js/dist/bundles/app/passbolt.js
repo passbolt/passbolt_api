@@ -31384,26 +31384,26 @@ define('app/component/app_navigation_left', ['mad/component/menu'], function ($_
             afterStart: function () {
                 var menuItems = [
                         new mad.model.Action({
-                            'id': 'js_app_nav_left_home_link',
-                            'label': __('home'),
-                            'cssClasses': ['home'],
-                            'action': function () {
+                            id: 'js_app_nav_left_home_link',
+                            label: __('home'),
+                            cssClasses: ['home'],
+                            action: function () {
                                 mad.bus.trigger('workspace_selected', 'password');
                             }
                         }),
                         new mad.model.Action({
-                            'id': 'js_app_nav_left_pwd_wsp_link',
-                            'label': __('passwords'),
-                            'cssClasses': ['passwords'],
-                            'action': function () {
+                            id: 'js_app_nav_left_password_wsp_link',
+                            label: __('passwords'),
+                            cssClasses: ['passwords'],
+                            action: function () {
                                 mad.bus.trigger('workspace_selected', 'password');
                             }
                         }),
                         new mad.model.Action({
-                            'id': 'js_app_nav_left_user_wsp_link',
-                            'label': __('users'),
-                            'cssClasses': ['users'],
-                            'action': function () {
+                            id: 'js_app_nav_left_user_wsp_link',
+                            label: __('users'),
+                            cssClasses: ['users'],
+                            action: function () {
                                 mad.bus.trigger('workspace_selected', 'people');
                             }
                         })

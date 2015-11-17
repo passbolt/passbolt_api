@@ -20,10 +20,12 @@ class ModelTask extends AppShell {
 		foreach ($data as $item) {
 			$Model->create();
 			$Model->set($item);
-			if (!$Model->validates()) {
+			// Get fields to validate. (Sometimes we need exceptions).
+			$validationFields = method_exists($this, 'getValidationFields') ? ['fieldList' => $this->getValidationFields($item)] : [];
+			if (!$Model->validates($validationFields)) {
 				var_dump($Model->validationErrors);
 			}
-			$instance = $Model->save();
+			$instance = $Model->save($item, false);
 			if (!$instance) {
 				$this->out('<error>Unable to insert ' . pr($item[$this->model]) . '</error>');
 				die;

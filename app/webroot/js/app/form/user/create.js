@@ -79,13 +79,24 @@ var CreateForm = passbolt.form.user.Create = mad.Form.extend('passbolt.form.user
 		).start();
 
 		// Add role element to form.
-		this.addElement(
-			this.options.role,
-			new mad.form.Feedback($('#js_field_role_id_feedback'), {}).start()
-		);
-		// Hide everything that is not admin.
+        this.addElement(
+            this.options.role,
+            new mad.form.Feedback($('#js_field_role_id_feedback'), {}).start()
+        );
+        // Hide everything that is not admin.
         this.options.role.setValue(cakephpConfig.roles.user);
         $('input[type=checkbox]', $('#js_field_role_id')).not("[value='" + cakephpConfig.roles.admin + "']").hide().next('label').hide();
+
+        // Check if current user is editing his own profile.
+        var editingOwnProfile = false;
+        if (this.options.data != undefined && this.options.data.id == passbolt.model.User.getCurrent().id) {
+            editingOwnProfile = true;
+        }
+        // If editing his own profile, set the field as disabled.
+        if (editingOwnProfile == true) {
+            $('input[type=checkbox]', $('#js_field_role_id')).attr('disabled', true)
+            $('#js_field_role_id').parent().addClass('disabled');
+        }
 
 		// Add resource username field
 		this.addElement(

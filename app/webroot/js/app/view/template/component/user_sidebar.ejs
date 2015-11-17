@@ -1,4 +1,4 @@
-<div class="user">
+<div class="sidebar user">
 	<div class="header">
 		<img src="<%= user.Profile.Avatar.url.small %>" alt="<%= user.Profile.first_name %> <%= user.Profile.last_name %> picture"/>
 		<h3>
@@ -12,10 +12,6 @@
 	<div class="detailed-information">
 		<h4><%= __('Information') %></h4>
 		<ul>
-			<li class="username">
-				<span class="label"><%= __('Password') %></span>
-				<span class="value">**********</span>
-			</li>
 			<li class="role">
 				<span class="label"><%= __('Role') %></span>
 				<span class="value"><%= user.Role.name.charAt(0).toUpperCase() + user.Role.name.slice(1); %></span>

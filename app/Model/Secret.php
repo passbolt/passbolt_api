@@ -36,7 +36,7 @@ class Secret extends AppModel {
 					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('The resource uid must be in correct format')
+					'message'	=> __('The secret uid must be provided and in correct format')
 				),
 				'exist' => array(
 					'rule' => array('userExists', null),
@@ -59,7 +59,7 @@ class Secret extends AppModel {
 				'isNotEmpty' => array(
 					'required' => 'create',
 					'rule' => 'notEmpty',
-					'message' => __('The secret must me provided')
+					'message' => __('The secret must be provided')
 				),
 				'isGpgFormat' => array(
 					'rule'    => array('checkGpgMessageIsValid', null),

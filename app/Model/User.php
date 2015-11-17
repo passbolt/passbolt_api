@@ -123,6 +123,23 @@ class User extends AppModel {
 					'message' => __('Password provided is not valid'),
 				)
 			),
+			'role_id' => array(
+				'required' => array(
+					'required'   => 'create',
+					'allowEmpty' => false,
+					'rule'       => array('notEmpty'),
+					'message'    => __('A role should be provided')
+				),
+				'validRole' => array(
+					'rule' => array('checkValidRole'),
+					'message' =>  __('The role provided is not valid')
+				),
+				'cantRemoveOwnAdminRole' => array(
+					'on' => 'update',
+					'rule' => array('checkCantRemoveOwnAdminRole'),
+					'message'    => __('It is not possible to remove your own admin role')
+				),
+			),
 		);
 		switch ($case) {
 
@@ -167,6 +184,65 @@ class User extends AppModel {
 		return ($current === $hash);
 	}
 
+
+	/**
+	 * Check if the role provided is a valid one.
+	 *
+	 * @param $check data provided for validation
+	 *
+	 * @return bool
+	 */
+	public function checkValidRole($check) {
+		if (!isset($check['role_id']) || empty($check['role_id'])) {
+			return false;
+		}
+		$role = $this->Role->findById($check['role_id']);
+		if (empty($role)) {
+			return false;
+		}
+		if (!in_array($role['Role']['name'], [Role::ADMIN, Role::USER])) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Check if an admin is trying to remove his own admin role.
+	 *
+	 * @param $check data provided for validation
+	 *
+	 * @return bool
+	 */
+	public function checkCantRemoveOwnAdminRole($check) {
+		if (!isset($check['role_id']) || empty($check['role_id'])) {
+			return false;
+		}
+		$role = $this->Role->findById($check['role_id']);
+
+		$userId = null;
+		// check if a user record is available.
+		if (isset($this->data['User']['id']) && !empty($this->data['User']['id'])) {
+			$userId = $this->data['User']['id'];
+		} elseif (isset($this->id) && !empty($this->id)) {
+			$userId = $this->id;
+		}
+		// if user id is null, it means we are not updating.
+		if ($userId == null) {
+			return true;
+		}
+
+		// if current user is different from updated user, we are good.
+		$currentUser = User::get('id');
+		if ($currentUser != $userId) {
+			return true;
+		}
+
+		// If current admin user want to modify his role to non admin, it's a no!
+		if (User::get('Role.name') == Role::ADMIN && $role['Role']['name'] != User::get('Role.name')) {
+			return false;
+		}
+	}
+
 /**
  * Before Save callback
  *
@@ -175,6 +251,9 @@ class User extends AppModel {
  * @access public
  */
 	public function beforeSave($options=null) {
+		// Are we in an insert or update scenario.
+		$insert = !$this->id && empty($this->data[$this->alias][$this->primaryKey]);
+
 		// Encrypt the password.
 		if (isset($this->data['User']['password'])) {
 			$this->data['User']['password'] = Security::hash($this->data['User']['password'], Configure::read('Auth.HashType'), false);
@@ -182,6 +261,10 @@ class User extends AppModel {
 		// If debug mode is activated, set the user id in a predictive manner.
 		if (!isset($this->data['User']['id']) && isset($this->data['User']['username']) && Configure::read('debug') > 0) {
 			$this->data['User']['id'] = Common::uuid($this->data['User']['username']);
+		}
+		// Set a default role in case it is not provided.
+		if ($insert && !isset($this->data['User']['role_id']) || empty($this->data['User']['role_id'])) {
+			$this->data['User']['role_id'] = $this->Role->field('id', ['name' => Role::USER]);
 		}
 		return true;
 	}

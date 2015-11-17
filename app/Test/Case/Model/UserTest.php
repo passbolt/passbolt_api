@@ -91,6 +91,34 @@ class UserTest extends CakeTestCase {
 	}
 
 	/**
+	 * Test Role validation.
+	 */
+	public function testRoleValidation() {
+		//pr($this->User->Role->find('all'));
+		$testcases = array(
+			''                              => false,
+			'?!#'                           => false,
+			Common::uuid('role.id.user')    => true,
+			Common::uuid('role.id.admin')   => true,
+			Common::uuid('role.id.anonymous') => false,
+			Common::uuid('role.id.root')    => false,
+		);
+
+		foreach ($testcases as $testcase => $result) {
+			$user = array('User' => array('role_id' => $testcase));
+			$this->User->set($user);
+			if ($result) {
+				$msg = 'validation of role with ' . $testcase . ' should validate.';
+			} else {
+				$msg = 'validation of role with ' . $testcase . ' should not validate';
+			}
+			$msg .= ('. Error returned : ' . print_r($this->User->validationErrors, true));
+			$this->assertEquals($this->User->validates(array('fieldList' => array('role_id'))), $result, $msg);
+		}
+	}
+
+
+	/**
 	 * Test the custom validation rule that checks that a password is the same than the current one
 	 * Used when editing passwords
 	 */
@@ -384,7 +412,7 @@ class UserTest extends CakeTestCase {
 		$this->User->set(
 			array(
 				'username' => 'testSave@passbolt.com',
-				'role_id'  => Common::uuid('role.id.anonymous'),
+				'role_id'  => Common::uuid('role.id.user'),
 				'password' => 'abcdefgh',
 				'active'   => 1
 			)
@@ -477,4 +505,47 @@ class UserTest extends CakeTestCase {
 			]);
 		$this->assertEmpty($user, 'After a validation error, the user should not have been created in the database');
 	}
+
+	/**
+	 * Test __add() function with an invalid role.
+	 * An exception should be returned
+	 * No user should be created in the database due to rollback.
+	 */
+	public function testAddInvalidRole() {
+		$data = [
+			'Profile' => [
+				'first_name' => 'john',
+				'last_name' => 'doe',
+			],
+			'User' => [
+				'username' => 'john.doe@passbolt.com',
+				'role_id'  => Common::uuid('role.id.anonymous')
+			]
+		];
+		$this->setExpectedException('ValidationException', 'Could not validate user');
+		$this->User->__add($data);
+		// Check that no user is inside the user table.
+		$user = $this->User->find('all', [
+			'conditions' => [
+				'username' => $data['User']['username']
+			]
+		]);
+		$this->assertEmpty($user, 'After a validation error, the user should not have been created in the database');
+	}
+
+	/**
+	 * Test that an admin cannot change its own admin role.
+	 */
+	public function testModifyOwnAdminRole() {
+		$user = $this->User->find('first', array('conditions' => array('username' => 'admin@passbolt.com')));
+		$this->User->setActive($user);
+
+		$user['User']['role_id'] = $this->User->Role->field('id', ['name' => Role::USER]);
+		$this->User->id = $user['User']['id'];
+		$this->User->set($user);
+		$validates = $this->User->validates();
+		$this->assertFalse($validates);
+		$this->assertTrue(array_key_exists('role_id', $this->User->validationErrors));
+	}
+
 }

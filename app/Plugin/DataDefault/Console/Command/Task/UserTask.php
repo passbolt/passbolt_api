@@ -48,4 +48,13 @@ class UserTask extends ModelTask {
 
 		return $us;
 	}
+
+	protected function getValidationFields($item) {
+		return [
+			'id',
+			'username',
+			'active',
+			'created_by'
+		];
+	}
 }
