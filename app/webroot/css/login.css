@@ -20,7 +20,7 @@
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden {
+html body .hidden {
   display: none;
 }
 /*
@@ -1172,7 +1172,7 @@ textarea {
 	.notice			- can be used for example messages prior validation
 	.error			 - error messages used for validation issues
 */
-form .input .message {
+.input .message {
   font-weight: bold;
   padding: 0;
   padding-left: .25em;
@@ -1181,21 +1181,24 @@ form .input .message {
   border: 0;
   /* colors for messages */
 }
-form .input .message.error {
+.input .message.error {
   color: #d40101;
 }
-form .input .message.success {
+.input .message.success {
   color: #009900;
 }
-form .input .message.warning {
+.input .message.warning {
   color: #9f6000;
 }
-form .input .message.notice {
+.input .message.notice {
   color: #2894df;
 }
-form .input .message.helptext {
+.input .message.helptext {
   color: #888888;
   font-weight: normal;
+}
+form .input .message {
+  background-color: transparent;
 }
 .input.error label {
   color: #d40101;

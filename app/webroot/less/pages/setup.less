@@ -37,15 +37,43 @@
 		 p {
 			 padding-bottom: 1em;
 		 }
-		input[type=text] {
-			width:80%;
-		}
-		label {
-			font-size: 1em;
-		}
-		.checkbox {
-			padding:.5em 0;
-		}
+        div.input {
+            .clearfix();
+
+            label {
+              font-size: 1em;
+            }
+
+            &.text {
+                padding-bottom : 0.5em;
+
+                input[type=text] {
+                    width:65%;
+                    float: left;
+                }
+                label {
+                    width: 20%;
+                    float: left;
+                    padding: .475em .625em .475em 0;
+                }
+                a.more {
+                    padding: .475em 0 .475em .625em;
+                    text-decoration: underline;
+                    float: left;
+                }
+            }
+            &.checkbox {
+                padding:.5em 0;
+            }
+
+            div.message.error {
+                .clearfix();
+
+                width: 65%;
+                margin-left: 20%;
+                padding-left: .625em;
+            }
+        }
 	}
 
 	/* login password step main form */

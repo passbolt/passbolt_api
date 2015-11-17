@@ -20,7 +20,7 @@
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden {
+html body .hidden {
   display: none;
 }
 /*
@@ -1475,7 +1475,7 @@ textarea {
 	.notice			- can be used for example messages prior validation
 	.error			 - error messages used for validation issues
 */
-form .input .message {
+.input .message {
   font-weight: bold;
   padding: 0;
   padding-left: .25em;
@@ -1484,21 +1484,24 @@ form .input .message {
   border: 0;
   /* colors for messages */
 }
-form .input .message.error {
+.input .message.error {
   color: #d40101;
 }
-form .input .message.success {
+.input .message.success {
   color: #009900;
 }
-form .input .message.warning {
+.input .message.warning {
   color: #9f6000;
 }
-form .input .message.notice {
+.input .message.notice {
   color: #2894df;
 }
-form .input .message.helptext {
+.input .message.helptext {
   color: #888888;
   font-weight: normal;
+}
+form .input .message {
+  background-color: transparent;
 }
 .input.error label {
   color: #d40101;
@@ -2332,6 +2335,9 @@ select.fluid {
   /* inputs */
   /* submit / cancel */
 }
+.dialog.medium {
+  max-width: 36em;
+}
 .dialog .dialog-header {
   padding: 0.5em 1em 0 1em;
   height: 3em;
@@ -3009,7 +3015,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   padding-left: 0;
 }
 .input-password-wrapper .password-complexity .progress {
-  width: 66.5%;
+  width: 66%;
   border: 1px solid #dddddd;
   height: 7px;
   display: block;
@@ -3080,6 +3086,16 @@ table.table-info.horizontal tbody tr:nth-child(even) {
     margin-top: .5em;
   }
 }
+.dialog.key-info table {
+  margin-top: 1em;
+}
+.dialog.key-info table tr td {
+  padding: 0.5em 0 0.5em 0;
+}
+.dialog.key-info table tr td.label {
+  padding-right: 4em;
+  color: #888888;
+}
 /*
 	Custom rules for the setup process pages
 	Mostly extra padding here and there
@@ -3118,14 +3134,129 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 .setup .why-plugin-wrapper p {
   padding-bottom: 1em;
 }
-.setup .why-plugin-wrapper input[type=text] {
-  width: 80%;
+.setup .why-plugin-wrapper div.input {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
 }
-.setup .why-plugin-wrapper label {
+.setup .why-plugin-wrapper div.input:before,
+.setup .why-plugin-wrapper div.input:after {
+  content: "";
+  display: table;
+}
+.setup .why-plugin-wrapper div.input:after {
+  clear: both;
+}
+.setup .why-plugin-wrapper div.input:before,
+.setup .why-plugin-wrapper div.input:after {
+  content: "";
+  display: table;
+}
+.setup .why-plugin-wrapper div.input:after {
+  clear: both;
+}
+.setup .why-plugin-wrapper div.input label {
   font-size: 1em;
 }
-.setup .why-plugin-wrapper .checkbox {
+.setup .why-plugin-wrapper div.input.text {
+  padding-bottom: 0.5em;
+}
+.setup .why-plugin-wrapper div.input.text input[type=text] {
+  width: 65%;
+  float: left;
+}
+.setup .why-plugin-wrapper div.input.text label {
+  width: 20%;
+  float: left;
+  padding: .475em .625em .475em 0;
+}
+.setup .why-plugin-wrapper div.input.text a.more {
+  padding: .475em 0 .475em .625em;
+  text-decoration: underline;
+  float: left;
+}
+.setup .why-plugin-wrapper div.input.checkbox {
   padding: .5em 0;
+}
+.setup .why-plugin-wrapper div.input div.message.error {
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  width: 65%;
+  margin-left: 20%;
+  padding-left: .625em;
+}
+.setup .why-plugin-wrapper div.input div.message.error:before,
+.setup .why-plugin-wrapper div.input div.message.error:after {
+  content: "";
+  display: table;
+}
+.setup .why-plugin-wrapper div.input div.message.error:after {
+  clear: both;
+}
+.setup .why-plugin-wrapper div.input div.message.error:before,
+.setup .why-plugin-wrapper div.input div.message.error:after {
+  content: "";
+  display: table;
+}
+.setup .why-plugin-wrapper div.input div.message.error:after {
+  clear: both;
 }
 .setup .first-password-wrapper {
   padding-top: 1em;

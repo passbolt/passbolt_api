@@ -1,0 +1,73 @@
+/*
+	form to add new permissions
+	basically this form is embedded in a dedicated iframe released by the plugin
+*/
+.form-content.permission-add {
+	label {
+		padding-bottom: .5em;
+		padding-top: 1em;
+		font-size: 0.938em;
+	}
+	.autocomplete input {
+		width: 100%;
+		margin-bottom: 0;
+		box-sizing:border-box;
+	}
+	.message {
+		padding-left: 0;
+	}
+}
+
+/*
+	autocomplete users results
+	basically this list of users is embedded in a dedicated iframe released by the plugin
+*/
+.autocomplete-content {
+	width:100%;
+	padding:0;
+	border:1px solid @border-default;
+	height:10em;
+	overflow:auto;
+	box-sizing:border-box;
+
+	.row {
+		.clearfix();
+		font-size: .813em;
+		padding: .825em .5em .5em 1em;
+		border-bottom: 1px dotted @border-default;
+
+		&:last-child {
+			border: 0;
+		}
+
+		/* user summary */
+		.avatar img {
+			width: 36px;
+			height: 36px;
+			float: left;
+		}
+		.user,
+		.group {
+			width: 75%;
+			float: left;
+			padding-left: 1em;
+			padding-right: 1em;
+		}
+		.name {
+			display: block;
+			.ellipsis();
+		}
+		.details {
+			color: @font-light;
+			.ellipsis();
+			display: block;
+		}
+	}
+}
+
+/* hide icons if there is no space */
+@media all and (max-width: 440px) {
+	.autocomplete-content {
+		height:100%;
+	}
+}

@@ -82,53 +82,25 @@
 		}
 	}
 
+	/* new/updated permissions */
+	.row.permission-updated {
+		.avatar img {
+			border:1px solid #ff4500;
+		}
+	}
+
 	/* message */
 	.message {
 		font-size:0.813em;
 		padding-left:2em;
 	}
 
-	/* form to add new permissions */
 	.form-content.permission-add {
-		padding:0 1.5em 1em 1.5em;
 		.clearfix();
 
-		label {
-			padding-bottom: .5em;
-			padding-top:1em;
-		}
-		.autocomplete input {
-			width:45%;
-			margin-right:2%;
-			float:left;
-		}
-		.autocomplete-content {
-			width:45%;
-		}
-		.perm-type {
-			margin-right:4%;
-		}
-		.actions {
-			.clearfix();
-		}
-		.actions input {
-			padding:0.3em 1em;
-		}
-		.checkbox {
-			clear: both;
-			display:block;
-			float:left;
-		}
-		.select select{
-			width:7em;
-			font-size: 1em;
-		}
-		.button {
-			font-size: 1em;
-			line-height: 1.5em;
-		}
-		.message {
-			padding-left:0;
+		#passbolt-password-share-autocomplete-wrapper {
+			position:relative;
+			width:100%;
 		}
 	}
 }
@@ -136,15 +108,13 @@
 /* hide icons if there is no space */
 @media all and (max-width: 480px) {
 	.dialog .share-tab {
+		.permissions.scroll {
+			height:auto;
+			margin:0;
+		}
 		.row .user,
 		.row .group {
 			width:45%;
-		}
-		.form-content.permission-add {
-			.autocomplete input,
-			.autocomplete-content {
-				width:90%;
-			}
 		}
 	}
 }

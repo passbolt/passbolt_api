@@ -20,7 +20,7 @@
 /*
  * Hide from both screenreaders and browsers: h5bp.com/u
  */
-.hidden {
+html body .hidden {
   display: none;
 }
 /*
@@ -1475,7 +1475,7 @@ textarea {
 	.notice			- can be used for example messages prior validation
 	.error			 - error messages used for validation issues
 */
-form .input .message {
+.input .message {
   font-weight: bold;
   padding: 0;
   padding-left: .25em;
@@ -1484,21 +1484,24 @@ form .input .message {
   border: 0;
   /* colors for messages */
 }
-form .input .message.error {
+.input .message.error {
   color: #d40101;
 }
-form .input .message.success {
+.input .message.success {
   color: #009900;
 }
-form .input .message.warning {
+.input .message.warning {
   color: #9f6000;
 }
-form .input .message.notice {
+.input .message.notice {
   color: #2894df;
 }
-form .input .message.helptext {
+.input .message.helptext {
   color: #888888;
   font-weight: normal;
+}
+form .input .message {
+  background-color: transparent;
 }
 .input.error label {
   color: #d40101;
@@ -2700,20 +2703,6 @@ input[type="search"]::-webkit-search-cancel-button {
 #container.page div.secret-copy > pre {
   display: none;
 }
-.autocomplete-content {
-  border: 1px solid #dddddd;
-  background: #ffffff;
-  float: left;
-  position: absolute;
-  min-width: 13em;
-  z-index: 898;
-  padding-top: .25em;
-  width: 100%;
-}
-.autocomplete input + .autocomplete-content {
-  margin-top: 1.80em;
-  margin-right: 7px;
-}
 /* Dialog */
 .dialog-wrapper {
   position: absolute;
@@ -2740,6 +2729,9 @@ input[type="search"]::-webkit-search-cancel-button {
   /* content */
   /* inputs */
   /* submit / cancel */
+}
+.dialog.medium {
+  max-width: 36em;
 }
 .dialog .dialog-header {
   padding: 0.5em 1em 0 1em;
@@ -3986,7 +3978,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   padding-left: 0;
 }
 .input-password-wrapper .password-complexity .progress {
-  width: 66.5%;
+  width: 66%;
   border: 1px solid #dddddd;
   height: 7px;
   display: block;
@@ -4137,8 +4129,8 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* password share tab */
 .dialog .share-tab {
   /* list of existing permissions settings */
+  /* new/updated permissions */
   /* message */
-  /* form to add new permissions */
 }
 .dialog .share-tab .form-content {
   padding: 1em;
@@ -4267,12 +4259,14 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 .dialog .share-tab .row.inherited-permission .inherited-actions a {
   color: #888888;
 }
+.dialog .share-tab .row.permission-updated .avatar img {
+  border: 1px solid #ff4500;
+}
 .dialog .share-tab .message {
   font-size: 0.813em;
   padding-left: 2em;
 }
 .dialog .share-tab .form-content.permission-add {
-  padding: 0 1.5em 1em 1.5em;
   /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
@@ -4321,98 +4315,19 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 .dialog .share-tab .form-content.permission-add:after {
   clear: both;
 }
-.dialog .share-tab .form-content.permission-add label {
-  padding-bottom: .5em;
-  padding-top: 1em;
-}
-.dialog .share-tab .form-content.permission-add .autocomplete input {
-  width: 45%;
-  margin-right: 2%;
-  float: left;
-}
-.dialog .share-tab .form-content.permission-add .autocomplete-content {
-  width: 45%;
-}
-.dialog .share-tab .form-content.permission-add .perm-type {
-  margin-right: 4%;
-}
-.dialog .share-tab .form-content.permission-add .actions {
-  /*
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
-  /*
- * Clearfix: contain floats
- *
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *	`contenteditable` attribute is included anywhere else in the document.
- *	Otherwise it causes space to appear at the top and bottom of elements
- *	that receive the `clearfix` class.
- * 2. The use of `table` rather than `block` is only necessary if using
- *	`:before` to contain the top-margins of child elements.
- */
-  /*
- * For IE 6/7 only
- * Include this rule to trigger hasLayout and contain floats.
- */
-  zoom: 1;
-  /*
- * Clearfix: contain floats
- *
- * For modern browsers
- * 1. The space content is one way to avoid an Opera bug when the
- *	`contenteditable` attribute is included anywhere else in the document.
- *	Otherwise it causes space to appear at the top and bottom of elements
- *	that receive the `clearfix` class.
- * 2. The use of `table` rather than `block` is only necessary if using
- *	`:before` to contain the top-margins of child elements.
- */
-}
-.dialog .share-tab .form-content.permission-add .actions:before,
-.dialog .share-tab .form-content.permission-add .actions:after {
-  content: "";
-  display: table;
-}
-.dialog .share-tab .form-content.permission-add .actions:after {
-  clear: both;
-}
-.dialog .share-tab .form-content.permission-add .actions:before,
-.dialog .share-tab .form-content.permission-add .actions:after {
-  content: "";
-  display: table;
-}
-.dialog .share-tab .form-content.permission-add .actions:after {
-  clear: both;
-}
-.dialog .share-tab .form-content.permission-add .actions input {
-  padding: 0.3em 1em;
-}
-.dialog .share-tab .form-content.permission-add .checkbox {
-  clear: both;
-  display: block;
-  float: left;
-}
-.dialog .share-tab .form-content.permission-add .select select {
-  width: 7em;
-  font-size: 1em;
-}
-.dialog .share-tab .form-content.permission-add .button {
-  font-size: 1em;
-  line-height: 1.5em;
-}
-.dialog .share-tab .form-content.permission-add .message {
-  padding-left: 0;
+.dialog .share-tab .form-content.permission-add #passbolt-password-share-autocomplete-wrapper {
+  position: relative;
+  width: 100%;
 }
 /* hide icons if there is no space */
 @media all and (max-width: 480px) {
+  .dialog .share-tab .permissions.scroll {
+    height: auto;
+    margin: 0;
+  }
   .dialog .share-tab .row .user,
   .dialog .share-tab .row .group {
     width: 45%;
-  }
-  .dialog .share-tab .form-content.permission-add .autocomplete input,
-  .dialog .share-tab .form-content.permission-add .autocomplete-content {
-    width: 90%;
   }
 }
 .dialog .organize-tab .current-folder {

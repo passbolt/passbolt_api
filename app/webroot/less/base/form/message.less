@@ -8,7 +8,7 @@
 	.notice			- can be used for example messages prior validation
 	.error			 - error messages used for validation issues
 */
-form .input .message {
+.input .message {
 	font-weight:bold;
 	padding:0;
 	padding-left:.25em;
@@ -34,6 +34,9 @@ form .input .message {
 	  	font-weight:normal;
 	}
 
+}
+form .input .message {
+  background-color: transparent;
 }
 .input.error label {
 	color: @red;

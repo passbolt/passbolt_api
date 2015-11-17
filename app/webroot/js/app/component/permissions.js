@@ -117,94 +117,27 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		});
 		this.permList.start();
 
-		//// form add permission
-		//this.addFormController = new mad.Form($('#js_permission_add_form', this.element), {
-		//	templateBased: true,
-		//	cssClasses: ['perm-create-form', 'clearfix'],
-		//	templateUri: 'app/view/template/form/permission/add.ejs',
-		//	validateOnChange: false,
-		//	callbacks: {
-		//		submit: function(data) {
-		//			self.formAddPermissionSubmit(data);
-		//		}
-		//	}
-		//});
-		//this.addFormController.start();
-
-		//// Form feedback controller
-		//var permCreateFormFeedback = new mad.form.Feedback($('#js_perm_create_form_feedback'), {}).start();
-		//
 		// Add an hidden element to the form to carry the aro id
 		this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
 		this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
-		//this.addFormController.addElement(this.permAroHiddenTxtbx);
-		//
-		//// Add an autocomplete element to the form to search the target aro
-		//this.options.permAroAutocpltTxtbx = new mad.form.Autocomplete($('#js_perm_create_form_aro_auto_cplt', this.element), {
-		//	modelReference: 'passbolt.model.Permission.aro_foreign_label',
-		//	changeTimeout: 400,
-		//	callbacks: {
-		//		ajax: function(value) {
-		//			return self.autocompleteAro(value);
-		//		}
-		//	}
-		//}).start();
-		//this.addFormController.addElement(this.options.permAroAutocpltTxtbx, permCreateFormFeedback);
-		//
-		//// Add a selectbox element to the form to carry permission type
-		//var availablePermissionTypes = {},
-         //   permissionTypes = [1, 7, 15]; // Hardcoded for Resource and direct permission.
-		//for (var permType in permissionTypes) {
-		//	availablePermissionTypes[permissionTypes[permType]] = passbolt.model.PermissionType.formatToString(permissionTypes[permType]);
-		//}
-		//var permTypeCtl = new mad.form.Dropdown($('#js_perm_create_form_type', this.element), {
-		//		emptyValue: false,
-		//		modelReference: 'passbolt.model.Permission.type',
-		//		availableValues: availablePermissionTypes
-		//	}).start();
-		//this.addFormController.addElement(permTypeCtl, permCreateFormFeedback);
-		//
-		//// rebind the just created elements, so the controller will be able to listen events which occured on them.
-		//this.on();
 
         // Load the component for the aco instance given in options.
         this.load(this.options.acoInstance);
 
 		// Notify the plugin that the share dialog is rendered.
-		mad.bus.trigger('passbolt.plugin.resource_share');
+		mad.bus.trigger('passbolt.plugin.resource_share', {
+			resourceId: this.options.acoInstance.id,
+			armored: this.options.acoInstance.Secret[0].data
+		});
 	},
 
 	/**
-	 * Show the autcomplete list functions of received users and groups
-	 * @param {string} value String to launche the autocomplete with
-	 * @return {void}
+	 * Load a new permission in the list.
+	 * @param permission
 	 */
-	autocompleteAro: function(value) {
-		// get all the users and groups functions of the given string
-		// start by getting all the users.
-		var request = passbolt.model.Permission.searchUsers({
-			keywords: value,
-			model: this.options.acoInstance.constructor.shortName,
-			id: this.options.acoInstance.id
-		}).then(function(users) {
-			var returnValue = [];
-			users.each(function(user, i) {
-				// Otherwise, add user in autocomplete.
-				returnValue.push(new mad.Model({
-					id: user.id,
-					label: user.username,
-					model: 'passbolt.model.User',
-					user: user
-				}));
-			});
-			return returnValue;
-		});
-
-		return request;
-	},
-
 	loadPermission: function(permission) {
-		var permSelector = '#js_share_rs_perm_' + permission.id,
+		var permTypeSelector = '#js_share_rs_perm_' + permission.id,
+			permSelector = '#' + permission.id,
             availablePermissionTypes = {},
             permissionTypes = [1, 7, 15]; // Hardcoded for Resource and direct permission.
 
@@ -216,27 +149,31 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		this.permList.insertItem(permission);
 
 		// Add a selectbox to display the permission type (and allow to change)
-		new mad.form.Dropdown($('.js_share_rs_perm_type', permSelector), {
+		new mad.form.Dropdown($('.js_share_rs_perm_type', permTypeSelector), {
 			emptyValue: false,
 			modelReference: 'passbolt.model.Permission.type',
 			availableValues: availablePermissionTypes
 		})
 			.start()
 			.setValue(permission.type);
+
+		// If the permission is temporary and requires a final save action to be applied.
+		if(permission.is_new) {
+			// Mark the row as updated.
+			$(permSelector).addClass('permission-updated');
+			// Scroll the permissions list to the last permission.
+			this.permList.element.scrollTop(this.permList.element[0].scrollHeight);
+		}
 	},
 
 	/**
 	 * load permission for a given instance
 	 * @param {mad.model.Model} obj The target instance
-	 * @return {void}
 	 */
 	load: function(obj) {
 		var self = this;
 		this.options.acoInstance = obj;
 		this.options.changes = {};
-
-		// load the add form with the resource data
-		//self.addFormController.load(this.options.acoInstance);
 
 		// get permissions for the given resource
 		return passbolt.model.Permission.findAll({
@@ -251,7 +188,6 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * Refresh
-	 * @return {void}
 	 */
 	refresh: function() {
 		// reset the list in case it has already been populated
@@ -265,90 +201,140 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	},
 
 	/**
-	 * Listen when the plugin has encrypted the secrets.
-	 * @todo #security #architecture refactor, check also resource createFormController.
-	 * @todo #dirtycode
+	 * Show the apply feedback.
 	 */
-	'{mad.bus.element} resource_share_secret_encrypted': function(el, ev, armoreds) {
-		// Share the resource with newly created armoreds.
-		this.save(armoreds);
+	showApplyFeedback: function() {
+		var $permissionChanges = $('#js_permissions_changes');
+		$permissionChanges.removeClass('hidden');
 	},
 
 	/**
-	 * Apply a permission change.
-	 * @param {string} id Permission id
-	 * @param {array} data New data for the permission
+	 * Hide the apply feedback.
 	 */
-	permissionChange: function(id, data) {
-		// Try to delete a just added permission.
-		if (this.options.changes[id] !== undefined && data['delete'] !== undefined && data['delete']) {
-			// Remove the changes from the list of changes.
-			delete this.options.changes[id];
-			// Hide the user feedback if there is no more changes.
-			if (!this.options.changes.length) {
-				$('#js_permissions_changes').addClass('hidden');
-			}
-		}
-		else {
-			this.options.changes[id] = {
-				Permission: data
-			};
-			// Display the user feedback if not shown already.
-            var $permissionChanges = $('#js_permissions_changes.hidden');
-			if ($permissionChanges.length) {
-				$permissionChanges.removeClass('hidden');
-			}
-		}
+	hideApplyFeedback: function() {
+		var $permissionChanges = $('#js_permissions_changes');
+		$permissionChanges.addClass('hidden');
 	},
 
 	/**
-	 * The add permission form has been submited.
-	 * @param {array} formData the data form.
-	 * @return {void}
+	 * Add a new permission.
+	 * @param id The permission id
+	 * @param data The permission data
 	 */
-	formAddPermissionSubmit: function(formData) {
-		var fieldAttrs = mad.Model.getModelAttributes(this.permAroHiddenTxtbx.getModelReference()),
-			modelAttr = fieldAttrs[0],
-            user = null;
+	addPermission: function(data) {
+		// Instantiate a new temporary permission.
+		data.id = uuid();
+		var permission = new passbolt.model.Permission(data);
 
-		// @todo #performance avoid this step.
-		var userId = formData[modelAttr.modelReference.fullName].id;
-		passbolt.model.User.findOne({
-			id: userId,
-			async: false
-		}).then(function(u) {
-			user = u;
-		});
-
-		// Add the permission to the list of permission.
-		var tmpPermissionId = uuid();
-		var permission = new passbolt.model.Permission({
-			id: tmpPermissionId,
-			isNew: true,
-			aco: this.options.acoInstance.constructor.shortName,
-			aco_foreign_key: this.options.acoInstance.id,
-			aro: modelAttr.modelReference.shortName,
-			aro_foreign_key: formData[modelAttr.modelReference.fullName].id,
-			type: formData['passbolt.model.Permission'].type,
-			User: user
-		});
+		// Load this temporary permission in the permissions list component.
 		this.loadPermission(permission);
 
 		// Store the change.
-		this.permissionChange(tmpPermissionId, {
-			isNew: true,
-			aro: modelAttr.modelReference.shortName,
-			aro_foreign_key: formData[modelAttr.modelReference.fullName].id,
-			type: formData['passbolt.model.Permission'].type
-		});
+		this.options.changes[data.id] = {
+			Permission: {
+				isNew: true,
+				aco: data.aco,
+				aco_foreign_key: data.aco_foreign_key,
+				aro: data.aro,
+				aro_foreign_key: data.aro_foreign_key,
+				type: data.type
+			}
+		};
 
-		// reset the add form controller.
-		this.addFormController.reset();
+		this.showApplyFeedback();
 	},
 
 	/**
-	 * Save the changes.
-	 * @param {array} armoreds (optional) the secret armoreds.
+	 * Update an existing permission
+	 * @param id The permission id
+	 * @param type The permission type
+	 */
+	updateTypePermission: function(id, type) {
+		// Store the change in the list of permissions changes.
+		// If a permission change already exists for the given permission id.
+		if (this.options.changes[id]) {
+			this.options.changes[id].Permission.type = type;
+		}
+		// Otherwise add a new update change.
+		else {
+			this.options.changes[id] = {
+				Permission: {
+					id: id,
+					type: type
+				}
+			}
+		}
+
+		this.showApplyFeedback();
+	},
+
+	/**
+	 * Delete a permission
+	 * @param permission The permission to update
+	 */
+	deletePermission: function(permission) {
+		// Remove the permission from the list.
+		this.permList.removeItem(permission);
+
+		// Store the change in the list of permissions changes.
+		// If a permission change already exists for the given permission id.
+		if (typeof this.options.changes[permission.id] != 'undefined') {
+
+			// If the changes is relative to a new permission. Remove this new temporary change.
+			if (typeof this.options.changes[permission.id].Permission.isNew != 'undefined' &&
+				typeof this.options.changes[permission.id].Permission.isNew) {
+
+				// Remove the change.
+				delete this.options.changes[permission.id];
+
+				// Notify the plugin, the user can be listed by the autocomplete again.
+				mad.bus.trigger('passbolt.share.remove_permission', {
+					userId: permission.aro_foreign_key,
+					isTemporaryPermission: true
+				});
+			}
+			// Otherwise replace it with a delete change.
+			else {
+				this.options.changes[permission.id] = {
+					Permission: {
+						id : permission.id,
+						delete : 1
+					}
+				};
+				// Notify the plugin, the user shouldn't be listed by the autocomplete anymore.
+				mad.bus.trigger('passbolt.share.remove_permission', {
+					userId: permission.aro_foreign_key,
+					isTemporaryPermission: false
+				});
+			}
+		}
+		// Otherwise add a new delete change.
+		else {
+			this.options.changes[permission.id] = {
+				Permission: {
+					id : permission.id,
+					delete : 1
+				}
+			};
+			// Notify the plugin, the user shouldn't be listed by the autocomplete anymore.
+			mad.bus.trigger('passbolt.share.remove_permission', {
+				userId: permission.aro_foreign_key,
+				isTemporaryPermission: false
+			});
+		}
+
+		// Regarding the length of the permissions changes show or hide the apply feedback.
+		if ($.isEmptyObject(this.options.changes)) {
+			this.hideApplyFeedback();
+		}
+		else {
+			this.showApplyFeedback();
+		}
+	},
+
+	/**
+	 * Save the permissions changes.
+	 * @param {array} armoreds (optional) the secret encrypted for new users.
 	 */
 	save: function(armoreds) {
 		var self = this,
@@ -356,12 +342,14 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			aco = this.options.acoInstance.constructor.shortName,
 			acoForeignKey = this.options.acoInstance.id;
 
-		// Add the permissions to the request.
+		// Add the changes to the array that will be send to the server.
 		data.Permissions = [];
 		for (var i in this.options.changes) {
 			data.Permissions.push(this.options.changes[i]);
 		}
-		// If armoreds secret have been given, add them to the request.
+
+		// If the secret has been encrypted for new users, add the armored
+		// secrets.
 		if (armoreds) {
 			data.Secrets = [];
 			for (var userId in armoreds) {
@@ -375,15 +363,37 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			}
 		}
 
-		// create a new permission
+		// Save the permissions changes.
 		passbolt.model.Permission.share(aco, acoForeignKey, data)
 			.then(function() {
+				// Refresh the component.
 				self.refresh()
                     .done(function() {
                         // Switch the component in ready state.
                         self.setState('ready');
                     });
 			});
+	},
+
+	/* ************************************************************** */
+	/* LISTEN TO THE PLUGIN EVENTS */
+	/* ************************************************************** */
+
+	/**
+	 * Once the secret has been encrypted for the new users selected, the plugin
+	 * trigger resource_share_encrypted event.
+	 * Save the permission changes and the new encrypted secrets.
+	 */
+	'{mad.bus.element} resource_share_encrypted': function(el, ev, armoreds) {
+		// Save the permissions changes including the secret encrypted for the new users.
+		this.save(armoreds);
+	},
+
+	/**
+	 * Listen when a permission has been added through the plugin.
+	 */
+	'{mad.bus.element} resource_share_add_permission': function(el, ev, data) {
+		this.addPermission(data);
 	},
 
 	/* ************************************************************** */
@@ -395,40 +405,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {passbolt.model.Permission} permission The permission to remove
-	 * @return {void}
 	 */
 	 ' request_permission_delete': function (el, ev, permission) {
-		this.permissionChange(permission.id, {
-			id : permission.id,
-			delete : 1
-		});
-		this.permList.removeItem(permission);
-	},
-
-	/**
-	 * The user is typing in the autocomplete box
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {array} data The data typed in the autocomplete box
-	 * @return {void}
-	 */
-	'{permAroAutocpltTxtbx.element} changed': function(el, ev, data) {
-		// reset aro foreign key txtbx
-		this.permAroHiddenTxtbx.setValue(null);
-	},
-
-	/**
-	 * An item has been selected in the autocomplete list
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {passbolt.model.User || passbolt.model.Group} permission The permission to remove
-	 * @return {void}
-	 */
-	'{permAroAutocpltTxtbx.element} item_selected': function(el, ev, data) {
-		// update the field model reference functions of the given autocomplete result (can be a User or a Group)
-		this.permAroHiddenTxtbx.setModelReference(data.model + '.id');
-		// set the value of the hidden field aro_foreign_key
-		this.permAroHiddenTxtbx.setValue(data.id);
+		this.deletePermission(permission);
 	},
 
 	/**
@@ -437,77 +416,39 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {HTMLEvent} ev The event which occured
 	 * @param {string} permission The permission to edit
 	 * @param {string} type The new permission type
-	 * @return {void}
 	 */
 	 ' request_permission_edit': function (el, ev, permission, type) {
-		this.permissionChange(permission.id, {
-			id: permission.id,
-			type: type
-		});
-	},
-
-	/**
-	 * The user request a go to permission.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @param {string} permissionType The new permission type
-	 * @return {void}
-	 */
-	'.js_perm_goto click': function(el, ev) {
-		var li = el.parents('li'),
-			permission = li.data('passbolt.model.Permission');
-
-		// Extract the permission.
-		switch(permission.aco) {
-			case 'Category':
-				// Get the full object stored in our local madstore.c
-				var i = mad.model.List.indexOf(passbolt.model.Category.madStore, permission.Category.id);
-				var category = passbolt.model.Category.madStore[i];
-				mad.bus.trigger('request_category_sharing', category);
-				break;
-		}
+		this.updateTypePermission(permission.id, type);
 	},
 
 	/**
 	 * The user request the form to be saved.
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
 	 */
 	'#js_rs_share_save click': function(el, ev) {
-		var aco = this.options.acoInstance.constructor.shortName,
-			acoForeignKey = this.options.acoInstance.id,
-			usersIds = [];
+		var usersIds = [];
 
-		// Extract the new permissions users ids.
-		for (var i in this.options.changes) {
-			if (typeof this.options.changes[i].Permission.isNew != 'undefined'
-				&& this.options.changes[i].Permission.isNew) {
-				usersIds.push(this.options.changes[i].Permission.aro_foreign_key);
+		// Switch the component in loading state.
+		// The ready state will be restored once the component will be refreshed.
+		this.setState('loading');
+
+		// Extract the users the secret should be encrypted for by extracting the information from the changes.
+		// This information shouldn't be trusted.
+		for (var permissionId in this.options.changes) {
+
+			// If the permission is a new permission, add the user id the permission is targeting to the
+			// list of users the secret should be encrypted for.
+			if (this.options.changes[permissionId].Permission.isNew) {
+				usersIds.push(this.options.changes[permissionId].Permission.aro_foreign_key);
 			}
 		}
 
-		// If the secret needs to be encrypted for new users.
-		if (usersIds.length) {
-
-            // Switch the component in loading state.
-            // The ready state will be restored once the component will be refreshed.
-            this.setState('loading');
-
-			// ask the plugin to encrypt the secret for the new users.
-			// When the secrets are encrypted the addon will send back the event secret_share_secret_encrypted.
-			mad.bus.trigger('passbolt.resource_share.encrypt', {
-				resourceId: acoForeignKey,
-				usersIds: usersIds
-			});
-		}
-		else {
-            // Switch the component in loading state.
-            // The ready state will be restored once the component will be refreshed.
-            this.setState('loading');
-
-			this.save();
-		}
+		// Request the plugin to encrypt the secret for the new users.
+		// When the secrets are encrypted the addon will send back the event secret_share_secret_encrypted.
+		mad.bus.trigger('passbolt.share.encrypt', {
+			usersIds: usersIds
+		});
 	}
 
 });

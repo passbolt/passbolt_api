@@ -432,6 +432,14 @@ class ShareController extends AppController {
 			$data['keywords'] = $this->request->query['keywords'];
 		}
 
+		// If the search should exclude some users.
+		if (isset($this->request->query['excludedUsers'])) {
+			$excludedUsers = json_decode($this->request->query['excludedUsers']);
+			if (!empty($excludedUsers)) {
+				$data['excludedUsers'] = $excludedUsers;
+			}
+		}
+
 		// Find all the users who can receive a direct permission.
 		$data['aco_foreign_key'] = $id;
 		$data['aco'] = $model;

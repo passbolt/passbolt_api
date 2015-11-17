@@ -438,6 +438,10 @@ class User extends AppModel {
 								$conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
 							}
 						}
+						// If exclude users.
+						if (isset($data['excludedUsers'])) {
+							$conditions['conditions']["AND"]["NOT"][] = array('User.id' => $data['excludedUsers']);
+						}
 						// Order the data.
 						if (isset($data['order'])) {
 							switch ($data['order']) {
