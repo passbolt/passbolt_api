@@ -121,6 +121,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         $('#js_wsp_primary_menu_wrapper').empty();
         $('#js_wsp_secondary_menu_wrapper').empty();
 
+        // Destroy Selected users.
+        this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
+
+        // Call parent.
         this._super();
     },
 

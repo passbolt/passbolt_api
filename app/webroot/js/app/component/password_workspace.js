@@ -127,6 +127,10 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		$('#js_wsp_secondary_menu_wrapper').empty();
 		$('.main-action-wrapper').empty();
 
+        // Destroy Selected resource.
+        this.options.selectedRs.splice(0, this.options.selectedRs.length);
+
+        // Call parent.
 		this._super();
 	},
 
