@@ -103,26 +103,6 @@ class User extends AppModel {
 					'message' => __('The username has already been taken')
 				)
 			),
-			'password' => array(
-				'required'  => array(
-					'required'   => 'create',
-					'allowEmpty' => false,
-					'rule'       => array('notEmpty'),
-					'message'    => __('A password is required'),
-				),
-				'size' => array(
-					'rule' => array('lengthBetween', 8, 20),
-					'message' => __('Password should be between %s and %s characters long', 8, 20),
-				)
-			),
-			'current_password' => array(
-				'validPassword' => array(
-					'rule' => array('isCurrentPassword', true),
-					'shared' => false,
-					'required' => false,
-					'message' => __('Password provided is not valid'),
-				)
-			),
 			'role_id' => array(
 				'required' => array(
 					'required'   => 'create',
@@ -144,14 +124,6 @@ class User extends AppModel {
 			),
 		);
 		switch ($case) {
-
-// @todo cleanup after #PASSBOLT-360
-//			case 'editPassword':
-//				$rules = array(
-//					'password' => $default['password'],
-//				);
-//				break;
-
 			default:
 			case 'default' :
 				$rules = $default;
@@ -159,33 +131,6 @@ class User extends AppModel {
 
 		return $rules;
 	}
-
-	/**
-	 * Check if the provided password is the same as current. Used when editing passwords.
-	 * @param $check the form data provided for validation
-	 * @return bool true if the passwords are matching
-	 */
-	public function isCurrentPassword($check) {
-		// check that a password is provided as 'current_password'
-		// the field 'password' is used to store the new password value
-		if (!isset($check['current_password']) || empty($check['current_password'])) {
-			return false;
-		}
-		// check if a user record is available
-		if (isset($this->data['User']['id']) && !empty($this->data['User']['id'])) {
-			$userId = $this->data['User']['id'];
-		} elseif (isset($this->id) && !empty($this->id)) {
-			$userId = $this->id;
-		} else {
-			return false;
-		}
-
-		// check that the hashes are matching
-		$current = $this->field('password', array('id' => $userId));
-		$hash = Security::hash($check['current_password'], Configure::read('Auth.HashType'), $current);
-		return ($current === $hash);
-	}
-
 
 	/**
 	 * Check if the role provided is a valid one.
@@ -253,21 +198,20 @@ class User extends AppModel {
  * @access public
  */
 	public function beforeSave($options=null) {
+
 		// Are we in an insert or update scenario.
 		$insert = !$this->id && empty($this->data[$this->alias][$this->primaryKey]);
 
-		// Encrypt the password.
-		if (isset($this->data['User']['password'])) {
-			$this->data['User']['password'] = Security::hash($this->data['User']['password'], Configure::read('Auth.HashType'), false);
-		}
 		// If debug mode is activated, set the user id in a predictive manner.
 		if (!isset($this->data['User']['id']) && isset($this->data['User']['username']) && Configure::read('debug') > 0) {
 			$this->data['User']['id'] = Common::uuid($this->data['User']['username']);
 		}
+
 		// Set a default role in case it is not provided.
 		if ($insert && !isset($this->data['User']['role_id']) || empty($this->data['User']['role_id'])) {
 			$this->data['User']['role_id'] = $this->Role->field('id', ['name' => Role::USER]);
 		}
+
 		return true;
 	}
 
@@ -703,7 +647,6 @@ class User extends AppModel {
 					'fields' => array(
 						'username',
 						'role_id',
-						'password',
 						'active',
 					)
 				);
@@ -717,20 +660,12 @@ class User extends AppModel {
 					'fields' => array(
 						'User' => array(
 							'role_id',
-							'password',
 							'active',
 						),
 						'Profile' => array(
 							'first_name',
 							'last_name',
 						)
-					)
-				);
-				break;
-			case 'User::editPassword':
-				$fields = array(
-					'fields' => array(
-						'password',
 					)
 				);
 				break;
@@ -757,19 +692,22 @@ class User extends AppModel {
 	 * @throws ValidationException
 	 */
 	public function __add($data) {
+
 		$userData = $data;
+
 		// If role id is not provided, we assign a default one
 		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
 			$userData['User']['role_id'] = $this->Role->field('Role.id', array('name' => Role::USER));
 		}
-		// Assign a temporary and random password.
-		$userData['User']['password'] = Common::randomString(15);
 		// User is not activated by default.
 		$userData['User']['active'] = FALSE;
+
 		// Validates user information
 		$this->set($userData);
+
 		// Get fields.
 		$fields = $this->getFindFields('User::save', User::get('Role.name'));
+
 		// check if the data is valid
 		if (!$this->validates()) {
 			$invalidFields = $this->validationErrors;

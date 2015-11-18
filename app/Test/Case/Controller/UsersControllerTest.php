@@ -212,7 +212,6 @@ class UsersControllerTest extends ControllerTestCase {
 					'data'   => array(
 						'User' => array(
 							'username' => 'testadd1@passbolt.com',
-							'password' => 'test1',
 							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
@@ -238,7 +237,6 @@ class UsersControllerTest extends ControllerTestCase {
 					'data'   => array(
 						'User' => array(
 							'username' => 'testadd1@passbolt.com',
-							'password' => 'abcedfghijk',
 							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
@@ -292,7 +290,6 @@ class UsersControllerTest extends ControllerTestCase {
 					'data'   => array(
 						'User' => array(
 							'username' => 'testaddnoroleid@passbolt.com',
-							'password' => 'abcedfghijk',
 							'active'   => 1
 						),
 						'Profile' => array(
@@ -349,7 +346,6 @@ class UsersControllerTest extends ControllerTestCase {
 					'data'   => array(
 						'User' => array(
 							'username' => 'testprofile@passbolt.com',
-							'password' => 'abcedfghijk',
 							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
@@ -383,7 +379,6 @@ class UsersControllerTest extends ControllerTestCase {
 						'User' => array(
 							'id'       => $user['User']['id'],
 							'username' => 'user-modified@passbolt.com',
-							'password' => 'abcedfghijk',
 							'role_id'  => Common::uuid('role.id.user'),
 							'active'   => 1
 						),
@@ -582,99 +577,6 @@ class UsersControllerTest extends ControllerTestCase {
 				'method' => 'put',
 				'return' => 'contents'
 			));
-	}
-
-	/**
-	 * Test update password from admin.
-	 */
-	public function testUpdatePasswordFromAdmin() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$id = $user['User']['id'];
-
-		$data['User']['password'] = 'test12345678';
-		$resRaw = $this->testAction(
-			"/users/$id.json",
-			array(
-				'data'   => $data,
-				'method' => 'put',
-				'return' => 'contents'
-			)
-		);
-		$result = json_decode($resRaw, true);
-		$this->assertEquals(
-			Message::SUCCESS,
-			$result['header']['status'],
-			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
-		);
-	}
-
-	/**
-	 * Test update own password.
-	 */
-	public function testUpdateOwnPasswordFromAdminNoCurrentPassword() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-		$id = $ad['User']['id'];
-
-		$this->setExpectedException('HttpException', 'Current Password must be provided');
-		$data['User']['password'] = 'test12345678';
-		$resRaw = $this->testAction(
-			"/users/$id.json",
-			array(
-				'data'   => $data,
-				'method' => 'put',
-				'return' => 'contents'
-			)
-		);
-	}
-
-	/**
-	 * Test update own password for LU.
-	 */
-	public function testUpdateOwnPasswordFromLU() {
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($user);
-		$id = $user['User']['id'];
-
-		$data['User']['current_password'] = 'password';
-		$data['User']['password'] = 'test12345678';
-		$resRaw = $this->testAction(
-			"/users/$id.json",
-			array(
-				'data'   => $data,
-				'method' => 'put',
-				'return' => 'contents'
-			)
-		);
-		$result = json_decode($resRaw, true);
-		$this->assertEquals(
-			Message::SUCCESS,
-			$result['header']['status'],
-			"Edit : /users.json : The test should return success but is returning " . print_r($result, true)
-		);
-	}
-
-	/**
-	 * Test update own password from LU, with a wrong initial password.
-	 */
-	public function testUpdateOwnPasswordFromLUWrongCurrentPassword() {
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($user);
-		$id = $user['User']['id'];
-
-		$this->setExpectedException('HttpException', 'Could not validate User');
-		$data['User']['current_password'] = 'wrongpassword';
-		$data['User']['password'] = 'test12345678';
-		$resRaw = $this->testAction(
-			"/users/$id.json",
-			array(
-				'data'   => $data,
-				'method' => 'put',
-				'return' => 'contents'
-			)
-		);
 	}
 
 	/**

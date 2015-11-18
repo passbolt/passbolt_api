@@ -67,30 +67,6 @@ class UserTest extends CakeTestCase {
 	}
 
 	/**
-	 * Test Password Validation
-	 *
-	 * @return void
-	 */
-	public function testPasswordValidation() {
-		$testcases = array(
-			''       => false,
-			'?!#'    => false,
-			'abcdefghijkl' => true,
-			'32abcde,-fghijkl20' => true
-		);
-		foreach ($testcases as $testcase => $result) {
-			$user = array('User' => array('password' => $testcase, 'password_confirm' => $testcase));
-			$this->User->set($user);
-			if ($result) {
-				$msg = 'validation of user password with ' . $testcase . ' should validate';
-			} else {
-				$msg = 'validation of user password with ' . $testcase . ' should not validate';
-			}
-			$this->assertEquals($this->User->validates(array('fieldList' => array('password'))), $result, $msg);
-		}
-	}
-
-	/**
 	 * Test Role validation.
 	 */
 	public function testRoleValidation() {
@@ -115,61 +91,6 @@ class UserTest extends CakeTestCase {
 			$msg .= ('. Error returned : ' . print_r($this->User->validationErrors, true));
 			$this->assertEquals($this->User->validates(array('fieldList' => array('role_id'))), $result, $msg);
 		}
-	}
-
-
-	/**
-	 * Test the custom validation rule that checks that a password is the same than the current one
-	 * Used when editing passwords
-	 */
-	public function testIsCurrentPasswordValidationRule() {
-		// check that current_password is set
-		$check = array();
-		$this->assertEquals($this->User->isCurrentPassword($check),false,'Empty password should not validate');
-		$check = array('current_password' => null);
-		$this->assertEquals($this->User->isCurrentPassword($check),false,'Empty password should not validate');
-		$check = array('current_password' => '');
-		$this->assertEquals($this->User->isCurrentPassword($check),false,'Empty password should not validate');
-
-		// check the user id is set
-		$check = array('current_password' => 'check');
-		$this->assertEquals($this->User->isCurrentPassword($check),false,'Password should not validate when current user is not active');
-
-		// check getting the right user based on id
-		$param = array('conditions' => array('username' => 'user@passbolt.com'));
-		$user = $this->User->find('first', $param);
-		$this->User->set($user);
-		$this->User->data = array();
-		// check with wrong password
-		$this->assertEquals($this->User->isCurrentPassword($check),false,'Password should not validate if it is not the current one');
-		// check with good password
-		$check = array('current_password' => 'password');
-		$this->assertEquals($this->User->isCurrentPassword($check),true,'Password should validate if it is the current one');
-
-		// check getting the right user based on data
-		$param = array('conditions' => array('username' => 'user@passbolt.com'));
-		$user = $this->User->find('first', $param);
-		$this->User->set($user);
-		$this->User->id = null;
-		$check = array('current_password' => 'password');
-		$this->assertEquals($this->User->isCurrentPassword($check),true,'Password should validate if it is the current one');
-
-	}
-
-	/**
-	 * Test Password Encryption
-	 *
-	 * @return void
-	 */
-	public function testBeforeSave() {
-		$user = array('User' => array('password' => 'test1'));
-		$this->User->set($user);
-		$this->assertEquals($this->User->beforeSave(), true, 'Before save should return true');
-		$this->assertNotEquals(
-			$this->User->data['User']['password'],
-			$user['User']['password'],
-			'Before save should return true'
-		);
 	}
 
 	/**
@@ -395,7 +316,7 @@ class UserTest extends CakeTestCase {
 
 		$should_find = array(
 			'User::index', 'User::view', 'User::activation', 'Bogus::stuff',
-			'User::validateAccount', 'User::edit', 'User::save', 'User::delete', 'User::editPassword'
+			'User::validateAccount', 'User::edit', 'User::save', 'User::delete'
 		);
 		foreach ($should_find as $find) {
 			$f = $this->User->getFindFields($find);
@@ -413,7 +334,6 @@ class UserTest extends CakeTestCase {
 			array(
 				'username' => 'testSave@passbolt.com',
 				'role_id'  => Common::uuid('role.id.user'),
-				'password' => 'abcdefgh',
 				'active'   => 1
 			)
 		);

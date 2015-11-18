@@ -288,26 +288,6 @@ class UsersController extends AppController {
 
 		// Save user.
 		if (isset($userData['User'])) {
-			// if password field is present but empty, we simply ignore it.
-			if (isset($userData['User']['password']) && empty($userData['User']['password'])) {
-				unset($userData['User']['password']);
-			}
-			// If the password is provided.
-			if (isset($userData['User']['password'])) {
-				// Manage password fields depending on roles and data provided.
-				// Is user's own password.
-				$isOwn = ($id == User::get('id'));
-				// Is current password required.
-				$currentPasswordRequired = $isOwn;
-				// Is current password provided.
-				$currentPasswordProvided = isset($userData['User']['current_password'])
-					&& !empty($userData['User']['current_password']);
-				// If no current password is provided, then we return an error.
-				if ($currentPasswordRequired && !$currentPasswordProvided) {
-					$finalInvalidFields = Common::formatInvalidFields('User', array('current_password' => array(__("Current password is required"))));
-					return $this->Message->error(__('Current Password must be provided'), array('body' => $finalInvalidFields));
-				}
-			}
 
 			// Validates data.
 			$this->User->set($userData);
@@ -435,75 +415,6 @@ class UsersController extends AppController {
 		$this->set('data', $user);
 	}
 
-// @todo cleanup after #PASSBOLT-360
-///**
-// * edit password entry point for users
-// *
-// * @param uuid $id the id of the user we want to edit
-// */
-//	public function editPassword($id = null) {
-//		// check the HTTP request method
-//		if (!$this->request->is('put')) {
-//			return $this->Message->error(__('Invalid request method, should be PUT'));
-//		}
-//
-//		// First of all, check if the user is an administrator
-//		// Or the user is editing is own account
-//		if (User::get('Role.name') != Role::ADMIN && $id != User::get('id')) {
-//			return $this->Message->error(__('You are not authorized to access that location'));
-//		}
-//
-//		// check if the id is provided
-//		if (!isset($id)) {
-//			return $this->Message->error(__('The user id is missing'));
-//		}
-//
-//		// check if the id is valid
-//		if (!Common::isUuid($id)) {
-//			return $this->Message->error(__('The user id is invalid'));
-//		}
-//
-//		// get the resource id
-//		$resource = $this->User->findById($id);
-//		if (!$resource) {
-//			return $this->Message->error(__('The user does not exist'), array('code' => 404));
-//		}
-//
-//		// check if data was provided
-//		if (!isset($this->request->data['User'])) {
-//			return $this->Message->error(__('No data were provided'));
-//		}
-//
-//		// set the data for validation and save
-//		$userData = $this->request->data;
-//		$this->User->begin();
-//
-//		if (isset($userData['User'])) {
-//			$this->User->id = $id;
-//
-//			$this->User->set($userData);
-//			$this->User->setValidationRules('editPassword');
-//			if (!$this->User->validates()) {
-//				return $this->Message->error(__('Could not validate User'));
-//			}
-//
-//			$fields = $this->User->getFindFields('User::editPassword', User::get('Role.name'));
-//			$save = $this->User->save($userData, false, $fields['fields']);
-//			if (!$save) {
-//				$this->User->rollback();
-//				return $this->Message->error(__('The user could not be updated'));
-//			}
-//		}
-//
-//		$this->User->commit();
-//
-//		$data = array('User.id' => $this->User->id);
-//		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-//		$user = $this->User->find('all', $options);
-//
-//		$this->Message->success(__("The password has been updated successfully"));
-//		$this->set('data', $user);
-//	}
 
 	/**
 	 * Validate a user account.
