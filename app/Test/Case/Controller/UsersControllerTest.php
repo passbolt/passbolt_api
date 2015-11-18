@@ -725,6 +725,20 @@ class UsersControllerTest extends ControllerTestCase {
 		);
 	}
 
+
+	/**
+	 * Test delete yourself.
+	 */
+	public function testDeleteSelf() {
+		$ad = $this->User->findByUsername('admin@passbolt.com');
+		$this->User->setActive($ad);
+
+		$this->setExpectedException('HttpException', 'You are not allowed to delete yourself');
+		$result = json_decode(
+			$this->testAction('/users/' . $ad['User']['id'] . '.json', array('return' => 'contents', 'method' => 'delete'), true)
+		);
+	}
+
 	/**
 	 * Test delete for a non existing user.
 	 */
