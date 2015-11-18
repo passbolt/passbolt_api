@@ -139,7 +139,12 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         var $item = $('#' + this.options.prefixItemId + item.id);
         var item_offset = $item.offset();
 
+        // Is the user an admin.
         var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
+
+        // Is the selected user same as the current user.
+        var isSelf = passbolt.model.User.getCurrent().id == this.options.selectedUsers[0].id;
+
 
         // Instantiate the contextual menu menu.
         var contextualMenu = new mad.component.ContextualMenu(null, {
@@ -195,16 +200,19 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             });
             contextualMenu.insertItem(action);
 
-            // Add Delete action.
-            var action = new mad.model.Action({
-                id: 'js_user_browser_menu_delete',
-                label: 'Delete',
-                action: function (menu) {
-                    mad.bus.trigger('request_user_deletion', item);
-                    menu.remove();
-                }
-            });
-            contextualMenu.insertItem(action);
+            // Delete is available only if the current user has not selected himself.
+            if (!isSelf) {
+                // Add Delete action.
+                var action = new mad.model.Action({
+                    id: 'js_user_browser_menu_delete',
+                    label: 'Delete',
+                    action: function (menu) {
+                        mad.bus.trigger('request_user_deletion', item);
+                        menu.remove();
+                    }
+                });
+                contextualMenu.insertItem(action);
+            }
         }
 
         // Display the menu.

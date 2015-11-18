@@ -187,14 +187,34 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @return {void}
      */
     stateSelection: function (go) {
-        if (passbolt.model.User.getCurrent().Role.name == 'admin') {
+        console.log('stateSelection');
+        // Is the current user an admin.
+        var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
+
+        // If user is an admin, we enable the controls.
+        if (isAdmin) {
             if (go) {
+
+                // Is the selected user same as the current user.
+                var isSelf = passbolt.model.User.getCurrent().id == this.options.selectedUsers[0].id;
+
                 this.options.editionButton
                     .setValue(this.options.selectedUsers[0])
                     .setState('ready');
-                this.options.deletionButton
-                    .setValue(this.options.selectedUsers)
-                    .setState('ready');
+
+                // If the user has not selected himself.
+                if (!isSelf) {
+                    // Activate the delete button.
+                    this.options.deletionButton
+                        .setValue(this.options.selectedUsers)
+                        .setState('ready');
+                }
+                // If user has selected himself, delete is not available.
+                else {
+                    this.options.deletionButton
+                        .setValue(null)
+                        .setState('disabled');
+                }
 				// #PASSBOLT-787
 				//this.options.moreButton
                  //   .setValue(this.options.selectedUsers[0])
