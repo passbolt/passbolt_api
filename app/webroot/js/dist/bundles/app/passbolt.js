@@ -19247,6 +19247,7 @@ define('mad/util/validation', [
                 if (typeof rule == 'object') {
                     options = rule;
                     if (typeof rule.rule == 'undefined') {
+                        console.log(rule);
                         throw mad.Exception.get(mad.error.WRONG_PARAMETER, 'rule.rule');
                     }
                     if (rule.rule.indexOf('/') == '0') {
@@ -19259,6 +19260,7 @@ define('mad/util/validation', [
                     }
                 }
                 if (typeof mad.Validation[rule] == 'undefined') {
+                    console.log(rule);
                     throw mad.Exception.get(mad.error.WRONG_PARAMETER, 'rule');
                 }
                 return mad.Validation[rule](value, values, options);
@@ -28815,10 +28817,6 @@ define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/v
         }
     }));
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/comment/create*/
 define('app/form/comment/create', [
     'mad/form/form',
@@ -29043,6 +29041,8 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29057,6 +29057,8 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -29409,7 +29411,7 @@ define('app/component/resource_sidebar', [
                 commentsController.start();
             },
             ' password_clicked': function (el, ev) {
-                var secret = this.options.selectedRs[0].Secret[0].data;
+                var secret = this.options.selectedItem.Secret[0].data;
                 mad.bus.trigger('passbolt.secret.decrypt', secret);
             }
         });
@@ -31056,7 +31058,7 @@ define('app/component/user_sidebar', [
                 this.setViewData('user', this.options.selectedItem);
             },
             ' request_copy_publickey': function (el, ev) {
-                var gpgKey = this.options.selectedUsers[0].Gpgkey.key;
+                var gpgKey = this.options.selectedItem.Gpgkey.key;
                 var data = {
                         name: 'Public key',
                         data: gpgKey

@@ -131,10 +131,12 @@ class User extends AppModel {
 					'message'    => __('A role should be provided')
 				),
 				'validRole' => array(
+					'shared' => false,
 					'rule' => array('checkValidRole'),
 					'message' =>  __('The role provided is not valid')
 				),
 				'cantRemoveOwnAdminRole' => array(
+					'shared' => false,
 					'on' => 'update',
 					'rule' => array('checkCantRemoveOwnAdminRole'),
 					'message'    => __('It is not possible to remove your own admin role')

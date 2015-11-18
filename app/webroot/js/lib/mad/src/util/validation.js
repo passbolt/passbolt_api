@@ -26,6 +26,7 @@ var Validation = mad.Validation = can.Construct.extend('mad.Validation', /** @st
 
             // The target rule has not been defined.
             if (typeof rule.rule == 'undefined') {
+				console.log(rule);
                 throw mad.Exception.get(mad.error.WRONG_PARAMETER, 'rule.rule');
             }
             // The rule is a regex (based on the cakephp structure).
@@ -43,6 +44,7 @@ var Validation = mad.Validation = can.Construct.extend('mad.Validation', /** @st
         }
 
         if (typeof mad.Validation[rule] == 'undefined') {
+			console.log(rule);
             throw mad.Exception.get(mad.error.WRONG_PARAMETER, 'rule');
         }
 

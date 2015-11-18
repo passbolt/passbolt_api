@@ -47,7 +47,7 @@ var UserSidebar = passbolt.component.UserSidebar = passbolt.component.Sidebar.ex
 	 */
 	' request_copy_publickey': function(el, ev) {
 		// Get secret out of Resource object.
-		var gpgKey = this.options.selectedUsers[0].Gpgkey.key;
+		var gpgKey = this.options.selectedItem.Gpgkey.key;
 		// Build data.
 		var data = {
 			name : 'Public key',
