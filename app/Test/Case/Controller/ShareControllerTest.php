@@ -540,8 +540,28 @@ hcciUFw5
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
-		// The owner is not in the list of users who can receive a direct permission
+		// The user Betty is in the list of retrieved users.
 		$this->assertTrue(in_array(Common::uuid('user.id.betty'), $usersIds));
+	}
+
+	// test search users available to receive a new direct permission : excluding users
+	public function testSearchUsersToGrantFilterExcludingUsers() {
+		$id = Common::uuid('resource.id.facebook-account');
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents',
+			'data' => array(
+				'excludedUsers' => json_encode(array(Common::uuid('user.id.betty')))
+			)
+		);
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+
+		// The request found some users.
+		$this->assertNotEmpty($usersIds);
+
+		// The owner is not in the list of users who can receive a direct permission
+		$this->assertTrue(!in_array(Common::uuid('user.id.betty'), $usersIds));
 	}
 
 }
