@@ -25,8 +25,9 @@
 .autocomplete-content {
 	width:100%;
 	padding:0;
+	margin:0;
 	border:1px solid @border-default;
-	height:10em;
+	max-height:10em;
 	overflow:auto;
 	box-sizing:border-box;
 
@@ -65,9 +66,16 @@
 	}
 }
 
+.autocomplete-content.loading {
+	ul {
+		height:20px;
+		background: url('@{images}/controls/loading.gif') no-repeat center center;
+	}
+}
 /* hide icons if there is no space */
 @media all and (max-width: 440px) {
 	.autocomplete-content {
-		height:100%;
+		height: auto;
+		max-height: none;
 	}
 }

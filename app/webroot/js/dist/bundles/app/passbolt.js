@@ -29043,6 +29043,8 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
 });
 /*lib/can/util/array/makeArray*/
 System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29057,8 +29059,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -30310,10 +30310,17 @@ define('app/component/people_workspace_menu', [
                 }
             },
             stateSelection: function (go) {
-                if (passbolt.model.User.getCurrent().Role.name == 'admin') {
+                console.log('stateSelection');
+                var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
+                if (isAdmin) {
                     if (go) {
+                        var isSelf = passbolt.model.User.getCurrent().id == this.options.selectedUsers[0].id;
                         this.options.editionButton.setValue(this.options.selectedUsers[0]).setState('ready');
-                        this.options.deletionButton.setValue(this.options.selectedUsers).setState('ready');
+                        if (!isSelf) {
+                            this.options.deletionButton.setValue(this.options.selectedUsers).setState('ready');
+                        } else {
+                            this.options.deletionButton.setValue(null).setState('disabled');
+                        }
                     } else {
                         this.options.editionButton.setValue(null).setState('disabled');
                         this.options.deletionButton.setValue(null).setState('disabled');
@@ -30629,6 +30636,7 @@ define('app/component/user_browser', [
                 var $item = $('#' + this.options.prefixItemId + item.id);
                 var item_offset = $item.offset();
                 var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
+                var isSelf = passbolt.model.User.getCurrent().id == this.options.selectedUsers[0].id;
                 var contextualMenu = new mad.component.ContextualMenu(null, {
                         state: 'hidden',
                         source: eventTarget,
@@ -30675,15 +30683,17 @@ define('app/component/user_browser', [
                             }
                         });
                     contextualMenu.insertItem(action);
-                    var action = new mad.model.Action({
-                            id: 'js_user_browser_menu_delete',
-                            label: 'Delete',
-                            action: function (menu) {
-                                mad.bus.trigger('request_user_deletion', item);
-                                menu.remove();
-                            }
-                        });
-                    contextualMenu.insertItem(action);
+                    if (!isSelf) {
+                        var action = new mad.model.Action({
+                                id: 'js_user_browser_menu_delete',
+                                label: 'Delete',
+                                action: function (menu) {
+                                    mad.bus.trigger('request_user_deletion', item);
+                                    menu.remove();
+                                }
+                            });
+                        contextualMenu.insertItem(action);
+                    }
                 }
                 contextualMenu.setState('ready');
             },
@@ -32176,6 +32186,9 @@ define('app/component/app', [
             '{mad.bus.element} request_dialog_close_latest': function (el, ev, options) {
                 mad.component.Dialog.closeLatest();
             },
+            '{window} p3_narrow_checked': function (el, ev) {
+                mad.bus.trigger('passbolt.html_helper.window_resized');
+            },
             stateLoading: function (go) {
                 if (this.view) {
                     this.view.loading(go);
@@ -32330,13 +32343,37 @@ define('app/bootstrap', [
         __esModule: true
     };
 });
+/*lib/p3_narrow/p3.narrow*/
+System.define('lib/p3_narrow/p3.narrow', '/**!\n * Adds classes to an element (body by default) based on document width\n *\n * @copyright       Copyright 2013, Greenpeace International\n * @license         MIT License (opensource.org/licenses/MIT)\n * @version         0.0.2\n * @author          <a href="mailto:hello@raywalker.it">Ray Walker</a>,\n *                  based on original work by\n *                  <a href="http://www.more-onion.com/">More Onion</a>\n * @requires        <a href="http://jquery.com/">jQuery 1.1.4+</a>\n * @example         $.p3.narrow([options]);\n */\n/* global jQuery */\n\n(function($, w, d) {\n\t\'use strict\';\n\n\tvar _p3 = $.p3 || {},\n\t\tdefaults = {\n\t\t\t/* Selector or object to which the classes are added */\n\t\t\tel: \'body\',\n\t\t\t/* Class names and their breakpoints */\n\t\t\tsizes: {\n\t\t\t\tthreetwo:   320,\n\t\t\t\tfour:       400,\n\t\t\t\tfive:       500,\n\t\t\t\tsix:        600,\n\t\t\t\tsixfive:    650,\n\t\t\t\tseven:      700,\n\t\t\t\tsevensome:  768,\n\t\t\t\teightfive:  850,\n\t\t\t\tnine:       900,\n\t\t\t\ttablet:     480,\n\t\t\t\tdesktop:    1024,\n\t\t\t\twide:       1350,\n\t\t\t\tlarge:      1600\n\t\t\t},\n\t\t\t// Apply changes on resize\n\t\t\tonResize: true,\n\t\t\t// Apply changes on initialisation\n\t\t\tonLoad: true,\n\t\t\t// Throttle resize event timer in milliseconds\n\t\t\tdelay: 100\n\t\t};\n\n\t_p3.narrow = function(options) {\n\t\tvar config = $.extend(true, defaults, options || {}),\n\t\t\t$window = $(w),\n\t\t\t$el = $(config.el),\n\t\t\twait = false;\n\n\t\t/**\n\t\t * Returns the size of the document plus scrollbars\n\t\t * @returns {int}\n\t\t */\n\t\tfunction getWidth() {\n\t\t\tif (typeof w.innerWidth === \'number\') {\n\t\t\t\t// Non-IE\n\t\t\t\treturn w.innerWidth;\n\t\t\t} else if (d.documentElement && d.documentElement.clientWidth) {\n\t\t\t\t// IE 6+ in \'standards compliant mode\'\n\t\t\t\treturn d.documentElement.clientWidth;\n\t\t\t}\n\t\t}\n\n\t\t/**\n\t\t * Assigns classes to the target element\n\t\t */\n\t\tfunction checkNarrow() {\n\t\t\tvar classString = \'\',\n\t\t\t\twidth = getWidth();\n\n\t\t\t// For each configured breakpoint\n\t\t\t$.each(config.sizes, function(cls, size) {\n\t\t\t\t// If the document is larger or equal to this size\n\t\t\t\tif (width >= size) {\n\t\t\t\t\t// Add this classname to the element\n\t\t\t\t\tclassString += \' \' + cls;\n\t\t\t\t} else {\n\t\t\t\t\t// Remove this class\n\t\t\t\t\t$el.removeClass(cls);\n\t\t\t\t}\n\t\t\t});\n\n\t\t\t// Apply new classes\n\t\t\t$el.addClass(classString);\n\n\t\t\t// Propagate an event while the class has been added.\n\t\t\t$(window).trigger(\'p3_narrow_checked\');\n\t\t}\n\n\t\t/**\n\t\t * Executes callback no more than once per interval\n\t\t *\n\t\t * @param {function}    callback\n\t\t * @param {int}         interval\n\t\t * @returns {undefined}\n\t\t */\n\t\tfunction throttle(callback, interval) {\n\t\t\tif (wait) {\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\twait = true;\n\n\t\t\tsetTimeout(function() {\n\t\t\t\twait = false;\n\t\t\t}, interval);\n\n\t\t\tcallback();\n\t\t}\n\n\t\tif (config.onResize) {\n\t\t\t$window.resize(function() {\n\t\t\t\tthrottle(checkNarrow, config.delay);\n\t\t\t});\n\t\t}\n\n\t\tif (config.onLoad) {\n\t\t\t$window.ready(checkNarrow);\n\t\t}\n\t};\n\n\t$.p3 = _p3;\n\n}(jQuery, this, document));\n', {
+    'address': 'lib/p3_narrow/p3.narrow',
+    'metadata': {
+        'deps': [],
+        'format': 'global'
+    }
+});
 /*app/passbolt*/
-define('app/passbolt', ['app/bootstrap'], function ($__0) {
+define('app/passbolt', [
+    'app/bootstrap',
+    'lib/p3_narrow/p3.narrow'
+], function ($__0, $__1) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
+    if (!$__1 || !$__1.__esModule)
+        $__1 = { default: $__1 };
     $__0;
+    $__1;
     $(document).ready(function () {
+        $.p3.narrow({
+            sizes: {
+                fourfour: 440,
+                fourheight: 480,
+                fivefour: 540,
+                six: 600,
+                ninefive: 980,
+                nineheight: 980
+            }
+        });
         var bootstrap = new passbolt.Bootstrap();
     });
     return {};

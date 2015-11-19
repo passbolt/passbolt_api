@@ -187,6 +187,17 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		mad.component.Dialog.closeLatest();
 	},
 
+
+	/**
+	 * The p3 narrow external lib caught a window resize event and
+	 * set the appropriated classes to the body HTML Element.
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 */
+	'{window} p3_narrow_checked': function(el, ev) {
+		mad.bus.trigger('passbolt.html_helper.window_resized');
+	},
+
 	/* ************************************************************** */
 	/* LISTEN TO THE STATE CHANGES */
 	/* ************************************************************** */

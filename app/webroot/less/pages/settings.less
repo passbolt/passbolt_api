@@ -6,56 +6,57 @@
 	}
 
 	.profile-detailed-information {
-    .clearfix();
-    .avatar {
-      float: left;
-      img {
-        border: 1px solid @border-default;
-        padding: 0;
+		.clearfix();
+		.avatar {
+			float: left;
+			img {
+				border: 1px solid @border-default;
+				padding: 0;
 				width:12.5em;
 				height:12.5em;
 				margin:.5em 1em 0 0;
-      }
-      .edit {
-        width: 12.5em;
-        height: 3.125em;
-        background: transparent url('@{images}/controls/overlay-opacity-50.png') repeat;
+			}
+			.edit {
+				width: 12.5em;
+				height: 3.125em;
+				background: transparent url('@{images}/controls/overlay-opacity-50.png') repeat;
 				border: 1px solid transparent;
-        color: #fff;
+				color: #fff;
 				margin:-3.25em 0 2em 0;
-        position: relative;
+				position: relative;
 
-        a {
-          color: #fff;
-          display: block;
-          height: 3.125em;
-          .clearfix();
+				a {
+					color: #fff;
+					display: block;
+					height: 3.125em;
+					.clearfix();
 
-          i.icon {
-            display: block;
-            float: left;
-            &:before {
-              display: block;
-              float: left;
-              width: 1em;
-              height: 1em;
-              line-height: 1.4em;
-              font-size: 3em;
-              text-align: center;
-            }
-          }
-          .help-text {
-            display: block;
+					i.fa {
+						display: block;
+						float: left;
+						&:before {
+							display: block;
+							float: left;
+							width: 1em;
+							height: 1em;
+							line-height: 1.4em;
+							font-size: 1.5em;
+							text-align: center;
+							padding:.25em .5em;
+						}
+					}
+					.help-text {
+						display: block;
 						font-size: 0.813em; /* 13/16px */
-            width: 10em; /* 130/13 */
-            float: left;
-            margin-left: 0;
-            padding: 0.5em 0.5em 0 0.5em;
-          }
-        }
-      }
-    }
-  }
+						width: 10em; /* 130/13 */
+						float: left;
+						margin-left: 0;
+						padding: 0.5em 0.5em 0 0.5em;
+					}
+				}
+			}
+		}
+	}
 	.key-export {
 		.actions {
 			margin:1em 0;
@@ -78,9 +79,9 @@
 /* table info is hard to fit because of fingerprint */
 @media (max-width: 1280px) {
 	.key-info .table-info {
-		font-size:	0.875em	;
+		font-size: 0.875em	;
 		.select select {
-			font-size:		0.929em	;
+			font-size: 0.929em	;
 		}
 	}
 }
