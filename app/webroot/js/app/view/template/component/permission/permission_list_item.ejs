@@ -37,8 +37,8 @@ for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
         // The user can delete it directly
         if (mappedItem.isDirect) { %>
         <a href="#" class="js_perm_delete close" title="<%= __('remove') %>">
-            <i class="icon close no-text"></i>
-            <span><%= __('remove') %></span>
+            <i class="fa fa-times-circle"></i>
+            <span class="visuallyhidden"><%= __('remove') %></span>
         </a>
         <% } %>
     </div>

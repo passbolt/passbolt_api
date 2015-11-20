@@ -6,7 +6,7 @@
 <p>
 <p>
 	<a href="http://github.com/passbolt" class="button dim github">
-		<i class="icon social github inline"></i>
+		<i class="fa fa-fw fa-github"></i>
 		<span>github</span>
 	</a>
 </p>
