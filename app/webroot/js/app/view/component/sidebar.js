@@ -24,7 +24,7 @@ var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.c
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '.icon.close click': function(el, ev) {
+    ' .js_sidebar_close click': function(el, ev) {
         mad.Config.write('ui.workspace.showSidebar', false);
         mad.bus.trigger('workspace_showSidebar', false);
     }
