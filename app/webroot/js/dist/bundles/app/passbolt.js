@@ -19247,7 +19247,6 @@ define('mad/util/validation', [
                 if (typeof rule == 'object') {
                     options = rule;
                     if (typeof rule.rule == 'undefined') {
-                        console.log(rule);
                         throw mad.Exception.get(mad.error.WRONG_PARAMETER, 'rule.rule');
                     }
                     if (rule.rule.indexOf('/') == '0') {
@@ -19260,7 +19259,6 @@ define('mad/util/validation', [
                     }
                 }
                 if (typeof mad.Validation[rule] == 'undefined') {
-                    console.log(rule);
                     throw mad.Exception.get(mad.error.WRONG_PARAMETER, 'rule');
                 }
                 return mad.Validation[rule](value, values, options);
@@ -22770,7 +22768,7 @@ define('app/view/template/component/settings_workspace_menu.ejs!lib/can/view/ejs
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<li>\n\t<a id="js_settings_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="icon edit"></i>\n\t\t<span>');
+                ___v1ew.push('<li>\n\t<a id="js_settings_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-edit"></i>\n\t\t<span>');
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return __('edit');
                 }));
@@ -22980,7 +22978,7 @@ define('app/view/template/component/profile.ejs!lib/can/view/ejs/system', ['can/
                     return __('Change Avatar');
                 }));
                 ___v1ew.push('"', can.view.pending({ scope: this }), '>');
-                ___v1ew.push('\n\t\t\t\t\t\t\t<i class="icon camera"></i>\n\t\t\t\t\t\t\t<span class="help-text">Click here to upload a new picture.</span>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<table class="table-info">\n\t\t\t\t\t<tbody>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('\n\t\t\t\t\t\t\t<i class="fa fa-camera"></i>\n\t\t\t\t\t\t\t<span class="help-text">Click here to upload a new picture.</span>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<table class="table-info">\n\t\t\t\t\t<tbody>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return __('Name');
                 }));
@@ -23431,7 +23429,7 @@ define('app/view/template/component/keys.ejs!lib/can/view/ejs/system', ['can/vie
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return gpgkey.type;
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t</tr>\n\t\t\t</table>\n\t\t</div>\n\t\t<div class="col6 last key-export">\n\t\t\t<ul class="actions duo-wrapper">\n\t\t\t\t<li>\n\t\t\t\t\t<a href="#publicKey" class="button selected toggle duo">public</a>\n\t\t\t\t\t<a href="#privateKey" class="button toggle duo">private</a>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t\t<a id="js_settings_keys_download" href="#" class="button">\n\t\t\t\t\t\t<i class="icon download"></i>\n\t\t\t\t\t\t<span>download</span>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t<div class="input textarea gpgkey" rel="publicKey">\n\t\t\t\t<textarea id="publicKeyUnarmored" class="fluid code" placeholder="" name="data[Gpgkey][key]"', can.view.pending({ scope: this }), '>');
+                ___v1ew.push('</td>\n\t\t\t\t</tr>\n\t\t\t</table>\n\t\t</div>\n\t\t<div class="col6 last key-export">\n\t\t\t<ul class="actions duo-wrapper">\n\t\t\t\t<li>\n\t\t\t\t\t<a href="#publicKey" class="button selected toggle duo">public</a>\n\t\t\t\t\t<a href="#privateKey" class="button toggle duo">private</a>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t\t<a id="js_settings_keys_download" href="#" class="button">\n\t\t\t\t\t\t<i class="fa fa-fw fa-download"></i>\n\t\t\t\t\t\t<span>download</span>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t<div class="input textarea gpgkey" rel="publicKey">\n\t\t\t\t<textarea id="publicKeyUnarmored" class="fluid code" placeholder="" name="data[Gpgkey][key]"', can.view.pending({ scope: this }), '>');
                 ___v1ew.push(can.view.txt(1, 'textarea', 0, this, function () {
                     return gpgkey.key;
                 }));
@@ -24711,7 +24709,7 @@ define('mad/view/template/component/dialog/dialog.ejs!lib/can/view/ejs/system', 
                 ___v1ew.push(can.view.txt(1, 'h2', 0, this, function () {
                     return label;
                 }));
-                ___v1ew.push('</h2>\n        <a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>\n    </div>\n    <div class="js_dialog_content dialog-content">\n    </div>\n</div>\n');
+                ___v1ew.push('</h2>\n        <a href="#" class="dialog-close">\n            <i class="fa fa-close"></i>\n            <span class="visuallyhidden">close</span>\n        </a>\n    </div>\n    <div class="js_dialog_content dialog-content">\n    </div>\n</div>\n');
                 ;
                 return ___v1ew.join('');
             }
@@ -24811,7 +24809,7 @@ define('mad/view/template/component/confirm/confirm.ejs!lib/can/view/ejs/system'
                 ___v1ew.push(can.view.txt(1, 'h2', 0, this, function () {
                     return label;
                 }));
-                ___v1ew.push('</h2>\n        <a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>\n    </div>\n    <div class="js_dialog_content dialog-content">\n        <div class="form-content">\n            <p>');
+                ___v1ew.push('</h2>\n        <a href="#" class="dialog-close">\n            <i class="fa fa-close"></i>\n            <span class="visuallyhidden">close</span>\n        </a>\n    </div>\n    <div class="js_dialog_content dialog-content">\n        <div class="form-content">\n            <p>');
                 ___v1ew.push(can.view.txt(1, 'p', 0, this, function () {
                     return content;
                 }));
@@ -25013,7 +25011,7 @@ define('mad/view/template/component/button_dropdown/button_dropdown.ejs!lib/can/
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<div class="dropdown">\n\t<a>\n\t\t<span>more</span>\n\t\t<i class="icon after arrowdown"></i>\n\t</a>\n\t<ul class="dropdown-content">\n\t\t<li><a href="#">submenu1</a></li>\n\t\t<li><a href="#">submenu2</a></li>\n\t</ul>\n</div>');
+                ___v1ew.push('<div class="dropdown">\n\t<a>\n\t\t<span>more</span>\n\t\t<i class="fa fa-fw fa-caret-down"></i>\n\t</a>\n\t<ul class="dropdown-content">\n\t\t<li><a href="#">submenu1</a></li>\n\t\t<li><a href="#">submenu2</a></li>\n\t</ul>\n</div>');
                 ;
                 return ___v1ew.join('');
             }
@@ -25648,11 +25646,11 @@ define('app/view/template/component/password_workspace_menu.ejs!lib/can/view/ejs
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<li>\n    <a id="js_wk_menu_secretcopy_button" href="#" class="button">\n        <i class="icon copy"></i>\n        <span>copy</span>\n    </a>\n</li>\n<li>\n\t<a id="js_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="icon edit"></i>\n\t\t<span>');
+                ___v1ew.push('<li>\n    <a id="js_wk_menu_secretcopy_button" href="#" class="button">\n        <i class="fa fa-fw fa-copy"></i>\n        <span>copy</span>\n    </a>\n</li>\n<li>\n\t<a id="js_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-edit"></i>\n\t\t<span>');
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return __('edit');
                 }));
-                ___v1ew.push('</span>\n\t</a>\n</li>\n<li>\n\t<a id="js_wk_menu_sharing_button" href="#" class="button">\n\t\t<i class="icon share"></i>\n\t\t<span>');
+                ___v1ew.push('</span>\n\t</a>\n</li>\n<li>\n\t<a id="js_wk_menu_sharing_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-share"></i>\n\t\t<span>');
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return __('share');
                 }));
@@ -25660,7 +25658,7 @@ define('app/view/template/component/password_workspace_menu.ejs!lib/can/view/ejs
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return __('more');
                 }));
-                ___v1ew.push('</span>\n\t\t\t<i class="icon after arrowdown"></i>\n\t\t</a>\n\t</div>\n</li>\n');
+                ___v1ew.push('</span>\n\t\t\t<i class="fa fa-fw fa-caret-down"></i></a>\n\t\t</a>\n\t</div>\n</li>\n');
                 ;
                 return ___v1ew.join('');
             }
@@ -27043,7 +27041,7 @@ define('app/view/template/component/favorite.ejs!lib/can/view/ejs/system', ['can
                     return instance.isFavorite() ? 'unfav' : 'fav';
                 }));
                 ___v1ew.push('"', can.view.pending({ scope: this }), '>');
-                ___v1ew.push('</i>\n\t<span>fav</span>\n</a>\n');
+                ___v1ew.push('</i>\n\t<span class="visuallyhidden">fav</span>\n</a>\n');
                 ;
                 return ___v1ew.join('');
             }
@@ -27295,7 +27293,7 @@ define('app/component/password_browser', [
                         index: 'favorite',
                         header: {
                             css: ['selections s-cell'],
-                            label: '<a href="#"> \t\t\t\t\t\t<i class="icon fav no-text"></i> \t\t\t\t\t\t<span>fav</span> \t\t\t\t\t</a>'
+                            label: '<a href="#"> \t\t\t\t\t\t<i class="icon fav"></i> \t\t\t\t\t\t<span class="visuallyhidden">fav</span> \t\t\t\t\t</a>'
                         },
                         cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
                             var availableValues = {};
@@ -28040,7 +28038,7 @@ define('app/view/template/component/permission/permission_list_item.ejs!lib/can/
                             return __('remove');
                         }));
                         ___v1ew.push('"', can.view.pending({ scope: this }), '>');
-                        ___v1ew.push('\n            <i class="icon close no-text"></i>\n            <span>');
+                        ___v1ew.push('\n            <i class="fa fa-times-circle"></i>\n            <span class="visuallyhidden">');
                         ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                             return __('remove');
                         }));
@@ -28624,7 +28622,7 @@ define('app/view/template/component/comments.ejs!lib/can/view/ejs/system', ['can
                 ___v1ew.push(can.view.txt(1, 'h4', 0, this, function () {
                     return __('Comments');
                 }));
-                ___v1ew.push('</h4>\n<a href="#" class="section-action"><i class="icon create no-text"></i><span>create</span></a>\n<div id="js_rs_details_comments_add_form"></div>\n<ul id="js_rs_details_comments_list"></ul>');
+                ___v1ew.push('</h4>\n<a href="#" class="section-action"><i class="fa fa-fw fa-plus-circle"></i><span class="visuallyhidden">create</span></a>\n<div id="js_rs_details_comments_add_form"></div>\n<ul id="js_rs_details_comments_list"></ul>');
                 ;
                 return ___v1ew.join('');
             }
@@ -29041,10 +29039,6 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29059,6 +29053,10 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -29135,7 +29133,7 @@ define('app/view/template/component/sidebar_section/description.ejs!lib/can/view
                 ___v1ew.push(can.view.txt(0, 'span', 0, this, function () {
                     var ___v1ew = [];
                     if (editable) {
-                        ___v1ew.push('\n<a href="#" class="edit_description_button section-action" id="js_edit_description_button">\n\t<i class="icon edit no-text"></i>\n\t<span>edit</span>\n</a>\n');
+                        ___v1ew.push('\n<a href="#" class="edit_description_button section-action" id="js_edit_description_button">\n\t<i class="fa fa-fw fa-edit"></i>\n\t<span class="visuallyhidden">edit</span>\n</a>\n');
                     }
                     ;
                     return ___v1ew.join('');
@@ -29268,7 +29266,7 @@ define('app/view/template/component/resource_sidebar.ejs!lib/can/view/ejs/system
                 ___v1ew.push(can.view.txt(1, 'h3', 0, this, function () {
                     return resource.name;
                 }));
-                ___v1ew.push('</h3>\n\t<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>\n\t<div class="detailed-information">\n\t<h4>');
+                ___v1ew.push('</h3>\n\t<a href="#" class="dialog-close">\n\t\t<i class="fa fa-close"></i>\n\t\t<span class="visuallyhidden">close</span>\n\t</a>\n\t<div class="detailed-information">\n\t<h4>');
                 ___v1ew.push(can.view.txt(1, 'h4', 0, this, function () {
                     return __('Information');
                 }));
@@ -29549,7 +29547,7 @@ define('app/view/template/component/workspace_secondary_menu.ejs!lib/can/view/ej
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<li>\n\t<a id="js_wk_secondary_menu_view_sidebar_button" href="#" class="button toggle">\n\t\t<i class="icon layout eye big no-text"></i>\n\t\t<span>');
+                ___v1ew.push('<li>\n\t<a id="js_wk_secondary_menu_view_sidebar_button" href="#" class="button toggle">\n\t\t<i class="fa fa-lg fa-eye"></i>\n\t\t<span class="visuallyhidden">');
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return __('view sidebar');
                 }));
@@ -29891,7 +29889,7 @@ define('app/view/template/component/create_button.ejs!lib/can/view/ejs/system', 
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<i class="icon create"></i>\n<span>create</span>\n');
+                ___v1ew.push('<i class="fa fa-fw fa-plus-circle"></i>\n<span>create</span>\n');
                 ;
                 return ___v1ew.join('');
             }
@@ -30215,15 +30213,15 @@ define('app/view/template/component/people_workspace_menu.ejs!lib/can/view/ejs/s
                 ___v1ew.push(can.view.txt(0, 'ul', 0, this, function () {
                     var ___v1ew = [];
                     if (role == 'admin') {
-                        ___v1ew.push('\n<li>\n\t<a id="js_user_wk_menu_creation_button" href="#" class="button">\n\t\t<i class="icon create"></i>\n\t\t<span>');
+                        ___v1ew.push('\n<li>\n\t<a id="js_user_wk_menu_creation_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-plus-circle"></i>\n\t\t<span>');
                         ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                             return __('create');
                         }));
-                        ___v1ew.push('</span>\n\t</a>\n</li>\n<li>\n\t<a id="js_user_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="icon edit"></i>\n\t\t<span>');
+                        ___v1ew.push('</span>\n\t</a>\n</li>\n<li>\n\t<a id="js_user_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-edit"></i>\n\t\t<span>');
                         ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                             return __('edit');
                         }));
-                        ___v1ew.push('</span>\n\t</a>\n</li>\n<li>\n\t<a id="js_user_wk_menu_deletion_button" href="#" class="button">\n\t\t<i class="icon delete"></i>\n\t\t<span>');
+                        ___v1ew.push('</span>\n\t</a>\n</li>\n<li>\n\t<a id="js_user_wk_menu_deletion_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-trash"></i>\n\t\t<span>');
                         ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                             return __('delete');
                         }));
@@ -30231,7 +30229,7 @@ define('app/view/template/component/people_workspace_menu.ejs!lib/can/view/ejs/s
                         ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                             return __('more');
                         }));
-                        ___v1ew.push('</span>\n\t\t\t<i class="icon after arrowdown"></i>\n\t\t</a>\n\t</div>\n</li>-->\n');
+                        ___v1ew.push('</span>\n\t\t\t<i class="fa fa-fw fa-caret-down"></i>\n\t\t</a>\n\t</div>\n</li>-->\n');
                     }
                     ;
                     return ___v1ew.join('');
@@ -30965,7 +30963,7 @@ define('app/view/template/component/user_sidebar.ejs!lib/can/view/ejs/system', [
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return user.username;
                 }));
-                ___v1ew.push('</span>\n\t\t</h3>\n\t</div>\n\t<a href="#" class="dialog-close"><i class="icon close no-text"></i><span>close</span></a>\n\t<div class="detailed-information">\n\t\t<h4>');
+                ___v1ew.push('</span>\n\t\t</h3>\n\t</div>\n\t<a href="#" class="dialog-close">\n\t\t<i class="fa fa-close"></i>\n\t\t<span class="visuallyhidden">close</span>\n\t</a>\n\t<div class="detailed-information">\n\t\t<h4>');
                 ___v1ew.push(can.view.txt(1, 'h4', 0, this, function () {
                     return __('Information');
                 }));
@@ -31429,7 +31427,7 @@ define('app/view/template/component/app_filter.ejs!lib/can/view/ejs/system', ['c
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<form id="js_app_filter_form" class="search">\n\t<!-- <ul id="js_filter_tags" class="tags"></ul> -->\n    <div class="input search required">\n        <label for="js_app_filter_keywords"> Search</label>\n        <input id="js_app_filter_keywords" class="required" maxlength="50" type="search" placeholder="search" />\n    </div>\n    <button value="search">\n        <i class="icon search"></i>\n        <span class="text visuallyhidden">search</span>\n    </button>\n</form>\n<!-- <form id="js_filter_form">\n    <ul id="js_filter_tags" class="tags"></ul>\n    <fieldset>\n        <legend>\n            Please enter a search keyword\n        </legend>\n        <div class="input text required">\n            <label for="js_filter_keywords">\n                Search</label>\n            <input id="js_filter_keywords" class="required" maxlength="50" type="text"/>\n        </div>\n    </fieldset>\n    <span id="js_filter_reset" class="control reset">x</span>\n    <div class="submit">\n        <input type="submit" />\n    </div>\n</form> -->');
+                ___v1ew.push('<form id="js_app_filter_form" class="search">\n\t<!-- <ul id="js_filter_tags" class="tags"></ul> -->\n    <div class="input search required">\n        <label for="js_app_filter_keywords"> Search</label>\n        <input id="js_app_filter_keywords" class="required" maxlength="50" type="search" placeholder="search" />\n    </div>\n    <button value="search">\n        <i class="fa fa-fw fa-search"></i>\n        <span class="text visuallyhidden">search</span>\n    </button>\n</form>\n<!-- <form id="js_filter_form">\n    <ul id="js_filter_tags" class="tags"></ul>\n    <fieldset>\n        <legend>\n            Please enter a search keyword\n        </legend>\n        <div class="input text required">\n            <label for="js_filter_keywords">\n                Search</label>\n            <input id="js_filter_keywords" class="required" maxlength="50" type="text"/>\n        </div>\n    </fieldset>\n    <span id="js_filter_reset" class="control reset">x</span>\n    <div class="submit">\n        <input type="submit" />\n    </div>\n</form> -->');
                 ;
                 return ___v1ew.join('');
             }

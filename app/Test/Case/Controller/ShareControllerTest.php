@@ -560,7 +560,7 @@ hcciUFw5
 		// The request found some users.
 		$this->assertNotEmpty($usersIds);
 
-		// The owner is not in the list of users who can receive a direct permission
+		// The users with excluded in the request parameters is not in the request results.
 		$this->assertTrue(!in_array(Common::uuid('user.id.betty'), $usersIds));
 	}
 
