@@ -1,9 +1,0 @@
-{
-  "name": "foo",
-  "main": "foo.js",
-  "system": {
-    "paths": {
-      "bar": "bower_components/bar/bar.js"
-    }
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "sites": {
-    "docs": {
-      "parent": "Mad",
-      "dest": "./docs",
-      "glob" : "src/**/*.{js,md}"
-    }
-  }
-}

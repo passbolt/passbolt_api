@@ -1,7 +1,0 @@
-{
-  "name": "app",
-  "main": "app.js",
-  "dependencies": {
-    "jquerty": "0.0.1"
-  }
-}

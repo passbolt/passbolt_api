@@ -1,9 +1,0 @@
-{
-	"core": {
-		"components": []
-	},
-	"app": {
-		"url": "http://passbolt.local",
-		"controllerElt": "body"
-	}
-}
