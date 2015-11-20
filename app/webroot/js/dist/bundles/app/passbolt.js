@@ -28622,7 +28622,7 @@ define('app/view/template/component/comments.ejs!lib/can/view/ejs/system', ['can
                 ___v1ew.push(can.view.txt(1, 'h4', 0, this, function () {
                     return __('Comments');
                 }));
-                ___v1ew.push('</h4>\n<a href="#" class="section-action"><i class="fa fa-fw fa-plus-circle"></i><span class="visuallyhidden">create</span></a>\n<div id="js_rs_details_comments_add_form"></div>\n<ul id="js_rs_details_comments_list"></ul>');
+                ___v1ew.push('</h4>\n<a href="#" class="js_add_comment section-action"><i class="fa fa-fw fa-plus-circle"></i><span class="visuallyhidden">create</span></a>\n<div id="js_rs_details_comments_add_form"></div>\n<ul id="js_rs_details_comments_list"></ul>');
                 ;
                 return ___v1ew.join('');
             }
@@ -28645,7 +28645,7 @@ define('app/view/component/comments', [
             init: function (el, options) {
                 this._super(el, options);
             },
-            '.icon.create click': function (el, ev) {
+            ' a.js_add_comment click': function (el, ev) {
                 this.getController().addForm.setState('ready');
             },
             'a.button.comment-submit click': function (el, ev) {
@@ -28680,7 +28680,7 @@ define('app/view/component/comments_list', [
             init: function (el, options) {
                 this._super(el, options);
             },
-            '.actions a .icon.delete click': function (el, ev) {
+            ' .actions a.js_delete_comment click': function (el, ev) {
                 ev.stopPropagation();
                 ev.preventDefault();
                 var data = null;
@@ -28985,6 +28985,10 @@ define('app/component/sidebar_section', ['mad/view/component/tree'], function ($
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/component/sidebar*/
 define('app/view/component/sidebar', [
     'mad/view/component/tree',
@@ -29002,7 +29006,7 @@ define('app/view/component/sidebar', [
     $__1;
     $__2;
     var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.component.Sidebar', {}, {
-            '.icon.close click': function (el, ev) {
+            ' .js_sidebar_close click': function (el, ev) {
                 mad.Config.write('ui.workspace.showSidebar', false);
                 mad.bus.trigger('workspace_showSidebar', false);
             }
@@ -29053,10 +29057,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -29266,7 +29266,7 @@ define('app/view/template/component/resource_sidebar.ejs!lib/can/view/ejs/system
                 ___v1ew.push(can.view.txt(1, 'h3', 0, this, function () {
                     return resource.name;
                 }));
-                ___v1ew.push('</h3>\n\t<a href="#" class="dialog-close">\n\t\t<i class="fa fa-close"></i>\n\t\t<span class="visuallyhidden">close</span>\n\t</a>\n\t<div class="detailed-information">\n\t<h4>');
+                ___v1ew.push('</h3>\n\t<a href="#" class="js_sidebar_close dialog-close">\n\t\t<i class="fa fa-close"></i>\n\t\t<span class="visuallyhidden">close</span>\n\t</a>\n\t<div class="detailed-information">\n\t<h4>');
                 ___v1ew.push(can.view.txt(1, 'h4', 0, this, function () {
                     return __('Information');
                 }));
@@ -30963,7 +30963,7 @@ define('app/view/template/component/user_sidebar.ejs!lib/can/view/ejs/system', [
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return user.username;
                 }));
-                ___v1ew.push('</span>\n\t\t</h3>\n\t</div>\n\t<a href="#" class="dialog-close">\n\t\t<i class="fa fa-close"></i>\n\t\t<span class="visuallyhidden">close</span>\n\t</a>\n\t<div class="detailed-information">\n\t\t<h4>');
+                ___v1ew.push('</span>\n\t\t</h3>\n\t</div>\n\t<a href="#" class="js_sidebar_close dialog-close">\n\t\t<i class="fa fa-close"></i>\n\t\t<span class="visuallyhidden">close</span>\n\t</a>\n\t<div class="detailed-information">\n\t\t<h4>');
                 ___v1ew.push(can.view.txt(1, 'h4', 0, this, function () {
                     return __('Information');
                 }));
