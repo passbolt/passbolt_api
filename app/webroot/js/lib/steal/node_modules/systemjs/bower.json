@@ -1,6 +1,0 @@
-{
-  "name": "systemjs",
-  "devDependencies": {
-    "qunit": "~1.12.0"
-  }
-}

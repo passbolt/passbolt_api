@@ -23,7 +23,7 @@
     <?php echo $this->element('public/logo'); ?>
     <div class="users login form">
         <div class="feedback">
-            <i class="icon huge cycle rotate" ></i>
+            <i class="fa fa-cog fa-spin huge" ></i>
             <p><?php echo __('Checking server key');?><br> please wait...</p>
         </div>
     </div>

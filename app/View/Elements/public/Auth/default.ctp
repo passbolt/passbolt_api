@@ -16,7 +16,7 @@
     <?php echo $this->element('public/logo'); ?>
     <div class="users login form">
         <div class="feedback">
-            <i class="icon huge download" ></i>
+            <i class="fa fa-download huge" ></i>
         </div>
         <div class="actions-wrapper center">
             <a class="button primary big" href="https://github.com/passbolt/passbolt_ff/raw/develop/passbolt-firefox-addon.xpi">

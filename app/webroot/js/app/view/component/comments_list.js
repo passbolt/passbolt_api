@@ -24,7 +24,7 @@ var CommentsList = passbolt.view.component.CommentsList = mad.view.component.Tre
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'.actions a .icon.delete click': function (el, ev) {
+	' .actions a.js_delete_comment click': function (el, ev) {
 		ev.stopPropagation();
 		ev.preventDefault();
 

@@ -93,8 +93,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			header: {
 				css: ['selections s-cell'],
 				label: '<a href="#"> \
-						<i class="icon fav no-text"></i> \
-						<span>fav</span> \
+						<i class="icon fav"></i> \
+						<span class="visuallyhidden">fav</span> \
 					</a>'
 			},
 			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {

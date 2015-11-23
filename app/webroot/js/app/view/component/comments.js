@@ -23,7 +23,7 @@ var Comments = passbolt.view.component.Comments = mad.View.extend('passbolt.view
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'.icon.create click': function (el, ev) {
+	' a.js_add_comment click': function (el, ev) {
 		// Displays the add comment form
 		this.getController().addForm.setState('ready');
 	},
