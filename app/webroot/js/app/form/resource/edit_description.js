@@ -57,7 +57,19 @@ var EditDescription = passbolt.form.resource.EditDescription = mad.Form.extend('
 		$('.button.resource-submit').click(function(){
 			$(this).trigger('submit');
 		});
-	}
+	},
+
+    /**
+     * Reset description in description field.
+     * @param description
+     */
+    reset : function(description) {
+        this._super();
+        if (description == undefined) {
+            description = this.options.resource.description;
+        }
+        this.options.descriptionField.setValue(description);
+    }
 });
 
 export default EditDescription;
