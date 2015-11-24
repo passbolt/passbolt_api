@@ -23715,8 +23715,13 @@ define('mad/form/form', [
                 this.setViewData('action', this.options.action);
             },
             reset: function () {
+                this.validations = 0;
                 for (var eltId in this.elements) {
-                    this.elements[eltId].setValue(this.options.defaultValue);
+                    var element = this.elements[eltId], feedbackElement = this.feedbackElements[element.getId()];
+                    element.setValue(this.options.defaultValue);
+                    if (feedbackElement != undefined) {
+                        feedbackElement.setMessage('').setState('success');
+                    }
                 }
             },
             load: function (data) {
@@ -28985,10 +28990,6 @@ define('app/component/sidebar_section', ['mad/view/component/tree'], function ($
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/component/sidebar*/
 define('app/view/component/sidebar', [
     'mad/view/component/tree',
@@ -29089,6 +29090,13 @@ define('app/form/resource/edit_description', [
                 $('.button.resource-submit').click(function () {
                     $(this).trigger('submit');
                 });
+            },
+            reset: function (description) {
+                this._super();
+                if (description == undefined) {
+                    description = this.options.resource.description;
+                }
+                this.options.descriptionField.setValue(description);
             }
         });
     var $__default = EditDescription;
@@ -29167,7 +29175,23 @@ define('app/view/component/sidebar_section/description', [
     $__2;
     var Description = passbolt.view.component.sidebarSection.Description = passbolt.view.component.SidebarSection.extend('passbolt.view.component.sidebarSection.Description', {}, {
             'a#js_edit_description_button, p.description_content click': function (el, ev) {
-                this.element.trigger('request_resource_description_edit');
+                if (this.getController().getViewData('editable') !== false) {
+                    this.element.trigger('request_resource_description_edit');
+                }
+            },
+            '{window} click': function (el, ev) {
+                var isEditState = this.getController().state.is('edit');
+                var evtSrc = ev.originalEvent.target;
+                var descriptionElt = $('p.description_content', this.getController().element).get(0);
+                var editButtonElement = $('a#js_edit_description_button i', this.getController().element).get(0);
+                var clickIsOnEditElement = descriptionElt == evtSrc || editButtonElement == evtSrc;
+                if (isEditState && !clickIsOnEditElement) {
+                    var $form = $('.form-content', this.getController().element);
+                    var contained = $.contains($form.get(0), evtSrc);
+                    if (!contained) {
+                        this.getController().setState('ready');
+                    }
+                }
             },
             showDescription: function (visible) {
                 if (visible) {
@@ -29231,8 +29255,8 @@ define('app/component/sidebar_section/description', [
                     'data': { 'Resource': this.options.resource },
                     'callbacks': {
                         'submit': function (data) {
-                            self.options.resource.update({ 'description': data['passbolt.model.Resource']['description'] }, function () {
-                            });
+                            self.options.resource.attr('description', data['passbolt.model.Resource']['description']);
+                            self.options.resource.save();
                         }
                     }
                 }).start();
@@ -29250,6 +29274,7 @@ define('app/component/sidebar_section/description', [
                     this.view.showDescription(false);
                 } else {
                     this.options.editDescriptionFormCtrl.setState('hidden');
+                    this.options.editDescriptionFormCtrl.reset();
                     this.view.showDescription(true);
                 }
             }
@@ -29662,6 +29687,10 @@ define('app/form/secret/create', ['mad/form/form'], function ($__0) {
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/create.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/create.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_create_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -32218,12 +32247,13 @@ define('app/config/config.json', [], function () {
                 'name': 'Sauvage',
                 'song': 'http://youtu.be/DaRG0ukxYqQ'
             },
-            'url': 'http://192.168.99.100:8081',
-            'hostname': '192.168.99.100:8081',
+            'url': 'http://passbolt.dev',
+            'hostname': 'http://192.168.99.100:8081',
             'controllerElt': '#js_app_controller',
             'namespace': 'passbolt',
             'ControllerClassName': 'passbolt.component.App'
         },
+        'ui': { 'workspace': { 'showSidebar': true } },
         'notification': { 'timeout': 6000 },
         'error': { 'ErrorHandlerClassName': 'passbolt.error.ErrorHandler' },
         'event': { 'eventBusControllerElt': '#js_bus_controller' },

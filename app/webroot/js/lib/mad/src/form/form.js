@@ -90,12 +90,28 @@ var Form = mad.Form = mad.Component.extend('mad.Form', /* @static */ {
 
     /**
      * Reset the form.
+     * Reset the values inside the form, and remove error messages.
      * @return {void}
      */
     reset: function () {
+        // Number of validations is back to zero.
+        this.validations = 0;
+
         // Reset all the form elements value.
         for (var eltId in this.elements) {
-            this.elements[eltId].setValue(this.options.defaultValue);
+
+            var element =  this.elements[eltId],
+                feedbackElement = this.feedbackElements[element.getId()];
+
+            // Reset element value.
+            element.setValue(this.options.defaultValue);
+
+            // Reset feedback element if any.
+            if (feedbackElement != undefined) {
+                feedbackElement
+                    .setMessage('')
+                    .setState('success');
+            }
         }
     },
 

@@ -20,8 +20,39 @@ var Description = passbolt.view.component.sidebarSection.Description = passbolt.
 	 * @return {void}
 	 */
 	'a#js_edit_description_button, p.description_content click': function (el, ev) {
-		this.element.trigger('request_resource_description_edit');
+        if (this.getController().getViewData('editable') !== false) {
+		    this.element.trigger('request_resource_description_edit');
+        }
 	},
+
+    /**
+     * Observe when a click is done anywhere in the window.
+     * If a click is done while being in edit mode, we cancel the edit and back to normal state.
+     * @param el
+     * @param ev
+     */
+    '{window} click': function(el, ev) {
+        // Are we in edit state.
+        var isEditState = this.getController().state.is('edit');
+        // Source of the click.
+        var evtSrc = ev.originalEvent.target;
+        // Description p element.
+        var descriptionElt = $('p.description_content', this.getController().element).get(0);
+        // Edit button element.
+        var editButtonElement = $('a#js_edit_description_button i', this.getController().element).get(0);
+        // Is the click providing from an element that triggers edit ?
+        var clickIsOnEditElement = descriptionElt == evtSrc || editButtonElement == evtSrc;
+
+        // If we are in edit mode, and the click doesn't come from the element containing the description.
+        if (isEditState && ! clickIsOnEditElement) {
+            // We intercept the click only if it's outside of the form.
+            var $form = $('.form-content', this.getController().element);
+            var contained = $.contains($form.get(0), evtSrc);
+            if (!contained) {
+                this.getController().setState('ready');
+            }
+        }
+    },
 
 	/**
 	 * Set the visibility of the description

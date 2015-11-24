@@ -25,7 +25,6 @@ $config = array(
 	// Javascript
 	'App.js' => array(
 		'build' => 'production',
-		'compile' => false
 	),
 	// Internationalization
 	'i18n' => array(
@@ -108,7 +107,7 @@ $config = array(
 		),
 		'serverKey' => array(
 			'id' => '573EE67E',
-			'fingerprint' => '2fc8945833c51946e937f9fed47b0811573ee67e',
+			'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
 			'public' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure.key',
 			'private' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure_private.key',
 			'passphrase' => ''

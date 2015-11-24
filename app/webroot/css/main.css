@@ -6097,6 +6097,41 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 .folder-add .input.text {
   width: 25em;
 }
+/*
+ * Password workspace
+ * @todo better namespacing
+ */
+/* drag n drop */
+#js_dragged_resource {
+  padding: 6px 10px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+#js_dragged_resource span.name {
+  font-weight: bold;
+}
+/* sidebar */
+.panel.aside .resource .detailed-information li.password .value {
+  height: 1.6em;
+  padding-top: 0.2em;
+}
+/* unused collumn
+	@todo: remove html
+*/
+.js_grid_column_owner,
+.js_grid_column_copyLogin,
+.js_grid_column_copySecret {
+  display: none;
+}
+/* hide left column when there is no space */
+@media all and (max-width: 980px) {
+  .tableview .js_grid_column_modified {
+    display: none;
+  }
+}
 /* sidebar / user details in overview */
 .panel.aside .user .header {
   /*
@@ -6202,41 +6237,6 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 /* login history icon collumn centerign */
 .login-history td:first-child {
   text-align: center;
-}
-/*
- * Password workspace
- * @todo better namespacing
- */
-/* drag n drop */
-#js_dragged_resource {
-  padding: 6px 10px;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-#js_dragged_resource span.name {
-  font-weight: bold;
-}
-/* sidebar */
-.panel.aside .resource .detailed-information li.password .value {
-  height: 1.6em;
-  padding-top: 0.2em;
-}
-/* unused collumn
-	@todo: remove html
-*/
-.js_grid_column_owner,
-.js_grid_column_copyLogin,
-.js_grid_column_copySecret {
-  display: none;
-}
-/* hide left column when there is no space */
-@media all and (max-width: 980px) {
-  .tableview .js_grid_column_modified {
-    display: none;
-  }
 }
 /* TODO replace by page level selector */
 .page.settings .main.panel .middle {

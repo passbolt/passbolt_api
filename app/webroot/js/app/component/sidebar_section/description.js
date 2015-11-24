@@ -56,13 +56,8 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 			},
 			'callbacks': {
 				'submit': function (data) {
-					self.options.resource.update({
-						'description': data['passbolt.model.Resource']['description']
-					}, function () {
-						// No callback required, the parent controller will refresh itself,
-						// and its children components while the current resource is
-						// updated with success.
-					});
+                    self.options.resource.attr('description', data['passbolt.model.Resource']['description']);
+                    self.options.resource.save();
 				}
 			}
 		}).start();
@@ -98,8 +93,8 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 		}
 		else {
 			this.options.editDescriptionFormCtrl.setState('hidden');
+            this.options.editDescriptionFormCtrl.reset();
 			this.view.showDescription(true);
 		}
 	}
-
 });
