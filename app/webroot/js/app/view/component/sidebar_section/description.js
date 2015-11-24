@@ -32,7 +32,6 @@ var Description = passbolt.view.component.sidebarSection.Description = passbolt.
      * @param ev
      */
     '{window} click': function(el, ev) {
-
         // Are we in edit state.
         var isEditState = this.getController().state.is('edit');
         // Source of the click.
@@ -40,7 +39,7 @@ var Description = passbolt.view.component.sidebarSection.Description = passbolt.
         // Description p element.
         var descriptionElt = $('p.description_content', this.getController().element).get(0);
         // Edit button element.
-        var editButtonElement = $('a#js_edit_description_button span', this.getController().element).get(0);
+        var editButtonElement = $('a#js_edit_description_button i', this.getController().element).get(0);
         // Is the click providing from an element that triggers edit ?
         var clickIsOnEditElement = descriptionElt == evtSrc || editButtonElement == evtSrc;
 

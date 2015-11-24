@@ -27747,10 +27747,6 @@ define('mad/view/form/element/dropdown', ['mad/view/form/element'], function ($_
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system*/
 define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('mad_view_template_form_dropdown_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29187,7 +29183,7 @@ define('app/view/component/sidebar_section/description', [
                 var isEditState = this.getController().state.is('edit');
                 var evtSrc = ev.originalEvent.target;
                 var descriptionElt = $('p.description_content', this.getController().element).get(0);
-                var editButtonElement = $('a#js_edit_description_button span', this.getController().element).get(0);
+                var editButtonElement = $('a#js_edit_description_button i', this.getController().element).get(0);
                 var clickIsOnEditElement = descriptionElt == evtSrc || editButtonElement == evtSrc;
                 if (isEditState && !clickIsOnEditElement) {
                     var $form = $('.form-content', this.getController().element);
@@ -29691,6 +29687,10 @@ define('app/form/secret/create', ['mad/form/form'], function ($__0) {
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/create.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/create.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_create_ejs', can.EJS(function (_CONTEXT, _VIEW) {
