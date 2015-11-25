@@ -119,7 +119,7 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  * useful when generating links from the CLI (e.g. sending emails)
  */
 	//Configure::write('App.fullBaseUrl', 'http://example.com');
-	Configure::write('App.fullBaseUrl', 'http://' . getenv('APP_URL'));
+	Configure::write('App.fullBaseUrl', 'https://' . getenv('APP_URL'));
 
 /**
  * Web path to the public images directory under webroot.
