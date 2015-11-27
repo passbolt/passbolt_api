@@ -32,15 +32,43 @@ class UsersController extends AppController {
 	}
 
 /**
+ * Helper function to help with account registration.
+ *
+ * Create the user, its associated profile and an Authentication token to allow the user
+ * to access the setup and finalize the registration process.
+ *
+ * Notify the user by email.
+ *
+ * @param $data array User and profile data.
+ * @return array the created user
+ *
+ * @throws Exception
+ * @throws ValidationException
+ */
+	private function registerUser($data) {
+		// Save user data
+		$user = $this->User->registerUser($data);
+
+		// Send notification email
+		$this->EmailNotificator->accountCreationNotification(
+			$user['Profile']['user_id'],
+			array(
+				'token' => $user['AuthenticationToken']['token'],
+				'creator_id' => User::get('id'),
+			));
+	}
+
+/**
  * Register page.
  */
 	public function register() {
 		$this->layout = 'login';
+
 		// if data is provided.
 		if (!empty ($this->request->data)) {
 			$userData = $this->request->data;
 			try {
-				$this->__add($userData);
+				$this->registerUser($userData);
 			}
 			catch (ValidationException $e) {
 				return;
@@ -52,47 +80,26 @@ class UsersController extends AppController {
 		}
 	}
 
-	/**
-	 * Add a user to the app, create a token and send a notification.
-	 * @param $data
-	 *   user and profile data.
-	 *
-	 * @return array
-	 *   a user object
-	 *
-	 * @throws Exception
-	 * @throws ValidationException
-	 */
-	private function __add($data) {
-		// Save user data.
-		$user = $this->User->__add($data);
-
-		// Send notification email.
-		$this->EmailNotificator->accountCreationNotification(
-			$user['Profile']['user_id'],
-			array(
-				'token' => $user['AuthenticationToken']['token'],
-				'creator_id' => User::get('id'),
-			));
-	}
-
 /**
  * Thank you page after registration.
  */
 	public function register_thankyou() {
 		// Check referer.
 		$referer = $this->referer();
+
 		// If no referer, we redirect to register page.
 		if (empty($referer)) {
 			$this->redirect("/register");
 			return;
 		}
+
 		$url = parse_url($referer);
 		// If the referer was not the register url, we also redirect to /register page.
 		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== '/register') {
 			$this->redirect("/register");
 			return;
 		}
+
 		$this->layout = 'login';
 	}
 
@@ -130,23 +137,6 @@ class UsersController extends AppController {
 
 		$this->set('data', $users);
 		$this->Message->success();
-	}
-
-/**
- * Recursive ksort() implementation
- *
- * @param array $array
- * @param integer
- * @return void
- * @link https://gist.github.com/601849
- */
-	public function ksortRecursive(&$array, $sortFlags = SORT_REGULAR) {
-		if (!is_array($array)) return false;
-		ksort($array, $sortFlags);
-		foreach ($array as &$arr) {
-			$this->ksortRecursive($arr, $sortFlags);
-		}
-		return true;
 	}
 
 /**
@@ -210,7 +200,7 @@ class UsersController extends AppController {
 
 		// Try to add the user
 		try {
-			$this->__add($userData);
+			$this->registerUser($userData);
 		}
 		// Something went wrong with the validation
 		catch (ValidationException $e) {
@@ -273,7 +263,7 @@ class UsersController extends AppController {
 			return $this->Message->error(__('No data were provided'));
 		}
 
-		// Begin transaction.
+		// Begin transaction
 		$this->User->begin();
 
 		// Set the data for validation and save
@@ -285,7 +275,7 @@ class UsersController extends AppController {
 		// Update the user
 		if (isset($userData['User'])) {
 
-			// Get the meaningful fields of this operation
+			// Get the meaningful fields for this operation
 			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
 
 			// Validate the user data
@@ -308,6 +298,8 @@ class UsersController extends AppController {
 
 		// Update the user profile
 		if (isset($userData['Profile'])) {
+
+			// Retrieve the profile associated to the user account
 			$profile = $this->User->Profile->findByUserId($id);
 
 			// If no profile associated to the user found
@@ -327,15 +319,17 @@ class UsersController extends AppController {
 				$profileData['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profileData['Profile']['date_of_birth']));
 			}
 
+			// Get the meaningful fields for this operation
 			$fields = $this->User->Profile->getFindFields('User::edit', User::get('Role.name'));
 			$fields = Hash::expand($fields);
+
+			// Set the data for validation and save
 			$this->User->Profile->set($profileData);
 
 			// Validate the profile data
 			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->rollback();
-				$invalidFields = $this->User->Profile->validationErrors;
-				$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
+				$finalInvalidFields = Common::formatInvalidFields('Profile', $this->User->Profile->validationErrors);
 				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
 			}
 
@@ -350,7 +344,7 @@ class UsersController extends AppController {
 		// Everything went fine, commit the changes
 		$this->User->commit();
 
-		// Retrieve the just updated user and its associated model
+		// Retrieve the just updated user
 		$data = array('User.id' => $this->User->id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
@@ -471,7 +465,6 @@ class UsersController extends AppController {
 		}
 
 		// Check that token is valid
-		file_put_contents('/tmp/authentication_token.txt', json_encode($data));
 		$validToken = $this->User->AuthenticationToken->checkTokenIsValidForUser($data['AuthenticationToken']['token'], $id);
 		if (!$validToken) {
 			return $this->Message->error(__('Invalid token'));

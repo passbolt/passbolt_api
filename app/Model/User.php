@@ -168,6 +168,7 @@ class User extends AppModel {
 
 		$userId = null;
 		// check if a user record is available.
+		// @todo explain
 		if (isset($this->data['User']['id']) && !empty($this->data['User']['id'])) {
 			$userId = $this->data['User']['id'];
 		} elseif (isset($this->id) && !empty($this->id)) {
@@ -367,6 +368,8 @@ class User extends AppModel {
  * @param null|string $role The user role.
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
+ *
+ * @throws Exception
  */
 	public static function getFindConditions($case = null, $role = Role::GUEST, $data = null) {
 		$conditions = array();
@@ -682,82 +685,78 @@ class User extends AppModel {
 
 	/**
 	 * Add a user and its profile, and create an authentication token.
-	 * @param $data
-	 *   user and profile data.
 	 *
-	 * @return array
-	 *   a user object
+	 * @param $data The user and profile data
+	 * @return array The user, the profile and the token data
 	 *
 	 * @throws Exception
 	 * @throws ValidationException
 	 */
-	public function __add($data) {
+	public function registerUser($data, $case = "User::save") {
+		// No user data provided
+		if (!isset($data['User']) || empty($data['User'])) {
+			throw new Exception(__('User data are missing'));
+		}
 
-		$userData = $data;
+		// No profile data provided
+		if (!isset($data['Profile']) || empty($data['Profile'])) {
+			throw new Exception(__('Profile data are missing'));
+		}
 
 		// If role id is not provided, we assign a default one
-		if(!isset($userData['User']['role_id']) || empty($userData['User']['role_id'])) {
-			$userData['User']['role_id'] = $this->Role->field('Role.id', array('name' => Role::USER));
+		if (!isset($data['User']['role_id']) || empty($data['User']['role_id'])) {
+			$data['User']['role_id'] = $this->Role->field('Role.id', array('name' => Role::USER));
 		}
-		// User is not activated by default.
-		$userData['User']['active'] = FALSE;
 
-		// Validates user information
-		$this->set($userData);
+		// By default a user is not active
+		$data['User']['active'] = FALSE;
 
-		// Get fields.
-		$fields = $this->getFindFields('User::save', User::get('Role.name'));
+		// Begin transaction
+		$this->begin();
 
-		// check if the data is valid
-		if (!$this->validates()) {
+		// Get the meaningful fields for this operation
+		$fields = $this->getFindFields($case, User::get('Role.name'));
+		// Set the data for validation and save
+		$this->set($data);
+
+		// Validate the user data
+		if (!$this->validates(array('fieldList' => array($fields['fields'])))) {
 			$invalidFields = $this->validationErrors;
 			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
 			throw new ValidationException(__('Could not validate user data'), $finalInvalidFields);
 		}
 
-		$this->begin();
-		$user = $this->save(
-			$userData,
-			[
-				'validate' => false,
-				'fieldList' => $fields['fields']
-			]
-		);
-		if ($user == false) {
+		// Save the user
+		$saveUser = $this->save($data, false, $fields['fields']);
+		if (!$saveUser) {
 			$this->rollback();
 			throw new Exception(__('The user could not be saved'));
 		}
 
-		if (!isset($userData['Profile']) || empty($userData['Profile'])) {
-			$this->rollback();
-			throw new Exception(__('Profile data are missing'));
-		}
-		// Validates profile information
-		$userData['Profile']['user_id'] = $this->id;
-		$this->Profile->set($userData);
-		if (!$this->Profile->validates()) {
+		// Get the meaningful fields for this operation
+		$fields = $this->Profile->getFindFields($case, User::get('Role.name'));
+		// Set the data for validation and save
+		$data['Profile']['user_id'] = $this->id;
+		$this->Profile->set($data);
+
+		// Validate the profile data
+		if (!$this->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 			$this->rollback();
 			$invalidFields = $this->Profile->validationErrors;
 			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
 			throw new ValidationException(__('Could not validate profile'), $finalInvalidFields);
 		}
 
-		$fields = $this->Profile->getFindFields('User::save', User::get('Role.name'));
-		$profile = $this->Profile->save(
-			$userData['Profile'],
-			[
-				'validate' => false,
-				'fieldList' => $fields['fields']
-			]
-		);
-		if ($profile == false) {
+		// Save the profile
+		$saveProfile = $this->Profile->save($data['Profile'], false, $fields['fields']);
+		if (!$saveProfile) {
 			$this->rollback();
 			throw new Exception(__('The profile could not be saved'));
 		}
 
-		// Create token for user.
-		$token = $this->AuthenticationToken->createToken($this->id);
-		if (!$token) {
+		// Create the setup authentication token
+		$saveToken = $this->AuthenticationToken->createToken($this->id);
+		if (!$saveToken) {
 			$this->rollback();
 			throw new Exception(__('The account token could not be created'));
 		}
@@ -765,6 +764,6 @@ class User extends AppModel {
 		// Everything fine, we commit.
 		$this->commit();
 
-		return array_merge($user, $profile, $token);
+		return array_merge($saveUser, $saveProfile, $saveToken);
 	}
 }

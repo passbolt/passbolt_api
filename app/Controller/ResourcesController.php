@@ -322,8 +322,9 @@ class ResourcesController extends AppController {
 		// Update the resource
 		if (isset($resourcepost['Resource'])) {
 
-			// Get the meaningful fields of this operation
+			// Get the meaningful fields for this operation
 			$fields = $this->Resource->getFindFields('edit', User::get('Role.name'));
+
 			// Validate the resource data
 			$this->Resource->set($resourcepost);
 			// @todo validate only the fields required by this operation
@@ -410,13 +411,16 @@ class ResourcesController extends AppController {
 				}
 			}
 		}
-		$this->Message->success(__('The resource was successfully updated'));
+
+		// Retrieve the just updated resource
 		$data = array(
 			'Resource.id' => $resource['Resource']['id']
 		);
 		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
-		$resources = $this->Resource->find('all', $options);
-		$this->set('data', $resources[0]);
+		$resource = $this->Resource->find('first', $options);
+
+		$this->Message->success(__('The resource was successfully updated'));
+		$this->set('data', $resource);
 	}
 
 }

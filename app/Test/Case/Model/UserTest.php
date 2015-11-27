@@ -387,6 +387,9 @@ class UserTest extends CakeTestCase {
 	 * Test __add() function with valid parameters.
 	 */
 	public function testAdd() {
+		$user = $this->User->find('first', array('conditions' => array('username' => 'admin@passbolt.com')));
+		$this->User->setActive($user);
+
 		$data = [
 			'Profile' => [
 				'first_name' => 'john',
@@ -396,7 +399,7 @@ class UserTest extends CakeTestCase {
 				'username' => 'john.doe@passbolt.com'
 			]
 		];
-		$user = $this->User->__add($data);
+		$user = $this->User->registerUser($data);
 		$this->assertEquals($user['User']['username'], $data['User']['username'], 'User should have been created with the same email');
 	}
 
@@ -416,7 +419,7 @@ class UserTest extends CakeTestCase {
 			]
 		];
 		$this->setExpectedException('ValidationException', 'Could not validate profile');
-		$this->User->__add($data);
+		$this->User->registerUser($data);
 		// Check that no user is inside the user table.
 		$user = $this->User->find('all', [
 				'conditions' => [
@@ -443,7 +446,7 @@ class UserTest extends CakeTestCase {
 			]
 		];
 		$this->setExpectedException('ValidationException', 'Could not validate user');
-		$this->User->__add($data);
+		$this->User->registerUser($data);
 		// Check that no user is inside the user table.
 		$user = $this->User->find('all', [
 			'conditions' => [
