@@ -24,17 +24,6 @@ class AuthenticationToken extends AppModel {
 	);
 
 	/**
-	 * Length of the base random string used to generate tokens.
-	 */
-	const TOKEN_STRING_LENGTH = 30;
-
-	/**
-	 * Token Types
-	 */
-	const MD5 = 'md5';
-	const UUID = 'UUID';
-
-	/**
 	 * Get the validation rules upon context
 	 *
 	 * @param string $case (optional) The target validation case if any.
@@ -60,43 +49,14 @@ class AuthenticationToken extends AppModel {
 					'message' => __('The user id provided does not exist')
 				),
 			),
+			'token' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'message' => __('Token has an invalid format')
+				)
+			)
 		);
-		switch ($case) {
-			default:
-			case 'default':
-			case self::MD5 :
-				$rules['token'] = array(
-					'validMD5' => array(
-						'rule' => array('checkValidMd5', true),
-						'required' => true,
-						'allowEmpty' => false,
-						'message' => __('Token has an invalid format')
-					)
-				);
-				break;
-			case self::UUID :
-				$rules['token'] = array(
-					'uuid' => array(
-						'rule' => 'uuid',
-						'message' => __('UUID must be in correct format')
-					)
-				);
-				break;
-		}
 		return $rules;
-	}
-
-	/**
-	 * Check validation rule, whether a md5 is valid.
-	 * @param $check
-	 * @return bool
-	 */
-	public function checkValidMd5($check) {
-		if ($check['token'] == null) {
-			return false;
-		} else {
-			return strlen($check['token']) == 32 && ctype_xdigit($check['token']);
-		}
 	}
 
 	/**
@@ -119,30 +79,20 @@ class AuthenticationToken extends AppModel {
 	 * Generate a token.
 	 * @return string
 	 */
-	public static function generateToken($type = self::MD5) {
-		switch($type) {
-			default:
-			case self::MD5:
-				$rdStr = Common::randomString(self::TOKEN_STRING_LENGTH);
-				$token = md5($rdStr + time());
-				break;
-			case self::UUID:
-				$token = Common::uuid();
-				break;
-		}
-		return $token;
+	public static function generateToken() {
+		return Common::uuid();
 	}
 
 	/**
-	 * Check if a token is valid.
+	 * Check if a token exist and is valid for a given user.
 	 *
 	 * @param string $token
 	 * @param uuid $userId
 	 *
 	 * @return array or null if doesn't exist.
 	 */
-	public function checkTokenIsValid($token, $userId) {
-		// @todo check token expiracy
+	public function checkTokenIsValidForUser($token, $userId) {
+		// @todo PASSBOLT-1234 check token expiracy
 		$token = $this->find('first', array(
 				'conditions' => array(
 					'AuthenticationToken.user_id' => $userId,
@@ -159,23 +109,22 @@ class AuthenticationToken extends AppModel {
 	/**
 	 * Create a token for a given user.
 	 * @param uuid $userId
-	 * @param string $type MD5 or UUID
 	 * @return array result of the save function for token
 	 */
-	public function createToken($userId, $type = self::MD5) {
+	public function createToken($userId) {
 		$token = array(
 			'user_id' => $userId,
-			'token' => self::generateToken($type),
+			'token' => self::generateToken(),
 		);
 
+		// Set the data for validation and save
 		$this->set($token);
-		$this->setValidationRules($type);
-		$v = $this->validates();
-		if (!$v) {
+
+		// Validate the token data
+		if (!$this->validates()) {
 			return false;
 		}
 		$this->create();
-		$s = $this->save($token);
-		return $s;
+		return $this->save($token);
 	}
 }

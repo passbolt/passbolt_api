@@ -40,7 +40,7 @@ class ResourcesController extends AppController {
 			$recursive = true;
 		}
 
-		// if filtered categories are provided
+		// if a filter by category are provided
 		// - check the valildity of the given uids
 		// - if recursive, filter also on sub-categories
 		if (isset($data['foreignModels']['Category.id'])) {
@@ -312,6 +312,8 @@ class ResourcesController extends AppController {
 		// Use the url id parameter as Resource id
 		$resourcepost['Resource']['id'] = $id;
 
+		// @todo Begin transaction.
+
 		// check if data was provided
 		if (!isset($resourcepost['Resource']) && !isset($resourcepost['Category'])) {
 			return $this->Message->error(__('No data were provided'));
@@ -319,14 +321,18 @@ class ResourcesController extends AppController {
 
 		// Update the resource
 		if (isset($resourcepost['Resource'])) {
+
+			// Get the meaningful fields of this operation
+			$fields = $this->Resource->getFindFields('edit', User::get('Role.name'));
+			// Validate the resource data
 			$this->Resource->set($resourcepost);
+			// @todo validate only the fields required by this operation
 			if (!$this->Resource->validates()) {
 				return $this->Message->error(
 					__('Could not validate Resource'),
 					array('body' => $this->Resource->validationErrors)
 				);
 			}
-			$fields = $this->Resource->getFindFields('edit', User::get('Role.name'));
 			$save = $this->Resource->save($resourcepost, false, $fields['fields']);
 			if (!$save) {
 				return $this->Message->error(__('The resource could not be updated'));

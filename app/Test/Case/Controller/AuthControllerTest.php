@@ -227,10 +227,10 @@ class AuthControllerTest extends ControllerTestCase {
 
         $AuthenticationToken = Common::getModel('AuthenticationToken');
 
-        $token = $AuthenticationToken->createToken(Common::uuid('user.id.ada'), AuthenticationToken::UUID);
+        $token = $AuthenticationToken->createToken(Common::uuid('user.id.ada'));
 
         $this->assertTrue($token != false, 'Token should not be false');
-        $r = $AuthenticationToken->checkTokenIsValid($token['AuthenticationToken']['token'], Common::uuid('user.id.ada'));
+        $r = $AuthenticationToken->checkTokenIsValidForUser($token['AuthenticationToken']['token'], Common::uuid('user.id.ada'));
         $this->assertFalse(empty($r), 'r should not be empty');
 
         // Send it back!

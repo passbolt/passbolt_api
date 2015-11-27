@@ -55,23 +55,6 @@ class Common extends Object {
 	}
 
 /**
- * Generate a random string.
- * @todo check use as not cryptographically secure
- *
- * @param integer $length length of the string.
- * @return string the random string
- */
-	public static function randomString($length) {
-		$mask = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$';
-		$rdStr = substr(
-			str_shuffle($mask) ,
-			0,
-			$length
-		);
-		return $rdStr;
-	}
-
-/**
  * Format a list of invalid fields to be returned to the client.
  *
  * @param $model

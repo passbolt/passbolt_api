@@ -97,61 +97,49 @@ class UsersController extends AppController {
 	}
 
 /**
- * Index entry point
+ * Get all users
+ * Renders a json object of the users
  *
  * @access public
  */
 	public function index() {
-		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
-
+		// The additional information to pass to the model request
 		$data = array();
-		$filter = $this->Filter->fromRequest($this->request->query);
 
-		// Merge the filter into the additional information to pass to the model request
-		$data = array_merge($data, $filter);
+		// Extract the filter from the request
+		$data = $this->Filter->fromRequest($this->request->query);
 
-		// If group filter is used.
+		// If a filter by group is provided
 		if (isset($data['foreignModels']['Group.id'])) {
-			// Tmp array to store the target groups
-			$groups = array();
-
+			// Check the validity of each provided group
 			foreach ($data['foreignModels']['Group.id'] as $groupId) {
-				// if a category id is provided check it is well an uid
+				// Check if the group id is valid
 				if (!Common::isUuid($groupId)) {
 					return $this->Message->error(__('The group id is invalid'));
 				}
-				// check if the group exists
-				$Group = Common::getModel('Group');
-				$group = $Group->findById($groupId);
-				if (!$group) {
-					return $this->Message->error(__('The group doesn\t exist'));
+				// Check if the group exists
+				if (!$this->User->Group->findById($groupId)) {
+					return $this->Message->error(__('The group doesn\'t exist', $groupId));
 				}
-				$groups[] = $group['Group']['id'];
 			}
-			$data['foreignModels']['Group.id'] = $groups;
 		}
 
-		// if keywords provided build the model request with
-		if (!empty($keywords)) {
-			$data['keywords'] = $keywords;
-		}
+		// Find the users.
 		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $data);
-		$returnVal = $this->User->find('all', $o);
-		if (empty($returnVal)) {
-			return $this->Message->notice(__('There is no user to display'));
-		}
-		$this->set('data', $returnVal);
+		$users = $this->User->find('all', $o);
+
+		$this->set('data', $users);
 		$this->Message->success();
 	}
 
-	/**
-	 * Recursive ksort() implementation
-	 *
-	 * @param array $array
-	 * @param integer
-	 * @return void
-	 * @link https://gist.github.com/601849
-	 */
+/**
+ * Recursive ksort() implementation
+ *
+ * @param array $array
+ * @param integer
+ * @return void
+ * @link https://gist.github.com/601849
+ */
 	public function ksortRecursive(&$array, $sortFlags = SORT_REGULAR) {
 		if (!is_array($array)) return false;
 		ksort($array, $sortFlags);
@@ -162,35 +150,36 @@ class UsersController extends AppController {
 	}
 
 /**
- * View
+ * Get a user
+ * Renders a json object of the user
  *
  * @param $id UUID of the user
  *
  * @access public
  */
 	public function view($id = null) {
-		// asking for me returns the currently logged-in user.
+		// The additional information to pass to the model request
+		$data = array();
+
+		// Asking for me returns the currently logged-in user
 		if ($id == 'me') {
 			$id = User::get('id');
 		}
 
-		// check if the id is provided
+		// Check if the id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The user id is missing'));
 		}
-		// check if the id is valid
+		// Check if the id is valid
 		if (!Common::isUuid($id)) {
 			return $this->Message->error(__('The user id is invalid'));
 		}
 
 		// Retrieve the user
-		$data = array('User.id' => $id);
+		$data['User.id'] = $id;
 		$o = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-		$users = $this->User->find('all', $o);
-		$user = null;
-		if ($users) {
-			$user = reset($users);
-		} else {
+		$user = $this->User->find('first', $o);
+		if (!$user) {
 			return $this->Message->error(__('The user does not exist'), array('code' => 404));
 		}
 
@@ -198,108 +187,117 @@ class UsersController extends AppController {
 		$this->Message->success();
 	}
 
-
 /**
- * add a user entry point
+ * Add a user
  */
 	public function add() {
-		// First of all, check if the user is an administrator
+		// Only admin users can access this entry point
 		if (User::get('Role.name') != Role::ADMIN) {
 			return $this->Message->error(__('You are not authorized to access that location'));
 		}
 
-		// check the HTTP request method
+		// Check the HTTP request method
 		if (!$this->request->is('post')) {
 			return $this->Message->error(__('Invalid request method, should be POST'));
 		}
-		// check if data was provided
+		// Check if data was provided
 		if (!isset($this->request->data['User'])) {
 			return $this->Message->error(__('No data were provided'));
 		}
 
-		// set the data for validation and save
+		// Set the data for validation and save
 		$userData = $this->request->data;
 
+		// Try to add the user
 		try {
 			$this->__add($userData);
 		}
-		catch (ValidationException $ve) {
-			return $this->Message->error(__('Could not validate profile'), array('body' => $ve->getInvalidFields()));
+		// Something went wrong with the validation
+		catch (ValidationException $e) {
+			return $this->Message->error(__('Could not validate profile'), array(
+				'body' => $e->getInvalidFields()
+			));
 		}
+		// Something else went wrong
 		catch (Exception $e) {
 			return $this->Message->error($e->getMessage());
 		}
 
-		// Return data.
+		// Retrieve the just inserted user
 		$data = array(
 			'User.id' => $this->User->id,
 			'User.active' => FALSE,
 		);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-
-		$users = $this->User->find('all', $options);
+		$user = $this->User->find('first', $options);
 
 		$this->Message->success(__("The user has been saved successfully"));
-		$this->set('data', $users[0]);
+		$this->set('data', $user);
 	}
 
-	/**
-	 * edit entry point for users
-	 *
-	 * @param uuid $id the id of the user we want to edit
-	 */
+/**
+ * Update a user
+ *
+ * @param uuid $id the id of the user we want to edit
+ */
 	public function edit($id = null) {
-		// First of all, check if the user is an administrator
-		// Or the user is editing is own account
+		// Only admin users can update users
+		// Except user editing their own account
 		if (User::get('Role.name') != Role::ADMIN && $id != User::get('id')) {
 			return $this->Message->error(__('You are not authorized to access that location'));
 		}
 
-		// check if the id is provided
+		// Check if the id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The user id is missing'));
 		}
 
-		// check if the id is valid
+		// Check if the id is valid
 		if (!Common::isUuid($id)) {
 			return $this->Message->error(__('The user id is invalid'));
 		}
 
-		// get the resource id
+		// Get the resource id
 		$resource = $this->User->findById($id);
 		if (!$resource) {
 			return $this->Message->error(__('The user does not exist'), array('code' => 404));
 		}
 
-		// check the HTTP request method
+		// Check the HTTP request method
 		if (!$this->request->is('put')) {
 			return $this->Message->error(__('Invalid request method, should be PUT'));
 		}
 
-		// check if data was provided
+		// Check if data was provided
 		if (!isset($this->request->data['User'])) {
 			return $this->Message->error(__('No data were provided'));
 		}
 
-		// Set the data for validation and save.
-		$userData = $this->request->data;
 		// Begin transaction.
 		$this->User->begin();
 
-		// Save user.
+		// Set the data for validation and save
+		$userData = $this->request->data;
+
+		// Use the url id parameter as User id
+		$userData['User']['id'] = $id;
+
+		// Update the user
 		if (isset($userData['User'])) {
 
-			// Validates data.
-			$this->User->set($userData);
-			$this->User->id = $id;
+			// Get the meaningful fields of this operation
 			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
+
+			// Validate the user data
+			$this->User->set($userData);
 			if (!$this->User->validates(array('fieldList' => array($fields['fields'])))) {
 				$invalidFields = $this->User->validationErrors;
 				$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
 				// Return error message, with list of invalid fields.
 				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
 			}
-			// Save data.
+
+			// Update the user
 			$save = $this->User->save($userData, false, $fields['fields']);
 			// Didn't save, we rollback and return an error.
 			if (!$save) {
@@ -308,22 +306,32 @@ class UsersController extends AppController {
 			}
 		}
 
-		// Save profile for user.
+		// Update the user profile
 		if (isset($userData['Profile'])) {
 			$profile = $this->User->Profile->findByUserId($id);
+
+			// If no profile associated to the user found
 			if(!$profile) {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not retrieve profile'));
 			}
-			$profile['Profile'] = $userData['Profile'];
-			if (isset($profile['Profile']['date_of_birth'])) {
-				// Reformat date of birth properly to pass validation
-				$profile['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profile['Profile']['date_of_birth']));
+
+			// Extract the profile data from the request user data
+			$profileData['Profile'] = $userData['Profile'];
+
+			// Force the profile to be updated to be the one associated to the user
+			$profileData['Profile']['id'] = $profile['Profile']['id'];
+
+			// Reformat date of birth properly to pass validation
+			if (isset($profileData['Profile']['date_of_birth'])) {
+				$profileData['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profileData['Profile']['date_of_birth']));
 			}
 
 			$fields = $this->User->Profile->getFindFields('User::edit', User::get('Role.name'));
 			$fields = Hash::expand($fields);
-			$this->User->Profile->set($profile);
+			$this->User->Profile->set($profileData);
+
+			// Validate the profile data
 			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->rollback();
 				$invalidFields = $this->User->Profile->validationErrors;
@@ -331,19 +339,21 @@ class UsersController extends AppController {
 				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
 			}
 
-			$save = $this->User->Profile->save($profile, false, $fields['fields']);
+			// Update the profile
+			$save = $this->User->Profile->save($profileData, false, $fields['fields']);
 			if (!$save) {
 				$this->User->rollback();
 				return $this->Message->error(__('The profile could not be updated'));
 			}
 		}
 
+		// Everything went fine, commit the changes
 		$this->User->commit();
 
+		// Retrieve the just updated user and its associated model
 		$data = array('User.id' => $this->User->id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
-		$users = $this->User->find('all', $options);
-		$user = reset($users);
+		$user = $this->User->find('first', $options);
 
 		$this->Message->success(__("The user has been updated successfully"));
 		$this->set('data', $user);
@@ -355,34 +365,34 @@ class UsersController extends AppController {
  * @param uuid $id the id of the user we want to edit
  */
 	public function editAvatar($id = null) {
-		// check the HTTP request method
+		// Check the HTTP request method
 		if (!$this->request->is('post')) {
 			return $this->Message->error(__('Invalid request method, should be PUT'));
 		}
 
-		// First of all, check if the user is an administrator
-		// Or the user is editing is own account
+		// Only admin users can update users avatars
+		// Except user editing their own avatar
 		if (User::get('Role.name') != Role::ADMIN && $id != User::get('id')) {
 			return $this->Message->error(__('You are not authorized to access that location'));
 		}
 
-		// check if the id is provided
+		// Check if the id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The user id is missing'));
 		}
 
-		// check if the id is valid
+		// Check if the id is valid
 		if (!Common::isUuid($id)) {
 			return $this->Message->error(__('The user id is invalid'));
 		}
 
-		// get the resource id
-		$resource = $this->User->findById($id);
-		if (!$resource) {
+		// Check the user exists
+		$user = $this->User->findById($id);
+		if (!$user) {
 			return $this->Message->error(__('The user does not exist'), array('code' => 404));
 		}
 
-		// check if data was provided
+		// Check if data was provided
 		if (empty($_FILES)) {
 			return $this->Message->error(__('No data were provided'));
 		}
@@ -397,8 +407,7 @@ class UsersController extends AppController {
 		// Retrieve the user.
 		$findConditions = array('User.id' => $id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $findConditions);
-		$users = $this->User->find('all', $options);
-		$user = reset($users);
+		$user = $this->User->find('first', $options);
 
 		// Update the user avatar.
 		if (!$this->User->Profile->Avatar->upload($user['Profile']['id'], $data)) {
@@ -415,133 +424,134 @@ class UsersController extends AppController {
 		$this->set('data', $user);
 	}
 
-
-	/**
-	 * Validate a user account.
-	 * @param uuid $id the user id
-	 * @method PUT
-	 *  @param AuthenticationToken['token'] (compulsory) the token
-	 *  @param Profile['first_name'] (optional) the first_name
-	 *  @param Profile['last_name'] (optional) the last_name
-	 *  @param Gpgkey['key'] (optional) the key
-	 */
-	public function validateAccount($id) {
+/**
+ * Validate a user account.
+ * @param uuid $id the user id
+ * @method PUT
+ *  @param AuthenticationToken['token'] (compulsory) the token
+ *  @param Profile['first_name'] (optional) the first_name
+ *  @param Profile['last_name'] (optional) the last_name
+ *  @param Gpgkey['key'] (optional) the key
+ */
+	public function validateAccount($id = null) {
 		header('Access-Control-Allow-Origin: *');
 		header('Access-Control-Allow-Methods: PUT, OPTIONS');
-
-		// check if the id is provided
-		if (!isset($id)) {
-			return $this->Message->error(__('The user id is missing'));
-		}
-
-		// check if the id is valid
-		if (!Common::isUuid($id)) {
-			return $this->Message->error(__('The user id is invalid'));
-		}
-
-		// get the resource id
-		$resource = $this->User->findById($id);
-		if (!$resource) {
-			return $this->Message->error(__('The user does not exist'), array('code' => 404));
-		}
 
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			return $this->Message->error(__('Invalid request method, should be PUT'));
 		}
 
-		// Store request data in data.
+		// Check if the id is provided
+		if (!isset($id)) {
+			return $this->Message->error(__('The user id is missing'));
+		}
+
+		// Check if the id is valid
+		if (!Common::isUuid($id)) {
+			return $this->Message->error(__('The user id is invalid'));
+		}
+
+		// Get the resource
+		$user = $this->User->findById($id);
+		if (!$user) {
+			return $this->Message->error(__('The user does not exist'), array('code' => 404));
+		}
+
+		// Store request data in data
 		$data = $this->request->data;
 
 		if (!isset($data['AuthenticationToken'])) {
 			return $this->Message->error(__('No data were provided'));
 		}
 
-		// Set the data for validation and save.
+		// Set the data for validation and save
 		if (!isset($data['AuthenticationToken']['token'])) {
 			return $this->Message->error(__('Token not provided'));
 		}
 
-		// Check that token is valid.
-		$isValid = $this->User->AuthenticationToken->checkTokenIsValid($data['AuthenticationToken']['token'], $id);
-		if (!$isValid) {
+		// Check that token is valid
+		file_put_contents('/tmp/authentication_token.txt', json_encode($data));
+		$validToken = $this->User->AuthenticationToken->checkTokenIsValidForUser($data['AuthenticationToken']['token'], $id);
+		if (!$validToken) {
 			return $this->Message->error(__('Invalid token'));
 		}
 
-		// Token is valid, we begin transaction.
+		// Token is valid, we begin transaction
 		$this->User->begin();
 
-		// Activate user.
+		// Activate user
 		$this->User->id = $id;
-		$s = $this->User->saveField('active', TRUE, ['atomic' => false]);
-		if (!$s) {
+		$result = $this->User->saveField('active', TRUE, ['atomic' => false]);
+		if (!$result) {
 			$this->User->rollback();
 			return $this->Message->error(__('Could not update user'));
 		}
 
 		// Deactivate Token.
-		$this->User->AuthenticationToken->id = $isValid['AuthenticationToken']['id'];
-		$s = $this->User->AuthenticationToken->saveField('active', FALSE, ['atomic' => false]);
-		if (!$s) {
+		$this->User->AuthenticationToken->id = $validToken['AuthenticationToken']['id'];
+		$result = $this->User->AuthenticationToken->saveField('active', FALSE, ['atomic' => false]);
+		if (!$result) {
 			$this->User->rollback();
 			return $this->Message->error(__('Could not update token'));
 		}
 
-		// If Profile information are provided, we update.
+		// If Profile data are provided, we update
 		if (isset($data['Profile'])) {
 			$profileData = $data['Profile'];
-			// Get user profile (for profile_id).
+			// Get user profile (for profile_id)
 			$profile = $this->User->Profile->findByUserId($id);
-			// Get fields.
+			// Get meaningful fields for this operation
 			$fields = $this->User->getFindFields('User::validateAccount');
-			// Set profile id.
+
+			// Set the data for validation and save
 			$this->User->Profile->id = $profile['Profile']['id'];
-			// Validate Profile data.
 			$this->User->Profile->set($profileData);
-			$v = $this->User->Profile->validates(array('fieldList' => array($fields['fields'])));
-			// If validation failed.
-			if (!$v) {
+
+			// Validate the profile data
+			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
 			}
-			// Save (update) profile.
-			$s = $this->User->Profile->save($profileData, false, array('fieldList' => $fields['fields']));
-			// If update failed.
-			if (!$s) {
+
+			// Save/Update the profile
+			$result = $this->User->Profile->save($profileData, false, array('fieldList' => $fields['fields']));
+			// If update failed
+			if (!$result) {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not save Profile'));
 			}
 		}
 
-		// If User information are provided, we update.
+		// If User data are provided, we update
 		if (isset($data['Gpgkey'])) {
 			$gpgkeyData = $data['Gpgkey'];
 
-			// Extract data from the key.
+			// Extract data from the key
 			$gpgkeyData = $this->User->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['key']);
 			if ($gpgkeyData == false) {
 				$this->User->rollback();
 				return $this->Message->error(__('The key provided couldn\'t be used'));
 			}
 
-			// Set actual user id.
+			// Set actual user id
 			$gpgkeyData['Gpgkey']['user_id'] = $id;
 			// Set data.
 			$this->User->Gpgkey->set($gpgkeyData);
 
-			// Get fields.
+			// Get fields
 			$fields = $this->User->getFindFields('User::validateAccount');
 
-			// Check if the data is valid.
+			// Check if the data is valid
 			if (!$this->User->Gpgkey->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->Gpgkey->rollback();
 				return $this->Message->error(__('Could not validate gpgkey data'), array('body' => $this->User->Gpgkey->validationErrors));
 			}
-			// Save the key.
+			// Save the key
 			$this->User->Gpgkey->create();
 			$gpgkey= $this->User->Gpgkey->save($gpgkeyData, false, array('fieldList' => $fields['fields']));
 
-			// If saving the key failed.
+			// If saving the key failed
 			if (!$gpgkey) {
 				$this->User->Gpgkey->rollback();
 				$this->Message->error(__('The gpgkey could not be saved'));
@@ -567,30 +577,33 @@ class UsersController extends AppController {
  * @param uuid id the id of the user to delete
  */
 	public function delete($id = null) {
-		// First of all, check if the user is an administrator
+		// Only admin users can delete users
 		if (User::get('Role.name') != Role::ADMIN) {
 			return $this->Message->error(__('You are not authorized to access that location'));
 		}
 
-		// check if the category id is provided
+		// Check if the user id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The user id is missing'));
 		}
-		
-		// check if the id is valid
+
+		// Check if the id is valid
 		if (!Common::isUuid($id)) {
 			return $this->Message->error(__('The user id is invalid'));
 		}
 
+		// Cannot delete self
 		if (User::get('id') == $id) {
 			return $this->Message->error(__('You are not allowed to delete yourself'));
 		}
-		
+
+		// The user exists
 		$user = $this->User->findById($id);
 		if (!$user) {
 			return $this->Message->error(__('The user does not exist'), array('code' => 404));
 		}
 
+		// Delete the user
 		$this->User->id = $id;
 		$user['User']['deleted'] = true;
 

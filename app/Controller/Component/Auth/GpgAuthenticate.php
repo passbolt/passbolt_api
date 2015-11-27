@@ -73,7 +73,7 @@ class GpgAuthenticate extends BaseAuthenticate
                 $this->_config['serverKey']['fingerprint'], $this->_config['serverKey']['passphrase']);
 
             // generate token, note that we only store the UUID in the DB
-            $token = $AuthenticationToken->createToken($user['User']['id'], AuthenticationToken::UUID);
+            $token = $AuthenticationToken->createToken($user['User']['id']);
             if(!isset($token['AuthenticationToken']['token'])) {
                 return $this->__error('Failed to create token');
             }
@@ -95,7 +95,7 @@ class GpgAuthenticate extends BaseAuthenticate
             }
             // extract the UUID to get the database records
             list($version, $length, $uuid, $version2) = explode('|', $request->data['gpg_auth']['user_token_result']);
-            if (!($AuthenticationToken->checkTokenIsValid($uuid, $user['User']['id']))) {
+            if (!($AuthenticationToken->checkTokenIsValidForUser($uuid, $user['User']['id']))) {
                 return $this->__error('The user token result could not be found ' .
                     't='. $uuid . ' u=' . $user['User']['id']);
             }
