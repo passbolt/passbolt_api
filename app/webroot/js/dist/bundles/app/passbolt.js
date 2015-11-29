@@ -21565,7 +21565,7 @@ define('app/net/response_handler', ['mad'], function ($__0) {
             };
         c = c || {};
         a.outputUpper = c.outputUpper || !1;
-        a.b64Pad = c.b64Pad || '=';
+        !0 === c.hasOwnProperty('b64Pad') && (a.b64Pad = c.b64Pad);
         if ('boolean' !== typeof a.outputUpper)
             throw Error('Invalid outputUpper formatting option');
         if ('string' !== typeof a.b64Pad)
@@ -28204,10 +28204,12 @@ define('app/component/permissions', [
                 this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
                 this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
                 this.load(this.options.acoInstance);
+                this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), { 'state': 'disabled' }).start();
                 mad.bus.trigger('passbolt.plugin.resource_share', {
                     resourceId: this.options.acoInstance.id,
                     armored: this.options.acoInstance.Secret[0].data
                 });
+                this.on();
             },
             loadPermission: function (permission) {
                 var permTypeSelector = '#js_share_rs_perm_' + permission.id, permSelector = '#' + permission.id, availablePermissionTypes = {}, permissionTypes = [
@@ -28250,10 +28252,16 @@ define('app/component/permissions', [
             showApplyFeedback: function () {
                 var $permissionChanges = $('#js_permissions_changes');
                 $permissionChanges.removeClass('hidden');
+                if (this.options.saveChangesButton.state.is('disabled')) {
+                    this.options.saveChangesButton.setState('ready');
+                }
             },
             hideApplyFeedback: function () {
                 var $permissionChanges = $('#js_permissions_changes');
                 $permissionChanges.addClass('hidden');
+                if (this.options.saveChangesButton.state.is('ready')) {
+                    this.options.saveChangesButton.setState('disabled');
+                }
             },
             addPermission: function (data) {
                 data.id = uuid();
@@ -28346,6 +28354,9 @@ define('app/component/permissions', [
                         self.setState('ready');
                     });
                 });
+                if (this.options.saveChangesButton.state.is('ready')) {
+                    this.options.saveChangesButton.setState('disabled');
+                }
             },
             '{mad.bus.element} resource_share_encrypted': function (el, ev, armoreds) {
                 this.save(armoreds);
@@ -28359,7 +28370,7 @@ define('app/component/permissions', [
             ' request_permission_edit': function (el, ev, permission, type) {
                 this.updateTypePermission(permission.id, type);
             },
-            '#js_rs_share_save click': function (el, ev) {
+            '{saveChangesButton.element} click': function (el, ev) {
                 var usersIds = [];
                 this.setState('loading');
                 for (var permissionId in this.options.changes) {
@@ -29044,6 +29055,10 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29687,10 +29702,6 @@ define('app/form/secret/create', ['mad/form/form'], function ($__0) {
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/create.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/create.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_create_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -32247,13 +32258,12 @@ define('app/config/config.json', [], function () {
                 'name': 'Sauvage',
                 'song': 'http://youtu.be/DaRG0ukxYqQ'
             },
-            'url': 'http://passbolt.dev',
-            'hostname': 'http://192.168.99.100:8081',
+            'url': 'http://192.168.99.100:8081',
+            'hostname': '192.168.99.100:8081',
             'controllerElt': '#js_app_controller',
             'namespace': 'passbolt',
             'ControllerClassName': 'passbolt.component.App'
         },
-        'ui': { 'workspace': { 'showSidebar': true } },
         'notification': { 'timeout': 6000 },
         'error': { 'ErrorHandlerClassName': 'passbolt.error.ErrorHandler' },
         'event': { 'eventBusControllerElt': '#js_bus_controller' },

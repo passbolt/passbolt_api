@@ -124,11 +124,18 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
         // Load the component for the aco instance given in options.
         this.load(this.options.acoInstance);
 
+		// Add a button to control the final save action
+		this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), {
+			'state': 'disabled'
+		}).start();
+
 		// Notify the plugin that the share dialog is rendered.
 		mad.bus.trigger('passbolt.plugin.resource_share', {
 			resourceId: this.options.acoInstance.id,
 			armored: this.options.acoInstance.Secret[0].data
 		});
+
+		this.on();
 	},
 
 	/**
@@ -206,6 +213,11 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	showApplyFeedback: function() {
 		var $permissionChanges = $('#js_permissions_changes');
 		$permissionChanges.removeClass('hidden');
+
+		// Enable the save change button
+		if (this.options.saveChangesButton.state.is('disabled')) {
+			this.options.saveChangesButton.setState('ready');
+		}
 	},
 
 	/**
@@ -214,6 +226,11 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	hideApplyFeedback: function() {
 		var $permissionChanges = $('#js_permissions_changes');
 		$permissionChanges.addClass('hidden');
+
+		// Disable the save change button
+		if (this.options.saveChangesButton.state.is('ready')) {
+			this.options.saveChangesButton.setState('disabled');
+		}
 	},
 
 	/**
@@ -373,6 +390,11 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
                         self.setState('ready');
                     });
 			});
+
+		// Disable the save change button
+		if (this.options.saveChangesButton.state.is('ready')) {
+			this.options.saveChangesButton.setState('disabled');
+		}
 	},
 
 	/* ************************************************************** */
@@ -426,7 +448,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * @param {HTMLElement} el The element the event occured on
 	 * @param {HTMLEvent} ev The event which occured
 	 */
-	'#js_rs_share_save click': function(el, ev) {
+	'{saveChangesButton.element} click': function(el, ev) {
 		var usersIds = [];
 
 		// Switch the component in loading state.
