@@ -145,7 +145,7 @@ module.exports = function(grunt) {
 					expand: true
 				}, {
 					// mad
-					cwd: '<%= config.modules_path %>/mad/',
+					cwd: '<%= config.modules_path %>/passbolt-mad/',
 					src: ['src/**', 'patches/**'],
 					dest: '<%= config.webroot %>/js/lib/mad/',
 					nonull: true,
