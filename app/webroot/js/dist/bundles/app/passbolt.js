@@ -28222,10 +28222,12 @@ define('app/component/permissions', [
                 }
                 this.permList.insertItem(permission);
                 new mad.form.Dropdown($('.js_share_rs_perm_type', permTypeSelector), {
+                    id: 'js_share_perm_type_' + permission.id,
                     emptyValue: false,
                     modelReference: 'passbolt.model.Permission.type',
                     availableValues: availablePermissionTypes
                 }).start().setValue(permission.type);
+                new mad.component.Button($('.js_perm_delete', permSelector), { id: 'js_share_perm_delete_' + permission.id }).start();
                 if (permission.is_new) {
                     $(permSelector).addClass('permission-updated');
                     this.permList.element.scrollTop(this.permList.element[0].scrollHeight);
@@ -28242,6 +28244,7 @@ define('app/component/permissions', [
                     for (var i = 0; i < permissions.length; i++) {
                         self.loadPermission(permissions[i]);
                     }
+                    self.checkOwner();
                 });
             },
             refresh: function () {
@@ -28261,6 +28264,36 @@ define('app/component/permissions', [
                 $permissionChanges.addClass('hidden');
                 if (this.options.saveChangesButton.state.is('ready')) {
                     this.options.saveChangesButton.setState('disabled');
+                }
+            },
+            checkOwner: function () {
+                var self = this, ownerPermissions = [];
+                this.permList.options.items.each(function (item) {
+                    var isOwner = false;
+                    if (item.type == 15) {
+                        isOwner = true;
+                    }
+                    if (typeof self.options.changes[item.id] != 'undefined') {
+                        if (self.options.changes[item.id].Permission.type == 15) {
+                            isOwner = true;
+                        } else {
+                            isOwner = false;
+                        }
+                    }
+                    if (isOwner) {
+                        ownerPermissions.push(item);
+                    }
+                });
+                if (ownerPermissions.length == 1) {
+                    var permTypeDropdownComponentId = 'js_share_perm_type_' + ownerPermissions[0].id, permDeleteButtonId = 'js_share_perm_delete_' + ownerPermissions[0].id, permTypeDropdown = mad.getControl(permTypeDropdownComponentId, 'mad.form.Dropdown'), permDeleteButton = mad.getControl(permDeleteButtonId, 'mad.component.Button');
+                    permTypeDropdown.setState('disabled');
+                    permDeleteButton.setState('disabled');
+                } else if (ownerPermissions.length > 1) {
+                    for (var i in ownerPermissions) {
+                        var permTypeDropdownComponentId = 'js_share_perm_type_' + ownerPermissions[i].id, permDeleteButtonId = 'js_share_perm_delete_' + ownerPermissions[i].id, permTypeDropdown = mad.getControl(permTypeDropdownComponentId, 'mad.form.Dropdown'), permDeleteButton = mad.getControl(permDeleteButtonId, 'mad.component.Button');
+                        permTypeDropdown.setState('ready');
+                        permDeleteButton.setState('ready');
+                    }
                 }
             },
             addPermission: function (data) {
@@ -28291,6 +28324,7 @@ define('app/component/permissions', [
                     };
                 }
                 this.showApplyFeedback();
+                this.checkOwner();
             },
             deletePermission: function (permission) {
                 this.permList.removeItem(permission);
@@ -28330,6 +28364,7 @@ define('app/component/permissions', [
                 } else {
                     this.showApplyFeedback();
                 }
+                this.checkOwner();
             },
             save: function (armoreds) {
                 var self = this, data = {}, aco = this.options.acoInstance.constructor.shortName, acoForeignKey = this.options.acoInstance.id;
@@ -28800,6 +28835,10 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29055,10 +29094,6 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {

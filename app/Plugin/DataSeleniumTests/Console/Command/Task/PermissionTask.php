@@ -167,7 +167,7 @@ class PermissionTask extends ModelTask {
 		foreach($permissions as $resourceID => $users) {
 				foreach($users as $userID => $permission) {
 				$ps[] = array('Permission' => array(
-					'id' => Common::uuid('user.id.permissions.'.$resourceID.'.'.$userID),
+					'id' => Common::uuid('permission.id.'.$resourceID.'-'.$userID),
 					'aco' => 'Resource',
 					'aco_foreign_key' => $resourceID,
 					'aro' => 'User',

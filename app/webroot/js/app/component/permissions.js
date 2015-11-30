@@ -148,6 +148,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
             availablePermissionTypes = {},
             permissionTypes = [1, 7, 15]; // Hardcoded for Resource and direct permission.
 
+		// Gather the available permission types
         for (var permType in permissionTypes) {
             availablePermissionTypes[permissionTypes[permType]] = passbolt.model.PermissionType.formatToString(permissionTypes[permType]);
         }
@@ -157,12 +158,18 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// Add a selectbox to display the permission type (and allow to change)
 		new mad.form.Dropdown($('.js_share_rs_perm_type', permTypeSelector), {
+			id: 'js_share_perm_type_' + permission.id,
 			emptyValue: false,
 			modelReference: 'passbolt.model.Permission.type',
 			availableValues: availablePermissionTypes
 		})
 			.start()
 			.setValue(permission.type);
+
+		// Add a button to allow the user to delete the permission
+		new mad.component.Button($('.js_perm_delete', permSelector), {
+			id: 'js_share_perm_delete_' + permission.id
+		}).start();
 
 		// If the permission is temporary and requires a final save action to be applied.
 		if(permission.is_new) {
@@ -190,6 +197,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			for (var i=0; i<permissions.length; i++) {
 				self.loadPermission(permissions[i]);
 			}
+			// Check the permission must have a owner case
+			self.checkOwner();
 		});
 	},
 
@@ -230,6 +239,63 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		// Disable the save change button
 		if (this.options.saveChangesButton.state.is('ready')) {
 			this.options.saveChangesButton.setState('disabled');
+		}
+	},
+
+	/**
+	 * Owner permission check.
+	 * A permission must have at least a owner.
+	 * If there is only one owner, the permissions should be locked.
+	 */
+	checkOwner: function() {
+		var self = this,
+			ownerPermissions = [];
+
+		// Get all the owner.
+		this.permList.options.items.each(function (item) {
+			var isOwner = false;
+			// Is owner ?
+			if (item.type == 15) {
+				isOwner = true;
+			}
+			// A permission has been updated
+			if (typeof self.options.changes[item.id] != 'undefined') {
+				// got owner right
+				if (self.options.changes[item.id].Permission.type == 15) {
+					isOwner = true;
+				} else {
+					isOwner = false;
+				}
+			}
+			// Add the permission to the list of owner permissions
+			if (isOwner) {
+				ownerPermissions.push(item);
+			}
+		});
+
+		// If only one owner, make the edition of the owner permission unavailable
+		if (ownerPermissions.length == 1) {
+			var permTypeDropdownComponentId = 'js_share_perm_type_' + ownerPermissions[0].id,
+				permDeleteButtonId = 'js_share_perm_delete_' + ownerPermissions[0].id,
+				permTypeDropdown = mad.getControl(permTypeDropdownComponentId, 'mad.form.Dropdown'),
+				permDeleteButton = mad.getControl(permDeleteButtonId, 'mad.component.Button');
+
+			// Disable the permission type field and the permission delete button
+			permTypeDropdown.setState('disabled');
+			permDeleteButton.setState('disabled');
+		}
+		// If several owners, make the permission type dropdown and permission delete button enabled
+		else if (ownerPermissions.length > 1) {
+			for (var i in ownerPermissions) {
+				var permTypeDropdownComponentId = 'js_share_perm_type_' + ownerPermissions[i].id,
+					permDeleteButtonId = 'js_share_perm_delete_' + ownerPermissions[i].id,
+					permTypeDropdown = mad.getControl(permTypeDropdownComponentId, 'mad.form.Dropdown'),
+					permDeleteButton = mad.getControl(permDeleteButtonId, 'mad.component.Button');
+
+				// Disable the permission type field and the permission delete button
+				permTypeDropdown.setState('ready');
+				permDeleteButton.setState('ready');
+			}
 		}
 	},
 
@@ -283,6 +349,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		}
 
 		this.showApplyFeedback();
+
+		// Check the permission must have a owner case
+		this.checkOwner();
 	},
 
 	/**
@@ -347,6 +416,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		else {
 			this.showApplyFeedback();
 		}
+
+		// Check the permission must have a owner case
+		this.checkOwner();
 	},
 
 	/**
