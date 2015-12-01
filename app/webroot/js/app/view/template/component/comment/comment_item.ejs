@@ -1,24 +1,30 @@
 <li class="comment-wrapper" id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %>>
 	<div class="comment">
-		<div class="author profile picture"><a href="#">
-		    <img src="<%= mappedItem.creatorAvatarPath %>" alt="comment author picture" />
-		</a></div>
-		<div class="content-wrapper">
-			<p><%= mappedItem.content %></p>
-			<div class="metadata">
-				<span class="author username"><a href="#"><%= mappedItem.creatorName %></a></span>
-				<span class="modified"><%= moment(mappedItem.modified).fromNow(); %></span>
+		<div class="wrap-right-column">
+			<div class="right-column">
+				<div class="content-wrapper">
+					<p><%= mappedItem.content %></p>
+					<div class="metadata">
+						<span class="author username"><a href="#"><%= mappedItem.creatorName %></a></span>
+						<span class="modified"><%= moment(mappedItem.modified).fromNow(); %></span>
+					</div>
+					<div class="actions">
+						<ul>
+							<li>
+								<a href="#" class="js_delete_comment">
+									<i class="fa fa-fw fa-trash"></i>
+									<span class="visuallyhidden">delete</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
-			<div class="actions">
-				<ul>
-					<li>
-						<a href="#" class="js_delete_comment">
-							<i class="fa fa-fw fa-trash"></i>
-							<span class="visuallyhidden">delete</span>
-						</a>
-					</li>
-				</ul>
-			</div>
+		</div>
+		<div class="left-column">
+			<div class="author profile picture"><a href="#">
+				<img src="<%= mappedItem.creatorAvatarPath %>" alt="comment author picture" />
+			</a></div>
 		</div>
 	</div>
 </li>

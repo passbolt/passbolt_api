@@ -77,7 +77,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 				templateBased: true,
 				templateUri: 'app/view/template/component/create_button.ejs',
 				tag: 'a',
-				cssClasses: ['button']
+				cssClasses: ['button','primary']
 			}
 		).start();
 

@@ -20,11 +20,14 @@
 			border:0;
     }
     h4 {
-      margin-bottom:.626em;
+      margin-bottom:1em;
       padding-bottom:.313em;
       border-bottom:1px dotted @border-default;
     }
-    li, p {
+    .message,
+    .detailed-information li,
+    .comment p,
+    .comment .metadata {
       font-size:.875em;
     }
     li {
@@ -47,39 +50,29 @@
         .ellipsis();
       }
     }
-    textarea.resource_description {
-      height: 2.3em;
-      float: left;
-      font-size: .775em;
-      min-width: 21.5em;
-      border: 1px solid @border-default;
-    }
-    /** description edit **/
-    .resource-description-edit-wrapper input[type=submit] {
-      float: right;
-      margin: 0;
-      font-size: .700em;
-      width: auto;
-      margin: 0;
-      padding: .300em .6em .300em .6em;
+
+    .description {
+      .description_content {
+        font-size:.875em;
+      }
+
+      textarea {
+        box-sizing: border-box;
+        width:100%;
+      }
     }
     .dialog-close {
       position:absolute;
       right:1em;
       top:1em;
     }
+    .button  {
+      float:right;
+    }
+
     .section-action {
       float:right;
-      margin-top:-2.25em;
-      padding:0;
-    }
-    .detailed-information {
-      li {
-        .label,
-        .value {
-          line-height: 1.8em;
-        }
-      }
+      margin-top:-2.75em;
     }
   }
 }
@@ -94,4 +87,8 @@
 		height: 100%;
 	}
 }
-
+@media all and (min-width: 1280px) {
+  .panel.aside {
+    width: 25em;
+  }
+}

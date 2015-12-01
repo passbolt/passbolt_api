@@ -2815,13 +2815,10 @@ p {
   content: "\f280";
 }
 /*
-	Generic button
-
+	Generic buttons
 	Description	: We support <input[submit]>, <input.button>, <button> and <a.button>
-	Compatible	 : IE6+, Firefox 2+, Safari 4+, Chrome 1+, Opera 11+
-	Since				: version 3.0
 
-	:hover			 - Subtle hover highlight and box shadow
+	:hover			- Subtle hover highlight and box shadow
 	:active			- Inset box shadow and 1px offset
 	.disabled		- Dims the button to indicate it cannot be used
 */
@@ -2830,25 +2827,24 @@ input.button,
 button,
 a.button {
   position: relative;
-  font-size: 100%;
+  font-size: 0.875em;
+  /*	14px */
+  padding: .429em 1.225em .429em 1.225em ;
+  /* 6px 16px */
   display: inline-block;
   zoom: 1;
   /* zoom and *display = ie7 hack for display:inline-block */
   *display: inline;
   vertical-align: baseline;
-  margin: 0 2px;
+  margin-right: .5em;
   outline: none;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  padding: .5em 1.5em .5em 1.5em;
   border: 1px solid #cccccc;
   color: #333333;
   font-weight: bold;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-  -webkit-border-radius: .25em;
-  -moz-border-radius: .25em;
-  border-radius: .25em;
   background: #eeeeee;
   background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: -ms-linear-gradient(top, #f3f3f3, #eeeeee);
@@ -2856,22 +2852,14 @@ a.button {
   background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: linear-gradient(top, #f3f3f3, #eeeeee);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 /* size and position adjustments */
 .submit {
   display: inline-block;
   /* in case there is a div wrapper */
-}
-a.button {
-  font-size: 0.875em;
-  /*	14px */
-  padding: .429em 1.286em .429em 1.286em ;
-  /* 6px 20px */
-  height: 1.429em;
-  margin-right: .5em;
-  -webkit-border-radius: .286em;
-  -moz-border-radius: .286em;
-  border-radius: .286em;
 }
 a.button.big {
   font-size: 1em;
@@ -3226,15 +3214,16 @@ textarea {
   color: #888888;
   font-weight: normal;
 }
+.form-content .input .message,
 form .input .message {
   background-color: transparent;
 }
 .input.error label {
   color: #d40101;
 }
-.input input.error,
-.textarea textarea.error,
-.select select.error {
+input.error,
+textarea.error,
+select.error {
   border: 1px solid #d40101;
 }
 form .input .inline.message {
@@ -3349,7 +3338,7 @@ select.fluid {
   top: 10em;
   border-top: 1px solid #dddddd;
 }
-/* collumns */
+/* columns */
 .panel,
 .col1,
 .col2,
@@ -4099,9 +4088,15 @@ select.fluid {
   vertical-align: baseline;
   line-height: 0;
   border: 1px solid #eeeeee;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 .dialog a.dialog-close:hover .fa-close {
   border: 1px solid #dddddd;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 .dialog .dialog-content {
   position: relative;
@@ -4628,7 +4623,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   background: url('../img/controls/colorpicker/marker.png') no-repeat;
 }
 /*
-	image input is a 2 collumn fixed / fluid layout
+	image input is a 2 column fixed / fluid layout
 		with preview on the left
 		and info and input field on the right
 */
@@ -4706,7 +4701,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 }
 .input-password-wrapper .input.password input {
   box-sizing: padding-box;
-  width: 62%;
+  width: 64%;
   float: left;
 }
 .input-password-wrapper .input.password.has-encrypted-secret input {
@@ -4744,7 +4739,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   padding-left: 0;
 }
 .input-password-wrapper .password-complexity .progress {
-  width: 62%;
+  width: 64%;
   border: 1px solid #dddddd;
   height: 7px;
   display: block;
@@ -4852,13 +4847,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 }
 .setup .input-password-wrapper {
   margin-top: 1.5em;
-  width: 92%;
-}
-.setup .input-password-wrapper .input.password input {
-  width: 60%;
-}
-.setup .input-password-wrapper .password-complexity .progress {
-  width: 64%;
+  width: 90%;
 }
 .setup .why-plugin-wrapper p {
   padding-bottom: 1em;

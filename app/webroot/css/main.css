@@ -2824,7 +2824,7 @@ p {
 }
 /* favorites */
 .icon.fav:before {
-  content: "\f006";
+  content: "\f005";
   color: #dddddd;
 }
 .icon.unfav:before {
@@ -2832,13 +2832,10 @@ p {
   color: #d40101;
 }
 /*
-	Generic button
-
+	Generic buttons
 	Description	: We support <input[submit]>, <input.button>, <button> and <a.button>
-	Compatible	 : IE6+, Firefox 2+, Safari 4+, Chrome 1+, Opera 11+
-	Since				: version 3.0
 
-	:hover			 - Subtle hover highlight and box shadow
+	:hover			- Subtle hover highlight and box shadow
 	:active			- Inset box shadow and 1px offset
 	.disabled		- Dims the button to indicate it cannot be used
 */
@@ -2847,25 +2844,24 @@ input.button,
 button,
 a.button {
   position: relative;
-  font-size: 100%;
+  font-size: 0.875em;
+  /*	14px */
+  padding: .429em 1.225em .429em 1.225em ;
+  /* 6px 16px */
   display: inline-block;
   zoom: 1;
   /* zoom and *display = ie7 hack for display:inline-block */
   *display: inline;
   vertical-align: baseline;
-  margin: 0 2px;
+  margin-right: .5em;
   outline: none;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  padding: .5em 1.5em .5em 1.5em;
   border: 1px solid #cccccc;
   color: #333333;
   font-weight: bold;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-  -webkit-border-radius: .25em;
-  -moz-border-radius: .25em;
-  border-radius: .25em;
   background: #eeeeee;
   background-image: -moz-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: -ms-linear-gradient(top, #f3f3f3, #eeeeee);
@@ -2873,22 +2869,14 @@ a.button {
   background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: linear-gradient(top, #f3f3f3, #eeeeee);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 /* size and position adjustments */
 .submit {
   display: inline-block;
   /* in case there is a div wrapper */
-}
-a.button {
-  font-size: 0.875em;
-  /*	14px */
-  padding: .429em 1.286em .429em 1.286em ;
-  /* 6px 20px */
-  height: 1.429em;
-  margin-right: .5em;
-  -webkit-border-radius: .286em;
-  -moz-border-radius: .286em;
-  border-radius: .286em;
 }
 a.button.big {
   font-size: 1em;
@@ -3243,15 +3231,16 @@ textarea {
   color: #888888;
   font-weight: normal;
 }
+.form-content .input .message,
 form .input .message {
   background-color: transparent;
 }
 .input.error label {
   color: #d40101;
 }
-.input input.error,
-.textarea textarea.error,
-.select select.error {
+input.error,
+textarea.error,
+select.error {
   border: 1px solid #d40101;
 }
 form .input .inline.message {
@@ -3366,7 +3355,7 @@ select.fluid {
   top: 10em;
   border-top: 1px solid #dddddd;
 }
-/* collumns */
+/* columns */
 .panel,
 .col1,
 .col2,
@@ -3956,22 +3945,20 @@ select.fluid {
 }
 .search input[type=search] {
   float: left;
-  width: 70%;
-  margin-right: .25em;
+  width: 65%;
   margin-bottom: 0;
   padding: .313em .625em;
 }
-.search .submit {
-  float: left;
-  border: 1px solid #bbbbbb;
-}
 .search button {
-  height: 2.25em;
-  min-width: 4em;
-  padding-top: .3em;
+  height: 2.571em;
+  /* 36px */
+  float: left;
+  margin-left: -2px;
+  border-left: 0;
+  border-radius: 0px 3px 3px 0px;
 }
 .search button .fa-search {
-  font-size: 1.25em;
+  font-size: 1.4em;
 }
 /* remove webkit search input decoration and cancel button */
 input[type="search"]::-webkit-search-decoration,
@@ -3984,7 +3971,7 @@ input[type="search"]::-webkit-search-cancel-button {
     width: 60%;
   }
   .search button {
-    height: 2.25em;
+    height: 2.4em;
     font-size: 1.125em;
   }
 }
@@ -4115,13 +4102,13 @@ input[type="search"]::-webkit-search-cancel-button {
   border-bottom: 1px solid #dddddd;
 }
 .breadcrumbs ul {
-  padding-top: 0.4em;
+  padding-top: 0.2em;
 }
 .breadcrumbs ul li {
   display: inline;
   font-size: .8em;
   /* 12px/base16>15 */
-  margin-left: .250em;
+  margin-left: .25em;
 }
 .breadcrumbs ul li:before {
   content: "›";
@@ -4148,7 +4135,6 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .header.third .main-action-wrapper .button {
   font-size: .875em;
-  min-width: 4em;
 }
 .header.third .actions-wrapper {
   margin-top: .5em;
@@ -4509,9 +4495,15 @@ input[type="search"]::-webkit-search-cancel-button {
   vertical-align: baseline;
   line-height: 0;
   border: 1px solid #eeeeee;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 .dialog a.dialog-close:hover .fa-close {
   border: 1px solid #dddddd;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 .dialog .dialog-content {
   position: relative;
@@ -4779,42 +4771,48 @@ input[type="search"]::-webkit-search-cancel-button {
 /*
  * Comment thread with add/edit form
  */
-.comments .comment-wrapper {
+.comments {
   clear: both;
-  float: left;
   margin: .5em 0;
   width: 100%;
+  /* mini fixed fluid 2 columns layout */
 }
-.comments .comment-wrapper.reply {
+.comments .wrap-right-column {
   float: left;
-  margin-left: 2em;
-  width: auto;
+  width: 100%;
 }
-/* content */
-.comments .comment p {
-  margin: -0.3em 0 0.3em 3em;
-  min-height: 2em;
+.comments .right-column {
+  margin-left: 2.5em;
 }
-/* picture */
-.comments .comment .author.picture {
+.comments .left-column {
   float: left;
   width: 2em;
+  margin-left: -100%;
+}
+.comments .comment {
+  margin-bottom: .5em;
+  /* picture */
+  /* username and date */
+  /* actions */
+  /* triangle bubble */
+}
+.comments .comment p {
+  background: #eeeeee;
+  padding: 1em;
+  margin-left: 10px;
+}
+.comments .comment .author.picture {
+  width: 2em;
   height: 2em;
-  margin-right: .5em;
+  margin-top: .25em;
 }
 .comments .comment .author.picture img {
-  float: left;
   width: 2em;
   height: 2em;
-  margin-right: .5em;
 }
-/* username and date */
 .comments .comment .metadata {
-  font-size: .875em;
   font-style: italic;
-  float: left;
-  width: 75%;
-  padding-left: 3em;
+  margin: .5em 0 1em 1em;
 }
 .comments .comment .metadata .author.username {
   max-width: 48%;
@@ -4825,7 +4823,7 @@ input[type="search"]::-webkit-search-cancel-button {
   -ms-text-overflow: ellipsis;
 }
 .comments .comment .metadata .author.username:after {
-  content: ", ";
+  content: ', ';
 }
 .comments .comment .metadata .modified {
   max-width: 48%;
@@ -4837,42 +4835,86 @@ input[type="search"]::-webkit-search-cancel-button {
   -o-text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
 }
-/* actions */
-.comments .actions {
+.comments .comment .actions {
   float: right;
-  margin: 0;
+  margin-top: -2.25em;
+  margin-right: 0;
 }
-.comments .actions li {
-  display: inline;
-  width: 3em;
+.comments .comment p:before {
+  content: ' ';
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #eeeeee;
+  margin-left: -1.8em;
+  margin-top: -0.5em;
 }
-/* add / edit comment */
-.comments .comment.edit label,
-.comments .comment.add label {
+.comments .form-content {
+  margin: 0 0 1em .5em;
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+  /*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+  zoom: 1;
+  /*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *	`contenteditable` attribute is included anywhere else in the document.
+ *	Otherwise it causes space to appear at the top and bottom of elements
+ *	that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *	`:before` to contain the top-margins of child elements.
+ */
+}
+.comments .form-content:before,
+.comments .form-content:after {
+  content: "";
+  display: table;
+}
+.comments .form-content:after {
+  clear: both;
+}
+.comments .form-content:before,
+.comments .form-content:after {
+  content: "";
+  display: table;
+}
+.comments .form-content:after {
+  clear: both;
+}
+.comments .form-content label {
   display: none;
 }
-.comments .comment.edit textarea,
-.comments .comment.add textarea {
-  height: 2.3em;
-  float: left;
-  font-size: .875em;
-  min-width: 18.5em;
-  border: 1px solid #DDD;
+.comments .form-content textarea {
+  height: 4em;
+  width: 100%;
+  box-sizing: border-box;
 }
-.comments .comment.add textarea:focus {
-  border: 1px solid #2a9ceb;
+.comments .form-content .metadata {
+  margin-left: 0;
 }
-.comments .comment .button {
-  float: right;
-  margin: 0;
-  padding: .125em .5em 0em .5em;
-}
-.comments .comment .button span,
-.comments .comment .button span {
-  float: right;
-  margin: 0;
-  font-size: .875em;
-  width: auto;
+.comments .form-content .button {
+  margin-top: -0.25em;
+  margin-right: 0;
 }
 /* left panel navigation */
 .panel .navigation {
@@ -5046,7 +5088,6 @@ input[type="search"]::-webkit-search-cancel-button {
 .panel.aside .resource,
 .panel.aside .user {
   padding: .5em 1em 1em 1em;
-  /** description edit **/
 }
 .panel.aside .resource h3,
 .panel.aside .user h3 {
@@ -5055,14 +5096,18 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .panel.aside .resource h4,
 .panel.aside .user h4 {
-  margin-bottom: .626em;
+  margin-bottom: 1em;
   padding-bottom: .313em;
   border-bottom: 1px dotted #dddddd;
 }
-.panel.aside .resource li,
-.panel.aside .user li,
-.panel.aside .resource p,
-.panel.aside .user p {
+.panel.aside .resource .message,
+.panel.aside .user .message,
+.panel.aside .resource .detailed-information li,
+.panel.aside .user .detailed-information li,
+.panel.aside .resource .comment p,
+.panel.aside .user .comment p,
+.panel.aside .resource .comment .metadata,
+.panel.aside .user .comment .metadata {
   font-size: .875em;
 }
 .panel.aside .resource li,
@@ -5144,21 +5189,14 @@ input[type="search"]::-webkit-search-cancel-button {
   -o-text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
 }
-.panel.aside .resource textarea.resource_description,
-.panel.aside .user textarea.resource_description {
-  height: 2.3em;
-  float: left;
-  font-size: .775em;
-  min-width: 21.5em;
-  border: 1px solid #dddddd;
+.panel.aside .resource .description .description_content,
+.panel.aside .user .description .description_content {
+  font-size: .875em;
 }
-.panel.aside .resource .resource-description-edit-wrapper input[type=submit],
-.panel.aside .user .resource-description-edit-wrapper input[type=submit] {
-  float: right;
-  font-size: .700em;
-  width: auto;
-  margin: 0;
-  padding: .300em .6em .300em .6em;
+.panel.aside .resource .description textarea,
+.panel.aside .user .description textarea {
+  box-sizing: border-box;
+  width: 100%;
 }
 .panel.aside .resource .dialog-close,
 .panel.aside .user .dialog-close {
@@ -5166,17 +5204,14 @@ input[type="search"]::-webkit-search-cancel-button {
   right: 1em;
   top: 1em;
 }
+.panel.aside .resource .button,
+.panel.aside .user .button {
+  float: right;
+}
 .panel.aside .resource .section-action,
 .panel.aside .user .section-action {
   float: right;
-  margin-top: -2.25em;
-  padding: 0;
-}
-.panel.aside .resource .detailed-information li .label,
-.panel.aside .user .detailed-information li .label,
-.panel.aside .resource .detailed-information li .value,
-.panel.aside .user .detailed-information li .value {
-  line-height: 1.8em;
+  margin-top: -2.75em;
 }
 /* place sidebar on top of everything when there is no space */
 @media all and (max-width: 980px) {
@@ -5187,6 +5222,11 @@ input[type="search"]::-webkit-search-cancel-button {
     bottom: 0;
     top: 0;
     height: 100%;
+  }
+}
+@media all and (min-width: 1280px) {
+  .panel.aside {
+    width: 25em;
   }
 }
 /* tabs */
@@ -5214,9 +5254,9 @@ input[type="search"]::-webkit-search-cancel-button {
   border: 1px solid #dddddd;
   border-bottom: 1px solid #FFF;
   background: #ffffff;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
   -webkit-border-bottom-left-radius: 0;
   -webkit-border-bottom-right-radius: 0;
   -moz-border-radius-bottomleft: 0;
@@ -5687,7 +5727,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 }
 .input-password-wrapper .input.password input {
   box-sizing: padding-box;
-  width: 62%;
+  width: 64%;
   float: left;
 }
 .input-password-wrapper .input.password.has-encrypted-secret input {
@@ -5725,7 +5765,7 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   padding-left: 0;
 }
 .input-password-wrapper .password-complexity .progress {
-  width: 62%;
+  width: 64%;
   border: 1px solid #dddddd;
   height: 7px;
   display: block;
@@ -6097,41 +6137,6 @@ table.table-info.horizontal tbody tr:nth-child(even) {
 .folder-add .input.text {
   width: 25em;
 }
-/*
- * Password workspace
- * @todo better namespacing
- */
-/* drag n drop */
-#js_dragged_resource {
-  padding: 6px 10px;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-#js_dragged_resource span.name {
-  font-weight: bold;
-}
-/* sidebar */
-.panel.aside .resource .detailed-information li.password .value {
-  height: 1.6em;
-  padding-top: 0.2em;
-}
-/* unused collumn
-	@todo: remove html
-*/
-.js_grid_column_owner,
-.js_grid_column_copyLogin,
-.js_grid_column_copySecret {
-  display: none;
-}
-/* hide left column when there is no space */
-@media all and (max-width: 980px) {
-  .tableview .js_grid_column_modified {
-    display: none;
-  }
-}
 /* sidebar / user details in overview */
 .panel.aside .user .header {
   /*
@@ -6234,9 +6239,44 @@ table.table-info.horizontal tbody tr:nth-child(even) {
   width: 25px !important;
   height: 25px !important;
 }
-/* login history icon collumn centerign */
+/* login history icon column centerign */
 .login-history td:first-child {
   text-align: center;
+}
+/*
+ * Password workspace
+ * @todo better namespacing
+ */
+/* drag n drop */
+#js_dragged_resource {
+  padding: 6px 10px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+#js_dragged_resource span.name {
+  font-weight: bold;
+}
+/* sidebar */
+.panel.aside .resource .detailed-information li.password .value {
+  height: 1.6em;
+  padding-top: 0.2em;
+}
+/* unused column
+	@todo: remove html
+*/
+.js_grid_column_owner,
+.js_grid_column_copyLogin,
+.js_grid_column_copySecret {
+  display: none;
+}
+/* hide left column when there is no space */
+@media all and (max-width: 980px) {
+  .tableview .js_grid_column_modified {
+    display: none;
+  }
 }
 /* TODO replace by page level selector */
 .page.settings .main.panel .middle {

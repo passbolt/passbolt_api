@@ -12,7 +12,7 @@
 		"underscore": "~1.8.3",
 		"xregexp": "~3.0.0",
 		"passbolt-mad": "~0.0.8",
-	    "passbolt-styleguide": "~0.2.0",
+	    "passbolt-styleguide": "~0.3.3",
 		"jquery-ui": "^1.10.4",
 		"moment": "^2.10.0",
 		"jquery-mousewheel": "^3.1.13",

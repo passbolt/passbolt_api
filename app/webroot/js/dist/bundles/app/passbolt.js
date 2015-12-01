@@ -30046,7 +30046,7 @@ define('app/component/password_workspace', [
                     templateBased: true,
                     templateUri: 'app/view/template/component/create_button.ejs',
                     tag: 'a',
-                    cssClasses: ['button']
+                    cssClasses: ['button', 'primary']
                 }).start();
                 var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
                 rsShortcut.start();
