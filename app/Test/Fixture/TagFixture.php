@@ -29,23 +29,7 @@ class TagFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => 'aaa00000-c5cd-11e1-a0c5-080027796c4c',
-			'name' => 'social',
-			'created' => '2012-11-25 13:39:25',
-			'modified' => '2012-11-25 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
-		),
-		array(
-			'id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c',
-			'name' => 'facebook',
-			'created' => '2012-11-25 13:39:25',
-			'modified' => '2012-11-25 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
-		),
-		array(
-			'id' => 'aaa00002-c5cd-11e1-a0c5-080027796c4c',
+			'id' => '161d87d1-a8c0-3577-a1e9-37d65d3a1510',
 			'name' => 'twitter',
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
@@ -53,7 +37,7 @@ class TagFixture extends CakeTestFixture {
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
-			'id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
+			'id' => '6732c5fa-02f4-37fd-ace3-2ac5a668570b',
 			'name' => 'banking',
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
@@ -61,7 +45,23 @@ class TagFixture extends CakeTestFixture {
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
-			'id' => 'aaa01103-c5cd-11d1-a1c5-080027796c4c',
+			'id' => '6ea4ba42-ae97-3910-a2f7-a7dd9cfc1619',
+			'name' => 'social',
+			'created' => '2012-11-25 13:39:25',
+			'modified' => '2012-11-25 13:39:25',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
+			'id' => '9bc58fb6-3b95-35da-a8e8-ae7aa5dd7abe',
+			'name' => 'facebook',
+			'created' => '2012-11-25 13:39:25',
+			'modified' => '2012-11-25 13:39:25',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
+			'id' => 'aeaa6327-cf98-37c2-a20b-c96f79aff277',
 			'name' => 'drupal',
 			'created' => '2014-09-07 19:33:00',
 			'modified' => '2014-09-07 19:33:00',

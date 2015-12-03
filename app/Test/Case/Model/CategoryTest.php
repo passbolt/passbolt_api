@@ -97,7 +97,7 @@ class CategoryTest extends AppTestCase {
 		$testcases = array(
 			'' => true,
 			'wrongid' => false,
-			'50d77ff7-bcac-4c03-8687-1b63d7a10fce' => true,
+			Common::uuid('category.id.administration') => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -121,7 +121,7 @@ class CategoryTest extends AppTestCase {
 		$testcases = array(
 			'' => true,
 			'wrongid' => false,
-			'0234f3a4-c5cd-11e1-a0c5-080027456c4c' => true,
+			Common::uuid('category_type.id.ssh') => true,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56aa' => false
 		);
 		foreach ($testcases as $testcase => $result) {

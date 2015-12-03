@@ -26,17 +26,17 @@ class CategoryTypeFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => '0234f3a4-c5cd-11e1-a0c5-080027456c4c',
-			'name' => 'ssh',
-			'description' => 'ssh category type description'
-		),
-		array(
-			'id' => '0234f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'id' => '79709255-d7fe-30b7-aadb-b0194a0a53ba',
 			'name' => 'default',
 			'description' => 'default category type description'
 		),
 		array(
-			'id' => '0234f3a4-c5cd-11e1-a0c5-081127796c4c',
+			'id' => 'b8c2c06b-2f99-31a1-a555-ead66d3e6a7d',
+			'name' => 'ssh',
+			'description' => 'ssh category type description'
+		),
+		array(
+			'id' => 'bc025999-5432-34a8-a95b-a4aa66eef0b3',
 			'name' => 'database',
 			'description' => 'database category type description'
 		),

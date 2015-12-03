@@ -15,36 +15,6 @@ App::uses('User', 'Model');
 class UserTask extends ModelTask {
 
 	public $model = 'User';
-
-	public static function getAlias() {
-		$aliases = array (
-			// anonymous user
-			'ano' => Common::uuid('user.id.anonymous'),
-
-			// one user per default roles
-			'gue' => Common::uuid('user.id.guest'),
-			'usr' => Common::uuid('user.id.user'),
-			'adm' => Common::uuid('user.id.admin'),
-			'roo' => Common::uuid('user.id.root'),
-
-			// famous scientists
-			'ada' => Common::uuid('user.id.ada'),
-            'bet' => Common::uuid('user.id.betty'),
-            'car' => Common::uuid('user.id.carol'),
-            'dam' => Common::uuid('user.id.dame'),
-            'edi' => Common::uuid('user.id.edith'),
-            'fra' => Common::uuid('user.id.frances'),
-            'gra' => Common::uuid('user.id.grace'),
-            'hed' => Common::uuid('user.id.hedy'),
-            'ire' => Common::uuid('user.id.irene'),
-            'jea' => Common::uuid('user.id.jean'),
-            'kay' => Common::uuid('user.id.kathleen'),
-            'lyn' => Common::uuid('user.id.lynne'),
-            'mar' => Common::uuid('user.id.marlyn'),
-
-		);
-		return $aliases;
-	}
 	
 	protected function getData() {
 		// anonymous user

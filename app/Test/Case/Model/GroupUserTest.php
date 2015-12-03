@@ -44,7 +44,7 @@ class GroupUserTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'30ce2d3a-0468-4334-b59f-3053d7a10fce' => true
+			Common::uuid('group.id.human') => true
 		);
 
 		foreach ($testcases as $testcase => $result) {
@@ -85,7 +85,7 @@ class GroupUserTest extends CakeTestCase {
 			$cr = array(
 				'GroupUser' => array(
 					'user_id' => $testcase,
-					'group_id' => '30ce2d3a-0468-4334-b59f-3053d7a10fce'
+					'group_id' => Common::uuid('group.id.human')
 				)
 			);
 			$this->GroupUser->create();

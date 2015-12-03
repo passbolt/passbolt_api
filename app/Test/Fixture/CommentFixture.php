@@ -40,7 +40,7 @@ class CommentFixture extends CakeTestFixture {
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
 			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'modified_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123'
 		),
 		array(
 			'id' => 'aaa00001-cccc-11d1-a0c5-080027796c4c',
@@ -51,7 +51,7 @@ class CommentFixture extends CakeTestFixture {
 			'created' => '2012-11-25 13:39:26',
 			'modified' => '2012-11-25 13:39:26',
 			'created_by' => '917c2b89-d573-3c7c-ac4f-51f519d0164f',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'modified_by' => '917c2b89-d573-3c7c-ac4f-51f519d0164f'
 		),
 	);
 

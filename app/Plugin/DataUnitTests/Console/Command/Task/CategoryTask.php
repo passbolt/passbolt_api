@@ -68,7 +68,7 @@ class CategoryTask extends ModelTask {
 	protected function getData() {
 		// Passbolt main Use case
 		$c[] = array('Category'=>array(
-			'id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.bolt'),
 			'parent_id' => null,
 			'name' => 'Bolt Softwares Pvt. Ltd.',
 			'category_type_id' => null,
@@ -79,8 +79,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '533d3a6b-fc74-4fde-b19f-0aafc0a895dc',
-			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.empty'),
+			'parent_id' => Common::uuid('category.id.bolt'),
 			'name' => 'empty',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -90,8 +90,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
-			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.administration'),
+			'parent_id' => Common::uuid('category.id.bolt'),
 			'name' => 'administration',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -101,8 +101,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ff8-40ec-451a-b96e-1b63d7a10fce',
-			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'id' => Common::uuid('category.id.accounts'),
+			'parent_id' => Common::uuid('category.id.administration'),
 			'name' => 'accounts',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -112,8 +112,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ff8-9084-4f21-bc2f-1b63d7a10fce',
-			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'id' => Common::uuid('category.id.marketing'),
+			'parent_id' => Common::uuid('category.id.administration'),
 			'name' => 'marketing',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -123,8 +123,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ff9-42d8-43d5-beee-1b63d7a10fce',
-			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'id' => Common::uuid('category.id.human'),
+			'parent_id' => Common::uuid('category.id.administration'),
 			'name' => 'human resource',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -134,8 +134,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ff9-98f0-4378-9b7a-1b63d7a10fce',
-			'parent_id' => '50d77ff7-bcac-4c03-8687-1b63d7a10fce',
+			'id' => Common::uuid('category.id.misc'),
+			'parent_id' => Common::uuid('category.id.administration'),
 			'name' => 'misc',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -145,8 +145,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
-			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.projects'),
+			'parent_id' => Common::uuid('category.id.bolt'),
 			'name' => 'projects',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -156,8 +156,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
-			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'id' => Common::uuid('category.id.cakephp'),
+			'parent_id' => Common::uuid('category.id.projects'),
 			'name' => 'cakephp',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -167,8 +167,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffa-4030-49e1-990d-1b63d7a10fce',
-			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'id' => Common::uuid('category.id.cp-project1'),
+			'parent_id' => Common::uuid('category.id.cakephp'),
 			'name' => 'cp-project1',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -178,8 +178,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffa-c25c-4d92-aa35-1b63d7a10fce',
-			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'id' => Common::uuid('category.id.cp-project2'),
+			'parent_id' => Common::uuid('category.id.cakephp'),
 			'name' => 'cp-project2',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -189,8 +189,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
-			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'id' => Common::uuid('category.id.drupal'),
+			'parent_id' => Common::uuid('category.id.projects'),
 			'name' => 'drupal',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -200,8 +200,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffb-8008-42d2-8811-1b63d7a10fce',
-			'parent_id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'id' => Common::uuid('category.id.d-project1'),
+			'parent_id' => Common::uuid('category.id.drupal'),
 			'name' => 'd-project1',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -211,8 +211,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffb-d488-4217-9e2f-1b63d7a10fce',
-			'parent_id' => '50d77ffa-5144-4b95-badd-1b63d7a10fce',
+			'id' => Common::uuid('category.id.cp-project3'),
+			'parent_id' => Common::uuid('category.id.cakephp'),
 			'name' => 'cp-project3',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -222,8 +222,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
-			'parent_id' => '50d77ffa-094c-4d4c-9dd7-1b63d7a10fce',
+			'id' => Common::uuid('category.id.others'),
+			'parent_id' => Common::uuid('category.id.projects'),
 			'name' => 'others',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -233,8 +233,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffc-0414-49dd-9959-1b63d7a10fce',
-			'parent_id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'id' => Common::uuid('category.id.o-project1'),
+			'parent_id' => Common::uuid('category.id.others'),
 			'name' => 'o-project1',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -244,8 +244,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffc-8608-422a-8456-1b63d7a10fce',
-			'parent_id' => '50d77ffb-b9a0-415d-ba6a-1b63d7a10fce',
+			'id' => Common::uuid('category.id.d-project2'),
+			'parent_id' => Common::uuid('category.id.drupal'),
 			'name' => 'd-project2',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -255,8 +255,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '50d77ffd-cf28-460e-b35e-1b63d7a10fce',
-			'parent_id' => '50d77ffc-08ac-42a8-b185-1b63d7a10fce',
+			'id' => Common::uuid('category.id.o-project2'),
+			'parent_id' => Common::uuid('category.id.others'),
 			'name' => 'o-project2',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -266,8 +266,8 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '444d3a7b-fc90-4faa-a19f-1aafc0a895dc',
-			'parent_id' => '50d77ff7-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.private'),
+			'parent_id' => Common::uuid('category.id.bolt'),
 			'name' => 'private',
 			'category_type_id' => null,
 			'deleted' => 0,
@@ -277,7 +277,7 @@ class CategoryTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
-			'id' => '222d3a7b-fc70-4faa-a19f-1aafc0a800dc',
+			'id' => Common::uuid('category.id.pv-jean_bartik'),
 			'parent_id' => null,
 			'name' => 'pv-jean_bartik',
 			'category_type_id' => null,
@@ -290,22 +290,22 @@ class CategoryTask extends ModelTask {
 
 		// Sand box unit test
 		$c[] = array('Category'=>array(
-			'id' => '10d11ff1-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.utest'),
 			'parent_id' => null,
 			'name' => 'utest',
 			'category_type_id' => null,
 			'deleted' => 0
 		));
 		$c[] = array('Category'=>array(
-			'id' => '10d11ff2-5208-4dc2-94d1-1b63d7a10fce',
-			'parent_id' => '10d11ff1-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.utest1'),
+			'parent_id' => Common::uuid('category.id.utest'),
 			'name' => 'utest1',
 			'category_type_id' => null,
 			'deleted' => 0
 		));
 		$c[] = array('Category'=>array(
-			'id' => '10d11ff3-5208-4dc2-94d1-1b63d7a10fce',
-			'parent_id' => '10d11ff1-5208-4dc2-94d1-1b63d7a10fce',
+			'id' => Common::uuid('category.id.utest2'),
+			'parent_id' => Common::uuid('category.id.utest'),
 			'name' => 'utest2',
 			'category_type_id' => null,
 			'deleted' => 0

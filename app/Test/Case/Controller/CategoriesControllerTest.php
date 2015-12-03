@@ -687,7 +687,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/type/$id/default.json : The test should return success but returned {$result['header']['status']}");
 
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$this->assertEquals("0234f3a4-c5cd-11e1-a0c5-080027796c4c", $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
+		$this->assertEquals(Common::uuid('category_type.id.default'), $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
 	}
 
 	public function testXSS() {

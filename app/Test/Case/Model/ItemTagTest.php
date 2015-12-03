@@ -42,14 +42,14 @@ class ItemTagTest extends CakeTestCase {
 	public function testUnicityValidation() {
 		$tr = array(
 			'ItemTag' => array(
-				'tag_id' => 'aaa00003-c5cd-11e1-a0c5-080027796c4c',
+				'tag_id' => Common::uuid('tag.id.banking'),
 				'foreign_model' => 'Resource',
 				'foreign_id' => Common::uuid('resource.id.utest1-pwd1')
 			)
 		);
 		$this->ItemTag->create();
 		$this->ItemTag->set($tr);
-		$save = $this->ItemTag->save($tr);
+		$this->ItemTag->save($tr);
 		$validation = $this->ItemTag->validates(array('fieldList' => array('tag_id', 'foreign_model', 'foreign_id')));
 		$this->assertEquals($validation, false, 'It should not be possible to associate a resource and a tag twice');
 
@@ -67,7 +67,7 @@ class ItemTagTest extends CakeTestCase {
 		$this->assertEquals($result, false, 'Tag null should not be found');
 		$result = $this->ItemTag->tagExists(array('tag_id' => 'fff00001-c5cd-11e1-a0c5-080027796c4c'));
 		$this->assertEquals($result, false, 'Not existing tag should not be found');
-		$result = $this->ItemTag->tagExists(array('tag_id' => 'aaa00001-c5cd-11e1-a0c5-080027796c4c'));
+		$result = $this->ItemTag->tagExists(array('tag_id' => Common::uuid('tag.id.facebook')));
 		$this->assertEquals($result, true, 'Facebook tag should be found');
 	}
 
@@ -114,7 +114,7 @@ class ItemTagTest extends CakeTestCase {
 			'' => false, '?!#' => false, 'test' => false,
 			'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
 			'zzz00003-c5cd-11e1-a0c5-080027796c4c' => false,
-			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => true,
+			Common::uuid('tag.id.banking') => true,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$itemTag = array('ItemTag' => array('foreign_model' => 'Resource', 'tag_id' => $testcase));

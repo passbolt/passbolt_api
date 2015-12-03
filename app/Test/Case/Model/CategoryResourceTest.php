@@ -49,7 +49,7 @@ class CategoryResourceTest extends CakeTestCase {
 			'?!#' => false,
 			'test' => false,
 			'4ff6111b-efb8-4a26-aab4-2184cbdd56c' => false,
-			'50d77ff9-42d8-43d5-beee-1b63d7a10fce' => true
+			Common::uuid('category.id.human') => true
 		);
 
 		foreach ($testcases as $testcase => $result) {
@@ -90,7 +90,7 @@ class CategoryResourceTest extends CakeTestCase {
 			$cr = array(
 				'CategoryResource' => array(
 					'resource_id' => $testcase,
-					'category_id' => '50d77ff9-42d8-43d5-beee-1b63d7a10fce'
+					'category_id' => Common::uuid('category.id.human')
 				)
 			);
 			$this->CategoryResource->create();

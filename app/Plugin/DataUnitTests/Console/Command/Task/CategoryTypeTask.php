@@ -18,7 +18,7 @@ class CategoryTypeTask extends ModelTask {
 
 	protected function getData() {
 		$ct[] = array('CategoryType' => array(
-			'id' => '0234f3a4-c5cd-11e1-a0c5-080027796c4c',
+			'id' => Common::uuid('category_type.id.default'),
 			'name' => 'default',
 			'description' => 'default category type description',
 			'created' => '2012-07-04 13:39:25',
@@ -27,7 +27,7 @@ class CategoryTypeTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$ct[] = array('CategoryType' => array(
-			'id' => '0234f3a4-c5cd-11e1-a0c5-081127796c4c',
+			'id' => Common::uuid('category_type.id.database'),
 			'name' => 'database',
 			'description' => 'database category type description',
 			'created' => '2012-07-04 13:39:25',
@@ -36,7 +36,7 @@ class CategoryTypeTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$ct[] = array('CategoryType' => array(
-			'id' => '0234f3a4-c5cd-11e1-a0c5-080027456c4c',
+			'id' => Common::uuid('category_type.id.ssh'),
 			'name' => 'ssh',
 			'description' => 'ssh category type description',
 			'created' => '2012-07-04 13:39:25',
