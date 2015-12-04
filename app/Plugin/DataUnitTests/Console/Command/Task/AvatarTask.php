@@ -20,16 +20,13 @@ class AvatarTask extends ModelTask {
 
 	public function execute() {
 		$User = ClassRegistry::init('User');
-		$UserTask = $this->Tasks->load('DataUnitTests.User');
-		$users = $UserTask::getAlias();
+		// Retrieve the users.
+		$data = array();
+		$o = $User->getFindOptions('User::index', 'admin', $data);
+		$users = $User->find('all', $o);
 
 		// For all users, if an image has been defined insert it as profile avatar.
-		foreach ($users as $userId) {
-			// Retrieve the user.
-			$data = array('User.id' => $userId);
-			$o = $User->getFindOptions('User::view', 'admin', $data);
-			$users = $User->find('all', $o);
-			$user = reset($users);
+		foreach ($users as $user) {
 
 			// Check if an image exists for him.
 			$path = dirname(__FILE__) . DS . 'img' . DS . 'avatar' . DS;

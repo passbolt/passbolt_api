@@ -50,8 +50,8 @@ class CommentFixture extends CakeTestFixture {
 			'content' => 'this is a reply to the short comment',
 			'created' => '2012-11-25 13:39:26',
 			'modified' => '2012-11-25 13:39:26',
-			'created_by' => '917c2b89-d573-3c7c-ac4f-51f519d0164f',
-			'modified_by' => '917c2b89-d573-3c7c-ac4f-51f519d0164f'
+			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+			'modified_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123'
 		),
 	);
 

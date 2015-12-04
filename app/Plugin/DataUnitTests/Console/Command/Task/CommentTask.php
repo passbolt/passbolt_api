@@ -20,9 +20,6 @@ class CommentTask extends ModelTask {
 	protected function getData() {
 		$this->Resource = ClassRegistry::init('Resource');
 
-		$UserTask = $this->Tasks->load('DataUnitTests.User');
-		$users = $UserTask::getAlias();
-
 		$c[] = array('Comment'=>array(
 			'id' => 'aaa00000-cccc-11d1-a0c5-080027796c4c',
 			'parent_id' => null,
@@ -31,8 +28,8 @@ class CommentTask extends ModelTask {
 			'content' => 'this is a short comment',
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
-			'created_by' => $users['ire'],
-			'modified_by' => $users['ire'],
+			'created_by' => Common::uuid('user.id.irene'),
+			'modified_by' => Common::uuid('user.id.irene'),
 		));
 		$c[] = array('Comment'=>array(
 			'id' => 'aaa00001-cccc-11d1-a0c5-080027796c4c',
@@ -42,8 +39,8 @@ class CommentTask extends ModelTask {
 			'content' => 'this is a reply to the short comment',
 			'created' => '2012-11-25 13:39:26',
 			'modified' => '2012-11-25 13:39:26',
-			'created_by' => $users['mar'],
-			'modified_by' => $users['mar'],
+			'created_by' => Common::uuid('user.id.irene'),
+			'modified_by' => Common::uuid('user.id.irene'),
 		));
 		return $c;
 	}
