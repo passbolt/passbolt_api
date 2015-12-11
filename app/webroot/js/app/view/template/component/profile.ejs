@@ -14,31 +14,33 @@
 						</a>
 					</div>
 				</div>
-				<table class="table-info">
+				<table class="table-info profile">
 					<tbody>
-					<tr>
-						<td><%= __('Name') %></td>
-						<td><%= user.Profile.first_name %> <%= user.Profile.last_name %></td>
+					<tr class="name">
+						<td class="label"><%= __('Name') %></td>
+						<td class="value"><%= user.Profile.first_name %> <%= user.Profile.last_name %></td>
 					</tr>
-					<tr>
-						<td><%= __('Email') %></td>
-						<td><%= user.username %></td>
+					<tr class="email">
+						<td class="label"><%= __('Email') %></td>
+						<td class="value"><%= user.username %></td>
 					</tr>
-					<tr>
-						<td><%= __('Role') %></td>
-						<td><%= user.Role.name %></td>
+					<tr class="role">
+						<td class="label"><%= __('Role') %></td>
+						<td class="value"><%= user.Role.name %></td>
 					</tr>
-					<tr>
-						<td><%= __('Modified') %></td>
-						<td><%= moment(new Date(user.Profile.modified)).fromNow(); %></td>
+					<tr class="modified">
+						<td class="label"><%= __('Modified') %></td>
+                        <% var dateModified = datetimeToJSDate(user.Profile.attr('modified')); %>
+						<td class="value"><%= moment(dateModified).fromNow(); %></td>
 					</tr>
-					<tr>
-						<td><%= __('Created') %></td>
-						<td><%= moment(new Date(user.Profile.created)).fromNow(); %></td>
+					<tr class="created">
+						<td class="label"><%= __('Created') %></td>
+                        <% var dateCreated = datetimeToJSDate(user.Profile.attr('created')); %>
+						<td class="value"><%= moment(dateCreated).fromNow(); %></td>
 					</tr>
-					<tr>
-						<td><%= __('Public key') %></td>
-						<td>
+					<tr class="publickey_keyid">
+						<td class="label"><%= __('Public key') %></td>
+						<td class="value">
 							<%= user.Gpgkey.key_id %>
 							<p><em>Note: Sorry it is not possible to change your key at the moment. <a href="#">learn more ›</a></em></p>
 						</td>

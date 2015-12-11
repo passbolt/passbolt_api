@@ -96,13 +96,16 @@ class ProfileAvatar extends ImageStorage {
 				'operations' => $operations));
 			CakeEventManager::instance()->dispatch($Event);
 
-			// Delete the file.
-			$imagePath = Configure::read('ImageStorage.basePath') . DS . $avatar['Avatar']['path'] . DS . $this->stripUuid($avatar['Avatar']['id']) . '.' . $avatar['Avatar']['extension'];
+			// Get the path of the file.
+			$imagePath = $avatar['Avatar']['path'] . $this->stripUuid($avatar['Avatar']['id']) . '.' . $avatar['Avatar']['extension'];
+			$fullImagePath = Configure::read('ImageStorage.basePath') . DS . $imagePath;
 
-			$imagePath = $avatar['Avatar']['path'] . DS . $this->stripUuid($avatar['Avatar']['id']) . '.' . $avatar['Avatar']['extension'];
-			StorageManager::adapter($avatar['Avatar']['adapter'])->delete($imagePath);
+			// If file exists, delete it.
+			if (file_exists($fullImagePath)) {
+				StorageManager::adapter($avatar['Avatar']['adapter'])->delete($imagePath);
+			}
 
-			// Delete the db resource.
+			// Delete the corresponding db entry.
 			$this->delete($avatar['Avatar']['id']);
 		}
 

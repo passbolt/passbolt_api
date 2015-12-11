@@ -5,6 +5,7 @@ import 'mad/bootstrap';
 import 'app/error/error_handler';
 import 'app/net/response_handler';
 import 'app/component/app';
+import Common from 'app/util/common';
 import appConfig from 'app/config/config.json';
 import notifConfig from 'app/config/notification.json';
 
@@ -41,6 +42,8 @@ var Bootstrap = passbolt.Bootstrap = mad.Bootstrap.extend('passbolt.Bootstrap', 
 	loadViewHelpers: function() {
 		// Load view helper
 		can.ejs.Helpers.prototype.moment = moment;
+        // Load date helper.
+        can.ejs.Helpers.prototype.datetimeToJSDate = Common.datetimeToJSDate;
 	}
 
 });
