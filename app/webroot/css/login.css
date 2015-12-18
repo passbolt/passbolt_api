@@ -3653,6 +3653,9 @@ html body .button.processing {
 .header .navigation.primary li a:focus {
   color: #2894df;
 }
+.header .navigation.primary li .row.selected a {
+  color: #2894df;
+}
 .header .navigation.primary .home a {
   margin-top: .125em;
   margin-left: .5em;

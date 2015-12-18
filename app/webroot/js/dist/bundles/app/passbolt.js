@@ -29090,6 +29090,10 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -29104,10 +29108,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -31433,35 +31433,47 @@ define('app/component/app_navigation_left', ['mad/component/menu'], function ($_
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
     $__0;
-    var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Menu.extend('passbolt.component.AppNavigationLeft', { 'defaults': {} }, {
+    var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Menu.extend('passbolt.component.AppNavigationLeft', { defaults: { selected: null } }, {
             afterStart: function () {
-                var menuItems = [
+                var self = this, menuItems = [
                         new mad.model.Action({
                             id: 'js_app_nav_left_home_link',
                             label: __('home'),
                             cssClasses: ['home'],
                             action: function () {
+                                self.options.selected = 'home';
                                 mad.bus.trigger('workspace_selected', 'password');
                             }
                         }),
                         new mad.model.Action({
                             id: 'js_app_nav_left_password_wsp_link',
                             label: __('passwords'),
-                            cssClasses: ['passwords'],
+                            cssClasses: ['password'],
                             action: function () {
+                                self.options.selected = 'password';
                                 mad.bus.trigger('workspace_selected', 'password');
                             }
                         }),
                         new mad.model.Action({
                             id: 'js_app_nav_left_user_wsp_link',
                             label: __('users'),
-                            cssClasses: ['users'],
+                            cssClasses: ['user'],
                             action: function () {
+                                self.options.selected = 'people';
                                 mad.bus.trigger('workspace_selected', 'people');
                             }
                         })
                     ];
                 this.load(menuItems);
+            },
+            '{mad.bus.element} workspace_selected': function (el, event, workspace, options) {
+                if (this.options.selected != workspace) {
+                    var li = $('li.' + workspace), itemClass = this.getItemClass();
+                    if (itemClass) {
+                        var data = li.data(itemClass.fullName);
+                        this.selectItem(data);
+                    }
+                }
             }
         });
     var $__default = AppNavigationLeft;

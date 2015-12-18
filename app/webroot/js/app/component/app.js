@@ -39,7 +39,6 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	/**
 	 * After start hook.
 	 * Initialise component of the application
-	 * @return {void}
 	 */
 	afterStart: function() {
 		var self = this;
@@ -87,11 +86,10 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 	/**
 	 * Observe when the user wants to switch to another workspace
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {string} workspace The target workspace
 	 * @param {array} options Workspace's options
-	 * @return {void}
 	 */
 	'{mad.bus.element} workspace_selected': function (el, event, workspace, options) {
 		options = typeof options != "undefined" ? options : {};
@@ -124,6 +122,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		// Extend default workspace options with the ones given in params.
 		$.extend(workspaceOptions, options);
 
+		// Instantiate the workspace component.
 		var component = mad.helper.Component.create(
 			$('#js_app_panel_main'),
 			'last',
@@ -138,11 +137,10 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 	/**
 	 * Observe when the user requests a dialog to be opened.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {string} label The label of the dialog
 	 * @param {array} options (optional) Options to give to the dialog controller
-	 * @return {void}
 	 */
 	'{mad.bus.element} request_dialog': function (el, ev, options) {
 		var options = options || {};
@@ -151,9 +149,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 	/**
 	 * Observe when the application processus have been all completed.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} passbolt_application_loading_completed': function (el, ev, options) {
 		if(!$('html').hasClass('loaded')) {
@@ -165,9 +162,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 	/**
 	 * Observe when the user wants to close the latest dialog.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} passbolt_application_loading': function (el, ev, options) {
 		if (!$('html').hasClass('loading')) {
@@ -179,9 +175,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 	/**
 	 * Observe when the user wants to close the latest dialog.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} request_dialog_close_latest': function (el, ev, options) {
 		mad.component.Dialog.closeLatest();
@@ -191,8 +186,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	/**
 	 * The p3 narrow external lib caught a window resize event and
 	 * set the appropriated classes to the body HTML Element.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{window} p3_narrow_checked': function(el, ev) {
 		mad.bus.trigger('passbolt.html_helper.window_resized');
@@ -205,7 +200,6 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	/**
 	 * Listen to the change relative to the state Loading
 	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
 	 */
 	stateLoading: function (go) {
 		// If the view has already been instanciated.
@@ -218,7 +212,6 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	/**
 	 * The application is ready.
 	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
 	 */
 	stateReady: function (go) {
 		// Select the password workspace
