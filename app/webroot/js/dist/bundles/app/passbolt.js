@@ -28835,17 +28835,14 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<ul>\n\t<li class="comment-wrapper">\n        <form id="js_comment_add_form" class="form comment add">\n            <div class="author profile picture"><a href="#"><img ');
+                ___v1ew.push('<ul>\n\t<li class="comment-wrapper">\n        <form id="js_comment_add_form" class="form comment add">\n            <div class="wrap-right-column">\n                <div class="right-column">\n                    <div class="form-content">\n                        <input name="data[comment][parent_id]" class="js_comment_parent_id required" type="hidden" >\n                        <input name="data[comment][foreign_id]" class="js_comment_foreign_id required" type="hidden" >\n                        <input name="data[comment][foreign_model]" class="js_comment_foreign_model required" type="hidden" >\n                        <div class="input textarea required">\n                            <label for="js_field_comment_content">Add a comment</label>\n                            <textarea id="js_field_comment_content" name="data[comment][content]" class="js_comment_content required" maxlength="150"  placeholder="add a comment"', can.view.pending({ scope: this }), '>');
+                ___v1ew.push('</textarea>\n                            <div class="js_comment_content_feedback message"></div>\n                        </div>\n                        <div class="metadata">\n                            <span class="author username"><a href="#">You</a></span>\n                            <span class="modified">right now</span>\n                        </div>\n                        <div class="actions">\n                            <a href="#" class="button comment-submit"><span>send</span></a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class="left-column">\n                <div class="author profile picture"><a href="#"><img ');
                 ___v1ew.push(can.view.txt(2, 'img', 'src', this, function () {
                     var ___v1ew = [];
                     ___v1ew.push('src="');
@@ -28862,8 +28859,7 @@ define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/v
                     return user.Profile.last_name;
                 }));
                 ___v1ew.push(' avatar"', can.view.pending({ scope: this }), '>');
-                ___v1ew.push('</a></div>\n            <div class="form-content">\n                <input name="data[comment][parent_id]" class="js_comment_parent_id required" type="hidden" >\n                <input name="data[comment][foreign_id]" class="js_comment_foreign_id required" type="hidden" >\n                <input name="data[comment][foreign_model]" class="js_comment_foreign_model required" type="hidden" >\n                <div class="input textarea required">\n                    <label for="js_field_comment_content">Add a comment</label>\n                    <textarea id="js_field_comment_content" name="data[comment][content]" class="js_comment_content required" maxlength="150"  placeholder="add a comment"', can.view.pending({ scope: this }), '>');
-                ___v1ew.push('</textarea>\n                    <div class="js_comment_content_feedback message"></div>\n                </div>\n                <div class="metadata">\n                    <span class="author username"><a href="#">You</a></span>\n                    <span class="modified">right now</span>\n                </div>\n                <div class="actions">\n                    <a href="#" class="button comment-submit"><span>send</span></a>\n                </div>\n            </div>\n        </form>\n\t</li>\n</ul>');
+                ___v1ew.push('</a></div>\n            </div>\n        </form>\n\t</li>\n</ul>');
                 ;
                 return ___v1ew.join('');
             }
@@ -29108,6 +29104,10 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -30046,7 +30046,10 @@ define('app/component/password_workspace', [
                     templateBased: true,
                     templateUri: 'app/view/template/component/create_button.ejs',
                     tag: 'a',
-                    cssClasses: ['button', 'primary']
+                    cssClasses: [
+                        'button',
+                        'primary'
+                    ]
                 }).start();
                 var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
                 rsShortcut.start();
@@ -30288,11 +30291,7 @@ define('app/view/template/component/people_workspace_menu.ejs!lib/can/view/ejs/s
                 ___v1ew.push(can.view.txt(0, 'ul', 0, this, function () {
                     var ___v1ew = [];
                     if (role == 'admin') {
-                        ___v1ew.push('\n<li>\n\t<a id="js_user_wk_menu_creation_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-plus-circle"></i>\n\t\t<span>');
-                        ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
-                            return __('create');
-                        }));
-                        ___v1ew.push('</span>\n\t</a>\n</li>\n<li>\n\t<a id="js_user_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-edit"></i>\n\t\t<span>');
+                        ___v1ew.push('\n<li>\n\t<a id="js_user_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-edit"></i>\n\t\t<span>');
                         ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                             return __('edit');
                         }));
@@ -30342,18 +30341,12 @@ define('app/component/people_workspace_menu', [
             }
         }, {
             afterStart: function () {
-                var self = this;
-                var user = passbolt.model.User.getCurrent();
-                var userRole = user.Role.name;
+                var user = passbolt.model.User.getCurrent(), userRole = user.Role.name;
                 if (userRole == 'admin') {
-                    this.options.creationButton = new mad.component.Button($('#js_user_wk_menu_creation_button')).start();
                     this.options.editionButton = new mad.component.Button($('#js_user_wk_menu_edition_button'), { state: 'disabled' }).start();
                     this.options.deletionButton = new mad.component.Button($('#js_user_wk_menu_deletion_button'), { state: 'disabled' }).start();
                 }
                 this.on();
-            },
-            '{creationButton.element} click': function (el, ev) {
-                mad.bus.trigger('request_user_creation');
             },
             '{editionButton.element} click': function (el, ev) {
                 mad.bus.trigger('request_user_edition');
@@ -31184,8 +31177,9 @@ define('app/component/people_workspace', [
     'app/form/user/create',
     'app/model/user',
     'app/model/filter',
-    'app/view/template/people_workspace.ejs!'
-], function ($__0, $__1, $__2, $__3, $__4, $__5, $__6, $__7, $__8, $__9, $__10, $__11, $__12) {
+    'app/view/template/people_workspace.ejs!',
+    'app/view/template/component/create_button.ejs!'
+], function ($__0, $__1, $__2, $__3, $__4, $__5, $__6, $__7, $__8, $__9, $__10, $__11, $__12, $__13) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
@@ -31213,6 +31207,8 @@ define('app/component/people_workspace', [
         $__11 = { default: $__11 };
     if (!$__12 || !$__12.__esModule)
         $__12 = { default: $__12 };
+    if (!$__13 || !$__13.__esModule)
+        $__13 = { default: $__13 };
     $__0;
     $__1;
     $__2;
@@ -31226,6 +31222,7 @@ define('app/component/people_workspace', [
     $__10;
     $__11;
     $__12;
+    $__13;
     var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend('passbolt.component.PeopleWorkspace', {
             defaults: {
                 label: 'People',
@@ -31237,6 +31234,7 @@ define('app/component/people_workspace', [
             }
         }, {
             afterStart: function () {
+                var role = passbolt.model.User.getCurrent().Role.name;
                 var primWkMenu = mad.helper.Component.create($('#js_wsp_primary_menu_wrapper'), 'last', passbolt.component.PeopleWorkspaceMenu, {
                         selectedUsers: this.options.selectedUsers,
                         selectedGroups: this.options.selectedGroups
@@ -31244,6 +31242,18 @@ define('app/component/people_workspace', [
                 primWkMenu.start();
                 var secWkMenu = mad.helper.Component.create($('#js_wsp_secondary_menu_wrapper'), 'last', passbolt.component.WorkspaceSecondaryMenu, { selectedItems: this.options.selectedUsers });
                 secWkMenu.start();
+                if (role == 'admin') {
+                    this.options.createButton = mad.helper.Component.create($('.main-action-wrapper'), 'last', mad.component.Button, {
+                        id: 'js_wsp_create_button',
+                        templateBased: true,
+                        templateUri: 'app/view/template/component/create_button.ejs',
+                        tag: 'a',
+                        cssClasses: [
+                            'button',
+                            'primary'
+                        ]
+                    }).start();
+                }
                 this.breadcrumCtl = new passbolt.component.PeopleBreadcrumb($('#js_wsp_users_breadcrumb'), {});
                 this.breadcrumCtl.start();
                 var userShortcut = new passbolt.component.UserShortcuts('#js_wsp_users_filter_shortcuts', {});
@@ -31270,13 +31280,14 @@ define('app/component/people_workspace', [
             destroy: function () {
                 $('#js_wsp_primary_menu_wrapper').empty();
                 $('#js_wsp_secondary_menu_wrapper').empty();
+                $('.main-action-wrapper').empty();
                 this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
                 this._super();
             },
+            '{createButton.element} click': function (el, ev) {
+                mad.bus.trigger('request_user_creation');
+            },
             '{mad.bus.element} group_selected': function (el, ev, group) {
-                if (!this.element)
-                    return;
-                console.log('group selected');
                 this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
                 this.options.filter.attr({
                     foreignModels: { Group: new can.List([group]) },
@@ -31287,8 +31298,6 @@ define('app/component/people_workspace', [
                 this.options.selectedGroups.push(group);
             },
             '{mad.bus.element} filter_users_browser': function (el, ev, filter) {
-                if (!this.element)
-                    return;
                 if (typeof filter.name != 'undefined') {
                     if (filter.name == 'all') {
                         this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
@@ -31298,8 +31307,6 @@ define('app/component/people_workspace', [
                 this.breadcrumCtl.load(filter);
             },
             '{mad.bus.element} request_group_creation': function (el, ev, data) {
-                if (!this.element)
-                    return;
                 var group = new passbolt.model.Group();
                 var dialog = new mad.component.Dialog(null, { label: __('Create a new Group') }).start();
                 var form = dialog.add(passbolt.form.group.Create, {
@@ -31314,8 +31321,6 @@ define('app/component/people_workspace', [
                 form.load(group);
             },
             '{mad.bus.element} request_group_edition': function (el, ev, group) {
-                if (!this.element)
-                    return;
                 var dialog = new mad.component.Dialog(null, { label: __('Edit a Group') }).start();
                 var form = dialog.add(passbolt.form.group.Create, {
                         data: group,
@@ -31329,13 +31334,9 @@ define('app/component/people_workspace', [
                 form.load(group);
             },
             '{mad.bus.element} request_group_deletion': function (el, ev, group) {
-                if (!this.element)
-                    return;
                 group.destroy();
             },
             '{mad.bus.element} request_user_creation': function (el, ev, data) {
-                if (!this.element)
-                    return;
                 var user = new passbolt.model.User({ active: 1 });
                 var dialog = new mad.component.Dialog(null, {
                         label: __('Add User'),
@@ -31361,8 +31362,6 @@ define('app/component/people_workspace', [
                 form.load(user);
             },
             '{mad.bus.element} request_user_edition': function (el, ev, user) {
-                if (!this.element)
-                    return;
                 var self = this;
                 user = this.options.selectedUsers[0];
                 var dialog = new mad.component.Dialog(null, {
@@ -31404,8 +31403,6 @@ define('app/component/people_workspace', [
                     }).start();
             },
             '{mad.bus.element} request_remove_user_from_group': function (el, ev, selectedUsers, selectedGroups) {
-                if (!this.element)
-                    return;
                 if (selectedGroups.attr('length') == 0) {
                     return;
                 }

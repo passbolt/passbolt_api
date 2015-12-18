@@ -15,6 +15,7 @@ import 'app/model/user';
 import 'app/model/filter';
 
 import 'app/view/template/people_workspace.ejs!';
+import 'app/view/template/component/create_button.ejs!';
 
 /**
  * @inherits {mad.Component}
@@ -33,8 +34,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     defaults: {
         label: 'People',
         templateUri: 'app/view/template/people_workspace.ejs',
+		// The current selected users
         selectedUsers: new can.Model.List(),
+		// The current selected groups
         selectedGroups: new can.Model.List(),
+		// The current filter
         filter: new passbolt.model.Filter(),
 		// Override the silentLoading parameter.
 		silentLoading: false
@@ -44,10 +48,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
     /**
      * Called right after the start function
-     * @return {void}
      * @see {mad.controller.ComponentController}
      */
     afterStart: function() {
+		var role = passbolt.model.User.getCurrent().Role.name;
+
         // Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
         var primWkMenu = mad.helper.Component.create(
             $('#js_wsp_primary_menu_wrapper'),
@@ -68,6 +73,22 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
             }
         );
         secWkMenu.start();
+
+		// Create user capability is only available to admin user
+		if (role == 'admin') {
+			// Instantiate the create button controller.
+			this.options.createButton = mad.helper.Component.create(
+				$('.main-action-wrapper'),
+				'last',
+				mad.component.Button, {
+					id: 'js_wsp_create_button',
+					templateBased: true,
+					templateUri: 'app/view/template/component/create_button.ejs',
+					tag: 'a',
+					cssClasses: ['button', 'primary']
+				}
+			).start();
+		}
 
         // Instantiate the password workspace breadcrumb controller
         this.breadcrumCtl = new passbolt.component.PeopleBreadcrumb($('#js_wsp_users_breadcrumb'), {});
@@ -120,6 +141,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         // Be sure that the primary & secondary workspace menus controllers will be destroyed also.
         $('#js_wsp_primary_menu_wrapper').empty();
         $('#js_wsp_secondary_menu_wrapper').empty();
+		$('.main-action-wrapper').empty();
 
         // Destroy Selected users.
         this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
@@ -132,18 +154,22 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
 
+	/**
+	 * Observe when the user wants to create a new user
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
+	 */
+	'{createButton.element} click': function (el, ev) {
+		mad.bus.trigger('request_user_creation');
+	},
+
     /**
      * Observe when group is selected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Group} group The selected group
-     * @return {void}
      */
     '{mad.bus.element} group_selected': function (el, ev, group) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
-        console.log('group selected');
         // reset the selected resources
         this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
         // Set the new filter
@@ -164,15 +190,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     /**
      * Event filter_users_browser.
      * When a new filter is applied.
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Filter} filter, the filter being applied.
-     * @return {void}
      */
     '{mad.bus.element} filter_users_browser': function (el, ev, filter) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         // If the filter applied is "all groups", then empty the list of selected groups.
         if (typeof filter.name != 'undefined') {
             if(filter.name == 'all') {
@@ -188,14 +210,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
     /**
      * Observe when the user requests a category creation
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @return {void}
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_group_creation': function (el, ev, data) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         var group = new passbolt.model.Group();
 
         // Get the dialog
@@ -220,14 +238,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
     /**
      * Observe when the user requests a group edition
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @return {void}
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_group_edition': function (el, ev, group) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         // get the dialog
         var dialog = new mad.component.Dialog(null, {label: __('Edit a Group')})
             .start();
@@ -249,27 +263,19 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
     /**
      * Observe when the user requests a group deletion
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @return {void}
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_group_deletion': function (el, ev, group) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         group.destroy();
     },
 
     /**
      * Observe when the user requests a category creation
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @return {void}
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_user_creation': function (el, ev, data) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         // create the resource which will be used by the form builder to populate the fields
         var user = new passbolt.model.User({active:1});
 
@@ -304,15 +310,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
     /**
      * Observe when the user requests a user edition
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User} resource The target user to edit
-     * @return {void}
      */
     '{mad.bus.element} request_user_edition': function (el, ev, user) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         var self = this;
         // Retrieve the selected user
         user = this.options.selectedUsers[0];
@@ -347,11 +349,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
     /**
      * Observe when the user requests a user deletion
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User} user1 A target user to delete
      * @param {passbolt.model.User} [user2 ...] Other users to delete
-     * @return {void}
      */
     '{mad.bus.element} request_user_deletion': function (el, ev) {
 		var args = arguments;
@@ -375,14 +376,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
     /**
      * Observe when a user requests to remove a user from a group.
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @return {void}
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_remove_user_from_group': function (el, ev, selectedUsers, selectedGroups) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         // Check Params.
         if(selectedGroups.attr("length") == 0) {
             return;
