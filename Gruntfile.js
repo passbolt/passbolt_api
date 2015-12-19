@@ -36,7 +36,8 @@ module.exports = function(grunt) {
 				'<%= config.webroot %>/js/lib/steal',
 				'<%= config.webroot %>/js/lib/underscore',
 				'<%= config.webroot %>/js/lib/xregexp',
-				'<%= config.webroot %>/js/lib/jssha'
+				'<%= config.webroot %>/js/lib/jssha',
+				'<%= config.webroot %>/js/lib/urijs'
 			]
 		},
 		lesslint: {
@@ -190,6 +191,13 @@ module.exports = function(grunt) {
 					cwd: '<%= config.modules_path %>/jssha/',
 					src: 'src/**',
 					dest: '<%= config.webroot %>/js/lib/jssha/',
+					nonull: true,
+					expand: true
+				}, {
+					// urijs
+					cwd: '<%= config.modules_path %>/urijs/',
+					src: 'src/**',
+					dest: '<%= config.webroot %>/js/lib/urijs/',
 					nonull: true,
 					expand: true
 				}]
