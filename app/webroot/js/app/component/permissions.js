@@ -324,6 +324,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			}
 		};
 
+		// Propagate an event notifying other component regarding the changes.
+		this.element.trigger('changed', this.options.changes);
+		// Display the change feedback.
 		this.showApplyFeedback();
 	},
 
@@ -348,6 +351,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			}
 		}
 
+		// Propagate an event notifying other component regarding the changes.
+		this.element.trigger('changed', this.options.changes);
+		// Display the change feedback.
 		this.showApplyFeedback();
 
 		// Check the permission must have a owner case
@@ -414,6 +420,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			this.hideApplyFeedback();
 		}
 		else {
+			// Propagate an event notifying other component regarding the changes.
+			this.element.trigger('changed', this.options.changes);
+			// Display the change feedback.
 			this.showApplyFeedback();
 		}
 

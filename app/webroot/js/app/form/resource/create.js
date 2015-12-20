@@ -18,6 +18,7 @@ passbolt.form.resource = passbolt.form.resource || {};
  * @return {passbolt.form.resource.Create}
  */
 var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.resource.Create', /** @static */ {
+
 	defaults: {
 		templateBased: true,
 		secretField: null,
@@ -27,6 +28,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		resource: null,
 		templateUri: 'app/view/template/form/resource/create.ejs'
 	}
+
 }, /** @prototype */ {
 
 	/**
@@ -75,6 +77,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 			new mad.form.Feedback($('#js_field_username_feedback'), {}).start()
 		);
 		// Add secrets forms.
+		// @todo Check if this section regarding secrects is still useful.
 		can.each(this.options.data.Secret, function (secret, i) {
 			var form = new passbolt.form.secret.Create('#js_secret_edit_' + i, {
 				data: secret,
@@ -139,7 +142,6 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 
 	/**
 	 * Listen when the plugin has encrypted the secrets.
-	 * @todo #security #architecture refactor, check also permissionController.
 	 */
 	'{mad.bus.element} secret_edition_secret_encrypted': function(el, ev, armoreds) {
 		var data = this.getData();
@@ -156,6 +158,13 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		if (this.options.callbacks.submit) {
 			this.options.callbacks.submit(data);
 		}
+	},
+
+	/**
+	 * Listen when the plugin observed a change on the password.
+	 */
+	'{mad.bus.element} secret_edition_secret_changed': function(el, ev, armoreds) {
+		this.element.trigger('changed', 'secret');
 	}
 
 });
