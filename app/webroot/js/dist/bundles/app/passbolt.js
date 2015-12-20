@@ -30533,6 +30533,7 @@ define('app/component/permissions', [
                         type: data.type
                     }
                 };
+                this.element.trigger('changed', this.options.changes);
                 this.showApplyFeedback();
             },
             updateTypePermission: function (id, type) {
@@ -30546,6 +30547,7 @@ define('app/component/permissions', [
                         }
                     };
                 }
+                this.element.trigger('changed', this.options.changes);
                 this.showApplyFeedback();
                 this.checkOwner();
             },
@@ -30585,6 +30587,7 @@ define('app/component/permissions', [
                 if ($.isEmptyObject(this.options.changes)) {
                     this.hideApplyFeedback();
                 } else {
+                    this.element.trigger('changed', this.options.changes);
                     this.showApplyFeedback();
                 }
                 this.checkOwner();
@@ -30668,6 +30671,7 @@ define('app/component/resource_actions_tab', [
                 templateUri: 'mad/view/template/component/tab/tab.ejs'
             }
         }, {
+            _hasChanged: false,
             afterStart: function () {
                 this._super();
                 var self = this;
@@ -30694,17 +30698,26 @@ define('app/component/resource_actions_tab', [
                     });
                 permCtl.start();
             },
-            load: function (resource) {
-                return;
-                this.options.resource = resource;
-                this.setViewData('resource', resource);
-                this.refresh();
-            },
-            enableTab: function (tabId) {
-                this._super(tabId);
-                var enabledTabCtl = this.getComponent(this.enabledTabId);
+            enableTab: function (tabId, force) {
+                var force = force || false, self = this;
+                if (this._hasChanged && force === false) {
+                    new mad.component.Confirm(null, {
+                        label: __('Do you really want to leave ?'),
+                        content: __('If you continue you\'ll lose your changes'),
+                        action: function () {
+                            self.enableTab(tabId, true);
+                        }
+                    }).start();
+                    return;
+                }
+                var enabledTabCtl = this.getComponent(tabId);
                 var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
                 this.closest(mad.component.Dialog).setTitle(label);
+                this._hasChanged = false;
+                this._super(tabId);
+            },
+            ' changed': function (el, ev, data) {
+                this._hasChanged = true;
             }
         });
     var $__default = ResourceActionsTab;
@@ -31313,10 +31326,6 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -31331,6 +31340,10 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -32115,6 +32128,9 @@ define('app/form/resource/create', [
                 if (this.options.callbacks.submit) {
                     this.options.callbacks.submit(data);
                 }
+            },
+            '{mad.bus.element} secret_edition_secret_changed': function (el, ev, armoreds) {
+                this.element.trigger('changed', 'secret');
             }
         });
     var $__default = Create;
