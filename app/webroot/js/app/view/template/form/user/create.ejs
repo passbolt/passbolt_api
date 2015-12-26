@@ -26,6 +26,7 @@
 		</div>
 	</div>
 
+    <% if (role == 'admin') { %>
 	<div class="input text required">
 		<label for="js_field_role_id"><%= __('Role') %></label>
 		<div id="js_field_role_id">
@@ -38,6 +39,8 @@
 		<div id="js_field_role_id_feedback" class="message">
 		</div>
 	</div>
+    <% } %>
+
 	<% if (action == 'create') { %>
 	<div class="input text required">
 		<label for="js_field_email_user"><%= __('Password') %></label>

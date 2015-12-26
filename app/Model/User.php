@@ -189,6 +189,8 @@ class User extends AppModel {
 		if (User::get('Role.name') == Role::ADMIN && $role['Role']['name'] != User::get('Role.name')) {
 			return false;
 		}
+
+		return true;
 	}
 
 /**

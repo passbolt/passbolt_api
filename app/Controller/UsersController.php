@@ -272,25 +272,27 @@ class UsersController extends AppController {
 		// Use the url id parameter as User id
 		$userData['User']['id'] = $id;
 
-		// Update the user
-		if (isset($userData['User'])) {
+		$editOwn = $id == User::get('id');
 
+		// Update the user, only if not editing itself.
+		if (isset( $userData['User'] ) && !$editOwn) {
 			// Get the meaningful fields for this operation
-			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
+			$fields = $this->User->getFindFields('User::edit',
+			  User::get('Role.name'));
 
 			// Validate the user data
 			$this->User->set($userData);
-			if (!$this->User->validates(array('fieldList' => array($fields['fields'])))) {
-				$invalidFields = $this->User->validationErrors;
-				$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
+
+			if ( ! $this->User->validates(array( 'fieldList' => array( $fields['fields'] ) ))) {
 				// Return error message, with list of invalid fields.
-				return $this->Message->error(__('Could not validate User'), array('body' => $finalInvalidFields));
+				return $this->Message->error(__('Could not validate User'),
+				  array( 'body' => $this->User->validationErrors ));
 			}
 
 			// Update the user
-			$save = $this->User->save($userData, false, $fields['fields']);
+			$save = $this->User->save($userData, FALSE, $fields['fields']);
 			// Didn't save, we rollback and return an error.
-			if (!$save) {
+			if ( ! $save) {
 				$this->User->rollback();
 				return $this->Message->error(__('The user could not be updated'));
 			}
@@ -329,8 +331,7 @@ class UsersController extends AppController {
 			// Validate the profile data
 			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
 				$this->User->rollback();
-				$finalInvalidFields = Common::formatInvalidFields('Profile', $this->User->Profile->validationErrors);
-				return $this->Message->error(__('Could not validate Profile'), array('body' => $finalInvalidFields));
+				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
 			}
 
 			// Update the profile

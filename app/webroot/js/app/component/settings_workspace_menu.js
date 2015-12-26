@@ -29,8 +29,18 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 	 * @return {void}
 	 */
 	afterStart: function () {
+		this.options.sectionItems = {
+			profile: {},
+			keys: {}
+		};
 		// Manage edition action
-		this.options.editionButton = new mad.component.Button($('#js_settings_wk_menu_edition_button'))
+		this.options.sectionItems['profile'].edit = new mad.component.Button($('#js_settings_wk_menu_edition_button'))
+			.start();
+
+		this.options.sectionItems['keys'].downloadPublic = new mad.component.Button($('#js_settings_wk_menu_download_public_key'))
+			.start();
+
+		this.options.sectionItems['keys'].downloadPrivate = new mad.component.Button($('#js_settings_wk_menu_download_private_key'))
 			.start();
 
 		this.on();
@@ -46,12 +56,51 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 	 * @param {HTMLEvent} ev The event which occured
 	 * @return {void}
 	 */
-	'{editionButton.element} click': function (el, ev) {
+	'{sectionItems.profile.edit.element} click': function (el, ev) {
 		mad.bus.trigger('request_profile_edition');
-	}
+	},
 
-	/* ************************************************************** */
-	/* LISTEN TO THE STATE CHANGES */
-	/* ************************************************************** */
+	/**
+	 * Observe when the user wants to download his public key.
+	 * @param el
+	 * @param ev
+	 */
+	'{sectionItems.keys.downloadPublic.element} click': function (el, ev) {
+		console.log();
+		mad.bus.trigger('passbolt.settings.download_public_key');
+	},
+
+	/**
+	 * Observe when the user wants to download his private key.
+	 * @param el
+	 * @param ev
+	 */
+	'{sectionItems.keys.downloadPrivate.element} click': function (el, ev) {
+		mad.bus.trigger('passbolt.settings.download_private_key');
+	},
+
+	/**
+	 * Observe when the user changes section inside the workspace, and adjust the menu items accordingly
+	 * @param el
+	 * @param ev
+	 * @param section
+	 */
+	'{mad.bus} request_settings_section': function(el, ev, section) {
+
+		if (this.options.sectionItems[section] == 'undefined') {
+			return;
+		}
+
+		for (let sectionName in this.options.sectionItems) {
+			for (let item in this.options.sectionItems[sectionName]) {
+				if (sectionName == section) {
+					this.options.sectionItems[sectionName][item].setState('ready');
+				}
+				else {
+					this.options.sectionItems[sectionName][item].setState('hidden');
+				}
+			}
+		}
+	}
 });
 export default SettingsWorkspaceMenu;

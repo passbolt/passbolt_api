@@ -41,14 +41,7 @@ var Keys = passbolt.component.Keys = mad.Component.extend('passbolt.component.Ke
 		this._super();
 		// Set user key data.
 		self.setViewData('gpgkey', passbolt.model.User.getCurrent().Gpgkey);
-	},
-
-	/* ************************************************************** */
-	/* LISTEN TO THE VIEW EVENTS */
-	/* ************************************************************** */
-
-	'#js_settings_keys_download click': function(el, ev) {
-		mad.bus.trigger('passbolt.settings.backup_key');
 	}
 });
+
 export default Keys;

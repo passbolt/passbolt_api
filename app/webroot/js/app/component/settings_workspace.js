@@ -124,24 +124,30 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * @return {void}
 	 */
 	'{mad.bus} request_profile_edition': function (el, ev) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
-
-		var self = this;
-
+		// Current user.
 		var user = passbolt.model.User.getCurrent();
 
 		// get the dialog
-		var dialog = new mad.component.Dialog(null, {label: __('Edit User')})
-			.start();
+		var dialog = new mad.component.Dialog(null, {
+			label: __('Edit profile'),
+			cssClasses : ['edit-profile-dialog','dialog-wrapper']
+		}).start();
 		// attach the component to the dialog
 		var form = dialog.add(passbolt.form.user.Create, {
 			data: user,
 			action: 'edit',
 			callbacks : {
 				submit: function (data) {
-					user.attr(data['passbolt.model.User']).save();
-					dialog.remove();
+					user.attr(data['passbolt.model.User']).save(
+						// Success.
+						function() {
+							dialog.remove();
+						},
+						// Error.
+						function(v) {
+							form.showErrors(JSON.parse(v.responseText)['body']);
+						}
+					);
 				}
 			}
 		});
