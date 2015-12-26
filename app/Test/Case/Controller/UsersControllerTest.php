@@ -693,20 +693,77 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setActive($admin);
 		$id = $admin['User']['id'];
 
-		$this->setExpectedException('HttpException', 'Could not validate User');
+    $userRoleId = $this->User->Role->field('id', ['name' => Role::USER]);
+
 		$this->testAction(
 			"/users/$id.json",
 			array(
 				'data'   => array(
 					'User' => array(
 						'id' => $id,
-						'role_id' => $this->User->Role->field('id', ['name' => Role::ADMIN]),
+						'role_id' => $userRoleId,
 					),
 				),
 				'method' => 'put',
 				'return' => 'contents'
 			));
+
+    $adminNew = $this->User->findByUsername('admin@passbolt.com');
+    $this->assertNotEquals($adminNew['User']['role_id'], $userRoleId);
+    $this->assertEquals($admin['User']['role_id'], $adminNew['User']['role_id']);
 	}
+
+  /**
+   * Test that admin cannot set himself as non active.
+   */
+  public function testUpdateAdminCantSetOwnInactive() {
+    // the user to update
+    $user = $this->User->findByUsername('dame@passbolt.com');
+    $id = $user['User']['id'];
+    $this->User->setActive($user);
+
+    $this->testAction(
+      "/users/$id.json",
+      array(
+        'data'   => array(
+          'User' => array(
+            'id' => $id,
+            'active' => 0,
+          ),
+        ),
+        'method' => 'put',
+        'return' => 'contents'
+      ));
+
+    $dame = $this->User->findByUsername('dame@passbolt.com');
+    $this->assertEquals($dame['User']['active'], '1', 'After update the actived field should still be true');
+  }
+
+  /**
+   * Test that normal user cannot set himself as non active.
+   */
+  public function testUpdateNonAdminCantSetOwnInactive() {
+    // normal user don't have the right to add user
+    $admin = $this->User->findByUsername('admin@passbolt.com');
+    $this->User->setActive($admin);
+    $id = $admin['User']['id'];
+
+    $this->testAction(
+      "/users/$id.json",
+      array(
+        'data'   => array(
+          'User' => array(
+            'id' => $id,
+            'active' => 0,
+          ),
+        ),
+        'method' => 'put',
+        'return' => 'contents'
+      ));
+
+    $admin = $this->User->findByUsername('admin@passbolt.com');
+    $this->assertEquals($admin['User']['active'], '1', 'After update the actived field should still be true');
+  }
 
 	/**
 	 * Test delete for non admin user.
