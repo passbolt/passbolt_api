@@ -34,18 +34,12 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
 
     /**
      * after start hook.
-     * @return {void}
      */
     afterStart: function () {
-        var self = this;
-
-        var user = passbolt.model.User.getCurrent();
-        var userRole = user.Role.name;
+        var user = passbolt.model.User.getCurrent(),
+        	userRole = user.Role.name;
 
         if (userRole == 'admin') {
-            // Manage creation action
-            this.options.creationButton = new mad.component.Button($('#js_user_wk_menu_creation_button'))
-                .start();
 
             // Manage edition action
             this.options.editionButton = new mad.component.Button($('#js_user_wk_menu_edition_button'), {
@@ -79,7 +73,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
             //}).start();
         }
 
-        // @todo URGENT, buggy, it rebinds 2 times external element event (such as madbus)
         this.on();
     },
 
@@ -88,21 +81,9 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
     /* ************************************************************** */
 
     /**
-     * Observe when the user wants to create a new user
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @return {void}
-     */
-    '{creationButton.element} click': function (el, ev) {
-        /*var category = this.options.creationButton.getValue();*/
-        mad.bus.trigger('request_user_creation'/*, category*/);
-    },
-
-    /**
      * Observe when the user wants to edit an instance (Resource, User depending of the active workspace)
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
-     * @return {void}
      */
     '{editionButton.element} click': function (el, ev) {
         /*var category = this.options.editionButton.getValue();*/
@@ -113,7 +94,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * Observe when the user wants to delete an instance (Resource, User depending of the active workspace)
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
-     * @return {void}
      */
     '{deletionButton.element} click': function (el, ev) {
         var users = this.options.selectedUsers;
@@ -125,7 +105,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.User} user The selected user
-     * @return {void}
      */
     '{selectedUsers} add': function (el, ev, user) {
         // if no user selected.
@@ -160,7 +139,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {HTMLElement} el The element the event occured on
      * @param {HTMLEvent} ev The event which occured
      * @param {passbolt.model.User} user The unselected user
-     * @return {void}
      */
     '{selectedUsers} remove': function (el, ev, user) {
         // if more than one resource selected, or no resource selected
@@ -184,7 +162,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
     /**
      * Listen to the change relative to the state selected
      * @param {boolean} go Enter or leave the state
-     * @return {void}
      */
     stateSelection: function (go) {
         console.log('stateSelection');
@@ -237,7 +214,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
     /**
      * Listen to the change relative to the state multiSelection
      * @param {boolean} go Enter or leave the state
-     * @return {void}
      */
     stateMultiSelection: function (go) {
         if (passbolt.model.User.getCurrent().Role.name == 'admin') {

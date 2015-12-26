@@ -1,3 +1,7 @@
+import 'urijs/punycode';
+import 'urijs/SecondLevelDomains';
+import 'urijs/IPv6';
+import URI from 'urijs/URI';
 import 'mad/view/component/tree';
 import 'app/component/sidebar';
 import 'app/view/component/resource_sidebar';
@@ -38,8 +42,19 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 	beforeRender: function () {
 		this._super();
         if (this.options.selectedItem != null) {
-            this.setViewData('resource', this.options.selectedItem);
-            // pass the secret strength label to the view
+			// Format the resource URI.
+			var uri = URI(this.options.selectedItem.uri);
+			// If the uri is an url and is not absolute.
+			// Add the default http:// protocol
+			if (!uri.is('absolute') && uri.is('url')) {
+				uri.protocol('http');
+			}
+
+			// Send the resource formatted uri to the view
+			this.setViewData('resourceFormattedUri', uri.toString());
+            // Send the resource to the view
+			this.setViewData('resource', this.options.selectedItem);
+            // Send the secret strength label to the view
             var secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.selectedItem.Secret.data);
             this.setViewData('secretStrength', secretStrength);
         }

@@ -1,4 +1,8 @@
 import moment from 'moment';
+import 'urijs/punycode';
+import 'urijs/SecondLevelDomains';
+import 'urijs/IPv6';
+import URI from 'urijs/URI';
 import 'mad/component/grid';
 import 'mad/component/contextual_menu';
 import 'mad/form/element/checkbox';
@@ -56,8 +60,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			uri: 'uri',
 			modified: 'modified',
 			owner: 'Creator.username',
-			//'copyLogin: 'id',
-			//'copySecret: 'id',
 			Category: 'Category'
 		});
 
@@ -154,6 +156,21 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			header: {
 				css: ['l-cell'],
 				label: __('URI')
+			},
+			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
+				var uri = URI(cellValue);
+
+				// If the uri is an url and is not absolute.
+				// Add the default http:// protocol
+				if (!uri.is('absolute') && uri.is('url')) {
+					uri.protocol('http');
+				}
+
+				mad.helper.Html.create(
+					cellElement,
+					'inside_replace',
+					'<a href="' + uri.toString() + '" target="_blank">' + cellValue + '</a>'
+				);
 			}
 		}, {
 			name: 'modified',

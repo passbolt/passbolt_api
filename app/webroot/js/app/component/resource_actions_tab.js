@@ -28,6 +28,12 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 
 }, /** @prototype */ {
 
+	/**
+	 * Something has changed on a tab controlled by this component.
+	 * @private
+	 */
+	_hasChanged: false,
+
 	// after start
 	afterStart: function() {
 		this._super();
@@ -65,36 +71,56 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 	},
 
 	/**
-	 * Load details of a resource
-	 * @param {passbolt.model.Resource} resource The resource to load
-	 * @return {void}
-	 */
-	load: function (resource) {
-		return;
-		// push the new resource in the options to be able to listen the resource
-		// change in the function name
-		this.options.resource = resource;
-		// pass the new resource to the view
-		this.setViewData('resource', resource);
-		// refresh the view
-		this.refresh();
-		// // on
-		// this.on();
-	},
-
-	/**
 	 * Enable a tab
 	 * @param {string} tabId id of the tab to enable
-	 * @return {void}
+	 * @param {boolean} force Should the action be forced, or a confirmation is required
 	 */
-	enableTab: function (tabId) {
-		this._super(tabId);
-		// Change the label of the dialog which contains this component.
-		var enabledTabCtl = this.getComponent(this.enabledTabId);
+	enableTab: function (tabId, force) {
+		var force = force || false,
+			self = this;
+
+		// If a change occurred on the current tab, and a confirmation is required.
+		if (this._hasChanged && force === false) {
+			new mad.component.Confirm(null, {
+				label: __('Do you really want to leave ?'),
+				content: __('If you continue you\'ll lose your changes'),
+				action: function() {
+					self.enableTab(tabId, true);
+				}
+			}).start();
+			return;
+		}
+
+		// The tab to enable.
+		var enabledTabCtl = this.getComponent(tabId)
+
+		// The dialog should have a relevant title.
 		var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
 		this.closest(mad.component.Dialog)
 			.setTitle(label);
+
+		this._hasChanged = false;
+		this._super(tabId);
+	},
+
+	/**
+	 * Listen to any changed event which occurred on the form elements contained by
+	 * the form controller.
+	 *
+	 * When a change occurred, if the user wants to change the current tab, ensure
+	 * he is notified regarding the changes he's going to lose.
+	 *
+	 * Ensure the component controlled by this component trigger an event "changed" while
+	 * their content is updated.
+	 *
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event that occurred
+	 * @param {mixed} data The new data
+	 */
+	' changed': function (el, ev, data) {
+		this._hasChanged = true;
 	}
+
 });
 
 export default ResourceActionsTab;
