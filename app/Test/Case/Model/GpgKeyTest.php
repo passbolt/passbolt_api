@@ -245,7 +245,7 @@ ffvdXuT2n3w=
 		$testcases = array(
 			'' => true,
 			'1980-12-14 00:00:00' => false,
-			'2015-12-14 00:00:00' => true,
+			'2025-12-14 00:00:00' => true,
 			'ghdjsk tt gg' => false
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -266,7 +266,7 @@ ffvdXuT2n3w=
 		$testcases = array(
 			'' => false,
 			'1980-12-14 00:00:00' => true,
-			'2015-12-14 00:00:00' => false,
+			'2025-12-14 00:00:00' => false,
 			'ghdjsk tt gg' => false
 		);
 		foreach ($testcases as $testcase => $result) {
