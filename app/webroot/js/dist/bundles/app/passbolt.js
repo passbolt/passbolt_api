@@ -25645,6 +25645,13 @@ define('app/model/permission', [
                     error: error
                 }).pipe(function (data, textStatus, jqXHR) {
                     var def = $.Deferred();
+                    if (data.acoInstance != null) {
+                        var resource = passbolt.model.Resource.model(mad.model.serializer.CakeSerializer.from(data.acoInstance, passbolt.model.Resource));
+                        can.trigger(passbolt.model.Resource, 'updated', resource);
+                    } else {
+                        var storedResource = passbolt.model.Resource.store[acoForeignKey];
+                        storedResource.destroyed();
+                    }
                     def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
                     return def;
                 });
@@ -30677,14 +30684,18 @@ define('app/component/permissions', [
                         });
                     }
                 }
-                passbolt.model.Permission.share(aco, acoForeignKey, data).then(function () {
-                    self.refresh().done(function () {
-                        self.setState('ready');
-                    });
+                passbolt.model.Permission.share(aco, acoForeignKey, data).then(function (data) {
+                    if (data.acoInstance == null) {
+                        self.closest(mad.component.Dialog).remove();
+                    } else {
+                        self.refresh().done(function () {
+                            self.setState('ready');
+                            self.element.trigger('saved');
+                        });
+                    }
                 });
-                if (this.options.saveChangesButton.state.is('ready')) {
-                    this.options.saveChangesButton.setState('disabled');
-                }
+            },
+            '{acoInstance} destroyed': function () {
             },
             '{mad.bus.element} resource_share_encrypted': function (el, ev, armoreds) {
                 this.save(armoreds);
@@ -30700,6 +30711,9 @@ define('app/component/permissions', [
             },
             '{saveChangesButton.element} click': function (el, ev) {
                 var usersIds = [];
+                if (this.options.saveChangesButton.state.is('ready')) {
+                    this.options.saveChangesButton.setState('disabled');
+                }
                 this.setState('loading');
                 for (var permissionId in this.options.changes) {
                     if (this.options.changes[permissionId].Permission.isNew) {
@@ -30785,6 +30799,9 @@ define('app/component/resource_actions_tab', [
             },
             ' changed': function (el, ev, data) {
                 this._hasChanged = true;
+            },
+            ' saved': function (el, ev) {
+                this._hasChanged = false;
             }
         });
     var $__default = ResourceActionsTab;
@@ -31138,6 +31155,8 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -31169,6 +31188,8 @@ define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/v
         }
     }));
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/comment/create*/
 define('app/form/comment/create', [
     'mad/form/form',
@@ -31407,10 +31428,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
