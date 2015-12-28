@@ -463,21 +463,43 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// Save the permissions changes.
 		passbolt.model.Permission.share(aco, acoForeignKey, data)
-			.then(function() {
+			.then(function(data) {
+				// If no permissions retrieved, that means the user doesn't
+				// have access to this resource anymore.
+				// Close the dialog.
+				if (data.acoInstance == null) {
+					self.closest(mad.component.Dialog)
+						.remove();
+				}
 				// Refresh the component.
-				self.refresh()
-                    .done(function() {
-                        // Switch the component in ready state.
-                        self.setState('ready');
-						// Notify other components regarding the success of the share action.
-						self.element.trigger('saved');
-                    });
-			});
+				else {
+					self.refresh()
+						.done(function() {
+							// Switch the component in ready state.
+							self.setState('ready');
+							// Notify other components regarding the success of the share action.
+							self.element.trigger('saved');
+						});
 
-		// Disable the save change button
-		if (this.options.saveChangesButton.state.is('ready')) {
-			this.options.saveChangesButton.setState('disabled');
-		}
+				}
+			});
+	},
+
+	/* ************************************************************** */
+	/* LISTEN TO THE MODEL EVENTS */
+	/* ************************************************************** */
+
+	/**
+	* Listen to the destroyed event on the edited/shared resource.
+	*
+	* It can happen when :
+	* * the user removes his own permission ;
+	* * someone removed remotely the user permission ;
+	* * the resource has been destroyed remotely.
+	*/
+	'{acoInstance} destroyed': function () {
+		// For now do nothing, the only case which is managed is: the user removes his own permission.
+		// This case is managed in the save function.
 	},
 
 	/* ************************************************************** */
@@ -533,6 +555,11 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 */
 	'{saveChangesButton.element} click': function(el, ev) {
 		var usersIds = [];
+
+		// Disable the save change button
+		if (this.options.saveChangesButton.state.is('ready')) {
+			this.options.saveChangesButton.setState('disabled');
+		}
 
 		// Switch the component in loading state.
 		// The ready state will be restored once the component will be refreshed.

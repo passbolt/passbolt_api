@@ -103,6 +103,10 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 		this._super(tabId);
 	},
 
+	/* ************************************************************** */
+	/* LISTEN TO THE COMPONENT EVENTS */
+	/* ************************************************************** */
+
 	/**
 	 * Listen to any changed event which occurred on the form elements contained by
 	 * the form controller.
@@ -124,7 +128,7 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 	/**
 	 * Listen to any saved event which occurred on the children components.
 	 *
-	 * When a saved occurred, it's is not necessary anymore to display a feedback regarding
+	 * When a save occurred, it's is not necessary anymore to display a feedback regarding
 	 * the changes that can be lost.
 	 *
 	 * @param {HTMLElement} el The element the event occurred on

@@ -134,10 +134,7 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 
 	share: function(aco, acoForeignKey, attrs, success, error) {
 		var self = this;
-		// format data as expected by cakePHP
-		//var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-		// add the root of the params, it will be used in the url template
-		//params.id = id;
+
 		return mad.net.Ajax.request({
 			url: APP_URL + 'share/' + aco + '/' + acoForeignKey + '.json',
 			type: 'PUT',
@@ -145,9 +142,28 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 			success: success,
 			error: error
 		}).pipe(function (data, textStatus, jqXHR) {
-			// pipe the result to convert cakephp response format into can format
+			// Pipe the result to convert CakePHP response format into can format.
 			var def = $.Deferred();
+
+			// If the user still have permission to the resource, the updated resource is sent
+			// by the server while updating the permissions.
+			if (data.acoInstance != null) {
+				// Make a passbolt.model.Resource with the resource sent by the server.
+				var resource = passbolt.model.Resource.model(mad.model.serializer.CakeSerializer.from(data.acoInstance, passbolt.model.Resource));
+				// Trigger a change on the retrieved resource, to notify all components that something changed on the resource.
+				can.trigger(passbolt.model.Resource, 'updated', resource);
+			}
+			// If the resource is not there, that means the user doesn't have access to this resource
+			// anymore. Delete it locally, all components should be notified by this change and update themselves.
+			else {
+				var storedResource = passbolt.model.Resource.store[acoForeignKey];
+				// Mark it as destroyed should trigger the removed event.
+				storedResource.destroyed();
+			}
+
+			// Resolve the deferred.
 			def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+
 			return def;
 		});
 	},
