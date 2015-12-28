@@ -31155,8 +31155,6 @@ define('app/component/comments_list', [
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/comment/add.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_comment_add_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -31188,8 +31186,6 @@ define('app/view/template/form/comment/add.ejs!lib/can/view/ejs/system', ['can/v
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/comment/create*/
 define('app/form/comment/create', [
     'mad/form/form',
@@ -32872,6 +32868,8 @@ define('app/view/template/component/user/dragged_user.ejs!lib/can/view/ejs/syste
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/component/user_browser*/
 define('app/view/component/user_browser', [
     'mad/view/component/grid',
@@ -32923,6 +32921,8 @@ define('app/view/component/user_browser', [
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/component/user_browser*/
 define('app/component/user_browser', [
     'moment',
