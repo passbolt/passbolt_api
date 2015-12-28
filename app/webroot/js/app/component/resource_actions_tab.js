@@ -119,6 +119,19 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 	 */
 	' changed': function (el, ev, data) {
 		this._hasChanged = true;
+	},
+
+	/**
+	 * Listen to any saved event which occurred on the children components.
+	 *
+	 * When a saved occurred, it's is not necessary anymore to display a feedback regarding
+	 * the changes that can be lost.
+	 *
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event that occurred
+	 */
+	' saved': function (el, ev) {
+		this._hasChanged = false;
 	}
 
 });

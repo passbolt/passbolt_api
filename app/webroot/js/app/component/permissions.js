@@ -126,7 +126,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// Add a button to control the final save action
 		this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), {
-			'state': 'disabled'
+			state: 'disabled'
 		}).start();
 
 		// Notify the plugin that the share dialog is rendered.
@@ -469,6 +469,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
                     .done(function() {
                         // Switch the component in ready state.
                         self.setState('ready');
+						// Notify other components regarding the success of the share action.
+						self.element.trigger('saved');
                     });
 			});
 
@@ -505,8 +507,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * The user want to remove a permission
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.Permission} permission The permission to remove
 	 */
 	 ' request_permission_delete': function (el, ev, permission) {
@@ -515,8 +517,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * A permission has been updated.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {string} permission The permission to edit
 	 * @param {string} type The new permission type
 	 */
@@ -526,8 +528,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * The user request the form to be saved.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{saveChangesButton.element} click': function(el, ev) {
 		var usersIds = [];
@@ -548,7 +550,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		}
 
 		// Request the plugin to encrypt the secret for the new users.
-		// When the secrets are encrypted the addon will send back the event secret_share_secret_encrypted.
+		// Once the plugin has encrypted the secret, it sends back an event secret_share_secret_encrypted.
 		mad.bus.trigger('passbolt.share.encrypt', {
 			usersIds: usersIds
 		});
