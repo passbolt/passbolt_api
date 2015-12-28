@@ -1044,9 +1044,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test account validation when user id is missing.
 	 */
 	public function testAccountValidationUserIdIsMissing() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-
+    $this->User->setInactive();
 		$this->setExpectedException('HttpException', 'The user id is missing');
 		json_decode($this->testAction('/users/validateAccount.json', array('return' => 'contents', 'method' => 'put'), true));
 	}
@@ -1055,9 +1053,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test accoutn validation user id not valid.
 	 */
 	public function testAccountValidationUserIdNotValid() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-
+    $this->User->setInactive();
 		$this->setExpectedException('HttpException', 'The user id is invalid');
 		json_decode(
 			$this->testAction('/users/validateAccount/badId.json', array('return' => 'contents', 'method' => 'put'), true)
@@ -1068,9 +1064,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test account validation when the user does not exist.
 	 */
 	public function testAccountValidationUserDoesNotExist() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-
+    $this->User->setInactive();
 		$this->setExpectedException('HttpException', 'The user does not exist');
 		json_decode(
 			$this->testAction(
@@ -1088,6 +1082,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
+    $this->User->setInactive();
 		$this->setExpectedException('HttpException', 'No data were provided');
 
 		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
@@ -1104,6 +1099,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
+    $this->User->setInactive();
 
 		$this->setExpectedException('HttpException', 'Invalid token');
 		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
@@ -1125,6 +1121,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
+    $this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
@@ -1165,6 +1162,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
+    $this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
