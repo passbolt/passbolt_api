@@ -170,9 +170,37 @@ class PermissionsController extends AppController {
  * @return array
  */
 	public function viewAcoPermissions($acoModelName = '', $acoInstanceId = null) {
+		$returnValue = array();
+
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
 			$this->Message->error(__('Invalid request method, should be GET'));
+			return;
+		}
+
+		// check if the target ACO model is permissionable
+		if (!$this->Permission->isValidAco($acoModelName)) {
+			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
+			return;
+		}
+
+		// no aco instance id given
+		if (is_null($acoInstanceId)) {
+			$this->Message->error(__('The %s id is missing', $acoModelName));
+			return;
+		}
+
+		// the aco instance id is invalid
+		if (!Common::isUuid($acoInstanceId)) {
+			$this->Message->error(__('The %s id is invalid', $acoModelName));
+			return;
+		}
+
+		// the user is allowed to access the aco instance
+		$this->loadModel($acoModelName);
+		$acoInstance = $this->$acoModelName->findById($acoInstanceId);
+		if (empty($acoInstance)) {
+			$this->Message->error(__('The %s does not exist', $acoModelName));
 			return;
 		}
 
