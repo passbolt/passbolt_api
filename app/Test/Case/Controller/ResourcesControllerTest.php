@@ -419,6 +419,122 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		)), true);
 	}
 
+	/**
+	 * Test edit a resource with secrets, and providing an invalid number of secrets.
+	 */
+	public function testEditWithSecretsInvalidNumberOfSecrets() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+		array_pop($secretsData);
+
+		$this->setExpectedException('HttpException', 'Secrets provided are invalid');
+		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+					'data' => array(
+						'Resource' => array(
+							'name' => 'testEditSecret'
+						),
+						'Secret' => $secretsData,
+					),
+					'method' => 'Put',
+					'return' => 'contents'
+				));
+	}
+
+	/**
+	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
+	 */
+	public function testEditWithSecretsInvalidSecretUsers() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+		$last = array_pop($secretsData);
+		$last['user_id'] = 'randominvaliduserid';
+		$secretsData[] = $last;
+
+		$this->setExpectedException('HttpException', 'Secrets provided are invalid');
+		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+				'data' => array(
+					'Resource' => array(
+						'name' => 'testEditSecret'
+					),
+					'Secret' => $secretsData,
+				),
+				'method' => 'Put',
+				'return' => 'contents'
+			));
+	}
+
+	/**
+	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
+	 */
+	public function testEditWithSecrets() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+
+//		pr(Hash::extract($secretsData, '{n}.user_id'));
+//		pr(sizeof($secretsData)); die();
+//
+		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+				'data' => array(
+					'Resource' => array(
+						'name' => 'testEditSecret1'
+					),
+					'Secret' => $secretsData,
+				),
+				'method' => 'Put',
+				'return' => 'contents'
+			));
+		$json = json_decode($result, true);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$json['header']['status'],
+			"update /resources/{$resource['Resource']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
+		);
+	}
+
 	public function testEdit() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$accountCat = $this->Resource->CategoryResource->Category->findByName('accounts');

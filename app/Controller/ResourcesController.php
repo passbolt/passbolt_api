@@ -17,8 +17,10 @@ class ResourcesController extends AppController {
  * @var $component application wide components
  */
 	public $components = array(
-		'Filter'
+		'Filter',
+		'PermissionHelper'
 	);
+
 
 /**
  * Get all resources
@@ -342,23 +344,51 @@ class ResourcesController extends AppController {
 
 		// Update the associated secrets.
 		if (isset($resourcepost['Secret']) && !empty($resourcepost['Secret'])) {
-			$secrets = array();
+
+			// Validate the secrets provided.
+			// Make sure there is a secret per user with whom it's shared, nothing more, nothing less.
+
+			// Get list of current permissions for the given ACO.
+			$permsUsers = $this->PermissionHelper->findAcoUsers('Resource', $id);
+			$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
+
+			// Get the list of users corresponding to the secrets, without duplicates.
+			$dataSecretUsers = array_unique(
+				Hash::extract($resourcepost['Secret'], '{n}.user_id')
+			);
+
+			// Check difference between the users expected and the users provided.
+			$missingUsers = array_diff($permsUsers, $dataSecretUsers);
+
+			// Check if the size of expected secrets is the same as provided one.
+			$sameSize = sizeof($permsUsers) == sizeof($dataSecretUsers);
+
+			// Check if the users expected are the same as the users provided.
+			$sameUsers = empty($missingUsers);
+
+			// Check errors and return error message if any.
+			if (!$sameSize || !$sameUsers) {
+				return $this->Message->error(__('Secrets provided are invalid'));
+			}
+
+			// End of secrets check. We proceed.
 
 			// Delete all the previous secrets.
 			$this->Resource->Secret->deleteAll(array(
 				'Secret.resource_id' => $id
 			), false);
 
+			$secrets = array();
 			// Validate the given resources.
 			foreach ($resourcepost['Secret'] as $i => $secret) {
 				// Force the resource id if empty.
 				if (empty($secret['resource_id'])) {
 					$secret['resource_id'] = $resource['Resource']['id'];
 				}
-				// Force the user id if empty.
-				if (empty($secret['user_id'])) {
-					return $this->Message->error(__('user id was not provided for the secret'));
-				}
+//				// Force the user id if empty.
+//				if (empty($secret['user_id'])) {
+//					return $this->Message->error(__('user id was not provided for the secret'));
+//				}
 				// Validate the data.
 				$this->Resource->Secret->set($secret);
 				if (!$this->Resource->Secret->validates()) {
@@ -374,7 +404,7 @@ class ResourcesController extends AppController {
 			$fields = $this->Resource->Secret->getFindFields('update', User::get('Role.name'));
 			if (!$this->Resource->Secret->saveMany($secrets, $fields)) {
 				return $this->Message->error(__('Could not save the secrets'));
-	        }
+			}
 		}
 
 		// Save the relations
