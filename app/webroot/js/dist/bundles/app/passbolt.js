@@ -22023,6 +22023,15 @@ define('app/util/common', [
                 var replace = XRegExp('${first}-${second}-3${fourth}-a${sixth}-${seventh}');
                 var uuid = XRegExp.replace(hashStr, search, replace).replace(/\//g, '');
                 return uuid;
+            },
+            datetimeToJSDate: function (dateTime) {
+                var dateTime = dateTime.split(' ');
+                var date = dateTime[0];
+                var time = dateTime[1];
+                var dateArr = date.split('-');
+                var timeArr = time.split(':');
+                var dateObj = new Date(dateArr[0], dateArr[1] - 1, dateArr[2], timeArr[0], timeArr[1], timeArr[2]);
+                return dateObj;
             }
         }, {});
     var $__default = Common;
@@ -22769,11 +22778,19 @@ define('app/view/template/component/settings_workspace_menu.ejs!lib/can/view/ejs
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<li>\n\t<a id="js_settings_wk_menu_edition_button" href="#" class="button">\n\t\t<i class="fa fa-fw fa-edit"></i>\n\t\t<span>');
+                ___v1ew.push('<li>\n\t<a id="js_settings_wk_menu_edition_button" href="#" class="button section-profile">\n\t\t<i class="fa fa-fw fa-edit"></i>\n\t\t<span>');
                 ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
                     return __('edit');
                 }));
-                ___v1ew.push('</span>\n\t</a>\n</li>\n');
+                ___v1ew.push('</span>\n\t</a>\n    <a id="js_settings_wk_menu_download_public_key" href="#" class="button section-keys">\n        <i class="fa fa-fw fa-download"></i>\n        <span>');
+                ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
+                    return __('Public');
+                }));
+                ___v1ew.push('</span>\n    </a>\n    <a id="js_settings_wk_menu_download_private_key" href="#" class="button section-keys">\n        <i class="fa fa-fw fa-download"></i>\n        <span>');
+                ___v1ew.push(can.view.txt(1, 'span', 0, this, function () {
+                    return __('Private');
+                }));
+                ___v1ew.push('</span>\n    </a>\n</li>\n');
                 ;
                 return ___v1ew.join('');
             }
@@ -22799,11 +22816,38 @@ define('app/component/settings_workspace_menu', [
             }
         }, {
             afterStart: function () {
-                this.options.editionButton = new mad.component.Button($('#js_settings_wk_menu_edition_button')).start();
+                this.options.sectionItems = {
+                    profile: {},
+                    keys: {}
+                };
+                this.options.sectionItems['profile'].edit = new mad.component.Button($('#js_settings_wk_menu_edition_button')).start();
+                this.options.sectionItems['keys'].downloadPublic = new mad.component.Button($('#js_settings_wk_menu_download_public_key')).start();
+                this.options.sectionItems['keys'].downloadPrivate = new mad.component.Button($('#js_settings_wk_menu_download_private_key')).start();
                 this.on();
             },
-            '{editionButton.element} click': function (el, ev) {
+            '{sectionItems.profile.edit.element} click': function (el, ev) {
                 mad.bus.trigger('request_profile_edition');
+            },
+            '{sectionItems.keys.downloadPublic.element} click': function (el, ev) {
+                console.log();
+                mad.bus.trigger('passbolt.settings.download_public_key');
+            },
+            '{sectionItems.keys.downloadPrivate.element} click': function (el, ev) {
+                mad.bus.trigger('passbolt.settings.download_private_key');
+            },
+            '{mad.bus} request_settings_section': function (el, ev, section) {
+                if (this.options.sectionItems[section] == 'undefined') {
+                    return;
+                }
+                for (var sectionName in this.options.sectionItems) {
+                    for (var item in this.options.sectionItems[sectionName]) {
+                        if (sectionName == section) {
+                            this.options.sectionItems[sectionName][item].setState('ready');
+                        } else {
+                            this.options.sectionItems[sectionName][item].setState('hidden');
+                        }
+                    }
+                }
             }
         });
     var $__default = SettingsWorkspaceMenu;
@@ -22979,11 +23023,11 @@ define('app/view/template/component/profile.ejs!lib/can/view/ejs/system', ['can/
                     return __('Change Avatar');
                 }));
                 ___v1ew.push('"', can.view.pending({ scope: this }), '>');
-                ___v1ew.push('\n\t\t\t\t\t\t\t<i class="fa fa-camera"></i>\n\t\t\t\t\t\t\t<span class="help-text">Click here to upload a new picture.</span>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<table class="table-info">\n\t\t\t\t\t<tbody>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('\n\t\t\t\t\t\t\t<i class="fa fa-camera"></i>\n\t\t\t\t\t\t\t<span class="help-text">Click here to upload a new picture.</span>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<table class="table-info profile">\n\t\t\t\t\t<tbody>\n\t\t\t\t\t<tr class="name">\n\t\t\t\t\t\t<td class="label">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return __('Name');
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t\t<td class="value">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return user.Profile.first_name;
                 }));
@@ -22991,43 +23035,51 @@ define('app/view/template/component/profile.ejs!lib/can/view/ejs/system', ['can/
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return user.Profile.last_name;
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr class="email">\n\t\t\t\t\t\t<td class="label">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return __('Email');
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t\t<td class="value">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return user.username;
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr class="role">\n\t\t\t\t\t\t<td class="label">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return __('Role');
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t\t<td class="value">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return user.Role.name;
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr class="modified">\n\t\t\t\t\t\t<td class="label">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return __('Modified');
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n                        ');
+                var dateModified = datetimeToJSDate(user.Profile.attr('modified'));
+                ;
+                ;
+                ___v1ew.push('\n\t\t\t\t\t\t<td class="value">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
-                    return moment(new Date(user.Profile.modified)).fromNow();
+                    return moment(dateModified).fromNow();
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr class="created">\n\t\t\t\t\t\t<td class="label">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return __('Created');
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n                        ');
+                var dateCreated = datetimeToJSDate(user.Profile.attr('created'));
+                ;
+                ;
+                ___v1ew.push('\n\t\t\t\t\t\t<td class="value">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
-                    return moment(new Date(user.Profile.created)).fromNow();
+                    return moment(dateCreated).fromNow();
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>');
+                ___v1ew.push('</td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr class="publickey_keyid">\n\t\t\t\t\t\t<td class="label">');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return __('Public key');
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t');
+                ___v1ew.push('</td>\n\t\t\t\t\t\t<td class="value">\n\t\t\t\t\t\t\t');
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return user.Gpgkey.key_id;
                 }));
@@ -23430,7 +23482,7 @@ define('app/view/template/component/keys.ejs!lib/can/view/ejs/system', ['can/vie
                 ___v1ew.push(can.view.txt(1, 'td', 0, this, function () {
                     return gpgkey.type;
                 }));
-                ___v1ew.push('</td>\n\t\t\t\t</tr>\n\t\t\t</table>\n\t\t</div>\n\t\t<div class="col6 last key-export">\n\t\t\t<ul class="actions duo-wrapper">\n\t\t\t\t<li>\n\t\t\t\t\t<a href="#publicKey" class="button selected toggle duo">public</a>\n\t\t\t\t\t<a href="#privateKey" class="button toggle duo">private</a>\n\t\t\t\t</li>\n\t\t\t\t<li>\n\t\t\t\t\t<a id="js_settings_keys_download" href="#" class="button">\n\t\t\t\t\t\t<i class="fa fa-fw fa-download"></i>\n\t\t\t\t\t\t<span>download</span>\n\t\t\t\t\t</a>\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t\t<div class="input textarea gpgkey" rel="publicKey">\n\t\t\t\t<textarea id="publicKeyUnarmored" class="fluid code" placeholder="" name="data[Gpgkey][key]"', can.view.pending({ scope: this }), '>');
+                ___v1ew.push('</td>\n\t\t\t\t</tr>\n\t\t\t</table>\n\t\t</div>\n\t\t<div class="col6 last key-export">\n            <h3>Public key block</h3>\n\t\t\t<div class="input textarea gpgkey" rel="publicKey">\n\t\t\t\t<textarea id="publicKeyUnarmored" class="fluid code" placeholder="" name="data[Gpgkey][key]"', can.view.pending({ scope: this }), '>');
                 ___v1ew.push(can.view.txt(1, 'textarea', 0, this, function () {
                     return gpgkey.key;
                 }));
@@ -23466,9 +23518,6 @@ define('app/component/keys', [
                 var self = this;
                 this._super();
                 self.setViewData('gpgkey', passbolt.model.User.getCurrent().Gpgkey);
-            },
-            '#js_settings_keys_download click': function (el, ev) {
-                mad.bus.trigger('passbolt.settings.backup_key');
             }
         });
     var $__default = Keys;
@@ -24235,25 +24284,34 @@ define('app/view/template/form/user/create.ejs!lib/can/view/ejs/system', ['can/v
                     return ___v1ew.join('');
                 }));
                 ___v1ew.push(' ', can.view.pending({ scope: this }), '/>');
-                ___v1ew.push('\n\t\t<div id="js_field_username_feedback" class="message">\n\t\t</div>\n\t</div>\n\t<div class="input text required">\n\t\t<label for="js_field_role_id">');
-                ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
-                    return __('Role');
-                }));
-                ___v1ew.push('</label>\n\t\t<div id="js_field_role_id">\n\t\t\t<input name="passbolt.model.User.role_id" value="');
-                ___v1ew.push(can.view.txt(true, 'input', 'value', this, function () {
-                    return cakephpConfig.roles.admin;
-                }));
-                ___v1ew.push('" type="checkbox" ', can.view.pending({ scope: this }), '/>');
-                ___v1ew.push('\n\t\t\t<span>This user is an administrator</span>\n\t\t</div>\n\t\t');
+                ___v1ew.push('\n\t\t<div id="js_field_username_feedback" class="message">\n\t\t</div>\n\t</div>\n    ');
                 ___v1ew.push(can.view.txt(0, 'div', 0, this, function () {
                     var ___v1ew = [];
-                    if (action == 'create') {
-                        ___v1ew.push('\n\t\t<em>Note: administrators can not see passwords as such but they can edit the password properties, like the name and description. They can also manage other users and the organization settings.</em>\n\t\t');
+                    if (role == 'admin') {
+                        ___v1ew.push('\n\t<div class="input text required">\n\t\t<label for="js_field_role_id">');
+                        ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
+                            return __('Role');
+                        }));
+                        ___v1ew.push('</label>\n\t\t<div id="js_field_role_id">\n\t\t\t<input name="passbolt.model.User.role_id" value="');
+                        ___v1ew.push(can.view.txt(true, 'input', 'value', this, function () {
+                            return cakephpConfig.roles.admin;
+                        }));
+                        ___v1ew.push('" type="checkbox" ', can.view.pending({ scope: this }), '/>');
+                        ___v1ew.push('\n\t\t\t<span>This user is an administrator</span>\n\t\t</div>\n\t\t');
+                        ___v1ew.push(can.view.txt(0, 'div', 0, this, function () {
+                            var ___v1ew = [];
+                            if (action == 'create') {
+                                ___v1ew.push('\n\t\t<em>Note: administrators can not see passwords as such but they can edit the password properties, like the name and description. They can also manage other users and the organization settings.</em>\n\t\t');
+                            }
+                            ;
+                            return ___v1ew.join('');
+                        }));
+                        ___v1ew.push('\n\t\t<div id="js_field_role_id_feedback" class="message">\n\t\t</div>\n\t</div>\n    ');
                     }
                     ;
                     return ___v1ew.join('');
                 }));
-                ___v1ew.push('\n\t\t<div id="js_field_role_id_feedback" class="message">\n\t\t</div>\n\t</div>\n\t');
+                ___v1ew.push('\n\t');
                 ___v1ew.push(can.view.txt(0, 'div', 0, this, function () {
                     var ___v1ew = [];
                     if (action == 'create') {
@@ -24316,31 +24374,34 @@ define('app/form/user/create', [
         }, {
             afterStart: function () {
                 this.options.data.User = this.options.data.User || {};
-                var activeField = this.addElement(new mad.form.Textbox($('#js_field_user_active'), { modelReference: 'passbolt.model.User.active' }).start());
-                this.addElement(new mad.form.Textbox($('#js_field_first_name'), { modelReference: 'passbolt.model.User.Profile.first_name' }).start(), new mad.form.Feedback($('#js_field_first_name_feedback'), {}).start());
-                this.addElement(new mad.form.Textbox($('#js_field_last_name'), { modelReference: 'passbolt.model.User.Profile.last_name' }).start(), new mad.form.Feedback($('#js_field_last_name_feedback'), {}).start());
-                var roles = {};
-                roles[cakephpConfig.roles.admin] = __('This user is an administrator');
-                roles[cakephpConfig.roles.user] = __('This user is a normal user');
-                var valueClasses = {};
-                valueClasses[cakephpConfig.roles.admin] = 'role-admin';
-                valueClasses[cakephpConfig.roles.user] = 'role-user';
-                this.options.role = new mad.form.Checkbox($('#js_field_role_id'), {
-                    name: 'role_id',
-                    modelReference: 'passbolt.model.User.role_id',
-                    availableValues: roles,
-                    valueClasses: valueClasses
-                }).start();
-                this.addElement(this.options.role, new mad.form.Feedback($('#js_field_role_id_feedback'), {}).start());
-                this.options.role.setValue(cakephpConfig.roles.user);
-                $('input[type=checkbox]', $('#js_field_role_id')).not('[value=\'' + cakephpConfig.roles.admin + '\']').hide().next('label').hide();
+                var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin' ? true : false;
                 var editingOwnProfile = false;
                 if (this.options.data != undefined && this.options.data.id == passbolt.model.User.getCurrent().id) {
                     editingOwnProfile = true;
                 }
-                if (editingOwnProfile == true) {
-                    $('input[type=checkbox]', $('#js_field_role_id')).attr('disabled', true);
-                    $('#js_field_role_id').parent().addClass('disabled');
+                var activeField = this.addElement(new mad.form.Textbox($('#js_field_user_active'), { modelReference: 'passbolt.model.User.active' }).start());
+                this.addElement(new mad.form.Textbox($('#js_field_first_name'), { modelReference: 'passbolt.model.User.Profile.first_name' }).start(), new mad.form.Feedback($('#js_field_first_name_feedback'), {}).start());
+                this.addElement(new mad.form.Textbox($('#js_field_last_name'), { modelReference: 'passbolt.model.User.Profile.last_name' }).start(), new mad.form.Feedback($('#js_field_last_name_feedback'), {}).start());
+                if (isAdmin === true) {
+                    var roles = {};
+                    roles[cakephpConfig.roles.admin] = __('This user is an administrator');
+                    roles[cakephpConfig.roles.user] = __('This user is a normal user');
+                    var valueClasses = {};
+                    valueClasses[cakephpConfig.roles.admin] = 'role-admin';
+                    valueClasses[cakephpConfig.roles.user] = 'role-user';
+                    this.options.role = new mad.form.Checkbox($('#js_field_role_id'), {
+                        name: 'role_id',
+                        modelReference: 'passbolt.model.User.role_id',
+                        availableValues: roles,
+                        valueClasses: valueClasses
+                    }).start();
+                    this.addElement(this.options.role, new mad.form.Feedback($('#js_field_role_id_feedback'), {}).start());
+                    this.options.role.setValue(cakephpConfig.roles.user);
+                    $('input[type=checkbox]', $('#js_field_role_id')).not('[value=\'' + cakephpConfig.roles.admin + '\']').hide().next('label').hide();
+                    if (editingOwnProfile == true) {
+                        $('input[type=checkbox]', $('#js_field_role_id')).attr('disabled', true);
+                        $('#js_field_role_id').parent().addClass('disabled');
+                    }
                 }
                 this.addElement(new mad.form.Textbox($('#js_field_username'), { modelReference: 'passbolt.model.User.username' }).start(), new mad.form.Feedback($('#js_field_username_feedback'), {}).start());
                 this.on();
@@ -24535,18 +24596,24 @@ define('app/component/settings_workspace', [
                 this._super();
             },
             '{mad.bus} request_profile_edition': function (el, ev) {
-                if (!this.element)
-                    return;
-                var self = this;
                 var user = passbolt.model.User.getCurrent();
-                var dialog = new mad.component.Dialog(null, { label: __('Edit User') }).start();
+                var dialog = new mad.component.Dialog(null, {
+                        label: __('Edit profile'),
+                        cssClasses: [
+                            'edit-profile-dialog',
+                            'dialog-wrapper'
+                        ]
+                    }).start();
                 var form = dialog.add(passbolt.form.user.Create, {
                         data: user,
                         action: 'edit',
                         callbacks: {
                             submit: function (data) {
-                                user.attr(data['passbolt.model.User']).save();
-                                dialog.remove();
+                                user.attr(data['passbolt.model.User']).save(function () {
+                                    dialog.remove();
+                                }, function (v) {
+                                    form.showErrors(JSON.parse(v.responseText)['body']);
+                                });
                             }
                         }
                     });
@@ -30427,7 +30494,7 @@ define('app/component/permissions', [
                 this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
                 this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
                 this.load(this.options.acoInstance);
-                this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), { 'state': 'disabled' }).start();
+                this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), { state: 'disabled' }).start();
                 mad.bus.trigger('passbolt.plugin.resource_share', {
                     resourceId: this.options.acoInstance.id,
                     armored: this.options.acoInstance.Secret[0].data
@@ -34634,9 +34701,10 @@ define('app/bootstrap', [
     'app/error/error_handler',
     'app/net/response_handler',
     'app/component/app',
+    'app/util/common',
     'app/config/config.json',
     'app/config/notification.json'
-], function ($__0, $__2, $__4, $__5, $__6, $__7, $__8, $__9, $__11) {
+], function ($__0, $__2, $__4, $__5, $__6, $__7, $__8, $__9, $__11, $__13) {
     'use strict';
     if (!$__0 || !$__0.__esModule)
         $__0 = { default: $__0 };
@@ -34656,6 +34724,8 @@ define('app/bootstrap', [
         $__9 = { default: $__9 };
     if (!$__11 || !$__11.__esModule)
         $__11 = { default: $__11 };
+    if (!$__13 || !$__13.__esModule)
+        $__13 = { default: $__13 };
     var moment = $__0.default;
     var passbolt = $__2.default;
     $__4;
@@ -34663,8 +34733,9 @@ define('app/bootstrap', [
     $__6;
     $__7;
     $__8;
-    var appConfig = $__9.default;
-    var notifConfig = $__11.default;
+    var Common = $__9.default;
+    var appConfig = $__11.default;
+    var notifConfig = $__13.default;
     var Bootstrap = passbolt.Bootstrap = mad.Bootstrap.extend('passbolt.Bootstrap', { defaults: {} }, {
             init: function (options) {
                 mad.Config.load(appConfig);
@@ -34675,6 +34746,7 @@ define('app/bootstrap', [
             },
             loadViewHelpers: function () {
                 can.ejs.Helpers.prototype.moment = moment;
+                can.ejs.Helpers.prototype.datetimeToJSDate = Common.datetimeToJSDate;
             }
         });
     var $__default = Bootstrap;
