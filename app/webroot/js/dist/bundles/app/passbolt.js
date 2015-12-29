@@ -25645,6 +25645,13 @@ define('app/model/permission', [
                     error: error
                 }).pipe(function (data, textStatus, jqXHR) {
                     var def = $.Deferred();
+                    if (data.acoInstance != null) {
+                        var resource = passbolt.model.Resource.model(mad.model.serializer.CakeSerializer.from(data.acoInstance, passbolt.model.Resource));
+                        can.trigger(passbolt.model.Resource, 'updated', resource);
+                    } else {
+                        var storedResource = passbolt.model.Resource.store[acoForeignKey];
+                        storedResource.destroyed();
+                    }
                     def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
                     return def;
                 });
@@ -30119,7 +30126,16 @@ define('app/view/template/component/permissions.ejs!lib/can/view/ejs/system', ['
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<div class="form-content permission-edit">\n    <ul id="js_permissions_list" class="permissions scroll">\n    </ul>\n</div>\n<div id="js_permissions_changes" class="warning message hidden">\n    <span>You need to save to apply the changes.</span>\n</div>\n<div class="form-content permission-add js_plugin_share_wrapper">\n    <input id="js_perm_create_form_aro" type="hidden" value="" />\n    <div id="passbolt-password-share-autocomplete-wrapper">\n    </div>\n</div>\n<div class="submit-wrapper clearfix">\n    <input id="js_rs_share_save" type="submit" class="button primary" value="');
+                ___v1ew.push('<div class="form-content permission-edit">\n    <ul id="js_permissions_list" class="permissions scroll">\n    </ul>\n</div>\n<div id="js_permissions_changes" class="warning message hidden">\n    <span>You need to save to apply the changes.</span>\n</div>\n');
+                ___v1ew.push(can.view.txt(0, 'span', 0, this, function () {
+                    var ___v1ew = [];
+                    if (canAdmin) {
+                        ___v1ew.push('\n<div id="js_permissions_create_wrapper" class="form-content permission-add js_plugin_share_wrapper">\n    <input id="js_perm_create_form_aro" type="hidden" value="" />\n    <div id="passbolt-password-share-autocomplete-wrapper">\n    </div>\n</div>\n');
+                    }
+                    ;
+                    return ___v1ew.join('');
+                }));
+                ___v1ew.push('\n<div class="submit-wrapper clearfix">\n    <input id="js_rs_share_save" type="submit" class="button primary" value="');
                 ___v1ew.push(can.view.txt(true, 'input', 'value', this, function () {
                     return __('save');
                 }));
@@ -30423,6 +30439,13 @@ define('app/component/permissions', [
                 silentLoading: false
             }
         }, {
+            init: function (el, opts) {
+                this._super(el, opts);
+                this.setViewData('canAdmin', this._isAdmin());
+            },
+            _isAdmin: function () {
+                return passbolt.model.Permission.isAllowedTo(this.options.acoInstance, passbolt.ADMIN);
+            },
             afterStart: function () {
                 var self = this;
                 this.permList = new mad.component.Tree($('#js_permissions_list'), {
@@ -30491,14 +30514,16 @@ define('app/component/permissions', [
                     })
                 });
                 this.permList.start();
-                this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
-                this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
+                if (this._isAdmin()) {
+                    this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
+                    this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
+                    mad.bus.trigger('passbolt.plugin.resource_share', {
+                        resourceId: this.options.acoInstance.id,
+                        armored: this.options.acoInstance.Secret[0].data
+                    });
+                }
                 this.load(this.options.acoInstance);
                 this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), { state: 'disabled' }).start();
-                mad.bus.trigger('passbolt.plugin.resource_share', {
-                    resourceId: this.options.acoInstance.id,
-                    armored: this.options.acoInstance.Secret[0].data
-                });
                 this.on();
             },
             loadPermission: function (permission) {
@@ -30515,9 +30540,13 @@ define('app/component/permissions', [
                     id: 'js_share_perm_type_' + permission.id,
                     emptyValue: false,
                     modelReference: 'passbolt.model.Permission.type',
-                    availableValues: availablePermissionTypes
+                    availableValues: availablePermissionTypes,
+                    state: this._isAdmin() ? 'ready' : 'disabled'
                 }).start().setValue(permission.type);
-                new mad.component.Button($('.js_perm_delete', permSelector), { id: 'js_share_perm_delete_' + permission.id }).start();
+                new mad.component.Button($('.js_perm_delete', permSelector), {
+                    id: 'js_share_perm_delete_' + permission.id,
+                    state: this._isAdmin() ? 'ready' : 'disabled'
+                }).start();
                 if (permission.is_new) {
                     $(permSelector).addClass('permission-updated');
                     this.permList.element.scrollTop(this.permList.element[0].scrollHeight);
@@ -30534,13 +30563,21 @@ define('app/component/permissions', [
                     for (var i = 0; i < permissions.length; i++) {
                         self.loadPermission(permissions[i]);
                     }
-                    self.checkOwner();
+                    if (self._isAdmin()) {
+                        self.checkOwner();
+                    }
                 });
             },
             refresh: function () {
-                this.permList.reset();
+                var self = this;
                 $('#js_permissions_changes').addClass('hidden');
-                return this.load(this.options.acoInstance);
+                this.permList.reset();
+                if (!this._isAdmin()) {
+                    $('#js_permissions_create_wrapper', this.element).hide();
+                }
+                this.load(this.options.acoInstance).done(function () {
+                    self.setState('ready');
+                });
             },
             showApplyFeedback: function () {
                 var $permissionChanges = $('#js_permissions_changes');
@@ -30677,14 +30714,16 @@ define('app/component/permissions', [
                         });
                     }
                 }
-                passbolt.model.Permission.share(aco, acoForeignKey, data).then(function () {
-                    self.refresh().done(function () {
-                        self.setState('ready');
-                    });
+                passbolt.model.Permission.share(aco, acoForeignKey, data).then(function (data) {
+                    self.element.trigger('saved');
+                    if (data.acoInstance == null) {
+                        self.closest(mad.component.Dialog).remove();
+                    } else {
+                        self.refresh();
+                    }
                 });
-                if (this.options.saveChangesButton.state.is('ready')) {
-                    this.options.saveChangesButton.setState('disabled');
-                }
+            },
+            '{acoInstance} destroyed': function () {
             },
             '{mad.bus.element} resource_share_encrypted': function (el, ev, armoreds) {
                 this.save(armoreds);
@@ -30700,6 +30739,9 @@ define('app/component/permissions', [
             },
             '{saveChangesButton.element} click': function (el, ev) {
                 var usersIds = [];
+                if (this.options.saveChangesButton.state.is('ready')) {
+                    this.options.saveChangesButton.setState('disabled');
+                }
                 this.setState('loading');
                 for (var permissionId in this.options.changes) {
                     if (this.options.changes[permissionId].Permission.isNew) {
@@ -30742,31 +30784,31 @@ define('app/component/resource_actions_tab', [
             afterStart: function () {
                 this._super();
                 var self = this;
-                var editFormCtl = this.addComponent(passbolt.form.resource.Create, {
-                        id: 'js_rs_edit',
-                        label: __('Edit'),
-                        action: 'edit',
-                        data: this.options.resource,
-                        callbacks: {
-                            submit: function (data) {
-                                self.options.resource.attr(data['passbolt.model.Resource']).save();
-                                self.closest(mad.component.Dialog).remove();
-                            }
+                this.addComponent(passbolt.form.resource.Create, {
+                    id: 'js_rs_edit',
+                    label: __('Edit'),
+                    action: 'edit',
+                    data: this.options.resource,
+                    callbacks: {
+                        submit: function (data) {
+                            self.options.resource.attr(data['passbolt.model.Resource']).save();
+                            self.closest(mad.component.Dialog).remove();
                         }
-                    });
-                editFormCtl.start();
-                editFormCtl.load(this.options.resource);
-                var permCtl = this.addComponent(passbolt.component.Permissions, {
-                        id: 'js_rs_permission',
-                        label: 'Share',
-                        resource: this.options.resources,
-                        cssClasses: ['share-tab'],
-                        acoInstance: this.options.resource
-                    });
-                permCtl.start();
+                    }
+                });
+                this.addComponent(passbolt.component.Permissions, {
+                    id: 'js_rs_permission',
+                    label: 'Share',
+                    resource: this.options.resources,
+                    cssClasses: ['share-tab'],
+                    acoInstance: this.options.resource
+                });
             },
             enableTab: function (tabId, force) {
                 var force = force || false, self = this;
+                if (this.enabledTabId == tabId) {
+                    return;
+                }
                 if (this._hasChanged && force === false) {
                     new mad.component.Confirm(null, {
                         label: __('Do you really want to leave ?'),
@@ -30777,14 +30819,17 @@ define('app/component/resource_actions_tab', [
                     }).start();
                     return;
                 }
-                var enabledTabCtl = this.getComponent(tabId);
-                var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
+                var targetTabCtl = this.getComponent(tabId);
+                var label = targetTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
                 this.closest(mad.component.Dialog).setTitle(label);
                 this._hasChanged = false;
                 this._super(tabId);
             },
             ' changed': function (el, ev, data) {
                 this._hasChanged = true;
+            },
+            ' saved': function (el, ev) {
+                this._hasChanged = false;
             }
         });
     var $__default = ResourceActionsTab;
@@ -31407,10 +31452,10 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*lib/can/util/array/makeArray*/
 System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -32157,6 +32202,9 @@ define('app/form/resource/create', [
                 });
                 this.addElement(new mad.form.Textbox($('#js_field_description'), { modelReference: 'passbolt.model.Resource.description' }).start(), new mad.form.Feedback($('#js_field_description_feedback'), {}).start());
                 $('#js_field_name').focus();
+                if (this.options.data != null) {
+                    this.load(this.options.data);
+                }
                 mad.bus.trigger('passbolt.plugin.resource_edition');
             },
             ' submit': function (el, ev) {

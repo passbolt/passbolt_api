@@ -7,11 +7,13 @@
     <span>You need to save to apply the changes.</span>
 </div>
 
-<div class="form-content permission-add js_plugin_share_wrapper">
+<% if (canAdmin) { %>
+<div id="js_permissions_create_wrapper" class="form-content permission-add js_plugin_share_wrapper">
     <input id="js_perm_create_form_aro" type="hidden" value="" />
     <div id="passbolt-password-share-autocomplete-wrapper">
     </div>
 </div>
+<% } %>
 
 <div class="submit-wrapper clearfix">
     <input id="js_rs_share_save" type="submit" class="button primary" value="<%= __('save') %>" />

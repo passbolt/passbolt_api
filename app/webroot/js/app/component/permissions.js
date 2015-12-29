@@ -45,6 +45,20 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 }, /** @prototype */ {
 
+	// Constructor like
+	init: function (el, opts) {
+		this._super(el, opts);
+		this.setViewData('canAdmin', this._isAdmin());
+	},
+
+	/**
+	 * Check that the current user has admin right on the resource.
+	 * @return {boolean}
+	 */
+	_isAdmin: function() {
+		return passbolt.model.Permission.isAllowedTo(this.options.acoInstance, passbolt.ADMIN);
+	},
+
 	afterStart: function() {
 		var self = this;
 
@@ -117,23 +131,27 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		});
 		this.permList.start();
 
-		// Add an hidden element to the form to carry the aro id
-		this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
-		this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
+		if (this._isAdmin()) {
+			// Add an hidden element to the form to carry the aro id
+			this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
+			this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
 
-        // Load the component for the aco instance given in options.
-        this.load(this.options.acoInstance);
+			// Notify the plugin that the share dialog is ready to interact with it.
+			// The plugin will inject the form to grant new users.
+			mad.bus.trigger('passbolt.plugin.resource_share', {
+				resourceId: this.options.acoInstance.id,
+				armored: this.options.acoInstance.Secret[0].data
+			});
+		}
+
+		// Load the component for the aco instance given in options.
+		this.load(this.options.acoInstance);
 
 		// Add a button to control the final save action
 		this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), {
-			'state': 'disabled'
+			// By default it is disabled, it will be enabled once the user has changed something.
+			state: 'disabled'
 		}).start();
-
-		// Notify the plugin that the share dialog is rendered.
-		mad.bus.trigger('passbolt.plugin.resource_share', {
-			resourceId: this.options.acoInstance.id,
-			armored: this.options.acoInstance.Secret[0].data
-		});
 
 		this.on();
 	},
@@ -161,14 +179,18 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			id: 'js_share_perm_type_' + permission.id,
 			emptyValue: false,
 			modelReference: 'passbolt.model.Permission.type',
-			availableValues: availablePermissionTypes
+			availableValues: availablePermissionTypes,
+			// If the current user has no admin right, disable this action.
+			state: this._isAdmin() ? 'ready' : 'disabled'
 		})
 			.start()
 			.setValue(permission.type);
 
 		// Add a button to allow the user to delete the permission
 		new mad.component.Button($('.js_perm_delete', permSelector), {
-			id: 'js_share_perm_delete_' + permission.id
+			id: 'js_share_perm_delete_' + permission.id,
+			// If the current user has no admin right, disable this action.
+			state: this._isAdmin() ? 'ready' : 'disabled'
 		}).start();
 
 		// If the permission is temporary and requires a final save action to be applied.
@@ -198,7 +220,11 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 				self.loadPermission(permissions[i]);
 			}
 			// Check the permission must have a owner case
-			self.checkOwner();
+			// This check is not necessary if the current user has no admin right, as all actions
+			// will be disabled.
+			if (self._isAdmin()) {
+				self.checkOwner();
+			}
 		});
 	},
 
@@ -206,14 +232,25 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * Refresh
 	 */
 	refresh: function() {
-		// reset the list in case it has already been populated
+		var self = this;
+
+		// hide the user feedback.
+		$('#js_permissions_changes').addClass('hidden');
+
+		// reset the permissions list.
 		this.permList.reset();
 
-        // hide the user feedback.
-        $('#js_permissions_changes').addClass('hidden');
+		// if the user lost his admin right, hide the add users form.
+		if (!this._isAdmin()) {
+			$('#js_permissions_create_wrapper', this.element).hide();
+		}
 
 		// reload the component with the updated permissions
-		return this.load(this.options.acoInstance);
+		this.load(this.options.acoInstance)
+			.done(function() {
+				// Switch the component in ready state.
+				self.setState('ready');
+			});
 	},
 
 	/**
@@ -301,7 +338,6 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * Add a new permission.
-	 * @param id The permission id
 	 * @param data The permission data
 	 */
 	addPermission: function(data) {
@@ -463,19 +499,39 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// Save the permissions changes.
 		passbolt.model.Permission.share(aco, acoForeignKey, data)
-			.then(function() {
-				// Refresh the component.
-				self.refresh()
-                    .done(function() {
-                        // Switch the component in ready state.
-                        self.setState('ready');
-                    });
-			});
+			.then(function(data) {
+				// Notify other components regarding the success of the share action.
+				self.element.trigger('saved');
 
-		// Disable the save change button
-		if (this.options.saveChangesButton.state.is('ready')) {
-			this.options.saveChangesButton.setState('disabled');
-		}
+				// If no permissions retrieved, that means the user doesn't
+				// have access to this resource anymore.
+				// Close the dialog.
+				if (data.acoInstance == null) {
+					self.closest(mad.component.Dialog)
+						.remove();
+				}
+				// Refresh the component.
+				else {
+					self.refresh();
+				}
+			});
+	},
+
+	/* ************************************************************** */
+	/* LISTEN TO THE MODEL EVENTS */
+	/* ************************************************************** */
+
+	/**
+	* Listen to the destroyed event on the edited/shared resource.
+	*
+	* It can happen when :
+	* * the user removes his own permission ;
+	* * someone removed remotely the user permission ;
+	* * the resource has been destroyed remotely.
+	*/
+	'{acoInstance} destroyed': function () {
+		// For now do nothing, the only case which is managed is: the user removes his own permission.
+		// This case is managed in the save function.
 	},
 
 	/* ************************************************************** */
@@ -505,8 +561,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * The user want to remove a permission
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.Permission} permission The permission to remove
 	 */
 	 ' request_permission_delete': function (el, ev, permission) {
@@ -515,8 +571,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * A permission has been updated.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {string} permission The permission to edit
 	 * @param {string} type The new permission type
 	 */
@@ -526,11 +582,16 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 	/**
 	 * The user request the form to be saved.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{saveChangesButton.element} click': function(el, ev) {
 		var usersIds = [];
+
+		// Disable the save change button
+		if (this.options.saveChangesButton.state.is('ready')) {
+			this.options.saveChangesButton.setState('disabled');
+		}
 
 		// Switch the component in loading state.
 		// The ready state will be restored once the component will be refreshed.
@@ -548,7 +609,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		}
 
 		// Request the plugin to encrypt the secret for the new users.
-		// When the secrets are encrypted the addon will send back the event secret_share_secret_encrypted.
+		// Once the plugin has encrypted the secret, it sends back an event secret_share_secret_encrypted.
 		mad.bus.trigger('passbolt.share.encrypt', {
 			usersIds: usersIds
 		});
