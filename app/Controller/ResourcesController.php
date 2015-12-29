@@ -22,42 +22,40 @@ class ResourcesController extends AppController {
 
 /**
  * Get all resources
- * Renders a json object of the resources
+ * Renders a json object of the resources.
  *
- * @return void
+ *
  */
 	public function index() {
 		// The additional information to pass to the model request
-		$data = array();
+		$findData = array();
 		// Whether we want also the resources of all subcategories
 		$recursive = false;
 
 		// Extract the filter from the request
 		$filter = $this->Filter->fromRequest($this->request->query);
 		// Merge the filter into the additional information to pass to the model request
-		$data = array_merge($data, $filter);
+		$data = array_merge($findData, $filter);
 		if (isset($this->request->query['recursive']) && $this->request->query['recursive'] === 'true') {
 			$recursive = true;
 		}
 
-		// if a filter by category are provided
-		// - check the valildity of the given uids
+		// A filter on category is provided
+		// - check the validity of the given categories uid
 		// - if recursive, filter also on sub-categories
-		if (isset($data['foreignModels']['Category.id'])) {
+		if (isset($findData['foreignModels']['Category.id'])) {
 			// Tmp array to store the target categories and subcategories (if recursive provided)
 			$categories = array();
 
-			foreach ($data['foreignModels']['Category.id'] as $categoryId) {
+			foreach ($findData['foreignModels']['Category.id'] as $categoryId) {
 				// if a category id is provided check it is well an uid
 				if (!Common::isUuid($categoryId)) {
-					$this->Message->error(__('The category id is invalid'));
-					return;
+					return $this->Message->error(__('The category id is invalid'));
 				}
 				// check if the category exists
 				$category = $this->Resource->CategoryResource->Category->findById($categoryId);
 				if (!$category) {
-					$this->Message->error(__('The category doesn\'t exist'));
-					return;
+					return $this->Message->error(__('The category doesn\'t exist'));
 				}
 
 				// The request is not a recursive request
@@ -80,11 +78,11 @@ class ResourcesController extends AppController {
 			}
 
 			// replace the categories to filter on with the computed array of categories & subcategories
-			$data['foreignModels']['Category.id'] = $categories;
+			$findData['foreignModels']['Category.id'] = $categories;
 		}
 
-		$options = $this->Resource->getFindOptions('index', User::get('Role.name'), $data);
-		$resources = $this->Resource->find('all', $options);
+		$findOptions = $this->Resource->getFindOptions('index', User::get('Role.name'), $findData);
+		$resources = $this->Resource->find('all', $findOptions);
 
 		if (!$resources) {
 			$resources = array();
@@ -99,32 +97,27 @@ class ResourcesController extends AppController {
  * Renders a json object of the resource
  *
  * @param uuid $id the id of the resource
- * @return void
  */
 	public function view($id = null) {
 		// check if the resource id is provided
 		if (!isset($id)) {
-			$this->Message->error(__('The resource id is missing'));
-			return;
+			return $this->Message->error(__('The resource id is missing'));
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The resource id is invalid'));
-			return;
+			return $this->Message->error(__('The resource id is invalid'));
 		}
 		// check if it exists
 		$resource = $this->Resource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The resource does not exist'), array('code' => 404));
-			return;
+			return $this->Message->error(__('The resource does not exist'), array('code' => 404));
 		}
 
 		// check if user is authorized
 		// the permissionable after find executed on the previous operation findById should drop
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->Resource->isAuthorized($id, PermissionType::READ)) {
-			$this->Message->error(__('You are not authorized to access this resource'), array('code' => 403));
-			return;
+			return $this->Message->error(__('You are not authorized to access this resource'), array('code' => 403));
 		}
 
 		// Get the resource.
@@ -144,31 +137,26 @@ class ResourcesController extends AppController {
 	public function delete($id = null) {
 		// check if the category id is provided
 		if (!isset($id)) {
-			$this->Message->error(__('The resource id is missing'));
-			return;
+			return $this->Message->error(__('The resource id is missing'));
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The resource id is invalid'));
-			return;
+			return $this->Message->error(__('The resource id is invalid'));
 		}
 		$resource = $this->Resource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The resource does not exist'), array('code' => 404));
-			return;
+			return $this->Message->error(__('The resource does not exist'), array('code' => 404));
 		}
 
 		// check if user is authorized
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not authorized to delete this resource'), array('code' => 403));
-			return;
+			return $this->Message->error(__('You are not authorized to delete this resource'), array('code' => 403));
 		}
 
 		$resource['Resource']['deleted'] = '1';
 		$fields = $this->Resource->getFindFields('delete', User::get('Role.name'));
 		if (!$this->Resource->save($resource, true, $fields['fields'])) {
-			$this->Message->error(__('Error while deleting'));
-			return;
+			return $this->Message->error(__('Error while deleting'));
 		}
 		$this->Message->success(__('The resource was successfully deleted'));
 	}
@@ -274,37 +262,33 @@ class ResourcesController extends AppController {
 
 /**
  * Update a resource
+ * @param uuid $id The resource to update
  */
 	public function edit($id = null) {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
-			$this->Message->error(__('Invalid request method, should be PUT'));
-			return;
+			return $this->Message->error(__('Invalid request method, should be PUT'));
 		}
 
 		// check if data was provided
 		if ($id == null) {
-			$this->Message->error(__('No valid id was provided'));
-			return;
+			return $this->Message->error(__('No valid id was provided'));
 		}
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The resource id invalid'));
-			return;
+			return $this->Message->error(__('The resource id invalid'));
 		}
 
 		// check if the resource exists
 		$resource = $this->Resource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The resource doesn\'t exist'));
-			return;
+			return $this->Message->error(__('The resource doesn\'t exist'));
 		}
 
 		// check if user is authorized
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not authorized to edit this resource'), array('code' => 403));
-			return;
+			return $this->Message->error(__('You are not authorized to edit this resource'), array('code' => 403));
 		}
 
 		// set the data for validation and save
