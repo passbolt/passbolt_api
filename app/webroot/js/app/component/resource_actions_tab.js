@@ -86,7 +86,6 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 			new mad.component.Confirm(null, {
 				label: __('Do you really want to leave ?'),
 				content: __('If you continue you\'ll lose your changes'),
-				content: __('If you continue you\'ll lose your changes'),
 				action: function() {
 					self.enableTab(tabId, true);
 				}

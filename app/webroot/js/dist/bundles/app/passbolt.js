@@ -30784,31 +30784,31 @@ define('app/component/resource_actions_tab', [
             afterStart: function () {
                 this._super();
                 var self = this;
-                var editFormCtl = this.addComponent(passbolt.form.resource.Create, {
-                        id: 'js_rs_edit',
-                        label: __('Edit'),
-                        action: 'edit',
-                        data: this.options.resource,
-                        callbacks: {
-                            submit: function (data) {
-                                self.options.resource.attr(data['passbolt.model.Resource']).save();
-                                self.closest(mad.component.Dialog).remove();
-                            }
+                this.addComponent(passbolt.form.resource.Create, {
+                    id: 'js_rs_edit',
+                    label: __('Edit'),
+                    action: 'edit',
+                    data: this.options.resource,
+                    callbacks: {
+                        submit: function (data) {
+                            self.options.resource.attr(data['passbolt.model.Resource']).save();
+                            self.closest(mad.component.Dialog).remove();
                         }
-                    });
-                editFormCtl.start();
-                editFormCtl.load(this.options.resource);
-                var permCtl = this.addComponent(passbolt.component.Permissions, {
-                        id: 'js_rs_permission',
-                        label: 'Share',
-                        resource: this.options.resources,
-                        cssClasses: ['share-tab'],
-                        acoInstance: this.options.resource
-                    });
-                permCtl.start();
+                    }
+                });
+                this.addComponent(passbolt.component.Permissions, {
+                    id: 'js_rs_permission',
+                    label: 'Share',
+                    resource: this.options.resources,
+                    cssClasses: ['share-tab'],
+                    acoInstance: this.options.resource
+                });
             },
             enableTab: function (tabId, force) {
                 var force = force || false, self = this;
+                if (this.enabledTabId == tabId) {
+                    return;
+                }
                 if (this._hasChanged && force === false) {
                     new mad.component.Confirm(null, {
                         label: __('Do you really want to leave ?'),
@@ -30819,8 +30819,8 @@ define('app/component/resource_actions_tab', [
                     }).start();
                     return;
                 }
-                var enabledTabCtl = this.getComponent(tabId);
-                var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
+                var targetTabCtl = this.getComponent(tabId);
+                var label = targetTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
                 this.closest(mad.component.Dialog).setTitle(label);
                 this._hasChanged = false;
                 this._super(tabId);
@@ -31438,8 +31438,6 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -31456,6 +31454,8 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
 });
 /*lib/can/util/array/makeArray*/
 System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -32202,6 +32202,9 @@ define('app/form/resource/create', [
                 });
                 this.addElement(new mad.form.Textbox($('#js_field_description'), { modelReference: 'passbolt.model.Resource.description' }).start(), new mad.form.Feedback($('#js_field_description_feedback'), {}).start());
                 $('#js_field_name').focus();
+                if (this.options.data != null) {
+                    this.load(this.options.data);
+                }
                 mad.bus.trigger('passbolt.plugin.resource_edition');
             },
             ' submit': function (el, ev) {
