@@ -56,11 +56,6 @@ $config = array(
 //			)
 			'Gpg'
 		),
-		'authorize' => array('Controller'),
-		'unauthorizedRedirect' => array(
-			'controller' => 'auth',
-			'action' => 'login',
-		),
 		'throttlingStrategies' => array(
 			'throttle' => array(
 				1 => array('throttleTime' => '5'),
@@ -80,20 +75,7 @@ $config = array(
 				100 => array(
 					'interval' => '3600',
 					'blacklistTime' => '7200',
-				),
-			),
-		),
-		'whitelist' => array(
-			'users' => array(
-				'login' => true,
-				'logout' => true,
-				'verify' => true
-			),
-			'auth' => array(
-				'login' => true,
-				'logout' => true,
-				'verify' => true,
-				'partials' => true
+				)
 			)
 		)
 	),

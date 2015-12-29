@@ -55,11 +55,6 @@ $config = array(
 			)
 //			'Gpg'
 		),
-		'authorize' => array('Controller'),
-		'unauthorizedRedirect' => array(
-			'controller' => 'users',
-			'action' => 'login'
-		),
 		'throttlingStrategies' => array(
 			'throttle' => array(
 				1 => array('throttleTime' => '5'),
@@ -81,14 +76,7 @@ $config = array(
 					'blacklistTime' => '7200'
 				)
 			)
-		),
-		'whitelist' => array(
-			'users' => array(
-				'login' => true,
-				'logout' => true,
-				'verify' => true
-			)
-		),
+		)
 	),
 	'GPG' => array(
 		'trustModel' => 'always',
