@@ -30126,7 +30126,16 @@ define('app/view/template/component/permissions.ejs!lib/can/view/ejs/system', ['
         with (_VIEW) {
             with (_CONTEXT) {
                 var ___v1ew = [];
-                ___v1ew.push('<div class="form-content permission-edit">\n    <ul id="js_permissions_list" class="permissions scroll">\n    </ul>\n</div>\n<div id="js_permissions_changes" class="warning message hidden">\n    <span>You need to save to apply the changes.</span>\n</div>\n<div class="form-content permission-add js_plugin_share_wrapper">\n    <input id="js_perm_create_form_aro" type="hidden" value="" />\n    <div id="passbolt-password-share-autocomplete-wrapper">\n    </div>\n</div>\n<div class="submit-wrapper clearfix">\n    <input id="js_rs_share_save" type="submit" class="button primary" value="');
+                ___v1ew.push('<div class="form-content permission-edit">\n    <ul id="js_permissions_list" class="permissions scroll">\n    </ul>\n</div>\n<div id="js_permissions_changes" class="warning message hidden">\n    <span>You need to save to apply the changes.</span>\n</div>\n');
+                ___v1ew.push(can.view.txt(0, 'span', 0, this, function () {
+                    var ___v1ew = [];
+                    if (canAdmin) {
+                        ___v1ew.push('\n<div id="js_permissions_create_wrapper" class="form-content permission-add js_plugin_share_wrapper">\n    <input id="js_perm_create_form_aro" type="hidden" value="" />\n    <div id="passbolt-password-share-autocomplete-wrapper">\n    </div>\n</div>\n');
+                    }
+                    ;
+                    return ___v1ew.join('');
+                }));
+                ___v1ew.push('\n<div class="submit-wrapper clearfix">\n    <input id="js_rs_share_save" type="submit" class="button primary" value="');
                 ___v1ew.push(can.view.txt(true, 'input', 'value', this, function () {
                     return __('save');
                 }));
@@ -30430,6 +30439,13 @@ define('app/component/permissions', [
                 silentLoading: false
             }
         }, {
+            init: function (el, opts) {
+                this._super(el, opts);
+                this.setViewData('canAdmin', this._isAdmin());
+            },
+            _isAdmin: function () {
+                return passbolt.model.Permission.isAllowedTo(this.options.acoInstance, passbolt.ADMIN);
+            },
             afterStart: function () {
                 var self = this;
                 this.permList = new mad.component.Tree($('#js_permissions_list'), {
@@ -30498,14 +30514,16 @@ define('app/component/permissions', [
                     })
                 });
                 this.permList.start();
-                this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
-                this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
+                if (this._isAdmin()) {
+                    this.permAroHiddenTxtbx = new mad.form.Textbox($('#js_perm_create_form_aro', this.element), {}).start();
+                    this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
+                    mad.bus.trigger('passbolt.plugin.resource_share', {
+                        resourceId: this.options.acoInstance.id,
+                        armored: this.options.acoInstance.Secret[0].data
+                    });
+                }
                 this.load(this.options.acoInstance);
                 this.options.saveChangesButton = new mad.component.Button($('#js_rs_share_save'), { state: 'disabled' }).start();
-                mad.bus.trigger('passbolt.plugin.resource_share', {
-                    resourceId: this.options.acoInstance.id,
-                    armored: this.options.acoInstance.Secret[0].data
-                });
                 this.on();
             },
             loadPermission: function (permission) {
@@ -30522,9 +30540,13 @@ define('app/component/permissions', [
                     id: 'js_share_perm_type_' + permission.id,
                     emptyValue: false,
                     modelReference: 'passbolt.model.Permission.type',
-                    availableValues: availablePermissionTypes
+                    availableValues: availablePermissionTypes,
+                    state: this._isAdmin() ? 'ready' : 'disabled'
                 }).start().setValue(permission.type);
-                new mad.component.Button($('.js_perm_delete', permSelector), { id: 'js_share_perm_delete_' + permission.id }).start();
+                new mad.component.Button($('.js_perm_delete', permSelector), {
+                    id: 'js_share_perm_delete_' + permission.id,
+                    state: this._isAdmin() ? 'ready' : 'disabled'
+                }).start();
                 if (permission.is_new) {
                     $(permSelector).addClass('permission-updated');
                     this.permList.element.scrollTop(this.permList.element[0].scrollHeight);
@@ -30541,13 +30563,21 @@ define('app/component/permissions', [
                     for (var i = 0; i < permissions.length; i++) {
                         self.loadPermission(permissions[i]);
                     }
-                    self.checkOwner();
+                    if (self._isAdmin()) {
+                        self.checkOwner();
+                    }
                 });
             },
             refresh: function () {
-                this.permList.reset();
+                var self = this;
                 $('#js_permissions_changes').addClass('hidden');
-                return this.load(this.options.acoInstance);
+                this.permList.reset();
+                if (!this._isAdmin()) {
+                    $('#js_permissions_create_wrapper', this.element).hide();
+                }
+                this.load(this.options.acoInstance).done(function () {
+                    self.setState('ready');
+                });
             },
             showApplyFeedback: function () {
                 var $permissionChanges = $('#js_permissions_changes');
@@ -30685,13 +30715,11 @@ define('app/component/permissions', [
                     }
                 }
                 passbolt.model.Permission.share(aco, acoForeignKey, data).then(function (data) {
+                    self.element.trigger('saved');
                     if (data.acoInstance == null) {
                         self.closest(mad.component.Dialog).remove();
                     } else {
-                        self.refresh().done(function () {
-                            self.setState('ready');
-                            self.element.trigger('saved');
-                        });
+                        self.refresh();
                     }
                 });
             },
@@ -31410,6 +31438,8 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -31424,6 +31454,8 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -32868,8 +32900,6 @@ define('app/view/template/component/user/dragged_user.ejs!lib/can/view/ejs/syste
         }
     }));
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/component/user_browser*/
 define('app/view/component/user_browser', [
     'mad/view/component/grid',
@@ -32921,8 +32951,6 @@ define('app/view/component/user_browser', [
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/component/user_browser*/
 define('app/component/user_browser', [
     'moment',
