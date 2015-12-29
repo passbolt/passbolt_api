@@ -40,7 +40,7 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 		var self = this;
 
 		// Add the edition form controller to the tab
-		var editFormCtl = this.addComponent(passbolt.form.resource.Create, {
+		this.addComponent(passbolt.form.resource.Create, {
 			id: 'js_rs_edit',
 			label: __('Edit'),
 			action: 'edit',
@@ -56,18 +56,15 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 				}
 			}
 		});
-		editFormCtl.start();
-		editFormCtl.load(this.options.resource);
 
 		// Add the permission controller to the tab, if the user is allowed to share.
-		var permCtl = this.addComponent(passbolt.component.Permissions, {
+		this.addComponent(passbolt.component.Permissions, {
 			id: 'js_rs_permission',
 			label: 'Share',
 			resource: this.options.resources,
 			cssClasses: ['share-tab'],
             acoInstance: this.options.resource
 		});
-		permCtl.start();
 	},
 
 	/**
@@ -79,10 +76,16 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 		var force = force || false,
 			self = this;
 
+		// If the request tab is the same than the active one.
+		if (this.enabledTabId == tabId) {
+			return;
+		}
+
 		// If a change occurred on the current tab, and a confirmation is required.
 		if (this._hasChanged && force === false) {
 			new mad.component.Confirm(null, {
 				label: __('Do you really want to leave ?'),
+				content: __('If you continue you\'ll lose your changes'),
 				content: __('If you continue you\'ll lose your changes'),
 				action: function() {
 					self.enableTab(tabId, true);
@@ -92,10 +95,10 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 		}
 
 		// The tab to enable.
-		var enabledTabCtl = this.getComponent(tabId)
+		var targetTabCtl = this.getComponent(tabId);
 
 		// The dialog should have a relevant title.
-		var label = enabledTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
+		var label = targetTabCtl.options.label + '<span class="dialog-header-subtitle">' + this.options.resource.name + '</span>';
 		this.closest(mad.component.Dialog)
 			.setTitle(label);
 
