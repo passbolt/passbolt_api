@@ -442,7 +442,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		}
 		array_pop($secretsData);
 
-		$this->setExpectedException('HttpException', 'Secrets provided are invalid');
+		$this->setExpectedException('HttpException', 'The list of secrets provided is invalid');
 		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
 					'data' => array(
 						'Resource' => array(
@@ -480,7 +480,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		$last['user_id'] = 'randominvaliduserid';
 		$secretsData[] = $last;
 
-		$this->setExpectedException('HttpException', 'Secrets provided are invalid');
+		$this->setExpectedException('HttpException', 'The list of secrets provided is invalid');
 		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
 				'data' => array(
 					'Resource' => array(
@@ -496,7 +496,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	/**
 	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
 	 */
-	public function testEditWithSecrets() {
+	public function testEditWithSecretsNoError() {
 		$user = $this->User->findByUsername('marlyn@passbolt.com');
 		$this->User->setActive($user);
 
@@ -535,6 +535,61 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		);
 	}
 
+	/**
+	 * Test that rollback is effective.
+	 */
+	public function testEditWithSecretsRollback() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+
+
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+		$last = array_pop($secretsData);
+		$last['data'] = 'Wrongkey';
+		$secretsData[] = $last;
+
+		try {
+			$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+					'data' => array(
+						'Resource' => array(
+							'name' => 'testEditSecret',
+							'description' => 'wtf'
+						),
+						'Secret' => $secretsData,
+					),
+					'method' => 'Put',
+					'return' => 'contents'
+				));
+		} catch(Exception $e) {
+			$this->assertEquals($e->getMessage(), 'The list of secrets provided is invalid', 'Error message is not what is expected');
+			// Get the resource again, and assert it's the exact same
+			$resourceAfterUpdate = $this->Resource->find('first', [
+					'conditions' => [
+						'id' => $resource['Resource']['id']
+					],
+					'contain' => ['Secret']
+				]);
+			$this->assertEquals($resourceAfterUpdate, $resource, $e->getMessage() . 'After an error, the update should have performed a rollback but did not' . print_r($resourceAfterUpdate, true) . print_r($resource, true));
+		}
+	}
+
+	/**
+	 * Test a normal edit operation.
+	 */
 	public function testEdit() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$accountCat = $this->Resource->CategoryResource->Category->findByName('accounts');

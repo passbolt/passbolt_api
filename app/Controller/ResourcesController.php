@@ -280,33 +280,28 @@ class ResourcesController extends AppController {
 	public function edit($id = null) {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
-			$this->Message->error(__('Invalid request method, should be PUT'));
-			return;
+			return $this->Message->error(__('Invalid request method, should be PUT'));
 		}
 
 		// check if data was provided
 		if ($id == null) {
-			$this->Message->error(__('No valid id was provided'));
-			return;
+			return $this->Message->error(__('No valid id was provided'));
 		}
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The resource id invalid'));
-			return;
+			return $this->Message->error(__('The resource id invalid'));
 		}
 
 		// check if the resource exists
 		$resource = $this->Resource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The resource doesn\'t exist'));
-			return;
+			return $this->Message->error(__('The resource doesn\'t exist'));
 		}
 
 		// check if user is authorized
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not authorized to edit this resource'), array('code' => 403));
-			return;
+			return $this->Message->error(__('You are not authorized to edit this resource'), array('code' => 403));
 		}
 
 		// set the data for validation and save
@@ -314,7 +309,10 @@ class ResourcesController extends AppController {
 		// Use the url id parameter as Resource id
 		$resourcepost['Resource']['id'] = $id;
 
-		// @todo Begin transaction.
+		// Begin transaction, and set useNestedTransaction to true.
+		$dataSource = $this->Resource->getDataSource();
+		$dataSource->useNestedTransactions = true;
+		$dataSource->begin();
 
 		// check if data was provided
 		if (!isset($resourcepost['Resource']) && !isset($resourcepost['Category'])) {
@@ -325,18 +323,26 @@ class ResourcesController extends AppController {
 		if (isset($resourcepost['Resource'])) {
 
 			// Get the meaningful fields for this operation
-			$fields = $this->Resource->getFindFields('edit', User::get('Role.name'));
+			$fields = $this->Resource->getFindFields('Resource::edit', User::get('Role.name'));
 
 			// Validate the resource data
 			$this->Resource->set($resourcepost);
-			// @todo validate only the fields required by this operation
-			if (!$this->Resource->validates()) {
+			if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
 				return $this->Message->error(
 					__('Could not validate Resource'),
 					array('body' => $this->Resource->validationErrors)
 				);
 			}
-			$save = $this->Resource->save($resourcepost, false, $fields['fields']);
+
+			// Save data.
+			$save = $this->Resource->save(
+				$resourcepost,
+				[
+					'validate' => false,
+					'fieldList' => $fields['fields'],
+					'atomic' => false
+				]);
+
 			if (!$save) {
 				return $this->Message->error(__('The resource could not be updated'));
 			}
@@ -344,66 +350,16 @@ class ResourcesController extends AppController {
 
 		// Update the associated secrets.
 		if (isset($resourcepost['Secret']) && !empty($resourcepost['Secret'])) {
-
-			// Validate the secrets provided.
-			// Make sure there is a secret per user with whom it's shared, nothing more, nothing less.
-
-			// Get list of current permissions for the given ACO.
-			$permsUsers = $this->PermissionHelper->findAcoUsers('Resource', $id);
-			$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
-
-			// Get the list of users corresponding to the secrets, without duplicates.
-			$dataSecretUsers = array_unique(
-				Hash::extract($resourcepost['Secret'], '{n}.user_id')
-			);
-
-			// Check difference between the users expected and the users provided.
-			$missingUsers = array_diff($permsUsers, $dataSecretUsers);
-
-			// Check if the size of expected secrets is the same as provided one.
-			$sameSize = sizeof($permsUsers) == sizeof($dataSecretUsers);
-
-			// Check if the users expected are the same as the users provided.
-			$sameUsers = empty($missingUsers);
-
-			// Check errors and return error message if any.
-			if (!$sameSize || !$sameUsers) {
-				return $this->Message->error(__('Secrets provided are invalid'));
+			try {
+				$this->Resource->saveSecrets($id, $resourcepost['Secret']);
 			}
-
-			// End of secrets check. We proceed.
-
-			// Delete all the previous secrets.
-			$this->Resource->Secret->deleteAll(array(
-				'Secret.resource_id' => $id
-			), false);
-
-			$secrets = array();
-			// Validate the given resources.
-			foreach ($resourcepost['Secret'] as $i => $secret) {
-				// Force the resource id if empty.
-				if (empty($secret['resource_id'])) {
-					$secret['resource_id'] = $resource['Resource']['id'];
-				}
-//				// Force the user id if empty.
-//				if (empty($secret['user_id'])) {
-//					return $this->Message->error(__('user id was not provided for the secret'));
-//				}
-				// Validate the data.
-				$this->Resource->Secret->set($secret);
-				if (!$this->Resource->Secret->validates()) {
-					return $this->Message->error(
-						__('Could not validate secret model'),
-						array('body' => $this->Resource->Secret->validationErrors)
-					);
-				}
-				$secrets[] = $secret;
+			catch(ValidationException $e) {
+				$dataSource->rollback();
+				return $this->Message->error($e->getMessage(), [ 'body' => $e->getInvalidFields() ]);
 			}
-
-			// Save the secrets.
-			$fields = $this->Resource->Secret->getFindFields('update', User::get('Role.name'));
-			if (!$this->Resource->Secret->saveMany($secrets, $fields)) {
-				return $this->Message->error(__('Could not save the secrets'));
+			catch (Exception $e) {
+				$dataSource->rollback();
+				return $this->Message->error($e->getMessage());
 			}
 		}
 
@@ -415,6 +371,7 @@ class ResourcesController extends AppController {
 				'resource_id' => $id
 			));
 			if (!$delete) {
+				$dataSource->rollback();
 				return $this->Message->error(__('Could not delete Categories'));
 			}
 			// Save the new relations
@@ -430,19 +387,22 @@ class ResourcesController extends AppController {
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates()) {
-					$this->Message->error(__('Could not validate CategoryResource'));
-					return;
+					$dataSource->rollback();
+					return $this->Message->error(__('Could not validate CategoryResource'));
 				}
 				// if validation passes, then save the data
 				$res = $this->Resource->CategoryResource->save();
 				if (!$res) {
-					$this->Message->error(__('Could not save the association'));
-					return;
+					$dataSource->rollback();
+					return $this->Message->error(__('Could not save the association'));
 				}
 			}
 		}
 
-		// Retrieve the just updated resource
+		// Commit all the changes.
+		$dataSource->commit();
+
+		// Retrieve the updated resource.
 		$data = array(
 			'Resource.id' => $resource['Resource']['id']
 		);

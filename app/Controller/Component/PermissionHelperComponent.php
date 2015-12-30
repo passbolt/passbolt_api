@@ -101,23 +101,7 @@ class PermissionHelperComponent extends Component {
 	 * @return array
 	 */
 	public function findAcoUsers($acoModelName, $acoInstanceId) {
-		$acoKeyName = strtolower($acoModelName) . '_id';
-
-		$model = Common::getModel("User{$acoModelName}Permission");
-		$users = $model->find('all', array(
-				'conditions' => array(
-					$acoKeyName => $acoInstanceId,
-					'permission_type <>' => null
-				),
-				'contain' => array(
-					'User' => array(
-						'fields' => array(
-							'User.id'
-						)
-					)
-				)
-			));
-
-		return $users;
+		$AcoModel = Common::getModel($acoModelName);
+		return $AcoModel->getAuthorizedUsers($acoInstanceId);
 	}
 }
