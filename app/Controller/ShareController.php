@@ -23,7 +23,6 @@ class ShareController extends AppController {
 		'User',
 	);
 
-
 	/**
 	 * Update permissions for the objects that have been modified or deleted.
 	 *
@@ -368,8 +367,27 @@ class ShareController extends AppController {
 			));
 
 		// Get new permissions.
-		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
-		$this->set('data', array('Permissions' => $perms, 'changes' => array('added' => $added, 'removed' => $removed)));
+		$updatedPermissions = array();
+		$updatedAcoInstance = null;
+
+		// Get the updated resource.
+		$findResourceData = array('Resource.id' => $acoInstanceId);
+		$findResourceOptions = $this->Resource->getFindOptions('view', User::get('Role.name'), $findResourceData);
+		$updatedAcoInstance = $this->Resource->find('first', $findResourceOptions);
+
+		// If the user has still access to the instance, list the updated permissions.
+		if (!empty($updatedAcoInstance)) {
+			$updatedPermissions = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
+		} else {
+			// the find one return an empty array if not found, but a null is more relevant.
+			$updatedAcoInstance = null;
+		}
+
+		$this->set('data', array(
+			'Permissions' => $updatedPermissions,
+			'changes' => array('added' => $added, 'removed' => $removed),
+			'acoInstance' => $updatedAcoInstance
+		));
 		$this->Message->success(__('Share operation successful'));
 	}
 

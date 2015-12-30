@@ -53,85 +53,10 @@ class AppController extends Controller {
 	 * @return void
 	 */
 	public function beforeFilter() {
-		// Add a callback detector
-		$this->request->addDetector('json', array('callback' => function ($request) {
-			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
-		}));
-
-		// Set default layout
-		if ($this->request->is('json')) {
-			$this->layout = 'json';
-			$this->view = '/Json/default';
-		} else {
-			// Get roles, to load in the layout js variables.
-			// Only for admin and user.
-			// TODO move to the view
-			$Role = Common::getModel('Role');
-			$this->set('roles', $Role->find('all', array(
-				'conditions' => array(
-					'name' => array(Role::ADMIN, Role::USER),
-				),
-			)));
-			// default layout
-			$this->layout = 'html5';
-		}
-
-		// Authentication initialization - set headers for gpg auth.
+		$this->initRequestDetectors();
 		$this->initAuth();
-
-		// Check if user is logged in or not
-		// and return a json error message if not logged in but requesting a non allowed json page
-		$isLoggedIn = $this->Auth->user() !== null;
-		$isAuthorized = $isLoggedIn || $this->isWhitelisted();
-		if ( ! $isAuthorized ) {
-			if ($this->request->is('Json')) {
-				$this->Message->error(
-					__('You need to login to access this location'),
-					array('code' => 403)
-				);
-				return;
-			}
-		}
-
-
-		// @todo this will be remove via the initial auth check
-		// User::set() will load default config
-//		if ($this->Session->read('Config.language') != null) {
-//			Configure::write('Config.language', $this->Session->read('Config.language'));
-//		} else {
-//			$this->Session->write('Config.language', Configure::read('Config.language'));
-//		}
-
-		// Sanitize user input.
+		$this->setDefaultLayout();
 		$this->sanitize();
-	}
-
-	/**
-	 * Authorization check main callback
-	 * @link http://api20.cakephp.org/class/auth-component#method-AuthComponentisAuthorized
-	 * @param mixed $user The user to check the authorization of. If empty the user in the session will be used.
-	 * @return boolean True if $user is authorized, otherwise false
-	 * @access public
-	 */
-	public function isAuthorized($user) {
-		return true;
-	}
-
-	/**
-	 * Is the controller:action pair whitelisted in config? (see. App.auth.whitelist)
-	 * @param string $action, current is used if null
-	 * @return bool true if the controller action pair is whitelisted
-	 * @access public
-	 */
-	public function isWhitelisted($action=null) {
-		if ($action === null) {
-			$action = $this->action;
-		}
-
-		// An action is whitelisted only if declared explicitely to the Auth component.
-		$isWhiteListed = in_array($action, $this->Auth->allowedActions);
-
-		return $isWhiteListed;
 	}
 
 	/**
@@ -139,7 +64,6 @@ class AppController extends Controller {
 	 * @access public
 	 */
 	public function sanitize() {
-
 		// Before sanitizing, keep the original data.
 		$this->request->dataRaw = $this->request->data;
 		//$this->request->queryRaw = $this->request->query;
@@ -164,8 +88,10 @@ class AppController extends Controller {
 		}
 	}
 
+	/**
+	 * Init Authentication Component(s)
+	 */
 	public function initAuth() {
-
 		foreach (Configure::read('Auth') as $key => $authConf) {
 			$this->Auth->{$key} = $authConf;
 		}
@@ -177,15 +103,30 @@ class AppController extends Controller {
 		$this->response->header('X-GPGAuth-Verify-URL','/auth/verify');
 		$this->response->header('X-GPGAuth-Pubkey-URL','/auth/verify');
 
-		// Alow whitelisted actions from app.php config file.
-		$whitelist = Configure::read('Auth.whitelist');
-		$controller = strtolower($this->name);
-		if (isset($whitelist[$controller]) && is_array($whitelist[$controller])) {
-			foreach($whitelist[$controller] as $action => $allowed) {
-				if ($allowed === true) {
-					$this->Auth->allow($action);
-				}
-			}
+	}
+
+	/**
+	 * Define the default view layout depending on request type
+	 */
+	public function setDefaultLayout() {
+		// Default is HTML5 layout
+		$this->layout = 'html5';
+
+		// JSON request get an empty layout and view
+		if ($this->request->is('json')) {
+			$this->layout = 'json';
+			$this->view = '/Json/default';
 		}
 	}
+
+	/**
+	 * initRequestDetectors
+	 */
+	public function initRequestDetectors() {
+		// Add a callback to the JSON detector
+		$this->request->addDetector('json', array('callback' => function ($request) {
+			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
+		}));
+	}
+
 }

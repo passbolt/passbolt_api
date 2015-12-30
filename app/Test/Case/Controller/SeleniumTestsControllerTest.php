@@ -10,6 +10,7 @@
 App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('EmailNotificatorComponent', 'Controller/Component');
+App::uses('HttpSocket', 'Network/Http');
 
 /**
  * Class SeleniumTestsControllerTest
@@ -60,6 +61,13 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 		$this->EmailNotificatorComponent = $this->__getEmailNotificatorComponent();
 	}
 
+	public function testSocket() {
+		Configure::write('App.selenium.active', false);
+		Configure::write('debug', 0);
+		$HttpSocket = new HttpSocket();
+		$results = $HttpSocket->get('/users');
+	}
+
 	/**
 	 * Test showLastEmail entry point when selenimum is not active in the config.
 	 * It should obviously not work and redirect the user.
@@ -69,28 +77,37 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 		Configure::write('App.selenium.active', false);
 		Configure::write('debug', 0);
 		// Call the entry point.
+		$this->setExpectedException('ForbiddenException');
 		$this->testAction("/seleniumTests/showLastEmail/john@passbolt.com", array(
-				'return' => 'contents',
-			), true);
-		$this->assertTrue(isset($this->headers['Location']) && !empty($this->headers['Location']));
+				'return' => 'results',
+		), true);
+	}
 
-		// Test if Selenium entry point is marked as not allowed, and debug is set to true. (Should redirect too)
+	/**
+	 * Test if Selenium entry point is marked as not allowed, and debug is set to true. (Should redirect too)
+	 */
+	public function testShowLastEmailEntryPointNotAllowed2()
+	{
 		Configure::write('App.selenium.active', true);
 		Configure::write('debug', 0);
 		// Call the entry point.
+		$this->setExpectedException('ForbiddenException');
 		$this->testAction("/seleniumTests/showLastEmail/john@passbolt.com", array(
 				'return' => 'contents',
-			), true);
-		$this->assertTrue(isset($this->headers['Location']) && !empty($this->headers['Location']));
+		), true);
+	}
 
-		// Test if Selenium entry point is marked as allowed, and debug is set to false. (Should redirect too)
+	/**
+	 * Test if Selenium entry point is marked as allowed, and debug is set to false. (Should redirect too)
+	 */
+	public function testShowLastEmailEntryPointNotAllowed3() {
 		Configure::write('App.selenium.active', false);
 		Configure::write('debug', 1);
 		// Call the entry point.
+		$this->setExpectedException('ForbiddenException');
 		$this->testAction("/seleniumTests/showLastEmail/john@passbolt.com", array(
 				'return' => 'contents',
 			), true);
-		$this->assertTrue(isset($this->headers['Location']) && !empty($this->headers['Location']));
 	}
 
 	/**

@@ -7,8 +7,9 @@
  * @package      app.View.Elements.scriptHeader
  * @since        version 2.12.9
  */
+$Role = Common::getModel('Role');
+$roles = $Role->find('all', array('conditions' => array('name' => array(Role::ADMIN, Role::USER))));
 ?>
-
 	<script src="js/lib/modernizr/modernizr-custom.min.js"></script>
 	<script type="application/javascript">
 	var cakephpConfig = {

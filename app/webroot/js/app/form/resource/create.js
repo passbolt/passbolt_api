@@ -96,6 +96,11 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		);
 		$('#js_field_name').focus();
 
+		// If an instance of resource has been given, load it.
+		if (this.options.data != null) {
+			this.load (this.options.data);
+		}
+
 		// Notify the plugin that the resource is ready to be edited.
 		mad.bus.trigger('passbolt.plugin.resource_edition');
 	},

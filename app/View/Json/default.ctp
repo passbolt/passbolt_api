@@ -11,4 +11,3 @@ if(!isset($json)){
 	$json = array(); // @todo error message
 }
 echo json_encode($json);
-
