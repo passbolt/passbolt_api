@@ -218,4 +218,42 @@ class PermissionableBehavior extends ModelBehavior {
 		}
 		return false;
 	}
+
+	/**
+	 * Get a list of users who have permissions to access the given instance.
+	 *
+	 * @param      $model
+	 * @param null $acoInstanceId
+	 *
+	 * @return array|null
+	 */
+	public function getAuthorizedUsers(&$model, $acoInstanceId = null) {
+		// Get aco key name.
+		$acoKeyName = strtolower($model->alias) . '_id';
+
+		// If instance id is not provided as parameter, we get it from the model.
+		if (is_null($acoInstanceId)) {
+			$acoInstanceId = $this->id;
+		}
+
+		// Build corresponding model.
+		$model = Common::getModel("User{$model->alias}Permission");
+
+		// Retrieve the list of users.
+		$users = $model->find('all', array(
+				'conditions' => array(
+					$acoKeyName => $acoInstanceId,
+					'permission_type <>' => null
+				),
+				'contain' => array(
+					'User' => array(
+						'fields' => array(
+							'User.id'
+						)
+					)
+				)
+			));
+
+		return $users;
+	}
 }

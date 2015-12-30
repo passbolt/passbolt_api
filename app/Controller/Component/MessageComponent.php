@@ -110,18 +110,39 @@ class MessageComponent extends Component {
 
 		// We throw an exception unless specifically requested otherwise
 		if (!isset($options['throw']) || (isset($options['throw']) && $options['throw'] === true)) {
-			$code = 400;
-			if (isset($options['code'])) {
-				$code = $options['code'];
-			}
-			// Build exception, without forgetting to set the initial headers
-			// (headers were already set for the reponse. We just carry forward the same headers in the exception).
-			$responseHeaders = $this->Controller->response->header();
-			$httpException = new HttpException($message, $code);
-			$httpException->responseHeader($responseHeaders);
 
-			// Return exception.
-			throw $httpException;
+			$code = (isset($options['code'])) ? $options['code'] : 400;
+
+			// Build exception, without forgetting to set the initial headers
+			// Headers were already set for the response. We just carry forward the same headers in the exception.
+			switch($code) {
+				case '400':
+					$error = new BadRequestException($message);
+					break;
+				case '401':
+					$error = new UnauthorizedException($message);
+					break;
+				case '403':
+					$error = new ForbiddenException($message);
+					break;
+				case '404':
+					$error = new NotFoundException($message);
+					break;
+				case '405':
+					$error = new MethodNotAllowedException($message);
+					break;
+				case '500':
+					$error = new MethodNotAllowedException($message);
+					break;
+				case '501':
+					$error = new NotImplementedException($message);
+					break;
+				default:
+					$error = new HttpException($message, $code);
+				break;
+			}
+			$error->responseHeader($this->Controller->response->header());
+			throw $error;
 		}
 	}
 

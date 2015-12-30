@@ -280,6 +280,17 @@ class Resource extends AppModel {
 			case 'delete':
 				$fields = array('fields' => array('deleted'));
 				break;
+			case 'Resource::edit':
+				$fields = array(
+					'fields' => array(
+						'name',
+						'username',
+						'expiry_date',
+						'uri',
+						'description',
+					)
+				);
+				break;
 			case 'save':
 				$fields = array('fields' => array(
 					'name',
@@ -311,5 +322,82 @@ class Resource extends AppModel {
 		$expiryDate = strtotime($check['expiry_date']);
 		$interval = $expiryDate - $now;
 		return ($interval > 0);
+	}
+
+	/**
+	 * Save a list of secrets corresponding to a resource.
+	 *
+	 * @param $resourceId
+	 * @param $secrets
+	 *
+	 * @throw Exception, ValidationException
+	 */
+	public function saveSecrets($resourceId, $secrets) {
+		// Validate the secrets provided.
+		// Make sure there is a secret per user with whom it's shared, nothing more, nothing less.
+
+		// Get list of current permissions for the given ACO.
+		$permsUsers = $this->getAuthorizedUsers($resourceId);
+		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
+
+		// Get the list of users corresponding to the secrets, without duplicates.
+		$dataSecretUsers = array_unique(
+			Hash::extract($secrets, '{n}.user_id')
+		);
+
+		// Check difference between the users expected and the users provided.
+		$missingUsers = array_diff($permsUsers, $dataSecretUsers);
+		// Check if the size of expected secrets is the same as provided one.
+		$sameSize = sizeof($permsUsers) == sizeof($dataSecretUsers);
+
+		// Check if the users expected are the same as the users provided.
+		$sameUsers = empty($missingUsers);
+
+		// Check errors and return error message if any.
+		if (!$sameSize || !$sameUsers) {
+			throw new Exception(__('The list of secrets provided is invalid'));
+		}
+
+		// Begin transaction.
+		$this->begin();
+
+		// End of secrets check. We proceed.
+
+		// Delete all the previous secrets.
+		$this->Secret->deleteAll(array(
+				'Secret.resource_id' => $resourceId
+			), false);
+
+		$secrets = array();
+		$fields = $this->Secret->getFindFields('update', User::get('Role.name'));
+		// Validate the given resources.
+		foreach ($secrets as $i => $secret) {
+			// Force the resource id if empty.
+			if (empty($secret['resource_id'])) {
+				$secret['resource_id'] = $resourceId;
+			}
+
+			// Validate the data.
+			$this->Secret->set($secret);
+			if (!$this->Secret->validates(['fieldList' => $fields['fields']])) {
+				$this->rollback();
+				throw new ValidationException(
+					__('Could not validate secret model'),
+					$this->Secret->validationErrors
+				);
+			}
+			$secrets[] = $secret;
+		}
+
+		// Save the secrets.
+		if (!$this->Secret->saveMany($secrets, ['fieldList' => $fields['fields'], 'atomic' => false])) {
+			$this->rollback();
+			throw new Exception(__('Could not save the secrets'));
+		}
+
+		// Commit transaction.
+		$this->commit();
+
+		return $secrets;
 	}
 }

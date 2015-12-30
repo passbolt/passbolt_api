@@ -112,6 +112,24 @@ class GpgAuthenticate extends BaseAuthenticate
     }
 
     /**
+     * When an unauthenticated user tries to access a protected page this method is called
+     * @param CakeRequest $request
+     * @param CakeResponse $response
+     * @throws ForbiddenException
+     * @return true
+     */
+    public function unauthenticated(CakeRequest $request, CakeResponse $response) {
+        // If it's JSON we show an error message
+        if($request->is('json')) {
+            throw new ForbiddenException(__('You need to login to access this location'));
+        }
+        // If it's a page request we redirect to the login form
+        $response->location('/auth/login');
+        $response->send();
+        return true;
+    }
+
+    /**
      * Initialize GPG keyring and load the config
      * @throws CakeException if the config is missing or key is not set or not usable to decrypt
      */
