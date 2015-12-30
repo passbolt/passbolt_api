@@ -37,7 +37,7 @@ class ResourcesController extends AppController {
 		// Extract the filter from the request
 		$filter = $this->Filter->fromRequest($this->request->query);
 		// Merge the filter into the additional information to pass to the model request
-		$data = array_merge($findData, $filter);
+		$findData = array_merge($findData, $filter);
 		if (isset($this->request->query['recursive']) && $this->request->query['recursive'] === 'true') {
 			$recursive = true;
 		}
