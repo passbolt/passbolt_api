@@ -20,11 +20,11 @@ $config = array(
 	),
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => array(
-		'active' => 'true',
+		'active' => true,
 	),
 	// Javascript
 	'App.js' => array(
-	    'build' => 'production'
+		'build' => 'production'
 	),
 	// Internationalization
 	'i18n' => array(
@@ -34,14 +34,18 @@ $config = array(
 		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
 	'Registration' => array(
-		'public' => TRUE,
+		'public' => true,
 	),
 	// Authentication & Authorisation
 	'Auth' => array(
 		'className' => 'PassboltAuth',
 		'HashType' => 'blowfish',
 		'logoutRedirect' => array(
-			'controller' => 'users',
+			'controller' => 'auth',
+			'action' => 'login'
+		),
+		'loginAction' => array(
+			'controller' => 'auth',
 			'action' => 'login'
 		),
 		'loginRedirect' => array(
@@ -50,10 +54,10 @@ $config = array(
 			'home'
 		),
 		'authenticate' => array(
-			'Form' => array(
-				'passwordHasher' => 'Blowfish'
-			)
-//			'Gpg'
+//			'Form' => array(
+//				'passwordHasher' => 'Blowfish'
+//			)
+    		'Gpg'
 		),
 		'throttlingStrategies' => array(
 			'throttle' => array(
@@ -88,7 +92,8 @@ $config = array(
 			'path' => APP . 'Plugin' . DS . 'DataUnitTests'	. DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS
 		),
 		'serverKey' => array(
-			'fingerprint' => 'A0771BE5B573C18A4692AD5AEDB35494D8462294',
+			'id' => '573EE67E',
+			'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
 			'public' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure.key',
 			'private' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure_private.key',
 			'passphrase' => ''
