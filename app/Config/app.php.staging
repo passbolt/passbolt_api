@@ -24,7 +24,10 @@ $config = array(
 	),
 	// Javascript
 	'App.js' => array(
-		'build' => 'development'
+	    // build | options : development or production.
+	    // development will load the non compiled version,
+	    // production will load the compiled passbolt.js file.
+		'build' => 'production',
 	),
 	// Internationalization
 	'i18n' => array(
