@@ -1,49 +1,5 @@
 [
     {
-        "name": "lorenzo/cakephp-email-queue",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/lorenzo/cakephp-email-queue.git",
-            "reference": "4d6ee9141a0d6726d407c23a59a74bdb3a0c4075"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/lorenzo/cakephp-email-queue/zipball/4d6ee9141a0d6726d407c23a59a74bdb3a0c4075",
-            "reference": "4d6ee9141a0d6726d407c23a59a74bdb3a0c4075",
-            "shasum": ""
-        },
-        "require": {
-            "composer/installers": "*"
-        },
-        "time": "2014-03-13 13:42:41",
-        "type": "cakephp-plugin",
-        "extra": {
-            "installer-name": "EmailQueue"
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "José Lorenzo Rodríguez",
-                "role": "Author"
-            }
-        ],
-        "description": "Queue, preview and and send emails stored in the database",
-        "homepage": "https://github.com/lorenzo/cakephp-email-queue",
-        "keywords": [
-            "cakephp",
-            "cron",
-            "email",
-            "preview",
-            "queue"
-        ]
-    },
-    {
         "name": "knplabs/gaufrette",
         "version": "0.2.0",
         "version_normalized": "0.2.0.0",
@@ -127,57 +83,6 @@
             "file",
             "filesystem",
             "media"
-        ]
-    },
-    {
-        "name": "burzum/file-storage",
-        "version": "0.5.2",
-        "version_normalized": "0.5.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/burzum/cakephp-file-storage.git",
-            "reference": "e5107ae75d11c495e650104da58b012975fa278b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/burzum/cakephp-file-storage/zipball/e5107ae75d11c495e650104da58b012975fa278b",
-            "reference": "e5107ae75d11c495e650104da58b012975fa278b",
-            "shasum": ""
-        },
-        "require": {
-            "knplabs/gaufrette": "*",
-            "php": ">=5.3.2"
-        },
-        "suggest": {
-            "burzum/cakephp-imagine-plugin": "Required if you want to use the image processing feature of FileStorage",
-            "cakedc/migrations": "If you want to use the database migrations that come with FileStorage"
-        },
-        "time": "2015-04-30 14:36:49",
-        "type": "cakephp-plugin",
-        "extra": {
-            "installer-name": "FileStorage"
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Florian Krämer",
-                "homepage": "http://florian-kraemer.net"
-            }
-        ],
-        "description": "This plugin is giving you the possibility to store files in virtually and kind of storage backend. This plugin is wrapping the Gaufrette library (https://github.com/KnpLabs/Gaufrette) library in a CakePHP fashion and provides a simple way to use the storage adapters through the StorageManager class.",
-        "homepage": "http://github.com/burzum/cakephp-file-storage-plugin",
-        "keywords": [
-            "abstraction",
-            "cakephp",
-            "file",
-            "filesystem",
-            "media",
-            "storage",
-            "upload"
         ]
     },
     {
@@ -620,6 +525,340 @@
             "wordpress",
             "zend",
             "zikula"
+        ]
+    },
+    {
+        "name": "lorenzo/cakephp-email-queue",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/lorenzo/cakephp-email-queue.git",
+            "reference": "4d6ee9141a0d6726d407c23a59a74bdb3a0c4075"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/lorenzo/cakephp-email-queue/zipball/4d6ee9141a0d6726d407c23a59a74bdb3a0c4075",
+            "reference": "4d6ee9141a0d6726d407c23a59a74bdb3a0c4075",
+            "shasum": ""
+        },
+        "require": {
+            "composer/installers": "*"
+        },
+        "time": "2014-03-13 13:42:41",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "EmailQueue"
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "José Lorenzo Rodríguez",
+                "role": "Author"
+            }
+        ],
+        "description": "Queue, preview and and send emails stored in the database",
+        "homepage": "https://github.com/lorenzo/cakephp-email-queue",
+        "keywords": [
+            "cakephp",
+            "cron",
+            "email",
+            "preview",
+            "queue"
+        ]
+    },
+    {
+        "name": "burzum/file-storage",
+        "version": "0.5.2",
+        "version_normalized": "0.5.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/burzum/cakephp-file-storage.git",
+            "reference": "e5107ae75d11c495e650104da58b012975fa278b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/burzum/cakephp-file-storage/zipball/e5107ae75d11c495e650104da58b012975fa278b",
+            "reference": "e5107ae75d11c495e650104da58b012975fa278b",
+            "shasum": ""
+        },
+        "require": {
+            "knplabs/gaufrette": "*",
+            "php": ">=5.3.2"
+        },
+        "suggest": {
+            "burzum/cakephp-imagine-plugin": "Required if you want to use the image processing feature of FileStorage",
+            "cakedc/migrations": "If you want to use the database migrations that come with FileStorage"
+        },
+        "time": "2015-04-30 14:36:49",
+        "type": "cakephp-plugin",
+        "extra": {
+            "installer-name": "FileStorage"
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Florian Krämer",
+                "homepage": "http://florian-kraemer.net"
+            }
+        ],
+        "description": "This plugin is giving you the possibility to store files in virtually and kind of storage backend. This plugin is wrapping the Gaufrette library (https://github.com/KnpLabs/Gaufrette) library in a CakePHP fashion and provides a simple way to use the storage adapters through the StorageManager class.",
+        "homepage": "http://github.com/burzum/cakephp-file-storage-plugin",
+        "keywords": [
+            "abstraction",
+            "cakephp",
+            "file",
+            "filesystem",
+            "media",
+            "storage",
+            "upload"
+        ]
+    },
+    {
+        "name": "symfony/finder",
+        "version": "v2.8.1",
+        "version_normalized": "2.8.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/finder.git",
+            "reference": "dd41ae57f4f737be271d944a0cc5f5f21203a7c6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/finder/zipball/dd41ae57f4f737be271d944a0cc5f5f21203a7c6",
+            "reference": "dd41ae57f4f737be271d944a0cc5f5f21203a7c6",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "time": "2015-12-05 11:09:21",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Finder\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Finder Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "doctrine/lexer",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/lexer.git",
+            "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
+            "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "time": "2014-09-09 13:34:57",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\Common\\Lexer\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com"
+            },
+            {
+                "name": "Johannes Schmitt",
+                "email": "schmittjoh@gmail.com"
+            }
+        ],
+        "description": "Base library for a lexer that can be used in Top-Down, Recursive Descent Parsers.",
+        "homepage": "http://www.doctrine-project.org",
+        "keywords": [
+            "lexer",
+            "parser"
+        ]
+    },
+    {
+        "name": "doctrine/annotations",
+        "version": "v1.2.7",
+        "version_normalized": "1.2.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/annotations.git",
+            "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/annotations/zipball/f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
+            "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/lexer": "1.*",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "doctrine/cache": "1.*",
+            "phpunit/phpunit": "4.*"
+        },
+        "time": "2015-08-31 12:32:49",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\Common\\Annotations\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Benjamin Eberlei",
+                "email": "kontakt@beberlei.de"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com"
+            },
+            {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com"
+            },
+            {
+                "name": "Johannes Schmitt",
+                "email": "schmittjoh@gmail.com"
+            }
+        ],
+        "description": "Docblock Annotations Parser",
+        "homepage": "http://www.doctrine-project.org",
+        "keywords": [
+            "annotations",
+            "docblock",
+            "parser"
+        ]
+    },
+    {
+        "name": "zircote/swagger-php",
+        "version": "2.0.4",
+        "version_normalized": "2.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zircote/swagger-php.git",
+            "reference": "be5d96e56c23cbe52c5bc5e267851323d95c57cd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zircote/swagger-php/zipball/be5d96e56c23cbe52c5bc5e267851323d95c57cd",
+            "reference": "be5d96e56c23cbe52c5bc5e267851323d95c57cd",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/annotations": "*",
+            "php": ">=5.4.0",
+            "symfony/finder": "*"
+        },
+        "require-dev": {
+            "zendframework/zend-form": "*"
+        },
+        "time": "2015-11-13 13:50:11",
+        "bin": [
+            "bin/swagger"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Swagger\\": "src"
+            },
+            "files": [
+                "src/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache2"
+        ],
+        "authors": [
+            {
+                "name": "Robert Allen",
+                "email": "zircote@gmail.com",
+                "homepage": "http://www.zircote.com"
+            },
+            {
+                "name": "Bob Fanger",
+                "email": "bfanger@gmail.com",
+                "homepage": "http://bfanger.nl"
+            }
+        ],
+        "description": "Swagger-PHP - Generate interactive documentation for your RESTful API using phpdoc annotations",
+        "homepage": "https://github.com/zircote/swagger-php/",
+        "keywords": [
+            "api",
+            "json",
+            "rest",
+            "service discovery"
         ]
     }
 ]
