@@ -28,6 +28,7 @@
 /vendor
 /Vendor/*
 !/Vendor/composer
+!/Vendor/composer/*
 !/Vendor/autoload.php
 /vendors
 
