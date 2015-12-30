@@ -130,7 +130,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 			foreach ($permissionsMatrix['User']['Resource'] as $userResPermission) {
 				if ($userResPermission['aroname'] == $username) {
-					var_dump('test '.$username);
 					$path = $this->Resource->inNestedArray($userResPermission['aconame'], $result['body'], 'name');
 					if ($userResPermission['result'] == PermissionType::DENY) {
 						$this->assertTrue(empty($path), "{$url} : test should not contain '{$userResPermission['aconame']}' resource with user '{$username}'");
@@ -378,6 +377,49 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
 	}
 
+	/**
+	 * Test adding a resource with a wrong secret, and test that the rollback was effective.
+	 */
+	public function testAddWithWrongSecretRollback() {
+		$cat = $this->Category->findByName('administration');
+
+		// Looking at the matrix of permission marlyn should be able to read but not to create into the category marketing
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+		// Error : name is empty
+		try {
+			$this->testAction('/resources/add.json', array(
+					'data' => array(
+						'Resource' => array(
+							'name' => 'testAddSecretRollback',
+							'username' => 'test1',
+							'uri' => 'http://www.google.com',
+							'description' => 'this is a description'
+						),
+						'Secret' => array(
+							array(
+								'data' => 'wrong secret'
+							),
+						)
+					),
+					'method' => 'Post',
+					'return' => 'contents'
+				));
+		} catch (Exception $e) {
+			$this->assertEquals($e->getMessage(), 'Could not validate secret model');
+			// Get the resource again, and assert it's the exact same
+			$resourceAfterCreate = $this->Resource->find('first', [
+					'conditions' => [
+						'name' => 'testAddSecretRollback'
+					],
+					'contain' => ['Secret']
+				]);
+
+			$this->assertEmpty($resourceAfterCreate, 'After a secret validation error, the resource should not exist in the database');
+		}
+	}
+
 	public function testEditWithCategoryBadId() {
 		$resource = $this->Resource->findByName("facebook account");
 		$id = $resource['Resource']['id'];
@@ -419,6 +461,177 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		)), true);
 	}
 
+	/**
+	 * Test edit a resource with secrets, and providing an invalid number of secrets.
+	 */
+	public function testEditWithSecretsInvalidNumberOfSecrets() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+		array_pop($secretsData);
+
+		$this->setExpectedException('HttpException', 'The list of secrets provided is invalid');
+		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+					'data' => array(
+						'Resource' => array(
+							'name' => 'testEditSecret'
+						),
+						'Secret' => $secretsData,
+					),
+					'method' => 'Put',
+					'return' => 'contents'
+				));
+	}
+
+	/**
+	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
+	 */
+	public function testEditWithSecretsInvalidSecretUsers() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+		$last = array_pop($secretsData);
+		$last['user_id'] = 'randominvaliduserid';
+		$secretsData[] = $last;
+
+		$this->setExpectedException('HttpException', 'The list of secrets provided is invalid');
+		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+				'data' => array(
+					'Resource' => array(
+						'name' => 'testEditSecret'
+					),
+					'Secret' => $secretsData,
+				),
+				'method' => 'Put',
+				'return' => 'contents'
+			));
+	}
+
+	/**
+	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
+	 */
+	public function testEditWithSecretsNoError() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+
+//		pr(Hash::extract($secretsData, '{n}.user_id'));
+//		pr(sizeof($secretsData)); die();
+//
+		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+				'data' => array(
+					'Resource' => array(
+						'name' => 'testEditSecret1'
+					),
+					'Secret' => $secretsData,
+				),
+				'method' => 'Put',
+				'return' => 'contents'
+			));
+		$json = json_decode($result, true);
+		$this->assertEquals(
+			Message::SUCCESS,
+			$json['header']['status'],
+			"update /resources/{$resource['Resource']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
+		);
+	}
+
+	/**
+	 * Test that rollback is effective.
+	 */
+	public function testEditWithSecretsRollback() {
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+
+		$resource = $this->Resource->find('first', [
+				'conditions' => [
+					'name' => "salesforce account"
+				],
+				'contain' => ['Secret']
+			]);
+
+
+		$secretsData = [];
+		foreach($resource['Secret'] as $secret) {
+			$secretsData[] = [
+				'user_id' => $secret['user_id'],
+				'data'    => $secret['data']
+			];
+		}
+		$last = array_pop($secretsData);
+		$last['data'] = 'Wrongkey';
+		$secretsData[] = $last;
+
+		try {
+			$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+					'data' => array(
+						'Resource' => array(
+							'name' => 'testEditSecret',
+							'description' => 'wtf'
+						),
+						'Secret' => $secretsData,
+					),
+					'method' => 'Put',
+					'return' => 'contents'
+				));
+		} catch(Exception $e) {
+			$this->assertEquals($e->getMessage(), 'The list of secrets provided is invalid', 'Error message is not what is expected');
+			// Get the resource again, and assert it's the exact same
+			$resourceAfterUpdate = $this->Resource->find('first', [
+					'conditions' => [
+						'id' => $resource['Resource']['id']
+					],
+					'contain' => ['Secret']
+				]);
+			$this->assertEquals($resourceAfterUpdate, $resource, $e->getMessage() . 'After an error, the update should have performed a rollback but did not' . print_r($resourceAfterUpdate, true) . print_r($resource, true));
+		}
+	}
+
+	/**
+	 * Test a normal edit operation.
+	 */
 	public function testEdit() {
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$accountCat = $this->Resource->CategoryResource->Category->findByName('accounts');

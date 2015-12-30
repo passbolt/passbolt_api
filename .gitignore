@@ -25,11 +25,12 @@
 
 
 # Vendors
-/vendor
-/Vendor/*
-!/Vendor/composer
-!/Vendor/autoload.php
-/vendors
+#/vendor
+#/Vendor/*
+#!/Vendor/composer
+#!/Vendor/composer/*
+#!/Vendor/autoload.php
+#/vendors
 
 # bower, composer, grunt
 /bower_components

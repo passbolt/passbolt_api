@@ -1,59 +1,68 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Login layout
  *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.View.Layouts
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     copyright 2012 passbolt.com
+ * @license       http://www.passbolt.com/license
+ * @package       app.View.Layouts.login
+ * @since         version 2.12.9
  */
-
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
 ?>
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="passbolt no-js no-passboltplugin alpha version <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
-	<?php echo $this->Html->charset(); ?>
-	<title>
-		<?php echo $cakeDescription ?>:
-		<?php echo $this->fetch('title'); ?>
-	</title>
-	<?php
-		echo $this->Html->meta('icon');
+	<meta charset="utf-8">
+	<!--
+           ____                  __          ____
+          / __ \____  _____ ____/ /_  ____  / / /_
+         / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
+        / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
+       /_/    \__,_/____/____/_.___/\____/_/\__/
 
-		echo $this->Html->css('cake.generic');
+       The password management solution
+       (c) 2015 passbolt.com
 
-		echo $this->fetch('meta');
-		echo $this->fetch('css');
-		echo $this->fetch('script');
-	?>
+	-->
+	<base href="<?php echo Router::url('/',true);?>">
+	<title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
+	<meta name="description" content="<?php echo Configure::read('App.punchline'); ?>">
+	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
+	<meta name="viewport" content="width=device-width">
+	<?php $this->Html->css('main', null, array('inline' => false)); ?>
+	<?php echo $this->fetch('css'); ?>
+	<?php echo $this->element('scriptHeader'); ?>
+	<?php if(Configure::read('debug') > 0) echo $this->html->css('devel'); ?>
+
 </head>
 <body>
-	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
+<div id="container" class="error page <?php echo $this->fetch('page_classes') ?>">
+	<?php echo $this->element('public/disclaimers'); ?>
+	<!-- header -->
+	<header>
+		<div class="header first ">
+			<?php echo $this->element('public/topNavigation'); ?>
 		</div>
-		<div id="content">
-
-			<?php echo $this->Session->flash(); ?>
-
-			<?php echo $this->fetch('content'); ?>
-		</div>
-		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'http://www.cakephp.org/',
-					array('target' => '_blank', 'escape' => false)
-				);
-			?>
+	</header>
+	<!-- main -->
+	<div class="grid">
+		<div class="row">
+	<?php echo $this->fetch('content'); ?>
 		</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
+
+	<!-- footer -->
+	<footer>
+		<div class="footer">
+			<?php echo $this->element('public/footer'); ?>
+		</div>
+	</footer>
+</div>
+<?php echo $this->fetch('scriptBottom'); ?>
+<?php
+// load devel materials.
+if(Configure::read('debug') >= 2) {
+	echo $this->element('devel/sqlTrace');
+}
+?>
 </body>
 </html>

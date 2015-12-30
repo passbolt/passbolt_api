@@ -81,7 +81,7 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  */
 	Configure::write('Exception', array(
 		'handler' => 'ErrorHandler::handleException',
-		'renderer' => 'AppExceptionRenderer',
+		'renderer' => 'ExceptionRenderer',
 		'log' => true
 	));
 

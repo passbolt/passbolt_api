@@ -43,18 +43,18 @@ class SeleniumTestsController extends AppController {
 	 * beforeFilter().
 	 */
 	function beforeFilter() {
-		// If Selenium mode is not activated, we redirect to home page.
-		$allowed = $this->__isSeleniumAllowed();
-		if (!$allowed) {
-			return $this->redirect('/');
+		// If Selenium mode is not activated we throw and exception & redirect home
+		if (!$this->__isSeleniumAllowed()) {
+			throw new ForbiddenException();
 		}
-		// If selenium entry point is activated, we proceed.
 
 		// Allow ShowLastEmail entry point.
 		$this->Auth->allow(
 			array(
 				'showLastEmail',
 				'resetInstance',
+				'error404',
+				'error500'
 			)
 		);
 		// Use table email_queue. (seems that cakephp refuses to take the default of the class).
@@ -71,10 +71,6 @@ class SeleniumTestsController extends AppController {
 	 * @throws Exception
 	 */
 	public function showLastEmail($username = null) {
-		// If Selenium mode is not activated, we redirect to home page.
-		if (!$this->__isSeleniumAllowed()) {
-			return $this->redirect('/');
-		}
 		// If username is null, we return an error.
 		if (is_null($username)) {
 			throw new HttpException(__('Username not correct'));
@@ -121,10 +117,6 @@ class SeleniumTestsController extends AppController {
 	 * @param string $dummy data set name
 	 */
 	public function resetInstance($dummy = 'seleniumtests') {
-		// If Selenium mode is not activated, we redirect to home page.
-		if (!$this->__isSeleniumAllowed()) {
-			return $this->redirect('/');
-		}
 		// Install job shell.
 		$job = new InstallShell();
 		$job->startup();
@@ -137,4 +129,25 @@ class SeleniumTestsController extends AppController {
 		$job->dispatchMethod('main');
 		die();
 	}
+
+	/**
+	 * Convenience functions to test error pages
+	 */
+	public function error404($case = 'message') {
+		$this->request->invalidateFields = 'stuffs';
+		switch($case) {
+			case 'exception':
+				throw new NotFoundException();
+			break;
+			default:
+				return $this->Message->error('404 test not found', array('code' => 404));
+		}
+	}
+	public function error403() {
+		// nothing, forbidden because not part of allow list
+	}
+	public function error500() {
+		throw new InternalErrorException();
+	}
+
 }
