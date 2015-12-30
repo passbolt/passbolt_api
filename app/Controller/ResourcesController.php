@@ -201,7 +201,7 @@ class ResourcesController extends AppController {
 		$fields = $this->Resource->getFindFields('save', User::get('Role.name'));
 
 		// check if the data are valid.
-		if (!$this->Resource->validates(['fieldList' => $fields])) {
+		if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
 			return $this->Message->error(__('Could not validate resource data'), [ 'body' => $this->Resource->validationErrors ]);
 		}
 
@@ -229,7 +229,8 @@ class ResourcesController extends AppController {
 			// Validate the secret.
 			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
 			$this->Resource->Secret->set($secret);
-			if (!$this->Resource->Secret->validates([ 'fieldList' => $fields ])) {
+			if (!$this->Resource->Secret->validates([ 'fieldList' => $fields['fields'] ])) {
+				$dataSource->rollback();
 				return $this->Message->error(__('Could not validate secret model'), [ 'body' => $this->Resource->Secret->validationErrors ]);
 			}
 
@@ -239,6 +240,7 @@ class ResourcesController extends AppController {
 					'atomic' => false,
 					'fieldList' => $fields['fields']
 				]);
+
 			if ( $save == false ) {
 				$dataSource->rollback();
 				return $this->Message->error(__('Could not save the secret'));

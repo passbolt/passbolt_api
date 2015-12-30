@@ -378,6 +378,49 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
 	}
 
+	/**
+	 * Test adding a resource with a wrong secret, and test that the rollback was effective.
+	 */
+	public function testAddWithWrongSecretRollback() {
+		$cat = $this->Category->findByName('administration');
+
+		// Looking at the matrix of permission marlyn should be able to read but not to create into the category marketing
+		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$this->User->setActive($user);
+
+		// Error : name is empty
+		try {
+			$this->testAction('/resources/add.json', array(
+					'data' => array(
+						'Resource' => array(
+							'name' => 'testAddSecretRollback',
+							'username' => 'test1',
+							'uri' => 'http://www.google.com',
+							'description' => 'this is a description'
+						),
+						'Secret' => array(
+							array(
+								'data' => 'wrong secret'
+							),
+						)
+					),
+					'method' => 'Post',
+					'return' => 'contents'
+				));
+		} catch (Exception $e) {
+			$this->assertEquals($e->getMessage(), 'Could not validate secret model');
+			// Get the resource again, and assert it's the exact same
+			$resourceAfterCreate = $this->Resource->find('first', [
+					'conditions' => [
+						'name' => 'testAddSecretRollback'
+					],
+					'contain' => ['Secret']
+				]);
+
+			$this->assertEmpty($resourceAfterCreate, 'After a secret validation error, the resource should not exist in the database');
+		}
+	}
+
 	public function testEditWithCategoryBadId() {
 		$resource = $this->Resource->findByName("facebook account");
 		$id = $resource['Resource']['id'];
