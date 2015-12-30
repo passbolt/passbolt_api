@@ -13,6 +13,8 @@ return array(
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
     'File' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
+    'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib'),
     'Crypt' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
 );

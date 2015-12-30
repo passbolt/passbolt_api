@@ -1,102 +1,5 @@
 [
     {
-        "name": "composer/installers",
-        "version": "v1.0.21",
-        "version_normalized": "1.0.21.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/composer/installers.git",
-            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
-            "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
-            "shasum": ""
-        },
-        "replace": {
-            "roundcube/plugin-installer": "*",
-            "shama/baton": "*"
-        },
-        "require-dev": {
-            "composer/composer": "1.0.*@dev",
-            "phpunit/phpunit": "4.1.*"
-        },
-        "time": "2015-02-18 17:17:01",
-        "type": "composer-installer",
-        "extra": {
-            "class": "Composer\\Installers\\Installer",
-            "branch-alias": {
-                "dev-master": "1.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Composer\\Installers\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Kyle Robinson Young",
-                "email": "kyle@dontkry.com",
-                "homepage": "https://github.com/shama"
-            }
-        ],
-        "description": "A multi-framework Composer library installer",
-        "homepage": "http://composer.github.com/installers/",
-        "keywords": [
-            "Craft",
-            "Dolibarr",
-            "Hurad",
-            "MODX Evo",
-            "OXID",
-            "SMF",
-            "Thelia",
-            "WolfCMS",
-            "agl",
-            "aimeos",
-            "annotatecms",
-            "bitrix",
-            "cakephp",
-            "chef",
-            "codeigniter",
-            "concrete5",
-            "croogo",
-            "dokuwiki",
-            "drupal",
-            "elgg",
-            "fuelphp",
-            "grav",
-            "installer",
-            "joomla",
-            "kohana",
-            "laravel",
-            "lithium",
-            "magento",
-            "mako",
-            "mediawiki",
-            "modulework",
-            "moodle",
-            "phpbb",
-            "piwik",
-            "ppi",
-            "puppet",
-            "roundcube",
-            "shopware",
-            "silverstripe",
-            "symfony",
-            "typo3",
-            "wordpress",
-            "zend",
-            "zikula"
-        ]
-    },
-    {
         "name": "lorenzo/cakephp-email-queue",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -618,5 +521,344 @@
             }
         ],
         "description": "Pure-PHP implementation of the OpenPGP Message Format (RFC 4880)"
+    },
+    {
+        "name": "composer/installers",
+        "version": "v1.0.22",
+        "version_normalized": "1.0.22.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/composer/installers.git",
+            "reference": "bd9b14f094c89c8b5804a4e41edeb7853bb85046"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/composer/installers/zipball/bd9b14f094c89c8b5804a4e41edeb7853bb85046",
+            "reference": "bd9b14f094c89c8b5804a4e41edeb7853bb85046",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "1.0.0"
+        },
+        "replace": {
+            "roundcube/plugin-installer": "*",
+            "shama/baton": "*"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev",
+            "phpunit/phpunit": "4.1.*"
+        },
+        "time": "2015-10-29 23:28:48",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "Composer\\Installers\\Plugin",
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Composer\\Installers\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kyle Robinson Young",
+                "email": "kyle@dontkry.com",
+                "homepage": "https://github.com/shama"
+            }
+        ],
+        "description": "A multi-framework Composer library installer",
+        "homepage": "http://composer.github.com/installers/",
+        "keywords": [
+            "Craft",
+            "Dolibarr",
+            "Hurad",
+            "MODX Evo",
+            "OXID",
+            "SMF",
+            "Thelia",
+            "WolfCMS",
+            "agl",
+            "aimeos",
+            "annotatecms",
+            "bitrix",
+            "cakephp",
+            "chef",
+            "codeigniter",
+            "concrete5",
+            "croogo",
+            "dokuwiki",
+            "drupal",
+            "elgg",
+            "fuelphp",
+            "grav",
+            "installer",
+            "joomla",
+            "kohana",
+            "laravel",
+            "lithium",
+            "magento",
+            "mako",
+            "mediawiki",
+            "modulework",
+            "moodle",
+            "phpbb",
+            "piwik",
+            "ppi",
+            "puppet",
+            "roundcube",
+            "shopware",
+            "silverstripe",
+            "symfony",
+            "typo3",
+            "wordpress",
+            "zend",
+            "zikula"
+        ]
+    },
+    {
+        "name": "symfony/finder",
+        "version": "v2.8.1",
+        "version_normalized": "2.8.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/finder.git",
+            "reference": "dd41ae57f4f737be271d944a0cc5f5f21203a7c6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/finder/zipball/dd41ae57f4f737be271d944a0cc5f5f21203a7c6",
+            "reference": "dd41ae57f4f737be271d944a0cc5f5f21203a7c6",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "time": "2015-12-05 11:09:21",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Finder\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Finder Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "doctrine/lexer",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/lexer.git",
+            "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
+            "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "time": "2014-09-09 13:34:57",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\Common\\Lexer\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com"
+            },
+            {
+                "name": "Johannes Schmitt",
+                "email": "schmittjoh@gmail.com"
+            }
+        ],
+        "description": "Base library for a lexer that can be used in Top-Down, Recursive Descent Parsers.",
+        "homepage": "http://www.doctrine-project.org",
+        "keywords": [
+            "lexer",
+            "parser"
+        ]
+    },
+    {
+        "name": "doctrine/annotations",
+        "version": "v1.2.7",
+        "version_normalized": "1.2.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/annotations.git",
+            "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/annotations/zipball/f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
+            "reference": "f25c8aab83e0c3e976fd7d19875f198ccf2f7535",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/lexer": "1.*",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "doctrine/cache": "1.*",
+            "phpunit/phpunit": "4.*"
+        },
+        "time": "2015-08-31 12:32:49",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\Common\\Annotations\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org"
+            },
+            {
+                "name": "Benjamin Eberlei",
+                "email": "kontakt@beberlei.de"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com"
+            },
+            {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com"
+            },
+            {
+                "name": "Johannes Schmitt",
+                "email": "schmittjoh@gmail.com"
+            }
+        ],
+        "description": "Docblock Annotations Parser",
+        "homepage": "http://www.doctrine-project.org",
+        "keywords": [
+            "annotations",
+            "docblock",
+            "parser"
+        ]
+    },
+    {
+        "name": "zircote/swagger-php",
+        "version": "2.0.4",
+        "version_normalized": "2.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zircote/swagger-php.git",
+            "reference": "be5d96e56c23cbe52c5bc5e267851323d95c57cd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zircote/swagger-php/zipball/be5d96e56c23cbe52c5bc5e267851323d95c57cd",
+            "reference": "be5d96e56c23cbe52c5bc5e267851323d95c57cd",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/annotations": "*",
+            "php": ">=5.4.0",
+            "symfony/finder": "*"
+        },
+        "require-dev": {
+            "zendframework/zend-form": "*"
+        },
+        "time": "2015-11-13 13:50:11",
+        "bin": [
+            "bin/swagger"
+        ],
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Swagger\\": "src"
+            },
+            "files": [
+                "src/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache2"
+        ],
+        "authors": [
+            {
+                "name": "Robert Allen",
+                "email": "zircote@gmail.com",
+                "homepage": "http://www.zircote.com"
+            },
+            {
+                "name": "Bob Fanger",
+                "email": "bfanger@gmail.com",
+                "homepage": "http://bfanger.nl"
+            }
+        ],
+        "description": "Swagger-PHP - Generate interactive documentation for your RESTful API using phpdoc annotations",
+        "homepage": "https://github.com/zircote/swagger-php/",
+        "keywords": [
+            "api",
+            "json",
+            "rest",
+            "service discovery"
+        ]
     }
 ]

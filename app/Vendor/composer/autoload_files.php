@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/Random.php',
     $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+    $vendorDir . '/zircote/swagger-php/src/functions.php',
 );

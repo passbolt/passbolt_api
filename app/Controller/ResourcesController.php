@@ -6,8 +6,79 @@
  * @license       http://www.passbolt.com/license
  * @package       app.Controller.ResourcesController
  * @since         version 2.12.7
+ *
  */
 
+/**
+ * @SWG\Swagger(
+ *     schemes={"http"},
+ *     host="www.passbolt.com",
+ *     basePath="/",
+ *     @SWG\Info(
+ *         version="1.0.0",
+ *         title="Swagger passbolt",
+ *         description="Passbolt is an open source password manager based on opengpg.js that allows you to share secrets with your team! Passbolt is coming soon, let's keep in touch!",
+ *         termsOfService="http://www.passbolt.com/terms/",
+ *         @SWG\Contact(
+ *             email="contact@passbolt.com"
+ *         ),
+ *         @SWG\License(
+ *             name="GPL 3",
+ *             url="http://www.gnu.org/licenses/gpl-3.0.en.html"
+ *         )
+ *     ),
+ *     @SWG\ExternalDocumentation(
+ *         description="Find out more about Passbolt",
+ *         url="http://passbolt.com/help"
+ *     )
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *   definition="Header",
+ *   @SWG\Xml(name="Header"),
+ *   @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="The id of the request"
+ *   ),
+ *   @SWG\Property(
+ *     property="status",
+ *     type="string",
+ *     description="The status of the request"
+ *   ),
+ *   @SWG\Property(
+ *     property="title",
+ *     type="string",
+ *     description="The title of the request"
+ *   ),
+ *   @SWG\Property(
+ *     property="servertime",
+ *     type="integer",
+ *     description="The server time"
+ *   ),
+ *   @SWG\Property(
+ *     property="message",
+ *     type="string",
+ *     description="Additional message"
+ *   ),
+ *   @SWG\Property(
+ *     property="description",
+ *     type="string",
+ *     description="The description of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="controller",
+ *     type="string",
+ *     description="The controller name that have been called"
+ *   ),
+ *   @SWG\Property(
+ *     property="action",
+ *     type="string",
+ *     description="The action name that have been called on the controller"
+ *   )
+ * )
+ */
 App::uses('Category', 'Model');
 App::uses('CategoryResource', 'Model');
 
@@ -24,7 +95,59 @@ class ResourcesController extends AppController {
  * Get all resources
  * Renders a json object of the resources.
  *
- *
+ * @SWG\Get(
+ *   path="/resources.json",
+ *   summary="list resources",
+ *   @SWG\Parameter(
+ *     name="fltr_keywords",
+ *     in="query",
+ *     description="Keywords to filter by",
+ *     required=false,
+ *     type="string"
+ *   ),
+ *   @SWG\Parameter(
+ *     name="fltr_case",
+ *     in="query",
+ *     description="Case to filter by",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "favorite",
+ * 		 "shared"
+ * 	   }
+ *   ),
+ *   @SWG\Parameter(
+ *     name="fltr_order",
+ *     in="query",
+ *     description="Field to order by",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "modified",
+ * 		 "expiry_date"
+ * 	   }
+ *   ),
+ *   @SWG\Response(
+ *     response=200,
+ *     description="List with resources",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           type="array",
+ *           items={
+ * 				"$ref"= "#/definitions/Resource"
+ *           }
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function index() {
 		// The additional information to pass to the model request
@@ -97,6 +220,35 @@ class ResourcesController extends AppController {
  * Renders a json object of the resource
  *
  * @param uuid $id the id of the resource
+ *
+ * @SWG\Get(
+ *   path="/resources/{id}.json",
+ *   summary="Fetch resource details",
+ *   @SWG\Parameter(
+ * 		name="id",
+ * 		in="path",
+ * 		required=true,
+ * 		type="string",
+ * 		description="the id of the resource",
+ *   ),
+ *   @SWG\Response(
+ *     response=200,
+ *     description="The details of the resource",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           ref="#/definitions/Resource"
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function view($id = null) {
 		// check if the resource id is provided

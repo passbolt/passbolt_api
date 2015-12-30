@@ -8,7 +8,70 @@
  * @package       app.Model.Resource
  * @since         version 2.12.7
  */
-class Resource extends AppModel {
+
+/**
+ * @SWG\Definition(
+ *   @SWG\Xml(name="Resource"),
+ *   @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="The id of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="name",
+ *     type="string",
+ *     description="The name of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="username",
+ *     type="string",
+ *     description="The username of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="expiry_date",
+ *     type="string",
+ *     description="The expiry date of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="uri",
+ *     type="string",
+ *     description="The uri of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="description",
+ *     type="string",
+ *     description="The description of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="deleted",
+ *     type="string",
+ *     description="Is the user deleted"
+ *   ),
+ *   @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="The date of creation"
+ *   ),
+ *   @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="The date of edition"
+ *   ),
+ *   @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="The user who created the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="The latest user who updated the resource"
+ *   )
+ * )
+ */
+class Resource extends AppModel
+{
+
 /**
  * Model behaviors
  * @link http://api20.cakephp.org/class/model#
@@ -20,7 +83,6 @@ class Resource extends AppModel {
 		'Favoritable',
 		'Permissionable' => array('priority' => 1)
 	);
-
 
 /**
  * Details of belongs to relationships
@@ -50,9 +112,12 @@ class Resource extends AppModel {
  * Details of has and belongs to many relationships
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasAndBelongsToMany = array('Category' => array('className' => 'Category'));
+	public $hasAndBelongsToMany = array(
+		'Category' => array('className' => 'Category')
+	);
 
-	public function __construct($id = false, $table = null, $ds = null) {
+	public function __construct($id = false, $table = null, $ds = null)
+	{
 		parent::__construct($id, $table, $ds);
 		$this->Behaviors->setPriority(array('Permissionable' => 1));
 	}
@@ -63,48 +128,49 @@ class Resource extends AppModel {
  * @param string case (optional) The target validation case if any.
  * @return array CakePHP validation rules
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = 'default')
+	{
 		$default = array(
-				'id' => array(
-					'uuid' => array(
-						'rule' => 'uuid',
-						'required' => 'update',
-						'message' => __('Id must be in correct format'),
-					)
+			'id' => array(
+				'uuid' => array(
+					'rule' => 'uuid',
+					'required' => 'update',
+					'message' => __('Id must be in correct format'),
+				)
+			),
+			'name' => array(
+				'required' => array(
+					'allowEmpty' => false,
+					'rule' => array('notEmpty'),
+					'message' => __('A name is required')
 				),
-				'name' => array(
-					'required' => array(
-						'allowEmpty' => false,
-						'rule'       => array('notEmpty'),
-						'message'    => __('A name is required')
-					),
-					'alphaNumericAndSpecial' => array(
-						'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
-						'required' => 'create',
-						'allowEmpty' => false,
-						'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \''),
-					),
-					'size' => array(
-						'rule' => array('lengthBetween', 3, 64),
-						'message' => __('Name should be between %s and %s characters long', 3, 64),
-					)
+				'alphaNumericAndSpecial' => array(
+					'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
+					'required' => 'create',
+					'allowEmpty' => false,
+					'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \''),
 				),
-				'username' => array(
-					'required' => array(
-						'allowEmpty' => false,
-						'rule'       => array('notEmpty'),
-						'message'    => __('A username is required')
-					),
-					'alphaNumeric' => array(
-						'rule' => '/^[a-zA-Z0-9\-_]*$/',
-						'required' => 'create',
-						'message' => __('Username should only contain alphabets, numbers only and the special characters : - _'),
-					),
-					'size' => array(
-						'rule' => array('lengthBetween', 3, 64),
-						'message' => __('Username should be between %s and %s characters long', 3, 64),
-					)
+				'size' => array(
+					'rule' => array('lengthBetween', 3, 64),
+					'message' => __('Name should be between %s and %s characters long', 3, 64),
+				)
+			),
+			'username' => array(
+				'required' => array(
+					'allowEmpty' => false,
+					'rule' => array('notEmpty'),
+					'message' => __('A username is required')
 				),
+				'alphaNumeric' => array(
+					'rule' => '/^[a-zA-Z0-9\-_]*$/',
+					'required' => 'create',
+					'message' => __('Username should only contain alphabets, numbers only and the special characters : - _'),
+				),
+				'size' => array(
+					'rule' => array('lengthBetween', 3, 64),
+					'message' => __('Username should be between %s and %s characters long', 3, 64),
+				)
+			),
 			'expiry_date' => array(
 				'date' => array(
 					'required' => false,
@@ -150,6 +216,7 @@ class Resource extends AppModel {
 				$rules = $default;
 				break;
 		}
+
 		return $rules;
 	}
 
@@ -161,17 +228,20 @@ class Resource extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
+	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null)
+	{
 		$conditions = array();
 
 		switch ($case) {
 			case 'add':
 			case 'edit':
 			case 'view':
-				$conditions = array('conditions' => array(
-					'Resource.deleted' => 0,
-					'Resource.id' => $data['Resource.id']
-				));
+				$conditions = array(
+					'conditions' => array(
+						'Resource.deleted' => 0,
+						'Resource.id' => $data['Resource.id']
+					)
+				);
 				break;
 
 			case 'index':
@@ -231,7 +301,8 @@ class Resource extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = Role::USER)
+	{
 		switch ($case) {
 			case 'view':
 			case 'index':
@@ -259,7 +330,7 @@ class Resource extends AppModel {
 						'Category',
 						'CategoryResource',
 						'Favorite',
-						'Secret' => array (
+						'Secret' => array(
 							'fields' => array(
 								'Secret.id',
 								'Secret.user_id',
@@ -281,23 +352,26 @@ class Resource extends AppModel {
 				$fields = array('fields' => array('deleted'));
 				break;
 			case 'save':
-				$fields = array('fields' => array(
-					'name',
-					'username',
-					'expiry_date',
-					'uri',
-					'description',
-					'created',
-					'modified',
-					'created_by',
-					'modified_by',
-					'deleted'
-				));
+				$fields = array(
+					'fields' => array(
+						'name',
+						'username',
+						'expiry_date',
+						'uri',
+						'description',
+						'created',
+						'modified',
+						'created_by',
+						'modified_by',
+						'deleted'
+					)
+				);
 				break;
 			default:
 				$fields = array('fields' => array());
 				break;
 		}
+
 		return $fields;
 	}
 
@@ -306,10 +380,12 @@ class Resource extends AppModel {
  * @param array $check the parameters
  * @return bool true if the date is in future, false otherwise
  */
-	public function isInFuture($check) {
+	public function isInFuture($check)
+	{
 		$now = time();
 		$expiryDate = strtotime($check['expiry_date']);
 		$interval = $expiryDate - $now;
+
 		return ($interval > 0);
 	}
 }

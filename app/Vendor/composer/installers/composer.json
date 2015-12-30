@@ -1,6 +1,6 @@
 {
     "name": "composer/installers",
-    "type": "composer-installer",
+    "type": "composer-plugin",
     "license": "MIT",
     "description": "A multi-framework Composer library installer",
     "keywords": [
@@ -61,7 +61,7 @@
         "psr-0": { "Composer\\Installers\\": "src/" }
     },
     "extra": {
-        "class": "Composer\\Installers\\Installer",
+        "class": "Composer\\Installers\\Plugin",
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
@@ -69,6 +69,9 @@
     "replace": {
         "shama/baton": "*",
         "roundcube/plugin-installer": "*"
+    },
+    "require": {
+        "composer-plugin-api": "1.0.0"
     },
     "require-dev": {
         "composer/composer": "1.0.*@dev",
