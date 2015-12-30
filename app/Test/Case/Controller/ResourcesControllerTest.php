@@ -130,7 +130,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 			foreach ($permissionsMatrix['User']['Resource'] as $userResPermission) {
 				if ($userResPermission['aroname'] == $username) {
-					var_dump('test '.$username);
 					$path = $this->Resource->inNestedArray($userResPermission['aconame'], $result['body'], 'name');
 					if ($userResPermission['result'] == PermissionType::DENY) {
 						$this->assertTrue(empty($path), "{$url} : test should not contain '{$userResPermission['aconame']}' resource with user '{$username}'");
