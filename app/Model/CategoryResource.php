@@ -119,7 +119,9 @@ class CategoryResource extends AppModel {
 			case 'edit':
 				$fields = array(
 					'fields' => array(
-						'id', 'category_id', 'resource_id'
+						'id',
+						'category_id',
+						'resource_id'
 					)
 				);
 			break;
