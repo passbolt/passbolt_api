@@ -3,24 +3,25 @@
  * Categories Resources controller
  * This file will define how categories_resources are managed. only crud functions
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.CategoriesResourcesController
- * @since        version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 class CategoriesResourcesController extends AppController {
 
+/**
+ * @var $uses array containing the class names of models this controller uses.
+ */
 	public $uses = array('CategoryResource');
 
 /**
  * Get a categoryResource
  * Renders a json object of the resource
  *
- * @param integer $id the id of the resource
+ * @param string $id the uuid of the resource
  * @return void
  */
-	public function view($id=null) {
+	public function view($id = null) {
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The categoryResource id is missing'));
@@ -46,8 +47,10 @@ class CategoriesResourcesController extends AppController {
 	}
 
 /**
- * Delete a categoryResource
- * @param integer id the id of the resource to delete
+ * Delete a the relationship between a category and a resource
+ *
+ * @param string $id the uuid of the resource to delete
+ * @return void
  */
 	public function delete($id = null) {
 		// check if the category id is provided
@@ -74,8 +77,9 @@ class CategoriesResourcesController extends AppController {
 	}
 
 /**
- * Add a CategoriResource
- * @param post : the posted data
+ * Add a resource to a category
+ *
+ * @return void
  */
 	public function add() {
 		// check the HTTP request method

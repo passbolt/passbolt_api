@@ -2,17 +2,17 @@
 /**
  * Validation Rules Controller
  *
- * @copyright		Copyright 2012, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Controller.ValidationRulesController
- * @since			version 2.13.9
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ValidationRulesController extends AppController {
 
 /**
- * Get the validation rules of a target model.
- * @param $model The target model.
- * @param string $case (optional) The target case if any.
+ * Get the validation rules of a target model
+ *
+ * @param string $model target model name
+ * @param string $case (optional) the target case if any.
+ * @return void
  */
 	public function view($model, $case = 'default') {
 		$model = ucfirst($model);
@@ -43,11 +43,8 @@ class ValidationRulesController extends AppController {
 					}
 				}
 			}
-
 			$this->set('data', $rules);
 			$this->Message->success();
-			// $this->layout = 'js/canJs';
-			// $this->view = '/Js/modelValidationRules';
 		} else {
 			$this->Message->error(__('No validation rules defined'), array('code' => 404));
 		}

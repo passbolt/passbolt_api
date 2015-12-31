@@ -2,39 +2,37 @@
 /**
  * Gettext Dictionary Controller
  *
- * @copyright		Copyright 2012, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Controller.DictionaryController
- * @since			version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class DictionariesController extends AppController {
 
 /**
- * Get the text dictionnary
- * @param $dicoName
+ * Get the dictionary of translated strings for a given locale
+ *
+ * @param string $locale the name of the locale
+ * @return void
  */
-	public function view($l = 'default') {
+	public function view($locale = 'default') {
 		// get user locale or application default one
-		// TODO #PASSBOLT-158 User::get('i18n.locale');
-		$l = ($l != 'default') ? $l : Configure::read('i18n.locale');
+		$locale = ($locale != 'default') ? $locale : Configure::read('i18n.locale');
 
 		// find it in cache or read from model
-		$cache	= Cache::read('dictionary_' . $l, '_cake_model_');
+		$cache	= Cache::read('dictionary_' . $locale, '_cake_model_');
 		if ($cache === false) {
-			$data = $this->Dictionary->get($l);
+			$data = $this->Dictionary->get($locale);
 			if ($data) {
-				Cache::write('dictionary_' . $l, $data, '_cake_model_');
+				Cache::write('dictionary_' . $locale, $data, '_cake_model_');
 			}
 		} else {
 			$data = $cache;
 		}
 
-		// are you happy now?
 		if ($data) {
-			$this->Message->success();
 			$this->set('data', $data);
+			$this->Message->success();
 		} else {
-			$this->Message->error(__('Sorry the dictory could not be found'));
+			$this->Message->error(__('Sorry the dictionary could not be found'));
 		}
 	}
 

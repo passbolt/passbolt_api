@@ -3,24 +3,24 @@
  * Groups Users controller
  * This file will define how groups_users are managed.
  *
- * @copyright    Copyright 2014, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.GroupsUsersController
- * @since        version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 class GroupsUsersController extends AppController {
 
+/**
+ * @var $uses array containing the class names of models this controller uses.
+ */
 	public $uses = array('GroupUser');
 
-	/**
-	 * Get a groupUser
-	 * Renders a json object of the resource
-	 *
-	 * @param integer $id the id of the resource
-	 * @return void
-	 */
-	public function view($id=null) {
+/**
+ * Get a groupUser
+ * Renders a json object of the resource
+ *
+ * @param string $id the uuid of the resource
+ * @return void
+ */
+	public function view($id = null) {
 		// check if the group id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The groupUser id is missing'));
@@ -45,10 +45,12 @@ class GroupsUsersController extends AppController {
 		$this->Message->success();
 	}
 
-	/**
-	 * Delete a groupUser
-	 * @param integer id the id of the resource to delete
-	 */
+/**
+ * Delete a groupUser
+ *
+ * @param string $id the uuid of the resource to delete
+ * @return void
+ */
 	public function delete($id = null) {
 		// check if the group id is provided
 		if (!isset($id)) {
@@ -73,10 +75,11 @@ class GroupsUsersController extends AppController {
 		$this->Message->success(__('The groupUser was successfully deleted'));
 	}
 
-	/**
-	 * Add a GroupUser
-	 * @param post : the posted data
-	 */
+/**
+ * Add a GroupUser
+ *
+ * @return void
+ */
 	public function add() {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {

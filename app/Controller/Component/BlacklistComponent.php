@@ -4,7 +4,7 @@
  * Manages blacklisting of ip addresses in the system. 
  *
  * @copyright 	(c) 2015-present Passbolt.com
- * @licence		GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class BlacklistComponent extends Component {
 
@@ -15,32 +15,34 @@ class BlacklistComponent extends Component {
 	public $ip = null;
 
 /**
- * stores the controller
+ * @var Controller $controller
  */
- public $controller = null;
+	public $controller = null;
 
 /**
- * startup function
- * @param Controller $controller. the calling controller
- * @param Array $settings
+ * Called before the Controller::beforeFilter().
+ *
+ * @param Controller $controller Controller with components to initialize
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
  */
-	public function initialize(Controller $controller, $settings=array()) {
+	public function initialize(Controller $controller) {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
-
 		$this->ip = $controller->request->clientIp();
 
-		return parent::startup($controller);
+		return parent::initialize($controller);
 	}
 
 /**
  * startup function
- * @param Controller $controller. the calling controller
+ *
+ * @param Controller $controller the calling controller
+ * @return void
  */
 	public function startup(Controller $controller) {
 		// If address is blacklisted, gives a blackhole
-		// http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#handling-blackhole-callbacks
 		if ($this->isIpInBlacklist()) {
 			$this->blackHole();
 			return;
@@ -49,7 +51,9 @@ class BlacklistComponent extends Component {
 	}
 
 /**
- * detect whether the current address is blacklisted
+ * Detect whether the current address is blacklisted
+ *
+ * @return bool
  */
 	public function isIpInBlacklist() {
 		$bls = $this->AuthenticationBlacklist->find('all', array(
@@ -67,16 +71,16 @@ class BlacklistComponent extends Component {
 	}
 
 /**
- * makes a blackhole for the user.
- * this action is called when the ip is blacklisted
+ * Makes a blackhole for the user.
+ * This action is called when the ip is blacklisted
+ *
+ * @return bool true if already in blackhole?
  */
 	public function blackHole() {
-		if ($this->controller->request->here != '/pages/blackhole' ) { // avoid loop redirection
+		if ($this->controller->request->here != '/pages/blackhole') { // avoid loop redirection
 			$this->controller->redirect('/pages/blackhole');
 		}
 		return true;
 	}
 
 }
-
- 

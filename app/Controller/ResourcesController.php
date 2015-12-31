@@ -2,12 +2,9 @@
 /**
  * Resources Controller
  *
- * @copyright     Copyright 2012 Passbolt.com
- * @license       http://www.passbolt.com/license
- * @package       app.Controller.ResourcesController
- * @since         version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 App::uses('Category', 'Model');
 App::uses('CategoryResource', 'Model');
 
@@ -98,7 +95,7 @@ class ResourcesController extends AppController {
  * Get a resource
  * Renders a json object of the resource
  *
- * @param uuid $id the id of the resource
+ * @param string $id the id of the resource
  * @return void
  */
 	public function view($id = null) {
@@ -139,7 +136,8 @@ class ResourcesController extends AppController {
 /**
  * Delete a resource
  *
- * @param uuid id the id of the resource to delete
+ * @param string $id the uuid of the resource to delete
+ * @return void
  */
 	public function delete($id = null) {
 		// check if the category id is provided
@@ -175,6 +173,8 @@ class ResourcesController extends AppController {
 
 /**
  * Add a resource
+ *
+ * @return void
  */
 	public function add() {
 		$datasource = ConnectionManager::getDataSource('default');
@@ -183,12 +183,14 @@ class ResourcesController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$datasource->rollback();
-			return $this->Message->error(__('Invalid request method, should be POST'));
+			$this->Message->error(__('Invalid request method, should be POST'));
+			return;
 		}
 		// check if data was provided
 		if (!isset($this->request->data['Resource'])) {
 			$datasource->rollback();
-			return $this->Message->error(__('No data were provided'));
+			$this->Message->error(__('No data were provided'));
+			return;
 		}
 
 		// set the data for validation and save
@@ -200,14 +202,16 @@ class ResourcesController extends AppController {
 		// check if the data is valid
 		if (!$this->Resource->validates()) {
 			$datasource->rollback();
-			return $this->Message->error(__('Could not validate resource data'));
+			$this->Message->error(__('Could not validate resource data'));
+			return;
 		}
 
 		$resource = $this->Resource->save($resourcepost, false, $fields['fields']);
 
 		if ($resource === false) {
 			$datasource->rollback();
-			return $this->Message->error(__('The resource could not be saved'));
+			$this->Message->error(__('The resource could not be saved'));
+			return;
 		}
 
 		// Insert the given secret.
@@ -220,13 +224,15 @@ class ResourcesController extends AppController {
 			// Validate the secret.
 			$this->Resource->Secret->set($secret);
 			if (!$this->Resource->Secret->validates()) {
-				return $this->Message->error(__('Could not validate secret model'));
+				$this->Message->error(__('Could not validate secret model'));
+				return;
 			}
 
 			// Save the secret.
 			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
 			if (!$this->Resource->Secret->save($secret, false, $fields)) {
-				return $this->Message->error(__('Could not save the secret'));
+				$this->Message->error(__('Could not save the secret'));
+				return;
 			}
 		}
 
@@ -244,18 +250,21 @@ class ResourcesController extends AppController {
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates()) {
 					$datasource->rollback();
-					return $this->Message->error(__('Could not validate CategoryResource'));
+					$this->Message->error(__('Could not validate CategoryResource'));
+					return;
 				}
 				// Check that the user is well authorized to create a resource into the given category.
 				if (!$this->Resource->CategoryResource->Category->isAuthorized($cat['id'], PermissionType::CREATE)) {
 					$datasource->rollback();
-					return $this->Message->error(__('You are not authorized to create a resource into the category'), array('code' => 403));
+					$this->Message->error(__('You are not authorized to create a resource into the category'), array('code' => 403));
+					return;
 				}
 				// if validation passes, then save the data
 				$res = $this->Resource->CategoryResource->save();
 				if (!$res) {
 					$datasource->rollback();
-					return $this->Message->error(__('Could not save the association'));
+					$this->Message->error(__('Could not save the association'));
+					return;
 				}
 			}
 		}
@@ -274,6 +283,9 @@ class ResourcesController extends AppController {
 
 /**
  * Update a resource
+ *
+ * @param string $id the uuid of the resource to edit
+ * @return void
  */
 	public function edit($id = null) {
 		// check the HTTP request method
@@ -312,8 +324,6 @@ class ResourcesController extends AppController {
 		// Use the url id parameter as Resource id
 		$resourcepost['Resource']['id'] = $id;
 
-		// @todo Begin transaction.
-
 		// check if data was provided
 		if (!isset($resourcepost['Resource']) && !isset($resourcepost['Category'])) {
 			return $this->Message->error(__('No data were provided'));
@@ -327,16 +337,17 @@ class ResourcesController extends AppController {
 
 			// Validate the resource data
 			$this->Resource->set($resourcepost);
-			// @todo validate only the fields required by this operation
 			if (!$this->Resource->validates()) {
-				return $this->Message->error(
+				$this->Message->error(
 					__('Could not validate Resource'),
 					array('body' => $this->Resource->validationErrors)
 				);
+				return;
 			}
 			$save = $this->Resource->save($resourcepost, false, $fields['fields']);
 			if (!$save) {
-				return $this->Message->error(__('The resource could not be updated'));
+				$this->Message->error(__('The resource could not be updated'));
+				return;
 			}
 		}
 
@@ -357,15 +368,17 @@ class ResourcesController extends AppController {
 				}
 				// Force the user id if empty.
 				if (empty($secret['user_id'])) {
-					return $this->Message->error(__('user id was not provided for the secret'));
+					$this->Message->error(__('user id was not provided for the secret'));
+					return;
 				}
 				// Validate the data.
 				$this->Resource->Secret->set($secret);
 				if (!$this->Resource->Secret->validates()) {
-					return $this->Message->error(
+					$this->Message->error(
 						__('Could not validate secret model'),
 						array('body' => $this->Resource->Secret->validationErrors)
 					);
+					return;
 				}
 				$secrets[] = $secret;
 			}
@@ -373,8 +386,9 @@ class ResourcesController extends AppController {
 			// Save the secrets.
 			$fields = $this->Resource->Secret->getFindFields('update', User::get('Role.name'));
 			if (!$this->Resource->Secret->saveMany($secrets, $fields)) {
-				return $this->Message->error(__('Could not save the secrets'));
-	        }
+				$this->Message->error(__('Could not save the secrets'));
+				return;
+			}
 		}
 
 		// Save the relations
@@ -385,7 +399,8 @@ class ResourcesController extends AppController {
 				'resource_id' => $id
 			));
 			if (!$delete) {
-				return $this->Message->error(__('Could not delete Categories'));
+				$this->Message->error(__('Could not delete Categories'));
+				return;
 			}
 			// Save the new relations
 			foreach ($resourcepost['Category'] as $cat) {
@@ -422,6 +437,5 @@ class ResourcesController extends AppController {
 		$this->Message->success(__('The resource was successfully updated'));
 		$this->set('data', $resource);
 	}
-
 }
 

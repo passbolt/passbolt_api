@@ -2,27 +2,34 @@
 /**
  * Users Controller
  *
- * @copyright   Copyright 2012, Passbolt.com
- * @license     http://www.passbolt.com/license
- * @package     app.Controller.UsersController
- * @since       version 2.12.9
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class UsersController extends AppController {
 
+/**
+ * @var array helpers used by the view when rendering from this controller
+ */
 	public $helpers = array('PassboltAuth');
 
+/**
+ * @var array components used by this controller
+ */
 	public $components = array(
 		'Filter',
 		'EmailNotificator',
 	);
 
 /**
- * beforeFilter
+ * Called before the controller action. Used to manage access right
+ *
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
  */
-	function beforeFilter(){
-		$allow = [
+	public function beforeFilter() {
+		$allow = array(
 			'validateAccount'
-		];
+		);
 		if (Configure::read('Registration.public')) {
 			$allow[] = 'register';
 			$allow[] = 'register_thankyou';
@@ -39,13 +46,10 @@ class UsersController extends AppController {
  *
  * Notify the user by email.
  *
- * @param $data array User and profile data.
+ * @param array $data User and profile data.
  * @return array the created user
- *
- * @throws Exception
- * @throws ValidationException
  */
-	private function registerUser($data) {
+	private function __registerUser($data) {
 		// Save user data
 		$user = $this->User->registerUser($data);
 
@@ -59,16 +63,18 @@ class UsersController extends AppController {
 	}
 
 /**
- * Register page.
+ * Register page
+ *
+ * @return void
  */
 	public function register() {
 		$this->layout = 'login';
 
 		// if data is provided.
-		if (!empty ($this->request->data)) {
+		if (!empty($this->request->data)) {
 			$userData = $this->request->data;
 			try {
-				$this->registerUser($userData);
+				$this->__registerUser($userData);
 			}
 			catch (ValidationException $e) {
 				return;
@@ -81,7 +87,9 @@ class UsersController extends AppController {
 	}
 
 /**
- * Thank you page after registration.
+ * Thank you page after registration
+ *
+ * @return void
  */
 	public function register_thankyou() {
 		// Check referer.
@@ -107,7 +115,7 @@ class UsersController extends AppController {
  * Get all users
  * Renders a json object of the users
  *
- * @access public
+ * @return void
  */
 	public function index() {
 		// The additional information to pass to the model request
@@ -143,9 +151,8 @@ class UsersController extends AppController {
  * Get a user
  * Renders a json object of the user
  *
- * @param $id UUID of the user
- *
- * @access public
+ * @param string $id UUID of the user
+ * @return void
  */
 	public function view($id = null) {
 		// The additional information to pass to the model request
@@ -179,6 +186,8 @@ class UsersController extends AppController {
 
 /**
  * Add a user
+ *
+ * @return void
  */
 	public function add() {
 		// Only admin users can access this entry point
@@ -200,7 +209,7 @@ class UsersController extends AppController {
 
 		// Try to add the user
 		try {
-			$this->registerUser($userData);
+			$this->__registerUser($userData);
 		}
 		// Something went wrong with the validation
 		catch (ValidationException $e) {
@@ -216,7 +225,7 @@ class UsersController extends AppController {
 		// Retrieve the just inserted user
 		$data = array(
 			'User.id' => $this->User->id,
-			'User.active' => FALSE,
+			'User.active' => false,
 		);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
@@ -228,7 +237,8 @@ class UsersController extends AppController {
 /**
  * Update a user
  *
- * @param uuid $id the id of the user we want to edit
+ * @param string $id the uuid of the user we want to edit
+ * @return void
  */
 	public function edit($id = null) {
 		// Only admin users can update users
@@ -277,22 +287,21 @@ class UsersController extends AppController {
 		// Update the user, only if not editing itself.
 		if (isset( $userData['User'] ) && !$editOwn) {
 			// Get the meaningful fields for this operation
-			$fields = $this->User->getFindFields('User::edit',
-			  User::get('Role.name'));
+			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
 
 			// Validate the user data
 			$this->User->set($userData);
 
-			if ( ! $this->User->validates(array( 'fieldList' => array( $fields['fields'] ) ))) {
+			if (!$this->User->validates(array( 'fieldList' => array( $fields['fields'])))) {
 				// Return error message, with list of invalid fields.
-				return $this->Message->error(__('Could not validate User'),
-				  array( 'body' => $this->User->validationErrors ));
+				$this->Message->error(__('Could not validate User'), array( 'body' => $this->User->validationErrors ));
+				return;
 			}
 
 			// Update the user
-			$save = $this->User->save($userData, FALSE, $fields['fields']);
+			$save = $this->User->save($userData, false, $fields['fields']);
 			// Didn't save, we rollback and return an error.
-			if ( ! $save) {
+			if (!$save) {
 				$this->User->rollback();
 				return $this->Message->error(__('The user could not be updated'));
 			}
@@ -305,7 +314,7 @@ class UsersController extends AppController {
 			$profile = $this->User->Profile->findByUserId($id);
 
 			// If no profile associated to the user found
-			if(!$profile) {
+			if (!$profile) {
 				$this->User->rollback();
 				return $this->Message->error(__('Could not retrieve profile'));
 			}
@@ -357,7 +366,8 @@ class UsersController extends AppController {
 /**
  * edit avatar entry point for users
  *
- * @param uuid $id the id of the user we want to edit
+ * @param string $id the uuid of the user we want to edit
+ * @return void
  */
 	public function editAvatar($id = null) {
 		// Check the HTTP request method
@@ -421,12 +431,16 @@ class UsersController extends AppController {
 
 /**
  * Validate a user account.
+ *
+ * Put parameters:
+ * AuthenticationToken['token'] (compulsory) the token
+ * Profile['first_name'] (optional) the first_name
+ * Profile['last_name'] (optional) the last_name
+ * Gpgkey['key'] (optional) the key
+ *
  * @param uuid $id the user id
  * @method PUT
- *  @param AuthenticationToken['token'] (compulsory) the token
- *  @param Profile['first_name'] (optional) the first_name
- *  @param Profile['last_name'] (optional) the last_name
- *  @param Gpgkey['key'] (optional) the key
+ * @return void
  */
 	public function validateAccount($id = null) {
 		header('Access-Control-Allow-Origin: *');
@@ -476,7 +490,7 @@ class UsersController extends AppController {
 
 		// Activate user
 		$this->User->id = $id;
-		$result = $this->User->saveField('active', TRUE, ['atomic' => false]);
+		$result = $this->User->saveField('active', true, ['atomic' => false]);
 		if (!$result) {
 			$this->User->rollback();
 			return $this->Message->error(__('Could not update user'));
@@ -484,7 +498,7 @@ class UsersController extends AppController {
 
 		// Deactivate Token.
 		$this->User->AuthenticationToken->id = $validToken['AuthenticationToken']['id'];
-		$result = $this->User->AuthenticationToken->saveField('active', FALSE, ['atomic' => false]);
+		$result = $this->User->AuthenticationToken->saveField('active', false, ['atomic' => false]);
 		if (!$result) {
 			$this->User->rollback();
 			return $this->Message->error(__('Could not update token'));
@@ -543,7 +557,7 @@ class UsersController extends AppController {
 			}
 			// Save the key
 			$this->User->Gpgkey->create();
-			$gpgkey= $this->User->Gpgkey->save($gpgkeyData, false, array('fieldList' => $fields['fields']));
+			$gpgkey = $this->User->Gpgkey->save($gpgkeyData, false, array('fieldList' => $fields['fields']));
 
 			// If saving the key failed
 			if (!$gpgkey) {
@@ -553,7 +567,7 @@ class UsersController extends AppController {
 			}
 		}
 
-        // Everything ok, we commit the transaction.
+		// Everything ok, we commit the transaction.
 		$this->User->commit();
 
 		// Return information in case of success.
@@ -568,7 +582,8 @@ class UsersController extends AppController {
 /**
  * Delete a user
  *
- * @param uuid id the id of the user to delete
+ * @param string $id the uuid of the user to delete
+ * @return void
  */
 	public function delete($id = null) {
 		// Only admin users can delete users

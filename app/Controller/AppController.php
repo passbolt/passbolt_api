@@ -11,7 +11,7 @@
 
 App::uses('Controller', 'Controller');
 App::uses('Purifier', 'HtmlPurifier.Lib');
-App::import('Model','User');
+App::import('Model', 'User');
 
 /**
  * Application Controller
@@ -24,9 +24,9 @@ App::import('Model','User');
  */
 class AppController extends Controller {
 
-	/**
-	 * @var $component application wide components
-	 */
+/**
+ * @var $component application wide components
+ */
 	public $components = array(
 		'Session',
 		'Paginator',
@@ -46,12 +46,13 @@ class AppController extends Controller {
 		'FileStorage.Image'
 	);
 
-	/**
-	 * Called before the controller action.	You can use this method to configure and customize components
-	 * or perform logic that needs to happen before each controller action.
-	 * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
-	 * @return void
-	 */
+/**
+ * Called before the controller action.	You can use this method to configure and customize components
+ * or perform logic that needs to happen before each controller action.
+ *
+ * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
+ * @return void
+ */
 	public function beforeFilter() {
 		$this->initRequestDetectors();
 		$this->initAuth();
@@ -59,10 +60,12 @@ class AppController extends Controller {
 		$this->sanitize();
 	}
 
-	/**
-	 * This perform the HTML sanitization of all user input
-	 * @access public
-	 */
+/**
+ * This perform the HTML sanitization of all user input
+ *
+ * @access public
+ * @return void
+ */
 	public function sanitize() {
 		// Before sanitizing, keep the original data.
 		$this->request->dataRaw = $this->request->data;
@@ -88,26 +91,29 @@ class AppController extends Controller {
 		}
 	}
 
-	/**
-	 * Init Authentication Component(s)
-	 */
+/**
+ * Init Authentication Component(s)
+ *
+ * @return void
+ */
 	public function initAuth() {
 		foreach (Configure::read('Auth') as $key => $authConf) {
 			$this->Auth->{$key} = $authConf;
 		}
 
 		// Set the headers send in any case where GPG Auth is requested
-		$this->response->header('X-GPGAuth-Version','1.3.0');
-		$this->response->header('X-GPGAuth-Login-URL','/auth/login');
-		$this->response->header('X-GPGAuth-Logout-URL','/auth/logout');
-		$this->response->header('X-GPGAuth-Verify-URL','/auth/verify');
-		$this->response->header('X-GPGAuth-Pubkey-URL','/auth/verify');
-
+		$this->response->header('X-GPGAuth-Version', '1.3.0');
+		$this->response->header('X-GPGAuth-Login-URL', '/auth/login');
+		$this->response->header('X-GPGAuth-Logout-URL', '/auth/logout');
+		$this->response->header('X-GPGAuth-Verify-URL', '/auth/verify');
+		$this->response->header('X-GPGAuth-Pubkey-URL', '/auth/verify');
 	}
 
-	/**
-	 * Define the default view layout depending on request type
-	 */
+/**
+ * Define the default view layout depending on request type
+ *
+ * @return void
+ */
 	public function setDefaultLayout() {
 		// Default is HTML5 layout
 		$this->layout = 'html5';
@@ -119,13 +125,15 @@ class AppController extends Controller {
 		}
 	}
 
-	/**
-	 * initRequestDetectors
-	 */
+/**
+ * initRequestDetectors
+ *
+ * @return void
+ */
 	public function initRequestDetectors() {
 		// Add a callback to the JSON detector
 		$this->request->addDetector('json', array('callback' => function ($request) {
-			return (preg_match('/(.json){1,}$/', Router::url(null,true)) || $request->is('ajax'));
+			return (preg_match('/(.json){1,}$/', Router::url(null, true)) || $request->is('ajax'));
 		}));
 	}
 

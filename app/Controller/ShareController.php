@@ -2,20 +2,22 @@
 /**
  * Share Controller
  *
- * @copyright     Copyright 2012 Passbolt.com
- * @license       http://www.passbolt.com/license
- * @package       app.Controller.ShareController
- * @since         version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ShareController extends AppController {
 
-	// Components.
+/**
+ * @var array components used in this controller
+ */
 	public $components = array(
 		'PermissionHelper',
 		'EmailNotificator',
 	);
 
-	// Used models.
+/**
+ * @var array models used in this controller
+ */
 	public $uses = array(
 		'Secret',
 		'Resource',
@@ -23,16 +25,16 @@ class ShareController extends AppController {
 		'User',
 	);
 
-	/**
-	 * Update permissions for the objects that have been modified or deleted.
-	 *
-	 * @param $acoModelName
-	 * @param $acoInstanceId
-	 * @param $permissions
-	 *
-	 * @throws Exception
-	 */
-	private function _updatePermissions($acoModelName, $acoInstanceId, $permissions) {
+/**
+ * Update permissions for the objects that have been modified or deleted.
+ *
+ * @param string $acoModelName aco model name
+ * @param string $acoInstanceId aco instance uuid
+ * @param array $permissions a collection of permission
+ * @throws Exception
+ * @return void
+ */
+	private function __updatePermissions($acoModelName, $acoInstanceId, $permissions) {
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
 			throw new Exception(__('The aco model %s is not permissionable', $acoModelName));
@@ -87,8 +89,7 @@ class ShareController extends AppController {
 					if (!$del) {
 						throw new Exception(__('Could not delete permission id %s', $permission['Permission']['id']));
 					}
-				}
-				elseif ($updateCase) {
+				} elseif ($updateCase) {
 					// Update.
 					$this->Permission->id = $permission['Permission']['id'];
 					$update = $this->Permission->saveField('type', $permission['Permission']['type'], true);
@@ -96,8 +97,7 @@ class ShareController extends AppController {
 						throw new Exception(__('Could not save permission id %s', $permission['Permission']['id']));
 					}
 				}
-			}
-			elseif ($saveCase) {
+			} elseif ($saveCase) {
 				$aroModelName = 'User';
 				$acoModelName = 'Resource';
 				$aroInstanceId = isset($permission['Permission']['aro_foreign_key']) ? $permission['Permission']['aro_foreign_key'] : null;
@@ -159,19 +159,19 @@ class ShareController extends AppController {
 		}
 	}
 
-	/**
-	 * Process added secrets.
-	 *
-	 * When we make a share operation, if a new user is added to access an ACO, we need to add his secret.
-	 * this function takes care of processing the secrets provided in the data, and make sure we have everything we need.
-	 *
-	 * @param uuid $acoInstanceId the resource id
-	 * @param array $addedUsers an array of users uuid
-	 * @param array $secrets an array of secrets
-	 *
-	 * @throws Exception
-	 */
-	private function _processAddedSecrets($acoInstanceId, $addedUsers, $secrets) {
+/**
+ * Process added secrets.
+ *
+ * When we make a share operation, if a new user is added to access an ACO, we need to add his secret.
+ * this function takes care of processing the secrets provided in the data, and make sure we have everything we need.
+ *
+ * @param uuid $acoInstanceId the resource id
+ * @param array $addedUsers an array of users uuid
+ * @param array $secrets an array of secrets
+ * @throws Exception
+ * @return void
+ */
+	private function __processAddedSecrets($acoInstanceId, $addedUsers, $secrets) {
 		// Add secrets for added users.
 		if (count($addedUsers) != count($secrets)) {
 			throw new Exception(__("The number of secrets provided doesn't match the %s users who have now access to the resources", count($addedUsers)));
@@ -213,15 +213,15 @@ class ShareController extends AppController {
 		}
 	}
 
-	/**
-	 * Process removed secrets. See similar function _processAddedSecrets().
-	 *
-	 * @param uuid $acoInstanceId
-	 * @param array $removedUsers
-	 *
-	 * @throws Exception
-	 */
-	private function _processRemovedSecrets($acoInstanceId, $removedUsers) {
+/**
+ * Process removed secrets. See similar function __processAddedSecrets().
+ *
+ * @param string $acoInstanceId uuid of the aco instance
+ * @param array $removedUsers list of removed users
+ * @throws Exception
+ * @return void
+ */
+	private function __processRemovedSecrets($acoInstanceId, $removedUsers) {
 		// If there are users that have been removed.
 		if (!empty($removedUsers)) {
 			// Delete Secrets for removed permissions.
@@ -237,14 +237,14 @@ class ShareController extends AppController {
 		}
 	}
 
-	/**
-	 * Simulate entry point.
-	 *
-	 * @param string $acoModelName
-	 * @param uuid   $acoInstanceId
-	 *
-	 * @throws Exception
-	 */
+/**
+ * Simulate entry point.
+ *
+ * @param string $acoModelName aco model name
+ * @param string $acoInstanceId aco instance uuid
+ * @throws Exception
+ * @return void
+ */
 	public function simulate($acoModelName = '', $acoInstanceId = null) {
 		// Should be capitalized
 		$acoModelName = ucfirst($acoModelName);
@@ -253,7 +253,7 @@ class ShareController extends AppController {
 
 		$this->Permission->begin();
 		try {
-			$this->_updatePermissions($acoModelName, $acoInstanceId, $permissions);
+			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
 		}
 		catch (Exception $e) {
 			$this->Permission->rollback();
@@ -271,11 +271,13 @@ class ShareController extends AppController {
 		$this->Message->success(__('Simulate successful'));
 	}
 
-	/**
-	 * Update entry point.
-	 * @param string $acoModelName
-	 * @param null   $acoInstanceId
-	 */
+/**
+ * Update entry point.
+ *
+ * @param string $acoModelName aco model name
+ * @param string $acoInstanceId aco instance uuid
+ * @return void
+ */
 	public function update($acoModelName = '', $acoInstanceId = null) {
 		// Should be capitalized
 		$acoModelName = ucfirst($acoModelName);
@@ -310,7 +312,7 @@ class ShareController extends AppController {
 		// Begin transaction.
 		$this->Permission->begin();
 		try {
-			$this->_updatePermissions($acoModelName, $acoInstanceId, $permissions);
+			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
 		}
 		catch (Exception $e) {
 			$this->Permission->rollback();
@@ -330,8 +332,8 @@ class ShareController extends AppController {
 
 		// Manage added users and removed users.
 		try {
-			$this->_processRemovedSecrets($acoInstanceId, $addedUsers);
-			$this->_processAddedSecrets($acoInstanceId, $addedUsers, $secrets);
+			$this->__processRemovedSecrets($acoInstanceId, $addedUsers);
+			$this->__processAddedSecrets($acoInstanceId, $addedUsers, $secrets);
 		}
 		catch (Exception $e) {
 			$this->Permission->rollback();
@@ -393,8 +395,10 @@ class ShareController extends AppController {
 
 /**
  * Search users who can be granted for a target aco instance
- * @param null $id The aco model to search users for
- * @param null $id The aco instance to search users for
+ *
+ * @param string $model the aco model name
+ * @param string $id the aco instance uuid
+ * @return void
  */
 	public function searchUsers($model = null, $id = null) {
 		$data = array();

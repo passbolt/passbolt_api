@@ -3,24 +3,23 @@
  * Gpgkeys controller
  * This file will define how gpg keys are managed
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.GpgkeysController
- * @since        version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 class GpgkeysController extends AppController {
 
-	/**
-	 * @var $component application wide components
-	 */
+/**
+ * @var $component application wide components
+ */
 	public $components = array(
 		'Filter'
 	);
 
-	/**
-	 * Index entry point.
-	 */
+/**
+ * Index entry point.
+ *
+ * @return void
+ */
 	public function index() {
 		$filter = $this->Filter->fromRequest($this->request->query);
 		$data = array();
@@ -39,13 +38,12 @@ class GpgkeysController extends AppController {
 		$this->set('data', $returnVal);
 	}
 
-	/**
-	 * View
-	 *
-	 * @param $id UUID of the user
-	 *
-	 * @access public
-	 */
+/**
+ * View
+ *
+ * @param string $id UUID of the user
+ * @return void
+ */
 	public function view($id = null) {
 		// check if the id is provided
 		if (!isset($id)) {
@@ -70,11 +68,12 @@ class GpgkeysController extends AppController {
 		$this->Message->success();
 	}
 
-	/**
-	 * gpgkey add entry point
-	 */
+/**
+ * Gpgkey add entry point
+ *
+ * @return void
+ */
 	public function add() {
-
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
@@ -159,7 +158,5 @@ class GpgkeysController extends AppController {
 		// Send response.
 		$this->Message->success(__("The gpgkey has been saved successfully"));
 		$this->set('data', $gpgkey);
-
-		return;
 	}
 }

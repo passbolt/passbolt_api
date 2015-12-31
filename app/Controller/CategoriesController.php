@@ -3,10 +3,8 @@
  * Categories controller
  * This file will define how categories are managed
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.CategoriesController
- * @since        version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('CategoryType', 'Model');
@@ -15,7 +13,9 @@ App::uses('User', 'Model');
 class CategoriesController extends AppController {
 
 /**
- * index - get the list of top categories
+ * Index get the list of top categories
+ *
+ * @return void
  */
 	public function index() {
 		$data = array();
@@ -57,7 +57,6 @@ class CategoriesController extends AppController {
  *
  * @param uuid $id the id of the category
  * @return void
- *
  */
 	public function view($id = null) {
 		$children = isset($this->request->query['children']) ? ($this->request->query['children'] === 'true') : false;
@@ -102,11 +101,10 @@ class CategoriesController extends AppController {
 	}
 
 /**
- * get the children for a corresponding category
+ * Get the children for a corresponding category
  *
- * @param $id , the id of the parent category
+ * @param string $id the uuid of the parent category
  * @return void
- * @todo Rest mapping in routes
  */
 	public function children($id = null) {
 		// check if the id is provided
@@ -179,12 +177,7 @@ class CategoriesController extends AppController {
 		// try to save
 		$fields = $this->Category->getFindFields("add", User::get('Role.name'));
 		$this->Category->create();
-		// @todo take a moment to check what is this mess ....
-		// disable the permissionnable behavior because we need to access other categories to position the new one
-		//		$this->Category->Behaviors->disable('Permissionable');
 		$category = $this->Category->save($catpost, true, $fields['fields']);
-		// reenable the permissionnable behavior
-		//		$this->Category->Behaviors->disable('Permissionable');
 
 		if ($category === false) {
 			$this->Message->error(__('The category could not be saved'));
@@ -209,6 +202,9 @@ class CategoriesController extends AppController {
 
 /**
  * Edit a category
+ *
+ * @param string $id the uuid of the category
+ * @return void
  */
 	public function edit($id = null) {
 		// check the HTTP request method
@@ -279,7 +275,7 @@ class CategoriesController extends AppController {
 /**
  * Delete a category in the tree
  *
- * @param $id , the Category id
+ * @param string $id the category uuid
  * @return void
  */
 	public function delete($id = null) {
@@ -319,9 +315,9 @@ class CategoriesController extends AppController {
 /**
  * Move a category in the tree
  *
- * @param $id , the id of the category to move
- * @param $position , the position among the sieblings
- * @param $parentId , the new parent
+ * @param string $id the uuid of the category to move
+ * @param int $position the position among the siblings
+ * @param string $parentId the uuid of new parent
  * @return void
  */
 	public function move($id = null, $position = null, $parentId = null) {
@@ -376,8 +372,9 @@ class CategoriesController extends AppController {
 /**
  * Set the type of a category
  *
- * @param uuid $id the id of the category
- * @param varchar $typeName , the name of the type
+ * @param string $id the uuid of the category
+ * @param string $typeName , the name of the type
+ * @return void
  */
 	public function type($id = null, $typeName = null) {
 		// check if the category is provided

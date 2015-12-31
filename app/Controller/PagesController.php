@@ -1,23 +1,11 @@
 <?php
 /**
  * Static content controller.
- *
  * This file will render views from views/pages/
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.Controller
- * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 App::uses('AppController', 'Controller');
 
 /**
@@ -44,10 +32,12 @@ class PagesController extends AppController {
  */
 	public $uses = array();
 
-	/**
-	 * beforeFilter
-	 */
-	function beforeFilter(){
+/**
+ * beforeFilter
+ *
+ * @return void
+ */
+	public function beforeFilter() {
 		parent::beforeFilter();
 		if (Configure::read('debug') > 0) {
 			$this->Auth->allow(array('debug'));
@@ -62,8 +52,6 @@ class PagesController extends AppController {
  *	or MissingViewException in debug mode.
  */
 	public function display() {
-		//$this->layout = 'demo';
-
 		$path = func_get_args();
 
 		$count = count($path);
@@ -74,13 +62,13 @@ class PagesController extends AppController {
 
 		if (!empty($path[0])) {
 			$page = $path[0];
-			if(strpos($page,'demo') !== false) {
+			if (strpos($page, 'demo') !== false) {
 				$this->layout = 'demo';
 			}
 		}
 		if (!empty($path[1])) {
 			$subpage = $path[1];
-			if(strpos($subpage,'email-') !== false) {
+			if (strpos($subpage, 'email-') !== false) {
 				$this->layout = 'demo';
 			}
 		}
@@ -99,10 +87,13 @@ class PagesController extends AppController {
 		}
 	}
 
-	/**
-	 * Display the debug pages
-	 */
-	function debug($page) {
+/**
+ * Display the debug pages
+ *
+ * @param string $page page name
+ * @return void
+ */
+	public function debug($page) {
 		$this->viewPath = 'Pages/debug';
 		$this->view = 'config';
 		$this->layout = 'debug';

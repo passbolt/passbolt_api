@@ -1,12 +1,10 @@
 <?php
 /**
  * Mailer Component
- * Class used for debuging emails
+ * Class used for debugging emails
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.MailerComponent
- * @since        version 2.12.7
+ * @copyright 	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class MailerComponent extends Component {
 
@@ -18,17 +16,17 @@ class MailerComponent extends Component {
 /**
  * @var Controller $controller
  */
-	public $Controller;
+	public $controller;
 
 /**
- * Initialize
+ * Called before the Controller::beforeFilter().
  *
- * @param object $controller Controller using this component
- * @return boolean Proceed with component usage (true), or fail (false)
+ * @param Controller $controller Controller with components to initialize
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
  */
-	public function initialize(Controller $controller, $settings=array()) {
-		$this->Controller = $controller;
-		return true;
+	public function initialize(Controller $controller) {
+		$this->controller = $controller;
 	}
 
 /**
@@ -44,7 +42,7 @@ class MailerComponent extends Component {
 				$debug .= $msg['headers'];
 				$debug .= '<br/><br/><strong>Message</strong><br/>';
 				$debug .= $msg['message'];
-				$this->Controller->Message->debug($debug);
+				$this->controller->Message->debug($debug);
 				return true;
 			} else {
 				return $this->email->send();

@@ -213,9 +213,21 @@ CSS minified files should have been generated as the Javascript minified file.
 How do I check the code standards?
 ----------------------------------
 
-To run the sniffs for CakePHP coding standards:
+To run the sniffs for CakePHP coding standards, first you need to install the dev-dependencies with composer.
+Make sure you use the 1.* branch of the cakephp sniffs otherwise the new Cakephp3/PSR2 standards will apply.
+It depends on phpcs version 1.* as well and not the latest releases.
 ```
-    phpcs -p --extensions=php --standard=CakePHP ./lib/Cake
+    composer require --dev "cakephp/cakephp-codesniffer=1.*"
+```
+
+Then let phpcs where to find the cakephp sniffs
+```
+    Vendor/bin/phpcs --config-set installed_paths Vendor/cakephp/cakephp-codesniffer
+```
+
+The you can run it like follow:
+```
+     Vendor/bin/phpcs --standard=CakePHP app/path/to/something
 ```
 
 Credits

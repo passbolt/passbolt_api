@@ -3,31 +3,35 @@
  * PermissionHelper Component
  * This class offers tools for controllers who needs to access permissions.
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.PermissionHelperComponent
- * @since        version 2.12.7
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 class PermissionHelperComponent extends Component {
 
-	/**
-	 * Initialize
-	 */
-	public function initialize(Controller $controller, $settings = array()) {
-		$this->Controller = $controller;
+/**
+ * @var $Permission Model
+ */
+	public $Permission;
+
+/**
+ * Called before the Controller::beforeFilter().
+ *
+ * @param Controller $controller Controller with components to initialize
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
+ */
+	public function initialize(Controller $controller) {
 		$this->Permission = Common::getModel('Permission');
-		parent::initialize($controller);
 	}
 
-	/**
-	 * Get list of ACO permissions.
-	 *
-	 * @param string $acoModelName
-	 * @param null   $acoInstanceId
-	 *
-	 * @return array
-	 */
+/**
+ * Get list of ACO permissions.
+ *
+ * @param string $acoModelName model name
+ * @param string $acoInstanceId UUID of the aco instance
+ * @throws InvalidArgumentException if parameters are empty or incorrect
+ * @return array
+ */
 	public function findAcoPermissions($acoModelName = '', $acoInstanceId = null) {
 		$permissions = array();
 
@@ -59,10 +63,7 @@ class PermissionHelperComponent extends Component {
 			// this view case has to be defined in model which represent the views
 			$viewCase = 'viewBy' . $acoModelName;
 
-			// @todo, automatic aro, based on optional parameters !??
-
 			// get user's permissions for the target instance
-			// @todo We need a strong use case to check this part. Think about the case, direct user permission on the parent categories !!!
 			$viewName = 'User' . $acoModelName . 'Permission';
 			$ModelView = Common::getModel($viewName);
 			$foreignKey = Inflector::underscore($acoModelName) . '_id';
@@ -93,14 +94,13 @@ class PermissionHelperComponent extends Component {
 		return $permissions;
 	}
 
-	/**
-	 * Get a list of users who can access to the given ACO, with their corresponding permissions.
-	 *
-	 * @param $acoModelName
-	 * @param $acoInstanceId
-	 *
-	 * @return array
-	 */
+/**
+ * Get a list of users who can access to the given ACO, with their corresponding permissions.
+ *
+ * @param string $acoModelName model name
+ * @param string $acoInstanceId UUID of the aco instance
+ * @return array
+ */
 	public function findAcoUsers($acoModelName, $acoInstanceId) {
 		$acoKeyName = strtolower($acoModelName) . '_id';
 

@@ -66,8 +66,8 @@ class TestUsersController extends Controller {
 
 class TestPassboltAuthComponent extends PassboltAuthComponent {
 
-	public function __setContext($request) {
-		return parent::__setContext($request);
+	public function _setContext($request) {
+		return parent::_setContext($request);
 	}
 
 }
@@ -131,7 +131,7 @@ class PassboltAuthComponentTest extends CakeTestCase {
 		// Check when no entry is there in database
 		$cr = new CakeRequest();
 		$cr->data['User']['username'] = 'user@test.com';
-		$this->PassboltAuthComponent->__setContext($cr);
+		$this->PassboltAuthComponent->_setContext($cr);
 		$res = $this->PassboltAuthComponent->shouldBlacklist();
 		$this->assertEquals($res, false, "testShouldBlacklist : the test should have returned false but returned $res");
 

@@ -1,11 +1,11 @@
 <?php
 /**
  * PassboltAuth Component
- * Throttles the authentications. 
+ * Throttles the authentications.
  * This component prevents a user to do bruteforce attacks on the login by introducing compulsory time intervals between two login
  *
  * @copyright 	(c) 2015-present Passbolt.com
- * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class PassboltAuthComponent extends AuthComponent {
 
@@ -22,59 +22,52 @@ class PassboltAuthComponent extends AuthComponent {
 /**
  * @var string $ip
  * 		Stores the ip of the user for the current authentication attempt,
- * 		it is populated by __setContext method
+ * 		it is populated by _setContext method
  */
 	public $ip = null;
 
 /**
  * @var string $username
  * 		Stores current username for authentication,
- * 		it is populated by __setContext method
+ * 		it is populated by _setContext method
  */
 	public $username = null;
 
 /**
  * @var cakeRequest $request
  * 		Stores cakephp request object,
- * 		it is populated by __setContext method
+ * 		it is populated by _setContext method
  */
 	public $request = null;
 
 /**
  * @var AuthenticationLog $lastSuccessfulAuth
  * 		Stores last successful authentication object,
- * 		it is populated by __setContext method
+ * 		it is populated by _setContext method
  */
 	public $lastSuccessfulAuth = null;
 
 /**
  * @var AuthenticationLog
  * 		Stores the last failed authentication object,
- * 		it is populated by __setContext method
+ * 		it is populated by _setContext method
  */
 	public $lastFailedAuth = null;
 
 /**
- * @var integer $authenticationAttempt
+ * @var int $authenticationAttempt
  * 		Stores authentication attempt number,
- * 		it is populated by __setContext method
+ * 		it is populated by _setContext method
  */
 	public $authenticationAttempt = 0;
 
 /**
- * @var array $throttle defines the delay in seconds between each attempts
- * 	it is used in case of throttle strategy
- * @todo remove not used?
- */
-	public $throttle = array(5, 15, 45, 60);
-
-/**
- * @var boolean $doBlacklist defines if the current ip should be blacklisted in case of failed authentication attempt
+ * @var bool $doBlacklist defines if the current ip should be blacklisted in case of failed authentication attempt
  */
 	public $doBlacklist = false;
 
 /**
- * @var integer $blacklistTime defines the time during which the current ip should be blacklisted,
+ * @var int $blacklistTime defines the time during which the current ip should be blacklisted,
  * 		only used if $doBlacklist is set to true
  */
 	public $blacklistTime = null;
@@ -84,34 +77,34 @@ class PassboltAuthComponent extends AuthComponent {
  *		e.g. how much time the user need to wait after a failed authentication attempt
  */
 	public $throttlingStrategies = array(
-		'throttle' => array(
-			3 => array(
-				'throttleTime' => '5'
+			'throttle' => array(
+					3 => array(
+							'throttleTime' => '5'
+					),
+					4 => array(
+							'throttleTime' => '15'
+					),
+					5 => array(
+							'throttleTime' => '45'
+					),
+					6 => array(
+							'throttleTime' => '60'
+					)
 			),
-			4 => array(
-				'throttleTime' => '15'
-			),
-			5 => array(
-				'throttleTime' => '45'
-			),
-			6 => array(
-				'throttleTime' => '60'
+			'blacklist' => array(
+					20 => array(
+							'interval' => '60',
+							'blacklistTime' => '600'
+					),
+					50 => array(
+							'interval' => '1200',
+							'blacklistTime' => '2400'
+					),
+					100 => array(
+							'interval' => '3600',
+							'blacklistTime' => '7200'
+					)
 			)
-		),
-		'blacklist' => array(
-			20 => array(
-				'interval' => '60',
-				'blacklistTime' => '600'
-			),
-			50 => array(
-				'interval' => '1200',
-				'blacklistTime' => '2400'
-			),
-			100 => array(
-				'interval' => '3600',
-				'blacklistTime' => '7200'
-			)
-		)
 	);
 
 /**
@@ -130,7 +123,7 @@ class PassboltAuthComponent extends AuthComponent {
 /**
  * Get the throttle time interval corresponding to the attempt number
  *
- * @param integer $attempt, the attempt number
+ * @param int $attempt the current number of attempt
  * @return int $interval, the interval in seconds
  */
 	public function getThrottleInterval($attempt) {
@@ -147,15 +140,19 @@ class PassboltAuthComponent extends AuthComponent {
 				return $this->throttlingStrategies['throttle'][$attempt]['throttleTime'];
 			}
 			foreach ($this->throttlingStrategies['throttle'] as $key => $value) {
-				if ($attempt > $key) return prev($this->throttlingStrategies['throttle']);
+				if ($attempt > $key) {
+					return prev($this->throttlingStrategies['throttle']);
+				}
 			}
 			return end($this->throttlingStrategies['throttle']); // logically this should never happen
 		}
 	}
 
 /**
- * check and tell whether the user should be blacklisted according to what is in the context
- * @return the blacklist interval as defined in the settings if blacklisting has to be done, false if no blacklisting should happen
+ * Check and tell whether the user should be blacklisted according to what is in the context
+ *
+ * @return mixed int the blacklist interval as defined in the settings if blacklisting has to be done,
+ * 			false if no blacklisting should happen
  */
 	public function shouldBlacklist() {
 		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
@@ -194,8 +191,8 @@ class PassboltAuthComponent extends AuthComponent {
 	}
 
 /**
- * Get current attempt number
- * if no attempt was made, return 0
+ * Get current attempt number if no attempt was made, return 0
+ *
  * @return int attempt number
  */
 	public function getAttempt() {
@@ -205,22 +202,24 @@ class PassboltAuthComponent extends AuthComponent {
 
 /**
  * Set the  object context corresponding to the current request
+ *
  * @param Request $request object given by identify
+ * @return void
  */
-	protected function __setContext($request) {
+	protected function _setContext($request) {
 		$this->username = isset($request->data['User']['username']) ? $request->data['User']['username'] : null;
 		$this->ip = $this->controller->request->clientIp();
 
 		$this->lastFailedAuth = $this->AuthenticationLog->getLastFailedAuthenticationLog($this->username, $this->ip);
 		// Get last successful authentication for the username
 		$this->lastSuccessfulAuth = $this->AuthenticationLog->find('first', array(
-			'conditions' => array(
-				'username' => $this->username,
-				'status' => true
-			),
-			'order' => array(
-				'created' => 'DESC'
-			)
+				'conditions' => array(
+						'username' => $this->username,
+						'status' => true
+				),
+				'order' => array(
+						'created' => 'DESC'
+				)
 		));
 		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
 		$this->authenticationAttempt = $this->AuthenticationLog->getFailedAuthenticationCount($this->username, $this->ip, $sinceTimestamp);
@@ -235,25 +234,27 @@ class PassboltAuthComponent extends AuthComponent {
  * Checks if the authentication can happen according to the known context
  * (known context is username and ip that have to be set in the object)
  * will return false if it is throttled
+ *
  * @return bool true if no throttle is going on or false
  */
 	private function __isAuthenticationAllowed() {
-		if($this->authenticationAttempt == 0)
+		if ($this->authenticationAttempt == 0) {
 			return true;
-
+		}
 		$now = time();
 		$next = $this->nextAuthentication();
 		return $now > $next;
 	}
 
 /**
- * gets the timestamp when the next authentication can be done
+ * Gets the timestamp when the next authentication can be done
+ *
  * @return int $nextAuth, timestamp of next authentication
  */
 	public function nextAuthentication() {
-		if($this->authenticationAttempt == 0)
+		if ($this->authenticationAttempt == 0) {
 			return false;
-
+		}
 		$interval = $this->getThrottleInterval($this->authenticationAttempt);
 		$now = time();
 		// allowed time is the time when the user will be allowed to attempt to log on
@@ -266,25 +267,29 @@ class PassboltAuthComponent extends AuthComponent {
 /**
  * Override of identify method
  * Throttler functions have been added
- * @param CakeRequest $request
- * @param CakeResponse $response
+ *
+ * @param CakeRequest $request The request that contains authentication data.
+ * @param CakeResponse $response The response
+ * @return array User record data, or false, if the user could not be identified.
  */
 	public function identify(CakeRequest $request, CakeResponse $response) {
 		// If no parameters are given, we return default value
-		if(empty($request->data)) return parent::identify($request, $response);
+		if (empty($request->data)) {
+			return parent::identify($request, $response);
+		}
 
-		$this->__setContext($request);
+		$this->_setContext($request);
 		// if the user is not allowed to attempt to login, we return false
-		if(!$this->__isAuthenticationAllowed())
+		if (!$this->__isAuthenticationAllowed()) {
 			return false;
-
+		}
 		// get the status of authentication
 		$identified = parent::identify($request, $response);
 		if (isset($request->data['User']['username'])) {
 			$status = $identified ? true : false;
 			// Log the attempt
 			$this->AuthenticationLog->add($request->data['User']['username'], $this->ip, $status);
-			$this->__setContext($request); // After logging a new entry, we set the context again
+			$this->_setContext($request); // After logging a new entry, we set the context again
 		}
 
 		// if there is a failed attempt of login
@@ -295,8 +300,8 @@ class PassboltAuthComponent extends AuthComponent {
 			if ($this->doBlacklist) {
 				$AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
 				$bl = array(
-					'ip' => $this->ip,
-					'expiry' => gmdate('Y-m-d H:i:s', gmdate('U') + $this->blacklistTime)
+						'ip' => $this->ip,
+						'expiry' => gmdate('Y-m-d H:i:s', gmdate('U') + $this->blacklistTime)
 				);
 				// record blacklisting in database
 				$AuthenticationBlacklist->save($bl);

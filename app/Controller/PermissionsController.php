@@ -3,12 +3,9 @@
  * Permissions controller
  * This file will define how permissions are managed
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Controller.PermissionsController
- * @since        version 2.12.12
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 App::uses('Permission', 'Model');
 
 class PermissionsController extends AppController {
@@ -17,70 +14,80 @@ class PermissionsController extends AppController {
 		'PermissionHelper'
 	);
 
-	private function _addAcoPermissions($acoModelName = '', $acoInstanceId = null, $aroModelName = '', $aroInstanceId = null, $permission = null) {
+/**
+ * Add Aco Permissions
+ *
+ * @param string $acoModelName aco model name
+ * @param string $acoInstanceId aco instance uuid
+ * @param string $aroModelName aro model name
+ * @param string $aroInstanceId aro instance uuid
+ * @param string $permission permission type
+ * @return void|bool void if error, true if save was a success
+ */
+	private function __addAcoPermissions($acoModelName = '', $acoInstanceId = null, $aroModelName = '', $aroInstanceId = null, $permission = null) {
 		// The given permission type
 		$permissionType = isset($permission) ? $permission : null;
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
 			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
-			return;
+			return false;
 		}
 
 		// no aco instance id given
 		if (is_null($acoInstanceId)) {
 			$this->Message->error(__('The %s id is missing', $acoModelName));
-			return;
+			return false;
 		}
 
 		// the aco instance id is invalid
 		if (!Common::isUuid($acoInstanceId)) {
 			$this->Message->error(__('The %s id is invalid', $acoModelName));
-			return;
+			return false;
 		}
 
 		// the aco instance instance does not exist
 		$this->loadModel($acoModelName);
 		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::OWNER)) {
 			$this->Message->error(__('Your are not allowed to add a permission to the %s', $acoModelName), array('code' => 403));
-			return;
+			return false;
 		}
 
 		// not allowed aro model
 		if (is_null($aroModelName)) {
 			$this->Message->error(__('The target ARO model is not allowed'));
-			return;
+			return false;
 		}
 
 		// the ARO instance id is invalid
 		if (!Common::isUuid($aroInstanceId)) {
 			$this->Message->error(__('The id %s is invalid', $aroInstanceId));
-			return;
+			return false;
 		}
 
 		// the ARO instance does not exist
 		$this->loadModel($aroModelName);
 		if (!$this->$aroModelName->exists($aroInstanceId)) {
 			$this->Message->error(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $aroInstanceId, $aroModelName));
-			return;
+			return false;
 		}
 
 		// no permission type given
 		if (is_null($permissionType)) {
 			$this->Message->error(__('No permission type given'));
-			return;
+			return false;
 		}
 
 		// the permission type is invalid
 		if (!$this->Permission->PermissionType->isValidSerial($permissionType)) {
 			$this->Message->error(__('The given permission type is not valid'));
-			return;
+			return false;
 		}
 
 		// Check that the permission if a permission already exists
 		if (!$this->Permission->isUniqueByFields($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId)) {
 			$this->Message->error(__('A direct permission already exists'));
-			return;
+			return false;
 		}
 
 		// add the new permission
@@ -97,7 +104,7 @@ class PermissionsController extends AppController {
 		$this->Permission->set($data);
 		if (!$this->Permission->validates()) {
 			$this->Message->error($this->Permission->validationErrors);
-			return;
+			return false;
 		}
 
 		$ret = $this->Permission->save($data, ['atomic' => false]);
@@ -108,8 +115,8 @@ class PermissionsController extends AppController {
 /**
  * Add permission to a target instance of a given model
  *
- * @param string acoModelName the model of the target aco model instance
- * @param uuid acoInstanceId the uuid of the target aco model instance
+ * @param string $acoModelName the model of the target aco model instance
+ * @param string $acoInstanceId the uuid of the target aco model instance
  * @return array
  */
 	public function addAcoPermissions($acoModelName = '', $acoInstanceId = null) {
@@ -141,7 +148,7 @@ class PermissionsController extends AppController {
 			}
 		}
 
-		$save = $this->_addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType);
+		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType);
 		if (!$save) {
 			$this->Message->error(__('Could not save the permission'));
 			return;
@@ -165,8 +172,8 @@ class PermissionsController extends AppController {
 /**
  * View applied permissions on an instance
  *
- * @param string acoModelName the model of the target aco model instance
- * @param uuid acoInstanceId the uuid of the target aco model instance
+ * @param string $acoModelName the model of the target aco model instance
+ * @param string $acoInstanceId the uuid of the target aco model instance
  * @return array
  */
 	public function viewAcoPermissions($acoModelName = '', $acoInstanceId = null) {
@@ -218,14 +225,14 @@ class PermissionsController extends AppController {
 		$this->set('data', $returnValue);
 	}
 
-	/**
-	 * View applied permissions on an instance, after simulating change in the list of permissions.
-	 * The new permissions have to be posted.
-	 *
-	 * @param string acoModelName the model of the target aco model instance
-	 * @param uuid acoInstanceId the uuid of the target aco model instance
-	 * @return array
-	 */
+/**
+ * View applied permissions on an instance, after simulating change in the list of permissions.
+ * The new permissions have to be posted.
+ *
+ * @param string $acoModelName the model of the target aco model instance
+ * @param string $acoInstanceId the uuid of the target aco model instance
+ * @return void
+ */
 	public function simulateAcoPermissionsAfterChange($acoModelName = '', $acoInstanceId = null) {
 		// Should be capitalized
 		$acoModelName = ucfirst($acoModelName);
@@ -259,7 +266,7 @@ class PermissionsController extends AppController {
 		// Init a transaction.
 		$this->Permission->begin();
 		// Save permission inside the transaction.
-		$save = $this->_addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType);
+		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType);
 
 		// Return list of permissions.
 		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
@@ -271,12 +278,11 @@ class PermissionsController extends AppController {
 		$this->set('data', $perms);
 	}
 
-
 /**
  * Edit a permission
  *
- * @param string id the target permission to edit
- * @return array
+ * @param string $id the uuid of the target permission to edit
+ * @return void
  */
 	public function edit($id = null) {
 		// The permission to edit
@@ -371,7 +377,7 @@ class PermissionsController extends AppController {
 /**
  * Delete a permission
  *
- * @param string id the target permission to edit
+ * @param string $id the uuid of the target permission to edit
  * @return array
  */
 	public function delete($id = null) {
@@ -422,5 +428,4 @@ class PermissionsController extends AppController {
 		$this->Permission->delete($id);
 		$this->Message->success(__('The permission was successfully deleted'));
 	}
-
 }

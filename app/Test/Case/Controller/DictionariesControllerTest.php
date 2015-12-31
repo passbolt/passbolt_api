@@ -51,7 +51,7 @@ class DictionariesControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewDictionnaryDoesNotExist() {
-		$this->setExpectedException('HttpException', 'Sorry the dictory could not be found');
+		$this->setExpectedException('HttpException', 'Sorry the dictionary could not be found');
 		$result = json_decode($this->testAction('/dictionaries/00-00.json', array(
 			'return' => 'contents',
 			'method' => 'GET'

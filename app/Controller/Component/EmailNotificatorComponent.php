@@ -3,19 +3,44 @@
  * EmailNotification Component
  * This class offers tools to send notification emails.
  *
- * @copyright 	(c) 2015-present Passbolt.com
- * @licence			GNU Public Licence v3 - www.gnu.org/licenses/gpl-3.0.en.html
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class EmailNotificatorComponent extends Component {
 
 /**
- * Initialize
- *
- * @param Controller $controller
- * @param Array $settings
+ * @var Permission $Permission model instance
  */
-	public function initialize(Controller $controller, $settings = array()) {
-		$this->Controller = $controller;
+	public $Permission;
+
+/**
+ * @var User $User model instance
+ */
+	public $User;
+
+/**
+ * @var Resource $v model instance
+ */
+	public $Resource;
+
+/**
+ * @var Secret $Secret model instance
+ */
+	public $Secret;
+
+/**
+ * @var EmailNotification $EmailNotification model instance
+ */
+	public $EmailNotification;
+
+/**
+ * Called before the Controller::beforeFilter().
+ *
+ * @param Controller $controller Controller with components to initialize
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
+ */
+	public function initialize(Controller $controller) {
 		$this->Permission = Common::getModel('Permission');
 		$this->User = Common::getModel('User');
 		$this->Resource = Common::getModel('Resource');
@@ -31,7 +56,7 @@ class EmailNotificatorComponent extends Component {
  * @param string $userId UUID
  * @return Array $author, empty if not found or null on error
  */
-	private function _getAuthorInfo($userId) {
+	protected function _getAuthorInfo($userId) {
 		$author = $this->User->find(
 			'first',
 			array(
@@ -68,6 +93,7 @@ class EmailNotificatorComponent extends Component {
  *   variables to pass to the template which should contain
  *     resource_id the resource id
  *     sharer_id the user who is sharing the resource
+ * @return void
  */
 	public function passwordSharedNotification($toUserId, $data) {
 		// get resource.
@@ -123,12 +149,12 @@ class EmailNotificatorComponent extends Component {
 /**
  * Send a notification email regarding a new account created for a user.
  *
- * @param uuid $toUserId
- *   user id of the recipient
+ * @param uuid $toUserId user id of the recipient
  * @param array $data
  *   variables to pass to the template which should contain
  *     - creator_id the user who has created the account
  *     - token the token
+ * @return void
  */
 	public function accountCreationNotification($toUserId, $data) {
 		// Get recipient info.
@@ -159,5 +185,4 @@ class EmailNotificatorComponent extends Component {
 			'account_creation'
 		);
 	}
-
 }

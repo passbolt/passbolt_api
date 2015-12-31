@@ -2,12 +2,9 @@
 /**
  * SeleniumTests Controller
  *
- * @copyright		Copyright 2012, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Controller.SeleniumTestsController
- * @since			version 2.13.3
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 // Uses EmailQueue.
 App::uses('EmailQueue', 'Plugin/EmailQueue/Model');
 App::uses('ShellDispatcher', 'Console');
@@ -27,22 +24,27 @@ class SeleniumTestsController extends AppController {
 	);
 
 	// Configuration key to check if selenium entry points are configured.
-	private $configKey = 'App.selenium.active';
+	private $__configKey = 'App.selenium.active';
 
-	/**
-	 * Check if the selenium entry point is allowed by the configuration.
-	 * @return bool
-	 */
+/**
+ * Check if the selenium entry point is allowed by the configuration.
+ *
+ * @return bool
+ */
 	private function __isSeleniumAllowed() {
-		$seleniumAllowed = Configure::read($this->configKey) === true
+		$seleniumAllowed = Configure::read($this->__configKey) === true
 			&& Configure::read('debug') > 0;
 		return $seleniumAllowed;
 	}
 
-	/**
-	 * beforeFilter().
-	 */
-	function beforeFilter() {
+/**
+ * Called before the controller action. Used to manage access right
+ *
+ * @throws ForbiddenException if selenium testing is not enabled on this instance
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
+ */
+	public function beforeFilter() {
 		// If Selenium mode is not activated we throw and exception & redirect home
 		if (!$this->__isSeleniumAllowed()) {
 			throw new ForbiddenException();
@@ -63,13 +65,14 @@ class SeleniumTestsController extends AppController {
 		parent::beforeFilter();
 	}
 
-	/**
-	 * Show last email sent to a particular user.
-	 * Make sure you send email address URL encoded
-	 * @param string $username
-	 *
-	 * @throws Exception
-	 */
+/**
+ * Show last email sent to a particular user.
+ * Make sure you send email address URL encoded
+ *
+ * @param string $username the email of the user
+ * @throws HttpException
+ * @return void
+ */
 	public function showLastEmail($username = null) {
 		// If username is null, we return an error.
 		if (is_null($username)) {
@@ -108,20 +111,19 @@ class SeleniumTestsController extends AppController {
 		$this->render("/Emails/$format/" . $template);
 	}
 
-	/**
-	 * DANGEROUS !!!! Reset passbolt instance data.
-	 * DO NOT CALL THIS ENTRY POINT IF YOU DON'T UNDERSTAND WHAT IT IS.
-	 * WE USE IT ONLY FOR OUR SELENIUM TESTS.
-	 * IF YOU CALL IT, YOU WILL LOSE ALL THE DATA OF YOUR DB. YOU ARE WARNED.
-	 * This is same as calling the cake shell : cake install [--data=[default|...]]
-	 * @param string $dummy data set name
-	 */
+/**
+ * Reset passbolt instance data. All data will be lost
+ * This is same as calling the cake shell : cake install [--data=[default|...]]
+ *
+ * @param string $dummy data set name
+ * @return void
+ */
 	public function resetInstance($dummy = 'seleniumtests') {
 		// Install job shell.
 		$job = new InstallShell();
 		$job->startup();
 		// If dummy data is requested.
-		if($dummy == 'default' || $dummy == 'seleniumtests' || $dummy == 'unittests') {
+		if ($dummy == 'default' || $dummy == 'seleniumtests' || $dummy == 'unittests') {
 			$job->params['data'] = $dummy;
 			$job->params['quick'] = 'true';
 		}
@@ -130,24 +132,41 @@ class SeleniumTestsController extends AppController {
 		die();
 	}
 
-	/**
-	 * Convenience functions to test error pages
-	 */
+/**
+ * Convenience functions to test error pages
+ *
+ * @param string $case [message|exception] throw an exception directly or use the message component
+ * @throws NotFoundException
+ * @return void
+ */
 	public function error404($case = 'message') {
 		$this->request->invalidateFields = 'stuffs';
 		switch($case) {
 			case 'exception':
 				throw new NotFoundException();
-			break;
 			default:
-				return $this->Message->error('404 test not found', array('code' => 404));
+				$this->Message->error('404 test not found', array('code' => 404));
+				return;
 		}
 	}
+
+/**
+ * Convenience function to test a 403 page
+ *
+ * @return void
+ */
 	public function error403() {
+		return;
 		// nothing, forbidden because not part of allow list
 	}
+
+/**
+ * Convenience function to test a 500 page
+ *
+ * @throws InternalErrorException
+ * @return void
+ */
 	public function error500() {
 		throw new InternalErrorException();
 	}
-
 }

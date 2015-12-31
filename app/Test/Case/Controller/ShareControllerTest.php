@@ -23,12 +23,12 @@ App::uses('CakeSession', 'Model/Datasource');
 
 class ShareControllerTest extends ControllerTestCase {
 
-	public $fixtures
-		= array(
+	public $fixtures = array(
 			'app.resource',
 			'app.secret',
 			'app.category',
 			'app.categories_resource',
+			'app.favorite',
 			'app.user',
 			'app.group',
 			'app.groups_user',

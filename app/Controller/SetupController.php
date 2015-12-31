@@ -2,21 +2,26 @@
 /**
  * Setup Controller
  *
- * @copyright   Copyright 2015, Passbolt.com
- * @license     http://www.passbolt.com/license
- * @package     app.Controller.SetupController
- * @since       version 2.12.9
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class SetupController extends AppController {
-	public $helpers = array();
-	public $components = array();
 
+/**
+ * @var array Models to be used in this controller
+ */
 	public $uses = array(
 		'User',
 		'AuthenticationToken',
 	);
 
-	function beforeFilter(){
+/**
+ * Called before the controller action. Used to manage access right
+ *
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
+ */
+	public function beforeFilter() {
 		$this->Auth->allow('install');
 		$this->Auth->allow('ping');
 		parent::beforeFilter();
@@ -25,7 +30,11 @@ class SetupController extends AppController {
 /**
  * Install the plugin for the first time.
  *
- * @param string $token
+ * @param string $userId user uuid
+ * @param string $token AuthenticationToken uuid
+ * @throws BadRequestException
+ * @throws NotFoundException
+ * @return void
  */
 	public function install($userId = null, $token = null) {
 		$this->layout = 'html5';
@@ -63,9 +72,11 @@ class SetupController extends AppController {
 		$this->set('user', $user);
 	}
 
-	/**
-	 * Ping passbolt.
-	 */
+/**
+ * Ping passbolt.
+ *
+ * @return void
+ */
 	public function ping() {
 		header('Access-Control-Allow-Origin: *');
 		header('Access-Control-Allow-Methods: PUT, OPTIONS');

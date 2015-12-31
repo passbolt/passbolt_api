@@ -2,20 +2,18 @@
 /**
  * ItemsTags Controller
  *
- * @copyright   Copyright 2012, Passbolt.com
- * @license     http://www.passbolt.com/license
- * @package     app.Controller.GroupsController
- * @since       version 2.13.6
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ItemTagsController extends AppController {
 
-	public $helpers = array('PassboltAuth');
-
-	/**
-	 * Index
-	 *
-	 * @access public
-	 */
+/**
+ * Index
+ *
+ * @param string $foreignModel model name
+ * @param string $foreignId instance uuid
+ * @return void
+ */
 	public function viewForeignItemTags($foreignModel = null, $foreignId = null) {
 		$foreignModelName = Inflector::camelize($foreignModel);
 
@@ -26,13 +24,13 @@ class ItemTagsController extends AppController {
 		}
 
 		// check if the target foreign model is commentable
-		if(!$this->ItemTag->isValidForeignModel($foreignModelName)) {
+		if (!$this->ItemTag->isValidForeignModel($foreignModelName)) {
 			$this->Message->error(__('The model %s is not taggable', $foreignModelName));
 			return;
 		}
 
 		// no instance id given
-		if(is_null($foreignId)) {
+		if (is_null($foreignId)) {
 			$this->Message->error(__('The %s id is missing', $foreignModelName));
 			return;
 		}
@@ -74,13 +72,13 @@ class ItemTagsController extends AppController {
 		$this->Message->success();
 	}
 
-	/**
-	 * Edit several tag/item associations
-	 *
-	 * @param null|string $foreignModelName
-	 * @param null|UUID $foreignId
-	 * @return mixed
-	 */
+/**
+ * Edit several tag/item associations
+ *
+ * @param null|string $foreignModelName model name
+ * @param null|UUID $foreignId instance uuid
+ * @return void
+ */
 	public function updateBulk($foreignModelName = null, $foreignId = null) {
 		$datasource = ConnectionManager::getDataSource('default');
 		$datasource->begin();
@@ -91,32 +89,37 @@ class ItemTagsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$datasource->rollback();
-			return $this->Message->error(__('Invalid request method, should be POST'));
+			$this->Message->error(__('Invalid request method, should be POST'));
+			return;
 		}
 
 		// check if the target foreign model is commentable
-		if(!$this->ItemTag->isValidForeignModel($foreignModelName)) {
+		if (!$this->ItemTag->isValidForeignModel($foreignModelName)) {
 			$datasource->rollback();
-			return $this->Message->error(__('The model %s is not taggable', $foreignModelName));
+			$this->Message->error(__('The model %s is not taggable', $foreignModelName));
+			return;
 		}
 
 		// no instance id given
-		if(is_null($foreignId)) {
+		if (is_null($foreignId)) {
 			$datasource->rollback();
-			return $this->Message->error(__('The %s id is missing', $foreignModelName));
+			$this->Message->error(__('The %s id is missing', $foreignModelName));
+			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
 			$datasource->rollback();
-			return $this->Message->error(__('The %s id is invalid', $foreignModelName));
+			$this->Message->error(__('The %s id is invalid', $foreignModelName));
+			return;
 		}
 
 		// the foreign instance does not exist
 		$instance = $this->ItemTag->$foreignModelName->findById($foreignId);
 		if (!$instance) {
 			$datasource->rollback();
-			return $this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			return;
 		}
 
 		// check if user is authorized.
@@ -125,7 +128,8 @@ class ItemTagsController extends AppController {
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->ItemTag->$foreignModelName->isAuthorized($foreignId, PermissionType::UPDATE)) {
 			$datasource->rollback();
-			return $this->Message->error(__('You are not authorized to update item tags of this %s', $foreignModelName), array('code' => 403));
+			$this->Message->error(__('You are not authorized to update item tags of this %s', $foreignModelName), array('code' => 403));
+			return;
 		}
 
 		$this->ItemTag->deleteAll(array(
@@ -141,42 +145,46 @@ class ItemTagsController extends AppController {
 		// If new tags have been given.
 		if (!empty($tagList)) {
 			$tags = explode(',', $tagList);
-			foreach($tags as $tagName) {
+			foreach ($tags as $tagName) {
 				$tagName = trim($tagName);
 				$tag = $this->ItemTag->Tag->findByName($tagName);
 
 				// If the given tag doesn't exist, create it.
-				if(!$tag) {
+				if (!$tag) {
 					$t = array(
 						'name' => $tagName
 					);
 					$this->ItemTag->Tag->create();
 					$this->ItemTag->Tag->set($t);
-					if(!$this->ItemTag->Tag->validates()) {
+					if (!$this->ItemTag->Tag->validates()) {
 						$datasource->rollback();
-						return $this->Message->error(__('The tag named %s is not valid', $tagName));
+						$this->Message->error(__('The tag named %s is not valid', $tagName));
+						return;
 					}
-					if(!($tag = $this->ItemTag->Tag->save($t))) {
+					if (!($tag = $this->ItemTag->Tag->save($t))) {
 						$datasource->rollback();
-						return $this->Message->error(__('There was a problem while saving tag %s', $tagName));
+						$this->Message->error(__('There was a problem while saving tag %s', $tagName));
+						return;
 					}
 				}
 
 				// Create the new Item Tag.
 				$itemTag = array(
 					'foreign_model' => $foreignModelName,
-					'foreign_id'    => $foreignId,
-					'tag_id'        => $tag['Tag']['id']
+					'foreign_id' => $foreignId,
+					'tag_id' => $tag['Tag']['id']
 				);
 				$this->ItemTag->create();
 				$this->ItemTag->set($itemTag);
-				if(!$this->ItemTag->validates()) {
+				if (!$this->ItemTag->validates()) {
 					$datasource->rollback();
-					return $this->Message->error(__('The ItemTag is not valid', $tagName));
+					$this->Message->error(__('The ItemTag is not valid', $tagName));
+					return;
 				}
-				if(!$this->ItemTag->save($itemTag)) {
+				if (!$this->ItemTag->save($itemTag)) {
 					$datasource->rollback();
-					return $this->Message->error(__('There was a problem while saving ItemTag', $tagName));
+					$this->Message->error(__('There was a problem while saving ItemTag', $tagName));
+					return;
 				}
 			}
 		}
@@ -196,11 +204,13 @@ class ItemTagsController extends AppController {
 		$this->Message->success(__('The items tags have been updated with success'));
 	}
 
-	/**
-	 * Add a tag to a target taggable model instance
-	 * @param string foreignModelName The target foreign model
-	 * @param uuid foreignId The uuid of the target instance to create tags for
-	 */
+/**
+ * Add a tag to a target taggable model instance
+ *
+ * @param string $foreignModelName The target foreign model
+ * @param string $foreignId The uuid of the target instance to create tags for
+ * @return void
+ */
 	public function addForeignItemTag($foreignModelName = null, $foreignId = null) {
 		$datasource = ConnectionManager::getDataSource('default');
 		$datasource->begin();
@@ -211,32 +221,37 @@ class ItemTagsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$datasource->rollback();
-			return $this->Message->error(__('Invalid request method, should be POST'));
+			$this->Message->error(__('Invalid request method, should be POST'));
+			return;
 		}
 
 		// check if the target foreign model is commentable
-		if(!$this->ItemTag->isValidForeignModel($foreignModelName)) {
+		if (!$this->ItemTag->isValidForeignModel($foreignModelName)) {
 			$datasource->rollback();
-			return $this->Message->error(__('The model %s is not taggable', $foreignModelName));
+			$this->Message->error(__('The model %s is not taggable', $foreignModelName));
+			return;
 		}
 
 		// no instance id given
-		if(is_null($foreignId)) {
+		if (is_null($foreignId)) {
 			$datasource->rollback();
-			return $this->Message->error(__('The %s id is missing', $foreignModelName));
+			$this->Message->error(__('The %s id is missing', $foreignModelName));
+			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
 			$datasource->rollback();
-			return $this->Message->error(__('The %s id is invalid', $foreignModelName));
+			$this->Message->error(__('The %s id is invalid', $foreignModelName));
+			return;
 		}
 
 		// the foreign instance does not exist
 		$instance = $this->ItemTag->$foreignModelName->findById($foreignId);
 		if (!$instance) {
 			$datasource->rollback();
-			return $this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			return;
 		}
 
 		// check if user is authorized.
@@ -245,13 +260,15 @@ class ItemTagsController extends AppController {
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->ItemTag->$foreignModelName->isAuthorized($foreignId, PermissionType::READ)) {
 			$datasource->rollback();
-			return $this->Message->error(__('You are not authorized to access this %s', $foreignModelName), array('code' => 403));
+			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), array('code' => 403));
+			return;
 		}
 
 		// check if data was provided
 		if (!isset($postData['ItemTag']) && !isset($postData['Tag'])) {
 			$datasource->rollback();
-			return $this->Message->error(__('No data were provided'));
+			$this->Message->error(__('No data were provided'));
+			return;
 		}
 		// add data to the posted data
 		$postData['ItemTag']['foreign_model'] = $foreignModelName;
@@ -267,9 +284,10 @@ class ItemTagsController extends AppController {
 				$this->ItemTag->Tag->create();
 				$this->ItemTag->Tag->set($postData);
 				// check if the data is valid.
-				if(!$this->ItemTag->Tag->validates()){
+				if (!$this->ItemTag->Tag->validates()) {
 					$datasource->rollback();
-					return $this->Message->error($this->ItemTag->Tag->validationErrors);
+					$this->Message->error($this->ItemTag->Tag->validationErrors);
+					return;
 				}
 
 				$fields = $this->ItemTag->Tag->getFindFields('Tag.add', User::get('Role.name'));
@@ -279,21 +297,21 @@ class ItemTagsController extends AppController {
 
 			// add the tag id to the item tag save request.
 			$postData['ItemTag']['tag_id'] = $this->ItemTag->Tag->id;
-		}
-		// a tag id has been given.
-		else if (isset($postData['ItemTag']['tag_id'])) {
-			// check that it's a valid tag.
+		} elseif (isset($postData['ItemTag']['tag_id'])) {
+			// a tag id has been given, check it
 			if (!$this->ItemTag->Tag->exists($postData['ItemTag']['tag_id'])) {
 				$datasource->rollback();
-				return $this->Message->error(__('The Tag id is invalid'));
+				$this->Message->error(__('The Tag id is invalid'));
+				return;
 			}
 		}
 
 		$this->ItemTag->set($postData);
 		// check if the data is valid
-		if(!$this->ItemTag->validates()){
+		if (!$this->ItemTag->validates()) {
 			$datasource->rollback();
-			return $this->Message->error($this->ItemTag->validationErrors);
+			$this->Message->error($this->ItemTag->validationErrors);
+			return;
 		}
 
 		// Save the item tag.
@@ -309,11 +327,12 @@ class ItemTagsController extends AppController {
 		$this->Message->success(__('The tag was successfully added'));
 	}
 
-
-	/**
-	 * Delete an ItemTag.
-	 * @param uuid id The uuid of the item_tag to delete
-	 */
+/**
+ * Delete an ItemTag.
+ *
+ * @param string $id the uuid of the item_tag to delete
+ * @return void
+ */
 	public function delete($id = null) {
 		// check the HTTP request method
 		if (!$this->request->is('delete')) {
@@ -322,7 +341,7 @@ class ItemTagsController extends AppController {
 		}
 
 		// no instance id given
-		if(is_null($id)) {
+		if (is_null($id)) {
 			$this->Message->error(__('The item tag id is missing'));
 			return;
 		}
@@ -355,5 +374,4 @@ class ItemTagsController extends AppController {
 		$this->ItemTag->delete($id, true);
 		$this->Message->success(__('The ItemTag was successfully deleted'));
 	}
-
 }

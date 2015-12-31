@@ -1,0 +1,13 @@
+
+FILE: /Users/remy/Work/www/passbolt/app/Controller/UsersController.php
+--------------------------------------------------------------------------------
+FOUND 1 ERROR(S) AND 2 WARNING(S) AFFECTING 3 LINE(S)
+--------------------------------------------------------------------------------
+ 570 | ERROR   | Tabs must be used to indent lines; spaces are not allowed
+ 585 | WARNING | Doc comment for var id does not match actual variable name $id
+     |         | at position 1
+ 586 | WARNING | Missing @return tag in function comment
+--------------------------------------------------------------------------------
+UPGRADE TO PHP_CODESNIFFER 2.0 TO FIX ERRORS AUTOMATICALLY
+--------------------------------------------------------------------------------
+

@@ -2,22 +2,16 @@
 /**
  * Groups Controller
  *
- * @copyright   Copyright 2012, Passbolt.com
- * @license     http://www.passbolt.com/license
- * @package     app.Controller.GroupsController
- * @since       version 2.13.6
+ * @copyright	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class GroupsController extends AppController {
 
-	public $helpers = array(
-		'PassboltAuth'
-	);
-
-	/**
-	 * Index
-	 *
-	 * @access public
-	 */
+/**
+ * Index
+ *
+ * @return void
+ */
 	public function index() {
 		$data = array();
 		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
@@ -38,13 +32,12 @@ class GroupsController extends AppController {
 		$this->set('data', $returnVal);
 	}
 
-	/**
-	 * View
-	 *
-	 * @param $id UUID of the user
-	 *
-	 * @access public
-	 */
+/**
+ * View
+ *
+ * @param string $id the UUID of the user
+ * @return void
+ */
 	public function view($id = null) {
 		// check if the id is provided
 		if (!isset($id)) {
@@ -69,9 +62,11 @@ class GroupsController extends AppController {
 		$this->Message->success();
 	}
 
-	/**
-	 * group add entry point
-	 */
+/**
+ * group add entry point
+ *
+ * @return void
+ */
 	public function add() {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
@@ -103,7 +98,7 @@ class GroupsController extends AppController {
 		}
 
 		$this->Group->begin();
-		$group= $this->Group->save($groupData, false, $fields['fields']);
+		$group = $this->Group->save($groupData, false, $fields['fields']);
 
 		if ($group == false) {
 			$this->Group->rollback();
@@ -117,15 +112,14 @@ class GroupsController extends AppController {
 
 		$this->Message->success(__("The group has been saved successfully"));
 		$this->set('data', $group);
-
-		return;
 	}
 
-	/**
-	 * edit entry point for users
-	 *
-	 * @param uuid $id the id of the user we want to edit
-	 */
+/**
+ * edit entry point for users
+ *
+ * @param string $id the uuid of the user we want to edit
+ * @return void
+ */
 	public function edit($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
@@ -150,7 +144,7 @@ class GroupsController extends AppController {
 			$this->Message->error(__('The group id is invalid'));
 			return;
 		}
-		
+
 		// get the resource id
 		$resource = $this->Group->findById($id);
 		if (!$resource) {
@@ -196,11 +190,12 @@ class GroupsController extends AppController {
 		}
 	}
 
-	/**
-	 * Delete a user
-	 *
-	 * @param uuid id the id of the user to delete
-	 */
+/**
+ * Delete a user
+ *
+ * @param string $id the uuid of the user to delete
+ * @return void
+ */
 	public function delete($id = null) {
 		// First of all, check if the user is an administrator
 		if (User::get('Role.name') != Role::ADMIN) {
@@ -213,19 +208,19 @@ class GroupsController extends AppController {
 			$this->Message->error(__('The group id is missing'));
 			return;
 		}
-		
+
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The group id is invalid'));
 			return;
 		}
-		
+
 		$group = $this->Group->findById($id);
 		if (!$group) {
 			$this->Message->error(__('The group does not exist'), array('code' => 404));
 			return;
 		}
-		
+
 		$this->Group->id = $id;
 		$group['Group']['deleted'] = true;
 

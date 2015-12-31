@@ -113,7 +113,7 @@ class MessageComponentTest extends CakeTestCase {
 
 	public function testErrorRedirect() {
 		$this->MessageComponent->error('error test4', array('throw' => false, 'redirect' => true));
-		$this->MessageComponent->Controller->response = $this->getMock('CakeResponse', array('header', 'statusCode'));
+		$this->MessageComponent->controller->response = $this->getMock('CakeResponse', array('header', 'statusCode'));
 	}
 
 	public function testWarning() {
