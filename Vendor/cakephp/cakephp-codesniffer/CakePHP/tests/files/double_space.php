@@ -1,0 +1,2 @@
+<?php
+$var  = 'double space';

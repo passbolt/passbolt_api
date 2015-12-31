@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Phing build file for CakePHP coding standards.
+	Used to create pear pacakages.
+	Requires the d51PearPkg2 to be installed:
+
+	pear channel-discover pear.domain51.com
+	pear install domain51/Phing_d51PearPkg2Task
+
+	Use the `build` task to create a pear package based on the current working copy.
+	Use the `distribute` task to upload the pear package.
+	Use the `clean` task to clean up packaging artifacts.
+-->
+<project name="CakePHP-CodeSniffer" default="build">
+
+	<taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2" />
+
+	<!-- Update this version when making new packages -->
+	<property name="version" value="1.0.0" />
+
+	<!-- Shouldn't have to change these -->
+	<property name="build.dir" value="build" />
+	<property name="dist.dir" value="dist" />
+	<property name="project.name" value="CakePHP_CodeSniffer" />
+	<property name="pear.package" value="${project.name}-${version}" />
+	<property name="pirum.dir" value="/home/cakephp/www-live/pear.cakephp.org" />
+
+	<!--
+		The set of files we're going to package
+	 -->
+	<fileset id="files" dir="./">
+		<include name="**" />
+		<exclude name="build.xml" />
+		<exclude name="phpunit.xml" />
+		<exclude name="vendor/**" />
+	</fileset>
+
+	<!-- start fresh each time.  Remove the dist and build dirs -->
+	<target name="clean">
+		<delete dir="${build.dir}" includeemptydirs="true" />
+		<delete dir="${dist.dir}" includeemptydirs="true" />
+	</target>
+
+	<!--
+		Copy all the files to build/ so they can be packaged up.
+	-->
+	<target name="copy-files" depends="clean">
+		<echo msg="Creating build + dist directories." />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+
+		<echo msg="Copying files to build directory" />
+		<copy todir="${build.dir}/${pear.package}">
+			<fileset refid="files" />
+		</copy>
+	</target>
+
+	<!--
+		Define the package.xml.  Using xml to make xml is fun!
+	-->
+	<target name="define-pear-package" depends="copy-files">
+		<d51pearpkg2 baseinstalldir="PHP/CodeSniffer/Standards" dir="${build.dir}/${pear.package}">
+			<name>CakePHP_CodeSniffer</name>
+			<summary>PHP_CodeSniffer rules for CakePHP</summary>
+			<channel>pear.cakephp.org</channel>
+			<description>PHP_CodeSniffer rules for checking code against the CakePHP coding standards.</description>
+
+			<lead user="mark_story" name="Mark Story" email="mark@mark-story.com" />
+			<developer user="jrbasso" name="Juan Basso" email="jrbasso@gmail.com" />
+			<developer user="AD7six" name="Andy Dawson" email="andydawson76@gmail.com" />
+			<developer user="euromark" name="euromark" email="euromark@web.de" />
+
+			<license>MIT License</license>
+			<version release="${version}" api="${version}" />
+			<stability release="stable" api="stable" />
+			<notes>http://github.com/cakephp/cakephp-codesniffer/blob/master/README</notes>
+			<dependencies>
+				<php minimum_version="5.2.8" />
+				<pear minimum_version="1.9.0" recommended_version="1.9.4" />
+				<package name="PHP_CodeSniffer" channel="pear.php.net" maximum_version="1.5" minimum_version="1.4" />
+			</dependencies>
+			<exceptions key="CakePHP/ruleset.xml">php</exceptions>
+			<exceptions key="README.md">php</exceptions>
+
+			<changelog version="1.0.0" date="2014-12-21" license="MIT">
+				* Bump to 1.0.0 as development has already started
+				  on a PSR-2 compatible codesniffer that will be released
+				  at the 2.x version number.
+			</changelog>
+
+			<changelog version="0.1.31" date="2014-12-10" license="MIT">
+				* Stick with 1.x version of PHP_CodeSniffer.
+			</changelog>
+
+			<changelog version="0.1.30" date="2014-12-05" license="MIT">
+				* Stick with 1.x version of PHP_CodeSniffer.
+			</changelog>
+
+			<changelog version="0.1.29" date="2014-10-04" license="MIT">
+				* Closure spacing sniff was added.
+				* Improved API doc blocks.
+				* Fix reference operator sniff for reference values in arrays.
+			</changelog>
+
+			<changelog version="0.1.28" date="2014-09-17" license="MIT">
+				* New Type casting sniff added.
+				* New function comment sniff added.
+				* Improved error messages for use statements.
+				* API doc block issues raise warnings.
+				* API doc block indentation issues are now a warning instead of an error.
+			</changelog>
+
+			<changelog version="0.1.27" date="2014-06-29" license="MIT">
+				* Documentation sniffs are no longer applied to test cases.
+			</changelog>
+
+			<changelog version="0.1.26" date="2014-06-22" license="MIT">
+				* Docblocks now allow only 1 space after variable types.
+				* The `{@inheritDoc}` tag no longer triggers errors.
+			</changelog>
+
+			<changelog version="0.1.25" date="2014-05-22" license="MIT">
+				* Fix broken PEAR package.
+			</changelog>
+
+			<changelog version="0.1.24" date="2014-05-22" license="MIT">
+				* New FunctionCommentSniff added.
+				* Added composer.json
+				* Restructured repo to work better with composer.
+			</changelog>
+
+			<changelog version="0.1.23" date="2014-03-08" license="MIT">
+				* The `__debugInfo` magic method in PHP5.6 is not flagged as
+				  an error anymore.
+			</changelog>
+
+			<changelog version="0.1.22" date="2014-02-10" license="MIT">
+				* Operator sniff no longer fails on negative numbers inside
+				  short arrays.
+			</changelog>
+
+			<changelog version="0.1.21" date="2014-01-10" license="MIT">
+				* Namespace/directory sniff was removed. CakePHP will be using
+				  PSR-4 autoloading which no longer follows this rule.
+			</changelog>
+
+			<changelog version="0.1.20" date="2013-12-29" license="MIT">
+				* Useless method override sniff was removed. It created many false
+				  positives and rarely provided any valuable feedback.
+				* Using underscored property names no longer triggers errors. The
+				  new ORM in 3.0 will have widespread use of underscored properties, we
+				  cannot treat them as errors.
+			</changelog>
+
+			<changelog version="0.1.19" date="2013-12-17" license="MIT">
+				* Protected properties on traits no longer trigger warnings.
+			</changelog>
+
+			<changelog version="0.1.18" date="2013-11-12" license="MIT">
+				* Remove doubly reported errors for function names.
+				* Methods with the same name as the class no longer trigger warnings.
+			</changelog>
+
+			<changelog version="0.1.17" date="2013-09-15" license="MIT">
+				* Fix `use` sniff to not flag closures, and correctly handle classes defined
+				  after a closure.
+			</changelog>
+
+			<changelog version="0.1.16" date="2013-08-31" license="MIT">
+				* Fix constant sniff to not flag renamed trait methods.
+			</changelog>
+
+			<changelog version="0.1.15" date="2013-08-19" license="MIT">
+				* Fix use sniff for closures.
+			</changelog>
+
+			<changelog version="0.1.14" date="2013-08-12" license="MIT">
+				* Windows newlines no longer cause violations.
+				* PHP 5.4 short &lt;?= variant is now allowed.
+				* tmp directories are now excluded.
+				* Alternative syntax control structure sniffs were improved.
+				* Whitespace before/after commas is now checked.
+				* Underscored method names are now allowed in Task classes.
+				* Inline control structure sniffs were improved.
+				* `use` statements alphabetical ordering sniff improved.
+				* Fix detection of class opening brackets.
+				* Call spacing checks for built-in methods was improved.
+				* Only the .git directory should be ignored.
+				* Blank lines are now required after `namespace` and `use` keywords.
+				* Private static variable names no longer cause violations.
+			</changelog>
+
+			<changelog version="0.1.13" date="2013-05-12" license="MIT">
+				* Fix issues with parenthesis on include/require statements.
+			</changelog>
+
+			<changelog version="0.1.12" date="2013-05-11" license="MIT">
+				* Use sniff for traits/namespaces now works correctly.
+				* Sniffs for blank lines after namespaces added.
+				* .git should not be checked, but paths containing it should.
+				* Make tests simpler to setup/run.
+				* Add sniff for class brace placement.
+			</changelog>
+
+			<changelog version="0.1.11" date="2012-12-10" license="MIT">
+				* Use Generic.WhiteSpace.DisallowSpaceIndent instead of ForceTabIndentSniff
+				* Adding sniff for space and tab mixing
+				* Fixing operator spacing issue
+				* Added sniff for require use in alphabetical order
+				* Remove outputstring from error message, failing test will already show why the assert failed
+				* Fix error messages for tests
+				* Fixes for PHP 5.2
+				* Add travis support
+			</changelog>
+
+			<changelog version="0.1.10" date="2012-11-14" license="MIT">
+				* Supporting namespaces using block format
+				* Validating trait names
+				* Checking use in alphabetical order more properly and supporting traits
+				* Fixed code standard issues
+				* Implemented sniff to validate @throws in PHPDoc with support to namespaces
+				* Fixed use alphabetical order to check per file.
+				* Added sniff for require use in alphabetical order
+				* Added validation for one class per use
+				* Added validation for namespaces
+				* Changed to test files recursively.
+				* Fixed call for the fail on test case
+			</changelog>
+
+			<changelog version="0.1.9" date="2012-10-08" license="MIT">
+				* Small bug fix for operator spacing sniff.
+				* Test suite improvements.
+			</changelog>
+
+			<changelog version="0.1.8" date="2012-05-11" license="MIT">
+				* Small bug fix for variable name sniff.
+			</changelog>
+
+			<changelog version="0.1.7" date="2012-05-08" license="MIT">
+				* Remove contains numbers rule.
+				* Fix naming rules on Schema classes.
+				* Ignore .ini.php files.
+				* Remove commented out code sniff.
+				* Remove inline control structure sniff, as they
+				  are useful in HTML files.
+			</changelog>
+
+			<changelog version="0.1.6" date="2012-04-26" license="MIT">
+				* Fix doc comment indent message.
+				* Fix operator spacing rules when used with case &amp; ternary operators.
+				* Fix method checking on shell classes.
+				* Added space indent rules.
+				* Added unit tests.
+			</changelog>
+
+			<changelog version="0.1.5" date="2012-04-19" license="MIT">
+				* Fix issues with scope indent rules.
+				* Fix method checking on shell classes.
+			</changelog>
+
+			<changelog version="0.1.4" date="2012-04-08" license="MIT">
+				* Fix dependency issues.
+			</changelog>
+
+			<changelog version="0.1.3" date="2012-04-08" license="MIT">
+				* Fix private variable sniffs.
+				* Add phpcs dependency.
+			</changelog>
+
+		</d51pearpkg2>
+	</target>
+
+	<!-- Generate the PEAR package from a directory and move the files to the dist folder -->
+	<target name="generate-package" depends="define-pear-package">
+		<exec command="pear package" dir="${build.dir}/${pear.package}" passthru="true"/>
+		<echo msg="Moving ${pear.package}.tgz"/>
+		<move file="${build.dir}/${pear.package}/${pear.package}.tgz" todir="${dist.dir}" />
+	</target>
+
+	<!--
+		Upload to pirum pear channel.
+	-->
+	<target name="distribute">
+		<echo msg="Uploading tgz file to cakephp.org" />
+		<exec command="scp ${dist.dir}/${pear.package}.tgz cakephp@cakephp.org:${pirum.dir}" dir="." checkreturn="true"  />
+
+		<echo msg="Adding new release to pirum" />
+		<exec command="ssh cakephp@cakephp.org pirum add ${pirum.dir} ${pirum.dir}/${pear.package}.tgz" checkreturn="true" />
+	</target>
+
+	<!--
+		Top level easy to type targets
+	-->
+	<target name="build" depends="generate-package" />
+	<target name="release" depends="build,distribute" />
+
+</project>
+

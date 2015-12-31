@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="true"
+	 colors="false"
+	 convertErrorsToExceptions="true"
+	 convertNoticesToExceptions="true"
+	 convertWarningsToExceptions="true"
+	 mapTestClassNameToCoveredClassName="false"
+	 strict="false"
+	 verbose="false"
+	 bootstrap="./CakePHP/tests/bootstrap.php">
+	<testsuites>
+		<testsuite name="phpcs">
+			<file>./CakePHP/tests/CakePHPStandardTest.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>

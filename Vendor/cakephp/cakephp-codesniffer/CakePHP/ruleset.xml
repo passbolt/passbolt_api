@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ruleset name="CakePHP">
+ <description>CakePHP coding standard</description>
+
+ <exclude-pattern>\.git</exclude-pattern>
+ <exclude-pattern>*/Config/*.ini.php</exclude-pattern>
+ <exclude-pattern>/*/tmp/</exclude-pattern>
+
+ <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+
+ <rule ref="Squiz.Classes.LowercaseClassKeywords"/>
+
+ <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+ <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+ <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+ <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+ <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+
+ <rule ref="Squiz.Commenting.DocCommentAlignment"/>
+ <rule ref="Generic.Commenting.Todo"/>
+
+ <rule ref="PEAR.ControlStructures.ControlSignature"/>
+ <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration"/>
+ <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
+ <rule ref="PSR2.ControlStructures.ControlStructureSpacing"/>
+
+ <rule ref="Zend.Files.ClosingTag"/>
+ <rule ref="Generic.Files.LineEndings"/>
+
+ <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+ <rule ref="Generic.Formatting.NoSpaceAfterCast"/>
+
+ <rule ref="Squiz.Functions.FunctionDeclaration"/>
+ <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+ <rule ref="PEAR.Functions.ValidDefaultValue"/>
+
+ <rule ref="PSR2.Namespaces.NamespaceDeclaration"/>
+ <rule ref="PSR2.Namespaces.UseDeclaration"/>
+
+ <!--
+ Disabled and replaced with local copy. See http://pear.php.net/bugs/bug.php?id=19957
+ <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+ -->
+ <rule ref="PEAR.NamingConventions.ValidClassName"/>
+
+ <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+
+ <rule ref="Generic.PHP.DeprecatedFunctions"/>
+ <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+ <rule ref="Squiz.PHP.Eval"/>
+ <rule ref="Generic.PHP.ForbiddenFunctions"/>
+ <rule ref="Squiz.PHP.NonExecutableCode"/>
+ <rule ref="Generic.PHP.NoSilencedErrors"/>
+ <rule ref="Generic.PHP.LowerCaseConstant"/>
+
+ <rule ref="Squiz.Scope.MemberVarScope"/>
+ <rule ref="Squiz.Scope.MethodScope"/>
+ <rule ref="Squiz.Scope.StaticThisUsage"/>
+
+ <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+ <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+ <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+ <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+ <rule ref="Squiz.WhiteSpace.MemberVarSpacing"/>
+ <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+ <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+
+ <!-- Relax commenting rules for test cases -->
+ <rule ref="CakePHP.Commenting.FunctionComment">
+  <!-- 2.x dir structure -->
+  <exclude-pattern>*/Test/Case/*</exclude-pattern>
+  <exclude-pattern>*/Test/test_app/*</exclude-pattern>
+
+  <!-- 3.x dir structure -->
+  <exclude-pattern>*/tests/TestCase/*</exclude-pattern>
+  <exclude-pattern>*/tests/test_app/*</exclude-pattern>
+ </rule>
+
+ <!-- All rules in ./Sniffs are included automatically -->
+</ruleset>

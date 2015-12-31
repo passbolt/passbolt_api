@@ -1,0 +1,10 @@
+# Define the line ending behavior of the different file extensions
+# Set default behaviour, in case users don't have core.autocrlf set.
+* text=lf
+
+# Explicitly declare text files we want to always be normalized and converted
+# to native line endings on checkout.
+*.php eol=lf
+
+# Declare files that will always have CRLF line endings on checkout.
+*.bat eol=crlf
