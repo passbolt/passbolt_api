@@ -41,6 +41,10 @@
 @background-notice: lighten(@blue,40%);
 @background-disabled: @grey-lightest;
 
+/* scrollbar */
+@scrollbar-background : @white;
+@scrollbar : @grey-darker;
+
 .background-gradient() {
 	background:@background-lighter;
 	background-image: -moz-linear-gradient(top, @background-lightest, @background-lighter);
@@ -56,37 +60,4 @@
 	-moz-box-shadow: 0px 0px 10px 0px @grey;
 	-webkit-box-shadow: 0px 0px 10px 0px @grey;
 	box-shadow: 0px 0px 10px 0px @grey;
-}
-
-/* body */
-body {
-	color: @black;
-}
-
-/* links */
-a:link, a:visited {
-	color: @black;
-}
-a:hover {
-	color:@blue;
-}
-a:active, a:focus {
-	outline: 0;
-	color:@blue;
-	border:0;
-}
-p a {
-	border-bottom:1px solid @grey;
-}
-p a:hover {
-	border-bottom:1px solid @blue;
-}
-
-/* scrollbar */
-@scrollbar-background : @white;
-@scrollbar : @grey-darker;
-
-/* todos */
-.todo {
-	background:#ffffcc !important;
 }

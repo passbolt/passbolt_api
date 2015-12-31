@@ -85,9 +85,9 @@ html body .hidden {
  * Border radius
  */
 .rounded {
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 /* position shortcuts */
 .left {
@@ -139,36 +139,8 @@ html body .hidden {
 /* borders */
 /* font */
 /* background */
-/* shadows */
-/* body */
-body {
-  color: #333333;
-}
-/* links */
-a:link,
-a:visited {
-  color: #333333;
-}
-a:hover {
-  color: #2894df;
-}
-a:active,
-a:focus {
-  outline: 0;
-  color: #2894df;
-  border: 0;
-}
-p a {
-  border-bottom: 1px solid #dddddd;
-}
-p a:hover {
-  border-bottom: 1px solid #2894df;
-}
 /* scrollbar */
-/* todos */
-.todo {
-  background: #ffffcc !important;
-}
+/* shadows */
 /* ==========================================================================
  * Reset is a mix of :
  *
@@ -697,6 +669,34 @@ table th,
 table td {
   text-align: left;
   font-weight: normal;
+}
+/* body */
+body {
+  color: #333333;
+}
+/* links */
+a:link,
+a:visited {
+  color: #333333;
+}
+a:hover {
+  color: #2894df;
+}
+a:active,
+a:focus {
+  outline: 0;
+  color: #2894df;
+  border: 0;
+}
+p a {
+  border-bottom: 1px solid #dddddd;
+}
+p a:hover {
+  border-bottom: 1px solid #2894df;
+}
+/* todos */
+.todo {
+  background: #ffffcc !important;
 }
 /*
  * Typography
@@ -2833,6 +2833,10 @@ textarea {
   border: 1px solid #cccccc;
   border-top: 1px solid #bbbbbb;
   vertical-align: middle;
+  -ms-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 }
 textarea:hover,
 input[type=password]:hover,
@@ -2875,6 +2879,36 @@ textarea {
   height: 7em;
 }
 /* text and textarea */
+.text.input .input-addon,
+.date.input .input-addon {
+  position: absolute;
+  margin-left: -2.625em;
+}
+.text.input .input-addon i,
+.date.input .input-addon i {
+  font-size: 16px;
+  width: 1.250em;
+  border: 1px solid #cccccc;
+  border-top: 1px solid #bbbbbb;
+  line-height: 24px;
+  color: #333333;
+  background: #ffffff;
+  padding: .375em .625em .375em .625em;
+}
+.text.input input:hover + .input-addon i,
+.date.input input:hover + .input-addon i {
+  border: 1px solid #bbbbbb;
+}
+.text.input input:focus + .input-addon i,
+.date.input input:focus + .input-addon i {
+  border: 1px solid #2a9ceb;
+}
+.text.input input:disabled + .input-addon i,
+.date.input input:disabled + .input-addon i {
+  background: #f3f3f3;
+  border: 1px solid #dddddd;
+}
+/* icons for input */
 /*
 	Checkboxes and Radio
 */
@@ -2943,35 +2977,23 @@ select {
   font-size: 16px;
   color: #333333;
   background: #ffffff;
-  width: 15.5em;
-  /* 20 char x .7em x random browser stuffs */
-  padding: .5em .625em .313em .625em;
+  width: 15.375em;
+  /* 20 char (default input length) x .7em (average char length) */
+  padding: .375em .625em .375em .625em;
+  line-height: 24px;
   margin-bottom: .5em;
   border: 1px solid #cccccc;
   border-top: 1px solid #bbbbbb;
   display: inline-block;
+  -ms-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 }
 select:disabled {
   background: #f3f3f3;
 }
 /* select */
-.input.date input {
-  border-right: 0;
-  width: 12em;
-}
-.input.date:after {
-  position: absolute;
-  content: ' ';
-  z-index: 790;
-  width: 20px;
-  height: 20px;
-  background: transparent url('../img/controls/calendar.png') center center no-repeat;
-  padding: .365em;
-  border: 1px solid #cccccc;
-  border-top: 1px solid #bbbbbb;
-  border-left: 0;
-}
-/* date input */
 input[type=file] {
   width: 100%;
   color: #333333;
@@ -2983,9 +3005,6 @@ textarea.fluid,
 input[type=password].fluid,
 input[type=text].fluid {
   width: 80%;
-}
-select.fluid {
-  width: 97.5%;
 }
 .submit-wrapper {
   margin-top: .5em;
@@ -3029,14 +3048,17 @@ a.button {
   background-image: -webkit-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: -o-linear-gradient(top, #f3f3f3, #eeeeee);
   background-image: linear-gradient(top, #f3f3f3, #eeeeee);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 /* size and position adjustments */
 .submit {
   display: inline-block;
   /* in case there is a div wrapper */
+}
+input.button.big {
+  font-size: 1.125em;
 }
 a.button.big {
   font-size: 1em;
@@ -3654,7 +3676,7 @@ html body .button.processing {
   color: #2894df;
 }
 .header .navigation.primary li .row.selected a {
-  color: #2894df;
+  color: #ffffff;
 }
 .header .navigation.primary .home a {
   margin-top: .125em;

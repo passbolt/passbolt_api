@@ -2,13 +2,24 @@ select {
 	font-size: 16px;
 	color: @font-default;
 	background: @background-default;
-	width: 15.5em; /* 20 char x .7em x random browser stuffs */
-	padding: .5em .625em .313em .625em;
+	//width: 15.5em; /* 20 char x .7em x random browser stuffs */
+	//padding: .5em .625em .313em .625em;
+	width: 15.375em; /* 20 char (default input length) x .7em (average char length) */
+	padding: .375em .625em .375em .625em;
+	line-height: 24px;
 	margin-bottom: .5em;
 	border: 1px solid @border-2;
 	border-top: 1px solid @border-3;
 	display: inline-block;
+	-ms-box-sizing:content-box;
+	-moz-box-sizing:content-box;
+	-webkit-box-sizing:content-box;
+	box-sizing:content-box;
+	//-webkit-appearance:none;
+	//-moz-appearance:none;
+	//appearance:none;
 }
+
 select:disabled {
 	background: @background-disabled;
 }

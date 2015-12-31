@@ -1,0 +1,30 @@
+.text.input .input-addon,
+.date.input .input-addon {
+  position:absolute;
+  margin-left:-2.625em;
+}
+.text.input .input-addon i,
+.date.input .input-addon i {
+  font-size: 16px;
+  width:1.250em;
+  border: 1px solid @border-2;
+  border-top: 1px solid @border-3;
+  line-height: 24px;
+  color: @font-default;
+  background: @background-default;
+  padding: .375em .625em .375em .625em;
+}
+.text.input input:hover + .input-addon i,
+.date.input input:hover+ .input-addon i{
+  border:1px solid @border-3;
+}
+
+.text.input input:focus + .input-addon i,
+.date.input input:focus+ .input-addon i {
+  border: 1px solid #2a9ceb;
+}
+.text.input input:disabled + .input-addon i,
+.date.input input:disabled + .input-addon i{
+  background:@background-disabled;
+  border:1px solid @border-default;
+}

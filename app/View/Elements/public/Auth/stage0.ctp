@@ -3,7 +3,7 @@
     <div class="plugin-check-wrapper">
         <div class="plugin-check firefox success">
             <p class="message">
-                <?php echo __('Nice one! Firefox plugin is installed and configured. You are good to go!.');?>
+                <?php echo __('Nice one! Firefox plugin is installed and configured. You are good to go!');?>
             </p>
         </div>
     </div>
