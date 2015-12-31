@@ -18,10 +18,6 @@
 		$frontUri = 'steal/steal.js?app/passbolt.js';
 	}
 
-	// load devel materials.
-	if(Configure::read('debug')) {
-		$this->Html->css('devel', null, array('inline' => false));
-	}
 ?>
 <?php echo $this->element('loader'); ?>
 <div id="js_app_controller">

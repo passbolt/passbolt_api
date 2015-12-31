@@ -18,7 +18,7 @@
 	<meta name="viewport" content="width=device-width">
 	<?php echo $this->Html->script('lib/jquery/dist/jquery.js'); ?>
 	<?php echo $this->html->css('main'); ?>
-	<?php echo $this->html->css('devel'); ?>
+	<?php if(Configure::read('debug') > 0) echo $this->html->css('devel'); ?>
 </head>
 <body>
 <div id="container" class="debug page">
