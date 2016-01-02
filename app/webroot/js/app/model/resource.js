@@ -1,11 +1,11 @@
-import 'mad/model/model';
+import 'app/model/model';
 import 'app/model/category';
 import 'app/model/secret';
 import 'app/model/item_tag';
 import 'mad/model/serializer/cake_serializer';
 
 /**
- * @inherits {mad.Model}
+ * @inherits {passbolt.Model}
  * @parent index
  *
  * The resource model
@@ -15,7 +15,7 @@ import 'mad/model/serializer/cake_serializer';
  * @param {array} data
  * @return {passbolt.model.Resource}
  */
-var Resource = passbolt.model.Resource = mad.Model.extend('passbolt.model.Resource', /** @static */ {
+var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.Resource', /** @static */ {
 	/**
 	 * The rules to validate this model are available on the server.
 	 */
@@ -97,21 +97,46 @@ var Resource = passbolt.model.Resource = mad.Model.extend('passbolt.model.Resour
 		});
 	},
 
-	update : function(id, attrs, success, error) {
-		var self = this;
-		// remove not desired attributes
-		delete attrs.created;
-		delete attrs.modified;
-		// format data as expected by cakePHP
-		var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-		// add the root of the params, it will be used in the url template
+	/**
+	 * @inherited-doc
+	 */
+	getFilteredFields: function(filteredCase) {
+		var filteredFields = false;
+
+		switch(filteredCase) {
+			case 'edit':
+				filteredFields = [
+					'name',
+					'username',
+					'expiry_date',
+					'uri',
+					'description'
+				];
+				break;
+		}
+
+		return filteredFields;
+	},
+
+	update: function(id, attrs) {
+		var self = this,
+		// The request parameters.
+			params = {};
+
+		// Filter the attributes that need to be send by the request.
+		var data = this.filterAttributes(attrs);
+
+		// Format the data as expected by cakePHP
+		params = mad.model.serializer.CakeSerializer.to(data, this);
+
+		// Add the id, required by the templated url.
 		params.id = id;
+
+		// Send the request to the server.
 		return mad.net.Ajax.request({
 			url: APP_URL + 'resources/{id}.json',
 			type: 'PUT',
-			params: params,
-			success: success,
-			error: error
+			params: params
 		}).pipe(function (data, textStatus, jqXHR) {
 			// pipe the result to convert cakephp response format into can format
 			var def = $.Deferred();
