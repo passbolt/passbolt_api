@@ -173,16 +173,24 @@ class EmailNotificatorComponent extends Component {
 		// Get invite sender.
 		$sender = $this->_getAuthorInfo($data['creator_id']);
 
+		$self = isset($data['self']) && $data['self'] == true;
+
+		$subject = $self ?
+			__("Welcome to passbolt, %s!", $recipient['Profile']['first_name']) :
+			__("%s created an account for you!", $sender['Profile']['first_name']);
+
+		$template = $self ? 'account_creation_self' : 'account_creation';
+
 		// Send notification.
 		$this->EmailNotification->send(
 			$recipient['User']['username'],
-			__("%s created an account for you!", $sender['Profile']['first_name']),
+			$subject,
 			array(
 				'sender' => $sender,
 				'account' => $recipient,
 				'token' => $data['token'],
 			),
-			'account_creation'
+			$template
 		);
 	}
 }

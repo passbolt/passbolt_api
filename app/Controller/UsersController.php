@@ -47,9 +47,11 @@ class UsersController extends AppController {
  * Notify the user by email.
  *
  * @param array $data User and profile data.
+ * @param bool $self. whether it's a self registration.
+ *
  * @return array the created user
  */
-	private function __registerUser($data) {
+	private function __registerUser($data, $self = false) {
 		// Save user data
 		$user = $this->User->registerUser($data);
 
@@ -59,6 +61,7 @@ class UsersController extends AppController {
 			array(
 				'token' => $user['AuthenticationToken']['token'],
 				'creator_id' => User::get('id'),
+				'self' => $self,
 			));
 	}
 
@@ -74,7 +77,7 @@ class UsersController extends AppController {
 		if (!empty($this->request->data)) {
 			$userData = $this->request->data;
 			try {
-				$this->__registerUser($userData);
+				$this->__registerUser($userData, true);
 			}
 			catch (ValidationException $e) {
 				return;
