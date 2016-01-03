@@ -55,9 +55,13 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 				'Resource': this.options.resource
 			},
 			'callbacks': {
-				'submit': function (data) {
-                    self.options.resource.attr('description', data['passbolt.model.Resource']['description']);
-                    self.options.resource.save();
+				'submit': function (formData) {
+					var data = {
+						__FILTER_CASE__: 'edit_description',
+						description: formData['passbolt.model.Resource']['description']
+					};
+                    self.options.resource.attr(data)
+                    	.save();
 				}
 			}
 		}).start();

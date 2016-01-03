@@ -97,27 +97,6 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 		});
 	},
 
-	/**
-	 * @inherited-doc
-	 */
-	getFilteredFields: function(filteredCase) {
-		var filteredFields = false;
-
-		switch(filteredCase) {
-			case 'edit':
-				filteredFields = [
-					'name',
-					'username',
-					'expiry_date',
-					'uri',
-					'description'
-				];
-				break;
-		}
-
-		return filteredFields;
-	},
-
 	update: function(id, attrs) {
 		var self = this,
 		// The request parameters.
@@ -143,6 +122,32 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 			def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
 			return def;
 		});
+	},
+
+	/**
+	 * @inherited-doc
+	 */
+	getFilteredFields: function(filteredCase) {
+		var filteredFields = false;
+
+		switch(filteredCase) {
+			case 'edit':
+				filteredFields = [
+					'name',
+					'username',
+					'expiry_date',
+					'uri',
+					'description'
+				];
+				break;
+			case 'edit_description':
+				filteredFields = [
+					'description'
+				];
+				break;
+		}
+
+		return filteredFields;
 	}
 
 }, /** @prototype */ {
