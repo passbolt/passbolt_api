@@ -140,6 +140,16 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 					'description'
 				];
 				break;
+			case 'edit_with_secrets':
+				filteredFields = [
+					'name',
+					'username',
+					'expiry_date',
+					'uri',
+					'description',
+					'Secret'
+				];
+				break;
 			case 'edit_description':
 				filteredFields = [
 					'description'

@@ -47,9 +47,15 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 			data: this.options.resource,
 			callbacks: {
 				submit: function (formData) {
-					// save the resource's changes
+					// Retrieve the data in the extracted formData.
 					var data = formData['passbolt.model.Resource'];
-					data['__FILTER_CASE__'] = 'edit';
+					// define in which edit case we are.
+					if (data.Secret.length > 0) {
+						data['__FILTER_CASE__'] = 'edit_with_secrets';
+					} else {
+						data['__FILTER_CASE__'] = 'edit';
+					}
+					// Save the resource with the latest changes.
 					self.options.resource.attr(data)
 						.save();
 					// Close the dialog which contains this component.
