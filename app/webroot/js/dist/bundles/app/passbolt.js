@@ -28941,6 +28941,43 @@ define('mad/form/element/checkbox', [
         __esModule: true
     };
 });
+/*app/model/model*/
+define('app/model/model', ['mad/model/model'], function ($__0) {
+    'use strict';
+    if (!$__0 || !$__0.__esModule)
+        $__0 = { default: $__0 };
+    $__0;
+    var Model = passbolt.Model = mad.Model.extend('passbolt.Model', {
+            getFilteredFields: function (filteredCase) {
+                return false;
+            },
+            filterAttributes: function (attrs) {
+                var filteredAttrs = {};
+                if (typeof attrs.__FILTER_CASE__ != 'undefined') {
+                    var fields = this.getFilteredFields(attrs.__FILTER_CASE__);
+                    if (fields !== false) {
+                        for (var i in fields) {
+                            var value = can.getObject(fields[i], attrs);
+                            can.getObject(fields[i], filteredAttrs, true, value);
+                        }
+                    } else {
+                        filteredAttrs = attrs;
+                        delete filteredAttrs.__FILTER_CASE__;
+                    }
+                } else {
+                    filteredAttrs = attrs;
+                }
+                return filteredAttrs;
+            }
+        }, {});
+    var $__default = Model;
+    return {
+        get default() {
+            return $__default;
+        },
+        __esModule: true
+    };
+});
 /*app/model/tag*/
 define('app/model/tag', [
     'mad/model/model',
@@ -29100,7 +29137,7 @@ define('app/model/item_tag', [
 });
 /*app/model/resource*/
 define('app/model/resource', [
-    'mad/model/model',
+    'app/model/model',
     'app/model/category',
     'app/model/secret',
     'app/model/item_tag',
@@ -29122,7 +29159,7 @@ define('app/model/resource', [
     $__2;
     $__3;
     $__4;
-    var Resource = passbolt.model.Resource = mad.Model.extend('passbolt.model.Resource', {
+    var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.Resource', {
             checkServerRules: true,
             attributes: {
                 id: 'string',
@@ -29190,23 +29227,48 @@ define('app/model/resource', [
                     error: error
                 });
             },
-            update: function (id, attrs, success, error) {
-                var self = this;
-                delete attrs.created;
-                delete attrs.modified;
-                var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+            update: function (id, attrs) {
+                var self = this, params = {};
+                var data = this.filterAttributes(attrs);
+                params = mad.model.serializer.CakeSerializer.to(data, this);
                 params.id = id;
                 return mad.net.Ajax.request({
                     url: APP_URL + 'resources/{id}.json',
                     type: 'PUT',
-                    params: params,
-                    success: success,
-                    error: error
+                    params: params
                 }).pipe(function (data, textStatus, jqXHR) {
                     var def = $.Deferred();
                     def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
                     return def;
                 });
+            },
+            getFilteredFields: function (filteredCase) {
+                var filteredFields = false;
+                switch (filteredCase) {
+                case 'edit':
+                    filteredFields = [
+                        'name',
+                        'username',
+                        'expiry_date',
+                        'uri',
+                        'description'
+                    ];
+                    break;
+                case 'edit_with_secrets':
+                    filteredFields = [
+                        'name',
+                        'username',
+                        'expiry_date',
+                        'uri',
+                        'description',
+                        'Secret'
+                    ];
+                    break;
+                case 'edit_description':
+                    filteredFields = ['description'];
+                    break;
+                }
+                return filteredFields;
             }
         }, {
             init: function () {
@@ -30086,6 +30148,10 @@ define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*mad/form/element/dropdown*/
 define('mad/form/element/dropdown', [
     'mad/form/choice_element',
@@ -30790,8 +30856,14 @@ define('app/component/resource_actions_tab', [
                     action: 'edit',
                     data: this.options.resource,
                     callbacks: {
-                        submit: function (data) {
-                            self.options.resource.attr(data['passbolt.model.Resource']).save();
+                        submit: function (formData) {
+                            var data = formData['passbolt.model.Resource'];
+                            if (data.Secret.length > 0) {
+                                data['__FILTER_CASE__'] = 'edit_with_secrets';
+                            } else {
+                                data['__FILTER_CASE__'] = 'edit';
+                            }
+                            self.options.resource.attr(data).save();
                             self.closest(mad.component.Dialog).remove();
                         }
                     }
@@ -31438,10 +31510,6 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -31652,9 +31720,12 @@ define('app/component/sidebar_section/description', [
                     'state': 'hidden',
                     'data': { 'Resource': this.options.resource },
                     'callbacks': {
-                        'submit': function (data) {
-                            self.options.resource.attr('description', data['passbolt.model.Resource']['description']);
-                            self.options.resource.save();
+                        'submit': function (formData) {
+                            var data = {
+                                    __FILTER_CASE__: 'edit_description',
+                                    description: formData['passbolt.model.Resource']['description']
+                                };
+                            self.options.resource.attr(data).save();
                         }
                     }
                 }).start();
