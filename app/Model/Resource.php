@@ -330,7 +330,8 @@ class Resource extends AppModel {
 	 * @param $resourceId
 	 * @param $secrets
 	 *
-	 * @throw Exception, ValidationException
+	 * @throws Exception
+	 * @throws ValidationException
 	 */
 	public function saveSecrets($resourceId, $secrets) {
 		// Validate the secrets provided.
@@ -359,7 +360,8 @@ class Resource extends AppModel {
 		}
 
 		// Begin transaction.
-		$this->begin();
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
 
 		// End of secrets check. We proceed.
 
@@ -368,10 +370,9 @@ class Resource extends AppModel {
 				'Secret.resource_id' => $resourceId
 			), false);
 
-		$secrets = array();
 		$fields = $this->Secret->getFindFields('update', User::get('Role.name'));
-		// Validate the given resources.
-		foreach ($secrets as $i => $secret) {
+		// Validate the given secrets.
+		foreach ($secrets as $i => &$secret) {
 			// Force the resource id if empty.
 			if (empty($secret['resource_id'])) {
 				$secret['resource_id'] = $resourceId;
@@ -380,24 +381,21 @@ class Resource extends AppModel {
 			// Validate the data.
 			$this->Secret->set($secret);
 			if (!$this->Secret->validates(['fieldList' => $fields['fields']])) {
-				$this->rollback();
+				$dataSource->rollback();
 				throw new ValidationException(
 					__('Could not validate secret model'),
 					$this->Secret->validationErrors
 				);
 			}
-			$secrets[] = $secret;
 		}
 
 		// Save the secrets.
 		if (!$this->Secret->saveMany($secrets, ['fieldList' => $fields['fields'], 'atomic' => false])) {
-			$this->rollback();
+			$dataSource->rollback();
 			throw new Exception(__('Could not save the secrets'));
 		}
 
 		// Commit transaction.
-		$this->commit();
-
-		return $secrets;
+		$dataSource->commit();
 	}
 }

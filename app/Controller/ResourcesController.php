@@ -347,22 +347,23 @@ class ResourcesController extends AppController {
 			// Validate the resource data
 			$this->Resource->set($resourcepost);
 			if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
+				$dataSource->rollback();
 				return $this->Message->error(
-						__('Could not validate Resource'),
-						array('body' => $this->Resource->validationErrors)
+					__('Could not validate Resource'),
+					array('body' => $this->Resource->validationErrors)
 				);
 			}
 
 			// Save data.
 			$save = $this->Resource->save(
-					$resourcepost,
-					[
-							'validate' => false,
-							'fieldList' => $fields['fields'],
-							'atomic' => false
-					]);
+				$resourcepost, [
+					'validate' => false,
+					'fieldList' => $fields['fields'],
+					'atomic' => false
+				]);
 
 			if (!$save) {
+				$dataSource->rollback();
 				return $this->Message->error(__('The resource could not be updated'));
 			}
 		}

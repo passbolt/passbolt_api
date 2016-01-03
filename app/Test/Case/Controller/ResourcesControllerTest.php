@@ -575,6 +575,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			$json['header']['status'],
 			"update /resources/{$resource['Resource']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
+
 		$this->assertNotEmpty($json['body']['Secret'], "The update should return the updated secrets");
 	}
 
@@ -585,14 +586,12 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		$user = $this->User->findByUsername('marlyn@passbolt.com');
 		$this->User->setActive($user);
 
-
 		$resource = $this->Resource->find('first', [
 				'conditions' => [
 					'name' => "salesforce account"
 				],
 				'contain' => ['Secret']
 			]);
-
 
 		$secretsData = [];
 		foreach($resource['Secret'] as $secret) {
@@ -618,7 +617,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 					'return' => 'contents'
 				));
 		} catch(Exception $e) {
-			$this->assertEquals($e->getMessage(), 'The list of secrets provided is invalid', 'Error message is not what is expected');
+			$this->assertEquals($e->getMessage(), 'Could not validate secret model', 'Error message is not what is expected');
 			// Get the resource again, and assert it's the exact same
 			$resourceAfterUpdate = $this->Resource->find('first', [
 					'conditions' => [
