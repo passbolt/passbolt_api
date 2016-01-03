@@ -371,7 +371,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
+		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return success but is returning " . print_r($result, true));
 		// check that Categories were properly saved
 		$secret = $this->Resource->Secret->findByResourceId($result['body']['Resource']['id']);
 		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
@@ -538,7 +538,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	/**
 	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
 	 */
-	public function testEditWithSecretsNoError() {
+	public function testEditWithSecrets() {
 		$user = $this->User->findByUsername('marlyn@passbolt.com');
 		$this->User->setActive($user);
 
@@ -575,6 +575,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			$json['header']['status'],
 			"update /resources/{$resource['Resource']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
+		$this->assertNotEmpty($json['body']['Secret'], "The update should return the updated secrets");
 	}
 
 	/**
