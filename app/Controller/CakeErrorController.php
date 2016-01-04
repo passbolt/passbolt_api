@@ -62,20 +62,24 @@ class CakeErrorController extends AppController {
 			return parent::render($view, $layout);
 		}
 
-		// By default, the title is the controller name, action with an error type.
-		$title = strtolower('app_' . $this->request->controller . '_' . $this->request->action . '_' . Message::ERROR);
-		$response['header']['id'] = Common::uuid($title);
-		$response['header']['status'] = 'error';
-		$response['header']['title'] = $title;
-		$response['header']['servertime'] = time();
-		$response['header']['controller'] = $this->request->controller;
-		$response['header']['action'] = $this->request->action;
-		$response['header']['message'] = $this->viewVars['message'];
+		// if we're using the message component
+		if(isset($this->Message->messages) && !empty($this->Message->messages)) {
+			$response = array_pop($this->Message->messages);
+		} else {
+			// By default, the title is the controller name, action with an error type.
+			$title = strtolower('app_' . $this->request->controller . '_' . $this->request->action . '_' . Message::ERROR);
+			$response['header']['id'] = Common::uuid($title);
+			$response['header']['status'] = 'error';
+			$response['header']['title'] = $title;
+			$response['header']['servertime'] = time();
+			$response['header']['controller'] = $this->request->controller;
+			$response['header']['action'] = $this->request->action;
+			$response['header']['message'] = $this->viewVars['message'];
 
-		if (isset($this->request->viewVars)) {
-			$response['body'] = $this->request->viewVars;
+			if (isset($this->viewVars['error']->invalidFields)) {
+				$response['body'] = $this->viewVars['error']->invalidFields;
+			}
 		}
-		$response['body'] = $this->response;
 		$this->response->body(json_encode($response));
 	}
 
