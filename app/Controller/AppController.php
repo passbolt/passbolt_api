@@ -57,6 +57,7 @@ class AppController extends Controller {
 		$this->initRequestDetectors();
 		$this->initAuth();
 		$this->setDefaultLayout();
+		$this->disconnectUserIfAccountDisabled();
 		$this->sanitize();
 	}
 
@@ -137,4 +138,21 @@ class AppController extends Controller {
 		}));
 	}
 
+	/**
+	 * Disconnect the user if his account gets disabled during a session.
+	 */
+	public function disconnectUserIfAccountDisabled() {
+		// Check if user is logged in.
+		$userId = $this->Auth->user('User.id');
+		// If logged in.
+		if ($userId != null) {
+			// Retrieve user from db.
+			$User = Common::getModel('User');
+			$user = $User->findById($userId);
+			// If user is disabled, or soft deleted, log out.
+			if ($user['User']['deleted'] == true || $user['User']['active'] == false) {
+				$User->setInactive();
+			}
+		}
+	}
 }
