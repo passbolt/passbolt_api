@@ -30148,10 +30148,6 @@ define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view
         }
     }));
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*mad/form/element/dropdown*/
 define('mad/form/element/dropdown', [
     'mad/form/choice_element',
@@ -31524,6 +31520,10 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -31948,7 +31948,6 @@ define('app/component/resource_shortcuts', ['mad/component/menu'], function ($__
                         new mad.model.Action({
                             'id': 'js_pwd_wsp_filter_all',
                             'label': __('All items'),
-                            'cssClasses': ['selected'],
                             'action': function () {
                                 var filter = new passbolt.model.Filter({
                                         'label': __('All items'),
@@ -32008,10 +32007,9 @@ define('app/component/resource_shortcuts', ['mad/component/menu'], function ($__
                         })
                     ];
                 this.load(menuItems);
+                this.selectItem(menuItems[0]);
             },
             '{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
-                if (!this.element)
-                    return;
                 if (filter.type != passbolt.model.Filter.SHORTCUT) {
                     this.unselectAll();
                 }
@@ -32519,10 +32517,6 @@ define('app/component/password_workspace', [
                 $('.main-action-wrapper').empty();
                 this.options.selectedRs.splice(0, this.options.selectedRs.length);
                 this._super();
-            },
-            index: function (a, b, c) {
-                console.log('Execute function index of the password workspace controller, with the following arguments');
-                console.dir(arguments);
             },
             '{createButton.element} click': function (el, ev) {
                 var category = this.options.createButton.getValue();
@@ -33380,7 +33374,7 @@ define('app/component/user_shortcuts', ['mad/component/menu'], function ($__0) {
             afterStart: function () {
                 var menuItems = [
                         new mad.model.Action({
-                            id: uuid(),
+                            id: 'js_users_wsp_filter_all',
                             label: __('All users'),
                             action: function () {
                                 var filter = new passbolt.model.Filter({
@@ -33391,7 +33385,7 @@ define('app/component/user_shortcuts', ['mad/component/menu'], function ($__0) {
                             }
                         }),
                         new mad.model.Action({
-                            id: uuid(),
+                            id: 'js_users_wsp_filter_recently_modified',
                             label: __('Recently modified'),
                             action: function () {
                                 var filter = new passbolt.model.Filter({
@@ -33404,10 +33398,9 @@ define('app/component/user_shortcuts', ['mad/component/menu'], function ($__0) {
                         })
                     ];
                 this.load(menuItems);
+                this.selectItem(menuItems[0]);
             },
             '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
-                if (!this.element)
-                    return;
                 if (filter.type != passbolt.model.Filter.SHORTCUT) {
                     this.unselectAll();
                 }
@@ -33675,7 +33668,10 @@ define('app/component/people_workspace', [
                 templateUri: 'app/view/template/people_workspace.ejs',
                 selectedUsers: new can.Model.List(),
                 selectedGroups: new can.Model.List(),
-                filter: new passbolt.model.Filter(),
+                filter: new passbolt.model.Filter({
+                    label: __('All users'),
+                    type: passbolt.model.Filter.SHORTCUT
+                }),
                 silentLoading: false
             }
         }, {
@@ -33711,16 +33707,13 @@ define('app/component/people_workspace', [
                         selectedItems: this.options.selectedUsers
                     });
                 $('.js_wsp_users_sidebar_second', this.element).hide();
-                var filter = null;
-                if (this.options.filter) {
-                    filter = this.options.filter;
-                } else {
-                    filter = new passbolt.model.Filter({
+                if (this.options.filter.attr('type') == undefined) {
+                    this.options.filter.attr({
                         label: __('All users'),
                         type: passbolt.model.Filter.SHORTCUT
                     });
                 }
-                mad.bus.trigger('filter_users_browser', filter);
+                mad.bus.trigger('filter_users_browser', this.options.filter);
                 this.on();
             },
             destroy: function () {
@@ -34748,12 +34741,13 @@ define('app/config/config.json', [], function () {
                 'name': 'Sauvage',
                 'song': 'http://youtu.be/DaRG0ukxYqQ'
             },
-            'url': 'http://192.168.99.100:8081',
-            'hostname': '192.168.99.100:8081',
+            'url': 'http://passbolt.dev',
+            'hostname': 'http://192.168.99.100:8081',
             'controllerElt': '#js_app_controller',
             'namespace': 'passbolt',
             'ControllerClassName': 'passbolt.component.App'
         },
+        'ui': { 'workspace': { 'showSidebar': true } },
         'notification': { 'timeout': 6000 },
         'error': { 'ErrorHandlerClassName': 'passbolt.error.ErrorHandler' },
         'event': { 'eventBusControllerElt': '#js_bus_controller' },
