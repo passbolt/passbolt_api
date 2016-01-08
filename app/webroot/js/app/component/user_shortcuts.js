@@ -25,7 +25,7 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
     afterStart: function() {
         var menuItems = [
             new mad.model.Action({
-                id: uuid(),
+                id: 'js_users_wsp_filter_all',
                 label: __('All users'),
                 action: function () {
                     var filter = new passbolt.model.Filter({
@@ -35,7 +35,7 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
                     mad.bus.trigger('filter_users_browser', filter);
                 }
             }), new mad.model.Action({
-                id: uuid(),
+                id: 'js_users_wsp_filter_recently_modified',
                 label: __('Recently modified'),
                 action: function () {
                     var filter = new passbolt.model.Filter({
@@ -48,6 +48,8 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
             })
         ];
         this.load(menuItems);
+        // Select first item.
+        this.selectItem(menuItems[0]);
     },
 
     /* ************************************************************** */
@@ -62,9 +64,6 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
      * @return {void}
      */
     '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
-        // @todo fixed in future canJs.
-        if (!this.element) return;
-
         if (filter.type != passbolt.model.Filter.SHORTCUT) {
             this.unselectAll();
         }

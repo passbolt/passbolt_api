@@ -134,15 +134,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		this._super();
 	},
 
-	/**
-	 * Demonstration function to prove the dispatcher
-	 * @dev
-	 */
-	index: function (a, b, c) {
-		console.log('Execute function index of the password workspace controller, with the following arguments');
-		console.dir(arguments);
-	},
-
 	/* ************************************************************** */
 	/* LISTEN TO THE APP EVENTS */
 	/* ************************************************************** */
