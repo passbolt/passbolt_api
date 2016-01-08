@@ -102,13 +102,6 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEquals($result->header->status, Message::SUCCESS, '/users return something');
-
-		// @todo empty database and test if index throws warning for no
-		$this->User->deleteAll(array('User.active' => '1'));
-		$this->User->deleteAll(array('User.active' => '0'));
-		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/users doesn\'t failed');
-		$this->assertEmpty($result->body);
 	}
 
 	/**
@@ -1433,5 +1426,17 @@ qGyky3/L
 			),
 			true
 		);
+	}
+
+	/**
+	 * Test that the user is logged out if account is physically deleted.
+	 */
+	public function testUserIsLoggedOutIfAccountPhysicallyDeleted() {
+		$ada = $this->User->findByUsername('ada@passbolt.com');
+		$this->User->setActive($ada);
+		// Empty database and see if user is automatically logged out.
+		$this->User->deleteAll(array('User.id' => $ada['User']['id']));
+		$this->setExpectedException('HttpException', 'You need to login to access this location');
+		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true);
 	}
 }

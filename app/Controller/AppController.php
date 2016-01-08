@@ -150,7 +150,7 @@ class AppController extends Controller {
 			$User = Common::getModel('User');
 			$user = $User->findById($userId);
 			// If user is disabled, or soft deleted, log out.
-			if ($user['User']['deleted'] == true || $user['User']['active'] == false) {
+			if (empty($user) || $user['User']['deleted'] == true || $user['User']['active'] == false) {
 				$User->setInactive();
 			}
 		}
