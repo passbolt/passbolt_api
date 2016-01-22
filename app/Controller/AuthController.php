@@ -65,6 +65,16 @@ class AuthController extends AppController {
 		}
 	}
 
+	/**
+	 * Check if the public registration is open on this server.
+	 *
+	 * @return void
+	 */
+	public function publicRegistrationOpen() {
+		$this->set('data', Configure::read('Registration.public'));
+		return $this->Message->success();
+	}
+
 /**
  * Logout
  *
@@ -74,27 +84,4 @@ class AuthController extends AppController {
 		$this->redirect($this->Auth->logout());
 	}
 
-/**
- * Used to return partial login components to be used by the plugin to update the login page
- *
- * @param string $case the element to render
- * @return bool success
- */
-	public function partials($case) {
-		if ($this->request->isAjax()) {
-			$allowed = array(
-				'default', 'noconfig', 'stage0'
-			);
-			foreach ($allowed as $c) {
-				if ($c === $case) {
-					$this->render('../Elements/public/Auth/' . $case);
-					return true;
-				}
-			}
-			$this->render('../Elements/public/Auth/default');
-			return true;
-		}
-		$this->redirect('/auth/login');
-		return false;
-	}
 }
