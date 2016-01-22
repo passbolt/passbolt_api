@@ -49,13 +49,13 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 
 		// create a form to edit the description
 		this.options.editDescriptionFormCtrl = new passbolt.form.resource.EditDescription($('#js_rs_details_edit_description', this.element), {
-			'resource': this.options.resource,
-			'state': 'hidden',
-			'data': {
-				'Resource': this.options.resource
+			resource: this.options.resource,
+			state: 'hidden',
+			data: {
+				Resource: this.options.resource
 			},
-			'callbacks': {
-				'submit': function (formData) {
+			callbacks: {
+				submit: function (formData) {
 					var data = {
 						__FILTER_CASE__: 'edit_description',
 						description: formData['passbolt.model.Resource']['description']

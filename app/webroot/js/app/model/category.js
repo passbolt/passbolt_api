@@ -1,7 +1,6 @@
 import 'mad/model/model';
 import 'mad/model/serializer/cake_serializer';
 
-
 /**
  * @inherits {mad.Model}
  * @parent index
