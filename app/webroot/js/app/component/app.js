@@ -148,6 +148,20 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	},
 
 	/**
+	 * Remove all existing focus in the document.
+	 *
+	 * This way we can set the focus somewhere else in another iframe.
+	 *
+	 * @param el
+	 * @param ev
+	 * @param options
+	 */
+	'{mad.bus.element} remove_all_focuses': function (el, ev, options) {
+		var $focused = $(':focus');
+		$focused.blur();
+	},
+
+	/**
 	 * Observe when the application processus have been all completed.
 	 * @param {HTMLElement} el The element the event occurred on
 	 * @param {HTMLEvent} ev The event which occurred
