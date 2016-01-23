@@ -31520,10 +31520,10 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*lib/can/util/array/makeArray*/
 System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -32185,7 +32185,7 @@ define('app/view/template/form/resource/create.ejs!lib/can/view/ejs/system', ['c
                 ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
                     return __('Name');
                 }));
-                ___v1ew.push('</label>\n\t\t<input name="passbolt.model.Resource.name" class="required" maxlength="50" type="text" id="js_field_name" placeholder="name"/>\n\t\t<div id="js_field_name_feedback" class="message">\n\t\t</div>\n\t</div>\n\t\n\t<div class="input text js_form_element_wrapper">\n\t\t<label for="js_field_uri">');
+                ___v1ew.push('</label>\n\t\t<input name="passbolt.model.Resource.name" class="required" maxlength="50" type="text" id="js_field_name" placeholder="name" autofocus/>\n\t\t<div id="js_field_name_feedback" class="message">\n\t\t</div>\n\t</div>\n\t\n\t<div class="input text js_form_element_wrapper">\n\t\t<label for="js_field_uri">');
                 ___v1ew.push(can.view.txt(1, 'label', 0, this, function () {
                     return __('URI');
                 }));
@@ -32270,11 +32270,20 @@ define('app/form/resource/create', [
                     self.options.secretsForms.push(form);
                 });
                 this.addElement(new mad.form.Textbox($('#js_field_description'), { modelReference: 'passbolt.model.Resource.description' }).start(), new mad.form.Feedback($('#js_field_description_feedback'), {}).start());
-                $('#js_field_name').focus();
                 if (this.options.data != null) {
                     this.load(this.options.data);
                 }
                 mad.bus.trigger('passbolt.plugin.resource_edition');
+                setTimeout(function () {
+                    self.setInitialFocus();
+                }, 100);
+            },
+            setInitialFocus: function () {
+                var initialFocusEl = $('#js_field_name');
+                initialFocusEl.focus();
+                if (initialFocusEl.val() != '') {
+                    initialFocusEl.select();
+                }
             },
             ' submit': function (el, ev) {
                 ev.preventDefault();
@@ -32315,6 +32324,24 @@ define('app/form/resource/create', [
             },
             '{mad.bus.element} secret_edition_secret_changed': function (el, ev, armoreds) {
                 this.element.trigger('changed', 'secret');
+            },
+            '#js_field_username keydown': function (el, ev) {
+                var code = ev.keyCode || ev.which;
+                if (code == '9') {
+                    mad.bus.trigger('passbolt.secret.focus');
+                }
+            },
+            '#js_field_description keydown': function (el, ev) {
+                var code = ev.keyCode || ev.which;
+                if (code == '9' && ev.shiftKey) {
+                    mad.bus.trigger('passbolt.secret.focus');
+                }
+            },
+            '{mad.bus.element} secret_tab_pressed': function (el, ev) {
+                $('#js_field_description').focus();
+            },
+            '{mad.bus.element} secret_backtab_pressed': function (el, ev) {
+                $('#js_field_username').focus();
             }
         });
     var $__default = Create;
@@ -34693,6 +34720,10 @@ define('app/component/app', [
             '{mad.bus.element} request_dialog': function (el, ev, options) {
                 var options = options || {};
                 new mad.component.Dialog(null, options).start();
+            },
+            '{mad.bus.element} remove_all_focuses': function (el, ev, options) {
+                var $focused = $(':focus');
+                $focused.blur();
             },
             '{mad.bus.element} passbolt_application_loading_completed': function (el, ev, options) {
                 if (!$('html').hasClass('loaded')) {
