@@ -94,7 +94,6 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 			}).start(),
 			new mad.form.Feedback($('#js_field_description_feedback'), {}).start()
 		);
-		$('#js_field_name').focus();
 
 		// If an instance of resource has been given, load it.
 		if (this.options.data != null) {
@@ -103,6 +102,24 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 
 		// Notify the plugin that the resource is ready to be edited.
 		mad.bus.trigger('passbolt.plugin.resource_edition');
+
+		// Force focus on first element.
+		setTimeout(function() {
+			self.setInitialFocus();
+		}, 100);
+	},
+
+	/**
+	 * Set initial focus on the name field.
+	 *
+	 * If field is populated, then also select the content.
+	 */
+	setInitialFocus: function() {
+		var initialFocusEl = $('#js_field_name');
+		initialFocusEl.focus();
+		if (initialFocusEl.val() != '') {
+			initialFocusEl.select();
+		}
 	},
 
 	/**
@@ -170,8 +187,59 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 */
 	'{mad.bus.element} secret_edition_secret_changed': function(el, ev, armoreds) {
 		this.element.trigger('changed', 'secret');
-	}
+	},
 
+	/* ************************************************************** */
+	/* KEYBOARDS EVENTS */
+	/* ************************************************************** */
+
+	/**
+	 * Listen when a tab key is pressed inside the username field.
+	 * @param el
+	 * @param ev
+	 */
+	'#js_field_username keydown': function(el, ev) {
+		var code = ev.keyCode || ev.which;
+		if (code == '9') {
+			// Put focus on secret field (in plugin).
+			mad.bus.trigger('passbolt.secret.focus');
+		}
+	},
+
+	/**
+	 * Listen when a tab key is pressed inside the description field.
+	 * @param el
+	 * @param ev
+	 */
+	'#js_field_description keydown': function(el, ev) {
+		var code = ev.keyCode || ev.which;
+		if (code == '9' && ev.shiftKey) {
+			// Put focus on secret field (in plugin).
+			mad.bus.trigger('passbolt.secret.focus');
+		}
+	},
+
+	/**
+	 * Listen when tab key is pressed inside secret field.
+	 * (secret field is provided by plugin)
+	 * @param el
+	 * @param ev
+	 */
+	'{mad.bus.element} secret_tab_pressed': function(el, ev) {
+		// Put focus on description field.
+		$('#js_field_description').focus();
+	},
+
+	/**
+	 * Listen when backtab key is pressed inside secret field.
+	 * (secret field is provided by plugin)
+	 * @param el
+	 * @param ev
+	 */
+	'{mad.bus.element} secret_backtab_pressed': function(el, ev) {
+		// Put focus on username field.
+		$('#js_field_username').focus();
+	}
 });
 
 export default Create;
