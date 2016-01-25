@@ -8,7 +8,7 @@
  * @since		version 2.12.9
  */
 $this->assign('title',	__('Login'));
-$this->assign('page_classes','login');
+$this->assign('page_classes', 'login');
 $this->Html->css('login', null, array('block' => 'css'));
 $this->Html->script('lib/jquery/jquery-1.8.3.js', array('inline' => false, 'block'=>'scriptHeader'));
 $this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));

@@ -65,16 +65,6 @@ class AuthController extends AppController {
 		}
 	}
 
-	/**
-	 * Check if the public registration is open on this server.
-	 *
-	 * @return void
-	 */
-	public function publicRegistrationOpen() {
-		$this->set('data', Configure::read('Registration.public'));
-		return $this->Message->success();
-	}
-
 /**
  * Logout
  *

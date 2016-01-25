@@ -1,6 +1,6 @@
 <?php
     $this->assign('title',	__('Server public key'));
-    $this->assign('page_classes','auth verify');
+    $this->assign('page_classes', 'auth verify');
     if (isset($data)) :
 ?>
 <pre>

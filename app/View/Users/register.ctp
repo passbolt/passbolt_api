@@ -9,7 +9,7 @@
  */
 $this->assign('title',	__('Register'));
 $this->Html->css('login', null, array('block' => 'css'));
-$this->assign('page_classes','register');
+$this->assign('page_classes', 'register');
 ?>
 <div class="grid">
 	<div class="row">
