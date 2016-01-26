@@ -2,7 +2,7 @@ import 'mad/view/component/tree';
 import 'app/component/comments';
 import 'app/component/sidebar_section';
 
-/*
+/**
  * @inherits mad.View
  * @parent index
  *
@@ -25,8 +25,9 @@ var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.c
      */
     ' .js_sidebar_close click': function(el, ev) {
         mad.Config.write('ui.workspace.showSidebar', false);
-        mad.bus.trigger('workspace_showSidebar', false);
+        mad.bus.trigger('workspace_sidebar_hide');
     }
+
 });
 
 export default Sidebar;

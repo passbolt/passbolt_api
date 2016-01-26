@@ -41,19 +41,37 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
      * @param {passbolt.model.Resource} resource The resource to load
      */
     load: function (item) {
-        // push the new resource in the options to be able to listen the resource
+		// push the new resource in the options to be able to listen the resource
         // change in the function name
         this.options.selectedItem = item;
-        // If the component has not been already started
-        if (this.state.is(null)) {
-            this.start();
-        } else {
-            // refresh the component -> afterStart
-            this.refresh();
-        }
+
+		// Display or not the sidebar regarding the sidebar configuration variable.
+		if (mad.Config.read('ui.workspace.showSidebar')) {
+			// If the component has not been already started
+			if (this.state.is(null)) {
+				this.start();
+			}
+			// Else refresh the component, the afterStart will be replayed.
+			else {
+				this.refresh();
+			}
+		}
+
         // Some options changed, make the controller able to listen changes on this new options
         this.on();
     },
+
+	/**
+	 * Unload the component.
+	 */
+	unload: function() {
+		this.options.selectedItem = null;
+		this.on();
+
+		if (this.state.is('ready')) {
+			this.setState('hidden');
+		}
+	},
 
     /**
      * Check if the component is disabled or it is planned to disable it right after
@@ -62,39 +80,18 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
      */
     isDisabled: function() {
         // if the component is disabled
-        if(this.state.is('disabled') ||
-                // OR the component is not started AND it will be disabled right after its start
+        if (this.state.is('disabled') ||
+            // OR the component is not started AND it will be disabled right after its start
             (this.state.is(null) &&
-            (this.options.state == 'disabled' ||
-            ($.isArray(this.options.state) && this.options.state.indexOf('disabled') != -1)
-            )
+            	(
+					this.options.state == 'disabled' ||
+					($.isArray(this.options.state) && this.options.state.indexOf('disabled') != -1)
+            	)
             )
         ) {
             return true;
         }
         return false;
-    },
-
-    /**
-     * Load data in the sidebar and show it.
-     * Will show the sidebar only if the showSidebar setting allows it. Otherwise, will do nothing.
-     * @private
-     */
-    _show: function() {
-        var showSidebarEnabled = mad.Config.read('ui.workspace.showSidebar');
-        var itemsSelected = this.options.selectedItem != null;
-        if (itemsSelected && showSidebarEnabled) {
-            this.load(this.options.selectedItem);
-            this.setState('ready');
-        }
-    },
-
-    /**
-     * Hide the sidebar.
-     * @private
-     */
-    _hide: function() {
-        this.setState('hidden');
     },
 
     /* ************************************************************** */
@@ -122,8 +119,7 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
      * @param {passbolt.model} item The updated item
      */
     '{selectedItem} updated': function (item) {
-        // The reference of the resource does not change, refresh the component
-        if(!this.isDisabled()) {
+        if (!this.isDisabled()) {
             this.refresh();
         }
     },
@@ -133,17 +129,26 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
     /* ************************************************************** */
 
     /**
-     * Observe when the user desire to hide the sidebar
-     * @param {passbolt.model.Resource} resource The updated resource
+     * Observe when the user desire to show the sidebar
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
      */
-    '{mad.bus.element} workspace_showSidebar': function(el, ev, show) {
-        if (show) {
-            this._show();
-        }
-        else {
-            this._hide();
-        }
+    '{mad.bus.element} workspace_sidebar_show': function(el, ev) {
+		if (this.options.selectedItem != null) {
+			this.load(this.options.selectedItem);
+		}
     },
+
+	/**
+	 * Observe when the user desire to hide the sidebar
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
+	 */
+	'{mad.bus.element} workspace_sidebar_hide': function(el, ev) {
+		if (this.state.is('ready')) {
+			this.setState('hidden');
+		}
+	},
 
     /**
      * Observe when a item is selected
@@ -154,13 +159,11 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
     '{selectedItems} add': function (el, ev, item) {
         // If more than one resource selected, or no resource selected.
         if (this.options.selectedItems.length == 0 || this.options.selectedItems.length > 1) {
-            this.options.selectedItem = null;
-            this._hide();
-
-            // Else if only 1 resource selected show the details.
-        } else {
-            this.options.selectedItem = this.options.selectedItems[0];
-            this._show();
+            this.unload();
+        }
+		// Else if only 1 resource selected show the details.
+		else {
+			this.load(this.options.selectedItems[0]);
         }
     },
 
@@ -170,17 +173,17 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
      * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User||passbolt.model.Resource} item The unselected item
      */
-    '{selectedItems} remove': function (el, ev, itel) {
-        // If more than one itel selected, or no item selected.
+    '{selectedItems} remove': function (el, ev, item) {
+        // If more than one item selected, or no item selected.
         if (this.options.selectedItems.length == 0 || this.options.selectedItems.length > 1) {
-            this.options.selectedItem = null;
-            this._hide();
-            // Else if only 1 item selected show the details.
-        } else {
-            this.options.selectedItem = this.options.selectedItems[0];
-            this._show();
+            this.unload();
+        }
+		// Else if only 1 item selected show the details.
+		else {
+			this.load(this.options.selectedItems[0]);
         }
     }
+
 });
 
 export default Sidebar;
