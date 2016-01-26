@@ -82,6 +82,13 @@ $config = array(
 			)
 		)
 	),
+	'Analytics' => array(
+		'default' => 'piwik',
+		'piwik' => array(
+			// Provide this url to activate tracking.
+			'url' => ''
+		),
+	),
 	'GPG' => array(
 		'trustModel' => 'always',
 		'env' => array(
