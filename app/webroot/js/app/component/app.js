@@ -95,12 +95,6 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	'{mad.bus.element} workspace_selected': function (el, event, workspace, options) {
 		options = typeof options != "undefined" ? options : {};
 
-		// If workspace requested is same as current workspace, do nothing.
-		// (it is already loaded).
-		if (workspace == this.workspace) {
-			return;
-		}
-
 		// Destroy the existing workspace and all its components.
 		$('#js_app_panel_main').empty();
 
