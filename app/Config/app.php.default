@@ -20,14 +20,14 @@ $config = array(
 	),
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => array(
-		'active' => true,
+		'active' => false,
 	),
 	// Javascript
 	'App.js' => array(
 	    // build | options : development or production.
 	    // development will load the non compiled version,
 	    // production will load the compiled passbolt.js file.
-		'build' => 'development',
+		'build' => 'production',
 	),
 	// Internationalization
 	'i18n' => array(
@@ -37,7 +37,7 @@ $config = array(
 		'dictionary' => 'jsDictionary', // default dictionary file name
 	),
 	'Registration' => array(
-		'public' => true,
+		'public' => false,
 	),
 	// Authentication & Authorisation
 	'Auth' => array(
