@@ -30106,8 +30106,6 @@ define('mad/view/form/element/dropdown', ['mad/view/form/element'], function ($_
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system*/
 define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('mad_view_template_form_dropdown_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -30150,8 +30148,6 @@ define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view
         }
     }));
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*mad/form/element/dropdown*/
 define('mad/form/element/dropdown', [
     'mad/form/choice_element',
@@ -31486,6 +31482,8 @@ define('app/view/component/sidebar', [
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/component/resource_sidebar*/
 define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], function ($__0) {
     'use strict';
@@ -31510,6 +31508,8 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -32567,14 +32567,10 @@ define('app/component/password_workspace', [
             '{mad.bus.element} category_selected': function (el, ev, category) {
                 this.options.selectedRs.splice(0, this.options.selectedRs.length);
                 this.options.filter.attr({
-                    'foreignModels': { 'Category': new can.List([category]) },
-                    'type': passbolt.model.Filter.FOREIGN_MODEL
+                    foreignModels: { Category: new can.List([category]) },
+                    type: passbolt.model.Filter.FOREIGN_MODEL
                 });
                 mad.bus.trigger('filter_resources_browser', this.options.filter);
-            },
-            '{mad.bus.element} copy_login_clipboard': function (el, ev, resource) {
-            },
-            '{mad.bus.element} copy_secret_clipboard': function (el, ev, resource) {
             },
             '{mad.bus.element} request_category_creation': function (el, ev, data) {
                 var category = new passbolt.model.Category({ parent_id: data.id });
@@ -32687,8 +32683,8 @@ define('app/component/password_workspace', [
             },
             '{mad.bus.element} request_favorite': function (el, ev, promise, instance) {
                 var data = {
-                        'foreign_model': 'resource',
-                        'foreign_id': instance.id
+                        foreign_model: 'resource',
+                        foreign_id: instance.id
                     };
                 new passbolt.model.Favorite(data).save().then(function (favorite) {
                     instance.Favorite = favorite;

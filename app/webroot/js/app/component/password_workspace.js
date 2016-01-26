@@ -197,35 +197,13 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		this.options.selectedRs.splice(0, this.options.selectedRs.length);
 		// Set the new filter
 		this.options.filter.attr({
-			'foreignModels': {
-				'Category': new can.List([category])
+			foreignModels: {
+				Category: new can.List([category])
 			},
-			'type': passbolt.model.Filter.FOREIGN_MODEL
+			type: passbolt.model.Filter.FOREIGN_MODEL
 		});
 		// propagate a special event on bus
 		mad.bus.trigger('filter_resources_browser', this.options.filter);
-	},
-
-	/**
-	 * Observe when the user want to copy the login to the clipboard
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 * @param {passbolt.model.Resource} resource The selected resource
-	 */
-	'{mad.bus.element} copy_login_clipboard': function (el, ev, resource) {
-		// @todo make the copy
-		steal.dev.log('the password workspace listen to the event copy_login_clipboard');
-	},
-
-	/**
-	 * Observe when the user want to copy the secret to the clipboard
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 * @param {passbolt.model.Resource} resource The selected resource
-	 */
-	'{mad.bus.element} copy_secret_clipboard': function (el, ev, resource) {
-		// @todo make the copy
-		steal.dev.log('the password workspace listen to the event copy_secret_clipboard');
 	},
 
 	/**
@@ -417,8 +395,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	'{mad.bus.element} request_favorite': function (el, ev, promise, instance) {
 		// Data expected to save a resource as favorite.
 		var data = {
-			'foreign_model': 'resource',
-			'foreign_id': instance.id
+			foreign_model: 'resource',
+			foreign_id: instance.id
 		};
 
 		// Save the given resource as favorite.
