@@ -37,7 +37,7 @@ $config = array(
 		'dictionary' => 'jsDictionary', // default dictionary file name
 	),
 	'Registration' => array(
-		'public' => false,
+		'public' => true,
 	),
 	// Authentication & Authorisation
 	'Auth' => array(
