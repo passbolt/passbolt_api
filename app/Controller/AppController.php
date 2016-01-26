@@ -57,6 +57,7 @@ class AppController extends Controller {
 		$this->initRequestDetectors();
 		$this->initAuth();
 		$this->setDefaultLayout();
+		$this->processHeaders();
 		$this->disconnectUserIfAccountDisabled();
 		$this->sanitize();
 	}
@@ -123,6 +124,17 @@ class AppController extends Controller {
 		if ($this->request->is('json')) {
 			$this->layout = 'json';
 			$this->view = '/Json/default';
+		}
+	}
+
+	/**
+	 * Process headers and set view variables accordingly.
+	 *
+	 * Mainly used for DO NOT TRACK header as of now.
+	 */
+	public function processHeaders() {
+		if (isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'] == 1) {
+			$this->set('do_not_track', true);
 		}
 	}
 

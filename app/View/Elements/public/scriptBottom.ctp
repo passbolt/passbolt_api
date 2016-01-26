@@ -1,4 +1,5 @@
-<?php 
+<!-- Test piwik -->
+<?php
 /**
  * Script bottom element
  *
@@ -10,10 +11,5 @@
 	echo $this->fetch('scriptBottom');
   if (!Configure::read('debug')) :
 ?>
-<script>
-  var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-  s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
+	  <?php echo $this->element('analytics/piwik'); ?>
 <?php endif; ?>
