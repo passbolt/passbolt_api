@@ -26,7 +26,8 @@ var Keys = passbolt.component.Keys = mad.Component.extend('passbolt.component.Ke
 }, /** @prototype */ {
 
 	/**
-	 * After start.
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		var self = this;

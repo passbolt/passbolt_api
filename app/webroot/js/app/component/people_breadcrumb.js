@@ -32,11 +32,10 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
 
 }, /** @prototype */ {
 
-    /**
-     * Called right after the start function
-     *
-     * @see {mad.controller.ComponentController}
-     */
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
     afterStart: function () {
         // Create and render menu in the created container.
         var menuSelector = '#' + this.getId() + ' ul';

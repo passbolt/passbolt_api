@@ -38,7 +38,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 	/**
 	 * After start hook.
-	 * Initialise component of the application
+	 * Initialize the application's components.
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		var self = this;

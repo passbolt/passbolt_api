@@ -25,7 +25,8 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 }, /** @prototype */ {
 
 	/**
-	 * after start hook.
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		this.options.sectionItems = {

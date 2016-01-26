@@ -31,9 +31,8 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 }, /** @prototype */ {
 
 	/**
-	 * Called right after the start function
-	 * @return {void}
-	 * @see {mad.controller.ComponentController}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		// Create and render menu in the created container.

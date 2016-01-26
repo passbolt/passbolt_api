@@ -32,9 +32,10 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
 }, /** @prototype */ {
 
-    /**
-     * after start hook.
-     */
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
     afterStart: function () {
         var self = this;
 

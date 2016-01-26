@@ -39,7 +39,6 @@ var Favorite = passbolt.component.Favorite = mad.Component.extend('passbolt.comp
 	 * Observe when the mouse leave the component
 	 * @param {HTMLElement} el The element the event occurred on
 	 * @param {HTMLEvent} ev The event which occurred
-	 * @return {void}
 	 */
 	click: function (el, ev) {
 		var self = this;

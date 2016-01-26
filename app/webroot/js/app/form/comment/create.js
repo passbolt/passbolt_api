@@ -54,9 +54,8 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 
 	/**
 	 * After start hook.
-	 * Create the form elements
-	 *
-	 * @return {void}
+	 * Initialize the form elements.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		// parent_id hidden field

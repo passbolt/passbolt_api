@@ -21,6 +21,10 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 
 }, /** @prototype */ {
 
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
 	afterStart: function() {
 		var menuItems = [
 			new mad.model.Action({
@@ -94,7 +98,6 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 	 * @param {jQuery} element The source element
 	 * @param {Event} event The jQuery event
 	 * @param {passbolt.model.Filter} filter The filter to apply
-	 * @return {void}
 	 */
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
 		if (filter.type != passbolt.model.Filter.SHORTCUT) {

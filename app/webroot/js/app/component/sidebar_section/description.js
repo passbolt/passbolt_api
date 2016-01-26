@@ -40,8 +40,9 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 	},
 
 	/**
-	 * Hook After Start
+	 * After start hook.
 	 * Will basically instantiate the form to edit the description
+	 * @see {mad.Component}
 	 */
 	afterStart : function() {
 		var self = this;

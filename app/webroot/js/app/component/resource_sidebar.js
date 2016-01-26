@@ -60,8 +60,8 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 	},
 
 	/**
-	 * Called right after the start function
-	 * @see {mad.controller.ComponentController}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
         this._super();

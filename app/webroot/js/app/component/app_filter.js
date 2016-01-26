@@ -32,7 +32,7 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 
 	/**
 	 * After start hook.
-	 * Init the embedded components
+	 * @see {mad.Component}
 	 */
 	afterStart: function (options) {
 		// Instantiate the filter form

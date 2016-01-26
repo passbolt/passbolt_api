@@ -31,9 +31,8 @@ var EditDescription = passbolt.form.resource.EditDescription = mad.Form.extend('
 
 	/**
 	 * After start hook.
-	 * Create the form elements
-	 *
-	 * @return {void}
+	 * Initialize the form elements.
+	 * @see {mad.Component}
 	 */
 	afterStart : function() {
 		// id hidden field

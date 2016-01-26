@@ -44,7 +44,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 }, /** @prototype */ {
 
 	/**
-	 * Called right after the start function
+	 * After start hook.
 	 * @see {mad.Component}
 	 */
 	afterStart: function() {

@@ -32,9 +32,10 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
 
 }, /** @prototype */ {
 
-    /**
-     * after start hook.
-     */
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
     afterStart: function () {
         var user = passbolt.model.User.getCurrent(),
         	userRole = user.Role.name;

@@ -34,6 +34,10 @@ var Tags = passbolt.component.Tags = mad.Component.extend('passbolt.component.Ta
 
 }, /** @prototype */ {
 
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
 	afterStart: function () {
 		var self = this;
 
@@ -78,7 +82,6 @@ var Tags = passbolt.component.Tags = mad.Component.extend('passbolt.component.Ta
 	/**
 	 * Refresh instance tags
 	 * @param {passbolt.model.ItemTag.models} itemTags Collections of Item tags which will replace the existing instance's item tags
-	 * @return {void}
 	 */
 	refreshInstanceTags: function(itemTags) {
 		// Destroy all the existing tags from the tagged instance (Behavior of the Server)
@@ -96,7 +99,6 @@ var Tags = passbolt.component.Tags = mad.Component.extend('passbolt.component.Ta
 	 * @param {mad.model.Model} model The model reference
 	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.ItemTag} itemTags The added item tags
-	 * @return {void}
 	 */
 	'{instance.ItemTag} change': function(model, ev, itemTags) {
 		// If the instance is not tagged yet,

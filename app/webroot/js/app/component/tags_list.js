@@ -32,7 +32,8 @@ var TagsList = passbolt.component.TagsList = mad.Component.extend('passbolt.comp
 }, /** @prototype */ {
 
 	/**
-	 * after start
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		if(this.options.tags != null) {

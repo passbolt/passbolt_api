@@ -22,6 +22,10 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
 
 }, /** @prototype */ {
 
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
     afterStart: function() {
         var menuItems = [
             new mad.model.Action({
@@ -61,7 +65,6 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
      * @param {jQuery} element The source element
      * @param {Event} event The jQuery event
      * @param {passbolt.model.Filter} filter The filter to apply
-     * @return {void}
      */
     '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
         if (filter.type != passbolt.model.Filter.SHORTCUT) {

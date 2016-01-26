@@ -36,8 +36,8 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 }, /** @prototype */ {
 
 	/**
-	 * Called right after the start function
-	 * @see {mad.controller.ComponentController}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		var self = this;

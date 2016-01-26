@@ -25,7 +25,8 @@ steal(
 
 			/**
 			 * After start hook.
-			 * Create the form elements
+			 * Initialize the form elements.
+			 * @see {mad.Component}
 			 */
 			afterStart: function () {
 

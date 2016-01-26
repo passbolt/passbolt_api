@@ -29,7 +29,10 @@ var ProfileDropdown = passbolt.component.ProfileDropdown = mad.component.ButtonD
 
 }, /** @prototype */ {
 
-	// after start
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
 	afterStart: function() {
 		this._super();
 		var self = this;
@@ -90,7 +93,6 @@ var ProfileDropdown = passbolt.component.ProfileDropdown = mad.component.ButtonD
 	/**
 	 * Observe when the user is updated
 	 * @param {passbolt.model.User} user The updated user
-	 * @return {void}
 	 */
 	'{user} updated': function (user) {
 		// The reference of the user does not change, refresh the component

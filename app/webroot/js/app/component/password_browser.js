@@ -623,19 +623,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		mad.bus.trigger('passbolt.secret.decrypt', secret);
 	},
 
-    ///**
-    // * Observe when a password cell is clicked.
-    // *
-    // * @param {HTMLElement} el The element the event occurred on
-    // * @param {HTMLEvent} ev The event which occurred
-    // * @param {mixed} item The selected item instance or its id
-    // * @param {HTMLEvent} ev The source event which occurred
-    // * @return {void}
-    // */
-    //' password_clicked': function (el, ev, item, srcEvent) {
-    //    mad.bus.trigger('request_secret_view', item);
-    //},
-
 	/**
 	* Listen to the check event on any checkbox form element components.
 	*

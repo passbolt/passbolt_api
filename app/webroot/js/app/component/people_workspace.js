@@ -49,10 +49,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
 }, /** @prototype */ {
 
-    /**
-     * Called right after the start function
-     * @see {mad.controller.ComponentController}
-     */
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
     afterStart: function() {
 		var role = passbolt.model.User.getCurrent().Role.name;
 

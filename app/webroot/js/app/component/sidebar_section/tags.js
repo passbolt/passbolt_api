@@ -32,8 +32,9 @@ var Tags = passbolt.component.sidebarSection.Tags = mad.Component.extend('passbo
 	/* ************************************************************** */
 
 	/**
-	 * Hook After Start
+	 * After start hook.
 	 * Will basically launch a generic tagsController
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		var self = this;
@@ -63,7 +64,6 @@ var Tags = passbolt.component.sidebarSection.Tags = mad.Component.extend('passbo
 	 * Observe when the user want to edit the instance's tags list
 	 * @param {mad.model.Model} model The model reference
 	 * @param {HTMLEvent} ev The event which occurred
-	 * @return {void}
 	 */
 	' request_tags_edit': function (el, ev) {
 		this.setState('edit');
@@ -78,7 +78,6 @@ var Tags = passbolt.component.sidebarSection.Tags = mad.Component.extend('passbo
 	 * @param {mad.model.Model} model The model reference
 	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.ItemTag} itemTags The added item tags
-	 * @return {void}
 	 */
 	'{instance.ItemTag} change': function (el, ev) {
 		// If the instance is not tagged yet,
