@@ -144,7 +144,7 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 	 * @param ev
 	 * @param section
 	 */
-	'{mad.bus} request_settings_section': function (el, ev, section) {
+	'{mad.bus.element} request_settings_section': function (el, ev, section) {
 		// @todo #PASSBOLT-985 fixed in future canJs.
 		if (!this.element) return;
 		// When the section changes, we refresh the menu items in the breadcrumb.

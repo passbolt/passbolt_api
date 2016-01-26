@@ -83,7 +83,7 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 	 * @param ev
 	 * @param section
 	 */
-	'{mad.bus} request_settings_section': function(el, ev, section) {
+	'{mad.bus.element} request_settings_section': function(el, ev, section) {
 
 		if (this.options.sectionItems[section] == 'undefined') {
 			return;
