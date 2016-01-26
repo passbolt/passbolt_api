@@ -147,8 +147,8 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
 
     /**
      * Observe when a item is selected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User||passbolt.model.Resource} item The selected item
      */
     '{selectedItems} add': function (el, ev, item) {
@@ -166,8 +166,8 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
 
     /**
      * Observe when an item is unselected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User||passbolt.model.Resource} item The unselected item
      */
     '{selectedItems} remove': function (el, ev, itel) {

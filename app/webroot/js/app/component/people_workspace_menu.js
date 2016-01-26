@@ -50,27 +50,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
             this.options.deletionButton = new mad.component.Button($('#js_user_wk_menu_deletion_button'), {
                 state: 'disabled'
             }).start();
-
-            // Manage more actions.
-			// #PASSBOLT-787
-            //var moreButtonMenuItems = [
-            //    new mad.model.Action({
-            //        id: 'js_ppl_wk_remove_user_from_group',
-            //        label: __('remove user from group'),
-            //        initial_state: 'disabled',
-            //        cssClasses: null,
-            //        	action: function () {
-            //            mad.bus.trigger(
-            //                'request_remove_user_from_group',
-            //                [self.options.selectedUsers, self.options.selectedGroups]
-            //            );
-            //        }
-            //    })
-            //];
-            //this.options.moreButton = new mad.component.ButtonDropdown($('#js_user_wk_menu_more_button'), {
-            //    state: 'disabled',
-            //    items: moreButtonMenuItems
-            //}).start();
         }
 
         this.on();
@@ -82,8 +61,8 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
 
     /**
      * Observe when the user wants to edit an instance (Resource, User depending of the active workspace)
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{editionButton.element} click': function (el, ev) {
         /*var category = this.options.editionButton.getValue();*/
@@ -92,8 +71,8 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
 
     /**
      * Observe when the user wants to delete an instance (Resource, User depending of the active workspace)
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{deletionButton.element} click': function (el, ev) {
         var users = this.options.selectedUsers;
@@ -102,8 +81,8 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
 
     /**
      * Observe when a user is selected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User} user The selected user
      */
     '{selectedUsers} add': function (el, ev, user) {
@@ -119,25 +98,12 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
         else {
             this.setState('multiSelection');
         }
-
-        if (passbolt.model.User.getCurrent().Role.name == 'admin') {
-            // Enable or disable the "remove user from group" if a group is selected.
-            // Active if at least a group is selected.
-			// #PASSBOLT-787
-            //if (this.options.selectedGroups.length > 0) {
-            //    this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'ready');
-            //}
-            //// Disabled if no group selected.
-            //else {
-            //    this.options.moreButton.setItemState('js_ppl_wk_remove_user_from_group', 'disabled');
-            //}
-        }
     },
 
     /**
      * Observe when a user is unselected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User} user The unselected user
      */
     '{selectedUsers} remove': function (el, ev, user) {
@@ -164,7 +130,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {boolean} go Enter or leave the state
      */
     stateSelection: function (go) {
-        console.log('stateSelection');
         // Is the current user an admin.
         var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
 
@@ -192,10 +157,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                         .setValue(null)
                         .setState('disabled');
                 }
-				// #PASSBOLT-787
-				//this.options.moreButton
-                 //   .setValue(this.options.selectedUsers[0])
-                 //   .setState('ready');
             } else {
                 this.options.editionButton
                     .setValue(null)
@@ -203,10 +164,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                 this.options.deletionButton
                     .setValue(null)
                     .setState('disabled');
-				// #PASSBOLT-787
-                //this.options.moreButton
-                //    .setValue(null)
-                //    .setState('disabled');
             }
         }
     },
@@ -223,9 +180,6 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
                 this.options.deletionButton
                     .setValue(this.options.selectedUsers)
                     .setState('ready');
-				// #PASSBOLT-787
-                //this.options.moreButton
-                //    .setState('disabled');
             } else {
                 this.options.editionButton
                     .setValue(null)

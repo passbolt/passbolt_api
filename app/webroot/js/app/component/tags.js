@@ -94,7 +94,7 @@ var Tags = passbolt.component.Tags = mad.Component.extend('passbolt.component.Ta
 	/**
 	 * Observe when something happened onto the instance's item tags list
 	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.ItemTag} itemTags The added item tags
 	 * @return {void}
 	 */

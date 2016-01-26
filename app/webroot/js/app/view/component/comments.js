@@ -19,9 +19,8 @@ var Comments = passbolt.view.component.Comments = mad.View.extend('passbolt.view
 
 	/**
 	 * Observe when the user clicks on the plus button, to add a comment
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' a.js_add_comment click': function (el, ev) {
 		// Displays the add comment form
@@ -30,9 +29,8 @@ var Comments = passbolt.view.component.Comments = mad.View.extend('passbolt.view
 
 	/**
 	 * Observe when the user clicks on submit to save the comment
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'a.button.comment-submit click': function (el, ev) {
 		el.trigger('submit');

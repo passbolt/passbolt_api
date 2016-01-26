@@ -31,8 +31,8 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 }, /** @prototype */ {
 
 	/**
-	 * after start hook.
-	 * @return {void}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		// Manage the display of the sidebar
@@ -65,9 +65,8 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 
 	/**
 	 * Observe when another component wants the sidebar to be shown or hidden.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} workspace_showSidebar': function (el, ev, show) {
         var sidebarShouldBeVisible = this.checkShowSidebar();
@@ -79,9 +78,8 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
 
 	/**
 	 * Observe when the user wants to view the side bar
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{viewSidebarButton.element} click': function (el, ev) {
         // Status before click.

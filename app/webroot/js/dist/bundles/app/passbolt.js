@@ -22811,8 +22811,8 @@ define('app/component/settings_workspace_menu', [
     $__1;
     var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Component.extend('passbolt.component.SettingsWorkspaceMenu', {
             defaults: {
-                'label': 'Settings Workspace Menu',
-                'templateUri': 'app/view/template/component/settings_workspace_menu.ejs'
+                label: 'Settings Workspace Menu',
+                templateUri: 'app/view/template/component/settings_workspace_menu.ejs'
             }
         }, {
             afterStart: function () {
@@ -22829,7 +22829,6 @@ define('app/component/settings_workspace_menu', [
                 mad.bus.trigger('request_profile_edition');
             },
             '{sectionItems.keys.downloadPublic.element} click': function (el, ev) {
-                console.log();
                 mad.bus.trigger('passbolt.settings.download_public_key');
             },
             '{sectionItems.keys.downloadPrivate.element} click': function (el, ev) {
@@ -30427,6 +30426,8 @@ define('app/view/template/component/permission/permission_list_item.ejs!lib/can/
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/component/permissions*/
 define('app/component/permissions', [
     'mad/component/component',
@@ -30821,6 +30822,8 @@ define('app/component/permissions', [
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/component/resource_actions_tab*/
 define('app/component/resource_actions_tab', [
     'mad/component/tab',
@@ -31482,8 +31485,6 @@ define('app/view/component/sidebar', [
         __esModule: true
     };
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/view/component/resource_sidebar*/
 define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], function ($__0) {
     'use strict';
@@ -31508,8 +31509,6 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -32802,8 +32801,6 @@ define('app/component/people_workspace_menu', [
                 } else {
                     this.setState('multiSelection');
                 }
-                if (passbolt.model.User.getCurrent().Role.name == 'admin') {
-                }
             },
             '{selectedUsers} remove': function (el, ev, user) {
                 if (this.options.selectedUsers.length == 0) {
@@ -32815,7 +32812,6 @@ define('app/component/people_workspace_menu', [
                 }
             },
             stateSelection: function (go) {
-                console.log('stateSelection');
                 var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin';
                 if (isAdmin) {
                     if (go) {
@@ -32980,10 +32976,6 @@ define('app/view/component/user_browser', [
     $__0;
     $__1;
     var UserBrowser = passbolt.view.component.UserBrowser = mad.view.component.Grid.extend('passbolt.view.component.UserBrowser', {}, {
-            'insertItem': function (item, refItemId, position) {
-                var $row = this._super(item, refItemId, position);
-                var $name = $('.js_grid_column_name', $row);
-            },
             'tbody tr contextmenu': function (el, ev) {
                 ev.stopPropagation();
                 ev.preventDefault();

@@ -15,9 +15,8 @@ var Description = passbolt.view.component.sidebarSection.Description = passbolt.
 
 	/**
 	 * Observe when the user clicks on the edit button, or the description content, to modify the description content
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'a#js_edit_description_button, p.description_content click': function (el, ev) {
         if (this.getController().getViewData('editable') !== false) {
@@ -28,8 +27,8 @@ var Description = passbolt.view.component.sidebarSection.Description = passbolt.
     /**
      * Observe when a click is done anywhere in the window.
      * If a click is done while being in edit mode, we cancel the edit and back to normal state.
-     * @param el
-     * @param ev
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
      */
     '{window} click': function(el, ev) {
         // Are we in edit state.

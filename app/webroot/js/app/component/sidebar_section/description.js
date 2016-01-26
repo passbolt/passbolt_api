@@ -31,7 +31,6 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 
 	/**
 	 * before start hook.
-	 * @return {void}
 	 */
 	beforeRender: function () {
 		this._super();
@@ -70,8 +69,7 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 	/**
 	 * Observe when the user want to edit the instance's resource description
 	 * @param {HTMLElement} el The element
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' request_resource_description_edit' : function(el, ev) {
 		if(!this.state.is('edit')) {

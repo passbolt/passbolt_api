@@ -375,7 +375,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * Observe when a user is created.
      * If the created resource belong to a displayed category, add the resource to the grid.
      * @param {mad.model.Model} model The model reference
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Resource} resource The created resource
      */
     '{passbolt.model.User} created': function (model, ev, user) {
@@ -390,7 +390,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * note : We listen the model directly, listening on changes on
      * a list seems too much here (one event for each updated attribute)
      * @param {mad.model.Model} model The model reference
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User} user The updated user
      */
     '{passbolt.model.User} updated': function (model, ev, user) {
@@ -403,7 +403,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * Observe when users are removed from the list of displayed users and
      * remove it from the grid
      * @param {mad.model.Model} model The model reference
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User} users The removed user
      */
     '{users} remove': function (model, ev, users) {
@@ -417,7 +417,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * Observe when a category is removed. And remove from the grid all the resources
      * which are not belonging to a displayed Category.
      * @param {mad.model.Model} model The model reference
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Category} category The removed category
      */
     '{passbolt.model.GroupUser} destroyed': function (model, ev, groupUser) {
@@ -444,10 +444,10 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Observe when an item is selected in the grid.
      * This event comes from the grid view
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {mixed} item The selected item instance or its id
-     * @param {HTMLEvent} ev The source event which occured
+     * @param {HTMLEvent} ev The source event which occurred
      */
     ' item_selected': function (el, ev, item, srcEvent) {
         // switch to select state
@@ -460,10 +460,10 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
     /**
      * An item has been right selected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.User} item The right selected item instance or its id
-     * @param {HTMLEvent} srcEvent The source event which occured
+     * @param {HTMLEvent} srcEvent The source event which occurred
      */
     ' item_right_selected': function (el, ev, item, srcEvent) {
         // Select item.
@@ -475,8 +475,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Listen to the check event on any checkbox form element components.
      *
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {mixed} rsId The id of the resource which has been checked
      */
     '.js_checkbox_multiple_select checked': function (el, ev, userId) {
@@ -501,8 +501,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     /**
      * Listen to the uncheck event on any checkbox form element components.
      *
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {mixed} userId The id of the user which has been unchecked
      */
     '.js_checkbox_multiple_select unchecked': function (el, ev, userId) {

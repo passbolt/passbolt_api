@@ -1,4 +1,3 @@
-//import 'jquery/event/drag';
 import 'mad/view/component/grid';
 import 'app/view/template/component/user/dragged_user.ejs!';
 
@@ -11,43 +10,11 @@ var UserBrowser = passbolt.view.component.UserBrowser = mad.view.component.Grid.
 }, /** @prototype */ {
 
     /**
-     * Insert an Item in the grid.
-     *
-     * Overrides the default function so we can handle dragging of elements.
-     *
-     * @param {HTMLElement} item The item to be inserted
-     * @param {string} refItemId
-     * @param {string} position The position (first or last)
-     */
-    'insertItem': function (item, refItemId, position) {
-        var $row = this._super(item, refItemId, position);
-        var $name = $('.js_grid_column_name', $row);
-        // Handles draginit event for the current row.
-        //$row.on("draginit", function(ev, drag){
-        //	// create what we'll drag
-        //	var $draggedUser = $('div#js_dragged_user');
-        //	if ($draggedUser.length) {
-        //		$('.name', $draggedUser).text($name.text());
-        //	}
-        //	else {
-        //		$draggedUser = can.view(
-        //			'app/view/template/component/user/draggedUser.ejs', {
-        //				name: $name.text()
-        //			});
-        //		$($draggedUser).appendTo(document.body);
-        //		$draggedUser = $('div#js_dragged_user');
-        //	}
-        //	// indicate we want our mouse on the top-right of it
-        //	drag.representative($draggedUser, 0, 0);
-        //});
-    },
-
-    /**
      * Right click has been detected. (contextual menu).
 	 * we just stop the event here, as we do not want to base our contextual menu on this event, but on the mouse down event instead.
      * @event item_right_selected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @return {bool}
      */
     'tbody tr contextmenu': function (el, ev) {
@@ -59,8 +26,8 @@ var UserBrowser = passbolt.view.component.UserBrowser = mad.view.component.Grid.
 	/**
 	 * Right click has been detected. (contextual menu).
 	 * @event item_right_selected
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @return {bool}
 	 */
 	'tbody tr mousedown': function (el, ev) {

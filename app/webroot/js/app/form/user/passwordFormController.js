@@ -17,19 +17,17 @@ steal(
 		 * @return {passbolt.form.user.PasswordFormController}
 		 */
 		mad.form.FormController.extend('passbolt.form.user.PasswordFormController', /** @static */ {
-			'defaults': {
-				'templateBased': true,
-				'passwordField': null
+			defaults: {
+				templateBased: true,
+				passwordField: null
 			}
 		}, /** @prototype */ {
 
 			/**
 			 * After start hook.
 			 * Create the form elements
-			 *
-			 * @return {void}
 			 */
-			'afterStart': function () {
+			afterStart: function () {
 
 				// Add secret data field{
 				this.options.passwordField = new mad.form.Textbox($('#js_field_password'), {
@@ -66,9 +64,8 @@ steal(
 			/**
 			 * Update the secret entropy
 			 * @param {string} pwd The password to use to mesure the entropy
-			 * @return {void}
 			 */
-			'updateSecretEntropy': function(pwd) {
+			updateSecretEntropy: function(pwd) {
 				var secretStrength = passbolt.model.SecretStrength.getSecretStrength(pwd);
 				this.options.secretStrength.load(secretStrength);
 			},
@@ -79,9 +76,8 @@ steal(
 
 			/**
 			 * Observe when the user is changing the password
-			 * @param {HTMLElement} el The element the event occured on
-			 * @param {HTMLEvent} ev The event which occured
-			 * @return {void}
+			 * @param {HTMLElement} el The element the event occurred on
+			 * @param {HTMLEvent} ev The event which occurred
 			 */
 			'{passwordField} changed': function(el, ev) {
 				if (this.options.passwordField) {
@@ -91,9 +87,8 @@ steal(
 
 			/**
 			 * Observe when the user is changing the password through the unscrumbeld field
-			 * @param {HTMLElement} el The element the event occured on
-			 * @param {HTMLEvent} ev The event which occured
-			 * @return {void}
+			 * @param {HTMLElement} el The element the event occurred on
+			 * @param {HTMLEvent} ev The event which occurred
 			 */
 			'{passwordClear} changed': function(el, ev) {
 				var value = this.getElement('js_field_password_clear').getValue();
@@ -103,9 +98,8 @@ steal(
 
 			/**
 			 * Observe when the user wants to see the password unscrumbled
-			 * @param {HTMLElement} el The element the event occured on
-			 * @param {HTMLEvent} ev The event which occured
-			 * @return {void}
+			 * @param {HTMLElement} el The element the event occurred on
+			 * @param {HTMLEvent} ev The event which occurred
 			 */
 			'{showPwdButton} click': function(el, ev) {
 				var password = this.getElement('js_field_password');
@@ -133,9 +127,8 @@ steal(
 
 			/**
 			 * Observe when the user wants to generate a password
-			 * @param {HTMLElement} el The element the event occured on
-			 * @param {HTMLEvent} ev The event which occured
-			 * @return {void}
+			 * @param {HTMLElement} el The element the event occurred on
+			 * @param {HTMLEvent} ev The event which occurred
 			 */
 			'{genPwdButton} click': function(el, ev) {
 				var value = passbolt.model.Secret.generate();

@@ -6,7 +6,6 @@ import 'app/component/breadcrumb/settings_breadcrumb';
 import 'app/component/profile';
 import 'app/component/keys';
 import 'app/form/user/create';
-//import 'app/form/user/passwordForm';
 import 'app/form/user/avatar';
 
 import 'app/view/template/settings_workspace.ejs!';
@@ -38,7 +37,6 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 	/**
 	 * Called right after the start function
-	 * @return {void}
 	 * @see {mad.controller.ComponentController}
 	 */
 	afterStart: function() {
@@ -119,9 +117,8 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 	/**
 	 * Observe when the user requests a profile edition
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus} request_profile_edition': function (el, ev) {
 		// Current user.
@@ -156,9 +153,8 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 	/**
 	 * Observe when the user requests a password edition
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus} request_user_password_edition': function (el, ev, user) {
 		// @todo #PASSBOLT-985 fixed in future canJs.
@@ -185,9 +181,8 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 	/**
 	 * Observe when the user requests an avatar edition
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus} request_profile_avatar_edition': function (el, ev, user) {
 		// @todo #PASSBOLT-985 fixed in future canJs.
@@ -253,7 +248,6 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	/**
 	 * The application is ready.
 	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
 	 */
 	stateReady: function (go) {
 		// Load profile section by default.

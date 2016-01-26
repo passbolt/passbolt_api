@@ -62,7 +62,7 @@ var Tags = passbolt.component.sidebarSection.Tags = mad.Component.extend('passbo
 	/**
 	 * Observe when the user want to edit the instance's tags list
 	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @return {void}
 	 */
 	' request_tags_edit': function (el, ev) {
@@ -76,7 +76,7 @@ var Tags = passbolt.component.sidebarSection.Tags = mad.Component.extend('passbo
 	/**
 	 * Observe when item tags list are updated onto the observed instance
 	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.ItemTag} itemTags The added item tags
 	 * @return {void}
 	 */

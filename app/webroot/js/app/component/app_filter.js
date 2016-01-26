@@ -49,7 +49,6 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 
 	/**
 	 * Reset the filter
-	 * @return {void}
 	 */
 	reset: function () {
 		this.keywordsFormElement.setValue('');
@@ -61,10 +60,9 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 
 	/**
 	 * Observe when category is selected
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.Category} category The selected category
-	 * @return {void}
 	 */
 	'{mad.bus.element} category_selected': function (el, ev, category) {
 		// @todo fixed in future canJs.
@@ -98,8 +96,8 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 
 	/**
 	 * Listen when the user is updating the filter
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {object} data The form data
 	 */
 	' update': function(el, ev) {
@@ -120,10 +118,8 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 
 	/**
 	 * Observe when the user wants to reset the filter
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
-	 * js_filter_reset
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' reset': function (el, ev) {
 		this.reset();

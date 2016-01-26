@@ -20,8 +20,8 @@ var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.c
 
     /**
      * Observe when the user clicks on the close button
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @return {void}
      */
     ' .js_sidebar_close click': function(el, ev) {
