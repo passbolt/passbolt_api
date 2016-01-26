@@ -102,7 +102,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 
 		// Instanciate the resource details controller
 		var resourceSidebar = new passbolt.component.ResourceSidebar($('.js_wsp_pwd_sidebar_second', this.element), {
-			'selectedItems': this.options.selectedRs
+			selectedItems: this.options.selectedRs
 		});
         // Hide the sidebar by default.
         $('.js_wsp_pwd_sidebar_second', this.element).hide();
@@ -153,7 +153,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	* @param {jQuery} element The source element
 	* @param {Event} event The jQuery event
 	* @param {passbolt.model.Filter} filter The filter to apply
-	* @return {void}
 	*/
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
 		// Update the breadcrumb with the new filter.
@@ -194,9 +193,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Category} category The selected category
 	 */
 	'{mad.bus.element} category_selected': function (el, ev, category) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// reset the selected resources
 		this.options.selectedRs.splice(0, this.options.selectedRs.length);
 		// Set the new filter
@@ -217,9 +213,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Resource} resource The selected resource
 	 */
 	'{mad.bus.element} copy_login_clipboard': function (el, ev, resource) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// @todo make the copy
 		steal.dev.log('the password workspace listen to the event copy_login_clipboard');
 	},
@@ -231,9 +224,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Resource} resource The selected resource
 	 */
 	'{mad.bus.element} copy_secret_clipboard': function (el, ev, resource) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// @todo make the copy
 		steal.dev.log('the password workspace listen to the event copy_secret_clipboard');
 	},
@@ -244,9 +234,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} request_category_creation': function (el, ev, data) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		var category = new passbolt.model.Category({ parent_id: data.id });
 
 		// get the dialog
@@ -276,9 +263,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} request_category_edition': function (el, ev, category) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
             label: __('Edit a Category'),
@@ -298,9 +282,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} request_category_sharing': function (el, ev, category) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
             label: __('Share a Category'),
@@ -320,9 +301,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} request_category_deletion': function (el, ev, category) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		category.destroy();
 	},
 
@@ -333,9 +311,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Category} categories The target categories to insert the resource
 	 */
 	'{mad.bus.element} request_resource_creation': function (el, ev, categories) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		if(typeof categories == 'undefined') {
 			categories = [];
 		} else if (!$.isArray(categories)) {
@@ -371,9 +346,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Resource} resource The target resource to edit
 	 */
 	'{mad.bus.element} request_resource_edition': function (el, ev, resource) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
 			label: __('Edit Password'),
@@ -422,9 +394,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Resource} [rs2 ...] Other resources to delete
 	 */
 	'{mad.bus.element} request_resource_sharing': function (el, ev, resource) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
             label: __('Share Password'),
@@ -446,9 +415,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Model} instance The target instance to set as favorite
 	 */
 	'{mad.bus.element} request_favorite': function (el, ev, promise, instance) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// Data expected to save a resource as favorite.
 		var data = {
 			'foreign_model': 'resource',
@@ -484,9 +450,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {passbolt.model.Model} instance The target instance to unset as favorite
 	 */
 	'{mad.bus.element} request_unfavorite': function (el, ev, promise, instance) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		// Unfavorite the given resource.
 		instance.Favorite.destroy()
 			.then(function() {

@@ -22,7 +22,7 @@ var Sidebar = passbolt.component.ResourceDetails = mad.Component.extend('passbol
         // Items selected in the interface. We need them to deduct the selectedItem.
         selectedItems: null,
         // template uri.
-        'templateUri': 'app/view/template/component/sidebar.ejs'
+        templateUri: 'app/view/template/component/sidebar.ejs'
     }
 
 }, /** @prototype */ {

@@ -25,7 +25,7 @@ var WorkspaceSecondaryMenu = passbolt.component.WorkspaceSecondaryMenu = mad.Com
         showSidebar: true,
 
         // Selected users or resources.
-        selectedItems: new can.Model.List(),
+        selectedItems: new can.Model.List()
 	}
 
 }, /** @prototype */ {
