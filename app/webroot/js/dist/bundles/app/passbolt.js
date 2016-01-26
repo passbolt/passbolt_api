@@ -30106,6 +30106,8 @@ define('mad/view/form/element/dropdown', ['mad/view/form/element'], function ($_
         __esModule: true
     };
 });
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system*/
 define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('mad_view_template_form_dropdown_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -30148,6 +30150,8 @@ define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view
         }
     }));
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*mad/form/element/dropdown*/
 define('mad/form/element/dropdown', [
     'mad/form/choice_element',
@@ -30920,7 +30924,7 @@ define('app/component/sidebar', ['mad/component/component'], function ($__0) {
                 viewClass: passbolt.view.component.Sidebar,
                 selectedItem: null,
                 selectedItems: null,
-                'templateUri': 'app/view/template/component/sidebar.ejs'
+                templateUri: 'app/view/template/component/sidebar.ejs'
             }
         }, {
             beforeRender: function () {
@@ -31520,10 +31524,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -31716,11 +31716,11 @@ define('app/component/sidebar_section/description', [
             afterStart: function () {
                 var self = this;
                 this.options.editDescriptionFormCtrl = new passbolt.form.resource.EditDescription($('#js_rs_details_edit_description', this.element), {
-                    'resource': this.options.resource,
-                    'state': 'hidden',
-                    'data': { 'Resource': this.options.resource },
-                    'callbacks': {
-                        'submit': function (formData) {
+                    resource: this.options.resource,
+                    state: 'hidden',
+                    data: { Resource: this.options.resource },
+                    callbacks: {
+                        submit: function (formData) {
                             var data = {
                                     __FILTER_CASE__: 'edit_description',
                                     description: formData['passbolt.model.Resource']['description']
@@ -31896,7 +31896,7 @@ define('app/component/resource_sidebar', [
             defaults: {
                 label: 'Resource Details',
                 viewClass: passbolt.view.component.ResourceSidebar,
-                'templateUri': 'app/view/template/component/resource_sidebar.ejs'
+                templateUri: 'app/view/template/component/resource_sidebar.ejs'
             }
         }, {
             beforeRender: function () {
@@ -31914,12 +31914,12 @@ define('app/component/resource_sidebar', [
             },
             afterStart: function () {
                 this._super();
-                var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), { 'resource': this.options.selectedItem });
+                var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), { resource: this.options.selectedItem });
                 descriptionController.start();
                 var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
-                        'resource': this.options.selectedItem,
-                        'foreignModel': 'Resource',
-                        'foreignId': this.options.selectedItem.id
+                        resource: this.options.selectedItem,
+                        foreignModel: 'Resource',
+                        foreignId: this.options.selectedItem.id
                     });
                 commentsController.start();
             },
@@ -32528,7 +32528,7 @@ define('app/component/password_workspace', [
                 this.breadcrumCtl.start();
                 var passwordBrowserController = new passbolt.component.PasswordBrowser('#js_wsp_pwd_browser', { selectedRs: this.options.selectedRs });
                 passwordBrowserController.start();
-                var resourceSidebar = new passbolt.component.ResourceSidebar($('.js_wsp_pwd_sidebar_second', this.element), { 'selectedItems': this.options.selectedRs });
+                var resourceSidebar = new passbolt.component.ResourceSidebar($('.js_wsp_pwd_sidebar_second', this.element), { selectedItems: this.options.selectedRs });
                 $('.js_wsp_pwd_sidebar_second', this.element).hide();
                 var filter = new passbolt.model.Filter({
                         label: __('All items'),
@@ -32565,8 +32565,6 @@ define('app/component/password_workspace', [
                 this.options.createButton.setState(createButtonState);
             },
             '{mad.bus.element} category_selected': function (el, ev, category) {
-                if (!this.element)
-                    return;
                 this.options.selectedRs.splice(0, this.options.selectedRs.length);
                 this.options.filter.attr({
                     'foreignModels': { 'Category': new can.List([category]) },
@@ -32575,16 +32573,10 @@ define('app/component/password_workspace', [
                 mad.bus.trigger('filter_resources_browser', this.options.filter);
             },
             '{mad.bus.element} copy_login_clipboard': function (el, ev, resource) {
-                if (!this.element)
-                    return;
             },
             '{mad.bus.element} copy_secret_clipboard': function (el, ev, resource) {
-                if (!this.element)
-                    return;
             },
             '{mad.bus.element} request_category_creation': function (el, ev, data) {
-                if (!this.element)
-                    return;
                 var category = new passbolt.model.Category({ parent_id: data.id });
                 var dialog = new mad.component.Dialog(null, {
                         label: __('Create a new Category'),
@@ -32605,8 +32597,6 @@ define('app/component/password_workspace', [
                 form.load(category);
             },
             '{mad.bus.element} request_category_edition': function (el, ev, category) {
-                if (!this.element)
-                    return;
                 var dialog = new mad.component.Dialog(null, {
                         label: __('Edit a Category'),
                         cssClasses: [
@@ -32618,8 +32608,6 @@ define('app/component/password_workspace', [
                 tab.enableTab('js_cat_edit');
             },
             '{mad.bus.element} request_category_sharing': function (el, ev, category) {
-                if (!this.element)
-                    return;
                 var dialog = new mad.component.Dialog(null, {
                         label: __('Share a Category'),
                         cssClasses: [
@@ -32631,13 +32619,9 @@ define('app/component/password_workspace', [
                 tab.enableTab('js_cat_permission');
             },
             '{mad.bus.element} request_category_deletion': function (el, ev, category) {
-                if (!this.element)
-                    return;
                 category.destroy();
             },
             '{mad.bus.element} request_resource_creation': function (el, ev, categories) {
-                if (!this.element)
-                    return;
                 if (typeof categories == 'undefined') {
                     categories = [];
                 } else if (!$.isArray(categories)) {
@@ -32664,8 +32648,6 @@ define('app/component/password_workspace', [
                 form.load(resource);
             },
             '{mad.bus.element} request_resource_edition': function (el, ev, resource) {
-                if (!this.element)
-                    return;
                 var dialog = new mad.component.Dialog(null, {
                         label: __('Edit Password'),
                         cssClasses: [
@@ -32693,8 +32675,6 @@ define('app/component/password_workspace', [
                     }).start();
             },
             '{mad.bus.element} request_resource_sharing': function (el, ev, resource) {
-                if (!this.element)
-                    return;
                 var dialog = new mad.component.Dialog(null, {
                         label: __('Share Password'),
                         cssClasses: [
@@ -32706,8 +32686,6 @@ define('app/component/password_workspace', [
                 tab.enableTab('js_rs_permission');
             },
             '{mad.bus.element} request_favorite': function (el, ev, promise, instance) {
-                if (!this.element)
-                    return;
                 var data = {
                         'foreign_model': 'resource',
                         'foreign_id': instance.id
@@ -32721,8 +32699,6 @@ define('app/component/password_workspace', [
                 });
             },
             '{mad.bus.element} request_unfavorite': function (el, ev, promise, instance) {
-                if (!this.element)
-                    return;
                 instance.Favorite.destroy().then(function () {
                     instance.Favorite = null;
                     can.trigger(passbolt.model.Resource, 'updated', instance);
@@ -34772,13 +34748,12 @@ define('app/config/config.json', [], function () {
                 'name': 'Sauvage',
                 'song': 'http://youtu.be/DaRG0ukxYqQ'
             },
-            'url': 'http://passbolt.dev',
-            'hostname': 'http://192.168.99.100:8081',
+            'url': 'http://192.168.99.100:8081',
+            'hostname': '192.168.99.100:8081',
             'controllerElt': '#js_app_controller',
             'namespace': 'passbolt',
             'ControllerClassName': 'passbolt.component.App'
         },
-        'ui': { 'workspace': { 'showSidebar': true } },
         'notification': { 'timeout': 6000 },
         'error': { 'ErrorHandlerClassName': 'passbolt.error.ErrorHandler' },
         'event': { 'eventBusControllerElt': '#js_bus_controller' },
