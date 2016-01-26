@@ -154,9 +154,6 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} request_user_password_edition': function (el, ev, user) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
-
 		var self = this;
 
 		// get the dialog
@@ -182,9 +179,6 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} request_profile_avatar_edition': function (el, ev, user) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
-
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {label: __('Edit Avatar')})
 			.start();
@@ -209,11 +203,9 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * @param section
 	 */
 	'{mad.bus.element} request_settings_section': function (el, ev, section) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
+		var tabId = null,
+			sectionIsValid = $.inArray(section, this.options.sections) != -1;
 
-		var tabId = null;
-		var sectionIsValid = $.inArray(section, this.options.sections) != -1;
 		if (sectionIsValid) {
 			switch (section) {
 				case 'keys' :
