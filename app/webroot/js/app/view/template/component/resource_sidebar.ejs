@@ -31,7 +31,7 @@
 		</li>
 		<li class="modified">
 			<span class="label"><%= __('Modified') %></span>
-			<span class="value"><%= moment(resource.modified).fromNow() %></span>
+			<span class="value"><%= datetimeGetTimeAgo(resource.modified) %></span>
 		</li>
 		<li class="modified-by">
 			<span class="label"><%= __('Modified by') %></span>

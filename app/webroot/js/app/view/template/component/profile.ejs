@@ -30,13 +30,13 @@
 					</tr>
 					<tr class="modified">
 						<td class="label"><%= __('Modified') %></td>
-                        <% var dateModified = datetimeToJSDate(user.Profile.attr('modified')); %>
-						<td class="value"><%= moment(dateModified).fromNow(); %></td>
+						<% var timeAgo = datetimeGetTimeAgo(user.Profile.attr('modified')); %>
+						<td class="value"><%= timeAgo %></td>
 					</tr>
 					<tr class="created">
 						<td class="label"><%= __('Created') %></td>
-                        <% var dateCreated = datetimeToJSDate(user.Profile.attr('created')); %>
-						<td class="value"><%= moment(dateCreated).fromNow(); %></td>
+						<% var timeAgo = datetimeGetTimeAgo(user.Profile.attr('created')); %>
+						<td class="value"><%= timeAgo %></td>
 					</tr>
 					<tr class="publickey_keyid">
 						<td class="label"><%= __('Public key') %></td>

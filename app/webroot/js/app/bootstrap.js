@@ -1,4 +1,5 @@
 import moment from 'moment';
+import 'moment-timezone';
 import passbolt from 'app/util/util';
 import 'mad/mad';
 import 'mad/bootstrap';
@@ -42,8 +43,10 @@ var Bootstrap = passbolt.Bootstrap = mad.Bootstrap.extend('passbolt.Bootstrap', 
 	loadViewHelpers: function() {
 		// Load view helper
 		can.ejs.Helpers.prototype.moment = moment;
-        // Load date helper.
-        can.ejs.Helpers.prototype.datetimeToJSDate = Common.datetimeToJSDate;
+		// Load date helper.
+		can.ejs.Helpers.prototype.datetimeToJSDate = Common.datetimeToJSDate;
+		// Load datetimeGetTimeAgo.
+		can.ejs.Helpers.prototype.datetimeGetTimeAgo = Common.datetimeGetTimeAgo;
 	}
 
 });

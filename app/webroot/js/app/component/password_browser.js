@@ -180,7 +180,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				label: __('Modified')
 			},
 			valueAdapter: function (value, mappedItem, item, columnModel) {
-				return moment(value).fromNow();
+				return passbolt.Common.datetimeGetTimeAgo(value);
 			}
 		}, {
 			name: 'owner',

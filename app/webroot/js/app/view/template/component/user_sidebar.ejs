@@ -21,7 +21,7 @@
 			</li>
 			<li class="modified">
 				<span class="label"><%= __('Modified') %></span>
-				<span class="value"><%= moment(user.modified).fromNow() %></span>
+				<span class="value"><%= datetimeGetTimeAgo(user.modified) %></span>
 			</li>
 		</ul>
 	</div>
