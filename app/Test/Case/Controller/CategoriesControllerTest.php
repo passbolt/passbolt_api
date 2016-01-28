@@ -38,6 +38,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 		'app.permission_view',
 		'app.authenticationBlacklist',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public function setUp() {
@@ -62,7 +64,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'return' => 'contents'
 		)), true);
 		$debug = print_r($result, true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
 		$this->assertEmpty($this->Category->inNestedArray('Bolt Softwares Pvt. Ltd.', $result['body'], 'name'), '/categories/index.json : The server result should not contain Bolt Softwares Pvt. Ltd.');
 		$this->assertNotEmpty($this->Category->inNestedArray('pv-jean_bartik', $result['body'], 'name'), '/categories/index.json : The server result should contain pv-jean_bartik');
 	}
@@ -74,7 +76,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'return' => 'contents'
 		)), true);
 		$debug = print_r($result, true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/index.json : The test should return success but is returning {$result['header']['status']} debug : $debug");
 		$this->assertNotEmpty($this->Category->inNestedArray('Bolt Softwares Pvt. Ltd.', $result['body'], 'name'), '/categories/index.json : The server result should contain Bolt Softwares Pvt. Ltd.');
 
 		// test with children = true
@@ -85,7 +87,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 				'children' => 'true'
 			)
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories.json?children=true : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories.json?children=true : The test should return success but is returning {$result['header']['status']}");
 		$this->assertTrue($result['body'][0]['children'] > 0, "/categories.json?children=true : \$result['body'][0]['Category']['name'] should return 'Bolt Softwares Pvt. Ltd.' but is returning {$result['body'][0]['Category']['name']}");
 	}
 
@@ -137,7 +139,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories.json : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories.json : The test should return success but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
 		$result = json_decode($this->testAction("/categories/$id.json", array(
@@ -147,7 +149,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 				'children' => 'true'
 			)
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], 'categories/view/' . $id . '.json?children=true should return success');
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], 'categories/view/' . $id . '.json?children=true should return success');
 
 		// test it is the expected format
 		$result = json_decode($this->testAction("/categories/$id.json", array(
@@ -214,7 +216,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'return' => 'contents'
 		)), true);
 		//pr($result); die();
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/children/$id.json : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/children/$id.json : The test should return success but is returning {$result['header']['status']}");
 
 		// test it is the expected format
 		$result = json_decode($this->testAction("/categories/children/$id.json", array(
@@ -290,7 +292,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		)), true);
 
 
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		$this->assertEquals('Aramboooool', $result['body']['Category']['name'], "The test should return Aramboooool but is returning {$result['body']['Category']['name']}");
 
 		// test insertion with parameter parent_id, and position 1
@@ -309,7 +311,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		)), true);
 
 		$catTest = $this->Category->findById($result['body']['Category']['id']);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		$this->assertEquals($parent['Category']['lft'] + 1, $catTest['Category']['lft']);
 
 		// test insertion with parameter parent_id, and position 2
@@ -326,7 +328,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		)), true);
 
 		$catTest2 = $this->Category->findById($result['body']['Category']['id']);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		$this->assertEquals($catTest['Category']['lft'] + 2, $catTest2['Category']['lft']);
 
 		// test insertion with parameter parent_id, and position 50 (doesnt exist)
@@ -342,7 +344,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'return' => 'contents'
 		)), true);
 		$catTest2 = $this->Category->findById($result['body']['Category']['id']);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		// $this->assertEquals(38, $catTest2['Category']['lft'], "Checking the lft attribute : should be 38 but is {$catTest2['Category']['lft']}");
 	}
 
@@ -448,7 +450,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'return' => 'contents'
 		);
 		$result = json_decode($this->testAction("/categories/$id.json", $params), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "test edit with data should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "test edit with data should return success but is returning {$result['header']['status']}");
 
 		// test that the category has been modified properly in db
 		$cat = $this->Category->findById($id);
@@ -514,7 +516,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'method' => 'delete',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/delete/$id : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/delete/$id : The test should return success but is returning {$result['header']['status']}");
 		// check that the category was properly deleted
 		$cat = $this->Category->findByName($catName);
 		$this->assertTrue(empty($cat), "The category Drug places should have been deleted but is not");
@@ -595,7 +597,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		//		// test firstPosition
 		//		$url = "/categories/move/{$testCases['firstPosition']['id']}/{$testCases['firstPosition']['position']}.json";
 		//		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		//		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "$url : The test should return success but is returning {$result['header']['status']}"); // test if response is a success
+		//		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "$url : The test should return success but is returning {$result['header']['status']}"); // test if response is a success
 		//		// test if the category is at the right place at present
 		//		$afterSave = $this->Category->findById($hr['Category']['id']);
 		//		$this->assertEquals($afterSave['Category']['lft'], $administration['Category']['lft'] + 1, "$url : Test failed to verify that Mapusa is first child of Disco Places");
@@ -603,7 +605,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		//		// test moving down
 		//		$url = "/categories/move/{$testCases['moveDown']['id']}/{$testCases['moveDown']['position']}.json";
 		//		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		//		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}"); // test if response is an error
+		//		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}"); // test if response is an error
 		//		// test if the category is at the right place after moving down
 		//		$afterSave = $this->Category->findById($hr['Category']['id']);
 		//		$this->assertEquals($afterSave['Category']['lft'], $administration['Category']['lft'] + 3, "$url : Test failed to verify that Mapusa is now at the 2nd position from top");
@@ -611,7 +613,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		//		// test lastPosition
 		//		$url = "/categories/move/{$testCases['lastPosition']['id']}/{$testCases['lastPosition']['position']}.json";
 		//		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		//		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "$url : The test should return success but is returning {$result['header']['status']}"); // test if response is a success
+		//		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "$url : The test should return success but is returning {$result['header']['status']}"); // test if response is a success
 		//		// test if the category is at the right place at present
 		//		$afterSave = $this->Category->findById($hr['Category']['id']);
 		//		$this->assertEquals($afterSave['Category']['lft'], $administration['Category']['lft'] + 7, "$url : Test failed to verify that Mapusa is now at the last position");
@@ -619,7 +621,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		//		// test positionMiddle
 		//		$url = "/categories/move/{$testCases['positionMiddle']['id']}/{$testCases['positionMiddle']['position']}.json";
 		//		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		//		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "$url : The test should return error but is returning {$result['header']['status']}"); // test if response is a success
+		//		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "$url : The test should return error but is returning {$result['header']['status']}"); // test if response is a success
 		//		// test if the category is at the right place at present
 		//		$afterSave = $this->Category->findById($hr['Category']['id']);
 		//		$this->assertEquals($afterSave['Category']['lft'], $administration['Category']['lft'] + 5, "$url : The test failed to verify that Mapusa is now positionne the middle. lft should be " . ($administration['Category']['lft'] + 5) . " but is {$afterSave['Category']['lft']}");
@@ -627,7 +629,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		//		// test differentParent
 		//		$url = "/categories/move/{$testCases['differentParent']['id']}/{$testCases['differentParent']['position']}/{$testCases['differentParent']['parent_id']}.json";
 		//		$result = json_decode($this->testAction($url, array('method' => 'put', 'return' => 'contents')), true);
-		//		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "$url : The test should return success but is returning {$result['header']['status']}"); // test if response is a success
+		//		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "$url : The test should return success but is returning {$result['header']['status']}"); // test if response is a success
 		//		// test if the category is at the right place at present
 		//		$afterSave = $this->Category->findById($hr['Category']['id']);
 		//		$cakephp = $this->Category->findById($cakephp['Category']['id']);
@@ -684,7 +686,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'method' => 'put',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categories/type/$id/default.json : The test should return success but returned {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/type/$id/default.json : The test should return success but returned {$result['header']['status']}");
 
 		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
 		$this->assertEquals(Common::uuid('category_type.id.default'), $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
@@ -699,7 +701,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
 		$this->assertEquals($result['body']['Category']['name'], 'XSS', "Html should be striped down");
 	}
 }

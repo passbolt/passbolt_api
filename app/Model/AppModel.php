@@ -196,4 +196,47 @@ class AppModel extends Model {
 
 		parent::beforeSave($options);
 	}
+
+	/**
+	 * Check if a user with same id exists
+	 * @param $check
+	 * @return bool
+	 */
+	public function userExists($check) {
+		if ($check['user_id'] == null) {
+			return false;
+		} else {
+			if(!isset($this->User)) {
+				$this->User = Common::getModel('User');
+			}
+			$exists = $this->User->find('count', array(
+				'conditions' => array('User.id' => $check['user_id'])
+			));
+			return $exists > 0;
+		}
+	}
+
+	/**
+	 * Validate an IP address
+	 * @param array $check['ip']
+	 * @return bool true if a valid IP address
+	 */
+	public function validIpRange($check) {
+		if ($check['ip'] == null) {
+			return false;
+		}
+		$ipRegexp = '([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])';
+		$ipwildcardRegexp = '^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.(\*?|[01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.(\*?|[01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.(\*?|[01]?\\d\\d?|2[0-4]\\d|25[0-5])$';
+		$ipRangeRegexp = '^' . $ipRegexp . '-' . $ipRegexp . '$';
+		$ipMaskRegexp = '^' . $ipRegexp . '\/[0-9]{1,2}$';
+		if (preg_match('/' . $ipwildcardRegexp . '/', $check['ip'])) {
+			return true;
+		} elseif (preg_match('/' . $ipRangeRegexp . '/', $check['ip'])) {
+			return true;
+		} elseif (preg_match('/' . $ipMaskRegexp . '/', $check['ip'])) {
+			return true;
+		}
+		return false;
+	}
+
 }

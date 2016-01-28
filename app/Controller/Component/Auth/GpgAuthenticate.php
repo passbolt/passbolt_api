@@ -134,9 +134,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 			throw new ForbiddenException(__('You need to login to access this location'));
 		}
 		// If it's a page request we redirect to the login form
-		$response->location('/auth/login');
-		$response->send();
-		return true;
+		return false;
 	}
 
 /**

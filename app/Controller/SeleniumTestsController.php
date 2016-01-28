@@ -156,6 +156,7 @@ class SeleniumTestsController extends AppController {
  * @return void
  */
 	public function error403() {
+		echo 'test;';
 		return;
 		// nothing, forbidden because not part of allow list
 	}

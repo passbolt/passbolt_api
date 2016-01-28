@@ -11,6 +11,7 @@
 
 App::uses('Controller', 'Controller');
 App::uses('Purifier', 'HtmlPurifier.Lib');
+App::uses('ControllerLog', 'Model');
 App::import('Model', 'User');
 
 /**
@@ -71,15 +72,9 @@ class AppController extends Controller {
 		$this->request->dataRaw = $this->request->data;
 		//$this->request->queryRaw = $this->request->query;
 
-		// Create a very restrictive configuration.
-		Purifier::config('nohtml', array(
-			'HTML.AllowedElements' => '',
-			'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
-		));
-
 		// Sanitize any controller parameters.
-		if (isset($this->request->params['pass']) && !empty($this->request->params['pass'])) {
-			$this->request->params['pass'] = $this->HtmlPurifier->cleanRecursive($this->request->params['pass'], 'nohtml');
+		if (isset($this->request->params) && !empty($this->request->params)) {
+			$this->request->params = $this->HtmlPurifier->cleanRecursive($this->request->params, 'nohtml');
 		}
 		// Sanitize post data, except exceptions.
 		if (isset($this->request->data) && !empty($this->request->data)) {

@@ -8,17 +8,7 @@
  * @copyright 	(c) 2015-present Passbolt.com
  * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
-/**
- * Class Message constants
- */
-class Message {
-	const ERROR = 'error';
-	const SUCCESS = 'success';
-	const WARNING = 'warning';
-	const NOTICE = 'notice';
-	const DEBUG = 'debug';
-}
+app::uses('ControllerLog', 'Model');
 
 /**
  * Class MessageComponent
@@ -104,7 +94,7 @@ class MessageComponent extends Component {
  * @return void
  */
 	public function error($message, $options = array()) {
-		$this->__add(Message::ERROR, $message, $options);
+		$this->__add(Status::ERROR, $message, $options);
 
 		// We throw an exception unless specifically requested otherwise
 		if (!isset($options['throw']) || (isset($options['throw']) && $options['throw'] === true)) {
@@ -129,18 +119,19 @@ class MessageComponent extends Component {
 				case '405':
 					$error = new MethodNotAllowedException($message);
 					break;
-				case '500':
-					$error = new MethodNotAllowedException($message);
-					break;
 				case '501':
 					$error = new NotImplementedException($message);
 					break;
+				case '500':
 				default:
-					$error = new HttpException($message, $code);
+					$error = new HttpException($message);
 				break;
 			}
 			$error->responseHeader($this->controller->response->header());
 			throw $error;
+		} else {
+			// Errors are logged by CakeErrorController when throwing an exception
+			ControllerLog::write(Status::ERROR, $this->controller->request, $message, 'MessageComponent');
 		}
 	}
 
@@ -154,7 +145,7 @@ class MessageComponent extends Component {
  * @return void
  */
 	public function warning($message, $options = array()) {
-		$this->__add(Message::WARNING, $message, $options);
+		$this->__add(Status::WARNING, $message, $options);
 	}
 
 /**
@@ -167,7 +158,7 @@ class MessageComponent extends Component {
  * @return void
  */
 	public function debug($message, $options = array()) {
-		$this->__add(Message::DEBUG, $message, $options);
+		$this->__add(Status::DEBUG, $message, $options);
 	}
 
 /**
@@ -180,7 +171,7 @@ class MessageComponent extends Component {
  * @return void
  */
 	public function notice($message, $options = array()) {
-		$this->__add(Message::NOTICE, $message, $options);
+		$this->__add(Status::NOTICE, $message, $options);
 	}
 
 /**
@@ -193,13 +184,14 @@ class MessageComponent extends Component {
  * @return void
  */
 	public function success($message = '', $options = array()) {
-		$this->__add(Message::SUCCESS, $message, $options);
+
+		$this->__add(Status::SUCCESS, $message, $options);
 	}
 
 /**
  * Add a message to the queue
  *
- * @param string $type error|notice|warning|success
+ * @param string $level error|notice|warning|success
  * @param string $message title (optional)
  * @param array $options
  * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
@@ -207,16 +199,16 @@ class MessageComponent extends Component {
  * @access private
  * @return void
  */
-	private function __add($type = Message::ERROR, $message = null, $options = null) {
+	private function __add($level = Status::ERROR, $message = null, $options = null) {
 		// The response message
 		$response = array(
 			'header' => array(),
 			'body' => array()
 		);
-		$type = strtolower($type);
+		$level = strtolower($level);
 
 		// By default, the title is the controller name.
-		$title = strtolower('app_' . $this->controller->name . '_' . $this->controller->action . '_' . $type);
+		$title = strtolower('app_' . $this->controller->name . '_' . $this->controller->action . '_' . $level);
 		if (isset($options['title']) && !empty($options['title'])) {
 			$title = $options['title'];
 		}
@@ -225,7 +217,7 @@ class MessageComponent extends Component {
 		$response['header'] = array(
 			// UUID is predictable
 			'id' => Common::uuid($title),
-			'status' => $type,
+			'status' => strtolower($level),
 			'title' => $title,
 			'servertime' => time(),
 			'message' => $message,
@@ -247,12 +239,18 @@ class MessageComponent extends Component {
 		// Add the message to the queue of messages
 		$this->messages[] = $response;
 
+		// Log if needed
+		if(Configure::read('Log.'. $level) && ($level != Status::ERROR)) {
+			ControllerLog::write($level, $this->controller->request, $message, '');
+		}
+
 		// Need some directions?
 		if (isset($options['redirect'])) {
 			if (is_bool($options['redirect'])) {
 				$options['redirect'] = $this->controller->referer();
 			} elseif (is_string($options['redirect']) || is_array($options['redirect'])) {
-				return $this->controller->redirect($options['redirect']);
+				$this->controller->redirect($options['redirect']);
+				return;
 			}
 		}
 

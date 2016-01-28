@@ -40,6 +40,8 @@ class FavoritesControllerTest extends ControllerTestCase {
 		'app.gpgkey',
 		'app.file_storage',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public function setUp() {

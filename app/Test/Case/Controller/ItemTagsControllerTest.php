@@ -35,6 +35,8 @@ class TagsControllerTest extends ControllerTestCase {
 		'app.tag',
 		'app.itemsTag',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public $user;
@@ -129,7 +131,7 @@ class TagsControllerTest extends ControllerTestCase {
 		);
 
 
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "updateBulk : function should have returned success");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "updateBulk : function should have returned success");
 
 		$tag1 = $this->Tag->findByName('tag1');
 		$tagsCount = $this->Tag->find('count');
@@ -219,7 +221,7 @@ class TagsControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$rs = $this->Resource->findByName('facebook account');
 		$result = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $getOptions), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
 
 		// We expect 2 tags
 		$this->assertEquals(count($result['body']), 2, "We expect 2 tags");
@@ -272,7 +274,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 		// Tag a resource & ensure the server returned it.
 		$addResult = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $postOptions), true);
-		$this->assertEquals(Message::SUCCESS, $addResult['header']['status'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$addResult['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $addResult['header']['status'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$addResult['header']['status']}");
 		$this->assertEquals($postOptions['data']['Tag']['name'], $addResult['body']['Tag']['name'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The server should return an item tag which has same content than the posted value");
 
 		// Ensure the item tag has well been inserted.
@@ -344,7 +346,7 @@ class TagsControllerTest extends ControllerTestCase {
 			'return' => 'contents'
 		)), true);
 
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/itemTags/{$id}.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/itemTags/{$id}.json : The test should return a success but is returning {$result['header']['status']}");
 
 		// The resource should not be tagged anymore.
 		$getOptions = array(
@@ -354,7 +356,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 		$model = 'resource';
 		$result = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $getOptions), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
 
 		// We expect 0 root tag
 		$this->assertEquals(count($result['body']), 0, "We expect 0 tags");

@@ -38,6 +38,8 @@ class CommentsControllerTest extends ControllerTestCase {
 		'app.authenticationBlacklist',
 		'app.gpgkey',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public function setUp() {
@@ -109,7 +111,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$model = 'resource';
 		$rs = $this->Resource->findByName('salesforce account');
 		$result = json_decode($this->testAction("/comments/$model/{$rs['Resource']['id']}.json", $getOptions), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/comments/viewForeignComments/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/comments/viewForeignComments/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
 
 		// We expect 1 root comment
 		$this->assertEquals(count($result['body']), 1, "We expect 1 root comment");
@@ -185,7 +187,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 		// Add a comment to the resource
 		$srvResult = json_decode($this->testAction("/comments/$model/{$rs['Resource']['id']}.json", $postOptions), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		$this->assertEquals($postOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The server should return a comment which has same content than the posted value");
 
 		$findData = array(
@@ -212,7 +214,7 @@ class CommentsControllerTest extends ControllerTestCase {
 			// ))
 		// );
 		// $srvResult = json_decode($this->testAction("/comments/$model/{$rs['Resource']['id']}.json", $postOptions), true);
-		// $this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		// $this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		// $this->assertEquals($postOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The server should return a comment which has same content than the posted value");
 //
 		// $findData = array(
@@ -282,7 +284,7 @@ class CommentsControllerTest extends ControllerTestCase {
 			))
 		);
 		$srvResult = json_decode($this->testAction("/comments/$commentId.json", $putOptions), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");
 		$this->assertEquals($putOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/edit/$commentId.json : The server should return a comment which has same content than the posted value");
 	}
 
@@ -347,7 +349,7 @@ class CommentsControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		);
 		$srvResult = json_decode($this->testAction("/comments/$commentId.json", $deleteOptions), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 		// Check the comment has well been deleted
 		$this->assertFalse($this->Comment->exists($commentId), "The comment {$commentId} should not exist");

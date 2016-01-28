@@ -39,6 +39,8 @@ class ResourcesControllerTest extends ControllerTestCase {
 		'app.permission_view',
 		'app.authenticationBlacklist',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public function setUp() {
@@ -92,7 +94,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 
 		// test if the object returned is a success one
 		$result = json_decode($this->testAction("/resources/view/$id.json", array('return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], 'resources/view/' . $id . '.json should return success');
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], 'resources/view/' . $id . '.json should return success');
 
 		$this->assertEquals('facebook account', $result['body']['Resource']['name'], 'resources/view/' . $id . ".json should a resource named 'facebook account' but returned {$result['body']['Resource']['name']} instead");
 	}
@@ -125,7 +127,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 			$url = '/resources/index.json';
 
 			$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
-			$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
+			$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
 			$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
 
 			foreach ($permissionsMatrix['User']['Resource'] as $userResPermission) {
@@ -150,7 +152,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 		// test when no parameters are provided
 		$url = '/resources/index.json';
 		$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
 		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
 
 		// test with category parameter specified which does not contain resources
@@ -168,7 +170,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 			),
 			true
 		);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
 		$this->assertTrue(empty($result['body']), "{$url} : should not contain result");
 
 		// test with category parameter specified which contains resources
@@ -186,7 +188,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 			),
 			true
 		);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
 		$this->assertEquals(2, count($result['body']), "{$url} : counting the number of elements should return '2' but is reading " . count($result['body']));
 		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
 		$this->assertTrue(!empty($path), "{$url} : test should contain 'cpp2-pwd2' resource");
@@ -303,7 +305,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
 		// check that Categories were properly saved
 		$resource = $this->Resource->findByName("test1");
 		$catres = $this->Resource->CategoryResource->find('all', array(
@@ -327,7 +329,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
 	}
 
 /**
@@ -371,7 +373,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return success but is returning " . print_r($result, true));
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return success but is returning " . print_r($result, true));
 		// check that Categories were properly saved
 		$secret = $this->Resource->Secret->findByResourceId($result['body']['Resource']['id']);
 		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
@@ -436,7 +438,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			'method' => 'put',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
+		$this->assertEquals(Status::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
 		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
 		$this->assertTrue(count($after) == 0, "update /resources/$id.json : After this test, there should be no categories associated to the resource anymore.");
 	}
@@ -571,7 +573,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			));
 		$json = json_decode($result, true);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$json['header']['status'],
 			"update /resources/{$resource['Resource']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
@@ -657,7 +659,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			'return' => 'contents'
 		)), true);
 
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "update /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "update /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
 		$result = $this->Resource->findById($id);
 		$this->assertEquals("test", $result['Resource']['name'], "update /resources/$id.json : The test should have modified the name into 'test', but name is still {$result['Resource']['name']}");
 
@@ -728,7 +730,7 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			'method' => 'delete',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "delete /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
 	}
 
 }

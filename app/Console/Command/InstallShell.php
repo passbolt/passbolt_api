@@ -162,7 +162,7 @@ class InstallShell extends AppShell
 	 */
 	public function deleteAvatars()
 	{
-		$path = IMAGES . 'public' . DS . 'imagess';
+		$path = IMAGES . 'public' . DS . 'images';
 		if (PHP_OS === 'Windows') {
 			exec("rd /s /q {$path}", $output, $status);
 		} else {
