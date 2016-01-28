@@ -13,9 +13,8 @@ var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbol
 
 	/**
 	 * Observe when the user want to delete a permission.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' .js_perm_delete click': function(el, ev) {
 		ev.stopPropagation();
@@ -28,9 +27,8 @@ var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbol
 
 	/**
 	 * Observe when the user want to edit a permission type.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' .js_share_rs_perm_type changed': function(el, ev, data) {
 		ev.stopPropagation();
@@ -44,9 +42,8 @@ var Permissions = passbolt.view.component.Permissions = mad.View.extend('passbol
 
 	/**
 	 * Observe when the user want to reset the filter
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' #js_perm_create_form_add_btn click': function(el, ev) {
 		ev.stopPropagation();

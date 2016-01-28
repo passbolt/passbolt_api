@@ -33,8 +33,7 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 }, /** @prototype */ {
 
 	/**
-	 * Called right after the start function
-	 * @return {void}
+	 * After start hook.
 	 * @see {mad.Component}
 	 */
 	afterStart: function () {

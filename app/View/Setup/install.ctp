@@ -8,7 +8,7 @@
  * @since		version 2.12.9
  */
 $this->assign('title',	__('Install'));
-$this->assign('page_classes','setup install');
+$this->assign('page_classes', 'setup install');
 $this->Html->css('setup', null, array('block' => 'css'));
 $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scriptBottom'));
 ?>

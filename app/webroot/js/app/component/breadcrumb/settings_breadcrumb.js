@@ -31,9 +31,8 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 }, /** @prototype */ {
 
 	/**
-	 * Called right after the start function
-	 * @return {void}
-	 * @see {mad.controller.ComponentController}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		// Create and render menu in the created container.
@@ -145,9 +144,7 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 	 * @param ev
 	 * @param section
 	 */
-	'{mad.bus} request_settings_section': function (el, ev, section) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
+	'{mad.bus.element} request_settings_section': function (el, ev, section) {
 		// When the section changes, we refresh the menu items in the breadcrumb.
 		this.refreshMenuItems(section);
 	}

@@ -16,7 +16,6 @@ mad.net.ResponseHandler.extend('passbolt.net.ResponseHandler', /** @static */ {
 	/**
 	 * Handle the success response. By default notify the user about this success
 	 * if the request is a POST, DELETE or PUT request.
-	 * @return {void}
 	 */
 	'_success': function () {
 		// send a notification on the event bus for any successful response.

@@ -33,8 +33,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 }, /** @prototype */ {
 
 	/**
-	 * Called right after the start function
-	 * @return {void}
+	 * After start hook.
 	 * @see {mad.Component}
 	 */
 	afterStart: function () {

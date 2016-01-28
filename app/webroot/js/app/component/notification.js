@@ -175,8 +175,8 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 
 	/**
 	 * Listen the event passbolt_notify and display load the corresponding notification.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {array} notification
 	 */
 	'{mad.bus.element} passbolt_notify': function (el, ev, notif) {

@@ -14,27 +14,24 @@ $config = array(
 	'App.copyright' => '2015 &copy; Passbolt.com',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.version'	 => array(
-		'number' => '2.15.11',
+		'number' => '2.15.9',
 		'name' => 'Sauvage',
-		'song' => 'http://youtu.be/DaRG0ukxYqQ',
+		'song' => 'http://youtu.be/DaRG0ukxYqQ'
 	),
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => array(
-		'active' => false,
+		'active' => true,
 	),
 	// Javascript
 	'App.js' => array(
-	    // build | options : development or production.
-	    // development will load the non compiled version,
-	    // production will load the compiled passbolt.js file.
-		'build' => 'production',
+		'build' => 'production'
 	),
 	// Internationalization
 	'i18n' => array(
 		'locale' => 'en-EN',
 		'language' => 'en',
 		'timezone' => 'GTM+1',
-		'dictionary' => 'jsDictionary', // default dictionary file name
+		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
 	'Registration' => array(
 		'public' => true,
@@ -44,39 +41,43 @@ $config = array(
 		'className' => 'PassboltAuth',
 		'HashType' => 'blowfish',
 		'logoutRedirect' => array(
-			'controller' => 'users',
-			'action' => 'login',
+			'controller' => 'auth',
+			'action' => 'login'
+		),
+		'loginAction' => array(
+			'controller' => 'auth',
+			'action' => 'login'
 		),
 		'loginRedirect' => array(
 			'controller' => 'pages',
 			'action' => 'display',
-			'home',
+			'home'
 		),
 		'authenticate' => array(
 //			'Form' => array(
 //				'passwordHasher' => 'Blowfish'
 //			)
-			'Gpg'
+    		'Gpg'
 		),
 		'throttlingStrategies' => array(
 			'throttle' => array(
 				1 => array('throttleTime' => '5'),
 				2 => array('throttleTime' => '15'),
 				3 => array('throttleTime' => '45'),
-				4 => array('throttleTime' => '60'),
+				4 => array('throttleTime' => '60')
 			),
 			'blacklist' => array(
 				20 => array(
 					'interval' => '60',
-					'blacklistTime' => '600',
+					'blacklistTime' => '600'
 				),
 				50 => array(
 					'interval' => '1200',
-					'blacklistTime' => '2400',
+					'blacklistTime' => '2400'
 				),
 				100 => array(
 					'interval' => '3600',
-					'blacklistTime' => '7200',
+					'blacklistTime' => '7200'
 				)
 			)
 		)
@@ -92,10 +93,10 @@ $config = array(
 		'trustModel' => 'always',
 		'env' => array(
 			'setenv' => 1,
-			'home' => '/home/www-data/.gnupg',
+			'home' => '/home/www-data/.gnupg'
 		),
 		'testKeys' => array(
-			'path' => APP . 'Plugin' . DS . 'DataUnitTests'	. DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS,
+			'path' => APP . 'Plugin' . DS . 'DataUnitTests'	. DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS
 		),
 		'serverKey' => array(
 			'id' => '573EE67E',
@@ -107,16 +108,16 @@ $config = array(
 	),
 	'Permission' => array(
 		'acoModels' => array('Resource', 'Category'),
-		'aroModels' => array('User', 'Group'),
+		'aroModels' => array('User', 'Group')
 	),
 	'Comment' => array(
-		'foreignModels' => array('Resource'),
+		'foreignModels' => array('Resource')
 	),
 	'Favorite' => array(
-		'foreignModels' => array('Resource'),
+		'foreignModels' => array('Resource')
 	),
 	'ItemTag' => array(
-		'foreignModels' => array('Resource'),
+		'foreignModels' => array('Resource')
 	),
 	'Validation' => array(
 		'shared' => array(
@@ -128,15 +129,6 @@ $config = array(
 			'Secret',
 			'Tag',
 			'User',
-		),
-	),
-	'Log' => array(
-		'error' => true,
-		'success' => true,
-		'notice' => true,
-		'debug' => true,
-		'warning' => true,
-		// Log request data on errors
-		'request_data' => true
+		)
 	)
 );

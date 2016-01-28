@@ -15,9 +15,8 @@ var Favorite = passbolt.view.component.Favorite = mad.View.extend('passbolt.view
 
 	/**
 	 *
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' click': function (el, ev) {
 		this.element.trigger('trigger');

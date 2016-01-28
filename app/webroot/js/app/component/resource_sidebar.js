@@ -7,7 +7,6 @@ import 'app/component/sidebar';
 import 'app/view/component/resource_sidebar';
 import 'app/component/comments';
 import 'app/component/sidebar_section';
-//import 'app/component/sidebar_section/tags';
 import 'app/component/sidebar_section/description';
 import 'app/view/template/component/resource_sidebar.ejs!';
 
@@ -31,7 +30,7 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
         // View class to be used.
 		viewClass: passbolt.view.component.ResourceSidebar,
 		// template uri.
-		'templateUri': 'app/view/template/component/resource_sidebar.ejs'
+		templateUri: 'app/view/template/component/resource_sidebar.ejs'
 	}
 
 }, /** @prototype */ {
@@ -61,33 +60,25 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 	},
 
 	/**
-	 * Called right after the start function
-	 * @see {mad.controller.ComponentController}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
         this._super();
 
-		//// Instantiate the description controller for the current resource.
+		// Instantiate the description controller for the current resource.
 		var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), {
-			'resource': this.options.selectedItem
+			resource: this.options.selectedItem
 		});
 		descriptionController.start();
 
-		//// Instantiate the comments controller for the current resource.
+		// Instantiate the comments controller for the current resource.
 		var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
-			'resource': this.options.selectedItem,
-			'foreignModel': 'Resource',
-			'foreignId': this.options.selectedItem.id
+			resource: this.options.selectedItem,
+			foreignModel: 'Resource',
+			foreignId: this.options.selectedItem.id
 		});
 		commentsController.start();
-		//
-		//// Instantiate the item tags controller for the current resource.
-		//var sidebarTagsController = new passbolt.component.sidebarSection.SidebarSectionTagsController($('#js_rs_details_tags', this.element), {
-		//	'instance': this.options.resource,
-		//	'foreignModel': 'Resource',
-		//	'foreignId': this.options.resource.id
-		//});
-		//sidebarTagsController.start();
 	},
 
 	/* ************************************************************** */
@@ -96,8 +87,8 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 
 	/**
 	 * A password has been clicked.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' password_clicked': function (el, ev) {
 		// Get secret out of Resource object.

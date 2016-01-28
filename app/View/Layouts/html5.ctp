@@ -44,6 +44,7 @@
 </div>
 </footer>
 <?php echo $this->fetch('scriptBottom'); ?>
+<?php echo $this->element('analytics/piwik'); ?>
 <?php if(Configure::read('App.js.build') === 'production') : ?>
 <script type="text/javascript" src="/js/lib/steal/steal.production.js" config="js/stealconfig.js" main="app/passbolt" env="production"></script>
 <?php else: ?>

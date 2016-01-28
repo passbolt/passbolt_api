@@ -59,7 +59,6 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	/**
 	 * Listen to the change relative to the state Loading
 	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
 	 */
 	stateLoading: function (go) {},
 
@@ -152,8 +151,8 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 
 	/**
 	 * Listen when a component is entering loading state.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {mad.controller.CoponentController} component The target component
 	 */
 	'{mad.bus.element} passbolt_component_loading_start': function (el, ev, component) {
@@ -165,8 +164,8 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 
 	/**
 	 * Listen when a component is leaving loading state.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {mad.controller.CoponentController} component The target component
 	 */
 	'{mad.bus.element} passbolt_component_loading_complete': function (el, ev, component) {
@@ -178,8 +177,8 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 
 	/**
 	 * Listen when an ajax request is starting.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} passbolt_ajax_request_start': function (el, ev, request) {
 		if (!request.silentLoading) {
@@ -190,8 +189,8 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 
 	/**
 	 * Listen when an ajax request is completed.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} passbolt_ajax_request_complete': function (el, ev, request) {
 		if (!request.silentLoading) {
@@ -202,8 +201,8 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 
 	/**
 	 * Listen the event passbolt_loading and display a feedback to the user
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} passbolt_loading': function (el, ev) {
 		this.options.currentProcs++;
@@ -212,8 +211,8 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 
 	/**
 	 * Listen the event passbolt_loading_completed and display a feedback to the user
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{mad.bus.element} passbolt_loading_complete': function (el, ev) {
 		this.options.currentProcs--;

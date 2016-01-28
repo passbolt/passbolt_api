@@ -38,7 +38,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 	/**
 	 * After start hook.
-	 * Initialise component of the application
+	 * Initialize the application's components.
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		var self = this;
@@ -94,12 +95,6 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	'{mad.bus.element} workspace_selected': function (el, event, workspace, options) {
 		options = typeof options != "undefined" ? options : {};
 
-		// If workspace requested is same as current workspace, do nothing.
-		// (it is already loaded).
-		if (workspace == this.workspace) {
-			return;
-		}
-
 		// Destroy the existing workspace and all its components.
 		$('#js_app_panel_main').empty();
 
@@ -145,6 +140,20 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	'{mad.bus.element} request_dialog': function (el, ev, options) {
 		var options = options || {};
 		new mad.component.Dialog(null, options).start();
+	},
+
+	/**
+	 * Remove all existing focus in the document.
+	 *
+	 * This way we can set the focus somewhere else in another iframe.
+	 *
+	 * @param el
+	 * @param ev
+	 * @param options
+	 */
+	'{mad.bus.element} remove_all_focuses': function (el, ev, options) {
+		var $focused = $(':focus');
+		$focused.blur();
 	},
 
 	/**

@@ -45,8 +45,8 @@ var PasswordBrowser = passbolt.view.component.PasswordBrowser = mad.view.compone
 	/**
 	 * Click on a password element.
 	 * @event password_clicked
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @return {bool}
 	 */
 	'tbody tr td.password a click': function (el, ev) {
@@ -66,8 +66,8 @@ var PasswordBrowser = passbolt.view.component.PasswordBrowser = mad.view.compone
 	 * Right click has been detected. (contextual menu).
 	 * we just stop the event here, as we do not want to base our contextual menu on this event, but on the mouse down event instead.
 	 * @event item_right_selected
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @return {bool}
 	 */
 	'tbody tr contextmenu': function (el, ev) {

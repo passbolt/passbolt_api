@@ -24,6 +24,9 @@ $config = array(
 	),
 	// Javascript
 	'App.js' => array(
+		// build | options : development or production.
+		// development will load the non compiled version,
+		// production will load the compiled passbolt.js file.
 		'build' => 'production'
 	),
 	// Internationalization
@@ -81,6 +84,13 @@ $config = array(
 				)
 			)
 		)
+	),
+	'Analytics' => array(
+		'default' => 'piwik',
+		'piwik' => array(
+			// Provide this url to activate tracking.
+			'url' => 'passbolt.piwikpro.com'
+		),
 	),
 	'GPG' => array(
 		'trustModel' => 'always',

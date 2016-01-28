@@ -18,15 +18,15 @@ import 'app/view/template/component/settings_workspace_menu.ejs!';
  */
 var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Component.extend('passbolt.component.SettingsWorkspaceMenu', /** @static */ {
 	defaults: {
-		'label': 'Settings Workspace Menu',
-		'templateUri': 'app/view/template/component/settings_workspace_menu.ejs'
+		label: 'Settings Workspace Menu',
+		templateUri: 'app/view/template/component/settings_workspace_menu.ejs'
 	}
 
 }, /** @prototype */ {
 
 	/**
-	 * after start hook.
-	 * @return {void}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		this.options.sectionItems = {
@@ -52,9 +52,8 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 
 	/**
 	 * Observe when the user wants to edit an instance (Resource, User depending of the active workspace)
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{sectionItems.profile.edit.element} click': function (el, ev) {
 		mad.bus.trigger('request_profile_edition');
@@ -66,7 +65,6 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 	 * @param ev
 	 */
 	'{sectionItems.keys.downloadPublic.element} click': function (el, ev) {
-		console.log();
 		mad.bus.trigger('passbolt.settings.download_public_key');
 	},
 
@@ -85,7 +83,7 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 	 * @param ev
 	 * @param section
 	 */
-	'{mad.bus} request_settings_section': function(el, ev, section) {
+	'{mad.bus.element} request_settings_section': function(el, ev, section) {
 
 		if (this.options.sectionItems[section] == 'undefined') {
 			return;
@@ -103,4 +101,5 @@ var SettingsWorkspaceMenu = passbolt.component.SettingsWorkspaceMenu = mad.Compo
 		}
 	}
 });
+
 export default SettingsWorkspaceMenu;

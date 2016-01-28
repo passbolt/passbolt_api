@@ -104,6 +104,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
+
 	}
 
 	/**
@@ -1354,5 +1355,91 @@ qGyky3/L
 			$at = $AuthenticationToken->findById($at['AuthenticationToken']['id']);
 			$this->assertEquals($at['AuthenticationToken']['active'], '1', 'Account validation : After exception, token should still be active but is not');
 		}
+	}
+
+	/**
+	 * Test that a user is logged out if his account is deactivated during his session.
+	 */
+	public function testUserIsLoggedOutIfAccountDeactivated() {
+		$ada = $this->User->findByUsername('ada@passbolt.com');
+		$this->User->setActive($ada);
+
+		$json = json_decode(
+			$this->testAction(
+				'/resources.json',
+				[
+					'method' => 'get',
+					'return' => 'contents',
+				]
+			),
+			true
+		);
+		$this->assertEquals($json['header']['status'], Message::SUCCESS);
+
+		// Set active to zero.
+		$this->User->id = $ada['User']['id'];
+		$this->User->save(['active' => false], false);
+
+		// Try to perform the same query on resources and observe I am logged out automatically.
+		$this->setExpectedException('HttpException', 'You need to login to access this location');
+		$json = json_decode(
+			$this->testAction(
+				'/resources.json',
+				[
+					'method' => 'get',
+					'return' => 'contents',
+				]
+			),
+			true
+		);
+	}
+
+	/**
+	 * Test that a user is logged out if his account is softdeleted during his session.
+	 */
+	public function testUserIsLoggedOutIfAccountDeleted() {
+		$ada = $this->User->findByUsername('ada@passbolt.com');
+		$this->User->setActive($ada);
+
+		$json = json_decode(
+			$this->testAction(
+				'/resources.json',
+				[
+					'method' => 'get',
+					'return' => 'contents',
+				]
+			),
+			true
+		);
+		$this->assertEquals($json['header']['status'], Message::SUCCESS);
+
+		// Set active to zero.
+		$this->User->id = $ada['User']['id'];
+		$this->User->save(['deleted' => true], false);
+
+		// Try to perform the same query on resources and observe I am logged out automatically.
+		$this->setExpectedException('HttpException', 'You need to login to access this location');
+		$json = json_decode(
+			$this->testAction(
+				'/resources.json',
+				[
+					'method' => 'get',
+					'return' => 'contents',
+				]
+			),
+			true
+		);
+	}
+
+	/**
+	 * Test that the user is logged out if account is physically deleted.
+	 */
+	public function testUserIsLoggedOutIfAccountPhysicallyDeleted() {
+		$ada = $this->User->findByUsername('ada@passbolt.com');
+		$this->User->setActive($ada);
+		// Empty database and see if user is automatically logged out.
+		$this->User->deleteAll(array('User.id' => $ada['User']['id']));
+		$this->setExpectedException('HttpException', 'You need to login to access this location');
+		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true);
 	}
 }

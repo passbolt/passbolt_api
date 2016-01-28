@@ -12,7 +12,7 @@
 <html class="passbolt no-js no-passboltplugin alpha version <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
 	<meta charset="utf-8">
-	<!--
+	<!-- hey yo
            ____                  __          ____
           / __ \____  _____ ____/ /_  ____  / / /_
          / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
@@ -51,6 +51,7 @@
 </footer>
 </div>
 <?php echo $this->fetch('scriptBottom'); ?>
+<?php echo $this->element('analytics/piwik'); ?>
 <?php
 // load devel materials.
 if(Configure::read('debug') >= 2) {

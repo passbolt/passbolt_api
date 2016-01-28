@@ -39,17 +39,20 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 		// The current selected groups
         selectedGroups: new can.Model.List(),
 		// The current filter
-        filter: new passbolt.model.Filter(),
+        filter: new passbolt.model.Filter({
+            label: __('All users'),
+            type: passbolt.model.Filter.SHORTCUT
+        }),
 		// Override the silentLoading parameter.
 		silentLoading: false
     }
 
 }, /** @prototype */ {
 
-    /**
-     * Called right after the start function
-     * @see {mad.controller.ComponentController}
-     */
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
     afterStart: function() {
 		var role = passbolt.model.User.getCurrent().Role.name;
 
@@ -118,18 +121,15 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         });
         $('.js_wsp_users_sidebar_second', this.element).hide();
 
-        // Filter the workspace.
-        var filter = null;
         // A filter has been given in options.
-        if (this.options.filter) {
-            filter = this.options.filter;
-        } else {
-            filter = new passbolt.model.Filter({
+        // If not given, set one by default.
+        if (this.options.filter.attr('type') == undefined) {
+            this.options.filter.attr({
                 label: __('All users'),
                 type: passbolt.model.Filter.SHORTCUT
             });
         }
-        mad.bus.trigger('filter_users_browser', filter);
+        mad.bus.trigger('filter_users_browser', this.options.filter);
 
         this.on();
     },

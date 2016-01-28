@@ -39,14 +39,20 @@ class PermissionableBehavior extends ModelBehavior {
 					$userPermissionModelName . '.permission_id',
 					$userPermissionModelName . '.permission_type'
 				),
-				'conditions' => array(
+				'conditions' => array(),
+				'contain' => array($userPermissionModelName)
+			);
+
+			// If the current user doesn't have the Admin role.
+			// He will be restricted to see only content is has been granted for.
+			if (User::get('Role.name') != Role::ADMIN) {
+				$permOptions['conditions'] = array(
 					// We're looking for permissions for the current user.
 					$userPermissionModelName . '.user_id' => User::get('id'),
 					// The user should have a permission greater than DENY.
 					$userPermissionModelName . '.permission_type >' => PermissionType::DENY,
-				),
-				'contain' => array($userPermissionModelName)
-			);
+				);
+			}
 
 			// Bind the model the user is performing a find to our permissions model system.
 			$model->bindModel(

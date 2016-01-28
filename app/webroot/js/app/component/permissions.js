@@ -59,6 +59,10 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		return passbolt.model.Permission.isAllowedTo(this.options.acoInstance, passbolt.ADMIN);
 	},
 
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
 	afterStart: function() {
 		var self = this;
 

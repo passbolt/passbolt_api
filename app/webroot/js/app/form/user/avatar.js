@@ -24,9 +24,8 @@ var AvatarForm = passbolt.form.user.Avatar = mad.Form.extend('passbolt.form.user
 
 	/**
 	 * After start hook.
-	 * Create the form elements
-	 *
-	 * @return {void}
+	 * Initialize the form elements.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 

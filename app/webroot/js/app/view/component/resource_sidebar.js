@@ -13,9 +13,8 @@ var ResourceSidebar = passbolt.view.component.ResourceSidebar = passbolt.view.co
 
 	/**
 	 * Observe when the user clicks on any h2 element, rolldown the following p tag
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'h2 click': function (el, ev) {
 		el.next('p').toggle();
@@ -23,9 +22,8 @@ var ResourceSidebar = passbolt.view.component.ResourceSidebar = passbolt.view.co
 
 	/**
 	 * Observe when the user clicks on any h2 element, rolldown the following p tag
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'li.password .secret-copy > a click': function (el, ev) {
 		ev.stopPropagation();

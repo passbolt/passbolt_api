@@ -24,8 +24,9 @@ var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Men
 }, /** @prototype */ {
 
 	/**
-	 * After start. Init the menu items
-	 * @return {void}
+	 * After start hook.
+	 * Initialize the menu items.
+	 * @see {mad.Component}
 	 */
 	afterStart: function () {
 		var self = this,
@@ -77,7 +78,9 @@ var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Men
 
 			if (itemClass) {
 				var data = li.data(itemClass.fullName);
-				this.selectItem(data);
+				if (typeof data != 'undefined') {
+					this.selectItem(data);
+				}
 			}
 
 		}

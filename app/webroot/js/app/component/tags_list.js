@@ -32,7 +32,8 @@ var TagsList = passbolt.component.TagsList = mad.Component.extend('passbolt.comp
 }, /** @prototype */ {
 
 	/**
-	 * after start
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		if(this.options.tags != null) {
@@ -47,9 +48,8 @@ var TagsList = passbolt.component.TagsList = mad.Component.extend('passbolt.comp
 	/**
 	 * Observe when item tags are added to the observed instance
 	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.ItemTag} itemTags The added item tags
-	 * @return {void}
 	 */
 	'{tags} add': function (model, ev, itemTags) {
 		var self = this;
@@ -61,9 +61,8 @@ var TagsList = passbolt.component.TagsList = mad.Component.extend('passbolt.comp
 	/**
 	 * Observe when item tags are removed to the observed instance
 	 * @param {mad.model.Model} model The model reference
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.ItemTag} itemTags The removed item tags
-	 * @return {void}
 	 */
 	'{tags} remove': function (model, ev, itemTags) {
 		var self = this;

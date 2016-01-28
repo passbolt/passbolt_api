@@ -498,7 +498,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* Observe when a resource is created.
 	* If the created resource belong to a displayed category, add the resource to the grid.
 	* @param {mad.model.Model} model The model reference
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {passbolt.model.Resource} resource The created resource
 	*/
 	'{passbolt.model.Resource} created': function (model, ev, resource) {
@@ -528,7 +528,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* note : We listen the model directly, listening on changes on
 	* a list seems too much here (one event for each updated attribute)
 	* @param {mad.model.Model} model The model reference
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {passbolt.model.Resource} resource The updated resource
 	*/
 	'{passbolt.model.Resource} updated': function (model, ev, resource) {
@@ -541,7 +541,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* Observe when resources are removed from the list of displayed resources and
 	* remove it from the grid
 	* @param {mad.model.Model} model The model reference
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {passbolt.model.Resource} resources The removed resource
 	*/
 	'{resources} remove': function (model, ev, resources) {
@@ -555,7 +555,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* Observe when a category is removed. And remove from the grid all the resources
 	* which are not belonging to a displayed Category.
 	* @param {mad.model.Model} model The model reference
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {passbolt.model.Category} category The removed category
 	*/
 	'{passbolt.model.Category} destroyed': function (model, ev, category) {
@@ -581,10 +581,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/**
 	* Observe when an item is selected in the grid.
 	* This event comes from the grid view
-	* @param {HTMLElement} el The element the event occured on
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLElement} el The element the event occurred on
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {mixed} item The selected item instance or its id
-	* @param {HTMLEvent} ev The source event which occured
+	* @param {HTMLEvent} ev The source event which occurred
 	*/
 	' item_selected': function (el, ev, item, srcEvent) {
 		// switch to select state
@@ -597,10 +597,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 	/**
 	* An item has been right selected
-	* @param {HTMLElement} el The element the event occured on
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLElement} el The element the event occurred on
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {passbolt.model.Resource} item The right selected item instance or its id
-	* @param {HTMLEvent} srcEvent The source event which occured
+	* @param {HTMLEvent} srcEvent The source event which occurred
 	*/
     ' item_right_selected': function (el, ev, item, srcEvent) {
         // Select item.
@@ -611,10 +611,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 	/**
 	* A password has been clicked.
-	* @param {HTMLElement} el The element the event occured on
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLElement} el The element the event occurred on
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {passbolt.model.Resource} item The right selected item instance or its id
-	* @param {HTMLEvent} srcEvent The source event which occured
+	* @param {HTMLEvent} srcEvent The source event which occurred
 	*/
 	' password_clicked': function (el, ev, item, srcEvent) {
 		// Get secret out of Resource object.
@@ -623,24 +623,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		mad.bus.trigger('passbolt.secret.decrypt', secret);
 	},
 
-    ///**
-    // * Observe when a password cell is clicked.
-    // *
-    // * @param {HTMLElement} el The element the event occured on
-    // * @param {HTMLEvent} ev The event which occured
-    // * @param {mixed} item The selected item instance or its id
-    // * @param {HTMLEvent} ev The source event which occured
-    // * @return {void}
-    // */
-    //' password_clicked': function (el, ev, item, srcEvent) {
-    //    mad.bus.trigger('request_secret_view', item);
-    //},
-
 	/**
 	* Listen to the check event on any checkbox form element components.
 	*
-	* @param {HTMLElement} el The element the event occured on
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLElement} el The element the event occurred on
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {mixed} rsId The id of the resource which has been checked
 	*/
 	'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
@@ -667,8 +654,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/**
 	* Listen to the uncheck event on any checkbox form element components.
 	*
-	* @param {HTMLElement} el The element the event occured on
-	* @param {HTMLEvent} ev The event which occured
+	* @param {HTMLElement} el The element the event occurred on
+	* @param {HTMLEvent} ev The event which occurred
 	* @param {mixed} rsId The id of the resource which has been unchecked
 	*/
 	'.js_checkbox_multiple_select unchecked': function (el, ev, rsId) {
@@ -703,9 +690,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {passbolt.model.Filter} filter The filter to apply
 	*/
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		var self = this;
 		// store the filter
 		this.filter = filter;

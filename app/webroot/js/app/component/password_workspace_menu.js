@@ -32,9 +32,10 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
 }, /** @prototype */ {
 
-    /**
-     * after start hook.
-     */
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
     afterStart: function () {
         var self = this;
 
@@ -101,8 +102,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
 	/**
 	 * Observe when the user wants to copy the secret a resource.
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{secretCopyButton.element} click': function (el, ev) {
 		var resource = this.options.editButton.getValue();
@@ -112,8 +113,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
     /**
      * Observe when the user wants to edit a resource.
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{editButton.element} click': function (el, ev) {
         var resource = this.options.editButton.getValue();
@@ -122,8 +123,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
     /**
      * Observe when the user wants to delete a resource.
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     ' delete_action_clicked': function (el, ev) {
         var resources = this.options.selectedRs;
@@ -132,8 +133,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
     /**
      * Observe when the user wants to share a resrouce.
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     '{shareButton.element} click': function (el, ev) {
         var resource = this.options.shareButton.getValue();
@@ -142,8 +143,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
     /**
      * Observe when a resource is selected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Resource} resource The selected resource
      */
     '{selectedRs} add': function (el, ev, resource) {
@@ -163,8 +164,8 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 
     /**
      * Observe when a resource is unselected
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Resource} resource The unselected resource
      */
     '{selectedRs} remove': function (el, ev, resource) {

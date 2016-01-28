@@ -34,7 +34,10 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 	 */
 	_hasChanged: false,
 
-	// after start
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
 	afterStart: function() {
 		this._super();
 		var self = this;

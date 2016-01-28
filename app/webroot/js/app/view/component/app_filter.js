@@ -16,9 +16,8 @@ var AppFilter = passbolt.view.component.AppFilter = mad.View.extend('passbolt.vi
 
 	/**
 	 * Observe when the user update the filter
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'form submit': function(el, ev) {
 		this.element.trigger('update');

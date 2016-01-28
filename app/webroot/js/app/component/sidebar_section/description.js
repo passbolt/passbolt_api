@@ -31,7 +31,6 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 
 	/**
 	 * before start hook.
-	 * @return {void}
 	 */
 	beforeRender: function () {
 		this._super();
@@ -41,21 +40,22 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 	},
 
 	/**
-	 * Hook After Start
+	 * After start hook.
 	 * Will basically instantiate the form to edit the description
+	 * @see {mad.Component}
 	 */
 	afterStart : function() {
 		var self = this;
 
 		// create a form to edit the description
 		this.options.editDescriptionFormCtrl = new passbolt.form.resource.EditDescription($('#js_rs_details_edit_description', this.element), {
-			'resource': this.options.resource,
-			'state': 'hidden',
-			'data': {
-				'Resource': this.options.resource
+			resource: this.options.resource,
+			state: 'hidden',
+			data: {
+				Resource: this.options.resource
 			},
-			'callbacks': {
-				'submit': function (formData) {
+			callbacks: {
+				submit: function (formData) {
 					var data = {
 						__FILTER_CASE__: 'edit_description',
 						description: formData['passbolt.model.Resource']['description']
@@ -70,8 +70,7 @@ var Description = passbolt.component.sidebarSection.Description = mad.Component.
 	/**
 	 * Observe when the user want to edit the instance's resource description
 	 * @param {HTMLElement} el The element
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	' request_resource_description_edit' : function(el, ev) {
 		if(!this.state.is('edit')) {

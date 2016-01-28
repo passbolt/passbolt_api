@@ -2,7 +2,7 @@ import 'mad/view/component/tree';
 import 'app/component/comments';
 import 'app/component/sidebar_section';
 
-/*
+/**
  * @inherits mad.View
  * @parent index
  *
@@ -20,14 +20,14 @@ var Sidebar = passbolt.view.component.Sidebar = mad.View.extend('passbolt.view.c
 
     /**
      * Observe when the user clicks on the close button
-     * @param {HTMLElement} el The element the event occured on
-     * @param {HTMLEvent} ev The event which occured
-     * @return {void}
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
      */
     ' .js_sidebar_close click': function(el, ev) {
         mad.Config.write('ui.workspace.showSidebar', false);
-        mad.bus.trigger('workspace_showSidebar', false);
+        mad.bus.trigger('workspace_sidebar_hide');
     }
+
 });
 
 export default Sidebar;

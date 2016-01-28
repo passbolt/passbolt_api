@@ -21,12 +21,15 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 
 }, /** @prototype */ {
 
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
 	afterStart: function() {
 		var menuItems = [
 			new mad.model.Action({
 				'id': 'js_pwd_wsp_filter_all',
 				'label': __('All items'),
-				'cssClasses': ['selected'],
 				'action': function () {
 					var filter = new passbolt.model.Filter({
 						'label': __('All items'),
@@ -82,6 +85,8 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 			})
 		];
 		this.load(menuItems);
+        // Select first item.
+        this.selectItem(menuItems[0]);
 	},
 
 	/* ************************************************************** */
@@ -93,12 +98,8 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 	 * @param {jQuery} element The source element
 	 * @param {Event} event The jQuery event
 	 * @param {passbolt.model.Filter} filter The filter to apply
-	 * @return {void}
 	 */
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
-		// @todo fixed in future canJs.
-		if (!this.element) return;
-
 		if (filter.type != passbolt.model.Filter.SHORTCUT) {
 			this.unselectAll();
 		}

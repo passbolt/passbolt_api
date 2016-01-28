@@ -22,8 +22,13 @@ var SettingsMenu = passbolt.component.SettingsMenu = mad.component.Menu.extend('
 
 }, /** @prototype */ {
 
+	/**
+	 * After start hook.
+	 * @see {mad.Component}
+	 */
 	afterStart: function() {
 		this.load(this.options.menuItems);
 	}
+
 });
 export default SettingsMenu;

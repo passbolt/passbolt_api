@@ -41,7 +41,6 @@ var Profile = passbolt.component.Profile= mad.Component.extend('passbolt.compone
 	/**
 	 * Observe when the user is updated
 	 * @param {passbolt.model.User} user The updated user
-	 * @return {void}
 	 */
 	'{user} updated': function (user) {
 		// The reference of the user does not change, refresh the component

@@ -6,7 +6,6 @@ import 'app/component/breadcrumb/settings_breadcrumb';
 import 'app/component/profile';
 import 'app/component/keys';
 import 'app/form/user/create';
-//import 'app/form/user/passwordForm';
 import 'app/form/user/avatar';
 
 import 'app/view/template/settings_workspace.ejs!';
@@ -37,66 +36,61 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 }, /** @prototype */ {
 
 	/**
-	 * Called right after the start function
-	 * @return {void}
-	 * @see {mad.controller.ComponentController}
+	 * After start hook.
+	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		var self = this;
 		this.section = '';
 
 		// Instantiate the primary workspace menu controller outside of the workspace container, destroy it when the workspace is destroyed
-		var component = mad.helper.Component.create(
+		var primWkMenu = mad.helper.Component.create(
 			$('#js_wsp_primary_menu_wrapper'),
 			'last',
 			passbolt.component.SettingsWorkspaceMenu,
 			{}
 		);
-		component.start();
+		primWkMenu.start();
 
-		this.menuItems = Array();
 		// Instantiate the settings menu
-		this.menuItems['profile'] = new mad.model.Action({
-			id: uuid(),
-			label: __('My profile'),
-			action: function () {
-				mad.bus.trigger('request_settings_section', 'profile');
-			}
-		});
-		this.menuItems['keys'] = new mad.model.Action({
-			id: uuid(),
-			label: __('Manage your keys'),
-			action: function () {
-				mad.bus.trigger('request_settings_section', 'keys');
-			}
-		});
-
+		this.settingsWkMenuItems = {
+			profile: new mad.model.Action({
+				id: uuid(),
+				label: __('My profile'),
+				action: function () {
+					mad.bus.trigger('request_settings_section', 'profile');
+				}
+			}),
+			keys: new mad.model.Action({
+				id: uuid(),
+				label: __('Manage your keys'),
+				action: function () {
+					mad.bus.trigger('request_settings_section', 'keys');
+				}
+			})
+		};
 		this.settingsWkMenu = new passbolt.component.SettingsMenu('#js_wk_settings_menu', {
-			menuItems : [
-				this.menuItems['profile'],
-				this.menuItems['keys']
-			]
-		});
-		this.settingsWkMenu.start();
+			menuItems : this.settingsWkMenuItems
+		}).start();
 
-		// Instanciate the main tabs controller
+		// Instantiate the main tabs controller
 		this.settingsTabsCtl = new mad.component.Tab('#js_wk_settings_main', {
 			autoMenu: false // do not generate automatically the associated tab nav
 		});
 		this.settingsTabsCtl.start();
 
 		// Instantiate the password workspace breadcrumb controller
-		this.breadcrumCtl = new passbolt.component.SettingsBreadcrumb($('#js_wsp_settings_breadcrumb'), {});
-		this.breadcrumCtl.start();
-		this.breadcrumCtl.load();
+		this.breadcrumCtl = new passbolt.component.SettingsBreadcrumb($('#js_wsp_settings_breadcrumb'), {})
+			.start()
+			.load();
 
-		self.profileCtl = self.settingsTabsCtl.addComponent(passbolt.component.Profile, {
+		this.profileCtl = self.settingsTabsCtl.addComponent(passbolt.component.Profile, {
 			id: 'js_settings_wk_profile_controller',
 			label: 'profile',
 			user: passbolt.model.User.getCurrent()
 		});
 
-		self.profileKeysCtl = self.settingsTabsCtl.addComponent(passbolt.component.Keys, {
+		this.profileKeysCtl = self.settingsTabsCtl.addComponent(passbolt.component.Keys, {
 			id: 'js_settings_wk_profile_keys_controller',
 			label: 'keys'
 		});
@@ -110,6 +104,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 		$('#js_wsp_primary_menu_wrapper').empty();
 		// Destroy the breadcrumb too.
 		$('#js_wsp_settings_breadcrumb').empty();
+
 		this._super();
 	},
 
@@ -119,11 +114,10 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 	/**
 	 * Observe when the user requests a profile edition
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
-	'{mad.bus} request_profile_edition': function (el, ev) {
+	'{mad.bus.element} request_profile_edition': function (el, ev) {
 		// Current user.
 		var user = passbolt.model.User.getCurrent();
 
@@ -156,14 +150,10 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 	/**
 	 * Observe when the user requests a password edition
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
-	'{mad.bus} request_user_password_edition': function (el, ev, user) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
-
+	'{mad.bus.element} request_user_password_edition': function (el, ev, user) {
 		var self = this;
 
 		// get the dialog
@@ -185,14 +175,10 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 	/**
 	 * Observe when the user requests an avatar edition
-	 * @param {HTMLElement} el The element the event occured on
-	 * @param {HTMLEvent} ev The event which occured
-	 * @return {void}
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
 	 */
-	'{mad.bus} request_profile_avatar_edition': function (el, ev, user) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
-
+	'{mad.bus.element} request_profile_avatar_edition': function (el, ev, user) {
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {label: __('Edit Avatar')})
 			.start();
@@ -216,12 +202,10 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	 * @param ev
 	 * @param section
 	 */
-	'{mad.bus} request_settings_section': function (el, ev, section) {
-		// @todo #PASSBOLT-985 fixed in future canJs.
-		if (!this.element) return;
+	'{mad.bus.element} request_settings_section': function (el, ev, section) {
+		var tabId = null,
+			sectionIsValid = $.inArray(section, this.options.sections) != -1;
 
-		var tabId = null;
-		var sectionIsValid = $.inArray(section, this.options.sections) != -1;
 		if (sectionIsValid) {
 			switch (section) {
 				case 'keys' :
@@ -242,7 +226,7 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 
 			this.section = section;
 			// Select corresponding section in the menu.
-			this.settingsWkMenu.selectItem(this.menuItems[this.section]);
+			this.settingsWkMenu.selectItem(this.settingsWkMenuItems[this.section]);
 		}
 	},
 
@@ -253,7 +237,6 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	/**
 	 * The application is ready.
 	 * @param {boolean} go Enter or leave the state
-	 * @return {void}
 	 */
 	stateReady: function (go) {
 		// Load profile section by default.
