@@ -1374,7 +1374,7 @@ qGyky3/L
 			),
 			true
 		);
-		$this->assertEquals($json['header']['status'], Message::SUCCESS);
+		$this->assertEquals($json['header']['status'], Status::SUCCESS);
 
 		// Set active to zero.
 		$this->User->id = $ada['User']['id'];
@@ -1411,7 +1411,7 @@ qGyky3/L
 			),
 			true
 		);
-		$this->assertEquals($json['header']['status'], Message::SUCCESS);
+		$this->assertEquals($json['header']['status'], Status::SUCCESS);
 
 		// Set active to zero.
 		$this->User->id = $ada['User']['id'];
