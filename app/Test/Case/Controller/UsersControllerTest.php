@@ -1366,7 +1366,7 @@ qGyky3/L
 
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',
@@ -1384,7 +1384,7 @@ qGyky3/L
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',
@@ -1403,7 +1403,7 @@ qGyky3/L
 
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',
@@ -1421,7 +1421,7 @@ qGyky3/L
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',
