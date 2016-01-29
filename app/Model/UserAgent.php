@@ -48,6 +48,9 @@ class UserAgent extends AppModel {
 		// Produce a cleaned up user agent from environment
 		// Create a very restrictive configuration.
 		$userAgent['UserAgent']['name'] =  Purifier::clean(env('HTTP_USER_AGENT'),'nohtml');
+		if(empty($userAgent['UserAgent']['name'])) {
+			$userAgent['UserAgent']['name'] = 'Empty user agent';
+		}
 		if(strlen($userAgent['UserAgent']['name']) > 512) {
 			$userAgent['UserAgent']['name'] = substr($userAgent['UserAgent']['name'], 0, 512);
 		}
