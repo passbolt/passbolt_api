@@ -31,6 +31,7 @@ module.exports = function(grunt) {
 				'<%= config.webroot %>/js/lib/jquery-ui',
 				'<%= config.webroot %>/js/lib/mad',
 				'<%= config.webroot %>/js/lib/moment',
+				'<%= config.webroot %>/js/lib/moment-timezone',
 				'<%= config.webroot %>/js/lib/jquery-mousewheel',
 				'<%= config.webroot %>/js/lib/<%= config.styleguide %>',
 				'<%= config.webroot %>/js/lib/steal',
@@ -163,6 +164,13 @@ module.exports = function(grunt) {
 					cwd: '<%= config.modules_path %>/moment/',
 					src: ['locale/**', 'moment.js'],
 					dest: '<%= config.webroot %>/js/lib/moment/',
+					nonull: true,
+					expand: true
+				}, {
+					// moment-timezone
+					cwd: '<%= config.modules_path %>/moment-timezone/',
+					src: ['builds/moment-timezone-with-data.js'],
+					dest: '<%= config.webroot %>/js/lib/moment-timezone/',
 					nonull: true,
 					expand: true
 				}, {

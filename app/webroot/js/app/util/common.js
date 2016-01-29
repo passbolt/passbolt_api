@@ -1,6 +1,8 @@
 import jsSHA from 'sha1';
 import XRegExp from 'xregexp';
 import 'mad/component/component';
+import moment from 'moment';
+import 'moment-timezone';
 
 /**
  * @inherits mad.Component
@@ -27,20 +29,31 @@ var Common = passbolt.Common = mad.Component.extend('passbolt.Common', /** @stat
 		return uuid;
 	},
 
-    /**
-     * Convert a datetime string into a js Date object.
-     * @param dateTime
-     * @returns {Date}
-     */
-    datetimeToJSDate: function(dateTime) {
-        var dateTime = dateTime.split(" ");
-        var date = dateTime[0];
-        var time = dateTime[1];
-        var dateArr = date.split('-');
-        var timeArr = time.split(':');
-        var dateObj = new Date(dateArr[0], dateArr[1] - 1, dateArr[2], timeArr[0], timeArr[1], timeArr[2]);
-        return dateObj;
-    }
+	/**
+	 * Convert a datetime string into a js Date object.
+	 * @param dateTime
+	 * @returns {Date}
+	 */
+	datetimeToJSDate: function(dateTime) {
+		var dateTime = dateTime.split(" ");
+		var date = dateTime[0];
+		var time = dateTime[1];
+		var dateArr = date.split('-');
+		var timeArr = time.split(':');
+		var dateObj = new Date(dateArr[0], dateArr[1] - 1, dateArr[2], timeArr[0], timeArr[1], timeArr[2]);
+		return dateObj;
+	},
+
+	/**
+	 * Convert a datetime string into a time ago value. (using moment.js).
+	 *
+	 * @param dateTime
+	 * @returns {*}
+	 */
+	datetimeGetTimeAgo: function(dateTime) {
+		var timeAgo = moment.tz(dateTime, cakephpConfig.app.server_timezone).fromNow();
+		return timeAgo;
+	}
 }, {
 
 });

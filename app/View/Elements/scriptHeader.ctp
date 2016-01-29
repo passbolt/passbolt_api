@@ -24,7 +24,8 @@ $roles = $Role->find('all', array('conditions' => array('name' => array(Role::AD
 				song: "<?php echo Configure::read('App.version.song'); ?>"
 			},
 			url: "<?php echo Router::url('/',true); ?>",
-			debug: "<?php echo Configure::read('debug'); ?>"
+			debug: "<?php echo Configure::read('debug'); ?>",
+			server_timezone: "<?php echo date_default_timezone_get(); ?>"
 		},
 		user : {
 			id: "<?php echo User::get('id') ?>"

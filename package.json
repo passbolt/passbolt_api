@@ -15,6 +15,7 @@
 	    "passbolt-styleguide": "~0.3.7",
 		"jquery-ui": "^1.10.4",
 		"moment": "^2.10.0",
+		"moment-timezone": "^0.5.0",
 		"jquery-mousewheel": "^3.1.13",
 		"jssha": "~2.0.1",
 	  	"urijs": "^1.17.0"

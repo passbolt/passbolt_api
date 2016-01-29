@@ -120,7 +120,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                 label: __('Modified')
             },
             valueAdapter: function (value, mappedItem, item, columnModel) {
-                return moment(value).fromNow();
+	            return passbolt.Common.datetimeGetTimeAgo(value);
             }
         }];
 
