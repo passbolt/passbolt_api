@@ -46,7 +46,9 @@ class UserTask extends ModelTask {
 			'username' => 'admin@passbolt.com',
 			'role_id' => Common::uuid('role.id.admin'),
 			'password' => 'password',
-			'active' => 1
+			'active' => 1,
+			'created' => date('Y-m-d H:i:s', strtotime('-2 years')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 years')),
 		));
 		$us[] = array('User' => array(
 			'id' => Common::uuid('user.id.root'),
@@ -62,35 +64,45 @@ class UserTask extends ModelTask {
 			'username' => 'ada@passbolt.com',
 			'role_id' => Common::uuid('role.id.user'),
 			'password' => 'password',
-			'active' => 1
+			'active' => 1,
+			'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
 		));
         $us[] = array('User' => array(
             'id' => Common::uuid('user.id.betty'),
             'username' => 'betty@passbolt.com',
             'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
-            'active' => 1
+            'active' => 1,
+            'created' => date('Y-m-d H:i:s', strtotime('-2 weeks')),
+            'modified' => date('Y-m-d H:i:s', strtotime('-1 weeks')),
         ));
         $us[] = array('User' => array(
             'id' => Common::uuid('user.id.carol'),
             'username' => 'carol@passbolt.com',
             'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
-            'active' => 1
+            'active' => 1,
+            'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
+            'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
         ));
         $us[] = array('User' => array(
             'id' => Common::uuid('user.id.dame'),
             'username' => 'dame@passbolt.com',
             'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
-            'active' => 1
+            'active' => 1,
+            'created' => date('Y-m-d H:i:s', strtotime('-2 hours')),
+            'modified' => date('Y-m-d H:i:s', strtotime('-1 hours')),
         ));
         $us[] = array('User' => array(
             'id' => Common::uuid('user.id.edith'),
             'username' => 'edith@passbolt.com',
             'role_id' => Common::uuid('role.id.user'),
             'password' => 'password',
-            'active' => 1
+            'active' => 1,
+            'created' => date('Y-m-d H:i:s', strtotime('-2 minutes')),
+            'modified' => date('Y-m-d H:i:s', strtotime('-1 minutes')),
         ));
         $us[] = array('User' => array(
             'id' => Common::uuid('user.id.frances'),

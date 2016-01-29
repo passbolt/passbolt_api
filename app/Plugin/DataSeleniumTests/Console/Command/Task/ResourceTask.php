@@ -44,7 +44,9 @@ class ResourceTask extends ModelTask {
 			'description' => 'Apache is the world\'s most used web server software.',
 			'deleted' => 0,
 			'created_by' => Common::uuid('user.id.ada'),
-			'modified_by' => Common::uuid('user.id.ada')
+			'modified_by' => Common::uuid('user.id.ada'),
+			'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
 		));
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.april'),
@@ -55,7 +57,7 @@ class ResourceTask extends ModelTask {
 			'description' => 'L\'association pionnière du logiciel libre en France',
 			'deleted' => 0,
 			'created_by' => Common::uuid('user.id.betty'),
-			'modified_by' => Common::uuid('user.id.betty')
+			'modified_by' => Common::uuid('user.id.betty'),
 		));
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.bower'),
@@ -66,7 +68,9 @@ class ResourceTask extends ModelTask {
 			'description' => 'A package manager for the web!',
 			'deleted' => 0,
 			'created_by' => Common::uuid('user.id.carol'),
-			'modified_by' => Common::uuid('user.id.carol')
+			'modified_by' => Common::uuid('user.id.carol'),
+			'created' => date('Y-m-d H:i:s', strtotime('-2 years')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 years')),
 		));
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.centos'),
@@ -77,7 +81,9 @@ class ResourceTask extends ModelTask {
 			'description' => 'The CentOS Linux distribution is a platform derived from Red Hat Enterprise Linux (RHEL).',
 			'deleted' => 0,
 			'created_by' => Common::uuid('user.id.dame'),
-			'modified_by' => Common::uuid('user.id.dame')
+			'modified_by' => Common::uuid('user.id.dame'),
+			'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
 		));
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.canjs'),
@@ -88,7 +94,9 @@ class ResourceTask extends ModelTask {
 			'description' => 'CanJS is a JavaScript library that makes developing complex applications simple and fast.',
 			'deleted' => 0,
 			'created_by' => Common::uuid('user.id.edith'),
-			'modified_by' => Common::uuid('user.id.edith')
+			'modified_by' => Common::uuid('user.id.edith'),
+			'created' => date('Y-m-d H:i:s', strtotime('-2 weeks')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 weeks')),
 		));
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.cakephp'),
@@ -99,7 +107,9 @@ class ResourceTask extends ModelTask {
 			'description' => 'The rapid and tasty php development framework',
 			'deleted' => 0,
 			'created_by' => Common::uuid('user.id.ada'),
-			'modified_by' => Common::uuid('user.id.ada')
+			'modified_by' => Common::uuid('user.id.ada'),
+			'created' => date('Y-m-d H:i:s', strtotime('-2 hours')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 hours')),
 		));
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.chai'),
@@ -121,7 +131,9 @@ class ResourceTask extends ModelTask {
 			'description' => 'Dependency Manager for PHP',
 			'deleted' => 0,
 			'created_by' => Common::uuid('user.id.carol'),
-			'modified_by' => Common::uuid('user.id.carol')
+			'modified_by' => Common::uuid('user.id.carol'),
+			'created' => date('Y-m-d H:i:s', strtotime('-2 minutes')),
+			'modified' => date('Y-m-d H:i:s', strtotime('-1 minutes')),
 		));
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.debian'),
