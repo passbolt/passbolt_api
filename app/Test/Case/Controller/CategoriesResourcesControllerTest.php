@@ -36,7 +36,9 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		'app.permission_view',
 		'app.authenticationBlacklist',
 		'app.file_storage',
-		'core.cakeSession'
+		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public function setUp() {
@@ -71,7 +73,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/categoriesResources/$id.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/categoriesResources.json : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categoriesResources.json : The test should return success but is returning {$result['header']['status']}");
 	}
 
 	public function testAddNoDataProvided() {
@@ -112,7 +114,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 			 'method' => 'post',
 			 'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /categoriesResources.json : The test should return sucess but is returning " . print_r($result, true));
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /categoriesResources.json : The test should return sucess but is returning " . print_r($result, true));
 		// check that Categories were properly saved
 		$cr = $this->CategoryResource->find('all', array(
 			'conditions' => array(
@@ -144,7 +146,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 			 'method' => 'delete',
 			 'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /categoriesResources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "delete /categoriesResources/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
 		$found = $this->CategoryResource->findById($id);
 		$this->assertEquals(

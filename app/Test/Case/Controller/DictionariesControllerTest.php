@@ -27,6 +27,8 @@ class DictionariesControllerTest extends ControllerTestCase {
 		'app.authenticationBlacklist',
 		'app.gpgkey',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public $user;
@@ -64,14 +66,14 @@ class DictionariesControllerTest extends ControllerTestCase {
 			'return' => 'contents',
 			'method' => 'GET'
 		), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/dictionaries/en-EN.json should return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/dictionaries/en-EN.json should return something');
 
 		// test french dictionary
 		$result = json_decode($this->testAction('/dictionaries/fr-FR.json', array(
 			'return' => 'contents',
 			'method' => 'GET'
 		), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/dictionaries/fr-FR.json should return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/dictionaries/fr-FR.json should return something');
 
 		// clear cache and test if cache writting works
 		Cache::clear();

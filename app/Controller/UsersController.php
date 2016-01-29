@@ -80,12 +80,16 @@ class UsersController extends AppController {
 				$this->__registerUser($userData, true);
 			}
 			catch (ValidationException $e) {
+				// we do not want CakeErrorController to handle the validation error
+				// if the request is not in JSON format
+				// since we need to render the validation error in the original view/layout
+				if($this->request->is('json')) {
+					throw $e;
+				}
 				return;
 			}
-
 			// Redirect to thank you page.
-			$this->redirect("/register/thankyou");
-			return;
+			$this->redirect('/register/thankyou');
 		}
 	}
 

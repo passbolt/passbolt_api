@@ -28,6 +28,8 @@ class GroupsControllerTest extends ControllerTestCase {
 		'app.authenticationLog',
 		'app.authenticationBlacklist',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public $user;
@@ -53,14 +55,14 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	/**
 	 * Index entry point
-	 // */
+	 */
 	public function testIndex() {
 		$result = json_decode($this->testAction('/groups.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/groups.json return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/groups.json return something');
 
 		$this->Group->deleteAll(array('id <>' => null));
 		$result = json_decode($this->testAction('/groups.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEquals($result->header->status, Message::NOTICE, '/groups.json return a warning');
+		$this->assertEquals($result->header->status, Status::NOTICE, '/groups.json return a warning');
 	}
 
 	public function testViewGroupIdIsMissing() {
@@ -80,7 +82,7 @@ class GroupsControllerTest extends ControllerTestCase {
 	public function testView() {
 		$group = $this->Group->findByName('accounting dpt');
 		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json",array('return' => 'contents','method' => 'GET'), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS,'/groups return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS,'/groups return something');
 	}
 
 	public function testAddNoAllowed() {
@@ -115,7 +117,7 @@ class GroupsControllerTest extends ControllerTestCase {
 					'return' => 'contents'
 				)), true
 		);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /groups.json : The test should return sucess but is returning " . print_r($result, true));
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /groups.json : The test should return sucess but is returning " . print_r($result, true));
 
 		// check that User was properly saved
 		$group = $this->Group->findByName("test1");
@@ -180,7 +182,7 @@ class GroupsControllerTest extends ControllerTestCase {
 			'method' => 'put',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Edit : /groups.json : The test should return sucess but is returning " . print_r($result, true));
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Edit : /groups.json : The test should return sucess but is returning " . print_r($result, true));
 
 		// check that User was properly saved
 		$gr = $this->Group->findByName("modified name");
@@ -221,7 +223,7 @@ class GroupsControllerTest extends ControllerTestCase {
 		$id = $group['Group']['id'];
 
 		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json", array('method' => 'delete','return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /groups/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "delete /groups/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
 		$deleted = $this->Group->findByName('accounting dpt');
 		$this->assertEquals(1, $deleted['Group']['deleted'], "delete /groups/{$group['Group']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['Group']['deleted']}");

@@ -35,6 +35,8 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		'app.permission_view',
 		'app.authenticationBlacklist',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public $uses = array(
@@ -72,7 +74,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/groupsUsers/$id.json", array('method' => 'get', 'return' => 'contents')), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "/groupsUsers.json : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/groupsUsers.json : The test should return success but is returning {$result['header']['status']}");
 	}
 
 	public function testAddNoDataProvided() {
@@ -113,7 +115,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 					'method' => 'post',
 					'return' => 'contents'
 				)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "Add : /groupsUsers.json : The test should return sucess but is returning " . print_r($result, true));
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /groupsUsers.json : The test should return sucess but is returning " . print_r($result, true));
 
 		// check that Categories were properly saved
 		$gu = $this->GroupUser->find('all', array(
@@ -146,7 +148,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 					'method' => 'delete',
 					'return' => 'contents'
 				)), true);
-		$this->assertEquals(Message::SUCCESS, $result['header']['status'], "delete /groupsUsers/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "delete /groupsUsers/$id.json : The test should return a success but is returning {$result['header']['status']}");
 
 		$found = $this->GroupUser->findById($id);
 		$this->assertEquals(

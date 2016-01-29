@@ -8,6 +8,7 @@
  */
 
 App::uses('AppController', 'Controller');
+App::uses('ControllerLog', 'Model');
 
 /**
  * Error Handling Controller
@@ -56,18 +57,12 @@ class CakeErrorController extends AppController {
  * @return CakeResponse
  */
 	public function render($view = null, $layout = null) {
-		// Default treatment is request is not JSON
-		if (!$this->request->is('json')) {
-			$this->layout = 'error';
-			return parent::render($view, $layout);
-		}
-
 		// if we're using the message component
 		if(isset($this->Message->messages) && !empty($this->Message->messages)) {
 			$response = array_pop($this->Message->messages);
 		} else {
 			// By default, the title is the controller name, action with an error type.
-			$title = strtolower('app_' . $this->request->controller . '_' . $this->request->action . '_' . Message::ERROR);
+			$title = strtolower('app_' . $this->request->controller . '_' . $this->request->action . '_' . Status::ERROR);
 			$response['header']['id'] = Common::uuid($title);
 			$response['header']['status'] = 'error';
 			$response['header']['title'] = $title;
@@ -80,7 +75,18 @@ class CakeErrorController extends AppController {
 				$response['body'] = $this->viewVars['error']->invalidFields;
 			}
 		}
-		$this->response->body(json_encode($response));
+
+		// Log the event if needed
+		ControllerLog::write(Status::ERROR, $this->request, $response['header']['message'], 'CakeErrorJson');
+
+		// Default treatment is request is not JSON
+		if (!$this->request->is('json')) {
+			$this->layout = 'error';
+			ControllerLog::write(Status::ERROR, $this->request, '', 'CakeError');
+			return parent::render($view, $layout);
+		} else {
+			return $this->response->body(json_encode($response));
+		}
 	}
 
 }

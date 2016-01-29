@@ -24,25 +24,27 @@ App::uses('CakeSession', 'Model/Datasource');
 class ShareControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-			'app.resource',
-			'app.secret',
-			'app.category',
-			'app.categories_resource',
-			'app.favorite',
-			'app.user',
-			'app.group',
-			'app.groups_user',
-			'app.role',
-			'app.profile',
-			'app.file_storage',
-			'app.permission',
-			'app.permissions_type',
-			'app.permission_view',
-			'app.authenticationLog',
-			'app.authenticationBlacklist',
-			'app.gpgkey',
-			'app.emailQueue',
-			'core.cakeSession',
+		'app.resource',
+		'app.secret',
+		'app.category',
+		'app.categories_resource',
+		'app.favorite',
+		'app.user',
+		'app.group',
+		'app.groups_user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+		'app.authenticationLog',
+		'app.authenticationBlacklist',
+		'app.gpgkey',
+		'app.emailQueue',
+		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 		);
 
 	public $user;
@@ -211,7 +213,7 @@ class ShareControllerTest extends ControllerTestCase {
 		);
 		$res = json_decode($this->_updateCall('facebook account', $data, 'Resource'), true);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$res['header']['status'],
 			"Deleting a permission should have returned a success, but returned {$res['header']['status']}"
 		);
@@ -392,7 +394,7 @@ hcciUFw5
 		);
 		$res = json_decode($this->_updateCall('facebook account', $data, 'Resource'), true);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$res['header']['status'],
 			"Adding a permission should have returned a success, but returned {$res['header']['status']}"
 		);
@@ -435,7 +437,7 @@ hcciUFw5
 		$resource = $this->Resource->findById($directPerm['Permission']['aco_foreign_key']);
 		$res = json_decode($this->_updateCall($resource['Resource']['name'], $data, 'Resource'), true);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$res['header']['status'],
 			"Updating a permission should have returned a success, but returned {$res['header']['status']}"
 		);
@@ -465,7 +467,7 @@ hcciUFw5
 		$json = json_decode($res, true);
 
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$json['header']['status'],
 			"Simulation of adding permissions should have returned success, but returned {$json['header']['status']}"
 		);

@@ -30,6 +30,8 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 			'app.authenticationBlacklist',
 			'app.emailQueue',
 			'core.cakeSession',
+			'app.user_agent',
+			'app.controller_log'
 		);
 
 	/**

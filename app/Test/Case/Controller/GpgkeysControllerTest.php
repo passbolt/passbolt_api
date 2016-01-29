@@ -20,16 +20,17 @@ if (!class_exists('CakeSession')) {
 
 class GpgkeysControllerTest extends ControllerTestCase {
 
-	public $fixtures
-		= array(
-			'app.user',
-			'app.role',
-			'app.gpgkey',
-			'app.group',
-			'app.authenticationLog',
-			'app.authenticationBlacklist',
-			'core.cakeSession',
-		);
+	public $fixtures = array(
+		'app.user',
+		'app.role',
+		'app.gpgkey',
+		'app.group',
+		'app.authenticationLog',
+		'app.authenticationBlacklist',
+		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
+	);
 
 	/**
 	 * Setup.
@@ -58,7 +59,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			));
 		$this->assertEquals(
 			$result->header->status,
-			Message::SUCCESS,
+			Status::SUCCESS,
 			'/gpgkeys.json return something'
 		);
 
@@ -77,7 +78,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			));
 		$this->assertEquals(
 			$result->header->status,
-			Message::NOTICE,
+			Status::NOTICE,
 			'/gpgkeys.json return a warning'
 		);
 	}
@@ -103,7 +104,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 
 		$this->assertEquals(
 			$result->header->status,
-			Message::SUCCESS,
+			Status::SUCCESS,
 			'Gpgkeys Controller should return something when modified after is in the past'
 		);
 
@@ -125,7 +126,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 
 		$this->assertEquals(
 			$result2->header->status,
-			Message::NOTICE,
+			Status::NOTICE,
 			'Gpgkeys Controller should return nothing when modified after filter date is in the future'
 		);
 
@@ -166,7 +167,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 				),
 				true)
 		);
-		$this->assertEquals($result->header->status, Message::SUCCESS,'/gpgkey return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS,'/gpgkey return something');
 	}
 
 	/**
@@ -190,7 +191,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			true
 		);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$json['header']['status'],
 			"Add : /gpgkeys.json : The test should return sucess but is returning " . print_r($json, true)
 		);
@@ -237,7 +238,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 				);
 			// For each round, test that the add was succesful.
 			$this->assertEquals(
-				Message::SUCCESS,
+				Status::SUCCESS,
 				$result['header']['status'],
 				"Add : /gpgkeys.json : The test should return success but is returning " . print_r($result, true)
 			);

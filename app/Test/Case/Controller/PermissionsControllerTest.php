@@ -41,6 +41,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 		'app.authenticationLog',
 		'app.authenticationBlacklist',
 		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
 	);
 
 	public $user;
@@ -129,7 +131,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->User->setActive($user);
 
 		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $getOptions), true);
-		$this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/category/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/category/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
 
 	// test view aco permissions on Resource Aco
@@ -322,7 +324,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		)), true);
 
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$srvResult['header']['status'],
 			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
 		);
@@ -364,7 +366,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'return' => 'contents',
 			 'data'=> $data
 		)), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 
 		$this->setExpectedException('HttpException', "A direct permission already exists");
@@ -412,7 +414,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$simulatedCount = count($srvSimulatedResult['body']);
 
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$srvResult['header']['status'],
 			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
 		);
@@ -493,7 +495,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 		// switch the permission of human resource on the category administration to deny
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
-		$this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 		// log the user with a user who belongs to the human resource group
 		$user = $this->User->findByUsername('irene@passbolt.com');
@@ -563,7 +565,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 //		 );
 //		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
 //		 // message should be : The user is not allowed to delete the permission
-//		 $this->assertEquals(Message::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+//		 $this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
 //	 }
 //
 //	 // test delete
@@ -576,7 +578,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 //
 //		 // switch the permission of human resource on the category administration to deny
 //		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
-//		 $this->assertEquals(Message::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+//		 $this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 //
 //		 // log the user with a user who belongs to the human resource group
 //		 $user = $this->User->findByUsername('irene@passbolt.com');

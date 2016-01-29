@@ -133,5 +133,14 @@ $config = array(
 			'Tag',
 			'User',
 		)
-	)
+	),
+  'Log' => array(
+    'error' => true,
+    'success' => true,
+    'notice' => true,
+    'debug' => true,
+    'warning' => true,
+    // Log request data on errors
+    'request_data' => true
+  )
 );

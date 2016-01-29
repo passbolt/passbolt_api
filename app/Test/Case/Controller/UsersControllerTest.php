@@ -19,19 +19,21 @@ App::uses('CakeSessionFixture', 'Test/Fixture');
 class UsersControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
-			'app.groups_user',
-			'app.group',
-			'app.user',
-			'app.gpgkey',
-			'app.email_queue',
-			'app.profile',
-			'app.file_storage',
-			'app.role',
-			'app.authenticationToken',
-			'app.authenticationLog',
-			'app.authenticationBlacklist',
-			'core.cakeSession',
-		);
+		'app.groups_user',
+		'app.group',
+		'app.user',
+		'app.gpgkey',
+		'app.email_queue',
+		'app.profile',
+		'app.file_storage',
+		'app.role',
+		'app.authenticationToken',
+		'app.authenticationLog',
+		'app.authenticationBlacklist',
+		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log'
+	);
 
 	public $user;
 
@@ -101,7 +103,8 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setActive($user);
 
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/users return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
+
 	}
 
 	/**
@@ -145,7 +148,7 @@ class UsersControllerTest extends ControllerTestCase {
 			'fltr_model_group' => $group['Group']['id']
 		);
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/users return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
 		$this->assertNotEmpty($result->body);
 		$this->assertEquals($result->body[0]->User->username, 'dame@passbolt.com');
 	}
@@ -162,7 +165,7 @@ class UsersControllerTest extends ControllerTestCase {
 			'fltr_keywords' => 'Betty'
 		);
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/users return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
 		$this->assertNotEmpty($result->body);
 		$this->assertEquals($result->body[0]->User->username, 'betty@passbolt.com');
 	}
@@ -236,7 +239,7 @@ class UsersControllerTest extends ControllerTestCase {
 				true
 			)
 		);
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/user return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/user return something');
 		$this->assertNotEmpty($result->body);
 		$this->assertEquals($result->body->User->username, 'user@passbolt.com');
 	}
@@ -256,7 +259,7 @@ class UsersControllerTest extends ControllerTestCase {
 				true
 			)
 		);
-		$this->assertEquals($result->header->status, Message::SUCCESS, '/users return something');
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
 		$this->assertNotEmpty($result->body);
 		$this->assertEquals($result->body->User->username, 'ada@passbolt.com');
 	}
@@ -344,7 +347,7 @@ class UsersControllerTest extends ControllerTestCase {
 			true
 		);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$result['header']['status'],
 			"Add : /users.json : The test should return success but is returning " . print_r($result, true)
 		);
@@ -401,7 +404,7 @@ class UsersControllerTest extends ControllerTestCase {
 			true
 		);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$result['header']['status'],
 			"Add : /users.json : The test should return sucess but is returning " . print_r($result, true)
 		);
@@ -574,7 +577,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$result = json_decode($resRaw, true);
 
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$result['header']['status'],
 			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
 		);
@@ -621,7 +624,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$result = json_decode($resRaw, true);
 
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$result['header']['status'],
 			"Edit : /users.json : The test should return success but is returning " . print_r($result, true)
 		);
@@ -857,7 +860,7 @@ class UsersControllerTest extends ControllerTestCase {
 			true
 		);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$result['header']['status'],
 			"delete /users/{$u['User']['id']}.json : The test should return a success but is returning {$result['header']['status']}"
 		);
@@ -1002,7 +1005,7 @@ class UsersControllerTest extends ControllerTestCase {
 			true
 		);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$result['header']['status'],
 			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
 		);
@@ -1131,7 +1134,7 @@ class UsersControllerTest extends ControllerTestCase {
 		));
 		$json = json_decode($validate, true);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$json['header']['status'],
 			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
@@ -1176,7 +1179,7 @@ class UsersControllerTest extends ControllerTestCase {
 		));
 		$json = json_decode($validate, true);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$json['header']['status'],
 			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
@@ -1251,7 +1254,7 @@ qGyky3/L
 		);
 		$json = json_decode($validate, true);
 		$this->assertEquals(
-			Message::SUCCESS,
+			Status::SUCCESS,
 			$json['header']['status'],
 			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
 		);

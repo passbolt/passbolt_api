@@ -166,7 +166,7 @@ CakeLog::config('error', array(
  * Testsuite
  */
 //require_once APP . 'Vendor/autoload.php';
-require_once dirname(dirname(__DIR__)) . '/Vendor/autoload.php';
+require_once dirname(dirname(__DIR__)) . DS . 'Vendor' . DS . 'autoload.php';
 
 /**
  * GPG Keyring
@@ -174,3 +174,16 @@ require_once dirname(dirname(__DIR__)) . '/Vendor/autoload.php';
 if(Configure::read('GPG.env.setenv')) {
 	putenv('GNUPGHOME='. Configure::read('GPG.env.home'));
 }
+
+/**
+ * HTML Purifier
+ */
+Purifier::config('nohtml', array(
+	'HTML.AllowedElements' => '',
+	'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
+));
+
+/**
+ * Application Statuses
+ */
+require_once(APP . DS . 'Lib' . DS . 'Status.php');
