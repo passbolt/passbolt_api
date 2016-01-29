@@ -79,7 +79,7 @@ class ControllerLog extends AppModel {
 			'ip' => array(
 				'ip' => array(
 					'required' => true,
-					'allowEmpty' => false,
+					'allowEmpty' => true,
 					'rule' => 'validIpRange',
 					'message' => __('The IP address must be in correct format')
 				)
@@ -182,12 +182,18 @@ class ControllerLog extends AppModel {
 		$userAgent = UserAgent::get();
 		$data['ControllerLog']['user_agent_id'] = $userAgent['UserAgent']['id'];
 		$data['ControllerLog']['ip'] = $request->clientIp();
+		if(empty($data['ControllerLog']['ip'])) {
+			$data['ControllerLog']['ip'] = '127.0.0.1';
+		}
 
 		// auto populate http method
 		foreach(array('get','post','put','delete') as $method) {
 			if($request->is($method)) {
 				$data['ControllerLog']['method'] = strtoupper($method);
 			}
+		}
+		if(empty($data['ControllerLog']['method'])) {
+			$data['ControllerLog']['method'] = 'GET';
 		}
 
 		// set controller name and action
@@ -214,7 +220,11 @@ class ControllerLog extends AppModel {
 		$_this = Common::getModel('ControllerLog');
 		if(!$_this->save($data)) {
 			if(isset($_this->validationErrors)) {
-				throw new ValidationException(__('Could not validate the controller log'), $_this->validationErrors);
+				$msg = __('Could not validate the controller log');
+				if(Configure::read('debug')) {
+					$msg .= "\n" . json_encode($_this->validationErrors) . "\n" . json_encode($data);
+				}
+				throw new ValidationException($msg, $_this->validationErrors);
 			}
 			throw new Exception(__('System error, could not save'));
 		}
