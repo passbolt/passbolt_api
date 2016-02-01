@@ -487,7 +487,7 @@ class UsersController extends AppController {
 		}
 
 		// Check that token is valid
-		$validToken = $this->User->AuthenticationToken->checkTokenIsValidForUser($data['AuthenticationToken']['token'], $id);
+		$validToken = $this->User->AuthenticationToken->isValid($data['AuthenticationToken']['token'], $id);
 		if (!$validToken) {
 			return $this->Message->error(__('Invalid token'));
 		}

@@ -32,6 +32,12 @@ class GpgAuthenticate extends BaseAuthenticate {
 	protected $_response;
 
 /**
+ * @var $_request CakeRequest
+ * @access protected
+ */
+	protected $_request;
+
+/**
  * Authenticate
  *
  * @param CakeRequest $request interface for accessing request parameters
@@ -42,6 +48,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// Init gpg object and load server key
 		$this->_initKeyring();
 		$this->_response = &$response;
+		$this->_request = &$request;
 
 		// Begin process by checking if the user exist and his key is valid
 		$response->header('X-GPGAuth-Authenticated', 'false');
@@ -49,7 +56,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 
 		$user = $this->_identifyUserWithFingerprint($request);
 		if ($user === false) {
-			return $this->__error();
+			return $this->__error('There is no user associated with this key');
 		}
 
 		// Step 0. Server authentication
@@ -81,8 +88,11 @@ class GpgAuthenticate extends BaseAuthenticate {
 			$this->_gpg->addsignkey(
 				$this->_config['serverKey']['fingerprint'], $this->_config['serverKey']['passphrase']);
 
-			// generate token, note that we only store the UUID in the DB
-			$token = $AuthenticationToken->createToken($user['User']['id']);
+			// generate the authentication token
+			$token = $AuthenticationToken->generate($user['User']['id']);
+
+			$this->_response->header('X-GPGAuth-Debug-Token', $AuthenticationToken->find('count'));
+
 			if (!isset($token['AuthenticationToken']['token'])) {
 				return $this->__error('Failed to create token');
 			}
@@ -104,14 +114,15 @@ class GpgAuthenticate extends BaseAuthenticate {
 			}
 			// extract the UUID to get the database records
 			list($version, $length, $uuid, $version2) = explode('|', $request->data['gpg_auth']['user_token_result']);
-			if (!($AuthenticationToken->checkTokenIsValidForUser($uuid, $user['User']['id']))) {
+			if (empty($AuthenticationToken->isValid($uuid, $user['User']['id']))) {
 				return $this->__error('The user token result could not be found ' .
 					't=' . $uuid . ' u=' . $user['User']['id']);
 			}
 		}
 
 		// Completed
-		// we set the user to active and provide some success feedback
+		// we set the user to active, delete the auth token and provide some success feedback
+		AuthenticationToken::setInactive($uuid, $user['User']['id']);
 		$user = User::setActive($user);
 
 		$this->_response->header('X-GPGAuth-Progress', 'complete');

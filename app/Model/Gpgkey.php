@@ -126,23 +126,6 @@ class Gpgkey extends AppModel {
     }
 
     /**
-     * Check if a user with same id exists
-     * @param $check
-     * @return bool
-     */
-    public function userExists($check) {
-        if ($check['user_id'] == null) {
-            return false;
-        } else {
-            $exists = $this->User->find('count', array(
-                'conditions' => array('User.id' => $check['user_id']),
-                'recursive' => -1
-            ));
-            return $exists > 0;
-        }
-    }
-
-    /**
      * Check if a key can be imported
      * @param $check
      * @return bool
