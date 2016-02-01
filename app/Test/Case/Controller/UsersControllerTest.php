@@ -1095,14 +1095,14 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-    $this->User->setInactive();
+		$this->User->setInactive();
 
 		$this->setExpectedException('HttpException', 'Invalid token');
 		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
 		$this->testAction($url, array(
 			'data'   => array (
 				'AuthenticationToken' => array (
-					'token' => AuthenticationToken::generateToken(),
+					'token' => Common::uuid(),
 				),
 			),
 			'method' => 'put',
@@ -1117,7 +1117,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-    $this->User->setInactive();
+		$this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
