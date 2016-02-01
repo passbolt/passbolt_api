@@ -290,8 +290,8 @@ wJffl4U=
 	public function testEncrypt() {
 		$gpg = new \Passbolt\Gpg();
 
-		// Get key for ada.
-		$publicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_public.key');
+		// Get key for jean.
+		$publicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'jean_public.key');
 
 		// Encrypt message.
 		$gpg->setEncryptKey($publicKey);
@@ -307,17 +307,23 @@ wJffl4U=
 	public function testDecryptNoPassphrase() {
 		// Define pre encrypted message.
 		$message = '-----BEGIN PGP MESSAGE-----
-Version: GnuPG v2
+Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
+Comment: GPGTools - https://gpgtools.org
 
-hQEMAxze6z9p8rK1AQgApWbX3sTlR/yNpI5I04AftbojBe8ULg9+r7OLYxlbg/lQ
-HvQGWT1a8iH4Zw1DcjB+oYxHdaTFwsG0QMeKGRl+tghyKKmlWGSeGWkeHOZPbsXB
-cE/FOyRkMG0ghUnlo0PBWKqL9KFmlcNvc/F5VH4H4GiRR0x3+qYhpiLRpFfe49t2
-oc4/iqws8GcQ2jBWzb5qlhEYE8YqQxtz/HlPbOtlURwoB7dmPNcmP+5XxfYar68y
-L3fyHyHSRrtW8Lvb8pJlzScUIOUNwjzc8BGelG64In+4HEOVia3jcBUn0JGdPAfu
-nOm1PMuTKj5bj0RHFnZBscIIS2lo/SlxcrvL0uZ8oNJQAThXPKsbnC6GVqYzLI3P
-Ek/ZD5H6fGVm7t9GKDgwRrNQNFsqerx7HvyOj+C0bRnii87MzFykc9dOOVHywudM
-LUbRh6UyogY9wzlgcqgPFKk=
-=HMm1
+hQIMA4e/DeCIHsAzAQ//Yi1V/ozh6E5/x6AGVnrKTJgxMnDstQaOqbUD/iSC4of0
+6PmQBy25wbWtx+2nOpnueEvaS+q4xn3uQZYwO9ez4Qd6WPGc2aH8WzG4lOJjTBh6
+NJ234gPTk7xWtDYfxBK6hlgnIG8vd6MuOl/RNJIl3bdXaHdho+msskMV4vTKKlrv
+MYwkHhVpTeGm3P9PGvZZquh9Pi7iNdBh1gASgUuONrPPP8mlbEyGPV1flcgLmVvL
+WYM8Q5g56oWRW1C+qtUW6rQ5KG6KiIxW42Jc7x2aCudh/O0ZCT9kaYZNj4SWbLw6
+HZLXS8l2FurGDDktU/fy5tPNQelRmroA0GEg1jq0giMb036OtO2Ybpe8ulD1nEQF
+wiCBC5wIYvxhlwZSht+nvvKEhmggS4U+2tcOTL2uKaw3qNogbuS+EwXallins0/l
+Gz5AsUVjmmb6lytTMLVFzAX0rMgqzk+OaLPX71wU81Z1inFQWZUMsmDLkTQOzmWZ
+lkXvTdFYSPUWKnSZ9HFeFlbyc9tGBeIi7oq+8NtSpt8PN0UoIHd4bJUzwCKGI/Py
+XpHkJ2Q3zPvy6dhNxqdBnAOphhwrs29l/KsP8+bOzue0lEZCkQrIS/NnldDPcL5p
+MFrv1nqnwCGKup5lIsL/la25aIhv/bYRHWCV4c70bNEFk9HafbMN+yHNNJZ2bdnS
+WgE2IjaoHzzgUb7jkDiM06j0pcdyEbSMK3n/JUsin0x+jl1CHnJuAswhaB+RTIyc
+ioTIR/2PI3cct9axfZV49J1fKt/dH7p5HCxTNSv2xRtpLOSJ2Leq/nobFg==
+=z0jv
 -----END PGP MESSAGE-----';
 
 
@@ -342,9 +348,9 @@ LUbRh6UyogY9wzlgcqgPFKk=
 	 */
 	public function testEncryptSign() {
 		$gpg = new \Passbolt\Gpg();
-		// Get ada keys.
-		$publicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_public.key');
-		$signKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key');
+		// Get jean keys.
+		$publicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'jean_public.key');
+		$signKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'jean_private_nopassphrase.key');
 
 		// Set keys for encryption and signature.
 		$gpg->setEncryptKey($publicKey);
@@ -364,9 +370,9 @@ LUbRh6UyogY9wzlgcqgPFKk=
 		$gpg = new \Passbolt\Gpg();
 
 		//Get keys.
-		$publicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key');
-		$signKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key');
-		$privateKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key');
+		$publicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'jean_private_nopassphrase.key');
+		$signKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'jean_private_nopassphrase.key');
+		$privateKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'jean_private_nopassphrase.key');
 
 		// Original text to be encrypted.
 		$originalText = "this is a clear message";
