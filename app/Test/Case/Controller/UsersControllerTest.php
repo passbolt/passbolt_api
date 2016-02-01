@@ -1095,14 +1095,14 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-    $this->User->setInactive();
+		$this->User->setInactive();
 
 		$this->setExpectedException('HttpException', 'Invalid token');
 		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
 		$this->testAction($url, array(
 			'data'   => array (
 				'AuthenticationToken' => array (
-					'token' => AuthenticationToken::generateToken(),
+					'token' => Common::uuid(),
 				),
 			),
 			'method' => 'put',
@@ -1117,7 +1117,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$ad = $this->User->findByUsername('admin@passbolt.com');
 		$this->User->setActive($ad);
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-    $this->User->setInactive();
+		$this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
@@ -1366,7 +1366,7 @@ qGyky3/L
 
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',
@@ -1374,7 +1374,7 @@ qGyky3/L
 			),
 			true
 		);
-		$this->assertEquals($json['header']['status'], Message::SUCCESS);
+		$this->assertEquals($json['header']['status'], Status::SUCCESS);
 
 		// Set active to zero.
 		$this->User->id = $ada['User']['id'];
@@ -1384,7 +1384,7 @@ qGyky3/L
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',
@@ -1403,7 +1403,7 @@ qGyky3/L
 
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',
@@ -1411,7 +1411,7 @@ qGyky3/L
 			),
 			true
 		);
-		$this->assertEquals($json['header']['status'], Message::SUCCESS);
+		$this->assertEquals($json['header']['status'], Status::SUCCESS);
 
 		// Set active to zero.
 		$this->User->id = $ada['User']['id'];
@@ -1421,7 +1421,7 @@ qGyky3/L
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$json = json_decode(
 			$this->testAction(
-				'/resources.json',
+				'/users.json',
 				[
 					'method' => 'get',
 					'return' => 'contents',

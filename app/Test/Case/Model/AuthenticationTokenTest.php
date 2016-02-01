@@ -64,7 +64,6 @@ class AuthenticationTokenTest extends CakeTestCase {
 		);
 		foreach ($testcases as $testcase => $result) {
 			$authenticationToken = array('AuthenticationToken' => array('token' => $testcase));
-			$this->AuthenticationToken->create();
 			$this->AuthenticationToken->set($authenticationToken);
 			if($result) $msg = 'validation of the token with ' . $testcase . ' should validate';
 			else $msg = 'validation of the token with ' . $testcase . ' should not validate';
@@ -74,11 +73,11 @@ class AuthenticationTokenTest extends CakeTestCase {
 	}
 
 	/**
-	 * Test createToken.
+	 * Test create.
 	 */
 	public function testCreateToken() {
 		$user = $this->User->findByUsername('user@passbolt.com');
-		$token = $this->AuthenticationToken->createToken($user['User']['id']);
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
 		$this->assertEquals(!empty($token), true, 'Token should have been created, but has not');
 	}
 
@@ -86,7 +85,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * Test create token for invalid user.
 	 */
 	public function testCreateTokenInvalidUser() {
-		$token = $this->AuthenticationToken->createToken('aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
+		$token = $this->AuthenticationToken->generate('aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
 		$this->assertEquals(false, $token, 'Creation of the token should have failed');
 	}
 
@@ -95,8 +94,8 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 */
 	public function testCheckTokenIsValid() {
 		$user = $this->User->findByUsername('user@passbolt.com');
-		$token = $this->AuthenticationToken->createToken($user['User']['id']);
-		$isValid = $this->AuthenticationToken->checkTokenIsValidForUser($token['AuthenticationToken']['token'], $user['User']['id']);
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
 		$this->assertEquals(is_array($isValid), true, 'The test should have returned a valid token, but has not');
 	}
 
@@ -105,8 +104,17 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 */
 	public function testCheckTokenIsValidInvalidUser() {
 		$user = $this->User->findByUsername('user@passbolt.com');
-		$token = $this->AuthenticationToken->createToken($user['User']['id']);
-		$isValid = $this->AuthenticationToken->checkTokenIsValidForUser($token['AuthenticationToken']['token'], 'aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], 'aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
 		$this->assertEquals((bool)$isValid, false, 'The test should have returned an invalid token');
+	}
+
+	public function testSetInactive() {
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
+		$this->AuthenticationToken->setInactive($token['AuthenticationToken']['token'], $user['User']['id']);
+		$t = $this->AuthenticationToken->find('first', $token['AuthenticationToken']['id']);
+		$this->assertTrue($t['AuthenticationToken']['active'] == 0, 'The authentication token should be inactive');
 	}
 }

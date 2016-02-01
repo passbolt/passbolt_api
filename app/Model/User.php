@@ -755,7 +755,7 @@ class User extends AppModel {
 		}
 
 		// Create the setup authentication token
-		$saveToken = $this->AuthenticationToken->createToken($this->id);
+		$saveToken = $this->AuthenticationToken->generate($this->id);
 		if (!$saveToken) {
 			$dataSource->rollback();
 			throw new Exception(__('The account token could not be created'));

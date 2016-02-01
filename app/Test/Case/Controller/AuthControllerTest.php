@@ -67,12 +67,12 @@ class AuthControllerTest extends ControllerTestCase {
      * Check that GPGAuth headers are set everywhere
      */
     public function testGetHeaders() {
-        $result = $this->myTestAction(Router::url('/', true));
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Version']));
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Verify-URL']));
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Pubkey-URL']));
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Login-URL']));
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Logout-URL']));
+        $this->testAction('/');
+        $this->assertTrue(isset($this->headers['X-GPGAuth-Version']));
+        $this->assertTrue(isset($this->headers['X-GPGAuth-Verify-URL']));
+        $this->assertTrue(isset($this->headers['X-GPGAuth-Pubkey-URL']));
+        $this->assertTrue(isset($this->headers['X-GPGAuth-Login-URL']));
+        $this->assertTrue(isset($this->headers['X-GPGAuth-Logout-URL']));
     }
 
     /**
@@ -80,9 +80,9 @@ class AuthControllerTest extends ControllerTestCase {
      */
     public function testGetServerPublicKey() {
         // get the server public key
-        $result = $this->myTestAction(Router::url('/', true));
+        $this->testAction('/');
         $result = json_decode($this->testAction(
-            $result['headers']['X-GPGAuth-Verify-URL'] . DS . 'json',
+			$this->headers['X-GPGAuth-Verify-URL'] . DS . 'json',
             array('return' => 'contents', 'method' => 'GET'), true)
         );
         // check the key data and fingerprint are set and match the config
@@ -110,33 +110,31 @@ class AuthControllerTest extends ControllerTestCase {
         );
 
         foreach($fix as $keyid => $success_expected) {
-            $result = $this->myTestAction(
-                Router::url('/auth/login', true),
-                array(
-                    'data[gpg_auth][keyid]' => $keyid
-                )
-            );
-
-            $this->assertTrue(isset($result['headers']['X-GPGAuth-Authenticated']), 'Authentication headers should be set for keyid:' . $keyid);
-            $this->assertEquals($result['headers']['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
-            $this->assertTrue(isset($result['headers']['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
-            $this->assertNotEquals($result['headers']['X-GPGAuth-Progress'],'stage2','The progress indicator should not be stage 2');
-            $this->assertNotEquals($result['headers']['X-GPGAuth-Progress'],'complete','The progress indicator should not be stage 2');
+			$this->testAction('/auth/login', array(
+				'data' => array( 'gpg_auth' => array(
+					'keyid' => $keyid
+				)))
+			);
+            $this->assertTrue(isset($this->headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set for keyid:' . $keyid);
+            $this->assertEquals($this->headers['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
+            $this->assertTrue(isset($this->headers['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
+            $this->assertNotEquals($this->headers['X-GPGAuth-Progress'],'stage2','The progress indicator should not be stage 2');
+            $this->assertNotEquals($this->headers['X-GPGAuth-Progress'],'complete','The progress indicator should not be stage 2');
 
             if ($success_expected) {
-                $msg = (isset($result['headers']['X-GPGAuth-Debug'])) ? $result['headers']['X-GPGAuth-Debug'] . ': '.$keyid :
+                $msg = (isset($this->headers['X-GPGAuth-Debug'])) ? $this->headers['X-GPGAuth-Debug'] . ': '.$keyid :
                     'The fingerprint: '. $keyid . ' should work';
-                $this->assertFalse(isset($result['headers']['X-GPGAuth-Error']), $msg);
-                $this->assertFalse(isset($result['headers']['X-GPGAuth-Verify-Response']));
+                $this->assertFalse(isset($this->headers['X-GPGAuth-Error']), $msg);
+                $this->assertFalse(isset($this->headers['X-GPGAuth-Verify-Response']));
             } else {
-                $this->assertTrue(isset($result['headers']['X-GPGAuth-Error']), 'There should be an error header set for keyid:' . $keyid);
-                $this->assertEquals($result['headers']['X-GPGAuth-Error'], 'true', 'There should be an error header set to true for keyid:' . $keyid);
+                $this->assertTrue(isset($this->headers['X-GPGAuth-Error']), 'There should be an error header set for keyid:' . $keyid);
+                $this->assertEquals($this->headers['X-GPGAuth-Error'], 'true', 'There should be an error header set to true for keyid:' . $keyid);
             }
         }
     }
 
     /**
-     * Stage 0. with good user fingerprint with check different server verify token
+     * Stage 0. Verify server key
      */
     public function testStage0MessageFormat() {
         $uuid = String::uuid();
@@ -159,102 +157,101 @@ class AuthControllerTest extends ControllerTestCase {
 
         foreach ($fix as $token => $expect_success) {
             $msg = $this->_gpg->encrypt($token);
-            $result = $this->myTestAction(
-                Router::url('/auth/verify.json', true),
-                array(
-                    'data[gpg_auth][keyid]' => $this->_keys['user']['fingerprint'],
-                    'data[gpg_auth][server_verify_token]' => $msg
-                )
+            $this->testAction('/auth/verify.json', array(
+            	'data' => array( 'gpg_auth' => array(
+                    'keyid' => $this->_keys['user']['fingerprint'],
+                    'server_verify_token' => $msg
+                )))
             );
 
-            $this->assertTrue(isset($result['headers']['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
-            $this->assertEquals($result['headers']['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
-            $this->assertTrue(isset($result['headers']['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
-            $this->assertEquals($result['headers']['X-GPGAuth-Progress'],'stage0','The progress indicator should be set to stage0 for token.');
+            $this->assertTrue(isset($this->headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
+            $this->assertEquals($this->headers['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
+            $this->assertTrue(isset($this->headers['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
+            $this->assertEquals($this->headers['X-GPGAuth-Progress'],'stage0','The progress indicator should be set to stage0 for token.');
 
             if (!$expect_success) {
-                $this->assertTrue(isset($result['headers']['X-GPGAuth-Error']),'There should be an error header for token:' . $token);
-                $this->assertEquals($result['headers']['X-GPGAuth-Error'], 'true', 'There should be an error header set to true for token:' . $token);
-                $this->assertTrue(isset($result['headers']['X-GPGAuth-Debug']), 'A debug message should be set in the headers');
-                $this->assertFalse(
-                    strpos($result['headers']['X-GPGAuth-Debug'],'Invalid verify token format') === false,
-                    'The debug message should contain "Invalid verify token format"');
+				$this->assertTrue(isset($this->headers['X-GPGAuth-Error']),'There should be an error header for token:' . $token);
+                $this->assertEquals($this->headers['X-GPGAuth-Error'], 'true', 'There should be an error header set to true for token:' . $token);
+                $this->assertTrue(isset($this->headers['X-GPGAuth-Debug']), 'A debug message should be set in the headers');
+				$this->assertFalse(
+                    strpos($this->headers['X-GPGAuth-Debug'],'Invalid verify token format') === false,
+                    'The debug message should contain "Invalid verify token format"'
+				);
             } else {
-                $this->assertTrue(isset($result['headers']['X-GPGAuth-Verify-Response']),'The verify response header should be set for ' . $token);
-                $this->assertEquals($result['headers']['X-GPGAuth-Verify-Response'], $token,
-                    'The verify response header should match the original token. It is ' . $result['headers']['X-GPGAuth-Verify-Response'] . ' instead of ' . $token
+                $this->assertTrue(isset($this->headers['X-GPGAuth-Verify-Response']),'The verify response header should be set for ' . $token);
+                $this->assertEquals($this->headers['X-GPGAuth-Verify-Response'], $token,
+                    'The verify response header should match the original token. It is ' . $this->headers['X-GPGAuth-Verify-Response'] . ' instead of ' . $token
                 );
             }
         }
     }
 
-    /**
-     * Check if a token is send by the server in the right format
-     */
-    public function testStage1UserToken() {
-        // we consider that stage 1 was successful, e.g. that the user checked the server key
-        $result = $this->myTestAction(
-            Router::url('/auth/login', true),
-            array( 'data[gpg_auth][keyid]' => $this->_keys['user']['fingerprint'])
-        );
+	/**
+	 * Stage 1. Authenticate user
+	 */
+	public function testStage1UserToken() {
+		$this->testAction('/auth/login', array(
+			'data' => array(
+				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+			)
+		));
 
-        // check headers
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
-        $this->assertEquals($result['headers']['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
-        $this->assertEquals($result['headers']['X-GPGAuth-Progress'],'stage1','The progress indicator should be set to stage1');
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-User-Auth-Token']), 'User authentication token should be set');
+		// check headers
+		$this->assertTrue(isset($this->headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
+		$this->assertEquals($this->headers['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
+		$this->assertTrue(isset($this->headers['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
+		$this->assertEquals($this->headers['X-GPGAuth-Progress'],'stage1','The progress indicator should be set to stage1');
+		$this->assertTrue(isset($this->headers['X-GPGAuth-User-Auth-Token']), 'User authentication token should be set');
 
-        // try to decrypt the message
-        $this->assertTrue(
-            $this->_gpg->adddecryptkey($this->_keys['server']['fingerprint'], $this->_keys['user']['passphrase']),
-            'CONFIG - It is not possible to use the key provided in the fixtures to decrypt.'
-        );
-        $msg = (stripslashes(urldecode($result['headers']['X-GPGAuth-User-Auth-Token'])));
-        $plaintext = '';
-        $info =  $this->_gpg->decryptverify($msg,$plaintext);
-        $this->assertFalse(($info === false), 'Could not decrypt the server generated User Auth Token: ' . $msg);
-        $this->assertFalse(($plaintext === ''), 'Could not decrypt the server generated User Auth Token: ' . $msg);
-        $this->assertEquals(strtoupper($info[0]['fingerprint']), strtoupper($this->_keys['server']['fingerprint']), 'Server signature is not matching known fingerprint');
+		// try to decrypt the message
+		$this->assertTrue(
+			$this->_gpg->adddecryptkey($this->_keys['server']['fingerprint'], $this->_keys['user']['passphrase']),
+			'CONFIG - It is not possible to use the key provided in the fixtures to decrypt.'
+		);
+		$msg = (stripslashes(urldecode($this->headers['X-GPGAuth-User-Auth-Token'])));
+		$plaintext = '';
+		$info =  $this->_gpg->decryptverify($msg, $plaintext);
+		$this->assertFalse(($info === false), 'Could not decrypt the server generated User Auth Token: ' . $msg);
+		$this->assertFalse(($plaintext === ''), 'Could not decrypt the server generated User Auth Token: ' . $msg);
+		$this->assertEquals(strtoupper($info[0]['fingerprint']), strtoupper($this->_keys['server']['fingerprint']), 'Server signature is not matching known fingerprint');
 
-        // Decrypt and check if the token is in the right format
-        $result = explode('|', $plaintext);
-        $this->assertTrue((count($result) == 4), 'Decrypted User Auth Token: sections missing or wrong delimiters: ' . $plaintext);
-        list($version, $length, $uuid, $version2) = $result;
-        $this->assertTrue($version == $version2, 'Decrypted User Auth Token: version numbers don\'t match: ' . $plaintext);
-        $this->assertTrue($version == 'gpgauthv1.3.0', 'Decrypted User Auth Token: wrong version number: ' . $plaintext);
-        $this->assertTrue($version == Common::isUuid($uuid), 'Decrypted User Auth Token: not a UUID: ' . $plaintext);
-        $this->assertTrue($length == 36, 'Decrypted User Auth Token: wrong token data length');
+		// Decrypt and check if the token is in the right format
+		$info = explode('|', $plaintext);
+		$this->assertTrue((count($info) == 4), 'Decrypted User Auth Token: sections missing or wrong delimiters: ' . $plaintext);
+		list($version, $length, $uuid, $version2) = $info;
+		$this->assertTrue($version == $version2, 'Decrypted User Auth Token: version numbers don\'t match: ' . $plaintext);
+		$this->assertTrue($version == 'gpgauthv1.3.0', 'Decrypted User Auth Token: wrong version number: ' . $plaintext);
+		$this->assertTrue($version == Common::isUuid($uuid), 'Decrypted User Auth Token: not a UUID: ' . $plaintext);
+		$this->assertTrue($length == 36, 'Decrypted User Auth Token: wrong token data length');
 
+		// Check if there is a valid AuthToken in store
+		$AuthToken = Common::getModel('AuthenticationToken');
+		$this->assertTrue(!empty($AuthToken->isValid($uuid, Common::uuid('user.id.ada'))),'There should a valid auth token');
 
-        $AuthenticationToken = Common::getModel('AuthenticationToken');
+		// Send it back!
+		$this->testAction('/auth/login', array(
+			'data' => array(
+				'gpg_auth' => array(
+					'keyid' => $this->_keys['user']['fingerprint'],
+					'user_token_result' => $plaintext
+				)
+			)
+		));
 
-        $token = $AuthenticationToken->createToken(Common::uuid('user.id.ada'));
+		if(isset($this->headers['X-GPGAuth-Debug'])) {
+			$this->assertTrue(false,'There should be no debug header set to true for token: ' .
+				$uuid . '. Debug: '. $this->headers['headers']['X-GPGAuth-Debug']);
+		}
 
-        $this->assertTrue($token != false, 'Token should not be false');
-        $r = $AuthenticationToken->checkTokenIsValidForUser($token['AuthenticationToken']['token'], Common::uuid('user.id.ada'));
-        $this->assertFalse(empty($r), 'r should not be empty');
+		$this->assertFalse(isset($this->headers['X-GPGAuth-Error']),'There should not be an error header for token: ' . $uuid);
+		$this->assertTrue(isset($this->headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
+		$this->assertEquals($this->headers['X-GPGAuth-Authenticated'], 'true', 'The user should be authenticated at that point');
+		$this->assertTrue(isset($this->headers['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
+		$this->assertEquals($this->headers['X-GPGAuth-Progress'],'complete','The progress indicator should be set to complete');
 
-        // Send it back!
-        $result = $this->myTestAction(
-            Router::url('/auth/login', true),
-            array(
-                'data[gpg_auth][keyid]' => $this->_keys['user']['fingerprint'],
-                'data[gpg_auth][user_token_result]' => $plaintext
-            )
-        );
-
-        if(isset($result['headers']['X-GPGAuth-Debug'])) {
-            $this->assertTrue(false,'There should be no debug header set to true for token: ' .
-              $uuid . '. Debug: '.$result['headers']['X-GPGAuth-Debug']);
-        }
-        $this->assertFalse(isset($result['headers']['X-GPGAuth-Error']),'There should not be an error header for token: ' . $uuid);
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
-        $this->assertEquals($result['headers']['X-GPGAuth-Authenticated'], 'true', 'The user should be authenticated at that point');
-        $this->assertTrue(isset($result['headers']['X-GPGAuth-Progress']),'The progress indicator should be set in the headers');
-        $this->assertEquals($result['headers']['X-GPGAuth-Progress'],'complete','The progress indicator should be set to complete');
-
-    }
+		// Authentication token should be disabled at that stage
+		$this->assertTrue(empty($AuthToken->isValid($uuid, Common::uuid('user.id.ada'))),'There should a valid auth token');
+	}
 
     // ====== UTILITIES =========================================================
 
@@ -300,123 +297,5 @@ class AuthControllerTest extends ControllerTestCase {
             }
         }
     }
-
-    /**
-     * Convenience function to replace testaction to get access to headers
-     * @param $url
-     * @return bool
-     */
-    function myTestAction($url, $data = null) {
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
-
-        // if post data
-        if(!empty($data)) {
-            $data_string = '';
-            foreach($data as $key=>$value) { $data_string .= $key.'='.urlencode($value).'&'; }
-            rtrim($data_string, '&');
-            curl_setopt($ch,CURLOPT_POST, count($data));
-            curl_setopt($ch,CURLOPT_POSTFIELDS, $data_string);
-        }
-
-        $response = curl_exec($ch);
-
-        if(empty($response)) {
-            return false;
-        }
-
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $header = substr($response, 0, $header_size);
-        $result['headers'] = $this->_get_headers_from_curl_response($header);
-        $result['body'] = substr($response, $header_size);
-        return $result;
-    }
-
-    /**
-     * Parse headers from curl response into associative array
-     * @param $response
-     * @return array
-     */
-    protected function _get_headers_from_curl_response($response) {
-        $headers = array();
-        $header_text = substr($response, 0, strpos($response, "\r\n\r\n"));
-
-        foreach (explode("\r\n", $header_text) as $i => $line)
-            if ($i === 0) {
-                $headers['http_code'] = $line;
-            } else {
-                list ($key, $value) = explode(': ', $line);
-                $headers[$key] = $value;
-            }
-
-        return $headers;
-    }
-
-// --- OLD FORM BASED LOGIN TESTS -----
-
-//    public function testLoginWrongUser() {
-//        // Make sure there is no session active after each test
-//        $this->User->setInactive();
-//        $data = array(
-//            'User' => array(
-//                'username' => 'biloute@passbolt.com',
-//                'password' => 'ouaich mec'
-//            )
-//        );
-//        $result = $this->testAction(
-//            '/users/login',
-//            array('return' => 'view', 'method' => 'POST', 'data' => $data),
-//            true
-//        );
-//        $this->assertTextContains('Username', $result);
-//        $this->assertTextContains('Password', $result);
-//    }
-//
-//    public function testLogin() {
-//        // check if we get form
-//        $result = $this->testAction('/login', array('return' => 'view', 'method' => 'GET'), true);
-//        $this->assertEquals(
-//            preg_match('/(<form)/', $result),
-//            true,
-//            '/users/login with no data sent should return a form'
-//        );
-//
-//        // check logging in with a good user
-//        $data = array(
-//            'User' => array(
-//                'username' => 'user@passbolt.com',
-//                'password' => 'password'
-//            )
-//        );
-//
-//        // Test that the user is returned properly in the session (authentication has done its job)
-//        $result = $this->testAction(
-//            '/users/login',
-//            array('return' => 'vars', 'method' => 'POST', 'data' => $data),
-//            true
-//        );
-//        $this->assertEquals(
-//            $this->User->get('User.username'),
-//            'user@passbolt.com',
-//            "login test should have returned user@passbolt.com but has returned {$this->User->get('User.username')}"
-//        );
-//
-//        // Test that the redirection is there as it should
-//        $result = $this->testAction(
-//            '/users/login',
-//            array('return' => 'view', 'method' => 'POST', 'data' => $data),
-//            true
-//        );
-//        $this->assertEquals(
-//            $this->headers['Location'],
-//            Router::url('/', true),
-//            "Login should have redirected to / but has not"
-//        );
-//    }
 
 }

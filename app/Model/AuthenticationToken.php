@@ -2,33 +2,27 @@
 /**
  * AuthenticationToken Model
  *
- * Copyright 2012, Passbolt
- * Passbolt(tm), the simple password management solution
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright		Copyright 2012, Passbolt.com
- * @package			app.Model.authenticationToken
- * @since			version 2.12.7
- * @license			http://www.passbolt.com/license
+ * @copyright 	(c) 2015-present Passbolt.com
+ * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class AuthenticationToken extends AppModel {
 
-	/**
-	 * Details of belongs to relationships
-	 *
-	 * @var array
-	 * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
-	 */
+/**
+ * Details of belongs to relationships
+ *
+ * @var array
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
 		'User',
 	);
 
-	/**
-	 * Get the validation rules upon context
-	 *
-	 * @param string $case (optional) The target validation case if any.
-	 * @return array cakephp validation rules
-	 */
+/**
+ * Get the validation rules upon context
+ *
+ * @param string $case (optional) The target validation case if any.
+ * @return array cakephp validation rules
+ */
 	public static function getValidationRules($case = 'default') {
 		$rules = array(
 			'id' => array(
@@ -52,52 +46,36 @@ class AuthenticationToken extends AppModel {
 			'token' => array(
 				'uuid' => array(
 					'rule' => 'uuid',
-					'message' => __('Token has an invalid format')
+					'message' => __('This token has an invalid format')
+				),
+				'unique' => array(
+					'rule' => 'isUnique',
+					'required' => 'create',
+					'message' => __('This token already exists')
 				)
 			)
 		);
 		return $rules;
 	}
 
-	/**
-	 * Check if a user with same id exists
-	 * @param $check
-	 * @return bool
-	 */
-	public function userExists($check) {
-		if ($check['user_id'] == null) {
-			return false;
-		} else {
-			$exists = $this->User->find('count', array(
-				'conditions' => array('User.id' => $check['user_id'])
-			));
-			return $exists > 0;
+/**
+ * Check if a token exist and is valid for a given user.
+ *
+ * @param string $token
+ * @param uuid $userId
+ * @return array or null if doesn't exist.
+ */
+	static public function isValid($token, $userId) {
+		if(!Common::isUuid($token) || !Common::isUuid($userId)) {
+			return null;
 		}
-	}
-
-	/**
-	 * Generate a token.
-	 * @return string
-	 */
-	public static function generateToken() {
-		return Common::uuid();
-	}
-
-	/**
-	 * Check if a token exist and is valid for a given user.
-	 *
-	 * @param string $token
-	 * @param uuid $userId
-	 *
-	 * @return array or null if doesn't exist.
-	 */
-	public function checkTokenIsValidForUser($token, $userId) {
 		// @todo PASSBOLT-1234 check token expiracy
-		$token = $this->find('first', array(
+		$_this = Common::getModel('AuthenticationToken');
+		$token = $_this->find('first', array(
 				'conditions' => array(
 					'AuthenticationToken.user_id' => $userId,
 					'AuthenticationToken.token' => $token,
-					'AuthenticationToken.active' => TRUE,
+					'AuthenticationToken.active' => true,
 				),
 				'order' => array(
 					'created' => 'DESC'
@@ -106,25 +84,52 @@ class AuthenticationToken extends AppModel {
 		return $token;
 	}
 
-	/**
-	 * Create a token for a given user.
-	 * @param uuid $userId
-	 * @return array result of the save function for token
-	 */
-	public function createToken($userId) {
-		$token = array(
-			'user_id' => $userId,
-			'token' => self::generateToken(),
-		);
+/**
+ * Create a unique token for a given user.
+ * @param uuid $userId
+ * @return array result of the save function for token
+ */
+	static public function generate($userId) {
+		$_this = Common::getModel('AuthenticationToken');
+		do {
+			$token = array(
+				'user_id' => $userId,
+				'token' => Common::uuid(),
+			);
+			$unique = $_this->find('count', array('conditions' => array('id' => $token['token'])));
+		} while($unique);
 
 		// Set the data for validation and save
-		$this->set($token);
+		$_this->set($token);
 
 		// Validate the token data
-		if (!$this->validates()) {
+		if (!$_this->validates()) {
+			// @todo ValidationException
+			// @todo Only one (or N?) token active per user at a time?
 			return false;
 		}
-		$this->create();
-		return $this->save($token);
+		$_this->create();
+		return $_this->save($token);
+	}
+
+/**
+ * Set a valid token to inactive
+ * @param $token
+ * @param $userId
+ * @return bool
+ * @throws ValidationException if token id or user id are not valid
+ * @throws Exception if save failed
+ */
+	static public function setInactive($token, $userId) {
+		$data = AuthenticationToken::isValid($token, $userId);
+		if(empty($data)) {
+			throw new ValidationException('This is not a valid token id');
+		}
+		$data['AuthenticationToken']['active'] = false;
+		$_this = Common::getModel('AuthenticationToken');
+		if(!$_this->save($data)) {
+			throw new Exception(__('System error, could not save'));
+		}
+		return true;
 	}
 }
