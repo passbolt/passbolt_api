@@ -83,6 +83,17 @@ class ShareController extends AppController {
 					throw new Exception(__('The permission with id %s does not exist', $permission['Permission']['id']));
 				}
 
+				// Check that the permission belongs to the aco instance.
+				$permissionBelongsToAcoInstance = $this->Permission->find('first', array(
+					'conditions' => array(
+						'Permission.id' => $permission['Permission']['id'],
+						'Permission.aco_foreign_key' => $acoInstanceId
+					)
+				));
+				if (empty($permissionBelongsToAcoInstance)) {
+					throw new Exception(__('Could not delete permission id %s', $permission['Permission']['id']));
+				}
+
 				// Everything ok, we process with saving the data.
 				if ($deleteCase) {
 					$del = $this->Permission->delete($permission['Permission']['id']);

@@ -16,8 +16,10 @@ App::uses('CategoryResource', 'Model');
 App::uses('Category', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
+App::uses('PermissionMatrix', 'Test/Data');
 
-class ResourcesControllerTest extends ControllerTestCase {
+class ResourcesControllerTest extends ControllerTestCase
+{
 
 	public $fixtures = array(
 		'app.category',
@@ -43,20 +45,23 @@ class ResourcesControllerTest extends ControllerTestCase {
 		'app.controller_log'
 	);
 
-	public function setUp() {
+	public function setUp()
+	{
 		parent::setUp();
 		$this->User = ClassRegistry::init('User');
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Category = ClassRegistry::init('Category');
-		$user = $this->User->findByUsername('dame@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
-	public function testViewResourceIdIsMissing() {
+	public function testViewResourceIdIsMissing()
+	{
 		// Unable to test missing id param because of route
 	}
 
-	public function testViewResourceIdNotValid() {
+	public function testViewResourceIdNotValid()
+	{
 		// test an error bad id
 		$this->setExpectedException('HttpException', 'The resource id is invalid');
 		$result = json_decode($this->testAction("/resources/badid.json?children=true", array(
@@ -65,95 +70,93 @@ class ResourcesControllerTest extends ControllerTestCase {
 		)), true);
 	}
 
-	public function testViewResourceDoesNotExist() {
+	public function testViewResourceDoesNotExist()
+	{
+		$id = Common::uuid('not-valid-reference');
 		// test when a wrong id is provided
 		$this->setExpectedException('HttpException', 'The resource does not exist');
-		$result = json_decode($this->testAction("/resources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$result = json_decode($this->testAction("/resources/{$id}.json", array(
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
 	}
 
-	public function testViewAndPermission() {
-		$res = $this->Resource->findByName('cpp1-pwd1');
+	public function testViewAndPermission()
+	{
+		$resId = Common::uuid('resource.id.cpp1-pwd1');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findByUsername('irene@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The resource does not exist');
-		$result = json_decode($this->testAction("/resources/{$res['Resource']['id']}.json", array(
+		$result = json_decode($this->testAction("/resources/{$resId}.json", array(
 			'method' => 'Get',
 			'return' => 'contents'
 		)), true);
 	}
 
-	public function testView() {
-		$festival = $this->Resource->findByName('facebook account');
-		$id = $festival['Resource']['id'];
+	public function testView()
+	{
+		$resId = Common::uuid('resource.id.facebook-account');
 
 		// test if the object returned is a success one
-		$result = json_decode($this->testAction("/resources/view/$id.json", array('return' => 'contents')), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], 'resources/view/' . $id . '.json should return success');
+		$result = json_decode($this->testAction("/resources/view/$resId.json", array('return' => 'contents')), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			'resources/view/' . $resId . '.json should return success');
 
-		$this->assertEquals('facebook account', $result['body']['Resource']['name'], 'resources/view/' . $id . ".json should a resource named 'facebook account' but returned {$result['body']['Resource']['name']} instead");
+		$this->assertEquals('facebook account', $result['body']['Resource']['name'],
+			'resources/view/' . $resId . ".json should a resource named 'facebook account' but returned {$result['body']['Resource']['name']} instead");
 	}
 
-	public function testIndexFilterCategoryDoesntExist() {
+	public function testIndexFilterCategoryDoesntExist()
+	{
 		$this->setExpectedException('HttpException', 'The category doesn\'t exist');
-		$catId = '50d22ff7-5239-4dd2-94d1-1c63d7a10fce';
+		$catId = Common::uuid('not-valid-reference');
 		$url = '/resources.json?recursive=true&fltr_model_category=' . $catId;
 		json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
 	}
 
-	public function testIndexAndPermission() {
-		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../Data/permissionsMatrix.php');
-		$usersNames = array(
-            'ada@passbolt.com',
-            'betty@passbolt.com',
-            'carol@passbolt.com',
-			'hedy@passbolt.com',
-			'dame@passbolt.com',
-			'irene@passbolt.com',
-			'lynne@passbolt.com',
-			'marlyn@passbolt.com',
-		);
+	public function testIndexAndPermission()
+	{
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv', 'user');
 
-		foreach ($usersNames as $username) {
-			$user = $this->User->findByUsername($username);
+		foreach ($matrix as $userAlias => $userPermissions) {
+			$userId = Common::uuid('user.id.' . $userAlias);
+			$user = $this->User->findById($userId);
 			$this->User->setActive($user);
 
-			// test when no parameters are provided
 			$url = '/resources/index.json';
-
 			$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
-			$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
-			$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
+			$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+				"{$url} : The test should return a success but is returning {$result['header']['status']}");
 
-			foreach ($permissionsMatrix['User']['Resource'] as $userResPermission) {
-				if ($userResPermission['aroname'] == $username) {
-					$path = $this->Resource->inNestedArray($userResPermission['aconame'], $result['body'], 'name');
-					if ($userResPermission['result'] == PermissionType::DENY) {
-						$this->assertTrue(empty($path), "{$url} : test should not contain '{$userResPermission['aconame']}' resource with user '{$username}'");
-					} else {
-						$this->assertTrue(!empty($path), "{$url} : test should contain '{$userResPermission['aconame']}' resource with user '{$username}'");
-					}
+			foreach ($userPermissions as $resourceAlias => $resourcePermission) {
+				$resourceId = Common::uuid('resource.id.' . $resourceAlias);
+				$path = $this->Resource->inNestedArray($resourceId, $result['body'], 'id');
+				if ($resourcePermission == PermissionType::DENY) {
+					$this->assertTrue(empty($path),
+						"{$url} : test should not contain '{$resourceAlias}' resource with user '{$userAlias}'");
+				} else {
+					$this->assertTrue(!empty($path),
+						"{$url} : test should contain '{$resourceAlias}' resource with user '{$userAlias}'");
 				}
 			}
 		}
 	}
 
-	public function testIndex() {
-		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$cpCat2 = $this->Resource->CategoryResource->Category->findByName('cp-project2');
-		$cpCat3 = $this->Resource->CategoryResource->Category->findByName('cp-project3');
-		$emptyCat = $this->Resource->CategoryResource->Category->findByName('empty');
-
-		// test when no parameters are provided
+	public function testIndex()
+	{
 		$url = '/resources/index.json';
 		$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"{$url} : The test should return a success but is returning {$result['header']['status']}");
 		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
+	}
+
+	public function testIndexFilterByCategoryWhichIsEmpty()
+	{
+		$catEmptyId = Common::uuid('category.id.empty');
 
 		// test with category parameter specified which does not contain resources
 		$url = '/resources/index.json';
@@ -164,14 +167,20 @@ class ResourcesControllerTest extends ControllerTestCase {
 					'method' => 'get',
 					'return' => 'contents',
 					'data' => array(
-						'fltr_model_category' => $emptyCat['Category']['id']
+						'fltr_model_category' => $catEmptyId
 					)
 				)
 			),
 			true
 		);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"{$url} : should return success but returned {$result['header']['status']}");
 		$this->assertTrue(empty($result['body']), "{$url} : should not contain result");
+	}
+
+	public function testIndexFilterByCategory()
+	{
+		$catCp2Id = Common::uuid('category.id.cp-project2');
 
 		// test with category parameter specified which contains resources
 		$url = "/resources/index.json";
@@ -182,39 +191,25 @@ class ResourcesControllerTest extends ControllerTestCase {
 					'method' => 'get',
 					'return' => 'contents',
 					'data' => array(
-						'fltr_model_category' => $cpCat2['Category']['id']
+						'fltr_model_category' => $catCp2Id
 					)
 				)
 			),
 			true
 		);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "{$url} : should return success but returned {$result['header']['status']}");
-		$this->assertEquals(2, count($result['body']), "{$url} : counting the number of elements should return '2' but is reading " . count($result['body']));
-		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
-		$this->assertTrue(!empty($path), "{$url} : test should contain 'cpp2-pwd2' resource");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"{$url} : should return success but returned {$result['header']['status']}");
+		$this->assertEquals(2, count($result['body']),
+			"{$url} : counting the number of elements should return '2' but is reading " . count($result['body']));
 
-		// test with recursive parameter on the top category
-		$url = "/resources/index.json";
-		$result = json_decode(
-			$this->testAction(
-				$url,
-				array(
-					'method' => 'get',
-					'return' => 'contents',
-					'data' => array(
-						'fltr_model_category' => $rootCat['Category']['id'],
-						'recursive' => 'true'
-					)
-				)
-			),
-			true
-		);
-		$path = $this->Resource->inNestedArray('cpp2-pwd2', $result['body'], 'name');
-		$this->assertTrue(!empty($path), "{$url} : test should contain 'cpp2-pwd2' resource");
-		$this->assertEquals(13, count($result['body']), "{$url} : counting the number of elements should return '13' but is reading " . count($result['body']));
+		$path = $this->Resource->inNestedArray(Common::uuid('resource.id.cpp2-pwd1'), $result['body'], 'id');
+		$this->assertTrue(!empty($path), "{$url} : test should contain the resource");
+		$path = $this->Resource->inNestedArray(Common::uuid('resource.id.cpp2-pwd2'), $result['body'], 'id');
+		$this->assertTrue(!empty($path), "{$url} : test should contain the resource");
 	}
 
-	public function testAddWithCategoryBadId() {
+	public function testAddWithCategoryBadId()
+	{
 		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
@@ -235,7 +230,9 @@ class ResourcesControllerTest extends ControllerTestCase {
 		)), true);
 	}
 
-	public function testAddWithCategoryDoesNotExist() {
+	public function testAddWithCategoryDoesNotExist()
+	{
+		$catId = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
 		// Test with wrong id for category
 		$result = json_decode($this->testAction('/resources.json', array(
@@ -248,7 +245,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 				),
 				'Category' => array(
 					0 => array(
-						'id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56hg'
+						'id' => $catId
 					)
 				)
 			),
@@ -257,11 +254,12 @@ class ResourcesControllerTest extends ControllerTestCase {
 		)), true);
 	}
 
-	public function testAddAndPermission() {
-		$cat = $this->Category->findByName('administration');
+	public function testAddAndPermission()
+	{
+		$catId = Common::uuid('category.id.administration');
 
 		// Looking at the matrix of permission marlyn should be able to read but not to create into the category marketing
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		// Error : name is empty
@@ -276,7 +274,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 				),
 				'Category' => array(
 					0 => array(
-						'id' => $cat['Category']['id']
+						'id' => $catId
 					)
 				)
 			),
@@ -286,8 +284,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testAdd() {
-		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
-
+		// Add without Category
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
@@ -295,28 +292,34 @@ class ResourcesControllerTest extends ControllerTestCase {
 					'username' => 'test1',
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
-				),
-				'Category' => array(
-					0 => array(
-						'id' => $rootCat['Category']['id']
-					)
 				)
 			),
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
-		// check that Categories were properly saved
+
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
+
+		// check that the resource has been saved has been saved
 		$resource = $this->Resource->findByName("test1");
-		$catres = $this->Resource->CategoryResource->find('all', array(
+		$rsId = $resource["Resource"]["id"];
+		$this->assertNotEmpty($resource);
+
+		// check that the resource is not associated with any category
+		$catRes = $this->Resource->CategoryResource->find('all', array(
 			'conditions' => array(
-				'resource_id' => $resource["Resource"]["id"]
+				'resource_id' => $rsId
 			)
 		));
-		$this->assertEquals(1, count($catres), "Add : /resources.json : The number of categories returned should be 1, but actually is " . count($catres));
-		$this->assertEquals($rootCat['Category']['id'], $catres['0']['CategoryResource']['category_id'], "Add : /resources.json : the category inserted should be {$rootCat['Category']['id']} but is {$catres['0']['CategoryResource']['category_id']}");
+		$this->assertempty($catRes,
+			"Add : /resources.json : The number of categories returned should be 0, but actually is " . count($catRes));
+	}
 
-		// Add without Category
+	public function testAddInCategory()
+	{
+		$rootCatId = Common::uuid('category.id.bolt');
+
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
@@ -324,25 +327,49 @@ class ResourcesControllerTest extends ControllerTestCase {
 					'username' => 'test2',
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
+				),
+				'Category' => array(
+					0 => array(
+						'id' => $rootCatId
+					)
 				)
 			),
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return sucess but is returning {$result['header']['status']} : " . print_r($result, true));
+
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"Add : /resources.json : The test should return sucess but is returning " . print_r($result, true));
+
+		// check that the resource has been saved has been saved
+		$resource = $this->Resource->findByName("test2");
+		$rsId = $resource["Resource"]["id"];
+		$this->assertNotEmpty($resource);
+
+		// check that the association with the category has been saved
+		$catRes = $this->Resource->CategoryResource->find('all', array(
+			'conditions' => array(
+				'resource_id' => $rsId
+			)
+		));
+		$this->assertEquals(1, count($catRes),
+			"Add : /resources.json : The number of categories returned should be 1, but actually is " . count($catRes));
+		$this->assertEquals($rootCatId, $catRes['0']['CategoryResource']['category_id'],
+			"Add : /resources.json : the category inserted should be {$rootCatId} but is {$catRes['0']['CategoryResource']['category_id']}");
 	}
 
-/**
- * Test adding a resource with a secret
- */
-	public function testAddWithSecret() {
+	/**
+	 * Test adding a resource with a secret
+	 */
+	public function testAddWithSecret()
+	{
 		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
 
 		$result = json_decode($this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
-					'name' => 'test1',
-					'username' => 'test1',
+					'name' => 'test3',
+					'username' => 'test3',
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
@@ -373,8 +400,10 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /resources.json : The test should return success but is returning " . print_r($result, true));
-		// check that Categories were properly saved
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"Add : /resources.json : The test should return success but is returning " . print_r($result, true));
+
+		// check that Secret has been saved
 		$secret = $this->Resource->Secret->findByResourceId($result['body']['Resource']['id']);
 		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
 	}
@@ -382,52 +411,55 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	/**
 	 * Test adding a resource with a wrong secret, and test that the rollback was effective.
 	 */
-	public function testAddWithWrongSecretRollback() {
+	public function testAddWithWrongSecretRollback()
+	{
 		$cat = $this->Category->findByName('administration');
 
 		// Looking at the matrix of permission marlyn should be able to read but not to create into the category marketing
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		// Error : name is empty
 		try {
 			$this->testAction('/resources/add.json', array(
-					'data' => array(
-						'Resource' => array(
-							'name' => 'testAddSecretRollback',
-							'username' => 'test1',
-							'uri' => 'http://www.google.com',
-							'description' => 'this is a description'
-						),
-						'Secret' => array(
-							array(
-								'data' => 'wrong secret'
-							),
-						)
+				'data' => array(
+					'Resource' => array(
+						'name' => 'testAddSecretRollback',
+						'username' => 'test1',
+						'uri' => 'http://www.google.com',
+						'description' => 'this is a description'
 					),
-					'method' => 'Post',
-					'return' => 'contents'
-				));
+					'Secret' => array(
+						array(
+							'data' => 'wrong secret'
+						),
+					)
+				),
+				'method' => 'Post',
+				'return' => 'contents'
+			));
 		} catch (Exception $e) {
 			$this->assertEquals($e->getMessage(), 'Could not validate secret model');
 			// Get the resource again, and assert it's the exact same
 			$resourceAfterCreate = $this->Resource->find('first', [
-					'conditions' => [
-						'name' => 'testAddSecretRollback'
-					],
-					'contain' => ['Secret']
-				]);
+				'conditions' => [
+					'name' => 'testAddSecretRollback'
+				],
+				'contain' => ['Secret']
+			]);
 
-			$this->assertEmpty($resourceAfterCreate, 'After a secret validation error, the resource should not exist in the database');
+			$this->assertEmpty($resourceAfterCreate,
+				'After a secret validation error, the resource should not exist in the database');
 		}
 	}
 
-	public function testEditWithCategoryBadId() {
-		$resource = $this->Resource->findByName("facebook account");
-		$id = $resource['Resource']['id'];
+	public function testEditWithCategoryBadId()
+	{
+		$rsId = Common::uuid("resource.id.facebook-account");
+
 		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
 		// Test with a bad format of category
-		$result = json_decode($this->testAction("/resources/$id.json", array(
+		$result = json_decode($this->testAction("/resources/$rsId.json", array(
 			'data' => array(
 				'Category' => array(
 					0 => array(
@@ -438,21 +470,19 @@ a1YdhBEx6sd+aex8bJj4wbiq
 			'method' => 'put',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Status::ERROR, $result['header']['status'], "Add : /resources.json : The test should return error but is returning {$result['header']['status']} : " . print_r($result, true));
-		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
-		$this->assertTrue(count($after) == 0, "update /resources/$id.json : After this test, there should be no categories associated to the resource anymore.");
 	}
 
-	public function testEditAndPermission() {
-		$resource = $this->Resource->findByName("tetris license");
+	public function testEditAndPermission()
+	{
+		$rsId = Common::uuid("resource.id.tetris-license");
 
 		// Looking at the matrix of permission marlyn should be able to read but not to update the resource tetris license
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		// Error : name is empty
 		$this->setExpectedException('HttpException', 'You are not authorized to edit this resource');
-		$result = json_decode($this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+		$result = json_decode($this->testAction("/resources/{$rsId}.json", array(
 			'data' => array(
 				'Resource' => array(
 					'name' => 'testEditAndPermission'
@@ -466,58 +496,58 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	/**
 	 * Test edit a resource with secrets, and providing an invalid number of secrets.
 	 */
-	public function testEditWithSecretsInvalidNumberOfSecrets() {
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
+	public function testEditWithSecretsInvalidNumberOfSecrets()
+	{
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
-
 		$resource = $this->Resource->find('first', [
-				'conditions' => [
-					'name' => "salesforce account"
-				],
-				'contain' => ['Secret']
-			]);
+			'conditions' => [
+				'name' => "salesforce account"
+			],
+			'contain' => ['Secret']
+		]);
 		$secretsData = [];
-		foreach($resource['Secret'] as $secret) {
+		foreach ($resource['Secret'] as $secret) {
 			$secretsData[] = [
 				'user_id' => $secret['user_id'],
-				'data'    => $secret['data']
+				'data' => $secret['data']
 			];
 		}
 		array_pop($secretsData);
 
 		$this->setExpectedException('HttpException', 'The list of secrets provided is invalid');
 		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
-					'data' => array(
-						'Resource' => array(
-							'name' => 'testEditSecret'
-						),
-						'Secret' => $secretsData,
-					),
-					'method' => 'Put',
-					'return' => 'contents'
-				));
+			'data' => array(
+				'Resource' => array(
+					'name' => 'testEditSecret'
+				),
+				'Secret' => $secretsData,
+			),
+			'method' => 'Put',
+			'return' => 'contents'
+		));
 	}
 
 	/**
 	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
 	 */
-	public function testEditWithSecretsInvalidSecretUsers() {
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
+	public function testEditWithSecretsInvalidSecretUsers()
+	{
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
-
 		$resource = $this->Resource->find('first', [
-				'conditions' => [
-					'name' => "salesforce account"
-				],
-				'contain' => ['Secret']
-			]);
+			'conditions' => [
+				'name' => "salesforce account"
+			],
+			'contain' => ['Secret']
+		]);
 		$secretsData = [];
-		foreach($resource['Secret'] as $secret) {
+		foreach ($resource['Secret'] as $secret) {
 			$secretsData[] = [
 				'user_id' => $secret['user_id'],
-				'data'    => $secret['data']
+				'data' => $secret['data']
 			];
 		}
 		$last = array_pop($secretsData);
@@ -526,51 +556,49 @@ a1YdhBEx6sd+aex8bJj4wbiq
 
 		$this->setExpectedException('HttpException', 'The list of secrets provided is invalid');
 		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
-				'data' => array(
-					'Resource' => array(
-						'name' => 'testEditSecret'
-					),
-					'Secret' => $secretsData,
+			'data' => array(
+				'Resource' => array(
+					'name' => 'testEditSecret'
 				),
-				'method' => 'Put',
-				'return' => 'contents'
-			));
+				'Secret' => $secretsData,
+			),
+			'method' => 'Put',
+			'return' => 'contents'
+		));
 	}
 
 	/**
 	 * Test edit a resource with secrets, with one of the secrets having an invalid user.
 	 */
-	public function testEditWithSecrets() {
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
+	public function testEditWithSecrets()
+	{
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		$resource = $this->Resource->find('first', [
-				'conditions' => [
-					'name' => "salesforce account"
-				],
-				'contain' => ['Secret']
-			]);
+			'conditions' => [
+				'name' => "salesforce account"
+			],
+			'contain' => ['Secret']
+		]);
 		$secretsData = [];
-		foreach($resource['Secret'] as $secret) {
+		foreach ($resource['Secret'] as $secret) {
 			$secretsData[] = [
 				'user_id' => $secret['user_id'],
-				'data'    => $secret['data']
+				'data' => $secret['data']
 			];
 		}
 
-//		pr(Hash::extract($secretsData, '{n}.user_id'));
-//		pr(sizeof($secretsData)); die();
-//
 		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
-				'data' => array(
-					'Resource' => array(
-						'name' => 'testEditSecret1'
-					),
-					'Secret' => $secretsData,
+			'data' => array(
+				'Resource' => array(
+					'name' => 'testEditSecret1'
 				),
-				'method' => 'Put',
-				'return' => 'contents'
-			));
+				'Secret' => $secretsData,
+			),
+			'method' => 'Put',
+			'return' => 'contents'
+		));
 		$json = json_decode($result, true);
 		$this->assertEquals(
 			Status::SUCCESS,
@@ -584,22 +612,23 @@ a1YdhBEx6sd+aex8bJj4wbiq
 	/**
 	 * Test that rollback is effective.
 	 */
-	public function testEditWithSecretsRollback() {
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
+	public function testEditWithSecretsRollback()
+	{
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		$resource = $this->Resource->find('first', [
-				'conditions' => [
-					'name' => "salesforce account"
-				],
-				'contain' => ['Secret']
-			]);
+			'conditions' => [
+				'name' => "salesforce account"
+			],
+			'contain' => ['Secret']
+		]);
 
 		$secretsData = [];
-		foreach($resource['Secret'] as $secret) {
+		foreach ($resource['Secret'] as $secret) {
 			$secretsData[] = [
 				'user_id' => $secret['user_id'],
-				'data'    => $secret['data']
+				'data' => $secret['data']
 			];
 		}
 		$last = array_pop($secretsData);
@@ -608,83 +637,74 @@ a1YdhBEx6sd+aex8bJj4wbiq
 
 		try {
 			$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
-					'data' => array(
-						'Resource' => array(
-							'name' => 'testEditSecret',
-							'description' => 'wtf'
-						),
-						'Secret' => $secretsData,
+				'data' => array(
+					'Resource' => array(
+						'name' => 'testEditSecret',
+						'description' => 'wtf'
 					),
-					'method' => 'Put',
-					'return' => 'contents'
-				));
-		} catch(Exception $e) {
-			$this->assertEquals($e->getMessage(), 'Could not validate secret model', 'Error message is not what is expected');
+					'Secret' => $secretsData,
+				),
+				'method' => 'Put',
+				'return' => 'contents'
+			));
+		} catch (Exception $e) {
+			$this->assertEquals($e->getMessage(), 'Could not validate secret model',
+				'Error message is not what is expected');
 			// Get the resource again, and assert it's the exact same
 			$resourceAfterUpdate = $this->Resource->find('first', [
-					'conditions' => [
-						'id' => $resource['Resource']['id']
-					],
-					'contain' => ['Secret']
-				]);
-			$this->assertEquals($resourceAfterUpdate, $resource, $e->getMessage() . 'After an error, the update should have performed a rollback but did not' . print_r($resourceAfterUpdate, true) . print_r($resource, true));
+				'conditions' => [
+					'id' => $resource['Resource']['id']
+				],
+				'contain' => ['Secret']
+			]);
+			$this->assertEquals($resourceAfterUpdate, $resource,
+				$e->getMessage() . 'After an error, the update should have performed a rollback but did not' . print_r($resourceAfterUpdate,
+					true) . print_r($resource, true));
 		}
 	}
 
 	/**
 	 * Test a normal edit operation.
 	 */
-	public function testEdit() {
-		$rootCat = $this->Resource->CategoryResource->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$accountCat = $this->Resource->CategoryResource->Category->findByName('accounts');
-		$resource = $this->Resource->findByName("facebook account");
-		$id = $resource['Resource']['id'];
+	public function testEdit()
+	{
+		$rootCatId = Common::uuid('category.id.bolt');
+		$catAccountId = Common::uuid('category.id.accounts');
+		$rsId = Common::uuid('resource.id.facebook-account');
+		$resource = $this->Resource->findById($rsId);
+		$catRs = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $rsId)));
 
+		// Update the resource
 		$resource['Resource']['name'] = "test";
-		$before = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
-
-		$result = json_decode($this->testAction("/resources/$id.json", array(
-			'data' => array(
-				'Resource' => $resource['Resource'],
-				'Category' => array(
-					0 => array(
-						'id' => $accountCat['Category']['id']
-					),
-					1 => array(
-						'id' => $rootCat['Category']['id']
-					)
+		$data = array(
+			'Resource' => $resource['Resource'],
+			'Category' => array(
+				0 => array(
+					'id' => $catAccountId
+				),
+				1 => array(
+					'id' => $rootCatId
 				)
-			),
+			)
+		);
+		$result = json_decode($this->testAction("/resources/$rsId.json", array(
+			'data' => $data,
 			'method' => 'put',
 			'return' => 'contents'
 		)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"update /resources/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
 
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "update /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
-		$result = $this->Resource->findById($id);
-		$this->assertEquals("test", $result['Resource']['name'], "update /resources/$id.json : The test should have modified the name into 'test', but name is still {$result['Resource']['name']}");
-
-		$after = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $id)));
-
-		$this->assertEquals(count($after), 2, "2 results are expected");
-		$this->Resource->CategoryResource->create();
-		$this->Resource->CategoryResource->set(array(
-			'CategoryResource' => array(
-				'resource_id' => $id,
-				'category_id' => $rootCat['Category']['id']
-			)
-		));
-		$this->assertEquals($this->Resource->CategoryResource->uniqueCombi(), false, "update /resources/$id.json : The resource should now belong to category id {$rootCat['Category']['id']}");
-		$this->Resource->CategoryResource->create();
-		$this->Resource->CategoryResource->set(array(
-			'CategoryResource' => array(
-				'resource_id' => $id,
-				'category_id' => $accountCat['Category']['id']
-			)
-		));
-		$this->assertEquals($this->Resource->CategoryResource->uniqueCombi(), false, "update /resources/$id.json : The resource should now belong to category id {$accountCat['Category']['id']}");
+		// Retrieve the resource and ensure the changes have been applied
+		$updatedResource = $this->Resource->findById($rsId);
+		$updatedRsCat = $this->Resource->CategoryResource->find('all', array('conditions' => array('resource_id' => $rsId)));
+		$this->assertEquals("test", $updatedResource['Resource']['name'],
+			"update /resources/$rsId.json : The test should have modified the name into 'test', but name is still {$updatedResource['Resource']['name']}");
+		$this->assertEquals(count($updatedRsCat), 2, "2 results are expected");
 	}
 
-	public function testDeleteResourceIdIsMissing() {
+	public function testDeleteResourceIdIsMissing()
+	{
 		$this->setExpectedException('HttpException', 'The resource id is missing');
 		$result = json_decode($this->testAction("/resources.json", array(
 			'method' => 'delete',
@@ -692,7 +712,8 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		)), true);
 	}
 
-	public function testDeleteResourceIdNotValid() {
+	public function testDeleteResourceIdNotValid()
+	{
 		$this->setExpectedException('HttpException', 'The resource id is invalid');
 		$result = json_decode($this->testAction("/resources/badid.json", array(
 			'method' => 'delete',
@@ -700,37 +721,42 @@ a1YdhBEx6sd+aex8bJj4wbiq
 		)), true);
 	}
 
-	public function testDeleteResourceDoesNotExist() {
+	public function testDeleteResourceDoesNotExist()
+	{
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The resource does not exist');
-		$result = json_decode($this->testAction("/resources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$result = json_decode($this->testAction("/resources/{$id}.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
 		)), true);
 	}
 
-	public function testDeleteAndPermission() {
-		// Looking at the matrix of permission marlyn should be able to read but not to delete the resource facebook
-		$user = $this->User->findByUsername('marlyn@passbolt.com');
-		$this->User->setActive($user);
+	public function testDeleteAndPermission()
+	{
+		$rsId = Common::uuid('resource.id.bank-password');
 
-		$res = $this->Resource->findByName('bank password');
+		// Looking at the matrix of permission marlyn should be able to read but not to delete the resource facebook
+		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$this->User->setActive($user);
 
 		// Error : name is empty
 		$this->setExpectedException('HttpException', 'You are not authorized to delete this resource');
-		$result = json_decode($this->testAction("/resources/{$res['Resource']['id']}.json", array(
+		$result = json_decode($this->testAction("/resources/{$rsId}.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
 		)), true);
 	}
 
-	public function testDelete() {
-		$res = $this->Resource->findByName('facebook account');
-		$id = $res['Resource']['id'];
-		$result = json_decode($this->testAction("/resources/$id.json", array(
+	public function testDelete()
+	{
+		$rsId = Common::uuid('resource.id.facebook-account');
+
+		$result = json_decode($this->testAction("/resources/$rsId.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "delete /resources/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"delete /resources/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
 	}
 
 }

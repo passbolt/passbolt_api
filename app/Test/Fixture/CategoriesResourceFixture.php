@@ -59,13 +59,6 @@ class CategoriesResourceFixture extends CakeTestFixture {
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
-			'id' => '50d77ffa-45fc-423c-a5b1-1b63d7a10fce',
-			'category_id' => '7a7268fa-44cb-30f9-a943-644734657155',
-			'resource_id' => '3e45ee73-6a50-380b-af39-71d259a7bf1e',
-			'created' => '2012-12-24 03:34:42',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
-		),
-		array(
 			'id' => '50d77ffa-5a3c-4423-9c38-1b63d7a10fce',
 			'category_id' => '7a7268fa-44cb-30f9-a943-644734657155',
 			'resource_id' => 'c4c89e1a-5ae2-3ecc-a2f8-d77156c5c74d',
@@ -132,8 +125,15 @@ class CategoriesResourceFixture extends CakeTestFixture {
 			'id' => '50d99ef8-3fd4-4e62-8159-1b63d7a10fce',
 			'category_id' => '6dc848e0-7e30-3669-a130-865c39f5e078',
 			'resource_id' => '41099784-c61c-3172-a66d-93f2a4702a6e',
-			'created' => '2016-01-28 17:30:12',
+			'created' => '2016-02-03 16:24:46',
 			'created_by' => ''
+		),
+		array(
+			'id' => '9676dedc-d558-35b3-a8dc-bc5729b4e8eb',
+			'category_id' => '7a7268fa-44cb-30f9-a943-644734657155',
+			'resource_id' => '3e45ee73-6a50-380b-af39-71d259a7bf1e',
+			'created' => '2012-12-24 03:34:42',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 	);
 

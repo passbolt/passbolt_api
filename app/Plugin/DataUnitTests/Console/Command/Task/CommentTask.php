@@ -21,7 +21,7 @@ class CommentTask extends ModelTask {
 		$this->Resource = ClassRegistry::init('Resource');
 
 		$c[] = array('Comment'=>array(
-			'id' => 'aaa00000-cccc-11d1-a0c5-080027796c4c',
+			'id' => Common::uuid('comment.id.salesforce-account-1'),
 			'parent_id' => null,
 			'foreign_id' => Common::uuid('resource.id.salesforce-account'),
 			'foreign_model' => 'Resource',
@@ -32,8 +32,8 @@ class CommentTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.irene'),
 		));
 		$c[] = array('Comment'=>array(
-			'id' => 'aaa00001-cccc-11d1-a0c5-080027796c4c',
-			'parent_id' => 'aaa00000-cccc-11d1-a0c5-080027796c4c',
+			'id' => Common::uuid('comment.id.salesforce-account-2'),
+			'parent_id' => Common::uuid('comment.id.salesforce-account-1'),
 			'foreign_id' => Common::uuid('resource.id.salesforce-account'),
 			'foreign_model' => 'Resource',
 			'content' => 'this is a reply to the short comment',

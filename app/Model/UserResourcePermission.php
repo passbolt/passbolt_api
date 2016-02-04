@@ -10,8 +10,24 @@
 
 class UserResourcePermission extends AppModel {
 
+/**
+ * Custom database table name, or null/false if no table association is desired.
+ *
+ * @var string
+ * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#usetable
+ */
 	public $useTable = "users_resources_permissions";
 
+/**
+ * Model behaviors
+ * @access public
+ */
+	public $actsAs = array('Containable');
+
+/**
+ * Details of belongs to relationships
+ * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
+ */
 	public $belongsTo = array(
 		'User',
 		'Resource',

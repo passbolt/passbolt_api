@@ -185,6 +185,15 @@ class ProfileTask extends ModelTask {
 			'first_name' => 'Marlyn',
 			'last_name' => 'Wescoff'
 		));
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.nancy'),
+			'user_id' => Common::uuid('user.id.nancy'),
+			'gender' => 'f',
+			'date_of_birth' => '1986-07-14',
+			'title' => 'Ms',
+			'first_name' => 'Nancy',
+			'last_name' => 'Leveson'
+		));
 
 		return $c;
 	}

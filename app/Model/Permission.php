@@ -93,6 +93,23 @@ class Permission extends AppModel {
 		return $rules;
 	}
 
+
+/**
+ * Details of after save method
+ *
+ * @link http://api20.cakephp.org/class/model#method-ModelafterSave
+ */
+	public function beforeSave($options = Array()) {
+		// If the debug mode is enabled.
+		// Generate a permission id based on the aco foreign key and the aro foreign key.
+		// It will help us to retrieve permission for debugging or testing.
+		if (Configure::read('debug') > 0) {
+			if (empty($this->data['Permission']['id'])) {
+				$this->data['Permission']['id'] = Common::uuid('permission.id.' . $this->data['Permission']['aco_foreign_key'] . '-' . $this->data['Permission']['aro_foreign_key']);
+			}
+		}
+	}
+
 /**
  * Validation Rule : Check if the given ACO key is an allowed ACO model
  * @param array check the data to test

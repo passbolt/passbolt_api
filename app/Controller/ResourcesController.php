@@ -80,6 +80,7 @@ class ResourcesController extends AppController {
 		}
 
 		$findOptions = $this->Resource->getFindOptions('index', User::get('Role.name'), $findData);
+		var_dump($findOptions);
 		$resources = $this->Resource->find('all', $findOptions);
 
 		if (!$resources) {

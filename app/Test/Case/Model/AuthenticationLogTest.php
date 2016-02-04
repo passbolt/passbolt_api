@@ -24,7 +24,7 @@ class AuthenticationLogTest extends CakeTestCase {
 	}
 
 	public function testGetFailedAuthenticationCount() {
-		$userTest = $this->User->findByUsername('user@passbolt.com');
+		$userTest = $this->User->findById(Common::uuid('user.id.user'));
 		$l1 = array('AuthenticationLog' => array(
 			'user_id' => $userTest['User']['id'],
 			'username' => $userTest['User']['username'],
@@ -93,7 +93,7 @@ class AuthenticationLogTest extends CakeTestCase {
 	}
 
 	public function testGetLastFailedAuthenticationLog() {
-		$userTest = $this->User->findByUsername('user@passbolt.com');
+		$userTest = $this->User->findById(Common::uuid('user.id.user'));
 		$l3 = array('AuthenticationLog' => array(
 			'user_id' => $userTest['User']['id'],
 			'username' => $userTest['User']['username'],

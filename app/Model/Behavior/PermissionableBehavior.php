@@ -22,10 +22,10 @@ class PermissionableBehavior extends ModelBehavior {
  * functions of the User and the User[AroModelName]Permission model
  */
 	public function beforeFind(Model $model, $queryData = array()) {
-		// If the current user is a normal user or an anonymous user,
+		// If the current user is a normal user (all roles except root),
 		// all his requests will be augmented with the permissionable behavior
 		// to ensure he can only access records he has permission for.
-		if (User::get('Role.name') == Role::USER || User::get('Role.name') == Role::GUEST || User::get('Role.name') == Role::ADMIN) {
+		if (User::get('Role.name') != Role::ROOT) {
 
 			// Depending on the target model the user wants to access,
 			// the permissions are managed by a specific model.
@@ -150,8 +150,8 @@ class PermissionableBehavior extends ModelBehavior {
 				)
 			);
 			// If the debug mode is enabled.
-			// Generate a permission id based on the inserted instance id and the user id.
-			// It will help us to guess the permission id in the test.
+			// Generate a permission id based on the aco foreign key and the aro foreign key.
+			// It will help us to retrieve permission for debugging or testing.
 			if (Configure::read('debug') > 0) {
 				$data['Permission']['id'] = Common::uuid('permission.id.' . $model->id . '-' . $userId);
 			}

@@ -27,7 +27,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testUserIdValidation() {
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$testcases = array(
 			'' => false,
 			'?!#' => false,
@@ -77,7 +77,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * Test createToken.
 	 */
 	public function testCreateToken() {
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$token = $this->AuthenticationToken->createToken($user['User']['id']);
 		$this->assertEquals(!empty($token), true, 'Token should have been created, but has not');
 	}
@@ -94,7 +94,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * Test that a token is valid.
 	 */
 	public function testCheckTokenIsValid() {
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$token = $this->AuthenticationToken->createToken($user['User']['id']);
 		$isValid = $this->AuthenticationToken->checkTokenIsValidForUser($token['AuthenticationToken']['token'], $user['User']['id']);
 		$this->assertEquals(is_array($isValid), true, 'The test should have returned a valid token, but has not');
@@ -104,7 +104,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * Test that a token is valid for an invalid user
 	 */
 	public function testCheckTokenIsValidInvalidUser() {
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$token = $this->AuthenticationToken->createToken($user['User']['id']);
 		$isValid = $this->AuthenticationToken->checkTokenIsValidForUser($token['AuthenticationToken']['token'], 'aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
 		$this->assertEquals((bool)$isValid, false, 'The test should have returned an invalid token');

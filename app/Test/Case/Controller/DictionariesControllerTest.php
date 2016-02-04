@@ -38,7 +38,7 @@ class DictionariesControllerTest extends ControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->User = Common::getModel('User');
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 	}
 

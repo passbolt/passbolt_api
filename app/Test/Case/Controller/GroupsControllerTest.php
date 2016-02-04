@@ -45,7 +45,7 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->session->init();
 		
 		// log the user as a manager to be able to access all features
-		$user = $this->User->findByUsername('admin@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 	}
 
@@ -75,20 +75,22 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewGroupDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
+
 		$this->setExpectedException('HttpException', 'The group does not exist');
-		$this->testAction("/groups/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
+		$this->testAction("/groups/{$id}.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testView() {
-		$group = $this->Group->findByName('accounting dpt');
-		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json",array('return' => 'contents','method' => 'GET'), true));
+		$groupId = Common::uuid('group.id.accounting');
+		$result = json_decode($this->testAction("/groups/{$groupId}.json",array('return' => 'contents','method' => 'GET'), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS,'/groups return something');
 	}
 
 	public function testAddNoAllowed() {
 		// test with a not allowed user
-		$u = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($u);
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		$result = json_decode($this->testAction('/groups.json', array(
@@ -105,8 +107,9 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		// log the user as a manager to be able to access all features
-		$user = $this->User->findByUsername('admin@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
 		$this->User->setActive($user);
+
 		$result = json_decode($this->testAction('/groups.json', array(
 					'data' => array(
 						'Group' => array(
@@ -127,14 +130,13 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	public function testUpdateNoAllowed() {
 		// test with a not allowed user
-		$u = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($u);
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
 
-		$group = $this->Group->findByName('accounting dpt');
-		$id = $group['Group']['id'];
+		$groupId = Common::uuid('group.id.accounting');
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
-		$result = json_decode($this->testAction("/groups/$id.json", array(
+		$result = json_decode($this->testAction("/groups/$groupId.json", array(
 					'data' => array(
 						'Group' => array(
 							'name' => 'modified name'
@@ -164,20 +166,23 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateNoDataProvided() {
-		$model = 'resource';
-		$group = $this->Group->findByName('accounting dpt');
+		$groupId = Common::uuid('group.id.accounting');
+
 		$this->setExpectedException('HttpException', 'No data were provided');
-		$this->testAction("/groups/{$group['Group']['id']}.json", array(
+		$this->testAction("/groups/{$groupId}.json", array(
 			 'method' => 'put',
 			 'return' => 'contents'
 		));
 	}
 
 	public function testUpdate() {
-		$group = $this->Group->findByName('accounting dpt');
-		$id = $group['Group']['id'];
+		$groupId = Common::uuid('group.id.accounting');
+		$group = $this->Group->findById($groupId);
+
+		// Update the group name.
 		$group['Group']['name'] = 'modified name';
-		$result = json_decode($this->testAction("/groups/$id.json", array(
+
+		$result = json_decode($this->testAction("/groups/$groupId.json", array(
 			'data' => $group,
 			'method' => 'put',
 			'return' => 'contents'
@@ -185,20 +190,20 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Edit : /groups.json : The test should return sucess but is returning " . print_r($result, true));
 
 		// check that User was properly saved
-		$gr = $this->Group->findByName("modified name");
-		$this->assertEquals(1, count($gr), "Edit : /groups.json : The number of groups returned should be 1, but actually is " . count($group));
-		$this->assertEquals($gr['Group']['id'], $group['Group']['id'], "Edit : /groups.json : the id of the retrieved group  should be {$group['Group']['id']} but is {$gr['Group']['id']}");
+		$updatedGroup = $this->Group->findByName("modified name");
+		$this->assertEquals(1, count($updatedGroup), "Edit : /groups.json : The number of groups returned should be 1, but actually is " . count($group));
+		$this->assertEquals($updatedGroup['Group']['id'], $groupId, "Edit : /groups.json : the id of the retrieved group  should be {$groupId} but is {$updatedGroup['Group']['id']}");
 	}
 
 	public function testDeleteNoAllowed() {
 		// test with a not allowed user
-		$u = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($u);
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
 
-		$group = $this->Group->findByName('accounting dpt');
+		$groupId = Common::uuid('group.id.accounting');
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
-		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json", array('method' => 'delete','return' => 'contents')), true);
+		$result = json_decode($this->testAction("/groups/{$groupId}.json", array('method' => 'delete','return' => 'contents')), true);
 	}
 
 	public function testDeleteGroupIdIsMissing() {
@@ -212,20 +217,19 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteGroupDoesNotExist() {
-		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
+		$id = Common::uuid('not-valid-reference');
 
 		$this->setExpectedException('HttpException', 'The group does not exist');
 		$this->testAction("/groups/$id.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 	
 	public function testDelete() {
-		$group = $this->Group->findByName('accounting dpt');
-		$id = $group['Group']['id'];
+		$groupId = Common::uuid('group.id.accounting');
 
-		$result = json_decode($this->testAction("/groups/{$group['Group']['id']}.json", array('method' => 'delete','return' => 'contents')), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "delete /groups/$id.json : The test should return a success but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/groups/{$groupId}.json", array('method' => 'delete','return' => 'contents')), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "delete /groups/$groupId.json : The test should return a success but is returning {$result['header']['status']}");
 
-		$deleted = $this->Group->findByName('accounting dpt');
-		$this->assertEquals(1, $deleted['Group']['deleted'], "delete /groups/{$group['Group']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['Group']['deleted']}");
+		$deleted = $this->Group->findById($groupId);
+		$this->assertEquals(1, $deleted['Group']['deleted'], "delete /groups/{$groupId}.json : after delete, the value of the field deleted should be 1 but is {$deleted['Group']['deleted']}");
 	}
 }

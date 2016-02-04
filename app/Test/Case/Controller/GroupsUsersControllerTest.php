@@ -50,7 +50,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		parent::setUp();
 
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findByUsername('admin@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 	}
 
@@ -65,12 +65,13 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewGroUsrDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The groupUser does not exist');
-		$this->testAction("/groupsUsers/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
+		$this->testAction("/groupsUsers/{$id}.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testView() {
-		$id = '53865f1f-230c-448b-b911-2173c0a895dc';
+		$id = Common::uuid('group_user.id.management-dame');
 
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/groupsUsers/$id.json", array('method' => 'get', 'return' => 'contents')), true);
@@ -101,12 +102,12 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 	}*/
 
 	public function testAdd() {
-		$gro = $this->Group->findByName('developers');
-		$usr = $this->User->findByUsername('grace@passbolt.com');
+		$groupId = Common::uuid('group.id.developers');
+		$userId = Common::uuid('user.id.grace');
 		$data = array(
 			'GroupUser' => array(
-				'group_id' => $gro['Group']['id'],
-				'user_id' => $usr['User']['id']
+				'group_id' => $groupId,
+				'user_id' => $userId,
 			)
 		);
 
@@ -118,13 +119,13 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /groupsUsers.json : The test should return sucess but is returning " . print_r($result, true));
 
 		// check that Categories were properly saved
-		$gu = $this->GroupUser->find('all', array(
+		$groups = $this->GroupUser->find('all', array(
 				'conditions' => array(
-					'group_id' => $gro['Group']['id'],
-					'user_id' => $usr['User']['id']
+					'group_id' => $groupId,
+					'user_id' => $userId,
 				)
 			));
-		$this->assertEquals(1, count($gu), "Add : /groupsUsers.json : The number of groupsUsers returned should be 1, but actually is " . count($gu));
+		$this->assertEquals(1, count($groups), "Add : /groupsUsers.json : The number of groupsUsers returned should be 1, but actually is " . count($groups));
 	}
 
 	public function testDeleteCatResIdIsMissing() {
@@ -138,12 +139,14 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteCatResDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
+
 		$this->setExpectedException('HttpException', 'The groupUser does not exist');
-		$this->testAction("/groupsUsers/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents'));
+		$this->testAction("/groupsUsers/{$id}.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDelete() {
-		$id = '53865f1f-311c-4535-8a72-2173c0a895dc';
+		$id = Common::uuid('group_user.id.human-marlyn');
 		$result = json_decode($this->testAction("/groupsUsers/$id.json", array(
 					'method' => 'delete',
 					'return' => 'contents'
