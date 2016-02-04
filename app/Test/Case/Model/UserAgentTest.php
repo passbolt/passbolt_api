@@ -43,7 +43,10 @@ class UserAgentTest extends CakeTestCase {
  * Test create if does not exist
  */
  	public function testCreateIfDoesNotExist() {
+		$_SERVER['HTTP_USER_AGENT'] = 'phpunit test user agent';
 		$ua_raw = env('HTTP_USER_AGENT');
+		$this->assertTrue($ua_raw == 'phpunit test user agent', 'This UA should match the one set previously');
+
 		$i = $this->UserAgent->find('count', array('conditions' => array('name' => $ua_raw)));
 		$this->assertTrue($i == 0, 'User agent should not be found');
 

@@ -79,6 +79,7 @@ class Secret extends AppModel {
 /**
  * Check if a resource with same id exists
  * @param check
+ * @return bool
  */
 	public function resourceExists($check) {
 		if ($check['resource_id'] == null) {
@@ -95,28 +96,10 @@ class Secret extends AppModel {
 	}
 
 /**
- * Check if a user with same id exists
- * @param check
+ * Check a gpg message is valid
+ * @param $check
+ * @return bool
  */
-	public function userExists($check) {
-		if ($check['user_id'] == null) {
-			return false;
-		} else {
-			$exists = $this->User->find('count', array(
-				'conditions' => array(
-					'User.id' => $check['user_id']
-				),
-				'recursive' => -1
-			));
-			return $exists > 0;
-		}
-	}
-
-	/**
-	 * Check a gpg message is valid
-	 * @param $check
-	 * @return bool
-	 */
 	public function checkGpgMessageIsValid($check) {
 		if ($check['data'] == null) {
 			return false;
@@ -169,7 +152,7 @@ class Secret extends AppModel {
 /**
  * Return the list of field to fetch for given context
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @return array $condition
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
 		switch($case){

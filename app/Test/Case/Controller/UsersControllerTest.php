@@ -1057,7 +1057,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->testAction($url, array(
 			'data'   => array (
 				'AuthenticationToken' => array (
-					'token' => AuthenticationToken::generateToken(),
+					'token' => Common::uuid(),
 				),
 			),
 			'method' => 'put',

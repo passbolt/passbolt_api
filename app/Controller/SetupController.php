@@ -55,7 +55,7 @@ class SetupController extends AppController {
 		}
 
 		// Check if token is valid.
-		$token = $this->AuthenticationToken->checkTokenIsValidForUser($token, $userId);
+		$token = $this->AuthenticationToken->isValid($token, $userId);
 		if (empty($token)) {
 			throw new NotFoundException(__('Token not found'));
 		}

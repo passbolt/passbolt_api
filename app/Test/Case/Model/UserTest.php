@@ -405,8 +405,7 @@ class UserTest extends CakeTestCase {
 
 	/**
 	 * Test __add() function with invalid parameters.
-	 * An exception should be returned
-	 * No user should be created in the database due to rollback.
+	 * Assert that an exception should be returned
 	 */
 	public function testAddWithValidationError() {
 		$data = [
@@ -420,13 +419,35 @@ class UserTest extends CakeTestCase {
 		];
 		$this->setExpectedException('ValidationException', 'Could not validate profile');
 		$this->User->registerUser($data);
-		// Check that no user is inside the user table.
-		$user = $this->User->find('all', [
-				'conditions' => [
-					'username' => $data['User']['username']
-				]
-			]);
-		$this->assertEmpty($user, 'After a validation error, the user should not have been created in the database');
+	}
+
+	/**
+	 * Test register user with invalid parameters, and make sure the rollback was effective, and not entry was created in db.
+	 * Assert that an exception should be returned.
+	 * Assert that no user should be created in the database thanks to rollback.
+	 */
+	public function testAddWithValidationErrorRollback() {
+		$data = [
+			'Profile' => [
+				'first_name' => 'john1',
+				'last_name' => 'doe',
+			],
+			'User' => [
+				'username' => 'john.doe@passbolt.com'
+			]
+		];
+
+		try {
+			$this->User->registerUser($data);
+		} catch(Exception $e) {
+			// Check that no user is inside the user table.
+			$user = $this->User->find('all', [
+					'conditions' => [
+						'username' => $data['User']['username']
+					]
+				]);
+			$this->assertEmpty($user, 'After a validation error, the user should not have been created in the database');
+		}
 	}
 
 	/**
@@ -470,5 +491,4 @@ class UserTest extends CakeTestCase {
 		$this->assertFalse($validates);
 		$this->assertTrue(array_key_exists('role_id', $this->User->validationErrors));
 	}
-
 }

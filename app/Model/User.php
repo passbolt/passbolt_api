@@ -714,7 +714,8 @@ class User extends AppModel {
 		$data['User']['active'] = FALSE;
 
 		// Begin transaction
-		$this->begin();
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
 
 		// Get the meaningful fields for this operation
 		$fields = $this->getFindFields($case, User::get('Role.name'));
@@ -723,15 +724,14 @@ class User extends AppModel {
 
 		// Validate the user data
 		if (!$this->validates(array('fieldList' => array($fields['fields'])))) {
-			$invalidFields = $this->validationErrors;
-			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
-			throw new ValidationException(__('Could not validate user data'), $finalInvalidFields);
+			$dataSource->rollback();
+			throw new ValidationException(__('Could not validate user data'), $this->validationErrors);
 		}
 
 		// Save the user
 		$saveUser = $this->save($data, false, $fields['fields']);
 		if (!$saveUser) {
-			$this->rollback();
+			$dataSource->rollback();
 			throw new Exception(__('The user could not be saved'));
 		}
 
@@ -743,28 +743,26 @@ class User extends AppModel {
 
 		// Validate the profile data
 		if (!$this->Profile->validates(array('fieldList' => array($fields['fields'])))) {
-			$this->rollback();
-			$invalidFields = $this->Profile->validationErrors;
-			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
-			throw new ValidationException(__('Could not validate profile'), $finalInvalidFields);
+			$dataSource->rollback();
+			throw new ValidationException(__('Could not validate profile'), $this->Profile->validationErrors);
 		}
 
 		// Save the profile
 		$saveProfile = $this->Profile->save($data['Profile'], false, $fields['fields']);
 		if (!$saveProfile) {
-			$this->rollback();
+			$dataSource->rollback();
 			throw new Exception(__('The profile could not be saved'));
 		}
 
 		// Create the setup authentication token
-		$saveToken = $this->AuthenticationToken->createToken($this->id);
+		$saveToken = $this->AuthenticationToken->generate($this->id);
 		if (!$saveToken) {
-			$this->rollback();
+			$dataSource->rollback();
 			throw new Exception(__('The account token could not be created'));
 		}
 
 		// Everything fine, we commit.
-		$this->commit();
+		$dataSource->commit();
 
 		return array_merge($saveUser, $saveProfile, $saveToken);
 	}
