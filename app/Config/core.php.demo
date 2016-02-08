@@ -222,7 +222,10 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  *
  */
 	Configure::write('Session', array(
-		'defaults' => 'database'
+		'defaults' => 'cache',
+		'handler' => array(
+			'config' => 'session'
+		)
 	));
 
 /**
