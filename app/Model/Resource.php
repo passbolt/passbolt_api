@@ -75,7 +75,7 @@ class Resource extends AppModel {
 				'name' => array(
 					'required' => array(
 						'allowEmpty' => false,
-						'rule'       => array('notEmpty'),
+						'rule'       => array('notBlank'),
 						'message'    => __('A name is required')
 					),
 					'alphaNumericAndSpecial' => array(
@@ -92,7 +92,7 @@ class Resource extends AppModel {
 				'username' => array(
 					'required' => array(
 						'allowEmpty' => false,
-						'rule'       => array('notEmpty'),
+						'rule'       => array('notBlank'),
 						'message'    => __('A username is required')
 					),
 					'alphaNumeric' => array(

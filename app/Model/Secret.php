@@ -56,9 +56,9 @@ class Secret extends AppModel {
 				),
 			),
 			'data' => array(
-				'isNotEmpty' => array(
+				'isnotBlank' => array(
 					'required' => 'create',
-					'rule' => 'notEmpty',
+					'rule' => 'notBlank',
 					'message' => __('The secret must be provided')
 				),
 				'isGpgFormat' => array(

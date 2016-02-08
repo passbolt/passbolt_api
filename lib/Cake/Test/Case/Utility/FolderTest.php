@@ -41,7 +41,7 @@ class FolderTest extends CakeTestCase {
 
 		foreach (scandir(TMP) as $file) {
 			if (is_dir(TMP . $file) && !in_array($file, array('.', '..'))) {
-				self::$_tmp[] = $file;
+				static::$_tmp[] = $file;
 			}
 		}
 	}
@@ -62,7 +62,7 @@ class FolderTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
-		$exclude = array_merge(self::$_tmp, array('.', '..'));
+		$exclude = array_merge(static::$_tmp, array('.', '..'));
 		foreach (scandir(TMP) as $dir) {
 			if (is_dir(TMP . $dir) && !in_array($dir, $exclude)) {
 				$iterator = new RecursiveDirectoryIterator(TMP . $dir);
@@ -192,7 +192,7 @@ class FolderTest extends CakeTestCase {
  * @return void
  */
 	public function testRecursiveCreateFailure() {
-		$this->skipIf(DIRECTORY_SEPARATOR === '\\', 'Cant perform operations using permissions on windows.');
+		$this->skipIf(DIRECTORY_SEPARATOR === '\\', 'Cant perform operations using permissions on Windows.');
 
 		$path = TMP . 'tests' . DS . 'one';
 		mkdir($path);
@@ -1026,7 +1026,7 @@ class FolderTest extends CakeTestCase {
 		extract($this->_setupFilesystem());
 
 		$Folder = new Folder($folderOne);
-		$result = $Folder->copy(array('to' => $folderThree, 'scheme' => Folder::OVERWRITE));
+		$Folder->copy(array('to' => $folderThree, 'scheme' => Folder::OVERWRITE));
 
 		$this->assertTrue(file_exists($folderThree . DS . 'file1.php'));
 		$this->assertTrue(file_exists($folderThree . DS . 'folderA' . DS . 'fileA.php'));

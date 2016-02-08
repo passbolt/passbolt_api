@@ -89,7 +89,7 @@ class User extends AppModel {
 				'required' => array(
 					'required'   => 'create',
 					'allowEmpty' => false,
-					'rule'       => array('notEmpty'),
+					'rule'       => array('notBlank'),
 					'message'    => __('A username is required')
 				),
 				'email'    => array(
@@ -107,7 +107,7 @@ class User extends AppModel {
 				'required' => array(
 					'required'   => 'create',
 					'allowEmpty' => false,
-					'rule'       => array('notEmpty'),
+					'rule'       => array('notBlank'),
 					'message'    => __('A role should be provided')
 				),
 				'validRole' => array(

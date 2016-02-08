@@ -31,6 +31,13 @@ App::uses('File', 'Utility');
 class Shell extends Object {
 
 /**
+ * Default error code
+ *
+ * @var int
+ */
+	const CODE_ERROR = 1;
+
+/**
  * Output constant making verbose shells.
  *
  * @var int
@@ -173,6 +180,13 @@ class Shell extends Object {
  * @var int
  */
 	protected $_lastWritten = 0;
+
+/**
+ * Contains helpers which have been previously instantiated
+ *
+ * @var array
+ */
+	protected $_helpers = array();
 
 /**
  *  Constructs this Shell instance.
@@ -500,6 +514,19 @@ class Shell extends Object {
 	}
 
 /**
+ * Safely access the values in $this->params.
+ *
+ * @param string $name The name of the parameter to get.
+ * @return string|bool|null Value. Will return null if it doesn't exist.
+ */
+	public function param($name) {
+		if (!isset($this->params[$name])) {
+			return null;
+		}
+		return $this->params[$name];
+	}
+
+/**
  * Prompts the user for input, and returns it.
  *
  * @param string $prompt Prompt text.
@@ -560,7 +587,8 @@ class Shell extends Object {
 		$result = $this->stdin->read();
 
 		if ($result === false) {
-			return $this->_stop(1);
+			$this->_stop(self::CODE_ERROR);
+			return self::CODE_ERROR;
 		}
 		$result = trim($result);
 
@@ -583,11 +611,11 @@ class Shell extends Object {
  * @param string $text Text the text to format.
  * @param string|int|array $options Array of options to use, or an integer to wrap the text to.
  * @return string Wrapped / indented text
- * @see String::wrap()
+ * @see CakeText::wrap()
  * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::wrapText
  */
 	public function wrapText($text, $options = array()) {
-		return String::wrap($text, $options);
+		return CakeText::wrap($text, $options);
 	}
 
 /**
@@ -632,8 +660,7 @@ class Shell extends Object {
  *
  * @param array|string $message The message to output.
  * @param int $newlines Number of newlines to append.
- * @param int $size The number of bytes to overwrite. Defaults to the
- *    length of the last message output.
+ * @param int $size The number of bytes to overwrite. Defaults to the length of the last message output.
  * @return int|bool Returns the number of bytes returned from writing to stdout.
  */
 	public function overwrite($message, $newlines = 1, $size = null) {
@@ -707,7 +734,8 @@ class Shell extends Object {
 		if (!empty($message)) {
 			$this->err($message);
 		}
-		return $this->_stop(1);
+		$this->_stop(self::CODE_ERROR);
+		return self::CODE_ERROR;
 	}
 
 /**
@@ -745,7 +773,8 @@ class Shell extends Object {
 
 			if (strtolower($key) === 'q') {
 				$this->out(__d('cake_console', '<error>Quitting</error>.'), 2);
-				return $this->_stop();
+				$this->_stop();
+				return true;
 			} elseif (strtolower($key) !== 'y') {
 				$this->out(__d('cake_console', 'Skip `%s`', $path), 2);
 				return false;
@@ -764,6 +793,28 @@ class Shell extends Object {
 
 		$this->err(__d('cake_console', '<error>Could not write to `%s`</error>.', $path), 2);
 		return false;
+	}
+
+/**
+ * Load given shell helper class
+ *
+ * @param string $name Name of the helper class. Supports plugin syntax.
+ * @return BaseShellHelper Instance of helper class
+ * @throws RuntimeException If invalid class name is provided
+ */
+	public function helper($name) {
+		if (isset($this->_helpers[$name])) {
+			return $this->_helpers[$name];
+		}
+		list($plugin, $helperClassName) = pluginSplit($name, true);
+		$helperClassName = Inflector::camelize($name) . "ShellHelper";
+		App::uses($helperClassName, $plugin . "Console/Helper");
+		if (!class_exists($helperClassName)) {
+			throw new RuntimeException("Class " . $helperClassName . " not found");
+		}
+		$helper = new $helperClassName($this->stdout);
+		$this->_helpers[$name] = $helper;
+		return $helper;
 	}
 
 /**

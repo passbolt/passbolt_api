@@ -1,12 +1,12 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine on
-    RewriteRule    ^$    webroot/    [L]
-    RewriteRule    (.*) webroot/$1    [L]
+	RewriteEngine on
+	RewriteRule ^$ webroot/ [L]
+	RewriteRule (.*) webroot/$1 [L]
 </IfModule>
 <IfModule mod_headers.c>
-  Header set Cache-Control "no-cache, no-store, must-revalidate"
-  Header set Pragma "no-cache"
-  Header set Expires 0
-  BrowserMatch MSIE ie
-  Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+    BrowserMatch MSIE ie
+    Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
 </IfModule>

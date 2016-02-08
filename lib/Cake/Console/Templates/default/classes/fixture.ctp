@@ -21,8 +21,7 @@
 echo "<?php\n";
 ?>
 /**
- * <?php echo $model; ?>Fixture
- *
+ * <?php echo $model; ?> Fixture
  */
 class <?php echo $model; ?>Fixture extends CakeTestFixture {
 
@@ -50,7 +49,7 @@ class <?php echo $model; ?>Fixture extends CakeTestFixture {
  *
  * @var array
  */
-	public $fields = <?php echo $schema; ?>
+	public $fields = <?php echo $schema; ?>;
 
 <?php endif; ?>
 <?php if ($records): ?>

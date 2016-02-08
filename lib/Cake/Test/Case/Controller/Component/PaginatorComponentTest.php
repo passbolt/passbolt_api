@@ -361,13 +361,13 @@ class PaginatorComponentTest extends CakeTestCase {
 		$Controller->request->params['named'] = array('sort' => 'NotExisting.field', 'direction' => 'desc', 'limit' => 2);
 		$Controller->Paginator->paginate('PaginatorControllerPost');
 		$this->assertEquals(1, $Controller->params['paging']['PaginatorControllerPost']['page']);
-		$this->assertEquals(array(), $Controller->PaginatorControllerPost->lastQueries[1]['order'][0], 'no order should be set.');
+		$this->assertEquals(array(), $Controller->PaginatorControllerPost->lastQueries[1]['order'], 'no order should be set.');
 
 		$Controller->request->params['named'] = array(
 			'sort' => 'PaginatorControllerPost.author_id', 'direction' => 'allYourBase'
 		);
 		$results = Hash::extract($Controller->Paginator->paginate('PaginatorControllerPost'), '{n}.PaginatorControllerPost.id');
-		$this->assertEquals(array('PaginatorControllerPost.author_id' => 'asc'), $Controller->PaginatorControllerPost->lastQueries[0]['order'][0]);
+		$this->assertEquals(array('PaginatorControllerPost.author_id' => 'asc'), $Controller->PaginatorControllerPost->lastQueries[0]['order']);
 		$this->assertEquals(array(1, 3, 2), $results);
 
 		$Controller->request->params['named'] = array();
@@ -486,7 +486,7 @@ class PaginatorComponentTest extends CakeTestCase {
 
 		$Controller->request->params['named'] = array('limit' => 12);
 		$Controller->Paginator->settings = array('limit' => 30, 'maxLimit' => 100, 'paramType' => 'named');
-		$result = $Controller->Paginator->paginate('PaginatorControllerPost');
+		$Controller->Paginator->paginate('PaginatorControllerPost');
 		$paging = $Controller->params['paging']['PaginatorControllerPost'];
 
 		$this->assertEquals(12, $Controller->PaginatorControllerPost->lastQueries[0]['limit']);
@@ -504,7 +504,7 @@ class PaginatorComponentTest extends CakeTestCase {
 				'paramType' => 'named'
 			)
 		);
-		$result = $Controller->Paginator->paginate('ControllerPaginateModel');
+		$Controller->Paginator->paginate('ControllerPaginateModel');
 		$expected = array(
 			'contain' => array('ControllerPaginateModel'),
 			'group' => 'Comment.author_id',

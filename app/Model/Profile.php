@@ -65,7 +65,7 @@ class Profile extends AppModel {
 			'gender' => array(
 				'required' => array(
 					'allowEmpty' => false,
-					'rule' => array('notEmpty'),
+					'rule' => array('notBlank'),
 					'message' => __('Gender cannot be empty')
 				),
 				'inList' => array(

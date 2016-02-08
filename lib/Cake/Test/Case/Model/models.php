@@ -208,7 +208,7 @@ class User extends CakeTestModel {
  *
  * @var array
  */
-	public $validate = array('user' => 'notEmpty', 'password' => 'notEmpty');
+	public $validate = array('user' => 'notBlank', 'password' => 'notBlank');
 
 /**
  * beforeFind() callback used to run ContainableBehaviorTest::testLazyLoad()
@@ -269,8 +269,8 @@ class Article extends CakeTestModel {
  */
 	public $validate = array(
 		'user_id' => 'numeric',
-		'title' => array('required' => false, 'rule' => 'notEmpty'),
-		'body' => array('required' => false, 'rule' => 'notEmpty'),
+		'title' => array('required' => false, 'rule' => 'notBlank'),
+		'body' => array('required' => false, 'rule' => 'notBlank'),
 	);
 
 /**
@@ -424,7 +424,7 @@ class ArticleFeatured extends CakeTestModel {
  *
  * @var array
  */
-	public $validate = array('user_id' => 'numeric', 'title' => 'notEmpty', 'body' => 'notEmpty');
+	public $validate = array('user_id' => 'numeric', 'title' => 'notBlank', 'body' => 'notBlank');
 
 }
 
@@ -802,7 +802,7 @@ class Apple extends CakeTestModel {
  *
  * @var array
  */
-	public $validate = array('name' => 'notEmpty');
+	public $validate = array('name' => 'notBlank');
 
 /**
  * hasOne property
@@ -1197,7 +1197,7 @@ class NodeAfterFind extends CakeTestModel {
  *
  * @var array
  */
-	public $validate = array('name' => 'notEmpty');
+	public $validate = array('name' => 'notBlank');
 
 /**
  * useTable property
@@ -1287,7 +1287,7 @@ class NodeNoAfterFind extends CakeTestModel {
  *
  * @var array
  */
-	public $validate = array('name' => 'notEmpty');
+	public $validate = array('name' => 'notBlank');
 
 /**
  * useTable property
@@ -2191,10 +2191,10 @@ class ValidationTest1 extends CakeTestModel {
  * @var array
  */
 	public $validate = array(
-		'title' => 'notEmpty',
+		'title' => 'notBlank',
 		'published' => 'customValidationMethod',
 		'body' => array(
-			'notEmpty',
+			'notBlank',
 			'/^.{5,}$/s' => 'no matchy',
 			'/^[0-9A-Za-z \\.]{1,}$/s'
 		)
@@ -2270,10 +2270,10 @@ class ValidationTest2 extends CakeTestModel {
  * @var array
  */
 	public $validate = array(
-		'title' => 'notEmpty',
+		'title' => 'notBlank',
 		'published' => 'customValidationMethod',
 		'body' => array(
-			'notEmpty',
+			'notBlank',
 			'/^.{5,}$/s' => 'no matchy',
 			'/^[0-9A-Za-z \\.]{1,}$/s'
 		)
@@ -2394,7 +2394,7 @@ class Story extends CakeTestModel {
  *
  * @var array
  */
-	public $validate = array('title' => 'notEmpty');
+	public $validate = array('title' => 'notBlank');
 }
 
 /**
@@ -4781,7 +4781,6 @@ class MysqlTestModel extends Model {
 
 /**
  * Test model for datasource prefixes
- *
  */
 class PrefixTestModel extends CakeTestModel {
 }
@@ -5077,5 +5076,52 @@ class Example extends AppModel {
 			'comment' => null
 		),
 	);
+
+}
+
+/**
+ * UserHasOneArticle class
+ *
+ * @package       Cake.Test.Case.Model
+ */
+class UserHasOneArticle extends AppModel {
+
+/**
+ * useTable property
+ *
+ * @var string
+ */
+	public $useTable = 'users';
+
+/**
+ * hasOne property
+ *
+ * @var array
+ */
+	public $hasOne = array('Article');
+
+}
+
+
+/**
+ * ArticlesTagBelongsToArticle class
+ *
+ * @package       Cake.Test.Case.Model
+ */
+class ArticlesTagBelongsToArticle extends CakeTestModel {
+
+/**
+ * useTable property
+ *
+ * @var string
+ */
+	public $useTable = 'articles_tags';
+
+/**
+ * belongsTo property
+ *
+ * @var array
+ */
+	public $belongsTo = array('Article');
 
 }

@@ -65,8 +65,8 @@ class ServerShell extends AppShell {
  * @return void
  */
 	public function initialize() {
-		$this->_host = self::DEFAULT_HOST;
-		$this->_port = self::DEFAULT_PORT;
+		$this->_host = static::DEFAULT_HOST;
+		$this->_port = static::DEFAULT_PORT;
 		$this->_documentRoot = WWW_ROOT;
 	}
 
@@ -91,7 +91,7 @@ class ServerShell extends AppShell {
 			$this->_documentRoot = $this->params['document_root'];
 		}
 
-		// for windows
+		// for Windows
 		if (substr($this->_documentRoot, -1, 1) === DIRECTORY_SEPARATOR) {
 			$this->_documentRoot = substr($this->_documentRoot, 0, strlen($this->_documentRoot) - 1);
 		}
@@ -135,7 +135,7 @@ class ServerShell extends AppShell {
 			escapeshellarg($this->_documentRoot . '/index.php')
 		);
 
-		$port = ($this->_port == self::DEFAULT_PORT) ? '' : ':' . $this->_port;
+		$port = ($this->_port == static::DEFAULT_PORT) ? '' : ':' . $this->_port;
 		$this->out(__d('cake_console', 'built-in server is running in http://%s%s/', $this->_host, $port));
 		system($command);
 	}

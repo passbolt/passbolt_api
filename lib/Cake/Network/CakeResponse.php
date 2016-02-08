@@ -96,7 +96,7 @@ class CakeResponse {
 		'cpio' => 'application/x-cpio',
 		'cpt' => 'application/mac-compactpro',
 		'csh' => 'application/x-csh',
-		'csv' => array('text/csv', 'application/vnd.ms-excel', 'text/plain'),
+		'csv' => array('text/csv', 'application/vnd.ms-excel'),
 		'dcr' => 'application/x-director',
 		'dir' => 'application/x-director',
 		'dms' => 'application/octet-stream',
@@ -452,7 +452,7 @@ class CakeResponse {
 
 /**
  * Formats the Content-Type header based on the configured contentType and charset
- * the charset will only be set in the header if the response is of type text/*
+ * the charset will only be set in the header if the response is of type text
  *
  * @return void
  */
@@ -832,7 +832,7 @@ class CakeResponse {
 			if (!$public && !$private && !$noCache) {
 				return null;
 			}
-			$sharable = $public || ! ($private || $noCache);
+			$sharable = $public || !($private || $noCache);
 			return $sharable;
 		}
 		if ($public) {
@@ -1337,7 +1337,7 @@ class CakeResponse {
 			'download' => null
 		);
 
-		if (strpos($path, '..' . DS) !== false) {
+		if (strpos($path, '../') !== false || strpos($path, '..\\') !== false) {
 			throw new NotFoundException(__d(
 				'cake_dev',
 				'The requested file contains `..` and will not be read.'

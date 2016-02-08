@@ -118,7 +118,8 @@ class SmtpTransport extends AbstractTransport {
 			'username' => null,
 			'password' => null,
 			'client' => null,
-			'tls' => false
+			'tls' => false,
+			'ssl_allow_self_signed' => false
 		);
 		$this->_config = array_merge($default, $this->_config, $config);
 		return $this->_config;
@@ -339,9 +340,9 @@ class SmtpTransport extends AbstractTransport {
 /**
  * Protected method for sending data to SMTP connection
  *
- * @param string $data data to be sent to SMTP server
- * @param string|bool $checkCode code to check for in server response, false to skip
- * @return void
+ * @param string|null $data Data to be sent to SMTP server
+ * @param string|bool $checkCode Code to check for in server response, false to skip
+ * @return string|null The matched code, or null if nothing matched
  * @throws SocketException
  */
 	protected function _smtpSend($data, $checkCode = '250') {

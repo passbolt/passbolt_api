@@ -68,7 +68,7 @@ class PhpAcl extends Object implements AclInterface {
  */
 	public function __construct() {
 		$this->options = array(
-			'policy' => self::DENY,
+			'policy' => static::DENY,
 			'config' => APP . 'Config' . DS . 'acl.php',
 		);
 	}
@@ -196,7 +196,6 @@ class PhpAcl extends Object implements AclInterface {
 
 /**
  * Access Control Object
- *
  */
 class PhpAco {
 
@@ -252,7 +251,7 @@ class PhpAco {
 			}
 
 			foreach ($root as $node => $elements) {
-				$pattern = '/^' . str_replace(array_keys(self::$modifiers), array_values(self::$modifiers), $node) . '$/';
+				$pattern = '/^' . str_replace(array_keys(static::$modifiers), array_values(static::$modifiers), $node) . '$/';
 
 				if ($node == $aco[$level] || preg_match($pattern, $aco[$level])) {
 					// merge allow/denies with $path of current level
@@ -361,7 +360,6 @@ class PhpAco {
 
 /**
  * Access Request Object
- *
  */
 class PhpAro {
 
@@ -494,7 +492,7 @@ class PhpAro {
 				return $this->aliases[$mapped];
 			}
 		}
-		return self::DEFAULT_ROLE;
+		return static::DEFAULT_ROLE;
 	}
 
 /**
