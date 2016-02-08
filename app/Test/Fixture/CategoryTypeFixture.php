@@ -1,7 +1,6 @@
 <?php
 /**
- * CategoryTypeFixture
- *
+ * CategoryType Fixture
  */
 class CategoryTypeFixture extends CakeTestFixture {
 

@@ -1,7 +1,6 @@
 <?php
 /**
- * GroupFixture
- *
+ * Group Fixture
  */
 class GroupFixture extends CakeTestFixture {
 

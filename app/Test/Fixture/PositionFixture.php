@@ -1,7 +1,6 @@
 <?php
 /**
- * PositionFixture
- *
+ * Position Fixture
  */
 class PositionFixture extends CakeTestFixture {
 

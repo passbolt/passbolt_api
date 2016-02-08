@@ -1,7 +1,6 @@
 <?php
 /**
- * FavoriteFixture
- *
+ * Favorite Fixture
  */
 class FavoriteFixture extends CakeTestFixture {
 

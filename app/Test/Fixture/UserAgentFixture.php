@@ -1,7 +1,6 @@
 <?php
 /**
- * UserAgentFixture
- *
+ * UserAgent Fixture
  */
 class UserAgentFixture extends CakeTestFixture {
 

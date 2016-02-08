@@ -1,7 +1,6 @@
 <?php
 /**
- * CommentFixture
- *
+ * Comment Fixture
  */
 class CommentFixture extends CakeTestFixture {
 

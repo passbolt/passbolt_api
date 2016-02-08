@@ -1,7 +1,6 @@
 <?php
 /**
- * AuthenticationLogFixture
- *
+ * AuthenticationLog Fixture
  */
 class AuthenticationLogFixture extends CakeTestFixture {
 

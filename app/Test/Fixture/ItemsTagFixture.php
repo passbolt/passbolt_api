@@ -1,7 +1,6 @@
 <?php
 /**
- * ItemsTagFixture
- *
+ * ItemsTag Fixture
  */
 class ItemsTagFixture extends CakeTestFixture {
 

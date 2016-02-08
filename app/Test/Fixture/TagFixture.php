@@ -1,7 +1,6 @@
 <?php
 /**
- * TagFixture
- *
+ * Tag Fixture
  */
 class TagFixture extends CakeTestFixture {
 

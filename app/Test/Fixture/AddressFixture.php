@@ -1,7 +1,6 @@
 <?php
 /**
- * AddressFixture
- *
+ * Address Fixture
  */
 class AddressFixture extends CakeTestFixture {
 

@@ -1,7 +1,6 @@
 <?php
 /**
- * CategoriesResourceFixture
- *
+ * CategoriesResource Fixture
  */
 class CategoriesResourceFixture extends CakeTestFixture {
 
@@ -125,7 +124,7 @@ class CategoriesResourceFixture extends CakeTestFixture {
 			'id' => '50d99ef8-3fd4-4e62-8159-1b63d7a10fce',
 			'category_id' => '6dc848e0-7e30-3669-a130-865c39f5e078',
 			'resource_id' => '41099784-c61c-3172-a66d-93f2a4702a6e',
-			'created' => '2016-02-04 00:53:36',
+			'created' => '2016-02-08 17:38:26',
 			'created_by' => ''
 		),
 		array(
