@@ -301,6 +301,20 @@ class Gpg {
 		return $import['fingerprint'];
 	}
 
+	/**
+	 * Remove a key from the local keyring.
+	 *
+	 * @returns string
+	 *   fingerprint of the key
+	 *
+	 * @throws Exception
+	 */
+	public function removeKeyFromKeyring($fingerprint) {
+		$deleting = $this->_gpg->deletekey($fingerprint, true);
+		if (! $deleting) {
+			throw new Exception('Could not delete the key');
+		}
+	}
 
 	/**
 	 * Encrypt a text.
