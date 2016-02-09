@@ -2,8 +2,8 @@
 /**
  * SeleniumTests Controller
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 // Uses EmailQueue.
 App::uses('EmailQueue', 'Plugin/EmailQueue/Model');
@@ -18,10 +18,10 @@ App::import('Console/Command', 'InstallShell');
  */
 class SeleniumTestsController extends AppController {
 
-	public $uses = array(
+	public $uses = [
 		'User',
 		'EmailQueue',
-	);
+	];
 
 	// Configuration key to check if selenium entry points are configured.
 	private $__configKey = 'App.selenium.active';
@@ -34,6 +34,7 @@ class SeleniumTestsController extends AppController {
 	private function __isSeleniumAllowed() {
 		$seleniumAllowed = Configure::read($this->__configKey) === true
 			&& Configure::read('debug') > 0;
+
 		return $seleniumAllowed;
 	}
 
@@ -52,12 +53,12 @@ class SeleniumTestsController extends AppController {
 
 		// Allow ShowLastEmail entry point.
 		$this->Auth->allow(
-			array(
+			[
 				'showLastEmail',
 				'resetInstance',
 				'error404',
 				'error500'
-			)
+			]
 		);
 		// Use table email_queue. (seems that cakephp refuses to take the default of the class).
 		$this->EmailQueue->useTable = 'email_queue';
@@ -141,11 +142,12 @@ class SeleniumTestsController extends AppController {
  */
 	public function error404($case = 'message') {
 		$this->request->invalidateFields = 'stuffs';
-		switch($case) {
+		switch ($case) {
 			case 'exception':
 				throw new NotFoundException();
 			default:
-				$this->Message->error('404 test not found', array('code' => 404));
+				$this->Message->error('404 test not found', ['code' => 404]);
+
 				return;
 		}
 	}
@@ -157,6 +159,7 @@ class SeleniumTestsController extends AppController {
  */
 	public function error403() {
 		echo 'test;';
+
 		return;
 		// nothing, forbidden because not part of allow list
 	}

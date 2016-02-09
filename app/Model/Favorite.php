@@ -1,17 +1,19 @@
 <?php
+
 /**
  * Favorite Model
  *
- * @copyright		Copyright 2013, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Model.Favorite
- * @since				version 2.13.09
+ * @copyright        Copyright 2013, Passbolt.com
+ * @license            http://www.passbolt.com/license
+ * @package            app.Model.Favorite
+ * @since                version 2.13.09
  */
 class Favorite extends AppModel {
-	var $belongsTo = array('User');
+	var $belongsTo = ['User'];
 
 /**
  * Check if the given foreign model is allowed
+ *
  * @param string foreignModel The foreign model key to test
  * @return boolean
  */
@@ -29,22 +31,24 @@ class Favorite extends AppModel {
  */
 	static function isFavorited($foreign_id, $model = null) {
 		$_this = Common::getModel('Favorite');
-		$conditions =	array(
-			'conditions' => array(
+		$conditions = [
+			'conditions' => [
 				'foreign_model' => $model,
 				'user_id' => User::get('id'),
 				'foreign_id' => $foreign_id
-			),
-			'fields' => array(
+			],
+			'fields' => [
 				'id'
-			)
-		);
+			]
+		];
 		$favorites = $_this->find('first', $conditions);
+
 		return !empty($favorites);
 	}
 
 /**
  * STATIC Get the number of faved items per model
+ *
  * @return string $archived {true, false, both}
  * @return array $favorites
  */
@@ -55,19 +59,19 @@ class Favorite extends AppModel {
 		$models = @array_keys(Configure::read('Favorite.foreignModels'), true);
 
 		// default condition
-		$conditions =	array(
-			'conditions' => array(
+		$conditions = [
+			'conditions' => [
 				'foreign_model' => $models,
 				'user_id' => User::get('id')
-			),
-			'fields' => array(
+			],
+			'fields' => [
 				'foreign_model',
 				'COUNT(foreign_model) as count'
-			),
-			'group' => array(
+			],
+			'group' => [
 				'Favorite.foreign_model'
-			)
-		);
+			]
+		];
 
 		// Search for faved records
 		$favorites = $_this->find('all', $conditions);

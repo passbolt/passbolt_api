@@ -13,15 +13,15 @@ App::uses('Resource', 'Model');
 
 class Secret extends AppModel {
 
-	public $actsAs = array(
+	public $actsAs = [
 		'Containable',
 		'Trackable'
-	);
+	];
 
-	public $belongsTo = array(
+	public $belongsTo = [
 		'Resource',
 		'User',
-	);
+	];
 
 /**
  * Get the validation rules upon context
@@ -30,54 +30,56 @@ class Secret extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
-			'user_id' => array(
-				'uuid' => array(
+		$default = [
+			'user_id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('The secret uid must be provided and in correct format')
-				),
-				'exist' => array(
-					'rule' => array('userExists', null),
+					'message' => __('The secret uid must be provided and in correct format')
+				],
+				'exist' => [
+					'rule' => ['userExists', null],
 					'message' => __('The user provided does not exist')
-				),
-			),
-			'resource_id' => array(
-				'uuid' => array(
+				],
+			],
+			'resource_id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
-						'message'	=> __('The resource uid must be in correct format')
-				),
-				'exist' => array(
-					'rule' => array('resourceExists', null),
+					'message' => __('The resource uid must be in correct format')
+				],
+				'exist' => [
+					'rule' => ['resourceExists', null],
 					'message' => __('The resource provided does not exist')
-				),
-			),
-			'data' => array(
-				'isnotBlank' => array(
+				],
+			],
+			'data' => [
+				'isnotBlank' => [
 					'required' => 'create',
 					'rule' => 'notBlank',
 					'message' => __('The secret must be provided')
-				),
-				'isGpgFormat' => array(
-					'rule'    => array('checkGpgMessageIsValid', null),
+				],
+				'isGpgFormat' => [
+					'rule' => ['checkGpgMessageIsValid', null],
 					'message' => __('The message provided is not in the right format'),
-				),
-			),
-		);
+				],
+			],
+		];
 		switch ($case) {
 			default:
 			case 'default':
 				$rules = $default;
-			break;
+				break;
 		}
+
 		return $rules;
 	}
 
 /**
  * Check if a resource with same id exists
+ *
  * @param check
  * @return bool
  */
@@ -85,18 +87,20 @@ class Secret extends AppModel {
 		if ($check['resource_id'] == null) {
 			return false;
 		} else {
-			$exists = $this->Resource->find('count', array(
-				'conditions' => array(
+			$exists = $this->Resource->find('count', [
+				'conditions' => [
 					'Resource.id' => $check['resource_id']
-				),
+				],
 				'recursive' => -1
-			));
+			]);
+
 			return $exists > 0;
 		}
 	}
 
 /**
  * Check a gpg message is valid
+ *
  * @param $check
  * @return bool
  */
@@ -113,8 +117,10 @@ class Secret extends AppModel {
 			if ($msgUnarmored != false) {
 				// Message in right format.
 				$msg = OpenPGP_Message::parse($msgUnarmored);
+
 				return true;
 			}
+
 			return false;
 		}
 	}
@@ -128,22 +134,22 @@ class Secret extends AppModel {
  * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = array();
+		$conditions = [];
 
 		switch ($case) {
 			case 'add':
 			case 'edit':
 			case 'view':
-				$conditions = array(
-					'conditions' => array(
-					)
-				);
-			break;
+				$conditions = [
+					'conditions' => [
+					]
+				];
+				break;
 
 			default:
-				$conditions = array(
-					'conditions' => array()
-				);
+				$conditions = [
+					'conditions' => []
+				];
 		}
 
 		return $conditions;
@@ -151,14 +157,15 @@ class Secret extends AppModel {
 
 /**
  * Return the list of field to fetch for given context
+ *
  * @param string $case context ex: login, activation
  * @return array $condition
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
-		switch($case){
+		switch ($case) {
 			case 'view':
-				$fields = array(
-					'fields' => array(
+				$fields = [
+					'fields' => [
 						'id',
 						'user_id',
 						'resource_id',
@@ -167,11 +174,12 @@ class Secret extends AppModel {
 						'modified',
 						'created_by',
 						'modified_by'
-					));
-			break;
+					]
+				];
+				break;
 			case 'save':
-				$fields = array(
-					'fields' => array(
+				$fields = [
+					'fields' => [
 						'user_id',
 						'resource_id',
 						'data',
@@ -179,11 +187,12 @@ class Secret extends AppModel {
 						'modified',
 						'created_by',
 						'modified_by'
-					));
-            break;
+					]
+				];
+				break;
 			case 'update':
-				$fields = array(
-					'fields' => array(
+				$fields = [
+					'fields' => [
 						'user_id',
 						'resource_id',
 						'data',
@@ -191,14 +200,16 @@ class Secret extends AppModel {
 						'modified',
 						'created_by',
 						'modified_by'
-					));
-            break;
+					]
+				];
+				break;
 			default:
-				$fields = array(
-					'fields' => array()
-				);
-			break;
+				$fields = [
+					'fields' => []
+				];
+				break;
 		}
+
 		return $fields;
 	}
 }

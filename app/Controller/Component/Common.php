@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Common Component
  * This class serves as a space for convenience functions (mostly static)
  * that need to be globally available within this application.
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class Common extends Object {
 
@@ -22,6 +23,7 @@ class Common extends Object {
 		} else {
 			$ModelObj = ClassRegistry::init($model);
 		}
+
 		return $ModelObj;
 	}
 
@@ -41,6 +43,7 @@ class Common extends Object {
 			$string = bin2hex(openssl_random_pseudo_bytes(16));
 			$replacement = '${1}-${2}-4${4}-a${6}-${7}'; // v4
 		}
+
 		return preg_replace($pattern, $replacement, $string);
 	}
 
@@ -51,6 +54,7 @@ class Common extends Object {
  * @return bool true if str is a UUID
  */
 	public static function isUuid($str) {
-		return is_string($str) && preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/', $str);
+		return is_string($str) && preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/',
+			$str);
 	}
 }

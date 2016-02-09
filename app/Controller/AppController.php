@@ -2,7 +2,7 @@
 /**
  * Application Controller
  * Application-wide methods, all controllers inherit them
- * 
+ *
  * @copyright    copyright 2012 Passbolt.com
  * @package      app.Controller.AppController
  * @since        version 2.12.7
@@ -20,15 +20,15 @@ App::import('Model', 'User');
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
- * @package		app.Controller
- * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
+ * @package        app.Controller
+ * @link        http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
 
 /**
  * @var $component application wide components
  */
-	public $components = array(
+	public $components = [
 		'Session',
 		'Paginator',
 		'HtmlPurifier',
@@ -38,17 +38,17 @@ class AppController extends Controller {
 		'Mailer',
 		'IpAddress',
 		'Blacklist'
-	);
+	];
 
-	public $helpers = array(
+	public $helpers = [
 		'Html',
 		'Form',
 		'MyForm',
 		'FileStorage.Image'
-	);
+	];
 
 /**
- * Called before the controller action.	You can use this method to configure and customize components
+ * Called before the controller action.    You can use this method to configure and customize components
  * or perform logic that needs to happen before each controller action.
  *
  * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
@@ -122,11 +122,13 @@ class AppController extends Controller {
 		}
 	}
 
-	/**
-	 * Process headers and set view variables accordingly.
-	 *
-	 * Mainly used for DO NOT TRACK header as of now.
-	 */
+/**
+ * Process headers and set view variables accordingly.
+ *
+ * Mainly used for DO NOT TRACK header as of now.
+ *
+ * @return void
+ */
 	public function processHeaders() {
 		if (isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'] == 1) {
 			$this->set('do_not_track', true);
@@ -140,14 +142,18 @@ class AppController extends Controller {
  */
 	public function initRequestDetectors() {
 		// Add a callback to the JSON detector
-		$this->request->addDetector('json', array('callback' => function ($request) {
-			return (preg_match('/(.json){1,}$/', Router::url(null, true)) || $request->is('ajax'));
-		}));
+		$this->request->addDetector('json', [
+			'callback' => function ($request) {
+				return (preg_match('/(.json){1,}$/', Router::url(null, true)) || $request->is('ajax'));
+			}
+		]);
 	}
 
-	/**
-	 * Disconnect the user if his account gets disabled during a session.
-	 */
+/**
+ * Disconnect the user if his account gets disabled during a session.
+ *
+ * @return void
+ */
 	public function disconnectUserIfAccountDisabled() {
 		// Check if user is logged in.
 		$userId = $this->Auth->user('User.id');

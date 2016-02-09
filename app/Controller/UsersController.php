@@ -1,24 +1,25 @@
 <?php
+
 /**
  * Users Controller
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class UsersController extends AppController {
 
 /**
  * @var array helpers used by the view when rendering from this controller
  */
-	public $helpers = array('PassboltAuth');
+	public $helpers = ['PassboltAuth'];
 
 /**
  * @var array components used by this controller
  */
-	public $components = array(
+	public $components = [
 		'Filter',
 		'EmailNotificator',
-	);
+	];
 
 /**
  * Called before the controller action. Used to manage access right
@@ -27,9 +28,9 @@ class UsersController extends AppController {
  * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
  */
 	public function beforeFilter() {
-		$allow = array(
+		$allow = [
 			'validateAccount'
-		);
+		];
 		if (Configure::read('Registration.public')) {
 			$allow[] = 'register';
 			$allow[] = 'register_thankyou';
@@ -47,7 +48,7 @@ class UsersController extends AppController {
  * Notify the user by email.
  *
  * @param array $data User and profile data.
- * @param bool $self. whether it's a self registration.
+ * @param bool $self . whether it's a self registration.
  *
  * @return array the created user
  */
@@ -58,16 +59,17 @@ class UsersController extends AppController {
 		// Send notification email
 		$this->EmailNotificator->accountCreationNotification(
 			$user['Profile']['user_id'],
-			array(
+			[
 				'token' => $user['AuthenticationToken']['token'],
 				'creator_id' => User::get('id'),
 				'self' => $self,
-			));
+			]);
 	}
 
 /**
  * Register page
  *
+ * @throws ValidationException
  * @return void
  */
 	public function register() {
@@ -78,14 +80,14 @@ class UsersController extends AppController {
 			$userData = $this->request->data;
 			try {
 				$this->__registerUser($userData, true);
-			}
-			catch (ValidationException $e) {
+			} catch (ValidationException $e) {
 				// we do not want CakeErrorController to handle the validation error
 				// if the request is not in JSON format
 				// since we need to render the validation error in the original view/layout
-				if($this->request->is('json')) {
+				if ($this->request->is('json')) {
 					throw $e;
 				}
+
 				return;
 			}
 			// Redirect to thank you page.
@@ -105,6 +107,7 @@ class UsersController extends AppController {
 		// If no referer, we redirect to register page.
 		if (empty($referer)) {
 			$this->redirect("/register");
+
 			return;
 		}
 
@@ -112,6 +115,7 @@ class UsersController extends AppController {
 		// If the referer was not the register url, we also redirect to /register page.
 		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== '/register') {
 			$this->redirect("/register");
+
 			return;
 		}
 
@@ -126,7 +130,7 @@ class UsersController extends AppController {
  */
 	public function index() {
 		// The additional information to pass to the model request
-		$data = array();
+		$data = [];
 
 		// Extract the filter from the request
 		$data = $this->Filter->fromRequest($this->request->query);
@@ -163,7 +167,7 @@ class UsersController extends AppController {
  */
 	public function view($id = null) {
 		// The additional information to pass to the model request
-		$data = array();
+		$data = [];
 
 		// Asking for me returns the currently logged-in user
 		if ($id == 'me') {
@@ -184,7 +188,7 @@ class UsersController extends AppController {
 		$o = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $o);
 		if (!$user) {
-			return $this->Message->error(__('The user does not exist'), array('code' => 404));
+			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
 
 		$this->set('data', $user);
@@ -217,23 +221,21 @@ class UsersController extends AppController {
 		// Try to add the user
 		try {
 			$this->__registerUser($userData);
-		}
-		// Something went wrong with the validation
+		} // Something went wrong with the validation
 		catch (ValidationException $e) {
-			return $this->Message->error(__('Could not validate profile'), array(
+			return $this->Message->error(__('Could not validate profile'), [
 				'body' => $e->getInvalidFields()
-			));
-		}
-		// Something else went wrong
+			]);
+		} // Something else went wrong
 		catch (Exception $e) {
 			return $this->Message->error($e->getMessage());
 		}
 
 		// Retrieve the just inserted user
-		$data = array(
+		$data = [
 			'User.id' => $this->User->id,
 			'User.active' => false,
-		);
+		];
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
@@ -267,7 +269,7 @@ class UsersController extends AppController {
 		// Get the resource id
 		$resource = $this->User->findById($id);
 		if (!$resource) {
-			return $this->Message->error(__('The user does not exist'), array('code' => 404));
+			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
 
 		// Check the HTTP request method
@@ -292,16 +294,17 @@ class UsersController extends AppController {
 		$editOwn = $id == User::get('id');
 
 		// Update the user, only if not editing itself.
-		if (isset( $userData['User'] ) && !$editOwn) {
+		if (isset($userData['User']) && !$editOwn) {
 			// Get the meaningful fields for this operation
 			$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
 
 			// Validate the user data
 			$this->User->set($userData);
 
-			if (!$this->User->validates(array( 'fieldList' => array( $fields['fields'])))) {
+			if (!$this->User->validates(['fieldList' => [$fields['fields']]])) {
 				// Return error message, with list of invalid fields.
-				$this->Message->error(__('Could not validate User'), array( 'body' => $this->User->validationErrors ));
+				$this->Message->error(__('Could not validate User'), ['body' => $this->User->validationErrors]);
+
 				return;
 			}
 
@@ -310,6 +313,7 @@ class UsersController extends AppController {
 			// Didn't save, we rollback and return an error.
 			if (!$save) {
 				$this->User->rollback();
+
 				return $this->Message->error(__('The user could not be updated'));
 			}
 		}
@@ -323,6 +327,7 @@ class UsersController extends AppController {
 			// If no profile associated to the user found
 			if (!$profile) {
 				$this->User->rollback();
+
 				return $this->Message->error(__('Could not retrieve profile'));
 			}
 
@@ -334,7 +339,8 @@ class UsersController extends AppController {
 
 			// Reformat date of birth properly to pass validation
 			if (isset($profileData['Profile']['date_of_birth'])) {
-				$profileData['Profile']['date_of_birth'] = date('Y-m-d', strtotime($profileData['Profile']['date_of_birth']));
+				$profileData['Profile']['date_of_birth'] = date('Y-m-d',
+					strtotime($profileData['Profile']['date_of_birth']));
 			}
 
 			// Get the meaningful fields for this operation
@@ -345,15 +351,18 @@ class UsersController extends AppController {
 			$this->User->Profile->set($profileData);
 
 			// Validate the profile data
-			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
+			if (!$this->User->Profile->validates(['fieldList' => [$fields['fields']]])) {
 				$this->User->rollback();
-				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
+
+				return $this->Message->error(__('Could not validate Profile'),
+					['body' => $this->User->Profile->validationErrors]);
 			}
 
 			// Update the profile
 			$save = $this->User->Profile->save($profileData, false, $fields['fields']);
 			if (!$save) {
 				$this->User->rollback();
+
 				return $this->Message->error(__('The profile could not be updated'));
 			}
 		}
@@ -362,7 +371,7 @@ class UsersController extends AppController {
 		$this->User->commit();
 
 		// Retrieve the just updated user
-		$data = array('User.id' => $this->User->id);
+		$data = ['User.id' => $this->User->id];
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
@@ -401,7 +410,7 @@ class UsersController extends AppController {
 		// Check the user exists
 		$user = $this->User->findById($id);
 		if (!$user) {
-			return $this->Message->error(__('The user does not exist'), array('code' => 404));
+			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
 
 		// Check if data was provided
@@ -410,24 +419,24 @@ class UsersController extends AppController {
 		}
 
 		$file = reset($_FILES);
-		$data = array(
-			'Avatar' => array(
+		$data = [
+			'Avatar' => [
 				'file' => $file
-			)
-		);
+			]
+		];
 
 		// Retrieve the user.
-		$findConditions = array('User.id' => $id);
+		$findConditions = ['User.id' => $id];
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $findConditions);
 		$user = $this->User->find('first', $options);
 
 		// Update the user avatar.
 		if (!$this->User->Profile->Avatar->upload($user['Profile']['id'], $data)) {
-			return $this->Message->error(__('The avatar hasn\'t been uploaded'), array('code' => 404));
+			return $this->Message->error(__('The avatar hasn\'t been uploaded'), ['code' => 404]);
 		}
 
 		// Retrieve and return the updated user.
-		$data = array('User.id' => $id);
+		$data = ['User.id' => $id];
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$users = $this->User->find('all', $options);
 		$user = reset($users);
@@ -471,7 +480,7 @@ class UsersController extends AppController {
 		// Get the resource
 		$user = $this->User->findById($id);
 		if (!$user) {
-			return $this->Message->error(__('The user does not exist'), array('code' => 404));
+			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
 
 		// Store request data in data
@@ -500,6 +509,7 @@ class UsersController extends AppController {
 		$result = $this->User->saveField('active', true, ['atomic' => false]);
 		if (!$result) {
 			$this->User->rollback();
+
 			return $this->Message->error(__('Could not update user'));
 		}
 
@@ -508,6 +518,7 @@ class UsersController extends AppController {
 		$result = $this->User->AuthenticationToken->saveField('active', false, ['atomic' => false]);
 		if (!$result) {
 			$this->User->rollback();
+
 			return $this->Message->error(__('Could not update token'));
 		}
 
@@ -524,16 +535,19 @@ class UsersController extends AppController {
 			$this->User->Profile->set($profileData);
 
 			// Validate the profile data
-			if (!$this->User->Profile->validates(array('fieldList' => array($fields['fields'])))) {
+			if (!$this->User->Profile->validates(['fieldList' => [$fields['fields']]])) {
 				$this->User->rollback();
-				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
+
+				return $this->Message->error(__('Could not validate Profile'),
+					['body' => $this->User->Profile->validationErrors]);
 			}
 
 			// Save/Update the profile
-			$result = $this->User->Profile->save($profileData, false, array('fieldList' => $fields['fields']));
+			$result = $this->User->Profile->save($profileData, false, ['fieldList' => $fields['fields']]);
 			// If update failed
 			if (!$result) {
 				$this->User->rollback();
+
 				return $this->Message->error(__('Could not save Profile'));
 			}
 		}
@@ -546,6 +560,7 @@ class UsersController extends AppController {
 			$gpgkeyData = $this->User->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['key']);
 			if ($gpgkeyData == false) {
 				$this->User->rollback();
+
 				return $this->Message->error(__('The key provided couldn\'t be used'));
 			}
 
@@ -558,18 +573,21 @@ class UsersController extends AppController {
 			$fields = $this->User->getFindFields('User::validateAccount');
 
 			// Check if the data is valid
-			if (!$this->User->Gpgkey->validates(array('fieldList' => array($fields['fields'])))) {
+			if (!$this->User->Gpgkey->validates(['fieldList' => [$fields['fields']]])) {
 				$this->User->Gpgkey->rollback();
-				return $this->Message->error(__('Could not validate gpgkey data'), array('body' => $this->User->Gpgkey->validationErrors));
+
+				return $this->Message->error(__('Could not validate gpgkey data'),
+					['body' => $this->User->Gpgkey->validationErrors]);
 			}
 			// Save the key
 			$this->User->Gpgkey->create();
-			$gpgkey = $this->User->Gpgkey->save($gpgkeyData, false, array('fieldList' => $fields['fields']));
+			$gpgkey = $this->User->Gpgkey->save($gpgkeyData, false, ['fieldList' => $fields['fields']]);
 
 			// If saving the key failed
 			if (!$gpgkey) {
 				$this->User->Gpgkey->rollback();
 				$this->Message->error(__('The gpgkey could not be saved'));
+
 				return;
 			}
 		}
@@ -578,7 +596,7 @@ class UsersController extends AppController {
 		$this->User->commit();
 
 		// Return information in case of success.
-		$data = array('User.id' => $id);
+		$data = ['User.id' => $id];
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
@@ -616,7 +634,7 @@ class UsersController extends AppController {
 		// The user exists
 		$user = $this->User->findById($id);
 		if (!$user) {
-			return $this->Message->error(__('The user does not exist'), array('code' => 404));
+			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
 
 		// Delete the user
@@ -627,6 +645,7 @@ class UsersController extends AppController {
 		$this->User->begin();
 		if (!$this->User->save($user, true, $fields['fields'])) {
 			$this->User->rollback();
+
 			return $this->Message->error(__('Error while deleting user'));
 		}
 		$this->User->commit();

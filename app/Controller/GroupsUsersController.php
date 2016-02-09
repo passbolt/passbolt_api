@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Groups Users controller
  * This file will define how groups_users are managed.
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class GroupsUsersController extends AppController {
 
 /**
  * @var $uses array containing the class names of models this controller uses.
  */
-	public $uses = array('GroupUser');
+	public $uses = ['GroupUser'];
 
 /**
  * Get a groupUser
@@ -24,21 +25,24 @@ class GroupsUsersController extends AppController {
 		// check if the group id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The groupUser id is missing'));
+
 			return;
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The groupUser id is invalid'));
+
 			return;
 		}
 		// check if it exists
-		$data = array(
+		$data = [
 			'GroupUser.id' => $id
-		);
+		];
 		$options = $this->GroupUser->getFindOptions('view', User::get('Role.name'), $data);
 		$cr = $this->GroupUser->find('all', $options);
 		if (!count($cr)) {
-			$this->Message->error(__('The groupUser does not exist'), array('code' => 404));
+			$this->Message->error(__('The groupUser does not exist'), ['code' => 404]);
+
 			return;
 		}
 		$this->set('data', $cr[0]);
@@ -55,21 +59,25 @@ class GroupsUsersController extends AppController {
 		// check if the group id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The groupUser id is missing'));
+
 			return;
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The groupUser id is invalid'));
+
 			return;
 		}
 		$resource = $this->GroupUser->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The groupUser does not exist'), array('code' => 404));
+			$this->Message->error(__('The groupUser does not exist'), ['code' => 404]);
+
 			return;
 		}
 
 		if (!$this->GroupUser->delete($id)) {
 			$this->Message->error(__('Error while deleting'));
+
 			return;
 		}
 		$this->Message->success(__('The groupUser was successfully deleted'));
@@ -84,11 +92,13 @@ class GroupsUsersController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
+
 			return;
 		}
 		// check if data was provided
 		if (!isset($this->request->data['GroupUser'])) {
 			$this->Message->error(__('No data were provided'));
+
 			return;
 		}
 
@@ -101,12 +111,14 @@ class GroupsUsersController extends AppController {
 		// check if the data is valid
 		if (!$this->GroupUser->validates()) {
 			$this->Message->error(__('Could not validate data'));
+
 			return;
 		}
 
 		$cr = $this->GroupUser->save($gupost, false, $fields['fields']);
 		if ($cr === false) {
 			$this->Message->error(__('The GroupUser could not be saved'));
+
 			return;
 		}
 		$fields = $this->GroupUser->getFindFields('add', User::get('Role.name'));

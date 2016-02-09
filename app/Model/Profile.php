@@ -22,9 +22,9 @@ class Profile extends AppModel {
  * @var array
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $belongsTo = array(
+	public $belongsTo = [
 		'User',
-	);
+	];
 
 /**
  * Details of has one relationships
@@ -32,12 +32,12 @@ class Profile extends AppModel {
  * @var array
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasOne = array(
-		'Avatar' => array(
+	public $hasOne = [
+		'Avatar' => [
 			'className' => 'ProfileAvatar',
 			'foreignKey' => 'foreign_key',
-		),
-	);
+		],
+	];
 
 /**
  * Get the validation rules upon context
@@ -49,69 +49,69 @@ class Profile extends AppModel {
  * @access public
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
-			'user_id' => array(
-				'uuid' => array(
+		$default = [
+			'user_id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'required' => 'create',
 					'allowEmpty' => false,
-					'message'	=> __('UUID must be in correct format')
-				),
-				'exist' => array(
-					'rule' => array('userExists', null),
+					'message' => __('UUID must be in correct format')
+				],
+				'exist' => [
+					'rule' => ['userExists', null],
 					'message' => __('The user id provided does not exist')
-				),
-			),
-			'gender' => array(
-				'required' => array(
+				],
+			],
+			'gender' => [
+				'required' => [
 					'allowEmpty' => false,
-					'rule' => array('notBlank'),
+					'rule' => ['notBlank'],
 					'message' => __('Gender cannot be empty')
-				),
-				'inList' => array(
-					'rule' => array('inList', array('m', 'f')),
+				],
+				'inList' => [
+					'rule' => ['inList', ['m', 'f']],
 					'message' => __('Gender can be only "m" or "f"')
-				)
-			),
-			'date_of_birth' => array(
-				'date' => array(
-					'rule' => array('date', 'ymd'),
+				]
+			],
+			'date_of_birth' => [
+				'date' => [
+					'rule' => ['date', 'ymd'],
 					'message' => 'Enter a valid date of birth in YY-MM-DD format.',
 					'allowEmpty' => false
-				)
-			),
-			'title' => array(
-				'inList' => array(
-					'rule' => array('inList', array('Mr', 'Ms', 'Mrs', 'Dr')),
+				]
+			],
+			'title' => [
+				'inList' => [
+					'rule' => ['inList', ['Mr', 'Ms', 'Mrs', 'Dr']],
 					'message' => __('A valid title has to be provided'),
 					'allowEmpty' => false
-				),
-			),
-			'first_name' => array(
-				'alphaNumericAndSpecial' => array(
+				],
+			],
+			'first_name' => [
+				'alphaNumericAndSpecial' => [
 					'rule' => "/^[\p{L} \-']*$/u",
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('First name should only contain alphabets and the special characters : - \'')
-				),
-				'size' => array(
-					'rule' => array('lengthBetween', 3, 64),
+					'message' => __('First name should only contain alphabets and the special characters : - \'')
+				],
+				'size' => [
+					'rule' => ['lengthBetween', 3, 64],
 					'message' => __('First name should be between %s and %s characters long'),
-				)
-			),
-			'last_name' => array(
-				'alphaNumericAndSpecial' => array(
+				]
+			],
+			'last_name' => [
+				'alphaNumericAndSpecial' => [
 					'rule' => "/^[\p{L} \-']*$/u",
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('Last name should only contain alphabets and the special characters : - \'')
-				),
-				'size' => array(
-					'rule' => array('lengthBetween', 3, 64),
+					'message' => __('Last name should only contain alphabets and the special characters : - \'')
+				],
+				'size' => [
+					'rule' => ['lengthBetween', 3, 64],
 					'message' => __('Last name should be between %s and %s characters long'),
-				)
-			),
-		);
+				]
+			],
+		];
 		switch ($case) {
 			default:
 			case 'default' :
@@ -122,60 +122,60 @@ class Profile extends AppModel {
 	}
 
 	public static function getFindFields($case = '', $role = Role::USER) {
-		$returnValue = array();
+		$returnValue = [];
 		switch ($case) {
 			case 'view':
-				$returnValue = array(
-					'fields' => array(
+				$returnValue = [
+					'fields' => [
 						'Role.id',
 						'Role.name'
-					)
-				);
+					]
+				];
 				break;
 			case 'User::save':
 			case 'User::edit':
-				$returnValue = array(
-					'fields' => array(
+				$returnValue = [
+					'fields' => [
 						'user_id',
 						'first_name',
 						'last_name',
-					)
-				);
+					]
+				];
 				break;
 			default:
-				$returnValue = array(
-					'fields' => array()
-				);
+				$returnValue = [
+					'fields' => []
+				];
 				break;
 		}
 
 		return $returnValue;
 	}
 
-	/**
-	 * AfterFind callback.
-	 *
-	 * Used mainly to initialize default avatars.
-	 * It is added here, because ProfileAvatar after Find is not executed if the result is empty.
-	 *
-	 * @param mixed $results
-	 * @param bool  $primary
-	 *
-	 * @return mixed
-	 */
+/**
+ * AfterFind callback.
+ *
+ * Used mainly to initialize default avatars.
+ * It is added here, because ProfileAvatar after Find is not executed if the result is empty.
+ *
+ * @param mixed $results
+ * @param bool $primary
+ *
+ * @return mixed
+ */
 	public function afterFind($results, $primary = false) {
 		if ($primary === false) {
 			foreach ($results as $key => $result) {
-				if(empty($result['Profile']['Avatar'])) {
-					$result['Profile']['Avatar'] = array();
+				if (empty($result['Profile']['Avatar'])) {
+					$result['Profile']['Avatar'] = [];
 				}
 				$results[$key]['Profile']['Avatar'] = $this->Avatar->addPathsInfo($result['Profile']['Avatar']);
 			}
-		}
-		else {
-			$results['Avatar'] = empty($results['Avatar']) ? array() : $results['Avatar'];
+		} else {
+			$results['Avatar'] = empty($results['Avatar']) ? [] : $results['Avatar'];
 			$results['Avatar'] = $this->Avatar->addPathsInfo($results['Avatar']);
 		}
+
 		return $results;
 	}
 }

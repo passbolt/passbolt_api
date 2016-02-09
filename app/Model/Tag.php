@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tag Model
  *
@@ -18,18 +19,19 @@ class Tag extends AppModel {
  *
  * @link http://api20.cakephp.org/class/model#
  */
-	public $actsAs = array('Trackable');
+	public $actsAs = ['Trackable'];
 
 /**
  * Details of has and belongs to many relationships
+ *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasAndBelongsToMany = array(
-		'Resource' => array(
+	public $hasAndBelongsToMany = [
+		'Resource' => [
 			'className' => 'Resource',
-			 'joinTable' => 'items_tags',
-		)
-	);
+			'joinTable' => 'items_tags',
+		]
+	];
 
 /**
  * Get the validation rules upon context
@@ -38,32 +40,33 @@ class Tag extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
-			'id' => array(
-				'uuid' => array(
+		$default = [
+			'id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'message' => __('UUID must be in correct format')
-				)
-			),
-			'name' => array(
-				'alphaNumeric' => array(
+				]
+			],
+			'name' => [
+				'alphaNumeric' => [
 					'required' => 'create',
 					'allowEmpty' => false,
 					'rule' => "/^[\p{L}\d '\"-]*$/u",
 					'message' => __('Name should only contain alphabets, numbers, spaces and the special characters \' " -')
-				),
-				'size' => array(
-					'rule' => array('lengthBetween', 3, 64),
+				],
+				'size' => [
+					'rule' => ['lengthBetween', 3, 64],
 					'message' => __('Name should be between %s and %s characters long'),
-				)
-			)
-		);
+				]
+			]
+		];
 		switch ($case) {
 			default:
 			case 'default':
 				$rules = $default;
 				break;
 		}
+
 		return $rules;
 	}
 
@@ -76,16 +79,16 @@ class Tag extends AppModel {
  * @return array
  */
 	public static function getFindConditions($case = 'Tag.view', $role = Role::USER, $data = null) {
-		$conditions = array();
+		$conditions = [];
 
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
 			case 'Tag.view':
-				$conditions = array(
-					'conditions' => array(
+				$conditions = [
+					'conditions' => [
 						'Tag.id' => $data['Tag']['id']
-					)
-				);
+					]
+				];
 				break;
 
 		}
@@ -100,31 +103,32 @@ class Tag extends AppModel {
  * @return $condition array
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
-		$returnValue = array('fields' => array());
+		$returnValue = ['fields' => []];
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
 			case 'Tag.view':
-				$returnValue = array(
-					'fields' => array(
+				$returnValue = [
+					'fields' => [
 						'Tag.id',
 						'Tag.name',
 						'Tag.created',
 						'Tag.modified',
 						'Tag.created_by',
 						'Tag.modified_by',
-					)
-				);
+					]
+				];
 				break;
 			case 'Tag.add':
-				$returnValue = array(
-					'fields' => array(
+				$returnValue = [
+					'fields' => [
 						'name',
 						'created_by',
 						'modified_by',
-					)
-				);
+					]
+				];
 				break;
 		}
+
 		return $returnValue;
 	}
 

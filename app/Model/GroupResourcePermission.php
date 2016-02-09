@@ -1,22 +1,22 @@
 <?php
+
 /**
  * GroupResourcePermission Model
  *
- * @copyright		Copyright 2012, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Model.GroupResourcePermission
- * @since			version 2.12.11
+ * @copyright        Copyright 2012, Passbolt.com
+ * @license            http://www.passbolt.com/license
+ * @package            app.Model.GroupResourcePermission
+ * @since            version 2.12.11
  */
-
 class GroupResourcePermission extends AppModel {
 
 	public $useTable = "groups_resources_permissions";
 
-	public $belongsTo = array(
+	public $belongsTo = [
 		'Group',
 		'Resource',
 		'Permission'
-	);
+	];
 
 /**
  * Return the find conditions to be used for a given context.
@@ -27,24 +27,24 @@ class GroupResourcePermission extends AppModel {
  * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = array();
+		$conditions = [];
 
 		switch ($case) {
 			case 'viewByResource':
-				$conditions = array(
-					'conditions' => array(
+				$conditions = [
+					'conditions' => [
 						// not null permissions
 						'GroupResourcePermission.permission_id !=' => null,
 						// permissions relative to the target resource
 						'GroupResourcePermission.resource_id' => $data['GroupResourcePermission']['resource_id'],
-					)
-				);
-			break;
+					]
+				];
+				break;
 
 			default:
-				$conditions = array(
-					'conditions' => array()
-				);
+				$conditions = [
+					'conditions' => []
+				];
 		}
 
 		return $conditions;
@@ -52,36 +52,38 @@ class GroupResourcePermission extends AppModel {
 
 /**
  * Return the list of field to fetch for given context
+ *
  * @param string $case context ex: login, activation
  * @return $condition array
  */
- 	public static function getFindFields($case = 'view', $role = Role::USER) {
-		$returnValue = array('fields'=>array());
-		switch($case){
+	public static function getFindFields($case = 'view', $role = Role::USER) {
+		$returnValue = ['fields' => []];
+		switch ($case) {
 			case 'viewByResource':
-				$returnValue = array(
-					'fields' => array('group_id', 'resource_id', 'permission_id', 'permission_type'),
-					'contain' => array(
-						'Permission' => array(
-              'fields' => array('id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'),
-							'PermissionType' => array(
-								'fields' => array('serial', 'name')
-							),
+				$returnValue = [
+					'fields' => ['group_id', 'resource_id', 'permission_id', 'permission_type'],
+					'contain' => [
+						'Permission' => [
+							'fields' => ['id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'],
+							'PermissionType' => [
+								'fields' => ['serial', 'name']
+							],
 							// Return the elements the permission has been defined for (group, category)
-							'Group' => array(
-								'fields' => array('id', 'name')
-							),
-							'Resource' => array(
-								'fields' => array('id', 'name')
-							),
-							'Category' => array(
-								'fields' => array('id', 'name')
-							)
-						)
-					)
-				);
-			break;
+							'Group' => [
+								'fields' => ['id', 'name']
+							],
+							'Resource' => [
+								'fields' => ['id', 'name']
+							],
+							'Category' => [
+								'fields' => ['id', 'name']
+							]
+						]
+					]
+				];
+				break;
 		}
+
 		return $returnValue;
 	}
 }
