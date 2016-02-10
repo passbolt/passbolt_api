@@ -734,7 +734,7 @@ class User extends AppModel {
 		// Validate the user data
 		if (!$this->validates(['fieldList' => [$fields['fields']]])) {
 			$dataSource->rollback();
-			throw new ValidationException(__('Could not validate user data'), $this->validationErrors);
+			throw new ValidationException(__('Could not validate user data'), ['User' => $this->validationErrors]);
 		}
 
 		// Save the user
@@ -753,7 +753,7 @@ class User extends AppModel {
 		// Validate the profile data
 		if (!$this->Profile->validates(['fieldList' => [$fields['fields']]])) {
 			$dataSource->rollback();
-			throw new ValidationException(__('Could not validate profile'), $this->Profile->validationErrors);
+			throw new ValidationException(__('Could not validate profile'), ['Profile' => $this->Profile->validationErrors]);
 		}
 
 		// Save the profile
