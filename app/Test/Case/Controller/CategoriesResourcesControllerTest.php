@@ -49,7 +49,7 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		$this->CategoryResource = ClassRegistry::init('CategoryResource');
 
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findByUsername('dame@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -64,14 +64,13 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testViewCatResDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The categoryResource does not exist');
-		$this->testAction("/categoriesResources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'get', 'return' => 'contents'));
+		$this->testAction("/categoriesResources/{$id}.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testView() {
-		$id = '50d77ffa-45fc-423c-a5b1-1b63d7a10fce';
-
-		// test when no parameters are provided
+		$id = Common::uuid('category_resource.id.cpp1-project1_cpp1-pwd2');
 		$result = json_decode($this->testAction("/categoriesResources/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categoriesResources.json : The test should return success but is returning {$result['header']['status']}");
 	}
@@ -84,11 +83,13 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 		));
 	}
 
-	public function testWrongDataProvided() {
+	public function testAddWrongDataProvided() {
+		$id1 = Common::uuid('not-valid-reference');
+		$id2 = Common::uuid('not-valid-reference');
 		$data = array(
 			'CategoryResource' => array(
-				'category_id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56ca',
-				'resource_id' => '4ff6111b-efb8-4a26-aab4-2184cbdd56ca',
+				'category_id' => $id1,
+				'resource_id' => $id2,
 			)
 		);
 		$this->setExpectedException('HttpException', 'Could not validate data');
@@ -98,14 +99,14 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 			'return' => 'contents'
 		));
 	}
-	
+
 	public function testAdd() {
-		$cat = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$res = $this->Resource->findByName('facebook account');
+		$catId = Common::uuid('category.id.bolt');
+		$resId = Common::uuid('resource.id.facebook-account');
 		$data = array(
 			'CategoryResource' => array(
-				'category_id' => $cat['Category']['id'],
-				'resource_id' => $res['Resource']['id']
+				'category_id' => $catId,
+				'resource_id' => $resId
 			)
 		);
 
@@ -115,11 +116,12 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "Add : /categoriesResources.json : The test should return sucess but is returning " . print_r($result, true));
+
 		// check that Categories were properly saved
 		$cr = $this->CategoryResource->find('all', array(
 			'conditions' => array(
-				'category_id' => $cat['Category']['id'],
-				'resource_id' => $res['Resource']['id']
+				'category_id' => $catId,
+				'resource_id' => $resId
 			)
 		));
 		$this->assertEquals(1, count($cr), "Add : /categoriesResources.json : The number of categoriesResources returned should be 1, but actually is " . count($cr));
@@ -136,12 +138,14 @@ class CategoriesResourcesControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteCatResDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The categoryResource does not exist');
-		$this->testAction("/categoriesResources/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents'));
+		$this->testAction("/categoriesResources/{$id}.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDelete() {
-		$id = '50d77ffa-45fc-423c-a5b1-1b63d7a10fce';
+		$id = Common::uuid('category_resource.id.cpp1-project1_cpp1-pwd2');
+
 		$result = json_decode($this->testAction("/categoriesResources/$id.json", array(
 			 'method' => 'delete',
 			 'return' => 'contents'

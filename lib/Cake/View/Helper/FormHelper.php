@@ -203,7 +203,7 @@ class FormHelper extends AppHelper {
 	protected function _introspectModel($model, $key, $field = null) {
 		$object = $this->_getModel($model);
 		if (!$object) {
-			return;
+			return null;
 		}
 
 		if ($key === 'key') {
@@ -312,19 +312,19 @@ class FormHelper extends AppHelper {
  * ### Options:
  *
  * - `type` Form method defaults to POST
- * - `action`  The controller action the form submits to, (optional).
+ * - `action`  The controller action the form submits to, (optional). Deprecated since 2.8, use `url`.
  * - `url`  The URL the form submits to. Can be a string or a URL array. If you use 'url'
  *    you should leave 'action' undefined.
- * - `default`  Allows for the creation of Ajax forms. Set this to false to prevent the default event handler.
+ * - `default`  Allows for the creation of AJAX forms. Set this to false to prevent the default event handler.
  *   Will create an onsubmit attribute if it doesn't not exist. If it does, default action suppression
  *   will be appended.
- * - `onsubmit` Used in conjunction with 'default' to create ajax forms.
+ * - `onsubmit` Used in conjunction with 'default' to create AJAX forms.
  * - `inputDefaults` set the default $options for FormHelper::input(). Any options that would
  *   be set when using FormHelper::input() can be set here. Options set with `inputDefaults`
  *   can be overridden when calling input()
  * - `encoding` Set the accept-charset encoding for the form. Defaults to `Configure::read('App.encoding')`
  *
- * @param mixed $model The model name for which the form is being defined. Should
+ * @param mixed|null $model The model name for which the form is being defined. Should
  *   include the plugin name for plugin models. e.g. `ContactManager.Contact`.
  *   If an array is passed and $options argument is empty, the array will be used as options.
  *   If `false` no model is used.
@@ -379,6 +379,13 @@ class FormHelper extends AppHelper {
 		$this->inputDefaults($options['inputDefaults']);
 		unset($options['inputDefaults']);
 
+		if (isset($options['action'])) {
+			trigger_error('Using key `action` is deprecated, use `url` directly instead.', E_USER_DEPRECATED);
+		}
+		if (is_array($options['url']) && isset($options['url']['action'])) {
+			$options['action'] = $options['url']['action'];
+		}
+
 		if (!isset($options['id'])) {
 			$domId = isset($options['action']) ? $options['action'] : $this->request['action'];
 			$options['id'] = $this->domId($domId . 'Form');
@@ -386,7 +393,7 @@ class FormHelper extends AppHelper {
 
 		if ($options['action'] === null && $options['url'] === null) {
 			$options['action'] = $this->request->here(false);
-		} elseif (empty($options['url']) || is_array($options['url'])) {
+		} elseif (is_array($options['url'])) {
 			if (empty($options['url']['controller'])) {
 				if (!empty($model)) {
 					$options['url']['controller'] = Inflector::underscore(Inflector::pluralize($model));
@@ -414,7 +421,6 @@ class FormHelper extends AppHelper {
 		} elseif (is_string($options['url'])) {
 			$options['action'] = $options['url'];
 		}
-		unset($options['url']);
 
 		switch (strtolower($options['type'])) {
 			case 'get':
@@ -428,14 +434,19 @@ class FormHelper extends AppHelper {
 			case 'delete':
 				$append .= $this->hidden('_method', array(
 					'name' => '_method', 'value' => strtoupper($options['type']), 'id' => null,
-					'secure' => self::SECURE_SKIP
+					'secure' => static::SECURE_SKIP
 				));
 			default:
 				$htmlAttributes['method'] = 'post';
 		}
 		$this->requestType = strtolower($options['type']);
 
-		$action = $this->url($options['action']);
+		$action = null;
+		if ($options['action'] !== false && $options['url'] !== false) {
+			$action = $this->url($options['action']);
+		}
+		unset($options['url']);
+
 		$this->_lastAction($options['action']);
 		unset($options['type'], $options['action']);
 
@@ -468,6 +479,10 @@ class FormHelper extends AppHelper {
 			$this->_introspectModel($model, 'fields');
 		}
 
+		if ($action === null) {
+			return $this->Html->useTag('formwithoutaction', $htmlAttributes) . $append;
+		}
+
 		return $this->Html->useTag('form', $action, $htmlAttributes) . $append;
 	}
 
@@ -488,7 +503,7 @@ class FormHelper extends AppHelper {
 		}
 		return $this->hidden('_Token.key', array(
 			'value' => $this->request->params['_Token']['key'], 'id' => 'Token' . mt_rand(),
-			'secure' => self::SECURE_SKIP
+			'secure' => static::SECURE_SKIP
 		));
 	}
 
@@ -561,12 +576,12 @@ class FormHelper extends AppHelper {
  *    generating the hash, else $this->fields is being used.
  * @param array $secureAttributes will be passed as html attributes into the hidden
  *    input elements generated for the Security Component.
- * @return string A hidden input field with a security hash
+ * @return string|null A hidden input field with a security hash, otherwise null.
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::secure
  */
 	public function secure($fields = array(), $secureAttributes = array()) {
 		if (!isset($this->request['_Token']) || empty($this->request['_Token'])) {
-			return;
+			return null;
 		}
 		$locked = array();
 		$unlockedFields = $this->_unlockedFields;
@@ -661,6 +676,8 @@ class FormHelper extends AppHelper {
 			if (!in_array($field, $this->fields)) {
 				if ($value !== null) {
 					return $this->fields[$field] = $value;
+				} elseif (isset($this->fields[$field]) && $value === null) {
+					unset($this->fields[$field]);
 				}
 				$this->fields[] = $field;
 			}
@@ -813,6 +830,10 @@ class FormHelper extends AppHelper {
  * ));
  * <label for="post-publish">Publish</label>
  * ```
+ *
+ * *Warning* Unlike most FormHelper methods, this method does not automatically
+ * escape the $text parameter. You must escape the $text parameter yourself if you
+ * are using user supplied data.
  *
  * @param string $fieldName This should be "Modelname.fieldname"
  * @param string $text Text that will appear in the label field. If
@@ -1086,13 +1107,13 @@ class FormHelper extends AppHelper {
 				unset($options['options']);
 				return $this->select($fieldName, $list, $options);
 			case 'time':
-				$options['value'] = $selected;
+				$options += array('value' => $selected);
 				return $this->dateTime($fieldName, null, $timeFormat, $options);
 			case 'date':
-				$options['value'] = $selected;
+				$options += array('value' => $selected);
 				return $this->dateTime($fieldName, $dateFormat, null, $options);
 			case 'datetime':
-				$options['value'] = $selected;
+				$options += array('value' => $selected);
 				return $this->dateTime($fieldName, $dateFormat, $timeFormat, $options);
 			case 'textarea':
 				return $this->textarea($fieldName, $options + array('cols' => '30', 'rows' => '6'));
@@ -1203,10 +1224,10 @@ class FormHelper extends AppHelper {
 			if ($options['type'] === 'number' &&
 				!isset($options['step'])
 			) {
-				if ($type === 'decimal') {
+				if ($type === 'decimal' && isset($fieldDef['length'])) {
 					$decimalPlaces = substr($fieldDef['length'], strpos($fieldDef['length'], ',') + 1);
 					$options['step'] = sprintf('%.' . $decimalPlaces . 'F', pow(10, -1 * $decimalPlaces));
-				} elseif ($type === 'float') {
+				} elseif ($type === 'float' || $type === 'decimal') {
 					$options['step'] = 'any';
 				}
 			}
@@ -1471,6 +1492,15 @@ class FormHelper extends AppHelper {
  * Creates a set of radio widgets. Will create a legend and fieldset
  * by default. Use $options to control this
  *
+ * You can also customize each radio input element using an array of arrays:
+ *
+ * ```
+ * $options = array(
+ *  array('name' => 'United states', 'value' => 'US', 'title' => 'My title'),
+ *  array('name' => 'Germany', 'value' => 'DE', 'class' => 'de-de', 'title' => 'Another title'),
+ * );
+ * ```
+ *
  * ### Attributes:
  *
  * - `separator` - define the string in between the radio buttons
@@ -1553,6 +1583,15 @@ class FormHelper extends AppHelper {
 		$this->_domIdSuffixes = array();
 		foreach ($options as $optValue => $optTitle) {
 			$optionsHere = array('value' => $optValue, 'disabled' => false);
+			if (is_array($optTitle)) {
+				if (isset($optTitle['value'])) {
+					$optionsHere['value'] = $optTitle['value'];
+				}
+
+				$optionsHere += $optTitle;
+				$optTitle = $optionsHere['name'];
+				unset($optionsHere['name']);
+			}
 
 			if (isset($value) && strval($optValue) === strval($value)) {
 				$optionsHere['checked'] = 'checked';
@@ -1572,7 +1611,7 @@ class FormHelper extends AppHelper {
 			if (is_array($between)) {
 				$optTitle .= array_shift($between);
 			}
-			$allOptions = array_merge($attributes, $optionsHere);
+			$allOptions = $optionsHere + $attributes;
 			$out[] = $this->Html->useTag('radio', $attributes['name'], $tagName,
 				array_diff_key($allOptions, array('name' => null, 'type' => null, 'id' => null)),
 				$optTitle
@@ -1678,7 +1717,7 @@ class FormHelper extends AppHelper {
 		unset($options['secure']);
 
 		$options = $this->_initInputField($fieldName, array_merge(
-			$options, array('secure' => self::SECURE_SKIP)
+			$options, array('secure' => static::SECURE_SKIP)
 		));
 
 		if ($secure === true) {
@@ -1699,7 +1738,7 @@ class FormHelper extends AppHelper {
 	public function file($fieldName, $options = array()) {
 		$options += array('secure' => true);
 		$secure = $options['secure'];
-		$options['secure'] = self::SECURE_SKIP;
+		$options['secure'] = static::SECURE_SKIP;
 
 		$options = $this->_initInputField($fieldName, $options);
 		$field = $this->entity();
@@ -1771,8 +1810,12 @@ class FormHelper extends AppHelper {
  * Creates an HTML link, but access the URL using the method you specify (defaults to POST).
  * Requires javascript to be enabled in browser.
  *
- * This method creates a `<form>` element. So do not use this method inside an existing form.
- * Instead you should add a submit button using FormHelper::submit()
+ * This method creates a `<form>` element. If you want to use this method inside of an
+ * existing form, you must use the `inline` or `block` options so that the new form is
+ * being set to a view block that can be rendered outside of the main form.
+ *
+ * If all you are looking for is a button to submit your form, then you should use
+ * `FormHelper::submit()` instead.
  *
  * ### Options:
  *
@@ -2049,7 +2092,7 @@ class FormHelper extends AppHelper {
 		$id = $this->_extractOption('id', $attributes);
 
 		$attributes = $this->_initInputField($fieldName, array_merge(
-			(array)$attributes, array('secure' => self::SECURE_SKIP)
+			(array)$attributes, array('secure' => static::SECURE_SKIP)
 		));
 
 		if (is_string($options) && isset($this->_options[$options])) {
@@ -2989,7 +3032,7 @@ class FormHelper extends AppHelper {
 			$result['required'] = true;
 		}
 
-		if ($secure === self::SECURE_SKIP) {
+		if ($secure === static::SECURE_SKIP) {
 			return $result;
 		}
 

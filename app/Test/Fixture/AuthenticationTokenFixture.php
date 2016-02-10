@@ -1,7 +1,6 @@
 <?php
 /**
- * AuthenticationTokenFixture
- *
+ * AuthenticationToken Fixture
  */
 class AuthenticationTokenFixture extends CakeTestFixture {
 

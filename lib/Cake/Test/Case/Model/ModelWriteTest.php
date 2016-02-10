@@ -388,6 +388,34 @@ class ModelWriteTest extends BaseModelTest {
 	}
 
 /**
+ * Test that save() with a fieldList continues to write
+ * updated in all cases.
+ *
+ * @return void
+ */
+	public function testSaveUpdatedWithFieldList() {
+		$this->loadFixtures('Post', 'Author');
+		$model = ClassRegistry::init('Post');
+		$original = $model->find('first', array(
+			'conditions' => array('Post.id' => 1)
+		));
+		$data = array(
+			'Post' => array(
+				'id' => 1,
+				'title' => 'New title',
+				'updated' => '1999-01-01 00:00:00',
+			)
+		);
+		$model->save($data, array(
+			'fieldList' => array('title')
+		));
+		$new = $model->find('first', array(
+			'conditions' => array('Post.id' => 1)
+		));
+		$this->assertGreaterThan($original['Post']['updated'], $new['Post']['updated']);
+	}
+
+/**
  * Test save() resets the whitelist after afterSave
  *
  * @return void
@@ -879,7 +907,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		// Check if Database supports transactions
 
-		$PostModel->validate = array('title' => 'notEmpty');
+		$PostModel->validate = array('title' => 'notBlank');
 		$data = array(
 			array('author_id' => 1, 'title' => 'New Fourth Post'),
 			array('author_id' => 1, 'title' => 'New Fifth Post'),
@@ -1960,8 +1988,8 @@ class ModelWriteTest extends BaseModelTest {
 				'title' => 'New Article With Tags and fieldList',
 				'body' => '',
 				'published' => 'N',
-				'created' => '',
-				'updated' => ''
+				'created' => static::date(),
+				'updated' => static::date(),
 			),
 			'Tag' => array(
 				0 => array(
@@ -2102,7 +2130,7 @@ class ModelWriteTest extends BaseModelTest {
 				'body' => 'Second Article Body',
 				'published' => 'Y',
 				'created' => '2007-03-18 10:41:23',
-				'updated' => self::date()
+				'updated' => static::date()
 			),
 			'Tag' => array(
 				array(
@@ -2785,18 +2813,9 @@ class ModelWriteTest extends BaseModelTest {
 
 		$TestModel = new TheVoid();
 		$this->assertFalse($TestModel->exists());
-	}
 
-/**
- * testRecordExistsMissingTable method
- *
- * @expectedException PDOException
- * @return void
- */
-	public function testRecordExistsMissingTable() {
-		$TestModel = new TheVoid();
 		$TestModel->id = 5;
-		$TestModel->exists();
+		$this->assertFalse($TestModel->exists());
 	}
 
 /**
@@ -3042,23 +3061,23 @@ class ModelWriteTest extends BaseModelTest {
 			'JoinA' => array(
 				'id' => '1',
 				'name' => 'New name for Join A 1',
-				'updated' => self::date()
+				'updated' => static::date()
 			),
 			'JoinB' => array(
 				array(
 					'id' => 1,
 					'join_b_id' => 2,
 					'other' => 'New data for Join A 1 Join B 2',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 			)),
 			'JoinC' => array(
 				array(
 					'id' => 1,
 					'join_c_id' => 2,
 					'other' => 'New data for Join A 1 Join C 2',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 		)));
 
 		$TestModel->set($data);
@@ -3071,7 +3090,7 @@ class ModelWriteTest extends BaseModelTest {
 				'name' => 'New name for Join A 1',
 				'body' => 'Join A 1 Body',
 				'created' => '2008-01-03 10:54:23',
-				'updated' => self::date()
+				'updated' => static::date()
 			),
 			'JoinB' => array(
 				0 => array(
@@ -3084,8 +3103,8 @@ class ModelWriteTest extends BaseModelTest {
 						'join_a_id' => 1,
 						'join_b_id' => 2,
 						'other' => 'New data for Join A 1 Join B 2',
-						'created' => self::date(),
-						'updated' => self::date()
+						'created' => static::date(),
+						'updated' => static::date()
 			))),
 			'JoinC' => array(
 				0 => array(
@@ -3098,8 +3117,8 @@ class ModelWriteTest extends BaseModelTest {
 						'join_a_id' => 1,
 						'join_c_id' => 2,
 						'other' => 'New data for Join A 1 Join C 2',
-						'created' => self::date(),
-						'updated' => self::date()
+						'created' => static::date(),
+						'updated' => static::date()
 		))));
 
 		$this->assertEquals($expected, $result);
@@ -3143,10 +3162,10 @@ class ModelWriteTest extends BaseModelTest {
 				'password' => '5f4dcc3b5aa765d61d8327deb882cf90',
 				'test' => 'working'
 		));
-		$this->assertEquals(self::date(), $result[3]['Post']['created']);
-		$this->assertEquals(self::date(), $result[3]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[3]['Author']['created']);
-		$this->assertEquals(self::date(), $result[3]['Author']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Post']['created']);
+		$this->assertEquals(static::date(), $result[3]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Author']['created']);
+		$this->assertEquals(static::date(), $result[3]['Author']['updated']);
 		unset($result[3]['Post']['created'], $result[3]['Post']['updated']);
 		unset($result[3]['Author']['created'], $result[3]['Author']['updated']);
 		$this->assertEquals($expected, $result[3]);
@@ -3191,10 +3210,10 @@ class ModelWriteTest extends BaseModelTest {
 					'body' => 'Second multi-record post',
 					'published' => 'N'
 		)));
-		$this->assertEquals(self::date(), $result[0]['Post']['created']);
-		$this->assertEquals(self::date(), $result[0]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[1]['Post']['created']);
-		$this->assertEquals(self::date(), $result[1]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[0]['Post']['created']);
+		$this->assertEquals(static::date(), $result[0]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[1]['Post']['created']);
+		$this->assertEquals(static::date(), $result[1]['Post']['updated']);
 		unset($result[0]['Post']['created'], $result[0]['Post']['updated']);
 		unset($result[1]['Post']['created'], $result[1]['Post']['updated']);
 		$this->assertEquals($expected, $result);
@@ -3220,8 +3239,8 @@ class ModelWriteTest extends BaseModelTest {
 			'comment' => 'New comment with attachment',
 			'published' => 'Y'
 		);
-		$this->assertEquals(self::date(), $result[6]['Comment']['created']);
-		$this->assertEquals(self::date(), $result[6]['Comment']['updated']);
+		$this->assertEquals(static::date(), $result[6]['Comment']['created']);
+		$this->assertEquals(static::date(), $result[6]['Comment']['updated']);
 		unset($result[6]['Comment']['created'], $result[6]['Comment']['updated']);
 		$this->assertEquals($expected, $result[6]['Comment']);
 
@@ -3230,8 +3249,8 @@ class ModelWriteTest extends BaseModelTest {
 			'comment_id' => '7',
 			'attachment' => 'some_file.tgz'
 		);
-		$this->assertEquals(self::date(), $result[6]['Attachment']['created']);
-		$this->assertEquals(self::date(), $result[6]['Attachment']['updated']);
+		$this->assertEquals(static::date(), $result[6]['Attachment']['created']);
+		$this->assertEquals(static::date(), $result[6]['Attachment']['updated']);
 		unset($result[6]['Attachment']['created'], $result[6]['Attachment']['updated']);
 		$this->assertEquals($expected, $result[6]['Attachment']);
 	}
@@ -3413,8 +3432,8 @@ class ModelWriteTest extends BaseModelTest {
 		$model->Attachment->deleteAll(true);
 		$this->assertEquals(array(), $model->Attachment->find('all'));
 
-		$model->validate = array('comment' => 'notEmpty');
-		$model->Attachment->validate = array('attachment' => 'notEmpty');
+		$model->validate = array('comment' => 'notBlank');
+		$model->Attachment->validate = array('attachment' => 'notBlank');
 		$model->Attachment->bindModel(array('belongsTo' => array('Comment')));
 
 		$result = $model->saveAll(
@@ -3496,7 +3515,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->assertSame($result, array('Article' => true, 'Comment' => array(true, true)));
 
 		$TestModel->validate = array(
-			'title' => 'notEmpty',
+			'title' => 'notBlank',
 			'author_id' => 'numeric'
 		);
 		$result = $TestModel->saveAll(array(
@@ -3701,7 +3720,7 @@ class ModelWriteTest extends BaseModelTest {
 				)
 			)
 		);
-		$TestModel->Comment->validate['comment'] = 'notEmpty';
+		$TestModel->Comment->validate['comment'] = 'notBlank';
 		$result = $TestModel->saveAll($data, array('deep' => true));
 		$this->assertFalse($result);
 
@@ -3744,8 +3763,8 @@ class ModelWriteTest extends BaseModelTest {
 		$TestModel = new Article();
 		$TestModel->hasMany['Comment']['order'] = array('Comment.created' => 'ASC');
 		$TestModel->hasAndBelongsToMany = array();
-		$TestModel->Comment->Attachment->validate['attachment'] = 'notEmpty';
-		$TestModel->Comment->validate['comment'] = 'notEmpty';
+		$TestModel->Comment->Attachment->validate['attachment'] = 'notBlank';
+		$TestModel->Comment->validate['comment'] = 'notBlank';
 
 		$result = $TestModel->saveAll(
 			array(
@@ -4155,7 +4174,7 @@ class ModelWriteTest extends BaseModelTest {
 				)
 			)
 		);
-		$TestModel->Comment->validate['comment'] = 'notEmpty';
+		$TestModel->Comment->validate['comment'] = 'notBlank';
 		$result = $TestModel->saveAll($data, array('deep' => false));
 		$this->assertFalse($result);
 
@@ -4195,8 +4214,8 @@ class ModelWriteTest extends BaseModelTest {
 		$TestModel = new Article();
 		$TestModel->hasMany['Comment']['order'] = array('Comment.created' => 'ASC');
 		$TestModel->hasAndBelongsToMany = array();
-		$TestModel->Comment->Attachment->validate['attachment'] = 'notEmpty';
-		$TestModel->Comment->validate['comment'] = 'notEmpty';
+		$TestModel->Comment->Attachment->validate['attachment'] = 'notBlank';
+		$TestModel->Comment->validate['comment'] = 'notBlank';
 
 		$result = $TestModel->saveAll(
 			array(
@@ -4416,7 +4435,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Article', 'Comment');
 		$TestModel = new Article();
 		$TestModel->belongsTo = $TestModel->hasAndBelongsToMany = array();
-		$TestModel->Comment->validate = array('comment' => 'notEmpty');
+		$TestModel->Comment->validate = array('comment' => 'notBlank');
 
 		$result = $TestModel->saveAll(array(
 			'Article' => array('id' => 2),
@@ -4457,7 +4476,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		$Post = new TestPost();
 		$Post->validate = array(
-			'title' => array('rule' => array('notEmpty'))
+			'title' => array('rule' => array('notBlank'))
 		);
 
 		// If validation error occurs, rollback() should be called.
@@ -4518,7 +4537,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		$Post = new TestPost();
 		$Post->Author->validate = array(
-			'user' => array('rule' => array('notEmpty'))
+			'user' => array('rule' => array('notBlank'))
 		);
 
 		// If validation error occurs, rollback() should be called.
@@ -4618,7 +4637,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Post', 'Author', 'Comment', 'Attachment');
 		$TestModel = new Post();
 
-		$TestModel->validate = array('title' => 'notEmpty');
+		$TestModel->validate = array('title' => 'notBlank');
 		$data = array(
 			array('author_id' => 1, 'title' => 'New Fourth Post'),
 			array('author_id' => 1, 'title' => 'New Fifth Post'),
@@ -4665,8 +4684,8 @@ class ModelWriteTest extends BaseModelTest {
 					'title' => 'New Fourth Post',
 					'body' => null,
 					'published' => 'N',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 			));
 
 			$expected[] = array(
@@ -4676,8 +4695,8 @@ class ModelWriteTest extends BaseModelTest {
 					'title' => 'New Fifth Post',
 					'body' => null,
 					'published' => 'N',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 			));
 
 			$this->assertEquals($expected, $result);
@@ -4733,8 +4752,8 @@ class ModelWriteTest extends BaseModelTest {
 					'title' => 'New Fourth Post',
 					'body' => 'Third Post Body',
 					'published' => 'N',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 			));
 
 			$expected[] = array(
@@ -4744,13 +4763,13 @@ class ModelWriteTest extends BaseModelTest {
 					'title' => 'Third Post',
 					'body' => 'Third Post Body',
 					'published' => 'N',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 			));
 		}
 		$this->assertEquals($expected, $result);
 
-		$TestModel->validate = array('title' => 'notEmpty');
+		$TestModel->validate = array('title' => 'notBlank');
 		$data = array(
 			array('author_id' => 1, 'title' => 'New Fourth Post'),
 			array('author_id' => 1, 'title' => 'New Fifth Post'),
@@ -4870,15 +4889,15 @@ class ModelWriteTest extends BaseModelTest {
 					'body' => 'Fourth post body',
 					'published' => 'N'
 		)));
-		$this->assertEquals(self::date(), $result[0]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[1]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[3]['Post']['created']);
-		$this->assertEquals(self::date(), $result[3]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[0]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[1]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Post']['created']);
+		$this->assertEquals(static::date(), $result[3]['Post']['updated']);
 		unset($result[0]['Post']['updated'], $result[1]['Post']['updated']);
 		unset($result[3]['Post']['created'], $result[3]['Post']['updated']);
 		$this->assertEquals($expected, $result);
 
-		$TestModel->validate = array('title' => 'notEmpty', 'author_id' => 'numeric');
+		$TestModel->validate = array('title' => 'notBlank', 'author_id' => 'numeric');
 		$data = array(
 			array(
 				'id' => '1',
@@ -4904,7 +4923,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		$this->assertEquals($errors, $TestModel->validationErrors);
 
-		$TestModel->validate = array('title' => 'notEmpty', 'author_id' => 'numeric');
+		$TestModel->validate = array('title' => 'notBlank', 'author_id' => 'numeric');
 		$data = array(
 			array(
 				'id' => '1',
@@ -4964,10 +4983,10 @@ class ModelWriteTest extends BaseModelTest {
 			)
 		);
 
-		$this->assertEquals(self::date(), $result[0]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[1]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[3]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[3]['Post']['created']);
+		$this->assertEquals(static::date(), $result[0]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[1]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Post']['created']);
 		unset(
 			$result[0]['Post']['updated'], $result[1]['Post']['updated'],
 			$result[3]['Post']['updated'], $result[3]['Post']['created']
@@ -5006,7 +5025,7 @@ class ModelWriteTest extends BaseModelTest {
 	public function testSaveAllValidationOnly() {
 		$this->loadFixtures('Comment', 'Attachment');
 		$TestModel = new Comment();
-		$TestModel->Attachment->validate = array('attachment' => 'notEmpty');
+		$TestModel->Attachment->validate = array('attachment' => 'notBlank');
 
 		$data = array(
 			'Comment' => array(
@@ -5021,7 +5040,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->assertFalse($result);
 
 		$TestModel = new Article();
-		$TestModel->validate = array('title' => 'notEmpty');
+		$TestModel->validate = array('title' => 'notBlank');
 		$result = $TestModel->saveAll(
 			array(
 				0 => array('title' => ''),
@@ -5061,7 +5080,7 @@ class ModelWriteTest extends BaseModelTest {
 		$model = new Article();
 		$model->deleteAll(true);
 
-		$model->Comment->validate = array('comment' => 'notEmpty');
+		$model->Comment->validate = array('comment' => 'notBlank');
 		$result = $model->saveAll(array(
 			'Article' => array(
 				'title' => 'Post with Author',
@@ -5198,7 +5217,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Article', 'Comment', 'Attachment');
 		$TestModel = new Article();
 		$TestModel->belongsTo = $TestModel->hasAndBelongsToMany = array();
-		$TestModel->Comment->validate = array('comment' => 'notEmpty');
+		$TestModel->Comment->validate = array('comment' => 'notBlank');
 
 		$result = $TestModel->saveAll(
 			array(
@@ -5348,10 +5367,10 @@ class ModelWriteTest extends BaseModelTest {
 				'password' => '5f4dcc3b5aa765d61d8327deb882cf90',
 				'test' => 'working'
 		));
-		$this->assertEquals(self::date(), $result[3]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[3]['Post']['created']);
-		$this->assertEquals(self::date(), $result[3]['Author']['created']);
-		$this->assertEquals(self::date(), $result[3]['Author']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Post']['created']);
+		$this->assertEquals(static::date(), $result[3]['Author']['created']);
+		$this->assertEquals(static::date(), $result[3]['Author']['updated']);
 		unset(
 			$result[3]['Post']['updated'], $result[3]['Post']['created'],
 			$result[3]['Author']['updated'], $result[3]['Author']['created']
@@ -5380,8 +5399,8 @@ class ModelWriteTest extends BaseModelTest {
 			'comment' => 'New comment with attachment',
 			'published' => 'Y'
 		);
-		$this->assertEquals(self::date(), $result[6]['Comment']['updated']);
-		$this->assertEquals(self::date(), $result[6]['Comment']['created']);
+		$this->assertEquals(static::date(), $result[6]['Comment']['updated']);
+		$this->assertEquals(static::date(), $result[6]['Comment']['created']);
 		unset($result[6]['Comment']['updated'], $result[6]['Comment']['created']);
 		$this->assertEquals($expected, $result[6]['Comment']);
 
@@ -5390,8 +5409,8 @@ class ModelWriteTest extends BaseModelTest {
 			'comment_id' => '7',
 			'attachment' => 'some_file.tgz'
 		);
-		$this->assertEquals(self::date(), $result[6]['Attachment']['updated']);
-		$this->assertEquals(self::date(), $result[6]['Attachment']['created']);
+		$this->assertEquals(static::date(), $result[6]['Attachment']['updated']);
+		$this->assertEquals(static::date(), $result[6]['Attachment']['created']);
 		unset($result[6]['Attachment']['updated'], $result[6]['Attachment']['created']);
 		$this->assertEquals($expected, $result[6]['Attachment']);
 	}
@@ -5406,7 +5425,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Comment', 'Article', 'User');
 		$Article = ClassRegistry::init('Article');
 		$Article->Comment->validator()->add('comment', array(
-			array('rule' => 'notEmpty')
+			array('rule' => 'notBlank')
 		));
 
 		$data = array(
@@ -5491,10 +5510,10 @@ class ModelWriteTest extends BaseModelTest {
 				)
 			)
 		);
-		$this->assertEquals(self::date(), $result[0]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[0]['Post']['created']);
-		$this->assertEquals(self::date(), $result[1]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[1]['Post']['created']);
+		$this->assertEquals(static::date(), $result[0]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[0]['Post']['created']);
+		$this->assertEquals(static::date(), $result[1]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[1]['Post']['created']);
 		unset($result[0]['Post']['updated'], $result[0]['Post']['created']);
 		unset($result[1]['Post']['updated'], $result[1]['Post']['created']);
 		$this->assertEquals($expected, $result);
@@ -5694,8 +5713,8 @@ class ModelWriteTest extends BaseModelTest {
 		$model->Attachment->deleteAll(true);
 		$this->assertEquals(array(), $model->Attachment->find('all'));
 
-		$model->validate = array('comment' => 'notEmpty');
-		$model->Attachment->validate = array('attachment' => 'notEmpty');
+		$model->validate = array('comment' => 'notBlank');
+		$model->Attachment->validate = array('attachment' => 'notBlank');
 		$model->Attachment->bindModel(array('belongsTo' => array('Comment')));
 
 		$result = $model->saveAssociated(
@@ -5789,7 +5808,7 @@ class ModelWriteTest extends BaseModelTest {
 		), array('atomic' => false));
 		$this->assertSame($result, array(true, true, true));
 
-		$TestModel->validate = array('title' => 'notEmpty', 'author_id' => 'numeric');
+		$TestModel->validate = array('title' => 'notBlank', 'author_id' => 'numeric');
 		$result = $TestModel->saveMany(array(
 			array(
 				'id' => '1',
@@ -5892,7 +5911,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Article', 'Comment');
 		$TestModel = new Article();
 		$TestModel->belongsTo = $TestModel->hasAndBelongsToMany = array();
-		$TestModel->validate = $TestModel->Comment->validate = array('user_id' => array('notEmpty' => array('rule' => 'notEmpty', 'required' => true)));
+		$TestModel->validate = $TestModel->Comment->validate = array('user_id' => array('notBlank' => array('rule' => 'notBlank', 'required' => true)));
 
 		//empty hasMany data is ignored in save
 		$result = $TestModel->saveAssociated(array(
@@ -5924,7 +5943,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Article', 'Comment');
 		$TestModel = new Article();
 		$TestModel->belongsTo = $TestModel->hasAndBelongsToMany = array();
-		$TestModel->Comment->validate = array('comment' => 'notEmpty');
+		$TestModel->Comment->validate = array('comment' => 'notBlank');
 
 		$result = $TestModel->saveAssociated(array(
 			'Article' => array('id' => 2),
@@ -5965,7 +5984,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		$Post = new TestPost();
 		$Post->validate = array(
-			'title' => array('rule' => array('notEmpty'))
+			'title' => array('rule' => array('notBlank'))
 		);
 
 		// If validation error occurs, rollback() should be called.
@@ -6026,7 +6045,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		$Post = new TestPost();
 		$Post->Author->validate = array(
-			'user' => array('rule' => array('notEmpty'))
+			'user' => array('rule' => array('notBlank'))
 		);
 
 		// If validation error occurs, rollback() should be called.
@@ -6126,7 +6145,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Post', 'Author', 'Comment', 'Attachment');
 		$TestModel = new Post();
 
-		$TestModel->validate = array('title' => 'notEmpty');
+		$TestModel->validate = array('title' => 'notBlank');
 		$data = array(
 			array('author_id' => 1, 'title' => 'New Fourth Post'),
 			array('author_id' => 1, 'title' => 'New Fifth Post'),
@@ -6184,10 +6203,10 @@ class ModelWriteTest extends BaseModelTest {
 					'published' => 'N',
 			));
 
-			$this->assertEquals(self::date(), $result[3]['Post']['created']);
-			$this->assertEquals(self::date(), $result[3]['Post']['updated']);
-			$this->assertEquals(self::date(), $result[4]['Post']['created']);
-			$this->assertEquals(self::date(), $result[4]['Post']['updated']);
+			$this->assertEquals(static::date(), $result[3]['Post']['created']);
+			$this->assertEquals(static::date(), $result[3]['Post']['updated']);
+			$this->assertEquals(static::date(), $result[4]['Post']['created']);
+			$this->assertEquals(static::date(), $result[4]['Post']['updated']);
 			unset($result[3]['Post']['created'], $result[3]['Post']['updated']);
 			unset($result[4]['Post']['created'], $result[4]['Post']['updated']);
 			$this->assertEquals($expected, $result);
@@ -6253,16 +6272,16 @@ class ModelWriteTest extends BaseModelTest {
 					'body' => 'Third Post Body',
 					'published' => 'N'
 			));
-			$this->assertEquals(self::date(), $result[3]['Post']['created']);
-			$this->assertEquals(self::date(), $result[3]['Post']['updated']);
-			$this->assertEquals(self::date(), $result[4]['Post']['created']);
-			$this->assertEquals(self::date(), $result[4]['Post']['updated']);
+			$this->assertEquals(static::date(), $result[3]['Post']['created']);
+			$this->assertEquals(static::date(), $result[3]['Post']['updated']);
+			$this->assertEquals(static::date(), $result[4]['Post']['created']);
+			$this->assertEquals(static::date(), $result[4]['Post']['updated']);
 			unset($result[3]['Post']['created'], $result[3]['Post']['updated']);
 			unset($result[4]['Post']['created'], $result[4]['Post']['updated']);
 		}
 		$this->assertEquals($expected, $result);
 
-		$TestModel->validate = array('title' => 'notEmpty');
+		$TestModel->validate = array('title' => 'notBlank');
 		$data = array(
 			array('author_id' => 1, 'title' => 'New Fourth Post'),
 			array('author_id' => 1, 'title' => 'New Fifth Post'),
@@ -6387,15 +6406,15 @@ class ModelWriteTest extends BaseModelTest {
 			)
 		);
 
-		$this->assertEquals(self::date(), $result[0]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[1]['Post']['updated']);
-		$this->assertEquals(self::date(), $result[3]['Post']['created']);
-		$this->assertEquals(self::date(), $result[3]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[0]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[1]['Post']['updated']);
+		$this->assertEquals(static::date(), $result[3]['Post']['created']);
+		$this->assertEquals(static::date(), $result[3]['Post']['updated']);
 		unset($result[0]['Post']['updated'], $result[1]['Post']['updated']);
 		unset($result[3]['Post']['created'], $result[3]['Post']['updated']);
 		$this->assertEquals($expected, $result);
 
-		$TestModel->validate = array('title' => 'notEmpty', 'author_id' => 'numeric');
+		$TestModel->validate = array('title' => 'notBlank', 'author_id' => 'numeric');
 		$data = array(
 			array(
 				'id' => '1',
@@ -6421,7 +6440,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		$this->assertEquals($errors, $TestModel->validationErrors);
 
-		$TestModel->validate = array('title' => 'notEmpty', 'author_id' => 'numeric');
+		$TestModel->validate = array('title' => 'notBlank', 'author_id' => 'numeric');
 		$data = array(
 			array(
 				'id' => '1',
@@ -6509,7 +6528,7 @@ class ModelWriteTest extends BaseModelTest {
  */
 	public function testValidateMany() {
 		$TestModel = new Article();
-		$TestModel->validate = array('title' => 'notEmpty');
+		$TestModel->validate = array('title' => 'notBlank');
 		$data = array(
 				0 => array('title' => ''),
 				1 => array('title' => 'title 1'),
@@ -6545,7 +6564,7 @@ class ModelWriteTest extends BaseModelTest {
 		$model = new Article();
 		$model->deleteAll(true);
 
-		$model->Comment->validate = array('comment' => 'notEmpty');
+		$model->Comment->validate = array('comment' => 'notBlank');
 		$result = $model->saveAssociated(array(
 			'Article' => array(
 				'title' => 'Post with Author',
@@ -6680,7 +6699,7 @@ class ModelWriteTest extends BaseModelTest {
 	public function testValidateAssociated() {
 		$this->loadFixtures('Attachment', 'Article', 'Comment');
 		$TestModel = new Comment();
-		$TestModel->Attachment->validate = array('attachment' => 'notEmpty');
+		$TestModel->Attachment->validate = array('attachment' => 'notBlank');
 
 		$data = array(
 			'Comment' => array(
@@ -6696,7 +6715,7 @@ class ModelWriteTest extends BaseModelTest {
 
 		$TestModel = new Article();
 		$TestModel->belongsTo = $TestModel->hasAndBelongsToMany = array();
-		$TestModel->Comment->validate = array('comment' => 'notEmpty');
+		$TestModel->Comment->validate = array('comment' => 'notBlank');
 
 		$data = array(
 			'Article' => array('id' => 2),
@@ -7147,15 +7166,15 @@ class ModelWriteTest extends BaseModelTest {
 				'title' => 'Post without body',
 				'body' => null,
 				'published' => 'N',
-				'created' => self::date(),
-				'updated' => self::date(),
+				'created' => static::date(),
+				'updated' => static::date(),
 			),
 			'Author' => array(
 				'id' => '5',
 				'user' => 'bob',
 				'password' => null,
-				'created' => self::date(),
-				'updated' => self::date(),
+				'created' => static::date(),
+				'updated' => static::date(),
 				'test' => 'working',
 			),
 		);
@@ -7210,15 +7229,15 @@ class ModelWriteTest extends BaseModelTest {
 				'title' => 'Post title',
 				'body' => 'Post body',
 				'published' => 'N',
-				'created' => self::date(),
-				'updated' => self::date()
+				'created' => static::date(),
+				'updated' => static::date()
 			),
 			'Author' => array(
 				'id' => '6',
 				'user' => 'jack',
 				'password' => 'foobar',
-				'created' => self::date(),
-				'updated' => self::date(),
+				'created' => static::date(),
+				'updated' => static::date(),
 				'test' => 'working'
 			),
 		);
@@ -7252,8 +7271,8 @@ class ModelWriteTest extends BaseModelTest {
 					'title' => 'Multi-record post 1',
 					'body' => '',
 					'published' => 'N',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 				)
 			),
 			array(
@@ -7263,8 +7282,8 @@ class ModelWriteTest extends BaseModelTest {
 					'title' => 'Multi-record post 2',
 					'body' => '',
 					'published' => 'N',
-					'created' => self::date(),
-					'updated' => self::date()
+					'created' => static::date(),
+					'updated' => static::date()
 				)
 			)
 		);
@@ -7331,8 +7350,8 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('Attachment', 'Comment', 'Article', 'User');
 		$TestModel = new Comment();
 
-		$TestModel->validate = array('comment' => 'notEmpty');
-		$TestModel->Attachment->validate = array('attachment' => 'notEmpty');
+		$TestModel->validate = array('comment' => 'notBlank');
+		$TestModel->Attachment->validate = array('attachment' => 'notBlank');
 
 		$record = array(
 			'Comment' => array(
@@ -7367,7 +7386,7 @@ class ModelWriteTest extends BaseModelTest {
 		$this->loadFixtures('ArticleFeatured', 'Featured');
 		$Article = new ArticleFeatured();
 		$Article->belongsTo = $Article->hasMany = array();
-		$Article->Featured->validate = array('end_date' => 'notEmpty');
+		$Article->Featured->validate = array('end_date' => 'notBlank');
 
 		$record = array(
 			'ArticleFeatured' => array(
@@ -7682,6 +7701,218 @@ class ModelWriteTest extends BaseModelTest {
 
 		$this->assertEquals(3, $result['Comment']['article_id']);
 		$this->assertEquals(2, count($result['Attachment']));
+	}
+
+/**
+ * Test that boolean fields don't cause saveMany to fail
+ *
+ * @return void
+ */
+	public function testSaveManyBooleanFields() {
+		$this->loadFixtures('Item', 'Syfile', 'Image');
+		$data = array(
+			array(
+				'Item' => array(
+					'name' => 'testing',
+					'syfile_id' => 1,
+					'published' => false
+				)
+			),
+			array(
+				'Item' => array(
+					'name' => 'testing 2',
+					'syfile_id' => 1,
+					'published' => true
+				)
+			),
+		);
+		$item = ClassRegistry::init('Item');
+		$result = $item->saveMany($data, array('atomic' => false));
+
+		$this->assertCount(2, $result, '2 records should have been saved.');
+		$this->assertTrue($result[0], 'Both should have succeded');
+		$this->assertTrue($result[1], 'Both should have succeded');
+	}
+
+/**
+ * testSaveManyDeepHasManyValidationFailure method
+ *
+ * @return void
+ */
+	public function testSaveManyDeepHasManyValidationFailure() {
+		$this->loadFixtures('Article', 'Comment');
+		$TestModel = new Article();
+		$TestModel->Comment->validate = array(
+			'comment' => array(
+				'notBlank' => array(
+					'rule' => array('notBlank'),
+				)
+			)
+		);
+
+		$result = $TestModel->saveMany(array(
+			array(
+				'user_id' => 1,
+				'title' => 'New Article',
+				'body' => 'This article contains a invalid comment',
+				'Comment' => array(
+					array(
+						'user_id' => 1,
+						'comment' => ''
+					)
+				)
+			)
+		), array('deep' => true));
+		$this->assertFalse($result);
+		$this->assertEquals(array(
+			array(
+				'Comment' => array(
+					array('comment' => array('notBlank'))
+				)
+			)
+		), $TestModel->validationErrors);
+	}
+
+/**
+ * testSaveAssociatedDeepHasOneHasManyValidateTrueValidationFailure method
+ *
+ * @return void
+ */
+	public function testSaveAssociatedDeepHasOneHasManyValidateTrueValidationFailure() {
+		$this->loadFixtures('User', 'Article', 'Comment');
+		$TestModel = new UserHasOneArticle();
+		$TestModel->Article->Comment->validate = array(
+			'comment' => array(
+				'notBlank' => array(
+					'rule' => array('notBlank'),
+				)
+			)
+		);
+
+		$result = $TestModel->saveAssociated(array(
+			'User' => array(
+				'user' => 'hiromi',
+				'password' => '5f4dcc3b5aa765d61d8327deb882cf99',
+			),
+			'Article' => array(
+				'title' => 'Article with User',
+				'body' => 'This article will be saved with an user and contains a invalid comment',
+				'Comment' => array(
+					array(
+						'user_id' => 1,
+						'comment' => ''
+					)
+				)
+			)
+		), array('deep' => true, 'validate' => true));
+		$this->assertFalse($result);
+		$this->assertEquals(array(
+			'Article' => array(
+				'Comment' => array(
+					array('comment' => array('notBlank'))
+				)
+			)
+		), $TestModel->validationErrors);
+	}
+
+/**
+ * testSaveAssociatedDeepBelongsToHasManyValidateTrueValidationFailure method
+ *
+ * @return void
+ */
+	public function testSaveAssociatedDeepBelongsToHasManyValidateTrueValidationFailure() {
+		$this->loadFixtures('ArticlesTag', 'Article', 'Comment');
+		$TestModel = new ArticlesTagBelongsToArticle();
+		$TestModel->Article->Comment->validate = array(
+			'comment' => array(
+				'notBlank' => array(
+					'rule' => array('notBlank'),
+				)
+			)
+		);
+
+		$result = $TestModel->saveAssociated(array(
+			'ArticlesTagBelongsToArticle' => array(
+				'tag_id' => 1,
+			),
+			'Article' => array(
+				'title' => 'Article with User',
+				'body' => 'This article will be saved with an user and contains a invalid comment',
+				'Comment' => array(
+					array(
+						'user_id' => 1,
+						'comment' => ''
+					)
+				)
+			)
+		), array('deep' => true, 'validate' => true));
+		$this->assertFalse($result);
+		$this->assertEquals(array(
+			'Article' => array(
+				'Comment' => array(
+					array('comment' => array('notBlank'))
+				)
+			)
+		), $TestModel->validationErrors);
+	}
+
+/**
+ * Test that boolean fields don't cause saveAssociated to fail
+ *
+ * @return void
+ */
+	public function testSaveAssociatedHasOneBooleanFields() {
+		$this->loadFixtures('Item', 'Syfile', 'Image');
+		$data = array(
+			'Syfile' => array(
+				'image_id' => 1,
+				'name' => 'Some file',
+			),
+			'Item' => array(
+				'name' => 'testing',
+				'published' => false
+			),
+		);
+		$syfile = ClassRegistry::init('Syfile');
+		$syfile->bindModel(array('hasOne' => array('Item')), false);
+		$result = $syfile->saveAssociated($data, array('atomic' => false));
+
+		$this->assertCount(2, $result, '2 records should have been saved.');
+		$this->assertTrue($result['Syfile'], 'Both should have succeded');
+		$this->assertTrue($result['Item'], 'Both should have succeded');
+	}
+
+/**
+ * Test that boolean fields don't cause saveAssociated to fail
+ *
+ * @return void
+ */
+	public function testSaveAssociatedBelongsToBooleanFields() {
+		$this->loadFixtures('Item', 'Syfile', 'Image');
+		$data = array(
+			'Syfile' => array(
+				'image_id' => 1,
+				'name' => 'Some file',
+			),
+			'Item' => array(
+				'name' => 'testing',
+				'syfile_id' => 2,
+				'published' => false
+			),
+		);
+		$item = ClassRegistry::init('Item');
+		$item->bindModel(array(
+			'belongsTo' => array(
+				'Item' => array(
+					'foreignKey' => 'image_id'
+				)
+			)
+		), false);
+		$result = $item->saveAssociated($data, array('atomic' => false));
+
+		$this->assertCount(2, $result, '2 records should have been saved.');
+		$this->assertTrue($result['Syfile'], 'Both should have succeded');
+		$this->assertTrue($result['Item'], 'Both should have succeded');
 	}
 
 /**

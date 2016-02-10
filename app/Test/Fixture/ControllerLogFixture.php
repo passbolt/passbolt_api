@@ -1,7 +1,6 @@
 <?php
 /**
- * ControllerLogFixture
- *
+ * ControllerLog Fixture
  */
 class ControllerLogFixture extends CakeTestFixture {
 

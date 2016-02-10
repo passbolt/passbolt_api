@@ -1,7 +1,6 @@
 <?php
 /**
- * RoleFixture
- *
+ * Role Fixture
  */
 class RoleFixture extends CakeTestFixture {
 

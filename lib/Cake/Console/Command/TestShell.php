@@ -179,11 +179,11 @@ class TestShell extends Shell {
 /**
  * Parse the CLI options into an array CakeTestDispatcher can use.
  *
- * @return array Array of params for CakeTestDispatcher
+ * @return array|null Array of params for CakeTestDispatcher or null.
  */
 	protected function _parseArgs() {
 		if (empty($this->args)) {
-			return;
+			return null;
 		}
 		$params = array(
 			'core' => false,
@@ -222,6 +222,7 @@ class TestShell extends Shell {
 		$options = array();
 		$params = $this->params;
 		unset($params['help']);
+		unset($params['quiet']);
 
 		if (!empty($params['no-colors'])) {
 			unset($params['no-colors'], $params['colors']);

@@ -3,8 +3,8 @@
  * Error Handling Controller
  * Controller used by ErrorHandler to render error views.
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('AppController', 'Controller');
@@ -15,7 +15,7 @@ App::uses('ControllerLog', 'Model');
  *
  * Controller used by ErrorHandler to render error views.
  *
- * @package	   Cake.Controller
+ * @package       Cake.Controller
  */
 class CakeErrorController extends AppController {
 
@@ -24,7 +24,7 @@ class CakeErrorController extends AppController {
  *
  * @var array
  */
-	public $uses = array();
+	public $uses = [];
 
 /**
  * Constructor
@@ -46,7 +46,7 @@ class CakeErrorController extends AppController {
 		if ($this->Components->enabled('Security')) {
 			$this->Components->disable('Security');
 		}
-		$this->_set(array('cacheAction' => false, 'viewPath' => 'Errors'));
+		$this->_set(['cacheAction' => false, 'viewPath' => 'Errors']);
 	}
 
 /**
@@ -58,7 +58,7 @@ class CakeErrorController extends AppController {
  */
 	public function render($view = null, $layout = null) {
 		// if we're using the message component
-		if(isset($this->Message->messages) && !empty($this->Message->messages)) {
+		if (isset($this->Message->messages) && !empty($this->Message->messages)) {
 			$response = array_pop($this->Message->messages);
 		} else {
 			// By default, the title is the controller name, action with an error type.
@@ -83,6 +83,7 @@ class CakeErrorController extends AppController {
 		if (!$this->request->is('json')) {
 			$this->layout = 'error';
 			ControllerLog::write(Status::ERROR, $this->request, '', 'CakeError');
+
 			return parent::render($view, $layout);
 		} else {
 			return $this->response->body(json_encode($response));

@@ -1,10 +1,11 @@
 <?php
+
 /**
  * PermissionHelper Component
  * This class offers tools for controllers who needs to access permissions.
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class PermissionHelperComponent extends Component {
 
@@ -33,7 +34,7 @@ class PermissionHelperComponent extends Component {
  * @return array
  */
 	public function findAcoPermissions($acoModelName = '', $acoInstanceId = null) {
-		$permissions = array();
+		$permissions = [];
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
@@ -67,11 +68,11 @@ class PermissionHelperComponent extends Component {
 			$viewName = 'User' . $acoModelName . 'Permission';
 			$ModelView = Common::getModel($viewName);
 			$foreignKey = Inflector::underscore($acoModelName) . '_id';
-			$upData = array(
-				$viewName => array(
+			$upData = [
+				$viewName => [
 					$foreignKey => $acoInstanceId
-				)
-			);
+				]
+			];
 			$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
 			$ups = $ModelView->find('all', $upOptions);
 
@@ -79,11 +80,11 @@ class PermissionHelperComponent extends Component {
 			$viewName = 'Group' . $acoModelName . 'Permission';
 			$ModelView = Common::getModel($viewName);
 			$foreignKey = strtolower($acoModelName) . '_id';
-			$gpData = array(
-				$viewName => array(
+			$gpData = [
+				$viewName => [
 					$foreignKey => $acoInstanceId
-				)
-			);
+				]
+			];
 			$gpOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $gpData);
 			$gps = $ModelView->find('all', $gpOptions);
 
@@ -103,6 +104,7 @@ class PermissionHelperComponent extends Component {
  */
 	public function findAcoUsers($acoModelName, $acoInstanceId) {
 		$AcoModel = Common::getModel($acoModelName);
+
 		return $AcoModel->getAuthorizedUsers($acoInstanceId);
 	}
 }

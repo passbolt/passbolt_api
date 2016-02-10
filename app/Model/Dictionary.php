@@ -1,13 +1,14 @@
-<?php 
+<?php
 /**
  * Dictionary Model
  *
- * @copyright		 Copyright 2012, Passbolt.com
- * @license			 http://www.passbolt.com/license
- * @package			 app.Model.Dictionary
- * @since				 version 2.12.7
+ * @copyright         Copyright 2012, Passbolt.com
+ * @license             http://www.passbolt.com/license
+ * @package             app.Model.Dictionary
+ * @since                 version 2.12.7
  */
 App::uses('I18n', 'I18n');
+
 class Dictionary extends AppModel {
 
 /**
@@ -33,6 +34,7 @@ class Dictionary extends AppModel {
 		if (file_exists($dicoFile)) {
 			$dico = I18n::loadPo($dicoFile);
 		}
+
 		return $dico;
 	}
 }

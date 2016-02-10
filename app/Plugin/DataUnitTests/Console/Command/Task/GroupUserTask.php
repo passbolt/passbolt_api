@@ -20,7 +20,7 @@ class GroupUserTask extends ModelTask {
 	
 	protected function getData() {
 		$gu[] = array('GroupUser' => array(
-			'id' => '53865f1f-230c-448b-b911-2173c0a895dc',
+			'id' => Common::uuid('group_user.id.management-dame'),
 			'group_id' => Common::uuid('group.id.management'),
 			'user_id' => Common::uuid('user.id.dame'),
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
@@ -38,7 +38,7 @@ class GroupUserTask extends ModelTask {
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$gu[] = array('GroupUser' => array(
-			'id' => '53865f1f-311c-4535-8a72-2173c0a895dc',
+			'id' => Common::uuid('group_user.id.human-marlyn'),
 			'group_id' => Common::uuid('group.id.human'),
 			'user_id' => Common::uuid('user.id.marlyn'),
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
@@ -96,6 +96,12 @@ class GroupUserTask extends ModelTask {
 			'group_id' => Common::uuid('group.id.developers_cakephp'),
 			'user_id' => Common::uuid('user.id.frances'),
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+		));
+		$gu[] = array('GroupUser' => array(
+			'id' => '53865fa5-1178-4580-b80f-204fc0a995dc',
+			'group_id' => Common::uuid('group.id.no_privilege'),
+			'user_id' => Common::uuid('user.id.nancy'),
+			'created' => '2016-02-02 18:59:05', 'modified' => '2016-02-02 18:59:05', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		// $gu[] = array('GroupUser' => array(
 			// 'id' => 'bbd5a042-c5cd-11e1-a345-080027046c4c',

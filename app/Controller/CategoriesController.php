@@ -3,8 +3,8 @@
  * Categories controller
  * This file will define how categories are managed
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('CategoryType', 'Model');
@@ -18,7 +18,7 @@ class CategoriesController extends AppController {
  * @return void
  */
 	public function index() {
-		$data = array();
+		$data = [];
 		$children = false;
 
 		if (isset($this->request->query['children']) && $this->request->query['children'] === 'true') {
@@ -64,18 +64,21 @@ class CategoriesController extends AppController {
 		// check if the category id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
+
 			return;
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
+
 			return;
 		}
 
 		// check if it exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
-			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			$this->Message->error(__('The category does not exist'), ['code' => 404]);
+
 			return;
 		}
 
@@ -83,7 +86,8 @@ class CategoriesController extends AppController {
 		// the permissionable after find executed on the previous operation findById should drop
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->Category->isAuthorized($id, PermissionType::READ)) {
-			$this->Message->error(__('You are not authorized to access this category'), array('code' => 403));
+			$this->Message->error(__('You are not authorized to access this category'), ['code' => 403]);
+
 			return;
 		}
 
@@ -93,7 +97,7 @@ class CategoriesController extends AppController {
 			$data = $this->Category->find('threaded', $o);
 			$this->set('data', $data[0]);
 		} else {
-			$data = array('Category' => array('id' => $id));
+			$data = ['Category' => ['id' => $id]];
 			$o = $this->Category->getFindOptions('view', User::get('Role.name'), $data);
 			$this->set('data', $this->Category->find('first', $o));
 		}
@@ -110,17 +114,20 @@ class CategoriesController extends AppController {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
+
 			return;
 		}
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
+
 			return;
 		}
 		// check if the category exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
-			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			$this->Message->error(__('The category does not exist'), ['code' => 404]);
+
 			return;
 		}
 		// find children thread and return
@@ -147,11 +154,13 @@ class CategoriesController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
+
 			return;
 		}
 		// check if data was provided
 		if (!isset($this->request->data['Category'])) {
 			$this->Message->error(__('No data were provided'));
+
 			return;
 		}
 
@@ -160,7 +169,9 @@ class CategoriesController extends AppController {
 		// Check if the user is allowed to create in the parent category.
 		if (isset($catpost['Category']['parent_id'])) {
 			if (!$this->Category->isAuthorized($catpost['Category']['parent_id'], PermissionType::CREATE)) {
-				$this->Message->error(__('You are not authorized to create a category into the given parent category'), array('code' => 403));
+				$this->Message->error(__('You are not authorized to create a category into the given parent category'),
+					['code' => 403]);
+
 				return;
 			}
 		}
@@ -171,6 +182,7 @@ class CategoriesController extends AppController {
 		// check if the data is valid
 		if (!$this->Category->validates()) {
 			$this->Message->error(__('Could not validate category data'));
+
 			return;
 		}
 
@@ -181,6 +193,7 @@ class CategoriesController extends AppController {
 
 		if ($category === false) {
 			$this->Message->error(__('The category could not be saved'));
+
 			return;
 		}
 
@@ -194,7 +207,7 @@ class CategoriesController extends AppController {
 		}
 
 		// Get back the category data to return to the client
-		$data = array('Category' => array('id' => $category['Category']['id']));
+		$data = ['Category' => ['id' => $category['Category']['id']]];
 		$options = $this->Category->getFindOptions('addResult', User::get('Role.name'), $data);
 		$this->set('data', $this->Category->find('first', $options));
 		$this->Message->success(__('The category was successfully added'));
@@ -210,37 +223,43 @@ class CategoriesController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
+
 			return;
 		}
 
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
+
 			return;
 		}
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
+
 			return;
 		}
 
 		// check if the category exists
 		$category = $this->Category->findById($id);
 		if (!($category)) {
-			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			$this->Message->error(__('The category does not exist'), ['code' => 404]);
+
 			return;
 		}
 
 		// Check if the user is allowed to update the category.
 		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not authorized to edit this category'), array('code' => 403));
+			$this->Message->error(__('You are not authorized to edit this category'), ['code' => 403]);
+
 			return;
 		}
 
 		// check if data was provided
 		if (!isset($this->request->data['Category'])) {
 			$this->Message->error(__('No data were provided'));
+
 			return;
 		}
 
@@ -248,7 +267,9 @@ class CategoriesController extends AppController {
 		// Check if the user is allowed to move the Category inside the given Category.
 		if (isset($this->request->data['Category']['parent_id']) && $category['Category']['parent_id'] != $this->request->data['Category']['parent_id']) {
 			if (!$this->Category->isAuthorized($this->request->data['Category']['parent_id'], PermissionType::CREATE)) {
-				$this->Message->error(__('You are not authorized to create a category into the given parent category'), array('code' => 403));
+				$this->Message->error(__('You are not authorized to create a category into the given parent category'),
+					['code' => 403]);
+
 				return;
 			}
 		}
@@ -257,6 +278,7 @@ class CategoriesController extends AppController {
 		$this->Category->set($this->request->data);
 		if (!$this->Category->validates()) {
 			$this->Message->error(__('Could not validate category data'));
+
 			return;
 		}
 
@@ -266,6 +288,7 @@ class CategoriesController extends AppController {
 		$category = $this->Category->save($this->request->data, true, $fields['fields']);
 		if ($category === false) {
 			$this->Message->error(__('The category could not be updated'));
+
 			return;
 		}
 
@@ -282,25 +305,29 @@ class CategoriesController extends AppController {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
+
 			return;
 		}
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
+
 			return;
 		}
 
 		// check if the category exists
 		$category = $this->Category->findById($id);
 		if (!$category) {
-			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			$this->Message->error(__('The category does not exist'), ['code' => 404]);
+
 			return;
 		}
 
 		// Check if the user is allowed to delete the category.
 		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not authorized to delete this category'), array('code' => 403));
+			$this->Message->error(__('You are not authorized to delete this category'), ['code' => 403]);
+
 			return;
 		}
 
@@ -324,18 +351,21 @@ class CategoriesController extends AppController {
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
+
 			return;
 		}
 
 		// check if the category id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
+
 			return;
 		}
 
 		// check if the category exists
 		if (!$this->Category->exists($id)) {
-			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			$this->Message->error(__('The category does not exist'), ['code' => 404]);
+
 			return;
 		}
 
@@ -344,12 +374,14 @@ class CategoriesController extends AppController {
 			// check if the parent category id is valid
 			if (!Common::isUuid($parentId)) {
 				$this->Message->error(__('The parent category id invalid'));
+
 				return;
 			}
 
 			// check if the parent category exists
 			if (!$this->Category->exists($parentId)) {
-				$this->Message->error(__('The parent category does not exist'), array('code' => 404));
+				$this->Message->error(__('The parent category does not exist'), ['code' => 404]);
+
 				return;
 			}
 		}
@@ -357,6 +389,7 @@ class CategoriesController extends AppController {
 		// check if the position is ok
 		if ($position < 0) {
 			$this->Message->error(__('It is not possible to move the category at this position'));
+
 			return;
 		}
 
@@ -380,30 +413,35 @@ class CategoriesController extends AppController {
 		// check if the category is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The category id is missing'));
+
 			return;
 		}
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The category id is invalid'));
+
 			return;
 		}
 
 		$category = $this->Category->findById($id);
 		if (!$category) {
-			$this->Message->error(__('The category does not exist'), array('code' => 404));
+			$this->Message->error(__('The category does not exist'), ['code' => 404]);
+
 			return;
 		}
 
 		$type = $this->Category->CategoryType->findByName($typeName);
 		if (!$type) {
-			$this->Message->error(__('The type does not exist'), array('code' => 404));
+			$this->Message->error(__('The type does not exist'), ['code' => 404]);
+
 			return;
 		}
 
 		// Check if the user is allowed to update the category.
 		if (!$this->Category->isAuthorized($id, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not authorized to change the type of this category'), array('code' => 403));
+			$this->Message->error(__('You are not authorized to change the type of this category'), ['code' => 403]);
+
 			return;
 		}
 
@@ -412,6 +450,7 @@ class CategoriesController extends AppController {
 
 		if (!$category) {
 			$this->Message->error(__('The type could not be changed'));
+
 			return;
 		}
 		$this->Message->success(__('The type was successfully set'));

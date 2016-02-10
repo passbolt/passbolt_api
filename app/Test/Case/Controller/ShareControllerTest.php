@@ -55,7 +55,6 @@ class ShareControllerTest extends ControllerTestCase {
 		parent::setUp();
 
 		$this->User = Common::getModel('User');
-		$u = $this->User->get();
 		$this->Resource = Common::getModel('Resource');
 		$this->Category = Common::getModel('Category');
 		$this->Permission = Common::getModel('Permission');
@@ -68,8 +67,8 @@ class ShareControllerTest extends ControllerTestCase {
 		$this->session->init();
 
 		// log the user as a manager to be able to access all categories
-		$steve = $this->User->findByUsername('dame@passbolt.com');
-		$this->User->setActive($steve);
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
+		$this->User->setActive($user);
 	}
 
 	public function tearDown() {
@@ -78,28 +77,11 @@ class ShareControllerTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
-	private function _updateCall($resourceName = '', $data = array(), $aco = '') {
-		$resourceId = '';
-		if ($resourceName == 'fakeidrs') {
-			$resourceId = Common::uuid('role.id.anonymous'); // Non existing id.
-		}
-		elseif ($resourceName == 'wrongidrs') {
-			$resourceId = '0208f3a4-c5cd-11e1-a0c5-080Y27796c4c'; // Non existing id.
-		}
-		else {
-			$resource = $this->Resource->findByName($resourceName);
-			if (!$resource) {
-				echo "Could not get resource";
-				die();
-			}
-		}
-
-		$aco = ($aco != '' ? $aco : 'Resource');
-		$acoInstanceId = isset($resource['Resource']['id']) ? $resource['Resource']['id'] : $resourceId;
-
+	private function _updateCall($aco = 'Resource', $acoId = '', $data = array()) {
+		Common::uuid('not-valid-reference');
 
 		// check how many permissions are already existing before the new insertion
-		$res = $this->testAction("/share/$aco/$acoInstanceId.json", array(
+		$res = $this->testAction("/share/$aco/$acoId.json", array(
 				'method' => 'put',
 				'return' => 'contents',
 				'data' => $data
@@ -109,12 +91,12 @@ class ShareControllerTest extends ControllerTestCase {
 
 	public function testUpdateAcoNotValid() {
 		$this->setExpectedException('HttpException', 'The call to entry point with parameter User is not allowed');
-		$res = $this->_updateCall('tetris license', array(), 'User');
+		$this->_updateCall('User', Common::uuid('tetris-license'), array());
 	}
 
 	public function testUpdateNoPermissions() {
 		$this->setExpectedException('HttpException', 'No permissions were provided');
-		$res = $this->_updateCall('tetris license', array(), 'Resource');
+		$this->_updateCall('Resource', Common::uuid('tetris-license'), array());
 	}
 
 	public function testUpdateWrongIdProvided() {
@@ -124,7 +106,7 @@ class ShareControllerTest extends ControllerTestCase {
 				array('Permission' => array())
 			),
 		);
-		$res = $this->_updateCall('wrongidrs', $data, 'Resource');
+		$this->_updateCall('Resource', 'badid', $data);
 	}
 
 	public function testUpdateFakeIdProvided() {
@@ -134,7 +116,7 @@ class ShareControllerTest extends ControllerTestCase {
 				array('Permission' => array())
 			),
 		);
-		$res = $this->_updateCall('fakeidrs', $data, 'Resource');
+		$this->_updateCall('Resource', Common::uuid(), $data);
 	}
 
 	public function testUpdateNoPermissionsProvided() {
@@ -144,14 +126,13 @@ class ShareControllerTest extends ControllerTestCase {
 
 			),
 		);
-		$res = $this->_updateCall('facebook account', $data, 'Resource');
+		$this->_updateCall('Resource', Common::uuid('resource.id.facebook-account'), $data);
 	}
 
 	public function testUpdateNotAllowed() {
-		$resource = $this->Resource->findByName('facebook account');
-		$acoInstanceId = $resource['Resource']['id'];
+		$acoInstanceId = Common::uuid('resource.id.facebook-account');
 
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$aco = 'Resource';
@@ -168,66 +149,89 @@ class ShareControllerTest extends ControllerTestCase {
 		);
 
 		// check how many permissions are already existing before the new insertion
-		$res = $this->testAction("/share/$aco/$acoInstanceId.json", array(
-				'method' => 'put',
-				'return' => 'contents',
-				'data' => $data
-			), true);
-		return $res;
+		$this->_updateCall('Resource', $acoInstanceId, $data);
 	}
 
 	public function testUpdateDeleteNonExistingResource() {
-		$fakeResourceId = '0208f3a4-c5cd-11e1-a0c5-080027796c4c';
+		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$permissionId = Common::uuid('not-valid-reference');
+
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'id' => $fakeResourceId,
+						'id' => $permissionId,
 						'delete' => '1',
 					)
 				)
 			),
 		);
-		$this->setExpectedException('HttpException', 'The permission with id 0208f3a4-c5cd-11e1-a0c5-080027796c4c does not exist');
-		$this->_updateCall('facebook account', $data, 'Resource');
+		$this->setExpectedException('HttpException', "The permission with id {$permissionId} does not exist");
+		$this->_updateCall('Resource', $acoInstanceId, $data);
 	}
 
-	public function testUpdateDelete() {
-		// Get a random direct perm.
-		$directPerm = $this->Permission->find('first', array(
-				'conditions' => array(
-					'aco' => 'Resource',
-					'aro' => 'User'
-				)
-			));
+	public function testUpdateDeletePermissionBelongsToOtherResource() {
+		$acoInstanceId = Common::uuid('resource.id.facebook-account');
 
+		// Get a permission that doesn't belong to the resource.
+		$directPerm = $this->Permission->find('first', array(
+			'conditions' => array(
+				'aco' => 'Resource',
+				'aco_foreign_key' => Common::uuid('resource.id.salesforce-account'),
+				'aro' => 'User',
+			)
+		));
+		$permissionId = $directPerm['Permission']['id'];
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'id' => $directPerm['Permission']['id'],
+						'id' => $permissionId,
 						'delete' => '1',
 					)
 				)
 			),
 		);
-		$res = json_decode($this->_updateCall('facebook account', $data, 'Resource'), true);
-		$this->assertEquals(
-			Status::SUCCESS,
-			$res['header']['status'],
+
+		$this->setExpectedException('HttpException', "Could not delete permission id {$permissionId}");
+		$this->_updateCall('Resource', $acoInstanceId, $data);
+	}
+
+	public function testUpdateDeletePermission() {
+		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+
+		// Get a permission that belongs to the resource
+		$directPerm = $this->Permission->find('first', array(
+			'conditions' => array(
+				'aco' => 'Resource',
+				'aco_foreign_key' => Common::uuid('resource.id.facebook-account'),
+				'aro' => 'User',
+			)
+		));
+		$permissionId = $directPerm['Permission']['id'];
+		$data = array(
+			'Permissions' => array(
+				array(
+					'Permission' => array (
+						'id' => $permissionId,
+						'delete' => '1',
+					)
+				)
+			),
+		);
+		$res = json_decode($this->_updateCall('Resource', $acoInstanceId, $data), true);
+		$this->assertEquals(Status::SUCCESS, $res['header']['status'],
 			"Deleting a permission should have returned a success, but returned {$res['header']['status']}"
 		);
 
 		// Observe that the permission is deleted.
-		$exist = $this->Permission->exists($directPerm['Permission']['id']);
-		$this->assertFalse(
-			$exist,
-			"Deleting a permission should have actually deleted the permission, but the permission still exists."
-		);
+		$exist = $this->Permission->exists($permissionId);
+		$this->assertFalse($exist, "Deleting a permission should have actually deleted the permission, but the permission still exists.");
 	}
 
 	public function testUpdateAddSecretsNotProvided() {
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 
 		$data = array(
 			'Permissions' => array(
@@ -240,7 +244,7 @@ class ShareControllerTest extends ControllerTestCase {
 			),
 		);
 		$this->setExpectedException('HttpException', 'The number of secrets provided doesn\'t match the 1 users who have now access to the resources');
-		$res = json_decode($this->_updateCall('facebook account', $data, 'Resource'), true);
+		$this->_updateCall('Resource', $acoInstanceId, $data);
 	}
 
 	public function testUpdateAddAlreadyExist() {
@@ -285,29 +289,27 @@ hcciUFw5
 
 		$resource = $this->Resource->findById($directPerm['Permission']['aco_foreign_key']);
 		$this->setExpectedException('HttpException', 'The permission to be created already exists');
-		$this->_updateCall($resource['Resource']['name'], $data, 'Resource');
+		$this->_updateCall('Resource', $resource['Resource']['id'], $data);
 	}
 
 	// Test update add with wrong secrets data provided. (not matching the user ids).
 	public function testUpdateAddSecretForWrongUserProvided() {
-
-		$ada = $this->User->findByUsername('ada@passbolt.com');
-		$user = $this->User->findByUsername('betty@passbolt.com');
-		$ce = $this->User->findByUsername('carol@passbolt.com');
-
-		$fbRs = $this->Resource->findByName('facebook account');
+		$userAdaId = common::uuid('user.id.ada');
+		$userBettyId = common::uuid('user.id.betty');
+		$userCarolId = common::uuid('user.id.carol');
+		$rsFacebookId = common::uuid('resource.id.facebook-account');
 
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $user['User']['id'],
+						'aro_foreign_key' => $userBettyId,
 						'type' => PermissionType::OWNER,
 					),
 				),
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $ce['User']['id'],
+						'aro_foreign_key' => $userCarolId,
 						'type' => PermissionType::OWNER,
 					),
 				)
@@ -315,8 +317,8 @@ hcciUFw5
 			'Secrets' => array(
 				array(
 					'Secret' => array (
-						'user_id' => $ada['User']['id'],
-						'resource_id' => $fbRs['Resource']['id'],
+						'user_id' =>$userAdaId,
+						'resource_id' => $rsFacebookId,
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -334,8 +336,8 @@ hcciUFw5
 				),
 				array(
 					'Secret' => array (
-						'user_id' =>$user['User']['id'],
-						'resource_id' => $fbRs['Resource']['id'],
+						'user_id' =>$userBettyId,
+						'resource_id' => $rsFacebookId,
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -353,19 +355,19 @@ hcciUFw5
 				),
 			),
 		);
-		$this->setExpectedException('HttpException', "The secret for user id {$ce['User']['id']} is not provided");
-		$this->_updateCall('facebook account', $data, 'Resource');
+		$this->setExpectedException('HttpException', "The secret for user id {$userCarolId} is not provided");
+		$this->_updateCall('Resource', $rsFacebookId, $data);
 	}
 
 	public function testUpdateAddValid() {
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$fbRs = $this->Resource->findByName('facebook account');
+		$userId = common::uuid('user.id.user');
+		$rsFacebookId = common::uuid('resource.id.facebook-account');
 
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $user['User']['id'],
+						'aro_foreign_key' => $userId,
 						'type' => PermissionType::OWNER,
 					),
 				),
@@ -373,8 +375,8 @@ hcciUFw5
 			'Secrets' => array(
 				array(
 					'Secret' => array (
-						'user_id' =>$user['User']['id'],
-						'resource_id' => $fbRs['Resource']['id'],
+						'user_id' => $userId,
+						'resource_id' => $rsFacebookId,
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -392,7 +394,7 @@ hcciUFw5
 				),
 			),
 		);
-		$res = json_decode($this->_updateCall('facebook account', $data, 'Resource'), true);
+		$res = json_decode($this->_updateCall('Resource', $rsFacebookId, $data), true);
 		$this->assertEquals(
 			Status::SUCCESS,
 			$res['header']['status'],
@@ -402,8 +404,8 @@ hcciUFw5
 		// Observe that the permission is deleted.
 		$exist = $this->Permission->find('first', array(
 				'conditions' => array(
-					'aco_foreign_key' => $fbRs['Resource']['id'],
-					'aro_foreign_key' => $user['User']['id'],
+					'aco_foreign_key' => $rsFacebookId,
+					'aro_foreign_key' => $userId,
 					'type' => PermissionType::OWNER,
 				)
 			));
@@ -434,8 +436,7 @@ hcciUFw5
 			),
 		);
 
-		$resource = $this->Resource->findById($directPerm['Permission']['aco_foreign_key']);
-		$res = json_decode($this->_updateCall($resource['Resource']['name'], $data, 'Resource'), true);
+		$res = json_decode($this->_updateCall('Resource', $directPerm['Permission']['aco_foreign_key'], $data), true);
 		$this->assertEquals(
 			Status::SUCCESS,
 			$res['header']['status'],
@@ -444,15 +445,14 @@ hcciUFw5
 	}
 
 	public function testSimulate() {
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$fbRs = $this->Resource->findByName('facebook account');
-		$acoInstanceId = $fbRs['Resource']['id'];
+		$userId = common::uuid('user.id.user');
+		$acoInstanceId = common::uuid('resource.id.facebook-account');
 
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $user['User']['id'],
+						'aro_foreign_key' => $userId,
 						'type' => PermissionType::OWNER,
 					),
 				),
@@ -491,28 +491,28 @@ hcciUFw5
 	public function testSearchUsersToGrantIdIsMissing() {
 		$this->setExpectedException('HttpException', "The resource id is missing");
 		// go through the addAcoPermissions because of routes
-		$srvResult = json_decode($this->testAction("/share/searchUsers/resource/", array('method' => 'get', 'return' => 'contents')), true);
+		$this->testAction("/share/searchUsers/resource/", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testSearchUsersToGrantIdIsInvalid() {
 		$id = 'badId';
 		$this->setExpectedException('HttpException', "The resource id is invalid");
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents')), true);
+		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testSearchUsersToGrantDoesNotExist() {
-		$id = '00000000-0000-0000-0000-000000000000';
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', "The resource does not exist");
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents')), true);
+		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testSearchUsersToGrantWithoutOwnerAccess() {
 		$id = Common::uuid('resource.id.cpp2-pwd2');
-		$user = $this->User->findByUsername('ada@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', "You are not authorized to share this resource");
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents')), true);
+		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	// test search users available to receive a new direct permission : owner should be excluded

@@ -17,7 +17,7 @@
  */
 
 App::uses('DboSource', 'Model/Datasource');
-App::uses('String', 'Utility');
+App::uses('CakeText', 'Utility');
 
 /**
  * DBO implementation for the SQLite3 DBMS.
@@ -303,7 +303,7 @@ class Sqlite extends DboSource {
 		if (stripos($querystring, 'SELECT') === 0 && stripos($querystring, 'FROM') > 0) {
 			$selectpart = substr($querystring, 7);
 			$selects = array();
-			foreach (String::tokenize($selectpart, ',', '(', ')') as $part) {
+			foreach (CakeText::tokenize($selectpart, ',', '(', ')') as $part) {
 				$fromPos = stripos($part, ' FROM ');
 				if ($fromPos !== false) {
 					$selects[] = trim(substr($part, 0, $fromPos));
@@ -323,7 +323,7 @@ class Sqlite extends DboSource {
 				$j++;
 				continue;
 			}
-			if (preg_match('/\bAS\s+(.*)/i', $selects[$j], $matches)) {
+			if (preg_match('/\bAS(?!.*\bAS\b)\s+(.*)/i', $selects[$j], $matches)) {
 				$columnName = trim($matches[1], '"');
 			} else {
 				$columnName = trim(str_replace('"', '', $selects[$j]));

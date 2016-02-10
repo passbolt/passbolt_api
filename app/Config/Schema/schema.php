@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Schema
  * $ ./Console/cake schema create
@@ -22,16 +22,16 @@ class AppSchema extends CakeSchema {
 	}
 
 	public function after($event = array()) {
-		
+
 		if (isset($event['create'])) {
 			self::$createdTables[] = $event['create'];
 			echo 'Table ' . $event['create'] . " created\n";
-			
+
 			// When all table have been created
-			if(count(self::$createdTables) == count($this->tables)) {
-				foreach(self::$createdTables as $tbName) {
+			if (count(self::$createdTables) == count($this->tables)) {
+				foreach (self::$createdTables as $tbName) {
 					$specificSchemaName = Inflector::camelize($tbName) . 'Schema';
-					if(class_exists($specificSchemaName)) {
+					if (class_exists($specificSchemaName)) {
 						echo 'Execute specific schema ' . $specificSchemaName;
 						$modelSchema = new $specificSchemaName();
 						$modelSchema->init();
@@ -59,7 +59,7 @@ class AppSchema extends CakeSchema {
 		'role_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'username' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'key' => 'unique', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'active' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),
-        'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -194,7 +194,7 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
 	);
 
- 	public $category_types = array(
+	public $category_types = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'description' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
@@ -358,9 +358,9 @@ class AppSchema extends CakeSchema {
 		'description' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 255, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'indexes' => array(
-          'PRIMARY' => array('column' => 'id', 'unique' => 1),
-          'serial' => array('column' => array('serial'), 'unique' => 1),
-        ),
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'serial' => array('column' => array('serial'), 'unique' => 1),
+		),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 

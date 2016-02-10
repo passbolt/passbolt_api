@@ -135,23 +135,23 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertRegExp($pattern, $result);
 
 		// extract.ctp
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:15;6\n';
+		$pattern = '/\#: extract\.ctp:15;6\n';
 		$pattern .= 'msgid "You have %d new message."\nmsgid_plural "You have %d new messages."/';
 		$this->assertRegExp($pattern, $result);
 
 		$pattern = '/msgid "You have %d new message."\nmsgstr ""/';
 		$this->assertNotRegExp($pattern, $result, 'No duplicate msgid');
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:7\n';
+		$pattern = '/\#: extract\.ctp:7\n';
 		$pattern .= 'msgid "You deleted %d message."\nmsgid_plural "You deleted %d messages."/';
 		$this->assertRegExp($pattern, $result);
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:14\n';
-		$pattern .= '\#: (\\\\|\/)home\.ctp:68\n';
+		$pattern = '/\#: extract\.ctp:14\n';
+		$pattern .= '\#: home\.ctp:68\n';
 		$pattern .= 'msgid "Editing this Page"\nmsgstr ""/';
 		$this->assertRegExp($pattern, $result);
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:22\nmsgid "';
+		$pattern = '/\#: extract\.ctp:22\nmsgid "';
 		$pattern .= 'Hot features!';
 		$pattern .= '\\\n - No Configuration: Set-up the database and let the magic begin';
 		$pattern .= '\\\n - Extremely Simple: Just look at the name...It\'s Cake';
@@ -162,19 +162,19 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertContains('msgid "double \\"quoted\\""', $result, 'Strings with quotes not handled correctly');
 		$this->assertContains("msgid \"single 'quoted'\"", $result, 'Strings with quotes not handled correctly');
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:36\nmsgid "letter"/';
+		$pattern = '/\#: extract\.ctp:36\nmsgid "letter"/';
 		$this->assertRegExp($pattern, $result, 'Strings with context should not overwrite strings without context');
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:37;39\nmsgctxt "A"\nmsgid "letter"/';
+		$pattern = '/\#: extract\.ctp:37;39\nmsgctxt "A"\nmsgid "letter"/';
 		$this->assertRegExp($pattern, $result, 'Should contain string with context "A"');
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:38\nmsgctxt "B"\nmsgid "letter"/';
+		$pattern = '/\#: extract\.ctp:38\nmsgctxt "B"\nmsgid "letter"/';
 		$this->assertRegExp($pattern, $result, 'Should contain string with context "B"');
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:40\nmsgid "%d letter"\nmsgid_plural "%d letters"/';
+		$pattern = '/\#: extract\.ctp:40\nmsgid "%d letter"\nmsgid_plural "%d letters"/';
 		$this->assertRegExp($pattern, $result, 'Plural strings with context should not overwrite strings without context');
 
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:41\nmsgctxt "A"\nmsgid "%d letter"\nmsgid_plural "%d letters"/';
+		$pattern = '/\#: extract\.ctp:41\nmsgctxt "A"\nmsgid "%d letter"\nmsgid_plural "%d letters"/';
 		$this->assertRegExp($pattern, $result, 'Should contain plural string with context "A"');
 
 		// extract.ctp - reading the domain.pot
@@ -218,6 +218,34 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertNotRegExp($pattern, $result);
 
 		$pattern = '/\#: .*extract\.ctp:33\n/';
+		$this->assertNotRegExp($pattern, $result);
+	}
+
+/**
+ * testExtractWithoutLocations method
+ *
+ * @return void
+ */
+	public function testExtractWithoutLocations() {
+		$this->Task->interactive = false;
+
+		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Pages';
+		$this->Task->params['output'] = $this->path . DS;
+		$this->Task->params['extract-core'] = 'no';
+		$this->Task->params['merge'] = 'no';
+		$this->Task->params['no-location'] = true;
+
+		$this->Task->expects($this->never())->method('err');
+		$this->Task->expects($this->any())->method('in')
+			->will($this->returnValue('y'));
+		$this->Task->expects($this->never())->method('_stop');
+
+		$this->Task->execute();
+		$this->assertTrue(file_exists($this->path . DS . 'default.pot'));
+
+		$result = file_get_contents($this->path . DS . 'default.pot');
+
+		$pattern = '/\n\#: .*\n/';
 		$this->assertNotRegExp($pattern, $result);
 	}
 

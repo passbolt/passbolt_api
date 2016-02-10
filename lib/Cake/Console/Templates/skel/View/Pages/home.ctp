@@ -62,7 +62,7 @@ endif;
 		$settings = Cache::settings();
 		if (!empty($settings)):
 			echo '<span class="notice success">';
-				echo __d('cake_dev', 'The %s is being used for core caching. To change the config edit %s', '<em>'. $settings['engine'] . 'Engine</em>', 'APP/Config/core.php');
+				echo __d('cake_dev', 'The %s is being used for core caching. To change the config edit %s', '<em>' . $settings['engine'] . 'Engine</em>', 'APP/Config/core.php');
 			echo '</span>';
 		else:
 			echo '<span class="notice">';
@@ -141,7 +141,7 @@ if (isset($filePresent)):
 			echo '<span class="notice">';
 				echo __d('cake_dev', 'DebugKit is not installed. It will help you inspect and debug different aspects of your application.');
 				echo '<br/>';
-				echo __d('cake_dev', 'You can install it from %s', $this->Html->link('GitHub', 'https://github.com/cakephp/debug_kit'));
+				echo __d('cake_dev', 'You can install it from %s', $this->Html->link('GitHub', 'https://github.com/cakephp/debug_kit/tree/2.2'));
 			echo '</span>';
 		endif;
 	?>
@@ -181,7 +181,7 @@ You can also add some CSS styles for your pages at: %s.',
 <p>
 <ul>
 	<li>
-		<?php echo $this->Html->link('DebugKit', 'https://github.com/cakephp/debug_kit') ?>:
+		<?php echo $this->Html->link('DebugKit', 'https://github.com/cakephp/debug_kit/tree/2.2') ?>:
 		<?php echo __d('cake_dev', 'provides a debugging toolbar and enhanced debugging tools for CakePHP applications.'); ?>
 	</li>
 	<li>

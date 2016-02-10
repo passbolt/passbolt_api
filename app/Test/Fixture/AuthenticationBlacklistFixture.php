@@ -1,7 +1,6 @@
 <?php
 /**
- * AuthenticationBlacklistFixture
- *
+ * AuthenticationBlacklist Fixture
  */
 class AuthenticationBlacklistFixture extends CakeTestFixture {
 

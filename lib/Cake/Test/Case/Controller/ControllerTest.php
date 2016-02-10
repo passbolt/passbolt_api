@@ -653,7 +653,7 @@ class ControllerTest extends CakeTestCase {
 		$expected = $Controller->ControllerComment->validationErrors;
 
 		$Controller->viewPath = 'Posts';
-		$result = $Controller->render('index');
+		$Controller->render('index');
 		$View = $Controller->View;
 		$this->assertTrue(isset($View->validationErrors['ControllerComment']));
 		$this->assertEquals($expected, $View->validationErrors['ControllerComment']);
@@ -993,6 +993,7 @@ class ControllerTest extends CakeTestCase {
 		$Controller->constructClasses();
 
 		$this->assertFalse(isset($Controller->Session));
+		$this->assertFalse(isset($Controller->Flash));
 	}
 
 /**
@@ -1106,7 +1107,7 @@ class ControllerTest extends CakeTestCase {
 		$TestController = new TestController();
 
 		$Post = new ControllerPost();
-		$Post->validate = array('title' => 'notEmpty');
+		$Post->validate = array('title' => 'notBlank');
 		$Post->set('title', '');
 		$result = $TestController->validateErrors($Post);
 
@@ -1441,6 +1442,25 @@ class ControllerTest extends CakeTestCase {
 
 		$url = new CakeRequest('test/admin_add/');
 		$url->addParams(array('controller' => 'test_controller', 'action' => 'admin_add'));
+		$response = $this->getMock('CakeResponse');
+
+		$Controller = new TestController($url, $response);
+		$Controller->invokeAction($url);
+	}
+
+/**
+ * test invoking controller methods.
+ *
+ * @expectedException PrivateActionException
+ * @expectedExceptionMessage Private Action TestController::Admin_add() is not directly accessible.
+ * @return void
+ */
+	public function testInvokeActionPrefixProtectionCasing() {
+		Router::reload();
+		Router::connect('/admin/:controller/:action/*', array('prefix' => 'admin'));
+
+		$url = new CakeRequest('test/Admin_add/');
+		$url->addParams(array('controller' => 'test_controller', 'action' => 'Admin_add'));
 		$response = $this->getMock('CakeResponse');
 
 		$Controller = new TestController($url, $response);

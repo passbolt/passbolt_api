@@ -42,6 +42,10 @@ class GpgTest extends CakeTestCase {
 
 		// Assert that the key info is populated.
 		$this->assertTrue( !empty($gpg->encryptKeyInfo) );
+
+		// Cleanup.
+		$publicKeyInfo = $gpg->getKeyInfo($publicKey);
+		$gpg->removeKeyFromKeyring($publicKeyInfo['fingerprint']);
 	}
 
 	/**
@@ -51,14 +55,18 @@ class GpgTest extends CakeTestCase {
 		$gpg = new \Passbolt\Gpg();
 
 		// Get key for ada.
-		$publicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private.key');
+		$privateKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private.key');
 
 		// Set decrypt key.
-		$setKey = $gpg->setDecryptKey($publicKey);
+		$setKey = $gpg->setDecryptKey($privateKey);
 
 		// Assert that operation was successful.
 		$this->assertTrue( $setKey );
 		$this->assertTrue( !empty($gpg->decryptKeyInfo) );
+
+		// Cleanup.
+		$privateKeyInfo = $gpg->getKeyInfo($privateKey);
+		$gpg->removeKeyFromKeyring($privateKeyInfo['fingerprint']);
 	}
 
 	/**
@@ -282,6 +290,10 @@ wJffl4U=
 
 		// Assert that the key fingerprint returned is the right one.
 		$this->assertEquals($fingerprint, '03F60E958F4CB29723ACDF761353B5B15D9B054F');
+
+		// Cleanup.
+		$publicKeyInfo = $gpg->getKeyInfo($publicKey);
+		$gpg->removeKeyFromKeyring($publicKeyInfo['fingerprint']);
 	}
 
 	/**
@@ -299,6 +311,10 @@ wJffl4U=
 
 		// Assert that the message has been encrypted.
 		$this->assertTrue(preg_match('/BEGIN PGP MESSAGE/', $encrypted) == true);
+
+		// Cleanup.
+		$publicKeyInfo = $gpg->getKeyInfo($publicKey);
+		$gpg->removeKeyFromKeyring($publicKeyInfo['fingerprint']);
 	}
 
 	/**
@@ -307,40 +323,42 @@ wJffl4U=
 	public function testDecryptNoPassphrase() {
 		// Define pre encrypted message.
 		$message = '-----BEGIN PGP MESSAGE-----
-Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-hQIMA4e/DeCIHsAzAQ//Yi1V/ozh6E5/x6AGVnrKTJgxMnDstQaOqbUD/iSC4of0
-6PmQBy25wbWtx+2nOpnueEvaS+q4xn3uQZYwO9ez4Qd6WPGc2aH8WzG4lOJjTBh6
-NJ234gPTk7xWtDYfxBK6hlgnIG8vd6MuOl/RNJIl3bdXaHdho+msskMV4vTKKlrv
-MYwkHhVpTeGm3P9PGvZZquh9Pi7iNdBh1gASgUuONrPPP8mlbEyGPV1flcgLmVvL
-WYM8Q5g56oWRW1C+qtUW6rQ5KG6KiIxW42Jc7x2aCudh/O0ZCT9kaYZNj4SWbLw6
-HZLXS8l2FurGDDktU/fy5tPNQelRmroA0GEg1jq0giMb036OtO2Ybpe8ulD1nEQF
-wiCBC5wIYvxhlwZSht+nvvKEhmggS4U+2tcOTL2uKaw3qNogbuS+EwXallins0/l
-Gz5AsUVjmmb6lytTMLVFzAX0rMgqzk+OaLPX71wU81Z1inFQWZUMsmDLkTQOzmWZ
-lkXvTdFYSPUWKnSZ9HFeFlbyc9tGBeIi7oq+8NtSpt8PN0UoIHd4bJUzwCKGI/Py
-XpHkJ2Q3zPvy6dhNxqdBnAOphhwrs29l/KsP8+bOzue0lEZCkQrIS/NnldDPcL5p
-MFrv1nqnwCGKup5lIsL/la25aIhv/bYRHWCV4c70bNEFk9HafbMN+yHNNJZ2bdnS
-WgE2IjaoHzzgUb7jkDiM06j0pcdyEbSMK3n/JUsin0x+jl1CHnJuAswhaB+RTIyc
-ioTIR/2PI3cct9axfZV49J1fKt/dH7p5HCxTNSv2xRtpLOSJ2Leq/nobFg==
-=z0jv
+hQIMA1P90Qk1JHA+ARAAq2Ms52xS8kYngLXX2kx4BnAzHky1gGx4EKq2k0cTNUB2
+BtE+bg7nKE7KF0oFMYrw1LKchncyHvuIGpH5ZyDvP9pdjvXyeTZQJDt/IPeQLIGh
+CAqoPihIS4Aul0v0wSswDHF0A6hPgwA/9mizSumZGYh+YcGDO+fhNHqZZPjZcTO0
+yssOnkOJYb4W19yPs/5n6QWW350QL4vND0LhOJ5vGJm08UwASB8xtwitXv6JGvm3
+ciuoTjdZ3ZCn/dgsQ1IKqdpqTD00yjK57WKePeUE5DCbxIprO4WPb1aLeoy4Zy1D
+krhV+Z3jodqhpAU49ZK3QdEYaJGpy51LyqhNFy/7ZdF7qI8h8nMFBIdBXwKoG0/+
+aHFAQGWRUqpcTZKlQ9WpVZczYcpovG4FdUDA120Q/mHLk+9N4y+SKR/vmeK0/zk1
+iDKGW5tZP04V82sw7wQb6OTIcKr0sClBA7Sevc2YsX7/WG/6yR60xz5z4f0q9n8d
+Dxv19RpRPQgdO/3xkfv7SU9ycsS7iInGNqpJ/WhlBvukn6cXPvDsHaAH025fi4F9
+qiSm+gDz29CZwbKleo8BeHaY4h2sYc2ZVopfbEp5chMrI0sb/ykEYGNKncOE5UHr
+JeQSeMVQrEVjbyLK1v0et6rdxcWL10RFYVobbZER7kMHuGFI5VTKlykHcESgND3S
+WQF8dlKcsjgcqdod4XZGg5Or4rH2O98LJhOsBARPhPNME0/DmBbC8Zb4Kbgv9S+U
+mygzWA1RoY7LFa9BN0vndsut8Y33Hf3tjJXWb2u1dlmlB/NSWRzTjG09
+=bsQE
 -----END PGP MESSAGE-----';
 
-
 		// Get key for ada.
-		$privatePublicKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key');
+		$privateKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key');
 
-		// Instatiate Gpg.
+		// Instantiate Gpg.
 		$gpg = new \Passbolt\Gpg();
 
 		// Set decrypt key.
-		$gpg->setDecryptKey($privatePublicKey);
+		$gpg->setDecryptKey($privateKey);
 
 		//Decrypt message.
 		$decrypted = $gpg->decrypt($message, '');
 
 		// Assert that the message decrypted is the same as original.
 		$this->assertEquals($decrypted, 'this is a clear message');
+
+		// Cleanup.
+		$publicKeyInfo = $gpg->getKeyInfo($privateKey);
+		$gpg->removeKeyFromKeyring($publicKeyInfo['fingerprint']);
 	}
 
 	/**
@@ -361,6 +379,10 @@ ioTIR/2PI3cct9axfZV49J1fKt/dH7p5HCxTNSv2xRtpLOSJ2Leq/nobFg==
 
 		// Assert that the encryption happened.
 		$this->assertTrue(preg_match('/BEGIN PGP MESSAGE/', $encrypted) == true);
+
+		// Cleanup.
+		$publicKeyInfo = $gpg->getKeyInfo($publicKey);
+		$gpg->removeKeyFromKeyring($publicKeyInfo['fingerprint']);
 	}
 
 	/**
@@ -393,6 +415,10 @@ ioTIR/2PI3cct9axfZV49J1fKt/dH7p5HCxTNSv2xRtpLOSJ2Leq/nobFg==
 
 		// Assert that the decrypted text is same as original.
 		$this->assertEquals($decrypted, $originalText);
+
+		// Cleanup.
+		$publicKeyInfo = $gpg->getKeyInfo($publicKey);
+		$gpg->removeKeyFromKeyring($publicKeyInfo['fingerprint']);
 	}
 
 	/**
@@ -425,5 +451,9 @@ ioTIR/2PI3cct9axfZV49J1fKt/dH7p5HCxTNSv2xRtpLOSJ2Leq/nobFg==
 
 		// Assert that the decrypted text is same as original.
 		$this->assertEquals($decrypted, $originalText);
+
+		// Cleanup.
+		$publicKeyInfo = $gpg->getKeyInfo($publicKey);
+		$gpg->removeKeyFromKeyring($publicKeyInfo['fingerprint']);
 	}
 }

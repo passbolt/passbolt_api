@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Validation Rules Controller
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ValidationRulesController extends AppController {
 
@@ -23,7 +24,8 @@ class ValidationRulesController extends AppController {
 		if (!is_null($settings)
 			&& is_array($settings)
 			&& isset($settings['shared'])
-			&& in_array($model, $settings['shared'])) {
+			&& in_array($model, $settings['shared'])
+		) {
 
 			App::import('Model', $model);
 			$instance = new $model();
@@ -46,7 +48,7 @@ class ValidationRulesController extends AppController {
 			$this->set('data', $rules);
 			$this->Message->success();
 		} else {
-			$this->Message->error(__('No validation rules defined'), array('code' => 404));
+			$this->Message->error(__('No validation rules defined'), ['code' => 404]);
 		}
 	}
 

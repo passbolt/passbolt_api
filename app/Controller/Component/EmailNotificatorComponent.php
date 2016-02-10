@@ -1,10 +1,11 @@
 <?php
+
 /**
  * EmailNotification Component
  * This class offers tools to send notification emails.
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class EmailNotificatorComponent extends Component {
 
@@ -51,35 +52,35 @@ class EmailNotificatorComponent extends Component {
 
 /**
  * Return the email author information like name and avatar
- * 	This data is required in the email template
+ *    This data is required in the email template
  *
  * @param string $userId UUID
- * @return Array $author, empty if not found or null on error
+ * @return array $author, empty if not found or null on error
  */
 	protected function _getAuthorInfo($userId) {
 		$author = $this->User->find(
 			'first',
-			array(
-				'conditions' => array(
+			[
+				'conditions' => [
 					'User.id' => $userId,
-				),
-				'fields' => array(
+				],
+				'fields' => [
 					'username'
-				),
-				'contain' => array(
-					'Profile' => array(
-						'fields' => array(
+				],
+				'contain' => [
+					'Profile' => [
+						'fields' => [
 							'Profile.first_name',
 							'Profile.last_name',
-						),
-						'Avatar' => array(
-							'fields' => array(
+						],
+						'Avatar' => [
+							'fields' => [
 								'Avatar.*'
-							)
-						)
-					),
-				)
-			)
+							]
+						]
+					],
+				]
+			]
 		);
 
 		return $author;
@@ -99,36 +100,36 @@ class EmailNotificatorComponent extends Component {
 		// get resource.
 		$resource = $this->Resource->find(
 			'first',
-			array(
-				'conditions' => array(
+			[
+				'conditions' => [
 					'Resource.id' => $data['resource_id']
-				),
-				'fields' => array(
+				],
+				'fields' => [
 					'Resource.name',
 					'Resource.username',
 					'Resource.uri',
 					'Resource.description'
-				),
-				'contain' => array(
-					'Secret' => array(
-						'fields' => array(
+				],
+				'contain' => [
+					'Secret' => [
+						'fields' => [
 							'Secret.data',
 							'Secret.modified',
-						),
-						'conditions' => array(
+						],
+						'conditions' => [
 							'Secret.user_id' => $toUserId
-						),
-					)
-				)
-			)
+						],
+					]
+				]
+			]
 		);
 
 		$recipient = $this->User->find(
-			'first', array(
-				'conditions' => array(
+			'first', [
+				'conditions' => [
 					'User.id' => $toUserId
-				),
-			)
+				],
+			]
 		);
 
 		// Get sharer info.
@@ -138,10 +139,10 @@ class EmailNotificatorComponent extends Component {
 		$this->EmailNotification->send(
 			$recipient['User']['username'],
 			__("%s shared %s with you", $sharer['Profile']['first_name'], $resource['Resource']['name']),
-			array(
+			[
 				'sender' => $sharer,
 				'resource' => $resource,
-			),
+			],
 			'new_password_share'
 		);
 	}
@@ -160,14 +161,14 @@ class EmailNotificatorComponent extends Component {
 		// Get recipient info.
 		$recipient = $this->User->find(
 			'first',
-			array(
-				'conditions' => array(
+			[
+				'conditions' => [
 					'User.id' => $toUserId,
-				),
-				'contain' => array(
+				],
+				'contain' => [
 					'Profile'
-				),
-			)
+				],
+			]
 		);
 
 		// Get invite sender.
@@ -185,11 +186,11 @@ class EmailNotificatorComponent extends Component {
 		$this->EmailNotification->send(
 			$recipient['User']['username'],
 			$subject,
-			array(
+			[
 				'sender' => $sender,
 				'account' => $recipient,
 				'token' => $data['token'],
-			),
+			],
 			$template
 		);
 	}

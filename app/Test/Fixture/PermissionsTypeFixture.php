@@ -1,7 +1,6 @@
 <?php
 /**
- * PermissionsTypeFixture
- *
+ * PermissionsType Fixture
  */
 class PermissionsTypeFixture extends CakeTestFixture {
 

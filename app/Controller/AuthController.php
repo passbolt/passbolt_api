@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Auth Controller
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class AuthController extends AppController {
 
@@ -41,7 +42,7 @@ class AuthController extends AppController {
 /**
  * Triggers GPGAuth first step, e.g. server key verification
  *
- * @return void
+ * @return Message
  */
 	public function verify() {
 		if ($this->request->is('post')) {
@@ -55,11 +56,12 @@ class AuthController extends AppController {
 				if (!$this->request->is('json')) {
 					$this->layout = 'empty';
 				}
+
 				return $this->Message->success();
 			} else {
 				return $this->Message->error(
 					__('The public key for this passbolt instance was not found.'),
-					array('code' => '400')
+					['code' => '400']
 				);
 			}
 		}

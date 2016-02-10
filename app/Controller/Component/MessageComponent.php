@@ -5,8 +5,8 @@
  * This class replace cake flash method. It offers options to qualify the end-user messages (e.g. an error, warning, etc.)
  * But more importantly this component is also used to format the JSON API responses
  *
- * @copyright 	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 app::uses('ControllerLog', 'Model');
 
@@ -42,7 +42,7 @@ class MessageComponent extends Component {
 
 /**
  * @var bool $autoRedirect true if referer redirection is needed. Default false
- * 	Such redirection is usefull for displaying messages when one action do not have a view
+ *    Such redirection is usefull for displaying messages when one action do not have a view
  */
 	public $autoRedirect = false;
 
@@ -66,8 +66,9 @@ class MessageComponent extends Component {
 			$this->messages = $this->Session->read($this->sessionKey);
 			$this->Session->delete($this->sessionKey);
 		} else {
-			$this->messages = array();
+			$this->messages = [];
 		}
+
 		return true;
 	}
 
@@ -78,7 +79,7 @@ class MessageComponent extends Component {
  */
 	public function reset() {
 		unset($this->messages);
-		$this->messages = array();
+		$this->messages = [];
 	}
 
 /**
@@ -86,14 +87,14 @@ class MessageComponent extends Component {
  *
  * @param string $message title
  * @param array $options
- * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
- * 		integer $options['code'] the code to use as http status code
- *		boolean $options['throw'] throw of not an Http Exception, by default true
- * 		string $options['body'] additional message information, usually in json format
+ *        mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ *        integer $options['code'] the code to use as http status code
+ *        boolean $options['throw'] throw of not an Http Exception, by default true
+ *        string $options['body'] additional message information, usually in json format
  * @throws HttpException to deliver the error to the client
  * @return void
  */
-	public function error($message, $options = array()) {
+	public function error($message, $options = []) {
 		$this->__add(Status::ERROR, $message, $options);
 
 		// We throw an exception unless specifically requested otherwise
@@ -103,7 +104,7 @@ class MessageComponent extends Component {
 
 			// Build exception, without forgetting to set the initial headers
 			// Headers were already set for the response. We just carry forward the same headers in the exception.
-			switch($code) {
+			switch ($code) {
 				case '400':
 					$error = new BadRequestException($message);
 					break;
@@ -125,7 +126,7 @@ class MessageComponent extends Component {
 				case '500':
 				default:
 					$error = new HttpException($message);
-				break;
+					break;
 			}
 			$error->responseHeader($this->controller->response->header());
 			throw $error;
@@ -140,11 +141,11 @@ class MessageComponent extends Component {
  *
  * @param string $message title
  * @param array $options
- * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
- * 		string $options['body'] additional message information, usually in json format
+ *        mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ *        string $options['body'] additional message information, usually in json format
  * @return void
  */
-	public function warning($message, $options = array()) {
+	public function warning($message, $options = []) {
 		$this->__add(Status::WARNING, $message, $options);
 	}
 
@@ -153,11 +154,11 @@ class MessageComponent extends Component {
  *
  * @param string $message title
  * @param array $options
- * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
- * 		string $options['body'] additional message information, usually in json format
+ *        mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ *        string $options['body'] additional message information, usually in json format
  * @return void
  */
-	public function debug($message, $options = array()) {
+	public function debug($message, $options = []) {
 		$this->__add(Status::DEBUG, $message, $options);
 	}
 
@@ -166,11 +167,11 @@ class MessageComponent extends Component {
  *
  * @param string $message title
  * @param array $options
- * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
- * 		string $options['body'] additional message information, usually in json format
+ *        mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ *        string $options['body'] additional message information, usually in json format
  * @return void
  */
-	public function notice($message, $options = array()) {
+	public function notice($message, $options = []) {
 		$this->__add(Status::NOTICE, $message, $options);
 	}
 
@@ -179,12 +180,11 @@ class MessageComponent extends Component {
  *
  * @param string $message title (optional)
  * @param array $options
- * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
- * 		string $options['body'] additional message information
+ *        mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ *        string $options['body'] additional message information
  * @return void
  */
-	public function success($message = '', $options = array()) {
-
+	public function success($message = '', $options = []) {
 		$this->__add(Status::SUCCESS, $message, $options);
 	}
 
@@ -194,17 +194,17 @@ class MessageComponent extends Component {
  * @param string $level error|notice|warning|success
  * @param string $message title (optional)
  * @param array $options
- * 		mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
- * 		string $options['body'] additional message information, usually in json format
+ *        mixed $options['redirect'] url(s) as string or array or true to redirect to the referrer
+ *        string $options['body'] additional message information, usually in json format
  * @access private
  * @return void
  */
 	private function __add($level = Status::ERROR, $message = null, $options = null) {
 		// The response message
-		$response = array(
-			'header' => array(),
-			'body' => array()
-		);
+		$response = [
+			'header' => [],
+			'body' => []
+		];
 		$level = strtolower($level);
 
 		// By default, the title is the controller name.
@@ -214,7 +214,7 @@ class MessageComponent extends Component {
 		}
 
 		// Set the header of the message
-		$response['header'] = array(
+		$response['header'] = [
 			// UUID is predictable
 			'id' => Common::uuid($title),
 			'status' => strtolower($level),
@@ -223,7 +223,7 @@ class MessageComponent extends Component {
 			'message' => $message,
 			'controller' => $this->controller->name,
 			'action' => $this->controller->action
-		);
+		];
 
 		// Set the body of the message
 		// An optional body as been passed as an option
@@ -233,14 +233,14 @@ class MessageComponent extends Component {
 			// Or the controller views data has been set
 			$response['body'] = $this->controller->viewVars['data'];
 		} else {
-			$response['body'] = array();
+			$response['body'] = [];
 		}
 
 		// Add the message to the queue of messages
 		$this->messages[] = $response;
 
 		// Log if needed
-		if(Configure::read('Log.'. $level) && ($level != Status::ERROR)) {
+		if (Configure::read('Log.' . $level) && ($level != Status::ERROR)) {
 			ControllerLog::write($level, $this->controller->request, $message, '');
 		}
 
@@ -250,6 +250,7 @@ class MessageComponent extends Component {
 				$options['redirect'] = $this->controller->referer();
 			} elseif (is_string($options['redirect']) || is_array($options['redirect'])) {
 				$this->controller->redirect($options['redirect']);
+
 				return;
 			}
 		}
@@ -274,12 +275,13 @@ class MessageComponent extends Component {
 			return false;
 		}
 		$this->messages[$nbMessages - 1]['body'] = $body;
+
 		return true;
 	}
 
 /**
  * Called before Controller::redirect()
- *		Save pending messages in session to allow a display after a redirect
+ *        Save pending messages in session to allow a display after a redirect
  *
  * @param Controller $controller Controller with components to beforeRedirect
  * @param string|array $url Either the string or URL array that is being redirected to.

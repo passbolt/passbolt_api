@@ -1,7 +1,6 @@
 <?php
 /**
- * EmailFixture
- *
+ * Email Fixture
  */
 class EmailFixture extends CakeTestFixture {
 

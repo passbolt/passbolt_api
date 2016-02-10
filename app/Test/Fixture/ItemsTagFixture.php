@@ -1,7 +1,6 @@
 <?php
 /**
- * ItemsTagFixture
- *
+ * ItemsTag Fixture
  */
 class ItemsTagFixture extends CakeTestFixture {
 
@@ -30,7 +29,7 @@ class ItemsTagFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => '10be2d3a-0468-432b-b49f-3153d7a82fce',
+			'id' => '21ef31b6-8a50-37b0-a4ef-09a77f43d83d',
 			'tag_id' => '9bc58fb6-3b95-35da-a8e8-ae7aa5dd7abe',
 			'foreign_model' => 'Resource',
 			'foreign_id' => '96e26ceb-b288-39b7-a515-3b1b45cb2673',
@@ -38,7 +37,7 @@ class ItemsTagFixture extends CakeTestFixture {
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
-			'id' => '10be2d3a-0468-432b-b58f-3153d7a83fce',
+			'id' => 'cfc1630c-a36c-3a97-a803-143fe54fdfa8',
 			'tag_id' => '6ea4ba42-ae97-3910-a2f7-a7dd9cfc1619',
 			'foreign_model' => 'Resource',
 			'foreign_id' => '96e26ceb-b288-39b7-a515-3b1b45cb2673',
@@ -46,18 +45,18 @@ class ItemsTagFixture extends CakeTestFixture {
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
-			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
-			'tag_id' => '6732c5fa-02f4-37fd-ace3-2ac5a668570b',
+			'id' => 'ddac9724-6419-3093-ac66-d277ca17a361',
+			'tag_id' => 'aeaa6327-cf98-37c2-a20b-c96f79aff277',
 			'foreign_model' => 'Resource',
-			'foreign_id' => '6b00d6e5-8584-3db4-a24d-7179b8dd44d5',
+			'foreign_id' => '5c67e5d8-29dd-3719-aab5-5a151226255d',
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
-			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
-			'tag_id' => 'aeaa6327-cf98-37c2-a20b-c96f79aff277',
+			'id' => 'ebb49e9e-8ff2-3518-a74a-f459b0a9b493',
+			'tag_id' => '6732c5fa-02f4-37fd-ace3-2ac5a668570b',
 			'foreign_model' => 'Resource',
-			'foreign_id' => '5c67e5d8-29dd-3719-aab5-5a151226255d',
+			'foreign_id' => '6b00d6e5-8584-3db4-a24d-7179b8dd44d5',
 			'created' => '2012-11-25 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),

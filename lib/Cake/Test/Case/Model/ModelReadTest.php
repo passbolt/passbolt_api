@@ -87,6 +87,112 @@ class ModelReadTest extends BaseModelTest {
 	}
 
 /**
+ * Test IN operator
+ *
+ * @return void
+ */
+	public function testInOperator() {
+		$this->loadFixtures('Product');
+		$Product = new Product();
+		$expected = array(
+			array(
+				'Product' => array(
+					'id' => 1,
+					'name' => "Park's Great Hits",
+					'type' => 'Music',
+					'price' => 19
+				)
+			)
+		);
+
+		$result = $Product->find('all', array('conditions' => array('Product.id IN' => array(1))));
+		$this->assertEquals($expected, $result);
+
+		$expected = array(
+			array(
+				'Product' => array(
+					'id' => 2,
+					'name' => "Silly Puddy",
+					'type' => 'Toy',
+					'price' => 3
+				)
+			),
+			array(
+				'Product' => array(
+					'id' => 3,
+					'name' => "Playstation",
+					'type' => 'Toy',
+					'price' => 89
+				)
+			),
+			array(
+				'Product' => array(
+					'id' => 4,
+					'name' => "Men's T-Shirt",
+					'type' => 'Clothing',
+					'price' => 32
+				)
+			),
+			array(
+				'Product' => array(
+					'id' => 5,
+					'name' => "Blouse",
+					'type' => 'Clothing',
+					'price' => 34
+				)
+			),
+			array(
+				'Product' => array(
+					'id' => 6,
+					'name' => "Electronica 2002",
+					'type' => 'Music',
+					'price' => 4
+				)
+			),
+			array(
+				'Product' => array(
+					'id' => 7,
+					'name' => "Country Tunes",
+					'type' => 'Music',
+					'price' => 21
+				)
+			),
+			array(
+				'Product' => array(
+					'id' => 8,
+					'name' => "Watermelon",
+					'type' => 'Food',
+					'price' => 9
+				)
+			)
+		);
+		$result = $Product->find('all', array('conditions' => array('Product.id NOT IN' => array(1))));
+		$this->assertEquals($expected, $result);
+
+		$expected = array(
+			array(
+				'Product' => array(
+					'id' => 1,
+					'name' => "Park's Great Hits",
+					'type' => 'Music',
+					'price' => 19
+				)
+			),
+			array(
+				'Product' => array(
+					'id' => 2,
+					'name' => "Silly Puddy",
+					'type' => 'Toy',
+					'price' => 3
+				)
+			),
+		);
+
+		$result = $Product->find('all', array('conditions' => array('Product.id IN' => array(1, 2))));
+		$this->assertEquals($expected, $result);
+	}
+
+/**
  * testGroupBy method
  *
  * These tests will never pass with Postgres or Oracle as all fields in a select must be
@@ -6309,9 +6415,7 @@ class ModelReadTest extends BaseModelTest {
 			'joins' => array(),
 			'limit' => null,
 			'offset' => null,
-			'order' => array(
-				0 => null
-			),
+			'order' => array(),
 			'page' => 1,
 			'group' => null,
 			'callbacks' => true,
@@ -7043,7 +7147,7 @@ class ModelReadTest extends BaseModelTest {
  * @return void
  */
 	public function testFindMagic() {
-		$this->loadFixtures('User');
+		$this->loadFixtures('User', 'Comment', 'Article');
 		$TestModel = new User();
 
 		$result = $TestModel->findByUser('mariano');
@@ -7066,6 +7170,113 @@ class ModelReadTest extends BaseModelTest {
 			'updated' => '2007-03-17 01:18:31'
 		));
 		$this->assertEquals($expected, $result);
+
+		$Comment = new Comment();
+		$Comment->recursive = -1;
+		$results = $Comment->findAllByUserId(1);
+		$expected = array(
+			array(
+				'Comment' => array(
+					'id' => 3,
+					'article_id' => 1,
+					'user_id' => 1,
+					'comment' => 'Third Comment for First Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:49:23',
+					'updated' => '2007-03-18 10:51:31'
+				)
+			),
+			array(
+				'Comment' => array(
+					'id' => 4,
+					'article_id' => 1,
+					'user_id' => 1,
+					'comment' => 'Fourth Comment for First Article',
+					'published' => 'N',
+					'created' => '2007-03-18 10:51:23',
+					'updated' => '2007-03-18 10:53:31'
+				)
+			),
+			array(
+				'Comment' => array(
+					'id' => 5,
+					'article_id' => 2,
+					'user_id' => 1,
+					'comment' => 'First Comment for Second Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:53:23',
+					'updated' => '2007-03-18 10:55:31'
+				)
+			)
+		);
+		$this->assertEquals($expected, $results);
+
+		$results = $Comment->findAllByUserIdAndPublished(1, 'Y');
+		$expected = array(
+			array(
+				'Comment' => array(
+					'id' => 3,
+					'article_id' => 1,
+					'user_id' => 1,
+					'comment' => 'Third Comment for First Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:49:23',
+					'updated' => '2007-03-18 10:51:31'
+				)
+			),
+			array(
+				'Comment' => array(
+					'id' => 5,
+					'article_id' => 2,
+					'user_id' => 1,
+					'comment' => 'First Comment for Second Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:53:23',
+					'updated' => '2007-03-18 10:55:31'
+				)
+			)
+		);
+		$this->assertEquals($expected, $results);
+
+		$Article = new CustomArticle();
+		$Article->recursive = -1;
+		$results = $Article->findListByUserId(1);
+		$expected = array(
+			1 => 'First Article',
+			3 => 'Third Article'
+		);
+		$this->assertEquals($expected, $results);
+
+		$results = $Article->findPublishedByUserId(1);
+		$expected = array(
+			array(
+				'CustomArticle' => array(
+					'id' => 1,
+					'user_id' => 1,
+					'title' => 'First Article',
+					'body' => 'First Article Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:39:23',
+					'updated' => '2007-03-18 10:41:31'
+				)
+			),
+			array(
+				'CustomArticle' => array(
+					'id' => 3,
+					'user_id' => 1,
+					'title' => 'Third Article',
+					'body' => 'Third Article Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:43:23',
+					'updated' => '2007-03-18 10:45:31'
+				)
+			)
+		);
+		$this->assertEquals($expected, $results);
+
+		$results = $Article->findUnPublishedByUserId(1);
+		$expected = array();
+		$this->assertEquals($expected, $results);
 	}
 
 /**
@@ -8079,8 +8290,8 @@ class ModelReadTest extends BaseModelTest {
 
 /**
  * test after find callback on related model
- * 
- * @return void 
+ *
+ * @return void
  */
 	public function testRelatedAfterFindCallback() {
 		$this->loadFixtures('Something', 'SomethingElse', 'JoinThing');

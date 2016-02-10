@@ -1,13 +1,13 @@
 <?php
+
 /**
  * PermissionType Model
  *
- * @copyright		Copyright 2012, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Model.PermissionDetail
- * @since			version 2.12.12
+ * @copyright        Copyright 2012, Passbolt.com
+ * @license            http://www.passbolt.com/license
+ * @package            app.Model.PermissionDetail
+ * @since            version 2.12.12
  */
-
 class PermissionType extends AppModel {
 
 /**
@@ -27,38 +27,39 @@ class PermissionType extends AppModel {
 	public $primaryKey = 'serial';
 
 	const DENY = '0';
-	const READ	= '1';
+	const READ = '1';
 	const CREATE = '3';
 	const UPDATE = '7';
-	const OWNER	= '15';
+	const OWNER = '15';
 
 /**
  * Check if the given type is a valid permission type
+ *
  * @param string type The type to check
  * @return boolean
  */
 	public function isValidSerial($type) {
-		switch($type) {
+		switch ($type) {
 			case self::DENY:
 			case self::READ:
 			case self::CREATE:
 			case self::UPDATE:
 			case self::OWNER:
 				return true;
-			break;
+				break;
 			default:
 				return false;
-			break;
+				break;
 		}
 	}
 
 	public static function getAll() {
-		return array(
+		return [
 			'DENY' => self::DENY,
 			'READ' => self::READ,
 			'CREATE' => self::CREATE,
 			'UPDATE' => self::UPDATE,
 			'ADMIN' => self::OWNER,
-		);
+		];
 	}
 }

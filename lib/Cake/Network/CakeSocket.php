@@ -129,10 +129,23 @@ class CakeSocket {
 			$this->disconnect();
 		}
 
+		$hasProtocol = strpos($this->config['host'], '://') !== false;
+		if ($hasProtocol) {
+			list($this->config['protocol'], $this->config['host']) = explode('://', $this->config['host']);
+		}
 		$scheme = null;
-		if (!empty($this->config['protocol']) && strpos($this->config['host'], '://') === false && empty($this->config['proxy'])) {
+		if (!empty($this->config['protocol'])) {
 			$scheme = $this->config['protocol'] . '://';
 		}
+		if (!empty($this->config['proxy'])) {
+			$scheme = 'tcp://';
+		}
+
+		$host = $this->config['host'];
+		if (isset($this->config['request']['uri']['host'])) {
+			$host = $this->config['request']['uri']['host'];
+		}
+		$this->_setSslContext($host);
 
 		if (!empty($this->config['context'])) {
 			$context = stream_context_create($this->config['context']);
@@ -179,6 +192,9 @@ class CakeSocket {
 					$this->config['request']['uri']['port'] . ' HTTP/1.1';
 				$req[] = 'Host: ' . $this->config['host'];
 				$req[] = 'User-Agent: php proxy';
+				if (!empty($this->config['proxyauth'])) {
+					$req[] = 'Proxy-Authorization: ' . $this->config['proxyauth'];
+				}
 
 				fwrite($this->connection, implode("\r\n", $req) . "\r\n\r\n");
 
@@ -193,6 +209,46 @@ class CakeSocket {
 			}
 		}
 		return $this->connected;
+	}
+
+/**
+ * Configure the SSL context options.
+ *
+ * @param string $host The host name being connected to.
+ * @return void
+ */
+	protected function _setSslContext($host) {
+		foreach ($this->config as $key => $value) {
+			if (substr($key, 0, 4) !== 'ssl_') {
+				continue;
+			}
+			$contextKey = substr($key, 4);
+			if (empty($this->config['context']['ssl'][$contextKey])) {
+				$this->config['context']['ssl'][$contextKey] = $value;
+			}
+			unset($this->config[$key]);
+		}
+		if (version_compare(PHP_VERSION, '5.3.2', '>=')) {
+			if (!isset($this->config['context']['ssl']['SNI_enabled'])) {
+				$this->config['context']['ssl']['SNI_enabled'] = true;
+			}
+			if (version_compare(PHP_VERSION, '5.6.0', '>=')) {
+				if (empty($this->config['context']['ssl']['peer_name'])) {
+					$this->config['context']['ssl']['peer_name'] = $host;
+				}
+			} else {
+				if (empty($this->config['context']['ssl']['SNI_server_name'])) {
+					$this->config['context']['ssl']['SNI_server_name'] = $host;
+				}
+			}
+		}
+		if (empty($this->config['context']['ssl']['cafile'])) {
+			$this->config['context']['ssl']['cafile'] = CAKE . 'Config' . DS . 'cacert.pem';
+		}
+		if (!empty($this->config['context']['ssl']['verify_host'])) {
+			$this->config['context']['ssl']['CN_match'] = $host;
+		}
+		unset($this->config['context']['ssl']['verify_host']);
 	}
 
 /**
@@ -216,7 +272,7 @@ class CakeSocket {
  */
 	public function context() {
 		if (!$this->connection) {
-			return;
+			return null;
 		}
 		return stream_context_get_options($this->connection);
 	}
@@ -405,6 +461,4 @@ class CakeSocket {
 		$this->setLastError(null, $errorMessage);
 		throw new SocketException($errorMessage);
 	}
-
 }
-

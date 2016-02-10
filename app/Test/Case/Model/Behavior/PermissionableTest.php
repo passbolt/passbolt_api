@@ -12,6 +12,7 @@ App::uses('User', 'Model');
 App::uses('Resource', 'Model');
 App::uses('Category', 'Model');
 App::uses('PermissionType', 'Model');
+App::uses('PermissionMatrix', 'Test/Data');
 
 class PermissionnableTest extends CakeTestCase {
 
@@ -43,83 +44,146 @@ class PermissionnableTest extends CakeTestCase {
 		$this->Resource = ClassRegistry::init('Resource');
 	}
 
-	public function testGetPermission() {
+	public function testGetResourcesPermission() {
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv');
 
-		// log the user as a manager to be able to access all the db.
-		$adminUser = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($adminUser);
+		foreach ($matrix as $resourceAlias => $usersPermissions) {
+			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
 
-		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../../Data/permissionsMatrix.php');
-		foreach ($permissionsMatrix as $aroType => $aroTestcases) {
-			foreach ($aroTestcases as $acoType => $testcases) {
-				foreach ($testcases as $testcase) {
-					$aroFindFunc = 'findByName';
-					$acoFindFunc = 'findByName';
-					if ($aroType == 'User') {
-						$aroFindFunc = 'findByUsername';
-					}
-					$aroInstance = $this->{$aroType}->{$aroFindFunc}($testcase['aroname']);
-					$acoInstance = $this->{$acoType}->{$acoFindFunc}($testcase['aconame']);
+			foreach ($usersPermissions as $userAlias => $userPermission) {
+				$userId = Common::uuid('user.id.' . $userAlias);
+				$user = $this->User->findById($userId);
+				$this->User->setActive($user);
 
-					if(empty($aroInstance)) {
-						$this->assertTrue(false, 'Aro:' . $testcase['aroname'] . ' (type:' . $aroType .') could not be found.');
+				$permission = $this->Resource->getPermission($resourceId, $userId, 'User');
+				$privilege = 0;
+				if (isset($permission['Permission']['type'])) {
+					$privilege = $permission['Permission']['type'];
+				}
+
+				$this->assertTrue($userPermission == $privilege,
+					"permissions for the User {$userAlias} and Resource {$resourceAlias} returned {$privilege} but should have returned {$userPermission}"
+				);
+			}
+		}
+	}
+
+	public function testGetCategoriesPermission() {
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/categories_users_permissions.csv');
+
+		foreach ($matrix as $categoryAlias => $usersPermissions) {
+			$categoryId = Common::uuid('category.id.' . $categoryAlias);
+
+			foreach ($usersPermissions as $userAlias => $userPermission) {
+				$userId = Common::uuid('user.id.' . $userAlias);
+				$user = $this->User->findById($userId);
+				$this->User->setActive($user);
+
+				$permission = $this->Category->getPermission($categoryId, $userId, 'User');
+				$privilege = 0;
+				if (isset($permission['Permission']['type'])) {
+					$privilege = $permission['Permission']['type'];
+				}
+
+				$this->assertTrue($userPermission == $privilege,
+					"permissions for the User {$userAlias} and Category {$categoryAlias} returned {$privilege} but should have returned {$userPermission}"
+				);
+			}
+		}
+	}
+
+	public function testUserIsAuthorizedToPerformOperationOnResource() {
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv');
+
+		foreach ($matrix as $resourceAlias => $usersPermissions) {
+			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
+
+			foreach ($usersPermissions as $userAlias => $userPermission) {
+				$userId = Common::uuid('user.id.' . $userAlias);
+				$user = $this->User->findById($userId);
+				$this->User->setActive($user);
+
+				foreach (PermissionType::getAll() as $permissionName => $permissionType) {
+					$isAuthorized = $this->Resource->isAuthorized($resourceId, $permissionType, $userId, 'User');
+					if ($permissionType == PermissionType::DENY) {
+						$isAuthorized = true;
 					}
-					else if(empty($acoInstance)) {
-						$this->assertTrue(false, 'Aco:' . $testcase['aconame'] . ' (type:' . $acoType .') could not be found.');
-					} else {
-						// Get the permission.
-						$permission = $this->{$acoType}->getPermission(
-							$acoInstance[$acoType]['id'],
-							$aroInstance[$aroType]['id'], $aroType
-						);
-						$permission = $permission ? $permission['Permission']['type'] : null;
-						$this->assertTrue($testcase['result'] == $permission,
-							"permissions for {$acoType} {$testcase['aconame']} and category {$aroType} {$testcase['aroname']} returned {$permission} but should have returned {$testcase['result']}"
-						);
-					}
+					$operationAllowed = $userPermission >= $permissionType;
+					$not = $operationAllowed ? '' : 'not ';
+					$this->assertTrue($operationAllowed == $isAuthorized,
+						"User {$userAlias} should {$not}be authorized to {$permissionName} the Resource {$resourceAlias}"
+					);
 				}
 			}
 		}
 	}
 
-	public function testIsAuthorized() {
-		// log the user as a manager to be able to access all the db.
-		$adminUser = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($adminUser);
+	public function testUserIsAuthorizedToPerformOperationOnCategory() {
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/categories_users_permissions.csv');
 
-		$permissionsMatrix = require (dirname(__FILE__) . DS . '../../../Data/permissionsMatrix.php');
-		foreach ($permissionsMatrix as $aroType => $aroTestcases) {
-			foreach ($aroTestcases as $acoType => $testcases) {
-				foreach ($testcases as $testcase) {
-					$aroFindFunc = 'findByName';
-					$acoFindFunc = 'findByName';
-					if ($aroType == 'User') {
-						$aroFindFunc = 'findByUsername';
-					}
-					$aroInstance = $this->$aroType->$aroFindFunc($testcase['aroname']);
-					$acoInstance = $this->$acoType->$acoFindFunc($testcase['aconame']);
+		foreach ($matrix as $categoryAlias => $usersPermissions) {
+			$categoryId = Common::uuid('category.id.' . $categoryAlias);
 
-					if(empty($aroInstance)) {
-						$this->assertTrue(false, 'Aro:' . $testcase['aroname'] . ' (type:' . $aroType .') could not be found.');
+			foreach ($usersPermissions as $userAlias => $userPermission) {
+				$userId = Common::uuid('user.id.' . $userAlias);
+				$user = $this->User->findById($userId);
+				$this->User->setActive($user);
+
+				foreach (PermissionType::getAll() as $permissionName => $permissionType) {
+					$isAuthorized = $this->Category->isAuthorized($categoryId, $permissionType, $userId, 'User');
+					if ($permissionType == PermissionType::DENY) {
+						$isAuthorized = true;
 					}
-					else if(empty($acoInstance)) {
-						$this->assertTrue(false, 'Aco:' . $testcase['aconame'] . ' (type:' . $acoType .') could not be found.');
-					} else {
-						// Check the user authorization.
-						foreach (PermissionType::getAll() as $permissionName => $permissionType) {
-							$isAuthorized = $this->$acoType->isAuthorized(
-								$acoInstance[$acoType]['id'], $permissionType,
-								$aroInstance[$aroType]['id'], $aroType
-							);
-							$expect = $testcase['result'] >= $permissionType;
-							$not = $expect ? '' : 'not';
-							$this->assertTrue($expect == $isAuthorized,
-								"{$aroType} {$testcase['aroname']} should {$not} be authorized to {$permissionName} {$acoType} {$testcase['aconame']}"
-							);
-						}
-					}
+					$operationAllowed = $userPermission >= $permissionType;
+					$not = $operationAllowed ? '' : 'not ';
+					$this->assertTrue($operationAllowed == $isAuthorized,
+						"User {$userAlias} should {$not}be authorized to {$permissionName} the Category {$categoryAlias}"
+					);
 				}
 			}
 		}
 	}
+
+	public function testAutomaticResourceFindFiltering() {
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv');
+
+		foreach ($matrix as $resourceAlias => $usersPermissions) {
+			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
+
+			foreach ($usersPermissions as $userAlias => $userPermission) {
+				$userId = Common::uuid('user.id.' . $userAlias);
+				$user = $this->User->findById($userId);
+				$this->User->setActive($user);
+
+				$resource = $this->Resource->findById($resourceId);
+				$isAuthorized = $userPermission >= PermissionType::READ;
+				$not = $isAuthorized ? '' : 'not ';
+				$this->assertTrue($isAuthorized == !empty($resource),
+					"User {$userAlias} should {$not}be authorized to read the Resource {$resourceAlias}"
+				);
+			}
+		}
+	}
+
+	public function testAutomaticCategoryFindFiltering() {
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/categories_users_permissions.csv');
+
+		foreach ($matrix as $categoryAlias => $usersPermissions) {
+			$categoryId = Common::uuid('category.id.' . $categoryAlias);
+
+			foreach ($usersPermissions as $userAlias => $userPermission) {
+				$userId = Common::uuid('user.id.' . $userAlias);
+				$user = $this->User->findById($userId);
+				$this->User->setActive($user);
+
+				$category = $this->Category->findById($categoryId);
+				$isAuthorized = $userPermission >= PermissionType::READ;
+				$not = $isAuthorized ? '' : 'not ';
+				$this->assertTrue($isAuthorized == !empty($category),
+					"User {$userAlias} should {$not}be authorized to read the Category {$categoryAlias}"
+				);
+			}
+		}
+	}
+
 }

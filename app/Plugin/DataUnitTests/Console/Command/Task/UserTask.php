@@ -153,13 +153,20 @@ class UserTask extends ModelTask {
             'password' => 'password',
             'active' => 1
         ));
-        $us[] = array('User' => array(
-            'id' => Common::uuid('user.id.marlyn'),
-            'username' => 'marlyn@passbolt.com',
-            'role_id' => Common::uuid('role.id.user'),
-            'password' => 'password',
-            'active' => 1
-        ));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.marlyn'),
+			'username' => 'marlyn@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'password' => 'password',
+			'active' => 1
+		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.nancy'),
+			'username' => 'nancy@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'password' => 'password',
+			'active' => 1
+		));
 		return $us;
 	}
 

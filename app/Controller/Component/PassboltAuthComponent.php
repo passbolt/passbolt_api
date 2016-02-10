@@ -1,11 +1,12 @@
 <?php
+
 /**
  * PassboltAuth Component
  * Throttles the authentications.
  * This component prevents a user to do bruteforce attacks on the login by introducing compulsory time intervals between two login
  *
- * @copyright 	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class PassboltAuthComponent extends AuthComponent {
 
@@ -21,43 +22,43 @@ class PassboltAuthComponent extends AuthComponent {
 
 /**
  * @var string $ip
- * 		Stores the ip of the user for the current authentication attempt,
- * 		it is populated by _setContext method
+ *        Stores the ip of the user for the current authentication attempt,
+ *        it is populated by _setContext method
  */
 	public $ip = null;
 
 /**
  * @var string $username
- * 		Stores current username for authentication,
- * 		it is populated by _setContext method
+ *        Stores current username for authentication,
+ *        it is populated by _setContext method
  */
 	public $username = null;
 
 /**
  * @var cakeRequest $request
- * 		Stores cakephp request object,
- * 		it is populated by _setContext method
+ *        Stores cakephp request object,
+ *        it is populated by _setContext method
  */
 	public $request = null;
 
 /**
  * @var AuthenticationLog $lastSuccessfulAuth
- * 		Stores last successful authentication object,
- * 		it is populated by _setContext method
+ *        Stores last successful authentication object,
+ *        it is populated by _setContext method
  */
 	public $lastSuccessfulAuth = null;
 
 /**
  * @var AuthenticationLog
- * 		Stores the last failed authentication object,
- * 		it is populated by _setContext method
+ *        Stores the last failed authentication object,
+ *        it is populated by _setContext method
  */
 	public $lastFailedAuth = null;
 
 /**
  * @var int $authenticationAttempt
- * 		Stores authentication attempt number,
- * 		it is populated by _setContext method
+ *        Stores authentication attempt number,
+ *        it is populated by _setContext method
  */
 	public $authenticationAttempt = 0;
 
@@ -68,44 +69,44 @@ class PassboltAuthComponent extends AuthComponent {
 
 /**
  * @var int $blacklistTime defines the time during which the current ip should be blacklisted,
- * 		only used if $doBlacklist is set to true
+ *        only used if $doBlacklist is set to true
  */
 	public $blacklistTime = null;
 
 /**
  * @var array $throttlingStrategies defines the throttle/blacklist strategies
- *		e.g. how much time the user need to wait after a failed authentication attempt
+ *        e.g. how much time the user need to wait after a failed authentication attempt
  */
-	public $throttlingStrategies = array(
-			'throttle' => array(
-					3 => array(
-							'throttleTime' => '5'
-					),
-					4 => array(
-							'throttleTime' => '15'
-					),
-					5 => array(
-							'throttleTime' => '45'
-					),
-					6 => array(
-							'throttleTime' => '60'
-					)
-			),
-			'blacklist' => array(
-					20 => array(
-							'interval' => '60',
-							'blacklistTime' => '600'
-					),
-					50 => array(
-							'interval' => '1200',
-							'blacklistTime' => '2400'
-					),
-					100 => array(
-							'interval' => '3600',
-							'blacklistTime' => '7200'
-					)
-			)
-	);
+	public $throttlingStrategies = [
+		'throttle' => [
+			3 => [
+				'throttleTime' => '5'
+			],
+			4 => [
+				'throttleTime' => '15'
+			],
+			5 => [
+				'throttleTime' => '45'
+			],
+			6 => [
+				'throttleTime' => '60'
+			]
+		],
+		'blacklist' => [
+			20 => [
+				'interval' => '60',
+				'blacklistTime' => '600'
+			],
+			50 => [
+				'interval' => '1200',
+				'blacklistTime' => '2400'
+			],
+			100 => [
+				'interval' => '3600',
+				'blacklistTime' => '7200'
+			]
+		]
+	];
 
 /**
  * Called after the Controller::beforeFilter() and before the controller action
@@ -117,6 +118,7 @@ class PassboltAuthComponent extends AuthComponent {
 	public function startup(Controller $controller) {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
+
 		return parent::startup($controller);
 	}
 
@@ -144,6 +146,7 @@ class PassboltAuthComponent extends AuthComponent {
 					return prev($this->throttlingStrategies['throttle']);
 				}
 			}
+
 			return end($this->throttlingStrategies['throttle']); // logically this should never happen
 		}
 	}
@@ -152,13 +155,13 @@ class PassboltAuthComponent extends AuthComponent {
  * Check and tell whether the user should be blacklisted according to what is in the context
  *
  * @return mixed int the blacklist interval as defined in the settings if blacklisting has to be done,
- * 			false if no blacklisting should happen
+ *            false if no blacklisting should happen
  */
 	public function shouldBlacklist() {
 		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
 
 		$i = 0;
-		$count = array();
+		$count = [];
 		$strategy = reset($this->throttlingStrategies['blacklist']);
 		$sinceTimestamp = time() - $strategy['interval'];
 		$count[] = $this->AuthenticationLog->getFailedAuthenticationCount(null, $this->ip, $sinceTimestamp);
@@ -187,6 +190,7 @@ class PassboltAuthComponent extends AuthComponent {
 			}
 			$i++;
 		}
+
 		return false;
 	}
 
@@ -197,6 +201,7 @@ class PassboltAuthComponent extends AuthComponent {
  */
 	public function getAttempt() {
 		$attempt = $this->authenticationAttempt;
+
 		return ($attempt ? $attempt : 0);
 	}
 
@@ -212,17 +217,18 @@ class PassboltAuthComponent extends AuthComponent {
 
 		$this->lastFailedAuth = $this->AuthenticationLog->getLastFailedAuthenticationLog($this->username, $this->ip);
 		// Get last successful authentication for the username
-		$this->lastSuccessfulAuth = $this->AuthenticationLog->find('first', array(
-				'conditions' => array(
-						'username' => $this->username,
-						'status' => true
-				),
-				'order' => array(
-						'created' => 'DESC'
-				)
-		));
+		$this->lastSuccessfulAuth = $this->AuthenticationLog->find('first', [
+			'conditions' => [
+				'username' => $this->username,
+				'status' => true
+			],
+			'order' => [
+				'created' => 'DESC'
+			]
+		]);
 		$sinceTimestamp = $this->lastSuccessfulAuth ? strtotime($this->lastSuccessfulAuth['AuthenticationLog']['created']) : null;
-		$this->authenticationAttempt = $this->AuthenticationLog->getFailedAuthenticationCount($this->username, $this->ip, $sinceTimestamp);
+		$this->authenticationAttempt = $this->AuthenticationLog->getFailedAuthenticationCount($this->username,
+			$this->ip, $sinceTimestamp);
 
 		if ($interval = $this->shouldBlacklist()) {
 			$this->doBlacklist = true;
@@ -243,6 +249,7 @@ class PassboltAuthComponent extends AuthComponent {
 		}
 		$now = time();
 		$next = $this->nextAuthentication();
+
 		return $now > $next;
 	}
 
@@ -261,6 +268,7 @@ class PassboltAuthComponent extends AuthComponent {
 		// it is equal to the last failure time + the interval time
 		$lastFailureTimestamp = strtotime($this->lastFailedAuth['AuthenticationLog']['created']);
 		$nextAuth = $lastFailureTimestamp + $interval;
+
 		return $nextAuth;
 	}
 
@@ -299,16 +307,18 @@ class PassboltAuthComponent extends AuthComponent {
 			// manage blacklist
 			if ($this->doBlacklist) {
 				$AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
-				$bl = array(
-						'ip' => $this->ip,
-						'expiry' => gmdate('Y-m-d H:i:s', gmdate('U') + $this->blacklistTime)
-				);
+				$bl = [
+					'ip' => $this->ip,
+					'expiry' => gmdate('Y-m-d H:i:s', gmdate('U') + $this->blacklistTime)
+				];
 				// record blacklisting in database
 				$AuthenticationBlacklist->save($bl);
 			}
+
 			return false;
 		}
 		$this->controller->Session->delete('Throttle.nextLoginTime');
+
 		return $identified;
 	}
 }

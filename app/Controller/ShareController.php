@@ -1,29 +1,30 @@
 <?php
+
 /**
  * Share Controller
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ShareController extends AppController {
 
 /**
  * @var array components used in this controller
  */
-	public $components = array(
+	public $components = [
 		'PermissionHelper',
 		'EmailNotificator',
-	);
+	];
 
 /**
  * @var array models used in this controller
  */
-	public $uses = array(
+	public $uses = [
 		'Secret',
 		'Resource',
 		'Permission',
 		'User',
-	);
+	];
 
 /**
  * Update permissions for the objects that have been modified or deleted.
@@ -80,7 +81,19 @@ class ShareController extends AppController {
 				// Validate Permission Id.
 				$exist = $this->Permission->exists($permission['Permission']['id']);
 				if (!$exist) {
-					throw new Exception(__('The permission with id %s does not exist', $permission['Permission']['id']));
+					throw new Exception(__('The permission with id %s does not exist',
+						$permission['Permission']['id']));
+				}
+
+				// Check that the permission belongs to the aco instance.
+				$permissionBelongsToAcoInstance = $this->Permission->find('first', [
+					'conditions' => [
+						'Permission.id' => $permission['Permission']['id'],
+						'Permission.aco_foreign_key' => $acoInstanceId
+					]
+				]);
+				if (empty($permissionBelongsToAcoInstance)) {
+					throw new Exception(__('Could not delete permission id %s', $permission['Permission']['id']));
 				}
 
 				// Everything ok, we process with saving the data.
@@ -120,30 +133,31 @@ class ShareController extends AppController {
 				// Check aro exists.
 				$this->loadModel($aroModelName);
 				if (!$this->$aroModelName->exists($aroInstanceId)) {
-					throw new Exception(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $aroInstanceId, $aroModelName));
+					throw new Exception(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it',
+						$aroInstanceId, $aroModelName));
 				}
 
 				// Make sure the same permission doesn't already exist.
-				$p = $this->Permission->find('first', array(
-						'conditions' => array(
-							'aco' => $acoModelName,
-							'aco_foreign_key' => $acoInstanceId,
-							'aro' => $aroModelName,
-							'aro_foreign_key' => $aroInstanceId
-						)
-					));
+				$p = $this->Permission->find('first', [
+					'conditions' => [
+						'aco' => $acoModelName,
+						'aco_foreign_key' => $acoInstanceId,
+						'aro' => $aroModelName,
+						'aro_foreign_key' => $aroInstanceId
+					]
+				]);
 				if ($p) {
 					throw new Exception(__('The permission to be created already exists'));
 				}
 
 				// Everything clear, we save permission.
-				$data = array(
+				$data = [
 					'aco' => $acoModelName,
 					'aco_foreign_key' => $acoInstanceId,
 					'aro' => $aroModelName,
 					'aro_foreign_key' => $aroInstanceId,
 					'type' => $permission['Permission']['type'],
-				);
+				];
 
 				$this->Permission->set($data);
 				$v = $this->Permission->validates();
@@ -151,7 +165,7 @@ class ShareController extends AppController {
 					throw new Exception(__('Could not validate model Permission during creation'));
 				}
 				$this->Permission->create();
-				$s = $this->Permission->save($data, array('atomic' => false));
+				$s = $this->Permission->save($data, ['atomic' => false]);
 				if (!$s) {
 					throw new Exception(__('Could not save model Permission'));
 				}
@@ -174,7 +188,8 @@ class ShareController extends AppController {
 	private function __processAddedSecrets($acoInstanceId, $addedUsers, $secrets) {
 		// Add secrets for added users.
 		if (count($addedUsers) != count($secrets)) {
-			throw new Exception(__("The number of secrets provided doesn't match the %s users who have now access to the resources", count($addedUsers)));
+			throw new Exception(__("The number of secrets provided doesn't match the %s users who have now access to the resources",
+				count($addedUsers)));
 		}
 
 		foreach ($addedUsers as $userId) {
@@ -192,11 +207,11 @@ class ShareController extends AppController {
 			}
 
 			// Save secret.
-			$data = array(
+			$data = [
 				'user_id' => $userId,
 				'resource_id' => $acoInstanceId,
 				'data' => $secret['Secret']['data'],
-			);
+			];
 			// Validates data.
 			$this->Secret->set($data);
 			$v = $this->Secret->validates();
@@ -226,10 +241,10 @@ class ShareController extends AppController {
 		if (!empty($removedUsers)) {
 			// Delete Secrets for removed permissions.
 			$del = $this->Secret->deleteAll(
-				array(
+				[
 					'user_id' => $removedUsers,
 					'resource_id' => $acoInstanceId,
-				)
+				]
 			);
 			if (!$del) {
 				throw new Exception(__("Could not delete secrets"));
@@ -254,8 +269,7 @@ class ShareController extends AppController {
 		$this->Permission->begin();
 		try {
 			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$this->Permission->rollback();
 			throw new Exception($e->getMessage());
 		}
@@ -263,10 +277,10 @@ class ShareController extends AppController {
 		$permissions = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
 		$this->Permission->rollback();
 
-		$data = array(
+		$data = [
 			'UserResourcePermissions' => $users,
 			'Permissions' => $permissions,
-		);
+		];
 		$this->set('data', $data);
 		$this->Message->success(__('Simulate successful'));
 	}
@@ -291,18 +305,21 @@ class ShareController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
+
 			return;
 		}
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
 			$this->Message->error(__('The call to entry point with parameter %s is not allowed', $acoModelName));
+
 			return;
 		}
 
 		// If permissions are not provided, call is useless.
 		if (empty($permissions) || is_null($permissions)) {
 			$this->Message->error(__('No permissions were provided'));
+
 			return;
 		}
 
@@ -313,10 +330,10 @@ class ShareController extends AppController {
 		$this->Permission->begin();
 		try {
 			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$this->Permission->rollback();
 			$this->Message->error($e->getMessage());
+
 			return;
 		}
 
@@ -334,10 +351,10 @@ class ShareController extends AppController {
 		try {
 			$this->__processRemovedSecrets($acoInstanceId, $addedUsers);
 			$this->__processAddedSecrets($acoInstanceId, $addedUsers, $secrets);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$this->Permission->rollback();
 			$this->Message->error($e->getMessage());
+
 			return;
 		}
 
@@ -348,32 +365,32 @@ class ShareController extends AppController {
 		foreach ($addedUsers as $userId) {
 			$this->EmailNotificator->passwordSharedNotification(
 				$userId,
-				array(
+				[
 					'resource_id' => $acoInstanceId,
 					'sharer_id' => User::get('id'),
-				));
+				]);
 		}
 
 		// Prepare output.
 		$added = $this->User->find(
 			'all',
 			array_merge(
-				array('conditions' => array('User.id' => $addedUsers)),
+				['conditions' => ['User.id' => $addedUsers]],
 				$this->User->getFindFields('User::edit')['fields']['User']
 			));
 		$removed = $this->User->find(
 			'all',
 			array_merge(
-				array('conditions' => array('User.id' => $removedUsers)),
+				['conditions' => ['User.id' => $removedUsers]],
 				$this->User->getFindFields('User::edit')['fields']['User']
 			));
 
 		// Get new permissions.
-		$updatedPermissions = array();
+		$updatedPermissions = [];
 		$updatedAcoInstance = null;
 
 		// Get the updated resource.
-		$findResourceData = array('Resource.id' => $acoInstanceId);
+		$findResourceData = ['Resource.id' => $acoInstanceId];
 		$findResourceOptions = $this->Resource->getFindOptions('view', User::get('Role.name'), $findResourceData);
 		$updatedAcoInstance = $this->Resource->find('first', $findResourceOptions);
 
@@ -385,11 +402,11 @@ class ShareController extends AppController {
 			$updatedAcoInstance = null;
 		}
 
-		$this->set('data', array(
+		$this->set('data', [
 			'Permissions' => $updatedPermissions,
-			'changes' => array('added' => $added, 'removed' => $removed),
+			'changes' => ['added' => $added, 'removed' => $removed],
 			'acoInstance' => $updatedAcoInstance
-		));
+		]);
 		$this->Message->success(__('Share operation successful'));
 	}
 
@@ -401,43 +418,48 @@ class ShareController extends AppController {
  * @return void
  */
 	public function searchUsers($model = null, $id = null) {
-		$data = array();
+		$data = [];
 		$model = ucfirst($model);
 
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
 			$this->Message->error(__('Invalid request method, should be GET'));
+
 			return;
 		}
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($model)) {
 			$this->Message->error(__('The model %s is not permissionable', $model));
+
 			return;
 		}
 
 		// the instance id is missing
 		if (is_null($id)) {
 			$this->Message->error(__('The %s id is missing', strtolower($model)));
+
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The %s id is invalid', strtolower($model)));
+
 			return;
 		}
 
 		// find the instance
 		$resource = $this->Permission->$model->findById($id);
 		if (empty($resource)) {
-			$this->Message->error(__('The %s does not exist', strtolower($model)), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', strtolower($model)), ['code' => 404]);
 		}
 
 		// check if user is authorized to share the resource
 		// the user can share a resource only if he is owner of this resource
 		if (!$this->Permission->$model->isAuthorized($id, PermissionType::OWNER)) {
-			$this->Message->error(__('You are not authorized to share this %s', strtolower($model)), array('code' => 403));
+			$this->Message->error(__('You are not authorized to share this %s', strtolower($model)), ['code' => 403]);
+
 			return;
 		}
 

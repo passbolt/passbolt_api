@@ -1,7 +1,6 @@
 <?php
 /**
- * PhoneNumberFixture
- *
+ * PhoneNumber Fixture
  */
 class PhoneNumberFixture extends CakeTestFixture {
 

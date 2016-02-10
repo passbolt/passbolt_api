@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Favorites controller
  * Control the starred items
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright    (c) 2015-present Passbolt.com
+ * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class FavoritesController extends AppController {
 
@@ -22,18 +23,21 @@ class FavoritesController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
+
 			return;
 		}
 
 		// check if the target foreign model is favoritable
 		if (!$this->Favorite->isValidForeignModel($foreignModelName)) {
 			$this->Message->error(__('The model %s is not favoritable', $foreignModelName));
+
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
 			$this->Message->error(__('The %s id is invalid', $foreignModelName));
+
 			return;
 		}
 
@@ -42,27 +46,30 @@ class FavoritesController extends AppController {
 		// access the instance record, the exists method should return false
 		$this->loadModel($foreignModelName);
 		if (!$this->$foreignModelName->exists($foreignId)) {
-			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
+
 			return;
 		}
 
-		$favorite = $this->Favorite->find('first', array(
-			'conditions' => array('user_id' => $userId, 'foreign_id' => $foreignId)
-		));
+		$favorite = $this->Favorite->find('first', [
+			'conditions' => ['user_id' => $userId, 'foreign_id' => $foreignId]
+		]);
 
 		// Already stared
 		if (!empty($favorite)) {
 			$this->Message->error(__('This record was already starred!'));
+
 			return;
 		} else {
-			$this->Favorite->create(array(
+			$this->Favorite->create([
 				'user_id' => $userId,
 				'foreign_id' => $foreignId,
 				'foreign_model' => strtolower($foreignModelName)
-			));
+			]);
 			$favorite = $this->Favorite->save();
 			$this->set('data', $favorite);
 			$this->Message->success(__('This record was successfully starred!'));
+
 			return;
 		}
 	}
@@ -77,25 +84,30 @@ class FavoritesController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('delete')) {
 			$this->Message->error(__('Invalid request method, should be DELETE'));
+
 			return;
 		}
 
 		// the id is invalid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The starred id is not valid', $id));
+
 			return;
 		}
 
 		// no favorite found
 		$favorite = $this->Favorite->findById($id);
 		if (empty($favorite)) {
-			$this->Message->error(__('The record is not in your starred item list'), array('code' => 404));
+			$this->Message->error(__('The record is not in your starred item list'), ['code' => 404]);
+
 			return;
 		}
 
 		// if the current user is not the owner of the favorite
 		if ($favorite['Favorite']['user_id'] != User::get('id')) {
-			$this->Message->error(__('Your are not allowed to remove this record from your starred item list'), array('code' => 403));
+			$this->Message->error(__('Your are not allowed to remove this record from your starred item list'),
+				['code' => 403]);
+
 			return;
 		}
 

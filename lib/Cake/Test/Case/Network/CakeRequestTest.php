@@ -90,6 +90,50 @@ class CakeRequestTest extends CakeTestCase {
 	}
 
 /**
+ * Test the header detector.
+ *
+ * @return void
+ */
+	public function testHeaderDetector() {
+		$request = new CakeRequest('some/path');
+		$request->addDetector('host', array('header' => array('host' => 'cakephp.org')));
+
+		$_SERVER['HTTP_HOST'] = 'cakephp.org';
+		$this->assertTrue($request->is('host'));
+
+		$_SERVER['HTTP_HOST'] = 'php.net';
+		$this->assertFalse($request->is('host'));
+	}
+
+/**
+ * Test the accept header detector.
+ *
+ * @return void
+ */
+	public function testExtensionDetector() {
+		$request = new CakeRequest('some/path');
+		$request->params['ext'] = 'json';
+		$this->assertTrue($request->is('json'));
+
+		$request->params['ext'] = 'xml';
+		$this->assertFalse($request->is('json'));
+	}
+
+/**
+ * Test the accept header detector.
+ *
+ * @return void
+ */
+	public function testAcceptHeaderDetector() {
+		$request = new CakeRequest('some/path');
+		$_SERVER['HTTP_ACCEPT'] = 'application/json, text/plain, */*';
+		$this->assertTrue($request->is('json'));
+
+		$_SERVER['HTTP_ACCEPT'] = 'text/plain, */*';
+		$this->assertFalse($request->is('json'));
+	}
+
+/**
  * Test that the autoparse = false constructor works.
  *
  * @return void
@@ -274,12 +318,6 @@ class CakeRequestTest extends CakeTestCase {
 		$request->reConstruct();
 		$this->assertEquals($data, $request->data);
 
-		$data = array(
-			'data' => array(
-				'Article' => array('title' => 'Testing'),
-			),
-			'action' => 'update'
-		);
 		$request = $this->getMock('TestCakeRequest', array('_readInput'));
 		$request->expects($this->at(0))->method('_readInput')
 			->will($this->returnValue('data[Article][title]=Testing&action=update'));
@@ -747,6 +785,24 @@ class CakeRequestTest extends CakeTestCase {
 
 		$_SERVER['REQUEST_METHOD'] = 'delete';
 		$this->assertFalse($request->is('delete'));
+	}
+
+/**
+ * Test is() with json and xml.
+ *
+ * @return void
+ */
+	public function testIsJsonAndXml() {
+		$request = new CakeRequest('some/path');
+
+		$_SERVER['HTTP_ACCEPT'] = 'application/json, text/plain, */*';
+		$this->assertTrue($request->is(array('json')));
+
+		$_SERVER['HTTP_ACCEPT'] = 'application/xml, text/plain, */*';
+		$this->assertTrue($request->is(array('xml')));
+
+		$_SERVER['HTTP_ACCEPT'] = 'text/xml, */*';
+		$this->assertTrue($request->is(array('xml')));
 	}
 
 /**
@@ -1361,12 +1417,12 @@ class CakeRequestTest extends CakeTestCase {
 		$this->assertEquals('/cakephp/bananas/eat/tasty_banana', $request->here);
 	}
 
-	/**
-	 * Test that even if mod_rewrite is on, and the url contains index.php
-	 * and there are numerous //s that the base/webroot is calculated correctly.
-	 *
-	 * @return void
-	 */
+/**
+ * Test that even if mod_rewrite is on, and the url contains index.php
+ * and there are numerous //s that the base/webroot is calculated correctly.
+ *
+ * @return void
+ */
 	public function testBaseUrlWithModRewriteAndExtraSlashes() {
 		$_SERVER['REQUEST_URI'] = '/cakephp/webroot///index.php/bananas/eat';
 		$_SERVER['PHP_SELF'] = '/cakephp/webroot///index.php/bananas/eat';
@@ -2199,7 +2255,7 @@ class CakeRequestTest extends CakeTestCase {
 
 		// Checking if requested
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'es_mx,en_ca';
-		$result = CakeRequest::acceptLanguage();
+		CakeRequest::acceptLanguage();
 
 		$result = CakeRequest::acceptLanguage('en-ca');
 		$this->assertTrue($result);
@@ -2386,6 +2442,24 @@ XML;
 
 		$this->setExpectedException('MethodNotAllowedException');
 		$request->allowMethod('POST');
+	}
+
+/**
+ * Tests that overriding the method to GET will clean all request
+ * data, to better simulate a GET request.
+ *
+ * @return void
+ */
+	public function testMethodOverrideEmptyData() {
+		$_POST = array('_method' => 'GET', 'foo' => 'bar');
+		$_SERVER['REQUEST_METHOD'] = 'PUT';
+		$request = new CakeRequest('/posts/edit/1');
+		$this->assertEmpty($request->data);
+
+		$_POST = array('foo' => 'bar');
+		$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = 'GET';
+		$request = new CakeRequest('/posts/edit/1');
+		$this->assertEmpty($request->data);
 	}
 
 /**

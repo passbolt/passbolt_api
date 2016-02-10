@@ -138,7 +138,7 @@ class CategoryTest extends AppTestCase {
 
 	public function testParentExists() {
 		// Test in a normal condition if the id is correct
-		$category = $this->Category->findByName('cakephp');
+		$category = $this->Category->findById(Common::uuid('category.id.cakephp'));
 		$result = $this->Category->parentExists($category['Category']);
 		$this->assertEquals(true, $result);
 
@@ -154,33 +154,33 @@ class CategoryTest extends AppTestCase {
 
 	public function testIsChild() {
 		// assert true
-		$parent = $this->Category->findByName('administration');
-		$child = $this->Category->findByName('accounts');
+		$parent = $this->Category->findById(Common::uuid('category.id.administration'));
+		$child = $this->Category->findById(Common::uuid('category.id.accounts'));
 
 		$this->assertEquals(true, $this->Category->isChild($child, $parent));
 
 		// assert false
-		$child = $this->Category->findByName('cakephp');
+		$child = $this->Category->findById(Common::uuid('category.id.cakephp'));
 		$this->assertEquals(false, $this->Category->isChild($child, $parent));
 	}
 
 	public function testIsLeaf() {
 		// assert false
-		$leaf = $this->Category->findByName('administration');
+		$leaf = $this->Category->findById(Common::uuid('category.id.administration'));
 		$this->assertEquals(false, $this->Category->isLeaf($leaf));
 
 		// assert true
-		$leaf = $this->Category->findByName('accounts');
+		$leaf = $this->Category->findById(Common::uuid('category.id.accounts'));
 		$this->assertEquals(true, $this->Category->isLeaf($leaf));
 	}
 
 	public function testIsTopLevelElement() {
-		$elt = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
+		$elt = $this->Category->findById(Common::uuid('category.id.bolt'));
 		$children = $this->Category->children($elt['Category']['id']);
 		$tree = array_merge(array(0 => $elt), $children);
 		$this->assertEquals(true, $this->Category->isTopLevelElement($elt, $tree));
 
-		$elt = $this->Category->findByName('administration');
+		$elt = $this->Category->findById(Common::uuid('category.id.administration'));
 		$this->assertEquals(false, $this->Category->isTopLevelElement($elt, $tree));
 	}
 
@@ -216,7 +216,7 @@ class CategoryTest extends AppTestCase {
 	}
 
 	public function testGetPosition() {
-		$uvbar = $this->Category->findByName('accounts');
+		$uvbar = $this->Category->findById(Common::uuid('category.id.accounts'));
 		$position = $this->Category->getPosition($uvbar['Category']['id']);
 		$this->assertEquals(1, $position);
 		$this->assertFalse($this->Category->getPosition('badid'));
