@@ -400,7 +400,7 @@ if ($commonCache['engine'] == 'File') {
 	$coreCache['path'] = CACHE . 'persistent' . DS;
 }
 // Merge the common cache configuration with the core cache configuration
-$commonCache = array_merge($coreCache, $commonCache);
+$coreCache = array_merge($commonCache, $coreCache);
 Cache::config('_cake_core_', $coreCache);
 
 /**
@@ -416,5 +416,5 @@ if ($commonCache['engine'] == 'File') {
 	$modelCache['path'] = CACHE . 'models' . DS;
 }
 // Merge the common cache configuration with the core cache configuration
-$commonCache = array_merge($modelCache, $commonCache);
+$modelCache = array_merge($commonCache, $modelCache);
 Cache::config('_cake_model_', $modelCache);

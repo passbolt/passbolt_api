@@ -351,9 +351,16 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  *
  * See the section Cache Engine Configuration, the data used here are the same.
  */
+$prefix = 'passbolt_';
 $commonCache = array(
-	'engine' => 'File',
+	'engine' => 'File', // Required
+	'prefix' => $prefix,
+	'duration' => 3600,
 );
+if ($commonCache['engine'] == 'File') {
+	$commonCache['path'] = CACHE;
+	$commonCache['serialize'] = true;
+}
 Configure::write('Cache.Common', $commonCache);
 
 /**
@@ -373,9 +380,6 @@ if (Configure::read('debug') > 0) {
 	$duration = '+10 seconds';
 }
 
-// Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = Inflector::slug(APP_DIR) . '_';
-
 /**
  * Configure the cache used for general framework caching. Path information,
  * object listings, and translation cache files are stored with this configuration.
@@ -389,7 +393,7 @@ if ($commonCache['engine'] == 'File') {
 	$coreCache['path'] = CACHE . 'persistent' . DS;
 }
 // Merge the common cache configuration with the core cache configuration
-$commonCache = array_merge($coreCache, $commonCache);
+$coreCache = array_merge($commonCache, $coreCache);
 Cache::config('_cake_core_', $coreCache);
 
 /**
@@ -401,9 +405,9 @@ $modelCache = array(
 	'duration' => $duration,
 );
 // If the cache engine is the File cache engine.
-if ($modelCache['engine'] == 'File') {
+if ($commonCache['engine'] == 'File') {
 	$modelCache['path'] = CACHE . 'models' . DS;
 }
 // Merge the common cache configuration with the core cache configuration
-$commonCache = array_merge($modelCache, $commonCache);
+$modelCache = array_merge($commonCache, $modelCache);
 Cache::config('_cake_model_', $modelCache);
