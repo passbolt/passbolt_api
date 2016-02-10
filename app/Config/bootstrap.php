@@ -30,7 +30,7 @@ if (!defined('SCHEMATMP')) {
 }
 
 // Setup a 'default' cache configuration for use in the application.
-Cache::config('default', array('engine' => 'File'));
+Cache::config('default', Configure::read('Cache.Common'));
 
 /**
  * Additional App Configuration

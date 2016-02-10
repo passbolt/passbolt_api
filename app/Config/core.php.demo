@@ -347,6 +347,29 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  */
 
 /**
+ * Configure the common cache handlers that CakePHP will other components will use.
+ * This configuration is also used by the default CakePHP cache, see bootstrap.php
+ *
+ * See the section Cache Engine Configuration, the data used here are the same.
+ */
+
+// Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
+$prefix = Inflector::slug(APP_DIR) . '_';
+
+$commonCache = array(
+	'engine' => 'Memcached',
+	'duration' => '3600',
+	'probability' => 100,
+	'prefix' => $prefix,
+	'servers' => array(
+		'127.0.0.1:11211'
+	),
+	'persistent' => 'passbolt_',
+	'compress' => false,
+);
+Configure::write('Cache.Common', $commonCache);
+
+/**
  * Configure the cache handlers that CakePHP will use for internal
  * metadata like class maps, and model schema.
  *
@@ -356,7 +379,6 @@ require_once dirname(__DIR__) . '/Vendor/autoload.php';
  *       Please check the comments in bootstrap.php for more info on the cache engines available
  *       and their settings.
  */
-$engine = 'File';
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
@@ -364,29 +386,34 @@ if (Configure::read('debug') > 0) {
 	$duration = '+10 seconds';
 }
 
-// Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'myapp_';
-
 /**
  * Configure the cache used for general framework caching. Path information,
  * object listings, and translation cache files are stored with this configuration.
  */
-Cache::config('_cake_core_', array(
-	'engine' => $engine,
+$coreCache = array(
 	'prefix' => $prefix . 'cake_core_',
-	'path' => CACHE . 'persistent' . DS,
-	'serialize' => ($engine === 'File'),
-	'duration' => $duration
-));
+	'duration' => $duration,
+);
+// If the cache engine is the File cache engine.
+if ($commonCache['engine'] == 'File') {
+	$coreCache['path'] = CACHE . 'persistent' . DS;
+}
+// Merge the common cache configuration with the core cache configuration
+$commonCache = array_merge($coreCache, $commonCache);
+Cache::config('_cake_core_', $coreCache);
 
 /**
  * Configure the cache for model and datasource caches. This cache configuration
  * is used to store schema descriptions, and table listings in connections.
  */
-Cache::config('_cake_model_', array(
-	'engine' => $engine,
+$modelCache = array(
 	'prefix' => $prefix . 'cake_model_',
-	'path' => CACHE . 'models' . DS,
-	'serialize' => ($engine === 'File'),
-	'duration' => $duration
-));
+	'duration' => $duration,
+);
+// If the cache engine is the File cache engine.
+if ($commonCache['engine'] == 'File') {
+	$modelCache['path'] = CACHE . 'models' . DS;
+}
+// Merge the common cache configuration with the core cache configuration
+$commonCache = array_merge($modelCache, $commonCache);
+Cache::config('_cake_model_', $modelCache);
