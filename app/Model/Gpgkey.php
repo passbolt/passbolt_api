@@ -144,7 +144,6 @@ class Gpgkey extends AppModel {
 		}
 
 		return is_array($info);
-
 	}
 
 /**
@@ -284,10 +283,10 @@ class Gpgkey extends AppModel {
 				],
 				$info
 			);
-			if (!empty ($data['Gpgkey']['expires'])) {
+			if (!empty($data['Gpgkey']['expires'])) {
 				$data['Gpgkey']['expires'] = gmdate('Y-m-d H:i:s', $data['Gpgkey']['expires']);
 			}
-			if (!empty ($data['Gpgkey']['key_created'])) {
+			if (!empty($data['Gpgkey']['key_created'])) {
 				$data['Gpgkey']['key_created'] = gmdate('Y-m-d H:i:s', $data['Gpgkey']['key_created']);
 			}
 		} else {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PassboltAuth Helper Customization
  *
@@ -19,9 +20,10 @@ class PassboltAuthHelper extends AppHelper {
 		$nbSecondsDiff = $nextLoginTime - gmdate('U');
 
 
-        // Creates the html
+		// Creates the html
 		$html .= '<input type="hidden" id="nextLogin" name="nextLogin" value="' . $nbSecondsDiff . '" />';
-		$html .= '<div class="auththrottler"><span class="countdown">'. $nbSecondsDiff .'</span> seconds before next login</div>';
+		$html .= '<div class="auththrottler"><span class="countdown">' . $nbSecondsDiff . '</span> seconds before next login</div>';
+
 		return $html;
 	}
 }

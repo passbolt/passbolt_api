@@ -131,7 +131,7 @@ class AppController extends Controller {
  */
 	public function processHeaders() {
 		if (isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'] == 1) {
-			$this->set('do_not_track', true);
+			$this->set('doNotTrack', true);
 		}
 	}
 

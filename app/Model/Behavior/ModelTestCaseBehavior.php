@@ -16,11 +16,12 @@ class ModelTestCaseBehavior extends ModelBehavior {
 /**
  * Set test data
  *
+ * @param $model
+ * @param array $options
  * @return void
  * @access public
  */
 	public function setTestData(&$model, $options = []) {
-
 		// Set Test Data for model Resource
 		if (is_a($model, 'Resource')) {
 			$model->set([
@@ -29,10 +30,10 @@ class ModelTestCaseBehavior extends ModelBehavior {
 				'uri' => RandomTool::string(),
 				'description' => RandomTool::string()
 			]);
-		} // Set Test Data for model Category
-		else {
+		} else {
+			// Set Test Data for model Category
 			if (is_a($model, 'Category')) {
-				$parent_id = null;
+				$parentId = null;
 				$Category = ClassRegistry::init('Category');
 
 				// define parent following options
@@ -49,11 +50,9 @@ class ModelTestCaseBehavior extends ModelBehavior {
 
 				$model->set([
 					'name' => RandomTool::string(),
-					'parent_id' => $parent_id
+					'parent_id' => $parentId
 				]);
 			}
 		}
-
-
 	}
 }
