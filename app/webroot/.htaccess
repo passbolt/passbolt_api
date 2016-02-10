@@ -4,3 +4,4 @@
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteRule ^ index.php [L]
 </IfModule>
+# Keep a newline at end of file
