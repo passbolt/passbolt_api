@@ -10,27 +10,16 @@
 <html class="passbolt no-js no-passboltplugin alpha version <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
 	<meta charset="utf-8">
-	<!--
-           ____                  __          ____
-          / __ \____  _____ ____/ /_  ____  / / /_
-         / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
-        / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
-       /_/    \__,_/____/____/_.___/\____/_/\__/
-
-       The password management solution
-       (c) 2015 passbolt.com
-
-	-->
+<?php echo $this->element('asciiart'); ?>
 	<base href="<?php echo Router::url('/',true);?>">
 	<title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
 	<meta name="description" content="<?php echo Configure::read('App.punchline'); ?>">
 	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
 	<meta name="viewport" content="width=device-width">
-	<?php $this->Html->css('main', null, array('inline' => false)); ?>
+	<?php $this->Html->css('main.min', null, array('inline' => false)); ?>
 	<?php echo $this->fetch('css'); ?>
 	<?php echo $this->element('scriptHeader'); ?>
-	<?php if(Configure::read('debug') > 0) echo $this->html->css('devel'); ?>
-
+	<?php if(Configure::read('debug') > 0) echo $this->html->css('devel.min'); ?>
 </head>
 <body>
 <div id="container" class="error page <?php echo $this->fetch('page_classes') ?>">

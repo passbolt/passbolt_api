@@ -8,8 +8,8 @@
 $config = [
 	// General App Details
 	'App.name' => 'Passbolt',
-	'App.punchline' => 'Passbolt is a simple password manager that allows you to easily share secrets with your team without making compromises on security! ',
-	'App.copyright' => '&copy; 2015-present Bolt Softwares Pvt Ltd',
+	'punchline' => 'Open source password manager for teams',
+	'copyright' => '© 2016 Bolt Softwares Pvt Ltd',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.version' => [
 		'number' => '0.1.0',
