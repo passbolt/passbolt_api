@@ -20,6 +20,7 @@ class ResourceTask extends ModelTask {
 		$Model = ClassRegistry::init($this->model);
 		// @todo work on permissionable and save
 		$Model->Behaviors->disable('Permissionable');
+		$Model->Behaviors->disable('Trackable');
 		$data = $this->getData();
 		foreach ($data as $item) {
 			$Model->create();
@@ -27,7 +28,7 @@ class ResourceTask extends ModelTask {
 			if (!$Model->validates()) {
 				var_dump($Model->validationErrors);
 			}
-			$instance = $Model->save();
+			$instance = $Model->save($item);
 			if (!$instance) {
 				$this->out('<error>Unable to insert ' . pr($item[$this->model]['name']) . '</error>');
 			}
