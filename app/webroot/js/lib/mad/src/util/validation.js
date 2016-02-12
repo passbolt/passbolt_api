@@ -110,6 +110,16 @@ var Validation = mad.Validation = can.Construct.extend('mad.Validation', /** @st
     },
 
     /**
+     * Alias for notEmpty.
+     * @param {mixed} value The value to validate
+     * @param {array} values The contextual values
+     * @param {array} options Optional parameters
+     */
+    notBlank: function (value, values, options) {
+        return this.notEmpty(value, values, options);
+    },
+
+    /**
      * @param {mixed} value The value to validate
      * @param {array} values The contextual values
      * @param {array} options Optional parameters
