@@ -1,2 +1,0 @@
-#!/bin/bash
-sh $OPENSHIFT_REPO_DIR/app/Console/cake EmailQueue.sender

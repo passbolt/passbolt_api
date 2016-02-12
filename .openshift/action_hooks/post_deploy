@@ -1,4 +1,0 @@
-#!/bin/sh
-echo "== POST-DEPLOY STARTS ===="
-rm -fr $OPENSHIFT_REPO_DIR/app/tmp/cache/models/*
-rm -fr $OPENSHIFT_REPO_DIR/app/tmp/cache/persistent/*
