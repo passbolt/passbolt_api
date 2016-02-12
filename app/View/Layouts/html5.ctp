@@ -27,7 +27,7 @@
 	<meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
 	<meta name="viewport" content="width=device-width">
 <?php echo $this->fetch('css'); ?>
-<?php if(Configure::read('debug') > 0) echo $this->html->css('devel'); ?>
+<?php if(Configure::read('debug') > 0) echo $this->html->css('devel.min'); ?>
 <?php echo $this->element('scriptHeader'); ?>
 </head>
 <body>
