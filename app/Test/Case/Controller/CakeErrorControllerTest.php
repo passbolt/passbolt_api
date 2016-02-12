@@ -46,6 +46,14 @@ class CakeErrorControllerTest extends ControllerTestCase {
         parent::setUp();
     }
 
+	/**
+	 * Check config is ok to run the tests
+	 */
+	public function testSeleniumConfig() {
+		$configok = Configure::read('App.selenium.active');
+		$this->assertTrue($configok, 'Selenium.active should be unabled in config to run these tests');
+	}
+
     /**
      * Check 404 on public JSON endpoint
      */

@@ -58,8 +58,8 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 		parent::setUp();
 		$this->EmailNotification = Common::getModel('EmailNotification');
 		$this->User = Common::getModel('User');
-		$this->marlyn = $this->User->findByUsername('marlyn@passbolt.com');
-		$this->anonymous = $this->User->findByUsername('anonymous@passbolt.com');
+		$this->marlyn = $this->User->findById(Common::uuid('user.id.marlyn'));
+		$this->anonymous = $this->User->findById(Common::uuid('user.id.anonymous'));
 		$this->EmailNotificatorComponent = $this->__getEmailNotificatorComponent();
 	}
 

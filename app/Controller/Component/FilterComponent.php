@@ -11,11 +11,11 @@ class FilterComponent extends Component {
 /**
  * Check if the request contains a filter and extract it
  *
- * @param Array $params The parameters of the request
- * @return Array The extract filter or null
+ * @param array $params The parameters of the request
+ * @return array The extract filter or null
  */
 	public static function fromRequest($params = null) {
-		$returnValue = array();
+		$returnValue = [];
 
 		// extract the keywords to filter on
 		if (isset($params['fltr_keywords'])) {
@@ -35,11 +35,11 @@ class FilterComponent extends Component {
 		// extract the foreign model to filter on
 		$exp = "/^fltr_model_(.*)$/";
 		foreach ($params as $param => $value) {
-			$matches = array();
+			$matches = [];
 			preg_match($exp, $param, $matches);
 			if (!empty($matches)) {
 				if (!isset($params['foreignModels'])) {
-					$returnValue['foreignModels'] = array();
+					$returnValue['foreignModels'] = [];
 				}
 				$returnValue['foreignModels'][ucfirst($matches[1]) . '.id'] = explode(',', $value);
 			}

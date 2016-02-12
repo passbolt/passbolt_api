@@ -51,7 +51,7 @@ class CategoryResourceTask extends ModelTask {
 			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$rc[] = array('CategoryResource'=>array(
-			'id' => '50d77ffa-45fc-423c-a5b1-1b63d7a10fce',
+			'id' => Common::uuid('category_resource.id.cpp1-project1_cpp1-pwd2'),
 			'category_id' => Common::uuid('category.id.cp-project1'),
 			'resource_id' => Common::uuid('resource.id.cpp1-pwd2'),
 			'created' => '2012-12-24 03:34:42',

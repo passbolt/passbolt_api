@@ -1,9 +1,9 @@
 <?php
 /**
  * Blacklist Component
- * Manages blacklisting of ip addresses in the system. 
+ * Manages blacklisting of ip addresses in the system.
  *
- * @copyright 	(c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class BlacklistComponent extends Component {
@@ -32,7 +32,7 @@ class BlacklistComponent extends Component {
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
 		$this->ip = $controller->request->clientIp();
 
-		return parent::initialize($controller);
+		parent::initialize($controller);
 	}
 
 /**
@@ -47,7 +47,7 @@ class BlacklistComponent extends Component {
 			$this->blackHole();
 			return;
 		}
-		return parent::startup($controller);
+		parent::startup($controller);
 	}
 
 /**
@@ -56,11 +56,11 @@ class BlacklistComponent extends Component {
  * @return bool
  */
 	public function isIpInBlacklist() {
-		$bls = $this->AuthenticationBlacklist->find('all', array(
-			'conditions' => array(
+		$bls = $this->AuthenticationBlacklist->find('all', [
+			'conditions' => [
 				'expiry >' => gmdate('Y-m-d H:i:s')
-			)
-		));
+			]
+		]);
 
 		foreach ($bls as $bl) {
 			if ($this->controller->IpAddress->inRange($this->ip, $bl['AuthenticationBlacklist']['ip'])) {

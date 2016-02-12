@@ -71,7 +71,6 @@ class CakeEvent {
  *	$event = new CakeEvent('Order.afterBuy', $this, array('buyer' => $userData));
  *	$event = new CakeEvent('User.afterRegister', $UserModel);
  * ```
- *
  */
 	public function __construct($name, $subject = null, $data = null) {
 		$this->_name = $name;
@@ -103,7 +102,7 @@ class CakeEvent {
 /**
  * Returns the subject of this event
  *
- * @return string
+ * @return object
  */
 	public function subject() {
 		return $this->_subject;

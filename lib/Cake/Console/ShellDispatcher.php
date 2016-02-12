@@ -177,6 +177,9 @@ class ShellDispatcher {
 		}
 		set_exception_handler($exception['consoleHandler']);
 		set_error_handler($error['consoleHandler'], Configure::read('Error.level'));
+
+		App::uses('Debugger', 'Utility');
+		Debugger::getInstance()->output('txt');
 	}
 
 /**
@@ -245,6 +248,11 @@ class ShellDispatcher {
 		App::uses('Shell', 'Console');
 		App::uses('AppShell', 'Console/Command');
 		App::uses($class, $plugin . 'Console/Command');
+
+		if (!class_exists($class)) {
+			$plugin = Inflector::camelize($shell) . '.';
+			App::uses($class, $plugin . 'Console/Command');
+		}
 
 		if (!class_exists($class)) {
 			throw new MissingShellException(array(

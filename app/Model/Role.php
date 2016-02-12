@@ -7,26 +7,28 @@
  */
 class Role extends AppModel {
 	const GUEST = 'guest';
-	const USER	= 'user';
+	const USER = 'user';
 	const ADMIN = 'admin';
-	const ROOT	= 'root';
-	
+	const ROOT = 'root';
+
 	public static function getFindFields($case = '', $role = Role::USER) {
-		$returnValue = array();
+		$returnValue = [];
 		switch ($case) {
 			case 'view':
-				$returnValue = array(
-					'fields' => array(
-						'Role.id', 'Role.name'
-					)
-				);
+				$returnValue = [
+					'fields' => [
+						'Role.id',
+						'Role.name'
+					]
+				];
 				break;
 			default:
-				$returnValue = array(
-					'fields' => array()
-				);
+				$returnValue = [
+					'fields' => []
+				];
 				break;
 		}
+
 		return $returnValue;
 	}
 }

@@ -17,38 +17,38 @@ class Category extends AppModel {
  *
  * @link http://api20.cakephp.org/class/model#
  */
-	public $actsAs = array(
+	public $actsAs = [
 		'Containable',
 		'Trackable',
-		'Permissionable' => array(
+		'Permissionable' => [
 			'priority' => 1
-		),
+		],
 		'Tree'
-	);
+	];
 
 /**
  * Details of has many relationships
  *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasMany = array(
+	public $hasMany = [
 		'CategoryResource'
-	);
+	];
 
 /**
  * Details of belongs relationships
  *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $belongsTo = array(
-		'CategoryType' => array(
+	public $belongsTo = [
+		'CategoryType' => [
 			'className' => 'CategoryType'
-		)
-	);
+		]
+	];
 
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
-		$this->Behaviors->setPriority(array('Permissionable' => 1));
+		$this->Behaviors->setPriority(['Permissionable' => 1]);
 	}
 
 /**
@@ -58,59 +58,59 @@ class Category extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
-			'id' => array(
-				'uuid' => array(
+		$default = [
+			'id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'required' => 'update',
 					'message' => __('Id must be in correct format')
-				)
-			),
-			'name' => array(
-				'alphaNumeric' => array(
+				]
+			],
+			'name' => [
+				'alphaNumeric' => [
 					'rule' => "/^[\p{L}\d ,.:;!?\-_\(\[\)\]'&\/]*$/u",
 					'required' => 'create',
 					'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \'')
-				),
-				'size' => array(
-					'rule' => array('between', 3, 64),
+				],
+				'size' => [
+					'rule' => ['between', 3, 64],
 					'message' => __('Name should be between %s and %s characters long'),
-				)
-			),
-			'parent_id' => array(
-				'exist' => array(
-					'rule' => array('parentExists', null),
+				]
+			],
+			'parent_id' => [
+				'exist' => [
+					'rule' => ['parentExists', null],
 					'allowEmpty' => true,
 					'shared' => false,
 					'message' => __('The parent provided does not exist')
-				),
-				'uuid' => array(
+				],
+				'uuid' => [
 					'rule' => 'uuid',
 					'allowEmpty' => true,
 					'required' => false,
 					'message' => __('UUID must be in correct format')
-				)
-			),
-			'position' => array(
-				'number' => array(
+				]
+			],
+			'position' => [
+				'number' => [
 					'rule' => 'numeric',
 					'message' => __('The position must be a number')
-				)
-			),
-			'category_type_id' => array(
-				'exist' => array(
-					'rule' => array('categoryTypeExists', null),
+				]
+			],
+			'category_type_id' => [
+				'exist' => [
+					'rule' => ['categoryTypeExists', null],
 					'allowEmpty' => true,
 					'message' => __('The category type provided does not exist')
-				),
-				'uuid' => array(
+				],
+				'uuid' => [
 					'rule' => 'uuid',
 					'allowEmpty' => true,
 					'required' => false,
 					'message' => __('The category type id must be in correct format')
-				)
-			)
-		);
+				]
+			]
+		];
 
 		switch ($case) {
 			default:
@@ -118,6 +118,7 @@ class Category extends AppModel {
 				$rules = $default;
 				break;
 		}
+
 		return $rules;
 	}
 
@@ -130,7 +131,7 @@ class Category extends AppModel {
  * @param array $results
  * @return array Threaded results
  */
-	protected function _findThreaded($state, $query, $results = array()) {
+	protected function _findThreaded($state, $query, $results = []) {
 		if ($state === 'before') {
 			return $query;
 		} elseif ($state === 'after') {
@@ -147,6 +148,7 @@ class Category extends AppModel {
 					}
 				}
 			}
+
 			return $results;
 		}
 	}
@@ -154,20 +156,21 @@ class Category extends AppModel {
 /**
  * Get the subcategories of a given category
  *
- * @param {Category} category The target category
- * @return {array}
+ * @param {Category} $category The target category
+ * @return array
  */
 	public function getSubCategories($category = null) {
-		$returnValue = array();
+		$returnValue = [];
 		if (!is_null($category)) {
-			$returnValue = $this->find('all', array(
-				'conditions' => array(
+			$returnValue = $this->find('all', [
+				'conditions' => [
 					'Category.lft >=' => $category['Category']['lft'],
 					'Category.rght <=' => $category['Category']['rght']
-				),
-				'order' => array('Category.lft' => 'ASC')
-			));
+				],
+				'order' => ['Category.lft' => 'ASC']
+			]);
 		}
+
 		return $returnValue;
 	}
 
@@ -180,10 +183,11 @@ class Category extends AppModel {
 		if ($check['category_type_id'] == null) {
 			return true;
 		} else {
-			$exists = $this->CategoryType->find('count', array(
-				'conditions' => array('CategoryType.id' => $check['category_type_id']),
+			$exists = $this->CategoryType->find('count', [
+				'conditions' => ['CategoryType.id' => $check['category_type_id']],
 				'recursive' => -1
-			));
+			]);
+
 			return $exists > 0;
 		}
 	}
@@ -210,6 +214,7 @@ class Category extends AppModel {
 		if ($category['Category']['lft'] + 1 == $category['Category']['rght']) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -225,6 +230,7 @@ class Category extends AppModel {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -268,6 +274,7 @@ class Category extends AppModel {
 				$result = $this->moveDown($id, -($steps));
 			}
 		}
+
 		return $result;
 	}
 
@@ -285,7 +292,7 @@ class Category extends AppModel {
 		}
 		$parent = $this->findById($category['Category']['parent_id']);
 		// calculate the current position
-		$children = $this->children($parent['Category']['id'], true, null, array('Category.lft' => 'ASC'));
+		$children = $this->children($parent['Category']['id'], true, null, ['Category.lft' => 'ASC']);
 		$currentPosition = 0;
 		foreach ($children as $child) {
 			$currentPosition++;
@@ -293,6 +300,7 @@ class Category extends AppModel {
 				break;
 			}
 		}
+
 		return $currentPosition;
 	}
 
@@ -303,7 +311,7 @@ class Category extends AppModel {
  * @return $condition array
  */
 	public static function getFindFields($case = 'get', $role = Role::USER) {
-		$returnValue = array('fields' => array());
+		$returnValue = ['fields' => []];
 
 		switch ($role) {
 			case 'user':
@@ -313,38 +321,39 @@ class Category extends AppModel {
 					case 'addResult':
 					case 'index' :
 					case 'getWithChildren' :
-						$returnValue = array(
-							'fields' => array(
+						$returnValue = [
+							'fields' => [
 								'id',
 								'name',
 								'parent_id',
 								'category_type_id',
 								'lft',
 								'rght'
-							),
-							'contain' => array('CategoryType')
-						);
+							],
+							'contain' => ['CategoryType']
+						];
 						break;
 					case 'Resource.viewByCategory':
-						$returnValue = array(
-							'fields' => array('Category.id', 'Category.name', 'Category.parent_id'),
-							'contain' => array('Resource' => Resource::getFindFields('view'))
-						);
+						$returnValue = [
+							'fields' => ['Category.id', 'Category.name', 'Category.parent_id'],
+							'contain' => ['Resource' => Resource::getFindFields('view')]
+						];
 						break;
 					case 'rename':
-						$returnValue = array('fields' => array('name'));
+						$returnValue = ['fields' => ['name']];
 						break;
 					case 'add':
 					case 'edit':
-						$returnValue = array('fields' => array('name', 'parent_id', 'category_type_id'));
+						$returnValue = ['fields' => ['name', 'parent_id', 'category_type_id']];
 						break;
 					default:
-						$returnValue = array('fields' => array());
+						$returnValue = ['fields' => []];
 						break;
 				}
 			case 'admin':
 				break;
 		}
+
 		return $returnValue;
 	}
 
@@ -357,46 +366,47 @@ class Category extends AppModel {
  * @return array
  */
 	public static function getFindConditions($case = 'get', $role = Role::USER, $data = null) {
-		$returnValue = array('conditions' => array());
+		$returnValue = ['conditions' => []];
 		switch ($role) {
 			case 'user':
 			case 'admin':
 				switch ($case) {
 					case 'getWithChildren':
-						$returnValue = array(
-							'conditions' => array(
+						$returnValue = [
+							'conditions' => [
 								'Category.lft >=' => $data['Category']['lft'],
 								'Category.rght <=' => $data['Category']['rght']
-							),
+							],
 							'order' => 'Category.lft ASC'
-						);
+						];
 						break;
 					case 'getChildren':
-						$returnValue = array(
-							'conditions' => array(
+						$returnValue = [
+							'conditions' => [
 								'Category.lft >' => $data['Category']['lft'],
 								'Category.rght <' => $data['Category']['rght']
-							),
+							],
 							'order' => 'Category.lft ASC'
-						);
+						];
 						break;
 					case 'Resource.viewByCategory':
 					case 'view':
 					case 'addResult':
-						$returnValue = array('conditions' => array('Category.id' => $data['Category']['id']));
+						$returnValue = ['conditions' => ['Category.id' => $data['Category']['id']]];
 						break;
 					case 'index':
-						$returnValue = array(
-							'conditions' => array('Category.parent_id' => null),
+						$returnValue = [
+							'conditions' => ['Category.parent_id' => null],
 							'order' => 'Category.lft ASC'
-						);
+						];
 						break;
 					default:
-						$returnValue = array('conditions' => array());
+						$returnValue = ['conditions' => []];
 				}
 			case 'admin':
 				break;
 		}
+
 		return $returnValue;
 	}
 }

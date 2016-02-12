@@ -31,39 +31,6 @@ class CategoryTask extends ModelTask {
 			}
 		}
 	}
-
-	public static function getAlias() {
-		$Category = ClassRegistry::init('Category');
-		$aliases = array(
-			// Passbolt case, mainly used to test permission system inheritance
-			'root' => $Category->findByName("Bolt Softwares Pvt. Ltd."),
-			'adm' => $Category->findByName("administration"),
-			'acc' => $Category->findByName("accounts"),
-			'mar' => $Category->findByName("marketing"),
-			'hr' => $Category->findByName("human resource"),
-			'mis' => $Category->findByName("misc"),
-			'pro' => $Category->findByName("projects"),
-			'cak' => $Category->findByName("cakephp"),
-			'cp1' => $Category->findByName("cp-project1"),
-			'cp2' => $Category->findByName("cp-project2"),
-			'cp3' => $Category->findByName("cp-project3"),
-			'dru' => $Category->findByName("drupal"),
-			'dp1' => $Category->findByName("d-project1"),
-			'dp2' => $Category->findByName("d-project2"),
-			'oth' => $Category->findByName("others"),
-			'op1' => $Category->findByName("o-project1"),
-			'op2' => $Category->findByName("o-project2"),
-			'pvt' => $Category->findByName("private"),
-			'pjr' => $Category->findByName("pv-jean_bartik"),
-
-			// Unit tests sandbox category
-			'utt' => $Category->findByName("utest")
-		);
-		foreach ($aliases as $name => $obj) {
-			$aliases[$name] = $obj['Category']['id'];
-		}
-		return $aliases;
-	}
 	
 	protected function getData() {
 		// Passbolt main Use case

@@ -13,48 +13,50 @@ class CategoryResource extends AppModel {
 
 	public $useTable = "categories_resources";
 
-	public $belongsTo = array(
-		'Category', 'Resource'
-	);
+	public $belongsTo = [
+		'Category',
+		'Resource'
+	];
 
-	public $actsAs = array('Trackable');
+	public $actsAs = ['Trackable'];
 
 /**
  * Get the validation rules upon context
+ *
  * @param string $case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
-			'category_id' => array(
-				'uuid' => array(
+		$default = [
+			'category_id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('UUID must be in correct format')
-				),
-				'exist' => array(
-					'rule' => array('validateExists', 'category_id', 'Category'),
+					'message' => __('UUID must be in correct format')
+				],
+				'exist' => [
+					'rule' => ['validateExists', 'category_id', 'Category'],
 					'message' => __('The category provided does not exist')
-				)
-			),
-			'resource_id' => array(
-				'uuid' => array(
+				]
+			],
+			'resource_id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'required' => true,
 					'allowEmpty' => false,
-					'message'	=> __('UUID must be in correct format')
-				),
-				'exist' => array(
-					'rule' => array('validateExists', 'resource_id', 'Resource'),
+					'message' => __('UUID must be in correct format')
+				],
+				'exist' => [
+					'rule' => ['validateExists', 'resource_id', 'Resource'],
 					'message' => __('The resource provided does not exist')
-				),
-				'uniqueCombi' => array(
-					'rule' => array('uniqueCombi', null),
+				],
+				'uniqueCombi' => [
+					'rule' => ['uniqueCombi', null],
 					'message' => __('The CategoryResource entered is a duplicate')
-				)
-			)
-		);
+				]
+			]
+		];
 		switch ($case) {
 			default:
 			case 'default' :
@@ -65,14 +67,17 @@ class CategoryResource extends AppModel {
 
 /**
  * Check if a category with same id exists
- * @param check
+ *
+ * @param bool $check
+ * @return bool
  */
 	public function uniqueCombi($check = false) {
 		$cr = $this->data['CategoryResource'];
-		$combi = array(
+		$combi = [
 			'CategoryResource.category_id' => $cr['category_id'],
 			'CategoryResource.resource_id' => $cr['resource_id']
-		);
+		];
+
 		return $this->isUnique($combi, false);
 	}
 
@@ -85,52 +90,53 @@ class CategoryResource extends AppModel {
  * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = array();
+		$conditions = [];
 		switch ($case) {
 			case 'add':
-				$conditions = array();
-			break;
+				$conditions = [];
+				break;
 			case 'view':
-				$conditions = array(
-					'conditions' => array(
+				$conditions = [
+					'conditions' => [
 						'CategoryResource.id' => $data['CategoryResource.id']
-					)
-				);
-			break;
+					]
+				];
+				break;
 			default:
-				$conditions = array(
-					'conditions' => array()
-				);
+				$conditions = [
+					'conditions' => []
+				];
 		}
 		return $conditions;
 	}
 
 /**
  * Return the list of field to fetch for given context
+ *
  * @param string $case context ex: login, activation
  * @return $condition array
  */
 	public static function getFindFields($case = 'view', $role = Role::USER) {
-		switch($case){
+		switch ($case) {
 			case 'view':
 			case 'add':
 			case 'edit':
-				$fields = array(
-					'fields' => array(
+				$fields = [
+					'fields' => [
 						'id',
 						'category_id',
 						'resource_id'
-					)
-				);
-			break;
+					]
+				];
+				break;
 			case 'delete':
-				$fields = array();
-			break;
+				$fields = [];
+				break;
 			default:
-				$fields = array(
-					'fields' => array()
-				);
-			break;
+				$fields = [
+					'fields' => []
+				];
+				break;
 		}
 		return $fields;
 	}

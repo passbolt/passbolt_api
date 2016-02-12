@@ -10,9 +10,9 @@ App::uses('Permission', 'Model');
 
 class PermissionsController extends AppController {
 
-	public $components = array(
+	public $components = [
 		'PermissionHelper'
-	);
+	];
 
 /**
  * Add Aco Permissions
@@ -49,7 +49,8 @@ class PermissionsController extends AppController {
 		// the aco instance instance does not exist
 		$this->loadModel($acoModelName);
 		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::OWNER)) {
-			$this->Message->error(__('Your are not allowed to add a permission to the %s', $acoModelName), array('code' => 403));
+			$this->Message->error(__('Your are not allowed to add a permission to the %s', $acoModelName),
+				['code' => 403]);
 			return false;
 		}
 
@@ -68,7 +69,8 @@ class PermissionsController extends AppController {
 		// the ARO instance does not exist
 		$this->loadModel($aroModelName);
 		if (!$this->$aroModelName->exists($aroInstanceId)) {
-			$this->Message->error(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it', $aroInstanceId, $aroModelName));
+			$this->Message->error(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it',
+				$aroInstanceId, $aroModelName));
 			return false;
 		}
 
@@ -91,15 +93,15 @@ class PermissionsController extends AppController {
 		}
 
 		// add the new permission
-		$data = array(
-			'Permission' => array(
+		$data = [
+			'Permission' => [
 				'aco' => $acoModelName,
 				'aco_foreign_key' => $acoInstanceId,
 				'aro' => $aroModelName,
 				'aro_foreign_key' => $aroInstanceId,
 				'type' => $permissionType
-			)
-		);
+			]
+		];
 		$this->Permission->create();
 		$this->Permission->set($data);
 		if (!$this->Permission->validates()) {
@@ -148,7 +150,8 @@ class PermissionsController extends AppController {
 			}
 		}
 
-		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType);
+		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId,
+			$permissionType);
 		if (!$save) {
 			$this->Message->error(__('Could not save the permission'));
 			return;
@@ -159,11 +162,11 @@ class PermissionsController extends AppController {
 		$viewCase = 'viewBy' . $acoModelName; // ex: viewByCategory
 		$foreignKey = Inflector::underscore($acoModelName) . '_id'; // category_id
 		$this->loadModel($viewName);
-		$findData = array(
-			$viewName => array( // UserCategoryPermission
+		$findData = [
+			$viewName => [ // UserCategoryPermission
 				$foreignKey => $acoInstanceId // category_id = $acoInstanceId
-			)
-		);
+			]
+		];
 		$findOptions = $this->$viewName->getFindOptions($viewCase, User::get('Role.name'), $findData);
 		$this->set('data', $this->$viewName->find('first', $findOptions));
 		$this->Message->success(__('The permission was successfully added'));
@@ -177,7 +180,7 @@ class PermissionsController extends AppController {
  * @return array
  */
 	public function viewAcoPermissions($acoModelName = '', $acoInstanceId = null) {
-		$returnValue = array();
+		$returnValue = [];
 
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
@@ -214,8 +217,7 @@ class PermissionsController extends AppController {
 		// Get list of permissions from subfunction.
 		try {
 			$returnValue = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$this->Message->error($e->getMessage());
 			return;
 		}
@@ -266,7 +268,8 @@ class PermissionsController extends AppController {
 		// Init a transaction.
 		$this->Permission->begin();
 		// Save permission inside the transaction.
-		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType);
+		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId,
+			$permissionType);
 
 		// Return list of permissions.
 		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
@@ -317,7 +320,7 @@ class PermissionsController extends AppController {
 		// find the permission
 		$permission = $this->Permission->findById($id);
 		if (empty($permission)) {
-			$this->Message->error(__('The permission does not exist'), array('code' => 404));
+			$this->Message->error(__('The permission does not exist'), ['code' => 404]);
 		}
 		$acoModelName = $permission['Permission']['aco'];
 		$acoInstanceId = $permission['Permission']['aco_foreign_key'];
@@ -359,12 +362,12 @@ class PermissionsController extends AppController {
 		$ModelView = ClassRegistry::init($viewName);
 		$acoForeignKey = strtolower($acoModelName) . '_id';
 		$aroForeignKey = strtolower($aroModelName) . '_id';
-		$findData = array(
-			$viewName => array(
+		$findData = [
+			$viewName => [
 				$acoForeignKey => $acoInstanceId,
 				$aroForeignKey => $aroInstanceId
-			)
-		);
+			]
+		];
 		$findOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $findData);
 		$result = $ModelView->find('first', $findOptions);
 
@@ -413,7 +416,7 @@ class PermissionsController extends AppController {
 		// find the permission
 		$permission = $this->Permission->findById($id);
 		if (empty($permission)) {
-			$this->Message->error(__('The permission does not exist'), array('code' => 404));
+			$this->Message->error(__('The permission does not exist'), ['code' => 404]);
 		}
 		$acoModelName = $permission['Permission']['aco'];
 		$acoForeignKey = $permission['Permission']['aco_foreign_key'];

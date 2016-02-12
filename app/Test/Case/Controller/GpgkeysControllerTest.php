@@ -40,7 +40,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		$this->Gpgkey = ClassRegistry::init('Gpgkey');
 		parent::setUp();
 
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 	}
 
@@ -147,9 +147,10 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 * Test view with uuid non existing.
 	 */
 	public function testViewGpgkeyDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The user id is invalid');
 		$this->testAction(
-			"/gpgkeys/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json",
+			"/gpgkeys/{$id}.json",
 			array('method' => 'get', 'return' => 'contents')
 		);
 	}
@@ -175,7 +176,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 */
 	public function testAdd() {
 		$pubKey = file_get_contents( Configure::read('GPG.testKeys.path') . 'passbolt_dummy_key.asc');
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 		$json = json_decode(
 			$this->testAction('/gpgkeys.json',
@@ -217,7 +218,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 */
 	public function testAddRemovePreviousKeys() {
 		$pubKey = file_get_contents(Configure::read('GPG.testKeys.path') . 'passbolt_dummy_key.asc');
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		// Number of insertion rounds.
@@ -268,7 +269,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 */
 	public function testAddInvalidKey() {
 		$pubKey = 'invalidkey';
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 		$this->setExpectedException('HttpException', 'The gpgkey provided could not be used');
 		$this->testAction('/gpgkeys.json',

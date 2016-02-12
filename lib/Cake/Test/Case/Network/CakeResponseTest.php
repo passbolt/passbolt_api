@@ -373,7 +373,7 @@ class CakeResponseTest extends CakeTestCase {
  * @return void
  */
 	public function testCompress() {
-		if (php_sapi_name() !== 'cli') {
+		if (PHP_SAPI !== 'cli') {
 			$this->markTestSkipped('The response compression can only be tested in cli.');
 		}
 
@@ -491,7 +491,7 @@ class CakeResponseTest extends CakeTestCase {
 		if (!extension_loaded("zlib")) {
 			$this->markTestSkipped('Skipping further tests for outputCompressed as zlib extension is not loaded');
 		}
-		if (php_sapi_name() !== 'cli') {
+		if (PHP_SAPI !== 'cli') {
 			$this->markTestSkipped('Testing outputCompressed method with compression enabled done only in cli');
 		}
 
@@ -566,7 +566,7 @@ class CakeResponseTest extends CakeTestCase {
 		$response->send();
 
 		ob_start();
-		$response = $this->getMock('CakeResponse', array('_sendHeader', '_sendContent'));
+		$this->getMock('CakeResponse', array('_sendHeader', '_sendContent'));
 		$goofyOutput = 'I am goofily sending output in the controller';
 		echo $goofyOutput;
 		$response = $this->getMock('CakeResponse', array('_sendHeader', '_sendContent'));
@@ -1167,15 +1167,27 @@ class CakeResponseTest extends CakeTestCase {
 	}
 
 /**
- * test file with ..
+ * test file with ../
  *
  * @expectedException NotFoundException
  * @expectedExceptionMessage The requested file contains `..` and will not be read.
  * @return void
  */
-	public function testFileWithPathTraversal() {
+	public function testFileWithForwardSlashPathTraversal() {
 		$response = new CakeResponse();
 		$response->file('my/../cat.gif');
+	}
+
+/**
+ * test file with ..\
+ *
+ * @expectedException NotFoundException
+ * @expectedExceptionMessage The requested file contains `..` and will not be read.
+ * @return void
+ */
+	public function testFileWithBackwardSlashPathTraversal() {
+		$response = new CakeResponse();
+		$response->file('my\..\cat.gif');
 	}
 
 /**
@@ -1734,7 +1746,7 @@ class CakeResponseTest extends CakeTestCase {
 		);
 
 		$this->assertEquals(416, $response->statusCode());
-		$result = $response->send();
+		$response->send();
 	}
 
 /**
@@ -1775,7 +1787,7 @@ class CakeResponseTest extends CakeTestCase {
 		);
 
 		ob_start();
-		$result = $response->send();
+		$response->send();
 		ob_get_clean();
 	}
 
@@ -1864,7 +1876,7 @@ class CakeResponseTest extends CakeTestCase {
 		);
 
 		$this->assertEquals(416, $response->statusCode());
-		$result = $response->send();
+		$response->send();
 	}
 
 /**

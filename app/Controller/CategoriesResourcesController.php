@@ -6,13 +6,12 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 class CategoriesResourcesController extends AppController {
 
 /**
  * @var $uses array containing the class names of models this controller uses.
  */
-	public $uses = array('CategoryResource');
+	public $uses = ['CategoryResource'];
 
 /**
  * Get a categoryResource
@@ -33,13 +32,13 @@ class CategoriesResourcesController extends AppController {
 			return;
 		}
 		// check if it exists
-		$data = array(
+		$data = [
 			'CategoryResource.id' => $id
-		);
+		];
 		$options = $this->CategoryResource->getFindOptions('view', User::get('Role.name'), $data);
 		$cr = $this->CategoryResource->find('all', $options);
 		if (!count($cr)) {
-			$this->Message->error(__('The categoryResource does not exist'), array('code' => 404));
+			$this->Message->error(__('The categoryResource does not exist'), ['code' => 404]);
 			return;
 		}
 		$this->set('data', $cr[0]);
@@ -65,7 +64,7 @@ class CategoriesResourcesController extends AppController {
 		}
 		$resource = $this->CategoryResource->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The categoryResource does not exist'), array('code' => 404));
+			$this->Message->error(__('The categoryResource does not exist'), ['code' => 404]);
 			return;
 		}
 

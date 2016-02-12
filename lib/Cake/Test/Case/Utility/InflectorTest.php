@@ -128,7 +128,7 @@ class InflectorTest extends CakeTestCase {
 		$this->assertEquals(Inflector::singularize('stimuli'), 'stimulus');
 		$this->assertEquals(Inflector::singularize('syllabi'), 'syllabus');
 		$this->assertEquals(Inflector::singularize('termini'), 'terminus');
-		$this->assertEquals(Inflector::singularize('viri'), 'virus');
+		$this->assertEquals(Inflector::singularize('viruses'), 'virus');
 		$this->assertEquals(Inflector::singularize('people'), 'person');
 		$this->assertEquals(Inflector::singularize('gloves'), 'glove');
 		$this->assertEquals(Inflector::singularize('doves'), 'dove');
@@ -246,7 +246,7 @@ class InflectorTest extends CakeTestCase {
 		$this->assertEquals(Inflector::pluralize('stimulus'), 'stimuli');
 		$this->assertEquals(Inflector::pluralize('syllabus'), 'syllabi');
 		$this->assertEquals(Inflector::pluralize('terminus'), 'termini');
-		$this->assertEquals(Inflector::pluralize('virus'), 'viri');
+		$this->assertEquals(Inflector::pluralize('virus'), 'viruses');
 		$this->assertEquals(Inflector::pluralize('person'), 'people');
 		$this->assertEquals(Inflector::pluralize('people'), 'people');
 		$this->assertEquals(Inflector::pluralize('glove'), 'gloves');
@@ -287,6 +287,9 @@ class InflectorTest extends CakeTestCase {
 	public function testPluralizeMultiWordIrregular() {
 		Inflector::rules('plural', array(
 			'irregular' => array(
+				'mytable1' => 'mytables1',
+				'mytable2' => 'mytables2',
+				'mytable1_mytable2' => 'mytables1_mytables2',
 				'pregunta_frecuente' => 'preguntas_frecuentes',
 				'categoria_pregunta_frecuente' => 'categorias_preguntas_frecuentes',
 			)
@@ -300,6 +303,10 @@ class InflectorTest extends CakeTestCase {
 			'faq_categorias_preguntas_frecuentes',
 			Inflector::pluralize('faq_categoria_pregunta_frecuente')
 		);
+		$this->assertEquals('mytables1', Inflector::pluralize('mytable1'));
+		$this->assertEquals('mytables2', Inflector::pluralize('mytable2'));
+		$this->assertEquals('mytables1_mytables2', Inflector::pluralize('mytable1_mytable2'));
+		$this->assertEquals('mytables1_mytables2', Inflector::tableize('Mytable1Mytable2'));
 	}
 
 /**
@@ -399,7 +406,7 @@ class InflectorTest extends CakeTestCase {
  * @return void
  */
 	public function testInflectorSlugCharList() {
-		foreach (self::$maps as $language => $list) {
+		foreach (static::$maps as $language => $list) {
 			foreach ($list as $from => $to) {
 				$result = Inflector::slug($from);
 				$this->assertEquals($to, $result, $from . ' (' . $language . ') should be ' . $to . ' - but is ' . $result);
@@ -459,7 +466,6 @@ class InflectorTest extends CakeTestCase {
 		$this->assertSame(Inflector::underscore(0), '0');
 		$this->assertSame(Inflector::underscore(false), '');
 	}
-
 
 /**
  * Test camelize()

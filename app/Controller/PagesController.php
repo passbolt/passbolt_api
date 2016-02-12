@@ -30,7 +30,7 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array();
+	public $uses = [];
 
 /**
  * beforeFilter
@@ -40,7 +40,7 @@ class PagesController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		if (Configure::read('debug') > 0) {
-			$this->Auth->allow(array('debug'));
+			$this->Auth->allow(['debug']);
 		}
 	}
 
@@ -49,7 +49,7 @@ class PagesController extends AppController {
  *
  * @return void
  * @throws NotFoundException When the view file could not be found
- *	or MissingViewException in debug mode.
+ * or MissingViewException in debug mode.
  */
 	public function display() {
 		$path = func_get_args();

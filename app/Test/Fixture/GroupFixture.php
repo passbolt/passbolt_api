@@ -1,7 +1,6 @@
 <?php
 /**
- * GroupFixture
- *
+ * Group Fixture
  */
 class GroupFixture extends CakeTestFixture {
 
@@ -107,6 +106,15 @@ class GroupFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-17 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
+			'id' => 'e7c2be86-c882-30ad-a3b2-d7387936c826',
+			'name' => 'no privilege',
+			'deleted' => 0,
+			'created' => '2016-02-02 18:59:05',
+			'modified' => '2016-02-02 18:59:05',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),

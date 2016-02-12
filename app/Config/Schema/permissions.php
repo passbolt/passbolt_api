@@ -40,7 +40,7 @@ class PermissionsSchema {
 			        Aplpy the same permission
 
 			 Note : A GROUP Permission cannot be applied to a Category, if a Permission
-			 has already been defined on a parent.
+			 has already been defined on a parent category.
 			 */
 			"groups_categories_permissions" => "
 			CREATE OR REPLACE ALGORITHM=UNDEFINED VIEW groups_categories_permissions AS
@@ -272,7 +272,8 @@ class PermissionsSchema {
 								SELECT `gcp`.permission_id INTO `permid`
 								FROM `groups_categories_permissions` gcp
 								WHERE `gcp`.group_id = `group_id` 
-								AND `gcp`.category_id = `category_id`;
+								AND `gcp`.category_id = `category_id`
+								LIMIT 1;
 								
 						    RETURN `permid`;
 						END;",

@@ -44,7 +44,7 @@ class ItemTagsController extends AppController {
 		// the foreign instance does not exist
 		$instance = $this->ItemTag->$foreignModelName->findById($foreignId);
 		if (!$instance) {
-			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
 			return;
 		}
 
@@ -53,17 +53,17 @@ class ItemTagsController extends AppController {
 		// the permissionable after find executed on the previous operation findById should drop
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->ItemTag->$foreignModelName->isAuthorized($foreignId, PermissionType::READ)) {
-			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), array('code' => 403));
+			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), ['code' => 403]);
 			return;
 		}
 
 		// find the comments
-		$findData = array(
-			'ItemTag' => array(
+		$findData = [
+			'ItemTag' => [
 				'foreign_id' => $foreignId,
 				'foreign_model' => $foreignModelName
-			)
-		);
+			]
+		];
 		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
 
 		// Retrieve the just updated item tags.
@@ -118,7 +118,7 @@ class ItemTagsController extends AppController {
 		$instance = $this->ItemTag->$foreignModelName->findById($foreignId);
 		if (!$instance) {
 			$datasource->rollback();
-			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
 			return;
 		}
 
@@ -128,14 +128,16 @@ class ItemTagsController extends AppController {
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->ItemTag->$foreignModelName->isAuthorized($foreignId, PermissionType::UPDATE)) {
 			$datasource->rollback();
-			$this->Message->error(__('You are not authorized to update item tags of this %s', $foreignModelName), array('code' => 403));
+			$this->Message->error(__('You are not authorized to update item tags of this %s', $foreignModelName),
+				['code' => 403]);
+
 			return;
 		}
 
-		$this->ItemTag->deleteAll(array(
+		$this->ItemTag->deleteAll([
 				'ItemTag.foreign_model' => $foreignModelName,
 				'ItemTag.foreign_id' => $foreignId
-			),
+			],
 			false
 		);
 
@@ -151,9 +153,9 @@ class ItemTagsController extends AppController {
 
 				// If the given tag doesn't exist, create it.
 				if (!$tag) {
-					$t = array(
+					$t = [
 						'name' => $tagName
-					);
+					];
 					$this->ItemTag->Tag->create();
 					$this->ItemTag->Tag->set($t);
 					if (!$this->ItemTag->Tag->validates()) {
@@ -169,11 +171,11 @@ class ItemTagsController extends AppController {
 				}
 
 				// Create the new Item Tag.
-				$itemTag = array(
+				$itemTag = [
 					'foreign_model' => $foreignModelName,
 					'foreign_id' => $foreignId,
 					'tag_id' => $tag['Tag']['id']
-				);
+				];
 				$this->ItemTag->create();
 				$this->ItemTag->set($itemTag);
 				if (!$this->ItemTag->validates()) {
@@ -192,12 +194,12 @@ class ItemTagsController extends AppController {
 		$datasource->commit();
 
 		// find the tags
-		$findData = array(
-			'ItemTag' => array(
+		$findData = [
+			'ItemTag' => [
 				'foreign_id' => $foreignId,
 				'foreign_model' => $foreignModelName
-			)
-		);
+			]
+		];
 		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
 		$itemTags = $this->ItemTag->find('all', $findOptions);
 		$this->set('data', $itemTags);
@@ -250,7 +252,7 @@ class ItemTagsController extends AppController {
 		$instance = $this->ItemTag->$foreignModelName->findById($foreignId);
 		if (!$instance) {
 			$datasource->rollback();
-			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
 			return;
 		}
 
@@ -260,7 +262,7 @@ class ItemTagsController extends AppController {
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->ItemTag->$foreignModelName->isAuthorized($foreignId, PermissionType::READ)) {
 			$datasource->rollback();
-			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), array('code' => 403));
+			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), ['code' => 403]);
 			return;
 		}
 
@@ -320,7 +322,7 @@ class ItemTagsController extends AppController {
 		$datasource->commit();
 
 		// return the just inserted item tag.
-		$findData = array('ItemTag' => array('id' => $this->ItemTag->id));
+		$findData = ['ItemTag' => ['id' => $this->ItemTag->id]];
 		$findOptions = $this->ItemTag->getFindOptions('ItemTag.view', User::get('Role.name'), $findData);
 		$this->set('data', $this->ItemTag->find('first', $findOptions));
 
@@ -355,7 +357,7 @@ class ItemTagsController extends AppController {
 		// the foreign instance does not exist
 		$instance = $this->ItemTag->findById($id);
 		if (!$instance) {
-			$this->Message->error(__('The item tag does not exist'), array('code' => 404));
+			$this->Message->error(__('The item tag does not exist'), ['code' => 404]);
 			return;
 		}
 
@@ -366,7 +368,8 @@ class ItemTagsController extends AppController {
 		$foreignModelName = $instance['ItemTag']['foreign_model'];
 		$foreignId = $instance['ItemTag']['foreign_id'];
 		if (!$this->ItemTag->$foreignModelName->isAuthorized($foreignId, PermissionType::UPDATE)) {
-			$this->Message->error(__('You are not authorized to delete item tags of this %s', $foreignModelName), array('code' => 403));
+			$this->Message->error(__('You are not authorized to delete item tags of this %s', $foreignModelName),
+				['code' => 403]);
 			return;
 		}
 

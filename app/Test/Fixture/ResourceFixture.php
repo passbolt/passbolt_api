@@ -1,7 +1,6 @@
 <?php
 /**
- * ResourceFixture
- *
+ * Resource Fixture
  */
 class ResourceFixture extends CakeTestFixture {
 
@@ -93,8 +92,8 @@ class ResourceFixture extends CakeTestFixture {
 			'uri' => 'https://unit-test.com',
 			'description' => 'description',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:12',
-			'modified' => '2016-01-28 17:30:12',
+			'created' => '2016-02-08 23:39:25',
+			'modified' => '2016-02-08 23:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),

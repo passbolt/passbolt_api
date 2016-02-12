@@ -1,7 +1,6 @@
 <?php
 /**
- * ProfileFixture
- *
+ * Profile Fixture
  */
 class ProfileFixture extends CakeTestFixture {
 
@@ -47,8 +46,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -63,8 +62,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -79,8 +78,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -95,8 +94,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -111,8 +110,24 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
+			'created_by' => '',
+			'modified_by' => ''
+		),
+		array(
+			'id' => '513ba7da-0a15-34d7-ad87-c726f7f479a0',
+			'user_id' => '27102e91-6880-3312-a4c5-db00c228820e',
+			'gender' => 'f',
+			'date_of_birth' => '1986-07-14 00:00:00',
+			'title' => 'Ms',
+			'first_name' => 'Nancy',
+			'last_name' => 'Leveson',
+			'avatar' => '',
+			'timezone' => '',
+			'locale' => '',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -127,8 +142,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -143,8 +158,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -159,8 +174,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -175,8 +190,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -191,8 +206,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -207,8 +222,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -223,8 +238,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -239,8 +254,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -255,8 +270,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -271,8 +286,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -287,8 +302,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -303,8 +318,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -319,8 +334,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:23',
+			'modified' => '2016-02-08 23:39:23',
 			'created_by' => '',
 			'modified_by' => ''
 		),

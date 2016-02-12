@@ -43,7 +43,7 @@ class ItemTagTask extends ModelTask {
 		$this->Tag = ClassRegistry::init('Tag');
 
 		$rts[] = array('ItemTag' => array(
-			'id' => '10be2d3a-0468-432b-b59f-3153d7a81fce',
+			'id' => Common::uuid('item_tag.id.banking-bank-password'),
 			'tag_id' => Common::uuid('tag.id.banking'),
 			'foreign_model' => 'Resource',
 			'foreign_id' => Common::uuid('resource.id.bank-password'),
@@ -51,7 +51,7 @@ class ItemTagTask extends ModelTask {
 			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$rts[] = array('ItemTag' => array(
-			'id' => '10be2d3a-0468-432b-b49f-3153d7a82fce',
+			'id' => Common::uuid('item_tag.id.facebook-facebook-account'),
 			'tag_id' => Common::uuid('tag.id.facebook'),
 			'foreign_model' => 'Resource',
 			'foreign_id' => Common::uuid('resource.id.facebook-account'),
@@ -59,7 +59,7 @@ class ItemTagTask extends ModelTask {
 			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$rts[] = array('ItemTag' => array(
-			'id' => '10be2d3a-0468-432b-b58f-3153d7a83fce',
+			'id' => Common::uuid('item_tag.id.social-facebook-account'),
 			'tag_id' => Common::uuid('tag.id.social'),
 			'foreign_model' => 'Resource',
 			'foreign_id' => Common::uuid('resource.id.facebook-account'),
@@ -67,7 +67,7 @@ class ItemTagTask extends ModelTask {
 			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$rts[] = array('ItemTag' => array(
-			'id' => '10be2d3a-0468-432b-b59f-3153d7a83fce',
+			'id' => Common::uuid('item_tag.id.drupal-dp1-pwd1'),
 			'tag_id' => Common::uuid('tag.id.drupal'),
 			'foreign_model' => 'Resource',
 			'foreign_id' => Common::uuid('resource.id.dp1-pwd1'),

@@ -433,7 +433,7 @@ class MemcachedEngineTest extends CakeTestCase {
 	public function testParseServerStringUnix() {
 		$Memcached = new TestMemcachedEngine();
 		$result = $Memcached->parseServerString('unix:///path/to/memcachedd.sock');
-		$this->assertEquals(array('unix:///path/to/memcachedd.sock', 0), $result);
+		$this->assertEquals(array('/path/to/memcachedd.sock', 0), $result);
 	}
 
 /**
@@ -796,5 +796,25 @@ class MemcachedEngineTest extends CakeTestCase {
 		$this->assertTrue(Cache::write('test_groups', 'value2', 'memcached_groups'));
 		$this->assertTrue(Cache::clearGroup('group_b', 'memcached_groups'));
 		$this->assertFalse(Cache::read('test_groups', 'memcached_groups'));
+	}
+
+/**
+ * Test add method.
+ *
+ * @return void
+ */
+	public function testAdd() {
+		Cache::set(array('duration' => 1), null, 'memcached');
+		Cache::delete('test_add_key', 'default');
+
+		$result = Cache::add('test_add_key', 'test data', 'default');
+		$this->assertTrue($result);
+
+		$expected = 'test data';
+		$result = Cache::read('test_add_key', 'default');
+		$this->assertEquals($expected, $result);
+
+		$result = Cache::add('test_add_key', 'test data 2', 'default');
+		$this->assertFalse($result);
 	}
 }

@@ -51,7 +51,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 		$this->Resource = Common::getModel('Resource');
 		
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findByUsername('dame@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -73,7 +73,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testAddDoesNotExist() {
 		$model = 'resource';
-		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
+		$id = Common::uuid('not-valid-reference');
 
 		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/favorites/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
@@ -81,8 +81,8 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		$model = 'resource';
-		$rs = $this->Resource->findByName('salesforce account');
-		$this->testAction("/favorites/$model/{$rs['Resource']['id']}.json", array('method' => 'post', 'return' => 'contents'));
+		$rsId = Common::uuid('resource.id.salesforce-account');
+		$this->testAction("/favorites/$model/{$rsId}.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
 	public function testDeleteModelIdIsMissing() {
@@ -90,14 +90,12 @@ class FavoritesControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeleteIdIsNotValid() {
-		$model = 'Resource';
 		$this->setExpectedException('HttpException', 'The starred id is not valid');
 		$this->testAction("/favorites/badId.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteDoesNotExist() {
-		$model = 'resource';
-		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
+		$id = Common::uuid('not-valid-reference');
 
 		$this->setExpectedException('HttpException', 'The record is not in your starred item list');
 		$this->testAction("/favorites/$id.json", array('method' => 'delete', 'return' => 'contents'));
@@ -105,8 +103,8 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testDelete() {
 		$model = 'resource';
-		$rs = $this->Resource->findByName('salesforce account');
-		$result = json_decode($this->testAction("/favorites/$model/{$rs['Resource']['id']}.json", array('method' => 'post', 'return' => 'contents')), true);
+		$rsId = Common::uuid('resource.id.salesforce-account');
+		$result = json_decode($this->testAction("/favorites/$model/{$rsId}.json", array('method' => 'post', 'return' => 'contents')), true);
 		$this->testAction("/favorites/{$result['body']['Favorite']['id']}.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 }

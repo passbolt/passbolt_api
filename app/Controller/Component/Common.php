@@ -51,22 +51,7 @@ class Common extends Object {
  * @return bool true if str is a UUID
  */
 	public static function isUuid($str) {
-		return is_string($str) && preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/', $str);
-	}
-
-/**
- * Format a list of invalid fields to be returned to the client.
- *
- * @param string $model the model name
- * @param array $invalidFields model members failing validation
- * @return array a reformatted list
- */
-	public static function formatInvalidFields($model, $invalidFields) {
-		$finalInvalidFields = array();
-		$i = 0;
-		foreach ($invalidFields as $key => $if) {
-			$finalInvalidFields[$i++][$model][$key] = $if;
-		}
-		return $finalInvalidFields;
+		return is_string($str) && preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/',
+			$str);
 	}
 }

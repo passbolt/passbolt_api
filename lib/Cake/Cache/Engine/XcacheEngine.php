@@ -44,7 +44,7 @@ class XcacheEngine extends CacheEngine {
  * @return bool True if the engine has been successfully initialized, false if not
  */
 	public function init($settings = array()) {
-		if (php_sapi_name() !== 'cli') {
+		if (PHP_SAPI !== 'cli') {
 			parent::init(array_merge(array(
 				'engine' => 'Xcache',
 				'prefix' => Inflector::slug(APP_DIR) . '_',
@@ -206,5 +206,22 @@ class XcacheEngine extends CacheEngine {
 				}
 			}
 		}
+	}
+
+/**
+ * Write data for key into cache if it doesn't exist already.
+ * If it already exists, it fails and returns false.
+ *
+ * @param string $key Identifier for the data.
+ * @param mixed $value Data to be cached.
+ * @param int $duration How long to cache the data, in seconds.
+ * @return bool True if the data was successfully cached, false on failure.
+ */
+	public function add($key, $value, $duration) {
+		$cachedValue = $this->read($key);
+		if ($cachedValue === false) {
+			return $this->write($key, $value, $duration);
+		}
+		return false;
 	}
 }

@@ -16,7 +16,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('String', 'Utility');
+App::uses('CakeText', 'Utility');
 
 /**
  * Security Library contains utility methods related to security
@@ -63,7 +63,7 @@ class Security {
  * @return string Hash
  */
 	public static function generateAuthKey() {
-		return Security::hash(String::uuid());
+		return Security::hash(CakeText::uuid());
 	}
 
 /**
@@ -105,12 +105,12 @@ class Security {
  */
 	public static function hash($string, $type = null, $salt = false) {
 		if (empty($type)) {
-			$type = self::$hashType;
+			$type = static::$hashType;
 		}
 		$type = strtolower($type);
 
 		if ($type === 'blowfish') {
-			return self::_crypt($string, $salt);
+			return static::_crypt($string, $salt);
 		}
 		if ($salt) {
 			if (!is_string($salt)) {
@@ -145,7 +145,7 @@ class Security {
  * @see Security::hash()
  */
 	public static function setHash($hash) {
-		self::$hashType = $hash;
+		static::$hashType = $hash;
 	}
 
 /**
@@ -163,7 +163,7 @@ class Security {
 			), E_USER_WARNING);
 			return null;
 		}
-		self::$hashCost = $cost;
+		static::$hashCost = $cost;
 	}
 
 /**
@@ -187,7 +187,7 @@ class Security {
 			return '';
 		}
 
-		srand(Configure::read('Security.cipherSeed'));
+		srand((int)Configure::read('Security.cipherSeed'));
 		$out = '';
 		$keyLength = strlen($key);
 		for ($i = 0, $textLength = strlen($text); $i < $textLength; $i++) {
@@ -273,8 +273,8 @@ class Security {
  */
 	protected static function _crypt($password, $salt = false) {
 		if ($salt === false) {
-			$salt = self::_salt(22);
-			$salt = vsprintf('$2a$%02d$%s', array(self::$hashCost, $salt));
+			$salt = static::_salt(22);
+			$salt = vsprintf('$2a$%02d$%s', array(static::$hashCost, $salt));
 		}
 
 		$invalidCipher = (
@@ -307,7 +307,7 @@ class Security {
  * @throws CakeException On invalid data or key.
  */
 	public static function encrypt($plain, $key, $hmacSalt = null) {
-		self::_checkKey($key, 'encrypt()');
+		static::_checkKey($key, 'encrypt()');
 
 		if ($hmacSalt === null) {
 			$hmacSalt = Configure::read('Security.salt');
@@ -350,7 +350,7 @@ class Security {
  * @throws CakeException On invalid data or key.
  */
 	public static function decrypt($cipher, $key, $hmacSalt = null) {
-		self::_checkKey($key, 'decrypt()');
+		static::_checkKey($key, 'decrypt()');
 		if (empty($cipher)) {
 			throw new CakeException(__d('cake_dev', 'The data to decrypt cannot be empty.'));
 		}

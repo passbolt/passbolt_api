@@ -12,11 +12,11 @@ App::uses('UserAgent', 'Model');
 
 class ControllerLog extends AppModel {
 	public $name = 'ControllerLog';
-	public $hasOne = array(
+	public $hasOne = [
 		'User',
 		'Role',
 		'UserAgent'
-	);
+	];
 
 /**
  * Get the validation rules upon context
@@ -25,88 +25,88 @@ class ControllerLog extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
-			'id' => array(
-				'uuid' => array(
+		$default = [
+			'id' => [
+				'uuid' => [
 					'rule' => 'uuid',
 					'message' => __('The UUID must be in correct format')
-				)
-			),
-			'user_id' => array(
-				'uuid' => array(
+				]
+			],
+			'user_id' => [
+				'uuid' => [
 					'required' => true,
 					'allowEmpty' => false,
 					'rule' => 'uuid',
 					'message' => __('The UUID must be in correct format'),
-				),
-				'exist' => array(
-					'rule' => array('userExists', null),
+				],
+				'exist' => [
+					'rule' => ['userExists', null],
 					'message' => __('The user id provided does not exist')
-				)
-			),
-			'role_id' => array(
-				'uuid' => array(
+				]
+			],
+			'role_id' => [
+				'uuid' => [
 					'required' => true,
 					'allowEmpty' => false,
 					'rule' => 'uuid',
 					'message' => __('UUID must be in correct format')
-				)
-			),
-			'level' => array(
-				'format' => array(
+				]
+			],
+			'level' => [
+				'format' => [
 					'required' => true,
 					'allowEmpty' => false,
-					'rule'    => array('validLogLevel', null),
+					'rule' => ['validLogLevel', null],
 					'message' => __('The level does not exist')
-				)
-			),
-			'method' => array(
-				'format' => array(
+				]
+			],
+			'method' => [
+				'format' => [
 					'required' => true,
 					'allowEmpty' => false,
-					'rule'    => array('validHttpMethod', null),
+					'rule' => ['validHttpMethod', null],
 					'message' => __('The HTTP method does not exist')
-				)
-			),
-			'user_agent_id' => array(
-				'uuid' => array(
+				]
+			],
+			'user_agent_id' => [
+				'uuid' => [
 					'required' => true,
 					'allowEmpty' => false,
 					'rule' => 'uuid',
 					'message' => __('The UUID must be in correct format')
-				)
-			),
-			'ip' => array(
-				'ip' => array(
+				]
+			],
+			'ip' => [
+				'ip' => [
 					'required' => true,
 					'allowEmpty' => true,
 					'rule' => 'validIpRange',
 					'message' => __('The IP address must be in correct format')
-				)
-			),
-			'controller' => array(
-				'size' => array(
+				]
+			],
+			'controller' => [
+				'size' => [
 					'required' => true,
 					'allowEmpty' => false,
-					'rule' => array('lengthBetween', 1, 64),
+					'rule' => ['lengthBetween', 1, 64],
 					'message' => __('The controller name should be max 64 characters'),
-				)
-			),
-			'action' => array(
-				'size' => array(
+				]
+			],
+			'action' => [
+				'size' => [
 					'required' => true,
 					'allowEmpty' => false,
-					'rule' => array('lengthBetween', 1, 64),
+					'rule' => ['lengthBetween', 1, 64],
 					'message' => __('The action name should be max 64 characters'),
-				)
-			),
-			'scope' => array(
-				'size' => array(
-					'rule' => array('lengthBetween', 1, 64),
+				]
+			],
+			'scope' => [
+				'size' => [
+					'rule' => ['lengthBetween', 1, 64],
 					'message' => __('The scope name should be max 64 characters'),
-				)
-			),
-		);
+				]
+			],
+		];
 		switch ($case) {
 			default:
 			case 'default':
@@ -126,6 +126,7 @@ class ControllerLog extends AppModel {
 		if (!isset($check['level']) || empty($check['level'])) {
 			return false;
 		}
+
 		return ($check['level'] == Status::ERROR ||
 			$check['level'] == Status::WARNING ||
 			$check['level'] == Status::NOTICE ||
@@ -144,6 +145,7 @@ class ControllerLog extends AppModel {
 			return false;
 		}
 		$check['method'] = strtoupper($check['method']);
+
 		return ($check['method'] == 'GET' ||
 			$check['method'] == 'PUT' ||
 			$check['method'] == 'POST' ||
@@ -161,10 +163,10 @@ class ControllerLog extends AppModel {
  * @throws ValidationException if any of the controller log parameters are not valid
  * @throws Exception if there is a system error that prevented the save operation
  */
- 	static public function write($level, $request, $message = null, $scope = null) {
+	static public function write($level, $request, $message = null, $scope = null) {
 		// Only log if the config allows it
-		if(!ControllerLog::validLogLevel(array('level' => $level))) {
-			throw new ValidationException(__('Could not validate the controller log'), array());
+		if (!ControllerLog::validLogLevel(['level' => $level])) {
+			throw new ValidationException(__('Could not validate the controller log'), []);
 		}
 		$config = Configure::read('Log.' . $level);
 		if (!isset($config) || empty($config) || $config == false) {
@@ -173,7 +175,7 @@ class ControllerLog extends AppModel {
 
 		$data['ControllerLog']['level'] = strtolower($level);
 
- 		// auto populate user role and id
+		// auto populate user role and id
 		$user = User::get();
 		$data['ControllerLog']['user_id'] = $user['User']['id'];
 		$data['ControllerLog']['role_id'] = $user['Role']['id'];
@@ -182,17 +184,17 @@ class ControllerLog extends AppModel {
 		$userAgent = UserAgent::get();
 		$data['ControllerLog']['user_agent_id'] = $userAgent['UserAgent']['id'];
 		$data['ControllerLog']['ip'] = $request->clientIp();
-		if(empty($data['ControllerLog']['ip'])) {
+		if (empty($data['ControllerLog']['ip'])) {
 			$data['ControllerLog']['ip'] = '127.0.0.1';
 		}
 
 		// auto populate http method
-		foreach(array('get','post','put','delete') as $method) {
-			if($request->is($method)) {
+		foreach (['get', 'post', 'put', 'delete'] as $method) {
+			if ($request->is($method)) {
 				$data['ControllerLog']['method'] = strtoupper($method);
 			}
 		}
-		if(empty($data['ControllerLog']['method'])) {
+		if (empty($data['ControllerLog']['method'])) {
 			$data['ControllerLog']['method'] = 'GET';
 		}
 
@@ -201,15 +203,15 @@ class ControllerLog extends AppModel {
 		$data['ControllerLog']['action'] = $request->action;
 
 		// set message & scope if not empty
-		if(isset($message) && !empty($message)) {
+		if (isset($message) && !empty($message)) {
 			$data['ControllerLog']['message'] = substr($message, 0, 512);
 		}
-		if(isset($scope) && !empty($scope)) {
+		if (isset($scope) && !empty($scope)) {
 			$data['ControllerLog']['scope'] = $scope;
 		}
 
 		// get interesting information from request if there was an error
-		if($level == Status::ERROR && Configure::read('Log.request_data')) {
+		if ($level == Status::ERROR && Configure::read('Log.request_data')) {
 			$tmp['data'] = $request->data;
 			$tmp['query'] = $request->query;
 			$tmp['params'] = $request->params;
@@ -218,10 +220,10 @@ class ControllerLog extends AppModel {
 
 		// And save
 		$_this = Common::getModel('ControllerLog');
-		if(!$_this->save($data)) {
-			if(isset($_this->validationErrors)) {
+		if (!$_this->save($data)) {
+			if (isset($_this->validationErrors)) {
 				$msg = __('Could not validate the controller log');
-				if(Configure::read('debug')) {
+				if (Configure::read('debug')) {
 					$msg .= "\n" . json_encode($_this->validationErrors) . "\n" . json_encode($data);
 				}
 				throw new ValidationException($msg, $_this->validationErrors);
@@ -229,5 +231,5 @@ class ControllerLog extends AppModel {
 			throw new Exception(__('System error, could not save'));
 		}
 		return true;
- 	}
+	}
 }

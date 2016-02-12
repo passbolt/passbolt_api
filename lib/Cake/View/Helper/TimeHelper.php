@@ -34,7 +34,7 @@ class TimeHelper extends AppHelper {
 /**
  * CakeTime instance
  *
- * @var stdClass
+ * @var CakeTime
  */
 	protected $_engine = null;
 
@@ -126,12 +126,12 @@ class TimeHelper extends AppHelper {
 
 /**
  * Converts a string representing the format for the function strftime and returns a
- * windows safe and i18n aware format.
+ * Windows safe and i18n aware format.
  *
  * @param string $format Format with specifiers for strftime function.
  *    Accepts the special specifier %S which mimics the modifier S for date()
  * @param string $time UNIX timestamp
- * @return string windows safe and date() function compatible format for strftime
+ * @return string Windows safe and date() function compatible format for strftime
  * @see CakeTime::convertSpecifiers()
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
  */
@@ -193,7 +193,7 @@ class TimeHelper extends AppHelper {
 /**
  * Returns a formatted descriptive date string for given datetime string.
  *
- * @param int|string|DateTime $dateString UNIX timestamp, strtotime() valid string or DateTime objectp
+ * @param int|string|DateTime $dateString UNIX timestamp, strtotime() valid string or DateTime object.
  * @param string|DateTimeZone $timezone User's timezone string or DateTimeZone object
  * @return string Described, relative date string
  * @see CakeTime::niceShort()
@@ -465,7 +465,7 @@ class TimeHelper extends AppHelper {
  * ```
  *   $this->Time->format('2012-02-15', '%m-%d-%Y'); // returns 02-15-2012
  *   $this->Time->format('2012-02-15 23:01:01', '%c'); // returns preferred date and time based on configured locale
- *   $this->Time->format('0000-00-00', '%d-%m-%Y', 'N/A'); // return N/A becuase an invalid date was passed
+ *   $this->Time->format('0000-00-00', '%d-%m-%Y', 'N/A'); // return N/A because an invalid date was passed
  *   $this->Time->format('2012-02-15 23:01:01', '%c', 'N/A', 'America/New_York'); // converts passed date to timezone
  * ```
  *

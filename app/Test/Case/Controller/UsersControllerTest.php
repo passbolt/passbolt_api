@@ -91,7 +91,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testIndexNoAllowed() {
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		// test with anonymous user
-		json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
+		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true);
 	}
 
 	/**
@@ -99,12 +99,11 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testIndex() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
-
 	}
 
 	/**
@@ -112,11 +111,11 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testIndexFilteredByGroupWhichDoesntExist() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The group doesn\'t exist');
-		$groupId = '50d22ff7-5239-4dd2-94d1-1c63d7a10fce';
+		$groupId = Common::uuid('not-valid-reference');
 		$url = '/users.json?fltr_model_group=' . $groupId;
 		$this->testAction($url, array('return' => 'contents', 'method' => 'GET'), true);
 	}
@@ -126,7 +125,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testIndexFilteredByGroupWithWrongId() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The group id is invalid');
@@ -140,12 +139,12 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testIndexFilteredByGroup() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
-		$group = $this->User->Group->findByName('management');
+		$groupId = Common::uuid('group.id.management');
 		$data = array(
-			'fltr_model_group' => $group['Group']['id']
+			'fltr_model_group' => $groupId,
 		);
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
@@ -158,7 +157,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testIndexFilteredByKeywords() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$data = array(
@@ -176,12 +175,10 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testViewNoAllowed() {
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		// test with anonymous user
-		json_decode(
-			$this->testAction(
-				'/users/'. Common::uuid('user.id.user') . '.json',
-				array('return' => 'contents', 'method' => 'GET'),
-				true
-			)
+		$this->testAction(
+			'/users/'. Common::uuid('user.id.user') . '.json',
+			array('return' => 'contents', 'method' => 'GET'),
+			true
 		);
 	}
 
@@ -197,13 +194,11 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testViewUserIdNotValid() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The user id is invalid');
-		json_decode(
-			$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'GET'), true)
-		);
+		$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'GET'), true);
 	}
 
 	/**
@@ -211,17 +206,12 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testViewUserDoesNotExist() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The user does not exist');
-		json_decode(
-			$this->testAction(
-				'/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
-				array('return' => 'contents', 'method' => 'GET'),
-				true
-			)
-		);
+		$this->testAction( "/users/{$id}.json", array('return' => 'contents', 'method' => 'GET'), true);
 	}
 
 	/**
@@ -229,7 +219,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testViewCurrentUser() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$result = json_decode(
@@ -249,7 +239,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testView() {
 		// test with normal user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$result = json_decode(
@@ -269,7 +259,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testAddNoAllowed() {
 		// normal user don't have the right to add user
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
@@ -296,7 +286,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test add without profile information.
 	 */
 	public function testAddWithoutProfileInfo() {
-		$user = $this->User->findByUsername('admin@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'Profile data are missing');
@@ -323,7 +313,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test add with missing role id in data.
 	 */
 	public function testAddWithoutRoleId() {
-		$user = $this->User->findByUsername('admin@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
 		$result = json_decode(
@@ -379,7 +369,7 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test add for a logged in admin.
 	 */
 	public function testAdd() {
-		$user = $this->User->findByUsername('admin@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
 		$result = json_decode(
@@ -434,12 +424,11 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testUpdateNoAllowed() {
 		// normal user don't have the right to add user
-		$steve = $this->User->findByUsername('dame@passbolt.com');
-		$this->User->setActive($steve);
+		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$this->User->setActive($user);
 
 		// the user to update
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$id = $user['User']['id'];
+		$id = common::uuid('user.id.user');
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		json_decode(
@@ -466,40 +455,37 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test update with a missing user id.
 	 */
 	public function testUpdateUserIdIsMissing() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The user id is missing');
-		json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'put'), true));
+		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'put'), true);
 	}
 
 	/**
 	 * Test update with a wrong user id.
 	 */
 	public function testUpdateUserIdNotValid() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The user id is invalid');
-		json_decode(
-			$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'put'), true)
-		);
+		$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'put'), true);
 	}
 
 	/**
 	 * Test update with a non existing user.
 	 */
 	public function testUpdateUserDoesNotExist() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The user does not exist');
-		json_decode(
-			$this->testAction(
-				'/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
-				array('return' => 'contents', 'method' => 'put'),
-				true
-			)
+		$this->testAction(
+			"/users/{$id}.json",
+			array('return' => 'contents', 'method' => 'put'),
+			true
 		);
 	}
 
@@ -507,23 +493,16 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test update with no data provided.
 	 */
 	public function testUpdateNoDataProvided() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		// the user to update
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$id = $user['User']['id'];
+		$id = common::uuid('user.id.user');
 
 		$this->setExpectedException('HttpException', 'No data were provided');
-		json_decode(
-			$this->testAction(
-				"/users/$id.json",
-				array(
-					'method' => 'put',
-					'return' => 'contents'
-				)
-			),
-			true
+		$this->testAction(
+			"/users/$id.json",
+			array('method' => 'put', 'return' => 'contents')
 		);
 	}
 
@@ -531,12 +510,11 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test update with providing an invalid username.
 	 */
 	public function testUpdateUsernameNotValid() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		// the user to update
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$id = $user['User']['id'];
+		$id = common::uuid('user.id.user');
 		$data['User']['username'] = 'user@34@passbolt.com';
 
 		$this->setExpectedException('HttpException', 'Could not validate User');
@@ -554,18 +532,15 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test update as an admin.
 	 */
 	public function testUpdateAsAdmin() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		// the user to update
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$id = $user['User']['id'];
+		$id = common::uuid('user.id.user');
 
 		// update the user by changing its role
-		$Role = Common::getModel('Role');
-		$adminRole = $Role->findByName("admin");
-
-		$data['User']['role_id'] = $adminRole['Role']['id'];
+		$roleId = Common::uuid('role.id.admin');
+		$data['User']['role_id'] = $roleId;
 		$resRaw = $this->testAction(
 			"/users/$id.json",
 			array(
@@ -586,13 +561,13 @@ class UsersControllerTest extends ControllerTestCase {
 		$userUpdated = $this->User->findByUsername("user@passbolt.com");
 		$this->assertEquals(
 			$userUpdated['User']['role_id'],
-			$adminRole['Role']['id'],
-			"Edit : /users.json : the role of the retrieved user should be {$adminRole['Role']['id']} but is {$userUpdated['User']['role_id']}"
+			$roleId,
+			"Edit : /users.json : the role of the retrieved user should be {$roleId} but is {$userUpdated['User']['role_id']}"
 		);
 		$this->assertEquals(
 			$userUpdated['User']['id'],
-			$user['User']['id'],
-			"Edit : /users.json : the id of the retrieved user should be {$user['User']['id']} but is {$userUpdated['User']['id']}"
+			$id,
+			"Edit : /users.json : the id of the retrieved user should be {$id} but is {$userUpdated['User']['id']}"
 		);
 	}
 
@@ -650,13 +625,12 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testUpdateAdminCanUpdateSomebodysRoleToAdmin() {
 		// normal user don't have the right to add user
-		$admin = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($admin);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		// the user to update
-		$user = $this->User->findByUsername('dame@passbolt.com');
-		$id = $user['User']['id'];
-		$adminRoleId = $this->User->Role->field('id', ['name' => Role::ADMIN]);
+		$id = common::uuid('user.id.dame');
+		$adminRoleId = common::uuid('role.id.admin');
 
 		$resRaw = $this->testAction(
 			"/users/$id.json",
@@ -672,7 +646,7 @@ class UsersControllerTest extends ControllerTestCase {
 			));
 		json_decode($resRaw, true);
 
-		$user = $this->User->findByUsername("dame@passbolt.com");
+		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->assertEquals(
 			$user['User']['role_id'],
 			$adminRoleId,
@@ -684,12 +658,11 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test that an admin cannot update his own role.
 	 */
 	public function testUpdateAdminCantUpdateOwnRole() {
-		// normal user don't have the right to add user
-		$admin = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($admin);
-		$id = $admin['User']['id'];
+		$id = common::uuid('user.id.admin');
+		$user = $this->User->findById($id);
+		$this->User->setActive($user);
 
-    $userRoleId = $this->User->Role->field('id', ['name' => Role::USER]);
+    	$userRoleId = Common::uuid('role.id.user');
 
 		$this->testAction(
 			"/users/$id.json",
@@ -704,9 +677,9 @@ class UsersControllerTest extends ControllerTestCase {
 				'return' => 'contents'
 			));
 
-    $adminNew = $this->User->findByUsername('admin@passbolt.com');
-    $this->assertNotEquals($adminNew['User']['role_id'], $userRoleId);
-    $this->assertEquals($admin['User']['role_id'], $adminNew['User']['role_id']);
+		$userUpdated = $this->User->findByUsername('admin@passbolt.com');
+		$this->assertNotEquals($userUpdated['User']['role_id'], $userRoleId);
+		$this->assertEquals($user['User']['role_id'], $userUpdated['User']['role_id']);
 	}
 
   /**
@@ -714,9 +687,9 @@ class UsersControllerTest extends ControllerTestCase {
    */
   public function testUpdateAdminCantSetOwnInactive() {
     // the user to update
-    $user = $this->User->findByUsername('dame@passbolt.com');
-    $id = $user['User']['id'];
-    $this->User->setActive($user);
+	  $id = common::uuid('user.id.admin');
+	  $user = $this->User->findById($id);
+	  $this->User->setActive($user);
 
     $this->testAction(
       "/users/$id.json",
@@ -731,8 +704,8 @@ class UsersControllerTest extends ControllerTestCase {
         'return' => 'contents'
       ));
 
-    $dame = $this->User->findByUsername('dame@passbolt.com');
-    $this->assertEquals($dame['User']['active'], '1', 'After update the actived field should still be true');
+	  $user = $this->User->findById($id);
+    $this->assertEquals($user['User']['active'], '1', 'After update the actived field should still be true');
   }
 
   /**
@@ -740,9 +713,9 @@ class UsersControllerTest extends ControllerTestCase {
    */
   public function testUpdateNonAdminCantSetOwnInactive() {
     // normal user don't have the right to add user
-    $admin = $this->User->findByUsername('admin@passbolt.com');
-    $this->User->setActive($admin);
-    $id = $admin['User']['id'];
+	  $id = common::uuid('user.id.dame');
+	  $user = $this->User->findById($id);
+	  $this->User->setActive($user);
 
     $this->testAction(
       "/users/$id.json",
@@ -757,7 +730,7 @@ class UsersControllerTest extends ControllerTestCase {
         'return' => 'contents'
       ));
 
-    $admin = $this->User->findByUsername('admin@passbolt.com');
+    $admin = $this->User->findById($id);
     $this->assertEquals($admin['User']['active'], '1', 'After update the actived field should still be true');
   }
 
@@ -765,14 +738,14 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test delete for non admin user.
 	 */
 	public function testDeleteNoAllowed() {
-		// normal user don't have the right to delete user
-		$u = $this->User->findByUsername('user@passbolt.com');
-		$this->User->setActive($u);
+		$id = common::uuid('user.id.user');
+		$user = $this->User->findById($id);
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		json_decode(
 			$this->testAction(
-				"/users/{$u['User']['id']}.json",
+				"/users/{$id}.json",
 				array(
 					'method' => 'delete',
 					'return' => 'contents'
@@ -786,56 +759,50 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test delete with missing user id.
 	 */
 	public function testDeleteUserIdIsMissing() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The user id is missing');
-		json_decode(
-			$this->testAction('/users.json', array('return' => 'contents', 'method' => 'delete'), true)
-		);
+		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'delete'), true);
 	}
 
 	/**
 	 * Test delete with an invalid user id.
 	 */
 	public function testDeleteUserIdNotValid() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The user id is invalid');
-		json_decode(
-			$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'delete'), true)
-		);
+		$this->testAction('/users/badId.json', array('return' => 'contents', 'method' => 'delete'), true);
 	}
 
 
 	/**
 	 * Test delete yourself.
 	 */
-	public function testDeleteSelf() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+	public function testDeleteSelfNotAllowed() {
+		$id = common::uuid('user.id.admin');
+		$user = $this->User->findById($id);
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not allowed to delete yourself');
-		json_decode(
-			$this->testAction('/users/' . $ad['User']['id'] . '.json', array('return' => 'contents', 'method' => 'delete'), true)
-		);
+		$this->testAction("/users/{$id}.json", array('return' => 'contents', 'method' => 'delete'), true);
 	}
 
 	/**
 	 * Test delete for a non existing user.
 	 */
 	public function testDeleteUserDoesNotExist() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The user does not exist');
-		json_decode(
-			$this->testAction(
-				'/users/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
-				array('return' => 'contents', 'method' => 'delete'),
-				true
-			)
+		$this->testAction(
+			"/users/{$id}.json",
+			array('return' => 'contents', 'method' => 'delete'),
+			true
 		);
 	}
 
@@ -843,15 +810,14 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test delete in a normal scenario.
 	 */
 	public function testDelete() {
-		$adm = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($adm);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		// the user to delete
-		$u = $this->User->findByUsername('user@passbolt.com');
-
+		$userId = common::uuid('user.id.user');
 		$result = json_decode(
 			$this->testAction(
-				"/users/{$u['User']['id']}.json",
+				"/users/{$userId}.json",
 				array(
 					'method' => 'delete',
 					'return' => 'contents'
@@ -862,14 +828,14 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEquals(
 			Status::SUCCESS,
 			$result['header']['status'],
-			"delete /users/{$u['User']['id']}.json : The test should return a success but is returning {$result['header']['status']}"
+			"delete /users/{$userId}.json : The test should return a success but is returning {$result['header']['status']}"
 		);
 
-		$deleted = $this->User->findByUsername('user@passbolt.com');
+		$deleted = $this->User->findById($userId);
 		$this->assertEquals(
 			1,
 			$deleted['User']['deleted'],
-			"delete /users/{$u['User']['id']}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}"
+			"delete /users/{$userId}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}"
 		);
 	}
 
@@ -877,12 +843,10 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test update avatar by a non allowed user.
 	 */
 	public function testUpdateAvatarNoAllowed() {
-		// normal user don't have the right to add user
-		$steve = $this->User->findByUsername('dame@passbolt.com');
-		$this->User->setActive($steve);
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$this->User->setActive($user);
 
-		$id = $user['User']['id'];
+		$id = common::uuid('user.id.user');
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access that location');
 		// test with anonymous user
@@ -908,40 +872,37 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test update avatar when user id is missing.
 	 */
 	public function testUpdateAvatarUserIdIsMissing() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The user id is missing');
-		json_decode($this->testAction('/users/avatar.json', array('return' => 'contents', 'method' => 'post'), true));
+		$this->testAction('/users/avatar.json', array('return' => 'contents', 'method' => 'post'), true);
 	}
 
 	/**
 	 * Test update avatar user id not valid.
 	 */
 	public function testUpdateAvatarUserIdNotValid() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The user id is invalid');
-		json_decode(
-			$this->testAction('/users/avatar/badId.json', array('return' => 'contents', 'method' => 'post'), true)
-		);
+		$this->testAction('/users/avatar/badId.json', array('return' => 'contents', 'method' => 'post'), true);
 	}
 
 	/**
 	 * Test updateAvatar when the user does not exist.
 	 */
 	public function testUpdateAvatarUserDoesNotExist() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The user does not exist');
-		json_decode(
-			$this->testAction(
-				'/users/avatar/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
-				array('return' => 'contents', 'method' => 'post'),
-				true
-			)
+		$this->testAction(
+			"/users/avatar/{$id}.json",
+			array('return' => 'contents', 'method' => 'post'),
+			true
 		);
 	}
 
@@ -949,23 +910,17 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test updateAvatar when no data is provided.
 	 */
 	public function testUpdateAvatarNoDataProvided() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
+		$id = common::uuid('user.id.user');
 		$this->setExpectedException('HttpException', 'No data were provided');
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$id = $user['User']['id'];
-
-		$user['User']['username'] = 'user-modified@passbolt.com';
-		json_decode(
-			$this->testAction(
-				"/users/avatar/$id.json",
-				array(
-					'method' => 'post',
-					'return' => 'contents'
-				)
-			),
-			true
+		$this->testAction(
+			"/users/avatar/$id.json",
+			array(
+				'method' => 'post',
+				'return' => 'contents'
+			)
 		);
 	}
 
@@ -973,16 +928,13 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test updateAvatar in normal scenario.
 	 */
 	public function testUpdateAvatar() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
-		$user = $this->User->findByUsername('user@passbolt.com');
-		$id = $user['User']['id'];
-
+		$id = common::uuid('user.id.user');
 		$findConditions = array('User.id' => $id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $findConditions);
-		$users = $this->User->find('all', $options);
-		$user = reset($users);
+		$user = $this->User->find('first', $options);
 
 		// Get empty image url.
 		$defaults = Configure::read('Media.imageDefaults.ProfileAvatar');
@@ -1012,8 +964,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$findConditions = array('User.id' => $id);
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $findConditions);
-		$users = $this->User->find('all', $options);
-		$user = reset($users);
+		$user = $this->User->find('first', $options);
 
 		$this->assertNotEmpty($user['Profile']['Avatar'], "The user " . $user['User']['username'] . " should have an avatar");
 	}
@@ -1022,17 +973,20 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test account creation and token.
 	 */
 	public function testAccountCreateAndToken() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-		$user = $this->__createAccount('jean-gabin@gmail.com');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// Create an account for jean gabin
+		$createdUser = $this->__createAccount('jean-gabin@gmail.com');
+		$userId = $createdUser['User']['id'];
 
 		// Verify that user is not active.
-		$u = $this->User->findById($user['User']['id']);
-		$this->assertEquals($u['User']['active'], 0, 'The user created should be inactive by default');
+		$user = $this->User->findById($userId);
+		$this->assertEquals($user['User']['active'], 0, 'The user created should be inactive by default');
 
 		// Check that there is an entry in the table authenticationToken.
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
-		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+		$at = $AuthenticationToken->findByUserId($userId);
 		$this->assertEquals((bool)$at, true, 'There should be an authentication token created for the user');
 	}
 
@@ -1042,7 +996,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testAccountValidationUserIdIsMissing() {
     $this->User->setInactive();
 		$this->setExpectedException('HttpException', 'The user id is missing');
-		json_decode($this->testAction('/users/validateAccount.json', array('return' => 'contents', 'method' => 'put'), true));
+		$this->testAction('/users/validateAccount.json', array('return' => 'contents', 'method' => 'put'), true);
 	}
 
 	/**
@@ -1051,9 +1005,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testAccountValidationUserIdNotValid() {
     $this->User->setInactive();
 		$this->setExpectedException('HttpException', 'The user id is invalid');
-		json_decode(
-			$this->testAction('/users/validateAccount/badId.json', array('return' => 'contents', 'method' => 'put'), true)
-		);
+		$this->testAction('/users/validateAccount/badId.json', array('return' => 'contents', 'method' => 'put'), true);
 	}
 
 	/**
@@ -1061,13 +1013,12 @@ class UsersControllerTest extends ControllerTestCase {
 	 */
 	public function testAccountValidationUserDoesNotExist() {
     $this->User->setInactive();
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The user does not exist');
-		json_decode(
-			$this->testAction(
-				'/users/validateAccount/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
-				array('return' => 'contents', 'method' => 'put'),
-				true
-			)
+		$this->testAction(
+			"/users/validateAccount/{$id}.json",
+			array('return' => 'contents', 'method' => 'put'),
+			true
 		);
 	}
 
@@ -1075,13 +1026,15 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test account validation.
 	 */
 	public function testAccountValidationNoDataProvided() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
-		$user = $this->__createAccount('jean-gabin@gmail.com');
-    $this->User->setInactive();
-		$this->setExpectedException('HttpException', 'No data were provided');
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
 
-		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+		$user = $this->__createAccount('jean-gabin@gmail.com');
+		$userId = $user['User']['id'];
+    	$this->User->setInactive();
+
+		$this->setExpectedException('HttpException', 'No data were provided');
+		$url = "/users/validateAccount/{$userId}.json";
 		$this->testAction($url, array(
 			'method' => 'put',
 			'return' => 'contents'
@@ -1092,13 +1045,15 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test account validation when the authentication token is invalid.
 	 */
 	public function testAccountValidationInvalidToken() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-		$this->User->setInactive();
+		$userId = $user['User']['id'];
+    	$this->User->setInactive();
 
 		$this->setExpectedException('HttpException', 'Invalid token');
-		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+		$url = "/users/validateAccount/{$userId}.json";
 		$this->testAction($url, array(
 			'data'   => array (
 				'AuthenticationToken' => array (
@@ -1114,15 +1069,17 @@ class UsersControllerTest extends ControllerTestCase {
 	 * Test account validation.
 	 */
 	public function testAccountValidation() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-		$this->User->setInactive();
+		$userId = $user['User']['id'];
+    	$this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
 
-		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+		$url = "/users/validateAccount/{$userId}.json";
 		$validate = $this->testAction($url, array(
 			'data'   => array (
 				'AuthenticationToken' => array (
@@ -1136,34 +1093,36 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEquals(
 			Status::SUCCESS,
 			$json['header']['status'],
-			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
+			"validateAccount /users/validateAccount/{$userId}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
-
-		// Get user and check if deactivated.
-		$u = $this->User->findById($user['User']['id']);
-		$this->assertEquals($u['User']['active'], true, 'The user should be activated after account validation, but is not');
-
-		// Check Authentication Token is not active anymore.
-		$at = $AuthenticationToken->findByUserId($user['User']['id']);
-		$this->assertEquals($at['AuthenticationToken']['active'], 0, 'The authentication token should be deactivated after account activation, but it is not');
 
 		// Check that the user returned is the right one.
 		$this->assertEquals($json['body']['User']['username'], $user['User']['username'], 'The authentication token should be deactivated after account activation, but it is not');
+
+		// Get user and check if deactivated.
+		$deactivatedUser = $this->User->findById($userId);
+		$this->assertEquals($deactivatedUser['User']['active'], true, 'The user should be activated after account validation, but is not');
+
+		// Check Authentication Token is not active anymore.
+		$at = $AuthenticationToken->findByUserId($userId);
+		$this->assertEquals($at['AuthenticationToken']['active'], 0, 'The authentication token should be deactivated after account activation, but it is not');
 	}
 
 	/**
 	 * Test account validation with profile edition.
 	 */
 	public function testAccountValidationWithProfileEdit() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
 		$user = $this->__createAccount('jean-gabin@gmail.com');
-    $this->User->setInactive();
+		$userId = $user['User']['id'];
+    	$this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
-		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+		$at = $AuthenticationToken->findByUserId($userId);
 
-		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+		$url = "/users/validateAccount/{$userId}.json";
 		$validate = $this->testAction($url, array(
 			'data'   => array (
 				'AuthenticationToken' => array (
@@ -1181,25 +1140,27 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEquals(
 			Status::SUCCESS,
 			$json['header']['status'],
-			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
+			"validateAccount /users/validateAccount/{$userId}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
 
 		// Get user and check if deactivated.
-		$p = $this->User->Profile->findByUserId($user['User']['id']);
-		$this->assertEquals($p['Profile']['first_name'], 'Rene', "After account validation the user first_name should be rene, but is {$p['Profile']['first_name']}");
+		$profile = $this->User->Profile->findByUserId($userId);
+		$this->assertEquals($profile['Profile']['first_name'], 'Rene', "After account validation the user first_name should be rene, but is {$profile['Profile']['first_name']}");
 	}
 
 	/**
 	 * Test account validation with a Gpgkey.
 	 */
 	public function testAccountValidationWithGpgkeyEdit() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
 		$user = $this->__createAccount('jean-gabin@gmail.com');
+		$userId = $user['User']['id'];
 		$this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
-		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+		$at = $AuthenticationToken->findByUserId($userId);
 
 		// Dummy key taken from one generated by pgpjs.
 		$dummyKey = array(
@@ -1238,7 +1199,7 @@ qGyky3/L
 -----END PGP PUBLIC KEY BLOCK-----'
 		);
 
-		$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+		$url = "/users/validateAccount/{$userId}.json";
 		$validate = $this->testAction(
 			$url,
 			array(
@@ -1256,27 +1217,28 @@ qGyky3/L
 		$this->assertEquals(
 			Status::SUCCESS,
 			$json['header']['status'],
-			"validateAccount /users/validateAccount/{$user['User']['id']}.json : The test should return a success but is returning {$json['header']['status']}"
+			"validateAccount /users/validateAccount/{$userId}.json : The test should return a success but is returning {$json['header']['status']}"
 		);
 
 		// Get user and check if deactivated.
-		$p = $this->Gpgkey->findByUserId($user['User']['id']);
-		$this->assertEquals($p['Gpgkey']['key'], $dummyKey['key'], "After account validation the key was supposed to be set, but is not");
-		$this->assertEquals($p['Gpgkey']['bits'], 2048);
-		$this->assertEquals($p['Gpgkey']['uid'], 'ada lovelace <ada@passbolt.com>');
-		$this->assertEquals($p['Gpgkey']['type'], 'RSA');
-		$this->assertEquals($p['Gpgkey']['key_created'], '2015-10-29 14:48:41');
-		$this->assertEquals($p['Gpgkey']['fingerprint'], '051A166E300DAD845B255E37CF77639281B5479F');
-		$this->assertEquals($p['Gpgkey']['key_id'], '81B5479F');
+		$gpkey = $this->Gpgkey->findByUserId($userId);
+		$this->assertEquals($gpkey['Gpgkey']['key'], $dummyKey['key'], "After account validation the key was supposed to be set, but is not");
+		$this->assertEquals($gpkey['Gpgkey']['bits'], 2048);
+		$this->assertEquals($gpkey['Gpgkey']['uid'], 'ada lovelace <ada@passbolt.com>');
+		$this->assertEquals($gpkey['Gpgkey']['type'], 'RSA');
+		$this->assertEquals($gpkey['Gpgkey']['key_created'], '2015-10-29 14:48:41');
+		$this->assertEquals($gpkey['Gpgkey']['fingerprint'], '051A166E300DAD845B255E37CF77639281B5479F');
+		$this->assertEquals($gpkey['Gpgkey']['key_id'], '81B5479F');
 	}
 
 	/**
 	 * Test account validation with a wrong user id.
 	 */
 	public function testAccountValidationWrongUserId() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The user does not exist');
-		$validate = $this->testAction(
-			'/users/validateAccount/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json',
+		$this->testAction(
+			"/users/validateAccount/{$id}.json",
 			array(
 				'data'   => array (
 					'AuthenticationToken' => array (
@@ -1293,14 +1255,17 @@ qGyky3/L
 	 * Test account validation with a wrong token.
 	 */
 	public function testAccountValidationWrongToken() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
 		$user = $this->__createAccount('jean-gabin@gmail.com');
+		$userId = $user['User']['id'];
 		$this->User->setInactive();
 
 		$this->setExpectedException('HttpException', 'Invalid token');
+		$url = "/users/validateAccount/{$userId}.json";
 		$this->testAction(
-			'/users/validateAccount/' . $user['User']['id'] . '.json',
+			$url,
 			array(
 				'data'   => array (
 					'AuthenticationToken' => array (
@@ -1318,13 +1283,15 @@ qGyky3/L
 	 * basically test that the active fields in user and authenticationToken are back to their normal state.
 	 */
 	public function testAccountValidationExceptionRollback() {
-		$ad = $this->User->findByUsername('admin@passbolt.com');
-		$this->User->setActive($ad);
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
 		$user = $this->__createAccount('jean-gabin@gmail.com');
+		$userId = $user['User']['id'];
 		$this->User->setInactive();
 
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
-		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+		$at = $AuthenticationToken->findByUserId($userId);
 
 		// Dummy key taken from one generated by pgpjs.
 		$dummyKey = array(
@@ -1332,7 +1299,7 @@ qGyky3/L
 		);
 
 		try {
-			$url = '/users/validateAccount/' . $user['User']['id'] . '.json';
+			$url = "/users/validateAccount/{$userId}.json";
 			$this->testAction(
 				$url,
 				array(
@@ -1348,8 +1315,8 @@ qGyky3/L
 			);
 		} catch(Exception $e) {
 			// Assert that user is not active.
-			$u = $this->User->findById($user['User']['id']);
-			$this->assertEquals($u['User']['active'], '0', 'Account validation : After exception, user should still be inactive but is not');
+			$notActivedUser = $this->User->findById($userId);
+			$this->assertEquals($notActivedUser['User']['active'], '0', 'Account validation : After exception, user should still be inactive but is not');
 
 			// Assert that token is deactivated.
 			$at = $AuthenticationToken->findById($at['AuthenticationToken']['id']);
@@ -1361,8 +1328,8 @@ qGyky3/L
 	 * Test that a user is logged out if his account is deactivated during his session.
 	 */
 	public function testUserIsLoggedOutIfAccountDeactivated() {
-		$ada = $this->User->findByUsername('ada@passbolt.com');
-		$this->User->setActive($ada);
+		$user = $this->User->findById(common::uuid('user.id.ada'));
+		$this->User->setActive($user);
 
 		$json = json_decode(
 			$this->testAction(
@@ -1377,20 +1344,17 @@ qGyky3/L
 		$this->assertEquals($json['header']['status'], Status::SUCCESS);
 
 		// Set active to zero.
-		$this->User->id = $ada['User']['id'];
+		$this->User->id = $user['User']['id'];
 		$this->User->save(['active' => false], false);
 
 		// Try to perform the same query on resources and observe I am logged out automatically.
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
-		$json = json_decode(
-			$this->testAction(
-				'/users.json',
-				[
-					'method' => 'get',
-					'return' => 'contents',
-				]
-			),
-			true
+		$this->testAction(
+			'/users.json',
+			[
+				'method' => 'get',
+				'return' => 'contents',
+			]
 		);
 	}
 
@@ -1398,8 +1362,8 @@ qGyky3/L
 	 * Test that a user is logged out if his account is softdeleted during his session.
 	 */
 	public function testUserIsLoggedOutIfAccountDeleted() {
-		$ada = $this->User->findByUsername('ada@passbolt.com');
-		$this->User->setActive($ada);
+		$user = $this->User->findById(common::uuid('user.id.ada'));
+		$this->User->setActive($user);
 
 		$json = json_decode(
 			$this->testAction(
@@ -1414,20 +1378,17 @@ qGyky3/L
 		$this->assertEquals($json['header']['status'], Status::SUCCESS);
 
 		// Set active to zero.
-		$this->User->id = $ada['User']['id'];
+		$this->User->id = $user['User']['id'];
 		$this->User->save(['deleted' => true], false);
 
 		// Try to perform the same query on resources and observe I am logged out automatically.
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
-		$json = json_decode(
-			$this->testAction(
-				'/users.json',
-				[
-					'method' => 'get',
-					'return' => 'contents',
-				]
-			),
-			true
+		$this->testAction(
+			'/users.json',
+			[
+				'method' => 'get',
+				'return' => 'contents',
+			]
 		);
 	}
 
@@ -1435,10 +1396,11 @@ qGyky3/L
 	 * Test that the user is logged out if account is physically deleted.
 	 */
 	public function testUserIsLoggedOutIfAccountPhysicallyDeleted() {
-		$ada = $this->User->findByUsername('ada@passbolt.com');
-		$this->User->setActive($ada);
+		$user = $this->User->findById(common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
 		// Empty database and see if user is automatically logged out.
-		$this->User->deleteAll(array('User.id' => $ada['User']['id']));
+		$this->User->deleteAll(array('User.id' => $user['User']['id']));
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true);
 	}

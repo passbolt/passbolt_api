@@ -3,7 +3,7 @@
  * GpgAuthenticate
  * Manages a GPG based authentication scheme
  *
- * @copyright 	(c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
@@ -42,7 +42,7 @@ class GpgAuthenticate extends BaseAuthenticate {
  *
  * @param CakeRequest $request interface for accessing request parameters
  * @param CakeResponse $response features and functionality for generating HTTP responses
- * @return Array|false the user or false if authentication failed
+ * @return array|false the user or false if authentication failed
  */
 	public function authenticate(CakeRequest $request, CakeResponse $response) {
 		// Init gpg object and load server key
@@ -144,6 +144,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		if ($request->is('json')) {
 			throw new ForbiddenException(__('You need to login to access this location'));
 		}
+
 		// If it's a page request we redirect to the login form
 		return false;
 	}
@@ -244,9 +245,11 @@ class GpgAuthenticate extends BaseAuthenticate {
 
 		// try to find the user
 		$User = Common::getModel('User');
-		$user = array('Gpgkey' => array(
-			'fingerprint' => $keyid
-		));
+		$user = [
+			'Gpgkey' => [
+				'fingerprint' => $keyid
+			]
+		];
 		$user = $User->find('first', User::getFindOptions('User::GpgAuth', Role::USER, $user));
 		if (empty($user)) {
 			$this->__debug('user nor found');

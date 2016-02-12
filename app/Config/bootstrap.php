@@ -30,7 +30,8 @@ if (!defined('SCHEMATMP')) {
 }
 
 // Setup a 'default' cache configuration for use in the application.
-Cache::config('default', array('engine' => 'File'));
+$commonCache = Configure::read('Cache.Common');
+Cache::config('default', $commonCache);
 
 /**
  * Additional App Configuration
@@ -96,7 +97,6 @@ require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
  *     'Vendor'                    => array('/path/to/vendors/', '/next/path/to/vendors/'),
  *     'Plugin'                    => array('/path/to/plugins/', '/next/path/to/plugins/'),
  * ));
- *
  */
 
 /**
@@ -105,7 +105,6 @@ require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
  *
  * Inflector::rules('singular', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
- *
  */
 
 /**
@@ -114,10 +113,8 @@ require_once (APP . 'Config' . DS  . 'file_storage.php'); // File storage
  * advanced ways of loading plugins
  *
  * CakePlugin::loadAll(); // Loads all plugins at once
- * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
- *
+ * CakePlugin::load('DebugKit'); // Loads a single plugin named DebugKit
  */
-
 
 /**
  * To prefer app translation over plugin translation, you can set

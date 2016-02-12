@@ -33,7 +33,7 @@ class PermissionHelperComponent extends Component {
  * @return array
  */
 	public function findAcoPermissions($acoModelName = '', $acoInstanceId = null) {
-		$permissions = array();
+		$permissions = [];
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
@@ -67,11 +67,11 @@ class PermissionHelperComponent extends Component {
 			$viewName = 'User' . $acoModelName . 'Permission';
 			$ModelView = Common::getModel($viewName);
 			$foreignKey = Inflector::underscore($acoModelName) . '_id';
-			$upData = array(
-				$viewName => array(
+			$upData = [
+				$viewName => [
 					$foreignKey => $acoInstanceId
-				)
-			);
+				]
+			];
 			$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
 			$ups = $ModelView->find('all', $upOptions);
 
@@ -79,11 +79,11 @@ class PermissionHelperComponent extends Component {
 			$viewName = 'Group' . $acoModelName . 'Permission';
 			$ModelView = Common::getModel($viewName);
 			$foreignKey = strtolower($acoModelName) . '_id';
-			$gpData = array(
-				$viewName => array(
+			$gpData = [
+				$viewName => [
 					$foreignKey => $acoInstanceId
-				)
-			);
+				]
+			];
 			$gpOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $gpData);
 			$gps = $ModelView->find('all', $gpOptions);
 

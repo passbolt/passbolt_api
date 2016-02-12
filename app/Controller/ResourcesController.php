@@ -11,12 +11,12 @@ App::uses('CategoryResource', 'Model');
 class ResourcesController extends AppController {
 
 /**
- * @var $component application wide components
+ * @var array $component application wide components
  */
-	public $components = array(
+	public $components = [
 		'Filter',
 		'PermissionHelper'
-	);
+	];
 
 /**
  * Get all resources
@@ -26,7 +26,7 @@ class ResourcesController extends AppController {
  */
 	public function index() {
 		// The additional information to pass to the model request
-		$findData = array();
+		$findData = [];
 		// Whether we want also the resources of all subcategories
 		$recursive = false;
 
@@ -43,7 +43,7 @@ class ResourcesController extends AppController {
 		// - if recursive, filter also on sub-categories
 		if (isset($findData['foreignModels']['Category.id'])) {
 			// Tmp array to store the target categories and subcategories (if recursive provided)
-			$categories = array();
+			$categories = [];
 
 			foreach ($findData['foreignModels']['Category.id'] as $categoryId) {
 				// if a category id is provided check it is well an uid
@@ -83,7 +83,7 @@ class ResourcesController extends AppController {
 		$resources = $this->Resource->find('all', $findOptions);
 
 		if (!$resources) {
-			$resources = array();
+			$resources = [];
 		}
 
 		$this->set('data', $resources);
@@ -109,20 +109,20 @@ class ResourcesController extends AppController {
 		// check if it exists
 		$resource = $this->Resource->findById($id);
 		if (!$resource) {
-			return $this->Message->error(__('The resource does not exist'), array('code' => 404));
+			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
 		}
 
 		// check if user is authorized
 		// the permissionable after find executed on the previous operation findById should drop
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->Resource->isAuthorized($id, PermissionType::READ)) {
-			return $this->Message->error(__('You are not authorized to access this resource'), array('code' => 403));
+			return $this->Message->error(__('You are not authorized to access this resource'), ['code' => 403]);
 		}
 
 		// Get the resource.
-		$data = array(
+		$data = [
 			'Resource.id' => $id
-		);
+		];
 		$o = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$this->set('data', $this->Resource->find('first', $o));
 		$this->Message->success();
@@ -145,12 +145,12 @@ class ResourcesController extends AppController {
 		}
 		$resource = $this->Resource->findById($id);
 		if (!$resource) {
-			return $this->Message->error(__('The resource does not exist'), array('code' => 404));
+			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
 		}
 
 		// check if user is authorized
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
-			return $this->Message->error(__('You are not authorized to delete this resource'), array('code' => 403));
+			return $this->Message->error(__('You are not authorized to delete this resource'), ['code' => 403]);
 		}
 
 		$resource['Resource']['deleted'] = '1';
@@ -189,16 +189,17 @@ class ResourcesController extends AppController {
 
 		// check if the data are valid.
 		if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
-			return $this->Message->error(__('Could not validate resource data'), [ 'body' => $this->Resource->validationErrors ]);
+			return $this->Message->error(__('Could not validate resource data'),
+				['body' => $this->Resource->validationErrors]);
 		}
 
 		// Save resource.
 		$resource = $this->Resource->save(
 			$resourcepost,
 			[
-					'validate' => false,
-					'atomic' => false,
-					'fieldList' => $fields['fields']
+				'validate' => false,
+				'atomic' => false,
+				'fieldList' => $fields['fields']
 			]);
 
 		if ($resource === false) {
@@ -216,17 +217,18 @@ class ResourcesController extends AppController {
 			// Validate the secret.
 			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
 			$this->Resource->Secret->set($secret);
-			if (!$this->Resource->Secret->validates([ 'fieldList' => $fields['fields'] ])) {
+			if (!$this->Resource->Secret->validates(['fieldList' => $fields['fields']])) {
 				$dataSource->rollback();
-				return $this->Message->error(__('Could not validate secret model'), [ 'body' => $this->Resource->Secret->validationErrors ]);
+				return $this->Message->error(__('Could not validate secret model'),
+					['body' => $this->Resource->Secret->validationErrors]);
 			}
 
 			// Save the secret.
-			$save = $this->Resource->Secret->save($secret, array(
+			$save = $this->Resource->Secret->save($secret, [
 				'validate' => false,
 				'atomic' => false,
 				'fieldList' => $fields['fields']
-			));
+			]);
 
 			if ($save == false) {
 				$dataSource->rollback();
@@ -240,36 +242,38 @@ class ResourcesController extends AppController {
 			$fields = $this->Resource->CategoryResource->getFindFields('save', User::get('Role.name'));
 
 			foreach ($resourcepost['Category'] as $cat) {
-				$crdata = array(
-					'CategoryResource' => array(
+				$crdata = [
+					'CategoryResource' => [
 						'category_id' => $cat['id'],
 						'resource_id' => $resource['Resource']['id']
-					)
-				);
+					]
+				];
 
 				$this->Resource->CategoryResource->create();
 
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
-				if (!$this->Resource->CategoryResource->validates( ['fieldList' => $fields['fields']] )) {
+				if (!$this->Resource->CategoryResource->validates(['fieldList' => $fields['fields']])) {
 					$dataSource->rollback();
-					return $this->Message->error(__('Could not validate CategoryResource', ['body' => $this->Resource->CategoryResource->validationErrors]));
+					return $this->Message->error(__('Could not validate CategoryResource',
+						['body' => $this->Resource->CategoryResource->validationErrors]));
 				}
 
 				// Check that the user is well authorized to create a resource into the given category.
 				if (!$this->Resource->CategoryResource->Category->isAuthorized($cat['id'], PermissionType::CREATE)) {
 					$dataSource->rollback();
-					return $this->Message->error(__('You are not authorized to create a resource into the category'), array('code' => 403));
+					return $this->Message->error(__('You are not authorized to create a resource into the category'),
+						['code' => 403]);
 				}
 
 				// Save the data.
 				$save = $this->Resource->CategoryResource->save(
 					$crdata,
-					array(
+					[
 						'validate' => false,
 						'atomic' => false,
 						'fieldList' => $fields['fields']
-					));
+					]);
 
 				if ($save == false) {
 					$dataSource->rollback();
@@ -282,9 +286,9 @@ class ResourcesController extends AppController {
 		$this->Message->success(__('The resource was successfully saved'));
 
 		// Return the created resource.
-		$data = array(
+		$data = [
 			'Resource.id' => $resource['Resource']['id']
-		);
+		];
 		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resources = $this->Resource->find('all', $options);
 		$this->set('data', $resources[0]);
@@ -320,7 +324,7 @@ class ResourcesController extends AppController {
 
 		// check if user is authorized
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
-			return $this->Message->error(__('You are not authorized to edit this resource'), array('code' => 403));
+			return $this->Message->error(__('You are not authorized to edit this resource'), ['code' => 403]);
 		}
 
 		// set the data for validation and save
@@ -350,17 +354,17 @@ class ResourcesController extends AppController {
 				$dataSource->rollback();
 				return $this->Message->error(
 					__('Could not validate Resource'),
-					array('body' => $this->Resource->validationErrors)
+					['body' => $this->Resource->validationErrors]
 				);
 			}
 
 			// Save data.
 			$save = $this->Resource->save(
 				$resourcepost, [
-					'validate' => false,
-					'fieldList' => $fields['fields'],
-					'atomic' => false
-				]);
+				'validate' => false,
+				'fieldList' => $fields['fields'],
+				'atomic' => false
+			]);
 
 			if (!$save) {
 				$dataSource->rollback();
@@ -372,12 +376,11 @@ class ResourcesController extends AppController {
 		if (isset($resourcepost['Secret']) && !empty($resourcepost['Secret'])) {
 			try {
 				$this->Resource->saveSecrets($id, $resourcepost['Secret']);
-			}
-			catch(ValidationException $e) {
+			} catch (ValidationException $e) {
 				$dataSource->rollback();
-				return $this->Message->error($e->getMessage(), [ 'body' => $e->getInvalidFields() ]);
-			}
-			catch (Exception $e) {
+
+				return $this->Message->error($e->getMessage(), ['body' => $e->getInvalidFields()]);
+			} catch (Exception $e) {
 				$dataSource->rollback();
 				return $this->Message->error($e->getMessage());
 			}
@@ -387,21 +390,21 @@ class ResourcesController extends AppController {
 		if (isset($resourcepost['Category']) && !empty($resourcepost['Category'])) {
 			// If relations are given with the resource
 			// we start by deleting previous associations
-			$delete = $this->Resource->CategoryResource->deleteAll(array(
-					'resource_id' => $id
-			));
+			$delete = $this->Resource->CategoryResource->deleteAll([
+				'resource_id' => $id
+			]);
 			if (!$delete) {
 				$dataSource->rollback();
 				return $this->Message->error(__('Could not delete Categories'));
 			}
 			// Save the new relations
 			foreach ($resourcepost['Category'] as $cat) {
-				$crdata = array(
-						'CategoryResource' => array(
-								'category_id' => $cat['id'],
-								'resource_id' => $id
-						)
-				);
+				$crdata = [
+					'CategoryResource' => [
+						'category_id' => $cat['id'],
+						'resource_id' => $id
+					]
+				];
 
 				$this->Resource->CategoryResource->create();
 				// check if the data is valid
@@ -423,9 +426,9 @@ class ResourcesController extends AppController {
 		$dataSource->commit();
 
 		// Retrieve the updated resource.
-		$data = array(
-				'Resource.id' => $resource['Resource']['id']
-		);
+		$data = [
+			'Resource.id' => $resource['Resource']['id']
+		];
 		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resource = $this->Resource->find('first', $options);
 

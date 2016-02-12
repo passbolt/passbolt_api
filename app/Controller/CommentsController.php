@@ -44,7 +44,7 @@ class CommentsController extends AppController {
 		// the foreign instance does not exist
 		$instance = $this->Comment->$foreignModelName->findById($foreignId);
 		if (!$instance) {
-			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
 			return;
 		}
 
@@ -53,16 +53,16 @@ class CommentsController extends AppController {
 		// the permissionable after find executed on the previous operation findById should drop
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->Comment->$foreignModelName->isAuthorized($foreignId, PermissionType::READ)) {
-			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), array('code' => 403));
+			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), ['code' => 403]);
 			return;
 		}
 
 		// find the comments
-		$findData = array(
-			'Comment' => array(
+		$findData = [
+			'Comment' => [
 				'foreign_id' => $foreignId
-			)
-		);
+			]
+		];
 		$findOptions = $this->Comment->getFindOptions('viewByForeignModel', User::get('Role.name'), $findData);
 		$this->set('data', $this->Comment->find('threaded', $findOptions));
 		$this->Message->success();
@@ -106,7 +106,7 @@ class CommentsController extends AppController {
 		// the foreign instance does not exist
 		$instance = $this->Comment->$foreignModelName->findById($foreignId);
 		if (!$instance) {
-			$this->Message->error(__('The %s does not exist', $foreignModelName), array('code' => 404));
+			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
 			return;
 		}
 
@@ -140,7 +140,7 @@ class CommentsController extends AppController {
 		$this->Comment->save($postData, true, $fields['fields']);
 
 		// return the just inserted comment
-		$findData = array('Comment' => array('id' => $this->Comment->id));
+		$findData = ['Comment' => ['id' => $this->Comment->id]];
 		$findOptions = $this->Comment->getFindOptions('view', User::get('Role.name'), $findData);
 		$this->set('data', $this->Comment->find('first', $findOptions));
 		$this->Message->success(__('The comment was successfully added'));
@@ -174,7 +174,7 @@ class CommentsController extends AppController {
 
 		// check if the comment exists
 		if (!$this->Comment->exists($id)) {
-			$this->Message->error(__('The comment does not exist'), array('code' => 404));
+			$this->Message->error(__('The comment does not exist'), ['code' => 404]);
 			return;
 		}
 
@@ -193,7 +193,7 @@ class CommentsController extends AppController {
 
 		// check the user is the owner of the comment or it has the role to edit it
 		if (!$this->Comment->isOwner($id)) {
-			$this->Message->error(__('Your are not allowed to edit this comment'), array('code' => 403));
+			$this->Message->error(__('Your are not allowed to edit this comment'), ['code' => 403]);
 			return;
 		}
 
@@ -205,7 +205,7 @@ class CommentsController extends AppController {
 			return;
 		}
 
-		$findData = array('Comment' => array('id' => $this->Comment->id));
+		$findData = ['Comment' => ['id' => $this->Comment->id]];
 		$findOptions = $this->Comment->getFindConditions('view', User::get('Role.name'), $findData);
 		$this->set('data', $this->Comment->find('first', $findOptions));
 		$this->Message->success(__('The comment was successfully updated'));
@@ -240,13 +240,13 @@ class CommentsController extends AppController {
 
 		// check if the comment exists
 		if (!$this->Comment->exists($id)) {
-			$this->Message->error(__('The comment does not exist'), array('code' => 404));
+			$this->Message->error(__('The comment does not exist'), ['code' => 404]);
 			return;
 		}
 
 		// check the user is the owner of the comment or it has the role to delete it
 		if (!$this->Comment->isOwner($id)) {
-			$this->Message->error(__('Your are not allowed to delete this comment'), array('code' => 403));
+			$this->Message->error(__('Your are not allowed to delete this comment'), ['code' => 403]);
 			return;
 		}
 

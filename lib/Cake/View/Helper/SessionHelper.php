@@ -30,7 +30,7 @@ App::uses('CakeSession', 'Model/Datasource');
 class SessionHelper extends AppHelper {
 
 /**
- * Used to read a session values set in a controller for a key or return values for all keys.
+ * Reads a session value for a key or returns values for all keys.
  *
  * In your view: `$this->Session->read('Controller.sessKey');`
  * Calling the method without a param will return all session vars
@@ -44,7 +44,19 @@ class SessionHelper extends AppHelper {
 	}
 
 /**
- * Used to check is a session key has been set
+ * Reads and deletes a session value for a key.
+ *
+ * In your view: `$this->Session->consume('Controller.sessKey');`
+ *
+ * @param string $name the name of the session key you want to read
+ * @return mixed values from the session vars
+ */
+	public function consume($name) {
+		return CakeSession::consume($name);
+	}
+
+/**
+ * Checks if a session key has been set.
  *
  * In your view: `$this->Session->check('Controller.sessKey');`
  *
@@ -114,6 +126,7 @@ class SessionHelper extends AppHelper {
  *    Supports the 'params', and 'element' keys that are used in the helper.
  * @return string
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::flash
+ * @deprecated 3.0.0 Since 2.7, use FlashHelper::render() instead.
  */
 	public function flash($key = 'flash', $attrs = array()) {
 		$out = false;
@@ -143,6 +156,7 @@ class SessionHelper extends AppHelper {
 				}
 				$tmpVars = $flash['params'];
 				$tmpVars['message'] = $message;
+				$tmpVars['key'] = $key;
 				$out = $this->_View->element($flash['element'], $tmpVars, $options);
 			}
 		}

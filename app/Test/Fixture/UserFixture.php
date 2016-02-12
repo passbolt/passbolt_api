@@ -1,7 +1,6 @@
 <?php
 /**
- * UserFixture
- *
+ * User Fixture
  */
 class UserFixture extends CakeTestFixture {
 
@@ -38,8 +37,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'frances@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -49,8 +48,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'kathleen@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -60,8 +59,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'root@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -71,8 +70,19 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'carol@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-06 23:39:22',
+			'modified' => '2016-02-07 23:39:22',
+			'created_by' => '',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
+			'id' => '27102e91-6880-3312-a4c5-db00c228820e',
+			'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+			'username' => 'nancy@passbolt.com',
+			'active' => '1',
+			'deleted' => 0,
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -82,8 +92,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'admin@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2014-02-08 23:39:22',
+			'modified' => '2015-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -93,8 +103,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'hedy@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -104,8 +114,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'jean@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -115,8 +125,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'guest@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -126,8 +136,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'marlyn@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -137,8 +147,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'irene@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -148,8 +158,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'anonymous@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => ''
 		),
@@ -159,8 +169,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'grace@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -170,8 +180,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'edith@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:37:22',
+			'modified' => '2016-02-08 23:38:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -181,8 +191,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'ada@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2015-12-08 23:39:22',
+			'modified' => '2016-01-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -192,8 +202,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'betty@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-01-25 23:39:22',
+			'modified' => '2016-02-01 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -203,8 +213,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'user@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -214,8 +224,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'lynne@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 23:39:22',
+			'modified' => '2016-02-08 23:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
@@ -225,8 +235,8 @@ class UserFixture extends CakeTestFixture {
 			'username' => 'dame@passbolt.com',
 			'active' => '1',
 			'deleted' => 0,
-			'created' => '2016-01-28 17:30:09',
-			'modified' => '2016-01-28 17:30:09',
+			'created' => '2016-02-08 21:39:22',
+			'modified' => '2016-02-08 22:39:22',
 			'created_by' => '',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),

@@ -10,10 +10,10 @@ class SetupController extends AppController {
 /**
  * @var array Models to be used in this controller
  */
-	public $uses = array(
+	public $uses = [
 		'User',
 		'AuthenticationToken',
-	);
+	];
 
 /**
  * Called before the controller action. Used to manage access right
@@ -61,7 +61,7 @@ class SetupController extends AppController {
 		}
 
 		// Retrieve the user.
-		$data = array('User.id' => $userId);
+		$data = ['User.id' => $userId];
 		$o = $this->User->getFindOptions('Setup::userInfo', Role::GUEST, $data);
 		$user = $this->User->find('first', $o);
 

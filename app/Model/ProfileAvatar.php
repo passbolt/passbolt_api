@@ -1,4 +1,10 @@
 <?php
+/**
+ * Profile Avatar Model
+ *
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ */
 App::uses('ImageStorage', 'FileStorage.Model');
 
 class ProfileAvatar extends ImageStorage {
@@ -6,6 +12,12 @@ class ProfileAvatar extends ImageStorage {
 /**
  * Defines which key to use while returning an avatar object
  * to tell the path for the avatar image.
+ * @var string
+ */
+/**
+ * Defines which key to use while returning an avatar object
+ * to tell the path for the avatar image.
+ *
  * @var string
  */
 	public $imagePathKey = 'url';
@@ -23,14 +35,14 @@ class ProfileAvatar extends ImageStorage {
  *
  * @link http://api20.cakephp.org/class/model#
  */
-	public $actsAs = array(
-		'FileStorage.UploadValidator' => array(
-			'allowedExtensions' => array(
+	public $actsAs = [
+		'FileStorage.UploadValidator' => [
+			'allowedExtensions' => [
 				'jpg',
 				'png',
-			),
-		),
-	);
+			],
+		],
+	];
 
 /**
  * beforeSave callback
@@ -38,36 +50,35 @@ class ProfileAvatar extends ImageStorage {
  * @param array $options
  * @return boolean true on success
  */
-	public function beforeSave($options = array()) {
+	public function beforeSave($options = []) {
 		if (!parent::beforeSave($options)) {
 			return false;
 		}
 
 		// delete the previous avatar
-		$this->deleteAll(array(
+		$this->deleteAll([
 			'foreign_key' => $this->data['Avatar']['foreign_key']
-		));
+		]);
 
 		return true;
 	}
 
-	/**
-	 * After find callback.
-	 *
-	 * Is used to build an array of url for the images.
-	 *
-	 * @param mixed $results
-	 * @param bool  $primary
-	 *
-	 * @return mixed
-	 */
+/**
+ * After find callback.
+ *
+ * Is used to build an array of url for the images.
+ *
+ * @param mixed $results
+ * @param bool $primary
+ *
+ * @return mixed
+ */
 	public function afterFind($results, $primary = false) {
 		if (isset($results[0])) {
 			foreach ($results as $key => $result) {
 				$results[$key] = $this->addPathsInfo($result);
 			}
-		}
-		else {
+		} else {
 			$results = $this->addPathsInfo($results);
 		}
 		return $results;
@@ -90,10 +101,11 @@ class ProfileAvatar extends ImageStorage {
 			// Delete the versions of the file.
 			$this->id = $avatar['Avatar']['id'];
 			$operations = Configure::read('Media.imageSizes.ProfileAvatar');
-			$Event = new CakeEvent('ImageVersion.removeVersion', $this, array(
+			$Event = new CakeEvent('ImageVersion.removeVersion', $this, [
 				'record' => $avatar,
 				'storage' => StorageManager::adapter('Local'),
-				'operations' => $operations));
+				'operations' => $operations
+			]);
 			CakeEventManager::instance()->dispatch($Event);
 
 			// Get the path of the file.
@@ -115,6 +127,7 @@ class ProfileAvatar extends ImageStorage {
 		$data[$this->alias]['extension'] = $this->fileExtension($data['Avatar']['file']['tmp_name']);
 		$data[$this->alias]['foreign_key'] = $foreignId;
 		$this->create();
+
 		return $this->save($data);
 	}
 
@@ -128,9 +141,9 @@ class ProfileAvatar extends ImageStorage {
  */
 	public function imageUrl($image, $version = null, $options = array()) {
 		// Default options.
-		$defaultOptions = array(
+		$defaultOptions = [
 			'version' => 'small',
-		);
+		];
 		$options = array_merge($options, $defaultOptions);
 
 		// If image is empty, we return the default avatar.
@@ -146,18 +159,19 @@ class ProfileAvatar extends ImageStorage {
 		if (!empty($version)) {
 			$hash = Configure::read('Media.imageHashes.' . $image['model'] . '.' . $version);
 			if (empty($hash)) {
-				throw new \InvalidArgumentException(__d('file_storage', 'No valid version key (%s %s) passed!', @$image['model'], $version));
+				throw new \InvalidArgumentException(__d('file_storage', 'No valid version key (%s %s) passed!',
+					@$image['model'], $version));
 			}
 		} else {
 			$hash = null;
 		}
 
-		$Event = new CakeEvent('FileStorage.ImageHelper.imagePath', $this, array(
+		$Event = new CakeEvent('FileStorage.ImageHelper.imagePath', $this, [
 				'hash' => $hash,
 				'image' => $image,
 				'version' => $version,
 				'options' => $options
-			)
+			]
 		);
 		CakeEventManager::instance()->dispatch($Event);
 
@@ -181,13 +195,14 @@ class ProfileAvatar extends ImageStorage {
 
 /**
  * Add avatar path information for each available size to the model.
+ *
  * @param array $avatar a ProfileAvatar model
  * @return array ProfileAvatar with added information.
  */
 	public function addPathsInfo($avatar = array()) {
 		// Get available sizes.
 		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
-		$avatarsPath = array();
+		$avatarsPath = [];
 		// Add path for each available size.
 		foreach ($sizes as $size => $filters) {
 			$url = $this->imageUrl($avatar, $size);
@@ -195,6 +210,7 @@ class ProfileAvatar extends ImageStorage {
 		}
 		// Transform original model to add paths.
 		$avatar[$this->imagePathKey] = $avatarsPath;
+
 		return $avatar;
 	}
 }

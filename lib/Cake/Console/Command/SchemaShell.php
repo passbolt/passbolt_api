@@ -122,7 +122,7 @@ class SchemaShell extends AppShell {
 		if ($this->params['force']) {
 			$options['models'] = false;
 		} elseif (!empty($this->params['models'])) {
-			$options['models'] = String::tokenize($this->params['models']);
+			$options['models'] = CakeText::tokenize($this->params['models']);
 		}
 
 		$snapshot = false;
@@ -151,7 +151,7 @@ class SchemaShell extends AppShell {
 		Configure::write('Cache.disable', $cacheDisable);
 
 		if (!empty($this->params['exclude']) && !empty($content)) {
-			$excluded = String::tokenize($this->params['exclude']);
+			$excluded = CakeText::tokenize($this->params['exclude']);
 			foreach ($excluded as $table) {
 				unset($content['tables'][$table]);
 			}
@@ -403,6 +403,9 @@ class SchemaShell extends AppShell {
 			$this->out();
 			$this->out(__d('cake_console', 'Updating Database...'));
 			$this->_run($contents, 'update', $Schema);
+
+			Configure::write('Cache.disable', false);
+			Cache::clear(false, '_cake_model_');
 		}
 
 		$this->out(__d('cake_console', 'End update.'));

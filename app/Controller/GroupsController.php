@@ -13,7 +13,7 @@ class GroupsController extends AppController {
  * @return void
  */
 	public function index() {
-		$data = array();
+		$data = [];
 		$keywords = isset($this->request->query['keywords']) ? $this->request->query['keywords'] : '';
 
 		// if keywords provided build the model request with
@@ -51,11 +51,11 @@ class GroupsController extends AppController {
 			return;
 		}
 
-		$data = array('Group.id' => $id);
+		$data = ['Group.id' => $id];
 		$o = $this->Group->getFindOptions('view', User::get('Role.name'), $data);
 		$group = $this->Group->find('first', $o);
 		if (!$group) {
-			$this->Message->error(__('The group does not exist'), array('code' => 404));
+			$this->Message->error(__('The group does not exist'), ['code' => 404]);
 			return;
 		}
 		$this->set('data', $group);
@@ -106,7 +106,7 @@ class GroupsController extends AppController {
 			return;
 		}
 		$this->Group->commit();
-		$data = array('Group.id' => $this->Group->id);
+		$data = ['Group.id' => $this->Group->id];
 		$options = $this->Group->getFindOptions('view', User::get('Role.name'), $data);
 		$group = $this->Group->find('first', $options);
 
@@ -148,7 +148,7 @@ class GroupsController extends AppController {
 		// get the resource id
 		$resource = $this->Group->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The group does not exist'), array('code' => 404));
+			$this->Message->error(__('The group does not exist'), ['code' => 404]);
 			return;
 		}
 
@@ -180,7 +180,7 @@ class GroupsController extends AppController {
 			}
 			$this->Group->commit();
 
-			$data = array('Group.id' => $this->Group->id);
+			$data = ['Group.id' => $this->Group->id];
 			$options = $this->Group->getFindOptions('view', User::get('Role.name'), $data);
 			$group = $this->Group->find('first', $options);
 
@@ -217,7 +217,7 @@ class GroupsController extends AppController {
 
 		$group = $this->Group->findById($id);
 		if (!$group) {
-			$this->Message->error(__('The group does not exist'), array('code' => 404));
+			$this->Message->error(__('The group does not exist'), ['code' => 404]);
 			return;
 		}
 

@@ -5,7 +5,7 @@
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @link		http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
+ * @link http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
  */
 class IpAddressComponent extends Component {
 
@@ -28,10 +28,10 @@ class IpAddressComponent extends Component {
  * different formats
  *
  * Network ranges can be specified as:
- * 1. Regular ip			127.0.0.1
- * 2. Wildcard format:		1.2.3.*
- * 3. CIDR format:			1.2.3/24  OR  1.2.3.4/255.255.255.0
- * 4. Start-End IP format:	1.2.3.0-1.2.3.255
+ * 1. Regular ip 127.0.0.1
+ * 2. Wildcard format: 1.2.3.*
+ * 3. CIDR format: 1.2.3/24  OR  1.2.3.4/255.255.255.0
+ * 4. Start-End IP format: 1.2.3.0-1.2.3.255
  *
  * The function will return true if the supplied IP is within the range.
  * Note little validation is done on the range inputs - it expects you to
@@ -63,7 +63,8 @@ class IpAddressComponent extends Component {
 					$count = count($x);
 				}
 				list($a, $b, $c, $d) = $x;
-				$range = sprintf("%u.%u.%u.%u", empty($a)?'0':$a, empty($b)?'0':$b, empty($c)?'0':$c, empty($d)?'0':$d);
+				$range = sprintf("%u.%u.%u.%u", empty($a) ? '0' : $a, empty($b) ? '0' : $b, empty($c) ? '0' : $c,
+					empty($d) ? '0' : $d);
 				$rangeDec = ip2long($range);
 				$ipDec = ip2long($ip);
 
@@ -72,7 +73,7 @@ class IpAddressComponent extends Component {
 
 				# Strategy 2 - Use math to create it
 				$wildcardDec = pow(2, (32 - $netmask)) - 1;
-				$netmaskDec = ~ $wildcardDec;
+				$netmaskDec = ~$wildcardDec;
 
 				return (($ipDec & $netmaskDec) == ($rangeDec & $netmaskDec));
 			}

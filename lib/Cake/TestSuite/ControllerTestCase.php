@@ -109,6 +109,7 @@ class InterceptContentHelper extends Helper {
  * ControllerTestCase class
  *
  * @package       Cake.TestSuite
+ * @method        mixed testAction() testAction($url, $options = array())  Lets you do functional tests of a controller action.
  */
 abstract class ControllerTestCase extends CakeTestCase {
 
@@ -210,7 +211,7 @@ abstract class ControllerTestCase extends CakeTestCase {
  *     - `result` Get the return value of the controller action. Useful
  *       for testing requestAction methods.
  *
- * @param string $url The URL to test
+ * @param string|array $url The URL to test.
  * @param array $options See options
  * @return mixed The specified return type.
  * @triggers ControllerTestCase $Dispatch, array('request' => $request)
@@ -223,6 +224,10 @@ abstract class ControllerTestCase extends CakeTestCase {
 			'method' => 'POST',
 			'return' => 'result'
 		);
+
+		if (is_array($url)) {
+			$url = Router::url($url);
+		}
 
 		$restore = array('get' => $_GET, 'post' => $_POST);
 
@@ -254,7 +259,7 @@ abstract class ControllerTestCase extends CakeTestCase {
 		$Dispatch->parseParams(new CakeEvent('ControllerTestCase', $Dispatch, array('request' => $request)));
 		if (!isset($request->params['controller']) && Router::currentRoute()) {
 			$this->headers = Router::currentRoute()->response->header();
-			return;
+			return null;
 		}
 		if ($this->_dirtyController) {
 			$this->controller = null;

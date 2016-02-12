@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form Helper Customization
  *
@@ -9,13 +10,14 @@
  */
 class MyFormHelper extends FormHelper {
 
-/**
- * Input redefinition - required class += required span
- * @link http://book.cakephp.org/view/1390/Automagic-Form-Elements
- * @return string input
- * @access public
- */
-	public function input($fieldName, $options = array()) {
+	/**
+	 * Input redefinition - required class += required span
+	 *
+	 * @link http://book.cakephp.org/view/1390/Automagic-Form-Elements
+	 * @return string input
+	 * @access public
+	 */
+	public function input($fieldName, $options = []) {
 		//if (isset($options['class']) && !empty($options['class']) && strstr($options['class'],'required')) {
 		//	$options['label'] .= $this->required();
 		//}
@@ -23,22 +25,24 @@ class MyFormHelper extends FormHelper {
 			$options['after'] = $this->hint($options['hint']);
 			unset($options['hint']);
 		}
+
 		return parent::input($fieldName, $options) . "\n";
 	}
 
-	public function submit($caption = NULL, $options = array()) {
+	public function submit($caption = null, $options = []) {
 		return parent::submit($caption, $options) . "\n";
 	}
 
-	public function end($options = NULL, $secureAttributes = Array()) {
+	public function end($options = null, $secureAttributes = []) {
 		return parent::end() . "\n";
 	}
 
-/**
- * Required field special marker
- * @return string
- * @access public
- */
+	/**
+	 * Required field special marker
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function required() {
 		return ' <span class="required">*</span>';
 	}

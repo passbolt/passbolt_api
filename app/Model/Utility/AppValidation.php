@@ -15,6 +15,7 @@ class AppValidation extends Validation {
 
 /**
  * Get the regex to validate url.
+ *
  * @return string
  */
 	public static function getValidationUrlRegex() {
@@ -25,15 +26,18 @@ class AppValidation extends Validation {
 			'(?:\/?|\/' . $validChars . '*)?' .
 			'(?:\?' . $validChars . '*)?' .
 			'(?:#' . $validChars . '*)?$/iu';
+
 		return $regex;
 	}
 
 /**
  * Get the regex to authorize all alphanumeric and common special characters : , . : ; ? ! @ - _ ( ) [ ] \' " .
+ *
  * @return string
  */
 	public static function getValidationAlphaNumericAndSpecialRegex() {
 		$regex = "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u";
+
 		return $regex;
 	}
 

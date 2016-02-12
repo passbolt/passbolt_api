@@ -48,14 +48,14 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->Category = ClassRegistry::init('Category');
 
 		// log the user as a manager to be able to access all categories
-        $user = $this->User->findByUsername('dame@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
 	public function testIndexNoChildrenPermission() {
 		// Test that users won't get top categories if they're not allowed.
 		// Looking at the matrix of permission Jean Bartik should not be able to read the category 'Bolt Softwares Pvt. Ltd'
-		$user = $this->User->findByUsername('jean@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.jean'));
 		$this->User->setActive($user);
 
 		// test when no parameters are provided (default behaviour : children=false)
@@ -97,8 +97,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testViewCategoryIdNotValid() {
 		// test an error bad id
+		$catId = 'badId';
 		$this->setExpectedException('HttpException', 'The category id is invalid');
-		$result = json_decode($this->testAction("/categories/badid.json?children=true", array(
+		$result = json_decode($this->testAction("/categories/{$catId}.json?children=true", array(
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
@@ -106,8 +107,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testViewCategoryDoesNotExist() {
 		// test when a wrong id is provided
+		$catId = Common::uuid();
 		$this->setExpectedException('HttpException', 'The category does not exist');
-		$result = json_decode($this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$result = json_decode($this->testAction("/categories/{$catId}.json", array(
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
@@ -115,24 +117,21 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testViewAndPermission() {
 		// Error : name is empty
-		$cat = $this->Category->findByName('d-project1');
+		$catId = Common::uuid('category.id.d-project1');
 
 		// Looking at the matrix of permission Irene should not be able to read the category d-project1
-		$user = $this->User->findByUsername('irene@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The category does not exist');
-		$result = json_decode($this->testAction("/categories/{$cat['Category']['id']}.json", array(
+		$result = json_decode($this->testAction("/categories/{$catId}.json", array(
 			'method' => 'Get',
 			'return' => 'contents'
 		)), true);
 	}
 
 	public function testView() {
-		//$this->Category->query('select * from ')
-
-		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$id = $root['Category']['id'];
+		$rootCatId = Common::uuid('category.id.bolt');
 
 		// test when no parameters are provided
 		$result = json_decode($this->testAction("/categories.json", array(
@@ -142,42 +141,43 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories.json : The test should return success but is returning {$result['header']['status']}");
 
 		// test if the object returned is a success one
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$result = json_decode($this->testAction("/categories/$rootCatId.json", array(
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
 				'children' => 'true'
 			)
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], 'categories/view/' . $id . '.json?children=true should return success');
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], 'categories/view/' . $rootCatId . '.json?children=true should return success');
 
 		// test it is the expected format
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$result = json_decode($this->testAction("/categories/$rootCatId.json", array(
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
 				'children' => 'true'
 			)
 		)), true);
-		$this->assertInternalType('array', $result['body'], 'The url categories/view/' . $id . '.json?children=true should return a json object');
+		$this->assertInternalType('array', $result['body'], 'The url categories/view/' . $rootCatId . '.json?children=true should return a json object');
 
 		// test that content returned is containing expect value
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$result = json_decode($this->testAction("/categories/$rootCatId.json", array(
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
 				'children' => 'true'
 			)
 		)), true);
-		$accounts = $this->Category->findByName('accounts');
-		$path = $this->Category->inNestedArray($accounts['Category']['id'], $result['body']);
+		$accountsCatId = Common::uuid('category.id.accounts');
+		$path = $this->Category->inNestedArray($accountsCatId, $result['body']);
 		$this->assertTrue(!empty($path), 'The result should contain the category "accounts", but it is not found.');
-		$this->assertEquals($path[0], $root['Category']['id']);
-		$administration = $this->Category->findByName('administration');
-		$this->assertEquals($path[1], $administration['Category']['id']);
+		$this->assertEquals($path[0], $rootCatId);
+
+		$adminCatId = Common::uuid('category.id.administration');
+		$this->assertEquals($path[1], $adminCatId);
 
 		// test without children
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$result = json_decode($this->testAction("/categories/$rootCatId.json", array(
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
@@ -191,8 +191,9 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testChildrenCategoryDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The category does not exist');
-		$this->testAction("/categories/children/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$this->testAction("/categories/children/{$id}.json", array(
 			'method' => 'get',
 			'return' => 'contents'
 		));
@@ -204,34 +205,30 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testChildren() {
-		$category = Common::getModel('Category');
-
-		$root = $category->findByName('Bolt Softwares Pvt. Ltd.');
-		$id = $root['Category']['id'];
-
+		$rootCatId = Common::uuid('category.id.bolt');
 
 		// test if the object returned is a success one
-		$result = json_decode($this->testAction("/categories/children/$id.json", array(
+		$result = json_decode($this->testAction("/categories/children/$rootCatId.json", array(
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
-		//pr($result); die();
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/children/$id.json : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/children/$rootCatId.json : The test should return success but is returning {$result['header']['status']}");
 
 		// test it is the expected format
-		$result = json_decode($this->testAction("/categories/children/$id.json", array(
+		$result = json_decode($this->testAction("/categories/children/$rootCatId.json", array(
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
-		$this->assertInternalType('array', $result['body'], "/categories/children/$id.json : The value returned should be an array but is " . print_r($result['body'], true));
+		$this->assertInternalType('array', $result['body'], "/categories/children/$rootCatId.json : The value returned should be an array but is " . print_r($result['body'], true));
 
 		// test that content returned are correct
-		$result = json_decode($this->testAction("/categories/children/$id.json", array(
+		$result = json_decode($this->testAction("/categories/children/$rootCatId.json", array(
 			'method' => 'get',
 			'return' => 'contents'
 		)), true);
-		$accounts = $this->Category->findByName('accounts');
-		$path = $this->Category->inNestedArray($accounts['Category']['id'], $result['body']);
+
+		$accountCatId = Common::uuid('category.id.accounts');
+		$path = $this->Category->inNestedArray($accountCatId, $result['body']);
 		$this->assertTrue(!empty($path), 'The result should contain the category "accounts", but it is not found.');
 	}
 
@@ -259,17 +256,17 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testAddAndPermission() {
 		// Looking at the matrix of permission Carol should be able to read but not to create into the category d-project1
-		$user = $this->User->findByUsername('carol@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.carol'));
 		$this->User->setActive($user);
 
 		// Error : name is empty
 		$this->setExpectedException('HttpException', 'You are not authorized to create a category into the given parent category');
-		$cat = $this->Category->findByName('d-project1');
+		$catId = Common::uuid('category.id.d-project1');
 		$result = json_decode($this->testAction('/categories/add.json', array(
 			'data' => array(
 				'Category' => array(
 					'name' => 'testAddAndPermission Category',
-					'parent_id' => $cat['Category']['id']
+					'parent_id' => $catId
 				)
 			),
 			'method' => 'Post',
@@ -281,23 +278,22 @@ class CategoriesControllerTest extends ControllerTestCase {
 	 * Test adding a category
 	 */
 	public function testAddComplete() {
-
 		// check the response when a category is added (without parent_id)
+		$data = array(
+			'Category' => array('name' => 'Goa')
+		);
 		$result = json_decode($this->testAction('/categories.json', array(
-			'data' => array(
-				'Category' => array('name' => 'Aramboooool')
-			),
+			'data' => $data,
 			'method' => 'post',
 			'return' => 'contents'
 		)), true);
 
-
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
-		$this->assertEquals('Aramboooool', $result['body']['Category']['name'], "The test should return Aramboooool but is returning {$result['body']['Category']['name']}");
+		$this->assertEquals($data['Category']['name'], $result['body']['Category']['name'], "The test should return {$data['Category']['name']} but is returning {$result['body']['Category']['name']}");
 
 		// test insertion with parameter parent_id, and position 1
-		$parent = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$parentId = $parent['Category']['id'];
+		$parentId = Common::uuid('category.id.bolt');
+		$parentCat = $this->Category->findById($parentId);
 		$result = json_decode($this->testAction('/categories.json', array(
 			'data' => array(
 				'Category' => array(
@@ -312,7 +308,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 		$catTest = $this->Category->findById($result['body']['Category']['id']);
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "The test should return success but is returning {$result['header']['status']}");
-		$this->assertEquals($parent['Category']['lft'] + 1, $catTest['Category']['lft']);
+		$this->assertEquals($parentCat['Category']['lft'] + 1, $catTest['Category']['lft']);
 
 		// test insertion with parameter parent_id, and position 2
 		$result = json_decode($this->testAction('/categories.json', array(
@@ -360,33 +356,31 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testEditNoDataProvided() {
 		// Error : no data provided
-		$cat = $this->Category->findByName('o-project1');
-		$id = $cat['Category']['id'];
+		$catId = Common::uuid('category.id.o-project1');
 
 		// without parameters
 		$this->setExpectedException('HttpException', 'No data were provided');
-		$this->testAction("/categories/$id.json", array('method' => 'put', 'return' => 'contents'));
+		$this->testAction("/categories/$catId.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testEditCategoryDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The category does not exist');
-		$this->testAction("/categories/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$this->testAction("/categories/{$id}.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		));
 	}
 
 	public function testEditCategoryDoesNotExistAndPermission() {
-		$adminCat = $this->Category->findByName('administration');
-
 		// Looking at the matrix of permission should not be able to READ administration
-		$user = $this->User->findByUsername('ada@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The category does not exist');
 
-		$id = $adminCat['Category']['id'];
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$catId = Common::uuid('category.id.administration');
+		$result = json_decode($this->testAction("/categories/$catId.json", array(
 			'data' => array(
 				'Category' => array(
 					'name' => 'testEditCategoryDoesNotExistAndPermission Category'
@@ -399,13 +393,13 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testEditAndPermission() {
 		// Looking at the matrix of permission Carol should be able to read but not to edit the category d-project1
-		$user = $this->User->findByUsername('carol@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.carol'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to edit this category');
-		$cat = $this->Category->findByName('d-project1');
-		$id = $cat['Category']['id'];
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+
+		$catId = Common::uuid('category.id.d-project1');
+		$result = json_decode($this->testAction("/categories/$catId.json", array(
 			'data' => array(
 				'Category' => array(
 					'name' => 'testEditAndPermission Category'
@@ -417,20 +411,19 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testEditAndParentCategoryPermission() {
-		$adminCat = $this->Category->findByName('administration');
-
 		// Looking at the matrix of permission ada should be able to update "projects" but has no CREATE right for "administration"
-		$user = $this->User->findByUsername('ada@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
+		$parentCatId = Common::uuid('category.id.administration');
+		$catId = Common::uuid('category.id.projects');
+
 		$this->setExpectedException('HttpException', 'You are not authorized to create a category into the given parent category');
-		$projectsCat = $this->Category->findByName('projects');
-		$id = $projectsCat['Category']['id'];
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$result = json_decode($this->testAction("/categories/$catId.json", array(
 			'data' => array(
 				'Category' => array(
 					'name' => 'testEditAndPermission Category',
-					'parent_id' => $adminCat['Category']['id'],
+					'parent_id' => $parentCatId,
 				)
 			),
 			'method' => 'Put',
@@ -439,21 +432,23 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testEdit() {
-		$cat = $this->Category->findByName('o-project1');
-		$id = $cat['Category']['id'];
+		$catId = Common::uuid('category.id.o-project1');
+		$cat = $this->Category->findById($catId);
+
 		// Modify the name of the category
 		$catNewName = 'o-project1-transformed';
 		$cat['Category']['name'] = $catNewName;
+
 		$params = array(
 			'data' => $cat,
 			'method' => 'put',
 			'return' => 'contents'
 		);
-		$result = json_decode($this->testAction("/categories/$id.json", $params), true);
+		$result = json_decode($this->testAction("/categories/$catId.json", $params), true);
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "test edit with data should return success but is returning {$result['header']['status']}");
 
 		// test that the category has been modified properly in db
-		$cat = $this->Category->findById($id);
+		$cat = $this->Category->findById($catId);
 		$this->assertEquals($cat['Category']['name'], $catNewName, "test edit : name should be updated to $catNewName but it returned {$cat['Category']['name']}");
 	}
 
@@ -469,24 +464,24 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testDeleteCategoryDoesNotExist() {
 		$this->setExpectedException('HttpException', 'The category does not exist');
-		$id = '50d77ff7-bdad-4c03-8687-1b63d7a10fce';
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+
+		$catId = Common::uuid();
+		$result = json_decode($this->testAction("/categories/$catId.json", array(
 			'method' => 'Delete',
 			'return' => 'contents'
 		)), true);
 	}
 
 	public function testDeleteCategoryDoesNotExistAndPermission() {
-		$adminCat = $this->Category->findByName('administration');
+		$catId = Common::uuid('category.id.administration');
 
 		// Looking at the matrix of permission should not be able to READ administration
-		$user = $this->User->findByUsername('ada@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The category does not exist');
 
-		$id = $adminCat['Category']['id'];
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$result = json_decode($this->testAction("/categories/$catId.json", array(
 			'method' => 'Delete',
 			'return' => 'contents'
 		)), true);
@@ -494,32 +489,30 @@ class CategoriesControllerTest extends ControllerTestCase {
 
 	public function testDeleteAndPermission() {
 		// Looking at the matrix of permission Jean Bartik should be able to create but not delete the category Jean private
-		$user = $this->User->findByUsername('jean@passbolt.com');
+		$user = $this->User->findById(Common::uuid('user.id.jean'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to delete this category');
-		$cat = $this->Category->findByName('pv-jean_bartik');
 
-		$id = $cat['Category']['id'];
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$catId = Common::uuid('category.id.pv-jean_bartik');
+		$result = json_decode($this->testAction("/categories/$catId.json", array(
 			'method' => 'Delete',
 			'return' => 'contents'
 		)), true);
 	}
 
 	public function testDelete() {
-		$catName = 'cp-project2';
-		$cat = $this->Category->findByName($catName);
-		$id = $cat['Category']['id'];
+		$catId = Common::uuid('category.id.cp-project2');
 
-		$result = json_decode($this->testAction("/categories/$id.json", array(
+		$result = json_decode($this->testAction("/categories/$catId.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/delete/$id : The test should return success but is returning {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/delete/$catId : The test should return success but is returning {$result['header']['status']}");
+
 		// check that the category was properly deleted
-		$cat = $this->Category->findByName($catName);
-		$this->assertTrue(empty($cat), "The category Drug places should have been deleted but is not");
+		$cat = $this->Category->findById($catId);
+		$this->assertTrue(empty($cat), "The category cp-project2 should have been deleted but is not");
 	}
 
 	public function testMoveCategoryIdIsMissing() {
@@ -533,46 +526,49 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testMoveCategoryDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The category does not exist');
-		$this->testAction("/categories/move/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$this->testAction("/categories/move/{$id}.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		));
 	}
 
 	public function testMoveParentCategoryIdNotValid() {
-		$hr = $this->Category->findByName('human resource');
+		$catHrId = Common::uuid('category.id.human');
+		$parentCatId = 'badParentId';
 		$this->setExpectedException('HttpException', 'The parent category id invalid');
-		$this->testAction("/categories/move/{$hr['Category']['id']}/1/badParentId.json", array(
+		$this->testAction("/categories/move/{$catHrId}/1/{$parentCatId}.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		));
 	}
 
 	public function testMoveParentCategoryDoesNotExist() {
-		$hr = $this->Category->findByName('human resource');
+		$catHrId = Common::uuid('category.id.human');
+		$parentCatId = Common::uuid();
 		$this->setExpectedException('HttpException', 'The parent category does not exist');
-		$this->testAction("/categories/move/{$hr['Category']['id']}/1/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$this->testAction("/categories/move/{$catHrId}/1/{$parentCatId}.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		));
 	}
 
 	public function testMove() {
-		$hr = $this->Category->findByName('human resource');
-		$administration = $this->Category->findByName('administration');
-		$cakephp = $this->Category->findByName('cakephp');
+		$catHrId = Common::uuid('category.id.human');
+		$catAdmId = Common::uuid('category.id.administration');
+		$catCakeId = Common::uuid('category.id.cakephp');
 
 		$testCases = array(
-			'firstPosition' => array('id' => $hr['Category']['id'], 'position' => '1'),
-			'moveDown' => array('id' => $hr['Category']['id'], 'position' => '2'),
-			'lastPosition' => array('id' => $hr['Category']['id'], 'position' => '4'),
-			'positionMiddle' => array('id' => $hr['Category']['id'], 'position' => '3'),
-			'minusPosition' => array('id' => $hr['Category']['id'], 'position' => '-1'),
+			'firstPosition' => array('id' => $catHrId, 'position' => '1'),
+			'moveDown' => array('id' => $catHrId, 'position' => '2'),
+			'lastPosition' => array('id' => $catHrId, 'position' => '4'),
+			'positionMiddle' => array('id' => $catHrId, 'position' => '3'),
+			'minusPosition' => array('id' => $catHrId, 'position' => '-1'),
 			'differentParent' => array(
-				'id' => $hr['Category']['id'],
+				'id' => $catHrId,
 				'position' => '1',
-				'parent_id' => $cakephp['Category']['id']
+				'parent_id' => $catCakeId
 			)
 		);
 
@@ -582,14 +578,14 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->Category->save(array(
 			'Category' => array(
 				'name' => 'cat-test1',
-				'parent_id' => $administration['Category']['id']
+				'parent_id' => $catAdmId
 			)
 		));
 		$this->Category->create();
 		$this->Category->save(array(
 			'Category' => array(
 				'name' => 'cat-test2',
-				'parent_id' => $administration['Category']['id']
+				'parent_id' => $catAdmId
 			)
 		));
 		// $this->Category->Behaviors->enable('Permissionable');
@@ -647,53 +643,51 @@ class CategoriesControllerTest extends ControllerTestCase {
 	}
 
 	public function testTypeCategoryDoesNotExist() {
+		$catId = Common::uuid();
 		$this->setExpectedException('HttpException', 'The category does not exist');
-		$this->testAction("/categories/type/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array(
+		$this->testAction("/categories/type/{$catId}.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		));
 	}
 
 	public function testTypeNameDoesNotExist() {
-		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
+		$catId = Common::uuid('category.id.bolt');
 		$this->setExpectedException('HttpException', 'The type does not exist');
-		$this->testAction("/categories/type/{$root['Category']['id']}/badname.json", array(
+		$this->testAction("/categories/type/{$catId}/badname.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		));
 	}
 
 	public function testTypeAndPermission() {
-		// Looking at the matrix of permission Jean Bartik should be able to create but not delete the category Jean private
-		$user = $this->User->findByUsername('jean@passbolt.com');
+		// Looking at the matrix of permission Jean Bartik should be able to create but not update the category Jean private
+		$user = $this->User->findById(Common::uuid('user.id.jean'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to change the type of this category');
-		$cat = $this->Category->findByName('pv-jean_bartik');
 
-		$id = $cat['Category']['id'];
-		$result = json_decode($this->testAction("/categories/type/$id/default.json", array(
+		$catId = Common::uuid('category.id.pv-jean_bartik');
+		$result = json_decode($this->testAction("/categories/type/$catId/default.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		)), true);
 	}
 
 	public function testType() {
-		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
-		$id = $root['Category']['id'];
+		$catId = Common::uuid('category.id.bolt');
 
-		$result = json_decode($this->testAction("/categories/type/$id/default.json", array(
+		$result = json_decode($this->testAction("/categories/type/$catId/default.json", array(
 			'method' => 'put',
 			'return' => 'contents'
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/type/$id/default.json : The test should return success but returned {$result['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/categories/type/$catId/default.json : The test should return success but returned {$result['header']['status']}");
 
-		$root = $this->Category->findByName('Bolt Softwares Pvt. Ltd.');
+		$root = $this->Category->findById($catId);
 		$this->assertEquals(Common::uuid('category_type.id.default'), $root['Category']['category_type_id'], "The category type id should be 50bda570-9364-4c41-9504-a7c58cebc04d but it is {$root['Category']['category_type_id']}");
 	}
 
 	public function testXSS() {
-		// check the response when a category is added (without parent_id)
 		$result = json_decode($this->testAction('/categories.json', array(
 			'data' => array(
 				'Category' => array('name' => '<script>alert("xss");</script>XSS')

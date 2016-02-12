@@ -223,7 +223,7 @@ class I18n {
 		}
 
 		if ($domain === null) {
-			$domain = self::$defaultDomain;
+			$domain = static::$defaultDomain;
 		}
 		if ($domain === '') {
 			throw new CakeException(__d('cake_dev', 'You cannot use "" as a domain.'));
@@ -399,7 +399,7 @@ class I18n {
 			foreach ($this->l10n->languagePath as $lang) {
 				$localeDef = $directory . $lang . DS . $this->category;
 				if (is_file($localeDef)) {
-					$definitions = self::loadLocaleDefinition($localeDef);
+					$definitions = static::loadLocaleDefinition($localeDef);
 					if ($definitions !== false) {
 						$this->_domains[$domain][$this->_lang][$this->category] = $definitions;
 						$this->_noLocale = false;
@@ -412,10 +412,10 @@ class I18n {
 					$translations = false;
 
 					if (is_file($app . '.mo')) {
-						$translations = self::loadMo($app . '.mo');
+						$translations = static::loadMo($app . '.mo');
 					}
 					if ($translations === false && is_file($app . '.po')) {
-						$translations = self::loadPo($app . '.po');
+						$translations = static::loadPo($app . '.po');
 					}
 
 					if ($translations !== false) {
@@ -430,10 +430,10 @@ class I18n {
 				$translations = false;
 
 				if (is_file($file . '.mo')) {
-					$translations = self::loadMo($file . '.mo');
+					$translations = static::loadMo($file . '.mo');
 				}
 				if ($translations === false && is_file($file . '.po')) {
-					$translations = self::loadPo($file . '.po');
+					$translations = static::loadPo($file . '.po');
 				}
 
 				if ($translations !== false) {
@@ -478,6 +478,7 @@ class I18n {
  *
  * @param string $filename Binary .mo file to load
  * @return mixed Array of translations on success or false on failure
+ * @link https://www.gnu.org/software/gettext/manual/html_node/MO-Files.html
  */
 	public static function loadMo($filename) {
 		$translations = false;
@@ -486,7 +487,6 @@ class I18n {
 		// Binary files extracted makes non-standard local variables
 		if ($data = file_get_contents($filename)) {
 			$translations = array();
-			$context = null;
 			$header = substr($data, 0, 20);
 			$header = unpack('L1magic/L1version/L1count/L1o_msg/L1o_trn', $header);
 			extract($header);
@@ -496,7 +496,11 @@ class I18n {
 					$r = unpack("L1len/L1offs", substr($data, $o_msg + $n * 8, 8));
 					$msgid = substr($data, $r["offs"], $r["len"]);
 					unset($msgid_plural);
+					$context = null;
 
+					if (strpos($msgid, "\x04") !== false) {
+						list($context, $msgid) = explode("\x04", $msgid);
+					}
 					if (strpos($msgid, "\000")) {
 						list($msgid, $msgid_plural) = explode("\000", $msgid);
 					}
@@ -508,9 +512,10 @@ class I18n {
 					}
 
 					if ($msgid != '') {
-						$msgstr = array($context => $msgstr);
+						$translations[$msgid][$context] = $msgstr;
+					} else {
+						$translations[$msgid] = $msgstr;
 					}
-					$translations[$msgid] = $msgstr;
 
 					if (isset($msgid_plural)) {
 						$translations[$msgid_plural] =& $translations[$msgid];

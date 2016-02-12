@@ -5,8 +5,8 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 App::uses('I18n', 'I18n');
+
 class Dictionary extends AppModel {
 
 /**
@@ -32,6 +32,7 @@ class Dictionary extends AppModel {
 		if (file_exists($dicoFile)) {
 			$dico = I18n::loadPo($dicoFile);
 		}
+
 		return $dico;
 	}
 }

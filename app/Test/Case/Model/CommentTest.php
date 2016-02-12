@@ -79,7 +79,7 @@ class CommentTest extends AppTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
 			'zzz00003-c5cd-11e1-a0c5-080027796c4c' => false,
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => false,
-			'aaa00000-cccc-11d1-a0c5-080027796c4c' => true,
+			Common::uuid('comment.id.salesforce-account-1') => true,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$comment = array('Comment' => array('parent_id' => $testcase));

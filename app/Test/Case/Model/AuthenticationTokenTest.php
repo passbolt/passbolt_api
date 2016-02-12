@@ -27,7 +27,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testUserIdValidation() {
-		$user = $this->User->findByUsername('user@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.user'));
 		$testcases = array(
 			'' => false,
 			'?!#' => false,

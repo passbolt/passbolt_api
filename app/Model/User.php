@@ -25,11 +25,11 @@ class User extends AppModel {
  *
  * @link http://api20.cakephp.org/class/model#
  */
-	public $actsAs = array(
+	public $actsAs = [
 		'SuperJoin',
 		'Containable',
 		'Trackable'
-	);
+	];
 
 /**
  * Details of belongs to relationships
@@ -37,35 +37,38 @@ class User extends AppModel {
  * @var array
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $belongsTo = array(
+	public $belongsTo = [
 		'Role'
-	);
+	];
 
 /**
  * Details of the hasOne relationships
+ *
  * @var array
-*/
-	public $hasOne = array(
+ */
+	public $hasOne = [
 		'Profile',
 		'Gpgkey',
 		'AuthenticationToken',
-	);
+	];
 
 /**
  * Details of has many relationships
+ *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasMany = array('GroupUser', 'Secret');
+	public $hasMany = ['GroupUser', 'Secret'];
 
 /**
  * Details of has and belongs to many relationships
+ *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasAndBelongsToMany = array(
-		'Group' => array(
+	public $hasAndBelongsToMany = [
+		'Group' => [
 			'className' => 'Group'
-		)
-	);
+		]
+	];
 
 /**
  * They are legions
@@ -82,45 +85,45 @@ class User extends AppModel {
  * @access public
  */
 	public static function getValidationRules($case = 'default') {
-		$default = array(
-			'username' => array(
-				'required' => array(
-					'required'   => 'create',
+		$default = [
+			'username' => [
+				'required' => [
+					'required' => 'create',
 					'allowEmpty' => false,
-					'rule'       => array('notEmpty'),
-					'message'    => __('A username is required')
-				),
-				'email'    => array(
-					'rule'    => array('email'),
+					'rule' => ['notBlank'],
+					'message' => __('A username is required')
+				],
+				'email' => [
+					'rule' => ['email'],
 					'message' => __('The username should be a valid email address')
-				),
-				'login' => array(
+				],
+				'login' => [
 					'rule' => 'isUnique',
 					'on' => 'create',
-					'shared' => FALSE,
-					'message' => __('The username has already been taken')
-				)
-			),
-			'role_id' => array(
-				'required' => array(
-					'required'   => 'create',
-					'allowEmpty' => false,
-					'rule'       => array('notEmpty'),
-					'message'    => __('A role should be provided')
-				),
-				'validRole' => array(
 					'shared' => false,
-					'rule' => array('checkValidRole'),
-					'message' =>  __('The role provided is not valid')
-				),
-				'cantRemoveOwnAdminRole' => array(
+					'message' => __('The username has already been taken')
+				]
+			],
+			'role_id' => [
+				'required' => [
+					'required' => 'create',
+					'allowEmpty' => false,
+					'rule' => ['notBlank'],
+					'message' => __('A role should be provided')
+				],
+				'validRole' => [
+					'shared' => false,
+					'rule' => ['checkValidRole'],
+					'message' => __('The role provided is not valid')
+				],
+				'cantRemoveOwnAdminRole' => [
 					'shared' => false,
 					'on' => 'update',
-					'rule' => array('checkCantRemoveOwnAdminRole'),
-					'message'    => __('It is not possible to remove your own admin role')
-				),
-			),
-		);
+					'rule' => ['checkCantRemoveOwnAdminRole'],
+					'message' => __('It is not possible to remove your own admin role')
+				],
+			],
+		];
 		switch ($case) {
 			default:
 			case 'default' :
@@ -130,13 +133,13 @@ class User extends AppModel {
 		return $rules;
 	}
 
-	/**
-	 * Check if the role provided is a valid one.
-	 *
-	 * @param $check data provided for validation
-	 *
-	 * @return bool
-	 */
+/**
+ * Check if the role provided is a valid one.
+ *
+ * @param $check data provided for validation
+ *
+ * @return bool
+ */
 	public function checkValidRole($check) {
 		if (!isset($check['role_id']) || empty($check['role_id'])) {
 			return false;
@@ -148,16 +151,17 @@ class User extends AppModel {
 		if (!in_array($role['Role']['name'], [Role::ADMIN, Role::USER])) {
 			return false;
 		}
+
 		return true;
 	}
 
-	/**
-	 * Check if an admin is trying to remove his own admin role.
-	 *
-	 * @param $check data provided for validation
-	 *
-	 * @return bool
-	 */
+/**
+ * Check if an admin is trying to remove his own admin role.
+ *
+ * @param $check data provided for validation
+ *
+ * @return bool
+ */
 	public function checkCantRemoveOwnAdminRole($check) {
 		if (!isset($check['role_id']) || empty($check['role_id'])) {
 			return false;
@@ -198,7 +202,7 @@ class User extends AppModel {
  * @return bool, if true proceed with save
  * @access public
  */
-	public function beforeSave($options=null) {
+	public function beforeSave($options = null) {
 
 		// Are we in an insert or update scenario.
 		$insert = !$this->id && empty($this->data[$this->alias][$this->primaryKey]);
@@ -244,7 +248,7 @@ class User extends AppModel {
 		}
 		// If User is a part of path, and doesn't exist in Authentication object, we remove it from path.
 		// This is to match new CakePHP auth format, and to avoid side effects with existing passbolt code.
-		if (preg_match('/^User\//', $path)  && !isset($u['User'])) {
+		if (preg_match('/^User\//', $path) && !isset($u['User'])) {
 			// We remove User from path.
 			$path = str_replace('User/', '', $path);
 		}
@@ -269,7 +273,7 @@ class User extends AppModel {
 	public static function setActive($user = null) {
 		// Instantiate the mode as we are in a static/singleton context
 		$_this = Common::getModel('User');
-		$u = array();
+		$u = [];
 
 		// If user is unspecified or ANONYMOUS is requested
 		if ($user == null || $user == User::ANONYMOUS) {
@@ -279,7 +283,7 @@ class User extends AppModel {
 		} else {
 			// if the user is specified and have a valid ID find it
 			if (is_string($user) && Common::isUuid($user)) {
-				$user = array('User' => array('id' => $user));
+				$user = ['User' => ['id' => $user]];
 			}
 			$u = $_this->find('first', User::getFindOptions('User::activation', Role::USER, $user));
 
@@ -293,11 +297,13 @@ class User extends AppModel {
 		if (empty($u)) {
 			return false;
 		}
+
 		return $u;
 	}
 
 /**
  * Make the current user inactive
+ *
  * @access public
  */
 	public static function setInactive() {
@@ -332,6 +338,7 @@ class User extends AppModel {
 	public static function isAnonymous() {
 		$user = User::get();
 		$return = isset($user['User']['username']) && $user['User']['username'] == User::ANONYMOUS;
+
 		return $return;
 	}
 
@@ -372,41 +379,41 @@ class User extends AppModel {
  * @throws Exception
  */
 	public static function getFindConditions($case = null, $role = Role::GUEST, $data = null) {
-		$conditions = array();
+		$conditions = [];
 
 		switch ($role) {
 			case Role::GUEST:
 				switch ($case) {
 					case 'User::view':
-						$conditions = array(
-							'conditions' => array(
+						$conditions = [
+							'conditions' => [
 								'User.active' => true,
 								'User.deleted' => false
-							)
-						);
+							]
+						];
 						if (isset($data['User.id'])) {
 							$conditions['conditions']['User.id'] = $data['User.id'];
 						}
 						break;
 					case 'Setup::userInfo':
-						$conditions = array(
-							'conditions' => array(
+						$conditions = [
+							'conditions' => [
 								'User.active' => false,
 								'User.deleted' => false,
 								'User.id' => $data['User.id'],
-							)
-						);
+							]
+						];
 						break;
 					case 'User::activation':
-						$conditions = array(
-							'conditions' => array(
+						$conditions = [
+							'conditions' => [
 								'User.username' => User::ANONYMOUS,
 								'User.active' => true
-							)
-						);
+							]
+						];
 						break;
 					default:
-						throw new Exception('User::getFindCondition does not exist for role:'. $role .' and case:'. $case );
+						throw new Exception('User::getFindCondition does not exist for role:' . $role . ' and case:' . $case);
 						break;
 				}
 				break;
@@ -416,26 +423,26 @@ class User extends AppModel {
 			case Role::ROOT:
 				switch ($case) {
 					case 'User::activation':
-						$conditions = array(
-							'conditions' => array(
+						$conditions = [
+							'conditions' => [
 								'User.id' => $data['User']['id']
-							)
-						);
+							]
+						];
 						break;
 					case 'User::GpgAuth':
-						$conditions = array(
-							'conditions' => array(
+						$conditions = [
+							'conditions' => [
 								'Gpgkey.fingerprint' => $data['Gpgkey']['fingerprint']
-							)
-						);
+							]
+						];
 						break;
 
 					case 'User::view':
-						$conditions = array(
-							'conditions' => array(
+						$conditions = [
+							'conditions' => [
 								'User.deleted' => false
-							)
-						);
+							]
+						];
 						// if user is simple user, we do not allow him to see non active users.
 						if ($role == Role::USER) {
 							$conditions['conditions']['User.active'] = true;
@@ -449,12 +456,12 @@ class User extends AppModel {
 						break;
 
 					case 'User::index':
-						$conditions = array(
-							'conditions' => array(
+						$conditions = [
+							'conditions' => [
 								'User.deleted' => false,
-								'Role.name' => array(Role::USER, Role::ADMIN),
-							)
-						);
+								'Role.name' => [Role::USER, Role::ADMIN],
+							]
+						];
 						// if user is simple user, we do not allow him to see non active users.
 						if ($role == Role::USER) {
 							$conditions['conditions']['User.active'] = true;
@@ -467,23 +474,23 @@ class User extends AppModel {
 						if (isset($data['keywords'])) {
 							$keywords = explode(' ', $data['keywords']);
 							foreach ($keywords as $keyword) {
-								$conditions['conditions']["AND"][] = array('User.username LIKE' => '%' . $keyword . '%');
+								$conditions['conditions']["AND"][] = ['User.username LIKE' => '%' . $keyword . '%'];
 							}
 						}
 						// If exclude users.
 						if (isset($data['excludedUsers'])) {
-							$conditions['conditions']["AND"]["NOT"][] = array('User.id' => $data['excludedUsers']);
+							$conditions['conditions']["AND"]["NOT"][] = ['User.id' => $data['excludedUsers']];
 						}
 						// Order the data.
 						if (isset($data['order'])) {
 							switch ($data['order']) {
 								case 'modified':
-									$conditions['order'] = array('User.modified DESC');
+									$conditions['order'] = ['User.modified DESC'];
 									break;
 							}
 						} else {
 							// By default order alphabetically
-							$conditions['order'] = array('Profile.last_name ASC');
+							$conditions['order'] = ['Profile.last_name ASC'];
 						}
 						break;
 
@@ -491,11 +498,12 @@ class User extends AppModel {
 						// Use already conditions already defined for the index case
 						$conditions = User::getFindConditions('User::index', $role, $data);
 						// Only return users who don't have a direct permission defined for the given aco instance
-						$conditions['joins'][] = array(
+						$conditions['joins'][] = [
 							'table' => 'users',
 							'alias' => 'UserToGrant',
 							'type' => 'inner',
-							'conditions' => array('
+							'conditions' => [
+								'
 								User.id = UserToGrant.id
 								AND UserToGrant.id NOT IN (
 									SELECT Permission.aro_foreign_key
@@ -504,18 +512,18 @@ class User extends AppModel {
 										AND Permission.aco_foreign_key = "' . $data['aco_foreign_key'] . '"
 										AND Permission.aro_foreign_key = UserToGrant.id
 								)',
-							),
-						);
+							],
+						];
 						break;
 
 					default:
-						throw new Exception('User::getFindCondition does not exist for role:'. $role .' and case:'. $case );
+						throw new Exception('User::getFindCondition does not exist for role:' . $role . ' and case:' . $case);
 						break;
 				}
 				break;
 
 			default:
-				throw new Exception('User::getFindCondition does not exist for role:'. $role );
+				throw new Exception('User::getFindCondition does not exist for role:' . $role);
 				break;
 		}
 
@@ -535,32 +543,32 @@ class User extends AppModel {
 			case 'User::view':
 			case 'User::index':
 			default:
-				$fields = array(
-					'fields' => array(
+				$fields = [
+					'fields' => [
 						'DISTINCT User.id',
 						'User.username',
 						'User.role_id',
 						'User.created',
 						'User.modified',
-					),
-					'superjoin' => array('Group'),
-					'contain' => array(
-						'Role' => array(
-							'fields' => array(
+					],
+					'superjoin' => ['Group'],
+					'contain' => [
+						'Role' => [
+							'fields' => [
 								'Role.id',
 								'Role.name'
-							)
-						),
-						'Profile' => array(
-							'fields' => array(
+							]
+						],
+						'Profile' => [
+							'fields' => [
 								'Profile.id',
 								'Profile.first_name',
 								'Profile.last_name',
 								'Profile.created',
 								'Profile.modified'
-							),
-							'Avatar' => array(
-								'fields' => array(
+							],
+							'Avatar' => [
+								'fields' => [
 									'Avatar.id',
 									'Avatar.user_id',
 									'Avatar.foreign_key',
@@ -574,11 +582,11 @@ class User extends AppModel {
 									'Avatar.adapter',
 									'Avatar.created',
 									'Avatar.modified'
-								)
-							)
-						),
-						'Gpgkey' => array(
-							'fields' => array(
+								]
+							]
+						],
+						'Gpgkey' => [
+							'fields' => [
 								'Gpgkey.uid',
 								'Gpgkey.bits',
 								'Gpgkey.fingerprint',
@@ -587,53 +595,53 @@ class User extends AppModel {
 								'Gpgkey.expires',
 								'Gpgkey.type',
 								'Gpgkey.key',
-							),
-						),
-						'Group' => array(
-							'fields' => array(
+							],
+						],
+						'Group' => [
+							'fields' => [
 								'Group.id',
 								'Group.name',
 								'Group.created',
 								'Group.modified'
-							),
-						),
-						'GroupUser' => array(
-							'fields' => array(
+							],
+						],
+						'GroupUser' => [
+							'fields' => [
 								'GroupUser.group_id',
 								'GroupUser.user_id',
-							),
-						),
-					)
-				);
+							],
+						],
+					]
+				];
 				// Add active status for admin and root roles.
 				if ($role == Role::ADMIN || $role == Role::ROOT) {
 					$fields['fields'][] = 'User.active';
 				}
 				break;
 			case 'User::activation':
-				$fields = array(
-					'fields'  => array(
+				$fields = [
+					'fields' => [
 						'User.id',
 						'User.username',
-					),
-					'contain' => array(
-						'Role' => array(
-							'fields' => array(
+					],
+					'contain' => [
+						'Role' => [
+							'fields' => [
 								'Role.id',
 								'Role.name',
-							)
-						)
-					)
-				);
+							]
+						]
+					]
+				];
 				break;
 			case 'User::validateAccount':
-				$fields = array(
-					'fields' => array(
-						'Profile' => array(
+				$fields = [
+					'fields' => [
+						'Profile' => [
 							'first_name',
 							'last_name',
-						),
-						'Gpgkey' => array(
+						],
+						'Gpgkey' => [
 							'key',
 							'bits',
 							'uid',
@@ -641,57 +649,58 @@ class User extends AppModel {
 							'key_created',
 							'fingerprint',
 							'key_id'
-						),
-					),
-				);
+						],
+					],
+				];
 				break;
 			case 'User::save':
-				$fields = array(
-					'fields' => array(
+				$fields = [
+					'fields' => [
 						'username',
 						'role_id',
 						'active',
-					)
-				);
+					]
+				];
 				// if we are in debug mode, we also allow a predictive id to be inserted.
 				if (Configure::read('debug') > 0) {
 					$fields['fields'][] = 'id';
 				}
 				break;
 			case 'User::edit':
-				$fields = array(
-					'fields' => array(
-						'User' => array(
+				$fields = [
+					'fields' => [
+						'User' => [
 							'role_id',
 							'active',
-						),
-						'Profile' => array(
+						],
+						'Profile' => [
 							'first_name',
 							'last_name',
-						)
-					)
-				);
+						]
+					]
+				];
 				break;
 			case 'User::delete':
-				$fields = array(
-					'fields' => array(
+				$fields = [
+					'fields' => [
 						'deleted'
-					)
-				);
+					]
+				];
 				break;
 		}
+
 		return $fields;
 	}
 
-	/**
-	 * Add a user and its profile, and create an authentication token.
-	 *
-	 * @param $data The user and profile data
-	 * @return array The user, the profile and the token data
-	 *
-	 * @throws Exception
-	 * @throws ValidationException
-	 */
+/**
+ * Add a user and its profile, and create an authentication token.
+ *
+ * @param $data The user and profile data
+ * @return array The user, the profile and the token data
+ *
+ * @throws Exception
+ * @throws ValidationException
+ */
 	public function registerUser($data, $case = "User::save") {
 		// No user data provided
 		if (!isset($data['User']) || empty($data['User'])) {
@@ -705,14 +714,15 @@ class User extends AppModel {
 
 		// If role id is not provided, we assign a default one
 		if (!isset($data['User']['role_id']) || empty($data['User']['role_id'])) {
-			$data['User']['role_id'] = $this->Role->field('Role.id', array('name' => Role::USER));
+			$data['User']['role_id'] = $this->Role->field('Role.id', ['name' => Role::USER]);
 		}
 
 		// By default a user is not active
-		$data['User']['active'] = FALSE;
+		$data['User']['active'] = false;
 
 		// Begin transaction
-		$this->begin();
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
 
 		// Get the meaningful fields for this operation
 		$fields = $this->getFindFields($case, User::get('Role.name'));
@@ -720,16 +730,15 @@ class User extends AppModel {
 		$this->set($data);
 
 		// Validate the user data
-		if (!$this->validates(array('fieldList' => array($fields['fields'])))) {
-			$invalidFields = $this->validationErrors;
-			$finalInvalidFields = Common::formatInvalidFields('User', $invalidFields);
-			throw new ValidationException(__('Could not validate user data'), $finalInvalidFields);
+		if (!$this->validates(['fieldList' => [$fields['fields']]])) {
+			$dataSource->rollback();
+			throw new ValidationException(__('Could not validate user data'), ['User' => $this->validationErrors]);
 		}
 
 		// Save the user
 		$saveUser = $this->save($data, false, $fields['fields']);
 		if (!$saveUser) {
-			$this->rollback();
+			$dataSource->rollback();
 			throw new Exception(__('The user could not be saved'));
 		}
 
@@ -740,29 +749,27 @@ class User extends AppModel {
 		$this->Profile->set($data);
 
 		// Validate the profile data
-		if (!$this->Profile->validates(array('fieldList' => array($fields['fields'])))) {
-			$this->rollback();
-			$invalidFields = $this->Profile->validationErrors;
-			$finalInvalidFields = Common::formatInvalidFields('Profile', $invalidFields);
-			throw new ValidationException(__('Could not validate profile'), $finalInvalidFields);
+		if (!$this->Profile->validates(['fieldList' => [$fields['fields']]])) {
+			$dataSource->rollback();
+			throw new ValidationException(__('Could not validate profile'), ['Profile' => $this->Profile->validationErrors]);
 		}
 
 		// Save the profile
 		$saveProfile = $this->Profile->save($data['Profile'], false, $fields['fields']);
 		if (!$saveProfile) {
-			$this->rollback();
+			$dataSource->rollback();
 			throw new Exception(__('The profile could not be saved'));
 		}
 
 		// Create the setup authentication token
 		$saveToken = $this->AuthenticationToken->generate($this->id);
 		if (!$saveToken) {
-			$this->rollback();
+			$dataSource->rollback();
 			throw new Exception(__('The account token could not be created'));
 		}
 
 		// Everything fine, we commit.
-		$this->commit();
+		$dataSource->commit();
 
 		return array_merge($saveUser, $saveProfile, $saveToken);
 	}

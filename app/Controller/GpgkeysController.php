@@ -9,11 +9,11 @@
 class GpgkeysController extends AppController {
 
 /**
- * @var $component application wide components
+ * @var array $component application wide components
  */
-	public $components = array(
+	public $components = [
 		'Filter'
-	);
+	];
 
 /**
  * Index entry point.
@@ -22,7 +22,7 @@ class GpgkeysController extends AppController {
  */
 	public function index() {
 		$filter = $this->Filter->fromRequest($this->request->query);
-		$data = array();
+		$data = [];
 		// if keywords provided build the model request with
 		if (isset($filter['modified_after']) && !empty($filter['modified_after'])) {
 			$data['modified_after'] = date('Y-m-d H:i:s', $filter['modified_after']);
@@ -57,11 +57,11 @@ class GpgkeysController extends AppController {
 			return;
 		}
 
-		$data = array('Gpgkey.user_id' => $id);
+		$data = ['Gpgkey.user_id' => $id];
 		$o = $this->Gpgkey->getFindOptions('view', User::get('Role.name'), $data);
 		$gpgkey = $this->Gpgkey->find('first', $o);
 		if (!$gpgkey) {
-			$this->Message->error(__('The user id is invalid'), array('code' => 404));
+			$this->Message->error(__('The user id is invalid'), ['code' => 404]);
 			return;
 		}
 		$this->set('data', $gpgkey);
@@ -92,21 +92,21 @@ class GpgkeysController extends AppController {
 		$this->Gpgkey->begin();
 
 		// Check if a key already exists for the given user.
-		$existingKey = $this->Gpgkey->find('first', array(
-				'conditions' => array(
-					'Gpgkey.deleted' => 0,
-					'Gpgkey.user_id' => $userId,
-				)
-			));
+		$existingKey = $this->Gpgkey->find('first', [
+			'conditions' => [
+				'Gpgkey.deleted' => 0,
+				'Gpgkey.user_id' => $userId,
+			]
+		]);
 
 		// If key already exists, soft delete them.
 		if ($existingKey) {
 			$this->Gpgkey->updateAll(
-				array('Gpgkey.deleted' => 1),
-				array(
+				['Gpgkey.deleted' => 1],
+				[
 					'Gpgkey.user_id' => $userId,
 					'Gpgkey.deleted' => 0
-				)
+				]
 			);
 		}
 
@@ -151,7 +151,7 @@ class GpgkeysController extends AppController {
 		$this->Gpgkey->commit();
 
 		// Retrieve the data to return inthe response.
-		$data = array('Gpgkey.user_id' => $gpgkeyData['Gpgkey']['user_id']);
+		$data = ['Gpgkey.user_id' => $gpgkeyData['Gpgkey']['user_id']];
 		$options = $this->Gpgkey->getFindOptions('view', User::get('Role.name'), $data);
 		$gpgkey = $this->Gpgkey->find('first', $options);
 

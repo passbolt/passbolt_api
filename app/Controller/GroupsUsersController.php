@@ -11,7 +11,7 @@ class GroupsUsersController extends AppController {
 /**
  * @var $uses array containing the class names of models this controller uses.
  */
-	public $uses = array('GroupUser');
+	public $uses = ['GroupUser'];
 
 /**
  * Get a groupUser
@@ -32,13 +32,13 @@ class GroupsUsersController extends AppController {
 			return;
 		}
 		// check if it exists
-		$data = array(
+		$data = [
 			'GroupUser.id' => $id
-		);
+		];
 		$options = $this->GroupUser->getFindOptions('view', User::get('Role.name'), $data);
 		$cr = $this->GroupUser->find('all', $options);
 		if (!count($cr)) {
-			$this->Message->error(__('The groupUser does not exist'), array('code' => 404));
+			$this->Message->error(__('The groupUser does not exist'), ['code' => 404]);
 			return;
 		}
 		$this->set('data', $cr[0]);
@@ -64,7 +64,7 @@ class GroupsUsersController extends AppController {
 		}
 		$resource = $this->GroupUser->findById($id);
 		if (!$resource) {
-			$this->Message->error(__('The groupUser does not exist'), array('code' => 404));
+			$this->Message->error(__('The groupUser does not exist'), ['code' => 404]);
 			return;
 		}
 

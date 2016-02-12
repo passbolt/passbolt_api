@@ -77,6 +77,12 @@ class GroupTask extends ModelTask {
 			'name' => 'Users',
 			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
 		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.no_privilege'),
+			'name' => 'no privilege',
+			'created' => '2016-02-02 18:59:05', 'modified' => '2016-02-02 18:59:05', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+		));
+
 		return $g;
 	}
 }

@@ -18,7 +18,7 @@ class DictionariesController extends AppController {
 		$locale = ($locale != 'default') ? $locale : Configure::read('i18n.locale');
 
 		// find it in cache or read from model
-		$cache	= Cache::read('dictionary_' . $locale, '_cake_model_');
+		$cache = Cache::read('dictionary_' . $locale, '_cake_model_');
 		if ($cache === false) {
 			$data = $this->Dictionary->get($locale);
 			if ($data) {

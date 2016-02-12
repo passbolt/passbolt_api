@@ -14,7 +14,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('String', 'Utility');
+App::uses('CakeText', 'Utility');
 
 /**
  * Library of array functions for manipulating and extracting data
@@ -76,6 +76,7 @@ class Hash {
  *
  * - `{n}` Matches any numeric key, or integer.
  * - `{s}` Matches any string key.
+ * - `{*}` Matches any value.
  * - `Foo` Matches any key with the exact same value.
  *
  * There are a number of attribute operators:
@@ -105,13 +106,13 @@ class Hash {
 
 		// Simple paths.
 		if (!preg_match('/[{\[]/', $path)) {
-			return (array)self::get($data, $path);
+			return (array)static::get($data, $path);
 		}
 
 		if (strpos($path, '[') === false) {
 			$tokens = explode('.', $path);
 		} else {
-			$tokens = String::tokenize($path, '.', '[', ']');
+			$tokens = CakeText::tokenize($path, '.', '[', ']');
 		}
 
 		$_key = '__set_item__';
@@ -121,11 +122,11 @@ class Hash {
 		foreach ($tokens as $token) {
 			$next = array();
 
-			list($token, $conditions) = self::_splitConditions($token);
+			list($token, $conditions) = static::_splitConditions($token);
 
 			foreach ($context[$_key] as $item) {
 				foreach ((array)$item as $k => $v) {
-					if (self::_matchToken($k, $token)) {
+					if (static::_matchToken($k, $token)) {
 						$next[] = $v;
 					}
 				}
@@ -135,7 +136,7 @@ class Hash {
 			if ($conditions) {
 				$filter = array();
 				foreach ($next as $item) {
-					if (is_array($item) && self::_matches($item, $conditions)) {
+					if (is_array($item) && static::_matches($item, $conditions)) {
 						$filter[] = $item;
 					}
 				}
@@ -171,16 +172,16 @@ class Hash {
  * @return bool
  */
 	protected static function _matchToken($key, $token) {
-		if ($token === '{n}') {
-			return is_numeric($key);
+		switch ($token) {
+			case '{n}':
+				return is_numeric($key);
+			case '{s}':
+				return is_string($key);
+			case '{*}':
+				return true;
+			default:
+				return is_numeric($token) ? ($key == $token) : $key === $token;
 		}
-		if ($token === '{s}') {
-			return is_string($key);
-		}
-		if (is_numeric($token)) {
-			return ($key == $token);
-		}
-		return ($key === $token);
 	}
 
 /**
@@ -257,26 +258,26 @@ class Hash {
 		if (strpos($path, '[') === false) {
 			$tokens = explode('.', $path);
 		} else {
-			$tokens = String::tokenize($path, '.', '[', ']');
+			$tokens = CakeText::tokenize($path, '.', '[', ']');
 		}
 
 		if (strpos($path, '{') === false && strpos($path, '[') === false) {
-			return self::_simpleOp('insert', $data, $tokens, $values);
+			return static::_simpleOp('insert', $data, $tokens, $values);
 		}
 
 		$token = array_shift($tokens);
 		$nextPath = implode('.', $tokens);
 
-		list($token, $conditions) = self::_splitConditions($token);
+		list($token, $conditions) = static::_splitConditions($token);
 
 		foreach ($data as $k => $v) {
-			if (self::_matchToken($k, $token)) {
-				if ($conditions && self::_matches($v, $conditions)) {
+			if (static::_matchToken($k, $token)) {
+				if ($conditions && static::_matches($v, $conditions)) {
 					$data[$k] = array_merge($v, $values);
 					continue;
 				}
 				if (!$conditions) {
-					$data[$k] = self::insert($v, $nextPath, $values);
+					$data[$k] = static::insert($v, $nextPath, $values);
 				}
 			}
 		}
@@ -340,26 +341,26 @@ class Hash {
 		if (strpos($path, '[') === false) {
 			$tokens = explode('.', $path);
 		} else {
-			$tokens = String::tokenize($path, '.', '[', ']');
+			$tokens = CakeText::tokenize($path, '.', '[', ']');
 		}
 
 		if (strpos($path, '{') === false && strpos($path, '[') === false) {
-			return self::_simpleOp('remove', $data, $tokens);
+			return static::_simpleOp('remove', $data, $tokens);
 		}
 
 		$token = array_shift($tokens);
 		$nextPath = implode('.', $tokens);
 
-		list($token, $conditions) = self::_splitConditions($token);
+		list($token, $conditions) = static::_splitConditions($token);
 
 		foreach ($data as $k => $v) {
-			$match = self::_matchToken($k, $token);
+			$match = static::_matchToken($k, $token);
 			if ($match && is_array($v)) {
-				if ($conditions && self::_matches($v, $conditions)) {
+				if ($conditions && static::_matches($v, $conditions)) {
 					unset($data[$k]);
 					continue;
 				}
-				$data[$k] = self::remove($v, $nextPath);
+				$data[$k] = static::remove($v, $nextPath);
 				if (empty($data[$k])) {
 					unset($data[$k]);
 				}
@@ -391,9 +392,9 @@ class Hash {
 
 		if (is_array($keyPath)) {
 			$format = array_shift($keyPath);
-			$keys = self::format($data, $keyPath, $format);
+			$keys = static::format($data, $keyPath, $format);
 		} else {
-			$keys = self::extract($data, $keyPath);
+			$keys = static::extract($data, $keyPath);
 		}
 		if (empty($keys)) {
 			return array();
@@ -401,9 +402,9 @@ class Hash {
 
 		if (!empty($valuePath) && is_array($valuePath)) {
 			$format = array_shift($valuePath);
-			$vals = self::format($data, $valuePath, $format);
+			$vals = static::format($data, $valuePath, $format);
 		} elseif (!empty($valuePath)) {
-			$vals = self::extract($data, $valuePath);
+			$vals = static::extract($data, $valuePath);
 		}
 		if (empty($vals)) {
 			$vals = array_fill(0, count($keys), null);
@@ -417,7 +418,7 @@ class Hash {
 		}
 
 		if ($groupPath !== null) {
-			$group = self::extract($data, $groupPath);
+			$group = static::extract($data, $groupPath);
 			if (!empty($group)) {
 				$c = count($keys);
 				for ($i = 0; $i < $c; $i++) {
@@ -464,11 +465,11 @@ class Hash {
 		$count = count($paths);
 
 		if (!$count) {
-			return;
+			return null;
 		}
 
 		for ($i = 0; $i < $count; $i++) {
-			$extracted[] = self::extract($data, $paths[$i]);
+			$extracted[] = static::extract($data, $paths[$i]);
 		}
 		$out = array();
 		$data = $extracted;
@@ -538,7 +539,7 @@ class Hash {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::check
  */
 	public static function check(array $data, $path) {
-		$results = self::extract($data, $path);
+		$results = static::extract($data, $path);
 		if (!is_array($results)) {
 			return false;
 		}
@@ -550,14 +551,14 @@ class Hash {
  *
  * @param array $data Either an array to filter, or value when in callback
  * @param callable $callback A function to filter the data with. Defaults to
- *   `self::_filter()` Which strips out all non-zero empty values.
+ *   `static::_filter()` Which strips out all non-zero empty values.
  * @return array Filtered array
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::filter
  */
 	public static function filter(array $data, $callback = array('self', '_filter')) {
 		foreach ($data as $k => $v) {
 			if (is_array($v)) {
-				$data[$k] = self::filter($v, $callback);
+				$data[$k] = static::filter($v, $callback);
 			}
 		}
 		return array_filter($data, $callback);
@@ -758,15 +759,11 @@ class Hash {
  * @return int The maximum number of dimensions in $data
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::maxDimensions
  */
-	public static function maxDimensions(array $data) {
+	public static function maxDimensions($data) {
 		$depth = array();
 		if (is_array($data) && reset($data) !== false) {
 			foreach ($data as $value) {
-				if (is_array($value)) {
-					$depth[] = self::dimensions($value) + 1;
-				} else {
-					$depth[] = 1;
-				}
+				$depth[] = static::maxDimensions($value) + 1;
 			}
 		}
 		return empty($depth) ? 0 : max($depth);
@@ -783,7 +780,7 @@ class Hash {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::map
  */
 	public static function map(array $data, $path, $function) {
-		$values = (array)self::extract($data, $path);
+		$values = (array)static::extract($data, $path);
 		return array_map($function, $values);
 	}
 
@@ -797,7 +794,7 @@ class Hash {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::reduce
  */
 	public static function reduce(array $data, $path, $function) {
-		$values = (array)self::extract($data, $path);
+		$values = (array)static::extract($data, $path);
 		return array_reduce($values, $function);
 	}
 
@@ -822,7 +819,7 @@ class Hash {
  * @return mixed The results of the applied method.
  */
 	public static function apply(array $data, $path, $function) {
-		$values = (array)self::extract($data, $path);
+		$values = (array)static::extract($data, $path);
 		return call_user_func($function, $values);
 	}
 
@@ -842,10 +839,19 @@ class Hash {
  * - `natural` Compare items as strings using "natural ordering" in a human friendly way.
  *   Will sort foo10 below foo2 as an example. Requires PHP 5.4 or greater or it will fallback to 'regular'
  *
+ * To do case insensitive sorting, pass the type as an array as follows:
+ *
+ * ```
+ * array('type' => 'regular', 'ignoreCase' => true)
+ * ```
+ *
+ * When using the array form, `type` defaults to 'regular'. The `ignoreCase` option
+ * defaults to `false`.
+ *
  * @param array $data An array of data to sort
  * @param string $path A Set-compatible path to the array value
  * @param string $dir See directions above. Defaults to 'asc'.
- * @param string $type See direction types above. Defaults to 'regular'.
+ * @param array|string $type See direction types above. Defaults to 'regular'.
  * @return array Sorted array of data
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::sort
  */
@@ -858,7 +864,7 @@ class Hash {
 		if ($numeric) {
 			$data = array_values($data);
 		}
-		$sortValues = self::extract($data, $path);
+		$sortValues = static::extract($data, $path);
 		$sortCount = count($sortValues);
 		$dataCount = count($data);
 
@@ -867,15 +873,26 @@ class Hash {
 		if ($sortCount < $dataCount) {
 			$sortValues = array_pad($sortValues, $dataCount, null);
 		}
-		$result = self::_squash($sortValues);
-		$keys = self::extract($result, '{n}.id');
-		$values = self::extract($result, '{n}.value');
+		$result = static::_squash($sortValues);
+		$keys = static::extract($result, '{n}.id');
+		$values = static::extract($result, '{n}.value');
 
 		$dir = strtolower($dir);
-		$type = strtolower($type);
+		$ignoreCase = false;
+
+		// $type can be overloaded for case insensitive sort
+		if (is_array($type)) {
+			$type += array('ignoreCase' => false, 'type' => 'regular');
+			$ignoreCase = $type['ignoreCase'];
+			$type = $type['type'];
+		} else {
+			$type = strtolower($type);
+		}
+
 		if ($type === 'natural' && version_compare(PHP_VERSION, '5.4.0', '<')) {
 			$type = 'regular';
 		}
+
 		if ($dir === 'asc') {
 			$dir = SORT_ASC;
 		} else {
@@ -890,7 +907,12 @@ class Hash {
 		} else {
 			$type = SORT_REGULAR;
 		}
-		array_multisort($values, $dir, $type, $keys, $dir, $type);
+
+		if ($ignoreCase) {
+			$values = array_map('mb_strtolower', $values);
+		}
+		array_multisort($values, $dir, $type, $keys, $dir);
+
 		$sorted = array();
 		$keys = array_unique($keys);
 
@@ -924,7 +946,7 @@ class Hash {
 				$id = $key;
 			}
 			if (is_array($r) && !empty($r)) {
-				$stack = array_merge($stack, self::_squash($r, $id));
+				$stack = array_merge($stack, static::_squash($r, $id));
 			} else {
 				$stack[] = array('id' => $id, 'value' => $r);
 			}
@@ -980,7 +1002,7 @@ class Hash {
 			if (!array_key_exists($key, $data)) {
 				$data[$key] = $value;
 			} elseif (is_array($value)) {
-				$data[$key] = self::mergeDiff($data[$key], $compare[$key]);
+				$data[$key] = static::mergeDiff($data[$key], $compare[$key]);
 			}
 		}
 		return $data;
@@ -1054,7 +1076,7 @@ class Hash {
 		);
 
 		$return = $idMap = array();
-		$ids = self::extract($data, $options['idPath']);
+		$ids = static::extract($data, $options['idPath']);
 
 		$idKeys = explode('.', $options['idPath']);
 		array_shift($idKeys);
@@ -1065,8 +1087,8 @@ class Hash {
 		foreach ($data as $result) {
 			$result[$options['children']] = array();
 
-			$id = self::get($result, $idKeys);
-			$parentId = self::get($result, $parentKeys);
+			$id = static::get($result, $idKeys);
+			$parentId = static::get($result, $parentKeys);
 
 			if (isset($idMap[$id][$options['children']])) {
 				$idMap[$id] = array_merge($result, (array)$idMap[$id]);
@@ -1089,12 +1111,12 @@ class Hash {
 		if ($options['root']) {
 			$root = $options['root'];
 		} else {
-			$root = self::get($return[0], $parentKeys);
+			$root = static::get($return[0], $parentKeys);
 		}
 
 		foreach ($return as $i => $result) {
-			$id = self::get($result, $idKeys);
-			$parentId = self::get($result, $parentKeys);
+			$id = static::get($result, $idKeys);
+			$parentId = static::get($result, $parentKeys);
 			if ($id !== $root && $parentId != $root) {
 				unset($return[$i]);
 			}

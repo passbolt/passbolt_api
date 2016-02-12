@@ -10,7 +10,7 @@ class HtmlPurifierComponent extends Component {
 /**
  * @var array $setting main component settings
  */
-	public $settings = array();
+	public $settings = [];
 
 /**
  * Constructor
@@ -18,7 +18,7 @@ class HtmlPurifierComponent extends Component {
  * @param ComponentCollection $collection A ComponentCollection this component can use to lazy load its components
  * @param array $settings Array of configuration settings.
  */
-	public function __construct(ComponentCollection $collection, $settings = array()) {
+	public function __construct(ComponentCollection $collection, $settings = []) {
 		$this->settings = $settings;
 		parent::__construct($collection, $settings);
 	}

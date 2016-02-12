@@ -51,7 +51,7 @@ class TagsControllerTest extends ControllerTestCase {
 		$this->Resource = ClassRegistry::init('Resource');
 
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findByUsername('dame@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -81,24 +81,23 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public function testUpdateBulkDoesNotExist() {
 		$model = 'resource';
-		$id = '534a914c-4f55-4e61-ba16-12c1c0a895dc';
+		$id = Common::uuid('not-valid-reference');
 
 		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/itemTags/updateBulk//$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
 	public function testUpdateBulkAndPermission() {
-		$rs = $this->Resource->findByName('dp1-pwd1');
+		$rsId = Common::uuid('resource.id.dp1-pwd1');
 
 		// Looking at the matrix of permission Carol should able to READ dp1-pwd1 but not update it
-		$user = $this->User->findByUsername('carol@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.carol'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to update item tags of this Resource');
 
 		$tagList = array("tag1", "tag2", "tag3");
 		$tagListStr = implode(',', $tagList);
-		$id = $rs['Resource']['id'];
 		$postOptions = array(
 			'data' => array(
 				'ItemTag' => array(
@@ -108,20 +107,19 @@ class TagsControllerTest extends ControllerTestCase {
 			'method' => 'post',
 			'return' => 'contents'
 		);
-		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", $postOptions), true);
+		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$rsId.json", $postOptions), true);
 	}
 
 	public function testUpdateBulk() {
-		$items = $this->Resource->find('all');
-
 		$tagList = array("tag1", "tag2", "tag3");
 		$tagListStr = implode(',', $tagList);
-		$id = Common::uuid('resource.id.facebook-account');
-		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", array(
+		$rsId = Common::uuid('resource.id.facebook-account');
+
+		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$rsId.json", array(
 					'data' => array(
 						'ItemTag' => array(
 							'foreign_model' => 'test1',
-							'foreign_id' => $id,
+							'foreign_id' => $rsId,
 							'tag_list' => $tagListStr
 						),
 					),
@@ -138,12 +136,12 @@ class TagsControllerTest extends ControllerTestCase {
 
 		$tagList = array("tag1", "tag2", "tag3", "newTag");
 		$tagListStr = implode(',', $tagList);
-		$id = Common::uuid('resource.id.facebook-account');
-		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$id.json", array(
+
+		$result = json_decode($this->testAction("/itemTags/updateBulk/Resource/$rsId.json", array(
 					'data' => array(
 						'ItemTag' => array(
 							'foreign_model' => 'test1',
-							'foreign_id' => $id,
+							'foreign_id' => $rsId,
 							'tag_list' => $tagListStr
 						),
 					),
@@ -192,7 +190,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public function testViewDoesNotExist() {
 		$model = 'resource';
-		$id = '534a914c-4f55-4e61-ba16-12c1c0a895dc';
+		$id = Common::uuid('not-valid-reference');
 
 		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/itemTags/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
@@ -200,16 +198,14 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public function testViewAndPermission() {
 		$model = 'resource';
-		$res = $this->Resource->findByName('cpp1-pwd1');
+		$resId = Common::uuid('resource.id.cpp1-pwd1');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findByUsername('irene@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
-		$id = $res['Resource']['id'];
-
 		$this->setExpectedException('HttpException', 'The Resource does not exist');
-		$this->testAction("/itemTags/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
+		$this->testAction("/itemTags/$model/$resId.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testView() {
@@ -219,9 +215,10 @@ class TagsControllerTest extends ControllerTestCase {
 		);
 
 		$model = 'resource';
-		$rs = $this->Resource->findByName('facebook account');
-		$result = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $getOptions), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+		$resId = Common::uuid('resource.id.facebook-account');
+
+		$result = json_decode($this->testAction("/itemTags/$model/{$resId}.json", $getOptions), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/itemTags/$model/{$resId}.json : The test should return a success but is returning {$result['header']['status']}");
 
 		// We expect 2 tags
 		$this->assertEquals(count($result['body']), 2, "We expect 2 tags");
@@ -245,7 +242,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public function testAddDoesNotExist() {
 		$model = 'resource';
-		$id = '534a914c-4f63-4e61-ba36-12c1c0a895dc';
+		$id = Common::uuid('not-valid-reference');
 
 		$this->setExpectedException('HttpException', 'The Resource does not exist');
 		$this->testAction("/itemTags/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
@@ -253,9 +250,10 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public function testAddNoDataProvided() {
 		$model = 'resource';
-		$rs = $this->Resource->findByName('salesforce account');
+		$resId = Common::uuid('resource.id.salesforce-account');
+
 		$this->setExpectedException('HttpException', 'No data were provided');
-		$this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", array(
+		$this->testAction("/itemTags/$model/{$resId}.json", array(
 			'method' => 'post',
 			'return' => 'contents'
 		));
@@ -263,7 +261,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		$model = 'resource';
-		$rs = $this->Resource->findByName('salesforce account');
+		$resId = Common::uuid('resource.id.salesforce-account');
 		$postOptions = array(
 			'method' => 'post',
 			'return' => 'contents',
@@ -273,19 +271,19 @@ class TagsControllerTest extends ControllerTestCase {
 		);
 
 		// Tag a resource & ensure the server returned it.
-		$addResult = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $postOptions), true);
-		$this->assertEquals(Status::SUCCESS, $addResult['header']['status'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$addResult['header']['status']}");
-		$this->assertEquals($postOptions['data']['Tag']['name'], $addResult['body']['Tag']['name'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The server should return an item tag which has same content than the posted value");
+		$addResult = json_decode($this->testAction("/itemTags/$model/{$resId}.json", $postOptions), true);
+		$this->assertEquals(Status::SUCCESS, $addResult['header']['status'], "/itemTags/addForeignItemTag/$model/{$resId}.json : The test should return a success but is returning {$addResult['header']['status']}");
+		$this->assertEquals($postOptions['data']['Tag']['name'], $addResult['body']['Tag']['name'], "/itemTags/addForeignItemTag/$model/{$resId}.json : The server should return an item tag which has same content than the posted value");
 
 		// Ensure the item tag has well been inserted.
 		$findData = array(
 			'ItemTag' => array(
-				'foreign_id' => $rs['Resource']['id']
+				'foreign_id' => $resId
 			)
 		);
 		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
 		$getResult = $this->ItemTag->find('first', $findOptions);
-		$this->assertEquals($postOptions['data']['Tag']['name'], $getResult['Tag']['name'], "/itemTags/addForeignItemTag/$model/{$rs['Resource']['id']}.json : The server should return an item tag which has same content than the posted value");
+		$this->assertEquals($postOptions['data']['Tag']['name'], $getResult['Tag']['name'], "/itemTags/addForeignItemTag/$model/{$resId}.json : The server should return an item tag which has same content than the posted value");
 	}
 
 	public function testDeleteIdIsMissing() {
@@ -299,29 +297,20 @@ class TagsControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeletIdDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
+
 		$this->setExpectedException('HttpException', 'The item tag does not exist');
-		$this->testAction("/itemTags/4ff6111b-efb8-4a26-aab4-2184cbdd56ca.json", array('method' => 'delete', 'return' => 'contents'));
+		$this->testAction("/itemTags/{$id}.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeleteAndPermission() {
-		$rs = $this->Resource->findByName('dp1-pwd1');
-		$tag = $this->Tag->findByName('drupal');
-		$findData = array(
-			'ItemTag' => array(
-				'foreign_id' => $rs['Resource']['id'],
-				'tag_id' => $tag['Tag']['id'],
-			)
-		);
-		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
-		$itemTag = $this->ItemTag->find('first', $findOptions);
-
 		// Looking at the matrix of permission Carol should able to READ dp1-pwd1 but not update it
-		$user = $this->User->findByUsername('carol@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.carol'));
 		$this->User->setActive($user);
 
-		$this->setExpectedException('HttpException', 'You are not authorized to delete item tags of this Resource');
+		$id = Common::uuid('item_tag.id.drupal-dp1-pwd1');
 
-		$id = $itemTag['ItemTag']['id'];
+		$this->setExpectedException('HttpException', 'You are not authorized to delete item tags of this Resource');
 		$result = json_decode($this->testAction("/itemTags/$id.json", array(
 			'method' => 'Delete',
 			'return' => 'contents'
@@ -329,18 +318,8 @@ class TagsControllerTest extends ControllerTestCase {
 	}
 
 	public function testDelete() {
-		$rs = $this->Resource->findByName('dp1-pwd1');
-		$tag = $this->Tag->findByName('drupal');
-		$findData = array(
-			'ItemTag' => array(
-				'foreign_id' => $rs['Resource']['id'],
-				'tag_id' => $tag['Tag']['id'],
-			)
-		);
-		$findOptions = $this->ItemTag->getFindOptions('ItemTag.viewByForeignModel', User::get('Role.name'), $findData);
-		$itemTag = $this->ItemTag->find('first', $findOptions);
-
-		$id = $itemTag['ItemTag']['id'];
+		$rsId = Common::uuid('resource.id.dp1-pwd1');
+		$id = Common::uuid('item_tag.id.drupal-dp1-pwd1');
 		$result = json_decode($this->testAction("/itemTags/$id.json", array(
 			'method' => 'Delete',
 			'return' => 'contents'
@@ -355,10 +334,10 @@ class TagsControllerTest extends ControllerTestCase {
 		);
 
 		$model = 'resource';
-		$result = json_decode($this->testAction("/itemTags/$model/{$rs['Resource']['id']}.json", $getOptions), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/itemTags/$model/{$rsId}.json", $getOptions), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/itemTags/$model/{$rsId}.json : The test should return a success but is returning {$result['header']['status']}");
 
-		// We expect 0 root tag
+		// We expect no tag associated to the resource
 		$this->assertEquals(count($result['body']), 0, "We expect 0 tags");
 	}
 }

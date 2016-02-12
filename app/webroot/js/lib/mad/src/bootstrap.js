@@ -154,7 +154,6 @@ var Boostrap = mad.Bootstrap = can.Construct.extend('mad.Bootstrap', /* @static 
         // Load the required component
         var components = mad.Config.read('core.components');
         for (var i in components) {
-            console.debug('Bootstrap init component ' + components[i]);
             if (components[i] == 'Devel' && (mad.Config.read('app.debug') == null ||
                 mad.Config.read('app.debug') == 0)) {
                 continue;

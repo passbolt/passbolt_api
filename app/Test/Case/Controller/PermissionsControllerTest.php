@@ -66,7 +66,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->session->init();
 		
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findByUsername('dame@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -105,7 +105,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testViewAcoPermissionsModelInstanceDoesNotExist() {
 		$model = 'Resource';
-		$id = '00000000-0000-0000-0000-000000000000';
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', "The {$model} does not exist");
 		$srvResult = json_decode($this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents')), true);
 	}
@@ -119,19 +119,17 @@ class PermissionsControllerTest extends ControllerTestCase {
 		);
 
 		// try to get permissions on a Resource with a not allowed user
-		$categoryName = 'o-project1';
-		$category = $this->Category->findByName($categoryName);
-		$id = $category['Category']['id'];
+		$categoryId = Common::uuid('category.id.o-project1');
 
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "The Category does not exist");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findByUsername('edith@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
-		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $getOptions), true);
-		$this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/category/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+		$srvResult = json_decode($this->testAction("/permissions/category/$categoryId.json", $getOptions), true);
+		$this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/category/$categoryId.json : The test should return an error but is returning {$srvResult['header']['status']}");
 	}
 
 	// test view aco permissions on Resource Aco
@@ -145,19 +143,19 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
 			Common::uuid('permission.id.' . Common::uuid('resource.id.op1-pwd1') . '-' . Common::uuid('user.id.anonymous')), // Dame is the owner
-			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
-			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
-			'50e6b4af-ad14-4659-a60d-23a4d7a10fce', // Ada lovelace have admin rights on others
-			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
-			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
-			'50e6b4af-b124-40e3-988e-23a4d7a10fce', // group freelancers (freelancers have readonly rights on projects > others)
-			'50e6b4af-d4b0-43d8-947f-23a4d7a10fce', // group company a (company a can access o-project1 in read only, and o-project2 in modify)
+			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('user.id.frances')), // Frances Allen has deny rights on projects
+			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('user.id.lynne')), // user kathleen (manager with no group should have access to everything in aucr mode)
+			Common::uuid('permission.id.' . Common::uuid('category.id.others') . '-' . Common::uuid('user.id.ada')), // Ada lovelace have admin rights on others
+			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('group.id.management')), // group management (management access everything in aucr mode)
+			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('group.id.developers_team_leads')), // group developers team leads (developers team leads have create/modify rights on projects)
+			Common::uuid('permission.id.' . Common::uuid('category.id.others') . '-' . Common::uuid('group.id.freelancers')), // group freelancers (freelancers have readonly rights on projects > others)
+			Common::uuid('permission.id.' . Common::uuid('category.id.o-project1') . '-' . Common::uuid('group.id.company_a')), // group company a (company a can access o-project1 in read only, and o-project2 in modify)
 		);
-		$expectedCount = count($expectedPermissions);
+
 		$resourceName = 'op1-pwd1';
-		$resource = $this->Resource->findByName($resourceName);
-		$id = $resource['Resource']['id'];
-		$srvResult = json_decode($this->testAction("/permissions/resource/$id.json", $getOptions), true);
+		$rsId = Common::uuid('resource.id.' . $resourceName);
+		$srvResult = json_decode($this->testAction("/permissions/resource/$rsId.json", $getOptions), true);
+
 		// How many results we expect
 		$this->assertNotNull(count($srvResult['body']), "We expect permissions for the resources {$resourceName}");
 		// All expected permissions are in the server answer
@@ -168,20 +166,20 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Check mix group and user
 		// Check permission on the resource cpp1-pwd1
 		$expectedPermissions = array(
-			Common::uuid('permission.id.' . Common::uuid('resource.id.cpp1-pwd1') . '-' . Common::uuid('user.id.anonymous')), // Dame is the owner
-			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
-			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
-			'50e6b4af-c390-4e5e-a8f8-23a4d7a10fce', // user jean rene (ean rené can access projects > cakephp > cp-project1 > cpp1-pwd1 in readonly)
-			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // Ada lovelace has admin rights on cakephp > cp-project1
-			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
-			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
-			'50e6b4af-8ab8-4533-a4b4-23a4d7a10fce', // group developers cakephp (developers cakephp can access projects > cakephp in readonly)
+			Common::uuid('permission.id.' . Common::uuid('resource.id.cpp1-pwd1') . '-' . Common::uuid('user.id.anonymous')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('user.id.frances')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('user.id.lynne')),
+			Common::uuid('permission.id.' . Common::uuid('resource.id.cpp1-pwd1') . '-' . Common::uuid('user.id.jean')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.cp-project1') . '-' . Common::uuid('user.id.ada')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('group.id.management')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('group.id.developers_team_leads')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.cakephp') . '-' . Common::uuid('group.id.developers_cakephp')),
 		);
-		$expectedCount = count($expectedPermissions);
+
 		$resourceName = 'cpp1-pwd1';
-		$resource = $this->Resource->findByName($resourceName);
-		$id = $resource['Resource']['id'];
-		$srvResult = json_decode($this->testAction("/permissions/resource/$id.json", $getOptions), true);
+		$rsId = Common::uuid('resource.id.' . $resourceName);
+
+		$srvResult = json_decode($this->testAction("/permissions/resource/$rsId.json", $getOptions), true);
 		// How many results we expect
 		$this->assertNotNull(count($srvResult['body']), "We expect permissions for the resources {$resourceName}");
 		// All expected permissions are in the server answer
@@ -199,18 +197,19 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
-			'50f6b4af-a491-43f5-fac9-23a4d7a10fce', // Frances Allen has deny rights on projects
-			'533d2ecb-3ec8-4437-9ca5-0aafc0a895dc', // user kathleen (manager with no group should have access to everything in aucr mode)
-			'50e6b4af-aa58-478c-804d-23a4d7a10fce', // Ada lovelace has admin rights on cakephp > cp-project1
-			'50e6b4ae-ea4c-4baf-aaf4-23a4d7a10fce', // group management (management access everything in aucr mode)
-			'50e6b4af-a490-43f5-9cc9-23a4d7a10fce', // group developers team leads (developers team leads have create/modify rights on projects)
-			'50e6b4af-8ab8-4533-a4b4-23a4d7a10fce', // group developers cakephp (developers cakephp can access projects > cakephp in readonly)
+			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('user.id.frances')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('user.id.lynne')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.cp-project1') . '-' . Common::uuid('user.id.ada')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('group.id.management')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('group.id.developers_team_leads')),
+			Common::uuid('permission.id.' . Common::uuid('category.id.cakephp') . '-' . Common::uuid('group.id.developers_cakephp')),
 		);
-		$catName = 'cp-project1';
+
 		$expectedCount = count($expectedPermissions);
-		$category = $this->Category->findByName($catName);
-		$id = $category['Category']['id'];
-		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $getOptions), true);
+		$catName = 'cp-project1';
+		$catId = Common::uuid('category.id.' . $catName);
+
+		$srvResult = json_decode($this->testAction("/permissions/category/$catId.json", $getOptions), true);
 
 		// How many results we expect
 		$this->assertNotEmpty($srvResult['body'], $expectedCount, 'We expect permissions for the category ' . $catName);
@@ -252,7 +251,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testAddAcoPermissionsModelInstanceDoesNotExist() {
 		$model = 'resource';
-		$id = '00000000-0000-0000-0000-000000000000';
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Resource");
 		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array('method' => 'post', 'return' => 'contents')), true);
 	}
@@ -261,15 +260,13 @@ class PermissionsControllerTest extends ControllerTestCase {
 	// not allowed => Permission.type < PermissionType::READ (In other words 0)
 	public function testAddAcoPermissionsUserNotAllowed() {
 		// try to get permissions on a Resource with a not allowed user
-		$categoryName = 'o-project1';
-		$category = $this->Category->findByName($categoryName);
-		$id = $category['Category']['id'];
+		$catId = Common::uuid('category.id.o-project1');
 
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Category");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findByUsername('edith@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
 		$data = array(
@@ -286,20 +283,17 @@ class PermissionsControllerTest extends ControllerTestCase {
 			 'data' => $data
 		);
 
-		$srvResult = json_decode($this->testAction("/permissions/category/$id.json", $postOptions), true);
+		$srvResult = json_decode($this->testAction("/permissions/category/$catId.json", $postOptions), true);
 	}
 
 	public function testAddAcoPermissionsOnResource() {
 		// log with a user who has right on the unit test sandbox category
-		$user = $this->User->findByUsername('kathleen@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.kathleen'));
 		$this->User->setActive($user);
 
 		// Add a permisision for a given user to a given category
 		$model = 'resource';
-		$resName = 'utest1-pwd1';
-		$resource = $this->Resource->findByName($resName);
-
-		$id = $resource['Resource']['id'];
+		$rsId = Common::uuid('resource.id.utest1-pwd1');
 		$data = array(
 			'Permission' => array(
 				'type' => PermissionType::READ
@@ -310,14 +304,14 @@ class PermissionsControllerTest extends ControllerTestCase {
 		);
 
 		// check how many permissions are already existing before the new insertion
-		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		)), true);
 
 		$expectedCount = count($srvResult['body']) + 1;
 		// insert the new permission
-		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
 			 'method' => 'post',
 			 'return' => 'contents',
 			 'data'=> $data
@@ -326,31 +320,29 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(
 			Status::SUCCESS,
 			$srvResult['header']['status'],
-			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
+			"/permissions/$model/$rsId.json : The test should return a success but is returning {$srvResult['header']['status']}"
 		);
 		// check the permission has well been inserted
-		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
 			 'method' => 'get',
 			 'return' => 'contents'
 		)), true);
 		$this->assertEquals(
 			$expectedCount,
 			count($srvResult['body']),
-			"/permissions/$model/$id.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body'])
+			"/permissions/$model/$rsId.json : The test should return {$expectedCount} permissions but is returning " . count($srvResult['body'])
 		);
 	}
 
 	public function testAddAcoPermissionsOnResourceExistingPermission() {
 		// log with a user who has right on the unit test sandbox category
-		$user = $this->User->findByUsername('kathleen@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.kathleen'));
 		$this->User->setActive($user);
 
 		// Add a permisision for a given user to a given category
 		$model = 'resource';
-		$resName = 'utest1-pwd1';
-		$resource = $this->Resource->findByName($resName);
+		$rsId = Common::uuid('resource.id.utest1-pwd1');
 
-		$id = $resource['Resource']['id'];
 		$data = array(
 			'Permission' => array(
 				'type' => PermissionType::READ
@@ -361,17 +353,17 @@ class PermissionsControllerTest extends ControllerTestCase {
 		);
 
 		// insert the new permission
-		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
 			 'method' => 'post',
 			 'return' => 'contents',
 			 'data'=> $data
 		)), true);
-		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$rsId.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 
 		$this->setExpectedException('HttpException', "A direct permission already exists");
 		// try to insert a second time the same permission should return an error
-		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
 			 'method' => 'post',
 			 'return' => 'contents',
 			 'data'=> $data
@@ -380,15 +372,13 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testSimulateAcoPermissionsOnResource() {
 		// log with a user who has right on the unit test sandbox category
-		$user = $this->User->findByUsername('kathleen@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.kathleen'));
 		$this->User->setActive($user);
 
 		// Add a permisision for a given user to a given category
 		$model = 'resource';
-		$resName = 'utest1-pwd1';
-		$resource = $this->Resource->findByName($resName);
+		$rsId = Common::uuid('resource.id.utest1-pwd1');
 
-		$id = $resource['Resource']['id'];
 		$data = array(
 			'Permission' => array(
 				'type' => PermissionType::READ
@@ -399,14 +389,14 @@ class PermissionsControllerTest extends ControllerTestCase {
 		);
 
 		// check how many permissions are already existing before the new insertion
-		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
 					'method' => 'get',
 					'return' => 'contents'
 				)), true);
 
 		$realCount = count($srvResult['body']);
 		// insert the new permission
-		$srvSimulatedResult = json_decode($this->testAction("/permissions/simulate/$model/$id.json", array(
+		$srvSimulatedResult = json_decode($this->testAction("/permissions/simulate/$model/$rsId.json", array(
 					'method' => 'post',
 					'return' => 'contents',
 					'data'=> $data
@@ -416,29 +406,28 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(
 			Status::SUCCESS,
 			$srvResult['header']['status'],
-			"/permissions/$model/$id.json : The test should return a success but is returning {$srvResult['header']['status']}"
+			"/permissions/$model/$rsId.json : The test should return a success but is returning {$srvResult['header']['status']}"
 		);
 
 		$this->assertEquals(
 			$simulatedCount,
 			count($srvResult['body']) + 1,
-			"/permissions/$model/$id.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
+			"/permissions/$model/$rsId.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
 		);
 
 		// check the permission was not actually inserted (was only a simulation).
-		$srvResult = json_decode($this->testAction("/permissions/$model/$id.json", array(
+		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
 					'method' => 'get',
 					'return' => 'contents'
 				)), true);
 		$this->assertEquals(
 			$realCount,
 			count($srvResult['body']),
-			"/permissions/$model/$id.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
+			"/permissions/$model/$rsId.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
 		);
 	}
 
 	public function testEditPermissionIdIsMissing() {
-		$model = 'resource';
 		$this->setExpectedException('HttpException', "The permission id is missing");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions.json", array('method' => 'put', 'return' => 'contents')), true);
@@ -451,7 +440,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 	}
 
 	public function testEditPermissionDoesNotExist() {
-		$id = '00000000-0000-0000-0000-000000000000';
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', "The permission does not exist");
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", array('method' => 'put', 'return' => 'contents')), true);
 	}
@@ -460,13 +449,13 @@ class PermissionsControllerTest extends ControllerTestCase {
 	// not allowed => Permission.type < PermissionType::UPDATE
 	public function testEditUserNotAllowed() {
 		// try to get permissions on a Resource with a not allowed user
-		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		$id = Common::uuid('permission.id.' . Common::uuid('category.id.administration') . '-' . Common::uuid('group.id.human'));
 
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "You are not allowed to edit this permission");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findByUsername('edith@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
 		$postOptions = array(
@@ -482,7 +471,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 	}
 
 	public function testEdit() {
-		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		$id = Common::uuid('permission.id.' . Common::uuid('category.id.administration') . '-' . Common::uuid('group.id.human'));
 		$postOptions = array(
 			'method' => 'put',
 			'return' => 'contents',
@@ -498,7 +487,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 		// log the user with a user who belongs to the human resource group
-		$user = $this->User->findByUsername('irene@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		// try to access to the category administration
@@ -507,7 +496,6 @@ class PermissionsControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeletePermissionIdIsMissing() {
-		$model = 'resource';
 		$this->setExpectedException('HttpException', "The permission id is missing");
 		// go through the addAcoPermissions because of routes
 		$srvResult = json_decode($this->testAction("/permissions.json", array('method' => 'delete', 'return' => 'contents')), true);
@@ -520,7 +508,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 	}
 
 	public function testDeletePermissionDoesNotExist() {
-		$id = '00000000-0000-0000-0000-000000000000';
+		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', "The permission does not exist");
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", array('method' => 'delete', 'return' => 'contents')), true);
 	}
@@ -529,13 +517,13 @@ class PermissionsControllerTest extends ControllerTestCase {
 	// not allowed => Permission.type < PermissionType::OWNER
 	public function testDeletePermissionNotAllowed() {
 		// try to get permissions on a Resource with a not allowed user
-		$id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+		$id = Common::uuid('permission.id.' . Common::uuid('category.id.administration') . '-' . Common::uuid('group.id.human'));
 
 		// If the user is not allowed to access a category, this category is simply hidden to him
 		$this->setExpectedException('HttpException', "You are not allowed to delete this permission");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findByUsername('edith@passbolt.com');
+		$user = $this->User->findById(common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
 		$postOptions = array(
@@ -556,7 +544,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 //		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
 //
 //		 // log the user who is not allowed to access the category
-//		 $user = $this->User->findByUsername('edith@passbolt.com');
+//		 $user = $this->User->findById(common::uuid('user.id.edith'));
 //		 $this->User->setActive($user);
 //
 //		 $postOptions = array(
@@ -581,7 +569,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 //		 $this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 //
 //		 // log the user with a user who belongs to the human resource group
-//		 $user = $this->User->findByUsername('irene@passbolt.com');
+//		 $user = $this->User->findById(common::uuid('user.id.irene'));
 //		 $this->User->setActive($user);
 //
 //		 // try to access to the category administration
