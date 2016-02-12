@@ -98,9 +98,9 @@ class Resource extends AppModel {
 					'message' => __('A username is required')
 				],
 				'alphaNumeric' => [
-					'rule' => '/^[a-zA-Z0-9\-_]*$/',
+					'rule' => '/^[a-zA-Z0-9\-_@.]*$/',
 					'required' => 'create',
-					'message' => __('Username should only contain alphabets, numbers only and the special characters : - _'),
+					'message' => __('Username should only contain alphabets, numbers only and the special characters : - _ . @'),
 				],
 				'size' => [
 					'rule' => ['lengthBetween', 3, 64],
