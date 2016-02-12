@@ -42,8 +42,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028',
+			'modified_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3'
 		),
 		array(
 			'id' => '349c17f6-0cbe-3c13-a19d-87452de6a811',
@@ -55,8 +55,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:41',
 			'modified' => '2012-12-24 03:34:41',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028',
+			'modified_by' => '917c2b89-d573-3c7c-ac4f-51f519d0164f'
 		),
 		array(
 			'id' => '36c00be4-64f3-3471-aa0c-feb1bf6ed79b',
@@ -68,8 +68,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:41',
 			'modified' => '2012-12-24 03:34:41',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028',
+			'modified_by' => '917c2b89-d573-3c7c-ac4f-51f519d0164f'
 		),
 		array(
 			'id' => '3e45ee73-6a50-380b-af39-71d259a7bf1e',
@@ -81,8 +81,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3',
+			'modified_by' => 'cd49eb9e-73a2-3433-a018-6ed993d421e8'
 		),
 		array(
 			'id' => '41099784-c61c-3172-a66d-93f2a4702a6e',
@@ -92,10 +92,10 @@ class ResourceFixture extends CakeTestFixture {
 			'uri' => 'https://unit-test.com',
 			'description' => 'description',
 			'deleted' => 0,
-			'created' => '2016-02-08 23:39:25',
-			'modified' => '2016-02-08 23:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-02-12 11:35:09',
+			'modified' => '2016-02-12 11:35:09',
+			'created_by' => '201b442c-d6ca-3ee6-a443-ce669ca0ec6e',
+			'modified_by' => '201b442c-d6ca-3ee6-a443-ce669ca0ec6e'
 		),
 		array(
 			'id' => '5c67e5d8-29dd-3719-aab5-5a151226255d',
@@ -107,8 +107,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3',
+			'modified_by' => 'cd49eb9e-73a2-3433-a018-6ed993d421e8'
 		),
 		array(
 			'id' => '63701f29-e6fb-3e3f-a549-fb7c3cf9a1ac',
@@ -120,8 +120,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028',
+			'modified_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3'
 		),
 		array(
 			'id' => '6b00d6e5-8584-3db4-a24d-7179b8dd44d5',
@@ -134,7 +134,7 @@ class ResourceFixture extends CakeTestFixture {
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
 			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
-			'modified_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123'
+			'modified_by' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028'
 		),
 		array(
 			'id' => '7fc9dbec-a5a0-3780-abef-97d97c4aaf46',
@@ -146,8 +146,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3',
+			'modified_by' => 'cd49eb9e-73a2-3433-a018-6ed993d421e8'
 		),
 		array(
 			'id' => '96e26ceb-b288-39b7-a515-3b1b45cb2673',
@@ -160,7 +160,7 @@ class ResourceFixture extends CakeTestFixture {
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
 			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
-			'modified_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123'
+			'modified_by' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028'
 		),
 		array(
 			'id' => 'a1d6913c-e9bd-3b8c-a4a5-d8d30349b4e7',
@@ -172,8 +172,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:45',
 			'modified' => '2012-12-24 03:34:45',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'cd49eb9e-73a2-3433-a018-6ed993d421e8',
+			'modified_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3'
 		),
 		array(
 			'id' => 'b46ff445-4f22-3f52-a070-995e6f4be909',
@@ -185,8 +185,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:45',
 			'modified' => '2012-12-24 03:34:45',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'cd49eb9e-73a2-3433-a018-6ed993d421e8',
+			'modified_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3'
 		),
 		array(
 			'id' => 'c4c89e1a-5ae2-3ecc-a2f8-d77156c5c74d',
@@ -198,8 +198,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'cd49eb9e-73a2-3433-a018-6ed993d421e8',
+			'modified_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3'
 		),
 		array(
 			'id' => 'dc990bd2-9a2d-3bd5-af30-a91bbff83b3f',
@@ -211,8 +211,8 @@ class ResourceFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:45',
 			'modified' => '2012-12-24 03:34:45',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created_by' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028',
+			'modified_by' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3'
 		),
 	);
 

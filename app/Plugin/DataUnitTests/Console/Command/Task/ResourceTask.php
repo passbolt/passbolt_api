@@ -26,7 +26,6 @@ class ResourceTask extends ModelTask {
 
 		foreach ($data as $item) {
 			$Model->create();
-			echo $item;
 			$Model->set($item);
 			if (!$Model->validates()) {
 				var_dump($Model->validationErrors);

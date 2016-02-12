@@ -142,7 +142,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Just group permissions should be returned
 		// Check permission on the resource op1-pwd1
 		$expectedPermissions = array(
-			Common::uuid('permission.id.' . Common::uuid('resource.id.op1-pwd1') . '-' . Common::uuid('user.id.anonymous')), // Dame is the owner
+			Common::uuid('permission.id.' . Common::uuid('resource.id.op1-pwd1') . '-' . Common::uuid('user.id.ada')), // Dame is the owner
 			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('user.id.frances')), // Frances Allen has deny rights on projects
 			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('user.id.lynne')), // user kathleen (manager with no group should have access to everything in aucr mode)
 			Common::uuid('permission.id.' . Common::uuid('category.id.others') . '-' . Common::uuid('user.id.ada')), // Ada lovelace have admin rights on others
@@ -166,7 +166,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Check mix group and user
 		// Check permission on the resource cpp1-pwd1
 		$expectedPermissions = array(
-			Common::uuid('permission.id.' . Common::uuid('resource.id.cpp1-pwd1') . '-' . Common::uuid('user.id.anonymous')),
+			Common::uuid('permission.id.' . Common::uuid('resource.id.cpp1-pwd1') . '-' . Common::uuid('user.id.ada')),
 			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('user.id.frances')),
 			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('user.id.lynne')),
 			Common::uuid('permission.id.' . Common::uuid('resource.id.cpp1-pwd1') . '-' . Common::uuid('user.id.jean')),
