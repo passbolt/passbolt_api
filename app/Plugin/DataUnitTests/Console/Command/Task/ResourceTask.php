@@ -26,6 +26,7 @@ class ResourceTask extends ModelTask {
 
 		foreach ($data as $item) {
 			$Model->create();
+			echo $item;
 			$Model->set($item);
 			if (!$Model->validates()) {
 				var_dump($Model->validationErrors);
@@ -46,8 +47,8 @@ class ResourceTask extends ModelTask {
 			'uri' => 'https://unit-test.com',
 			'description' => 'description',
 			'deleted' => 0,
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.kathleen'),
+			'modified_by' => Common::uuid('user.id.kathleen')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.facebook-account'),
@@ -60,7 +61,7 @@ class ResourceTask extends ModelTask {
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
 			'created_by' => Common::uuid('user.id.irene'),
-			'modified_by' => Common::uuid('user.id.irene')
+			'modified_by' => Common::uuid('user.id.dame')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.bank-password'),
@@ -73,7 +74,7 @@ class ResourceTask extends ModelTask {
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
 			'created_by' => Common::uuid('user.id.irene'),
-			'modified_by' => Common::uuid('user.id.irene')
+			'modified_by' => Common::uuid('user.id.dame')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.salesforce-account'),
@@ -85,8 +86,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:41',
 			'modified' => '2012-12-24 03:34:41',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.dame'),
+			'modified_by' => Common::uuid('user.id.marlyn')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.tetris-license'),
@@ -98,8 +99,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:41',
 			'modified' => '2012-12-24 03:34:41',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.dame'),
+			'modified_by' => Common::uuid('user.id.marlyn')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.cpp1-pwd1'),
@@ -111,8 +112,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.ada'),
+			'modified_by' => Common::uuid('user.id.lynne')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.cpp1-pwd2'),
@@ -124,8 +125,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.lynne'),
+			'modified_by' => Common::uuid('user.id.ada')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.cpp2-pwd1'),
@@ -137,8 +138,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.dame'),
+			'modified_by' => Common::uuid('user.id.lynne')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.cpp2-pwd2'),
@@ -150,8 +151,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.dame'),
+			'modified_by' => Common::uuid('user.id.lynne')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.dp1-pwd1'),
@@ -163,8 +164,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.lynne'),
+			'modified_by' => Common::uuid('user.id.ada')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.dp2-pwd1'),
@@ -176,8 +177,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.lynne'),
+			'modified_by' => Common::uuid('user.id.ada')
 		));		
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.op1-pwd2'),
@@ -189,8 +190,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:45',
 			'modified' => '2012-12-24 03:34:45',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.ada'),
+			'modified_by' => Common::uuid('user.id.lynne')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.shared-resource'),
@@ -202,8 +203,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:45',
 			'modified' => '2012-12-24 03:34:45',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.dame'),
+			'modified_by' => Common::uuid('user.id.lynne')
 		));
 		$r[] = array('Resource'=>array(
 			'id' => Common::uuid('resource.id.op1-pwd1'),
@@ -215,8 +216,8 @@ class ResourceTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:45',
 			'modified' => '2012-12-24 03:34:45',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.ada'),
+			'modified_by' => Common::uuid('user.id.lynne')
 		));
 		return $r;
 	}
