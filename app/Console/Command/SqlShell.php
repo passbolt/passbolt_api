@@ -2,10 +2,8 @@
 /**
  * Import Database From a SQL dump file
  *
- * @copyright    copyright 2015 Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.console.command.importsqlshell
- * @since        version 2.15.10
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('AppShell', 'Console/Command');

@@ -3,8 +3,8 @@
  * Categories controller
  * This file will define how categories are managed
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('CategoryType', 'Model');

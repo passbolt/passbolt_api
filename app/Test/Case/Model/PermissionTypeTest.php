@@ -2,10 +2,10 @@
 /**
  * Permission Type Model Test
  *
- * @copyright     Copyright 2012, Passbolt.com
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @package       app.Test.Case.Model.PermissionTypeTest
  * @since         version 2.14.6
- * @license       http://www.passbolt.com/license
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('PermissionType', 'Model');
 

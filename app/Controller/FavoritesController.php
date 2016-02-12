@@ -3,8 +3,8 @@
  * Favorites controller
  * Control the starred items
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class FavoritesController extends AppController {
 

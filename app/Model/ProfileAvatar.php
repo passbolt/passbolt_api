@@ -3,11 +3,11 @@ App::uses('ImageStorage', 'FileStorage.Model');
 
 class ProfileAvatar extends ImageStorage {
 
-	/**
-	 * Defines which key to use while returning an avatar object
-	 * to tell the path for the avatar image.
-	 * @var string
-	 */
+/**
+ * Defines which key to use while returning an avatar object
+ * to tell the path for the avatar image.
+ * @var string
+ */
 	public $imagePathKey = 'url';
 
 /**
@@ -118,17 +118,14 @@ class ProfileAvatar extends ImageStorage {
 		return $this->save($data);
 	}
 
-	/**
-	 * Get Image Url for an entry.
-	 *
-	 * @param array $image
-	 *   entry of the db
-	 * @param string $version
-	 *   version as defined in file storage configuration file.
-	 * @param array $options
-	 *
-	 * @return bool
-	 */
+/**
+ * Get Image Url for an entry.
+ *
+ * @param array $image entry of the db
+ * @param string $version version as defined in file storage configuration file.
+ * @param array $options
+ * @return bool
+ */
 	public function imageUrl($image, $version = null, $options = array()) {
 		// Default options.
 		$defaultOptions = array(
@@ -171,24 +168,22 @@ class ProfileAvatar extends ImageStorage {
 		}
 	}
 
-	/**
-	 * Turns the windows \ into / so that the path can be used in an url
-	 *
-	 * @param string $path
-	 * @return string
-	 */
+/**
+ * Turns the windows \ into / so that the path can be used in an url
+ *
+ * @param string $path
+ * @return string
+ */
 	public function normalizePath($path) {
 		return str_replace('\\', '/', $path);
 	}
 
 
-	/**
-	 * Add avatar path information for each available size to the model.
-	 * @param array $avatar
-	 *   a ProfileAvatar model
-	 * @return array
-	 *   ProfileAvatar with added information.
-	 */
+/**
+ * Add avatar path information for each available size to the model.
+ * @param array $avatar a ProfileAvatar model
+ * @return array ProfileAvatar with added information.
+ */
 	public function addPathsInfo($avatar = array()) {
 		// Get available sizes.
 		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');

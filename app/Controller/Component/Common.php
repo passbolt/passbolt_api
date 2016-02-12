@@ -4,8 +4,8 @@
  * This class serves as a space for convenience functions (mostly static)
  * that need to be globally available within this application.
  *
- * @copyright	(c) 2015-present Passbolt.com
- * @licence		GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class Common extends Object {
 

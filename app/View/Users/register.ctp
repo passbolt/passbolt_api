@@ -2,37 +2,34 @@
 /**
  * Register form view (for guest role)
  *
- * @copyright	copyright 2012 passbolt.com
- * @license		http://www.passbolt.com/license
- * @package		app.View.Users.register
- * @since		version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $this->assign('title',	__('Register'));
-$this->Html->css('login', null, array('block' => 'css'));
+$this->Html->css('login.min', null, array('block' => 'css'));
 $this->assign('page_classes', 'register');
 ?>
 <div class="grid">
 	<div class="row">
 		<div class="col6 push1 information">
-			<h2><?php echo __('Try passbolt today!'); ?></h2>
-			<p>
-				<?php echo __('Enter your details in the form.'); ?>
-				<?php echo __('We will send you an email to get you started.'); ?>
-			</p>
+			<h2><?php echo __('Try passbolt demo today!'); ?></h2>
 			<div class="message-wrapper">
-				<p class="message warning"><strong><?php echo __('Disclaimer:'); ?></strong>
-					<?php echo __('please note this is a demo instance of Passbolt for trial purposes only.'); ?>
-					<?php echo __('Do not use it to store sensitive data.'); ?><br>
-					<a href="#"><?php echo __('find out more.'); ?></a>
+				<p class="message error"><strong><?php echo __('Important Disclaimer:'); ?></strong><br>
+					<?php echo __('This is a demo instance of Passbolt for trial purposes only.'); ?>
+					<?php echo __('Do not use it to store sensitive information.'); ?>
+					<?php echo __('Do not use it if you are not confortable with other testers being able to see your name and email address.'); ?>
 				</p>
 			</div>
 			<p>
 				<?php
-				echo __('By signing up, you agree to the %sTerms of Service%s and %sPrivacy Policy%s, including %sCookie Use%s.',
-						'<a href="#">','</a>',
-						'<a href="#">','</a>',
-						'<a href="#">','</a>'
+				echo __('By signing up, you agree to the %sTerms of Service%s and %sPrivacy Policy%s, including our use of Cookies.',
+						'<a href="https://www.passbolt.com/terms">','</a>',
+						'<a href="https://www.passbolt.com/privacy">','</a>'
 				); ?>
+			</p>
+			<p>
+				<?php echo __('Enter your details in the form.'); ?>
+				<?php echo __('We will send you an email to get you started.'); ?>
 			</p>
 		</div>
 		<div class="col4 push1 last">

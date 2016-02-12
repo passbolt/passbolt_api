@@ -2,10 +2,8 @@
 /**
  * Favorite Model
  *
- * @copyright		Copyright 2013, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Model.Favorite
- * @since				version 2.13.09
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class Favorite extends AppModel {
 	var $belongsTo = array('User');

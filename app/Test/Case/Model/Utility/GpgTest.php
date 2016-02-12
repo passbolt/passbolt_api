@@ -2,7 +2,7 @@
 /**
  * Gpg Utility Test
  *
- * @copyright	 Copyright 2012, Passbolt.com
+ * @copyright	 (c) 2015-present Bolt Softwares Pvt Ltd
  * @package	     app.Test.Case.Utility.GpgTest
  * @since		 version 2.12.7
  * @license	     http://www.passbolt.com/license

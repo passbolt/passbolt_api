@@ -1,11 +1,9 @@
 <?php
 /**
- * Header Element
+ * Header
  *
- * @copyright     copyright 2012 passbolt.com
- * @license       http://www.passbolt.com/license
- * @package       app.View.Elements.element
- * @since         version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 ?>
 <?php echo $this->element('header/topNavigation'); ?>

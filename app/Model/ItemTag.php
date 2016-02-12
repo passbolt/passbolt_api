@@ -2,10 +2,8 @@
 /**
  * Tag Resource Model
  *
- * @copyright         Copyright 2012, Passbolt.com
- * @package           app.Model.ItemTag
- * @since             version 2.12.11
- * @license           http://www.passbolt.com/license
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('Tag', 'Model');

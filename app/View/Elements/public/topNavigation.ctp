@@ -2,28 +2,19 @@
 /**
  * Top Navigation
  *
- * @copyright     copyright 2012 passbolt.com
- * @license       http://www.passbolt.com/license
- * @package       app.View.Elements.topNavigation
- * @since         version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
   if(User::isGuest()) {
 		$menu = array(
-			'home' => array('url' => '#', 'class' => 'home'),
-			'download' => array( 'url' => '#', 'class' => 'left'),
-			'about' => array( 'url' => '#', 'class' => 'left' ),
+			'passbolt' => array('url' => 'https://www.passbolt.com', 'class' => 'home with-link'),
+			'home' => array( 'url' => '/', 'class' => 'left'),
+//			'about' => array( 'url' => '#', 'class' => 'left' ),
 			'login' => array( 'url' => 'login', 'class' => 'right' )
 		);
 	    if (Configure::read('Registration.public')) {
 		    $menu['register'] = array( 'url' => 'register', 'class' => 'right' );
 	    }
-	} else {
-		$menu = array(
-			'home' => array( 'url' => '#', 'class' => 'home' ),
-			'passwords' => array( 'url' => '#', 'class' => 'left'),
-			'people' => array( 'url' => '#', 'class' => 'left' ),
-			'help' => array( 'url' => '#', 'class' => 'left')
-		);
 	}
 ?>
   <nav>

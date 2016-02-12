@@ -1,4 +1,10 @@
 <?php
+/**
+ * Piwik Element
+ *
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ */
 $analytics = Configure::read('Analytics');
 $analyticsConfigured = isset($analytics['piwik']) && !empty($analytics['piwik'])
 	&& isset($analytics['piwik']['url']) && !empty($analytics['piwik']['url']);

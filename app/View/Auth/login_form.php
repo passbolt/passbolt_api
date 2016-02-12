@@ -2,10 +2,8 @@
 /**
  * Login Form View (for guest role)
  *
- * @copyright	copyright 2012 passbolt.com
- * @license		http://www.passbolt.com/license
- * @package		app.View.Users.login
- * @since		version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $this->assign('title',	__('Login'));
 $this->assign('page_classes', 'login');

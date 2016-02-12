@@ -3,11 +3,10 @@
  * Favoritable Behavior
  * Allow adding favorites
  *
- * @copyright		Copyright 2013, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Model.Behavior.FavoritableBehavior
- * @since				version 2.13.09
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+
 class FavoritableBehavior extends ModelBehavior {
 
 	/**

@@ -2,13 +2,11 @@
 /**
  * Register form view (for guest role)
  *
- * @copyright	copyright 2012 passbolt.com
- * @license		http://www.passbolt.com/license
- * @package		app.View.Users.register
- * @since		version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $this->assign('title',	__('Register'));
-$this->Html->css('login', null, array('block' => 'css'));
+$this->Html->css('login.min', null, array('block' => 'css'));
 $this->assign('page_classes', 'register thank-you');
 ?>
 <div class="grid">
@@ -45,17 +43,6 @@ $this->assign('page_classes', 'register thank-you');
 					<?php echo __('Please check your spam folder if you do not hear from us after a while.'); ?>
 				</p>
 			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col3 push1 github-block">
-			<?php echo $this->element('public/box-open-source'); ?>
-		</div>
-		<div class="col3 chrome-plugin-block">
-			<?php echo $this->element('public/box-chrome-extension'); ?>
-		</div>
-		<div class="col4 donate-block push1 last">
-			<?php echo $this->element('public/box-donate'); ?>
 		</div>
 	</div>
 </div>

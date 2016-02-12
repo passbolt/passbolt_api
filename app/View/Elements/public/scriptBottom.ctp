@@ -1,15 +1,12 @@
-<!-- Test piwik -->
 <?php
 /**
- * Script bottom element
+ * Bottom page scripts
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.View.Elements.scriptBottom
- * @since        version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 	echo $this->fetch('scriptBottom');
-  if (!Configure::read('debug')) :
+	if (!Configure::read('debug')) {
+		echo $this->element('analytics/piwik');
+	}
 ?>
-	  <?php echo $this->element('analytics/piwik'); ?>
-<?php endif; ?>

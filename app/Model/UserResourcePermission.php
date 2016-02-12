@@ -2,10 +2,8 @@
 /**
  * UserResourcePermission Model
  *
- * @copyright		Copyright 2012, Passbolt.com
- * @license			http://www.passbolt.com/license
- * @package			app.Model.UserResourcePermission
- * @since			version 2.12.11
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 class UserResourcePermission extends AppModel {
