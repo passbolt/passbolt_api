@@ -92,7 +92,7 @@ class ResourceTest extends AppTestCase {
 			// Not empty
 			'' => false,
 			// Email are not accepted
-			'test@test.com' => false,
+			'test@test.com' => true,
 			// too short
 			'sh' => false,
 			// too long
