@@ -13,8 +13,8 @@
     <div class="plugin-check-wrapper">
         <div class="plugin-check firefox error">
             <p class="message">
-                <?php echo __('An add-on is required to use Passbolt. Download it at: '); ?>
-                <a href="https://github.com/passbolt/passbolt_ff/raw/develop/passbolt-firefox-addon.xpi">addons.mozilla.org</a>.</p>
+                <?php echo __('An add-on is required to use Passbolt.'); ?>
+                <a href="https://www.passbolt.com/download/firefox">Download it here</a>.</p>
         </div>
     </div>
     <?php echo $this->element('public/teaser-text'); ?>
@@ -26,7 +26,7 @@
             <i class="fa fa-download huge" ></i>
         </div>
         <div class="actions-wrapper center">
-            <a class="button primary big" href="https://github.com/passbolt/passbolt_ff/raw/develop/passbolt-firefox-addon.xpi">
+            <a class="button primary big" href="https://www.passbolt.com/download/firefox">
                 <?php echo __('Download the plugin'); ?>
             </a>
         </div>
