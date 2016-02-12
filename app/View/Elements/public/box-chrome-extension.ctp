@@ -1,5 +1,13 @@
-<h3>Chrome Extension</h3>
-<p>A Chrome Web store Extension for Passbolt is currently under development. Stay tuned!</p>
+<?php
+/**
+ * Login teaser box chrome extension
+ *
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ */
+?>
+<h3><?php echo __('Chrome Extension'); ?></h3>
+<p><?php echo __('A Chrome Extension for Passbolt is also under development but not available at the moment.'); ?></p>
 <p>
 	<img src="img/third_party/ChromeWebStore_disabled.png" alt="chrome web store"/>
 </p>

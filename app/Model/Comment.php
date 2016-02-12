@@ -1,12 +1,9 @@
 <?php
-
 /**
  * Comment Model
  *
- * @copyright        Copyright 2012, Passbolt.com
- * @package            app.Model.comment
- * @since            version 2.12.12
- * @license            http://www.passbolt.com/license
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class Comment extends AppModel {
 
@@ -125,7 +122,6 @@ class Comment extends AppModel {
 				$rules = $default;
 				break;
 		}
-
 		return $rules;
 	}
 
@@ -167,7 +163,6 @@ class Comment extends AppModel {
 			'conditions' => ['id' => $check['foreign_id']],
 			'recursive' => -1
 		]);
-
 		return $exists > 0;
 	}
 
@@ -273,7 +268,6 @@ class Comment extends AppModel {
 				];
 				break;
 		}
-
 		return $returnValue;
 	}
 

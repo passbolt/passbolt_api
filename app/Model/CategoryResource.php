@@ -2,10 +2,8 @@
 /**
  * Category Resource Model
  *
- * @copyright         Copyright 2012, Passbolt.com
- * @package             app.Model.CategoryResource
- * @since                 version 2.12.11
- * @license             http://www.passbolt.com/license
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('Category', 'Model');
@@ -64,14 +62,14 @@ class CategoryResource extends AppModel {
 			case 'default' :
 				$rules = $default;
 		}
-
 		return $rules;
 	}
 
 /**
  * Check if a category with same id exists
  *
- * @param check
+ * @param bool $check
+ * @return bool
  */
 	public function uniqueCombi($check = false) {
 		$cr = $this->data['CategoryResource'];
@@ -109,7 +107,6 @@ class CategoryResource extends AppModel {
 					'conditions' => []
 				];
 		}
-
 		return $conditions;
 	}
 
@@ -141,7 +138,6 @@ class CategoryResource extends AppModel {
 				];
 				break;
 		}
-
 		return $fields;
 	}
 }

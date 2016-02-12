@@ -2,10 +2,8 @@
 /**
  * Debug layout
  *
- * @copyright     copyright 2015 passbolt.com
- * @license       http://www.passbolt.com/license
- * @package       app.View.Layouts.debug
- * @since         version 2.15.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 ?>
 <!doctype html>

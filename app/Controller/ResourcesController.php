@@ -2,8 +2,8 @@
 /**
  * Resources Controller
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Category', 'Model');
 App::uses('CategoryResource', 'Model');
@@ -204,7 +204,6 @@ class ResourcesController extends AppController {
 
 		if ($resource === false) {
 			$dataSource->rollback();
-
 			return $this->Message->error(__('The resource could not be saved'));
 		}
 
@@ -220,7 +219,6 @@ class ResourcesController extends AppController {
 			$this->Resource->Secret->set($secret);
 			if (!$this->Resource->Secret->validates(['fieldList' => $fields['fields']])) {
 				$dataSource->rollback();
-
 				return $this->Message->error(__('Could not validate secret model'),
 					['body' => $this->Resource->Secret->validationErrors]);
 			}
@@ -234,7 +232,6 @@ class ResourcesController extends AppController {
 
 			if ($save == false) {
 				$dataSource->rollback();
-
 				return $this->Message->error(__('Could not save the secret'));
 			}
 		}
@@ -258,7 +255,6 @@ class ResourcesController extends AppController {
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates(['fieldList' => $fields['fields']])) {
 					$dataSource->rollback();
-
 					return $this->Message->error(__('Could not validate CategoryResource',
 						['body' => $this->Resource->CategoryResource->validationErrors]));
 				}
@@ -266,7 +262,6 @@ class ResourcesController extends AppController {
 				// Check that the user is well authorized to create a resource into the given category.
 				if (!$this->Resource->CategoryResource->Category->isAuthorized($cat['id'], PermissionType::CREATE)) {
 					$dataSource->rollback();
-
 					return $this->Message->error(__('You are not authorized to create a resource into the category'),
 						['code' => 403]);
 				}
@@ -282,7 +277,6 @@ class ResourcesController extends AppController {
 
 				if ($save == false) {
 					$dataSource->rollback();
-
 					return $this->Message->error(__('Could not save the association'));
 				}
 			}
@@ -358,7 +352,6 @@ class ResourcesController extends AppController {
 			$this->Resource->set($resourcepost);
 			if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
 				$dataSource->rollback();
-
 				return $this->Message->error(
 					__('Could not validate Resource'),
 					['body' => $this->Resource->validationErrors]
@@ -375,7 +368,6 @@ class ResourcesController extends AppController {
 
 			if (!$save) {
 				$dataSource->rollback();
-
 				return $this->Message->error(__('The resource could not be updated'));
 			}
 		}
@@ -390,7 +382,6 @@ class ResourcesController extends AppController {
 				return $this->Message->error($e->getMessage(), ['body' => $e->getInvalidFields()]);
 			} catch (Exception $e) {
 				$dataSource->rollback();
-
 				return $this->Message->error($e->getMessage());
 			}
 		}
@@ -404,7 +395,6 @@ class ResourcesController extends AppController {
 			]);
 			if (!$delete) {
 				$dataSource->rollback();
-
 				return $this->Message->error(__('Could not delete Categories'));
 			}
 			// Save the new relations
@@ -421,14 +411,12 @@ class ResourcesController extends AppController {
 				$this->Resource->CategoryResource->set($crdata);
 				if (!$this->Resource->CategoryResource->validates()) {
 					$dataSource->rollback();
-
 					return $this->Message->error(__('Could not validate CategoryResource'));
 				}
 				// if validation passes, then save the data
 				$res = $this->Resource->CategoryResource->save();
 				if (!$res) {
 					$dataSource->rollback();
-
 					return $this->Message->error(__('Could not save the association'));
 				}
 			}

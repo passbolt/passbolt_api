@@ -2,8 +2,8 @@
 /**
  * SeleniumTests Controller
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 // Uses EmailQueue.
 App::uses('EmailQueue', 'Plugin/EmailQueue/Model');
@@ -34,7 +34,6 @@ class SeleniumTestsController extends AppController {
 	private function __isSeleniumAllowed() {
 		$seleniumAllowed = Configure::read($this->__configKey) === true
 			&& Configure::read('debug') > 0;
-
 		return $seleniumAllowed;
 	}
 
@@ -147,7 +146,6 @@ class SeleniumTestsController extends AppController {
 				throw new NotFoundException();
 			default:
 				$this->Message->error('404 test not found', ['code' => 404]);
-
 				return;
 		}
 	}
@@ -159,7 +157,6 @@ class SeleniumTestsController extends AppController {
  */
 	public function error403() {
 		echo 'test;';
-
 		return;
 		// nothing, forbidden because not part of allow list
 	}

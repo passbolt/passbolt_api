@@ -5,8 +5,8 @@
  * This class replace cake flash method. It offers options to qualify the end-user messages (e.g. an error, warning, etc.)
  * But more importantly this component is also used to format the JSON API responses
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 app::uses('ControllerLog', 'Model');
 
@@ -42,7 +42,7 @@ class MessageComponent extends Component {
 
 /**
  * @var bool $autoRedirect true if referer redirection is needed. Default false
- *    Such redirection is usefull for displaying messages when one action do not have a view
+ * Such redirection is usefull for displaying messages when one action do not have a view
  */
 	public $autoRedirect = false;
 
@@ -68,7 +68,6 @@ class MessageComponent extends Component {
 		} else {
 			$this->messages = [];
 		}
-
 		return true;
 	}
 
@@ -250,7 +249,6 @@ class MessageComponent extends Component {
 				$options['redirect'] = $this->controller->referer();
 			} elseif (is_string($options['redirect']) || is_array($options['redirect'])) {
 				$this->controller->redirect($options['redirect']);
-
 				return;
 			}
 		}
@@ -275,7 +273,6 @@ class MessageComponent extends Component {
 			return false;
 		}
 		$this->messages[$nbMessages - 1]['body'] = $body;
-
 		return true;
 	}
 

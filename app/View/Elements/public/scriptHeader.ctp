@@ -2,10 +2,8 @@
 /**
  * Script Header element
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.View.Elements.scriptHeader
- * @since        version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 ?>
 <script src="/js/lib/modernizr/modernizr-custom.min.js"></script>

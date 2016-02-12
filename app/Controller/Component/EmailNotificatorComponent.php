@@ -1,11 +1,10 @@
 <?php
-
 /**
  * EmailNotification Component
  * This class offers tools to send notification emails.
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class EmailNotificatorComponent extends Component {
 
@@ -52,7 +51,7 @@ class EmailNotificatorComponent extends Component {
 
 /**
  * Return the email author information like name and avatar
- *    This data is required in the email template
+ * This data is required in the email template
  *
  * @param string $userId UUID
  * @return array $author, empty if not found or null on error

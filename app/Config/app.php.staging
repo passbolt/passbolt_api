@@ -2,21 +2,18 @@
 /**
  * Main application configuration file
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Config.app
- * @since        version 2.12.7
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $config = [
 	// General App Details
 	'App.name' => 'Passbolt',
 	'App.punchline' => 'Passbolt is a simple password manager that allows you to easily share secrets with your team without making compromises on security! ',
-	'App.copyright' => '2015 &copy; Passbolt.com',
+	'App.copyright' => '&copy; 2015-present Bolt Softwares Pvt Ltd',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.version' => [
-		'number' => '2.15.9',
-		'name' => 'Sauvage',
-		'song' => 'http://youtu.be/DaRG0ukxYqQ'
+		'number' => '0.1.0',
+		'name' => 'version sauvage'
 	],
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => [

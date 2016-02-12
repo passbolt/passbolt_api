@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Users Controller
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class UsersController extends AppController {
 
@@ -87,7 +86,6 @@ class UsersController extends AppController {
 				if ($this->request->is('json')) {
 					throw $e;
 				}
-
 				return;
 			}
 			// Redirect to thank you page.
@@ -107,7 +105,6 @@ class UsersController extends AppController {
 		// If no referer, we redirect to register page.
 		if (empty($referer)) {
 			$this->redirect("/register");
-
 			return;
 		}
 
@@ -115,7 +112,6 @@ class UsersController extends AppController {
 		// If the referer was not the register url, we also redirect to /register page.
 		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== '/register') {
 			$this->redirect("/register");
-
 			return;
 		}
 
@@ -313,7 +309,6 @@ class UsersController extends AppController {
 			// Didn't save, we rollback and return an error.
 			if (!$save) {
 				$this->User->rollback();
-
 				return $this->Message->error(__('The user could not be updated'));
 			}
 		}
@@ -327,7 +322,6 @@ class UsersController extends AppController {
 			// If no profile associated to the user found
 			if (!$profile) {
 				$this->User->rollback();
-
 				return $this->Message->error(__('Could not retrieve profile'));
 			}
 
@@ -362,7 +356,6 @@ class UsersController extends AppController {
 			$save = $this->User->Profile->save($profileData, false, $fields['fields']);
 			if (!$save) {
 				$this->User->rollback();
-
 				return $this->Message->error(__('The profile could not be updated'));
 			}
 		}
@@ -509,7 +502,6 @@ class UsersController extends AppController {
 		$result = $this->User->saveField('active', true, ['atomic' => false]);
 		if (!$result) {
 			$this->User->rollback();
-
 			return $this->Message->error(__('Could not update user'));
 		}
 
@@ -518,7 +510,6 @@ class UsersController extends AppController {
 		$result = $this->User->AuthenticationToken->saveField('active', false, ['atomic' => false]);
 		if (!$result) {
 			$this->User->rollback();
-
 			return $this->Message->error(__('Could not update token'));
 		}
 
@@ -537,9 +528,7 @@ class UsersController extends AppController {
 			// Validate the profile data
 			if (!$this->User->Profile->validates(['fieldList' => [$fields['fields']]])) {
 				$this->User->rollback();
-
-				return $this->Message->error(__('Could not validate Profile'),
-					['body' => $this->User->Profile->validationErrors]);
+				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
 			}
 
 			// Save/Update the profile
@@ -547,7 +536,6 @@ class UsersController extends AppController {
 			// If update failed
 			if (!$result) {
 				$this->User->rollback();
-
 				return $this->Message->error(__('Could not save Profile'));
 			}
 		}
@@ -560,7 +548,6 @@ class UsersController extends AppController {
 			$gpgkeyData = $this->User->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['key']);
 			if ($gpgkeyData == false) {
 				$this->User->rollback();
-
 				return $this->Message->error(__('The key provided couldn\'t be used'));
 			}
 
@@ -575,7 +562,6 @@ class UsersController extends AppController {
 			// Check if the data is valid
 			if (!$this->User->Gpgkey->validates(['fieldList' => [$fields['fields']]])) {
 				$this->User->Gpgkey->rollback();
-
 				return $this->Message->error(__('Could not validate gpgkey data'),
 					['body' => $this->User->Gpgkey->validationErrors]);
 			}
@@ -587,7 +573,6 @@ class UsersController extends AppController {
 			if (!$gpgkey) {
 				$this->User->Gpgkey->rollback();
 				$this->Message->error(__('The gpgkey could not be saved'));
-
 				return;
 			}
 		}
@@ -645,7 +630,6 @@ class UsersController extends AppController {
 		$this->User->begin();
 		if (!$this->User->save($user, true, $fields['fields'])) {
 			$this->User->rollback();
-
 			return $this->Message->error(__('Error while deleting user'));
 		}
 		$this->User->commit();

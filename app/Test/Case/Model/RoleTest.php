@@ -2,7 +2,7 @@
 /**
  * Role Model Test
  *
- * @copyright	 Copyright 2012, Passbolt.com
+ * @copyright	 (c) 2015-present Bolt Softwares Pvt Ltd
  * @license	   http://www.passbolt.com/license
  * @package	   app.Test.Case.Model.RoleTest
  * @since		   version 2.12.7

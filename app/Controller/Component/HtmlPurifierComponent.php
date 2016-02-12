@@ -1,10 +1,9 @@
 <?php
-
 /**
  * HtmlPurifierComponent
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class HtmlPurifierComponent extends Component {
 
@@ -35,7 +34,6 @@ class HtmlPurifierComponent extends Component {
 		if (empty($config) && !empty($this->settings['config'])) {
 			$config = $this->settings['config'];
 		}
-
 		return Purifier::clean($markup, $config);
 	}
 
@@ -55,7 +53,6 @@ class HtmlPurifierComponent extends Component {
 			foreach ($markup as $key => $value) {
 				$markup[$key] = $this->cleanRecursive($value, $config);
 			}
-
 			return $markup;
 		} else {
 			return Purifier::clean($markup, $config);

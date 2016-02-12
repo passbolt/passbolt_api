@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Auth Controller
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class AuthController extends AppController {
 
@@ -42,7 +41,7 @@ class AuthController extends AppController {
 /**
  * Triggers GPGAuth first step, e.g. server key verification
  *
- * @return Message
+ * @return void
  */
 	public function verify() {
 		if ($this->request->is('post')) {

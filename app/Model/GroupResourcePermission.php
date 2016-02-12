@@ -1,12 +1,9 @@
 <?php
-
 /**
  * GroupResourcePermission Model
  *
- * @copyright        Copyright 2012, Passbolt.com
- * @license            http://www.passbolt.com/license
- * @package            app.Model.GroupResourcePermission
- * @since            version 2.12.11
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class GroupResourcePermission extends AppModel {
 
@@ -83,7 +80,6 @@ class GroupResourcePermission extends AppModel {
 				];
 				break;
 		}
-
 		return $returnValue;
 	}
 }

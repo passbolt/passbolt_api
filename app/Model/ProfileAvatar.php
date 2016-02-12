@@ -1,8 +1,19 @@
 <?php
+/**
+ * Profile Avatar Model
+ *
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ */
 App::uses('ImageStorage', 'FileStorage.Model');
 
 class ProfileAvatar extends ImageStorage {
 
+/**
+ * Defines which key to use while returning an avatar object
+ * to tell the path for the avatar image.
+ * @var string
+ */
 /**
  * Defines which key to use while returning an avatar object
  * to tell the path for the avatar image.
@@ -70,7 +81,6 @@ class ProfileAvatar extends ImageStorage {
 		} else {
 			$results = $this->addPathsInfo($results);
 		}
-
 		return $results;
 	}
 
@@ -124,15 +134,12 @@ class ProfileAvatar extends ImageStorage {
 /**
  * Get Image Url for an entry.
  *
- * @param array $image
- *   entry of the db
- * @param string $version
- *   version as defined in file storage configuration file.
+ * @param array $image entry of the db
+ * @param string $version version as defined in file storage configuration file.
  * @param array $options
- *
  * @return bool
  */
-	public function imageUrl($image, $version = null, $options = []) {
+	public function imageUrl($image, $version = null, $options = array()) {
 		// Default options.
 		$defaultOptions = [
 			'version' => 'small',
@@ -146,7 +153,6 @@ class ProfileAvatar extends ImageStorage {
 			if (isset($avatarDefaults[$version])) {
 				return $avatarDefaults[$version];
 			}
-
 			return false;
 		}
 
@@ -190,12 +196,10 @@ class ProfileAvatar extends ImageStorage {
 /**
  * Add avatar path information for each available size to the model.
  *
- * @param array $avatar
- *   a ProfileAvatar model
- * @return array
- *   ProfileAvatar with added information.
+ * @param array $avatar a ProfileAvatar model
+ * @return array ProfileAvatar with added information.
  */
-	public function addPathsInfo($avatar = []) {
+	public function addPathsInfo($avatar = array()) {
 		// Get available sizes.
 		$sizes = Configure::read('Media.imageSizes.ProfileAvatar');
 		$avatarsPath = [];

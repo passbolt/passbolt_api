@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Blacklist Component
  * Manages blacklisting of ip addresses in the system.
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class BlacklistComponent extends Component {
 
@@ -46,10 +45,8 @@ class BlacklistComponent extends Component {
 		// If address is blacklisted, gives a blackhole
 		if ($this->isIpInBlacklist()) {
 			$this->blackHole();
-
 			return;
 		}
-
 		parent::startup($controller);
 	}
 
@@ -70,7 +67,6 @@ class BlacklistComponent extends Component {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -84,7 +80,6 @@ class BlacklistComponent extends Component {
 		if ($this->controller->request->here != '/pages/blackhole') { // avoid loop redirection
 			$this->controller->redirect('/pages/blackhole');
 		}
-
 		return true;
 	}
 

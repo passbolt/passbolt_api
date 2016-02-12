@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Comments Controller
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class CommentsController extends AppController {
 
@@ -21,28 +20,24 @@ class CommentsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
 			$this->Message->error(__('Invalid request method, should be GET'));
-
 			return;
 		}
 
 		// check if the target foreign model is commentable
 		if (!$this->Comment->isValidForeignModel($foreignModelName)) {
 			$this->Message->error(__('The model %s is not commentable', $foreignModelName));
-
 			return;
 		}
 
 		// no instance id given
 		if (is_null($foreignId)) {
 			$this->Message->error(__('The %s id is missing', $foreignModelName));
-
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
 			$this->Message->error(__('The %s id is invalid', $foreignModelName));
-
 			return;
 		}
 
@@ -50,7 +45,6 @@ class CommentsController extends AppController {
 		$instance = $this->Comment->$foreignModelName->findById($foreignId);
 		if (!$instance) {
 			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
-
 			return;
 		}
 
@@ -60,7 +54,6 @@ class CommentsController extends AppController {
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->Comment->$foreignModelName->isAuthorized($foreignId, PermissionType::READ)) {
 			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), ['code' => 403]);
-
 			return;
 		}
 
@@ -89,28 +82,24 @@ class CommentsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
-
 			return;
 		}
 
 		// check if the target foreign model is commentable
 		if (!$this->Comment->isValidForeignModel($foreignModelName)) {
 			$this->Message->error(__('The model %s is not commentable', $foreignModelName));
-
 			return;
 		}
 
 		// no instance id given
 		if (is_null($foreignId)) {
 			$this->Message->error(__('The %s id is missing', $foreignModelName));
-
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
 			$this->Message->error(__('The %s id is invalid', $foreignModelName));
-
 			return;
 		}
 
@@ -118,7 +107,6 @@ class CommentsController extends AppController {
 		$instance = $this->Comment->$foreignModelName->findById($foreignId);
 		if (!$instance) {
 			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
-
 			return;
 		}
 
@@ -127,15 +115,13 @@ class CommentsController extends AppController {
 		// the permissionable after find executed on the previous operation findById should drop
 		// any record the user is not authorized to access. This test should always be true.
 		if (!$this->Comment->$foreignModelName->isAuthorized($foreignId, PermissionType::READ)) {
-			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), ['code' => 403]);
-
+			$this->Message->error(__('You are not authorized to access this %s', $foreignModelName), array('code' => 403));
 			return;
 		}
 
 		// check if data was provided
 		if (!isset($postData['Comment'])) {
 			$this->Message->error(__('No data were provided'));
-
 			return;
 		}
 		// add data to the posted data
@@ -147,7 +133,6 @@ class CommentsController extends AppController {
 		// check if the data is valid
 		if (!$this->Comment->validates()) {
 			$this->Message->error(__('Could not validate data'));
-
 			return;
 		}
 
@@ -172,28 +157,24 @@ class CommentsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
-
 			return;
 		}
 
 		// check if the is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The comment id is missing'));
-
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The comment id is invalid'));
-
 			return;
 		}
 
 		// check if the comment exists
 		if (!$this->Comment->exists($id)) {
 			$this->Message->error(__('The comment does not exist'), ['code' => 404]);
-
 			return;
 		}
 
@@ -207,14 +188,12 @@ class CommentsController extends AppController {
 		// check if the data is valid
 		if (!$this->Comment->validates()) {
 			$this->Message->error(__('Unable to validate the pushed data'));
-
 			return;
 		}
 
 		// check the user is the owner of the comment or it has the role to edit it
 		if (!$this->Comment->isOwner($id)) {
 			$this->Message->error(__('Your are not allowed to edit this comment'), ['code' => 403]);
-
 			return;
 		}
 
@@ -223,7 +202,6 @@ class CommentsController extends AppController {
 		$comment = $this->Comment->save($pushData, true, $fields['fields']);
 		if ($comment === false) {
 			$this->Message->error(__('The comment could not be updated'));
-
 			return;
 		}
 
@@ -245,35 +223,30 @@ class CommentsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('delete')) {
 			$this->Message->error(__('Invalid request method, should be DELETE'));
-
 			return;
 		}
 
 		// check if the is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The comment id is missing'));
-
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The comment id is invalid'));
-
 			return;
 		}
 
 		// check if the comment exists
 		if (!$this->Comment->exists($id)) {
 			$this->Message->error(__('The comment does not exist'), ['code' => 404]);
-
 			return;
 		}
 
 		// check the user is the owner of the comment or it has the role to delete it
 		if (!$this->Comment->isOwner($id)) {
 			$this->Message->error(__('Your are not allowed to delete this comment'), ['code' => 403]);
-
 			return;
 		}
 

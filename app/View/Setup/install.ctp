@@ -2,14 +2,12 @@
 /**
  * Install very first step.
  *
- * @copyright	copyright 2015 passbolt.com
- * @license		http://www.passbolt.com/license
- * @package		app.View.Setup.Install
- * @since		version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $this->assign('title',	__('Install'));
 $this->assign('page_classes', 'setup install');
-$this->Html->css('setup', null, array('block' => 'css'));
+$this->Html->css('setup.min', null, array('block' => 'css'));
 $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scriptBottom'));
 ?>
 

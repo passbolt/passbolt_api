@@ -1,10 +1,9 @@
 <?php
-
 /**
  * AuthenticationToken Model
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class AuthenticationToken extends AppModel {
 
@@ -113,7 +112,6 @@ class AuthenticationToken extends AppModel {
 			return false;
 		}
 		$_this->create();
-
 		return $_this->save($token);
 	}
 
@@ -136,7 +134,6 @@ class AuthenticationToken extends AppModel {
 		if (!$_this->save($data)) {
 			throw new Exception(__('System error, could not save'));
 		}
-
 		return true;
 	}
 }

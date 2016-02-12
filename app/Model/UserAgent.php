@@ -3,8 +3,8 @@
  * User Agent
  * Short string that web browsers and other applications send to identify themselves to web servers
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppModel', 'Model');
 
@@ -57,7 +57,6 @@ class UserAgent extends AppModel {
 			$userAgent['UserAgent']['name'] = substr($userAgent['UserAgent']['name'], 0, 512);
 		}
 		$userAgent['UserAgent']['id'] = Common::uuid($userAgent['UserAgent']['name']);
-
 		UserAgent::createIfDoesNotExist($userAgent);
 
 		return $userAgent;

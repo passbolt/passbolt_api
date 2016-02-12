@@ -3,7 +3,7 @@
  * Config Debug Page
  *
  * @copyright    copyright 2012 passbolt.com
- * @license      http://www.passbolt.com/license
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  * @package      app.View.Pages.debug.config
  * @since        version 2.12.7
  */

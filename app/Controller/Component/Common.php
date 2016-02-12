@@ -1,12 +1,11 @@
 <?php
-
 /**
  * Common Component
  * This class serves as a space for convenience functions (mostly static)
  * that need to be globally available within this application.
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class Common extends Object {
 
@@ -23,7 +22,6 @@ class Common extends Object {
 		} else {
 			$ModelObj = ClassRegistry::init($model);
 		}
-
 		return $ModelObj;
 	}
 
@@ -43,7 +41,6 @@ class Common extends Object {
 			$string = bin2hex(openssl_random_pseudo_bytes(16));
 			$replacement = '${1}-${2}-4${4}-a${6}-${7}'; // v4
 		}
-
 		return preg_replace($pattern, $replacement, $string);
 	}
 

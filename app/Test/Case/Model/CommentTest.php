@@ -2,7 +2,7 @@
 /**
  * Comment Model Test
  *
- * @copyright		Copyright 2012, Passbolt.com
+ * @copyright		(c) 2015-present Bolt Softwares Pvt Ltd
  * @package			app.Test.Case.Model.CommentTest
  * @since			version 2.12.12
  * @license			http://www.passbolt.com/license

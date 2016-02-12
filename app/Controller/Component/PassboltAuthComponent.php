@@ -1,12 +1,11 @@
 <?php
-
 /**
  * PassboltAuth Component
  * Throttles the authentications.
  * This component prevents a user to do bruteforce attacks on the login by introducing compulsory time intervals between two login
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class PassboltAuthComponent extends AuthComponent {
 
@@ -22,22 +21,22 @@ class PassboltAuthComponent extends AuthComponent {
 
 /**
  * @var string $ip
- *        Stores the ip of the user for the current authentication attempt,
- *        it is populated by _setContext method
+ *      Stores the ip of the user for the current authentication attempt,
+ *      it is populated by _setContext method
  */
 	public $ip = null;
 
 /**
  * @var string $username
- *        Stores current username for authentication,
- *        it is populated by _setContext method
+ *      Stores current username for authentication,
+ *      it is populated by _setContext method
  */
 	public $username = null;
 
 /**
  * @var cakeRequest $request
- *        Stores cakephp request object,
- *        it is populated by _setContext method
+ *      Stores cakephp request object,
+ *      it is populated by _setContext method
  */
 	public $request = null;
 
@@ -118,7 +117,6 @@ class PassboltAuthComponent extends AuthComponent {
 	public function startup(Controller $controller) {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
-
 		return parent::startup($controller);
 	}
 
@@ -146,7 +144,6 @@ class PassboltAuthComponent extends AuthComponent {
 					return prev($this->throttlingStrategies['throttle']);
 				}
 			}
-
 			return end($this->throttlingStrategies['throttle']); // logically this should never happen
 		}
 	}
@@ -190,7 +187,6 @@ class PassboltAuthComponent extends AuthComponent {
 			}
 			$i++;
 		}
-
 		return false;
 	}
 
@@ -201,7 +197,6 @@ class PassboltAuthComponent extends AuthComponent {
  */
 	public function getAttempt() {
 		$attempt = $this->authenticationAttempt;
-
 		return ($attempt ? $attempt : 0);
 	}
 
@@ -249,7 +244,6 @@ class PassboltAuthComponent extends AuthComponent {
 		}
 		$now = time();
 		$next = $this->nextAuthentication();
-
 		return $now > $next;
 	}
 
@@ -268,7 +262,6 @@ class PassboltAuthComponent extends AuthComponent {
 		// it is equal to the last failure time + the interval time
 		$lastFailureTimestamp = strtotime($this->lastFailedAuth['AuthenticationLog']['created']);
 		$nextAuth = $lastFailureTimestamp + $interval;
-
 		return $nextAuth;
 	}
 
@@ -314,11 +307,9 @@ class PassboltAuthComponent extends AuthComponent {
 				// record blacklisting in database
 				$AuthenticationBlacklist->save($bl);
 			}
-
 			return false;
 		}
 		$this->controller->Session->delete('Throttle.nextLoginTime');
-
 		return $identified;
 	}
 }

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Gpgkeys controller
  * This file will define how gpg keys are managed
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class GpgkeysController extends AppController {
 
@@ -32,7 +31,6 @@ class GpgkeysController extends AppController {
 		$returnVal = $this->Gpgkey->find('all', $o);
 		if (empty($returnVal)) {
 			$this->Message->notice(__('There is no gpg keys to display'));
-
 			return;
 		}
 
@@ -50,14 +48,12 @@ class GpgkeysController extends AppController {
 		// check if the id is provided
 		if (!isset($id)) {
 			$this->Message->error(__('The user id is missing'));
-
 			return;
 		}
 
 		// check if the id is valid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The user id is invalid'));
-
 			return;
 		}
 
@@ -66,7 +62,6 @@ class GpgkeysController extends AppController {
 		$gpgkey = $this->Gpgkey->find('first', $o);
 		if (!$gpgkey) {
 			$this->Message->error(__('The user id is invalid'), ['code' => 404]);
-
 			return;
 		}
 		$this->set('data', $gpgkey);
@@ -82,14 +77,12 @@ class GpgkeysController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
-
 			return;
 		}
 
 		// check if data was provided
 		if (!isset($this->request->data['Gpgkey'])) {
 			$this->Message->error(__('No data were provided'));
-
 			return;
 		}
 
@@ -127,7 +120,6 @@ class GpgkeysController extends AppController {
 		if ($gpgkeyData === false) {
 			$this->Gpgkey->rollback();
 			$this->Message->error(__('The gpgkey provided could not be used'));
-
 			return;
 		}
 		$gpgkeyData['Gpgkey']['user_id'] = $userId;
@@ -139,7 +131,6 @@ class GpgkeysController extends AppController {
 		if (!$this->Gpgkey->validates()) {
 			$this->Gpgkey->rollback();
 			$this->Message->error(__('Could not validate gpgkey data'));
-
 			return;
 		}
 
@@ -153,7 +144,6 @@ class GpgkeysController extends AppController {
 		if ($gpgkey == false) {
 			$this->Gpgkey->rollback();
 			$this->Message->error(__('The gpgkey could not be saved'));
-
 			return;
 		}
 

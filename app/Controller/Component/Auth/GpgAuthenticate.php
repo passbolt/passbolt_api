@@ -3,8 +3,8 @@
  * GpgAuthenticate
  * Manages a GPG based authentication scheme
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
 App::uses('Gpgkey', 'Model');
@@ -72,7 +72,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 			} catch (Exception $e) {
 				return $this->__error('Decryption failed');
 			}
-
 			return false;
 		}
 
@@ -103,7 +102,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 			$msg = $this->_gpg->encryptsign($token);
 			$msg = quotemeta(urlencode($msg));
 			$this->_response->header('X-GPGAuth-User-Auth-Token', $msg);
-
 			return false;
 		}
 
@@ -130,7 +128,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 		$this->_response->header('X-GPGAuth-Progress', 'complete');
 		$this->_response->header('X-GPGAuth-Authenticated', 'true');
 		$this->_response->header('X-GPGAuth-Refer', '/');
-
 		return $user;
 	}
 
@@ -236,7 +233,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// First we check if we can get the user with the key fingerprint
 		if (!isset($request->data['gpg_auth']['keyid'])) {
 			$this->__debug('not key id set');
-
 			return false;
 		}
 		$keyid = $request->data['gpg_auth']['keyid'];
@@ -244,7 +240,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// validate the fingerprint format
 		if (!Gpgkey::isValidFingerprint($keyid)) {
 			$this->__debug('invalid fingerprint');
-
 			return false;
 		}
 
@@ -258,7 +253,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 		$user = $User->find('first', User::getFindOptions('User::GpgAuth', Role::USER, $user));
 		if (empty($user)) {
 			$this->__debug('user nor found');
-
 			return false;
 		}
 
@@ -286,7 +280,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 	private function __error($msg = null) {
 		$this->__debug($msg);
 		$this->_response->header('X-GPGAuth-Error', 'true');
-
 		return false;
 	}
 
@@ -315,7 +308,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 		if ($length != 36) {
 			return $this->__error($errorMsg . 'wrong token data length');
 		}
-
 		return true;
 	}
 }

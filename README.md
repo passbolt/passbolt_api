@@ -6,8 +6,7 @@
 	  /_/    \__,_/____/____/_,___/\____/_/\__/
 	
 	The open-source password management solution for teams
-	(c) 2012-2015 passbolt.com
-
+	(c) 2015-present Bolt Softwares Pvt Ltd
 
 
 Getting started
@@ -21,16 +20,16 @@ You will need browser with the passbolt plugin.
 You will need a webserver with SSL enabled.
 
 You will need to install php5 and the following modules directly or using pear/pecl:
-- mod_rewrite 	http://book.cakephp.org/2.0/en/installation/url-rewriting.html
-- Imagick		﻿http://php.net/manual/en/book.imagick.php
-- gnupg 		http://php.net/manual/en/gnupg.installation.php
-- Composer 		﻿https://getcomposer.org/
+- mod_rewrite http://book.cakephp.org/2.0/en/installation/url-rewriting.html
+- Imagick http://php.net/manual/en/book.imagick.php
+- gnupg http://php.net/manual/en/gnupg.installation.php
+- Composer https://getcomposer.org/
 
 For testing, code styling and coverage:
-- Phpunit 		﻿https://phpunit.de/
-- Curl 			http://php.net/manual/en/curl.installation.php
-- PhpCS			﻿https://pear.php.net/manual/en/package.php.php-codesniffer.php
-- XDebug		﻿http://xdebug.org/
+- Phpunit https://phpunit.de/
+- Curl http://php.net/manual/en/curl.installation.php
+- PhpCS https://pear.php.net/manual/en/package.php.php-codesniffer.php
+- XDebug http://xdebug.org/
 
 Getting the code
 ----------------

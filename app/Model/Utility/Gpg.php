@@ -21,10 +21,8 @@ use \OpenPGP as OpenPGP;
  *  - Velocity : Openpgp-php is a great library, but being implemented in PHP it can't be as fast as Php Gnupg.
  * So for all encryptions / decryption operations, we will prefer Php Gnupg
  *
- * @copyright    Copyright 2015, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Utility.Gpg
- * @since        version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class Gpg {
 

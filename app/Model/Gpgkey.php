@@ -2,10 +2,8 @@
 /**
  * Gpg Key Model
  *
- * @copyright    Copyright 2012, Passbolt.com
- * @license      http://www.passbolt.com/license
- * @package      app.Model.Gpgkey
- * @since        version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 if (!class_exists('\Passbolt\Gpg')) {

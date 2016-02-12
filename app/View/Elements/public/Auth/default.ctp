@@ -1,4 +1,11 @@
-
+<?php
+/**
+ * Login first step
+ *
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ */
+?>
 <div class="col6 push1 information">
     <h2>
         <?php echo __('Download the plugin to get started!'); ?>

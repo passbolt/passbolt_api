@@ -1,12 +1,11 @@
 <?php
-
 /**
  * IpAddress Component
  * Class used for working with IP addresses
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @link        http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @link http://pgregg.com/blog/2009/04/php-algorithms-determining-if-an-ip-is-within-a-specific-range/
  */
 class IpAddressComponent extends Component {
 
@@ -29,10 +28,10 @@ class IpAddressComponent extends Component {
  * different formats
  *
  * Network ranges can be specified as:
- * 1. Regular ip            127.0.0.1
- * 2. Wildcard format:        1.2.3.*
- * 3. CIDR format:            1.2.3/24  OR  1.2.3.4/255.255.255.0
- * 4. Start-End IP format:    1.2.3.0-1.2.3.255
+ * 1. Regular ip 127.0.0.1
+ * 2. Wildcard format: 1.2.3.*
+ * 3. CIDR format: 1.2.3/24  OR  1.2.3.4/255.255.255.0
+ * 4. Start-End IP format: 1.2.3.0-1.2.3.255
  *
  * The function will return true if the supplied IP is within the range.
  * Note little validation is done on the range inputs - it expects you to
@@ -53,7 +52,6 @@ class IpAddressComponent extends Component {
 				// $netmask is a 255.255.0.0 format
 				$netmask = str_replace('*', '0', $netmask);
 				$netmaskDec = ip2long($netmask);
-
 				return ((ip2long($ip) & $netmaskDec) == (ip2long($range) & $netmaskDec));
 			} else {
 				// $netmask is a CIDR size block
@@ -93,7 +91,6 @@ class IpAddressComponent extends Component {
 				$lowerDec = (float)sprintf("%u", ip2long($lower));
 				$upperDec = (float)sprintf("%u", ip2long($upper));
 				$ipDec = (float)sprintf("%u", ip2long($ip));
-
 				return (($ipDec >= $lowerDec) && ($ipDec <= $upperDec));
 			}
 

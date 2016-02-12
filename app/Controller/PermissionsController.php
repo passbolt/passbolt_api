@@ -3,8 +3,8 @@
  * Permissions controller
  * This file will define how permissions are managed
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Permission', 'Model');
 
@@ -24,34 +24,25 @@ class PermissionsController extends AppController {
  * @param string $permission permission type
  * @return void|bool void if error, true if save was a success
  */
-	private function __addAcoPermissions(
-		$acoModelName = '',
-		$acoInstanceId = null,
-		$aroModelName = '',
-		$aroInstanceId = null,
-		$permission = null
-	) {
+	private function __addAcoPermissions($acoModelName = '', $acoInstanceId = null, $aroModelName = '', $aroInstanceId = null, $permission = null) {
 		// The given permission type
 		$permissionType = isset($permission) ? $permission : null;
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
 			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
-
 			return false;
 		}
 
 		// no aco instance id given
 		if (is_null($acoInstanceId)) {
 			$this->Message->error(__('The %s id is missing', $acoModelName));
-
 			return false;
 		}
 
 		// the aco instance id is invalid
 		if (!Common::isUuid($acoInstanceId)) {
 			$this->Message->error(__('The %s id is invalid', $acoModelName));
-
 			return false;
 		}
 
@@ -60,21 +51,18 @@ class PermissionsController extends AppController {
 		if (!$this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::OWNER)) {
 			$this->Message->error(__('Your are not allowed to add a permission to the %s', $acoModelName),
 				['code' => 403]);
-
 			return false;
 		}
 
 		// not allowed aro model
 		if (is_null($aroModelName)) {
 			$this->Message->error(__('The target ARO model is not allowed'));
-
 			return false;
 		}
 
 		// the ARO instance id is invalid
 		if (!Common::isUuid($aroInstanceId)) {
 			$this->Message->error(__('The id %s is invalid', $aroInstanceId));
-
 			return false;
 		}
 
@@ -83,28 +71,24 @@ class PermissionsController extends AppController {
 		if (!$this->$aroModelName->exists($aroInstanceId)) {
 			$this->Message->error(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it',
 				$aroInstanceId, $aroModelName));
-
 			return false;
 		}
 
 		// no permission type given
 		if (is_null($permissionType)) {
 			$this->Message->error(__('No permission type given'));
-
 			return false;
 		}
 
 		// the permission type is invalid
 		if (!$this->Permission->PermissionType->isValidSerial($permissionType)) {
 			$this->Message->error(__('The given permission type is not valid'));
-
 			return false;
 		}
 
 		// Check that the permission if a permission already exists
 		if (!$this->Permission->isUniqueByFields($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId)) {
 			$this->Message->error(__('A direct permission already exists'));
-
 			return false;
 		}
 
@@ -122,7 +106,6 @@ class PermissionsController extends AppController {
 		$this->Permission->set($data);
 		if (!$this->Permission->validates()) {
 			$this->Message->error($this->Permission->validationErrors);
-
 			return false;
 		}
 
@@ -151,7 +134,6 @@ class PermissionsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
-
 			return;
 		}
 
@@ -172,7 +154,6 @@ class PermissionsController extends AppController {
 			$permissionType);
 		if (!$save) {
 			$this->Message->error(__('Could not save the permission'));
-
 			return;
 		}
 
@@ -204,28 +185,24 @@ class PermissionsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
 			$this->Message->error(__('Invalid request method, should be GET'));
-
 			return;
 		}
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
 			$this->Message->error(__('The model %s is not permissionable', $acoModelName));
-
 			return;
 		}
 
 		// no aco instance id given
 		if (is_null($acoInstanceId)) {
 			$this->Message->error(__('The %s id is missing', $acoModelName));
-
 			return;
 		}
 
 		// the aco instance id is invalid
 		if (!Common::isUuid($acoInstanceId)) {
 			$this->Message->error(__('The %s id is invalid', $acoModelName));
-
 			return;
 		}
 
@@ -234,7 +211,6 @@ class PermissionsController extends AppController {
 		$acoInstance = $this->$acoModelName->findById($acoInstanceId);
 		if (empty($acoInstance)) {
 			$this->Message->error(__('The %s does not exist', $acoModelName));
-
 			return;
 		}
 
@@ -243,7 +219,6 @@ class PermissionsController extends AppController {
 			$returnValue = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
 		} catch (Exception $e) {
 			$this->Message->error($e->getMessage());
-
 			return;
 		}
 
@@ -274,7 +249,6 @@ class PermissionsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('post')) {
 			$this->Message->error(__('Invalid request method, should be POST'));
-
 			return;
 		}
 
@@ -328,21 +302,18 @@ class PermissionsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
-
 			return;
 		}
 
 		// the permission id is missing
 		if (is_null($id)) {
 			$this->Message->error(__('The permission id is missing'));
-
 			return;
 		}
 
 		// the permission id is invalid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The permission id is invalid'));
-
 			return;
 		}
 
@@ -372,7 +343,6 @@ class PermissionsController extends AppController {
 		// check if the data is valid
 		if (!$this->Permission->validates()) {
 			$this->Message->error(__('Unable to validate the pushed data'));
-
 			return;
 		}
 
@@ -381,7 +351,6 @@ class PermissionsController extends AppController {
 		$permission = $this->Permission->save($pushData, true, $fields['fields']);
 		if ($permission === false) {
 			$this->Message->error(__('The permission could not be updated'));
-
 			return;
 		}
 
@@ -429,21 +398,18 @@ class PermissionsController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('delete')) {
 			$this->Message->error(__('Invalid request method, should be DELETE'));
-
 			return;
 		}
 
 		// the permission id is missing
 		if (is_null($id)) {
 			$this->Message->error(__('The permission id is missing'));
-
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The permission id is invalid'));
-
 			return;
 		}
 

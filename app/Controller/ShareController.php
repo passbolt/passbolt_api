@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Share Controller
  *
- * @copyright    (c) 2015-present Passbolt.com
- * @licence        GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ShareController extends AppController {
 
@@ -305,21 +304,18 @@ class ShareController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
 			$this->Message->error(__('Invalid request method, should be PUT'));
-
 			return;
 		}
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
 			$this->Message->error(__('The call to entry point with parameter %s is not allowed', $acoModelName));
-
 			return;
 		}
 
 		// If permissions are not provided, call is useless.
 		if (empty($permissions) || is_null($permissions)) {
 			$this->Message->error(__('No permissions were provided'));
-
 			return;
 		}
 
@@ -333,7 +329,6 @@ class ShareController extends AppController {
 		} catch (Exception $e) {
 			$this->Permission->rollback();
 			$this->Message->error($e->getMessage());
-
 			return;
 		}
 
@@ -354,7 +349,6 @@ class ShareController extends AppController {
 		} catch (Exception $e) {
 			$this->Permission->rollback();
 			$this->Message->error($e->getMessage());
-
 			return;
 		}
 
@@ -424,28 +418,24 @@ class ShareController extends AppController {
 		// check the HTTP request method
 		if (!$this->request->is('get')) {
 			$this->Message->error(__('Invalid request method, should be GET'));
-
 			return;
 		}
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($model)) {
 			$this->Message->error(__('The model %s is not permissionable', $model));
-
 			return;
 		}
 
 		// the instance id is missing
 		if (is_null($id)) {
 			$this->Message->error(__('The %s id is missing', strtolower($model)));
-
 			return;
 		}
 
 		// the instance id is invalid
 		if (!Common::isUuid($id)) {
 			$this->Message->error(__('The %s id is invalid', strtolower($model)));
-
 			return;
 		}
 
@@ -459,7 +449,6 @@ class ShareController extends AppController {
 		// the user can share a resource only if he is owner of this resource
 		if (!$this->Permission->$model->isAuthorized($id, PermissionType::OWNER)) {
 			$this->Message->error(__('You are not authorized to share this %s', strtolower($model)), ['code' => 403]);
-
 			return;
 		}
 

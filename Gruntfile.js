@@ -19,9 +19,6 @@ module.exports = function(grunt) {
 		config : config,
 		pkg: grunt.file.readJSON('package.json'),
 		clean: {
-			css: [
-				'<%= config.webroot %>/css/*.css', '!<%= config.webroot %>/css/cake.generic.css'
-			],
 			'js': [
 				'<%= config.webroot %>/js/app/production.js'
 			],
@@ -40,38 +37,6 @@ module.exports = function(grunt) {
 				'<%= config.webroot %>/js/lib/jssha',
 				'<%= config.webroot %>/js/lib/urijs'
 			]
-		},
-		lesslint: {
-			src: ['<%= config.webroot %>/less/*.less']
-		},
-		less: {
-			files: {
-				expand: true,
-				flatten: true,
-				cwd: "<%= config.webroot %>/less/",
-				src: "*.less",
-				dest: "<%= config.webroot %>/css/",
-				ext: ".css"
-			}
-		},
-		cssmin: {
-			options: {
-				banner: '/**!\n'+
-						' * @name\t\t<%= pkg.name %>\n'+
-						' * @version\t\tv<%= pkg.version %>\n' +
-						' * @date\t\t<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-						' * @copyright\t<%= pkg.copyright %>\n' +
-						' * @source\t\t<%= pkg.repository %>\n'+
-						' * @license\t\t<%= pkg.license %>\n */\n',
-				footer: '/* @license-end */'
-			},
-			minify: {
-				expand: true,
-				cwd: '<%= config.webroot %>/css/',
-				src: ['*.css', '!*.min.css'],
-				dest: '<%= config.webroot %>/css/',
-				ext: '.min.css'
-			}
 		},
 		shell: {
 			jsmin: {
@@ -119,14 +84,9 @@ module.exports = function(grunt) {
 					expand: true
 				},{
 					// Less
-					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/less',
-					src: [
-						'abstractions/**','base/**','components/**','dialogs/**',
-						'pages/launching.less','pages/login.less','pages/passwords.less',
-						'pages/users.less', 'pages/settings.less', 'pages/setup.less', 'setup.less',
-						'pages/login.less', 'login.less', 'main.less', 'devel.less'
-					],
-					dest: '<%= config.webroot %>/less',
+					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/build/css',
+					src: ['devel.min.css', 'login.min.css', 'main.min.css', 'setup.min.css'],
+					dest: '<%= config.webroot %>/css',
 					expand: true
 				}]
 			},
@@ -211,15 +171,6 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		watch: {
-			less: {
-				files: ['Gruntfile.js', 'package.json', '<%= config.webroot %>/less/*.less','<%= config.webroot %>/less/**/*.less'],
-				tasks: ['css'],
-				options: {
-					spawn: false
-				}
-			}
-		},
 		"steal-build": {
 			default: {
 				options: {
@@ -243,8 +194,6 @@ module.exports = function(grunt) {
 	// ========================================================================
 	// Initialise
 
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -252,12 +201,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
-
-	grunt.loadNpmTasks('grunt-lesslint');
-
-	grunt.loadNpmTasks('grunt-contrib-less');
-
-	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.loadNpmTasks('grunt-shell');
 
@@ -268,15 +211,8 @@ module.exports = function(grunt) {
 	// ========================================================================
 	// Register Tasks
 
-	// Run 'grunt csslint' to check LESS quality, and if no errors then
-	// compile LESS into CSS, combine and minify
-	grunt.registerTask('csslint', ['lesslint', 'css']);
-
-	// Run 'grunt css' to compile LESS into CSS, combine and minify
-	grunt.registerTask('css', ['clean:css', 'less', 'cssmin']);
-
 	// Npm styleguide deploy
-	grunt.registerTask('styleguide-deploy', ['shell:updatestyleguide','copy:styleguide','css']);
+	grunt.registerTask('styleguide-deploy', ['shell:updatestyleguide','copy:styleguide']);
 
 	// Npm libs deploy
 	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
@@ -285,13 +221,12 @@ module.exports = function(grunt) {
 	grunt.registerTask('js', ['clean:js', 'shell:jsmin']);
 
 	// Run 'grunt production' to prepare the production release
-	grunt.registerTask('production', ['css', 'clean:js', 'shell:jsmin']);
+	grunt.registerTask('production', ['clean:js', 'shell:jsmin']);
 
 	// Build mad & all the demos apps to ensure that everything compile
 	grunt.registerTask("build", ["steal-build"]);
 
-	// 'grunt' will check code quality, and if no errors,
-	// compile LESS to CSS, and minify and concatonate all JS and CSS
-	grunt.registerTask('default', ['css']);
+	// 'grunt' default
+	grunt.registerTask('default', ['clean:js', 'shell:jsmin']);
 
 };
