@@ -103,8 +103,10 @@ var Response = mad.Model.extend('mad.net.Response', /** @static */ {
     isResponse: function (data) {
         var returnValue = false;
 
+        // A response cannot be empty.
         if(typeof data != 'undefined' && data != null) {
-            if (data.header && data.body) {
+            // A response should carry a header.
+            if (data.header) {
                 returnValue = true
             }
         }

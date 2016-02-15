@@ -39,6 +39,12 @@ Cache::config('default', $commonCache);
 Configure::load('app'); // Application
 require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
 require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Exceptions
+// Extra configuration for selenium tests.
+if (Configure::read('debug') > 0 && Configure::read('App.selenium')) {
+	if (file_exists(__DIR__ . DS . 'selenium.php')) {
+		Configure::load('selenium');
+	}
+}
 
 /**
  * API and DOC Plugins

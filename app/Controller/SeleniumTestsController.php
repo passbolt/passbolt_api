@@ -56,13 +56,38 @@ class SeleniumTestsController extends AppController {
 				'showLastEmail',
 				'resetInstance',
 				'error404',
-				'error500'
+				'error500',
+				'setExtraConfig',
+				'resetExtraConfig',
+				'resetExtraConfig',
 			]
 		);
 		// Use table email_queue. (seems that cakephp refuses to take the default of the class).
 		$this->EmailQueue->useTable = 'email_queue';
 
 		parent::beforeFilter();
+	}
+
+/**
+ * Set extra selenium config
+ *
+ * @return void
+ */
+	public function setExtraConfig() {
+		$data = $this->request->input('json_decode', true);
+		$seleniumExtraConfig = '<?php $config = ' . var_export($data, true) . ';';
+		file_put_contents(APP . DS . 'Config' . DS . 'selenium.php', $seleniumExtraConfig);
+		die();
+	}
+
+/**
+ * Reset extra selenium config
+ *
+ * @return void
+ */
+	public function resetExtraConfig() {
+		unlink(APP . DS . 'Config' . DS . 'selenium.php');
+		die();
 	}
 
 /**

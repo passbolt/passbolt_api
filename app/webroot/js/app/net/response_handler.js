@@ -1,4 +1,7 @@
 import 'mad';
+
+import 'app/component/session_expired';
+
 /**
  * @inherits {mad.net.ResponseHandler}
  * @parent index
@@ -22,9 +25,9 @@ mad.net.ResponseHandler.extend('passbolt.net.ResponseHandler', /** @static */ {
 		// the notification system will take care of filtering what should be displayed.
 		if (mad.bus) {
 			mad.bus.trigger('passbolt_notify', {
-				'title': this.response.header.title,
-				'status': this.response.header.status,
-				'data': this.response
+				title: this.response.header.title,
+				status: this.response.header.status,
+				data: this.response
 			});
 		}
 		this._super();
@@ -35,7 +38,20 @@ mad.net.ResponseHandler.extend('passbolt.net.ResponseHandler', /** @static */ {
 		// Redirect the user to the front page.
 		if(this.response.getStatus() == mad.net.Response.STATUS_ERROR
 			&& this.response.getMessage() == __('You need to login to access this location')) {
-			location.href = mad.Config.read('app.url');
+
+			// If the session expired dialog has already been shown.
+			if ($('.session-expired-dialog').length > 0) {
+				return;
+			}
+
+			// get the dialog
+			var dialog = new mad.component.Dialog(null, {
+				label: __('Session expired'),
+				cssClasses : ['session-expired-dialog', 'dialog-wrapper']
+			}).start();
+
+			// attach the component to the dialog
+			dialog.add(passbolt.component.SessionExpired, {});
 		}
 		else {
 			// @todo Same for success we use message as title, maybe we should to something cleaner.

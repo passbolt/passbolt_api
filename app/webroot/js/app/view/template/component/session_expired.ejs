@@ -1,0 +1,10 @@
+<div class="form-content">
+    <p>
+        <%= __('Your session has expired, please log in again. You will be automatically redirected to the login page in') %>
+        <span id="js-redirect-count-down"><%= timeToRedirect %></span> <%= __('seconds.') %>
+    </p>
+</div>
+
+<div class="submit-wrapper clearfix">
+    <input id="confirm-button" type="submit" value="<%= __('Redirect now') %>" class="button primary">
+</div>

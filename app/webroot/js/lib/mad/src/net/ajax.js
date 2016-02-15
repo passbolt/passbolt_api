@@ -134,7 +134,7 @@ var Ajax = mad.net.Ajax = can.Construct.extend('mad.net.Ajax', /** @static */ {
                     }
 
                     // In case we've been able to parse the server answer.
-                    if (jsonData != null && mad.net.Response.isResponse(jsonData)) {
+                    if (mad.net.Response.isResponse(jsonData)) {
                         response = new mad.net.Response(jsonData);
                     }
                     // Otherwise treat a default unreacheable server answer.
