@@ -21,21 +21,11 @@ var SessionExpired = passbolt.component.SessionExpired = mad.Component.extend('p
 		label: 'Session Expired Controller',
 		templateBased: true,
 		templateUri: 'app/view/template/component/session_expired.ejs',
-		timeToRedirect: 60000,
-		countDownInterval: null
+		timeToRedirect: 5000,
+		countDownInterval: null,
 	}
 
 }, /** @prototype */ {
-
-	/**
-	 * Before render hook.
-	 * @see {mad.Component}
-	 */
-	beforeRender: function() {
-		this._super();
-		// Set user key data.
-		this.setViewData('timeToRedirect', this.options.timeToRedirect/1000);
-	},
 
 	/**
 	 * The session expired component has been destroyed.
@@ -60,8 +50,6 @@ var SessionExpired = passbolt.component.SessionExpired = mad.Component.extend('p
 				if (elapsedTime > self.options.timeToRedirect) {
 					clearInterval(self.options.countDownInterval);
 					location.href = mad.Config.read('app.url');
-				} else {
-					$('#js-redirect-count-down', self.element).html(Math.round((self.options.timeToRedirect - elapsedTime)/1000));
 				}
 			}, 1000);
 	},
