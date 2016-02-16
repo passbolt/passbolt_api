@@ -76,7 +76,7 @@ class SeleniumTestsController extends AppController {
 	public function setExtraConfig() {
 		$data = $this->request->input('json_decode', true);
 		$seleniumExtraConfig = '<?php $config = ' . var_export($data, true) . ';';
-		file_put_contents(APP . DS . 'Config' . DS . 'selenium.php', $seleniumExtraConfig);
+		file_put_contents(TMP . DS . 'selenium' . DS . 'core_extra_config.php', $seleniumExtraConfig);
 		die();
 	}
 
@@ -86,7 +86,7 @@ class SeleniumTestsController extends AppController {
  * @return void
  */
 	public function resetExtraConfig() {
-		unlink(APP . DS . 'Config' . DS . 'selenium.php');
+		unlink(TMP . DS . 'selenium' . DS . 'core_extra_config.php');
 		die();
 	}
 

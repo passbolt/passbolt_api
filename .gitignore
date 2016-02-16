@@ -14,6 +14,8 @@
 /app/tmp/gpg/*
 /app/tmp/logs/*
 /app/tmp/purifier/*
+/app/tmp/selenium/*
+!/app/tmp/selenium/empty
 /app/tmp/sessions/*
 /app/tmp/tests/*
 /app/tmp/image-processing/*
@@ -23,7 +25,6 @@
 # Plugins
 /Plugin
 /plugins
-
 
 # Vendors
 #/vendor
