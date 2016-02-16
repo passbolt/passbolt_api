@@ -42,7 +42,8 @@ require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Ex
 // Extra configuration for selenium tests.
 if (Configure::read('debug') > 0 && Configure::read('App.selenium')) {
 	if (file_exists(TMP . DS . 'selenium' . DS . 'core_extra_config.php')) {
-		Configure::load('selenium');
+		Configure::config('extra_config', new PhpReader(TMP . DS . 'selenium' . DS));
+		Configure::load('core_extra_config.php', 'extra_config');
 	}
 }
 
