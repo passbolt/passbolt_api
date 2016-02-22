@@ -80,7 +80,7 @@
 											<h3>Welcome <?php echo $account['Profile']['first_name']; ?>,</h3><br/>
 
 											You just opened an account on passbolt at <a href="<?php echo Router::url('/',true); ?>"><?php echo Router::url('/',true); ?></a>.
-											Passbolt is password manager that is designed to allow sharing credentials with your team without making compromises on security!<br/>
+											Passbolt is an open source password manager that is designed to allow sharing credentials with your team without making compromises on security!<br/>
 											<br/>
 											Let's take the next five minutes to get you started!<br/>
 										</td>

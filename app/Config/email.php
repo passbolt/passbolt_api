@@ -44,12 +44,12 @@ class EmailConfig {
 
 	public $default = array(
 		'transport' => 'Smtp',
-		'from' => array('kevin@passbolt.com' => 'Passbolt'),
+		'from' => array('contact@passbolt.com' => 'Passbolt'),
 		'host' => 'smtp.mandrillapp.com',
 		'port' => 587,
 		'timeout' => 30,
-		'username' => 'kevin@passbolt.com',
-		'password' => 'geUpSktGlBmKA67mAlOZMw',
+		'username' => '',
+		'password' => '',
 	);
 
 	public $smtp = array(
