@@ -36,6 +36,7 @@ Cache::config('default', $commonCache);
 /**
  * Additional App Configuration
  */
+Configure::load('version'); // Version
 Configure::load('app'); // Application
 require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Special Classes
 require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Exceptions
