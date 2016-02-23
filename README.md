@@ -9,6 +9,10 @@
 	(c) 2015-present Bolt Softwares Pvt Ltd
 
 
+Passbolt in a glimpse
+=====================
+![Passwords list](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot4-275.png)
+
 Getting started
 ===============
 
