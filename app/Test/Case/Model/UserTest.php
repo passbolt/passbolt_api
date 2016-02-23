@@ -316,7 +316,7 @@ class UserTest extends CakeTestCase {
 
 		$should_find = array(
 			'User::index', 'User::view', 'User::activation', 'Bogus::stuff',
-			'User::validateAccount', 'User::edit', 'User::save', 'User::delete'
+			'User::validateAccount', 'User::edit', 'User::save', 'User::softDelete'
 		);
 		foreach ($should_find as $find) {
 			$f = $this->User->getFindFields($find);
@@ -491,4 +491,20 @@ class UserTest extends CakeTestCase {
 		$this->assertFalse($validates);
 		$this->assertTrue(array_key_exists('role_id', $this->User->validationErrors));
 	}
+
+	/**
+	 * Test that when soft delete a user it is still in db and his permissions have been revoked
+	 */
+	public function testSoftDelete() {
+		$user = $this->User->find('first', array('conditions' => array('username' => 'admin@passbolt.com')));
+		$this->User->setActive($user);
+
+		$userA = $this->User->find('first', array('conditions' => array('username' => 'ada@passbolt.com')));
+		$this->User->softDelete($userA['User']['id']);
+
+		// User deleted field should be set at true
+		$userA = $this->User->find('first', array('conditions' => array('username' => 'ada@passbolt.com')));
+		$this->assertEqual($userA['User']['deleted'], true);
+	}
+
 }

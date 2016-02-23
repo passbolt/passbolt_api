@@ -59,7 +59,6 @@ class SeleniumTestsController extends AppController {
 				'error500',
 				'setExtraConfig',
 				'resetExtraConfig',
-				'resetExtraConfig',
 			]
 		);
 		// Use table email_queue. (seems that cakephp refuses to take the default of the class).
