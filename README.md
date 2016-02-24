@@ -27,7 +27,8 @@ Getting started
 Prerequisite
 ------------
 
-You will need browser with the passbolt plugin.
+You will need firefox browser with the passbolt plugin. Passbolt is compatible with firefox only at the moment.
+The plugin repository is here : https://github.com/passbolt/passbolt_firefox
 
 You will need a webserver with SSL enabled.
 
@@ -48,7 +49,7 @@ Getting the code
 
 Clone the repository and associated submodules
 ```
-	git clone git@bitbucket.org:passbolt/passbolt
+	git clone https://github.com/passbolt/passbolt_firefox.git
 	cd passbolt
 ```
 
@@ -69,6 +70,11 @@ Copy the database configuration file and edit the database name and credentials
 Copy the app configuration file and check the settings
 ```
 	cp app/Config/app.php.default app/Config/app.php
+```
+
+Set the email settings to be able to send emails
+```
+	nano app/Config/email.php
 ```
 
 Installation script
@@ -132,6 +138,13 @@ To fix this, add/uncomment this line in Config/core.php
 How to edit the LESS/CSS files?
 -------------------------------
 
+All the less and css files of passbolt are managed through a styleguide.
+https://github.com/passbolt/passbolt_styleguide
+
+Any modification in the style has to be first implemented in the styleguide.
+
+To deploy the styleguide :
+
 Install grunt and grunt
 ```
 	npm install -g grunt-cli
@@ -169,9 +182,13 @@ Make sure Debug is set to at least 1 in Config/app.php
 You can then go to test.php and run the tests from there.
 For example: ﻿http://localhost/passbolt/test.php
 
-Selenium tests are available on separate project:
-https://github.com/passbolt/passbolt_selenium
+How do I run the selenium tests?
+--------------------------------
 
+Passbolt is provided with a suite of selenium tests.
+
+The selenium test suite is available in a separate project :
+https://github.com/passbolt/passbolt_selenium
 
 How to regenerate the fixtures?
 -------------------------------
@@ -247,38 +264,13 @@ Credits
 Passbolt Team Rocket
 --------------------
 
-Kevin, Cedric, Remy, Aurelie, Ismael & Myriam
+Design and programming :
+ - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
+ - [Cédric Alfonsi](https://github.com/cedricalfonsi "Cédric Alfonsi")
+ - [Remy Bertot](https://github.com/stripthis "Remy Bertot")
+ 
+Unconditional support :
+Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur.
 
-
-CakePHP
---------
-
-CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record,
-Association Data Mapping, Front Controller and MVC.Our primary goal is to provide a structured framework that
- enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility.
-
-[CakePHP](http://www.cakephp.org) - The rapid development PHP framework
-
-[Cookbook](http://book.cakephp.org) - THE Cake user documentation; start learning here!
-
-[Plugins](http://plugins.cakephp.org/) - A repository of extensions to the framework
-
-[The Bakery](http://bakery.cakephp.org) - Tips, tutorials and articles
-
-[API](http://api.cakephp.org) - A reference to Cake's classes
-
-[CakePHP TV](http://tv.cakephp.org) - Screen casts from events and video tutorials
-
-[The Cake Software Foundation](http://cakefoundation.org/) - promoting development related to CakePHP
-
-[Our Google Group](http://groups.google.com/group/cake-php) - community mailing list and forum
-
-[#cakephp](http://webchat.freenode.net/?channels=#cakephp) on irc.freenode.net - Come chat with us, we have cake.
-
-[Q & A](http://ask.cakephp.org/) - Ask questions here, all questions welcome
-
-[Lighthouse](http://cakephp.lighthouseapp.com/) - Got issues? Please tell us!
-
-[![Bake Status](https://secure.travis-ci.org/cakephp/cakephp.png?branch=master)](http://travis-ci.org/cakephp/cakephp)
-
-![Cake Power](https://raw.github.com/cakephp/cakephp/master/lib/Cake/Console/Templates/skel/webroot/img/cake.power.gif)
+More :
+https://www.passbolt.com/credits
