@@ -495,7 +495,7 @@ class User extends AppModel {
 						break;
 
 					case 'Share::searchUsers':
-						// Use already conditions already defined for the index case
+						// Use conditions already defined for the index case
 						$conditions = User::getFindConditions('User::index', $role, $data);
 						// Only return users who don't have a direct permission defined for the given aco instance
 						$conditions['joins'][] = [
@@ -680,7 +680,7 @@ class User extends AppModel {
 					]
 				];
 				break;
-			case 'User::delete':
+			case 'User::softDelete':
 				$fields = [
 					'fields' => [
 						'deleted'
@@ -772,5 +772,43 @@ class User extends AppModel {
 		$dataSource->commit();
 
 		return array_merge($saveUser, $saveProfile, $saveToken);
+	}
+
+/**
+ * Soft delete a user.
+ *
+ * @param string $userId Id of the user to soft delete
+ * @return void
+ *
+ * @throws Exception
+ * @throws ValidationException
+ */
+	public function softDelete($userId) {
+		$Permission = ClassRegistry::init('Permission');
+
+		// Begin transaction
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+
+		// Mark the user as deleted
+		$data['User'] = [
+			'id' => $userId,
+			'deleted' => true
+		];
+		$fields = $this->getFindFields('User::softDelete', User::get('Role.name'));
+		if (!$this->save($data, true, $fields['fields'])) {
+			$dataSource->rollback();
+			throw new Exception(__('Unable to soft delete the user'));
+		}
+
+		// Revoke the user's permissions
+		$deleteOptions = ['Permission.aro_foreign_key' => $userId];
+		if (!$Permission->deleteAll($deleteOptions, false)) {
+			$dataSource->rollback();
+			throw new Exception(__('Unable to delete de user\'s permissions'));
+		}
+
+		// Everything fine, we commit.
+		$dataSource->commit();
 	}
 }

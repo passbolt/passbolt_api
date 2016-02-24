@@ -32,7 +32,13 @@ class UsersControllerTest extends ControllerTestCase {
 		'app.authenticationBlacklist',
 		'core.cakeSession',
 		'app.user_agent',
-		'app.controller_log'
+		'app.controller_log',
+		'app.resource',
+		'app.category',
+		'app.categories_resource',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
 	);
 
 	public $user;
@@ -836,6 +842,186 @@ class UsersControllerTest extends ControllerTestCase {
 			1,
 			$deleted['User']['deleted'],
 			"delete /users/{$userId}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}"
+		);
+	}
+
+	/**
+	 * Test retrieve see user in index that has been previously soft deleted.
+	 */
+	public function testDeleteAndIndex() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// the user to delete
+		$userId = common::uuid('user.id.user');
+		$result = json_decode(
+			$this->testAction(
+				"/users/{$userId}.json",
+				array(
+					'method' => 'delete',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Status::SUCCESS,
+			$result['header']['status'],
+			"delete /users/{$userId}.json : The test should return a success but is returning {$result['header']['status']}"
+		);
+
+		// Try to get all users
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET')), true);
+		$usersIds = Hash::extract($result['body'], '{n}.User.id');
+
+		// The user that has been deleted is not in the list of user
+		$this->assertFalse(in_array($userId, $usersIds));
+	}
+
+	/**
+	 * Test can't retrieve user that has been previously soft deleted.
+	 */
+	public function testDeleteAndView() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// the user to delete
+		$userId = common::uuid('user.id.user');
+		$result = json_decode(
+			$this->testAction(
+				"/users/{$userId}.json",
+				array(
+					'method' => 'delete',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Status::SUCCESS,
+			$result['header']['status'],
+			"delete /users/{$userId}.json : The test should return a success but is returning {$result['header']['status']}"
+		);
+
+		// Try to retrieve the user details
+		$this->setExpectedException('HttpException', 'The user does not exist');
+		$result = json_decode(
+			$this->testAction(
+				"/users/{$userId}.json",
+				array('return' => 'contents', 'method' => 'GET'),
+				true
+			)
+		);
+	}
+
+	/**
+	 * Test can't update user that has been previously soft deleted.
+	 */
+	public function testDeleteAndUpdate() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// the user to delete
+		$userId = common::uuid('user.id.user');
+		$result = json_decode(
+			$this->testAction(
+				"/users/{$userId}.json",
+				array(
+					'method' => 'delete',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Status::SUCCESS,
+			$result['header']['status'],
+			"delete /users/{$userId}.json : The test should return a success but is returning {$result['header']['status']}"
+		);
+
+		// Try to update a user that has been deleted
+		$this->setExpectedException('HttpException', 'The user does not exist');
+		$data['Profile']['first_name'] = 'Update user name';
+		$this->testAction(
+			"/users/{$userId}.json",
+			array(
+				'data'   => $data,
+				'method' => 'put',
+				'return' => 'contents'
+			)
+		);
+	}
+
+	/**
+	 * Test can't update avatar user that has been previously soft deleted.
+	 */
+	public function testDeleteAndUpdateAvatar() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// the user to delete
+		$userId = common::uuid('user.id.user');
+		$result = json_decode(
+			$this->testAction(
+				"/users/{$userId}.json",
+				array(
+					'method' => 'delete',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Status::SUCCESS,
+			$result['header']['status'],
+			"delete /users/{$userId}.json : The test should return a success but is returning {$result['header']['status']}"
+		);
+
+		// Try to update a user that has been deleted
+		$this->setExpectedException('HttpException', 'The user does not exist');
+		$this->testAction(
+			"/users/avatar/{$userId}.json",
+			array(
+				'data'   => [],
+				'method' => 'post',
+				'return' => 'contents'
+			)
+		);
+	}
+
+	/**
+	 * Test can't delete user that has been previously soft deleted.
+	 */
+	public function testDeleteAndDelete() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// the user to delete
+		$userId = common::uuid('user.id.user');
+		$result = json_decode(
+			$this->testAction(
+				"/users/{$userId}.json",
+				array(
+					'method' => 'delete',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Status::SUCCESS,
+			$result['header']['status'],
+			"delete /users/{$userId}.json : The test should return a success but is returning {$result['header']['status']}"
+		);
+
+		// Try to delete a user that has been deleted
+		$this->setExpectedException('HttpException', 'The user does not exist');
+		$this->testAction(
+			"/users/{$userId}.json",
+			array(
+				'method' => 'delete',
+				'return' => 'contents'
+			)
 		);
 	}
 

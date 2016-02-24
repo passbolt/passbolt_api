@@ -160,4 +160,20 @@ class PermissionTest extends CakeTestCase
 
 		}
 	}
+
+	public function testRevokePermissionWhenSoftDeleteUser() {
+		$user = $this->User->find('first', array('conditions' => array('username' => 'admin@passbolt.com')));
+		$this->User->setActive($user);
+
+		// Retrieve the user to soft delete
+		$userA = $this->User->find('first', array('conditions' => array('username' => 'ada@passbolt.com')));
+		// Ensure this user has already few direct permissions
+		$permissions = $this->Permission->find('all', array('conditions' => array('aro_foreign_key' => $userA['User']['id'])));
+		$this->assertNotEmpty($permissions);
+
+		// Soft delete the user and check he has no permission anymore
+		$this->User->softDelete($userA['User']['id']);
+		$permissions = $this->Permission->find('all', array('conditions' => array('aro_foreign_key' => $userA['User']['id'])));
+		$this->assertEmpty($permissions);
+	}
 }

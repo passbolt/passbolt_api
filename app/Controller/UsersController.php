@@ -262,9 +262,10 @@ class UsersController extends AppController {
 			return $this->Message->error(__('The user id is invalid'));
 		}
 
-		// Get the resource id
-		$resource = $this->User->findById($id);
-		if (!$resource) {
+		// The user exists
+		$o = $this->User->getFindOptions('User::view', User::get('Role.name'), ['User.id' => $id]);
+		$user = $this->User->find('first', $o);
+		if (!$user) {
 			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
 
@@ -401,7 +402,8 @@ class UsersController extends AppController {
 		}
 
 		// Check the user exists
-		$user = $this->User->findById($id);
+		$o = $this->User->getFindOptions('User::view', User::get('Role.name'), ['User.id' => $id]);
+		$user = $this->User->find('first', $o);
 		if (!$user) {
 			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
@@ -617,22 +619,20 @@ class UsersController extends AppController {
 		}
 
 		// The user exists
-		$user = $this->User->findById($id);
+		$o = $this->User->getFindOptions('User::view', User::get('Role.name'), ['User.id' => $id]);
+		$user = $this->User->find('first', $o);
 		if (!$user) {
 			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
 		}
 
-		// Delete the user
-		$this->User->id = $id;
-		$user['User']['deleted'] = true;
-
-		$fields = $this->User->getFindFields('User::delete', User::get('Role.name'));
-		$this->User->begin();
-		if (!$this->User->save($user, true, $fields['fields'])) {
-			$this->User->rollback();
+		// Soft delete the user
+		try {
+			$this->User->softDelete($id);
+		} catch(Exception $e) {
 			return $this->Message->error(__('Error while deleting user'));
 		}
-		$this->User->commit();
+
+		// Everything went fine, commit the changes
 		$this->Message->success(__('The user was successfully deleted'));
 	}
 
