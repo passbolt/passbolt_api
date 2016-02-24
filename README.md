@@ -7,6 +7,7 @@
 	
 	The open-source password management solution for teams
 	(c) 2015-present Bolt Softwares Pvt Ltd
+	https://www.passbolt.com
 
 
 Passbolt in a glimpse
@@ -20,6 +21,12 @@ Passbolt in a glimpse
 <a href="https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-share.png" rel="passwords list">
 ![Passwords list](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-share-275.png)
 </a>
+
+Main Features
+=============
+- GPG based encryption.
+- Single password for authentication and decryption.
+- Easy to share passwords with other users.
 
 Getting started
 ===============
