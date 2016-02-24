@@ -274,3 +274,11 @@ Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur.
 
 More :
 https://www.passbolt.com/credits
+
+Terms of service
+================
+https://www.passbolt.com/terms
+
+Privacy
+=======
+https://www.passbolt.com/privacy
