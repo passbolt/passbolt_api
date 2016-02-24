@@ -167,7 +167,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		$this->_gpg = new gnupg();
 		$info = $this->_gpg->keyinfo($keyid);
 		if (empty($info)) {
-			$this->_importServerKey($keyid);
+			throw new CakeException('The GPG Server key defined in the config is not found in the gpg keyring');
 		}
 
 		// set the key to be used for decrypting
@@ -176,28 +176,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 		}
 
 		$this->_gpg->seterrormode(gnupg::ERROR_EXCEPTION);
-	}
-
-/**
- * Load the server key to be used for the authentication scheme in the gpg keyring
- *
- * @param string $keyid the gpg key fingerprint
- * @throws CakeException
- * @return void
- */
-	protected function _importServerKey($keyid) {
-		// try to init the key if it's not in the keyring
-		$keydata = file_get_contents($this->_config['serverKey']['private']);
-		$importResults = $this->_gpg->import($keydata);
-
-		if (!$importResults || !isset($importResults['fingerprint'])) {
-			throw new CakeException('The GnuPG key for the server could not be imported');
-		}
-
-		// check that the imported key match the fingerprint
-		if ($importResults['fingerprint'] != $keyid) {
-			throw new CakeException('The GnuPG server key for the authentication scheme is not available');
-		}
 	}
 
 /**

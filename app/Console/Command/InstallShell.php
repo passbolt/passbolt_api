@@ -68,8 +68,12 @@ class InstallShell extends AppShell
 	 */
 	public function main()
 	{
+		$this->_config = Configure::read();
 		$this->__welcome();
 		$done = false;
+
+		// init gnupg keyring
+		$this->_initGpgKeyring();
 
 		// try to build from cache if requested and possible
 		if ($this->params['quick'] != 'false') {
@@ -101,6 +105,42 @@ class InstallShell extends AppShell
 		$this->out('');
 		$this->out(' Passbolt installation success! Enjoy! ☮');
 		$this->out('');
+	}
+
+/**
+ * Init the gpg keyring
+ *
+ * @return void
+ * @throws CakeException
+ */
+	protected function _initGpgKeyring() {
+		// Check that a GPG configuration id is provided
+		if (!isset($this->_config['GPG']['serverKey']['fingerprint'])
+			|| !isset($this->_config['GPG']['serverKey']['private'])) {
+			throw new CakeException('The GnuPG config for the server is not available or incomplete');
+		}
+		$keyid = $this->_config['GPG']['serverKey']['fingerprint'];
+		$privateKeyPath = $this->_config['GPG']['serverKey']['private'];
+
+		// Check that there is a key found at the given path
+		if (!file_exists($privateKeyPath)) {
+			throw new CakeException("No private key found at the given path $privateKeyPath");
+		}
+		$keydata = file_get_contents($privateKeyPath);
+
+		// Import the private key in the GPG keyring
+		$this->_gpg = new gnupg();
+		$importResults = $this->_gpg->import($keydata);
+
+		// Check if something went wrong during the import
+		if (!$importResults || !isset($importResults['fingerprint'])) {
+			throw new CakeException('The GnuPG key for the server could not be imported');
+		}
+
+		// check that the imported key match the fingerprint
+		if ($importResults['fingerprint'] != $keyid) {
+			throw new CakeException('The GnuPG server key for the authentication scheme is not available');
+		}
 	}
 
 	/**
