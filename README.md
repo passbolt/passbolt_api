@@ -7,7 +7,7 @@
 	
 	The open-source password management solution for teams
 	(c) 2015-present Bolt Softwares Pvt Ltd
-	https://www.passbolt.com
+	[https://www.passbolt.com](https://www.passbolt.com "Passbolt's Homepage")
 
 
 Passbolt in a glimpse
