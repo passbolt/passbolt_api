@@ -11,7 +11,9 @@
 
 Passbolt in a glimpse
 =====================
+<a href="https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot4.png" rel="some text">
 ![Passwords list](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot4-275.png)
+</a>
 
 Getting started
 ===============
