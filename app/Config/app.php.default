@@ -11,6 +11,7 @@ $config = [
 	'punchline' => 'Open source password manager for teams',
 	'copyright' => '© 2016 Bolt Softwares Pvt Ltd',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
+	'App.force_ssl' => true,
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => [
 		'active' => false,

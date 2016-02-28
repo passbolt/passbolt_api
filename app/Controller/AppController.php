@@ -54,11 +54,27 @@ class AppController extends Controller {
  */
 	public function beforeFilter() {
 		$this->initRequestDetectors();
+		$this->forceSSL();
 		$this->initAuth();
 		$this->setDefaultLayout();
 		$this->processHeaders();
 		$this->disconnectUserIfAccountDisabled();
 		$this->sanitize();
+	}
+
+
+/**
+ * Force ssl redirection.
+ *
+ * Will only work if debug is set to zero or selenium is set to active, and force_ssl is true.
+ */
+	public function forceSSL() {
+		if(!$this->request->is('ssl')) {
+			if ((Configure::read('debug') == 0 || Configure::read('App.selenium.active') == true)
+				&& Configure::read('App.force_ssl') == true) {
+				$this->redirect('https://' . env('SERVER_NAME') . $this->here, "301");
+			}
+		}
 	}
 
 /**

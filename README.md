@@ -86,6 +86,13 @@ Set the email settings to be able to send emails
 	nano app/Config/email.php
 ```
 
+SSL
+---
+!!! BEWARE !!! By default passbolt is configured to force an SSL connection. 
+If you don't have https configured on your host, passbolt will not be able to work.
+To change this setting, edit /app/Config/app.php and set the parameter App.force_ssl to false. 
+Keep in mind that doing that is is extremely unsecure. We recommend that you install https on your server instead.
+
 Installation script
 -------------------
 
