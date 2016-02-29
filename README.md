@@ -39,15 +39,18 @@ Prerequisite
 You will need firefox browser with the passbolt plugin. Passbolt is compatible with firefox only at the moment.
 The plugin repository is here : https://github.com/passbolt/passbolt_firefox
 
-You will need a webserver with SSL enabled.
+You will need a webserver with SSL and url rewriting enabled :
+- Url rewriting http://book.cakephp.org/2.0/en/installation/url-rewriting.html
 
 You will need to install php5 and the following modules directly or using pear/pecl:
-- mod_rewrite http://book.cakephp.org/2.0/en/installation/url-rewriting.html
 - Imagick http://php.net/manual/en/book.imagick.php
 - gnupg http://php.net/manual/en/gnupg.installation.php
 - Composer https://getcomposer.org/
 
-For testing, code styling and coverage:
+The following modules are greatly recommended :
+- Memcached http://php.net/manual/en/memcached.setup.php
+
+For testing, code styling and coverage :
 - Phpunit https://phpunit.de/
 - Curl http://php.net/manual/en/curl.installation.php
 - PhpCS https://pear.php.net/manual/en/package.php.php-codesniffer.php
