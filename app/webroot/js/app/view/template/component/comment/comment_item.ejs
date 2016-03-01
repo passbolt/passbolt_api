@@ -6,7 +6,7 @@
 					<p><%= mappedItem.content %></p>
 					<div class="metadata">
 						<span class="author username"><a href="#"><%= mappedItem.creatorName %></a></span>
-						<span class="modified"><%= moment(mappedItem.modified).fromNow(); %></span>
+						<span class="modified"><%= datetimeGetTimeAgo(mappedItem.modified) %></span>
 					</div>
 					<div class="actions">
 						<ul>
