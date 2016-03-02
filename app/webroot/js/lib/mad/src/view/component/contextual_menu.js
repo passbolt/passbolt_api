@@ -12,14 +12,14 @@ import 'mad/view/component/dropdown_menu';
 var ContextualMenu = mad.view.component.ContextualMenu = mad.view.component.DropdownMenu.extend('mad.view.component.ContextualMenu', /* @static */ {}, /** @prototype */ {
 
     /**
-     * Intercept global mousedown event.
+     * Intercept global click event.
      *
-     * Intercept global mousedown event and close menu if open.
+     * Intercept global click event and close menu if open.
      *
      * @param el
      * @param ev
      */
-    '{document} mousedown': function (el, ev) {
+    '{document} click': function (el, ev) {
         if (!this.element.is(el) && !$(this.getController().options.source).is(ev.target)) {
             this.element.remove();
         }
