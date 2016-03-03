@@ -124,7 +124,7 @@ class InstallShell extends AppShell {
  * @throws CakeException
  */
 	protected function _checkDefaultAppConfigOverriden($key) {
-		include APP . DS . 'config' . DS . 'app.php.default';
+		include APP . DS . 'Config' . DS . 'app.php.default';
 		if (!isset($config)) {
 			throw new CakeException('Unable to load the default app config file');
 		}
