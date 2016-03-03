@@ -218,7 +218,6 @@ class Gpgkey extends AppModel {
 		}
 	}
 
-
 /**
  * Analyze key before validating it, and extract key information.
  *

@@ -2,6 +2,7 @@
 <phpunit>
     <filter>
         <whitelist>
+            <directory suffix=".php">../Console</directory>
             <directory suffix=".php">../Controller</directory>
             <directory suffix=".php">../Model</directory>
             <directory suffix=".php">../View</directory>
