@@ -151,6 +151,7 @@ class InstallShellTest extends CakeTestCase {
  */
 	public function testProductionGpgServerKey() {
 		Configure::write('debug', 0);
+		Configure::write('GPG.serverKey.fingerprint', '2FC8945833C51946E937F9FED47B0811573EE67E');
 		$this->setExpectedException('CakeException', 'Default GnuPG server key cannot be used in production. Please change the values of \'GPG.server\' in \'APP/Config/app.php\' with your server key information. If you don\'t have yet a server key, please generate one, take a look at the install documentation.');
 		$this->Shell->main();
 	}
