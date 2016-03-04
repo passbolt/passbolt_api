@@ -16,25 +16,11 @@ $this->assign('page_classes', 'register thank-you');
 			<p>
 				<?php echo __('Thank you for giving passbolt a test run! We just sent you an email, please follow the instructions to get started.'); ?>
 			</p>
-			<div class="message-wrapper">
-				<p class="message warning"><strong><?php echo __('Disclaimer:'); ?></strong>
-					<?php echo __('please note this is a demo instance of Passbolt for trial purposes only.'); ?>
-					<?php echo __('Do not use it to store sensitive data.'); ?><br>
-					<a href="#"><?php echo __('find out more.'); ?></a>
-				</p>
-			</div>
-			<p>
-				<?php
-				echo __('By signing up, you agree to the %sTerms of Service%s and %sPrivacy Policy%s, including %sCookie Use%s.',
-					'<a href="#">','</a>',
-					'<a href="#">','</a>',
-					'<a href="#">','</a>'
-				); ?>
-			</p>
+<?php echo $this->element('public/disclaimer-legal'); ?>
 		</div>
 		<div class="col4 push1 last">
 			<div class="logo">
-				<h1><a href="#"><span>Passbolt</span></a></h1>
+				<h1><span>Passbolt</span></h1>
 			</div>
 			<div class="register thank-you form feedback">
 				<div class="graphical-feedback"><i class="fa fa-envelope-o huge"></i></div>
