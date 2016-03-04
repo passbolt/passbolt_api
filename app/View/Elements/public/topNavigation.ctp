@@ -7,7 +7,7 @@
  */
   if(User::isGuest()) {
 		$menu = array(
-			'passbolt' => array('url' => 'https://www.passbolt.com', 'class' => 'home with-link'),
+			'passbolt' => array('url' => '/', 'class' => 'home with-link'),
 			'home' => array( 'url' => '/', 'class' => 'left'),
 //			'about' => array( 'url' => '#', 'class' => 'left' ),
 			'login' => array( 'url' => 'login', 'class' => 'right' )
