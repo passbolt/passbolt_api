@@ -1,0 +1,737 @@
+{
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X; en; rv:1.8.1.11) Gecko\/20071128 Camino\/1.5.4": {
+		"platform": "Macintosh",
+		"browser": "Camino",
+		"version": "1.5.4"
+	},
+	"Mozilla\/5.0 (Macintosh; U; PPC Mac OS X Mach-O; it; rv:1.8.1.21) Gecko\/20090327 Camino\/1.6.7 (MultiLang) (like Firefox\/2.0.0.21pre)": {
+		"platform": "Macintosh",
+		"browser": "Camino",
+		"version": "1.6.7"
+	},
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10.6; en; rv:1.9.0.18) Gecko\/2010021619 Camino\/2.0.2 (like Firefox\/3.0.18)": {
+		"platform": "Macintosh",
+		"browser": "Camino",
+		"version": "2.0.2"
+	},
+	"Mozilla\/5.0 (Macintosh; U; PPC Mac OS X 10.5; it; rv:1.9.0.19) Gecko\/2010111021 Camino\/2.0.6 (MultiLang) (like Firefox\/3.0.19)": {
+		"platform": "Macintosh",
+		"browser": "Camino",
+		"version": "2.0.6"
+	},
+	"Mozilla\/5.0 (Macintosh; U; PPC Mac OS X 10.5; de; rv:1.9.2.28) Gecko\/20120308 Camino\/2.1.2 (MultiLang) (like Firefox\/3.6.28)": {
+		"platform": "Macintosh",
+		"browser": "Camino",
+		"version": "2.1.2"
+	},
+	"Mozilla\/5.0 (X11; U; CrOS i686 0.9.128; en-US) AppleWebKit\/534.10 (KHTML, like Gecko) Chrome\/8.0.552.339": {
+		"platform": "Chrome OS",
+		"browser": "Chrome",
+		"version": "8.0.552.339"
+	},
+	"Mozilla\/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit\/536.11 (KHTML, like Gecko) Chrome\/20.0.1132.57 Safari\/536.11": {
+		"platform": "Chrome OS",
+		"browser": "Chrome",
+		"version": "20.0.1132.57"
+	},
+	"Mozilla\/5.0 (X11; CrOS i686 3912.101.0) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/27.0.1453.116 Safari\/537.36": {
+		"platform": "Chrome OS",
+		"browser": "Chrome",
+		"version": "27.0.1453.116"
+	},
+	"Mozilla\/5.0 (X11; Linux x86_64) AppleWebKit\/535.19 (KHTML, like Gecko) Ubuntu\/12.04 Chromium\/18.0.1025.151 Chrome\/18.0.1025.151 Safari\/535.19": {
+		"platform": "Linux",
+		"browser": "Chrome",
+		"version": "18.0.1025.151"
+	},
+	"Mozilla\/5.0 (X11; Linux i686) AppleWebKit\/536.11 (KHTML, like Gecko) Chrome\/20.0.1132.57 Safari\/536.11": {
+		"platform": "Linux",
+		"browser": "Chrome",
+		"version": "20.0.1132.57"
+	},
+	"Mozilla\/5.0 (X11; Linux x86_64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/28.0.1500.52 Safari\/537.36": {
+		"platform": "Linux",
+		"browser": "Chrome",
+		"version": "28.0.1500.52"
+	},
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10_6_1; en-US) AppleWebKit\/532.0 (KHTML, like Gecko) Chrome\/4.0.209.0 Safari\/532.0": {
+		"platform": "Macintosh",
+		"browser": "Chrome",
+		"version": "4.0.209.0"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit\/535.1 (KHTML, like Gecko) Chrome\/14.0.813.0 Safari\/535.1": {
+		"platform": "Macintosh",
+		"browser": "Chrome",
+		"version": "14.0.813.0"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/27.0.1453.93 Safari\/537.36": {
+		"platform": "Macintosh",
+		"browser": "Chrome",
+		"version": "27.0.1453.93"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit\/534.7 (KHTML, like Gecko) Chrome\/7.0.517.41 Safari\/534.7": {
+		"platform": "Windows",
+		"browser": "Chrome",
+		"version": "7.0.517.41"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit\/534.13 (KHTML, like Gecko) Chrome\/9.0.597.98 Safari\/534.13": {
+		"platform": "Windows",
+		"browser": "Chrome",
+		"version": "9.0.597.98"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit\/534.16 (KHTML, like Gecko) Chrome\/10.0.648.114 Safari\/534.16": {
+		"platform": "Windows",
+		"browser": "Chrome",
+		"version": "10.0.648.114"
+	},
+	"Mozilla\/5.0 (Windows NT 6.2; WOW64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/30.0.1599.17 Safari\/537.36": {
+		"platform": "Windows",
+		"browser": "Chrome",
+		"version": "30.0.1599.17"
+	},
+	"Mozilla\/5.0 (Windows NT 6.4; WOW64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/36.0.1985.143 Safari\/537.36 Edge\/12.0": {
+		"platform": "Windows",
+		"browser": "Edge",
+		"version": "12.0"
+	},
+	"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/42.0.2311.135 Safari\/537.36 Edge\/12.10240": {
+		"platform": "Windows",
+		"browser": "Edge",
+		"version": "12.10240"
+	},
+	"Mozilla\/5.0 (X11; U; Linux i386; en-US; rv:1.7.5) Gecko\/20041109 Firefox\/1.0": {
+		"platform": "Linux",
+		"browser": "Firefox",
+		"version": "1.0"
+	},
+	"Mozilla\/5.0 (X11; U; Linux i686; en-US; rv:1.8.1) Gecko\/20061024 Iceweasel\/2.0 (Debian-2.0+dfsg-1)": {
+		"platform": "Linux",
+		"browser": "Firefox",
+		"version": "2.0"
+	},
+	"Mozilla\/5.0 (X11; Ubuntu; Linux x86_64; rv:12.0) Gecko\/20100101 Firefox\/12.0": {
+		"platform": "Linux",
+		"browser": "Firefox",
+		"version": "12.0"
+	},
+	"Mozilla\/5.0 (X11; Ubuntu; Linux i686; rv:14.0) Gecko\/20100101 Firefox\/14.0.1": {
+		"platform": "Linux",
+		"browser": "Firefox",
+		"version": "14.0.1"
+	},
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.3) Gecko\/20100401 Firefox\/3.6.3": {
+		"platform": "Macintosh",
+		"browser": "Firefox",
+		"version": "3.6.3"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10.6; rv:11.0) Gecko\/20100101 Firefox\/11.0": {
+		"platform": "Macintosh",
+		"browser": "Firefox",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10.6; rv:25.0) Gecko\/20100101 Firefox\/25.0": {
+		"platform": "Macintosh",
+		"browser": "Firefox",
+		"version": "25.0"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.1.5) Gecko\/20091102 Firefox\/3.5.5 (.NET CLR 3.5.21022)": {
+		"platform": "Windows",
+		"browser": "Firefox",
+		"version": "3.5.5"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.15) Gecko\/20110303 Firefox\/3.6.15 FirePHP\/0.5": {
+		"platform": "Windows",
+		"browser": "Firefox",
+		"version": "3.6.15"
+	},
+	"Mozilla\/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko\/20100101 Firefox\/25.0": {
+		"platform": "Windows",
+		"browser": "Firefox",
+		"version": "25.0"
+	},
+	"Mozilla\/5.0 (X11; U; Linux i686; de-DE; rv:1.8.1.9) Gecko\/20071103 Midori\/0.0.10": {
+		"platform": "Linux",
+		"browser": "Midori",
+		"version": "0.0.10"
+	},
+	"Mozilla\/5.0 (X11; U; Linux i686; de) AppleWebKit\/523+ (KHTML like Gecko) midori\/0.1": {
+		"platform": "Linux",
+		"browser": "Midori",
+		"version": "0.1"
+	},
+	"Midori\/0.3 (X11; Linux; U; en-us) WebKit\/531.2+": {
+		"platform": "Linux",
+		"browser": "Midori",
+		"version": "0.3"
+	},
+	"Mozilla\/5.0 (X11; Linux) AppleWebKit\/537.6 (KHTML, like Gecko) Chrome\/18.0.1025.133 Safari\/537.6 Midori\/0.4": {
+		"platform": "Linux",
+		"browser": "Midori",
+		"version": "0.4"
+	},
+	"Mozilla\/5.0 (X11; Linux; rv:2.0.1) Gecko\/20100101 Firefox\/4.0.1 Midori\/0.4": {
+		"platform": "Linux",
+		"browser": "Midori",
+		"version": "0.4"
+	},
+	"Mozilla\/5.0 (X11; Linux) AppleWebKit\/535.22 (KHTML, like Gecko) Chrome\/18.0.1025.133 Safari\/535.22 Midori\/0.5": {
+		"platform": "Linux",
+		"browser": "Midori",
+		"version": "0.5"
+	},
+	"Midori\/0.3 (Windows; Windows; U; en-en) WebKit\/532+ ": {
+		"platform": "Windows",
+		"browser": "Midori",
+		"version": "0.3"
+	},
+	"Mozilla\/4.0 (compatible;MSIE 6.0;Windows 98;Q312461)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "6.0"
+	},
+	"Mozilla\/4.0 (compatible; U; MSIE 6.0; Windows NT 5.1)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "6.0"
+	},
+	"Mozilla\/4.0 (Compatible; Windows NT 5.1; MSIE 6.0) (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "6.0"
+	},
+	"Mozilla\/4.0 (MSIE 6.0; Windows NT 5.0)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "6.0"
+	},
+	"Mozilla\/4.0 (MSIE 6.0; Windows NT 5.1)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "6.0"
+	},
+	"Mozilla\/4.0 (Windows; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "6.0"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Mozilla\/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) ; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "7.0"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident\/4.0; Mozilla\/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) ; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; InfoPath.3; Tablet PC 2.0)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "8.0"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident\/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; Tablet PC 2.0)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "8.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident\/5.0)": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "9.0"
+	},
+	"Mozilla\/5.0 (Windows NT 6.3; Trident\/7.0; rv:11.0) like Gecko": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Windows NT 6.3; Win64, x64; Trident\/7.0; Touch; rv:11.0) like Gecko": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Windows NT 6.3; WOW64; Trident\/7.0; Touch; rv:11.0) like Gecko": {
+		"platform": "Windows",
+		"browser": "MSIE",
+		"version": "11.0"
+	},
+	"Opera\/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; Edition MacAppStore; en) Presto\/2.10.229 Version\/11.61": {
+		"platform": "Macintosh",
+		"browser": "Opera",
+		"version": "11.61"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 8.0; Windows NT 6.1; de) Opera 11.01": {
+		"platform": "Windows",
+		"browser": "Opera",
+		"version": "11.01"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.13) Gecko\/20101213 Opera\/9.80 (Windows NT 6.1; U; zh-tw) Presto\/2.7.62 Version\/11.01": {
+		"platform": "Windows",
+		"browser": "Opera",
+		"version": "11.01"
+	},
+	"Mozilla\/5.0 (Windows NT 6.1; U; nl; rv:1.9.1.6) Gecko\/20091201 Firefox\/3.5.6 Opera 11.01": {
+		"platform": "Windows",
+		"browser": "Opera",
+		"version": "11.01"
+	},
+	"Opera\/9.80 (Windows NT 5.1; U; cs) Presto\/2.7.62 Version\/11.01": {
+		"platform": "Windows",
+		"browser": "Opera",
+		"version": "11.01"
+	},
+	"Opera\/9.80 (Windows NT 6.0; U; en) Presto\/2.8.99 Version\/11.10": {
+		"platform": "Windows",
+		"browser": "Opera",
+		"version": "11.10"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/28.0.1500.20 Safari\/537.36  OPR\/15.0.1147.18 (Edition Next)": {
+		"platform": "Macintosh",
+		"browser": "Opera Next",
+		"version": "15.0.1147.18"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/30.0.1599.66 Safari\/537.36 OPR\/17.0.1241.36 (Edition Next)": {
+		"platform": "Macintosh",
+		"browser": "Opera Next",
+		"version": "17.0.1241.36"
+	},
+	"Mozilla\/5.0 (Macintosh; U; PPC Mac OS X 10_4_11; en) AppleWebKit\/531.22.7 (KHTML, like Gecko) Version\/4.0.5 Safari\/531.22.7": {
+		"platform": "Macintosh",
+		"browser": "Safari",
+		"version": "4.0.5"
+	},
+	"Mozilla\/5.0 (Macintosh; U; PPC Mac OS X 10_4_11; en) AppleWebKit\/533.18.1 (KHTML, like Gecko) Version\/4.1.2 Safari\/533.18.5": {
+		"platform": "Macintosh",
+		"browser": "Safari",
+		"version": "4.1.2"
+	},
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us) AppleWebKit\/533.16 (KHTML, like Gecko) Version\/5.0 Safari\/533.16": {
+		"platform": "Macintosh",
+		"browser": "Safari",
+		"version": "5.0"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_9) AppleWebKit\/537.71 (KHTML, like Gecko) Version\/7.0 Safari\/537.71": {
+		"platform": "Macintosh",
+		"browser": "Safari",
+		"version": "7.0"
+	},
+	"Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit\/600.1.25 (KHTML, like Gecko) Version\/8.0 Safari\/600.1.25": {
+		"platform": "Macintosh",
+		"browser": "Safari",
+		"version": "8.0"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 6.1; tr-TR) AppleWebKit\/533.20.25 (KHTML, like Gecko) Version\/5.0.4 Safari\/533.20.27": {
+		"platform": "Windows",
+		"browser": "Safari",
+		"version": "5.0.4"
+	},
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10.6; en; rv:1.9.0.18) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/40.0.2214.89 Vivaldi\/1.0.83.38 Safari\/537.36": {
+		"platform": "Macintosh",
+		"browser": "Vivaldi",
+		"version": "1.0.83.38"
+	},
+	"Mozilla\/5.0 (Windows NT 6.3; WOW64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/40.0.2214.89 Vivaldi\/1.0.83.38 Safari\/537.36": {
+		"platform": "Windows",
+		"browser": "Vivaldi",
+		"version": "1.0.83.38"
+	},
+	"Wget\/1.12 (linux-gnu)": {
+		"platform": "Linux",
+		"browser": "Wget",
+		"version": "1.12"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 2.2; en-us; SGH-T959 Build\/FROYO) AppleWebKit\/533.1 (KHTML, like Gecko) Version\/4.0 Mobile Safari\/533.1": {
+		"platform": "Android",
+		"browser": "Android Browser",
+		"version": "4.0"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 3.2.1; hu-hu; Transformer TF101 Build\/HTK75) AppleWebKit\/534.13 (KHTML, like Gecko) Version\/4.0 Safari\/534.13": {
+		"platform": "Android",
+		"browser": "Android Browser",
+		"version": "4.0"
+	},
+	"Mozilla\/5.0 (Linux; U; Android Itfunz2.1_Eclipse_Terminator_II_Final; zh-cn; Milestone Build\/SHOLS_U2_02.36.0) AppleWebKit\/530.17 (KHTML, like Gecko) Version\/4.0 Mobile Safari\/530.17": {
+		"platform": "Android",
+		"browser": "Android Browser",
+		"version": "4.0"
+	},
+	"Mozilla\/5.0 (Linux; Android 4.2.2; de-at; SAMSUNG GT-I9195\/I9195XXUAMF6 Build\/JDQ39) AppleWebKit\/535.19 (KHTML, like Gecko) Version\/1.0 Chrome\/18.0.1025.308 Mobile Safari\/535.19": {
+		"platform": "Android",
+		"browser": "Chrome",
+		"version": "18.0.1025.308"
+	},
+	"Mozilla\/5.0 (BlackBerry; U; BlackBerry 9780; en) AppleWebKit\/534.8+ (KHTML, like Gecko) Version\/6.0.0.723 Mobile Safari\/534.8+": {
+		"platform": "BlackBerry",
+		"browser": "BlackBerry Browser",
+		"version": "6.0.0.723"
+	},
+	"Mozilla\/5.0 (BB10; Touch) AppleWebKit\/537.10+ (KHTML, like Gecko) Version\/10.0.9.2372 Mobile Safari\/537.10+": {
+		"platform": "BlackBerry",
+		"browser": "BlackBerry Browser",
+		"version": "10.0.9.2372"
+	},
+	"Mozilla\/5.0 (iPad; CPU OS 5_1_1 like Mac OS X) AppleWebKit\/534.46 (KHTML, like Gecko) CriOS\/29.0.1547.11 Mobile\/9B206 Safari\/7534.48.3": {
+		"platform": "iPad",
+		"browser": "Chrome",
+		"version": "29.0.1547.11"
+	},
+	"Mozilla\/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit\/537.51.1 (KHTML, like Gecko) CriOS\/30.0.1599.12 Mobile\/11A465 Safari\/8536.25": {
+		"platform": "iPad",
+		"browser": "Chrome",
+		"version": "30.0.1599.12"
+	},
+	"Mozilla\/5.0 (iPad; U; CPU iPhone OS 3_2 like Mac OS X; en-us) AppleWebKit\/531.21.10 (KHTML, like Gecko) Version\/4.0.4 Mobile\/7B314 Safari\/531.21.10": {
+		"platform": "iPad",
+		"browser": "Safari",
+		"version": "4.0.4"
+	},
+	"Mozilla\/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit\/531.21.10 (KHTML, like Gecko) Version\/4.0.4 Mobile\/7B334b Safari\/531.21.10": {
+		"platform": "iPad",
+		"browser": "Safari",
+		"version": "4.0.4"
+	},
+	"Mozilla\/5.0 (iPhone; U; CPU iPhone OS 5_1_1 like Mac OS X; en) AppleWebKit\/534.46.0 (KHTML, like Gecko) CriOS\/19.0.1084.60 Mobile\/9B206 Safari\/7534.48.3": {
+		"platform": "iPhone",
+		"browser": "Chrome",
+		"version": "19.0.1084.60"
+	},
+	"Mozilla\/5.0 (iPhone; CPU iPhone OS 7_0_2 like Mac OS X) AppleWebKit\/537.51.1 (KHTML, like Gecko) CriOS\/30.0.1599.12 Mobile\/11A501 Safari\/8536.25": {
+		"platform": "iPhone",
+		"browser": "Chrome",
+		"version": "30.0.1599.12"
+	},
+	"Mozilla\/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit\/420+ (KHTML, like Gecko) Version\/3.0 Mobile\/1C25 Safari\/419.3": {
+		"platform": "iPhone",
+		"browser": "Safari",
+		"version": "3.0"
+	},
+	"Mozilla\/5.0 (iPhone; U; CPU iPhone OS 4_2_6 like Mac OS X; en-us) AppleWebKit\/533.17.9 (KHTML, like Gecko) Version\/5.0.2 Mobile\/8E200 Safari\/6533.18.5": {
+		"platform": "iPhone",
+		"browser": "Safari",
+		"version": "5.0.2"
+	},
+	"Mozilla\/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit\/420.1 (KHTML, like Gecko) Version\/3.0 Mobile\/3A101a Safari\/419.3": {
+		"platform": "iPod",
+		"browser": "Safari",
+		"version": "3.0"
+	},
+	"Mozilla\/5.0 (iPod; CPU iPhone OS 5_0_1 like Mac OS X) AppleWebKit\/534.46 (KHTML, like Gecko) Version\/5.1 Mobile\/9A405 Safari\/7534.48.3": {
+		"platform": "iPod",
+		"browser": "Safari",
+		"version": "5.1"
+	},
+	"Mozilla\/5.0 (iPod touch; CPU iPhone OS 7_0_3 like Mac OS X) AppleWebKit\/537.51.1 (KHTML, like Gecko) Version\/7.0 Mobile\/11B511 Safari\/9537.53": {
+		"platform": "iPod",
+		"browser": "Safari",
+		"version": "7.0"
+	},
+	"Mozilla\/4.0 (compatible; Linux 2.6.10) NetFront\/3.3 Kindle\/1.0 (screen 600x800)": {
+		"platform": "Kindle",
+		"browser": "Kindle",
+		"version": "1"
+	},
+	"Mozilla\/5.0 (Linux; U; en-US) AppleWebKit\/528.5+ (KHTML, like Gecko, Safari\/528.5+) Version\/4.0 Kindle\/3.0 (screen 600x800; rotate)": {
+		"platform": "Kindle",
+		"browser": "Kindle",
+		"version": "3.0"
+	},
+	"Mozilla\/5.0 (Linux; U; en-US) AppleWebKit\/528.5+ (KHTML, like Gecko, Safari\/538.5+) Version\/4.0 Kindle\/3.0 (screen 600x800; rotate)": {
+		"platform": "Kindle",
+		"browser": "Kindle",
+		"version": "3.0"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 2.3.4; en-us; Kindle Fire Build\/GINGERBREAD) AppleWebKit\/533.1 (KHTML, like Gecko) Version\/4.0 Mobile Safari\/533.1": {
+		"platform": "Kindle Fire",
+		"browser": "Kindle",
+		"version": "4.0"
+	},
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk\/1.0.13.81_10003810) AppleWebKit\/533.16 (KHTML, like Gecko) Version\/5.0 Safari\/533.16 Silk-Accelerated=true": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "1.0.13.81"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 2.3.4; en-us; Silk\/1.1.0-84) AppleWebKit\/533.1 (KHTML, like Gecko) Version\/4.0 Mobile Safari\/533.1 Silk-Accelerated=false": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "1.1.0"
+	},
+	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk\/1.1.0-80) AppleWebKit\/533.16 (KHTML, like Gecko) Version\/5.0 Safari\/533.16 Silk-Accelerated=true": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "1.1.0"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 4.0.3; en-us; KFTT Build\/IML74K) AppleWebKit\/535.19 (KHTML, like Gecko) Silk\/2.1 Mobile Safari\/535.19 Silk-Accelerated=true": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "2.1"
+	},
+	"Mozilla\/5.0 (Linux; U; en-us; KFTT Build\/IML74K) AppleWebKit\/535.19 (KHTML, like Gecko) Silk\/2.2 Safari\/535.19 Silk-Accelerated=true": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "2.2"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 4.2.2; en-us; KFTHWI Build\/JDQ39) AppleWebKit\/537.36 (KHTML, like Gecko) Silk\/3.22 like Chrome\/34.0.1847.137 Mobile Safari\/537.36": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "3.22"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 4.2.2; en-us; KFTHWI Build\/JDQ39) AppleWebKit\/537.36 (KHTML, like Gecko) Silk\/3.22 like Chrome\/34.0.1847.137 Safari\/537.36": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "3.22"
+	},
+	"Mozilla\/5.0 (X11; Linux x86_64; U; en-us) AppleWebKit\/537.36 (KHTML, like Gecko) Silk\/3.22 like Chrome\/34.0.1847.137 Safari\/537.36": {
+		"platform": "Kindle Fire",
+		"browser": "Silk",
+		"version": "3.22"
+	},
+	"Mozilla\/5.0 (New Nintendo 3DS like iPhone) AppleWebKit\/536.30 (KHTML, like Gecko) NX\/3.0.0.5.8 Mobile NintendoBrowser\/1.0.9934.JP": {
+		"platform": "New Nintendo 3DS",
+		"browser": "NintendoBrowser",
+		"version": "1.0.9934.JP"
+	},
+	"Mozilla\/5.0 (Nintendo 3DS; U; ; en) Version\/1.7498.US": {
+		"platform": "Nintendo 3DS",
+		"browser": "NintendoBrowser",
+		"version": "1.7498.US"
+	},
+	"Mozilla\/5.0 (Nintendo 3DS; U; ; en) Version\/1.7552.EU": {
+		"platform": "Nintendo 3DS",
+		"browser": "NintendoBrowser",
+		"version": "1.7552.EU"
+	},
+	"Bunjalloo\/0.7.6(Nintendo DS;U;en)": {
+		"platform": "Nintendo DS",
+		"browser": "Bunjalloo",
+		"version": "0.7.6"
+	},
+	"Opera\/9.00 (Nintendo Wii; U; ; 1038-58; Wii Shop Channel\/1.0; en)": {
+		"platform": "Nintendo Wii",
+		"browser": "Opera",
+		"version": "9.00"
+	},
+	"Opera\/9.30 (Nintendo Wii; U; ; 2071; Wii Shop Channel\/1.0; en)": {
+		"platform": "Nintendo Wii",
+		"browser": "Opera",
+		"version": "9.30"
+	},
+	"Mozilla\/5.0 (Nintendo WiiU) AppleWebKit\/534.52 (KHTML, like Gecko) NX\/2.1.0.8.21 NintendoBrowser\/1.0.0.7494.US": {
+		"platform": "Nintendo WiiU",
+		"browser": "NintendoBrowser",
+		"version": "1.0.0.7494.US"
+	},
+	"Mozilla\/5.0 (PlayBook; U; RIM Tablet OS 2.0.1; en-US) AppleWebKit\/535.8+ (KHTML, like Gecko) Version\/7.2.0.1 Safari\/535.8+": {
+		"platform": "PlayBook",
+		"browser": "BlackBerry Browser",
+		"version": "7.2.0.1"
+	},
+	"Mozilla\/4.0 (PS3 (PlayStation 3); 1.00)": {
+		"platform": "PlayStation 3",
+		"browser": "NetFront",
+		"version": "1.00"
+	},
+	"Mozilla\/5.0 (PLAYSTATION 3; 1.00)": {
+		"platform": "PlayStation 3",
+		"browser": "NetFront",
+		"version": "1.00"
+	},
+	"Mozilla\/5.0 (PLAYSTATION 3; 3.55)": {
+		"platform": "PlayStation 3",
+		"browser": "NetFront",
+		"version": "3.55"
+	},
+	"Mozilla\/5.0 (PLAYSTATION 3 4.20) AppleWebKit\/531.22.8 (KHTML, like Gecko)": {
+		"platform": "PlayStation 3",
+		"browser": "NetFront",
+		"version": "4.20"
+	},
+	"Mozilla\/5.0 (PlayStation 4 1.50) AppleWebKit\/536.26 (KHTML, like Gecko)": {
+		"platform": "PlayStation 4",
+		"browser": "NetFront",
+		"version": "1.50"
+	},
+	"Mozilla\/5.0 (Playstation Vita 1.50) AppleWebKit\/531.22.8 (KHTML, like Gecko) Silk\/3.2": {
+		"platform": "PlayStation Vita",
+		"browser": "Browser",
+		"version": "1.50"
+	},
+	"Mozilla\/5.0 (PlayStation Vita 1.69) AppleWebKit\/531.22.8 (KHTML, like Gecko) Silk\/3.2": {
+		"platform": "PlayStation Vita",
+		"browser": "Browser",
+		"version": "1.69"
+	},
+	"Mozilla\/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit\/537.1 (KHTML, like Gecko) Mobile TizenBrowser\/2": {
+		"platform": "Tizen",
+		"browser": "TizenBrowser",
+		"version": "2"
+	},
+	"Mozilla\/5.0 (Windows Phone 10.0;  Android 4.2.1; Nokia; Lumia 520) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/42.0.2311.135 Mobile Safari\/537.36 Edge\/12.10130": {
+		"platform": "Windows Phone",
+		"browser": "Edge",
+		"version": "12.10130"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 7.0; Windows Phone OS 7.0; Trident\/3.1; IEMobile\/7.0) Asus;Galaxy6": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "7.0"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 7.0; Windows Phone OS 7.0; Trident\/3.1; IEMobile\/7.0) LG;LG-E900h)": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "7.0"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 7.0; Windows Phone OS 7.0; Trident\/3.1; IEMobile\/7.0; LG; GW910)": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "7.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident\/5.0; IEMobile\/9.0)": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "9.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident\/5.0; IEMobile\/9.0; SAMSUNG; SGH-i917)": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "9.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident\/6.0; IEMobile\/10.0; ARM; Touch; NOKIA; Lumia 820)": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "10.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident\/6.0; IEMobile\/10.0; ARM; Touch; rv:11; NOKIA; Lumia 920) like Gecko": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "10.0"
+	},
+	"Mozilla\/5.0 (Mobile; Windows Phone 8.1; Android 4.0; ARM; Trident\/7.0; Touch; rv:11.0; IEMobile\/11.0; NOKIA; Lumia 520) like iPhone OS 7_0_3 Mac OS X AppleWebKit\/537 (KHTML, like Gecko) Mobile Safari\/537": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Mobile; Windows Phone 8.1; Android 4.0; ARM; Trident\/7.0; Touch; rv:11.0; IEMobile\/11.0; NOKIA; Lumia 920; Vodafone ES) like iPhone OS 7_0_3 Mac OS X AppleWebkit\/537 (KHTML, like Gecko) Mobile Safari\/537": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Windows Phone 8.1; ARM; Trident\/7.0;Touch; rv:11.0; IEMobile\/11.0; Microsoft; Virtual) like Gecko": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Windows Phone 8.1; ARM; Trident\/7.0; Touch; rv:11; IEMobile\/11.0) like Android 4.1.2; compatible) like iPhone OS 7_0_3 Mac OS X WebKit\/537.36 (KHTML, like Gecko) Chrome\/32.0.1700.99 Mobile Safari\/537.36": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Windows Phone 8.1; ARM; Trident\/7.0; Touch; rv:11; IEMobile\/11.0) like Android 4.1.2; compatible) like iPhone OS 7_0_3 MacWebKit\/537.36 (KHTML, like Gecko) Chrome\/32.0.1700.99 Mobile Safari \/537.36": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "11.0"
+	},
+	"Mozilla\/5.0 (Windows Phone 8.1; ARM; Trident\/7.0; Touch; rv:11; IEMobile\/11.0; NOKIA; Lumia 928) like Gecko": {
+		"platform": "Windows Phone",
+		"browser": "IEMobile",
+		"version": "11.0"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 7.0; Windows Phone OS 7.5; Trident\/3.1; IEMobile\/7.0; Xbox)": {
+		"platform": "Xbox",
+		"browser": "IEMobile",
+		"version": "7.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident\/5.0; Xbox), or Mozilla\/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident\/5.0; IEMobile\/9.0; Xbox)": {
+		"platform": "Xbox",
+		"browser": "IEMobile",
+		"version": "9.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident\/5.0; IEMobile\/9.0; Xbox)": {
+		"platform": "Xbox",
+		"browser": "IEMobile",
+		"version": "9.0"
+	},
+	"Mozilla\/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident\/3.1; Xbox)": {
+		"platform": "Xbox",
+		"browser": "MSIE",
+		"version": "7.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident\/5.0; Xbox)": {
+		"platform": "Xbox",
+		"browser": "MSIE",
+		"version": "9.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 10.0; Windows Phone OS 7.5; Trident\/5.0; IEMobile\/10.0; Xbox; Xbox One)": {
+		"platform": "Xbox One",
+		"browser": "IEMobile",
+		"version": "10.0"
+	},
+	"Mozilla\/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident\/6.0; Xbox; Xbox One)": {
+		"platform": "Xbox One",
+		"browser": "MSIE",
+		"version": "10.0"
+	},
+	"AdsBot-Google (+http:\/\/www.google.com\/adsbot.html)": {
+		"platform": null,
+		"browser": "AdsBot-Google",
+		"version": null
+	},
+	"Mozilla\/5.0 (compatible; Baiduspider\/2.0; +http:\/\/www.baidu.com\/search\/spider.html)": {
+		"platform": null,
+		"browser": "Baiduspider",
+		"version": "2.0"
+	},
+	"Mozilla\/5.0 (compatible; bingbot\/2.0; +http:\/\/www.bing.com\/bingbot.htm)": {
+		"platform": null,
+		"browser": "bingbot",
+		"version": "2.0"
+	},
+	"curl\/7.19.7 (universal-apple-darwin10.0) libcurl\/7.19.7 OpenSSL\/0.9.8r zlib\/1.2.3": {
+		"platform": null,
+		"browser": "curl",
+		"version": "7.19.7"
+	},
+	"facebookexternalhit\/1.1 (+http:\/\/www.facebook.com\/externalhit_uatext.php)": {
+		"platform": null,
+		"browser": "facebookexternalhit",
+		"version": "1.1"
+	},
+	"FeedValidator\/1.3": {
+		"platform": null,
+		"browser": "FeedValidator",
+		"version": "1.3"
+	},
+	"Googlebot\/1.3": {
+		"platform": null,
+		"browser": "Googlebot",
+		"version": "1.3"
+	},
+	"Mozilla\/5.0 (compatible; Googlebot\/2.1; +http:\/\/www.google.com\/bot.html)": {
+		"platform": null,
+		"browser": "Googlebot",
+		"version": "2.1"
+	},
+	"Googlebot-Image\/1.0": {
+		"platform": null,
+		"browser": "Googlebot-Image",
+		"version": "1.0"
+	},
+	"Googlebot-Video\/1.0": {
+		"platform": null,
+		"browser": "Googlebot-Video",
+		"version": "1.0"
+	},
+	"Lynx\/2.8.6rel.4 libwww-FM\/2.14 SSL-MM\/1.4.1 OpenSSL\/0.9.7l Lynxlet\/0.7.0": {
+		"platform": null,
+		"browser": "Lynx",
+		"version": "2.8.6rel.4"
+	},
+	"msnbot-media\/1.1 (+http:\/\/search.msn.com\/msnbot.htm)": {
+		"platform": null,
+		"browser": "msnbot-media",
+		"version": "1.1"
+	},
+	"WordPress\/3.7.1; http:\/\/wordpress.com": {
+		"platform": null,
+		"browser": "WordPress",
+		"version": "3.7.1"
+	},
+	"Mozilla\/5.0 (compatible; YandexBot\/3.0; +http:\/\/yandex.com\/bots)": {
+		"platform": null,
+		"browser": "YandexBot",
+		"version": "3.0"
+	}
+}

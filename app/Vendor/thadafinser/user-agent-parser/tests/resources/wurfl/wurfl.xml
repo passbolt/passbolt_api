@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wurfl>
+	<version>
+		<ver>for API 1.6.4, db.scientiamobile.com - 2015-12-03 14:33:12</ver>
+		<last_updated>2015-12-03 14:35:41 -0500</last_updated>
+		<official_url>http://wurfl.sourceforge.net/</official_url>
+		<maintainers>
+			<maintainer name="Luca Passani" email="luca at scientiamobile dot com"
+				home_page="http://www.scientiamobile.com" />
+			<maintainer name="Steve Kamerman" email="steve at scientiamobile dot com"
+				home_page="http://www.scientiamobile.com" />
+		</maintainers>
+		<authors>
+			<author name="Luca Passani" email="luca at scientiamobile dot com"
+				home_page="http://www.scientiamobile.com" />
+		</authors>
+		<statement>asdf</statement>
+	</version>
+
+	<devices>
+		<device id="generic" user_agent="" fall_back="root">
+		</device>
+	</devices>
+</wurfl>
