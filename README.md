@@ -10,8 +10,26 @@
 	https://www.passbolt.com
 
 
-Passbolt in a glimpse
-=====================
+About Passbolt
+==============
+
+Passbolt is an open source password manager for teams. It allows to securely share and store credentials.
+For instance, the wifi password of your office, or the administrator password of a router, or your organisation social media account password,
+all of them can be secured using Passbolt.
+
+Passbolt is different from the other password managers because:
+- It is free & open source;
+- It is respectful of privacy;
+- It is primarily designed for teams and not individuals;
+- It is based on OpenGPG, a proven cryptographic standard;
+- It is easy to use for both novice and IT professionals alike.
+- It is extensible thanks to its restful API
+
+Find out more more : [https://www.passbolt.com](https://www.passbolt.com "Passbolt Homepage")
+
+
+In a glimpse
+------------
 
 <a href="https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-login.png" rel="passwords list">
 ![Passwords list](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-login-275.png)
@@ -22,16 +40,6 @@ Passbolt in a glimpse
 <a href="https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-share.png" rel="passwords list">
 ![Passwords list](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-share-275.png)
 </a>
-
-
-Main Features
-=============
-
-- GPG based encryption.
-- Single password for authentication and decryption.
-- Easy to share passwords with other users.
-
-Know more : [https://www.passbolt.com](https://www.passbolt.com "Passbolt's Homepage")
 
 
 Getting started
