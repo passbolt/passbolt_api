@@ -62,7 +62,7 @@ class DonatjUAParser extends AbstractProvider
 
     public function __construct()
     {
-        if (! file_exists('vendor/' . $this->getPackageName() . '/composer.json')) {
+        if (! function_exists('parse_user_agent')) {
             throw new PackageNotLoadedException('You need to install the package ' . $this->getPackageName() . ' to use this provider');
         }
     }
