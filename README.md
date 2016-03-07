@@ -309,20 +309,23 @@ Passbolt Team Rocket
 --------------------
 
 Design and programming :
- - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
  - [Cédric Alfonsi](https://github.com/cedricalfonsi "Cédric Alfonsi")
- - [Remy Bertot](https://github.com/stripthis "Remy Bertot")
+ - [Rémy Bertot](https://github.com/stripthis "Rémy Bertot")
+ - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
  
-Unconditional support :
-Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur.
+Special thanks:
+Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur, Janosh, Diego!
 
-More :
 https://www.passbolt.com/credits
 
+
+Legal
+=========
+
 Terms of service
-================
+----------------
 https://www.passbolt.com/terms
 
-Privacy
-=======
+Privacy Policy
+--------------
 https://www.passbolt.com/privacy
