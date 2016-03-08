@@ -79,6 +79,28 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 			'state': 'ready'
 		});
 		loadingBarCtl.start();
+
+		// Initialise the session timeout check loop.
+		this.initSessionTimeoutCheckLoop();
+	},
+
+	/**
+	 * Initialise the session timeout check loop.
+	 * If the user has been logged out, the server will answer a 403 message that should
+	 * be caught by the passbolt.net.ResponseHandler and redirect the user to the login
+	 * page.
+	 */
+	initSessionTimeoutCheckLoop: function() {
+		setTimeout(function() {
+			var interval = setInterval(function() {
+				mad.net.Ajax.request({
+					url: APP_URL + 'auth/checkSession.json',
+					type: 'GET'
+				}).fail(function() {
+					clearInterval(interval);
+				});
+			}, mad.Config.read('session.checkTimeInterval'));
+		}, mad.Config.read('session.checkTimeInterval'));
 	},
 
 	/* ************************************************************** */
