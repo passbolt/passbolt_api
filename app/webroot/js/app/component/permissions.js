@@ -506,18 +506,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			.then(function(data) {
 				// Notify other components regarding the success of the share action.
 				self.element.trigger('saved');
-
-				// If no permissions retrieved, that means the user doesn't
-				// have access to this resource anymore.
 				// Close the dialog.
-				if (data.acoInstance == null) {
-					self.closest(mad.component.Dialog)
-						.remove();
-				}
-				// Refresh the component.
-				else {
-					self.refresh();
-				}
+				self.closest(mad.component.Dialog)
+					.remove();
 			});
 	},
 
