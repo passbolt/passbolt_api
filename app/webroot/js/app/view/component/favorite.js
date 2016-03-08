@@ -1,7 +1,6 @@
 import 'mad/view/view';
 import 'app/view/template/component/favorite.ejs!';
 
-
 /**
  * @inherits mad.view.View
  */
@@ -9,17 +8,18 @@ var Favorite = passbolt.view.component.Favorite = mad.View.extend('passbolt.view
 
 }, /** @prototype */ {
 
-	/* ************************************************************** */
-	/* LISTEN TO THE VIEW EVENTS */
-	/* ************************************************************** */
+	/**
+	 * Mark as a favorite.
+	 */
+	favorite: function (el, ev) {
+		$('i', this.element).removeClass('fav').addClass('unfav');
+	},
 
 	/**
-	 *
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
+	 * Unmark as a favorite.
 	 */
-	' click': function (el, ev) {
-		this.element.trigger('trigger');
+	unfavorite: function (el, ev) {
+		$('i', this.element).removeClass('unfav').addClass('fav');
 	}
 
 });
