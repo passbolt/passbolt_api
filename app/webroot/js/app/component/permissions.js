@@ -40,7 +40,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
         // The template used to render the permissions component.
 		templateUri: 'app/view/template/component/permissions.ejs',
         // Override the silentLoading parameter.
-        silentLoading: false
+        silentLoading: false,
+		// The initial state the component will be initialized on (after start).
+		state: 'loading'
 	}
 
 }, /** @prototype */ {
@@ -215,6 +217,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		this.options.acoInstance = obj;
 		this.options.changes = {};
 
+		// change the state of the component to loading
+		this.setState('loading');
+
 		// get permissions for the given resource
 		return passbolt.model.Permission.findAll({
 			aco: this.options.acoInstance.constructor.shortName,
@@ -229,6 +234,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			if (self._isAdmin()) {
 				self.checkOwner();
 			}
+
+			// change the state of the component to loading
+			self.setState('ready');
 		});
 	},
 
