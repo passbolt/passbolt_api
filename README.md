@@ -6,12 +6,31 @@
 	  /_/    \__,_/____/____/_,___/\____/_/\__/
 	
 	The open-source password management solution for teams
-	(c) 2015-present Bolt Softwares Pvt Ltd
+	(c) 2016 Bolt Softwares Pvt Ltd
 	https://www.passbolt.com
 
 
-Passbolt in a glimpse
-=====================
+About Passbolt
+==============
+
+Passbolt is an open source password manager for teams. It allows to securely share and store credentials.
+For instance, the wifi password of your office, or the administrator password of a router, or your organisation social media account password,
+all of them can be secured using Passbolt.
+
+Passbolt is different from the other password managers because:
+- It is free & open source;
+- It is respectful of privacy;
+- It is primarily designed for teams and not individuals;
+- It is based on OpenGPG, a proven cryptographic standard;
+- It is easy to use for both novice and IT professionals alike.
+- It is extensible thanks to its restful API
+
+Find out more more : [https://www.passbolt.com](https://www.passbolt.com "Passbolt Homepage")
+
+
+In a glimpse
+------------
+
 <a href="https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-login.png" rel="passwords list">
 ![Passwords list](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-login-275.png)
 </a>
@@ -22,13 +41,6 @@ Passbolt in a glimpse
 ![Passwords list](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-share-275.png)
 </a>
 
-Main Features
-=============
-- GPG based encryption.
-- Single password for authentication and decryption.
-- Easy to share passwords with other users.
-
-Know more : [https://www.passbolt.com](https://www.passbolt.com "Passbolt's Homepage")
 
 Getting started
 ===============
@@ -91,10 +103,12 @@ Set the email settings to be able to send emails
 
 SSL
 ---
-!!! BEWARE !!! By default passbolt is configured to force an SSL connection. 
-If you don't have https configured on your host, passbolt will not be able to work.
+
+By default passbolt is configured to force an SSL connection. We recommend that you install https on your server.
+By default if you don't have https configured on your host, passbolt will not be able to work.
 To change this setting, edit /app/Config/app.php and set the parameter App.force_ssl to false. 
-Keep in mind that doing that is is extremely unsecure. We recommend that you install https on your server instead.
+Keep in mind that this setting will render your installation unsecure and should be used for development or testing only.
+
 
 Installation script
 -------------------
@@ -111,6 +125,7 @@ Check if it works!
 
 Emails settings
 ---------------
+
 Emails are placed in a queue that needs to be processed by a CakePhp Shell.
 To do so, execute the following command from your app folder :
 ```
@@ -141,8 +156,12 @@ Why am I getting a segmentation fault at install?
 
 It is possible that your $GNUPGHOME is not set or not available to either the php CLI or Apache users thus causing
 a segmentation fault.
-- Check app.php if you don't have ssh access, it can be set at run time.
-- Make sure the directory is accessible and writable for these users
+- Check app.php if you don't have ssh access, it can be set at run time with GPG.env.home variable.
+- Make sure the directory is accessible and writable for these users or run the php cli with www-data rights:
+
+```
+	su -s /bin/bash -c "/var/www/passbolt/app/Console/cake install" www-data
+```
 
 
 Why are images not displayed in the emails?
@@ -201,6 +220,7 @@ Make sure Debug is set to at least 1 in Config/app.php
 You can then go to test.php and run the tests from there.
 For example: ﻿http://localhost/passbolt/test.php
 
+
 How do I run the selenium tests?
 --------------------------------
 
@@ -208,6 +228,7 @@ Passbolt is provided with a suite of selenium tests.
 
 The selenium test suite is available in a separate project :
 https://github.com/passbolt/passbolt_selenium
+
 
 How to regenerate the fixtures?
 -------------------------------
@@ -221,24 +242,27 @@ install the data set and rexport the content as fixtures.
 
 Note that the tests are tightly coupled with the data. If you change it you may need to change the tests. You can add more record safely of course.
 
+
 How to update the PHP libraries
--------------------
+-------------------------------
 To update the PHP libraries, go to /app, and
 ```
 	composer install --no-dev
 ```
 Then execute all the unit tests and selenium tests, and if everything passes it can be commited and pushed on the git repo.
 
+
 How to update the Javascript libraries
--------------------
+--------------------------------------
 ```
 	npm install && npm update
 	grunt lib-deploy
 ```
 Then execute all the selenium tests, and if everything passes it can be commited and pushed on the git repo.
 
+
 How do I recompile the Javascript build?
-----------------------------------
+----------------------------------------
 
 Install grunt if it hasn't yet been installed
 ```
@@ -256,6 +280,7 @@ Prepare the production release
 ```
 
 CSS minified files should have been generated as the Javascript minified file.
+
 
 How do I check the code standards?
 ----------------------------------
@@ -284,20 +309,23 @@ Passbolt Team Rocket
 --------------------
 
 Design and programming :
- - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
  - [Cédric Alfonsi](https://github.com/cedricalfonsi "Cédric Alfonsi")
- - [Remy Bertot](https://github.com/stripthis "Remy Bertot")
+ - [Rémy Bertot](https://github.com/stripthis "Rémy Bertot")
+ - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
  
-Unconditional support :
-Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur.
+Special thanks:
+Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur, Janosh, Diego!
 
-More :
 https://www.passbolt.com/credits
 
+
+Legal
+=========
+
 Terms of service
-================
+----------------
 https://www.passbolt.com/terms
 
-Privacy
-=======
+Privacy Policy
+--------------
 https://www.passbolt.com/privacy
