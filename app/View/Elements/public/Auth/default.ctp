@@ -11,11 +11,7 @@
         <?php echo __('Download the plugin to get started!'); ?>
     </h2>
     <div class="plugin-check-wrapper">
-        <div class="plugin-check firefox error">
-            <p class="message">
-                <?php echo __('An add-on is required to use Passbolt.'); ?>
-                <a href="https://www.passbolt.com/download/firefox">Download it here</a>.</p>
-        </div>
+		<?php echo $this->element('public/plugin/firefox-no-addon'); ?>
     </div>
     <?php echo $this->element('public/teaser-text'); ?>
 </div>
