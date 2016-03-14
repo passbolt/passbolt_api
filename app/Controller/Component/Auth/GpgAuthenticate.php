@@ -159,7 +159,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// load base configuration
 		$this->_config = Configure::read('GPG');
 		if (!isset($this->_config['serverKey']['fingerprint'])) {
-			throw new CakeException('The GnuPG config for the server is not available');
+			throw new CakeException('The GnuPG config for the server is not available or incomplete');
 		}
 		$keyid = $this->_config['serverKey']['fingerprint'];
 
