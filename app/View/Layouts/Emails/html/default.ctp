@@ -181,7 +181,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 						that spans the width of the page.
 				-->
 				<table border="0" cellpadding="0" cellspacing="0" width="480" id="emailBody" style="border-collapse: separate;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #FFFFFF;border: 1px solid #FFFFFF;border-radius: 4px;">
-<?php echo $this->fetch('content'); ?>
+					<?php echo $this->fetch('content'); ?>
 
 				</table>
 				<!-- // EMAIL CONTAINER -->
