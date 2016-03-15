@@ -745,7 +745,7 @@ class User extends AppModel {
 		// Get the meaningful fields for this operation
 		$fields = $this->Profile->getFindFields($case, User::get('Role.name'));
 		// Set the data for validation and save
-		$data['Profile']['user_id'] = $this->id;
+		$data['Profile']['user_id'] = $saveUser['User']['id'];
 		$this->Profile->set($data);
 
 		// Validate the profile data
@@ -762,7 +762,7 @@ class User extends AppModel {
 		}
 
 		// Create the setup authentication token
-		$saveToken = $this->AuthenticationToken->generate($this->id);
+		$saveToken = $this->AuthenticationToken->generate($saveUser['User']['id']);
 		if (!$saveToken) {
 			$dataSource->rollback();
 			throw new Exception(__('The account token could not be created'));

@@ -12,6 +12,7 @@ class AllConsolesTest extends CakeTestSuite {
 	public static function suite() {
 		$suite = new CakeTestSuite('All consoles tests');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Console' . DS . 'Command');
+		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Console' . DS . 'Command' . DS . 'Task');
 		return $suite;
 	}
 }
