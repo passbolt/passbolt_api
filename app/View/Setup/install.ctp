@@ -27,8 +27,7 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 <!-- second header -->
 <div class="header second">
 	<div class="col1">
-		<div class="logo">
-			<img src="img/logo/logo.png" alt="passbolt">
+		<div class="logo no-img">
 			<h1><span>Passbolt</span></h1>
 		</div>
 	</div>
