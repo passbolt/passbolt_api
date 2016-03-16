@@ -40,7 +40,6 @@ class PassboltShell extends AppShell {
  * @return void
  */
 	protected function _welcome() {
-		$this->out('passbolt# ', 0);
 	}
 
 /**

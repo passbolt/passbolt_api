@@ -25,6 +25,10 @@ class RegisterUserTask extends AppShell {
 				'boolean' => true,
 				'help' => __('Enable interactive mode')
 			])
+			->addOption('interactive-loop', [
+				'default' => 3,
+				'help' => __('Enable interactive mode')
+			])
 			->addOption('notify', [
 				'short' => 'n',
 				'boolean' => true,
@@ -54,42 +58,49 @@ class RegisterUserTask extends AppShell {
  * Register a new user.
  */
 	function execute() {
-		$this->out(__('register_user'));
+		static $count = 0;
+		$count++;
+
 		$this->User = Common::getModel('User');
 		$this->Role = Common::getModel('Role');
 
 		// Is the command interactive.
 		$this->interactive = $this->param('interactive');
+		$interactiveLoop = 0;
+		if ($this->interactive) {
+			$this->out('Enter the user\'s information :');
+			$interactiveLoop = $this->param('interactive-loop');
+		}
 
 		// Should the user be notified by email.
 		$notify = $this->param('notify');
+
+		// If the user's username hasn't been given as option and interactive mode is enabled
+		// request the user to fill it.
+		$username = $this->param('username');
+		if (is_null($username)) {
+			$username = $this->in(__('Username (email)'));
+		}
 
 		// If the user's first name hasn't been given as option and interactive mode is enabled
 		// request the user to fill it.
 		$firstName = $this->param('first_name');
 		if (is_null($firstName)) {
-			$firstName = $this->in(__('User\'s first name'));
+			$firstName = $this->in(__('First name'));
 		}
 
 		// If the user's last name hasn't been given as option and interactive mode is enabled
 		// request the user to fill it.
 		$lastName = $this->param('last_name');
 		if (is_null($lastName)) {
-			$lastName = $this->in(__('User\'s last name'));
-		}
-
-		// If the user's username hasn't been given as option and interactive mode is enabled
-		// request the user to fill it.
-		$username = $this->param('username');
-		if (is_null($username)) {
-			$username = $this->in(__('User\'s email'));
+			$lastName = $this->in(__('Last name'));
 		}
 
 		// If the user's role hasn't been given as option and interactive mode is enabled
 		// request the user to fill it.
 		$role = $this->param('role');
 		if (is_null($role)) {
-			$role = $this->in(__('User\'s role'), ['admin', 'user'], 'user');
+			$role = $this->in(__('Role'), ['admin', 'user'], 'user');
 			if (is_null($role)) {
 				$role = 'user';
 			}
@@ -133,7 +144,14 @@ class RegisterUserTask extends AppShell {
 					}
 				}
 			}
-			$this->_stop();
+
+			// If interactive, and retry count is not over.
+			if ($interactiveLoop && $count < $interactiveLoop) {
+				$this->out();
+				$this->execute();
+			} else {
+				$this->_stop();
+			}
 			return;
 		}
 
