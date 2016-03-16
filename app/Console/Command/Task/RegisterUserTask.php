@@ -34,17 +34,17 @@ class RegisterUserTask extends AppShell {
 				'boolean' => true,
 				'help' => __('Should the user be notified by email')
 			])
-			->addOption('first_name', [
+			->addOption('username', [
+				'short' => 'u',
+				'help' => __('User\'s username (email)')
+			])
+			->addOption('first-name', [
 				'short' => 'f',
 				'help' => __('User\'s first name')
 			])
-			->addOption('last_name', [
+			->addOption('last-name', [
 				'short' => 'l',
 				'help' => __('User\'s last name')
-			])
-			->addOption('username', [
-				'short' => 'u',
-				'help' => __('User\'s email')
 			])
 			->addOption('role', [
 				'short' => 'r',
@@ -84,14 +84,14 @@ class RegisterUserTask extends AppShell {
 
 		// If the user's first name hasn't been given as option and interactive mode is enabled
 		// request the user to fill it.
-		$firstName = $this->param('first_name');
+		$firstName = $this->param('first-name');
 		if (is_null($firstName)) {
 			$firstName = $this->in(__('First name'));
 		}
 
 		// If the user's last name hasn't been given as option and interactive mode is enabled
 		// request the user to fill it.
-		$lastName = $this->param('last_name');
+		$lastName = $this->param('last-name');
 		if (is_null($lastName)) {
 			$lastName = $this->in(__('Last name'));
 		}

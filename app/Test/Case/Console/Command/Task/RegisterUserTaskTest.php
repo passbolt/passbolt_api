@@ -86,6 +86,7 @@ class RegisterUserTaskTest extends CakeTestCase {
  * @return void
  */
 	public function testRegisterUserWithoutUsername() {
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->execute();
 		$output = $this->RegisterUserTask->stdout->output;
@@ -99,6 +100,7 @@ class RegisterUserTaskTest extends CakeTestCase {
  * @return void
  */
 	public function testRegisterUserWrongUsername() {
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test';
 		$this->RegisterUserTask->execute();
@@ -113,6 +115,7 @@ class RegisterUserTaskTest extends CakeTestCase {
  * @return void
  */
 	public function testRegisterUserWithoutFirstName() {
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
 		$this->RegisterUserTask->params['lastname'] = 'lastname';
@@ -128,6 +131,7 @@ class RegisterUserTaskTest extends CakeTestCase {
  * @return void
  */
 	public function testRegisterUserWrongFirstName() {
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
 		$this->RegisterUserTask->params['firstname'] = 'firstname 2 (-)';
@@ -144,6 +148,7 @@ class RegisterUserTaskTest extends CakeTestCase {
  * @return void
  */
 	public function testRegisterUserWithoutLastName() {
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
 		$this->RegisterUserTask->params['firstname'] = 'firstname';
@@ -159,6 +164,7 @@ class RegisterUserTaskTest extends CakeTestCase {
  * @return void
  */
 	public function testRegisterUserWrongLastName() {
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
 		$this->RegisterUserTask->params['firstname'] = 'firstname';
@@ -184,10 +190,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$roleUser = $this->Role->find('first', $findRoleParams);
 
 		// Install passbolt & register a user
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
-		$this->RegisterUserTask->params['first_name'] = 'firstname';
-		$this->RegisterUserTask->params['last_name'] = 'lastname';
+		$this->RegisterUserTask->params['first-name'] = 'firstname';
+		$this->RegisterUserTask->params['last-name'] = 'lastname';
 		$this->RegisterUserTask->execute();
 
 		// Check the command output
@@ -209,8 +216,8 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$user = $this->User->find('first', $findUserParams);
 		$this->assertEquals($user['User']['username'], $this->RegisterUserTask->params['username']);
 		$this->assertEquals($user['User']['role_id'], $roleUser['Role']['id']);
-		$this->assertEquals($user['Profile']['first_name'], $this->RegisterUserTask->params['first_name']);
-		$this->assertEquals($user['Profile']['last_name'], $this->RegisterUserTask->params['last_name']);
+		$this->assertEquals($user['Profile']['first_name'], $this->RegisterUserTask->params['first-name']);
+		$this->assertEquals($user['Profile']['last_name'], $this->RegisterUserTask->params['last-name']);
 	}
 
 /**
@@ -228,10 +235,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$roleUser = $this->Role->find('first', $findRoleParams);
 
 		// Install passbolt & register an admin
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
-		$this->RegisterUserTask->params['first_name'] = 'firstname';
-		$this->RegisterUserTask->params['last_name'] = 'lastname';
+		$this->RegisterUserTask->params['first-name'] = 'firstname';
+		$this->RegisterUserTask->params['last-name'] = 'lastname';
 		$this->RegisterUserTask->params['role'] = 'admin';
 		$this->RegisterUserTask->execute();
 
@@ -254,8 +262,8 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$user = $this->User->find('first', $findUserParams);
 		$this->assertEquals($user['User']['username'], $this->RegisterUserTask->params['username']);
 		$this->assertEquals($user['User']['role_id'], $roleUser['Role']['id']);
-		$this->assertEquals($user['Profile']['first_name'], $this->RegisterUserTask->params['first_name']);
-		$this->assertEquals($user['Profile']['last_name'], $this->RegisterUserTask->params['last_name']);
+		$this->assertEquals($user['Profile']['first_name'], $this->RegisterUserTask->params['first-name']);
+		$this->assertEquals($user['Profile']['last_name'], $this->RegisterUserTask->params['last-name']);
 	}
 
 /**
@@ -264,10 +272,11 @@ class RegisterUserTaskTest extends CakeTestCase {
  * @return void
  */
 	public function testRegisterUserExistingUsername() {
+		$this->InstallShell->params['no-admin'] = true;
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
-		$this->RegisterUserTask->params['first_name'] = 'firstname';
-		$this->RegisterUserTask->params['last_name'] = 'lastname';
+		$this->RegisterUserTask->params['first-name'] = 'firstname';
+		$this->RegisterUserTask->params['last-name'] = 'lastname';
 		$this->RegisterUserTask->params['role'] = 'admin';
 		$this->RegisterUserTask->execute();
 		$this->RegisterUserTask->execute();
