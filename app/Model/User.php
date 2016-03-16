@@ -497,6 +497,13 @@ class User extends AppModel {
 					case 'Share::searchUsers':
 						// Use conditions already defined for the index case
 						$conditions = User::getFindConditions('User::index', $role, $data);
+
+						// If user is admin, he is also not allowed to see non active users.
+						// Nobody can share a password with a user who has not completed his setup.
+						if ($role == Role::ADMIN) {
+							$conditions['conditions']['User.active'] = true;
+						}
+
 						// Only return users who don't have a direct permission defined for the given aco instance
 						$conditions['joins'][] = [
 							'table' => 'users',
