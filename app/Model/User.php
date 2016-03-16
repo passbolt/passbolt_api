@@ -727,6 +727,7 @@ class User extends AppModel {
 		// Get the meaningful fields for this operation
 		$fields = $this->getFindFields($case, User::get('Role.name'));
 		// Set the data for validation and save
+		$this->create();
 		$this->set($data);
 
 		// Validate the user data

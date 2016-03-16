@@ -40,11 +40,11 @@ class TestStringOutput extends ConsoleOutput {
  */
 class RegisterUserTaskTest extends CakeTestCase {
 
-	/**
-	 * setUp method
-	 *
-	 * @return void
-	 */
+/**
+ * setUp method
+ *
+ * @return void
+ */
 	public function setUp() {
 		parent::setUp();
 
@@ -71,20 +71,20 @@ class RegisterUserTaskTest extends CakeTestCase {
 		);
 	}
 
-	/**
-	 * tearDown method
-	 *
-	 * @return void
-	 */
+/**
+ * tearDown method
+ *
+ * @return void
+ */
 	public function tearDown() {
 		parent::tearDown();
 	}
 
-	/**
-	 * Test error register a user without username
-	 *
-	 * @return void
-	 */
+/**
+ * Test error register a user without username
+ *
+ * @return void
+ */
 	public function testRegisterUserWithoutUsername() {
 		$this->InstallShell->main();
 		$this->RegisterUserTask->execute();
@@ -93,11 +93,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$this->assertRegExp($expected, $output);
 	}
 
-	/**
-	 * Test error register a user with wrong username
-	 *
-	 * @return void
-	 */
+/**
+ * Test error register a user with wrong username
+ *
+ * @return void
+ */
 	public function testRegisterUserWrongUsername() {
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test';
@@ -107,11 +107,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$this->assertRegExp($expected, $output);
 	}
 
-	/**
-	 * Test error register a user without first name
-	 *
-	 * @return void
-	 */
+/**
+ * Test error register a user without first name
+ *
+ * @return void
+ */
 	public function testRegisterUserWithoutFirstName() {
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
@@ -122,11 +122,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$this->assertRegExp($expected, $output);
 	}
 
-	/**
-	 * Test error register a user with wrong first name
-	 *
-	 * @return void
-	 */
+/**
+ * Test error register a user with wrong first name
+ *
+ * @return void
+ */
 	public function testRegisterUserWrongFirstName() {
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
@@ -138,11 +138,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$this->assertRegExp($expected, $output);
 	}
 
-	/**
-	 * Test error register a user without last name
-	 *
-	 * @return void
-	 */
+/**
+ * Test error register a user without last name
+ *
+ * @return void
+ */
 	public function testRegisterUserWithoutLastName() {
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
@@ -153,11 +153,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$this->assertRegExp($expected, $output);
 	}
 
-	/**
-	 * Test error register a user without last name
-	 *
-	 * @return void
-	 */
+/**
+ * Test error register a user without last name
+ *
+ * @return void
+ */
 	public function testRegisterUserWrongLastName() {
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';
@@ -169,11 +169,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$this->assertRegExp($expected, $output);
 	}
 
-	/**
-	 * Test register user
-	 *
-	 * @return void
-	 */
+/**
+ * Test register user
+ *
+ * @return void
+ */
 	public function testRegisterUser() {
 		// Retrieve the user role
 		$findRoleParams = [
@@ -258,11 +258,11 @@ class RegisterUserTaskTest extends CakeTestCase {
 		$this->assertEquals($user['Profile']['last_name'], $this->RegisterUserTask->params['last_name']);
 	}
 
-	/**
-	 * Test error register a user with an existing username
-	 *
-	 * @return void
-	 */
+/**
+ * Test error register a user with an existing username
+ *
+ * @return void
+ */
 	public function testRegisterUserExistingUsername() {
 		$this->InstallShell->main();
 		$this->RegisterUserTask->params['username'] = 'test@passbolt.com';

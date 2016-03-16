@@ -23,13 +23,11 @@ class RegisterUserTask extends AppShell {
 			->addOption('interactive', [
 				'short' => 'i',
 				'boolean' => true,
-				'default' => false,
 				'help' => __('Enable interactive mode')
 			])
 			->addOption('notify', [
 				'short' => 'n',
 				'boolean' => true,
-				'default' => true,
 				'help' => __('Should the user be notified by email')
 			])
 			->addOption('first_name', [
