@@ -8,6 +8,9 @@
  */
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
+App::uses('Controller', 'Controller');
+App::uses('ComponentCollection', 'Controller');
+App::uses('EmailNotificatorComponent', 'Controller/Component');
 
 class RegisterUserTask extends AppShell {
 
@@ -155,13 +158,31 @@ class RegisterUserTask extends AppShell {
 			return;
 		}
 
-		$this->out(__('The user has been registered with success, '), 0);
-		if ($notify) {
-			$this->out(__('the user has been notified by email to complete the registration process.'));
-		} else {
-			$link = Router::url('/setup/install/' . $user['AuthenticationToken']['user_id'] . '/' . $user['AuthenticationToken']['token'], true);
-			$this->out(__('complete the registration process by following the link : %s', $link));
-		}
+		// Write down the link to follow to complete the registration process.
+		$link = Router::url('/setup/install/' . $user['AuthenticationToken']['user_id'] . '/' . $user['AuthenticationToken']['token'], true);
+		$this->out(__('The user has been registered with success, to complete the registration process follow the link : %s', $link));
+
+		// Notify the user by email
+		$this->_accountCreationNotification($user);
+		$this->out(__('The user has been notified by email to complete his registration process.'));
+	}
+
+/**
+ * Send a notification email regarding a new account created for a user.
+ *
+ * @param array $user The created user
+ * @return void
+ */
+	protected function _accountCreationNotification($user) {
+		$Collection = new ComponentCollection();
+		$EmailNotificator = new EmailNotificatorComponent($Collection);
+		$EmailNotificator->initialize(new Controller(), array());
+		$EmailNotificator->accountCreationNotification(
+			$user['Profile']['user_id'], [
+			'token' => $user['AuthenticationToken']['token'],
+			'creator_id' => Common::uuid('user.id.anonymous'),
+			'self' => false,
+		]);
 	}
 
 }
