@@ -35,11 +35,12 @@ class ProfileAvatar extends ImageStorage {
  *
  * @link http://api20.cakephp.org/class/model#
  */
-	public $actsAs = [
+	public $_actsAs = [
 		'FileStorage.UploadValidator' => [
+			'validate' => true,
+			'localFile' => true,
 			'allowedExtensions' => [
-				'jpg',
-				'png',
+				'jpg', 'jpeg', 'png', 'gif'
 			],
 		],
 	];
@@ -92,9 +93,28 @@ class ProfileAvatar extends ImageStorage {
  * @return mixed
  */
 	public function upload($foreignId, $data) {
+		// Reload behavior with our settings.
+		// For some reasons, actsAs is unable to override the behavior settings
+		// So we have redefined actsAs into _actsAs.
+		$this->Behaviors->unload('UploadValidator');
+		$this->Behaviors->load('UploadValidator', $this->_actsAs['FileStorage.UploadValidator']);
+
 		// Check if an avatar has already been uploaded.
 		$options['conditions']['Avatar.foreign_key'] = $foreignId;
 		$avatar = $this->find('first', $options);
+
+		// Build avatar data.
+		$data[$this->alias]['adapter'] = 'Local';
+		$data[$this->alias]['model'] = 'ProfileAvatar';
+		$data[$this->alias]['extension'] = $this->fileExtension($data['Avatar']['file']['tmp_name']);
+		$data[$this->alias]['foreign_key'] = $foreignId;
+
+		$this->set($data);
+		$validate = $this->validates($data);
+		if (!$validate) {
+			throw new ValidationException(__('Upload error : ') . $this->validationErrors['file'][0], ['Avatar' => $this->validationErrors]);
+		}
+
 
 		// If an avatar exists, delete it and its versions.
 		if (!empty($avatar)) {
@@ -121,14 +141,14 @@ class ProfileAvatar extends ImageStorage {
 			$this->delete($avatar['Avatar']['id']);
 		}
 
-		// Save the given avatar.
-		$data[$this->alias]['adapter'] = 'Local';
-		$data[$this->alias]['model'] = 'ProfileAvatar';
-		$data[$this->alias]['extension'] = $this->fileExtension($data['Avatar']['file']['tmp_name']);
-		$data[$this->alias]['foreign_key'] = $foreignId;
-		$this->create();
 
-		return $this->save($data);
+		$this->create();
+		$save = $this->save($data);
+		if (!$save) {
+			throw new Exception(__('Could not save avatar'));
+		}
+
+		return true;
 	}
 
 /**

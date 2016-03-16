@@ -34,6 +34,15 @@ mad.net.ResponseHandler.extend('passbolt.net.ResponseHandler', /** @static */ {
 	},
 
 	'_error': function() {
+        // Trigger notification.
+        if (mad.bus) {
+            mad.bus.trigger('passbolt_notify', {
+                title: this.response.header.title,
+                status: this.response.header.status,
+                data: this.response
+            });
+        }
+
 		// If the user is not logged in to the application.
 		// Redirect the user to the front page.
 		if(this.response.getStatus() == mad.net.Response.STATUS_ERROR
