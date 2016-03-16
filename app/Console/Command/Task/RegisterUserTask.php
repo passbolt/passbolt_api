@@ -70,9 +70,6 @@ class RegisterUserTask extends AppShell {
 			$interactiveLoop = $this->param('interactive-loop');
 		}
 
-		// Should the user be notified by email.
-		$notify = $this->param('notify');
-
 		// If the user's username hasn't been given as option and interactive mode is enabled
 		// request the user to fill it.
 		$username = $this->param('username');
