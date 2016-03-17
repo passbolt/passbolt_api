@@ -110,11 +110,10 @@ class ProfileAvatar extends ImageStorage {
 		$data[$this->alias]['foreign_key'] = $foreignId;
 
 		$this->set($data);
-		$validate = $this->validates($data);
+		$validate = $this->validates();
 		if (!$validate) {
 			throw new ValidationException(__('Upload error : ') . $this->validationErrors['file'][0], ['Avatar' => $this->validationErrors]);
 		}
-
 
 		// If an avatar exists, delete it and its versions.
 		if (!empty($avatar)) {
