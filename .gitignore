@@ -1,10 +1,16 @@
-
-# Local config
+# Local config #
+################
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
 
-# Cake temp files
+# User specific #
+#################
+/app/webroot/img/public/*
+!/app/webroot/img/public/empty
+
+# Cake temp files #
+###################
 /app/tmp/cache/*
 /app/tmp/cache/models/*
 !/app/tmp/cache/models/empty
@@ -21,43 +27,42 @@
 /app/tmp/image-processing/*
 /app/tmp/file-storage-test/*
 /app/tmp/schema
+/lib/Cake/Console/Templates/skel/tmp/
 
-# Plugins
+# Plugins #
+###########
 /Plugin
 /plugins
-
-# Vendors
-#/vendor
-#/Vendor/*
-#!/Vendor/composer
-#!/Vendor/composer/*
-#!/Vendor/autoload.php
-#/vendors
 
 # bower, composer, grunt
 /bower_components
 /node_modules
 composer.lock
 
-# Misc
+# Misc #
+########
 /app/composer.phar
-/app/webroot/img/public/*
-!/app/webroot/img/public/empty
-/lib/Cake/Console/Templates/skel/tmp/
 /build
 /dist
 /tags
 *.mo
+
+# JS App config & doc #
+#######################
 /app/webroot/js/app/config/config.json
 /app/webroot/js/lib/mad/docs/
 /app/webroot/js/lib/mad/docs.html
-
 
 # IDE and editor specific files #
 #################################
 /nbproject
 .idea
+*.mo
 
+# IDE and editor specific files #
+#################################
+/nbproject
+.idea
 
 # OS generated files #
 ######################

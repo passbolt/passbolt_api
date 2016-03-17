@@ -27,8 +27,7 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 <!-- second header -->
 <div class="header second">
 	<div class="col1">
-		<div class="logo">
-			<img src="img/logo/logo.png" alt="passbolt">
+		<div class="logo no-img">
 			<h1><span>Passbolt</span></h1>
 		</div>
 	</div>
@@ -67,9 +66,7 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 				<div class="col7">
 					<div class="plugin-check-wrapper">
 						<h3><?php echo __('Plugin check') ?></h3>
-						<div class="plugin-check firefox error">
-							<p class="message"><?php echo __("An add-on is required to use Passbolt. Download it at <a href=\"https://github.com/passbolt/passbolt_ff/blob/develop/passbolt-firefox-addon.xpi?raw=true\">addons.mozilla.org</a>."); ?></p>
-						</div>
+						<?php echo $this->element('public/plugin/firefox-no-addon'); ?>
 					</div>
 					<div class="why-plugin-wrapper">
 						<h3><?php echo ("Why do I need a plugin"); ?></h3>
@@ -77,7 +74,6 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 							<?php echo __('Passbolt requires a browser add-on to guarantee that your secret key and your master password are never
 							accessible to any website (including passbolt.com itself). This is also the only way to guarantee that
 							the core cryptographic libraries cannot be tampered with.'); ?>
-							<a href="#"><?php echo __('Learn more'); ?></a>
 						</p>
 					</div>
 					<div class="submit-input-wrapper">

@@ -63,6 +63,26 @@ class AuthControllerTest extends ControllerTestCase {
 	}
 
 /**
+ * Test error 500 if the GnuPG fingerprint config for the server is missing.
+ * It can happen if a sysop overrides the GnuPG config for the server post installation.
+ */
+	public function testLoginServerKeyFingerprintMissing() {
+		Configure::delete('GPG.serverKey.fingerprint');
+		$this->setExpectedException('CakeException', 'The GnuPG config for the server is not available or incomplete');
+		json_decode($this->testAction('/auth/login', array('return' => 'contents', 'method' => 'GET'), true));
+	}
+
+/**
+ * Test error 500 if the GnuPG fingerprint config for the server is invalid.
+ * It can happen if a sysop changed the server key fingerprint without loading this key in the gpg keyring post installation.
+ */
+	public function testLoginBadServerKeyFingerprint() {
+		Configure::write('GPG.serverKey.fingerprint', '0000000000000000000000000000000000000000');
+		$this->setExpectedException('CakeException', 'The GPG Server key defined in the config is not found in the gpg keyring');
+		json_decode($this->testAction('/auth/login', array('return' => 'contents', 'method' => 'GET'), true));
+	}
+
+/**
  * Test error 500 if config is invalid
  */
 	public function testVerifyBadConfig() {

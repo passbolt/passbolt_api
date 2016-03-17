@@ -10,13 +10,11 @@
 <html class="passbolt no-js no-passboltplugin alpha version debug <?php echo User::get('Role.name'); ?>" lang="en">
 <head>
 	<meta charset="utf-8">
-	<base href="<?php echo Router::url('/',true);?>">
 	<title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
 	<meta name="robots" content="noindex,nofollow">
 	<meta name="viewport" content="width=device-width">
 	<?php echo $this->Html->script('lib/jquery/dist/jquery.js'); ?>
-	<?php echo $this->html->css('main'); ?>
-	<?php if(Configure::read('debug') > 0) echo $this->html->css('devel.min'); ?>
+	<?php echo $this->element('css'); ?>
 </head>
 <body>
 <div id="container" class="debug page">

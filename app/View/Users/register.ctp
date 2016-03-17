@@ -13,28 +13,15 @@ $this->assign('page_classes', 'register');
 	<div class="row">
 		<div class="col6 push1 information">
 			<h2><?php echo __('Try passbolt demo today!'); ?></h2>
-			<div class="message-wrapper">
-				<p class="message error"><strong><?php echo __('Important Disclaimer:'); ?></strong><br>
-					<?php echo __('This is a demo instance of Passbolt for trial purposes only.'); ?>
-					<?php echo __('Do not use it to store sensitive information.'); ?>
-					<?php echo __('Do not use it if you are not confortable with other testers being able to see your name and email address.'); ?>
-				</p>
-			</div>
-			<p>
-				<?php
-				echo __('By signing up, you agree to the %sTerms of Service%s and %sPrivacy Policy%s, including our use of Cookies.',
-						'<a href="https://www.passbolt.com/terms">','</a>',
-						'<a href="https://www.passbolt.com/privacy">','</a>'
-				); ?>
-			</p>
 			<p>
 				<?php echo __('Enter your details in the form.'); ?>
 				<?php echo __('We will send you an email to get you started.'); ?>
 			</p>
+<?php echo $this->element('public/disclaimer-legal'); ?>
 		</div>
 		<div class="col4 push1 last">
 			<div class="logo">
-				<h1><a href="#"><span>Passbolt</span></a></h1>
+				<h1><span>Passbolt</span></h1>
 			</div>
 			<div class="users register form">
 				<?php echo $this->MyForm->create('User');?>
