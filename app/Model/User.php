@@ -497,6 +497,13 @@ class User extends AppModel {
 					case 'Share::searchUsers':
 						// Use conditions already defined for the index case
 						$conditions = User::getFindConditions('User::index', $role, $data);
+
+						// If user is admin, he is also not allowed to see non active users.
+						// Nobody can share a password with a user who has not completed his setup.
+						if ($role == Role::ADMIN) {
+							$conditions['conditions']['User.active'] = true;
+						}
+
 						// Only return users who don't have a direct permission defined for the given aco instance
 						$conditions['joins'][] = [
 							'table' => 'users',
@@ -727,6 +734,7 @@ class User extends AppModel {
 		// Get the meaningful fields for this operation
 		$fields = $this->getFindFields($case, User::get('Role.name'));
 		// Set the data for validation and save
+		$this->create();
 		$this->set($data);
 
 		// Validate the user data
@@ -745,7 +753,7 @@ class User extends AppModel {
 		// Get the meaningful fields for this operation
 		$fields = $this->Profile->getFindFields($case, User::get('Role.name'));
 		// Set the data for validation and save
-		$data['Profile']['user_id'] = $this->id;
+		$data['Profile']['user_id'] = $saveUser['User']['id'];
 		$this->Profile->set($data);
 
 		// Validate the profile data
@@ -762,7 +770,7 @@ class User extends AppModel {
 		}
 
 		// Create the setup authentication token
-		$saveToken = $this->AuthenticationToken->generate($this->id);
+		$saveToken = $this->AuthenticationToken->generate($saveUser['User']['id']);
 		if (!$saveToken) {
 			$dataSource->rollback();
 			throw new Exception(__('The account token could not be created'));

@@ -124,14 +124,19 @@ class ShareController extends AppController {
 					throw new Exception(__('The %s id is missing', $aroModelName));
 				}
 
-				// the aco instance id is invalid
+				// the aro instance id is invalid
 				if (!Common::isUuid($aroInstanceId)) {
 					throw new Exception(__('The %s id is invalid', $aroModelName));
 				}
 
 				// Check aro exists.
 				$this->loadModel($aroModelName);
-				if (!$this->$aroModelName->exists($aroInstanceId)) {
+				$exists = $this->$aroModelName->exists($aroInstanceId);
+				// If aro is a user, we make sure it is also active, and not deleted.
+				if ($exists && $aroModelName == 'User') {
+					$exists = $this->$aroModelName->find('first', ['conditions' => ['id' => $aroInstanceId, 'active' => true, 'deleted' => false]]);
+				}
+				if (!$exists) {
 					throw new Exception(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it',
 						$aroInstanceId, $aroModelName));
 				}
