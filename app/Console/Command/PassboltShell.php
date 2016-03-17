@@ -15,7 +15,7 @@ class PassboltShell extends AppShell {
  *
  * @var array
  */
-	public $tasks = array('RegisterUser');
+	public $tasks = array('RegisterUser', 'AppConfig', 'CoreConfig');
 
 /**
  * Get command options parser
@@ -29,6 +29,14 @@ class PassboltShell extends AppShell {
 			->addSubcommand('register_user', array(
 				'help' => __('Register new user'),
 				'parser' => $this->RegisterUser->getOptionParser()
+			))
+			->addSubcommand('app_config', array(
+				'help' => __('Manipulate the passbolt app configuration'),
+				'parser' => $this->AppConfig->getOptionParser()
+			))
+			->addSubcommand('core_config', array(
+				'help' => __('Manipulate the passbolt core configuration'),
+				'parser' => $this->CoreConfig->getOptionParser()
 			));
 
 		return $parser;
