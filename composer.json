@@ -1,24 +1,27 @@
 {
-	"name": "cakephp/cakephp",
-	"description": "The CakePHP framework",
+	"name": "passbolt/passbolt",
+	"description": "The open source password manager for teams",
 	"type": "library",
 	"keywords": ["framework"],
-	"homepage": "http://cakephp.org",
-	"license": "MIT",
+	"homepage": "https://www.passbolt.com",
+	"license": "AGPL-3.0",
 	"config": {
 	  "vendor-dir": "Vendor"
 	},
 	"authors": [
+        {
+          "name": "Passbolt Team",
+          "homepage": "https://www.passbolt.com/credits"
+        },
 		{
 			"name": "CakePHP Community",
 			"homepage": "https://github.com/cakephp/cakephp/graphs/contributors"
 		}
 	],
 	"support": {
-		"issues": "https://github.com/cakephp/cakephp/issues",
-		"forum": "http://stackoverflow.com/tags/cakephp",
-		"irc": "irc://irc.freenode.org/cakephp",
-		"source": "https://github.com/cakephp/cakephp"
+		"bugs": "https://github.com/passbolt/passbolt/issues",
+		"help": "https://www.passbolt.com/help",
+		"source": "https://github.com/passbolt/passbolt"
 	},
 	"require": {
 		"php": ">=5.3.0",

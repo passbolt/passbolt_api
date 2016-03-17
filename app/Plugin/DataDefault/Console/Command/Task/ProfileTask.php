@@ -28,17 +28,6 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'User'
 		));
 
-        // Admin
-        $c[] = array('Profile' => array(
-            'id' => Common::uuid('profile.id.admin'),
-            'user_id' => Common::uuid('user.id.admin'),
-            'gender' => 'm',
-            'date_of_birth' => '1980-12-13',
-            'title' => 'Mr',
-            'first_name' => 'Admin',
-            'last_name' => 'User'
-        ));
-
 		return $c;
 	}
 }

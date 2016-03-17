@@ -17,13 +17,15 @@ import 'app/view/template/component/favorite.ejs!';
  * @return {passbolt.component.Favorite}
  */
 var Favorite = passbolt.component.Favorite = mad.Component.extend('passbolt.component.Favorite', /** @static */ {
-	'defaults': {
-		'label': 'Favorite',
-		'viewClass': passbolt.view.component.Favorite,
+
+	defaults: {
+		label: 'Favorite',
+		viewClass: passbolt.view.component.Favorite,
 		// The associated model instance browser
-		'instance': null,
+		instance: null,
         templateUri: 'app/view/template/component/favorite.ejs'
 	}
+
 }, /** @prototype */ {
 
 	init: function (el, options) {
@@ -58,6 +60,8 @@ var Favorite = passbolt.component.Favorite = mad.Component.extend('passbolt.comp
 
 		// If the instance is not already a favorite.
 		if (!this.options.instance.isFavorite()) {
+			// Mark as a favorite.
+			this.view.favorite();
 			mad.bus.triggerRequest('request_favorite', this.options.instance)
 				.then(function () {
 					// It is not required to change the component state as it has been destroyed
@@ -70,6 +74,8 @@ var Favorite = passbolt.component.Favorite = mad.Component.extend('passbolt.comp
 					self.setState('ready');
 				});
 		} else {
+			// Unmark as a favorite.
+			this.view.unfavorite();
 			mad.bus.triggerRequest('request_unfavorite', this.options.instance)
 				.then(function () {
 					// It is not required to change the component state as it has been destroyed

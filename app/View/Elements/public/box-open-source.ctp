@@ -8,7 +8,7 @@
 ?>
 <h3>We ♥ open source</h3>
 <p>Passbolt is free and open source. It uses
-	<a href="openpgpjs.org/" target="_blank">OpenGPG.js</a>,
+	<a href="http://openpgpjs.org/" target="_blank">OpenGPG.js</a>,
 	<a href="https://canjs.com/" target="_blank">CanJS</a>,
 	<a href="http://www.cakephp.org" target="_blank">Cakephp</a> and
 	<a href="https://www.passbolt.com/credits">more</a>.

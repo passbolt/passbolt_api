@@ -17,6 +17,15 @@ class UserTask extends ModelTask {
 	public $model = 'User';
 	
 	protected function getData() {
+		// admin
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.admin'),
+			'username' => 'admin@passbolt.com',
+			'role_id' => Common::uuid('role.id.admin'),
+			'password' => 'password',
+			'active' => 1,
+			'created_by' => Common::uuid('user.id.admin')
+		));
 		// anonymous user
 		$us[] = array('User' => array(
 			'id' => Common::uuid('user.id.anonymous'),

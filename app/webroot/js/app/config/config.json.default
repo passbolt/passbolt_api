@@ -47,5 +47,8 @@
 			"controller": "passwordWorkspace",
 			"action": "index"
 		}
-	}
+	},
+    "session": {
+        "checkTimeInterval": 60000
+    }
 }

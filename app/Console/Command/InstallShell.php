@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Our Install command
  *
@@ -7,50 +8,69 @@
  */
 App::uses('AppShell', 'Console/Command');
 
-class InstallShell extends AppShell
-{
+// Uses Gpg Utility.
+if (!class_exists('\Passbolt\Gpg')) {
+	App::import( 'Model/Utility', 'Gpg' );
+}
 
-	/**
-	 * @return ConsoleOptionParser
-	 */
-	public function getOptionParser()
-	{
+class InstallShell extends AppShell {
+
+/**
+ * Get command options parser
+ *
+ * @return ConsoleOptionParser
+ */
+	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 		$parser
-			->addOption('data', array(
+			->addOption('data', [
 				'help' => 'Baseline data, minimal by default. Useful for testing and development.',
 				'default' => 'default',
 				'short' => 'd',
-			))
-			->addOption('password', array(
+			])
+			->addOption('password', [
 				'help' => 'Password for admin user (only for non data install).',
 				'default' => '',
 				'short' => 'p',
-			))
-			->addOption('quick', array(
+			])
+			->addOption('quick', [
 				'help' => 'Use a database dump if any to speed things up.',
 				'default' => 'false',
-			))
-			->addOption('cache', array(
+			])
+			->addOption('cache', [
 				'help' => 'Create a database dump to enable cache option use later on',
 				'default' => 'true',
 				'short' => 'c',
-			))
-			->addOption('delete-avatars', array(
+			])
+			->addOption('delete-avatars', [
 				'help' => 'Delete existing public avatars',
 				'default' => 'true',
 				'short' => 'a',
-			))
+			])
+			->addOption('no-admin', [
+				'help' => 'Don\'t register an admin account during the installation',
+				'boolean' => true,
+			])
+			->addOption('admin-username', [
+				'help' => __('Admin\' username (email). If interactive mode enabled, and no-admin not set, it will be requested')
+			])
+			->addOption('admin-first-name', [
+				'help' => __('Admin\' first name. If interactive mode enabled, and no-admin not set, it will be requested')
+			])
+			->addOption('admin-last-name', [
+				'help' => __('Admin\' last name. If interactive mode enabled, and no-admin not set, it will be requested')
+			])
 			->description(__('Installation shell for the passbolt application.'));
 
 		return $parser;
 	}
 
-	/**
-	 * Display the passbolt ascii banner
-	 */
-	protected function __welcome()
-	{
+/**
+ * Display the passbolt ascii banner
+ *
+ * @return void
+ */
+	protected function _welcome() {
 		$this->out('     ____                  __          ____  ');
 		$this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
 		$this->out('   / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/ ');
@@ -63,22 +83,22 @@ class InstallShell extends AppShell
 		$this->hr();
 	}
 
-	/**
-	 * Main shell entry point
-	 */
-	public function main()
-	{
+/**
+ * Main shell entry point
+ *
+ * @return bool
+ */
+	public function main() {
 		$this->_config = Configure::read();
-		$this->__welcome();
-		$done = false;
 
 		// init gnupg keyring
 		$this->_initGpgKeyring();
 
 		// try to build from cache if requested and possible
-		if ($this->params['quick'] != 'false') {
-			$done = $this->__installFromCache();
-			if ($done) return true;
+		if (isset($this->params['quick']) && $this->params['quick'] != 'false') {
+			if ($this->_installFromCache()) {
+				return true;
+			}
 		}
 
 		// Delete existing avatar if requested
@@ -86,18 +106,22 @@ class InstallShell extends AppShell
 			$this->deleteAvatars();
 		}
 
-		// otherwise build from scratch
-		if (!$done) {
-			// create the schema & insert dummy data
-			$this->schema();
-			$this->data($this->params['data']);
+		// install from scratch
+		// create the schema
+		$this->schema();
 
-			// @TODO in case of default install request admin password details
-			// see. createAdminUser
+		// insert the data, if no set of data specified insert default data
+		$data = $this->param('data');
+		$this->data($data);
 
-			if (!isset($this->params['cache']) || $this->params['cache'] == 'true') {
-				$this->__setCache();
-			}
+		// register the admin user
+		$registerAdmin = $this->param('no-admin');
+		if (!$registerAdmin) {
+			$this->_registerAdmin($this->param('admin-username'), $this->param('admin-first-name'), $this->param('admin-last-name'));
+		}
+
+		if (!isset($this->params['cache']) || $this->params['cache'] == 'true') {
+			$this->_setCache();
 		}
 
 		// that's all folks
@@ -108,46 +132,88 @@ class InstallShell extends AppShell
 	}
 
 /**
+ * Check that a default app config variable has been overridden
+ *
+ * @param string $key The variable to check
+ * @return bool
+ * @throws CakeException
+ */
+	protected function _checkDefaultAppConfigOverriden($key) {
+		include APP . DS . 'Config' . DS . 'app.php.default';
+		if (!isset($config)) {
+			throw new CakeException('Unable to load the default app config file');
+		}
+		if (Configure::read($key) != Hash::get($config, $key)) {
+			return true;
+		}
+		return false;
+	}
+
+/**
  * Init the gpg keyring
  *
  * @return void
  * @throws CakeException
  */
 	protected function _initGpgKeyring() {
+		$this->_gpg = new Passbolt\Gpg();
+
 		// Check that a GPG configuration id is provided
 		if (!isset($this->_config['GPG']['serverKey']['fingerprint'])
-			|| !isset($this->_config['GPG']['serverKey']['private'])) {
+			|| !isset($this->_config['GPG']['serverKey']['private'])
+			|| !isset($this->_config['GPG']['serverKey']['public'])
+		) {
 			throw new CakeException('The GnuPG config for the server is not available or incomplete');
 		}
 		$keyid = $this->_config['GPG']['serverKey']['fingerprint'];
 		$privateKeyPath = $this->_config['GPG']['serverKey']['private'];
+		$publicKeyPath = $this->_config['GPG']['serverKey']['public'];
 
-		// Check that there is a key found at the given path
+		// In production don't accept default GPG server key
+		if (!Configure::read('debug')) {
+			if (!$this->_checkDefaultAppConfigOverriden('GPG.serverKey.fingerprint')) {
+				throw new CakeException("Default GnuPG server key cannot be used in production. Please change the values of 'GPG.server' in 'APP/Config/app.php' with your server key information. If you don't have yet a server key, please generate one, take a look at the install documentation.");
+			}
+		}
+
+		// Check that there is a private key found at the given path
 		if (!file_exists($privateKeyPath)) {
 			throw new CakeException("No private key found at the given path $privateKeyPath");
 		}
-		$keydata = file_get_contents($privateKeyPath);
+		$privateKeydata = file_get_contents($privateKeyPath);
 
-		// Import the private key in the GPG keyring
-		$this->_gpg = new gnupg();
-		$importResults = $this->_gpg->import($keydata);
-
-		// Check if something went wrong during the import
-		if (!$importResults || !isset($importResults['fingerprint'])) {
-			throw new CakeException('The GnuPG key for the server could not be imported');
+		// Check that the private key match the fingerprint
+		$privateKeyInfo = $this->_gpg->getKeyInfo($privateKeydata);
+		if ($privateKeyInfo['fingerprint'] != $keyid) {
+			throw new CakeException('The private key does not match the fingerprint mentioned in the config');
 		}
 
-		// check that the imported key match the fingerprint
-		if ($importResults['fingerprint'] != $keyid) {
-			throw new CakeException('The GnuPG server key for the authentication scheme is not available');
+		// Check that there is a public key found at the given path
+		if (!file_exists($publicKeyPath)) {
+			throw new CakeException("No public key found at the given path $publicKeyPath");
+		}
+		$publicKeydata = file_get_contents($publicKeyPath);
+
+		// Check that the public key match the fingerprint
+		$publicKeyInfo = $this->_gpg->getKeyInfo($publicKeydata);
+		if ($publicKeyInfo['fingerprint'] != $keyid) {
+			throw new CakeException('The public key does not match the fingerprint mentioned in the config');
+		}
+
+		// Import the private key in the GPG keyring
+		try {
+			$this->_gpg->importKeyIntoKeyring($privateKeydata);
+		} catch (Exception $e) {
+			throw new CakeException('The GnuPG key for the server could not be imported');
 		}
 	}
 
-	/**
-	 * Install the database schema
-	 */
-	public function schema()
-	{
+/**
+ * Install the database schema
+ *
+ * @return void
+ */
+	public function schema() {
 		$this->out('Installing schema / database');
 		$this->hr();
 		$this->dispatchShell('schema create --force_drop --force_create -q');
@@ -158,36 +224,59 @@ class InstallShell extends AppShell
 		$this->out('plugins schemas deployed');
 	}
 
-	/**
-	 * Insert the dummy data in database (dispatch)
-	 * @param string $options
-	 */
-	public function data($options = 'default')
-	{
-		//CakePlugin::load('DataExtras');
+/**
+ * Insert the dummy data in database (dispatch)
+ *
+ * @param string $options
+ * @return void
+ */
+	public function data($options = 'default') {
 		$this->dispatchShell('data import --data=' . $options);
 	}
 
-	/**
-	 * Build the cache for further use
-	 * @return bool
-	 */
-	protected function __installFromCache()
-	{
+/**
+ * Register the admin user
+ *
+ * @return void
+ */
+	protected function _registerAdmin($username = null, $firstName = null, $lastName = null) {
+		$this->out();
+		$this->out('Register the passbolt admin account.');
+		$cmd = 'passbolt register_user -r admin';
+		if ($this->interactive) {
+			$cmd .= ' -i';
+		}
+		if (!is_null($username)) {
+			$cmd .= ' -u ' .$username;
+		}
+		if (!is_null($firstName)) {
+			$cmd .= ' -f ' .$firstName;
+		}
+		if (!is_null($lastName)) {
+			$cmd .= ' -l ' .$lastName;
+		}
+		$this->dispatchShell($cmd);
+	}
+
+/**
+ * Build the cache for further use
+ *
+ * @return bool
+ */
+	protected function _installFromCache() {
 		$cmd = 'sql import';
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
 		}
 		return $this->dispatchShell($cmd);
-
 	}
 
-	/**
-	 * Build the cache for further use
-	 * @return bool
-	 */
-	public function __setCache()
-	{
+/**
+ * Build the cache for further use
+ *
+ * @return bool
+ */
+	protected function _setCache() {
 		$cmd = 'sql export';
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
@@ -195,22 +284,22 @@ class InstallShell extends AppShell
 		return $this->dispatchShell($cmd);
 	}
 
-	/**
-	 * Delete the avatars from public image director
-	 */
-	public function deleteAvatars()
-	{
+/**
+ * Delete the avatars from public image director
+ *
+ * @return bool
+ */
+	public function deleteAvatars() {
 		$path = IMAGES . 'public' . DS . 'images';
 		if (PHP_OS === 'Windows') {
 			exec("rd /s /q {$path}", $output, $status);
 		} else {
 			exec("rm -rf {$path}", $output, $status);
 		}
-		if($status == 1) {
+		if ($status == 1) {
 			$this->out(' Ooops, something went wrong when trying to delete the avatars!');
 			return false;
-		}
-		else {
+		} else {
 			$this->out(' Avatar deleted!');
 			return true;
 		}
