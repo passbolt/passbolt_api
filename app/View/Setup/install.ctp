@@ -42,7 +42,7 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 		<div class="navigation wizard">
 			<ul>
 				<li class="selected">
-					<a href="#"><?php echo __('1. Get the plugin') ?></a>
+					<?php echo __('1. Get the plugin') ?>
 				</li>
 				<li class="disabled">
 					<?php echo __('2. Define your keys') ?>
