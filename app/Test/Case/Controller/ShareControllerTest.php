@@ -444,6 +444,49 @@ hcciUFw5
 		);
 	}
 
+	// Test adding permissions for a user that is not active (not completed the setup yet).
+	public function testUpdateAddInactiveUser() {
+		$userId = common::uuid('user.id.user');
+		$rsFacebookId = common::uuid('resource.id.facebook-account');
+
+		$this->User->id = $userId;
+		$this->User->save(['active' => false], false, ['active']);
+
+		$data = array(
+			'Permissions' => array(
+				array(
+					'Permission' => array (
+						'aro_foreign_key' => $userId,
+						'type' => PermissionType::OWNER,
+					),
+				),
+			),
+			'Secrets' => array(
+				array(
+					'Secret' => array (
+						'user_id' => $userId,
+						'resource_id' => $rsFacebookId,
+						'data' => '-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----',
+					),
+				),
+			),
+		);
+		$this->setExpectedException('HttpException', "The ARO instance $userId for the model User doesn't exist or the user is not allowed to access it");
+		$this->_updateCall('Resource', $rsFacebookId, $data);
+	}
+
 	public function testSimulate() {
 		$userId = common::uuid('user.id.user');
 		$acoInstanceId = common::uuid('resource.id.facebook-account');
@@ -564,6 +607,76 @@ hcciUFw5
 
 		// The users with excluded in the request parameters is not in the request results.
 		$this->assertTrue(!in_array(Common::uuid('user.id.betty'), $usersIds));
+	}
+
+	// test search users shouldn't return inactive users.
+	public function testSearchUsersExcludeNonActive() {
+		// Make betty inactive.
+		$bettyId = Common::uuid('user.id.betty');
+		$this->User->id = $bettyId;
+		$this->User->save(['active' => false], false, ['active']);
+
+		$id = Common::uuid('resource.id.facebook-account');
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents',
+		);
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+
+		// Betty shouldn't be in the list of returned users.
+		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
+	}
+
+	// test search users shouldn't return inactive users in case of autocomplete.
+	public function testSearchUsersAutocompleteExcludeNonActive() {
+		// Make betty inactive.
+		$bettyId = Common::uuid('user.id.betty');
+		$this->User->id = $bettyId;
+		$this->User->save(['active' => false], false, ['active']);
+
+		$id = Common::uuid('resource.id.facebook-account');
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents',
+			'data' => array(
+				'keywords' => 'betty'
+			)
+		);
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+
+		// Betty shouldn't be in the list of returned users.
+		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
+	}
+
+	// test search users shouldn't return inactive users.
+	public function testAdminSearchUsersExcludeNonActive() {
+		$dame = $this->User->findById(Common::uuid('user.id.dame'));
+		$this->User->id = $dame['User']['id'];
+		$this->User->save(['role_id' => Common::uuid('role.id.admin')], false, ['role_id']);
+		$dame['User']['role_id'] = Common::uuid('role.id.admin');
+		$this->User->setActive($dame);
+
+		$bettyId = Common::uuid('user.id.betty');
+		$this->User->id = $bettyId;
+		$this->User->save(['active' => false], false, ['active']);
+
+		// Make betty inactive.
+		$bettyId = Common::uuid('user.id.betty');
+		$this->User->id = $bettyId;
+		$this->User->save(['active' => false], false, ['active']);
+
+		$id = Common::uuid('resource.id.facebook-account');
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents',
+		);
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+
+		// Betty shouldn't be in the list of returned users.
+		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
 	}
 
 }
