@@ -432,7 +432,9 @@ class User extends AppModel {
 					case 'User::GpgAuth':
 						$conditions = [
 							'conditions' => [
-								'Gpgkey.fingerprint' => $data['Gpgkey']['fingerprint']
+								'Gpgkey.fingerprint' => $data['Gpgkey']['fingerprint'],
+								'User.active' => true,
+								'User.deleted' => false,
 							]
 						];
 						break;

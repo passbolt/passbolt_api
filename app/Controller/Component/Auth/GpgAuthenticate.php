@@ -56,7 +56,13 @@ class GpgAuthenticate extends BaseAuthenticate {
 
 		$user = $this->_identifyUserWithFingerprint($request);
 		if ($user === false) {
-			return $this->__error('There is no user associated with this key');
+			// If the user doesn't exist, we want to mention it in the debug anyway (no matter we are in debug mode or not)
+			// IMPORTANT : Do not change this behavior. Exceptionally here, the client will need to know that
+			// we are in this case to be able to render a proper feedback.
+			$msg = 'There is no user associated with this key';
+			$this->__error($msg);
+			$this->_response->header('X-GPGAuth-Debug', $msg);
+			return false;
 		}
 
 		// Step 0. Server authentication
