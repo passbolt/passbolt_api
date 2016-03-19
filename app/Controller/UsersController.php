@@ -426,9 +426,16 @@ class UsersController extends AppController {
 		$user = $this->User->find('first', $options);
 
 		// Update the user avatar.
-		if (!$this->User->Profile->Avatar->upload($user['Profile']['id'], $data)) {
-			return $this->Message->error(__('The avatar hasn\'t been uploaded'), ['code' => 404]);
+		try {
+			$this->User->Profile->Avatar->upload($user['Profile']['id'], $data);
 		}
+		catch (ValidationException $ve) {
+			return $this->Message->error($ve->getMessage(), ['body' => ['User' => ['Profile' => $ve->getInvalidFields()]]]);
+		}
+		catch (Exception $e) {
+			return $this->Message->error(__('The avatar couldn\'t be uploaded'), ['code' => 404]);
+		}
+
 
 		// Retrieve and return the updated user.
 		$data = ['User.id' => $id];

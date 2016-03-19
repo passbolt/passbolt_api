@@ -156,6 +156,8 @@
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'edit', '[method]' => "PUT"));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'view', '[method]' => "GET"));
 
+	Router::redirect('/auth/register', array('controller' => 'users', 'action' => 'register'), array('persist' => true));
+
 /**
  * Custom route for permissions controller
  */
