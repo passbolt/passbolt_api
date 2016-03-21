@@ -110,7 +110,7 @@ class SqlShell extends AppShell {
 
         // Build the dump command
         // @TODO more database system and OS support
-        $cmd = 'mysqldump -u '. $config['login'] . ' -p'. $config['password'] . ' ' . $config['database']
+        $cmd = 'mysqldump -h ' . $config['host'] . ' -u '. $config['login'] . ' -p'. $config['password'] . ' ' . $config['database']
             . ' > ' . $this->file;
 
         //pr($cmd);
