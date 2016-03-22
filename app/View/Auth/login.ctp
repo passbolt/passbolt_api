@@ -14,10 +14,17 @@
 	$this->Html->css('login.min', null, array('block' => 'css'));
 	$this->Html->script('lib/jquery/dist/jquery.js', array('inline' => false, 'block'=>'scriptHeader'));
 	$this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));
+
+	// Only Firefox is supported right now.
+	if ($userAgent['Browser']['name'] == 'Firefox') {
+		$pluginCheckTemplate = 'public/Auth/default';
+	} else {
+		$pluginCheckTemplate = 'public/Auth/browser_unsupported';
+	}
 ?>
 <div class="grid">
 	<div class="row js_main-login-section">
-		<?php echo $this->element('public/Auth/default'); ?>
+		<?php echo $this->element($pluginCheckTemplate); ?>
 	</div>
 	<div class="row">
 		<div class="col3 push1 github-block">

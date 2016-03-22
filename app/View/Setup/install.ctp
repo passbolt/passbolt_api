@@ -9,6 +9,13 @@ $this->assign('title',	__('Install'));
 $this->assign('page_classes', 'setup install');
 $this->Html->css('setup.min', null, array('block' => 'css'));
 $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scriptBottom'));
+
+// Only Firefox is supported right now.
+if ($userAgent['Browser']['name'] == 'Firefox') {
+	$pluginCheckTemplate = 'public/Setup/firefox_no_addon';
+} else {
+	$pluginCheckTemplate = 'public/Setup/browser_unsupported';
+}
 ?>
 
 <input type="hidden" id="js_setup_user_username" value="<?php echo $user['User']['username'] ?>"/>
@@ -64,21 +71,7 @@ $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scrip
 		<div class="grid grid-responsive-12">
 			<div class="row">
 				<div class="col7">
-					<div class="plugin-check-wrapper">
-						<h3><?php echo __('Plugin check') ?></h3>
-						<?php echo $this->element('public/plugin/firefox-no-addon'); ?>
-					</div>
-					<div class="why-plugin-wrapper">
-						<h3><?php echo ("Why do I need a plugin"); ?></h3>
-						<p>
-							<?php echo __('Passbolt requires a browser add-on to guarantee that your secret key and your master password are never
-							accessible to any website (including passbolt.com itself). This is also the only way to guarantee that
-							the core cryptographic libraries cannot be tampered with.'); ?>
-						</p>
-					</div>
-					<div class="submit-input-wrapper">
-						<a id="js_setup_plugin_check" href="#" class="button primary big">retry</a>
-					</div>
+					<?php echo $this->element($pluginCheckTemplate); ?>
 				</div>
 				<div class="col5 last">
 <!--					<div class="video-wrapper">-->

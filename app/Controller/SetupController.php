@@ -5,6 +5,9 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+
+App::uses('UserAgent', 'Model');
+
 class SetupController extends AppController {
 
 /**
@@ -70,6 +73,10 @@ class SetupController extends AppController {
 		}
 
 		$this->set('user', $user);
+
+		// Parse the user agent
+		$userAgent = UserAgent::parse();
+		$this->set('userAgent', $userAgent);
 	}
 
 /**
