@@ -208,6 +208,15 @@ abstract class AbstractProvider
     }
 
     /**
+     * Get vendor dir
+     *
+     * @return string
+     */
+    protected function getVendorDir() {
+        return dirname(dirname(dirname(dirname(__DIR__))));
+    }
+
+    /**
      * What kind of capabilities this provider can detect
      *
      * @return array
