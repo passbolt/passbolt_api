@@ -504,13 +504,14 @@ class UsersController extends AppController {
 		}
 
 		// Token is valid, we begin transaction
-		$this->User->begin();
+		$dataSource = $this->User->getDataSource();
+		$dataSource->begin();
 
 		// Activate user
 		$this->User->id = $id;
 		$result = $this->User->saveField('active', true, ['atomic' => false]);
 		if (!$result) {
-			$this->User->rollback();
+			$dataSource->rollback();
 			return $this->Message->error(__('Could not update user'));
 		}
 
@@ -518,7 +519,7 @@ class UsersController extends AppController {
 		$this->User->AuthenticationToken->id = $validToken['AuthenticationToken']['id'];
 		$result = $this->User->AuthenticationToken->saveField('active', false, ['atomic' => false]);
 		if (!$result) {
-			$this->User->rollback();
+			$dataSource->rollback();
 			return $this->Message->error(__('Could not update token'));
 		}
 
@@ -536,7 +537,7 @@ class UsersController extends AppController {
 
 			// Validate the profile data
 			if (!$this->User->Profile->validates(['fieldList' => [$fields['fields']]])) {
-				$this->User->rollback();
+				$dataSource->rollback();
 				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
 			}
 
@@ -544,7 +545,7 @@ class UsersController extends AppController {
 			$result = $this->User->Profile->save($profileData, false, ['fieldList' => $fields['fields']]);
 			// If update failed
 			if (!$result) {
-				$this->User->rollback();
+				$dataSource->rollback();
 				return $this->Message->error(__('Could not save Profile'));
 			}
 		}
@@ -556,7 +557,7 @@ class UsersController extends AppController {
 			// Extract data from the key
 			$gpgkeyData = $this->User->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['key']);
 			if ($gpgkeyData == false) {
-				$this->User->rollback();
+				$dataSource->rollback();
 				return $this->Message->error(__('The key provided couldn\'t be used'));
 			}
 
@@ -570,7 +571,7 @@ class UsersController extends AppController {
 
 			// Check if the data is valid
 			if (!$this->User->Gpgkey->validates(['fieldList' => [$fields['fields']]])) {
-				$this->User->Gpgkey->rollback();
+				$dataSource->rollback();
 				return $this->Message->error(__('Could not validate gpgkey data'),
 					['body' => $this->User->Gpgkey->validationErrors]);
 			}
@@ -580,14 +581,14 @@ class UsersController extends AppController {
 
 			// If saving the key failed
 			if (!$gpgkey) {
-				$this->User->Gpgkey->rollback();
+				$dataSource->rollback();
 				$this->Message->error(__('The gpgkey could not be saved'));
 				return;
 			}
 		}
 
 		// Everything ok, we commit the transaction.
-		$this->User->commit();
+		$dataSource->commit();
 
 		// Return information in case of success.
 		$data = ['User.id' => $id];
