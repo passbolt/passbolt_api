@@ -10,6 +10,7 @@ App::uses('AuthComponent', 'Controller/Component');
 App::uses('Common', 'Controller/Component');
 App::uses('Role', 'Model');
 App::uses('Security', 'Utility');
+App::uses('CakeEvent', 'Event');
 
 class User extends AppModel {
 
@@ -781,7 +782,16 @@ class User extends AppModel {
 		// Everything fine, we commit.
 		$dataSource->commit();
 
-		return array_merge($saveUser, $saveProfile, $saveToken);
+		// Build result.
+		$res = array_merge($saveUser, $saveProfile, $saveToken);
+
+		// Dispatch event.
+		$event = new CakeEvent('Model.User.afterRegister', $this, array(
+				'data' => $res
+			));
+		$this->getEventManager()->dispatch($event);
+
+		return $res;
 	}
 
 /**
