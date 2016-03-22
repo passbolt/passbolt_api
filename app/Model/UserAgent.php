@@ -76,11 +76,6 @@ class UserAgent extends AppModel {
  * @throws ValidationException
  */
 	static public function get() {
-		// If the user agent has already been parsed.
-		if (!empty(self::$_userAgent)) {
-			return self::$_userAgent;
-		}
-
 		// Produce a cleaned up user agent from environment
 		// Create a very restrictive configuration.
 		$userAgent['UserAgent']['name'] = Purifier::clean(env('HTTP_USER_AGENT'), 'nohtml');
@@ -94,8 +89,7 @@ class UserAgent extends AppModel {
 
 		UserAgent::createIfDoesNotExist($userAgent);
 
-		self::$_userAgent = $userAgent;
-		return self::$_userAgent;
+		return $userAgent;
 	}
 
 	/**
@@ -114,12 +108,16 @@ class UserAgent extends AppModel {
 		}
 
 		// Parse the user agent string.
-		$parser = self::_getParser();
-		$userAgent['Browser']['name'] = $parser->getBrowser()->getName();
-		$userAgent['Browser']['version'] = $parser->getBrowser()->getVersion()->getComplete();
+		try {
+			$parser = self::_getParser();
+			$userAgent['Browser']['name'] = $parser->getBrowser()->getName();
+			$userAgent['Browser']['version'] = $parser->getBrowser()->getVersion()->getComplete();
+		} catch (Exception $e) {
+			$userAgent['Browser']['name'] = '';
+			$userAgent['Browser']['version'] = '';
+		}
 
-		self::$_userAgent = $userAgent;
-		return self::$_userAgent;
+		return $userAgent;
 	}
 
 /**
