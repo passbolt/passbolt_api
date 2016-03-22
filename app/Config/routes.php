@@ -156,6 +156,8 @@
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'edit', '[method]' => "PUT"));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'view', '[method]' => "GET"));
 
+	Router::redirect('/auth/register', array('controller' => 'users', 'action' => 'register'), array('persist' => true));
+
 /**
  * Custom route for permissions controller
  */
@@ -236,7 +238,7 @@ Router::connect(
 	Router::connect('/favorites/*', array('controller' => 'favorites', 'action' => 'delete', "[method]" => "DELETE"));
 
 /**
- * Load all plugin routes.	See the CakePlugin documentation on
+ * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
  */
 	CakePlugin::routes();

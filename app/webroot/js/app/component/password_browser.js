@@ -372,8 +372,16 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// if the resource has not been removed from the grid, update it
 		this._super(resource);
-		if (this.options.selectedRs.length > 0) {
-			this.select(this.options.selectedRs[0]);
+
+		// If the item was previously selected, update the view that has been altered when the item has been refreshed.
+		if (this.isSelected(resource)) {
+			// Select the checkbox (if it is not already done).
+			var id = 'multiple_select_checkbox_' + resource.id,
+				checkbox = mad.getControl(id, 'mad.form.Checkbox');
+			checkbox.setValue([resource.id]);
+
+			// Make the item selected in the view.
+			this.view.selectItem(resource);
 		}
 	},
 
@@ -402,13 +410,12 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {mad.model.Model} item The item to select
 	 */
 	beforeSelect: function (item) {
-		var self = this,
-			returnValue = true;
+		var returnValue = true;
 
 		if (this.state.is('selection')) {
 			// if an item has already been selected
 			// if the item is already selected, unselect it
-			if (this.options.selectedRs.length > 0 && this.options.selectedRs[0].id == item.id) {
+			if (this.isSelected(item)) {
 				this.unselect(item);
 				this.setState('ready');
 				returnValue = false;
@@ -432,6 +439,20 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
+	 * Is the item selected
+	 *
+	 * @param {mad.Model}
+	 * @return {bool}
+	 */
+	isSelected: function (item) {
+		// TODO does not work with the multiple selection feature.
+		if (this.options.selectedRs.length > 0 && this.options.selectedRs[0].id == item.id) {
+			return true;
+		}
+		return false;
+	},
+
+	/**
 	 * Select an item
 	 * @param {mad.model.Model} item The item to select
 	 * @param {boolean} silent Do not propagate any event (default:false)
@@ -439,8 +460,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	select: function (item, silent) {
 		silent = typeof silent == 'undefined' ? false : silent;
 
-        // If resource is already selected, we do nothing. Simply return.
-        if (this.options.selectedRs.length > 0 && this.options.selectedRs[0].id == item.id) {
+        // If resource is already selected, we do nothing.
+		// Refresh the view
+        if (this.isSelected(item)) {
             return;
         }
 
@@ -453,10 +475,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// Add the resource to the list of selected items.
 		this.options.selectedRs.push(item);
 
-		// Check the checkbox (if it is not already done).
+		// Select the checkbox (if it is not already done).
 		var id = 'multiple_select_checkbox_' + item.id,
 			checkbox = mad.getControl(id, 'mad.form.Checkbox');
-
 		checkbox.setValue([item.id]);
 
 		// Make the item selected in the view.

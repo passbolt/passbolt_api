@@ -6,12 +6,10 @@
 		  / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
 		 /_/    \__,_/____/____/_.___/\____/_/\__/
 
-		 <?php echo Configure::read('App.punchline'); ?>
+		 <?php echo Configure::read('punchline'); ?>
 
-		 <?php echo Configure::read('App.copyright'); ?>
+		 <?php echo Configure::read('copyright'); ?>
 
-
-		 Talk is cheap, show me the code!
-		 https://github.com/passbolt
+		 Source code: https://github.com/passbolt
 
 	-->

@@ -36,6 +36,7 @@ class InstallShellTest extends CakeTestCase {
 			array('in', 'out', 'hr', 'error', 'err', '_stop'),
 			array($out, $out, $in)
 		);
+		$this->Shell->params['no-admin'] = true;
 	}
 
 /**

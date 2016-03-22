@@ -47,6 +47,19 @@ class InstallShell extends AppShell {
 				'default' => 'true',
 				'short' => 'a',
 			])
+			->addOption('no-admin', [
+				'help' => 'Don\'t register an admin account during the installation',
+				'boolean' => true,
+			])
+			->addOption('admin-username', [
+				'help' => __('Admin\' username (email). If interactive mode enabled, and no-admin not set, it will be requested')
+			])
+			->addOption('admin-first-name', [
+				'help' => __('Admin\' first name. If interactive mode enabled, and no-admin not set, it will be requested')
+			])
+			->addOption('admin-last-name', [
+				'help' => __('Admin\' last name. If interactive mode enabled, and no-admin not set, it will be requested')
+			])
 			->description(__('Installation shell for the passbolt application.'));
 
 		return $parser;
@@ -94,16 +107,18 @@ class InstallShell extends AppShell {
 		}
 
 		// install from scratch
-		// create the schema & insert dummy data
+		// create the schema
 		$this->schema();
-		$data = null;
-		if (isset($this->params['data'])) {
-			$data = $this->params['data'];
-		}
+
+		// insert the data, if no set of data specified insert default data
+		$data = $this->param('data');
 		$this->data($data);
 
-		// @TODO in case of default install request admin password details
-		// see. createAdminUser
+		// register the admin user
+		$registerAdmin = $this->param('no-admin');
+		if (!$registerAdmin) {
+			$this->_registerAdmin($this->param('admin-username'), $this->param('admin-first-name'), $this->param('admin-last-name'));
+		}
 
 		if (!isset($this->params['cache']) || $this->params['cache'] == 'true') {
 			$this->_setCache();
@@ -216,8 +231,31 @@ class InstallShell extends AppShell {
  * @return void
  */
 	public function data($options = 'default') {
-		//CakePlugin::load('DataExtras');
 		$this->dispatchShell('data import --data=' . $options);
+	}
+
+/**
+ * Register the admin user
+ *
+ * @return void
+ */
+	protected function _registerAdmin($username = null, $firstName = null, $lastName = null) {
+		$this->out();
+		$this->out('Register the passbolt admin account.');
+		$cmd = 'passbolt register_user -r admin';
+		if ($this->interactive) {
+			$cmd .= ' -i';
+		}
+		if (!is_null($username)) {
+			$cmd .= ' -u ' .$username;
+		}
+		if (!is_null($firstName)) {
+			$cmd .= ' -f ' .$firstName;
+		}
+		if (!is_null($lastName)) {
+			$cmd .= ' -l ' .$lastName;
+		}
+		$this->dispatchShell($cmd);
 	}
 
 /**

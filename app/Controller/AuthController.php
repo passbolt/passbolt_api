@@ -14,7 +14,11 @@ class AuthController extends AppController {
  * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
  */
 	public function beforeFilter() {
-		$this->Auth->allow();
+		$this->Auth->allow([
+			'login',
+			'logout',
+			'verify',
+		]);
 		parent::beforeFilter();
 	}
 
@@ -73,6 +77,17 @@ class AuthController extends AppController {
  */
 	public function logout() {
 		$this->redirect($this->Auth->logout());
+	}
+
+/**
+ * Is the user still logged in ?
+ * If the user is not logged in, he will not be able to access this controller action, and he will get a 403 response.
+ * See GpgAuthenticate::unauthenticated()
+ *
+ * @return void
+ */
+	public function checkSession() {
+		return $this->Message->success();
 	}
 
 }
