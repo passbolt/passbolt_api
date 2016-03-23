@@ -3,7 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-(Add here current version changes)
+### Fixed
+- PASSBOLT-1416: API / token is disabled when validateAccount fails, there should be a rollback and token should still be valid.
+
+### Added
+- PASSBOLT-1444: Event integration in User model, for passbolt_slack plugin integration.
 
 ## [1.0.5] - 2016-03-21
 ### Added
