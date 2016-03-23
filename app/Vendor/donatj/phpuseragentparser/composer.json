@@ -1,0 +1,27 @@
+{
+	"name": "donatj/phpuseragentparser",
+	"type": "library",
+	"description": "Simple, streamlined PHP user-agent parser",
+	"keywords": ["user agent", "useragent", "parser", "browser", "browser detection"],
+	"homepage": "http://donatstudios.com/PHP-Parser-HTTP_USER_AGENT",
+	"license": "MIT",
+	"require": {
+		"php": ">=5.3.0"
+	},
+	"require-dev": {
+		"camspiers/json-pretty": "0.1.*",
+		"phpunit/phpunit": "4.*",
+		"donatj/drop": "*"
+	},
+	"authors": [
+		{
+			"name": "Jesse G. Donat",
+			"email": "donatj@gmail.com",
+			"homepage": "http://donatstudios.com",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"files": [ "Source/UserAgentParser.php" ]
+	}
+}

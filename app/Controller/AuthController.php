@@ -5,6 +5,9 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+
+App::uses('UserAgent', 'Model');
+
 class AuthController extends AppController {
 
 /**
@@ -30,6 +33,8 @@ class AuthController extends AppController {
 	public function login() {
 		// check if the user Authentication worked
 		if (!$this->Auth->login()) {
+			$userAgent = UserAgent::parse();
+			$this->set('userAgent', $userAgent);
 			$this->layout = 'login';
 			$this->view = '/Auth/login';
 		} else {
