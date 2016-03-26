@@ -485,9 +485,10 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             this.setState('selection');
         }
         // if the grid is already in selected state, switch to multipleSelected
-        else if (this.state.is('selection')) {
-            this.setState('multipleSelection');
-        }
+        // @todo Multiple selection has been disabled
+        //else if (this.state.is('selection')) {
+        //    this.setState('multipleSelection');
+        //}
 
         // find the resource to select functions of its id
         var i = mad.model.List.indexOf(this.options.users, userId);

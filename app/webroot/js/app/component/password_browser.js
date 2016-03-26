@@ -411,15 +411,17 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 */
 	beforeSelect: function (item) {
 		var returnValue = true;
-
+console.log('unselect');
 		if (this.state.is('selection')) {
 			// if an item has already been selected
 			// if the item is already selected, unselect it
 			if (this.isSelected(item)) {
+				console.log('unselect already selected');
 				this.unselect(item);
 				this.setState('ready');
 				returnValue = false;
 			} else {
+				console.log('unselect all selected');
 				for (var i = this.options.selectedRs.length - 1; i > -1; i--) {
 					this.unselect(this.options.selectedRs[i]);
 				}
@@ -664,9 +666,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			this.setState('selection');
 		}
 		// if the grid is already in selected state, switch to multipleSelected
-		else if (this.state.is('selection')) {
-			this.setState('multipleSelection');
-		}
+		// @todo Multiple selection has been disabled
+		//else if (this.state.is('selection')) {
+		//	this.setState('multipleSelection');
+		//}
 
 		// find the resource to select functions of its id
 		var i = mad.model.List.indexOf(this.options.resources, rsId);
