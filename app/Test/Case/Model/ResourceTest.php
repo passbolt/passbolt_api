@@ -13,7 +13,10 @@ App::uses('AppTestCase', 'Test');
 class ResourceTest extends AppTestCase {
 
 	public $fixtures = array(
+		'app.category',
 		'app.resource',
+		'app.categoryType',
+		'app.categoriesResource',
 		'app.user',
 		'app.role',
 		'app.profile',
@@ -21,12 +24,16 @@ class ResourceTest extends AppTestCase {
 		'app.file_storage',
 		'app.groupsUser',
 		'app.group',
-		'core.cakeSession'
+		'app.permissionsType',
+		'app.permission',
+		'app.permission_view',
+		'core.cakeSession',
 	);
 
 	public function setUp() {
 		parent::setUp();
 		$this->Resource = ClassRegistry::init('Resource');
+		$this->User = ClassRegistry::init('User');
 	}
 
 /**
@@ -237,5 +244,37 @@ class ResourceTest extends AppTestCase {
 			}
 			$this->assertEquals($this->Resource->validates(array('fieldList' => array('description'))), $result, $msg);
 		}
+	}
+
+/**
+ * Test that when soft delete a resource it is still in db and his permissions have been revoked
+ */
+	public function testSoftDelete() {
+		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$this->User->setActive($user);
+
+		$resourceId = Common::uuid('resource.id.facebook-account');
+		$this->Resource->softDelete($resourceId);
+
+		// Resource deleted field should be set at true
+		$resourceF = $this->Resource->findById($resourceId);
+		$this->assertEqual($resourceF['Resource']['deleted'], true);
+
+		// The resource should not exist anymore
+		$this->assertFalse($this->Resource->exists($resourceId));
+	}
+
+/**
+ * Test the overridden exists function
+ */
+	public function testExists() {
+		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$this->User->setActive($user);
+
+		$id = Common::uuid('not-valid-reference');
+		$this->assertFalse($this->Resource->exists($id));
+
+		$id = Common::uuid('resource.id.facebook-account');
+		$this->assertTrue($this->Resource->exists($id));
 	}
 }

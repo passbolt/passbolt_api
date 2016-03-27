@@ -107,8 +107,7 @@ class ResourcesController extends AppController {
 			return $this->Message->error(__('The resource id is invalid'));
 		}
 		// check if it exists
-		$resource = $this->Resource->findById($id);
-		if (!$resource) {
+		if (!$this->Resource->exists($id)) {
 			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
 		}
 
@@ -143,21 +142,22 @@ class ResourcesController extends AppController {
 		if (!Common::isUuid($id)) {
 			return $this->Message->error(__('The resource id is invalid'));
 		}
-		$resource = $this->Resource->findById($id);
-		if (!$resource) {
+		// check the resource exists
+		if (!$this->Resource->exists($id)) {
 			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
 		}
-
 		// check if user is authorized
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
 			return $this->Message->error(__('You are not authorized to delete this resource'), ['code' => 403]);
 		}
 
-		$resource['Resource']['deleted'] = '1';
-		$fields = $this->Resource->getFindFields('delete', User::get('Role.name'));
-		if (!$this->Resource->save($resource, true, $fields['fields'])) {
-			return $this->Message->error(__('Error while deleting'));
+		// Soft delete the resource
+		try {
+			$this->Resource->softDelete($id);
+		} catch(Exception $e) {
+			return $this->Message->error(__('Error while deleting resource'));
 		}
+
 		$this->Message->success(__('The resource was successfully deleted'));
 	}
 
@@ -317,8 +317,7 @@ class ResourcesController extends AppController {
 		}
 
 		// check if the resource exists
-		$resource = $this->Resource->findById($id);
-		if (!$resource) {
+		if (!$this->Resource->exists($id)) {
 			return $this->Message->error(__('The resource doesn\'t exist'));
 		}
 
@@ -427,7 +426,7 @@ class ResourcesController extends AppController {
 
 		// Retrieve the updated resource.
 		$data = [
-			'Resource.id' => $resource['Resource']['id']
+			'Resource.id' => $id
 		];
 		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resource = $this->Resource->find('first', $options);
