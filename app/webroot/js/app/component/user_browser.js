@@ -272,7 +272,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * load into the grid
      */
     load: function (users) {
-        // load the resources
+        // load the users
         this._super(users);
     },
 
@@ -560,6 +560,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             filter: this.filter,
             recursive: true
         }, function (users, response, request) {
+            // If the browser component has been destroyed.
+            if (self.element == null) {
+                return;
+            }
+
             // load the users in the browser.
             self.load(users);
             // change the state to ready.

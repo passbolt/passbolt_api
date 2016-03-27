@@ -746,7 +746,11 @@ console.log('unselect');
 			recursive: true,
 			silentLoading:false
 		}, function (resources, response, request) {
-			// TODO The callback is out of date, an other filter has been performed
+			// If the browser has been destroyed before the request completed.
+			if (self.element == null) {
+				return;
+			}
+
 			// load the resources in the browser
 			self.load(resources);
 			// change the state to ready

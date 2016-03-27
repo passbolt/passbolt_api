@@ -133,15 +133,18 @@ var Component = mad.Component = mad.Control.extend('mad.Component', /* @static *
 		// Unbind the state's label attribute observer.
 		this.state.unbind('label');
 
-		// Remove all the current states classes from the HTMLElement.
-		var currentStates = this.state.current.attr();
-		for (var i in currentStates) {
-			this.element.removeClass(currentStates[i]);
-		}
+		// If the component has been destroyed, but the HTMLElement still exists.
+		if (typeof this.element != 'undefined' && this.element != null) {
+			// Remove all the current states classes from the HTMLElement.
+			var currentStates = this.state.current.attr();
+			for (var i in currentStates) {
+				this.element.removeClass(currentStates[i]);
+			}
 
-		// Remove the optional css classes from the HTMLElement.
-		for (var i in this.options.cssClasses) {
-			this.element.removeClass(this.options.cssClasses[i]);
+			// Remove the optional css classes from the HTMLElement.
+			for (var i in this.options.cssClasses) {
+				this.element.removeClass(this.options.cssClasses[i]);
+			}
 		}
 
 		// Destroy the view.
