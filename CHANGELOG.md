@@ -3,11 +3,17 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-### Fixed
-- PASSBOLT-1416: API / token is disabled when validateAccount fails, there should be a rollback and token should still be valid.
 
+## [1.0.6] - 2016-03-28
 ### Added
-- PASSBOLT-1444: Event integration in User model, for passbolt_slack plugin integration.
+- PASSBOLT-1343: Confirmation email link opened in chrome does not explain that passbolt works only in firefox.
+- PASSBOLT-1416: Improved coverage : API / Token should not be disabled when validateAccount fails.
+- PASSBOLT-1444: Slack plugin for passbolt to keep track of demo registrations.
+
+### Fixed
+- PASSBOLT-1395: Regression : As LU I should not be able to select two password.
+- PASSBOLT-1396: As LU I should not see a mix of two dashboards if I click quickly on the users and passwords menu links.
+- PASSBOLT-1406: Space missing between first name and last name in registration email.
 
 ## [1.0.5] - 2016-03-21
 ### Added
@@ -25,5 +31,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.5...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.6...HEAD
+[1.0.6]: https://github.com/passbolt/passbolt/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/passbolt/passbolt/compare/6a92766...v1.0.5
