@@ -34,6 +34,7 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 					var filter = new passbolt.model.Filter({
 						'label': __('All items'),
 						'order': 'modified',
+                        'case' : 'all_items',
 						'type': passbolt.model.Filter.SHORTCUT
 					});
 					mad.bus.trigger('filter_resources_browser', filter);
@@ -56,6 +57,7 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 					var filter = new passbolt.model.Filter({
 						'label': __('Recently modified'),
 						'order': 'modified',
+                        'case' : 'recently_modified',
 						'type': passbolt.model.Filter.SHORTCUT
 					});
 					mad.bus.trigger('filter_resources_browser', filter);

@@ -79,7 +79,7 @@ module.exports = function(grunt) {
 				},{
 					// Images
 					cwd: '<%= config.modules_path %>/<%= config.styleguide %>/src/img',
-					src: ['default/**','logo/**','third_party/**','avatar/**','controls/**'],
+					src: ['default/**','logo/**','third_party/**','avatar/**','controls/**', 'illustrations/nest.png'],
 					dest: '<%= config.webroot %>/img',
 					expand: true
 				},{
