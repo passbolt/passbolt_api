@@ -8,7 +8,7 @@
 ?>
 <div class="launching-screen">
 	<div class="launching-screen-holder">
-		<div class="logo">
+		<div class="logo no-img">
 			<h1><span>Passbolt</span></h1>
 		</div>
 		<div class="progress-bar-wrapper">
