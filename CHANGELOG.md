@@ -4,6 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.7] - 2016-04-04
+### Added
+- PASSBOLT-1223 Implemented state for empty password workspace
+
+### Changed
+- PASSBOLT-1450 Change information button icon. Eye becomes information.
+
 ## [1.0.6] - 2016-03-28
 ### Added
 - PASSBOLT-1343: Confirmation email link opened in chrome does not explain that passbolt works only in firefox.
@@ -31,6 +38,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.6...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.7...HEAD
+[1.0.7]: https://github.com/passbolt/passbolt/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/passbolt/passbolt/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/passbolt/passbolt/compare/6a92766...v1.0.5
