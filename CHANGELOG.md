@@ -6,10 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.0.7] - 2016-04-04
 ### Added
-- PASSBOLT-1223 Implemented state for empty password workspace
+- PASSBOLT-1223: Implemented state for empty password workspace.
 
 ### Changed
-- PASSBOLT-1450 Change information button icon. Eye becomes information.
+- PASSBOLT-1450: Change information button icon. Eye becomes information.
 
 ## [1.0.6] - 2016-03-28
 ### Added
