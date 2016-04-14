@@ -66,6 +66,23 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
         }
 	},
 
+    /**
+     * Override insertItem.
+     * @param item
+     * @param refItem
+     * @param position
+     */
+    insertItem: function (item, refItem, position) {
+        this._super(item, refItem, position);
+        // Unhide delete action if user is owner.
+        var isOwner = item.created_by != undefined && item.created_by == passbolt.model.User.getCurrent().id;
+        if (isOwner) {
+            var $deleteActionEl = $('li#' + item.id + ' .js_delete_comment', this.element);
+            $deleteActionEl.removeClass('hidden');
+        }
+
+    },
+
 	/**
 	 * Catches a request_delete_comment coming from an item in the list
 	 * then redistribute on mad bus
