@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.0.8] - 2016-04-15
 ### Fixed
 - PASSBOLT-1445: As a LU viewing someone else comment I should not see the delete comment button.
 - PASSBOLT-1402: As LU, In the comment thread I should not see a hyperlink on people's name that leads to nowhere.
@@ -41,7 +43,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.7...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.8...HEAD
+[1.0.8]: https://github.com/passbolt/passbolt/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/passbolt/passbolt/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/passbolt/passbolt/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/passbolt/passbolt/compare/6a92766...v1.0.5
