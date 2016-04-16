@@ -10,7 +10,7 @@
 	https://www.passbolt.com
 
 
-Licence
+License
 ==============
 
 Passbolt is distributed under [Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.html)
