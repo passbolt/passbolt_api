@@ -10,6 +10,12 @@
 	https://www.passbolt.com
 
 
+Licence
+==============
+
+Passbolt is distributed under [Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.html)
+
+
 About Passbolt
 ==============
 
@@ -317,15 +323,3 @@ Special thanks:
 Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur, Janosch, Diego!
 
 https://www.passbolt.com/credits
-
-
-Legal
-=========
-
-Terms of service
-----------------
-https://www.passbolt.com/terms
-
-Privacy Policy
---------------
-https://www.passbolt.com/privacy
