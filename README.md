@@ -320,6 +320,6 @@ Design and programming :
  - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
  
 Special thanks:
-Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur, Janosh, Diego!
+Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur, Janosch, Diego!
 
 https://www.passbolt.com/credits
