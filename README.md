@@ -323,3 +323,15 @@ Special thanks:
 Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur, Janosch, Diego!
 
 https://www.passbolt.com/credits
+
+
+Legal
+=========
+
+Terms of service
+----------------
+https://www.passbolt.com/terms
+
+Privacy Policy
+--------------
+https://www.passbolt.com/privacy
