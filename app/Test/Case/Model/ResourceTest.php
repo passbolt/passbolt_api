@@ -89,8 +89,8 @@ class ResourceTest extends AppTestCase {
 	public function testUsernameValidation() {
 		$len = 64;
 		$testcases = array(
-			// Not empty
-			'' => false,
+			// Empty
+			'' => true,
 			// Email are not accepted
 			'test@test.com' => true,
 			// too short

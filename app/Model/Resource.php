@@ -92,14 +92,10 @@ class Resource extends AppModel {
 				]
 			],
 			'username' => [
-				'required' => [
-					'allowEmpty' => false,
-					'rule' => ['notBlank'],
-					'message' => __('A username is required')
-				],
 				'alphaNumeric' => [
+					'allowEmpty' => true,
+					'required' => false,
 					'rule' => '/^[a-zA-Z0-9\-_@.]*$/',
-					'required' => 'create',
 					'message' => __('Username should only contain alphabets, numbers only and the special characters : - _ . @'),
 				],
 				'size' => [
