@@ -26,6 +26,7 @@ class UserTest extends CakeTestCase {
 		'app.gpgkey',
 		'app.role',
 		'core.cakeSession',
+		'app.permission',
 		'app.authentication_token'
 	);
 

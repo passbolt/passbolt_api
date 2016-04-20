@@ -271,7 +271,7 @@ class User extends AppModel {
  * @return array the desired user or an ANONYMOUS user, false if error in find
  * @access public
  */
-	public static function setActive($user = null) {
+	public static function setActive($user = null, $update_session = true) {
 		// Instantiate the mode as we are in a static/singleton context
 		$_this = Common::getModel('User');
 		$u = [];
@@ -289,10 +289,10 @@ class User extends AppModel {
 			$u = $_this->find('first', User::getFindOptions('User::activation', Role::USER, $user));
 
 			// Store current user data in session
-			App::import('Model', 'CakeSession');
-			$Session = new CakeSession();
-			$Session->renew();
-			$Session->write(AuthComponent::$sessionKey, $u);
+			if($update_session) {
+				App::import('Model', 'CakeSession');
+				CakeSession::write(AuthComponent::$sessionKey, $u);
+			}
 		}
 
 		if (empty($u)) {
@@ -308,13 +308,10 @@ class User extends AppModel {
  * @access public
  */
 	public static function setInactive() {
-		// Store current user data in session
+		// Delete current user data in session
 		App::import('Model', 'CakeSession');
-		$Session = new CakeSession();
-
-		$Session->delete(AuthComponent::$sessionKey);
-		$Session->delete('Auth.redirect');
-		$Session->renew();
+		CakeSession::delete(AuthComponent::$sessionKey);
+		CakeSession::delete('Auth.redirect');
 	}
 
 /**

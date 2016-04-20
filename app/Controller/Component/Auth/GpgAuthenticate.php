@@ -129,7 +129,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// Completed
 		// we set the user to active, delete the auth token and provide some success feedback
 		AuthenticationToken::setInactive($uuid, $user['User']['id']);
-		$user = User::setActive($user);
+		$user = User::setActive($user, false); // session is updated by Auth component itself
 
 		$this->_response->header('X-GPGAuth-Progress', 'complete');
 		$this->_response->header('X-GPGAuth-Authenticated', 'true');
