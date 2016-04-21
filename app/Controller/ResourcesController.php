@@ -187,7 +187,7 @@ class ResourcesController extends AppController {
 		// Get fields to validate.
 		$fields = $this->Resource->getFindFields('save', User::get('Role.name'));
 
-		// check if the data are valid.
+		// check if the data is valid.
 		if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
 			return $this->Message->error(__('Could not validate resource data'),
 				['body' => $this->Resource->validationErrors]);
@@ -202,46 +202,51 @@ class ResourcesController extends AppController {
 				'fieldList' => $fields['fields']
 			]);
 
+		// If something went wrong while saving the resource.
 		if ($resource === false) {
 			$dataSource->rollback();
 			return $this->Message->error(__('The resource could not be saved'));
 		}
 
-		// Insert the given secret.
-		if (!empty($resourcepost['Secret'])) {
-			// Concat the resource infos.
-			$secret = $resourcepost['Secret'][0];
-			$secret['user_id'] = User::get('User.id');
-			$secret['resource_id'] = $resource['Resource']['id'];
+		// Check if there is at least one secret given.
+		if (empty($resourcepost['Secret'])) {
+			$dataSource->rollback();
+			return $this->Message->error(__('No secret provided'));
+		}
 
-			// Validate the secret.
-			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
-			$this->Resource->Secret->set($secret);
-			if (!$this->Resource->Secret->validates(['fieldList' => $fields['fields']])) {
-				$dataSource->rollback();
-				return $this->Message->error(__('Could not validate secret model'),
-					['body' => $this->Resource->Secret->validationErrors]);
-			}
+		// Save the secrets.
+		$secretpost = $resourcepost['Secret'][0];
+		$secretpost['user_id'] = User::get('User.id');
+		$secretpost['resource_id'] = $resource['Resource']['id'];
 
-			// Save the secret.
-			$save = $this->Resource->Secret->save($secret, [
-				'validate' => false,
-				'atomic' => false,
-				'fieldList' => $fields['fields']
-			]);
+		// Validate the secret.
+		$secretFields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
+		$this->Resource->Secret->set($secretpost);
+		if (!$this->Resource->Secret->validates(['fieldList' => $secretFields['fields']])) {
+			$dataSource->rollback();
+			return $this->Message->error(__('Could not validate secret model'),
+				['body' => $this->Resource->Secret->validationErrors]);
+		}
 
-			if ($save == false) {
-				$dataSource->rollback();
-				return $this->Message->error(__('Could not save the secret'));
-			}
+		// Save the secret.
+		$secret = $this->Resource->Secret->save($secretpost, [
+			'validate' => false,
+			'atomic' => false,
+			'fieldList' => $secretFields['fields']
+		]);
+
+		// If something wrong happened while saving the secrets.
+		if ($secret == false) {
+			$dataSource->rollback();
+			return $this->Message->error(__('Could not save the secret'));
 		}
 
 		// Save the corresponding categories.
 		if (isset($resourcepost['Category'])) {
-
-			$fields = $this->Resource->CategoryResource->getFindFields('save', User::get('Role.name'));
+			$categoryResourceFields = $this->Resource->CategoryResource->getFindFields('save', User::get('Role.name'));
 
 			foreach ($resourcepost['Category'] as $cat) {
+				$this->Resource->CategoryResource->create();
 				$crdata = [
 					'CategoryResource' => [
 						'category_id' => $cat['id'],
@@ -249,11 +254,9 @@ class ResourcesController extends AppController {
 					]
 				];
 
-				$this->Resource->CategoryResource->create();
-
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
-				if (!$this->Resource->CategoryResource->validates(['fieldList' => $fields['fields']])) {
+				if (!$this->Resource->CategoryResource->validates(['fieldList' => $categoryResourceFields['fields']])) {
 					$dataSource->rollback();
 					return $this->Message->error(__('Could not validate CategoryResource',
 						['body' => $this->Resource->CategoryResource->validationErrors]));
@@ -267,31 +270,31 @@ class ResourcesController extends AppController {
 				}
 
 				// Save the data.
-				$save = $this->Resource->CategoryResource->save(
+				$categoryResource = $this->Resource->CategoryResource->save(
 					$crdata,
 					[
 						'validate' => false,
 						'atomic' => false,
-						'fieldList' => $fields['fields']
+						'fieldList' => $categoryResourceFields['fields']
 					]);
 
-				if ($save == false) {
+				if ($categoryResource == false) {
 					$dataSource->rollback();
 					return $this->Message->error(__('Could not save the association'));
 				}
 			}
 		}
 
+		// Everything went fine.
 		$dataSource->commit();
 		$this->Message->success(__('The resource was successfully saved'));
 
-		// Return the created resource.
-		$data = [
+		// Return the added resource.
+		$addedResourceFindOptions = $this->Resource->getFindOptions('view', User::get('Role.name'), [
 			'Resource.id' => $resource['Resource']['id']
-		];
-		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
-		$resources = $this->Resource->find('all', $options);
-		$this->set('data', $resources[0]);
+		]);
+		$addedResource = $this->Resource->find('first', $addedResourceFindOptions);
+		$this->set('data', $addedResource);
 	}
 
 /**
