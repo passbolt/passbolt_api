@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-1505: As AP, I should not get an error during setup if my key key has been generated on a system that is not exactly on time.
 
 ## [1.0.8] - 2016-04-15
 ### Fixed

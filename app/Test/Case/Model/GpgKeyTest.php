@@ -263,10 +263,13 @@ ffvdXuT2n3w=
 	 * @return void
 	 */
 	public function testKeyCreatedValidation() {
+		// Test for a key generated on a system that is not on time. (6 hours difference).
+		$inSixHours = date('Y-m-d H:i:s', strtotime('+6 hour'));
 		$testcases = array(
 			'' => false,
 			'1980-12-14 00:00:00' => true,
 			'2025-12-14 00:00:00' => false,
+			$inSixHours => true,
 			'ghdjsk tt gg' => false
 		);
 		foreach ($testcases as $testcase => $result) {
