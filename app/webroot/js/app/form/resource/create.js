@@ -26,7 +26,8 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		action: 'create',
 		secretsForms: [],
 		resource: null,
-		templateUri: 'app/view/template/form/resource/create.ejs'
+		templateUri: 'app/view/template/form/resource/create.ejs',
+		lastValidationResult: false
 	}
 
 }, /** @prototype */ {
@@ -124,66 +125,80 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	},
 
 	/**
+	 * @see parent::validate();
+	 */
+	validate: function() {
+		// Request the plugin to validate the secret.
+		// Once the secret has been validated, the plugin will trigger the event secret_edition_secret_validated.
+		mad.bus.trigger('passbolt.secret_edition.validate');
+
+		// Validate the form elements.
+		this.lastValidationResult = this._super();
+	},
+
+	/**
+	 * Encrypt the secret.
+	 */
+	encrypt: function() {
+		var usersIds = [];
+
+		if (this.options.action == 'edit') {
+			// Get the users to encrypt the resource for.
+			// @todo #PASSBOLT-1248 #security
+			passbolt.model.Permission.findAll({
+				aco: this.options.data.constructor.shortName,
+				aco_foreign_key: this.options.data.id
+			}, function (permissions, response, request) {
+				permissions.each(function(permission, i) {
+					usersIds.push(permission.aro_foreign_key);
+				});
+				// Request the plugin to encrypt the secrets.
+				// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
+				mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
+			});
+		} else {
+			usersIds.push(mad.Config.read('user.id'));
+			// Request the plugin to encrypt the secrets.
+			// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
+			mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
+		}
+	},
+
+	/**
 	 * @See parent::submit();
 	 */
 	' submit': function (el, ev) {
 		ev.preventDefault();
-
-		// Validate the form.
-		if (this.validate()) {
-			// If the embedded components are valid.
-			// Validate the secret.
-			mad.bus.trigger('passbolt.secret_edition.validate');
-		} else {
-			// if an error callback is given, call it
-			if (this.options.callbacks.error) {
-				this.options.callbacks.error();
-			}
-		}
+		this.validate();
 	},
 
 	/**
 	 * Listen when the plugin has validated the secret.
 	 * This function is called as callback of the event passbolt.secret_edition.validate.
+	 * The validation of the secret is done aynchronously, once the validation is done
+	 * continue the submit process.
 	 */
-	'{mad.bus.element} secret_edition_secret_validated': function(el, ev, validated) {
-		// The validation of the secret is the final validation step.
-		// If it has been validated encrypt the secret and continue.
-		if (validated) {
-			var usersIds = [];
-
-			if (this.options.action == 'edit') {
-				// Unmark the field wrapper in case it was marked as in error.
-				$('.js_form_secret_wrapper').removeClass('error');
-
-				// Get the users to encrypt the resource for.
-				// @todo #PASSBOLT-1248 #security
-				passbolt.model.Permission.findAll({
-					aco: this.options.data.constructor.shortName,
-					aco_foreign_key: this.options.data.id
-				}, function (permissions, response, request) {
-					permissions.each(function(permission, i) {
-						usersIds.push(permission.aro_foreign_key);
-					});
-					// Request the plugin to encrypt the secrets.
-					// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
-					mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
-				});
-			} else {
-				usersIds.push(mad.Config.read('user.id'));
-				// Request the plugin to encrypt the secrets.
-				// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
-				mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
-			}
-		} else {
+	'{mad.bus.element} secret_edition_secret_validated': function(el, ev, secretValidated) {
+		// If the validation of the secret failed.
+		if (!secretValidated) {
 			// Mark the field wrapper as in error.
 			$('.js_form_secret_wrapper').addClass('error');
+		} else {
+			// Unmark the field wrapper in case it was marked as in error.
+			$('.js_form_secret_wrapper').removeClass('error');
+		}
 
+		// If the something went wrong during the validation.
+		if (!this.lastValidationResult || !secretValidated){
 			// If the validation failed, call the error callback, if given.
 			if (this.options.callbacks.error) {
 				this.options.callbacks.error();
 			}
+			return;
 		}
+
+		// If all fields are valid, encrypt the secret and continue.
+		this.encrypt();
 	},
 
 	/**
@@ -196,8 +211,8 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 
 		for (var userId in armoreds) {
 			data['passbolt.model.Resource'].Secret.push({
-				'user_id': userId,
-				'data': armoreds[userId]
+				user_id: userId,
+				data: armoreds[userId]
 			});
 		}
 
