@@ -15,7 +15,6 @@ License
 
 Passbolt is distributed under [Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.html)
 
-
 About Passbolt
 ==============
 
@@ -48,15 +47,20 @@ In a glimpse
 </a>
 
 
-Getting started
-===============
+Using passbolt
+==============
+
+- To try a demo of passbolt: https://demo.passbolt.com
+- To install passbolt on your own machine, follow these instructions : https://www.passbolt.com/help/tech/install
+- To know more about passbolt: https://www.passbolt.com
+
+Contributing to passbolt
+========================
+
+If you are a programmer and wish to contribute / extend passbolt, here is what you need to know.
 
 Prerequisite
 ------------
-
-You will need firefox browser with the passbolt plugin. Passbolt is compatible with firefox only at the moment.
-The plugin repository is here : https://github.com/passbolt/passbolt_firefox
-
 You will need a webserver with SSL and url rewriting enabled :
 - Url rewriting http://book.cakephp.org/2.0/en/installation/url-rewriting.html
 
@@ -74,110 +78,8 @@ For testing, code styling and coverage :
 - PhpCS https://pear.php.net/manual/en/package.php.php-codesniffer.php
 - XDebug http://xdebug.org/
 
-Getting the code
-----------------
-
-Clone the repository and associated submodules
-```
-	git clone https://github.com/passbolt/passbolt_firefox.git
-	cd passbolt
-```
-
-Configuration
--------------
-
-Copy the core configuration file, change the cypher seed and salt
-```
-	cp app/Config/core.php.default app/Config/core.php
-```
-
-Copy the database configuration file and edit the database name and credentials
-```
-	cp app/Config/database.php.default app/Config/database.php
-	nano app/Config/database.php
-```
-
-Copy the app configuration file and check the settings
-```
-	cp app/Config/app.php.default app/Config/app.php
-```
-
-Set the email settings to be able to send emails
-```
-	nano app/Config/email.php
-```
-
-SSL
----
-
-By default passbolt is configured to force an SSL connection. We recommend that you install https on your server.
-By default if you don't have https configured on your host, passbolt will not be able to work.
-To change this setting, edit /app/Config/app.php and set the parameter App.force_ssl to false. 
-Keep in mind that this setting will render your installation unsecure and should be used for development or testing only.
-
-
-Installation script
--------------------
-
-Run the install script from the cakephp root with the data flag set
-if you want to install the test data add the relevant parameter.
-```
-  cd ..
-	./app/Console/cake install [--data=[default|unittests|seleniumtests]]
-```
-
-Check if it works!
-
-
-Emails settings
----------------
-
-Emails are placed in a queue that needs to be processed by a CakePhp Shell.
-To do so, execute the following command from your app folder :
-```
-	Console/cake EmailQueue.sender
-```
-
-You can also see the corresponding documentation here:
-https://github.com/lorenzo/cakephp-email-queue
-
-Or launch it at regular intervals through cron. For example in :
-```
-	﻿crontab -e
-```
-
-You can add a call to the script to run every minutes:
-```
-	* * * * * /var/www/passbolt/app/Console/cake EmailQueue.sender > /var/log/passbolt.log
-```
-
-See more: ﻿https://en.wikipedia.org/wiki/Cron
-
-
 Frequently Asked Questions
 ===========================
-
-Why am I getting a segmentation fault at install?
--------------------------------------------------
-
-It is possible that your $GNUPGHOME is not set or not available to either the php CLI or Apache users thus causing
-a segmentation fault.
-- Check app.php if you don't have ssh access, it can be set at run time with GPG.env.home variable.
-- Make sure the directory is accessible and writable for these users or run the php cli with www-data rights:
-
-```
-	su -s /bin/bash -c "/var/www/passbolt/app/Console/cake install" www-data
-```
-
-
-Why are images not displayed in the emails?
---------------------------------------------
-
-For images that are send in emails, we need to tell cakephp what is the base url.
-To fix this, add/uncomment this line in Config/core.php
-```
-	Configure::write('App.fullBaseUrl', 'http://{your domain without slash}');
-```
 
 How to edit the LESS/CSS files?
 -------------------------------
