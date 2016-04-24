@@ -61,6 +61,9 @@ class AuthenticationToken extends AppModel {
 
 /**
  * Check if a token exist and is valid for a given user.
+ * A token is valid, if :
+ *  * it is active ;
+ *  * it is not expired ;
  *
  * @param string $token
  * @param uuid $userId
@@ -70,13 +73,13 @@ class AuthenticationToken extends AppModel {
 		if (!Common::isUuid($token) || !Common::isUuid($userId)) {
 			return null;
 		}
-		// @todo PASSBOLT-1234 check token expiracy
 		$_this = Common::getModel('AuthenticationToken');
 		$token = $_this->find('first', [
 			'conditions' => [
 				'AuthenticationToken.user_id' => $userId,
 				'AuthenticationToken.token' => $token,
 				'AuthenticationToken.active' => true,
+				'AuthenticationToken.created >=' => 'DATE_SUB(NOW(), INTERVAL ' . Configure::read('Registration.tokenExpiracy') . ' MINUTE)'
 			],
 			'order' => [
 				'created' => 'DESC'
