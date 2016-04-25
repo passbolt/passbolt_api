@@ -3,8 +3,17 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.0.9] - 2016-04-25
 ### Fixed
 - PASSBOLT-1505: As AP, I should not get an error during setup if my key key has been generated on a system that is not exactly on time.
+- PASSBOLT-1457: As LU, I should not be able to create a resource without password.
+- PASSBOLT-1441: Wordsmithing: a parenthesis is missing on set a security token step
+- PASSBOLT-1158: Remove all errors (plugin/client) from the browser console at passbolt start
+
+### Changed
+- PASSBOLT-1456: When generating a password automatically it only generate "fair" level password
+- PASSBOLT-1495: Passbolt: update installation instructions in README file
 
 ## [1.0.8] - 2016-04-15
 ### Fixed
