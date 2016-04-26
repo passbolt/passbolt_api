@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- PASSBOLT-1419: The client configuration (config.json) should be loaded dynamically and not be part of the production build.
 
 ## [1.0.9] - 2016-04-25
 ### Fixed
@@ -54,7 +56,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.9...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.10...HEAD
+[1.0.9]: https://github.com/passbolt/passbolt/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/passbolt/passbolt/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/passbolt/passbolt/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/passbolt/passbolt/compare/v1.0.6...v1.0.7
