@@ -2,6 +2,6 @@
 $config = [
 	'App.version' => [
 		'number' => '1.0.9',
-		'name' => 'The art of baking'
+		'name' => 'Let\s stay together'
 	],
 ];
