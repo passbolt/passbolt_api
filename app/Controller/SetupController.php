@@ -40,7 +40,7 @@ class SetupController extends AppController {
  * @return void
  */
 	public function install($userId = null, $token = null) {
-		$this->layout = 'html5';
+		$this->layout = 'default';
 
 		// check if the id is provided
 		if (is_null($userId)) {

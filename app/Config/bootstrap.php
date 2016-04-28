@@ -34,6 +34,11 @@ $commonCache = Configure::read('Cache.Common');
 Cache::config('default', $commonCache);
 
 /**
+ * Application Statuses
+ */
+require_once(APP . DS . 'Lib' . DS . 'Status.php');
+
+/**
  * Additional App Configuration
  */
 Configure::load('version'); // Version
@@ -187,8 +192,3 @@ Purifier::config('nohtml', array(
 	'HTML.AllowedElements' => '',
 	'Cache.SerializerPath' => APP . 'tmp' . DS . 'purifier',
 ));
-
-/**
- * Application Statuses
- */
-require_once(APP . DS . 'Lib' . DS . 'Status.php');

@@ -26,7 +26,7 @@ Passbolt is different from the other password managers because:
 - It is free & open source;
 - It is respectful of privacy;
 - It is primarily designed for teams and not individuals;
-- It is based on OpenGPG, a proven cryptographic standard;
+- It is based on OpenPGP, a proven cryptographic standard;
 - It is easy to use for both novice and IT professionals alike.
 - It is extensible thanks to its restful API
 
