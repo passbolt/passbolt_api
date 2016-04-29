@@ -5,15 +5,13 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-  if(User::isGuest()) {
-		$menu = array(
-			'passbolt' => array('url' => Router::url('/'), 'class' => 'home with-link'),
-			'home' => array( 'url' => Router::url('/'), 'class' => 'left'),
-			'login' => array( 'url' => Router::url('/login'), 'class' => 'right' )
-		);
-	    if (Configure::read('Registration.public')) {
-		    $menu['register'] = array( 'url' => Router::url('/register'), 'class' => 'right' );
-	    }
+	$menu = array(
+		'passbolt' => array('url' => Router::url('/'), 'class' => 'home with-link'),
+		'home' => array( 'url' => Router::url('/'), 'class' => 'left'),
+		'login' => array( 'url' => Router::url('/login'), 'class' => 'right' )
+	);
+	if (Configure::read('Registration.public')) {
+		$menu['register'] = array( 'url' => Router::url('/register'), 'class' => 'right' );
 	}
 ?>
   <nav>

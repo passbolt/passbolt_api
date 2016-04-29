@@ -36,7 +36,7 @@ class CakeErrorController extends AppController {
 		parent::__construct($request, $response);
 		$this->constructClasses();
 		if (count(Router::extensions()) &&
-			!$this->Components->attached('RequestHandler')
+			!$this->Components->loaded('RequestHandler')
 		) {
 			$this->RequestHandler = $this->Components->load('RequestHandler');
 		}
