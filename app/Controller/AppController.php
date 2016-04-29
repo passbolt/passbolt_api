@@ -35,7 +35,7 @@ class AppController extends Controller {
 		'Message',
 		'Mailer',
 		'IpAddress',
-		'Blacklist'
+		//'Blacklist'
 	];
 
 	public $helpers = [
@@ -61,7 +61,6 @@ class AppController extends Controller {
 		$this->disconnectUserIfAccountDisabled();
 		$this->sanitize();
 	}
-
 
 /**
  * Force ssl redirection.
@@ -113,7 +112,11 @@ class AppController extends Controller {
  * @return void
  */
 	public function initAuth() {
-		foreach (Configure::read('Auth') as $key => $authConf) {
+		$auth = Configure::read('Auth');
+		if(empty($auth)) {
+			throw new InternalErrorException(__('Auth configuration not found. Is App config set?'));
+		}
+		foreach ($auth as $key => $authConf) {
 			$this->Auth->{$key} = $authConf;
 		}
 
@@ -132,7 +135,7 @@ class AppController extends Controller {
  */
 	public function setDefaultLayout() {
 		// Default is HTML5 layout
-		$this->layout = 'html5';
+		$this->layout = 'default';
 
 		// JSON request get an empty layout and view
 		if ($this->request->is('json')) {
