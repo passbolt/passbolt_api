@@ -32,6 +32,8 @@ $config = [
 	],
 	'Registration' => [
 		'public' => true,
+        // The number of minutes the registration authentication token lives for.
+        'tokenExpiracy' => 1440
 	],
 	// Authentication & Authorisation
 	'Auth' => [

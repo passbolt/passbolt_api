@@ -109,12 +109,33 @@ class AuthenticationTokenTest extends CakeTestCase {
 		$this->assertEquals((bool)$isValid, false, 'The test should have returned an invalid token');
 	}
 
+	/**
+	 * Test that a token is inactive for an inactive user.
+	 */
 	public function testSetInactive() {
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$token = $this->AuthenticationToken->generate($user['User']['id']);
 		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
+		$this->assertNotEmpty($isValid);
 		$this->AuthenticationToken->setInactive($token['AuthenticationToken']['token'], $user['User']['id']);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
+		$this->assertEmpty($isValid);
 		$t = $this->AuthenticationToken->find('first', $token['AuthenticationToken']['id']);
 		$this->assertTrue($t['AuthenticationToken']['active'] == 0, 'The authentication token should be inactive');
+	}
+
+	/**
+	 * Test that a token is valid for an invalid user
+	 */
+	public function testCheckRegistrationTokenIsValidExpired() {
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id'], AuthenticationToken::REGISTRATION);
+		$this->assertNotEmpty($isValid);
+		// Reduce the token expiracy date to 1 second.
+		Configure::write('Registration.tokenExpiracy', 0.016);
+		sleep(1);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id'], AuthenticationToken::REGISTRATION);
+		$this->assertEmpty($isValid);
 	}
 }

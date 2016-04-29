@@ -1252,6 +1252,37 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	/**
+	 * Test account validation when the authentication token is expired.
+	 */
+	public function testAccountValidationExpiredToken() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		$user = $this->__createAccount('jean-gabin@gmail.com');
+		$userId = $user['User']['id'];
+		$this->User->setInactive();
+
+		$AuthenticationToken = Common::getModel('AuthenticationToken');
+		$at = $AuthenticationToken->findByUserId($user['User']['id']);
+
+		// Reduce the token expiracy date to 1 second.
+		Configure::write('Registration.tokenExpiracy', 0.016);
+		sleep(1);
+
+		$this->setExpectedException('HttpException', 'Invalid token');
+		$url = "/users/validateAccount/{$userId}.json";
+		$this->testAction($url, array(
+			'data'   => array (
+				'AuthenticationToken' => array (
+					'token' => $at['AuthenticationToken']['token'],
+				),
+			),
+			'method' => 'put',
+			'return' => 'contents'
+		));
+	}
+
+	/**
 	 * Test account validation.
 	 */
 	public function testAccountValidation() {

@@ -8,6 +8,14 @@
 class AuthenticationToken extends AppModel {
 
 /**
+ * Authentication types :
+ * - basic, delivered during basic authentication
+ * - registration, token delivered to complete the registration
+ */
+	const BASIC = 'basic';
+	const REGISTRATION = 'registration';
+
+/**
  * Details of belongs to relationships
  *
  * @var array
@@ -61,31 +69,35 @@ class AuthenticationToken extends AppModel {
 
 /**
  * Check if a token exist and is valid for a given user.
- * A token is valid, if :
- *  * it is active ;
- *  * it is not expired ;
  *
  * @param string $token
  * @param uuid $userId
+ * @param string $type
  * @return array or null if doesn't exist.
  */
-	static public function isValid($token, $userId) {
+	static public function isValid($token, $userId, $type = self::BASIC) {
 		if (!Common::isUuid($token) || !Common::isUuid($userId)) {
 			return null;
 		}
+
 		$_this = Common::getModel('AuthenticationToken');
-		$token = $_this->find('first', [
+		$findOptions = [
 			'conditions' => [
 				'AuthenticationToken.user_id' => $userId,
 				'AuthenticationToken.token' => $token,
 				'AuthenticationToken.active' => true,
-				'AuthenticationToken.created >=' => 'DATE_SUB(NOW(), INTERVAL ' . Configure::read('Registration.tokenExpiracy') . ' MINUTE)'
 			],
 			'order' => [
 				'created' => 'DESC'
 			],
-		]);
+		];
 
+		// If the token is relative to a registration, check it is not expired.
+		if ($type == self::REGISTRATION) {
+			$findOptions['conditions'][] = 'AuthenticationToken.created >= DATE_SUB(NOW(), INTERVAL ' . Configure::read('Registration.tokenExpiracy') . ' MINUTE)';
+		}
+
+		$token = $_this->find('first', $findOptions);
 		return $token;
 	}
 
