@@ -52,10 +52,6 @@ class HealthCheckController extends AppController {
 		$this->set('checks', $this->_checks);
 	}
 
-	private function getCurrentVersion() {
-		//https://raw.githubusercontent.com/passbolt/passbolt/master/app/Config/version.php
-	}
-
 	/**
 	 * Check that there is at least one admin in the DB
 	 *
@@ -110,7 +106,7 @@ class HealthCheckController extends AppController {
 		$this->set('settings', $settings);
 		$this->_checks['phpVersion'] = (version_compare(PHP_VERSION, '5.2.8', '>='));
 		$this->_checks['tmp'] = is_writable(TMP);
-		$this->_checks['debug'] = Configure::read('debug');
+		$this->_checks['debug'] = Configure::read('debug') > 0;
 		App::uses('Validation', 'Utility');
 		$this->_checks['validation'] = (Validation::alphaNumeric('cakephp'));
 	}
@@ -143,7 +139,7 @@ class HealthCheckController extends AppController {
 		$this->_checks['gpg'] = (class_exists('gnupg'));
 		$this->_checks['gpgKeyDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
 		$this->_checks['gpgKey'] = (Configure::read('GPG.serverKey.fingerprint') != null);
-		$this->_checks['selenium'] = Configure::read('App.selenium');
+		$this->_checks['selenium'] = Configure::read('App.selenium.active');
 		$this->_checks['registration'] = !Configure::read('Registration.public');
 		$this->_checks['jsProd'] = (Configure::read('App.js.build') == 'production');
 	}
