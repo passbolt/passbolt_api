@@ -70,14 +70,14 @@ class Gpgkey extends AppModel {
 			],
 			'key_id' => [
 				'format' => [
-					'rule' => '/^[A-Z0-9]{8}$/',
+					'rule' => '/^[A-F0-9]{8}$/',
 					'required' => false,
 					'message' => __('The key id has an incorrect format'),
 				],
 			],
 			'fingerprint' => [
 				'format' => [
-					'rule' => '/^[A-Z0-9]{40}$/',
+					'rule' => '/^[A-F0-9]{40}$/',
 					'required' => 'create',
 					'message' => __('The fingerprint has an incorrect format'),
 					'allowEmpty' => false,
@@ -305,7 +305,7 @@ class Gpgkey extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::ANONYMOUS, $data = null) {
+	public static function getFindConditions($case = 'view', $role = null, $data = null) {
 		switch ($case) {
 			case 'index':
 				$conditions = ['Gpgkey.deleted' => 0];
@@ -331,7 +331,7 @@ class Gpgkey extends AppModel {
  * @param string $case context ex: login, activation
  * @return array
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
 			case 'view':
 			case 'index':
@@ -372,6 +372,9 @@ class Gpgkey extends AppModel {
 					]
 				];
 				break;
+			default:
+				$fields = ['fields' => []];
+				break;
 		}
 
 		return $fields;
@@ -379,7 +382,7 @@ class Gpgkey extends AppModel {
 
 	static public function isValidFingerprint($fingerprint) {
 		// we expect a SHA1 fingerprint
-		$pattern = '/[A-Fa-f0-9]{40}/';
+		$pattern = '/^[A-F0-9]{40}$/';
 
 		return preg_match($pattern, $fingerprint);
 	}
