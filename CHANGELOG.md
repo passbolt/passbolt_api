@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - PASSBOLT-1419: The client configuration (config.json) should be loaded dynamically and not be part of the production build.
+- PASSBOLT-1514: By default passbolt app should not be indexed by search engines.
 
 ## [1.0.9] - 2016-04-25
 ### Fixed
