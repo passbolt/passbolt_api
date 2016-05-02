@@ -46,7 +46,7 @@ class RoleTest extends CakeTestCase {
  */
 	public function testGetFindFields() {
 		$default = ['fields' => []];
-		$this->assertNotEquals($default, Role::getFindFields('view'), 'Find fields missing for comment view');
+		$this->assertNotEquals($default, Role::getFindFields('view'), 'Find fields missing for view');
 		$this->assertEquals($default, Role::getFindFields('rubish'), 'Find fields should be empty for wrong find');
 	}
 }

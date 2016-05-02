@@ -308,49 +308,42 @@ class Category extends AppModel {
  * Return the list of field to fetch for given context
  *
  * @param string case (optional) The target validation case if any.
- * @return $condition array
+ * @return array $condition
  */
-	public static function getFindFields($case = 'get', $role = Role::USER) {
-		$returnValue = ['fields' => []];
-
-		switch ($role) {
-			case 'user':
-				switch ($case) {
-					case 'view':
-					case 'getChildren':
-					case 'addResult':
-					case 'index' :
-					case 'getWithChildren' :
-						$returnValue = [
-							'fields' => [
-								'id',
-								'name',
-								'parent_id',
-								'category_type_id',
-								'lft',
-								'rght'
-							],
-							'contain' => ['CategoryType']
-						];
-						break;
-					case 'Resource.viewByCategory':
-						$returnValue = [
-							'fields' => ['Category.id', 'Category.name', 'Category.parent_id'],
-							'contain' => ['Resource' => Resource::getFindFields('view')]
-						];
-						break;
-					case 'rename':
-						$returnValue = ['fields' => ['name']];
-						break;
-					case 'add':
-					case 'edit':
-						$returnValue = ['fields' => ['name', 'parent_id', 'category_type_id']];
-						break;
-					default:
-						$returnValue = ['fields' => []];
-						break;
-				}
-			case 'admin':
+	public static function getFindFields($case = 'get', $role = null) {
+		switch ($case) {
+			case 'view':
+			case 'getChildren':
+			case 'addResult':
+			case 'index' :
+			case 'getWithChildren' :
+				$returnValue = [
+					'fields' => [
+						'id',
+						'name',
+						'parent_id',
+						'category_type_id',
+						'lft',
+						'rght'
+					],
+					'contain' => ['CategoryType']
+				];
+				break;
+			case 'Resource.viewByCategory':
+				$returnValue = [
+					'fields' => ['Category.id', 'Category.name', 'Category.parent_id'],
+					'contain' => ['Resource' => Resource::getFindFields('view')]
+				];
+				break;
+			case 'rename':
+				$returnValue = ['fields' => ['name']];
+				break;
+			case 'add':
+			case 'edit':
+				$returnValue = ['fields' => ['name', 'parent_id', 'category_type_id']];
+				break;
+			default:
+				$returnValue = ['fields' => []];
 				break;
 		}
 
@@ -365,46 +358,39 @@ class Category extends AppModel {
  * @param array data Used in find conditions (such as User.id)
  * @return array
  */
-	public static function getFindConditions($case = 'get', $role = Role::USER, $data = null) {
-		$returnValue = ['conditions' => []];
-		switch ($role) {
-			case 'user':
-			case 'admin':
-				switch ($case) {
-					case 'getWithChildren':
-						$returnValue = [
-							'conditions' => [
-								'Category.lft >=' => $data['Category']['lft'],
-								'Category.rght <=' => $data['Category']['rght']
-							],
-							'order' => 'Category.lft ASC'
-						];
-						break;
-					case 'getChildren':
-						$returnValue = [
-							'conditions' => [
-								'Category.lft >' => $data['Category']['lft'],
-								'Category.rght <' => $data['Category']['rght']
-							],
-							'order' => 'Category.lft ASC'
-						];
-						break;
-					case 'Resource.viewByCategory':
-					case 'view':
-					case 'addResult':
-						$returnValue = ['conditions' => ['Category.id' => $data['Category']['id']]];
-						break;
-					case 'index':
-						$returnValue = [
-							'conditions' => ['Category.parent_id' => null],
-							'order' => 'Category.lft ASC'
-						];
-						break;
-					default:
-						$returnValue = ['conditions' => []];
-				}
-			case 'admin':
+	public static function getFindConditions($case = 'get', $role = null, $data = null) {
+		switch ($case) {
+			case 'getWithChildren':
+				$returnValue = [
+					'conditions' => [
+						'Category.lft >=' => $data['Category']['lft'],
+						'Category.rght <=' => $data['Category']['rght']
+					],
+					'order' => 'Category.lft ASC'
+				];
 				break;
+			case 'getChildren':
+				$returnValue = [
+					'conditions' => [
+						'Category.lft >' => $data['Category']['lft'],
+						'Category.rght <' => $data['Category']['rght']
+					],
+					'order' => 'Category.lft ASC'
+				];
+				break;
+			case 'Resource.viewByCategory':
+			case 'view':
+			case 'addResult':
+				$returnValue = ['conditions' => ['Category.id' => $data['Category']['id']]];
+				break;
+			case 'index':
+				$returnValue = [
+					'conditions' => ['Category.parent_id' => null],
+					'order' => 'Category.lft ASC'
+				];
+				break;
+			default:
+				$returnValue = ['conditions' => []];
 		}
 
 		return $returnValue;

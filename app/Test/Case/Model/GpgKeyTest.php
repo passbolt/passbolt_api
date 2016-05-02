@@ -337,8 +337,8 @@ ffvdXuT2n3w=
 	 */
 	public function testGetFindFields() {
 		$default = ['fields' => []];
-		$this->assertNotEquals($default, GpgKey::getFindFields('view'), 'Find fields missing for comment view');
-		$this->assertNotEquals($default, GpgKey::getFindFields('index'), 'Find fields missing for comment index');
+		$this->assertNotEquals($default, GpgKey::getFindFields('view'), 'Find fields missing for view');
+		$this->assertNotEquals($default, GpgKey::getFindFields('index'), 'Find fields missing for index');
 		$this->assertNotEquals($default, GpgKey::getFindFields('delete'), 'Find fields should be empty for delete');
 		$this->assertNotEquals($default, GpgKey::getFindFields('save'), 'Find fields should be empty for save');
 		$this->assertEquals($default, GpgKey::getFindFields('rubish'), 'Find fields should be empty for wrong find');
@@ -349,8 +349,8 @@ ffvdXuT2n3w=
 	 */
 	public function testGetFindConditions() {
 		$default = ['conditions' => []];
-		$this->assertNotEquals($default, GpgKey::getFindConditions('index'), 'Find conditions missing for comment view');
-		$this->assertNotEquals($default, GpgKey::getFindConditions('view'), 'Find conditions missing for comment add');
+		$this->assertNotEquals($default, GpgKey::getFindConditions('index'), 'Find conditions missing for view');
+		$this->assertNotEquals($default, GpgKey::getFindConditions('view'), 'Find conditions missing for add');
 		$this->assertEquals($default, GpgKey::getFindConditions('delete'), 'Find conditions should be empty for add');
 		$this->assertEquals($default, GpgKey::getFindConditions('save'), 'Find conditions should be empty for edit');
 		$this->assertEquals($default, GpgKey::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');

@@ -169,8 +169,8 @@ class ProfileTest extends CakeTestCase {
 	 */
 	public function testGetFindFields() {
 		$default = ['fields' => []];
-		$this->assertNotEquals($default, Profile::getFindFields('view'), 'Find fields missing for comment view');
-		$this->assertNotEquals($default, Profile::getFindFields('User::edit'), 'Find fields missing for comment index');
+		$this->assertNotEquals($default, Profile::getFindFields('view'), 'Find fields missing for view');
+		$this->assertNotEquals($default, Profile::getFindFields('User::edit'), 'Find fields missing for index');
 		$this->assertNotEquals($default, Profile::getFindFields('User::save'), 'Find fields should be empty for delete');
 		$this->assertEquals(
 			Profile::getFindFields('User::edit'),
