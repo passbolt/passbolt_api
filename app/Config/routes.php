@@ -60,6 +60,8 @@
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 
+	Router::connect('/healthcheck',  array('controller' => 'HealthCheck', 'action' => 'index'));
+
 	Router::redirect('/login', array('controller' => 'auth', 'action' => 'login'));
 	Router::redirect('/logout', array('controller' => 'auth', 'action' => 'logout'));
 	Router::redirect('/users/login', array('controller' => 'auth', 'action' => 'login'));

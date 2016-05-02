@@ -120,7 +120,8 @@ class GpgAuthenticate extends BaseAuthenticate {
 			}
 			// extract the UUID to get the database records
 			list($version, $length, $uuid, $version2) = explode('|', $request->data['gpg_auth']['user_token_result']);
-			if (empty($AuthenticationToken->isValid($uuid, $user['User']['id']))) {
+			$isValidAuthToken = $AuthenticationToken->isValid($uuid, $user['User']['id']);
+			if (empty($isValidAuthToken)) {
 				return $this->__error('The user token result could not be found ' .
 					't=' . $uuid . ' u=' . $user['User']['id']);
 			}
