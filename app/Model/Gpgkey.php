@@ -77,7 +77,7 @@ class Gpgkey extends AppModel {
 			],
 			'fingerprint' => [
 				'format' => [
-					'rule' => '/^[a-fA-F0-9]{40}$/',
+					'rule' => '/^[A-F0-9]{40}$/',
 					'required' => 'create',
 					'message' => __('The fingerprint has an incorrect format'),
 					'allowEmpty' => false,
@@ -388,7 +388,7 @@ class Gpgkey extends AppModel {
 	 */
 	static public function isValidFingerprint($fingerprint) {
 		// we expect a SHA1 fingerprint
-		$pattern = '/^[a-fA-F0-9]{40}$/';
+		$pattern = '/^[A-F0-9]{40}$/';
 
 		return (preg_match($pattern, $fingerprint) === 1);
 	}
