@@ -1590,4 +1590,28 @@ qGyky3/L
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true);
 	}
+
+	/**
+	 * Test the noindex meta tag is present in the html or not
+	 * depending on the config.
+	 */
+	public function testNoIndex() {
+		// Log out user.
+		$this->User->setInactive();
+		Configure::write('App.meta.robots.index', true);
+		$output = $this->testAction(
+			"/",
+			array('return' => 'contents', 'method' => 'get'),
+			true
+		);
+		$this->assertContains('<meta name="robots" content="noindex">', $output);
+
+		Configure::write('App.meta.robots.index', false);
+		$output = $this->testAction(
+			"/",
+			array('return' => 'contents', 'method' => 'get'),
+			true
+		);
+		$this->assertNotContains('<meta name="robots" content="noindex">', $output);
+	}
 }
