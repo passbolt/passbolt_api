@@ -197,7 +197,7 @@ class LocalImageProcessingListener extends Object implements CakeEventListener {
 				mkdir(TMP . 'image-processing');
 			}
 
-			$tmpFile = TMP . 'image-processing' . DS . String::uuid();
+			$tmpFile = TMP . 'image-processing' . DS . CakeText::uuid();
 			$imageData = $Storage->read($path);
 
 			file_put_contents($tmpFile, $imageData);

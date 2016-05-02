@@ -12,6 +12,7 @@ App::uses('Model', 'Model');
 App::uses('AppValidation', 'Model/Utility');
 
 class AppModel extends Model {
+
 /**
  * Model behaviors
  *
@@ -32,6 +33,10 @@ class AppModel extends Model {
 /**
  * Constructor
  *
+ * @param bool|int|string|array $id Set this ID for this model on startup,
+ * can also be an array of options, see above.
+ * @param string $table Name of database table to use.
+ * @param string $ds DataSource connection name.
  * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
  * @access public
  */
@@ -68,8 +73,8 @@ class AppModel extends Model {
  * Return the find options (felds and conditions) for a given context
  *
  * @param string $case The target case.
- * @param string $role
- * @param array $data
+ * @param string $role optional user role filter if needed to build the options
+ * @param array $data optional data to be used if needed to build the options
  * @return array
  */
 	public static function getFindOptions($case, $role = null, $data = null) {
@@ -77,27 +82,15 @@ class AppModel extends Model {
 	}
 
 /**
- * Return the list of field to use for a find for given context
+ * Return the list of fields to use for a find for given context
  *
  * @param string $case context ex: login, activation
- * @param string $role
+ * @param string $role optional user role if needed to build the options
  * @return array $condition
  * @access public
  */
 	public static function getFindFields($case = null, $role = null) {
 		return ['fields' => []];
-	}
-
-/**
- * Return the list of field to use for a find for given context for an embedded model
- *
- * @param string $case context ex: login, activation
- * @param string $role
- * @return array $condition
- * @access public
- */
-	public static function getEmbeddedFindFields($case = null, $role = null) {
-		return self::getFindFields($case, $role);
 	}
 
 /**
@@ -114,29 +107,13 @@ class AppModel extends Model {
 	}
 
 /**
- * Check if a record with provided parent_id exists
- *
- * @param check
- * @return boolean
- */
-	public function parentExists($check) {
-		if ($check['parent_id'] == null) {
-			return true;
-		} else {
-			$exists = $this->find('count', ['conditions' => ['id' => $check['parent_id']], 'recursive' => -1]);
-
-			return $exists > 0;
-		}
-	}
-
-/**
  * Get path of a target instance in a nested data array
  *
- * @param string $needle
+ * @param string $needle what are are looking for
  * @param array $data stack
  * @param string $key the key which hold the needle value
- * @param array $path
- * @param boolean $found
+ * @param array &$path the path of the found needle of last recursive call
+ * @param bool &$found result of last recursive call
  * @return array the path of the found needle or false
  */
 	public function inNestedArray($needle, $data, $key = 'id', &$path = [], &$found = false) {
@@ -172,38 +149,53 @@ class AppModel extends Model {
 	}
 
 /**
+ * beforeSave() callback.
+ *
+ * @param array $options Options passed from Model::save().
+ * @return bool
+ */
+	public function beforeSave($options = []) {
+		// Set atomic to false: we control database transactions manually.
+		$options['atomic'] = false;
+		return parent::beforeSave($options);
+	}
+
+/****************************************************************************************
+ *  COMMON VALIDATION RULES
+ ****************************************************************************************/
+
+/**
+ * Check if a record with provided parent_id exists
+ *
+ * @param array $check record to check
+ * @return bool
+ */
+	public function parentExists($check) {
+		if ($check['parent_id'] == null) {
+			return true;
+		} else {
+			$exists = $this->find('count', ['conditions' => ['id' => $check['parent_id']], 'recursive' => -1]);
+			return $exists > 0;
+		}
+	}
+
+/**
  * Validation rule : Check if an instance of a given model exists
  *
  * @param string $check The data to check
  * @param string $key The key to find the uuid
  * @param string $modelName The model name the instance belong to
- * @return boolean
+ * @return bool
  */
 	public function validateExists($check, $key, $modelName) {
 		$model = ClassRegistry::init($modelName);
-
 		return $model->exists($check[$key]);
-	}
-
-/**
- * beforeSave() callback.
- *
- * @param array $options
- *
- * @return bool|void
- */
-	public function beforeSave($options = []) {
-		// Set atomic to false.
-		// We usually control transactions at a upper level, and for group of operations.
-		$options['atomic'] = false;
-
-		parent::beforeSave($options);
 	}
 
 /**
  * Check if a user with same id exists
  *
- * @param $check
+ * @param array $check ['user_id' => UUID]
  * @return bool
  */
 	public function userExists($check) {

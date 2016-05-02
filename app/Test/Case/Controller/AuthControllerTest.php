@@ -174,7 +174,7 @@ class AuthControllerTest extends ControllerTestCase {
  * Stage 0. Verify server key
  */
 	public function testStage0MessageFormat() {
-		$uuid = String::uuid();
+		$uuid = Common::uuid();
 
 		$fix = array(
 			//'' => false, // empty

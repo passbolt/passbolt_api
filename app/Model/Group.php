@@ -54,7 +54,7 @@ class Group extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::ANONYMOUS, $data = null) {
+	public static function getFindConditions($case = 'view', $role = null, $data = null) {
 		$conditions = [];
 
 		switch ($case) {
@@ -85,7 +85,7 @@ class Group extends AppModel {
  * @param string $case context ex: login, activation
  * @return $condition array
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
 			case 'view':
 			case 'index':

@@ -11,7 +11,15 @@ class Role extends AppModel {
 	const ADMIN = 'admin';
 	const ROOT = 'root';
 
-	public static function getFindFields($case = '', $role = Role::USER) {
+/**
+ * Return the list of fields to use for a find for given context
+ *
+ * @param string $case context ex: login, activation
+ * @param string $role
+ * @return array $condition
+ * @access public
+ */
+	public static function getFindFields($case = '', $role = null) {
 		$returnValue = [];
 		switch ($case) {
 			case 'view':
