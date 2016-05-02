@@ -209,4 +209,28 @@ class CommentTest extends AppTestCase {
 			$this->assertEquals($this->Comment->validates(array('fieldList' => array('content'))), $result, $msg);
 		}
 	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindFields() {
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, Comment::getFindFields('view'), 'Find fields missing for comment view');
+		$this->assertNotEquals($default, Comment::getFindFields('viewByForeignModel'), 'Find fields missing for comment add');
+		$this->assertNotEquals($default, Comment::getFindFields('add'), 'Find fields should be empty for add');
+		$this->assertNotEquals($default, Comment::getFindFields('edit'), 'Find fields should be empty for edit');
+		$this->assertEquals($default, Comment::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindConditions() {
+		$default = ['conditions' => []];
+		$this->assertNotEquals($default, Comment::getFindConditions('view'), 'Find conditions missing for comment view');
+		$this->assertNotEquals($default, Comment::getFindConditions('viewByForeignModel'), 'Find conditions missing for comment add');
+		$this->assertEquals($default, Comment::getFindConditions('add'), 'Find conditions should be empty for add');
+		$this->assertEquals($default, Comment::getFindConditions('edit'), 'Find conditions should be empty for edit');
+		$this->assertEquals($default, Comment::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
+	}
 }

@@ -66,10 +66,9 @@ class AuthController extends AppController {
 				} else {
 					$this->response->type('json');
 				}
-
-				return $this->Message->success();
+				$this->Message->success();
 			} else {
-				return $this->Message->error(
+				$this->Message->error(
 					__('The public key for this passbolt instance was not found.'),
 					['code' => '500']
 				);
