@@ -30,7 +30,7 @@ class ProfileTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testFixtures() {
-		$profile = $this->Profile->find('first', array('conditions' => array('id' => String::Uuid())));
+		$profile = $this->Profile->find('first', array('conditions' => array('id' => Common::Uuid())));
 		$this->assertEquals(empty($profile), true, 'Shouldnt find a profile that does not exist');
         $profile = $this->Profile->find('first', array('conditions' => array('first_name' => 'ada')));
 		$this->assertEquals(is_array($profile), true, 'Profile should be present in the database');

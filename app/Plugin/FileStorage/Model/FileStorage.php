@@ -250,7 +250,7 @@ class FileStorage extends FileStorageAppModel {
 			new Folder($path, true);
 		}
 
-		return $path . String::uuid();
+		return $path . CakeText::uuid();
 	}
 
 /**

@@ -29,7 +29,7 @@ class RoleTest extends CakeTestCase {
  * @return void
  */
 	public function testConstants() {
-		$r = $this->Role->find('first', array('conditions' => array('name' => String::Uuid())));
+		$r = $this->Role->find('first', array('conditions' => array('name' => Common::Uuid())));
 		$this->assertEquals(empty($r), true, 'Shouldnt find a role that does not exist');
 		$r = $this->Role->find('first', array('conditions' => array('name' => Role::ADMIN)));
 		$this->assertEquals(is_array($r), true, 'Default admin role should be present in the database');

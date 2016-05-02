@@ -42,7 +42,7 @@ class CommentTest extends AppTestCase {
  * @return void
  */
 	public function testFixtures() {
-		$c = $this->Comment->find('first', array('conditions' => array('id' => String::Uuid())));
+		$c = $this->Comment->find('first', array('conditions' => array('id' => Common::Uuid())));
 		$this->assertEquals(empty($c), true, 'Shouldnt find a comment that does not exist');
 		$c = $this->Comment->find('first', array('conditions' => array('content' => 'this is a short comment')));
 		$this->assertEquals(is_array($c), true, 'Default comment should be present in the database');
