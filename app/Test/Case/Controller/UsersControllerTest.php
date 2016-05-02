@@ -1598,7 +1598,7 @@ qGyky3/L
 	public function testNoIndex() {
 		// Log out user.
 		$this->User->setInactive();
-		Configure::write('App.meta.robots.index', true);
+		Configure::write('App.meta.robots.index', false);
 		$output = $this->testAction(
 			"/",
 			array('return' => 'contents', 'method' => 'get'),
@@ -1606,7 +1606,7 @@ qGyky3/L
 		);
 		$this->assertContains('<meta name="robots" content="noindex">', $output);
 
-		Configure::write('App.meta.robots.index', false);
+		Configure::write('App.meta.robots.index', true);
 		$output = $this->testAction(
 			"/",
 			array('return' => 'contents', 'method' => 'get'),
