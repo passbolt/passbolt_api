@@ -77,7 +77,7 @@ class Gpgkey extends AppModel {
 			],
 			'fingerprint' => [
 				'format' => [
-					'rule' => '/^[A-F0-9]{40}$/',
+					'rule' => '/^[a-fA-F0-9]{40}$/',
 					'required' => 'create',
 					'message' => __('The fingerprint has an incorrect format'),
 					'allowEmpty' => false,
@@ -250,9 +250,7 @@ class Gpgkey extends AppModel {
  * @return bool
  */
 	public function beforeSave($options = []) {
-		if (!empty($this->data['Gpgkey']['key']) &&
-			empty($this->data['Gpgkey']['fingerprint'])
-		) {
+		if (!empty($this->data['Gpgkey']['key']) && empty($this->data['Gpgkey']['fingerprint'])) {
 			$data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']['key']);
 			if ($data !== false) {
 				$this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
@@ -390,7 +388,7 @@ class Gpgkey extends AppModel {
 	 */
 	static public function isValidFingerprint($fingerprint) {
 		// we expect a SHA1 fingerprint
-		$pattern = '/^[A-F0-9]{40}$/';
+		$pattern = '/^[a-fA-F0-9]{40}$/';
 
 		return (preg_match($pattern, $fingerprint) === 1);
 	}
