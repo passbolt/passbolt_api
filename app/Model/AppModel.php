@@ -77,7 +77,7 @@ class AppModel extends Model {
 	}
 
 /**
- * Return the list of field to use for a find for given context
+ * Return the list of fields to use for a find for given context
  *
  * @param string $case context ex: login, activation
  * @param string $role

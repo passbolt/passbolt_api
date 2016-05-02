@@ -29,8 +29,7 @@ class UserAgent extends AppModel {
  */
 	protected static function _getParser() {
 		// For now we use the simple DonatjUAParser which allow only a basic parsing to retrieve
-		// browser information.
-		// Other parser are available, watch out the project repository for more information :
+		// browser information. Other parser are available, check out the project repository for more information:
 		// https://github.com/ThaDafinser/UserAgentParser
 		// This version of Provider\DonatjUAParser has been patched, see the bug :
 		// https://github.com/ThaDafinser/UserAgentParser/issues/61

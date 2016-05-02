@@ -163,4 +163,20 @@ class ProfileTest extends CakeTestCase {
 			$this->assertEquals($this->Profile->validates(array('fieldList' => array('last_name'))), $result, $msg);
 		}
 	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindFields() {
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, Profile::getFindFields('view'), 'Find fields missing for comment view');
+		$this->assertNotEquals($default, Profile::getFindFields('User::edit'), 'Find fields missing for comment index');
+		$this->assertNotEquals($default, Profile::getFindFields('User::save'), 'Find fields should be empty for delete');
+		$this->assertEquals(
+			Profile::getFindFields('User::edit'),
+			Profile::getFindFields('User::save'),
+			'Find fields should be the same for edit and save'
+			);
+		$this->assertEquals($default, Profile::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+	}
 }

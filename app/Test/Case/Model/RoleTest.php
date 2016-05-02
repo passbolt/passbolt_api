@@ -40,4 +40,13 @@ class RoleTest extends CakeTestCase {
 		$r = $this->Role->find('first', array('conditions' => array('name' => Role::ROOT)));
 		$this->assertEquals(is_array($r), true, 'Default root role should be present in the database');
 	}
+
+/**
+ * Test GetFindFields
+ */
+	public function testGetFindFields() {
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, Role::getFindFields('view'), 'Find fields missing for comment view');
+		$this->assertEquals($default, Role::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+	}
 }

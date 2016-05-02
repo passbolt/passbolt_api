@@ -326,10 +326,12 @@ class Gpgkey extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context.
+ * Return the list of fields to use for a find for given context
  *
  * @param string $case context ex: login, activation
- * @return array
+ * @param string $role
+ * @return array $condition
+ * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
@@ -380,10 +382,16 @@ class Gpgkey extends AppModel {
 		return $fields;
 	}
 
+	/**
+	 * Check if a key fingerprint is valid
+	 *
+	 * @param $fingerprint
+	 * @return int
+	 */
 	static public function isValidFingerprint($fingerprint) {
 		// we expect a SHA1 fingerprint
 		$pattern = '/^[A-F0-9]{40}$/';
 
-		return preg_match($pattern, $fingerprint);
+		return (preg_match($pattern, $fingerprint) === 1);
 	}
 }
