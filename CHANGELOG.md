@@ -8,12 +8,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PASSBOLT-1502: String is depracated in Cakephp since version 2.7 use CakeText instead.
 - PASSBOLT-1466: GET /auth/verify.json Content-Type should not be text/html but JSON.
+- PASSBOLT-1443: Copy to clipboard icon is misleading
 
 ### Changed
 - PASSBOLT-1419: Cleanup config.json for js client and remove useless config.
 - PASSBOLT-1514: By default passbolt app should not be indexed by search engines.
 - PASSBOLT-1474: API: Upgrade cakephp to 2.8.3.
-- PASSBOLT-1288: As an AD installating passbolt application, I should have status page to help me.
+- PASSBOLT-1288: As an AD during install I should have status page to help me.
 
 ## [1.0.9] - 2016-04-25
 ### Fixed
