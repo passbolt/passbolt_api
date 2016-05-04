@@ -108,7 +108,7 @@ class SeleniumTestsController extends AppController {
 			throw new HttpException(__('The username doesn\'t exist'));
 		}
 		// If email is not found, we return an error.
-		$email = $this->EmailQueue->findByTo($username);
+		$email = $this->EmailQueue->findByTo($username, null, 'created DESC');
 		if (empty($email)) {
 			throw new HttpException(__('No email was sent to this user'));
 		}

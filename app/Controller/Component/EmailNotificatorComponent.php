@@ -45,6 +45,7 @@ class EmailNotificatorComponent extends Component {
 		$this->User = Common::getModel('User');
 		$this->Resource = Common::getModel('Resource');
 		$this->Secret = Common::getModel('Secret');
+		$this->Comment = Common::getModel('Comment');
 		$this->EmailNotification = Common::getModel('EmailNotification');
 		parent::initialize($controller);
 	}
@@ -143,6 +144,43 @@ class EmailNotificatorComponent extends Component {
 				'resource' => $resource,
 			],
 			'new_password_share'
+		);
+	}
+
+/**
+ * Send a notification email regarding a new comment created on a password.
+ *
+ * @param string $toUserId uuid of the recipient
+ * @param array $data
+ *   variables to pass to the template which should contain
+ *     resource_id the resource id
+ *     comment_id the comment id
+ * @return void
+ */
+	public function passwordCommentNotification($toUserId, $data) {
+
+		// Get recipient info.
+		$recipient = $this->User->findById($toUserId);
+
+		// Load comment.
+		$comment = $this->Comment->findById($data['comment_id'], ['content', 'created', 'created_by']);
+
+		// Load resource.
+		$resource = $this->Resource->findById($data['resource_id'],  ['name']);
+
+		// Get invite sender.
+		$sender = $this->_getAuthorInfo($comment['Comment']['created_by']);
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			__("%s commented on %s", $sender['Profile']['first_name'], $resource['Resource']['name']),
+			[
+				'sender' => $sender,
+				'resource' => $resource,
+				'comment' => $comment
+			],
+			'password_comment_new'
 		);
 	}
 
