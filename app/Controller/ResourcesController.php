@@ -168,8 +168,8 @@ class ResourcesController extends AppController {
 			$this->EmailNotificator->passwordDeletedNotification(
 				$userId,
 				[
-					'resource_id' => $id,
-					'deleter' => User::get('id'),
+					'resource_name' => $resource['Resource']['name'],
+					'deleter_id' => User::get('id'),
 					'own' => User::get('id') == $userId ? true : false,
 				]);
 		}

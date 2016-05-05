@@ -24,9 +24,9 @@
 								<table align="Right" border="0" cellpadding="0" cellspacing="0" width="360" class="flexibleContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
 									<tr>
 										<td valign="top" class="textContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 14px;line-height: 125%;text-align: Left;padding-bottom: 20px;">
-											<span style="font-weight:bold;">You (<a href="mailto:<?php echo $sender['User']['username']; ?>" style="color:#888;text-decoration: underline;"><?php echo $sender['User']['username']; ?></a>)</span><br>
+											<span style="font-weight:bold;"><?php echo ($own ? __('You') : $sender['Profile']['first_name'] . ' ' . $sender['Profile']['last_name']) ?> (<a href="mailto:<?php echo $sender['User']['username']; ?>" style="color:#888;text-decoration: underline;"><?php echo $sender['User']['username']; ?></a>)</span><br>
 											<span style="">have deleted a password</span><br>
-											<span style="color:#888888">on <?php echo date('M d, Y \a\t H:i', strtotime($resource['Resource']['created'])); ?></span><br>
+											<span style="color:#888888">on <?php echo date('M d, Y \a\t H:i', strtotime($resource_deletion_date)); ?></span><br>
 										</td>
 									</tr>
 								</table>
@@ -75,11 +75,17 @@
 								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
 									<tr>
 										<td valign="top" class="textContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 14px;line-height: 125%;text-align: Left;padding-bottom: 20px;">
-
-											Name : <?php echo $resource['Resource']['name']; ?>
+											Name : <?php echo $resource_name; ?>
 										</td>
 									</tr>
 								</table>
+								<table width="100%" cellspacing="0" cellpadding="0" border="0">
+									<tbody><tr>
+										<td valign="top" align="center" class="textContent">
+											<?php echo __('This password is now deleted on passbolt and can\'t be accessed anymore.'); ?>
+										</td>
+									</tr>
+									</tbody></table>
 								<!-- // CONTENT TABLE -->
 
 							</td>
@@ -94,45 +100,5 @@
 </tr>
 <!-- // MODULE ROW -->
 
-<!-- MODULE ROW // BUTTON -->
-<tr>
-	<td align="center" valign="top" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-		<!-- CENTERING TABLE // -->
-		<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-			<tr>
-				<td align="center" valign="top" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-					<!-- FLEXIBLE CONTAINER // -->
-					<table border="0" cellpadding="0" cellspacing="0" width="480" class="flexibleContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-						<tr>
-							<td align="center" valign="top" width="480" class="flexibleContainerCell bottomShim" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;padding-top: 20px;padding-right: 20px;padding-left: 20px;padding-bottom: 20px;">
-
-								<!-- CONTENT TABLE // -->
-								<!--
-									The emailButton table's width can be changed
-										to affect the look of the button. To make the
-										button width dependent on the text inside, leave
-										the width blank. When a button is placed in a column,
-										it's helpful to set the width to 100%.
-								-->
-								<table border="0" cellpadding="0" cellspacing="0" width="260" class="emailButton" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #2894DF;color: #FFFFFF;order-collapse: separate;border-radius: 4px;">
-									<tr>
-										<td align="center" valign="middle" class="buttonContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #FFFFFF;font-family: Helvetica;font-size: 14px;font-weight: bold;line-height: 100%;padding: 15px;text-align: center;">
-											<a href="<?php echo Router::url('/',true); ?>" target="_blank" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #FFFFFF;display: block;text-decoration: none;">view it with passbolt</a>
-										</td>
-									</tr>
-								</table>
-								<!-- // CONTENT TABLE -->
-
-							</td>
-						</tr>
-					</table>
-					<!-- // FLEXIBLE CONTAINER -->
-				</td>
-			</tr>
-		</table>
-		<!-- // CENTERING TABLE -->
-	</td>
-</tr>
-<!-- // MODULE ROW -->
 
 

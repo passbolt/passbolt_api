@@ -300,6 +300,38 @@ class EmailNotificatorComponent extends Component {
 		);
 	}
 
+	/**
+	 * Send a notification email regarding the deletion of a password.
+	 *
+	 * @param string $toUserId uuid of the recipient
+	 * @param array $data
+	 *   variables to pass to the template which should contain
+	 *     * resource_name the resource name
+	 *     * deleter_id the person who updated the password.
+	 *     * own is the notification sent to the updater
+	 * @return void
+	 */
+	public function passwordDeletedNotification($toUserId, $data) {
+		// Get recipient info.
+		$recipient = $this->User->findById($toUserId);
+
+		// Get sender info.
+		$sender = $this->_getAuthorInfo($data['deleter_id']);
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			__("Password %s has been deleted", $data['resource_name']),
+			[
+				'sender' => $sender,
+				'resource_name' => $data['resource_name'],
+				'resource_deletion_date' => date('Y-m-d H:i:s'),
+				'own' => $data['own'],
+			],
+			'password_deleted'
+		);
+	}
+
 /**
  * Send a notification email regarding a new account created for a user.
  *
