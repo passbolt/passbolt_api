@@ -7,6 +7,11 @@
  */
 class CommentsController extends AppController {
 
+	public $components = [
+		'PermissionHelper',
+		'EmailNotificator',
+	];
+
 /**
  * View comments of a target commentable model instance
  *
@@ -138,6 +143,22 @@ class CommentsController extends AppController {
 
 		$fields = $this->Comment->getFindFields('add', User::get('Role.name'));
 		$this->Comment->save($postData, true, $fields['fields']);
+
+		// Handle email notifications.
+		$passwordPermissions = $this->PermissionHelper->findAcoUsers(ucfirst($foreignModelName), $foreignId);
+		// Extract user ids from array.
+		$passwordUsers = Hash::extract($passwordPermissions, '{n}.User.id');
+		foreach ($passwordUsers as $userId) {
+			// Do not send to user who wrote the comment.
+			if ($userId  != User::get('id')) {
+				$this->EmailNotificator->passwordCommentNotification(
+					$userId,
+					[
+						'resource_id' => $foreignId,
+						'comment_id' => $this->Comment->id,
+					]);
+			}
+		}
 
 		// return the just inserted comment
 		$findData = ['Comment' => ['id' => $this->Comment->id]];
