@@ -26,7 +26,7 @@
 										<td valign="top" class="textContent">
 											<span style="font-weight:bold;"><?php echo $sender['Profile']['first_name']; ?> <?php echo $sender['Profile']['last_name']; ?> (<a href="mailto:<?php echo $sender['User']['username']; ?>" style="color:#888;text-decoration: underline;"><?php echo $sender['User']['username']; ?></a>)</span><br>
 											has commented on a password<br>
-											on <?php echo date('M d,Y \a\t H:i', strtotime($comment['Comment']['created'])); ?><br>
+											on <?php echo date('M d, Y \a\t H:i', strtotime($comment['Comment']['created'])); ?><br>
 										</td>
 									</tr>
 								</table>

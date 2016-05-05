@@ -24,9 +24,9 @@
 								<table align="Right" border="0" cellpadding="0" cellspacing="0" width="360" class="flexibleContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
 									<tr>
 										<td valign="top" class="textContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 14px;line-height: 125%;text-align: Left;padding-bottom: 20px;">
-											<span style="font-weight:bold;"><?php echo $sender['Profile']['first_name']; ?> <?php echo $sender['Profile']['last_name']; ?> (<a href="mailto:<?php echo $sender['User']['username']; ?>" style="color:#888;text-decoration: underline;"><?php echo $sender['User']['username']; ?></a>)</span><br>
-											<span style="">shared a password with you</span><br>
-											<span style="color:#888888">on <?php echo date('M d, Y \a\t H:i', strtotime($resource['Secret'][0]['modified'])); ?></span><br>
+											<span style="font-weight:bold;">You (<a href="mailto:<?php echo $sender['User']['username']; ?>" style="color:#888;text-decoration: underline;"><?php echo $sender['User']['username']; ?></a>)</span><br>
+											<span style="">have saved a new password</span><br>
+											<span style="color:#888888">on <?php echo date('M d, Y \a\t H:i', strtotime($resource['Resource']['created'])); ?></span><br>
 										</td>
 									</tr>
 								</table>

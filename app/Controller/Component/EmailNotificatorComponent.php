@@ -185,6 +185,62 @@ class EmailNotificatorComponent extends Component {
 	}
 
 /**
+ * Send a notification email regarding the creation of a new password.
+ *
+ * @param string $toUserId uuid of the recipient
+ * @param array $data
+ *   variables to pass to the template which should contain
+ *     resource_id the resource id
+ * @return void
+ */
+	public function passwordCreatedNotification($toUserId, $data) {
+		// Get recipient info.
+		//$recipient = $this->User->findById($toUserId);
+
+		// Get invite sender.
+		$sender = $this->_getAuthorInfo($toUserId);
+
+		// Get resource.
+		$resource = $this->Resource->find(
+			'first',
+			[
+				'conditions' => [
+					'Resource.id' => $data['resource_id']
+				],
+				'fields' => [
+					'Resource.name',
+					'Resource.username',
+					'Resource.uri',
+					'Resource.description',
+					'Resource.created'
+				],
+				'contain' => [
+					'Secret' => [
+						'fields' => [
+							'Secret.data',
+							'Secret.modified',
+						],
+						'conditions' => [
+							'Secret.user_id' => $toUserId
+						],
+					]
+				]
+			]
+		);
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$sender['User']['username'],
+			__("A new password %s has been saved", $resource['Resource']['name']),
+			[
+				'sender' => $sender,
+				'resource' => $resource,
+			],
+			'password_added'
+		);
+	}
+
+/**
  * Send a notification email regarding a new account created for a user.
  *
  * @param uuid $toUserId user id of the recipient

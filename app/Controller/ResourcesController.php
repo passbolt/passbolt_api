@@ -15,7 +15,8 @@ class ResourcesController extends AppController {
  */
 	public $components = [
 		'Filter',
-		'PermissionHelper'
+		'PermissionHelper',
+		'EmailNotificator',
 	];
 
 /**
@@ -240,6 +241,13 @@ class ResourcesController extends AppController {
 			$dataSource->rollback();
 			return $this->Message->error(__('Could not save the secret'));
 		}
+
+		// Email notification.
+		$this->EmailNotificator->passwordCreatedNotification(
+			User::get('User.id'),
+			[
+				'resource_id' => $resource['Resource']['id'],
+			]);
 
 		// Save the corresponding categories.
 		if (isset($resourcepost['Category'])) {
