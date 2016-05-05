@@ -159,6 +159,22 @@ class ResourcesController extends AppController {
 		if (!$this->Resource->save($resource, true, $fields['fields'])) {
 			return $this->Message->error(__('Error while deleting'));
 		}
+
+		// Email notification.
+		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		// Extract user ids from array.
+		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
+		foreach ($resourceUsers as $userId) {
+			$this->EmailNotificator->passwordDeletedNotification(
+				$userId,
+				[
+					'resource_id' => $id,
+					'deleter' => User::get('id'),
+					'own' => User::get('id') == $userId ? true : false,
+				]);
+		}
+
+
 		$this->Message->success(__('The resource was successfully deleted'));
 	}
 
