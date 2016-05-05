@@ -1,6 +1,6 @@
 <div class="message-wrapper">
 	<p class="message error"><strong><?php echo __('Important Disclaimer:'); ?></strong><br>
-		<?php echo __('This is a demo instance of Passbolt for trial purposes only.'); ?>
+		<?php echo __('This is a demo instance of passbolt for trial purposes only.'); ?>
 		<?php echo __('Do not use it to store sensitive information.'); ?>
 		<?php echo __('Do not use it if you are not confortable with other testers being able to see your name and email address.'); ?>
 	</p>
