@@ -241,6 +241,66 @@ class EmailNotificatorComponent extends Component {
 	}
 
 /**
+ * Send a notification email regarding the update of a password.
+ *
+ * @param string $toUserId uuid of the recipient
+ * @param array $data
+ *   variables to pass to the template which should contain
+ *     * resource_id the resource id
+ *     * resource_old_name the old name (in case it was changed)
+ *     * sender_id the person who updated the password.
+ *     * own is the notification sent to the updater
+ * @return void
+ */
+	public function passwordUpdatedNotification($toUserId, $data) {
+		// Get recipient info.
+		$recipient = $this->User->findById($toUserId);
+
+		// Get sender info.
+		$sender = $this->_getAuthorInfo($data['sender_id']);
+
+		// Get resource.
+		$resource = $this->Resource->find(
+			'first',
+			[
+				'conditions' => [
+					'Resource.id' => $data['resource_id']
+				],
+				'fields' => [
+					'Resource.name',
+					'Resource.username',
+					'Resource.uri',
+					'Resource.description',
+					'Resource.created'
+				],
+				'contain' => [
+					'Secret' => [
+						'fields' => [
+							'Secret.data',
+							'Secret.modified',
+						],
+						'conditions' => [
+							'Secret.user_id' => $toUserId
+						],
+					]
+				]
+			]
+		);
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			__("Password %s has been updated", $data['resource_old_name']),
+			[
+				'sender' => $sender,
+				'resource' => $resource,
+				'own' => $data['own'],
+			],
+			'password_updated'
+		);
+	}
+
+/**
  * Send a notification email regarding a new account created for a user.
  *
  * @param uuid $toUserId user id of the recipient

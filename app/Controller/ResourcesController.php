@@ -452,6 +452,21 @@ class ResourcesController extends AppController {
 		// Commit all the changes.
 		$dataSource->commit();
 
+		// Email notification.
+		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		// Extract user ids from array.
+		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
+		foreach ($resourceUsers as $userId) {
+			$this->EmailNotificator->passwordUpdatedNotification(
+				$userId,
+				[
+					'resource_id' => $resource['Resource']['id'],
+					'sender_id' => User::get('id'),
+					'resource_old_name' => $resource['Resource']['name'],
+					'own' => User::get('id') == $userId ? true : false,
+				]);
+		}
+
 		// Retrieve the updated resource.
 		$data = [
 			'Resource.id' => $resource['Resource']['id']
