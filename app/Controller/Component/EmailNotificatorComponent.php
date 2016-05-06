@@ -231,7 +231,7 @@ class EmailNotificatorComponent extends Component {
 		// Send notification.
 		$this->EmailNotification->send(
 			$sender['User']['username'],
-			__("A new password %s has been saved", $resource['Resource']['name']),
+			__("Password %s has been added", $resource['Resource']['name']),
 			[
 				'sender' => $sender,
 				'resource' => $resource,
