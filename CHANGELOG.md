@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-1388: As a user I should receive an email notification when a password is updated.
+- PASSBOLT-1389: As a user I should receive an email notification when a password is created.
+- PASSBOLT-1390: As a user I should receive an email notification when a password is deleted.
+- PASSBOLT-1544: As a user I should receive an email notification when someone comments on a password.
 
 ## [1.0.10] - 2016-05-03
 ### Fixed
