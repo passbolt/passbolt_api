@@ -1410,7 +1410,7 @@ qGyky3/L
 		$gpkey = $this->Gpgkey->findByUserId($userId);
 		$this->assertEquals($gpkey['Gpgkey']['key'], $dummyKey['key'], "After account validation the key was supposed to be set, but is not");
 		$this->assertEquals($gpkey['Gpgkey']['bits'], 2048);
-		$this->assertEquals($gpkey['Gpgkey']['uid'], 'ada lovelace <ada@passbolt.com>');
+		$this->assertEquals($gpkey['Gpgkey']['uid'], 'ada lovelace &lt;ada@passbolt.com&gt;');
 		$this->assertEquals($gpkey['Gpgkey']['type'], 'RSA');
 		$this->assertEquals($gpkey['Gpgkey']['key_created'], '2015-10-29 14:48:41');
 		$this->assertEquals($gpkey['Gpgkey']['fingerprint'], '051A166E300DAD845B255E37CF77639281B5479F');
