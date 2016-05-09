@@ -31,16 +31,43 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 }, /** @prototype */ {
 
 	/**
+	 * Read settings from the configuration file.
+	 *
+	 * If no settings are provided, but the notification is an error,
+	 * then return error settings. Otherwise return null.
+	 *
+	 * @param notification
+	 * @returns {*}
+	 * @private
+	 */
+	_readSettings: function(notification) {
+		var notifSettings = mad.Config.read('notification.messages.' + notification.title);
+		if (notifSettings == undefined) {
+			// Exception in case of errors.
+			// We want to return all errors without exceptions.
+			if (notification.status == "error") {
+				return {
+					"msg": notification.data.header.message,
+					"severity": "error"
+				};
+			}
+			return null;
+		}
+		return notifSettings;
+	},
+
+	/**
 	 * Get settings for a given notification.
 	 * @param notification
 	 * @returns {*}
 	 * @private
 	 */
 	_getNotificationSettings: function(notification) {
-		var notifSettings = mad.Config.read('notification.messages.' + notification.title);
-		if (notifSettings == undefined) {
+		var notifSettings = this._readSettings(notification);
+		if (notifSettings == null) {
 			return null;
 		}
+
 		// Severity is taken from the configuration.
 		// If there is no configuration, then from the message status.
 		// If no status, then it is the default : notice.
@@ -88,9 +115,6 @@ var Notification = passbolt.component.Notification = mad.Component.extend('passb
 	 * @private
 	 */
 	_populateNotification: function(notification, settings) {
-		if (!mad.Config.read('notification.messages.' + notification.title)) {
-			return null;
-		}
 		notification.message = this._buildMessage(notification, settings);
 		// Status is equal to the status given, or if not defined the severity defined in the config.
 		notification.status = (notification.status != undefined) ? notification.status : settings.severity;
