@@ -1266,10 +1266,10 @@ class UsersControllerTest extends ControllerTestCase {
 		$at = $AuthenticationToken->findByUserId($user['User']['id']);
 
 		// Reduce the token expiracy date to 1 second.
-		Configure::write('Registration.tokenExpiracy', 0.016);
+		Configure::write('Auth.tokenExpiracy', 0.016);
 		sleep(1);
 
-		$this->setExpectedException('HttpException', 'Invalid token');
+		$this->setExpectedException('HttpException', 'Expired token');
 		$url = "/users/validateAccount/{$userId}.json";
 		$this->testAction($url, array(
 			'data'   => array (

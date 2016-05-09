@@ -73,40 +73,68 @@ class AuthenticationTokenTest extends CakeTestCase {
 	}
 
 	/**
-	 * Test create.
+	 * Test generate a token with an invalid user id.
 	 */
-	public function testCreateToken() {
+	public function testGenerateUserIdNotValid() {
+		$token = $this->AuthenticationToken->generate('badId');
+		$this->assertEquals(false, $token, 'Creation of the token should have failed');
+	}
+
+	/**
+	 * Test generate.
+	 */
+	public function testGenerate() {
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$token = $this->AuthenticationToken->generate($user['User']['id']);
 		$this->assertEquals(!empty($token), true, 'Token should have been created, but has not');
 	}
 
 	/**
-	 * Test create token for invalid user.
+	 * Test isValid with an invalid user id
 	 */
-	public function testCreateTokenInvalidUser() {
-		$token = $this->AuthenticationToken->generate('aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
-		$this->assertEquals(false, $token, 'Creation of the token should have failed');
+	public function testIsValidInvalidUserId() {
+		$user = $this->User->findByUsername('user@passbolt.com');
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], 'badId');
+		$this->assertFalse($isValid);
 	}
 
 	/**
-	 * Test that a token is valid.
+	 * Test isValid with an invalid token
 	 */
-	public function testCheckTokenIsValid() {
+	public function testIsValidInvalidToken() {
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$token = $this->AuthenticationToken->generate($user['User']['id']);
-		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
-		$this->assertEquals(is_array($isValid), true, 'The test should have returned a valid token, but has not');
+		$isValid = $this->AuthenticationToken->isValid('badId', $user['User']['id']);
+		$this->assertFalse($isValid);
 	}
 
 	/**
 	 * Test that a token is valid for an invalid user
 	 */
-	public function testCheckTokenIsValidInvalidUser() {
+	public function testIsValidExpiredToken() {
+		$user = $this->User->findByUsername('user@passbolt.com');
+
+		// Generate a token and check that it is valid.
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
+		$this->assertTrue($isValid);
+
+		// Reduce the authentication token expiracy period, and test that the token is not valid.
+		Configure::write('Auth.tokenExpiracy', 0.016);
+		sleep(1);
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
+		$this->assertFalse($isValid);
+	}
+
+	/**
+	 * Test that a token is valid
+	 */
+	public function testIsValid() {
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$token = $this->AuthenticationToken->generate($user['User']['id']);
-		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], 'aaa00003-c5cd-11e1-a0c5-080027z!6c4c');
-		$this->assertEquals((bool)$isValid, false, 'The test should have returned an invalid token');
+		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
+		$this->assertTrue($isValid);
 	}
 
 	/**
@@ -116,26 +144,48 @@ class AuthenticationTokenTest extends CakeTestCase {
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$token = $this->AuthenticationToken->generate($user['User']['id']);
 		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
-		$this->assertNotEmpty($isValid);
+		$this->assertTrue($isValid);
 		$this->AuthenticationToken->setInactive($token['AuthenticationToken']['token'], $user['User']['id']);
 		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
-		$this->assertEmpty($isValid);
+		$this->assertFalse($isValid);
 		$t = $this->AuthenticationToken->find('first', $token['AuthenticationToken']['id']);
 		$this->assertTrue($t['AuthenticationToken']['active'] == 0, 'The authentication token should be inactive');
 	}
 
 	/**
-	 * Test that a token is valid for an invalid user
+	 * Test that a token is expired for an invalid token
 	 */
-	public function testCheckRegistrationTokenIsValidExpired() {
+	public function testExpiredInvalidToken() {
+		$isNotExpired = $this->AuthenticationToken->isNotExpired('badId');
+		$this->assertFalse($isNotExpired);
+	}
+
+	/**
+	 * Test that a token is expired while the token go over the expiracy period.
+	 */
+	public function testIsNotExpiredExpiredToken() {
+		$user = $this->User->findByUsername('user@passbolt.com');
+
+		// Generate a token and check that it is expired.
+		$token = $this->AuthenticationToken->generate($user['User']['id']);
+		$isNotExpired = $this->AuthenticationToken->isNotExpired($token['AuthenticationToken']['token']);
+		$this->assertTrue($isNotExpired);
+
+		// Reduce the authentication token expiracy period, and test that the token is expired.
+		Configure::write('Auth.tokenExpiracy', 0.016);
+		sleep(1);
+		$isValid = $this->AuthenticationToken->isNotExpired($token['AuthenticationToken']['token']);
+		$this->assertFalse($isValid);
+	}
+
+	/**
+	 * Test that a token is not expired for a just created token
+	 */
+	public function testIsNotExpired() {
 		$user = $this->User->findByUsername('user@passbolt.com');
 		$token = $this->AuthenticationToken->generate($user['User']['id']);
-		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id'], AuthenticationToken::REGISTRATION);
-		$this->assertNotEmpty($isValid);
-		// Reduce the token expiracy date to 1 second.
-		Configure::write('Registration.tokenExpiracy', 0.016);
-		sleep(1);
-		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id'], AuthenticationToken::REGISTRATION);
-		$this->assertEmpty($isValid);
+		$isNotExpired = $this->AuthenticationToken->isNotExpired($token['AuthenticationToken']['token']);
+		$this->assertTrue($isNotExpired);
 	}
+
 }

@@ -497,9 +497,21 @@ class UsersController extends AppController {
 			return $this->Message->error(__('Token not provided'));
 		}
 
+		// Check that the token exists
+		$authToken = $this->User->AuthenticationToken->findFirstByToken($data['AuthenticationToken']['token']);
+		if (empty($authToken)) {
+			return $this->Message->error(__('Invalid token'));
+		}
+
+		// Check that token is not expired
+		$isNotExpiredToken = $this->User->AuthenticationToken->isNotExpired($data['AuthenticationToken']['token']);
+		if (!$isNotExpiredToken) {
+			return $this->Message->error(__('Expired token'));
+		}
+
 		// Check that token is valid
-		$validToken = $this->User->AuthenticationToken->isValid($data['AuthenticationToken']['token'], $id, AuthenticationToken::REGISTRATION);
-		if (!$validToken) {
+		$isValidToken = $this->User->AuthenticationToken->isValid($data['AuthenticationToken']['token'], $id);
+		if (!$isValidToken) {
 			return $this->Message->error(__('Invalid token'));
 		}
 
@@ -516,8 +528,7 @@ class UsersController extends AppController {
 		}
 
 		// Deactivate Token.
-		$this->User->AuthenticationToken->id = $validToken['AuthenticationToken']['id'];
-		$result = $this->User->AuthenticationToken->saveField('active', false, ['atomic' => false]);
+		$result = AuthenticationToken::setInactive($data['AuthenticationToken']['token'], $id);
 		if (!$result) {
 			$dataSource->rollback();
 			return $this->Message->error(__('Could not update token'));

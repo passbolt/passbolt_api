@@ -57,10 +57,22 @@ class SetupController extends AppController {
 			throw new BadRequestException(__('Token not provided'));
 		}
 
+		// Check that the token exists
+		$authToken = $this->User->AuthenticationToken->findFirstByToken($token);
+		if (empty($authToken)) {
+			return $this->Message->error(__('Invalid token'));
+		}
+
+		// Check that token is not expired
+		$isNotExpiredToken = $this->User->AuthenticationToken->isNotExpired($token);
+		if (!$isNotExpiredToken) {
+			return $this->Message->error(__('Expired token'));
+		}
+
 		// Check if token is valid.
-		$token = $this->AuthenticationToken->isValid($token, $userId, AuthenticationToken::REGISTRATION);
-		if (empty($token)) {
-			throw new NotFoundException(__('Token not found'));
+		$isValidToken = $this->AuthenticationToken->isValid($token, $userId);
+		if (!$isValidToken) {
+			throw new NotFoundException(__('Invalid token'));
 		}
 
 		// Retrieve the user.
