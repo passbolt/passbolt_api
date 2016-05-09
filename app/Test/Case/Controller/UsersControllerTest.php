@@ -1441,7 +1441,7 @@ qGyky3/L
 		$gpkey = $this->Gpgkey->findByUserId($userId);
 		$this->assertEquals($gpkey['Gpgkey']['key'], $dummyKey['key'], "After account validation the key was supposed to be set, but is not");
 		$this->assertEquals($gpkey['Gpgkey']['bits'], 2048);
-		$this->assertEquals($gpkey['Gpgkey']['uid'], 'ada lovelace <ada@passbolt.com>');
+		$this->assertEquals($gpkey['Gpgkey']['uid'], 'ada lovelace &lt;ada@passbolt.com&gt;');
 		$this->assertEquals($gpkey['Gpgkey']['type'], 'RSA');
 		$this->assertEquals($gpkey['Gpgkey']['key_created'], '2015-10-29 14:48:41');
 		$this->assertEquals($gpkey['Gpgkey']['fingerprint'], '051A166E300DAD845B255E37CF77639281B5479F');
@@ -1620,5 +1620,29 @@ qGyky3/L
 		$this->User->deleteAll(array('User.id' => $user['User']['id']));
 		$this->setExpectedException('HttpException', 'You need to login to access this location');
 		$this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true);
+	}
+
+	/**
+	 * Test the noindex meta tag is present in the html or not
+	 * depending on the config.
+	 */
+	public function testNoIndex() {
+		// Log out user.
+		$this->User->setInactive();
+		Configure::write('App.meta.robots.index', false);
+		$output = $this->testAction(
+			"/",
+			array('return' => 'contents', 'method' => 'get'),
+			true
+		);
+		$this->assertContains('<meta name="robots" content="noindex">', $output);
+
+		Configure::write('App.meta.robots.index', true);
+		$output = $this->testAction(
+			"/",
+			array('return' => 'contents', 'method' => 'get'),
+			true
+		);
+		$this->assertNotContains('<meta name="robots" content="noindex">', $output);
 	}
 }

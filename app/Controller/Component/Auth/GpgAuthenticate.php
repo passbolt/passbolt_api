@@ -220,7 +220,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 			$this->__debug('not key id set');
 			return false;
 		}
-		$keyid = $request->data['gpg_auth']['keyid'];
+		$keyid = strtoupper($request->data['gpg_auth']['keyid']);
 
 		// validate the fingerprint format
 		if (!Gpgkey::isValidFingerprint($keyid)) {

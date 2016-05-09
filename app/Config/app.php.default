@@ -12,6 +12,7 @@ $config = [
 	'copyright' => '© 2016 Bolt Softwares Pvt Ltd',
 	'App.title' => '%s | Passbolt', // %s = title_for_layout
 	'App.force_ssl' => true,
+	'App.meta.robots.index' => false,
 	// Activate specific entry points for selenium testing.
 	'App.selenium' => [
 		'active' => false,

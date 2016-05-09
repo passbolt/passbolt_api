@@ -40,8 +40,11 @@ var Keys = passbolt.component.Keys = mad.Component.extend('passbolt.component.Ke
 	beforeRender: function() {
 		var self = this;
 		this._super();
+		var gpgKey = passbolt.model.User.getCurrent().Gpgkey;
+		gpgKey.uid = passbolt.Common.decodeHtmlEntities(gpgKey.uid);
+		console.log('gpgKey', gpgKey);
 		// Set user key data.
-		self.setViewData('gpgkey', passbolt.model.User.getCurrent().Gpgkey);
+		self.setViewData('gpgkey', gpgKey);
 	}
 });
 

@@ -265,7 +265,7 @@ class UserTest extends CakeTestCase {
 	 */
 	public function testGuestGetFindConditionsWithParameters() {
 		$should_find = array(
-			'User::view' => array('User.id' => String::uuid())
+			'User::view' => array('User.id' => Common::uuid())
 		);
 		foreach ($should_find as $find => $data) {
 			$f = $this->User->getFindConditions($find, Role::GUEST, $data);
@@ -279,7 +279,7 @@ class UserTest extends CakeTestCase {
 	 */
 	public function testUserGetFindConditionsWithParameters() {
 		$should_find = array(
-			'User::view' => array('User.id' => String::uuid()),
+			'User::view' => array('User.id' => Common::uuid()),
 			'User::view' => array('User.active' => true)
 		);
 		foreach ($should_find as $find => $data) {

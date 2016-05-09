@@ -8,13 +8,17 @@
  * @license	   http://www.passbolt.com/license
  */
 App::uses('User', 'Model');
+App::uses('Role', 'Model');
 
 class GpgkeyTest extends CakeTestCase {
 
-	public $fixtures = array('app.user', 'app.gpgkey');
+	public $fixtures = array(
+		'app.user',
+		'app.role',
+		'app.gpgkey'
+	);
 
 	public $autoFixtures = true;
-
 
 	/**
 	 * Setup
@@ -203,7 +207,8 @@ ffvdXuT2n3w=
 	public function testKeyIdValidation() {
 		$testcases = array(
 			'' => false,
-			'000876RF' => true,
+			'000876AF' => true,
+			'000876RF' => false,
 			'8745AE100' => false,
 		);
 		foreach ($testcases as $testcase => $result) {
@@ -224,6 +229,7 @@ ffvdXuT2n3w=
 		$testcases = array(
 			'' => false,
 			'120F87DDE5A438DE89826D464F8194025FD2D92C' => true,
+			'120F87DDE5A438DE89826Z464F8194025FD2D92C' => false,
 			'8745AE100' => false,
 			'120F87DDE5A438DE89826D464F8194025FD2D92CG' => false
 		);
@@ -234,6 +240,26 @@ ffvdXuT2n3w=
 			else $msg = 'validation of the fingerprint with ' . $testcase . ' should not validate';
 			$validate = $this->Gpgkey->validates(array('fieldList' => array('fingerprint')));
 			$this->assertEquals($validate, $result, $msg);
+		}
+	}
+
+	/**
+	 * Test isValidFingerprint method
+	 */
+	public function testIsValidFingerprint() {
+		$testcases = array(
+			'' => false,
+			'120F87DDE5A438DE89826D464F8194025FD2D92C' => true,
+			strtolower('120F87DDE5A438DE89826Z464F8194025FD2D92C') => false,
+			'120F87DDE5A438DE89826Z464F8194025FD2D92C' => false,
+			'8745AE100' => false,
+			'120F87DDE5A438DE89826D464F8194025FD2D92CG' => false
+		);
+		foreach ($testcases as $testcase => $result) {
+			if($result) $msg = 'validation of key_created with ' . $testcase . ' should validate';
+			else $msg = 'validation of key_created with ' . $testcase . ' should not validate';
+			$r = Gpgkey::isValidFingerprint($testcase);
+			$this->assertEquals($r, $result, $msg);
 		}
 	}
 
@@ -306,4 +332,57 @@ ffvdXuT2n3w=
 			$this->assertEquals($validate, $result, $msg);
 		}
 	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindFields() {
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, GpgKey::getFindFields('view'), 'Find fields missing for view');
+		$this->assertNotEquals($default, GpgKey::getFindFields('index'), 'Find fields missing for index');
+		$this->assertNotEquals($default, GpgKey::getFindFields('delete'), 'Find fields should be empty for delete');
+		$this->assertNotEquals($default, GpgKey::getFindFields('save'), 'Find fields should be empty for save');
+		$this->assertEquals($default, GpgKey::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindConditions() {
+		$default = ['conditions' => []];
+		$this->assertNotEquals($default, GpgKey::getFindConditions('index'), 'Find conditions missing for view');
+		$this->assertNotEquals($default, GpgKey::getFindConditions('view'), 'Find conditions missing for add');
+		$this->assertEquals($default, GpgKey::getFindConditions('delete'), 'Find conditions should be empty for add');
+		$this->assertEquals($default, GpgKey::getFindConditions('save'), 'Find conditions should be empty for edit');
+		$this->assertEquals($default, GpgKey::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
+	}
+
+	/**
+	 * Check checkExpireIsInFuture parameter is null
+	 */
+	public function testCheckExpireIsInFutureNotNull() {
+		$this->assertFalse($this->Gpgkey->checkExpireIsInFuture(null));
+	}
+
+	/**
+	 * Check checkKeyIsImportable parameter is null
+	 */
+	public function testCheckKeyIsImportableNotNull() {
+		$this->assertFalse($this->Gpgkey->checkKeyIsImportable(null));
+	}
+
+	/**
+	 * Check checkTypeExist parameter is null
+	 */
+	public function testCheckTypeExistNotNull() {
+		$this->assertFalse($this->Gpgkey->checkTypeExist(null));
+	}
+
+	/**
+	 * Check checkCreatedIsInPast parameter is null
+	 */
+	public function testCheckCreatedIsInPastNotNull() {
+		$this->assertFalse($this->Gpgkey->checkCreatedIsInPast(null));
+	}
+
 }

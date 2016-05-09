@@ -114,11 +114,18 @@ class Profile extends AppModel {
 		return $rules;
 	}
 
-	public static function getFindFields($case = '', $role = Role::USER) {
-		$returnValue = [];
+/**
+ * Return the list of fields to use for a find for given context
+ *
+ * @param string $case context ex: login, activation
+ * @param string $role
+ * @return array $condition
+ * @access public
+ */
+	public static function getFindFields($case = '', $role = null) {
 		switch ($case) {
 			case 'view':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'Role.id',
 						'Role.name'
@@ -127,7 +134,7 @@ class Profile extends AppModel {
 				break;
 			case 'User::save':
 			case 'User::edit':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'user_id',
 						'first_name',
@@ -136,13 +143,13 @@ class Profile extends AppModel {
 				];
 				break;
 			default:
-				$returnValue = [
+				$fields = [
 					'fields' => []
 				];
 				break;
 		}
 
-		return $returnValue;
+		return $fields;
 	}
 
 /**

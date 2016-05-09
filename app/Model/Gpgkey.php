@@ -70,14 +70,14 @@ class Gpgkey extends AppModel {
 			],
 			'key_id' => [
 				'format' => [
-					'rule' => '/^[A-Z0-9]{8}$/',
+					'rule' => '/^[A-F0-9]{8}$/',
 					'required' => false,
 					'message' => __('The key id has an incorrect format'),
 				],
 			],
 			'fingerprint' => [
 				'format' => [
-					'rule' => '/^[A-Z0-9]{40}$/',
+					'rule' => '/^[A-F0-9]{40}$/',
 					'required' => 'create',
 					'message' => __('The fingerprint has an incorrect format'),
 					'allowEmpty' => false,
@@ -250,9 +250,7 @@ class Gpgkey extends AppModel {
  * @return bool
  */
 	public function beforeSave($options = []) {
-		if (!empty($this->data['Gpgkey']['key']) &&
-			empty($this->data['Gpgkey']['fingerprint'])
-		) {
+		if (!empty($this->data['Gpgkey']['key']) && empty($this->data['Gpgkey']['fingerprint'])) {
 			$data = $this->buildGpgkeyDataFromKey($this->data['Gpgkey']['key']);
 			if ($data !== false) {
 				$this->data['Gpgkey'] = array_merge($this->data['Gpgkey'], $data['Gpgkey']);
@@ -305,7 +303,7 @@ class Gpgkey extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::ANONYMOUS, $data = null) {
+	public static function getFindConditions($case = 'view', $role = null, $data = null) {
 		switch ($case) {
 			case 'index':
 				$conditions = ['Gpgkey.deleted' => 0];
@@ -326,12 +324,14 @@ class Gpgkey extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context.
+ * Return the list of fields to use for a find for given context
  *
  * @param string $case context ex: login, activation
- * @return array
+ * @param string $role
+ * @return array $condition
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
 			case 'view':
 			case 'index':
@@ -372,15 +372,24 @@ class Gpgkey extends AppModel {
 					]
 				];
 				break;
+			default:
+				$fields = ['fields' => []];
+				break;
 		}
 
 		return $fields;
 	}
 
+	/**
+	 * Check if a key fingerprint is valid
+	 *
+	 * @param $fingerprint
+	 * @return int
+	 */
 	static public function isValidFingerprint($fingerprint) {
 		// we expect a SHA1 fingerprint
-		$pattern = '/[A-Fa-f0-9]{40}/';
+		$pattern = '/^[A-F0-9]{40}$/';
 
-		return preg_match($pattern, $fingerprint);
+		return (preg_match($pattern, $fingerprint) === 1);
 	}
 }

@@ -49,7 +49,6 @@ composer.lock
 
 # JS App config & doc #
 #######################
-/app/webroot/js/app/config/config.json
 /app/webroot/js/lib/mad/docs/
 /app/webroot/js/lib/mad/docs.html
 
