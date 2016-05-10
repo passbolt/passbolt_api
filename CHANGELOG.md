@@ -9,6 +9,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1390: As a user I should receive an email notification when a password is deleted.
 - PASSBOLT-1544: As a user I should receive an email notification when someone comments on a password.
 
+### Fixed
+- PASSBOLT-1094: Frontend : Server errors happening during a request should give a visual feedback.
+
 ## [1.0.10] - 2016-05-03
 ### Fixed
 - PASSBOLT-1502: String is depracated in Cakephp since version 2.7 use CakeText instead.
