@@ -12,6 +12,51 @@ App::uses('Role', 'Model');
 App::uses('Security', 'Utility');
 App::uses('CakeEvent', 'Event');
 
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="User"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="UUID of the user, the primary identifier",
+ *     example="e3ed5a94-8ef0-35a5-a01f-8e62539b758b"
+ *   ),
+ * @SWG\Property(
+ *     property="username",
+ *     type="string",
+ *     description="Email address of the user",
+ *     example="ada@passbolt.com"
+ *   ),
+ * @SWG\Property(
+ *     property="role_id",
+ *     type="string",
+ *     description="The UUID of the user role",
+ *     example="d1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="Id of the user who created the user"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="Id of the user who last modified the user"
+ *   )
+ * )
+ */
 class User extends AppModel {
 
 /**
@@ -542,7 +587,7 @@ class User extends AppModel {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = null, $role = null) {

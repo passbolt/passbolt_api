@@ -73,14 +73,14 @@ class UserResourcePermission extends AppModel {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {
-		$returnValue = ['fields' => []];
+		$fields = ['fields' => []];
 		switch ($case) {
 			case 'viewByResource':
-				$returnValue = [
+				$fields = [
 					'fields' => ['user_id', 'resource_id', 'permission_id', 'permission_type'],
 					'contain' => [
 						'Permission' => [
@@ -122,6 +122,6 @@ class UserResourcePermission extends AppModel {
 				];
 				break;
 		}
-		return $returnValue;
+		return $fields;
 	}
 }

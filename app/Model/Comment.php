@@ -214,11 +214,11 @@ class Comment extends AppModel {
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {
-		$returnValue = ['fields' => []];
+		$fields = ['fields' => []];
 		switch ($case) {
 			case 'view':
 			case 'viewByForeignModel':
-				$returnValue = [
+				$fields = [
 					'fields' => ['id', 'parent_id', 'content', 'created', 'modified', 'created_by', 'modified_by'],
 					'contain' => [
 						'Creator' => [
@@ -260,17 +260,17 @@ class Comment extends AppModel {
 				];
 				break;
 			case 'add':
-				$returnValue = [
+				$fields = [
 					'fields' => ['content', 'parent_id', 'foreign_model', 'foreign_id', 'created_by', 'modified_by']
 				];
 				break;
 			case 'edit':
-				$returnValue = [
+				$fields = [
 					'fields' => ['content']
 				];
 				break;
 		}
-		return $returnValue;
+		return $fields;
 	}
 
 }

@@ -95,15 +95,15 @@ class Tag extends AppModel {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {
-		$returnValue = ['fields' => []];
+		$fields = ['fields' => []];
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
 			case 'Tag.view':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'Tag.id',
 						'Tag.name',
@@ -115,7 +115,7 @@ class Tag extends AppModel {
 				];
 				break;
 			case 'Tag.add':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'name',
 						'created_by',
@@ -125,7 +125,7 @@ class Tag extends AppModel {
 				break;
 		}
 
-		return $returnValue;
+		return $fields;
 	}
 
 }

@@ -16,32 +16,37 @@ if (!class_exists('\Passbolt\Gpg')) {
  * @SWG\Property(
  *     property="id",
  *     type="string",
- *     description="A UUID serving as the primary identifier in passbolt database"
+ *     description="UUID serving as the primary identifier in passbolt database"
  *   ),
  * @SWG\Property(
  *     property="uid",
  *     type="string",
- *     description="Name and email of the user of the key, example: 'Firstname Lastname <example@passbolt.com>'"
+ *     description="Name and email of the user of the key",
+ *     example="Firstname Lastname <example@passbolt.com>"
  *   ),
  * @SWG\Property(
  *     property="fingerprint",
  *     type="string",
- *     description="Key fingerprint, 40 hexadecimal characters, example: 120F87DDE5A438DE89826D464F8194025FD2D92C"
+ *     description="Key fingerprint. SHA1 hash, e.g. 40 hexadecimal characters",
+ *     example="120F87DDE5A438DE89826D464F8194025FD2D92C"
  *   ),
  * @SWG\Property(
  *     property="key_id",
  *     type="string",
- *     description="Key id, the last 8 characters of the fingerprint"
+ *     description="Key id, the last 8 characters of the fingerprint",
+ *     example="5FD2D92C"
  *   ),
  * @SWG\Property(
  *     property="key_created",
  *     type="string",
- *     description="Date time when the key was created on the client side"
+ *     description="Date time when the key was created on the client side",
+ *     example="﻿2016-04-26 17:01:01"
  *   ),
  * @SWG\Property(
  *     property="expires",
  *     type="string",
- *     description="Date and time when the key will expire"
+ *     description="Date and time when the key will expire",
+ *     example="﻿2016-04-26 17:01:01"
  *   ),
  * @SWG\Property(
  *     property="type",
@@ -55,18 +60,20 @@ if (!class_exists('\Passbolt\Gpg')) {
  *   ),
  * @SWG\Property(
  *     property="bits",
- *     type="string",
+ *     type="integer",
  *     description="Size of the key, example: 2048"
  *   ),
  * @SWG\Property(
  *     property="created",
  *     type="string",
- *     description="Creation date (as a database entry)"
+ *     description="Creation date (as a database entry)",
+ *     example="﻿2016-04-26 17:01:01"
  *   ),
  * @SWG\Property(
  *     property="modified",
  *     type="string",
- *     description="Last modification date (as a database entry)"
+ *     description="Last modification date (as a database entry)",
+ *     example="﻿2016-04-26 17:01:01"
  *   ),
  * @SWG\Property(
  *     property="created_by",
@@ -395,7 +402,7 @@ class Gpgkey extends AppModel {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {

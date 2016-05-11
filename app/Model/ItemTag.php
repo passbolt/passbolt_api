@@ -226,15 +226,15 @@ class ItemTag extends AppModel {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {
-		$returnValue = ['fields' => []];
+		$fields = ['fields' => []];
 		switch ($case) {
 			case 'ItemTag.view':
 			case 'ItemTag.viewByForeignModel':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'ItemTag.id',
 						'ItemTag.tag_id',
@@ -249,7 +249,7 @@ class ItemTag extends AppModel {
 				];
 				break;
 			case 'ItemTag.add':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'foreign_model',
 						'foreign_id',
@@ -262,11 +262,11 @@ class ItemTag extends AppModel {
 				];
 				break;
 			case 'ItemTag.edit':
-				$returnValue = ['fields' => ['content']];
+				$fields = ['fields' => ['content']];
 				break;
 		}
 
-		return $returnValue;
+		return $fields;
 	}
 
 }

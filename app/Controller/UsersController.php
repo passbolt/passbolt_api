@@ -28,6 +28,7 @@ class UsersController extends AppController {
 		if (Configure::read('Registration.public')) {
 			$allow[] = 'register';
 			$allow[] = 'register_thankyou';
+			$allow[] = 'view';
 		}
 		$this->Auth->allow($allow);
 		parent::beforeFilter();

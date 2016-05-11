@@ -27,15 +27,15 @@ class ResourcesController extends AppController {
  *
  * @SWG\Get(
  *   path="/resources.json",
- *   summary="list resources",
- *   @SWG\Parameter(
+ *   summary="Find resources",
+ * @SWG\Parameter(
  *     name="filter_keywords",
  *     in="query",
  *     description="Keywords to filter by",
  *     required=false,
  *     type="string"
  *   ),
- *   @SWG\Parameter(
+ * @SWG\Parameter(
  *     name="filter_case",
  *     in="query",
  *     description="Case to filter by",
@@ -46,7 +46,7 @@ class ResourcesController extends AppController {
  * 		 "shared"
  * 	   }
  *   ),
- *   @SWG\Parameter(
+ * @SWG\Parameter(
  *     name="filter_order",
  *     in="query",
  *     description="Field to order by",
@@ -57,7 +57,7 @@ class ResourcesController extends AppController {
  * 		 "expiry_date"
  * 	   }
  *   ),
- *   @SWG\Response(
+ * @SWG\Response(
  *     response=200,
  *     description="An array of resources",
  *     @SWG\Schema(
@@ -153,16 +153,16 @@ class ResourcesController extends AppController {
  * @return void
  *
  * @SWG\Get(
- *   path="/resources/{id}.json",
- *   summary="Fetch resource details",
- *   @SWG\Parameter(
+ *   path="/resources/{uuid}.json",
+ *   summary="Find a resource by ID",
+ * @SWG\Parameter(
  * 		name="id",
  * 		in="path",
  * 		required=true,
  * 		type="string",
- * 		description="the id of the resource",
+ * 		description="the uuid of the resource",
  *   ),
- *   @SWG\Response(
+ * @SWG\Response(
  *     response=200,
  *     description="The details of the resource",
  *     @SWG\Schema(

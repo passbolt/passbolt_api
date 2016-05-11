@@ -309,7 +309,7 @@ class Category extends AppModel {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = 'get', $role = null) {
@@ -319,7 +319,7 @@ class Category extends AppModel {
 			case 'addResult':
 			case 'index' :
 			case 'getWithChildren' :
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'id',
 						'name',
@@ -332,24 +332,24 @@ class Category extends AppModel {
 				];
 				break;
 			case 'Resource.viewByCategory':
-				$returnValue = [
+				$fields = [
 					'fields' => ['Category.id', 'Category.name', 'Category.parent_id'],
 					'contain' => ['Resource' => Resource::getFindFields('view')]
 				];
 				break;
 			case 'rename':
-				$returnValue = ['fields' => ['name']];
+				$fields = ['fields' => ['name']];
 				break;
 			case 'add':
 			case 'edit':
-				$returnValue = ['fields' => ['name', 'parent_id', 'category_type_id']];
+				$fields = ['fields' => ['name', 'parent_id', 'category_type_id']];
 				break;
 			default:
-				$returnValue = ['fields' => []];
+				$fields = ['fields' => []];
 				break;
 		}
 
-		return $returnValue;
+		return $fields;
 	}
 
 /**

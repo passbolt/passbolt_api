@@ -11,57 +11,59 @@
  * @SWG\Property(
  *     property="id",
  *     type="string",
- *     description="The id of the resource"
+ *     description="UUID of the resource"
  *   ),
  * @SWG\Property(
  *     property="name",
  *     type="string",
- *     description="The name of the resource"
+ *     description="Name of the resource"
  *   ),
  * @SWG\Property(
  *     property="username",
  *     type="string",
- *     description="The username of the resource"
+ *     description="Username of the resource"
  *   ),
  * @SWG\Property(
  *     property="expiry_date",
  *     type="string",
- *     description="The expiry date of the resource"
+ *     description="Expiry date of the resource"
  *   ),
  * @SWG\Property(
  *     property="uri",
  *     type="string",
- *     description="The uri of the resource"
+ *     description="URI of the resource"
  *   ),
  * @SWG\Property(
  *     property="description",
  *     type="string",
- *     description="The description of the resource"
+ *     description="Description of the resource"
  *   ),
  * @SWG\Property(
  *     property="deleted",
- *     type="string",
- *     description="Is the user deleted"
+ *     type="boolean",
+ *     description="Flag to mark the resource as deleted"
  *   ),
  * @SWG\Property(
  *     property="created",
  *     type="string",
- *     description="The date of creation"
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
  *   ),
  * @SWG\Property(
  *     property="modified",
  *     type="string",
- *     description="The date of edition"
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
  *   ),
  * @SWG\Property(
  *     property="created_by",
  *     type="string",
- *     description="The id of the user who created the resource"
+ *     description="Id of the user who created the resource"
  *   ),
  * @SWG\Property(
  *     property="modified_by",
  *     type="string",
- *     description="The id of the last user who updated the resource"
+ *     description="Id of the last user who updated the resource"
  *   )
  * )
  */
@@ -291,7 +293,7 @@ class Resource extends AppModel {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {

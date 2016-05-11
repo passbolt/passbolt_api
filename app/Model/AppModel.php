@@ -86,7 +86,7 @@ class AppModel extends Model {
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = null, $role = null) {

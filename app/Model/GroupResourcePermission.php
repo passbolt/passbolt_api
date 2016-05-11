@@ -56,10 +56,10 @@ class GroupResourcePermission extends AppModel {
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {
-		$returnValue = ['fields' => []];
+		$fields = ['fields' => []];
 		switch ($case) {
 			case 'viewByResource':
-				$returnValue = [
+				$fields = [
 					'fields' => ['group_id', 'resource_id', 'permission_id', 'permission_type'],
 					'contain' => [
 						'Permission' => [
@@ -82,6 +82,6 @@ class GroupResourcePermission extends AppModel {
 				];
 				break;
 		}
-		return $returnValue;
+		return $fields;
 	}
 }
