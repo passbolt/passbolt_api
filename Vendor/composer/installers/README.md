@@ -48,20 +48,22 @@ is not needed to install packages with these frameworks:
 | Croogo       | `croogo-plugin`<br>`croogo-theme`
 | DokuWiki     | `dokuwiki-plugin`<br>`dokuwiki-template`
 | Dolibarr     | `dolibarr-module`
-| Drupal       | <b>`drupal-module`<br>`drupal-theme`</b><br>`drupal-library`<br>`drupal-profile`<br>`drupal-drush`
+| Drupal       | <b>`drupal-core`<br>`drupal-module`<br>`drupal-theme`</b><br>`drupal-library`<br>`drupal-profile`<br>`drupal-drush`
 | Elgg         | `elgg-plugin`
 | FuelPHP v1.x | `fuel-module`<br>`fuel-package`<br/>`fuel-theme`
 | FuelPHP v2.x | `fuelphp-component`
 | Grav         | `grav-plugin`<br>`grav-theme`
 | Hurad        | `hurad-plugin`<br>`hurad-theme`
+| ImageCMS     | `imagecms-template`<br>`imagecms-module`<br>`imagecms-library`
 | Joomla       | `joomla-component`<br>`joomla-module`<br>`joomla-template`<br>`joomla-plugin`<br>`joomla-library`
-| Kirby        | **`kirby-plugin`**
+| Kirby        | **`kirby-plugin`**<br>`kirby-field`<br>`kirby-tag`
 | KodiCMS      | `kodicms-plugin`<br>`kodicms-media`
 | Kohana       | **`kohana-module`**
 | Laravel      | `laravel-library`
 | Lithium      | **`lithium-library`<br>`lithium-source`**
 | Magento      | `magento-library`<br>`magento-skin`<br>`magento-theme`
 | Mako         | `mako-package`
+| Mautic       | `mautic-plugin`<br>`mautic-theme`
 | MODX Evo     | `modxevo-snippet`<br>`modxevo-plugin`<br>`modxevo-module`<br>`modxevo-template`<br>`modxevo-lib`
 | MediaWiki    | `mediawiki-extension`
 | October      | **`october-module`<br>`october-plugin`<br>`october-theme`**
@@ -81,7 +83,7 @@ is not needed to install packages with these frameworks:
 | symfony1     | **`symfony1-plugin`**
 | Tusk         | `tusk-task`<br>`tusk-command`<br>`tusk-asset`
 | TYPO3 Flow   | `typo3-flow-package`<br>`typo3-flow-framework`<br>`typo3-flow-plugin`<br>`typo3-flow-site`<br>`typo3-flow-boilerplate`<br>`typo3-flow-build`
-| TYPO3 CMS    | `typo3-cms-extension`
+| TYPO3 CMS    | `typo3-cms-extension` (Deprecated in this package, use the [TYPO3 CMS Installers](https://packagist.org/packages/typo3/cms-composer-installers) instead)
 | Wolf CMS     | `wolfcms-plugin`
 | WordPress    | <b>`wordpress-plugin`<br>`wordpress-theme`</b><br>`wordpress-muplugin`
 | Zend         | `zend-library`<br>`zend-extra`<br>`zend-module`
@@ -137,7 +139,20 @@ A package type can have a custom installation path with a `type:` prefix.
 }
 ```
 
-This would use your custom path for each of the listed packages. The available
+You can also have the same vendor packages with a custom installation path by
+using the `vendor:` prefix.
+
+``` json
+{
+    "extra": {
+        "installer-paths": {
+            "your/custom/path/{$name}/": ["vendor:my_organization"]
+        }
+    }
+}
+```
+
+These would use your custom path for each of the listed packages. The available
 variables to use in your paths are: `{$name}`, `{$vendor}`, `{$type}`.
 
 ## Custom Install Names
@@ -191,3 +206,5 @@ It has been proposed many times. Even implemented once early on and then
 removed. `installers` won't do this because it would allow a single package
 author to wipe out entire folders without the user's consent. That user would
 then come here to yell at us.
+
+Anyone still wanting this capability should consider requiring https://github.com/oomphinc/composer-installers-extender.

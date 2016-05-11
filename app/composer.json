@@ -1,22 +1,22 @@
 {
-	"name": "passbolt/dependencies",
-	"description": "The passbolt dependencies",
-	"license": "GPL-3.0",
-	"config": {
-		"vendor-dir": "Vendor"
-	},
-	"require": {
-		"burzum/file-storage": "0.*",
-		"burzum/cakephp-imagine-plugin": "1.x",
-        "burzum/cakephp-html-purifier" : "1.1.0",
-        "lorenzo/cakephp-email-queue": "1.0",
-        "singpolyma/openpgp-php" : "0.2.0",
-		"thadafinser/user-agent-parser": "^1.1",
-		"donatj/phpuseragentparser": "^0.5.0"
-	},
-    "extra": {
-        "installer-paths": {
-            "Plugin/HtmlPurifier": ["burzum/cakephp-html-purifier"]
-        }
+  "name": "passbolt/dependencies",
+  "description": "The passbolt dependencies",
+  "license": "GPL-3.0",
+  "config": {
+    "vendor-dir": "Vendor"
+  },
+  "require": {
+    "burzum/file-storage": "0.*",
+    "burzum/cakephp-imagine-plugin": "1.x",
+    "burzum/cakephp-html-purifier" : "1.1.0",
+    "lorenzo/cakephp-email-queue": "1.0",
+    "singpolyma/openpgp-php" : "0.2.0",
+    "thadafinser/user-agent-parser": "^1.1",
+    "donatj/phpuseragentparser": "^0.5.0"
+  },
+  "extra": {
+    "installer-paths": {
+      "Plugin/HtmlPurifier": ["burzum/cakephp-html-purifier"]
     }
+  }
 }

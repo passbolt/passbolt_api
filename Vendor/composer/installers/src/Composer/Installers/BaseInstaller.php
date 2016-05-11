@@ -55,7 +55,7 @@ abstract class BaseInstaller
         if ($this->composer->getPackage()) {
             $extra = $this->composer->getPackage()->getExtra();
             if (!empty($extra['installer-paths'])) {
-                $customPath = $this->mapCustomInstallPaths($extra['installer-paths'], $prettyName, $type);
+                $customPath = $this->mapCustomInstallPaths($extra['installer-paths'], $prettyName, $type, $vendor);
                 if ($customPath !== false) {
                     return $this->templatePath($customPath, $availableVars);
                 }
@@ -120,12 +120,13 @@ abstract class BaseInstaller
      * @param  array  $paths
      * @param  string $name
      * @param  string $type
+     * @param  string $vendor = NULL
      * @return string
      */
-    protected function mapCustomInstallPaths(array $paths, $name, $type)
+    protected function mapCustomInstallPaths(array $paths, $name, $type, $vendor = NULL)
     {
         foreach ($paths as $path => $names) {
-            if (in_array($name, $names) || in_array('type:' . $type, $names)) {
+            if (in_array($name, $names) || in_array('type:' . $type, $names) || in_array('vendor:' . $vendor, $names)) {
                 return $path;
             }
         }

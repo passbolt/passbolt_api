@@ -8,11 +8,6 @@
 class UsersController extends AppController {
 
 /**
- * @var array helpers used by the view when rendering from this controller
- */
-	public $helpers = ['PassboltAuth'];
-
-/**
  * @var array components used by this controller
  */
 	public $components = [

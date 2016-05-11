@@ -1,6 +1,9 @@
 <?php
 /**
  * CategoriesResource Fixture
+ *
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class CategoriesResourceFixture extends CakeTestFixture {
 
@@ -23,6 +26,7 @@ class CategoriesResourceFixture extends CakeTestFixture {
 		),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
+
 /**
  * Records
  *

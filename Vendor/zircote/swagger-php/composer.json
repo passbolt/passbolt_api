@@ -1,0 +1,44 @@
+{
+    "name": "zircote/swagger-php",
+    "type": "library",
+    "license": "Apache2",
+    "bin": ["bin/swagger"],
+    "description": "Swagger-PHP - Generate interactive documentation for your RESTful API using phpdoc annotations",
+    "keywords": ["json", "rest", "api", "service discovery"],
+    "homepage": "https://github.com/zircote/swagger-php/",
+    "authors": [
+        {
+            "name": "Robert Allen",
+            "email": "zircote@gmail.com",
+            "homepage": "http://www.zircote.com"
+        },
+        {
+            "name": "Bob Fanger",
+            "email": "bfanger@gmail.com",
+            "homepage": "http://bfanger.nl"
+        }
+    ],
+    "config": {
+        "bin-dir": "bin"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "doctrine/annotations": "*",
+        "symfony/finder": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Swagger\\": "src"
+        },
+        "files": ["src/functions.php"]
+    },
+    "require-dev": {
+        "zendframework/zend-form": "*",
+        "squizlabs/php_codesniffer": "2.*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SwaggerTests\\": "tests/"
+        }
+    }
+}

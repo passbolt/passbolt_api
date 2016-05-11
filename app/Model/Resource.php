@@ -1,12 +1,73 @@
 <?php
-
 /**
  * Resource model
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+
+/**
+ * @SWG\Definition(
+ *   @SWG\Xml(name="Resource"),
+ *   @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="The id of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="name",
+ *     type="string",
+ *     description="The name of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="username",
+ *     type="string",
+ *     description="The username of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="expiry_date",
+ *     type="string",
+ *     description="The expiry date of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="uri",
+ *     type="string",
+ *     description="The uri of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="description",
+ *     type="string",
+ *     description="The description of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="deleted",
+ *     type="string",
+ *     description="Is the user deleted"
+ *   ),
+ *   @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="The date of creation"
+ *   ),
+ *   @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="The date of edition"
+ *   ),
+ *   @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="The id of the user who created the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="The id of the last user who updated the resource"
+ *   )
+ * )
+ */
 class Resource extends AppModel {
+
 /**
  * Model behaviors
  *
@@ -19,7 +80,6 @@ class Resource extends AppModel {
 		'Favoritable',
 		'Permissionable' => ['priority' => 1]
 	];
-
 
 /**
  * Details of belongs to relationships

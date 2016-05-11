@@ -121,6 +121,9 @@ class InstallerTest extends TestCase
             array('fuelphp-component', true),
             array('hurad-plugin', true),
             array('hurad-theme', true),
+            array('imagecms-template', true),
+            array('imagecms-module', true),
+            array('imagecms-library', true),
             array('joomla-library', true),
             array('kirby-plugin', true),
             array('kohana-module', true),
@@ -235,6 +238,9 @@ class InstallerTest extends TestCase
             array('fuelphp-component', 'components/demo/', 'fuelphp/demo'),
             array('hurad-plugin', 'plugins/Akismet/', 'atkrad/akismet'),
             array('hurad-theme', 'plugins/Hurad2013/', 'atkrad/Hurad2013'),
+            array('imagecms-template', 'templates/my_template/', 'shama/my_template'),
+            array('imagecms-module', 'application/modules/my_module/', 'shama/my_module'),
+            array('imagecms-library', 'application/libraries/my_library/', 'shama/my_library'),
             array('joomla-plugin', 'plugins/my_plugin/', 'shama/my_plugin'),
             array('kirby-plugin', 'site/plugins/my_plugin/', 'shama/my_plugin'),
             array('kohana-module', 'modules/my_package/', 'shama/my_package'),
@@ -378,6 +384,27 @@ class InstallerTest extends TestCase
         ));
         $result = $installer->getInstallPath($package);
         $this->assertEquals('my/custom/path/my_plugin/', $result);
+    }
+
+    /**
+     * testVendorPath
+     */
+    public function testVendorPath()
+    {
+        $installer = new Installer($this->io, $this->composer);
+        $package = new Package('penyaskito/my_module', '1.0.0', '1.0.0');
+        $package->setType('drupal-module');
+        $consumerPackage = new RootPackage('drupal/drupal', '1.0.0', '1.0.0');
+        $this->composer->setPackage($consumerPackage);
+        $consumerPackage->setExtra(array(
+          'installer-paths' => array(
+            'modules/custom/{$name}/' => array(
+              'vendor:penyaskito'
+            ),
+          ),
+        ));
+        $result = $installer->getInstallPath($package);
+        $this->assertEquals('modules/custom/my_module/', $result);
     }
 
     /**

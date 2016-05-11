@@ -21,6 +21,54 @@ App::import('Model', 'User');
  * @package        app.Controller
  * @link        http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
+/**
+ * Controller API response envelope header definition
+ *
+ * @SWG\Definition(
+ *   definition="Header",
+ *   @SWG\Xml(name="Header"),
+ *   @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="The id of the request"
+ *   ),
+ *   @SWG\Property(
+ *     property="status",
+ *     type="string",
+ *     description="The status of the request"
+ *   ),
+ *   @SWG\Property(
+ *     property="title",
+ *     type="string",
+ *     description="The title of the request"
+ *   ),
+ *   @SWG\Property(
+ *     property="servertime",
+ *     type="integer",
+ *     description="The server time"
+ *   ),
+ *   @SWG\Property(
+ *     property="message",
+ *     type="string",
+ *     description="Additional message"
+ *   ),
+ *   @SWG\Property(
+ *     property="description",
+ *     type="string",
+ *     description="Description of the resource"
+ *   ),
+ *   @SWG\Property(
+ *     property="controller",
+ *     type="string",
+ *     description="The controller name"
+ *   ),
+ *   @SWG\Property(
+ *     property="action",
+ *     type="string",
+ *     description="The action name"
+ *   )
+ * )
+ */
 class AppController extends Controller {
 
 /**

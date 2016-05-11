@@ -122,7 +122,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$this->setExpectedException('HttpException', 'The group doesn\'t exist');
 		$groupId = Common::uuid('not-valid-reference');
-		$url = '/users.json?fltr_model_group=' . $groupId;
+		$url = '/users.json?filter_model_group=' . $groupId;
 		$this->testAction($url, array('return' => 'contents', 'method' => 'GET'), true);
 	}
 
@@ -136,7 +136,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$this->setExpectedException('HttpException', 'The group id is invalid');
 		$groupId = 'wrong_id';
-		$url = '/users.json?fltr_model_group=' . $groupId;
+		$url = '/users.json?filter_model_group=' . $groupId;
 		$this->testAction($url, array('return' => 'contents', 'method' => 'GET'), true);
 	}
 
@@ -150,7 +150,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$groupId = Common::uuid('group.id.management');
 		$data = array(
-			'fltr_model_group' => $groupId,
+			'filter_model_group' => $groupId,
 		);
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
@@ -167,7 +167,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setActive($user);
 
 		$data = array(
-			'fltr_keywords' => 'Betty'
+			'filter_keywords' => 'Betty'
 		);
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
