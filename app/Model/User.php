@@ -538,14 +538,14 @@ class User extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- *
- * @return empty|$condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $condition
  * @access public
  */
-	public static function getFindFields($case = null, $role = Role::USER) {
+	public static function getFindFields($case = null, $role = null) {
 		switch ($case) {
 			case 'User::view':
 			case 'User::index':
@@ -621,7 +621,7 @@ class User extends AppModel {
 					]
 				];
 				// Add active status for admin and root roles.
-				if ($role == Role::ADMIN || $role == Role::ROOT) {
+				if ($role !== null && ($role == Role::ADMIN || $role == Role::ROOT)) {
 					$fields['fields'][] = 'User.active';
 				}
 				break;

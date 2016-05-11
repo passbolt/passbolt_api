@@ -53,7 +53,6 @@ class ApiController extends AppController {
 			APP . 'Controller',
 			APP . 'Model'
 		];
-		$this->response->type('json');
 		$swagger = \Swagger\scan($pathList);
 		$this->set('json', $swagger);
 	}

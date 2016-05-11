@@ -10,6 +10,76 @@ if (!class_exists('\Passbolt\Gpg')) {
 	App::import('Model/Utility', 'Gpg');
 }
 
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="Gpgkey"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="A UUID serving as the primary identifier in passbolt database"
+ *   ),
+ * @SWG\Property(
+ *     property="uid",
+ *     type="string",
+ *     description="Name and email of the user of the key, example: 'Firstname Lastname <example@passbolt.com>'"
+ *   ),
+ * @SWG\Property(
+ *     property="fingerprint",
+ *     type="string",
+ *     description="Key fingerprint, 40 hexadecimal characters, example: 120F87DDE5A438DE89826D464F8194025FD2D92C"
+ *   ),
+ * @SWG\Property(
+ *     property="key_id",
+ *     type="string",
+ *     description="Key id, the last 8 characters of the fingerprint"
+ *   ),
+ * @SWG\Property(
+ *     property="key_created",
+ *     type="string",
+ *     description="Date time when the key was created on the client side"
+ *   ),
+ * @SWG\Property(
+ *     property="expires",
+ *     type="string",
+ *     description="Date and time when the key will expire"
+ *   ),
+ * @SWG\Property(
+ *     property="type",
+ *     type="string",
+ *     description="Algorithm used for encryption or signature, example: RSA."
+ *   ),
+ * @SWG\Property(
+ *     property="key",
+ *     type="string",
+ *     description="PGP Public key block, ASCII armored format"
+ *   ),
+ * @SWG\Property(
+ *     property="bits",
+ *     type="string",
+ *     description="Size of the key, example: 2048"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date (as a database entry)"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date (as a database entry)"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="Id of the user who created the key (as a database entry)"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="Id of the user who last modified the key (as a database entry)"
+ *   )
+ * )
+ */
 class Gpgkey extends AppModel {
 
 	public $name = 'Gpgkey';
@@ -23,7 +93,7 @@ class Gpgkey extends AppModel {
 /**
  * Get the validation rules upon context
  *
- * @param string case (optional) The target validation case if any.
+ * @param string $case (optional) the target validation case if any.
  * @return array CakePHP validation rules
  */
 	public static function getValidationRules($case = 'default') {
@@ -125,9 +195,9 @@ class Gpgkey extends AppModel {
 	}
 
 /**
- * Check if a key can be imported
+ * Check if a key can be imported from ASCII armored block
  *
- * @param $check
+ * @param array $check with $check['key'] set
  * @return bool
  */
 	public function checkKeyIsImportable($check) {
@@ -147,7 +217,7 @@ class Gpgkey extends AppModel {
 /**
  * Check if a key can be imported
  *
- * @param $check
+ * @param array $check with 'expires' key set
  * @return bool
  */
 	public function checkExpireIsInFuture($check) {
@@ -165,7 +235,7 @@ class Gpgkey extends AppModel {
 /**
  * Check if a key can be imported
  *
- * @param $check
+ * @param array $check with 'key_created' set
  * @return bool
  */
 	public function checkCreatedIsInPast($check) {
@@ -187,7 +257,7 @@ class Gpgkey extends AppModel {
 /**
  * Check uid (according to gpg rfc).
  *
- * @param $check
+ * @param array $check with 'uid' key set
  * @return bool
  */
 	public function checkUid($check) {
@@ -209,7 +279,7 @@ class Gpgkey extends AppModel {
 /**
  * Check type exists (according to gpg rfc).
  *
- * @param $check
+ * @param array $check with 'type' key set
  * @return bool
  */
 	public function checkTypeExist($check) {
@@ -225,8 +295,7 @@ class Gpgkey extends AppModel {
 /**
  * Analyze key before validating it, and extract key information.
  *
- * @param array $options
- *
+ * @param array $options Options passed from Model::save().
  * @return bool
  */
 	public function beforeValidate($options = []) {
@@ -245,8 +314,7 @@ class Gpgkey extends AppModel {
 /**
  * Analyze key before saving it, and extract key information.
  *
- * @param array $options
- *
+ * @param array $options Options passed from Model::save().
  * @return bool
  */
 	public function beforeSave($options = []) {
@@ -263,8 +331,7 @@ class Gpgkey extends AppModel {
 /**
  * Build data array from a key.
  *
- * @param $key
- *
+ * @param string $key ascii armored key
  * @return mixed
  */
 	public function buildGpgkeyDataFromKey($key) {
@@ -324,10 +391,10 @@ class Gpgkey extends AppModel {
 	}
 
 /**
- * Return the list of fields to use for a find for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @param string $role
+ * @param string $role optional user role if needed to build the options
  * @return array $condition
  * @access public
  */
@@ -337,6 +404,7 @@ class Gpgkey extends AppModel {
 			case 'index':
 				$fields = [
 					'fields' => [
+						'id',
 						'user_id',
 						'key',
 						'bits',
@@ -345,6 +413,7 @@ class Gpgkey extends AppModel {
 						'fingerprint',
 						'type',
 						'expires',
+						'created',
 						'modified'
 					]
 				];
@@ -359,6 +428,7 @@ class Gpgkey extends AppModel {
 			case 'save':
 				$fields = [
 					'fields' => [
+						'id',
 						'user_id',
 						'key',
 						'bits',
@@ -380,12 +450,12 @@ class Gpgkey extends AppModel {
 		return $fields;
 	}
 
-	/**
-	 * Check if a key fingerprint is valid
-	 *
-	 * @param $fingerprint
-	 * @return int
-	 */
+/**
+ * Check if a key fingerprint is valid
+ *
+ * @param string $fingerprint a hex string 40 chars in length
+ * @return bool
+ */
 	static public function isValidFingerprint($fingerprint) {
 		// we expect a SHA1 fingerprint
 		$pattern = '/^[A-F0-9]{40}$/';

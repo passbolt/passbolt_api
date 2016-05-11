@@ -5,61 +5,60 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
 /**
  * @SWG\Definition(
- *   @SWG\Xml(name="Resource"),
- *   @SWG\Property(
+ * @SWG\Xml(name="Resource"),
+ * @SWG\Property(
  *     property="id",
  *     type="string",
  *     description="The id of the resource"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="name",
  *     type="string",
  *     description="The name of the resource"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="username",
  *     type="string",
  *     description="The username of the resource"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="expiry_date",
  *     type="string",
  *     description="The expiry date of the resource"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="uri",
  *     type="string",
  *     description="The uri of the resource"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="description",
  *     type="string",
  *     description="The description of the resource"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="deleted",
  *     type="string",
  *     description="Is the user deleted"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="created",
  *     type="string",
  *     description="The date of creation"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="modified",
  *     type="string",
  *     description="The date of edition"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="created_by",
  *     type="string",
  *     description="The id of the user who created the resource"
  *   ),
- *   @SWG\Property(
+ * @SWG\Property(
  *     property="modified_by",
  *     type="string",
  *     description="The id of the last user who updated the resource"
@@ -288,12 +287,14 @@ class Resource extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $condition
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
 			case 'view':
 			case 'index':

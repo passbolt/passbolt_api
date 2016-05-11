@@ -222,12 +222,14 @@ class ItemTag extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $condition
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		$returnValue = ['fields' => []];
 		switch ($case) {
 			case 'ItemTag.view':
@@ -242,7 +244,7 @@ class ItemTag extends AppModel {
 						'ItemTag.created_by',
 					],
 					'contain' => [
-						'Tag' => Tag::getFindFields('Tag.view', User::get('Role.name'))
+						'Tag' => Tag::getFindFields('Tag.view', $role)
 					]
 				];
 				break;

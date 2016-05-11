@@ -305,10 +305,12 @@ class Category extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
- * @param string case (optional) The target validation case if any.
+ * @param string $case context ex: login, activation
+ * @param string $role optional user role if needed to build the options
  * @return array $condition
+ * @access public
  */
 	public static function getFindFields($case = 'get', $role = null) {
 		switch ($case) {

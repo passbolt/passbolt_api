@@ -50,7 +50,7 @@ App::import('Model', 'User');
  *   @SWG\Property(
  *     property="message",
  *     type="string",
- *     description="Additional message"
+ *     description="Additional error or warning message"
  *   ),
  *   @SWG\Property(
  *     property="description",
@@ -189,6 +189,7 @@ class AppController extends Controller {
 		if ($this->request->is('json')) {
 			$this->layout = 'json';
 			$this->view = '/Json/default';
+			$this->response->type('json');
 		}
 	}
 

@@ -115,10 +115,10 @@ class Profile extends AppModel {
 	}
 
 /**
- * Return the list of fields to use for a find for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @param string $role
+ * @param string $role optional user role if needed to build the options
  * @return array $condition
  * @access public
  */
