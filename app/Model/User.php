@@ -117,20 +117,18 @@ class User extends AppModel {
 	];
 
 /**
- * They are legions
+ * Anonymous user
  */
 	const ANONYMOUS = 'anonymous@passbolt.com';
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
- * @param string context
- *
+ * @param string $case (optional) The target validation case if any.
  * @return array validation rules
- * @throws exception if case is undefined
  * @access public
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'username' => [
 				'required' => [
@@ -355,8 +353,10 @@ class User extends AppModel {
 	public static function setInactive() {
 		// Delete current user data in session
 		App::import('Model', 'CakeSession');
-		CakeSession::delete(AuthComponent::$sessionKey);
-		CakeSession::delete('Auth.redirect');
+		if(CakeSession::check(AuthComponent::$sessionKey)) {
+			CakeSession::delete(AuthComponent::$sessionKey);
+			CakeSession::delete('Auth.redirect');
+		}
 	}
 
 /**
@@ -451,7 +451,8 @@ class User extends AppModel {
 						$conditions = [
 							'conditions' => [
 								'User.username' => User::ANONYMOUS,
-								'User.active' => true
+								'User.active' => true,
+								'Role.name' => Role::GUEST,
 							]
 						];
 						break;
@@ -468,7 +469,8 @@ class User extends AppModel {
 					case 'User::activation':
 						$conditions = [
 							'conditions' => [
-								'User.id' => $data['User']['id']
+								'User.id' => $data['User']['id'],
+								'Role.name' => [Role::USER, Role::ADMIN, Role::ROOT],
 							]
 						];
 						break;

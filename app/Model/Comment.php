@@ -48,10 +48,11 @@ class Comment extends AppModel {
 	];
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
  * @param string $case (optional) The target validation case if any.
- * @return array cakephp validation rules
+ * @return array validation rules
+ * @access public
  */
 	public static function getValidationRules($case = 'default') {
 		$default = [

@@ -46,7 +46,7 @@ class AppModel extends Model {
 	}
 
 /**
- * Set the validation rules upon context
+ * Set the validation rules for a given context
  *
  * @param string $case (optional) The target validation case if any.
  * @return bool true if success
@@ -59,7 +59,7 @@ class AppModel extends Model {
 	}
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
  * @param string $case (optional) The target validation case if any.
  * @return array validation rules

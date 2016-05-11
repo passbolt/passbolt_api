@@ -1,0 +1,34 @@
+
+FILE: /Users/remy/Work/www/passbolt/app/Model/User.php
+--------------------------------------------------------------------------------
+FOUND 4 ERROR(S) AND 16 WARNING(S) AFFECTING 15 LINE(S)
+--------------------------------------------------------------------------------
+ 183 | WARNING | Doc comment for var data does not match actual variable name
+     |         | $check at position 1
+ 205 | WARNING | Doc comment for var data does not match actual variable name
+     |         | $check at position 1
+ 217 | WARNING | Comment refers to a TODO task "explain"
+ 242 | WARNING | Doc comment for "$options" missing
+ 249 | ERROR   | Expected 0 blank lines after opening function brace; 1 found
+ 272 | WARNING | Parameters must appear immediately after the comment
+ 272 | WARNING | Doc comment for var field does not match actual variable name
+     |         | $path at position 1
+ 272 | WARNING | Missing comment for param "field" at position 1
+ 312 | WARNING | Doc comment for var UUID, does not match actual variable name
+     |         | $user at position 1
+ 312 | WARNING | Doc comment for "$update_session" missing
+ 317 | ERROR   | Variable "update_session" is not in valid camel caps format
+ 335 | ERROR   | Expected "if (...) {\n"; found "if(...) {\n"
+ 335 | ERROR   | Variable "update_session" is not in valid camel caps format
+ 352 | WARNING | Missing @return tag in function comment
+ 458 | WARNING | Code after THROW statement cannot be executed
+ 571 | WARNING | Code after THROW statement cannot be executed
+ 577 | WARNING | Code after THROW statement cannot be executed
+ 748 | WARNING | Doc comment for var The does not match actual variable name
+     |         | $data at position 1
+ 748 | WARNING | Doc comment for "$case" missing
+ 845 | WARNING | Expected 1 @throws tag(s) in function comment; 2 found
+--------------------------------------------------------------------------------
+UPGRADE TO PHP_CODESNIFFER 2.0 TO FIX ERRORS AUTOMATICALLY
+--------------------------------------------------------------------------------
+
