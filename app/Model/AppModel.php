@@ -151,7 +151,7 @@ class AppModel extends Model {
 /**
  * beforeSave() callback.
  *
- * @param array $options Options passed from Model::save().
+ * @param array $options passed from Model::save().
  * @return bool
  */
 	public function beforeSave($options = []) {

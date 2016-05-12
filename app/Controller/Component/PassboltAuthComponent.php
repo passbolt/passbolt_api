@@ -112,6 +112,7 @@ class PassboltAuthComponent extends AuthComponent {
  *
  * @param Controller $controller Controller with components to startup
  * @return void
+ *
  * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::startup
  */
 	public function startup(Controller $controller) {
@@ -188,16 +189,6 @@ class PassboltAuthComponent extends AuthComponent {
 			$i++;
 		}
 		return false;
-	}
-
-/**
- * Get current attempt number if no attempt was made, return 0
- *
- * @return int attempt number
- */
-	public function getAttempt() {
-		$attempt = $this->authenticationAttempt;
-		return ($attempt ? $attempt : 0);
 	}
 
 /**
