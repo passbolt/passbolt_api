@@ -11,5 +11,5 @@
 	</p>
 </div>
 <div class="submit-input-wrapper">
-	<a id="js_setup_plugin_check" href="#" class="button primary big">retry</a>
+	<a id="js_setup_plugin_check" href="#" class="button primary big" onclick="javascript:reload();">retry</a>
 </div>
