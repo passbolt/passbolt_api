@@ -77,10 +77,10 @@ class Secret extends AppModel {
 /**
  * Get the validation rules upon context
  *
- * @param string $case (optional) The target validation case if any.
+ * @param null|string $case (optional) The target validation case if any.
  * @return array validation rules
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'user_id' => [
 				'uuid' => [
@@ -118,14 +118,7 @@ class Secret extends AppModel {
 				],
 			],
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
-		return $rules;
+		return $default;
 	}
 
 /**
@@ -197,7 +190,7 @@ class Secret extends AppModel {
  * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @param string $role optional user role if needed to build the options
+ * @param string|null $role optional user role if needed to build the options
  * @return array $fields
  * @access public
  */

@@ -54,7 +54,6 @@ class AppModel extends Model {
  */
 	public function setValidationRules($case = 'default') {
 		$this->validate = $this->getValidationRules($case);
-
 		return true;
 	}
 
