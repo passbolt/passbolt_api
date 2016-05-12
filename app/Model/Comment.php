@@ -5,7 +5,57 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="Comment"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="Comment UUID",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="parent_id",
+ *     type="string",
+ *     description="Optional parent comment uuid, in case of a reply",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="foreign_key",
+ *     type="string",
+ *     description="Related model UUID",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="foreign_model",
+ *     type="string",
+ *     description="Name of the model the image is attached to",
+ *     example="Resource"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="Id of the user who created the comment"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="Id of the last user who updated the comment"
+ *   )
+ * )
+ */
 class Comment extends AppModel {
 
 /**
@@ -128,10 +178,11 @@ class Comment extends AppModel {
 	}
 
 /**
- * Validation Rule : Check if the given foreign model is allowed
+ * Check if the given foreign model is allowed
+ * Custom validation rule
  *
- * @param array check the data to test
- * @return boolean
+ * @param array $check with 'foreign_model' key set
+ * @return bool
  */
 	public function validateForeignModel($check) {
 		return $this->isValidForeignModel($check['foreign_model']);
@@ -139,9 +190,10 @@ class Comment extends AppModel {
 
 /**
  * Check if the given foreign model is allowed
+ * Custom validation rule
  *
- * @param string foreignModel The foreign model key to test
- * @return boolean
+ * @param string $foreignModel The foreign model key to test
+ * @return bool
  */
 	public function isValidForeignModel($foreignModel) {
 		return in_array($foreignModel, Configure::read('Comment.foreignModels'));
@@ -149,8 +201,10 @@ class Comment extends AppModel {
 
 /**
  * Check if a resource with same id exists
+ * Custom validation rule
  *
- * @param check
+ * @param array $check with foreign_id key set
+ * @return bool
  */
 	public function foreignExists($check) {
 		if ($this->data['Comment']['foreign_model'] == null) {
@@ -177,13 +231,14 @@ class Comment extends AppModel {
  * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$returnValue = [];
+		$returnValue = [
+			'conditions' => []
+		];
 		switch ($case) {
 			case 'viewByForeignModel':
 				$returnValue = [
 					'conditions' => [
 						'Comment.foreign_id' => $data['Comment']['foreign_id']
-						// @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
 					],
 					'order' => [
 						'Comment.modified desc'
@@ -194,16 +249,10 @@ class Comment extends AppModel {
 				$returnValue = [
 					'conditions' => [
 						'Comment.id' => $data['Comment']['id']
-						// @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
 					]
 				];
 				break;
-			default:
-				$returnValue = [
-					'conditions' => []
-				];
 		}
-
 		return $returnValue;
 	}
 
