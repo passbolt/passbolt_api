@@ -151,14 +151,12 @@ class EmailNotificatorComponent extends Component {
  * Send a notification email regarding a new comment created on a password.
  *
  * @param string $toUserId uuid of the recipient
- * @param array $data
- *   variables to pass to the template which should contain
+ * @param array $data variables to pass to the template which should contain
  *     resource_id the resource id
  *     comment_id the comment id
  * @return void
  */
 	public function passwordCommentNotification($toUserId, $data) {
-
 		// Get recipient info.
 		$recipient = $this->User->findById($toUserId);
 
@@ -166,7 +164,7 @@ class EmailNotificatorComponent extends Component {
 		$comment = $this->Comment->findById($data['comment_id'], ['content', 'created', 'created_by']);
 
 		// Load resource.
-		$resource = $this->Resource->findById($data['resource_id'],  ['name']);
+		$resource = $this->Resource->findById($data['resource_id'], ['name']);
 
 		// Get invite sender.
 		$sender = $this->_getAuthorInfo($comment['Comment']['created_by']);

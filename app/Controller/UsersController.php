@@ -431,7 +431,6 @@ class UsersController extends AppController {
 			return $this->Message->error(__('The avatar couldn\'t be uploaded'), ['code' => 404]);
 		}
 
-
 		// Retrieve and return the updated user.
 		$data = ['User.id' => $id];
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);

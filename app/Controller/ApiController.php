@@ -10,27 +10,28 @@ use Swagger\Swagger;
 
 class ApiController extends AppController {
 
-	/**
-	 * Called before the controller action. Used to manage access right
-	 *
-	 * @return void
-	 * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
-	 */
+/**
+ * Called before the controller action. Used to manage access right
+ *
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
+ */
 	public function beforeFilter() {
 		$allow = [
-			'doc'
+			'swagger'
 		];
 		$this->Auth->allow($allow);
 		parent::beforeFilter();
 	}
 
-	/**
-	 * Generates Swagger-PHP JSON documentation file
-	 *
-	 * @return void
-	 */
-	function doc() {
-		if(Configure::read('debug') < 1) {
+/**
+ * Generates Swagger-PHP JSON documentation file
+ *
+ * @throws ForbiddenException if application is not in debug mode
+ * @return void
+ */
+	public function swagger() {
+		if (Configure::read('debug') < 1) {
 			throw new ForbiddenException();
 		}
 

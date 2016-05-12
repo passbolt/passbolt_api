@@ -150,7 +150,7 @@ class CommentsController extends AppController {
 		$passwordUsers = Hash::extract($passwordPermissions, '{n}.User.id');
 		foreach ($passwordUsers as $userId) {
 			// Do not send to user who wrote the comment.
-			if ($userId  != User::get('id')) {
+			if ($userId != User::get('id')) {
 				$this->EmailNotificator->passwordCommentNotification(
 					$userId,
 					[
