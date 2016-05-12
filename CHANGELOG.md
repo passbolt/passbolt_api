@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - PASSBOLT-1094: Frontend : Server errors happening during a request should give a visual feedback.
+- PASSBOLT-1438: Retry button is not working at setup first step (when user doesn't have the plugin installed).
 
 ## [1.0.10] - 2016-05-03
 ### Fixed
