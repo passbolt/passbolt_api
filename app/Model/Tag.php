@@ -1,10 +1,48 @@
 <?php
-
 /**
  * Tag Model
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ */
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="Tag"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="Tag UUID",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="name",
+ *     type="string",
+ *     description="Name of the tag",
+ *     example="magpie"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="Id of the user who created the tag"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="Id of the last user who updated the tag"
+ *   )
+ * )
  */
 class Tag extends AppModel {
 
@@ -30,11 +68,11 @@ class Tag extends AppModel {
 /**
  * Get the validation rules upon context
  *
- * @param string context
+ * @param null|string $case optional validation case
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case = 'default') {
-		$default = [
+	public static function getValidationRules($case = null) {
+		$rules = [
 			'id' => [
 				'uuid' => [
 					'rule' => 'uuid',
@@ -54,13 +92,6 @@ class Tag extends AppModel {
 				]
 			]
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
 		return $rules;
 	}
 
@@ -74,7 +105,6 @@ class Tag extends AppModel {
  */
 	public static function getFindConditions($case = 'Tag.view', $role = Role::USER, $data = null) {
 		$conditions = [];
-
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
 			case 'Tag.view':
@@ -86,7 +116,6 @@ class Tag extends AppModel {
 				break;
 
 		}
-
 		return $conditions;
 	}
 
@@ -124,8 +153,6 @@ class Tag extends AppModel {
 				];
 				break;
 		}
-
 		return $fields;
 	}
-
 }
