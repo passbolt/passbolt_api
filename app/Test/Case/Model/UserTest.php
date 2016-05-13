@@ -161,6 +161,8 @@ class UserTest extends CakeTestCase {
 	public function testSetInactive() {
 		// get anonymous user
 		$u0 = $this->User->get();
+		$this->assertEquals($u0['User']['username'], User::ANONYMOUS, 'user::get should return anonymous');
+		$this->assertEquals($u0['Role']['name'], Role::GUEST, 'user::get should return guest role');
 
 		// get a user from the fixtures and set it as current user
 		$param = array('conditions' => array('username' => 'user@passbolt.com'));
