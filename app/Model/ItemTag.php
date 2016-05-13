@@ -46,7 +46,7 @@ class ItemTag extends AppModel {
  * @param string $case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'id' => [
 				'uuid' => [
@@ -93,25 +93,20 @@ class ItemTag extends AppModel {
 					'rule' => ['itemExists', null],
 					'message' => __('The resource provided does not exist')
 				],
-				'uniqueCombi' => [
-					'rule' => ['uniqueCombi', null],
+				'uniqueRelationship' => [
+					'rule' => ['uniqueRelationship'],
 					'message' => __('The tag and resource combination entered is a duplicate')
 				]
 			]
 		];
-		switch ($case) {
-			default:
-			case 'default' :
-				$rules = $default;
-		}
-
-		return $rules;
+		return $default;
 	}
 
 /**
  * Check if a Tag with same id exists
+ * Custom validation rule
  *
- * @param $check
+ * @param array $check with 'tag_id' key set
  * @return bool
  */
 	public function tagExists($check) {
@@ -126,8 +121,9 @@ class ItemTag extends AppModel {
 
 /**
  * Check if an item with same id exists
+ * Custom validation rule
  *
- * @param $check
+ * @param array $check with foreign_id and foreign_model keys set
  * @return bool
  */
 	public function itemExists($check) {
@@ -140,47 +136,49 @@ class ItemTag extends AppModel {
 				'conditions' => [$tr['foreign_model'] . '.id' => $check['foreign_id']],
 				'recursive' => -1
 			]);
-
 			return $exists > 0;
 		}
 	}
 
 /**
  * Check if a Tag / Item association don't already exist
+ * Custom Validation Rule
  *
- * @param $check
+ * @param array $check (optional) data to validate
  * @return bool
  */
-	public function uniqueCombi($check = null) {
-		$tr = $this->data['ItemTag'];
-		$combi = [
-			'ItemTag.tag_id' => $tr['tag_id'],
-			'ItemTag.foreign_model' => $tr['foreign_model'],
-			'ItemTag.foreign_id' => $check['foreign_id']
-		];
-		//pr($combi);
-		//pr($this->find('all'));
-		$result = $this->find('count', ['conditions' => $combi]);
+	public function uniqueRelationship($check = null) {
+		if (isset($check['ItemTag'])) {
+			$itemTag = $check['ItemTag'];
+		} else {
+			$itemTag = $this->data['ItemTag'];
+		}
 
-		//var_dump($result);
-		return $result == 0;
+		$combination = [
+			'ItemTag.tag_id' => $itemTag['tag_id'],
+			'ItemTag.foreign_model' => $itemTag['foreign_model'],
+			'ItemTag.foreign_id' => $itemTag['foreign_id']
+		];
+		$result = $this->find('count', ['conditions' => $combination]);
+		return ($result === 0);
 	}
 
 /**
  * Check if the given foreign model is allowed
  *
- * @param string foreignModel The foreign model key to test
- * @return boolean
+ * @param string $foreignModel The foreign model key to test
+ * @return bool
  */
 	public function isValidForeignModel($foreignModel) {
 		return in_array($foreignModel, Configure::read('ItemTag.foreignModels'));
 	}
 
 /**
- * Validation Rule : Check if the given foreign model is allowed
+ * Check if the given foreign model is allowed
+ * Custom validation rule
  *
- * @param array check the data to test
- * @return boolean
+ * @param array $check the data to test
+ * @return bool
  */
 	public function validateForeignModel($check) {
 		return $this->isValidForeignModel($check['foreign_model']);
@@ -189,19 +187,18 @@ class ItemTag extends AppModel {
 /**
  * Return the conditions to be used for a given context
  *
- * @param string case (optional) The target case if any.
- * @param string role
- * @param array data Used in find conditions (such as User.id)
+ * @param string $case (optional) The target case if any.
+ * @param string $role name (optional)
+ * @param array $data Used in find conditions (such as User.id)
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
+	public static function getFindConditions($case = 'view', $role = null, $data = null) {
 		$conditions = [];
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
 				$conditions = [
 					'conditions' => [
 						'ItemTag.foreign_id' => $data['ItemTag']['foreign_id']
-						// @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
 					],
 					'order' => ['ItemTag.created desc']
 				];
@@ -210,7 +207,6 @@ class ItemTag extends AppModel {
 				$conditions = [
 					'conditions' => [
 						'ItemTag.id' => $data['ItemTag']['id']
-						// @todo maybe check here if user has right to access the foreign instance, in this case we need the model to make a join with the convient permission view table
 					]
 				];
 				break;

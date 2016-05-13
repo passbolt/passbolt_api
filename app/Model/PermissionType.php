@@ -32,8 +32,8 @@ class PermissionType extends AppModel {
 /**
  * Check if the given type is a valid permission type
  *
- * @param string type The type to check
- * @return boolean
+ * @param string $type The type to check
+ * @return bool
  */
 	public function isValidSerial($type) {
 		switch ($type) {
@@ -43,13 +43,16 @@ class PermissionType extends AppModel {
 			case self::UPDATE:
 			case self::OWNER:
 				return true;
-				break;
 			default:
 				return false;
-				break;
 		}
 	}
 
+/**
+ * Return all the permission types
+ *
+ * @return array permissionTypes
+ */
 	public static function getAll() {
 		return [
 			'DENY' => self::DENY,

@@ -46,18 +46,26 @@ class Category extends AppModel {
 		]
 	];
 
+/**
+ * Category constructor
+ *
+ * @param bool|false $id  The id to start the model on.
+ * @param null $table The table to use for this model.
+ * @param null $ds The connection name this model is connected to.
+ */
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 		$this->Behaviors->setPriority(['Permissionable' => 1]);
 	}
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
- * @param string case (optional) The target validation case if any.
- * @return array cakephp validation rules
+ * @param string $case (optional) The target validation case if any.
+ * @return array validation rules
+ * @access public
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'id' => [
 				'uuid' => [
@@ -111,32 +119,24 @@ class Category extends AppModel {
 				]
 			]
 		];
-
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
-		return $rules;
+		return $default;
 	}
 
 /**
+ * Find threaded redefinition
+ * Warning: results has to be ordered following Category.lft
  * In the event of ambiguous results returned (multiple top level results, with different parent_ids)
  * top level results with different parent_ids to the first result will be dropped
  *
- * @param string $state
- * @param mixed $query
- * @param array $results
+ * @param string $state Either "before" or "after".
+ * @param array $query Query.
+ * @param array $results Results.
  * @return array Threaded results
  */
 	protected function _findThreaded($state, $query, $results = []) {
 		if ($state === 'before') {
 			return $query;
 		} elseif ($state === 'after') {
-			// ATTENTION
-			// results has to be ordered following Category.lft
 			$n = count($results);
 			// build parent hierarchy even if some nodes are missing. Based on left and right
 			for ($i = $n - 1; $i >= 0; $i--) {
@@ -148,7 +148,6 @@ class Category extends AppModel {
 					}
 				}
 			}
-
 			return $results;
 		}
 	}
@@ -176,8 +175,10 @@ class Category extends AppModel {
 
 /**
  * Check if a category type with same id exists
+ * Custom validation rule
  *
- * @param check
+ * @param array $check with category_type_id key id set
+ * @return bool
  */
 	public function categoryTypeExists($check) {
 		if ($check['category_type_id'] == null) {
@@ -196,53 +197,32 @@ class Category extends AppModel {
  * Check if an element is a child of a parent (not necessarily an immediate child. can be several levels below)
  * Useful when parsing an array of results
  *
- * @param $elt , the element to check
- * @param $parent , the parent
+ * @param array $category the category to check
+ * @param array $parent parent category to check
  * @return true if element is a child, false otherwise
  */
-	public function isChild($elt, $parent) {
-		return ($elt['Category']['rght'] < $parent['Category']['rght']);
+	public function isChild($category, $parent) {
+		return ($category['Category']['rght'] < $parent['Category']['rght']);
 	}
 
 /**
  * Check if an element is a leaf (no more children)
  *
- * @param $category , the category
+ * @param array $category the category to check
  * @return true if the category is a leaf. false otherwise.
  */
 	public function isLeaf($category) {
-		if ($category['Category']['lft'] + 1 == $category['Category']['rght']) {
-			return true;
-		}
-
-		return false;
-	}
-
-/**
- * Check if an element is at the top level of the given branch
- *
- * @param $objectType , the type of object given, whether a default cakePHP object or a Json converted one : 'default' or 'json'
- */
-	public function isTopLevelElement($category, $categories) {
-		$parentId = $category['Category']['parent_id'];
-		foreach ($categories as $c) {
-			if ($c['Category']['id'] == $parentId) {
-				return false;
-			}
-		}
-
-		return true;
+		return ($category['Category']['lft'] + 1 == $category['Category']['rght']);
 	}
 
 /**
  * move an element from a position to another in the tree
- * can be moved among its sieblings, can also change parent
+ * can be moved among its siblings, can also change parent
  *
- * @param uuid $id the if of the category
- * @param integer $position the position from 1 to n
- * @param uuid $parentId the parent Id (if we wish to change it)
+ * @param string $id uuid of the category
+ * @param int $position the position from 1 to n
+ * @param string $parentId the parent uuid (if we wish to change it)
  * @return bool true or false
- *
  */
 	public function move($id, $position, $parentId = null) {
 		// First, manage the parent
@@ -355,9 +335,9 @@ class Category extends AppModel {
 /**
  * Return the find conditions to be used for a given context
  *
- * @param string case (optional) The target validation case if any.
- * @param string role
- * @param array data Used in find conditions (such as User.id)
+ * @param string $case (optional) The target validation case if any.
+ * @param string $role (optional) Role name
+ * @param array $data Used in find conditions (such as User.id)
  * @return array
  */
 	public static function getFindConditions($case = 'get', $role = null, $data = null) {

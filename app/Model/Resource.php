@@ -115,18 +115,29 @@ class Resource extends AppModel {
  */
 	public $hasAndBelongsToMany = ['Category' => ['className' => 'Category']];
 
+/**
+ * Resource constructor
+ *
+ * @param bool|int|string|array $id Set this ID for this model on startup,
+ * can also be an array of options, see above.
+ * @param string $table Name of database table to use.
+ * @param string $ds DataSource connection name.
+ * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
+ * @access public
+ */
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 		$this->Behaviors->setPriority(['Permissionable' => 1]);
 	}
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
- * @param string case (optional) The target validation case if any.
- * @return array CakePHP validation rules
+ * @param string $case (optional) The target validation case if any.
+ * @return array validation rules
+ * @access public
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'id' => [
 				'uuid' => [
@@ -181,7 +192,7 @@ class Resource extends AppModel {
 			],
 			'uri' => [
 				'url' => [
-					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
 					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /.'),
 					'allowEmpty' => true,
 				],
@@ -192,7 +203,7 @@ class Resource extends AppModel {
 			],
 			'description' => [
 				'alphaNumericAndSpecial' => [
-					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
 					'required' => false,
 					'allowEmpty' => true,
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /')
@@ -203,14 +214,7 @@ class Resource extends AppModel {
 				]
 			],
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
-		return $rules;
+		return $default;
 	}
 
 /**
@@ -397,11 +401,11 @@ class Resource extends AppModel {
 /**
  * Save a list of secrets corresponding to a resource.
  *
- * @param $resourceId
- * @param $secrets
- *
+ * @param string $resourceId uuid
+ * @param array $secrets secret data
  * @throws Exception
  * @throws ValidationException
+ * @return void
  */
 	public function saveSecrets($resourceId, $secrets) {
 		// Validate the secrets provided.
@@ -419,7 +423,7 @@ class Resource extends AppModel {
 		// Check difference between the users expected and the users provided.
 		$missingUsers = array_diff($permsUsers, $dataSecretUsers);
 		// Check if the size of expected secrets is the same as provided one.
-		$sameSize = sizeof($permsUsers) == sizeof($dataSecretUsers);
+		$sameSize = (count($permsUsers) === count($dataSecretUsers));
 
 		// Check if the users expected are the same as the users provided.
 		$sameUsers = empty($missingUsers);
@@ -436,9 +440,7 @@ class Resource extends AppModel {
 		// End of secrets check. We proceed.
 
 		// Delete all the previous secrets.
-		$this->Secret->deleteAll([
-			'Secret.resource_id' => $resourceId
-		], false);
+		$this->Secret->deleteAll(['Secret.resource_id' => $resourceId], false);
 
 		$fields = $this->Secret->getFindFields('update', User::get('Role.name'));
 		// Validate the given secrets.

@@ -51,9 +51,9 @@ class CategoryResource extends AppModel {
 					'rule' => ['validateExists', 'resource_id', 'Resource'],
 					'message' => __('The resource provided does not exist')
 				],
-				'uniqueCombi' => [
-					'rule' => ['uniqueCombi', null],
-					'message' => __('The CategoryResource entered is a duplicate')
+				'uniqueRelationship' => [
+					'rule' => ['uniqueRelationship'],
+					'message' => __('The category and resource association is a duplicate')
 				]
 			]
 		];
@@ -67,11 +67,11 @@ class CategoryResource extends AppModel {
 
 /**
  * Check if a category with same id exists
+ * Custom Validation Rule
  *
- * @param bool $check
  * @return bool
  */
-	public function uniqueCombi($check = false) {
+	public function uniqueRelationship() {
 		$cr = $this->data['CategoryResource'];
 		$combi = [
 			'CategoryResource.category_id' => $cr['category_id'],
@@ -85,12 +85,11 @@ class CategoryResource extends AppModel {
  * Return the find conditions to be used for a given context.
  *
  * @param null|string $case The target case.
- * @param null|string $role The user role.
+ * @param null|string $role The user role. (optional)
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = [];
+	public static function getFindConditions($case = 'view', $role = null, $data = null) {
 		switch ($case) {
 			case 'add':
 				$conditions = [];

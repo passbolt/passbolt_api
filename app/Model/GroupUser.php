@@ -26,7 +26,7 @@ class GroupUser extends AppModel {
  * @param string $case (optional) The target validation case if any.
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'group_id' => [
 				'uuid' => [
@@ -51,18 +51,13 @@ class GroupUser extends AppModel {
 					'rule' => ['validateExists', 'user_id', 'User'],
 					'message' => __('The user provided does not exist')
 				],
-				'uniqueCombi' => [
-					'rule' => ['uniqueCombi', null],
+				'uniqueRelationship' => [
+					'rule' => ['uniqueRelationship'],
 					'message' => __('The GroupUser entered is a duplicate')
 				]
 			]
 		];
-		switch ($case) {
-			default:
-			case 'default' :
-				$rules = $default;
-		}
-		return $rules;
+		return $default;
 	}
 
 /**
@@ -74,7 +69,6 @@ class GroupUser extends AppModel {
  * @return array
  */
 	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = [];
 		switch ($case) {
 			case 'add':
 				$conditions = [];
@@ -129,17 +123,17 @@ class GroupUser extends AppModel {
 	}
 
 /**
- * Check if a category with same id exists
+ * Check if a Group User association with same id exists
+ * Custom Validation Rule
  *
- * @param check
+ * @return bool
  */
-	public function uniqueCombi($check = false) {
-		$cr = $this->data['GroupUser'];
-		$combi = [
-			'GroupUser.group_id' => $cr['group_id'],
-			'GroupUser.user_id' => $cr['user_id']
+	public function uniqueRelationship() {
+		$groupUser = $this->data['GroupUser'];
+		$combination = [
+			'GroupUser.group_id' => $groupUser['group_id'],
+			'GroupUser.user_id' => $groupUser['user_id']
 		];
-
-		return $this->isUnique($combi, false);
+		return $this->isUnique($combination, false);
 	}
 }

@@ -7,20 +7,16 @@
  */
 class EmailNotification extends AppModel {
 
-	// Doesn't use a table.
 	public $useTable = false;
 
 /**
  * Put a notification email in the queue.
  *
- * @param string $to
- *   the email to send the notification to
- * @param string $subject
- *   the subject
- * @param array $data
- *   variables to pass to the template
- * @param string $template
- *   name of the template to use
+ * @param string $to the email to send the notification to
+ * @param string $subject the subject
+ * @param array $data variables to pass to the template
+ * @param string $template name of the template to use
+ * @return void
  */
 	public function send($to, $subject, $data, $template) {
 		$options = [

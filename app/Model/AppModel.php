@@ -9,7 +9,6 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Model', 'Model');
-App::uses('AppValidation', 'Model/Utility');
 
 class AppModel extends Model {
 
