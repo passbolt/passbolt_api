@@ -177,7 +177,6 @@ class UserTest extends CakeTestCase {
 		$this->assertNotEquals($u1, $u2, 'User::setInactive should work');
 		$this->assertNotEquals($u1, $u0, 'User::setInactive should work');
 		$this->assertEquals($u2, $u0, 'User::setInactive should work');
-
 	}
 
 	/**
