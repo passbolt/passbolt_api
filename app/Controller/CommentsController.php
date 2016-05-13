@@ -147,7 +147,7 @@ class CommentsController extends AppController {
 		// Handle email notifications.
 		$passwordPermissions = $this->PermissionHelper->findAcoUsers(ucfirst($foreignModelName), $foreignId);
 		// Extract user ids from array.
-		$passwordUsers = Hash::extract($passwordPermissions, '{n}.User.id');
+		$passwordUsers = Set::extract($passwordPermissions, '{n}.User.id');
 		foreach ($passwordUsers as $userId) {
 			// Do not send to user who wrote the comment.
 			if ($userId != User::get('id')) {

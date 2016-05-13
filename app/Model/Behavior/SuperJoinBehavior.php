@@ -59,7 +59,7 @@ class SuperJoinBehavior extends ModelBehavior {
  * @return void
  */
 	public function setup(Model $model, $config = []) {
-		$this->options = Hash::merge($this->_defaultOptions, $config);
+		$this->options = Set::merge($this->_defaultOptions, $config);
 	}
 
 /**

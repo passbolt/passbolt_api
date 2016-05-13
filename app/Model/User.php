@@ -299,7 +299,7 @@ class User extends AppModel {
 			$path = str_replace('User/', '', $path);
 		}
 		$path = '/' . $path;
-		$value = Hash::extract($path, $u);
+		$value = Set::extract($path, $u);
 		if (!$value) {
 			return false;
 		}

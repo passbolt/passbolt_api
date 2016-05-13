@@ -872,7 +872,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		// Try to get all users
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET')), true);
-		$usersIds = Hash::extract($result['body'], '{n}.User.id');
+		$usersIds = Set::extract($result['body'], '{n}.User.id');
 
 		// The user that has been deleted is not in the list of user
 		$this->assertFalse(in_array($userId, $usersIds));
@@ -1124,7 +1124,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 		// Get empty image url.
 		$defaults = Configure::read('Media.imageDefaults.ProfileAvatar');
-		$diff = Hash::diff($user['Profile']['Avatar']['url'], $defaults);
+		$diff = Set::diff($user['Profile']['Avatar']['url'], $defaults);
 
 		$this->assertEmpty($diff, "The user " . $user['User']['username'] . " should have the default avatar");
 

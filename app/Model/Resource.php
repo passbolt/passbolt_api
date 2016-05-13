@@ -413,11 +413,11 @@ class Resource extends AppModel {
 
 		// Get list of current permissions for the given ACO.
 		$permsUsers = $this->getAuthorizedUsers($resourceId);
-		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
+		$permsUsers = Set::extract($permsUsers, '{n}.User.id');
 
 		// Get the list of users corresponding to the secrets, without duplicates.
 		$dataSecretUsers = array_unique(
-			Hash::extract($secrets, '{n}.user_id')
+			Set::extract($secrets, '{n}.user_id')
 		);
 
 		// Check difference between the users expected and the users provided.

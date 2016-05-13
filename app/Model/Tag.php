@@ -84,11 +84,11 @@ class Tag extends AppModel {
 					'required' => 'create',
 					'allowEmpty' => false,
 					'rule' => "/^[\p{L}\d '\"-]*$/u",
-					'message' => __('Name should only contain alphabets, numbers, spaces and the special characters \' " -')
+					'message' => __('Tag should only contain alphabets, numbers, spaces and the special characters \' " -')
 				],
 				'size' => [
 					'rule' => ['lengthBetween', 3, 64],
-					'message' => __('Name should be between %s and %s characters long'),
+					'message' => __('Tag should be between %s and %s characters long'),
 				]
 			]
 		];

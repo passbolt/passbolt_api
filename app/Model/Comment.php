@@ -153,7 +153,7 @@ class Comment extends AppModel {
 				'alphaNumeric' => [
 					'required' => true,
 					'allowEmpty' => false,
-					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
 					'message' => __('Content should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? @ !')
 				],
 				'size' => [
