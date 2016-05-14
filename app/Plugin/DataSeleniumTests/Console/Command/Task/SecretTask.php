@@ -68,6 +68,7 @@ class SecretTask extends ModelTask {
      */
     protected function encryptPassword($password, $userId) {
         $GpgkeyTask = $this->Tasks->load('Data.Gpgkey');
+	    $GpgkeyTask->params = $this->params;
         $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($userId);
         $Gpgkey = Common::getModel('Gpgkey');
         $key = $Gpgkey->find("first", array('conditions' => array(

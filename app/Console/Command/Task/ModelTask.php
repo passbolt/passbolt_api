@@ -21,7 +21,9 @@ class ModelTask extends AppShell {
 			// Get fields to validate. (Sometimes we need exceptions).
 			$validationFields = method_exists($this, 'getValidationFields') ? ['fieldList' => $this->getValidationFields($item)] : [];
 			if (!$Model->validates($validationFields)) {
-				var_dump($Model->validationErrors);
+				if (!isset($this->params['quiet']) || $this->params['quiet'] != 1) {
+					var_dump($Model->validationErrors);
+				}
 			}
 			$instance = $Model->save($item, false);
 			if (!$instance) {

@@ -123,6 +123,7 @@ class DataShell extends AppShell {
 
 		foreach ($dataModels as $dataModel) {
 			$Task = $this->Tasks->load($dataModel);
+			$Task->params['quiet'] = isset($this->params['quiet']) && $this->params['quiet'] == 1 ? 1 : 0;
 			if (method_exists($Task, "beforeExecute")) {
 				$Task->beforeExecute();
 			}

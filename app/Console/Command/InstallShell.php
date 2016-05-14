@@ -216,11 +216,11 @@ class InstallShell extends AppShell {
 	public function schema() {
 		$this->out('Installing schema / database');
 		$this->hr();
-		$this->dispatchShell('schema create --force_drop --force_create -q');
+		$this->dispatchShell('schema create --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('passbolt schema deployed');
-		$this->dispatchShell('schema create sessions --force_drop --force_create -q');
+		$this->dispatchShell('schema create sessions --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('passbolt session table deployed');
-		$this->dispatchShell('schema create --plugin FileStorage --force_drop --force_create -q');
+		$this->dispatchShell('schema create --plugin FileStorage --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('plugins schemas deployed');
 	}
 
@@ -231,7 +231,7 @@ class InstallShell extends AppShell {
  * @return void
  */
 	public function data($options = 'default') {
-		$this->dispatchShell('data import --data=' . $options);
+		$this->dispatchShell('data import --data=' . $options . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 	}
 
 /**
@@ -255,6 +255,9 @@ class InstallShell extends AppShell {
 		if (!is_null($lastName)) {
 			$cmd .= ' -l ' .$lastName;
 		}
+		if(isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+			$cmd .= ' -q';
+		}
 		$this->dispatchShell($cmd);
 	}
 
@@ -268,6 +271,9 @@ class InstallShell extends AppShell {
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
 		}
+		if(isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+			$cmd .= ' -q';
+		}
 		return $this->dispatchShell($cmd);
 	}
 
@@ -280,6 +286,9 @@ class InstallShell extends AppShell {
 		$cmd = 'sql export';
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
+		}
+		if(isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+			$cmd .= ' -q';
 		}
 		return $this->dispatchShell($cmd);
 	}

@@ -439,7 +439,7 @@ class SchemaShell extends AppShell {
 						$error = $table . ': ' . $e->getMessage();
 					}
 
-					$Schema->after(array($event => $table, 'errors' => $error));
+					$Schema->after(array($event => $table, 'errors' => $error, 'params' => $this->params));
 
 					if (!empty($error)) {
 						$this->err($error);
