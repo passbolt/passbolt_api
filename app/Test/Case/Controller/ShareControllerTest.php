@@ -566,7 +566,7 @@ hcciUFw5
 			'return' => 'contents',
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Set::extract($srvResult['body'], '{n}.User.id');
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// The owner is not in the list of users who can receive a direct permission
 		$this->assertFalse(in_array(Common::uuid('user.id.irene'), $usersIds));
@@ -583,7 +583,7 @@ hcciUFw5
 			)
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Set::extract($srvResult['body'], '{n}.User.id');
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// The user Betty is in the list of retrieved users.
 		$this->assertTrue(in_array(Common::uuid('user.id.betty'), $usersIds));
@@ -600,7 +600,7 @@ hcciUFw5
 			)
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Set::extract($srvResult['body'], '{n}.User.id');
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// The request found some users.
 		$this->assertNotEmpty($usersIds);
@@ -622,7 +622,7 @@ hcciUFw5
 			'return' => 'contents',
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Set::extract($srvResult['body'], '{n}.User.id');
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// Betty shouldn't be in the list of returned users.
 		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
@@ -644,7 +644,7 @@ hcciUFw5
 			)
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Set::extract($srvResult['body'], '{n}.User.id');
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// Betty shouldn't be in the list of returned users.
 		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
