@@ -5,7 +5,7 @@
 <div class="why-plugin-wrapper">
 	<h3><?php echo("Why do I need a plugin"); ?></h3>
 	<p>
-		<?php echo __('Passbolt requires a browser add-on to guarantee that your secret key and your master password are never
+		<?php echo __('Passbolt requires a browser add-on to guarantee that your secret key and your passphrase are never
 			accessible to any website (including passbolt.com itself). This is also the only way to guarantee that
 			the core cryptographic libraries cannot be tampered with.'); ?>
 	</p>
