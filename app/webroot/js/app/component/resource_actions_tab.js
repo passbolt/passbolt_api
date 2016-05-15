@@ -59,11 +59,13 @@ var ResourceActionsTab = passbolt.component.ResourceActionsTab = mad.component.T
 						data['__FILTER_CASE__'] = 'edit';
 					}
 					// Save the resource with the latest changes.
-					self.options.resource.attr(data)
-						.save();
-					// Close the dialog which contains this component.
-					self.closest(mad.component.Dialog)
-						.remove();
+					self.options.resource.attr(data).save(
+						function success() {
+							// Close the dialog which contains this component.
+							self.closest(mad.component.Dialog)
+								.remove();
+						}
+					);
 				}
 			}
 		});

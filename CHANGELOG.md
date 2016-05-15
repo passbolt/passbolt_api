@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-1388: As a user I should receive an email notification when a password is updated.
+- PASSBOLT-1389: As a user I should receive an email notification when a password is created.
+- PASSBOLT-1390: As a user I should receive an email notification when a password is deleted.
+- PASSBOLT-1544: As a user I should receive an email notification when someone comments on a password.
+
+### Fixed
+- PASSBOLT-1094: Frontend : Server errors happening during a request should give a visual feedback.
+- PASSBOLT-1438: Retry button is not working at setup first step (when user doesn't have the plugin installed).
 
 ## [1.0.10] - 2016-05-03
 ### Fixed

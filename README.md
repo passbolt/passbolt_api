@@ -65,7 +65,10 @@ You will need a webserver with SSL and url rewriting enabled :
 - Url rewriting http://book.cakephp.org/2.0/en/installation/url-rewriting.html
 
 You will need to install php5 and the following modules directly or using pear/pecl:
-- Imagick http://php.net/manual/en/book.imagick.php
+- Either one of these image manipulation libraries:
+	- Imagick http://php.net/manual/en/book.imagick.php
+	- GD2 http://php.net/manual/en/book.image.php
+	- Gmagick git merge 
 - gnupg http://php.net/manual/en/gnupg.installation.php
 - Composer https://getcomposer.org/
 

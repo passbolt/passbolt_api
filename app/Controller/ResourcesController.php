@@ -242,6 +242,22 @@ class ResourcesController extends AppController {
 		if (!$this->Resource->save($resource, true, $fields['fields'])) {
 			return $this->Message->error(__('Error while deleting'));
 		}
+
+		// Email notification.
+		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		// Extract user ids from array.
+		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
+		foreach ($resourceUsers as $userId) {
+			$this->EmailNotificator->passwordDeletedNotification(
+				$userId,
+				[
+					'resource_name' => $resource['Resource']['name'],
+					'deleter_id' => User::get('id'),
+					'own' => User::get('id') == $userId ? true : false,
+				]);
+		}
+
+
 		$this->Message->success(__('The resource was successfully deleted'));
 	}
 
@@ -518,6 +534,21 @@ class ResourcesController extends AppController {
 
 		// Commit all the changes.
 		$dataSource->commit();
+
+		// Email notification.
+		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		// Extract user ids from array.
+		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
+		foreach ($resourceUsers as $userId) {
+			$this->EmailNotificator->passwordUpdatedNotification(
+				$userId,
+				[
+					'resource_id' => $resource['Resource']['id'],
+					'sender_id' => User::get('id'),
+					'resource_old_name' => $resource['Resource']['name'],
+					'own' => User::get('id') == $userId ? true : false,
+				]);
+		}
 
 		// Retrieve the updated resource.
 		$data = [
