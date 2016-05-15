@@ -62,15 +62,15 @@ class AuthenticationToken extends AppModel {
 /**
  * Check if a token exist and is valid for a given user.
  *
- * @param string $token
- * @param uuid $userId
+ * @param string $token the token to check
+ * @param string $userId uuid of the user
  * @return array or null if doesn't exist.
  */
 	static public function isValid($token, $userId) {
 		if (!Common::isUuid($token) || !Common::isUuid($userId)) {
 			return null;
 		}
-		// @todo PASSBOLT-1234 check token expiracy
+		// PASSBOLT-1234 check token expiracy
 		$_this = Common::getModel('AuthenticationToken');
 		$token = $_this->find('first', [
 			'conditions' => [
@@ -89,8 +89,8 @@ class AuthenticationToken extends AppModel {
 /**
  * Create a unique token for a given user.
  *
- * @param uuid $userId
- * @return array result of the save function for token
+ * @param string $userId uuid of the user
+ * @return array result of the save function for token or false if there was an issue
  */
 	static public function generate($userId) {
 		$_this = Common::getModel('AuthenticationToken');
@@ -107,8 +107,6 @@ class AuthenticationToken extends AppModel {
 
 		// Validate the token data
 		if (!$_this->validates()) {
-			// @todo ValidationException
-			// @todo Only one (or N?) token active per user at a time?
 			return false;
 		}
 		$_this->create();
@@ -118,9 +116,9 @@ class AuthenticationToken extends AppModel {
 /**
  * Set a valid token to inactive
  *
- * @param $token
- * @param $userId
- * @return bool
+ * @param string $token a uuid
+ * @param string $userId a uuid
+ * @return bool true if success
  * @throws ValidationException if token id or user id are not valid
  * @throws Exception if save failed
  */

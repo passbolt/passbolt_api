@@ -1,15 +1,15 @@
-	<!--
+    <!--
 
-			 ____                  __          ____
-			/ __ \____  _____ ____/ /_  ____  / / /_
-		   / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
-		  / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
-		 /_/    \__,_/____/____/_.___/\____/_/\__/
+           ____                  __          ____
+          / __ \____  _____ ____/ /_  ____  / / /_
+         / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
+        / ____/ /_/ (__  )__  ) /_/ / /_/ / / /_
+       /_/    \__,_/____/____/_.___/\____/_/\__/
 
-		 <?php echo Configure::read('punchline'); ?>
+       <?php echo Configure::read('punchline'); ?>
 
-		 <?php echo Configure::read('copyright'); ?>
+       <?php echo Configure::read('copyright'); ?>
 
-		 Source code: https://github.com/passbolt
+       Source code: https://github.com/passbolt
 
-	-->
+    -->

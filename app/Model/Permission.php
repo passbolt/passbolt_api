@@ -41,7 +41,7 @@ class Permission extends AppModel {
 /**
  * Get the validation rules upon context
  *
- * @param string context
+ * @param string $case 'default' or 'type' (optional)
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
@@ -96,11 +96,13 @@ class Permission extends AppModel {
 		return $rules;
 	}
 
-
 /**
  * Details of after save method
  *
- * @link http://api20.cakephp.org/class/model#method-ModelafterSave
+ * @param array $options Options passed from Model::save().
+ * @return bool True if the operation should continue, false if it should abort
+ * @link http://book.cakephp.org/2.0/en/models/callback-methods.html#beforesave
+ * @see Model::save()
  */
 	public function beforeSave($options = []) {
 		// If the debug mode is enabled.
@@ -116,8 +118,8 @@ class Permission extends AppModel {
 /**
  * Validation Rule : Check if the given ACO key is an allowed ACO model
  *
- * @param array check the data to test
- * @return boolean
+ * @param array $check the data to test
+ * @return bool
  */
 	public function validateAco($check) {
 		return $this->isValidAco($check['aco']);
@@ -126,8 +128,8 @@ class Permission extends AppModel {
 /**
  * Validation Rule : Check if the given ARO key is an allowed ARO model
  *
- * @param array check the data to test
- * @return boolean
+ * @param array $check the data to test
+ * @return bool
  */
 	public function validateAro($check) {
 		return $this->isValidAro($check['aro']);
@@ -136,8 +138,8 @@ class Permission extends AppModel {
 /**
  * Validation Rule : check if the given aco foreign key is relative to an existing instance
  *
- * @param array check the data to test
- * @return boolean
+ * @param array $check the data to test
+ * @return bool
  */
 	public function validateAcoForeignKey($check) {
 		return $this->validateExists($check, 'aco_foreign_key', $this->data[$this->alias]['aco']);
@@ -146,8 +148,8 @@ class Permission extends AppModel {
 /**
  * Validation Rule : Check if the given aro foreign key is relative to an existing instance
  *
- * @param array check the data to test
- * @return boolean
+ * @param array $check the data to test
+ * @return bool
  */
 	public function validateAroForeignKey($check) {
 		return $this->validateExists($check, 'aro_foreign_key', $this->data[$this->alias]['aro']);
@@ -156,8 +158,8 @@ class Permission extends AppModel {
 /**
  * Validation Rule : Check if the given permission type is valid
  *
- * @param array check the data to test
- * @return boolean
+ * @param array $check with 'type' key set
+ * @return bool
  */
 	public function validatePermissionType($check) {
 		return $this->PermissionType->isValidSerial($check['type']);
@@ -166,10 +168,9 @@ class Permission extends AppModel {
 /**
  * Validation Rule : Check if a permission with same parameters already exists
  *
- * @param array check the data to test
- * @return boolean
+ * @return bool
  */
-	public function validateUnique($check) {
+	public function validateUnique() {
 		return $this->isUniqueByFields(
 			$this->data[$this->alias]['aco'],
 			$this->data[$this->alias]['aco_foreign_key'],
@@ -180,8 +181,8 @@ class Permission extends AppModel {
 /**
  * Check if the given ACO key is an allowed ACO model
  *
- * @param string aco The aco key to test
- * @return boolean
+ * @param string $aco The aco key to test
+ * @return bool
  */
 	public function isValidAco($aco) {
 		return in_array($aco, Configure::read('Permission.acoModels'));
@@ -190,8 +191,8 @@ class Permission extends AppModel {
 /**
  * Check if the given ARO key is an allowed ACO model
  *
- * @param string aro The aro key to test
- * @return boolean
+ * @param string $aro The aro key to test
+ * @return bool
  */
 	public function isValidAro($aro) {
 		return in_array($aro, Configure::read('Permission.aroModels'));
@@ -200,71 +201,20 @@ class Permission extends AppModel {
 /**
  * Check if a permission with same parameters already exists
  *
- * @param string aco
- * @param string aco_foreign_key
- * @param string aro
- * @param string aro_foreign_key
- * @return boolean
+ * @param string $aco name
+ * @param string $acoForeignKey uuid
+ * @param string $aro name
+ * @param string $aroForeignKey uuid
+ * @return bool
  */
-	public function isUniqueByFields($aco, $aco_foreign_key, $aro, $aro_foreign_key) {
-		$combi = [
+	public function isUniqueByFields($aco, $acoForeignKey, $aro, $aroForeignKey) {
+		$combination = [
 			'Permission.aco' => $aco,
-			'Permission.aco_foreign_key' => $aco_foreign_key,
+			'Permission.aco_foreign_key' => $acoForeignKey,
 			'Permission.aro' => $aro,
-			'Permission.aro_foreign_key' => $aro_foreign_key
+			'Permission.aro_foreign_key' => $aroForeignKey
 		];
 
-		return $this->isUnique($combi, false);
-	}
-
-/**
- * Return the list of field to fetch for given context
- *
- * @param string $case context ex: login, activation
- * @return $condition array
- */
-	public static function getFindFields($case = 'view', $role = Role::USER, $data = null) {
-		$returnValue = ['fields' => []];
-
-		return $returnValue;
-		switch ($case) {
-			case 'edit':
-				$returnValue = [
-					'fields' => ['type']
-				];
-				break;
-			case 'view':
-				$returnValue = [
-					'fields' => ['id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'],
-					'contain' => [
-						'PermissionType' => [
-							'fields' => ['serial', 'name']
-						],
-						// // Return the elements the permission has been defined for (user, category)
-						// 'Category' => array(
-						// 'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght')
-						// ),
-						// 'Resource' => array(
-						// 'fields' => array('id', 'name', 'username', 'expiry_date', 'uri', 'description', 'modified')
-						// ),
-						// 'Permission' => array(
-						// 'fields' => array('id', 'type'),
-						// 'PermissionType' => array(
-						// 'fields' => array('id', 'serial', 'name')
-						// ),
-						// // Return the elements the permission has been defined for (user, category)
-						// 'User' => array(
-						// 'fields' => array('id', 'username', 'role_id')
-						// ),
-						// 'Category' => array(
-						// 'fields' => array('id', 'name', 'parent_id', 'category_type_id', 'lft', 'rght')
-						// ),
-						// )
-					]
-				];
-				break;
-		}
-
-		return $returnValue;
+		return $this->isUnique($combination, false);
 	}
 }

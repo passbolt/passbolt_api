@@ -8,11 +8,6 @@
 class UsersController extends AppController {
 
 /**
- * @var array helpers used by the view when rendering from this controller
- */
-	public $helpers = ['PassboltAuth'];
-
-/**
  * @var array components used by this controller
  */
 	public $components = [
@@ -435,7 +430,6 @@ class UsersController extends AppController {
 		catch (Exception $e) {
 			return $this->Message->error(__('The avatar couldn\'t be uploaded'), ['code' => 404]);
 		}
-
 
 		// Retrieve and return the updated user.
 		$data = ['User.id' => $id];

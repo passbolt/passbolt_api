@@ -18,22 +18,22 @@ class FilterComponent extends Component {
 		$returnValue = [];
 
 		// extract the keywords to filter on
-		if (isset($params['fltr_keywords'])) {
-			$returnValue['keywords'] = $params['fltr_keywords'];
+		if (isset($params['filter_keywords'])) {
+			$returnValue['keywords'] = $params['filter_keywords'];
 		}
 		// extract the script to apply to filter
-		if (isset($params['fltr_case'])) {
-			$returnValue['case'] = $params['fltr_case'];
+		if (isset($params['filter_case'])) {
+			$returnValue['case'] = $params['filter_case'];
 		}
 		// extract the order to apply to the result
-		if (isset($params['fltr_order'])) {
-			$returnValue['order'] = $params['fltr_order'];
+		if (isset($params['filter_order'])) {
+			$returnValue['order'] = $params['filter_order'];
 		}
 		if (isset($params['modified_after'])) {
 			$returnValue['modified_after'] = $params['modified_after'];
 		}
 		// extract the foreign model to filter on
-		$exp = "/^fltr_model_(.*)$/";
+		$exp = "/^filter_model_(.*)$/";
 		foreach ($params as $param => $value) {
 			$matches = [];
 			preg_match($exp, $param, $matches);

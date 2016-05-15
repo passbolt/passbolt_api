@@ -8,37 +8,37 @@
  */
 class HealthCheckController extends AppController {
 
-	/**
-	 * This controller does not use a model
-	 *
-	 * @var array
-	 */
+/**
+ * This controller does not use a model
+ *
+ * @var array
+ */
 	public $uses = [];
 
-	/**
-	 * Results of healthchecks
-	 * @var array
-	 */
+/**
+ * Results of healthchecks
+ * @var array
+ */
 	protected $_checks = [];
 
-	/**
-	 * Called before the controller action. Used to manage access right
-	 *
-	 * @return void
-	 * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
-	 */
+/**
+ * Called before the controller action. Used to manage access right
+ *
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
+ */
 	public function beforeFilter() {
 		$this->Auth->allow(['index']);
 		parent::beforeFilter();
 	}
 
-	/**
-	 * Index
-	 * Display information about the passbolt instance
-	 * It is only available in debug mode or for logged in administrators
-	 *
-	 * @return void
-	 */
+/**
+ * Index
+ * Display information about the passbolt instance
+ * It is only available in debug mode or for logged in administrators
+ *
+ * @return void
+ */
 	public function index() {
 		$this->layout = 'login';
 
@@ -52,12 +52,12 @@ class HealthCheckController extends AppController {
 		$this->set('checks', $this->_checks);
 	}
 
-	/**
-	 * Check that there is at least one admin in the DB
-	 *
-	 * @access private
-	 * @return bool
-	 */
+/**
+ * Check that there is at least one admin in the DB
+ *
+ * @access private
+ * @return bool
+ */
 	private function __adminCountCheck() {
 		$this->_checks['adminCount'] = false;
 		if ($this->_checks['dbConnect']) {
@@ -75,12 +75,12 @@ class HealthCheckController extends AppController {
 		}
 	}
 
-	/**
-	 * Database healthchecks
-	 *
-	 * @return void
-	 * @access private
-	 */
+/**
+ * Database healthchecks
+ *
+ * @return void
+ * @access private
+ */
 	private function __databaseChecks() {
 		$this->_checks['dbFile'] = (file_exists(APP . 'Config' . DS . 'database.php'));
 		$this->_checks['dbConnect'] = false;
@@ -89,17 +89,17 @@ class HealthCheckController extends AppController {
 			try {
 				ConnectionManager::getDataSource('default');
 				$this->_checks['dbConnect'] = true;
-			} catch (Exception $connectionError) {}
+			} catch (Exception $connectionError) {
+			}
 		}
-
 	}
 
-	/**
-	 * Cakephp Core checks
-	 *
-	 * @return void
-	 * @access private
-	 */
+/**
+ * Cakephp Core checks
+ *
+ * @return void
+ * @access private
+ */
 	private function __coreChecks() {
 		$settings = Cache::settings();
 		$this->_checks['settings'] = (!empty($settings));
@@ -111,13 +111,13 @@ class HealthCheckController extends AppController {
 		$this->_checks['validation'] = (Validation::alphaNumeric('cakephp'));
 	}
 
-	/**
-	 * Access checks
-	 *
-	 * @throw ForbiddenException
-	 * @return void
-	 * @access private
-	 */
+/**
+ * Access checks
+ *
+ * @throws ForbiddenException if application is not in debug mode or user is not admin
+ * @return void
+ * @access private
+ */
 	private function __accessChecks() {
 		if (Configure::read('debug') == 0) {
 			if ($this->_checks['dbConnect'] && User::get('Role.name') != Role::ADMIN) {
@@ -128,12 +128,12 @@ class HealthCheckController extends AppController {
 		}
 	}
 
-	/**
-	 * Application checks
-	 *
-	 * @return void
-	 * @access private
-	 */
+/**
+ * Application checks
+ *
+ * @return void
+ * @access private
+ */
 	private function __appChecks() {
 		$this->_checks['ssl'] = ($this->request->is('ssl') && configure::read('app.force_ssl'));
 		$this->_checks['gpg'] = (class_exists('gnupg'));
@@ -144,12 +144,12 @@ class HealthCheckController extends AppController {
 		$this->_checks['jsProd'] = (Configure::read('App.js.build') == 'production');
 	}
 
-	/**
-	 * Development checks
-	 *
-	 * @return void
-	 * @access private
-	 */
+/**
+ * Development checks
+ *
+ * @return void
+ * @access private
+ */
 	private function __devChecks() {
 		$this->_checks['debugKit'] = CakePlugin::loaded('DebugKit');
 		$this->_checks['phpunit'] = (class_exists('PHPUnit_Runner_Version'));

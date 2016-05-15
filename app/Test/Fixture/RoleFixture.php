@@ -41,7 +41,7 @@ class RoleFixture extends CakeTestFixture {
 		array(
 			'id' => '49aad81e-4f70-3380-a92e-12292597409f',
 			'name' => 'guest',
-			'description' => 'Non logged-in user',
+			'description' => 'Non logged in user',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
@@ -59,7 +59,7 @@ class RoleFixture extends CakeTestFixture {
 		array(
 			'id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
 			'name' => 'user',
-			'description' => 'Logged in default user',
+			'description' => 'Logged in user',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',

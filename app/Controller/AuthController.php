@@ -63,8 +63,6 @@ class AuthController extends AppController {
 				$this->set('data', $key);
 				if (!$this->request->is('json')) {
 					$this->layout = 'empty';
-				} else {
-					$this->response->type('json');
 				}
 				$this->Message->success();
 			} else {

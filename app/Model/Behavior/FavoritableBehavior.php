@@ -14,17 +14,17 @@ class FavoritableBehavior extends ModelBehavior {
  * @var array
  * @access private
  */
-	var $__settings = [];
+	private $__settings = [];
 
 /**
- * Initiate behavior for the model using settings.
+ * Setup this behavior with the specified configuration settings.
  *
- * @param object $Model Model using the behaviour
- * @param array $settings Settings to override for model.
- * @access public
+ * @param Model $model Model using this behavior
+ * @param array $config Configuration settings for $model
+ * @return void
  */
-	function setup(Model $Model, $settings = []) {
-		$Model->bindModel([
+	public function setup(Model $model, $config = []) {
+		$model->bindModel([
 			'hasOne' => [
 				'Favorite' => [
 					'dependent' => true,

@@ -143,7 +143,7 @@ class InstallShell extends AppShell {
 		if (!isset($config)) {
 			throw new CakeException('Unable to load the default app config file');
 		}
-		if (Configure::read($key) != Hash::get($config, $key)) {
+		if (Configure::read($key) != Set::get($config, $key)) {
 			return true;
 		}
 		return false;

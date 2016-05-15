@@ -69,16 +69,18 @@ class UserResourcePermission extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $fields
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
-		$returnValue = ['fields' => []];
+	public static function getFindFields($case = 'view', $role = null) {
+		$fields = ['fields' => []];
 		switch ($case) {
 			case 'viewByResource':
-				$returnValue = [
+				$fields = [
 					'fields' => ['user_id', 'resource_id', 'permission_id', 'permission_type'],
 					'contain' => [
 						'Permission' => [
@@ -120,6 +122,6 @@ class UserResourcePermission extends AppModel {
 				];
 				break;
 		}
-		return $returnValue;
+		return $fields;
 	}
 }

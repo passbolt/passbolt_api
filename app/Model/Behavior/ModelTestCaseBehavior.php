@@ -14,12 +14,12 @@ class ModelTestCaseBehavior extends ModelBehavior {
 /**
  * Set test data
  *
- * @param $model
- * @param array $options
+ * @param Model &$model reference
+ * @param array $options optional
  * @return void
  * @access public
  */
-	public function setTestData(&$model, $options = []) {
+	public function setTestData(Model &$model, $options = []) {
 		// Set Test Data for model Resource
 		if (is_a($model, 'Resource')) {
 			$model->set([

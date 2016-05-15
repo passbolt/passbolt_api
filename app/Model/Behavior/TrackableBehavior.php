@@ -13,8 +13,10 @@ class TrackableBehavior extends ModelBehavior {
 /**
  * Before validate callback
  *
- * @return bool success
- * @access public
+ * @param Model $model Model using this behavior
+ * @param array $options Options passed from Model::save().
+ * @return mixed False or null will abort the operation. Any other result will continue.
+ * @see Model::save()
  */
 	public function beforeValidate(Model $model, $options = []) {
 		if (empty($model->data[$model->alias]['id'])) {
@@ -26,15 +28,15 @@ class TrackableBehavior extends ModelBehavior {
 	}
 
 /**
- * Check the user is owner of the given reccords
+ * Check the user is owner of the given record
  *
- * @param uuid id the target reccord to check the user is owner
+ * @param Model $model a reference to the model
+ * @param string $id uuid of the user
  * @return bool
  * @access public
  */
 	public function isOwner(Model $model, $id) {
 		$result = $model->findById($id);
-
 		return $result[$model->alias]['created_by'] == User::get('id');
 	}
 }

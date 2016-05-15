@@ -20,8 +20,8 @@ class Dictionary extends AppModel {
 /**
  * Get Dictionary
  *
- * @param $l locale such as en_EN, fr_FR
- * @param $d dictionnary file name
+ * @param string $l locale such as en_EN, fr_FR
+ * @param string $d dictionnary file name
  * @return mixed array or false
  */
 	public static function get($l = null, $d = null) {

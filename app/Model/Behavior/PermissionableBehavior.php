@@ -12,12 +12,14 @@ App::uses('PermissionType', 'Model');
 class PermissionableBehavior extends ModelBehavior {
 
 /**
- * Details of before find method
+ * beforeFind can be used to cancel find operations, or modify the query that will be executed.
+ * By returning null/false you can abort a find. By returning an array you can modify/replace the query
+ * that is going to be run.
  *
- * @link http://api20.cakephp.org/class/model#method-ModelbeforeFind
- *
- * The permissionnable before find method is used to augment the query to find reccords
- * functions of the User and the User[AroModelName]Permission model
+ * @param Model $model Model using this behavior
+ * @param array $queryData Data used to execute this query, i.e. conditions, order, etc.
+ * @return bool|array False or null will abort the operation. You can return an array to replace the
+ *   $query that will be eventually run.
  */
 	public function beforeFind(Model $model, $queryData = []) {
 		// If the current user is a normal user (all roles except root),
@@ -50,9 +52,6 @@ class PermissionableBehavior extends ModelBehavior {
 			$model->bindModel(
 				[
 					'hasOne' => [
-						// @todo automatically bind the [AroModelName][targetAcoModelName]Permission model to the model
-						// Je ne comprends plus ce todo !
-						// The target permision
 						$userPermissionModelName => [
 							'foreignKey' => $foreignModelPrimaryKey
 						],
@@ -98,9 +97,12 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
- * Details of after find method
+ * After find callback. Can be used to modify any results returned by find.
  *
- * @link http://api20.cakephp.org/class/model#method-ModelafterFind
+ * @param Model $model Model using this behavior
+ * @param mixed $results The results of the find operation
+ * @param bool $primary Whether this model is being queried directly (vs. being queried as an association)
+ * @return mixed An array value will replace the value of $results - any other value will be ignored.
  */
 	public function afterFind(Model $model, $results, $primary = false) {
 		if (User::get('Role.name') == Role::USER || User::get('Role.name') == Role::GUEST || User::get('Role.name') == Role::ADMIN) {
@@ -118,12 +120,16 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
- * Details of after save method
- *
- * @link http://api20.cakephp.org/class/model#method-ModelafterSave
- *
+ * afterSave is called after a model is saved.
  * The permissionnable after save method is used to automatically give to the user
  * the ADMIN right to the records he has just inserted
+ *
+ * @param Model $model Model using this behavior
+ * @param bool $created True if this save created a new record
+ * @param array $options Options passed from Model::save().
+ * @throws ValidationException if validation rules failed for permission model
+ * @throws Exception if no created_by field is availabled in the related model
+ * @return bool
  */
 	public function afterSave(Model $model, $created, $options = []) {
 		if ($created) {
@@ -158,12 +164,7 @@ class PermissionableBehavior extends ModelBehavior {
 			$Permission->create();
 			$Permission->set($data);
 			if (!$Permission->validates()) {
-				// @todo treat this error.
-				var_dump(User::get('User.id'));
-				var_dump($Permission->validationErrors);
-				$this->Message->error($Permission->validationErrors);
-
-				return;
+				throw new ValidationException(__('Could not save permissions, validation failed'), $Permission->validationErrors);
 			}
 
 			$Permission->save($data);
@@ -173,13 +174,13 @@ class PermissionableBehavior extends ModelBehavior {
 /**
  * Get the permission to an instance for a given user.
  *
- * @param $model The type of record.
- * @param $id Id of the record.
- * @param null $aroId The target user/group to get the permission for, by default the current user.
+ * @param Model &$model The type of record.
+ * @param string $id uuid of the record.
+ * @param string|null $aroId The target user/group to get the permission for, by default the current user.
  * @param string $aroType The target aro model to get the permission for, by default the User.
  * @return Permission
  */
-	public function getPermission(&$model, $id, $aroId = null, $aroType = 'User') {
+	public function getPermission(Model &$model, $id, $aroId = null, $aroType = 'User') {
 		$aroId = !is_null($aroId) ? $aroId : User::get('id');
 		$targetPermissionModelName = $aroType . $model->alias . 'Permission';
 		$TargetPermissionModel = Common::getModel($targetPermissionModelName);
@@ -205,20 +206,14 @@ class PermissionableBehavior extends ModelBehavior {
 /**
  * Check a user is authorized to access a reccord
  *
- * @param $model The type of record.
- * @param $id Id of the record.
+ * @param Model &$model reference to the type of record.
+ * @param string $id uuid of the record.
  * @param string $permissionType The permission type to verify.
  * @param null $aroId The target user/group to check the permission for, by default the current user.
  * @param string $aroType The target aro model to check the permission for, by default the User.
  * @return bool
  */
-	public function isAuthorized(
-		&$model,
-		$id,
-		$permissionType = PermissionType::READ,
-		$aroId = null,
-		$aroType = 'User'
-	) {
+	public function isAuthorized(Model &$model, $id, $permissionType = PermissionType::READ, $aroId = null, $aroType = 'User') {
 		$aroId = !is_null($aroId) ? $aroId : User::get('id');
 		$permission = $this->getPermission($model, $id, $aroId, $aroType);
 		if ($permission && $permission['Permission']['type'] >= $permissionType) {
@@ -231,12 +226,11 @@ class PermissionableBehavior extends ModelBehavior {
 /**
  * Get a list of users who have permissions to access the given instance.
  *
- * @param      $model
- * @param null $acoInstanceId
- *
+ * @param Model &$model reference to the type of record.
+ * @param string|null $acoInstanceId uuid
  * @return array|null
  */
-	public function getAuthorizedUsers(&$model, $acoInstanceId = null) {
+	public function getAuthorizedUsers(Model &$model, $acoInstanceId = null) {
 		// Get aco key name.
 		$acoKeyName = strtolower($model->alias) . '_id';
 

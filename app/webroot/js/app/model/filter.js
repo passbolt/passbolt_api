@@ -46,7 +46,7 @@ var Filter = passbolt.model.Filter = mad.Model.extend('passbolt.model.Filter', /
 
 	init: function(attrs) {
 		if(typeof attrs == 'undefined' || typeof attrs['requestPrefix'] == 'undefined') {
-			this.requestPrefix = 'fltr_';
+			this.requestPrefix = 'filter_';
 		}
 		if(typeof attrs == 'undefined' || typeof attrs['foreignModels'] == 'undefined') {
 			this.foreignModels = new can.List([]);

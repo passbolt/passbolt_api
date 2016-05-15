@@ -68,7 +68,7 @@ class AppConfigTask extends AppShell {
 	protected function _write($name, $value) {
 		$appConfigFile = APP . 'Config' . DS . 'app.php';
 		require $appConfigFile;
-		$config = Hash::insert($config, $name, $value);
+		$config = Set::insert($config, $name, $value);
 
 		$textConfig = '<?php
 /**

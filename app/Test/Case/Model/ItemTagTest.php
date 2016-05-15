@@ -54,7 +54,7 @@ class ItemTagTest extends CakeTestCase {
 		$this->assertEquals($validation, false, 'It should not be possible to associate a resource and a tag twice');
 
 		$this->ItemTag->set($tr);
-		$validation = $this->ItemTag->uniqueCombi(array('foreign_id' => Common::uuid('resource.id.utest1-pwd1')));
+		$validation = $this->ItemTag->uniqueRelationship(array('foreign_id' => Common::uuid('resource.id.utest1-pwd1')));
 		$this->assertEquals($validation, false, 'It should not be possible to associate a resource and a tag twice');
 	}
 
@@ -137,7 +137,7 @@ class ItemTagTest extends CakeTestCase {
 			Common::uuid('resource.id.facebook-account') => true,
 		);
 		// we test unicity separately
-		unset($this->ItemTag->validate['foreign_id']['uniqueCombi']);
+		unset($this->ItemTag->validate['foreign_id']['uniqueRelationship']);
 		foreach ($testcases as $testcase => $result) {
 			$itemTag = array('ItemTag' => array('foreign_model' => 'Resource', 'foreign_id' => $testcase));
 			$this->ItemTag->set($itemTag);
