@@ -69,6 +69,9 @@ class RegisterUserTaskTest extends CakeTestCase {
 			['in', 'hr', 'error', 'err', '_stop'],
 			[$out, $out, $in]
 		);
+
+		$this->InstallShell->params['no-admin'] = true;
+		$this->InstallShell->params['quiet'] = true;
 	}
 
 /**
