@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-1439: Email is sent as anonymous when a user is created from the console.
+- PASSBOLT-1509: As LU, when a password is shared with me in read only, I should not see the delete menu available in more.
 
 ## [1.0.11] - 2016-05-16
 ### Added
