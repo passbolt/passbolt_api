@@ -25,7 +25,7 @@ class CoreConfigTask extends AppShell {
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 		$parser
-			->description(__('Manipulate the passbole core configuration'))
+			->description(__('Manipulate the passbolt core configuration'))
 			->addArgument('action', [
 				'index' => 0,
 				'required' => true,
@@ -48,8 +48,10 @@ class CoreConfigTask extends AppShell {
 
 /**
  * Config actions dispatcher
+ *
+ * @return void
  */
-	function execute() {
+	public function execute() {
 		$action = array_shift($this->args);
 		switch ($action) {
 			case 'gen-cipher-seed':
@@ -85,9 +87,9 @@ class CoreConfigTask extends AppShell {
 /**
  * Write configuration variable
  *
- * @param $name
- * @param $value
- * @return void
+ * @param string $name item name
+ * @param string $value item value
+ * @return bool
  */
 	protected function _write($name, $value) {
 		$File = new File(APP . 'Config' . DS . 'core.php');

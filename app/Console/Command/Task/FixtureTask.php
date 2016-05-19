@@ -316,7 +316,7 @@ class FixtureTask extends BakeTask {
  * Generate String representation of Records
  *
  * @param array $tableInfo Table schema array
- * @param integer $recordCount
+ * @param int $recordCount optional number of records default 1
  * @return array Array of records to use in the fixture.
  */
 	protected function _generateRecords($tableInfo, $recordCount = 1) {
@@ -329,7 +329,7 @@ class FixtureTask extends BakeTask {
 				}
 				$insert = '';
 				switch ($fieldInfo['type']) {
-					case 'integer':
+					case 'int':
 					case 'float':
 						$insert = $i + 1;
 						break;

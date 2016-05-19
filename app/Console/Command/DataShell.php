@@ -13,10 +13,11 @@ App::uses('CakeSchema', 'Model');
 
 class DataShell extends AppShell {
 
-	/**
-	 * Define the parameters accepted by the task
-	 * @return ConsoleOptionParser
-	 */
+/**
+ * Define the parameters accepted by the task
+ *
+ * @return ConsoleOptionParser
+ */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 		$parser
@@ -29,21 +30,23 @@ class DataShell extends AppShell {
 		return $parser;
 	}
 
-	/**
-	 * Display a welcome message
-	 */
+/**
+ * Display a welcome message
+ *
+ * @return void
+ */
 	protected function _welcome() {
 		parent::_welcome();
 		$this->out('Installing data set:' . $this->params['data']);
 		$this->hr();
 	}
 
-	/**
-	 * Execution method always used for tasks
-	 * Handles dispatching to interactive, named, or all processes.
-	 *
-	 * @return void
-	 */
+/**
+ * Execution method always used for tasks
+ * Handles dispatching to interactive, named, or all processes.
+ *
+ * @return void
+ */
 	public function execute() {
 		parent::execute();
 		$this->interactive = false;
@@ -52,11 +55,12 @@ class DataShell extends AppShell {
 		}
 	}
 
-	/**
-	 * Get the models/tasks for a given data install context
-	 * @param string $options
-	 * @return array
-	 */
+/**
+ * Get the models/tasks for a given data install context
+ *
+ * @param string $options default, unittests or seleniumtests
+ * @return array
+ */
 	private function __getModels($options = 'default') {
 		switch ($options) {
 			case 'default':
@@ -110,13 +114,14 @@ class DataShell extends AppShell {
 		}
 	}
 
-	/**
-	 * Import data test for the defined models
-	 * @param $options string
-	 * @return void
-	 */
+/**
+ * Import data test for the defined models
+ *
+ * @param string $options default, unittests or seleniumtests
+ * @return void
+ */
 	public function import($options = 'default') {
-		if(isset($this->params['data'])) {
+		if (isset($this->params['data'])) {
 			$options = $this->params['data'];
 		}
 		$dataModels = $this->__getModels($options);
@@ -135,10 +140,11 @@ class DataShell extends AppShell {
 		}
 	}
 
-	/**
-	 * Export passbolt data into fixtures.
-	 * @return void
-	 */
+/**
+ * Export passbolt data into fixtures.
+ *
+ * @return void
+ */
 	public function export() {
 		// Export passbolt schema data
 		$noFixtureTables = array(
@@ -165,10 +171,13 @@ class DataShell extends AppShell {
 		$this->exportSchema($options, $noFixtureTables);
 	}
 
-	/**
-	 * Export data from a schema into fixtures
-	 * @return void
-	 */
+/**
+ * Export data from a schema into fixtures
+ *
+ * @param array $options for cakeschema
+ * @param array $noFixtureTables tables without fixtures
+ * @return void
+ */
 	public function exportSchema($options, $noFixtureTables) {
 		$cakeSchema = new CakeSchema($options);
 		$schema = $cakeSchema->load($options);

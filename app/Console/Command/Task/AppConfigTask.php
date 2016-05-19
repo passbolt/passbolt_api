@@ -1,5 +1,4 @@
 <?php
-
 /**
  * App Config task
  *
@@ -48,8 +47,10 @@ class AppConfigTask extends AppShell {
 
 /**
  * Config actions dispatcher
+ *
+ * @return void
  */
-	function execute() {
+	public function execute() {
 		$action = array_shift($this->args);
 		switch ($action) {
 			case 'write':
@@ -61,8 +62,8 @@ class AppConfigTask extends AppShell {
 /**
  * Write configuration variable
  *
- * @param $name
- * @param $value
+ * @param string $name item name
+ * @param string $value item value
  * @return void
  */
 	protected function _write($name, $value) {

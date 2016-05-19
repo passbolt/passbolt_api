@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Insert Model Task
  *
@@ -8,6 +7,11 @@
  */
 class ModelTask extends AppShell {
 
+/**
+ * Execute the task
+ *
+ * @return void
+ */
 	public function execute() {
 		$User = ClassRegistry::init('User');
 		$user = $User->findByUsername('root@passbolt.com');

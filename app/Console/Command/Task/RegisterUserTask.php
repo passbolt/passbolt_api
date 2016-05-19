@@ -54,8 +54,10 @@ class RegisterUserTask extends AppShell {
 
 /**
  * Register a new user.
+ *
+ * @return void
  */
-	function execute() {
+	public function execute() {
 		static $count = 0;
 		$count++;
 
@@ -108,14 +110,14 @@ class RegisterUserTask extends AppShell {
 		];
 		$roleUser = $this->Role->find('first', $findRoleParams);
 		if (!empty($roleUser)) {
-			$role_id = $roleUser['Role']['id'];
+			$roleId = $roleUser['Role']['id'];
 		}
 
 		// Try to register the user.
 		$data = [
 			'User' => [
 				'username' => $username,
-				'role_id' => $role_id,
+				'role_id' => $roleId,
 			],
 			'Profile' => [
 				'first_name' => $firstName,
