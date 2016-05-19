@@ -52,7 +52,7 @@ class SqlShell extends AppShell {
         if ($this->params['file'] != '') {
             $this->file = $this->params['file'];
         } else {
-            $this->file = SCHEMATMP . $this->params['datasource'] . '_' . $this->params['data'] . '.sql';
+            $this->file = APP . 'tmp' . DS . 'schema' . DS . $this->params['datasource'] . '_' . $this->params['data'] . '.sql';
         }
 
         $this->out(' Datasource : '. $this->params['datasource']);

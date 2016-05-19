@@ -18,8 +18,8 @@ Configure::write('Media', array(
 	'basePath' => APP . 'FileStorage' . DS,
 	'imageDefaults' => array(
 		'ProfileAvatar' => array(
-			'medium'     => IMAGES_URL . 'avatar' . DS . 'user_medium.png',
-			'small'  => IMAGES_URL . 'avatar' . DS . 'user.png',
+			'medium' => IMAGES_URL . 'avatar' . DS . 'user_medium.png',
+			'small' => IMAGES_URL . 'avatar' . DS . 'user.png',
 		)
 	),
 	// Configure image versions on a per model base
