@@ -80,7 +80,6 @@ CakeLog::config('error', array(
 /**
  * Testsuite
  */
-require_once dirname(dirname(__DIR__)) . DS . 'Vendor' . DS . 'autoload.php';
 
 // Selenium tests config
 if (Configure::read('debug') > 0 && Configure::read('App.selenium')) {
@@ -96,6 +95,8 @@ if (Configure::read('debug') > 0) {
 	CakePlugin::load('DataSeleniumTests');
 	CakePlugin::load('DataUnitTests');
 }
+
+require_once dirname(dirname(__DIR__)) . DS . 'Vendor' . DS . 'autoload.php';
 
 /**
  * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
