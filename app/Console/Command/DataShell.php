@@ -186,7 +186,12 @@ class DataShell extends AppShell {
 			if (in_array($name, $noFixtureTables)) {
 				continue;
 			}
-			$this->dispatchShell("bake fixture --count 1000 --records --schema {$name}");
+			$command = "bake fixture --count 1000 --records --schema {$name}";
+			if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+				$command .= ' --quiet';
+			}
+
+			$this->dispatchShell($command);
 		}
 
 		$this->out('Data deployed!');
