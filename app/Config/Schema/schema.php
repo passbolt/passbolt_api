@@ -13,14 +13,25 @@ class AppSchema extends CakeSchema {
 
 	public static $createdTables = array();
 
+/**
+ * Before callback
+ *
+ * @param array $event Schema object properties.
+ * @return bool Should process continue.
+ */
 	public function before($event = array()) {
 		$db = ConnectionManager::getDataSource($this->connection);
 		$db->cacheSources = false;
 		return true;
 	}
 
+/**
+ * After callback
+ *
+ * @param array $event Schema object properties.
+ * @return void
+ */
 	public function after($event = array()) {
-
 		if (isset($event['create'])) {
 			self::$createdTables[] = $event['create'];
 			if (!isset($event['params']['quiet']) || $event['params']['quiet'] != 1) {

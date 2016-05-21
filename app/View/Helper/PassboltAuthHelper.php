@@ -10,6 +10,11 @@
  */
 class PassboltAuthHelper extends AppHelper {
 
+/**
+ * Return indication on how long someone need to wait before trying to login again
+ *
+ * @return null|string
+ */
 	public function get() {
 		$html = '';
 		$nextLoginTime = $this->_View->Session->read("Throttle.nextLoginTime");
@@ -18,7 +23,6 @@ class PassboltAuthHelper extends AppHelper {
 		}
 		// Calculate diff
 		$nbSecondsDiff = $nextLoginTime - gmdate('U');
-
 
 		// Creates the html
 		$html .= '<input type="hidden" id="nextLogin" name="nextLogin" value="' . $nbSecondsDiff . '" />';
