@@ -7,6 +7,11 @@
  */
 class PermissionsSchema {
 
+/**
+ * Init
+ *
+ * @return void
+ */
 	public function init() {
 		// Create the permissions functions
 		$this->createFunctions();
@@ -14,6 +19,11 @@ class PermissionsSchema {
 		$this->createViews();
 	}
 
+/**
+ * Get SQL View
+ *
+ * @return array
+ */
 	public static function getViewsSQL() {
 		return array(
 			/*
@@ -252,6 +262,11 @@ class PermissionsSchema {
 		);
 	}
 
+/**
+ * Create SQL view
+ *
+ * @return void
+ */
 	public function createViews() {
 		$permission = ClassRegistry::init('Permission');
 		$views = $this->getViewsSQL();
@@ -260,6 +275,11 @@ class PermissionsSchema {
 		}
 	}
 
+/**
+ * Get SQL functions
+ *
+ * @return array
+ */
 	public static function getFunctionsSQL() {
 		return array(
 			"getGroupCategoryPermission" =>
@@ -325,12 +345,16 @@ class PermissionsSchema {
 		);
 	}
 
+/**
+ * Create Function
+ *
+ * @return void
+ */
 	public function createFunctions() {
 		$permission = ClassRegistry::init('Permission');
 		$functions = $this->getFunctionsSQL();
 		foreach ($functions as $f) {
 			$permission->query($f);
 		}
-		// TODO : manage case where user is owner of the resource. What to do ? What should be the permission then ?
 	}
 }

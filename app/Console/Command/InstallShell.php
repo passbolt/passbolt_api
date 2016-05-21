@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Our Install command
  *
@@ -227,7 +226,7 @@ class InstallShell extends AppShell {
 /**
  * Insert the dummy data in database (dispatch)
  *
- * @param string $options
+ * @param string $options default, seleniumtests or unittests
  * @return void
  */
 	public function data($options = 'default') {
@@ -237,6 +236,9 @@ class InstallShell extends AppShell {
 /**
  * Register the admin user
  *
+ * @param string $username admin email
+ * @param string $firstName admin first name
+ * @param string $lastName admin last name
  * @return void
  */
 	protected function _registerAdmin($username = null, $firstName = null, $lastName = null) {
@@ -247,15 +249,15 @@ class InstallShell extends AppShell {
 			$cmd .= ' -i';
 		}
 		if (!is_null($username)) {
-			$cmd .= ' -u ' .$username;
+			$cmd .= ' -u ' . $username;
 		}
 		if (!is_null($firstName)) {
-			$cmd .= ' -f ' .$firstName;
+			$cmd .= ' -f ' . $firstName;
 		}
 		if (!is_null($lastName)) {
-			$cmd .= ' -l ' .$lastName;
+			$cmd .= ' -l ' . $lastName;
 		}
-		if(isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+		if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
 			$cmd .= ' -q';
 		}
 		$this->dispatchShell($cmd);
@@ -271,7 +273,7 @@ class InstallShell extends AppShell {
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
 		}
-		if(isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+		if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
 			$cmd .= ' -q';
 		}
 		return $this->dispatchShell($cmd);
@@ -287,7 +289,7 @@ class InstallShell extends AppShell {
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
 		}
-		if(isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+		if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
 			$cmd .= ' -q';
 		}
 		return $this->dispatchShell($cmd);

@@ -44,7 +44,7 @@ class ExtractTask extends AppShell {
 /**
  * Merge all domains string into the default.pot file
  *
- * @var boolean
+ * @var bool
  */
 	protected $_merge = false;
 
@@ -93,14 +93,14 @@ class ExtractTask extends AppShell {
 /**
  * Holds whether this call should extract model validation messages
  *
- * @var boolean
+ * @var bool
  */
 	protected $_extractValidation = true;
 
 /**
  * Holds the validation string domain to use for validation messages when extracting
  *
- * @var boolean
+ * @var bool
  */
 	protected $_validationDomain = 'default';
 
@@ -210,18 +210,18 @@ class ExtractTask extends AppShell {
 
 /**
  * Add a translation to the internal translations property
- *
  * Takes care of duplicate translations
  *
- * @param string $domain
- * @param string $msgid
- * @param array $details
+ * @param string $domain translation domain
+ * @param string $msgid message id
+ * @param array $details additional details like plural forms
+ * @return void
  */
 	protected function _addTranslation($domain, $msgid, $details = array()) {
 		if (empty($this->_translations[$domain][$msgid])) {
 			$this->_translations[$domain][$msgid] = array(
 				'msgid_plural' => false
-			 );
+			);
 		}
 
 		if (isset($details['msgid_plural'])) {
@@ -281,7 +281,7 @@ class ExtractTask extends AppShell {
 			->addOption('output', array('help' => __d('cake_console', 'Full path to output directory.')))
 			->addOption('files', array('help' => __d('cake_console', 'Comma separated list of files.')))
 			->addOption('exclude-plugins', array(
-				'boolean' => true,
+				'bool' => true,
 				'default' => true,
 				'help' => __d('cake_console', 'Ignores all files in plugins if this command is run inside from the same app directory.')
 			))
@@ -289,7 +289,7 @@ class ExtractTask extends AppShell {
 				'help' => __d('cake_console', 'Extracts tokens only from the plugin specified and puts the result in the plugin\'s Locale directory.')
 			))
 			->addOption('ignore-model-validation', array(
-				'boolean' => true,
+				'bool' => true,
 				'default' => false,
 				'help' => __d('cake_console', 'Ignores validation messages in the $validate property.' .
 					' If this flag is not set and the command is run from the same app directory,' .
@@ -519,9 +519,9 @@ class ExtractTask extends AppShell {
 /**
  * Prepare a file to be stored
  *
- * @param string $domain
- * @param string $header
- * @param string $sentence
+ * @param string $domain domain
+ * @param string $header header
+ * @param string $sentence sentence
  * @return void
  */
 	protected function _store($domain, $header, $sentence) {
@@ -601,8 +601,8 @@ class ExtractTask extends AppShell {
 /**
  * Get the strings from the position forward
  *
- * @param integer $position Actual position on tokens array
- * @param integer $target Number of strings to extract
+ * @param int &$position Actual position on tokens array
+ * @param int $target Number of strings to extract
  * @return array Strings extracted
  */
 	protected function _getStrings(&$position, $target) {
@@ -649,9 +649,9 @@ class ExtractTask extends AppShell {
  * Indicate an invalid marker on a processed file
  *
  * @param string $file File where invalid marker resides
- * @param integer $line Line number
+ * @param int $line Line number
  * @param string $marker Marker found
- * @param integer $count Count
+ * @param int $count Count
  * @return void
  */
 	protected function _markerError($file, $line, $marker, $count) {
@@ -714,7 +714,7 @@ class ExtractTask extends AppShell {
  * Returns whether this execution is meant to extract string only from directories in folder represented by the
  * APP constant, i.e. this task is extracting strings from same application.
  *
- * @return boolean
+ * @return bool
  */
 	protected function _isExtractingApp() {
 		return $this->_paths === array(APP);
