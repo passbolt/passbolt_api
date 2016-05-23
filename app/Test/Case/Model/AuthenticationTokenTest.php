@@ -13,6 +13,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 
 	public $fixtures = array(
 		'app.user',
+		'app.role',
 		'app.authenticationToken'
 	);
 
