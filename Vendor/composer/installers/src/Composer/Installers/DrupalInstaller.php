@@ -10,5 +10,7 @@ class DrupalInstaller extends BaseInstaller
         'library'   => 'libraries/{$name}/',
         'profile'   => 'profiles/{$name}/',
         'drush'     => 'drush/{$name}/',
+	    'custom-theme' => 'themes/custom/{$name}/',
+	    'custom-module' => 'modules/custom/{$name}',
     );
 }

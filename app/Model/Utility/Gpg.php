@@ -59,7 +59,7 @@ class Gpg {
 /**
  * Gpg object.
  */
-	private $_gpg = null;
+	protected $_gpg = null;
 
 /**
  * Constructor.
@@ -77,10 +77,8 @@ class Gpg {
 /**
  * Set a key for encryption.
  *
- * @param $armoredKey
- *
- * @returns bool
- *
+ * @param string $armoredKey ASCII armored key data
+ * @return bool
  * @throws Exception
  */
 	public function setEncryptKey($armoredKey) {
@@ -99,10 +97,8 @@ class Gpg {
 /**
  * Set a key for decryption.
  *
- * @param $armoredKey
- *
- * @returns bool
- *
+ * @param string $armoredKey ASCII armored key data
+ * @return bool
  * @throws Exception
  */
 	public function setDecryptKey($armoredKey) {
@@ -121,10 +117,8 @@ class Gpg {
 /**
  * Set a key for signing.
  *
- * @param $armoredKey
- *
- * @returns bool
- *
+ * @param string $armoredKey ASCII armored key data
+ * @return bool
  * @throws Exception
  */
 	public function setSignKey($armoredKey) {
@@ -143,8 +137,7 @@ class Gpg {
 /**
  * Get the key marker.
  *
- * @param $armoredKey
- *
+ * @param string $armoredKey ASCII armored key data
  * @return mixed
  * @throws Exception
  */
@@ -163,11 +156,8 @@ class Gpg {
  * To do this, we try to unarmor the key. If the operation is successful, then we consider that
  * the key is a valid one.
  *
- * @param $armoredKey
- *   the armored key
- *
- * @return bool
- *   true if valid, false otherwise
+ * @param string $armoredKey ASCII armored key data
+ * @return bool true if valid, false otherwise
  */
 	public function isValidKey($armoredKey) {
 		// First, we try to get the marker of the key.
@@ -209,12 +199,8 @@ class Gpg {
  * So for basic operations such as getting the key info, or checking if the key is valid, we prefer to use a full php implementation
  * to avoid awful crash of the app.
  *
- * @param $armoredKey
- *   the armored key
- *
- * @return array
- *   as described above
- *
+ * @param string $armoredKey the ASCII armored key block
+ * @return array as described above
  * @throws Exception
  */
 	public function getKeyInfo($armoredKey) {
@@ -243,7 +229,7 @@ class Gpg {
 		}
 
 		// Get self signatures.
-		$self_signatures = $publicKeyPacket->self_signatures($msg);
+		$selfSignatures = $publicKeyPacket->self_signatures($msg);
 
 		// Get userId.
 		$userIds = [];
@@ -257,9 +243,9 @@ class Gpg {
 
 		$type = '';
 		$bits = '';
-		if (sizeof($self_signatures) > 0) {
-			$type = $self_signatures[0]->key_algorithm_name();
-			$bits = OpenPGP::bitlength($self_signatures[0]->data[0]);
+		if (count($selfSignatures) > 0) {
+			$type = $selfSignatures[0]->key_algorithm_name();
+			$bits = OpenPGP::bitlength($selfSignatures[0]->data[0]);
 		}
 
 		// Build key information array.
@@ -276,7 +262,12 @@ class Gpg {
 		return $info;
 	}
 
-
+/**
+ * Get key information from keyring
+ *
+ * @param string $fingerprint key fingerpint
+ * @return mixed
+ */
 	public function getKeyInfoFromKeyring($fingerprint) {
 		// Return info read from the keyring.
 		return $this->_gpg->keyinfo($fingerprint);
@@ -285,12 +276,8 @@ class Gpg {
 /**
  * Import a key into the local keyring.
  *
- * @param $armoredKey
- *   armored key
- *
- * @returns string
- *   fingerprint of the key
- *
+ * @param string $armoredKey the ASCII armored key block
+ * @return string fingerprint of the key
  * @throws Exception
  */
 	public function importKeyIntoKeyring($armoredKey) {
@@ -305,10 +292,9 @@ class Gpg {
 /**
  * Remove a key from the local keyring.
  *
- * @returns string
- *   fingerprint of the key
- *
+ * @param string $fingerprint of the key
  * @throws Exception
+ * @return void
  */
 	public function removeKeyFromKeyring($fingerprint) {
 		$deleting = $this->_gpg->deletekey($fingerprint, true);
@@ -320,21 +306,12 @@ class Gpg {
 /**
  * Encrypt a text.
  *
- * @param $text
- *   plain text to be encrypted.
- *
- * @param $sign
- *   whether the encrypted message should be signed.
- *   do not forget to add a sign key before
- *
- * @return mixed
- *   encrypted text if success, false if couldn't encrypt.
- *
+ * @param string $text plain text to be encrypted.
+ * @param bool $sign whether the encrypted message should be signed. Do not forget to add a sign key before.
+ * @return mixed encrypted text
  * @throws Exception
  */
 	public function encrypt($text, $sign = false) {
-		$encryptedText = false;
-
 		// If no private key is set, throw exception.
 		if (empty($this->encryptKeyInfo)) {
 			throw new Exception('No public key was added');
@@ -349,36 +326,29 @@ class Gpg {
 			if (empty($this->signKeyInfo)) {
 				throw new Exception('No sign key has been added');
 			}
-
 			// Add sign key.
 			$this->_gpg->addsignkey($this->signKeyInfo['fingerprint']);
-
 			// Encrypt message.
 			$encryptedText = $this->_gpg->encryptsign($text);
-		} // Else, if user didn't request signing.
-		else {
+		} else {
+			// Else, if user didn't request signing.
 			// Encrypt message.
 			$encryptedText = $this->_gpg->encrypt($text);
 		}
 
-		// return encrypted message.
 		return $encryptedText;
 	}
 
 /**
  * Decrypt a text.
  *
- * @param $text
- *   plain text to be decrypted.
- *
- * @param $passphrase
- *  passphrase for the key.
+ * @param string $text GPG block text to be decrypted.
+ * @param string $passphrase passphrase for the key.
  *  Warning : keys with passphrase is not currently supported. Leave this argument empty for now.
  *  This is a php gnupg limitation.
- *
- * @return mixed
- *   decrypted text if success, false if couldn't decrypt.
- *
+ * @param bool $verifySignature should signature be verified
+ * @param array &$signatureInfo signature data (optional)
+ * @return mixed decrypted text if success, false if couldn't decrypt.
  * @throws Exception
  */
 	public function decrypt($text, $passphrase = '', $verifySignature = false, &$signatureInfo = []) {

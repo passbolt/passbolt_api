@@ -11,7 +11,9 @@ App::uses('User', 'Model');
 App::uses('UserAgent', 'Model');
 
 class ControllerLog extends AppModel {
+
 	public $name = 'ControllerLog';
+
 	public $hasOne = [
 		'User',
 		'Role',
@@ -19,12 +21,13 @@ class ControllerLog extends AppModel {
 	];
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
- * @param string context
- * @return array cakephp validation rules
+ * @param string $case (optional) The target validation case if any.
+ * @return array validation rules
+ * @access public
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'id' => [
 				'uuid' => [
@@ -107,13 +110,7 @@ class ControllerLog extends AppModel {
 				]
 			],
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-		return $rules;
+		return $default;
 	}
 
 /**
@@ -155,10 +152,10 @@ class ControllerLog extends AppModel {
 /**
  * Write a controller log entry
  *
- * @param string $level Status
- * @param CakeRequest $request
+ * @param string $level see. Status::ERROR, Status::WARNING, etc.
+ * @param CakeRequest $request the requestio nobject
  * @param string $message (optional)
- * @param string scope additional message category (optional)
+ * @param string $scope additional message category (optional)
  * @return bool true if could write, false if config does not allow it
  * @throws ValidationException if any of the controller log parameters are not valid
  * @throws Exception if there is a system error that prevented the save operation

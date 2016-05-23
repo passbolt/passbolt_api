@@ -24,6 +24,60 @@ class ResourcesController extends AppController {
  * Renders a json object of the resources.
  *
  * @return void
+ *
+ * @SWG\Get(
+ *   path="/resources.json",
+ *   summary="Find resources",
+ * @SWG\Parameter(
+ *     name="filter_keywords",
+ *     in="query",
+ *     description="Keywords to filter by",
+ *     required=false,
+ *     type="string"
+ *   ),
+ * @SWG\Parameter(
+ *     name="filter_case",
+ *     in="query",
+ *     description="Case to filter by",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "favorite",
+ * 		 "shared"
+ * 	   }
+ *   ),
+ * @SWG\Parameter(
+ *     name="filter_order",
+ *     in="query",
+ *     description="Field to order by",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "modified",
+ * 		 "expiry_date"
+ * 	   }
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="An array of resources",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           type="array",
+ *           items={
+ * 				"$ref"= "#/definitions/Resource"
+ *           }
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function index() {
 		// The additional information to pass to the model request
@@ -97,6 +151,35 @@ class ResourcesController extends AppController {
  *
  * @param string $id the uuid of the resource
  * @return void
+ *
+ * @SWG\Get(
+ *   path="/resources/{uuid}.json",
+ *   summary="Find a resource by ID",
+ * @SWG\Parameter(
+ * 		name="id",
+ * 		in="path",
+ * 		required=true,
+ * 		type="string",
+ * 		description="the uuid of the resource",
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="The details of the resource",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           ref="#/definitions/Resource"
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function view($id = null) {
 		// check if the resource id is provided

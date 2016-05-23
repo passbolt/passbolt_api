@@ -80,10 +80,12 @@ class Group extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $fields
+ * @access public
  */
 	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
@@ -101,7 +103,6 @@ class Group extends AppModel {
 				$fields = ['fields' => []];
 				break;
 		}
-
 		return $fields;
 	}
 }

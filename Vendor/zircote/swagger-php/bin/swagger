@@ -1,0 +1,176 @@
+#!/usr/bin/env php
+<?php
+error_reporting(E_ALL);
+// Possible options and their default values.
+$options = array(
+    'output' => 'swagger.json',
+    'stdout' => false,
+    'exclude' => null,
+    'bootstrap' => false,
+    'help' => false,
+    'version' => false,
+);
+$aliases = array(
+    'o' => 'output',
+    'e' => 'exclude',
+    'b' => 'bootstrap',
+    'v' => 'version',
+    'h' => 'help',
+);
+$needsArgument = array(
+    'output',
+    'exclude',
+    'bootstrap',
+);
+$paths = array();
+$error = false;
+try {
+    // Parse cli arguments
+    for ($i = 1; $i < $argc; $i++) {
+        $arg = $argv[$i];
+        if (substr($arg, 0, 2) === '--') { // longopt
+            $option = substr($arg, 2);
+        } elseif ($arg[0] === '-') { // shortopt
+            if (array_key_exists(substr($arg, 1), $aliases)) {
+                $option = $aliases[$arg[1]];
+            } else {
+                throw new Exception('Unknown option: "' . $arg . '"');
+            }
+        } else {
+            $paths[] = $arg;
+            continue;
+        }
+        if (array_key_exists($option, $options) === false) {
+            throw new Exception('Unknown option: "' . $arg . '"');
+        }
+        if (in_array($option, $needsArgument)) {
+            if (empty($argv[$i + 1]) || $argv[$i + 1][0] === '-') {
+                throw new Exception('Missing argument for "' . $arg . '"');
+            }
+            $options[$option] = $argv[$i + 1];
+            $i++;
+        } else {
+            $options[$option] = true;
+        }
+    }
+} catch (Exception $e) {
+    $error = $e->getMessage();
+}
+$version = trim(file_get_contents(__DIR__ . '/../VERSION'));
+if ($options['version']) {
+    echo $version, PHP_EOL;
+    exit;
+}
+error_log('');
+error_log('Swagger-PHP ' . $version);
+error_log('------------'.  str_repeat('-', strlen($version)));
+if (!$error && $options['bootstrap']) {
+    if (is_readable($options['bootstrap']) === false) {
+        $error = 'Invalid `--bootstrap` value: "'.$options['bootstrap'].'"';
+    } else {
+        require_once($options['bootstrap']);
+    }
+}
+
+if ($error) {
+    error_log('[ERROR] '.$error);
+    $options['help'] = true; // Show help
+}
+if ($options['help']) {
+    $help = <<<EOF
+
+usage: swagger [/path/to/project] [--output ./swagger.json] ...
+
+  --output (-o)     Path to store the generated documentation.
+  --stdout          Write to the standard output.
+  --exclude (-e)    Exclude path(s).
+                    ex: --exclude vendor,library/Zend
+  --bootstrap (-b)  Bootstrap a php file for defining constants, etc.
+                    ex: --bootstrap config/constants.php
+  --version (-v)    Display Swagger-PHP version.
+  --help (-h)       Display this help message.
+
+
+EOF;
+    error_log($help);
+    exit;
+}
+if (count($paths) === 0) {
+    $paths[] = getcwd();
+    echo "Scanning files in '".$paths[0]."' ...\n";
+}
+if (class_exists('Swagger\Logger') === false) {
+    if (file_exists(__DIR__.'/../vendor/autoload.php')) {  // cloned / dev environment?
+        require_once(__DIR__.'/../vendor/autoload.php');
+    } else {
+        require_once(realpath(__DIR__.'/../../../').'/autoload.php');
+    }
+}
+$errorTypes = [
+    E_ERROR => 'ERROR',
+    E_WARNING => 'WARNING',
+    E_PARSE => 'PARSE',
+    E_NOTICE => 'NOTICE',
+    E_CORE_ERROR => 'CORE_ERROR',
+    E_CORE_WARNING => 'CORE_WARNING',
+    E_COMPILE_ERROR => 'COMPILE_ERROR',
+    E_COMPILE_WARNING => 'COMPILE_WARNING',
+    E_USER_ERROR => 'ERROR',
+    E_USER_WARNING => 'WARNING',
+    E_USER_NOTICE => 'NOTICE',
+    E_STRICT => 'STRICT',
+    E_RECOVERABLE_ERROR => 'RECOVERABLE_ERROR',
+    E_DEPRECATED => 'DEPRECATED',
+    E_USER_DEPRECATED => 'DEPRECATED'
+];
+set_error_handler(function ($errno, $errstr, $file, $line) use ($errorTypes) {
+    if (!(error_reporting() & $errno)) {
+        return; // This error code is not included in error_reporting
+    }
+    $type = @$errorTypes[$errno] ?: 'ERROR';
+    error_log('[' . $type . '] '.$errstr .' in '.$file.' on line '.$line);
+    if ($type === 'ERROR') {
+        exit($errno);
+    }
+});
+set_exception_handler(function ($exception) {
+    error_log('[EXCEPTION] '.$exception->getMessage() .' in '.$exception->getFile().' on line '.$exception->getLine());
+    exit($exception->getCode() ?: 1);
+});
+\Swagger\Logger::getInstance()->log = function ($entry, $type) {
+    $type = $type === E_USER_NOTICE ? 'INFO' : 'WARN';
+    if ($entry instanceof Exception) {
+        $entry = $entry->getMessage();
+    }
+    error_log('[' . $type . '] ' . $entry . PHP_EOL);
+};
+
+
+$exclude = $options['exclude'] ? explode(',', $options['exclude']) : null;
+
+$swagger = Swagger\scan($paths, ['exclude' => $exclude]);
+$methods = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch'];
+$counter = 0;
+
+// Output report
+foreach ($swagger->paths as $path) {
+    foreach ($path as $method => $operation) {
+        if ($operation !== null && in_array($method, $methods)) {
+            error_log(str_pad($method, 7, ' ', STR_PAD_LEFT) . ' ' . $path->path);
+            $counter++;
+        }
+    }
+}
+error_log('----------------------'.  str_repeat('-', strlen($counter)));
+error_log($counter.' operations documented');
+error_log('----------------------'.  str_repeat('-', strlen($counter)));
+if ($options['stdout']) {
+    echo $swagger;
+} else {
+    if (is_dir($options['output'])) {
+        $options['output'] .= '/swagger.json';
+    }
+    $swagger->saveAs($options['output']);
+    error_log('Written to '.realpath($options['output']));
+}
+error_log('');

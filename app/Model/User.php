@@ -12,6 +12,51 @@ App::uses('Role', 'Model');
 App::uses('Security', 'Utility');
 App::uses('CakeEvent', 'Event');
 
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="User"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="UUID of the user, the primary identifier",
+ *     example="e3ed5a94-8ef0-35a5-a01f-8e62539b758b"
+ *   ),
+ * @SWG\Property(
+ *     property="username",
+ *     type="string",
+ *     description="Email address of the user",
+ *     example="ada@passbolt.com"
+ *   ),
+ * @SWG\Property(
+ *     property="role_id",
+ *     type="string",
+ *     description="The UUID of the user role",
+ *     example="d1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="Id of the user who created the user"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="Id of the user who last modified the user"
+ *   )
+ * )
+ */
 class User extends AppModel {
 
 /**
@@ -72,20 +117,18 @@ class User extends AppModel {
 	];
 
 /**
- * They are legions
+ * Anonymous user
  */
 	const ANONYMOUS = 'anonymous@passbolt.com';
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
- * @param string context
- *
+ * @param string $case (optional) The target validation case if any.
  * @return array validation rules
- * @throws exception if case is undefined
  * @access public
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'username' => [
 				'required' => [
@@ -135,11 +178,12 @@ class User extends AppModel {
 	}
 
 /**
- * Check if the role provided is a valid one.
+ * Custom validation rule
+ * Check if the role provided is a valid one
  *
- * @param $check data provided for validation
- *
+ * @param array $check with 'role_id' key set
  * @return bool
+ * @access public
  */
 	public function checkValidRole($check) {
 		if (!isset($check['role_id']) || empty($check['role_id'])) {
@@ -157,27 +201,29 @@ class User extends AppModel {
 	}
 
 /**
+ * Custom validation rule
  * Check if an admin is trying to remove his own admin role.
  *
- * @param $check data provided for validation
- *
+ * @param array $check with 'role_id' key set, user role
  * @return bool
+ * @access public
  */
 	public function checkCantRemoveOwnAdminRole($check) {
 		if (!isset($check['role_id']) || empty($check['role_id'])) {
 			return false;
 		}
 		$role = $this->Role->findById($check['role_id']);
-
 		$userId = null;
-		// check if a user record is available.
-		// @todo explain
+
+		// check if a user record is available as previously set data
+		// or if user id is set as per active record pattern
 		if (isset($this->data['User']['id']) && !empty($this->data['User']['id'])) {
 			$userId = $this->data['User']['id'];
 		} elseif (isset($this->id) && !empty($this->id)) {
 			$userId = $this->id;
 		}
-		// if user id is null, it means we are not updating.
+
+		// if user id is not set then it means we are not updating a record
 		if ($userId == null) {
 			return true;
 		}
@@ -199,12 +245,13 @@ class User extends AppModel {
 /**
  * Before Save callback
  *
- * @link   http://api20.cakephp.org/class/app-model#method-AppModel__construct
+ * @param array $options passed from Model::save().
  * @return bool, if true proceed with save
  * @access public
+ *
+ * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
  */
 	public function beforeSave($options = null) {
-
 		// Are we in an insert or update scenario.
 		$insert = !$this->id && empty($this->data[$this->alias][$this->primaryKey]);
 
@@ -224,10 +271,8 @@ class User extends AppModel {
 /**
  * Get the current user
  *
+ * @param string $path optional path to the field, example 'Role.id' or 'Profile.firstname'
  * @return array the current user or an anonymous user, false if error
- *
- * @param string field
- *
  * @access public
  */
 	public static function get($path = null) {
@@ -266,12 +311,12 @@ class User extends AppModel {
  * Set the user as current
  * It always perform a search on id to avoid abuse (such as using a crafted/fake user)
  *
- * @param mixed UUID, User::ANONYMOUS, or user array with id specified
- *
+ * @param mixed $user UUID, User::ANONYMOUS, or user array with id specified
+ * @param bool $updateSession should the session be restarted? Default true
  * @return array the desired user or an ANONYMOUS user, false if error in find
  * @access public
  */
-	public static function setActive($user = null, $update_session = true) {
+	public static function setActive($user = null, $updateSession = true) {
 		// Instantiate the mode as we are in a static/singleton context
 		$_this = Common::getModel('User');
 		$u = [];
@@ -289,7 +334,7 @@ class User extends AppModel {
 			$u = $_this->find('first', User::getFindOptions('User::activation', Role::USER, $user));
 
 			// Store current user data in session
-			if($update_session) {
+			if ($updateSession) {
 				App::import('Model', 'CakeSession');
 				CakeSession::write(AuthComponent::$sessionKey, $u);
 			}
@@ -305,13 +350,16 @@ class User extends AppModel {
 /**
  * Make the current user inactive
  *
+ * @return void
  * @access public
  */
 	public static function setInactive() {
 		// Delete current user data in session
 		App::import('Model', 'CakeSession');
-		CakeSession::delete(AuthComponent::$sessionKey);
-		CakeSession::delete('Auth.redirect');
+		if (CakeSession::check(AuthComponent::$sessionKey)) {
+			CakeSession::delete(AuthComponent::$sessionKey);
+			CakeSession::delete('Auth.redirect');
+		}
 	}
 
 /**
@@ -406,13 +454,13 @@ class User extends AppModel {
 						$conditions = [
 							'conditions' => [
 								'User.username' => User::ANONYMOUS,
-								'User.active' => true
+								'User.active' => true,
+								'Role.name' => Role::GUEST,
 							]
 						];
 						break;
 					default:
 						throw new Exception('User::getFindCondition does not exist for role:' . $role . ' and case:' . $case);
-						break;
 				}
 				break;
 
@@ -423,7 +471,8 @@ class User extends AppModel {
 					case 'User::activation':
 						$conditions = [
 							'conditions' => [
-								'User.id' => $data['User']['id']
+								'User.id' => $data['User']['id'],
+								'Role.name' => [Role::USER, Role::ADMIN, Role::ROOT],
 							]
 						];
 						break;
@@ -525,27 +574,25 @@ class User extends AppModel {
 
 					default:
 						throw new Exception('User::getFindCondition does not exist for role:' . $role . ' and case:' . $case);
-						break;
 				}
 				break;
 
 			default:
 				throw new Exception('User::getFindCondition does not exist for role:' . $role);
-				break;
 		}
 
 		return $conditions;
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- *
- * @return empty|$condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = null, $role = Role::USER) {
+	public static function getFindFields($case = null, $role = null) {
 		switch ($case) {
 			case 'User::view':
 			case 'User::index':
@@ -621,7 +668,7 @@ class User extends AppModel {
 					]
 				];
 				// Add active status for admin and root roles.
-				if ($role == Role::ADMIN || $role == Role::ROOT) {
+				if ($role !== null && ($role == Role::ADMIN || $role == Role::ROOT)) {
 					$fields['fields'][] = 'User.active';
 				}
 				break;
@@ -702,13 +749,12 @@ class User extends AppModel {
 /**
  * Add a user and its profile, and create an authentication token.
  *
- * @param $data The user and profile data
+ * @param array $data user and profile data
+ * @throws Exception if there was a problem when saving
+ * @throws ValidationException if the provided user data do not validate
  * @return array The user, the profile and the token data
- *
- * @throws Exception
- * @throws ValidationException
  */
-	public function registerUser($data, $case = "User::save") {
+	public function registerUser($data) {
 		// No user data provided
 		if (!isset($data['User']) || empty($data['User'])) {
 			throw new Exception(__('User data are missing'));
@@ -731,13 +777,15 @@ class User extends AppModel {
 		$dataSource = $this->getDataSource();
 		$dataSource->begin();
 
-		// Get the meaningful fields for this operation
-		$fields = $this->getFindFields($case, User::get('Role.name'));
+		// Get the fields used for this operation validation
+		$findCase = "User::save";
+		$fields = $this->getFindFields($findCase, User::get('Role.name'));
+
 		// Set the data for validation and save
 		$this->create();
 		$this->set($data);
 
-		// Validate the user data
+		// Validate the user data with the right fields
 		if (!$this->validates(['fieldList' => [$fields['fields']]])) {
 			$dataSource->rollback();
 			throw new ValidationException(__('Could not validate user data'), ['User' => $this->validationErrors]);
@@ -750,8 +798,10 @@ class User extends AppModel {
 			throw new Exception(__('The user could not be saved'));
 		}
 
+		// Now the profile
 		// Get the meaningful fields for this operation
-		$fields = $this->Profile->getFindFields($case, User::get('Role.name'));
+		$fields = $this->Profile->getFindFields($findCase, User::get('Role.name'));
+
 		// Set the data for validation and save
 		$data['Profile']['user_id'] = $saveUser['User']['id'];
 		$this->Profile->set($data);
@@ -783,9 +833,7 @@ class User extends AppModel {
 		$res = array_merge($saveUser, $saveProfile, $saveToken);
 
 		// Dispatch event.
-		$event = new CakeEvent('Model.User.afterRegister', $this, array(
-				'data' => $res
-			));
+		$event = new CakeEvent('Model.User.afterRegister', $this, ['data' => $res]);
 		$this->getEventManager()->dispatch($event);
 
 		return $res;
@@ -795,10 +843,8 @@ class User extends AppModel {
  * Soft delete a user.
  *
  * @param string $userId Id of the user to soft delete
+ * @throws Exception if there is an issue during the save operation
  * @return void
- *
- * @throws Exception
- * @throws ValidationException
  */
 	public function softDelete($userId) {
 		$Permission = ClassRegistry::init('Permission');

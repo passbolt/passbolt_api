@@ -9,7 +9,6 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Model', 'Model');
-App::uses('AppValidation', 'Model/Utility');
 
 class AppModel extends Model {
 
@@ -46,7 +45,7 @@ class AppModel extends Model {
 	}
 
 /**
- * Set the validation rules upon context
+ * Set the validation rules for a given context
  *
  * @param string $case (optional) The target validation case if any.
  * @return bool true if success
@@ -54,12 +53,11 @@ class AppModel extends Model {
  */
 	public function setValidationRules($case = 'default') {
 		$this->validate = $this->getValidationRules($case);
-
 		return true;
 	}
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
  * @param string $case (optional) The target validation case if any.
  * @return array validation rules
@@ -82,11 +80,11 @@ class AppModel extends Model {
 	}
 
 /**
- * Return the list of fields to use for a find for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
  * @param string $role optional user role if needed to build the options
- * @return array $condition
+ * @return array $fields
  * @access public
  */
 	public static function getFindFields($case = null, $role = null) {
@@ -151,7 +149,7 @@ class AppModel extends Model {
 /**
  * beforeSave() callback.
  *
- * @param array $options Options passed from Model::save().
+ * @param array $options passed from Model::save().
  * @return bool
  */
 	public function beforeSave($options = []) {

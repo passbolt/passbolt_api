@@ -138,7 +138,7 @@ class ResourcesControllerTest extends ControllerTestCase
 	{
 		$this->setExpectedException('HttpException', 'The category doesn\'t exist');
 		$catId = Common::uuid('not-valid-reference');
-		$url = '/resources.json?recursive=true&fltr_model_category=' . $catId;
+		$url = '/resources.json?recursive=true&filter_model_category=' . $catId;
 		json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
 	}
 
@@ -192,7 +192,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'method' => 'get',
 					'return' => 'contents',
 					'data' => array(
-						'fltr_model_category' => $catEmptyId
+						'filter_model_category' => $catEmptyId
 					)
 				)
 			),
@@ -216,7 +216,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'method' => 'get',
 					'return' => 'contents',
 					'data' => array(
-						'fltr_model_category' => $catCp2Id
+						'filter_model_category' => $catCp2Id
 					)
 				)
 			),

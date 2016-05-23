@@ -55,7 +55,7 @@ if ($userAgent['Browser']['name'] == 'Firefox') {
 					<?php echo __('2. Define your keys') ?>
 				</li>
 				<li class="disabled">
-					<?php echo __('3. Set a master password') ?>
+					<?php echo __('3. Set a passphrase') ?>
 				</li>
 				<li class="disabled">
 					<?php echo __('4. Set a security token') ?>

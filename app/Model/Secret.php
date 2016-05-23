@@ -9,6 +9,59 @@
 App::uses('User', 'Model');
 App::uses('Resource', 'Model');
 
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="Secret"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="Secret UUID, the primary identifier",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="user_id",
+ *     type="string",
+ *     description="User UUID",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="resource_id",
+ *     type="string",
+ *     description="Resource UUID",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="data",
+ *     type="string",
+ *     description="Encrypted secret, GPG ASCII Armored format",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="UUID of the user who created the secret",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="UUID of the user who last modified the secret",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   )
+ * )
+ */
 class Secret extends AppModel {
 
 	public $actsAs = [
@@ -24,10 +77,10 @@ class Secret extends AppModel {
 /**
  * Get the validation rules upon context
  *
- * @param string case (optional) The target validation case if any.
- * @return array cakephp validation rules
+ * @param null|string $case (optional) The target validation case if any.
+ * @return array validation rules
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'user_id' => [
 				'uuid' => [
@@ -65,20 +118,14 @@ class Secret extends AppModel {
 				],
 			],
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
-		return $rules;
+		return $default;
 	}
 
 /**
  * Check if a resource with same id exists
+ * Custom validation rule
  *
- * @param check
+ * @param array $check with resource_id set
  * @return bool
  */
 	public function resourceExists($check) {
@@ -98,8 +145,9 @@ class Secret extends AppModel {
 
 /**
  * Check a gpg message is valid
+ * Custom validation rule
  *
- * @param $check
+ * @param array $check with data key set
  * @return bool
  */
 	public function checkGpgMessageIsValid($check) {
@@ -131,66 +179,29 @@ class Secret extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = [];
-
-		switch ($case) {
-			case 'add':
-			case 'edit':
-			case 'view':
-				$conditions = [
-					'conditions' => [
-					]
-				];
-				break;
-
-			default:
-				$conditions = [
-					'conditions' => []
-				];
-		}
-
+	public static function getFindConditions($case = null, $role = null, $data = null) {
+		$conditions = [
+			'conditions' => []
+		];
 		return $conditions;
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return array $condition
+ * @param string|null $role optional user role if needed to build the options
+ * @return array $fields
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
 			case 'view':
-				$fields = [
-					'fields' => [
-						'id',
-						'user_id',
-						'resource_id',
-						'data',
-						'created',
-						'modified',
-						'created_by',
-						'modified_by'
-					]
-				];
-				break;
 			case 'save':
-				$fields = [
-					'fields' => [
-						'user_id',
-						'resource_id',
-						'data',
-						'created',
-						'modified',
-						'created_by',
-						'modified_by'
-					]
-				];
-				break;
 			case 'update':
 				$fields = [
 					'fields' => [
+						'id',
 						'user_id',
 						'resource_id',
 						'data',

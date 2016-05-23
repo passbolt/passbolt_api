@@ -151,14 +151,12 @@ class EmailNotificatorComponent extends Component {
  * Send a notification email regarding a new comment created on a password.
  *
  * @param string $toUserId uuid of the recipient
- * @param array $data
- *   variables to pass to the template which should contain
+ * @param array $data variables to pass to the template which should contain
  *     resource_id the resource id
  *     comment_id the comment id
  * @return void
  */
 	public function passwordCommentNotification($toUserId, $data) {
-
 		// Get recipient info.
 		$recipient = $this->User->findById($toUserId);
 
@@ -166,7 +164,7 @@ class EmailNotificatorComponent extends Component {
 		$comment = $this->Comment->findById($data['comment_id'], ['content', 'created', 'created_by']);
 
 		// Load resource.
-		$resource = $this->Resource->findById($data['resource_id'],  ['name']);
+		$resource = $this->Resource->findById($data['resource_id'], ['name']);
 
 		// Get invite sender.
 		$sender = $this->_getAuthorInfo($comment['Comment']['created_by']);
@@ -361,11 +359,22 @@ class EmailNotificatorComponent extends Component {
 
 		$self = isset($data['self']) && $data['self'] == true;
 
-		$subject = $self ?
-			__("Welcome to passbolt, %s!", $recipient['Profile']['first_name']) :
-			__("%s created an account for you!", $sender['Profile']['first_name']);
+		// Check if account is created by anonymous user (command line).
+		$isCreatorAnonymous = $data['creator_id'] == Common::uuid('user.id.anonymous');
 
+		// Default subject.
+		$subject = __("Welcome to passbolt, %s!", $recipient['Profile']['first_name']);
+
+		// Subject if account is created by somebody who is not an anonymous user.
+		if (!$self && !$isCreatorAnonymous) {
+			$subject = __("%s created an account for you!", $sender['Profile']['first_name']);
+		}
+
+		// Define template.
 		$template = $self ? 'account_creation_self' : 'account_creation';
+		if (!$self && $isCreatorAnonymous) {
+			$template = 'account_creation_anonymous';
+		}
 
 		// Send notification.
 		$this->EmailNotification->send(

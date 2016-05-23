@@ -3,11 +3,23 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-1439: Email is sent as anonymous when a user is created from the console.
+- PASSBOLT-1509: As LU, when a password is shared with me in read only, I should not see the delete menu available in more.
+
+## [1.0.11] - 2016-05-16
 ### Added
 - PASSBOLT-1388: As a user I should receive an email notification when a password is updated.
 - PASSBOLT-1389: As a user I should receive an email notification when a password is created.
 - PASSBOLT-1390: As a user I should receive an email notification when a password is deleted.
 - PASSBOLT-1544: As a user I should receive an email notification when someone comments on a password.
+- PASSBOLT-1221: API documentation with Swagger (Part I: models).
+
+### Fixed
+- PASSBOLT-1094: Frontend : Server errors happening during a request should give a visual feedback.
+- PASSBOLT-1438: Retry button is not working at setup first step (when user doesn't have the plugin installed).
+- PASSBOLT-1564: As a sysop, installing passbolt with quiet mode should not output any information.
+- PASSBOLT-1434: Wordsmithing: rename master password to passphrase.
 
 ## [1.0.10] - 2016-05-03
 ### Fixed
@@ -71,8 +83,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.10...HEAD
-[1.0.9]: https://github.com/passbolt/passbolt/compare/v1.0.9...v1.0.10
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.11...HEAD
+[1.0.11]: https://github.com/passbolt/passbolt/compare/v1.0.10...v1.0.11
+[1.0.10]: https://github.com/passbolt/passbolt/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/passbolt/passbolt/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/passbolt/passbolt/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/passbolt/passbolt/compare/v1.0.6...v1.0.7

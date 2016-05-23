@@ -85,7 +85,7 @@ class EmailQueue extends AppModel {
 		));
 
 		if (!empty($emails)) {
-			$ids =  Set::extract('{n}.EmailQueue.id', $emails);
+			$ids =  Hash::extract('{n}.EmailQueue.id', $emails);
 			$this->updateAll(array('locked' => true), array('EmailQueue.id' => $ids));
 		}
 

@@ -105,7 +105,7 @@ class Inline
                 return 'null';
             case is_object($value):
                 if ($objectSupport) {
-                    return '!!php/object:'.serialize($value);
+                    return '!php/object:'.serialize($value);
                 }
 
                 if ($exceptionOnInvalidType) {
@@ -479,6 +479,16 @@ class Inline
                         return (string) substr($scalar, 5);
                     case 0 === strpos($scalar, '! '):
                         return (int) self::parseScalar(substr($scalar, 2));
+                    case 0 === strpos($scalar, '!php/object:'):
+                        if (self::$objectSupport) {
+                            return unserialize(substr($scalar, 12));
+                        }
+
+                        if (self::$exceptionOnInvalidType) {
+                            throw new ParseException('Object support when parsing a YAML file has been disabled.');
+                        }
+
+                        return;
                     case 0 === strpos($scalar, '!!php/object:'):
                         if (self::$objectSupport) {
                             return unserialize(substr($scalar, 13));
@@ -512,7 +522,12 @@ class Inline
                     case preg_match('/^(-|\+)?[0-9,]+(\.[0-9]+)?$/', $scalar):
                         return (float) str_replace(',', '', $scalar);
                     case preg_match(self::getTimestampRegex(), $scalar):
-                        return strtotime($scalar);
+                        $timeZone = date_default_timezone_get();
+                        date_default_timezone_set('UTC');
+                        $time = strtotime($scalar);
+                        date_default_timezone_set($timeZone);
+
+                        return $time;
                 }
             default:
                 return (string) $scalar;

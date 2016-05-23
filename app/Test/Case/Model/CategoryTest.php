@@ -174,16 +174,6 @@ class CategoryTest extends AppTestCase {
 		$this->assertEquals(true, $this->Category->isLeaf($leaf));
 	}
 
-	public function testIsTopLevelElement() {
-		$elt = $this->Category->findById(Common::uuid('category.id.bolt'));
-		$children = $this->Category->children($elt['Category']['id']);
-		$tree = array_merge(array(0 => $elt), $children);
-		$this->assertEquals(true, $this->Category->isTopLevelElement($elt, $tree));
-
-		$elt = $this->Category->findById(Common::uuid('category.id.administration'));
-		$this->assertEquals(false, $this->Category->isTopLevelElement($elt, $tree));
-	}
-
 	public function testAdd() {
 		// Test that a category cannot be added if the parent id doesn't exist
 		$category = array('Category' => array('name' => 'testAdd', 'parent_id' => 'doesntexist'));

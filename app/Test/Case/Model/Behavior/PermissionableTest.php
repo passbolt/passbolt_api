@@ -2,9 +2,7 @@
 /**
  * Permissionable Behavior Test
  *
- * @copyright    Copyright 2014, Passbolt.com
- * @package      app.Test.Case.Model.PermossionableTest
- * @since        version 2.14.6
+ * @copyright (c) 2016-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Category', 'Model');

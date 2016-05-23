@@ -1,0 +1,36 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+sudo: false
+
+env:
+  global:
+    - PHPUNIT=1
+
+matrix:
+  fast_finish: true
+
+  include:
+    - php: 7.0
+      env: PHPCS=1 PHPUNIT=0
+
+  allow_failures:
+    - php: hhvm
+
+before_script:
+  - composer self-update
+  - composer install --prefer-dist --no-interaction
+
+script:
+  - sh -c "if [ '$PHPUNIT' = '1' ]; then phpunit; fi"
+
+  - sh -c "if [ '$PHPCS' = '1' ]; then ./vendor/squizlabs/php_codesniffer/scripts/phpcs -p --extensions=php --standard=PSR2 --error-severity=1 --warning-severity=0 ./src ./tests; fi"
+
+notifications:
+  email: false
