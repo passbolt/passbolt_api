@@ -19,9 +19,6 @@ module.exports = function(grunt) {
 		config : config,
 		pkg: grunt.file.readJSON('package.json'),
 		clean: {
-			'js': [
-				'<%= config.webroot %>/js/app/production.js'
-			],
 			'lib': [
 				'<%= config.webroot %>/js/lib/can',
 				'<%= config.webroot %>/js/lib/jquery',
@@ -39,12 +36,6 @@ module.exports = function(grunt) {
 			]
 		},
 		shell: {
-			jsmin: {
-				options: {
-					stderr: false
-				},
-				command: '(cd ./app/webroot/js; ./js ./lib/steal/buildjs ./app/passbolt.html)'
-			},
 			mad_lib_patch: {
 				options: {
 					stderr: false
@@ -217,16 +208,10 @@ module.exports = function(grunt) {
 	// Npm libs deploy
 	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
 
-	// Run 'grunt js' to prepare the javascript
-	grunt.registerTask('js', ['clean:js', 'shell:jsmin']);
-
-	// Run 'grunt production' to prepare the production release
-	grunt.registerTask('production', ['clean:js', 'shell:jsmin']);
-
 	// Build mad & all the demos apps to ensure that everything compile
 	grunt.registerTask("build", ["steal-build"]);
 
 	// 'grunt' default
-	grunt.registerTask('default', ['clean:js', 'shell:jsmin']);
+	grunt.registerTask('default', ["steal-build"]);
 
 };
