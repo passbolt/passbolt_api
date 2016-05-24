@@ -96,8 +96,8 @@ class ResourceTest extends AppTestCase {
 	public function testUsernameValidation() {
 		$len = 64;
 		$testcases = array(
-			// Not empty
-			'' => false,
+			// Empty
+			'' => true,
 			// Email are not accepted
 			'test@test.com' => true,
 			// too short
@@ -246,9 +246,38 @@ class ResourceTest extends AppTestCase {
 		}
 	}
 
-/**
- * Test that when soft delete a resource it is still in db and his permissions have been revoked
- */
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindFields() {
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, Resource::getFindFields('view'), 'Find fields missing for view');
+		$this->assertNotEquals($default, Resource::getFindFields('index'), 'Find fields missing for index');
+		$this->assertNotEquals($default, Resource::getFindFields('viewByCategory'), 'Find fields missing for viewByCategory');
+		$this->assertNotEquals($default, Resource::getFindFields('delete'), 'Find fields missing for delete');
+		$this->assertNotEquals($default, Resource::getFindFields('Resource::edit'), 'Find fields missing for delete');
+		$this->assertNotEquals($default, Resource::getFindFields('save'), 'Find fields missing for delete');
+		$this->assertNotEquals($default, Resource::getFindFields('delete'), 'Find fields missing for delete');
+
+		$this->assertEquals($default, Resource::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindConditions() {
+		$default = ['conditions' => []];
+		$this->assertNotEquals($default, Resource::getFindConditions('add'), 'Find conditions missing for add');
+		$this->assertNotEquals($default, Resource::getFindConditions('edit'), 'Find conditions missing for edit');
+		$this->assertNotEquals($default, Resource::getFindConditions('view'), 'Find conditions missing for view');
+		$this->assertNotEquals($default, Resource::getFindConditions('index'), 'Find conditions missing for index');
+		$this->assertNotEquals($default, Resource::getFindConditions('viewByCategory'), 'Find conditions missing for viewByCategory');
+		$this->assertEquals($default, Resource::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
+	}
+
+	/**
+	 * Test that when soft delete a resource it is still in db and his permissions have been revoked
+	 */
 	public function testSoftDelete() {
 		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
@@ -264,9 +293,9 @@ class ResourceTest extends AppTestCase {
 		$this->assertFalse($this->Resource->exists($resourceId));
 	}
 
-/**
- * Test the overridden exists function
- */
+	/**
+	 * Test the overridden exists function
+	 */
 	public function testExists() {
 		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
@@ -277,4 +306,5 @@ class ResourceTest extends AppTestCase {
 		$id = Common::uuid('resource.id.facebook-account');
 		$this->assertTrue($this->Resource->exists($id));
 	}
+
 }

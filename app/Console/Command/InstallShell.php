@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Our Install command
  *
@@ -143,7 +142,7 @@ class InstallShell extends AppShell {
 		if (!isset($config)) {
 			throw new CakeException('Unable to load the default app config file');
 		}
-		if (Configure::read($key) != Hash::get($config, $key)) {
+		if (Configure::read($key) != Set::get($config, $key)) {
 			return true;
 		}
 		return false;
@@ -216,27 +215,30 @@ class InstallShell extends AppShell {
 	public function schema() {
 		$this->out('Installing schema / database');
 		$this->hr();
-		$this->dispatchShell('schema create --force_drop --force_create -q');
+		$this->dispatchShell('schema create --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('passbolt schema deployed');
-		$this->dispatchShell('schema create sessions --force_drop --force_create -q');
+		$this->dispatchShell('schema create sessions --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('passbolt session table deployed');
-		$this->dispatchShell('schema create --plugin FileStorage --force_drop --force_create -q');
+		$this->dispatchShell('schema create --plugin FileStorage --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('plugins schemas deployed');
 	}
 
 /**
  * Insert the dummy data in database (dispatch)
  *
- * @param string $options
+ * @param string $options default, seleniumtests or unittests
  * @return void
  */
 	public function data($options = 'default') {
-		$this->dispatchShell('data import --data=' . $options);
+		$this->dispatchShell('data import --data=' . $options . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 	}
 
 /**
  * Register the admin user
  *
+ * @param string $username admin email
+ * @param string $firstName admin first name
+ * @param string $lastName admin last name
  * @return void
  */
 	protected function _registerAdmin($username = null, $firstName = null, $lastName = null) {
@@ -247,13 +249,16 @@ class InstallShell extends AppShell {
 			$cmd .= ' -i';
 		}
 		if (!is_null($username)) {
-			$cmd .= ' -u ' .$username;
+			$cmd .= ' -u ' . $username;
 		}
 		if (!is_null($firstName)) {
-			$cmd .= ' -f ' .$firstName;
+			$cmd .= ' -f ' . $firstName;
 		}
 		if (!is_null($lastName)) {
-			$cmd .= ' -l ' .$lastName;
+			$cmd .= ' -l ' . $lastName;
+		}
+		if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+			$cmd .= ' -q';
 		}
 		$this->dispatchShell($cmd);
 	}
@@ -268,6 +273,9 @@ class InstallShell extends AppShell {
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
 		}
+		if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+			$cmd .= ' -q';
+		}
 		return $this->dispatchShell($cmd);
 	}
 
@@ -280,6 +288,9 @@ class InstallShell extends AppShell {
 		$cmd = 'sql export';
 		if (isset($this->params['data'])) {
 			$cmd .= ' --data=' . $this->params['data'];
+		}
+		if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
+			$cmd .= ' -q';
 		}
 		return $this->dispatchShell($cmd);
 	}

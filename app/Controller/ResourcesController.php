@@ -15,7 +15,8 @@ class ResourcesController extends AppController {
  */
 	public $components = [
 		'Filter',
-		'PermissionHelper'
+		'PermissionHelper',
+		'EmailNotificator',
 	];
 
 /**
@@ -23,6 +24,60 @@ class ResourcesController extends AppController {
  * Renders a json object of the resources.
  *
  * @return void
+ *
+ * @SWG\Get(
+ *   path="/resources.json",
+ *   summary="Find resources",
+ * @SWG\Parameter(
+ *     name="filter_keywords",
+ *     in="query",
+ *     description="Keywords to filter by",
+ *     required=false,
+ *     type="string"
+ *   ),
+ * @SWG\Parameter(
+ *     name="filter_case",
+ *     in="query",
+ *     description="Case to filter by",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "favorite",
+ * 		 "shared"
+ * 	   }
+ *   ),
+ * @SWG\Parameter(
+ *     name="filter_order",
+ *     in="query",
+ *     description="Field to order by",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "modified",
+ * 		 "expiry_date"
+ * 	   }
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="An array of resources",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           type="array",
+ *           items={
+ * 				"$ref"= "#/definitions/Resource"
+ *           }
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function index() {
 		// The additional information to pass to the model request
@@ -96,6 +151,35 @@ class ResourcesController extends AppController {
  *
  * @param string $id the uuid of the resource
  * @return void
+ *
+ * @SWG\Get(
+ *   path="/resources/{uuid}.json",
+ *   summary="Find a resource by ID",
+ * @SWG\Parameter(
+ * 		name="id",
+ * 		in="path",
+ * 		required=true,
+ * 		type="string",
+ * 		description="the uuid of the resource",
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="The details of the resource",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           ref="#/definitions/Resource"
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function view($id = null) {
 		// check if the resource id is provided
@@ -143,7 +227,8 @@ class ResourcesController extends AppController {
 			return $this->Message->error(__('The resource id is invalid'));
 		}
 		// check the resource exists
-		if (!$this->Resource->exists($id)) {
+		$resource = $this->Resource->findById($id);
+		if (!$resource) {
 			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
 		}
 		// check if user is authorized
@@ -157,6 +242,21 @@ class ResourcesController extends AppController {
 		} catch(Exception $e) {
 			return $this->Message->error(__('Error while deleting resource'));
 		}
+
+		// Email notification.
+		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		// Extract user ids from array.
+		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
+		foreach ($resourceUsers as $userId) {
+			$this->EmailNotificator->passwordDeletedNotification(
+				$userId,
+				[
+					'resource_name' => $resource['Resource']['name'],
+					'deleter_id' => User::get('id'),
+					'own' => User::get('id') == $userId ? true : false,
+				]);
+		}
+
 
 		$this->Message->success(__('The resource was successfully deleted'));
 	}
@@ -187,7 +287,7 @@ class ResourcesController extends AppController {
 		// Get fields to validate.
 		$fields = $this->Resource->getFindFields('save', User::get('Role.name'));
 
-		// check if the data are valid.
+		// check if the data is valid.
 		if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
 			return $this->Message->error(__('Could not validate resource data'),
 				['body' => $this->Resource->validationErrors]);
@@ -202,46 +302,58 @@ class ResourcesController extends AppController {
 				'fieldList' => $fields['fields']
 			]);
 
+		// If something went wrong while saving the resource.
 		if ($resource === false) {
 			$dataSource->rollback();
 			return $this->Message->error(__('The resource could not be saved'));
 		}
 
-		// Insert the given secret.
-		if (!empty($resourcepost['Secret'])) {
-			// Concat the resource infos.
-			$secret = $resourcepost['Secret'][0];
-			$secret['user_id'] = User::get('User.id');
-			$secret['resource_id'] = $resource['Resource']['id'];
-
-			// Validate the secret.
-			$fields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
-			$this->Resource->Secret->set($secret);
-			if (!$this->Resource->Secret->validates(['fieldList' => $fields['fields']])) {
-				$dataSource->rollback();
-				return $this->Message->error(__('Could not validate secret model'),
-					['body' => $this->Resource->Secret->validationErrors]);
-			}
-
-			// Save the secret.
-			$save = $this->Resource->Secret->save($secret, [
-				'validate' => false,
-				'atomic' => false,
-				'fieldList' => $fields['fields']
-			]);
-
-			if ($save == false) {
-				$dataSource->rollback();
-				return $this->Message->error(__('Could not save the secret'));
-			}
+		// Check if there is at least one secret given.
+		if (empty($resourcepost['Secret'])) {
+			$dataSource->rollback();
+			return $this->Message->error(__('No secret provided'));
 		}
+
+		// Save the secrets.
+		$secretpost = $resourcepost['Secret'][0];
+		$secretpost['user_id'] = User::get('User.id');
+		$secretpost['resource_id'] = $resource['Resource']['id'];
+
+		// Validate the secret.
+		$secretFields = $this->Resource->Secret->getFindFields('save', User::get('Role.name'));
+		$this->Resource->Secret->set($secretpost);
+		if (!$this->Resource->Secret->validates(['fieldList' => $secretFields['fields']])) {
+			$dataSource->rollback();
+			return $this->Message->error(__('Could not validate secret model'),
+				['body' => $this->Resource->Secret->validationErrors]);
+		}
+
+		// Save the secret.
+		$secret = $this->Resource->Secret->save($secretpost, [
+			'validate' => false,
+			'atomic' => false,
+			'fieldList' => $secretFields['fields']
+		]);
+
+		// If something wrong happened while saving the secrets.
+		if ($secret == false) {
+			$dataSource->rollback();
+			return $this->Message->error(__('Could not save the secret'));
+		}
+
+		// Email notification.
+		$this->EmailNotificator->passwordCreatedNotification(
+			User::get('User.id'),
+			[
+				'resource_id' => $resource['Resource']['id'],
+			]);
 
 		// Save the corresponding categories.
 		if (isset($resourcepost['Category'])) {
-
-			$fields = $this->Resource->CategoryResource->getFindFields('save', User::get('Role.name'));
+			$categoryResourceFields = $this->Resource->CategoryResource->getFindFields('save', User::get('Role.name'));
 
 			foreach ($resourcepost['Category'] as $cat) {
+				$this->Resource->CategoryResource->create();
 				$crdata = [
 					'CategoryResource' => [
 						'category_id' => $cat['id'],
@@ -249,11 +361,9 @@ class ResourcesController extends AppController {
 					]
 				];
 
-				$this->Resource->CategoryResource->create();
-
 				// check if the data is valid
 				$this->Resource->CategoryResource->set($crdata);
-				if (!$this->Resource->CategoryResource->validates(['fieldList' => $fields['fields']])) {
+				if (!$this->Resource->CategoryResource->validates(['fieldList' => $categoryResourceFields['fields']])) {
 					$dataSource->rollback();
 					return $this->Message->error(__('Could not validate CategoryResource',
 						['body' => $this->Resource->CategoryResource->validationErrors]));
@@ -267,31 +377,31 @@ class ResourcesController extends AppController {
 				}
 
 				// Save the data.
-				$save = $this->Resource->CategoryResource->save(
+				$categoryResource = $this->Resource->CategoryResource->save(
 					$crdata,
 					[
 						'validate' => false,
 						'atomic' => false,
-						'fieldList' => $fields['fields']
+						'fieldList' => $categoryResourceFields['fields']
 					]);
 
-				if ($save == false) {
+				if ($categoryResource == false) {
 					$dataSource->rollback();
 					return $this->Message->error(__('Could not save the association'));
 				}
 			}
 		}
 
+		// Everything went fine.
 		$dataSource->commit();
 		$this->Message->success(__('The resource was successfully saved'));
 
-		// Return the created resource.
-		$data = [
+		// Return the added resource.
+		$addedResourceFindOptions = $this->Resource->getFindOptions('view', User::get('Role.name'), [
 			'Resource.id' => $resource['Resource']['id']
-		];
-		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
-		$resources = $this->Resource->find('all', $options);
-		$this->set('data', $resources[0]);
+		]);
+		$addedResource = $this->Resource->find('first', $addedResourceFindOptions);
+		$this->set('data', $addedResource);
 	}
 
 /**
@@ -317,7 +427,8 @@ class ResourcesController extends AppController {
 		}
 
 		// check if the resource exists
-		if (!$this->Resource->exists($id)) {
+		$resource = $this->Resource->findById($id);
+		if (!$resource) {
 			return $this->Message->error(__('The resource doesn\'t exist'));
 		}
 
@@ -424,9 +535,24 @@ class ResourcesController extends AppController {
 		// Commit all the changes.
 		$dataSource->commit();
 
+		// Email notification.
+		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		// Extract user ids from array.
+		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
+		foreach ($resourceUsers as $userId) {
+			$this->EmailNotificator->passwordUpdatedNotification(
+				$userId,
+				[
+					'resource_id' => $resource['Resource']['id'],
+					'sender_id' => User::get('id'),
+					'resource_old_name' => $resource['Resource']['name'],
+					'own' => User::get('id') == $userId ? true : false,
+				]);
+		}
+
 		// Retrieve the updated resource.
 		$data = [
-			'Resource.id' => $id
+			'Resource.id' => $resource['Resource']['id']
 		];
 		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
 		$resource = $this->Resource->find('first', $options);

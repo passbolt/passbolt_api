@@ -30,7 +30,7 @@ class ProfileTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testFixtures() {
-		$profile = $this->Profile->find('first', array('conditions' => array('id' => String::Uuid())));
+		$profile = $this->Profile->find('first', array('conditions' => array('id' => Common::Uuid())));
 		$this->assertEquals(empty($profile), true, 'Shouldnt find a profile that does not exist');
         $profile = $this->Profile->find('first', array('conditions' => array('first_name' => 'ada')));
 		$this->assertEquals(is_array($profile), true, 'Profile should be present in the database');
@@ -162,5 +162,21 @@ class ProfileTest extends CakeTestCase {
 			else $msg = 'profile on lastName' . $testcase . ' should not be allowed';
 			$this->assertEquals($this->Profile->validates(array('fieldList' => array('last_name'))), $result, $msg);
 		}
+	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindFields() {
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, Profile::getFindFields('view'), 'Find fields missing for view');
+		$this->assertNotEquals($default, Profile::getFindFields('User::edit'), 'Find fields missing for index');
+		$this->assertNotEquals($default, Profile::getFindFields('User::save'), 'Find fields should be empty for delete');
+		$this->assertEquals(
+			Profile::getFindFields('User::edit'),
+			Profile::getFindFields('User::save'),
+			'Find fields should be the same for edit and save'
+			);
+		$this->assertEquals($default, Profile::getFindFields('rubish'), 'Find fields should be empty for wrong find');
 	}
 }

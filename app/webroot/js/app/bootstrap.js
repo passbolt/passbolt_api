@@ -7,10 +7,9 @@ import 'app/error/error_handler';
 import 'app/net/response_handler';
 import 'app/component/app';
 import Common from 'app/util/common';
-import appConfig from 'app/config/config.json';
-import notifConfig from 'app/config/notification.json';
 
 var Bootstrap = passbolt.Bootstrap = mad.Bootstrap.extend('passbolt.Bootstrap', /* @static */ {
+
 	/**
 	 * Default options.
 	 */
@@ -24,13 +23,6 @@ var Bootstrap = passbolt.Bootstrap = mad.Bootstrap.extend('passbolt.Bootstrap', 
 	 * @param options
 	 */
 	init: function (options) {
-		// Load the config packaged with the front-end application.
-		mad.Config.load(appConfig);
-		// Load notifications config.
-		mad.Config.load(notifConfig);
-		// Load the dynamic config served by the back-end.
-		mad.Config.load(cakephpConfig);
-
 		// Load mad bootstrap.
 		this._super(options);
 		// Load helpers.

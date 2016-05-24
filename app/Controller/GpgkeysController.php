@@ -122,10 +122,18 @@ class GpgkeysController extends AppController {
 			$this->Message->error(__('The gpgkey provided could not be used'));
 			return;
 		}
+
 		$gpgkeyData['Gpgkey']['user_id'] = $userId;
 
+		// Sanitize gpg key data.
+		$gpgkeyDataSanitized = $this->HtmlPurifier->cleanRecursive($gpgkeyData, 'nohtml');
+		// UID should not be sanitized at this stage, or will not pass the validation.
+		// UID has to follow RFC format. and it is very unlikely that it can be compromised since it
+		// is extracted from the key.
+		$gpgkeyDataSanitized['Gpgkey']['uid'] = $gpgkeyData['Gpgkey']['uid'];
+
 		// Set data.
-		$this->Gpgkey->set($gpgkeyData);
+		$this->Gpgkey->set($gpgkeyDataSanitized);
 
 		// Check if the data is valid.
 		if (!$this->Gpgkey->validates()) {
@@ -134,11 +142,13 @@ class GpgkeysController extends AppController {
 			return;
 		}
 
+		$gpgkeyDataSanitized['Gpgkey']['uid'] = htmlentities($gpgkeyDataSanitized['Gpgkey']['uid']);
+
 		// Get fields to save.
 		$fields = $this->Gpgkey->getFindFields('save', User::get('Role.name'));
 
 		// Everything alright, we save.
-		$gpgkey = $this->Gpgkey->save($gpgkeyData, false, $fields['fields']);
+		$gpgkey = $this->Gpgkey->save($gpgkeyDataSanitized, false, $fields['fields']);
 
 		// If there was a problem during a save, return error message.
 		if ($gpgkey == false) {

@@ -3,6 +3,7 @@
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
+/app/Config/email.php
 
 # User specific #
 #################
@@ -49,7 +50,6 @@ composer.lock
 
 # JS App config & doc #
 #######################
-/app/webroot/js/app/config/config.json
 /app/webroot/js/lib/mad/docs/
 /app/webroot/js/lib/mad/docs.html
 

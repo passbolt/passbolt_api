@@ -1,10 +1,48 @@
 <?php
-
 /**
  * Tag Model
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
+ */
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="Tag"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="Tag UUID",
+ *     example="d1acbfc1-78d8-3e11-ad8b-7ab1eb0332d3"
+ *   ),
+ * @SWG\Property(
+ *     property="name",
+ *     type="string",
+ *     description="Name of the tag",
+ *     example="magpie"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="Id of the user who created the tag"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="Id of the last user who updated the tag"
+ *   )
+ * )
  */
 class Tag extends AppModel {
 
@@ -30,11 +68,11 @@ class Tag extends AppModel {
 /**
  * Get the validation rules upon context
  *
- * @param string context
+ * @param null|string $case optional validation case
  * @return array cakephp validation rules
  */
-	public static function getValidationRules($case = 'default') {
-		$default = [
+	public static function getValidationRules($case = null) {
+		$rules = [
 			'id' => [
 				'uuid' => [
 					'rule' => 'uuid',
@@ -46,21 +84,14 @@ class Tag extends AppModel {
 					'required' => 'create',
 					'allowEmpty' => false,
 					'rule' => "/^[\p{L}\d '\"-]*$/u",
-					'message' => __('Name should only contain alphabets, numbers, spaces and the special characters \' " -')
+					'message' => __('Tag should only contain alphabets, numbers, spaces and the special characters \' " -')
 				],
 				'size' => [
 					'rule' => ['lengthBetween', 3, 64],
-					'message' => __('Name should be between %s and %s characters long'),
+					'message' => __('Tag should be between %s and %s characters long'),
 				]
 			]
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
 		return $rules;
 	}
 
@@ -74,7 +105,6 @@ class Tag extends AppModel {
  */
 	public static function getFindConditions($case = 'Tag.view', $role = Role::USER, $data = null) {
 		$conditions = [];
-
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
 			case 'Tag.view':
@@ -86,22 +116,23 @@ class Tag extends AppModel {
 				break;
 
 		}
-
 		return $conditions;
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $fields
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
-		$returnValue = ['fields' => []];
+	public static function getFindFields($case = 'view', $role = null) {
+		$fields = ['fields' => []];
 		switch ($case) {
 			case 'ItemTag.viewByForeignModel':
 			case 'Tag.view':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'Tag.id',
 						'Tag.name',
@@ -113,7 +144,7 @@ class Tag extends AppModel {
 				];
 				break;
 			case 'Tag.add':
-				$returnValue = [
+				$fields = [
 					'fields' => [
 						'name',
 						'created_by',
@@ -122,8 +153,6 @@ class Tag extends AppModel {
 				];
 				break;
 		}
-
-		return $returnValue;
+		return $fields;
 	}
-
 }

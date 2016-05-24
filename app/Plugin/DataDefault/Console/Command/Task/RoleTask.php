@@ -20,7 +20,7 @@ class RoleTask extends ModelTask {
 		$rs[] = array('Role' => array(
 			'id' => Common::uuid('role.id.anonymous'),
 			'name' => 'guest',
-			'description' => 'Non logged-in user',
+			'description' => 'Non logged in user',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
 			'created_by' => Common::uuid('user.id.anonymous'),
@@ -29,7 +29,7 @@ class RoleTask extends ModelTask {
 		$rs[] = array('Role' => array(
 			'id' => Common::uuid('role.id.user'),
 			'name' => 'user',
-			'description' => 'Logged in default user',
+			'description' => 'Logged in user',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
 			'created_by' => Common::uuid('user.id.anonymous'),

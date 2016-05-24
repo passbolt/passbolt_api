@@ -120,7 +120,8 @@ class GpgAuthenticate extends BaseAuthenticate {
 			}
 			// extract the UUID to get the database records
 			list($version, $length, $uuid, $version2) = explode('|', $request->data['gpg_auth']['user_token_result']);
-			if (empty($AuthenticationToken->isValid($uuid, $user['User']['id']))) {
+			$isValidAuthToken = $AuthenticationToken->isValid($uuid, $user['User']['id']);
+			if (empty($isValidAuthToken)) {
 				return $this->__error('The user token result could not be found ' .
 					't=' . $uuid . ' u=' . $user['User']['id']);
 			}
@@ -129,7 +130,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// Completed
 		// we set the user to active, delete the auth token and provide some success feedback
 		AuthenticationToken::setInactive($uuid, $user['User']['id']);
-		$user = User::setActive($user);
+		$user = User::setActive($user, false); // session is updated by Auth component itself
 
 		$this->_response->header('X-GPGAuth-Progress', 'complete');
 		$this->_response->header('X-GPGAuth-Authenticated', 'true');
@@ -219,7 +220,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 			$this->__debug('not key id set');
 			return false;
 		}
-		$keyid = $request->data['gpg_auth']['keyid'];
+		$keyid = strtoupper($request->data['gpg_auth']['keyid']);
 
 		// validate the fingerprint format
 		if (!Gpgkey::isValidFingerprint($keyid)) {

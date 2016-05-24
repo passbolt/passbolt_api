@@ -18,26 +18,75 @@ App::import('Model', 'User');
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
- * @package        app.Controller
- * @link        http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
+ * @package app.Controller
+ * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
+ */
+/**
+ * Controller API response envelope header definition
+ *
+ * @SWG\Definition(definition="Header",
+ * @SWG\Xml(name="Header"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="The id of the request"
+ *   ),
+ * @SWG\Property(
+ *     property="status",
+ *     type="string",
+ *     description="The status of the request"
+ *   ),
+ * @SWG\Property(
+ *     property="title",
+ *     type="string",
+ *     description="The title of the request"
+ *   ),
+ * @SWG\Property(
+ *     property="servertime",
+ *     type="integer",
+ *     description="The server time"
+ *   ),
+ * @SWG\Property(
+ *     property="message",
+ *     type="string",
+ *     description="Additional error or warning message"
+ *   ),
+ * @SWG\Property(
+ *     property="description",
+ *     type="string",
+ *     description="Description of the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="controller",
+ *     type="string",
+ *     description="The controller name"
+ *   ),
+ * @SWG\Property(
+ *     property="action",
+ *     type="string",
+ *     description="The action name"
+ *   )
+ * )
  */
 class AppController extends Controller {
 
 /**
- * @var $component application wide components
+ * @var array $component application wide components
+ * @access public
  */
 	public $components = [
 		'Session',
-		'Paginator',
 		'HtmlPurifier',
 		'Cookie',
 		'Auth',
 		'Message',
-		'Mailer',
-		'IpAddress',
-		'Blacklist'
+		'Mailer'
 	];
 
+/**
+ * @var array $helpers application wide view helper
+ * @access public
+ */
 	public $helpers = [
 		'Html',
 		'Form',
@@ -53,24 +102,25 @@ class AppController extends Controller {
  * @return void
  */
 	public function beforeFilter() {
-		$this->initRequestDetectors();
-		$this->forceSSL();
-		$this->initAuth();
-		$this->setDefaultLayout();
-		$this->processHeaders();
-		$this->disconnectUserIfAccountDisabled();
-		$this->sanitize();
+		$this->_initRequestDetectors();
+		$this->_forceSSL();
+		$this->_initAuth();
+		$this->_setDefaultLayout();
+		$this->_processHeaders();
+		$this->_disconnectUserIfAccountDisabled();
+		$this->_sanitize();
 	}
-
 
 /**
  * Force ssl redirection.
- *
  * Will only work if debug is set to zero or selenium is set to active, and force_ssl is true.
+ *
+ * @access public
+ * @return void
  */
-	public function forceSSL() {
+	protected function _forceSSL() {
 		// If request is not ssl.
-		if(!$this->request->is('ssl')) {
+		if (!$this->request->is('ssl')) {
 			// If debug mode is off, or selenium is active and request is not made on seleniumtests.
 			// (We dont want to forcessl for selenium tests entry point).
 			// And force_ssl is on.
@@ -88,7 +138,7 @@ class AppController extends Controller {
  * @access public
  * @return void
  */
-	public function sanitize() {
+	protected function _sanitize() {
 		// Before sanitizing, keep the original data.
 		$this->request->dataRaw = $this->request->data;
 		//$this->request->queryRaw = $this->request->query;
@@ -110,10 +160,15 @@ class AppController extends Controller {
 /**
  * Init Authentication Component(s)
  *
+ * @throws InternalErrorException
  * @return void
  */
-	public function initAuth() {
-		foreach (Configure::read('Auth') as $key => $authConf) {
+	protected function _initAuth() {
+		$auth = Configure::read('Auth');
+		if (empty($auth)) {
+			throw new InternalErrorException(__('Auth configuration not found. Is App config set?'));
+		}
+		foreach ($auth as $key => $authConf) {
 			$this->Auth->{$key} = $authConf;
 		}
 
@@ -130,25 +185,25 @@ class AppController extends Controller {
  *
  * @return void
  */
-	public function setDefaultLayout() {
+	protected function _setDefaultLayout() {
 		// Default is HTML5 layout
-		$this->layout = 'html5';
+		$this->layout = 'default';
 
 		// JSON request get an empty layout and view
 		if ($this->request->is('json')) {
 			$this->layout = 'json';
 			$this->view = '/Json/default';
+			$this->response->type('json');
 		}
 	}
 
 /**
  * Process headers and set view variables accordingly.
- *
  * Mainly used for DO NOT TRACK header as of now.
  *
  * @return void
  */
-	public function processHeaders() {
+	protected function _processHeaders() {
 		if (isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'] == 1) {
 			$this->set('doNotTrack', true);
 		}
@@ -156,10 +211,11 @@ class AppController extends Controller {
 
 /**
  * initRequestDetectors
+ * Used to detect if a request is json or ajax
  *
  * @return void
  */
-	public function initRequestDetectors() {
+	protected function _initRequestDetectors() {
 		// Add a callback to the JSON detector
 		$this->request->addDetector('json', [
 			'callback' => function ($request) {
@@ -173,7 +229,7 @@ class AppController extends Controller {
  *
  * @return void
  */
-	public function disconnectUserIfAccountDisabled() {
+	protected function _disconnectUserIfAccountDisabled() {
 		// Check if user is logged in.
 		$userId = $this->Auth->user('User.id');
 		// If logged in.

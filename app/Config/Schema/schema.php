@@ -13,27 +13,44 @@ class AppSchema extends CakeSchema {
 
 	public static $createdTables = array();
 
+/**
+ * Before callback
+ *
+ * @param array $event Schema object properties.
+ * @return bool Should process continue.
+ */
 	public function before($event = array()) {
 		$db = ConnectionManager::getDataSource($this->connection);
 		$db->cacheSources = false;
 		return true;
 	}
 
+/**
+ * After callback
+ *
+ * @param array $event Schema object properties.
+ * @return void
+ */
 	public function after($event = array()) {
-
 		if (isset($event['create'])) {
 			self::$createdTables[] = $event['create'];
-			echo 'Table ' . $event['create'] . " created\n";
+			if (!isset($event['params']['quiet']) || $event['params']['quiet'] != 1) {
+				echo 'Table ' . $event['create'] . " created\n";
+			}
 
 			// When all table have been created
 			if (count(self::$createdTables) == count($this->tables)) {
 				foreach (self::$createdTables as $tbName) {
 					$specificSchemaName = Inflector::camelize($tbName) . 'Schema';
 					if (class_exists($specificSchemaName)) {
-						echo 'Execute specific schema ' . $specificSchemaName;
+						if (!isset($event['params']['quiet']) || $event['params']['quiet'] != 1) {
+							echo 'Execute specific schema ' . $specificSchemaName;
+						}
 						$modelSchema = new $specificSchemaName();
 						$modelSchema->init();
-						echo " (ok)\n";
+						if (!isset($event['params']['quiet']) || $event['params']['quiet'] != 1) {
+							echo " (ok)\n";
+						}
 					}
 				}
 			}

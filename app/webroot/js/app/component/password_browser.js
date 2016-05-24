@@ -11,6 +11,7 @@ import 'app/model/category';
 import 'app/model/favorite';
 import 'app/component/favorite';
 import 'app/view/component/password_browser';
+import 'app/view/template/component/password_workspace_all_items_empty.ejs!';
 
 /**
  * @inherits {mad.component.Grid}
@@ -333,6 +334,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		this.options.resources.push(resource);
 		// insert the item to the grid
 		this._super(resource, refResourceId, position);
+        // Reset state to ready (to remove other states such as empty).
+        this.setState('ready');
 	},
 
 	/**
@@ -342,6 +345,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	removeItem: function (item) {
 		// remove the item to the grid
 		this._super(item);
+        // If no resources are left, set empty state.
+        if (this.options.resources.length == 0) {
+            this.setState(['ready', 'empty']);
+        }
 	},
 
 	/**
@@ -411,17 +418,15 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 */
 	beforeSelect: function (item) {
 		var returnValue = true;
-console.log('unselect');
+
 		if (this.state.is('selection')) {
 			// if an item has already been selected
 			// if the item is already selected, unselect it
 			if (this.isSelected(item)) {
-				console.log('unselect already selected');
 				this.unselect(item);
 				this.setState('ready');
 				returnValue = false;
 			} else {
-				console.log('unselect all selected');
 				for (var i = this.options.selectedRs.length - 1; i > -1; i--) {
 					this.unselect(this.options.selectedRs[i]);
 				}
@@ -720,10 +725,22 @@ console.log('unselect');
 	*/
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
 		var self = this;
-		// store the filter
-		this.filter = filter;
+
 		// reset the state variables
 		this.options.categories = [];
+
+        // Set state to filter case.
+        if (filter.case != undefined) {
+            // Remove class belonging to previous filter.
+            if (this.filter != undefined) {
+                self.element.removeClass(this.filter.case);
+            }
+            // Add class for current filter. (used in styleguide).
+            self.element.addClass(filter.case);
+        }
+
+        // store the filter
+        this.filter = filter;
 
 		// override the current list of categories displayed with the new ones
 		// and the relative sub-categories
@@ -740,6 +757,9 @@ console.log('unselect');
 		// change the state of the component to loading
 		this.setState('loading');
 
+        // Is password workspace empty.
+        var empty = false;
+
 		// load resources functions of the filter
 		passbolt.model.Resource.findAll({
 			filter: this.filter,
@@ -750,11 +770,15 @@ console.log('unselect');
 			if (self.element == null) {
 				return;
 			}
+            // If no resources found, then add class empty, and render empty content html.
+            if (resources.length == 0) {
+                empty = true;
+            }
 
 			// load the resources in the browser
 			self.load(resources);
 			// change the state to ready
-			self.setState('ready');
+			self.setState(empty ? ['ready', 'empty'] : 'ready');
 		});
 	},
 
@@ -785,7 +809,25 @@ console.log('unselect');
 	*/
 	stateMultipleSelection: function (go) {
 		// nothing to do
-	}
+	},
+
+    /**
+     * Listen to changes related to state empty (when there are no passwords to show).
+     * @param {boolean} go Enter or leave the state
+     */
+    stateEmpty: function (go) {
+        if (go) {
+            if (this.filter.case == 'all_items') {
+                var empty_html = mad.View.render("app/view/template/component/password_workspace_all_items_empty.ejs");
+                $('.tableview-content', self.element).prepend(empty_html);
+            }
+        }
+        else {
+            // Remove any empty content html from page.
+            // (empty content is the html displayed when the workspace is empty).
+            $('.empty-content', self.element).remove();
+        }
+    }
 
 });
 

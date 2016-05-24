@@ -54,7 +54,7 @@ class Group extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::ANONYMOUS, $data = null) {
+	public static function getFindConditions($case = 'view', $role = null, $data = null) {
 		$conditions = [];
 
 		switch ($case) {
@@ -80,12 +80,14 @@ class Group extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $fields
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
 			case 'view':
 			case 'index':
@@ -101,7 +103,6 @@ class Group extends AppModel {
 				$fields = ['fields' => []];
 				break;
 		}
-
 		return $fields;
 	}
 }

@@ -53,7 +53,21 @@ var Common = passbolt.Common = mad.Component.extend('passbolt.Common', /** @stat
 	datetimeGetTimeAgo: function(dateTime) {
 		var timeAgo = moment.tz(dateTime, cakephpConfig.app.server_timezone).fromNow();
 		return timeAgo;
+	},
+
+	/**
+	 * Decode html entities.
+	 *
+	 * @param encodedHtml
+	 *   encoded html
+	 *
+	 * @returns string
+	 *   decoded html, without html entities
+	 */
+	decodeHtmlEntities: function(encodedHtml) {
+		return $('<textarea/>').html(encodedHtml).text();
 	}
+
 }, {
 
 });

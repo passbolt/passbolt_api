@@ -8,11 +8,6 @@
 class UsersController extends AppController {
 
 /**
- * @var array helpers used by the view when rendering from this controller
- */
-	public $helpers = ['PassboltAuth'];
-
-/**
  * @var array components used by this controller
  */
 	public $components = [
@@ -436,7 +431,6 @@ class UsersController extends AppController {
 			return $this->Message->error(__('The avatar couldn\'t be uploaded'), ['code' => 404]);
 		}
 
-
 		// Retrieve and return the updated user.
 		$data = ['User.id' => $id];
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
@@ -563,21 +557,32 @@ class UsersController extends AppController {
 
 			// Set actual user id
 			$gpgkeyData['Gpgkey']['user_id'] = $id;
-			// Set data.
-			$this->User->Gpgkey->set($gpgkeyData);
 
-			// Get fields
+			// Sanitize gpg key data.
+			$gpgkeyDataSanitized = $this->HtmlPurifier->cleanRecursive($gpgkeyData, 'nohtml');
+			// UID should not be sanitized at this stage, or will not pass the validation.
+			// UID has to follow RFC format. and it is very unlikely that it can be compromised since it
+			// is extracted from the key.
+			$gpgkeyDataSanitized['Gpgkey']['uid'] = $gpgkeyData['Gpgkey']['uid'];
+
+			// Set data.
+			$this->User->Gpgkey->set($gpgkeyDataSanitized);
+
+			// Get fields.
 			$fields = $this->User->getFindFields('User::validateAccount');
 
-			// Check if the data is valid
+			// Check if the data is valid.
 			if (!$this->User->Gpgkey->validates(['fieldList' => [$fields['fields']]])) {
 				$dataSource->rollback();
 				return $this->Message->error(__('Could not validate gpgkey data'),
 					['body' => $this->User->Gpgkey->validationErrors]);
 			}
+
+			$gpgkeyDataSanitized['Gpgkey']['uid'] = htmlentities($gpgkeyDataSanitized['Gpgkey']['uid']);
+
 			// Save the key
 			$this->User->Gpgkey->create();
-			$gpgkey = $this->User->Gpgkey->save($gpgkeyData, false, ['fieldList' => $fields['fields']]);
+			$gpgkey = $this->User->Gpgkey->save($gpgkeyDataSanitized, false, ['fieldList' => $fields['fields']]);
 
 			// If saving the key failed
 			if (!$gpgkey) {

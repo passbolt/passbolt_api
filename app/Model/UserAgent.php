@@ -11,7 +11,9 @@ use UserAgentParser\Provider;
 App::uses('AppModel', 'Model');
 
 class UserAgent extends AppModel {
+
 	public $name = 'UserAgent';
+
 	public $useTable = 'user_agents';
 
 /**
@@ -29,8 +31,7 @@ class UserAgent extends AppModel {
  */
 	protected static function _getParser() {
 		// For now we use the simple DonatjUAParser which allow only a basic parsing to retrieve
-		// browser information.
-		// Other parser are available, watch out the project repository for more information :
+		// browser information. Other parser are available, check out the project repository for more information:
 		// https://github.com/ThaDafinser/UserAgentParser
 		// This version of Provider\DonatjUAParser has been patched, see the bug :
 		// https://github.com/ThaDafinser/UserAgentParser/issues/61
@@ -92,13 +93,13 @@ class UserAgent extends AppModel {
 		return $userAgent;
 	}
 
-	/**
-	 * Get user agent details from name defined in environment variable
-	 *
-	 * @return array
-	 * @throws Exception
-	 * @throws ValidationException
-	 */
+/**
+ * Get user agent details from name defined in environment variable
+ *
+ * @return array
+ * @throws Exception
+ * @throws ValidationException
+ */
 	static public function parse() {
 		$userAgent = self::get();
 
@@ -123,12 +124,26 @@ class UserAgent extends AppModel {
 /**
  * Create a User agent record if it does not exist yet
  *
- * @param array $userAgent
+ * @param array $userAgent data with id set (derived from name as predictable uuid)
  * @return bool true if exist or save is successful, false if save failed
  * @throws ValidationException if the user agent is not valid
+ * @throws Exception if no user agent is provided
  * @throws Exception if a system error occurs during save
  */
 	static public function createIfDoesNotExist($userAgent = null) {
+		// Check provided data
+		if (!isset($userAgent['UserAgent']) || empty($userAgent['UserAgent'])) {
+			throw new Exception('No user agent provided');
+		}
+
+		// Set id if not found
+		if (!isset($userAgent['UserAgent']['id'])) {
+			if (!isset($userAgent['UserAgent']['name'])) {
+				throw new Exception('No user agent provided');
+			}
+			$userAgent['UserAgent']['id'] = Common::uuid($userAgent['UserAgent']['name']);
+		}
+
 		// Check if the name based uuid can be found
 		$_this = Common::getModel('UserAgent');
 		$exist = $_this->find('count', [

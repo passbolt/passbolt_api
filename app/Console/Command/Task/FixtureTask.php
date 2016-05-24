@@ -283,7 +283,7 @@ class FixtureTask extends BakeTask {
 		$this->Template->set($vars);
 		$content = $this->Template->generate('classes', 'fixture');
 
-		$this->out("\n" . __d('cake_console', 'Baking test fixture for %s...', $model), 1, Shell::QUIET);
+		$this->out("\n" . __d('cake_console', 'Baking test fixture for %s...', $model));
 		$this->createFile($path . $filename, $content);
 		return $content;
 	}
@@ -316,7 +316,7 @@ class FixtureTask extends BakeTask {
  * Generate String representation of Records
  *
  * @param array $tableInfo Table schema array
- * @param integer $recordCount
+ * @param int $recordCount optional number of records default 1
  * @return array Array of records to use in the fixture.
  */
 	protected function _generateRecords($tableInfo, $recordCount = 1) {
@@ -329,7 +329,7 @@ class FixtureTask extends BakeTask {
 				}
 				$insert = '';
 				switch ($fieldInfo['type']) {
-					case 'integer':
+					case 'int':
 					case 'float':
 						$insert = $i + 1;
 						break;
@@ -340,7 +340,7 @@ class FixtureTask extends BakeTask {
 							isset($fieldInfo['length']) && $fieldInfo['length'] == 36
 						);
 						if ($isPrimaryUuid) {
-							$insert = String::uuid();
+							$insert = Common::uuid();
 						} else {
 							$insert = "Lorem ipsum dolor sit amet";
 							if (!empty($fieldInfo['length'])) {

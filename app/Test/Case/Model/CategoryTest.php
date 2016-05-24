@@ -174,16 +174,6 @@ class CategoryTest extends AppTestCase {
 		$this->assertEquals(true, $this->Category->isLeaf($leaf));
 	}
 
-	public function testIsTopLevelElement() {
-		$elt = $this->Category->findById(Common::uuid('category.id.bolt'));
-		$children = $this->Category->children($elt['Category']['id']);
-		$tree = array_merge(array(0 => $elt), $children);
-		$this->assertEquals(true, $this->Category->isTopLevelElement($elt, $tree));
-
-		$elt = $this->Category->findById(Common::uuid('category.id.administration'));
-		$this->assertEquals(false, $this->Category->isTopLevelElement($elt, $tree));
-	}
-
 	public function testAdd() {
 		// Test that a category cannot be added if the parent id doesn't exist
 		$category = array('Category' => array('name' => 'testAdd', 'parent_id' => 'doesntexist'));
@@ -223,12 +213,29 @@ class CategoryTest extends AppTestCase {
 	}
 
 	public function testGetFindConditions() {
-		$f = $this->Category->getFindConditions('testoqwidoqdhwqohdowqhid');
-		$this->assertEquals($f, array('conditions' => array()), 'testGetFindCondition should return an empty array');
+		$default = ['conditions' => []];
+		$this->assertNotEquals($default, Category::getFindConditions('getWithChildren'), 'Find conditions missing for getWithChildren');
+		$this->assertNotEquals($default, Category::getFindConditions('getChildren'), 'Find conditions missing for getChildren');
+		$this->assertNotEquals($default, Category::getFindConditions('Resource.viewByCategory'), 'Find conditions missing for viewByCategory');
+		$this->assertNotEquals($default, Category::getFindConditions('view'), 'Find conditions missing for view');
+		$this->assertNotEquals($default, Category::getFindConditions('addResult'), 'Find conditions missing for addResult');
+		$this->assertNotEquals($default, Category::getFindConditions('index'), 'Find conditions missing for index');
+
+		$this->assertEquals($default,  Category::getFindConditions('rubish'), 'testGetFindCondition should return an empty array');
 	}
 
 	public function testGetFindFields() {
-		$f = $this->Category->getFindFields('testdqwodjqodqodwjqidqjdow');
-		$this->assertEquals($f, array('fields' => array()), 'testGetFindFields return an empty array');
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, Category::getFindFields('view'), 'Find fields missing for view');
+		$this->assertNotEquals($default, Category::getFindFields('getChildren'), 'Find fields missing for getChildren');
+		$this->assertNotEquals($default, Category::getFindFields('addResult'), 'Find fields missing for addResult');
+		$this->assertNotEquals($default, Category::getFindFields('index'), 'Find fields missing for index');
+		$this->assertNotEquals($default, Category::getFindFields('getWithChildren'), 'Find fields missing for getWithChildren');
+		$this->assertNotEquals($default, Category::getFindFields('Resource.viewByCategory'), 'Find fields missing for viewByCategory');
+		$this->assertNotEquals($default, Category::getFindFields('rename'), 'Find fields missing for rename');
+		$this->assertNotEquals($default, Category::getFindFields('add'), 'Find fields missing for add');
+		$this->assertNotEquals($default, Category::getFindFields('edit'), 'Find fields missing for edit');
+
+		$this->assertEquals($default, Category::getFindFields('rubish'), 'Find fields should be empty for wrong find');
 	}
 }

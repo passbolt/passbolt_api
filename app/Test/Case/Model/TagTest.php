@@ -39,7 +39,7 @@ class TagTest extends AppTestCase {
  * @return void
  */
 	public function testFixtures() {
-		$t = $this->Tag->find('first', array('conditions' => array('name' => String::Uuid())));
+		$t = $this->Tag->find('first', array('conditions' => array('name' => Common::Uuid())));
 		$this->assertEquals(empty($t), true, 'Shouldnt find a tag that does not exist');
 		$t = $this->Tag->find('first', array('conditions' => array('name' => 'facebook')));
 		$this->assertEquals(is_array($t), true, 'Facebook Tag should be present in the database');

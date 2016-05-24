@@ -18,6 +18,11 @@ App::uses('User', 'Model');
 App::uses('Role', 'Model');
 App::uses('PermissionMatrix', 'Test/Data');
 
+// Uses Gpg Utility.
+if (!class_exists('\Passbolt\Gpg')) {
+	App::import( 'Model/Utility', 'Gpg' );
+}
+
 class ResourcesControllerTest extends ControllerTestCase
 {
 
@@ -30,6 +35,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		'app.favorite',
 		'app.log',
 		'app.user',
+		'app.gpgkey',
 		'app.profile',
 		'app.file_storage',
 		'app.group',
@@ -49,10 +55,29 @@ class ResourcesControllerTest extends ControllerTestCase
 	{
 		parent::setUp();
 		$this->User = ClassRegistry::init('User');
+		$this->Gpgkey = ClassRegistry::init('Gpgkey');
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Category = ClassRegistry::init('Category');
 		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
+	}
+
+	private function _encryptSecretFor($usersUuid, $resourceId, $text) {
+		$gpg = new \Passbolt\Gpg();
+		$secretData = array();
+
+		foreach ($usersUuid as $userUuid) {
+			$gpgKey = $this->Gpgkey->findByUserId($userUuid);
+			$gpg->setEncryptKey($gpgKey['Gpgkey']['key']);
+			$armoredSecret = $gpg->encrypt($text);
+			$secretData[] = array(
+				'user_id' => $usersUuid,
+				'resource_id' => $resourceId,
+				'data' => $armoredSecret
+			);
+		}
+
+		return $secretData;
 	}
 
 	public function testViewResourceIdIsMissing()
@@ -130,7 +155,7 @@ class ResourcesControllerTest extends ControllerTestCase
 	{
 		$this->setExpectedException('HttpException', 'The category doesn\'t exist');
 		$catId = Common::uuid('not-valid-reference');
-		$url = '/resources.json?recursive=true&fltr_model_category=' . $catId;
+		$url = '/resources.json?recursive=true&filter_model_category=' . $catId;
 		json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
 	}
 
@@ -184,7 +209,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'method' => 'get',
 					'return' => 'contents',
 					'data' => array(
-						'fltr_model_category' => $catEmptyId
+						'filter_model_category' => $catEmptyId
 					)
 				)
 			),
@@ -208,7 +233,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'method' => 'get',
 					'return' => 'contents',
 					'data' => array(
-						'fltr_model_category' => $catCp2Id
+						'filter_model_category' => $catCp2Id
 					)
 				)
 			),
@@ -228,7 +253,7 @@ class ResourcesControllerTest extends ControllerTestCase
 	public function testAddWithCategoryBadId()
 	{
 		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
-		$result = json_decode($this->testAction('/resources.json', array(
+		$this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
 					'name' => 'test3',
@@ -236,6 +261,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
+				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddWithCategoryBadId secret'),
 				'Category' => array(
 					0 => array(
 						'id' => 'BadId'
@@ -244,7 +270,7 @@ class ResourcesControllerTest extends ControllerTestCase
 			),
 			'method' => 'post',
 			'return' => 'contents'
-		)), true);
+		));
 	}
 
 	public function testAddWithCategoryDoesNotExist()
@@ -252,7 +278,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$catId = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'Could not validate CategoryResource');
 		// Test with wrong id for category
-		$result = json_decode($this->testAction('/resources.json', array(
+		$this->testAction('/resources.json', array(
 			'data' => array(
 				'Resource' => array(
 					'name' => 'test3',
@@ -260,6 +286,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
+				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddWithCategoryDoesNotExist secret'),
 				'Category' => array(
 					0 => array(
 						'id' => $catId
@@ -268,7 +295,7 @@ class ResourcesControllerTest extends ControllerTestCase
 			),
 			'method' => 'post',
 			'return' => 'contents'
-		)), true);
+		));
 	}
 
 	public function testAddAndPermission()
@@ -281,7 +308,7 @@ class ResourcesControllerTest extends ControllerTestCase
 
 		// Error : name is empty
 		$this->setExpectedException('HttpException', 'You are not authorized to create a resource into the category');
-		$result = json_decode($this->testAction('/resources/add.json', array(
+		$this->testAction('/resources/add.json', array(
 			'data' => array(
 				'Resource' => array(
 					'name' => 'testAddAndPermission',
@@ -289,6 +316,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
+				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.marlyn')), '', 'testAddAndPermission secret'),
 				'Category' => array(
 					0 => array(
 						'id' => $catId
@@ -297,7 +325,7 @@ class ResourcesControllerTest extends ControllerTestCase
 			),
 			'method' => 'Post',
 			'return' => 'contents'
-		)), true);
+		));
 	}
 
 	public function testAdd() {
@@ -309,7 +337,8 @@ class ResourcesControllerTest extends ControllerTestCase
 					'username' => 'test1',
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
-				)
+				),
+				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAdd secret'),
 			),
 			'method' => 'post',
 			'return' => 'contents'
@@ -345,6 +374,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
+				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddInCategory secret'),
 				'Category' => array(
 					0 => array(
 						'id' => $rootCatId
@@ -395,24 +425,7 @@ class ResourcesControllerTest extends ControllerTestCase
 						'id' => $rootCat['Category']['id']
 					)
 				),
-				'Secret' => array(
-					array(
-						'data' => '-----BEGIN PGP MESSAGE-----
-Version: OpenPGP.js v0.7.2
-Comment: http://openpgpjs.org
-
-wcBMAwvNmZMMcWZiAQf+KJfC9t/ZYpaJxd6+dzmUN7+NZv2zZuPwMFuUX7Li
-jRWSPGzrPvO1XstYVD+gToX4gvCG6xE7u27XR1LV+lsAXE/MkzfshO7tVILS
-aDiXulTq6m9s4x9beh6tHJkowYq4umGqpOUNxlBNe7x89Q4eY+hZyNZ86XE3
-A6zzeQbG2+AWqFcqoKsS2qbdsJ9brqRHpqvjnLOskiaDg7W201mntPz7Eso5
-0UrmlMsFMd/ePrZaHuPgrZhYYceYYWr/5vL+VjD3rXUH+nhHWdHkjHG8JMr7
-7OkuVFpiKo1wgeQi+xUerUtIeV4A+4lH097OdGbTNlyAxKqLAEvCA59uf5Fl
-udI8AesOCLKUZD3umfi3U7fZizFiOVCNqwKIRDQGlSc0+tMyqEYPtji0d7ox
-a1YdhBEx6sd+aex8bJj4wbiq
-=FOdS
------END PGP MESSAGE-----'
-					)
-				),
+				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddWithSecret secret'),
 			),
 			'method' => 'post',
 			'return' => 'contents'

@@ -278,6 +278,12 @@ abstract class ControllerTestCase extends CakeTestCase {
 		$Dispatch->testController = $this->controller;
 		$Dispatch->response = $this->getMock('CakeResponse', array('send', '_clearBuffer'));
 		$this->result = $Dispatch->dispatch($request, $Dispatch->response, $params);
+
+		// Clear out any stored requests.
+		while (Router::getRequest()) {
+			Router::popRequest();
+		}
+
 		$this->controller = $Dispatch->testController;
 		$this->vars = $this->controller->viewVars;
 		$this->contents = $this->controller->response->body();

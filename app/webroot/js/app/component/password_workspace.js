@@ -111,6 +111,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		var filter = new passbolt.model.Filter({
 			label: __('All items'),
 			order: 'modified',
+            case: 'all_items',
 			type: passbolt.model.Filter.SHORTCUT
 		});
 		mad.bus.trigger('filter_resources_browser', filter);

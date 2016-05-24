@@ -42,7 +42,7 @@ class CommentTest extends AppTestCase {
  * @return void
  */
 	public function testFixtures() {
-		$c = $this->Comment->find('first', array('conditions' => array('id' => String::Uuid())));
+		$c = $this->Comment->find('first', array('conditions' => array('id' => Common::Uuid())));
 		$this->assertEquals(empty($c), true, 'Shouldnt find a comment that does not exist');
 		$c = $this->Comment->find('first', array('conditions' => array('content' => 'this is a short comment')));
 		$this->assertEquals(is_array($c), true, 'Default comment should be present in the database');
@@ -208,5 +208,29 @@ class CommentTest extends AppTestCase {
 			else $msg = 'comment with content ' . $testcase . ' should not be allowed';
 			$this->assertEquals($this->Comment->validates(array('fieldList' => array('content'))), $result, $msg);
 		}
+	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindFields() {
+		$default = ['fields' => []];
+		$this->assertNotEquals($default, Comment::getFindFields('view'), 'Find fields missing for comment view');
+		$this->assertNotEquals($default, Comment::getFindFields('viewByForeignModel'), 'Find fields missing for comment add');
+		$this->assertNotEquals($default, Comment::getFindFields('add'), 'Find fields should be empty for add');
+		$this->assertNotEquals($default, Comment::getFindFields('edit'), 'Find fields should be empty for edit');
+		$this->assertEquals($default, Comment::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+	}
+
+	/**
+	 * Test GetFindFields
+	 */
+	public function testGetFindConditions() {
+		$default = ['conditions' => []];
+		$this->assertNotEquals($default, Comment::getFindConditions('view'), 'Find conditions missing for comment view');
+		$this->assertNotEquals($default, Comment::getFindConditions('viewByForeignModel'), 'Find conditions missing for comment add');
+		$this->assertEquals($default, Comment::getFindConditions('add'), 'Find conditions should be empty for add');
+		$this->assertEquals($default, Comment::getFindConditions('edit'), 'Find conditions should be empty for edit');
+		$this->assertEquals($default, Comment::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
 	}
 }

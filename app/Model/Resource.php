@@ -1,12 +1,74 @@
 <?php
-
 /**
  * Resource model
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+/**
+ * @SWG\Definition(
+ * @SWG\Xml(name="Resource"),
+ * @SWG\Property(
+ *     property="id",
+ *     type="string",
+ *     description="UUID of the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="name",
+ *     type="string",
+ *     description="Name of the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="username",
+ *     type="string",
+ *     description="Username of the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="expiry_date",
+ *     type="string",
+ *     description="Expiry date of the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="uri",
+ *     type="string",
+ *     description="URI of the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="description",
+ *     type="string",
+ *     description="Description of the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="deleted",
+ *     type="boolean",
+ *     description="Flag to mark the resource as deleted"
+ *   ),
+ * @SWG\Property(
+ *     property="created",
+ *     type="string",
+ *     description="Creation date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="modified",
+ *     type="string",
+ *     description="Last modification date",
+ *     example="﻿2016-04-26 17:01:01"
+ *   ),
+ * @SWG\Property(
+ *     property="created_by",
+ *     type="string",
+ *     description="Id of the user who created the resource"
+ *   ),
+ * @SWG\Property(
+ *     property="modified_by",
+ *     type="string",
+ *     description="Id of the last user who updated the resource"
+ *   )
+ * )
+ */
 class Resource extends AppModel {
+
 /**
  * Model behaviors
  *
@@ -19,7 +81,6 @@ class Resource extends AppModel {
 		'Favoritable',
 		'Permissionable' => ['priority' => 1]
 	];
-
 
 /**
  * Details of belongs to relationships
@@ -54,18 +115,29 @@ class Resource extends AppModel {
  */
 	public $hasAndBelongsToMany = ['Category' => ['className' => 'Category']];
 
+/**
+ * Resource constructor
+ *
+ * @param bool|int|string|array $id Set this ID for this model on startup,
+ * can also be an array of options, see above.
+ * @param string $table Name of database table to use.
+ * @param string $ds DataSource connection name.
+ * @link http://api20.cakephp.org/class/app-model#method-AppModel__construct
+ * @access public
+ */
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 		$this->Behaviors->setPriority(['Permissionable' => 1]);
 	}
 
 /**
- * Get the validation rules upon context
+ * Get the validation rules for a given context
  *
- * @param string case (optional) The target validation case if any.
- * @return array CakePHP validation rules
+ * @param string $case (optional) The target validation case if any.
+ * @return array validation rules
+ * @access public
  */
-	public static function getValidationRules($case = 'default') {
+	public static function getValidationRules($case = null) {
 		$default = [
 			'id' => [
 				'uuid' => [
@@ -92,14 +164,10 @@ class Resource extends AppModel {
 				]
 			],
 			'username' => [
-				'required' => [
-					'allowEmpty' => false,
-					'rule' => ['notBlank'],
-					'message' => __('A username is required')
-				],
 				'alphaNumeric' => [
+					'allowEmpty' => true,
+					'required' => false,
 					'rule' => '/^[a-zA-Z0-9\-_@.]*$/',
-					'required' => 'create',
 					'message' => __('Username should only contain alphabets, numbers only and the special characters : - _ . @'),
 				],
 				'size' => [
@@ -124,7 +192,7 @@ class Resource extends AppModel {
 			],
 			'uri' => [
 				'url' => [
-					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
 					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /.'),
 					'allowEmpty' => true,
 				],
@@ -135,7 +203,7 @@ class Resource extends AppModel {
 			],
 			'description' => [
 				'alphaNumericAndSpecial' => [
-					'rule' => AppValidation::getValidationAlphaNumericAndSpecialRegex(),
+					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
 					'required' => false,
 					'allowEmpty' => true,
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /')
@@ -146,14 +214,7 @@ class Resource extends AppModel {
 				]
 			],
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
-		return $rules;
+		return $default;
 	}
 
 /**
@@ -241,12 +302,14 @@ class Resource extends AppModel {
 	}
 
 /**
- * Return the list of field to fetch for given context
+ * Return the list of fields to be returned by a find operation in given context
  *
  * @param string $case context ex: login, activation
- * @return $condition array
+ * @param string $role optional user role if needed to build the options
+ * @return array $fields
+ * @access public
  */
-	public static function getFindFields($case = 'view', $role = Role::USER) {
+	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
 			case 'exists':
 				$fields = [
@@ -357,11 +420,11 @@ class Resource extends AppModel {
 /**
  * Save a list of secrets corresponding to a resource.
  *
- * @param $resourceId
- * @param $secrets
- *
+ * @param string $resourceId uuid
+ * @param array $secrets secret data
  * @throws Exception
  * @throws ValidationException
+ * @return void
  */
 	public function saveSecrets($resourceId, $secrets) {
 		// Validate the secrets provided.
@@ -369,17 +432,17 @@ class Resource extends AppModel {
 
 		// Get list of current permissions for the given ACO.
 		$permsUsers = $this->getAuthorizedUsers($resourceId);
-		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
+		$permsUsers = Set::extract($permsUsers, '{n}.User.id');
 
 		// Get the list of users corresponding to the secrets, without duplicates.
 		$dataSecretUsers = array_unique(
-			Hash::extract($secrets, '{n}.user_id')
+			Set::extract($secrets, '{n}.user_id')
 		);
 
 		// Check difference between the users expected and the users provided.
 		$missingUsers = array_diff($permsUsers, $dataSecretUsers);
 		// Check if the size of expected secrets is the same as provided one.
-		$sameSize = sizeof($permsUsers) == sizeof($dataSecretUsers);
+		$sameSize = (count($permsUsers) === count($dataSecretUsers));
 
 		// Check if the users expected are the same as the users provided.
 		$sameUsers = empty($missingUsers);
@@ -396,9 +459,7 @@ class Resource extends AppModel {
 		// End of secrets check. We proceed.
 
 		// Delete all the previous secrets.
-		$this->Secret->deleteAll([
-			'Secret.resource_id' => $resourceId
-		], false);
+		$this->Secret->deleteAll(['Secret.resource_id' => $resourceId], false);
 
 		$fields = $this->Secret->getFindFields('update', User::get('Role.name'));
 		// Validate the given secrets.

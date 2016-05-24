@@ -77,7 +77,7 @@ var ButtonDropdown = mad.component.ButtonDropdown = mad.component.Button.extend(
      * @param item
      */
     '{menu.element} item_selected': function(el, ev, item) {
-        if (this.options.closeOnItemClick === true) {
+        if (this.options.closeOnItemClick === true  && !item.state.is('disabled')) {
             this.view.close();
         }
     },
