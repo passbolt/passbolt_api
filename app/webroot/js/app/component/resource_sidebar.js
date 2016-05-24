@@ -8,6 +8,7 @@ import 'app/view/component/resource_sidebar';
 import 'app/component/comments';
 import 'app/component/sidebar_section';
 import 'app/component/sidebar_section/description';
+import 'app/component/sidebar_section/permissions';
 import 'app/view/template/component/resource_sidebar.ejs!';
 
 /**
@@ -71,6 +72,12 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 			resource: this.options.selectedItem
 		});
 		descriptionController.start();
+
+		// Instantiate the permissions component for the current resource.
+		var permissionsComponent = new passbolt.component.sidebarSection.Permissions($('#js_rs_details_permissions', this.element), {
+			acoInstance: this.options.selectedItem
+		});
+		permissionsComponent.start();
 
 		// Instantiate the comments controller for the current resource.
 		var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {

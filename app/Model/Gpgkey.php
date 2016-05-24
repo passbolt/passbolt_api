@@ -159,6 +159,10 @@ class Gpgkey extends AppModel {
 					'message' => __('The fingerprint has an incorrect format'),
 					'allowEmpty' => false,
 				],
+				'unique' => [
+					'rule' => ['checkKeyFingerprintIsUnique', null],
+					'message' => __('The key fingerprint provided is already in use for another user'),
+				]
 			],
 			'type' => [
 				'format' => [
@@ -280,6 +284,31 @@ class Gpgkey extends AppModel {
 			$valid = ($check['uid'] == sprintf('%s', $userIdPacket));
 
 			return $valid;
+		}
+	}
+
+/**
+ * Check if an active key with the same fingerprint already exist.
+ *
+ * @param array $check with 'fingerprint' set
+ * @return bool
+ */
+	public function checkKeyFingerprintIsUnique($check) {
+		if (!isset($check['fingerprint']) || empty($check['fingerprint'])) {
+			return false;
+		} else {
+			$exist = $this->find('first', [
+					'conditions' => [
+						'Gpgkey.fingerprint' => $check['fingerprint'],
+						'User.deleted' => false,
+						'User.active' => true,
+					],
+					'contain' => [
+						'User'
+					]
+				]);
+
+			return empty($exist);
 		}
 	}
 

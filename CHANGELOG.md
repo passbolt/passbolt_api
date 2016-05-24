@@ -8,6 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1509: As LU, when a password is shared with me in read only, I should not see the delete menu available in more.
 - PASSBOLT-1576: Fixed Hash component warning message in EmailQueue.
 
+### Added
+- PASSBOLT-1572: As LU, I should be able to see which users a password is shared with directly from the sidebar.
+
 ## [1.0.11] - 2016-05-16
 ### Added
 - PASSBOLT-1388: As a user I should receive an email notification when a password is updated.
