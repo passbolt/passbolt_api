@@ -491,7 +491,7 @@ class Resource extends AppModel {
 	}
 
 /**
- * Returns true if a record with particular ID exists.
+ * Returns true if a record with particular ID has been soft deleted.
  *
  * If $id is not passed it calls `Model::getID()` to obtain the current record ID,
  * if the resource has been soft deleted, is considered has a resource which doesn't
@@ -500,7 +500,7 @@ class Resource extends AppModel {
  * @param int|string $id ID of record to check for existence
  * @return bool True if such a record exists
  */
-	public function exists($id = null) {
+	public function isSoftDeleted($id = null) {
 		if ($id === null) {
 			$id = $this->getID();
 		}
@@ -511,7 +511,7 @@ class Resource extends AppModel {
 
 		$data = ['Resource.id' => $id];
 		$o = $this->getFindOptions('exists', User::get('Role.name'), $data);
-		return (bool)$this->find('count', $o);
+		return !(bool)$this->find('count', $o);
 	}
 
 /**

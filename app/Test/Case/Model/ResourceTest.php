@@ -289,22 +289,27 @@ class ResourceTest extends AppTestCase {
 		$resourceF = $this->Resource->findById($resourceId);
 		$this->assertEqual($resourceF['Resource']['deleted'], true);
 
-		// The resource should not exist anymore
-		$this->assertFalse($this->Resource->exists($resourceId));
+		// The resource should has been marked as soft deleted
+		$this->assertTrue($this->Resource->isSoftDeleted($resourceId));
 	}
 
 	/**
-	 * Test the overridden exists function
+	 * Test the softDeleted function
 	 */
-	public function testExists() {
+	public function testIsSoftDeleted() {
 		$user = $this->User->findById(common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 
 		$id = Common::uuid('not-valid-reference');
-		$this->assertFalse($this->Resource->exists($id));
+		$this->assertTrue($this->Resource->isSoftDeleted($id));
 
 		$id = Common::uuid('resource.id.facebook-account');
-		$this->assertTrue($this->Resource->exists($id));
+		$this->assertFalse($this->Resource->isSoftDeleted($id));
+
+		// Soft delete the resource
+		$this->Resource->softDelete($id);
+		// The resource should has been marked as soft deleted
+		$this->assertTrue($this->Resource->isSoftDeleted($id));
 	}
 
 }

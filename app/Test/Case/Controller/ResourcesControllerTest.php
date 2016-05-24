@@ -42,6 +42,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		'app.groupsUser',
 		'app.role',
 		'app.gpgkey',
+		'app.email_queue',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
@@ -711,7 +712,7 @@ class ResourcesControllerTest extends ControllerTestCase
 				'name' => "Edit a deleted resource"
 			)
 		);
-		$this->setExpectedException('HttpException', 'The resource doesn\'t exist');
+		$this->setExpectedException('HttpException', 'The resource does not exist');
 		$this->testAction("/resources/$rsId.json", array(
 			'data' => $data,
 			'method' => 'put',
