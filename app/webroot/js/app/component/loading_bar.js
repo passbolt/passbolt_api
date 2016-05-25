@@ -176,6 +176,24 @@ var LoadingBar = passbolt.component.LoadingBar = mad.Component.extend('passbolt.
 	},
 
 	/**
+	 * Listen when an ajax request is starting from mad.
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
+	 */
+	'{mad.bus.element} mad_ajax_request_start': function (el, ev, request) {
+		mad.bus.trigger('passbolt_ajax_request_start', request);
+	},
+
+	/**
+	 * Listen when an ajax request is completed in mad.
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
+	 */
+	'{mad.bus.element} mad_ajax_request_complete': function (el, ev, request) {
+		mad.bus.trigger('passbolt_ajax_request_complete', request);
+	},
+
+	/**
 	 * Listen when an ajax request is starting.
 	 * @param {HTMLElement} el The element the event occurred on
 	 * @param {HTMLEvent} ev The event which occurred
