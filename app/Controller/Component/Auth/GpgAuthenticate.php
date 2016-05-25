@@ -45,6 +45,9 @@ class GpgAuthenticate extends BaseAuthenticate {
  * @return array|false the user or false if authentication failed
  */
 	public function authenticate(CakeRequest $request, CakeResponse $response) {
+		// Log authenticate call.
+		ControllerLog::write(Status::DEBUG, $request, 'authenticate', '');
+
 		// Init gpg object and load server key
 		$this->_initKeyring();
 		$this->_response = &$response;
