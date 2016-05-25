@@ -54,7 +54,7 @@ class GpgkeyTask extends ModelTask {
 
 	public function getData() {
 		$User = Common::getModel('User');
-		$us = $User->find('all');
+		$us = $User->find('all', ['conditions' => ['role_id <>' => Common::uuid('role.id.anonymous')]]);
 		$Gpg = new \Passbolt\Gpg();
 
 		$Model = ClassRegistry::init($this->model);
