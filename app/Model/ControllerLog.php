@@ -208,7 +208,9 @@ class ControllerLog extends AppModel {
 		}
 
 		// get interesting information from request if there was an error
-		if ($level == Status::ERROR && Configure::read('Log.request_data')) {
+		$logData = Configure::read('Log.request_data') === 'all' ||
+			($level == Status::ERROR && (Configure::read('Log.request_data') === true ||  Configure::read('Log.request_data') === 'error'));
+		if ($logData) {
 			$tmp['data'] = $request->data;
 			$tmp['query'] = $request->query;
 			$tmp['params'] = $request->params;

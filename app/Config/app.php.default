@@ -131,7 +131,10 @@ $config = [
 		'notice' => true,
 		'debug' => true,
 		'warning' => true,
-		// Log request data on errors
+		// Log request data on errors.
+		// possible values:
+		// - 'all' will log request data for all statuses.
+		// - 'error' or true will log request data for errors only.
 		'request_data' => true
 	]
 ];

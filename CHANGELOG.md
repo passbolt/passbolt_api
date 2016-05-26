@@ -6,8 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PASSBOLT-1439: Email is sent as anonymous when a user is created from the console.
 - PASSBOLT-1509: As LU, when a password is shared with me in read only, I should not see the delete menu available in more.
+- PASSBOLT-1407: As a LU there is no visual feedback when I upload a picture and that the process is in progress.
+- PASSBOLT-1579: Segfault at the end of setup when trying to display login form.
 - PASSBOLT-1576: Fixed Hash component warning message in EmailQueue.
-- PASSBOLT-1407: As a LU there is no visual feedback when I upload my profile picture showing that the process is in progress.
 
 ### Added
 - PASSBOLT-1572: As LU, I should be able to see which users a password is shared with directly from the sidebar.
