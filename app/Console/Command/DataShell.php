@@ -99,7 +99,6 @@ class DataShell extends AppShell {
 					'DataUnitTests.Profile',
 					'DataUnitTests.Avatar',
 					'DataUnitTests.Resource',
-					'DataUnitTests.Comment',
 					// testing only
 					'DataUnitTests.CategoryType',
 					'DataUnitTests.Category',
@@ -110,6 +109,7 @@ class DataShell extends AppShell {
 					'DataUnitTests.ItemTag',
 					'DataUnitTests.Permission',
 					'DataUnitTests.Secret',
+					'DataUnitTests.Comment',
 				);
 		}
 	}
