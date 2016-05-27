@@ -294,12 +294,55 @@ class AuthControllerTest extends ControllerTestCase {
 		$this->assertTrue(count($r->body) > 1, 'There should be some users');
 	}
 
+/**
+ * Test user cannot login if account is disabled
+ */
+	public function testNoLoginIfInactiveAndDeleted() {
+		$this->_gpgSetup('ruth', false);
+		$this->assertEquals('9B78A8F124D440FEF5A52159546B4787A3A2AE97', $this->_keys['user']['fingerprint']);
+		$this->testAction('/auth/login', array(
+			'data' => array(
+				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+			)
+		));
+		$this->assertTrue(isset($this->headers['X-GPGAuth-Error']), 'There should not be an error header for fingerprint: ' . $this->_keys['user']['fingerprint']);
+	}
+
+/**
+ * Test user cannot login if account is inactive
+ */
+	public function testNoLoginIfInactive() {
+		$this->_gpgSetup('orna', false);
+		$this->assertEquals('E2E98DCC84FB41F69603C346EA62E0B3397EEAB6', $this->_keys['user']['fingerprint']);
+		$this->testAction('/auth/login', array(
+			'data' => array(
+				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+			)
+		));
+		$this->assertTrue(isset($this->headers['X-GPGAuth-Error']), 'There should not be an error header for fingerprint: ' . $this->_keys['user']['fingerprint']);
+	}
+
+/**
+ * Test user cannot login if account is active but is marked as deleted
+ */
+	public function testNoLoginIfActiveAndDeleted() {
+		$this->_gpgSetup('sofia', false);
+		$this->assertEquals('252B91CB28A96C6D67E8FC139020576F08D8B763', $this->_keys['user']['fingerprint']);
+		$this->testAction('/auth/login', array(
+			'data' => array(
+				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+			)
+		));
+		$this->assertTrue(isset($this->headers['X-GPGAuth-Error']), 'There should not be an error header for fingerprint: ' . $this->_keys['user']['fingerprint']);
+	}
+
 	// ====== UTILITIES =========================================================
 
 /**
  * Setup GPG and import the keys to be used in the tests
+ * @param string $name ada by default
  */
-	protected function _gpgSetup() {
+	protected function _gpgSetup($name = 'ada', $private = true) {
 		$this->_gpg = new gnupg();
 		$this->_gpg->seterrormode(gnupg::ERROR_EXCEPTION);
 
@@ -307,11 +350,15 @@ class AuthControllerTest extends ControllerTestCase {
 		$this->_keys = array(
 			'server' => Configure::read('GPG.serverKey'),
 			'user' => array(
-				'public' => Configure::read('GPG.testKeys.path') . 'ada_public.key',
-				'private' => Configure::read('GPG.testKeys.path') . 'ada_private_nopassphrase.key',
+				'public' => Configure::read('GPG.testKeys.path') . $name . '_public.key',
 				'passphrase' => ''
 			)
 		);
+		if ($private) {
+			// only keys with no passphrase are supported at the moment
+			$this->_keys['user']['private'] = Configure::read('GPG.testKeys.path') . $name . '_private_nopassphrase.key';
+		}
+
 		// Get fingerprint and add it to array.
 		$Gpg = new \Passbolt\Gpg();
 		$publicKeyinfo = $Gpg->getKeyInfo(file_get_contents($this->_keys['user']['public']));
@@ -321,18 +368,15 @@ class AuthControllerTest extends ControllerTestCase {
 		// if needed we add them for later use in the tests
 		$this->_gpg = new gnupg();
 		foreach ($this->_keys as $name => $key) {
-			//$type = ($name == 'server') ? 'public' : 'private';
-			$type = 'public';
-			$keydata = file_get_contents($key[$type]);
-			if (!$this->_gpg->import($keydata)) {
-				echo 'could not import ' . $type . ' key' . $key['fingerprint'];
-				die;
-			}
-			$type = 'private';
-			$keydata = file_get_contents($key[$type]);
-			if (!$this->_gpg->import($keydata)) {
-				echo 'could not import ' . $type . ' key' . $key['fingerprint'];
-				die;
+			$types = array('public', 'private');
+			foreach ($types as $type) {
+				if(isset($key[$type])) {
+					$keydata = file_get_contents($key[$type]);
+					if (!$this->_gpg->import($keydata)) {
+						echo 'could not import ' . $type . ' key' . $key['fingerprint'];
+						die;
+					}
+				}
 			}
 		}
 	}

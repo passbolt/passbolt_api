@@ -65,7 +65,7 @@ class GpgkeyTask extends ModelTask {
 			$keyRaw = $this->getUserKey($u['User']['id']);
 			$info = $Gpg->getKeyInfo($keyRaw);
 			$key = array(
-				'Gpgkey'=>array(
+				'Gpgkey'=> array(
 					'id' => Common::uuid(),
 					'user_id' => $u['User']['id'],
 					'key' => $keyRaw,
