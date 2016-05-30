@@ -229,8 +229,8 @@ ffvdXuT2n3w=
 		$testcases = array(
 			'' => false,
 			'55C6CD7D3DCBACF4D3432245EFAA789F48BF426F' => true,
-			'120F87DDE5A438DE89826D464F8194025FD2D92C' => false, // Should not validate because already used in database for nancy. Not unique.
-			'120F87DDE5A438DE89826Z464F8194025FD2D92C' => false,
+			'459B102D43F683E7EFC523610EC547AD9E7FA152' => false, // Should not validate because already used in database for nancy. Not unique.
+			'459B102D43F683Z7EFC523610EC547AD9E7FA152' => false,
 			'8745AE100' => false,
 			'120F87DDE5A438DE89826D464F8194025FD2D92CG' => false
 		);

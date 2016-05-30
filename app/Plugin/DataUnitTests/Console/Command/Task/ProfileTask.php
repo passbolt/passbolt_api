@@ -204,6 +204,34 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'Leveson'
 		));
 
+		// Users with no access
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.orna'),
+			'user_id' => Common::uuid('user.id.orna'),
+			'gender' => 'f',
+			'date_of_birth' => '1949-12-19',
+			'title' => 'Ms',
+			'first_name' => 'Orna',
+			'last_name' => 'Berry'
+		));
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.sofia'),
+			'user_id' => Common::uuid('user.id.sofia'),
+			'gender' => 'f',
+			'date_of_birth' => '1850-02-10',
+			'title' => 'Ms',
+			'first_name' => 'Sofia',
+			'last_name' => 'Kovalevskaya'
+		));
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.ruth'),
+			'user_id' => Common::uuid('user.id.ruth'),
+			'gender' => 'f',
+			'date_of_birth' => '1924-01-01',
+			'title' => 'Ms',
+			'first_name' => 'Ruth',
+			'last_name' => 'Teitelbaum'
+		));
 		return $c;
 	}
 }

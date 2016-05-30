@@ -92,8 +92,8 @@ class ResourceFixture extends CakeTestFixture {
 			'uri' => 'https://unit-test.com',
 			'description' => 'description',
 			'deleted' => 0,
-			'created' => '2016-02-12 11:35:09',
-			'modified' => '2016-02-12 11:35:09',
+			'created' => '2016-05-27 15:07:46',
+			'modified' => '2016-05-27 15:07:46',
 			'created_by' => '201b442c-d6ca-3ee6-a443-ce669ca0ec6e',
 			'modified_by' => '201b442c-d6ca-3ee6-a443-ce669ca0ec6e'
 		),

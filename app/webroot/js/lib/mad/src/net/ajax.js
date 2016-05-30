@@ -89,6 +89,10 @@ var Ajax = mad.net.Ajax = can.Construct.extend('mad.net.Ajax', /** @static */ {
             }
         }
 
+
+        // Start ajax request.
+        mad.bus.trigger('mad_ajax_request_start', request);
+
         // Perform the request.
         var returnValue = can.ajax(request)
             // pipe it to intercept server before any other treatments
@@ -153,7 +157,7 @@ var Ajax = mad.net.Ajax = can.Construct.extend('mad.net.Ajax', /** @static */ {
         // Handle the server success response with the default response handler
         returnValue.then(function (data, response, request) {
             // Propagate an event on the bus to inform other components.
-            //mad.bus.trigger('passbolt_ajax_request_complete', [request]);
+            mad.bus.trigger('mad_ajax_request_complete', request);
             var ResponseHandlerClass = self._getResponseHandlerClass();
             var ResponseHandlerClass = can.getObject(ResponseHandlerClass);
             var responseHandler = new ResponseHandlerClass(response, request);
@@ -163,7 +167,7 @@ var Ajax = mad.net.Ajax = can.Construct.extend('mad.net.Ajax', /** @static */ {
         // Handle the server fail response with the default response handler
         returnValue.fail(function (jqXHR, textStatus, response) {
             // Propagate an event on the bus to inform other components.
-            //mad.bus.trigger('passbolt_ajax_request_complete', [request]);
+            mad.bus.trigger('mad_ajax_request_complete', request);
             var ResponseHandlerClass = self._getResponseHandlerClass();
             var ResponseHandlerClass = can.getObject(ResponseHandlerClass);
             var responseHandler = new ResponseHandlerClass(response, request);

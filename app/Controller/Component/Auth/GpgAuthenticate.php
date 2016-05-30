@@ -45,6 +45,9 @@ class GpgAuthenticate extends BaseAuthenticate {
  * @return array|false the user or false if authentication failed
  */
 	public function authenticate(CakeRequest $request, CakeResponse $response) {
+		// Log authenticate call.
+		ControllerLog::write(Status::DEBUG, $request, 'authenticate', '');
+
 		// Init gpg object and load server key
 		$this->_initKeyring();
 		$this->_response = &$response;
@@ -120,8 +123,8 @@ class GpgAuthenticate extends BaseAuthenticate {
 			}
 			// extract the UUID to get the database records
 			list($version, $length, $uuid, $version2) = explode('|', $request->data['gpg_auth']['user_token_result']);
-			$isValidAuthToken = $AuthenticationToken->isValid($uuid, $user['User']['id']);
-			if (empty($isValidAuthToken)) {
+			$isValidToken = $AuthenticationToken->isValid($uuid, $user['User']['id']);
+			if (!$isValidToken) {
 				return $this->__error('The user token result could not be found ' .
 					't=' . $uuid . ' u=' . $user['User']['id']);
 			}
