@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1579: Segfault at the end of setup when trying to display login form.
 - PASSBOLT-1576: Fixed Hash component warning message in EmailQueue.
 - PASSBOLT-1322: Insertion of comments in unittest dataset display an error in the console.
+- PASSBOLT-1234: Authentication token used for account registration expiracy check.
 
 ### Added
 - PASSBOLT-1572: As LU, I should be able to see which users a password is shared with directly from the sidebar.
