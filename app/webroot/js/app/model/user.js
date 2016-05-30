@@ -145,6 +145,7 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 			type: 'PUT',
 			params: params,
 			success: success,
+			silentLoading: true,
 			error: error
 		}).pipe(function (data, textStatus, jqXHR) {
 			//pipe the result to convert cakephp response format into can format
