@@ -2,11 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.0.12] - 2016-05-31
 ### Fixed
 - PASSBOLT-1439: Email is sent as anonymous when a user is created from the console.
 - PASSBOLT-1509: As LU, when a password is shared with me in read only, I should not see the delete menu available in more.
-- PASSBOLT-1407: As a LU there is no visual feedback when I upload a picture and that the process is in progress.
+- PASSBOLT-1407: As LU, there is no visual feedback when I upload a picture and that the process is in progress.
 - PASSBOLT-1579: Segfault at the end of setup when trying to display login form.
 - PASSBOLT-1576: Fixed Hash component warning message in EmailQueue.
 - PASSBOLT-1322: Insertion of comments in unittest dataset display an error in the console.
@@ -91,7 +91,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.11...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.12...HEAD
+[1.0.11]: https://github.com/passbolt/passbolt/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/passbolt/passbolt/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/passbolt/passbolt/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/passbolt/passbolt/compare/v1.0.8...v1.0.9
