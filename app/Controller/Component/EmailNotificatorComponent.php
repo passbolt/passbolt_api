@@ -65,6 +65,7 @@ class EmailNotificatorComponent extends Component {
 					'User.id' => $userId,
 				],
 				'fields' => [
+					'id',
 					'username'
 				],
 				'contain' => [
@@ -382,6 +383,36 @@ class EmailNotificatorComponent extends Component {
 			$subject,
 			[
 				'sender' => $sender,
+				'account' => $recipient,
+				'token' => $data['token'],
+			],
+			$template
+		);
+	}
+
+	/**
+	 * Send a notification email regarding a an account recovery.
+	 *
+	 * @param uuid $toUserId user id of the recipient
+	 * @param array $data
+	 *   variables to pass to the template which should contain
+	 *     - token the token
+	 * @return void
+	 */
+	public function accountRecoveryNotification($toUserId, $data) {
+		// Get account info.
+		$recipient = $this->_getAuthorInfo($toUserId);
+
+		// Default subject.
+		$subject = __("Your account recovery, %s!", $recipient['Profile']['first_name']);
+
+		$template = 'account_recovery';
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			$subject,
+			[
 				'account' => $recipient,
 				'token' => $data['token'],
 			],

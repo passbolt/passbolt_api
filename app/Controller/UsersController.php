@@ -23,12 +23,15 @@ class UsersController extends AppController {
  */
 	public function beforeFilter() {
 		$allow = [
-			'validateAccount'
+			'validateAccount',
+			'recover',
+			'recover_thankyou',
 		];
 		if (Configure::read('Registration.public')) {
 			$allow[] = 'register';
 			$allow[] = 'register_thankyou';
 		}
+
 		$this->Auth->allow($allow);
 		parent::beforeFilter();
 	}
@@ -110,6 +113,69 @@ class UsersController extends AppController {
 			return;
 		}
 
+		$this->layout = 'login';
+	}
+
+
+	/**
+	 * Recover an existing account page.
+	 *
+	 * @throws Exception
+	 */
+	public function recover() {
+		$this->layout = 'login';
+
+		if (!empty($this->request->data)) {
+			try {
+				// No user data provided
+				if (!isset($this->request->data['User']) || empty($this->request->data['User'])) {
+					throw new Exception(__('User data are missing'));
+				}
+
+				// No username is provided.
+				if (!isset($this->request->data['User']['username']) || empty($this->request->data['User']['username'])) {
+					throw new Exception(__('User data are missing'));
+				}
+
+				// User doesn't exist.
+				$u = $this->User->findByUsername($this->request->data['User']['username']);
+				if (empty($u)) {
+					throw new Exception(__('Email provided doesn\'t belong to an existing user'));
+				}
+
+				// Create the setup authentication token
+				$saveToken = $this->User->AuthenticationToken->generate($u['User']['id']);
+				if (!$saveToken) {
+					throw new Exception(__('It was not possible to create a recovery token'));
+				}
+			}
+			catch (Exception $e) {
+				if ($this->request->is('json')) {
+					throw $e;
+				}
+
+				$this->User->invalidate('username', $e->getMessage());
+				return;
+			}
+
+			// Send notification email
+			$this->EmailNotificator->accountRecoveryNotification(
+				$u['User']['id'],
+				[
+					'token' => $saveToken,
+					'creator_id' => $u['User']['id'],
+				]);
+
+			$this->redirect('/recover/thankyou');
+		}
+	}
+
+	/**
+	 * Thank you page after recovery.
+	 *
+	 * @throws Exception
+	 */
+	public function recover_thankyou() {
 		$this->layout = 'login';
 	}
 

@@ -136,6 +136,8 @@
 	Router::connect('/users/index/*', array('controller' => 'users', 'action' => 'index'));
 	Router::connect('/register', array('controller' => 'users', 'action' => 'register'));
 	Router::connect('/register/thankyou', array('controller' => 'users', 'action' => 'register_thankyou'));
+	Router::connect('/recover', array('controller' => 'users', 'action' => 'recover'));
+	Router::connect('/recover/thankyou', array('controller' => 'users', 'action' => 'recover_thankyou'));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'delete', '[method]' => 'DELETE'));
 	Router::connect('/users/password/*', array('controller' => 'users', 'action' => 'editPassword', '[method]' => 'PUT'));
 	Router::connect('/users/avatar/*', array('controller' => 'users', 'action' => 'editAvatar', '[method]' => 'POST'));
