@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- PASSBOLT-1366: Worker bug when multiple passbolt instances are open in multiple windows
+
 ## [1.0.12] - 2016-05-31
 ### Fixed
 - PASSBOLT-1439: Email is sent as anonymous when a user is created from the console.
