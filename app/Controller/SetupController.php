@@ -91,14 +91,4 @@ class SetupController extends AppController {
 		$this->set('userAgent', $userAgent);
 	}
 
-/**
- * Ping passbolt.
- *
- * @return void
- */
-	public function ping() {
-		header('Access-Control-Allow-Origin: *');
-		header('Access-Control-Allow-Methods: PUT, OPTIONS');
-		$this->Message->success(__("Affirmative, Dave. I read you."));
-	}
 }
