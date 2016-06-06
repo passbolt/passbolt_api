@@ -229,6 +229,15 @@ class Resource extends AppModel {
 		$conditions = [];
 
 		switch ($case) {
+			case 'exists':
+				$conditions = [
+					'conditions' => [
+						'Resource.deleted' => 0,
+						'Resource.id' => $data['Resource.id']
+					]
+				];
+				break;
+
 			case 'add':
 			case 'edit':
 			case 'view':
@@ -302,6 +311,16 @@ class Resource extends AppModel {
  */
 	public static function getFindFields($case = 'view', $role = null) {
 		switch ($case) {
+			case 'exists':
+				$fields = [
+					'fields' => [
+						'Resource.id',
+						'Resource.deleted',
+					],
+					// avoid the behavior hooks, especially the permissionable behavior
+					'callbacks' => false
+				];
+				break;
 			case 'view':
 			case 'index':
 			case 'viewByCategory':
@@ -468,6 +487,68 @@ class Resource extends AppModel {
 		}
 
 		// Commit transaction.
+		$dataSource->commit();
+	}
+
+/**
+ * Returns true if a record with particular ID has been soft deleted.
+ *
+ * If $id is not passed it calls `Model::getID()` to obtain the current record ID,
+ * if the resource has been soft deleted, is considered has a resource which doesn't
+ * exist.
+ *
+ * @param int|string $id ID of record to check for existence
+ * @return bool True if such a record exists
+ */
+	public function isSoftDeleted($id = null) {
+		if ($id === null) {
+			$id = $this->getID();
+		}
+
+		if ($id === false) {
+			return false;
+		}
+
+		$data = ['Resource.id' => $id];
+		$o = $this->getFindOptions('exists', User::get('Role.name'), $data);
+		return !(bool)$this->find('count', $o);
+	}
+
+/**
+ * Soft delete a resource.
+ *
+ * @param string $id Id of the resource to soft delete
+ * @return void
+ *
+ * @throws Exception
+ * @throws ValidationException
+ */
+	public function softDelete($id) {
+		$Permission = ClassRegistry::init('Permission');
+
+		// Begin transaction
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+
+		// Mark the resource as deleted
+		$data['Resource'] = [
+			'id' => $id,
+			'deleted' => true
+		];
+		$fields = $this->getFindFields('delete', User::get('Role.name'));
+		if (!$this->save($data, true, $fields['fields'])) {
+			$dataSource->rollback();
+			throw new Exception(__('Unable to soft delete the resource'));
+		}
+
+		// Revoke the user's permissions
+		$deleteOptions = ['Permission.aro_foreign_key' => $id];
+		if (!$Permission->deleteAll($deleteOptions, false)) {
+			$dataSource->rollback();
+			throw new Exception(__('Unable to delete de resource\'s permissions'));
+		}
+
+		// Everything fine, we commit.
 		$dataSource->commit();
 	}
 }

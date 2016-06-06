@@ -42,6 +42,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		'app.groupsUser',
 		'app.role',
 		'app.gpgkey',
+		'app.email_queue',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
@@ -114,11 +115,28 @@ class ResourcesControllerTest extends ControllerTestCase
 		$user = $this->User->findById(common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
-		$this->setExpectedException('HttpException', 'The resource does not exist');
+		$this->setExpectedException('HttpException', 'You are not authorized to access this resource');
 		$result = json_decode($this->testAction("/resources/{$resId}.json", array(
 			'method' => 'Get',
 			'return' => 'contents'
 		)), true);
+	}
+
+	public function testViewDeletedResource()
+	{
+		$rsId = Common::uuid('resource.id.facebook-account');
+
+		// delete the resource
+		$result = json_decode($this->testAction("/resources/$rsId.json", array(
+			'method' => 'delete',
+			'return' => 'contents'
+		)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"delete /resources/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
+
+		// View the resource
+		$this->setExpectedException('HttpException', 'The resource does not exist');
+		$this->testAction("/resources/view/$rsId.json", array('return' => 'contents'));
 	}
 
 	public function testView()
@@ -676,6 +694,32 @@ class ResourcesControllerTest extends ControllerTestCase
 		}
 	}
 
+	public function testEditDeletedResource()
+	{
+		$rsId = Common::uuid('resource.id.facebook-account');
+
+		// delete the resource
+		$result = json_decode($this->testAction("/resources/$rsId.json", array(
+			'method' => 'delete',
+			'return' => 'contents'
+		)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"delete /resources/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
+
+		// Update the resource
+		$data = array(
+			'Resource' => array(
+				'name' => "Edit a deleted resource"
+			)
+		);
+		$this->setExpectedException('HttpException', 'The resource does not exist');
+		$this->testAction("/resources/$rsId.json", array(
+			'data' => $data,
+			'method' => 'put',
+			'return' => 'contents'
+		));
+	}
+
 	/**
 	 * Test a normal edit operation.
 	 */
@@ -770,6 +814,26 @@ class ResourcesControllerTest extends ControllerTestCase
 		)), true);
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
 			"delete /resources/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
+	}
+
+	public function testDeleteAlreadyDeletedResource()
+	{
+		$rsId = Common::uuid('resource.id.facebook-account');
+
+		// delete the resource
+		$result = json_decode($this->testAction("/resources/$rsId.json", array(
+			'method' => 'delete',
+			'return' => 'contents'
+		)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"delete /resources/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
+
+		// try to delete the resource a second time
+		$this->setExpectedException('HttpException', 'The resource does not exist');
+		$this->testAction("/resources/{$rsId}.json", array(
+			'method' => 'delete',
+			'return' => 'contents'
+		));
 	}
 
 }

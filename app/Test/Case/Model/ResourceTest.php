@@ -13,7 +13,10 @@ App::uses('AppTestCase', 'Test');
 class ResourceTest extends AppTestCase {
 
 	public $fixtures = array(
+		'app.category',
 		'app.resource',
+		'app.categoryType',
+		'app.categoriesResource',
 		'app.user',
 		'app.role',
 		'app.profile',
@@ -21,12 +24,16 @@ class ResourceTest extends AppTestCase {
 		'app.file_storage',
 		'app.groupsUser',
 		'app.group',
-		'core.cakeSession'
+		'app.permissionsType',
+		'app.permission',
+		'app.permission_view',
+		'core.cakeSession',
 	);
 
 	public function setUp() {
 		parent::setUp();
 		$this->Resource = ClassRegistry::init('Resource');
+		$this->User = ClassRegistry::init('User');
 	}
 
 /**
@@ -266,6 +273,43 @@ class ResourceTest extends AppTestCase {
 		$this->assertNotEquals($default, Resource::getFindConditions('index'), 'Find conditions missing for index');
 		$this->assertNotEquals($default, Resource::getFindConditions('viewByCategory'), 'Find conditions missing for viewByCategory');
 		$this->assertEquals($default, Resource::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
+	}
+
+	/**
+	 * Test that when soft delete a resource it is still in db and his permissions have been revoked
+	 */
+	public function testSoftDelete() {
+		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$this->User->setActive($user);
+
+		$resourceId = Common::uuid('resource.id.facebook-account');
+		$this->Resource->softDelete($resourceId);
+
+		// Resource deleted field should be set at true
+		$resourceF = $this->Resource->findById($resourceId);
+		$this->assertEqual($resourceF['Resource']['deleted'], true);
+
+		// The resource should has been marked as soft deleted
+		$this->assertTrue($this->Resource->isSoftDeleted($resourceId));
+	}
+
+	/**
+	 * Test the softDeleted function
+	 */
+	public function testIsSoftDeleted() {
+		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$this->User->setActive($user);
+
+		$id = Common::uuid('not-valid-reference');
+		$this->assertTrue($this->Resource->isSoftDeleted($id));
+
+		$id = Common::uuid('resource.id.facebook-account');
+		$this->assertFalse($this->Resource->isSoftDeleted($id));
+
+		// Soft delete the resource
+		$this->Resource->softDelete($id);
+		// The resource should has been marked as soft deleted
+		$this->assertTrue($this->Resource->isSoftDeleted($id));
 	}
 
 }

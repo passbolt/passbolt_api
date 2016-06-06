@@ -191,14 +191,14 @@ class ResourcesController extends AppController {
 			return $this->Message->error(__('The resource id is invalid'));
 		}
 		// check if it exists
-		$resource = $this->Resource->findById($id);
-		if (!$resource) {
+		if (!$this->Resource->exists($id)) {
 			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
 		}
-
-		// check if user is authorized
-		// the permissionable after find executed on the previous operation findById should drop
-		// any record the user is not authorized to access. This test should always be true.
+		// check if it has been soft deleted
+		if ($this->Resource->isSoftDeleted($id)) {
+			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
+		}
+		// check if the current user is authorized to access the resource
 		if (!$this->Resource->isAuthorized($id, PermissionType::READ)) {
 			return $this->Message->error(__('You are not authorized to access this resource'), ['code' => 403]);
 		}
@@ -227,20 +227,26 @@ class ResourcesController extends AppController {
 		if (!Common::isUuid($id)) {
 			return $this->Message->error(__('The resource id is invalid'));
 		}
-		$resource = $this->Resource->findById($id);
-		if (!$resource) {
+		// check the resource exists
+		if (!$this->Resource->exists($id)) {
 			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
 		}
-
-		// check if user is authorized
+		// check if it has been soft deleted
+		if ($this->Resource->isSoftDeleted($id)) {
+			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
+		}
+		// check if the current user is authorized to access the resource
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
 			return $this->Message->error(__('You are not authorized to delete this resource'), ['code' => 403]);
 		}
 
-		$resource['Resource']['deleted'] = '1';
-		$fields = $this->Resource->getFindFields('delete', User::get('Role.name'));
-		if (!$this->Resource->save($resource, true, $fields['fields'])) {
-			return $this->Message->error(__('Error while deleting'));
+		// Retrieve the resource before soft deleting it, information can be user after the deletion
+		$resource = $this->Resource->findById($id);
+		// Soft delete the resource
+		try {
+			$this->Resource->softDelete($id);
+		} catch(Exception $e) {
+			return $this->Message->error(__('Error while deleting resource'));
 		}
 
 		// Email notification.
@@ -427,15 +433,21 @@ class ResourcesController extends AppController {
 		}
 
 		// check if the resource exists
-		$resource = $this->Resource->findById($id);
-		if (!$resource) {
-			return $this->Message->error(__('The resource doesn\'t exist'));
+		if (!$this->Resource->exists($id)) {
+			return $this->Message->error(__('The resource does not exist'));
 		}
-
-		// check if user is authorized
+		// check if it has been soft deleted
+		if ($this->Resource->isSoftDeleted($id)) {
+			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
+		}
+		// check if the current user is authorized to access the resource
 		if (!$this->Resource->isAuthorized($id, PermissionType::UPDATE)) {
 			return $this->Message->error(__('You are not authorized to edit this resource'), ['code' => 403]);
 		}
+
+		// Retrieve the resource
+		$resource = $this->Resource->findById($id);
+
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;
