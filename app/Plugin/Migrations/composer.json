@@ -1,0 +1,27 @@
+{
+	"name": "cakedc/migrations",
+	"description": "Migrations Plugin for CakePHP",
+	"type": "cakephp-plugin",
+	"keywords": ["cakephp","migrations"],
+	"homepage": "http://cakedc.com",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Cake Development Corporation",
+			"email": "team@cakedc.com",
+			"homepage": "http://cakedc.com"
+		}
+	],
+	"support": {
+		"email": "team@cakedc.com",
+		"issues": "https://github.com/CakeDC/migrations/issues",
+		"forum": "http://stackoverflow.com/tags/cakedc",
+		"wiki": "https://github.com/CakeDC/migrations/blob/master/Docs/Home.md",
+		"irc": "irc://irc.freenode.org/cakephp",
+		"source": "https://github.com/CakeDC/migrations"
+	},
+	"require": {
+		"php": ">=5.2.8",
+		"composer/installers": "*"
+	}
+}
