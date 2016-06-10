@@ -6,6 +6,8 @@
  * @copyright (c) 2016-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+App::uses('HttpSocket', 'Network/Http');
+
 class HealthCheckController extends AppController {
 
 /**
@@ -20,6 +22,13 @@ class HealthCheckController extends AppController {
  * @var array
  */
 	protected $_checks = [];
+
+/**
+ * MigrationVersion class
+ *
+ * @var MigrationVersion
+ */
+	protected $_MigrationVersion = null;
 
 /**
  * Called before the controller action. Used to manage access right
@@ -135,6 +144,16 @@ class HealthCheckController extends AppController {
  * @access private
  */
 	private function __appChecks() {
+
+		try {
+			$this->_checks['remoteVersion'] = Common::getLatestTagName();
+			$this->_checks['latestVersion'] = Common::isLatestVersion();
+		} catch(exception $e) {
+			$this->_checks['remoteVersion'] = null;
+			$this->_checks['latestVersion'] = null;
+		}
+
+		$this->_checks['needMigration'] = Common::needMigration();
 		$this->_checks['ssl'] = ($this->request->is('ssl') && configure::read('app.force_ssl'));
 		$this->_checks['gpg'] = (class_exists('gnupg'));
 		$this->_checks['gpgKeyDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
@@ -155,4 +174,6 @@ class HealthCheckController extends AppController {
 		$this->_checks['phpunit'] = (class_exists('PHPUnit_Runner_Version'));
 		$this->_checks['phpunitVersion'] = ($this->_checks['phpunit'] && PHPUnit_Runner_Version::id() === '3.7.38');
 	}
+
+
 }

@@ -1,12 +1,12 @@
 <?php
-class PASSBOLT1597AppSettings extends CakeMigration {
+class v1_1_0 extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'PASSBOLT_1597_AppSettings';
+	public $description = 'https://www.passbolt.com/release/notes#v1.1.0';
 	public $since = 'v1.1.0';
 
 /**

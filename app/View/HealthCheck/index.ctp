@@ -17,7 +17,7 @@ endif;
 <div class="grid grid-responsive-12">
 <div class="row">
 <div class="col8">
-<h2><?php echo __('Passbolt API Status (v%s)', Configure::read('App.version')); ?></h2>
+<h2><?php echo __('Passbolt API Status') ?></h2>
 <h3><?php echo __('Core configuration'); ?></h3>
 	<?php
 	if (Configure::read('Security.salt') === 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi'):
@@ -151,6 +151,24 @@ endif;
 			echo '</div>';
 		}
 	}
+?>
+<?php
+	if (!isset($checks['latestVersion'])):
+		echo '<div class="message error">';
+		echo __('Could not connect to passbolt repository. It is not possible check if your version is up to date.');
+		echo '</div>';
+	else:
+		if (!$checks['latestVersion']):
+			echo '<div class="message error">';
+			echo __('Your install is not up to date. It should be: ') . $checks['remoteVersion'] . '. ';
+			echo __('But you are using: ') . Configure::read('App.version.number');
+			echo '</div>';
+		else:
+			echo '<div class="message success">';
+			echo __('You application is up to date. You are using: ') . $checks['remoteVersion'];
+			echo '</div>';
+		endif;
+	endif;
 ?>
 <?php
 	if ($checks['selenium']):
