@@ -47,4 +47,29 @@ class AuthenticationBlacklist extends AppModel {
 		return $rules;
 	}
 
+/**
+ * Validate an IP address
+ *
+ * @param array $check ['ip']
+ * @return bool true if a valid IP address
+ */
+	public function validIpRange($check) {
+		if ($check['ip'] == null) {
+			return false;
+		}
+		$ipRegexp = '([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])';
+		$ipwildcardRegexp = '^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.(\*?|[01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.(\*?|[01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.(\*?|[01]?\\d\\d?|2[0-4]\\d|25[0-5])$';
+		$ipRangeRegexp = '^' . $ipRegexp . '-' . $ipRegexp . '$';
+		$ipMaskRegexp = '^' . $ipRegexp . '\/[0-9]{1,2}$';
+		if (preg_match('/' . $ipwildcardRegexp . '/', $check['ip'])) {
+			return true;
+		} elseif (preg_match('/' . $ipRangeRegexp . '/', $check['ip'])) {
+			return true;
+		} elseif (preg_match('/' . $ipMaskRegexp . '/', $check['ip'])) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

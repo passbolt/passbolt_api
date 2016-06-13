@@ -4,7 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
+- PASSBOLT-1601: ControllerLog Model should support IVP6 addresses
 - PASSBOLT-1366: Worker bug when multiple passbolt instances are open in multiple windows
+- PASSBOLT-1590: Styleguide bump to v1.0.38
 
 ## [1.0.12] - 2016-05-31
 ### Fixed

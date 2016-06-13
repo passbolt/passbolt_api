@@ -83,7 +83,7 @@ class ControllerLog extends AppModel {
 				'ip' => [
 					'required' => true,
 					'allowEmpty' => true,
-					'rule' => 'validIpRange',
+					'rule' => ['ip','both'],
 					'message' => __('The IP address must be in correct format')
 				]
 			],
@@ -180,7 +180,7 @@ class ControllerLog extends AppModel {
 		// auto populate user agent and IP
 		$userAgent = UserAgent::get();
 		$data['ControllerLog']['user_agent_id'] = $userAgent['UserAgent']['id'];
-		$data['ControllerLog']['ip'] = $request->clientIp();
+		$data['ControllerLog']['ip'] = $request->clientIp(false);
 		if (empty($data['ControllerLog']['ip'])) {
 			$data['ControllerLog']['ip'] = '127.0.0.1';
 		}

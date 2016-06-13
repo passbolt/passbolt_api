@@ -157,6 +157,32 @@ class ControllerLogTest extends CakeTestCase {
 		$this->assertFalse($r, 'Controller Log should not be created if config for that level is set to false');
 	}
 
+/**
+ * Check IP address validation
+ */
+	public function testValidIP() {
+		$testcases = array(
+			// IPV4
+			'127.0.0.1' => true,
+			'192.168.1.111' => true,
+			// IPV6
+			'::1' => true,
+			'2001:0db8:0a0b:12f0:0000:0000:0000:0001' => true,
+			'2001:db8:a0b:12f0::1' => true,
+			// Wrong IPs
+			'267.1.1.0' => false,
+			'localhost' => false,
+			'zzz:db8:a0b:12f0::1' => false,
+		);
+		foreach ($testcases as $testcase => $expect) {
+			$this->ControllerLog->set(['ControllerLog' => ['ip' => $testcase]]);
+			$msg = 'The ip address ' . $testcase;
+			$msg .= $expect ? ' should validate' : ' should not validate';
+			$result = ($this->ControllerLog->validates(['fieldList' => ['ip']]) == $expect);
+			$this->assertTrue($result, $msg);
+		}
+	}
+
 	// @TODO More write tests:
 	// Test write with non anonymous user
 	// Test POST request
