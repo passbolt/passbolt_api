@@ -77,7 +77,7 @@
 									<tr>
 										<td valign="top" class="textContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 14px;line-height: 125%;text-align: Left;padding-bottom: 20px;">
 
-											<h3>Welcome <?php echo $account['Profile']['first_name']; ?>,</h3><br/>
+											<h3>Welcome back <?php echo $account['Profile']['first_name']; ?>,</h3><br/>
 											You have just requested to recover your <a href="<?php echo Router::url('/',true); ?>">passbolt</a> account on this device.<br/>
 											Click on the link below to proceed.
 											<br/>

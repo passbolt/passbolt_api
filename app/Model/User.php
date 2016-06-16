@@ -450,6 +450,15 @@ class User extends AppModel {
 							]
 						];
 						break;
+					case 'Recovery::userInfo':
+						$conditions = [
+							'conditions' => [
+								'User.active' => true,
+								'User.deleted' => false,
+								'User.id' => $data['User.id'],
+							]
+						];
+						break;
 					case 'User::activation':
 						$conditions = [
 							'conditions' => [

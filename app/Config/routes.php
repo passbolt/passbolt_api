@@ -146,6 +146,13 @@
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'view', '[method]' => 'GET'));
 
 /**
+ * Custom route for setup
+ */
+	Router::connect('/setup/recover', array('controller' => 'setup', 'action' => 'recover', '[method]' => 'GET'));
+	Router::connect('/setup/completeRecovery', array('controller' => 'setup', 'action' => 'completeRecovery', '[method]' => 'PUT'));
+
+
+/**
  * Custom route for permissions controller
  */
 	Router::connect('/permissions/resource/:id', array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Resource', '[method]' => 'POST'), array('pass' => array('model', 'id')));
