@@ -34,8 +34,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		itemClass: passbolt.model.Resource,
 		// the view class to use. Overriden so we can put our own logic.
 		viewClass: passbolt.view.component.PasswordBrowser,
-		// the list of resources displayed by the grid
-		resources: new can.Model.List(),
 		// the list of displayed categories
 		// categories: new passbolt.model.Category.List()
 		categories: [],
@@ -328,26 +326,28 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {string} position The position of the newly created item. You can pass in one
 	 * of those strings: "before", "after", "inside", "first", "last". By dhe default value
 	 * is set to last.
+	 *
+	 * @todo remove this function check todo inside
 	 */
 	insertItem: function (resource, refResourceId, position) {
-		// add the resource to the list of observed resources
-		this.options.resources.push(resource);
 		// insert the item to the grid
 		this._super(resource, refResourceId, position);
         // Reset state to ready (to remove other states such as empty).
+		// @todo noway !!! load use this function.
         this.setState('ready');
 	},
 
 	/**
 	 * Remove an item to the grid
 	 * @param {mad.model.Model} item The item to remove
+	 * @todo check if we can remove this function by moving the state empty into the grid
 	 */
 	removeItem: function (item) {
 		// remove the item to the grid
 		this._super(item);
         // If no resources are left, set empty state.
-        if (this.options.resources.length == 0) {
-            this.setState(['ready', 'empty']);
+        if (this.options.items.length == 0) {
+            this.state.addState('empty');
         }
 	},
 
@@ -390,26 +390,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			// Make the item selected in the view.
 			this.view.selectItem(resource);
 		}
-	},
-
-	/**
-	 * reset
-	 */
-	reset: function () {
-		// reset the list of observed resources
-		// by removing a resource from the resources list stored in options, the Browser will
-		// update itself (check "{resources} remove" listener)
-		this.options.resources.splice(0, this.options.resources.length);
-	},
-
-	/**
-	 * Load resources in the grid
-	 * @param {passbolt.model.Resource.List} resources The list of resources to
-	 * load into the grid
-	 */
-	load: function (resources) {
-		// load the resources
-		this._super(resources);
 	},
 
 	/**
@@ -565,23 +545,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {passbolt.model.Resource} resource The updated resource
 	*/
 	'{passbolt.model.Resource} updated': function (model, ev, resource) {
-		if (this.options.resources.indexOf(resource) != -1) {
+		if (this.options.items.indexOf(resource) != -1) {
 			this.refreshItem(resource);
 		}
-	},
-
-	/**
-	* Observe when resources are removed from the list of displayed resources and
-	* remove it from the grid
-	* @param {mad.model.Model} model The model reference
-	* @param {HTMLEvent} ev The event which occurred
-	* @param {passbolt.model.Resource} resources The removed resource
-	*/
-	'{resources} remove': function (model, ev, resources) {
-		var self = this;
-		can.each(resources, function (resource, i) {
-			self.removeItem(resource);
-		});
 	},
 
 	/**
@@ -677,8 +643,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		//}
 
 		// find the resource to select functions of its id
-		var i = mad.model.List.indexOf(this.options.resources, rsId);
-		var resource = this.options.resources[i];
+		var i = mad.model.List.indexOf(this.options.items, rsId);
+		var resource = this.options.items[i];
 
 		if (this.beforeSelect(resource)) {
 			this.select(resource);
@@ -696,8 +662,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		var self = this;
 
 		// find the resource to select functions of its id
-		var i = mad.model.List.indexOf(this.options.resources, rsId);
-		var resource = this.options.resources[i];
+		var i = mad.model.List.indexOf(this.options.items, rsId);
+		var resource = this.options.items[i];
 
 		if (this.beforeUnselect()) {
 			self.unselect(resource);
@@ -732,15 +698,15 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
         // Set state to filter case.
         if (filter.case != undefined) {
             // Remove class belonging to previous filter.
-            if (this.filter != undefined) {
-                self.element.removeClass(this.filter.case);
+            if (this.filterSettings != undefined) {
+                self.element.removeClass(this.filterSettings.case);
             }
             // Add class for current filter. (used in styleguide).
             self.element.addClass(filter.case);
         }
 
         // store the filter
-        this.filter = filter;
+        this.filterSettings = filter;
 
 		// override the current list of categories displayed with the new ones
 		// and the relative sub-categories
@@ -754,32 +720,37 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			});
 		}
 
-		// change the state of the component to loading
-		this.setState('loading');
+		// If the user wants to filter by keywords.
+		if (this.filterSettings.type == passbolt.model.Filter.KEYWORD) {
+			this.filterByKeywords(this.filterSettings.keywords, {
+				searchInFields: ['username', 'name', 'uri', 'description']
+			});
+		}
+		// Otherwise request the server.
+		else {
+			// change the state of the component to loading
+			this.setState('loading');
 
-        // Is password workspace empty.
-        var empty = false;
+			// Make the server filters the resources.
+			passbolt.model.Resource.findAll({
+				filter: this.filterSettings,
+				recursive: true,
+				silentLoading: false
+			}, function (resources, response, request) {
+				// If the browser has been destroyed before the request completed.
+				if (self.element == null) {
+					return;
+				}
 
-		// load resources functions of the filter
-		passbolt.model.Resource.findAll({
-			filter: this.filter,
-			recursive: true,
-			silentLoading:false
-		}, function (resources, response, request) {
-			// If the browser has been destroyed before the request completed.
-			if (self.element == null) {
-				return;
-			}
-            // If no resources found, then add class empty, and render empty content html.
-            if (resources.length == 0) {
-                empty = true;
-            }
+				// load the resources in the browser
+				self.load(resources);
 
-			// load the resources in the browser
-			self.load(resources);
-			// change the state to ready
-			self.setState(empty ? ['ready', 'empty'] : 'ready');
-		});
+				self.setState('ready');
+				if (!resources.length) {
+					self.state.addState('empty');
+				}
+			});
+		}
 	},
 
 	/* ************************************************************** */
@@ -817,7 +788,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
      */
     stateEmpty: function (go) {
         if (go) {
-            if (this.filter.case == 'all_items') {
+            if (this.filterSettings.case == 'all_items') {
                 var empty_html = mad.View.render("app/view/template/component/password_workspace_all_items_empty.ejs");
                 $('.tableview-content', self.element).prepend(empty_html);
             }

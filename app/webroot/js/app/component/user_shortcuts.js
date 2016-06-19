@@ -67,7 +67,8 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
      * @param {passbolt.model.Filter} filter The filter to apply
      */
     '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
-        if (filter.type != passbolt.model.Filter.SHORTCUT) {
+        if (filter.type != passbolt.model.Filter.SHORTCUT &&
+            filter.type != passbolt.model.Filter.KEYWORD) {
             this.unselectAll();
         }
     }

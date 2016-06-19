@@ -79,6 +79,26 @@ var Grid = mad.view.component.Grid = mad.View.extend('mad.view.component.Grid', 
         $item.remove();
     },
 
+    /**
+     * Hide an item.
+     *
+     * @param {mad.Model} item The item to hide.
+     */
+    hideItem: function (item) {
+        var $item = this.getItemElement(item);
+        $item.hide();
+    },
+
+    /**
+     * Show an item.
+     *
+     * @param {mad.Model} item The item to show.
+     */
+    showItem: function (item) {
+        var $item = this.getItemElement(item);
+        $item.show();
+    },
+
     /*
      * Render a row for a given item
      * @param {mad.model.Model} item

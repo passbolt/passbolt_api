@@ -28,8 +28,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         itemClass: passbolt.model.User,
         // Specific view for userBrowser. To handle specific behaviours like drag n drop.
         viewClass: passbolt.view.component.UserBrowser,
-        // the list of resources displayed by the grid
-        users: new can.Model.List(),
         // the list of displayed categories
         // categories: new passbolt.model.Category.List()
         groups: [],
@@ -220,22 +218,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
-     * Insert a resource in the grid
-     * @param {mad.model.Model} resource The resource to insert
-     * @param {string} refResourceId The reference resource id. By default the grid view object
-     * will choose the root as reference element.
-     * @param {string} position The position of the newly created item. You can pass in one
-     * of those strings: "before", "after", "inside", "first", "last". By dhe default value
-     * is set to last.
-     */
-    insertItem: function (user, refUserId, position) {
-        // add the resource to the list of observed resources
-        this.options.users.push(user);
-        // insert the item to the grid
-        this._super(user, refUserId, position);
-    },
-
-    /**
      * Refresh an item in the grid.
      * We override this function, so we can keep the selected state after the refresh.
      * @param item
@@ -254,16 +236,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     removeItem: function (item) {
         // remove the item to the grid
         this._super(item);
-    },
-
-    /**
-     * reset
-     */
-    reset: function () {
-        // reset the list of observed resources
-        // by removing a resource from the resources list stored in options, the Browser will
-        // update itself (check "{resources} remove" listener)
-        this.options.users.splice(0, this.options.users.length);
     },
 
     /**
@@ -394,7 +366,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {passbolt.model.User} user The updated user
      */
     '{passbolt.model.User} updated': function (model, ev, user) {
-        if (this.options.users.indexOf(user) != -1) {
+        if (this.options.items.indexOf(user) != -1) {
             this.refreshItem(user);
         }
     },
@@ -422,12 +394,12 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     '{passbolt.model.GroupUser} destroyed': function (model, ev, groupUser) {
         // Remove user from the list of users in the grid.
-        for (i in this.options.users) {
-            if (this.options.users[i].id == groupUser.user_id) {
+        for (i in this.options.items) {
+            if (this.options.items[i].id == groupUser.user_id) {
                 break;
             }
         }
-        this.options.users.splice(i, 1);
+        this.options.items.splice(i, 1);
 
         // Remove user from the list of selected users.
         for (i in this.options.selectedUsers) {
@@ -491,8 +463,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         //}
 
         // find the resource to select functions of its id
-        var i = mad.model.List.indexOf(this.options.users, userId);
-        var user = this.options.users[i];
+        var i = mad.model.List.indexOf(this.options.items, userId);
+        var user = this.options.items[i];
 
         if (this.beforeSelect(user)) {
             this.select(user);
@@ -510,8 +482,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         var self = this;
 
         // find the resource to select functions of its id
-        var i = mad.model.List.indexOf(this.options.users, userId);
-        var user = this.options.users[i];
+        var i = mad.model.List.indexOf(this.options.items, userId);
+        var user = this.options.items[i];
 
         if (this.beforeUnselect()) {
             self.unselect(user);
@@ -539,8 +511,9 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
         var self = this;
+
         // store the filter
-        this.filter = filter;
+        this.filterSettings = filter;
         // reset the state variables
         this.options.groups = [];
 
@@ -552,24 +525,33 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             });
         }
 
-        // change the state of the component to loading.
-        this.setState('loading');
+        // If the user wants to filter by keywords.
+        if (this.filterSettings.type == passbolt.model.Filter.KEYWORD) {
+            this.filterByKeywords(this.filterSettings.keywords, {
+                searchInFields: ['username', 'Role.name', 'Profile.first_name', 'Profile.last_name']
+            });
+        }
+        // Otherwise request the server.
+        else {
+            // change the state of the component to loading.
+            this.setState('loading');
 
-        // load resources functions of the filter.
-        passbolt.model.User.findAll({
-            filter: this.filter,
-            recursive: true
-        }, function (users, response, request) {
-            // If the browser component has been destroyed.
-            if (self.element == null) {
-                return;
-            }
+            // load resources functions of the filter.
+            passbolt.model.User.findAll({
+                filter: this.filterSettings,
+                recursive: true
+            }, function (users, response, request) {
+                // If the browser component has been destroyed.
+                if (self.element == null) {
+                    return;
+                }
 
-            // load the users in the browser.
-            self.load(users);
-            // change the state to ready.
-            self.setState('ready');
-        });
+                // load the users in the browser.
+                self.load(users);
+                // change the state to ready.
+                self.setState('ready');
+            });
+        }
     },
 
     /* ************************************************************** */

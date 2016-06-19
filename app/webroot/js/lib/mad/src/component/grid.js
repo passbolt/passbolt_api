@@ -40,16 +40,27 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
             item_selected: null,
             // An item is hovered.
             item_hovered: null
-        }
+        },
+        // The items the grid works with.
+        items: new can.Model.List(),
+        // Is the grid filtered.
+        isFiltered: false
     }
 
 }, /** @prototype */ {
 
     /**
-     * Flush the grid
+     * Constructor.
+     * Instantiate a new Grid Component.
+     * @param {HTMLElement|can.NodeList|CSSSelectorString} el The element the control will be created on
+     * @param {Object} [options] option values for the component.  These get added to
+     * this.options and merged with defaults static variable
+     * @return {mad.component.Grid}
      */
-    reset: function () {
-        this.view.reset();
+    init: function(el, options) {
+        this._super(el, options);
+        this.options.items = new can.Model.List();
+        this.on();
     },
 
     /**
@@ -77,6 +88,15 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
      */
     getItemClass: function () {
         return this.options.itemClass;
+    },
+
+    /**
+     * Return true if the grid is filtered, else return false.
+     *
+     * @returns {boolean}
+     */
+    isFiltered: function() {
+        return this.options.isFiltered;
     },
 
     /**
@@ -190,6 +210,9 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
             throw mad.Exception.get(mad.error.MISSING_OPTION, 'map');
         }
 
+        // Add the item to the list of observed items
+        this.options.items.push(item);
+
         // Map the item.
         mappedItem = this.getMap().mapObject(item);
 
@@ -263,6 +286,17 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
     },
 
     /**
+     * Reset the grid.
+     * Remove all the displayed (and hidden) items.
+     */
+    reset: function () {
+        // reset the list of observed items
+        // by removing an item from the items list stored in options, the grid will
+        // update itself (check "{items} remove" listener)
+        this.options.items.splice(0, this.options.items.length);
+    },
+
+    /**
      * Load items in the grid. If the grid contain items, reset it.
      *
      * @param {mad.model.Model[]} items The array or list of items to insert in the grid
@@ -271,11 +305,100 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
         var self = this;
 
         this.reset();
+        this.options.isFiltered = false;
+
         can.each(items, function (item, i) {
             self.insertItem(item);
         });
 
         return this;
+    },
+
+    /**
+     * Filter items in the grid by keywords
+     * @param {string} needle The string to search in the grid
+     */
+    filterByKeywords: function(needle, options) {
+        options = options || {};
+        var self = this,
+            // The fields to look into.
+            searchInFields = [],
+            // The keywords to search.
+            keywords = needle.split(/\s+/),
+            // Filtered resource.
+            filteredItems = new can.List();
+
+        // The fields to look into have been given in options.
+        if (typeof options.searchInFields != 'undefined') {
+            searchInFields = options.searchInFields;
+        } else {
+            searchInFields = this.options.map.getModelTargetFieldsNames();
+        }
+
+        // Search the keywords in the list of items.
+        can.each(this.options.items, function (item, i) {
+            // Foreach keywords.
+            for (var j in keywords) {
+                var found = false,
+                    field = null,
+                    i= 0;
+
+                // Search in the item fields.
+                while(!found && (field = searchInFields[i])) {
+                    // Is the keyword found in the field.
+                    found = can.getObject(field, item)
+                            .toLowerCase()
+                            .indexOf(keywords[j].toLowerCase()) != -1;
+                    i++;
+                }
+
+                // If the keyword hasn't been found in any field.
+                // Search in the next resource.
+                if (!found) {
+                    return;
+                }
+            }
+
+            filteredItems.push(item);
+        });
+
+        // Filter the grid
+        self.filter(filteredItems);
+    },
+
+    /**
+     * Filter items in the grid
+     * @param {can.List} items The list of items to filter
+     */
+    filter: function (filteredItems) {
+        var self = this;
+        this.options.isFiltered = true;
+
+        can.each(this.options.items, function(item, i) {
+            if (filteredItems.indexOf(item) != -1) {
+                self.view.showItem(item);
+            } else {
+                self.view.hideItem(item);
+            }
+        });
+    },
+
+    /* ************************************************************** */
+    /* LISTEN TO THE MODEL EVENTS */
+    /* ************************************************************** */
+
+    /**
+     * Observe when items are removed from the list of observed items and
+     * remove it from the grid
+     * @param {mad.model.Model} model The model reference
+     * @param {HTMLEvent} ev The event which occurred
+     * @param {can.Model.List} items The removed items
+     */
+    '{items} remove': function (model, ev, items) {
+        var self = this;
+        can.each(items, function (item, i) {
+            self.removeItem(item);
+        });
     },
 
     /* ************************************************************** */

@@ -102,7 +102,8 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 	 * @param {passbolt.model.Filter} filter The filter to apply
 	 */
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
-		if (filter.type != passbolt.model.Filter.SHORTCUT) {
+		if (filter.type != passbolt.model.Filter.SHORTCUT &&
+			filter.type != passbolt.model.Filter.KEYWORD) {
 			this.unselectAll();
 		}
 	}

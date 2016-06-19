@@ -156,8 +156,6 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	* @param {passbolt.model.Filter} filter The filter to apply
 	*/
 	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
-		// Update the breadcrumb with the new filter.
-		this.breadcrumCtl.load(filter);
 		// When filtering the resources browser, unselect all the resources.
 		this.options.selectedRs.splice(0, this.options.selectedRs.length);
 

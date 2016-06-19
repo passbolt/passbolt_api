@@ -34,17 +34,21 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * After start hook.
 	 * @see {mad.Component}
 	 */
-	afterStart: function (options) {
+	afterStart: function () {
+		this.workspace = 'password';
+
 		// Instantiate the filter form
 		this.filterForm = new mad.Form('#js_app_filter_form', {});
 		this.filterForm.start();
 
 		// Instantiate the textbox which will get the user search
-		this.keywordsFormElement = this.filterForm.addElement(new mad.form.Textbox('#js_app_filter_keywords', {
+		var keywordsFormElement = this.filterForm.addElement(new mad.form.Textbox('#js_app_filter_keywords', {
 			modelReference: 'passbolt.model.Filter.keywords'
 		}));
-		this.keywordsFormElement.start();
-		this.workspace = 'password';
+		keywordsFormElement.start();
+		this.options.keywordsFormElement = keywordsFormElement;
+
+		this.on();
 	},
 
 	/**
@@ -76,11 +80,12 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 */
 	'{mad.bus.element} workspace_selected': function (el, event, workspace) {
 		this.workspace = workspace;
+
 		if (this.workspace == 'password') {
-			this.keywordsFormElement.element.attr("placeholder", "search passwords");
+			this.options.keywordsFormElement.element.attr("placeholder", "search passwords");
 		}
 		else {
-			this.keywordsFormElement.element.attr("placeholder", "search people");
+			this.options.keywordsFormElement.element.attr("placeholder", "search people");
 		}
 	},
 
@@ -94,9 +99,14 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {object} data The form data
 	 */
-	' update': function(el, ev) {
-		var data = this.filterForm.getData(),
-			filter = new passbolt.model.Filter(data['passbolt.model.Filter']);
+	'{keywordsFormElement.element} changed': function(el, ev, data) {
+		// Build the filter data from the filter form and the default.
+		var formData =  this.filterForm.getData(),
+			filterData = $.extend({
+				type: passbolt.model.Filter.KEYWORD
+			}, formData['passbolt.model.Filter']),
+			// Build the filter based on the filter data.
+			filter = new passbolt.model.Filter(filterData);
 
 		if (this.workspace == 'password') {
 			mad.bus.trigger('filter_resources_browser', filter);
