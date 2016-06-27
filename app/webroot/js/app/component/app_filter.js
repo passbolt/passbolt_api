@@ -99,13 +99,13 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 		// Enable the people workspace first, and filter it.
 		if (this.workspace instanceof passbolt.component.SettingsWorkspace) {
 			filter = passbolt.component.PeopleWorkspace.getDefaultFilterSettings();
-			filter.keywords = formData['passbolt.model.Filter']['keywords'];
+			filter.attr('keywords', formData['passbolt.model.Filter']['keywords']);
 			mad.bus.trigger('request_workspace', ['people', {filterSettings: filter}]);
 		}
 		// Otherwise filter the current workspace.
 		else {
 			filter = self.workspace.constructor.getDefaultFilterSettings();
-			filter.keywords = formData['passbolt.model.Filter']['keywords'];
+			filter.attr('keywords', formData['passbolt.model.Filter']['keywords']);
 			mad.bus.trigger('filter_workspace', filter);
 		}
 	},
@@ -126,7 +126,7 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 		if (this.workspace instanceof passbolt.component.PasswordWorkspace) {
 			this.options.keywordsFormElement.element.attr("placeholder", "search passwords");
 		}
-		else if (this.workspace instanceof passbolt.component.PasswordWorkspace) {
+		else if (this.workspace instanceof passbolt.component.PeopleWorkspace) {
 			this.options.keywordsFormElement.element.attr("placeholder", "search people");
 		}
 		else if (this.workspace instanceof passbolt.component.SettingsWorkspace) {

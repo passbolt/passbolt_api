@@ -42,10 +42,16 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 }, /** @prototype */ {
 
     /**
-     * Keep a trace of the filter used to filter the browser.
+     * The filter used to filter the browser.
      * @type {passbolt.model.Filter}
      */
-    oldFilter: null,
+    filterSettings: null,
+
+    /**
+     * Keep a trace of the old filter used to filter the browser.
+     * @type {passbolt.model.Filter}
+     */
+    oldFilterSettings: null,
 
     // Constructor like
     init: function (el, options) {
@@ -149,7 +155,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // Is the selected user same as the current user.
         var isSelf = passbolt.model.User.getCurrent().id == this.options.selectedUsers[0].id;
 
-
         // Instantiate the contextual menu menu.
         var contextualMenu = new mad.component.ContextualMenu(null, {
             state: 'hidden',
@@ -175,6 +180,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             }
         });
         contextualMenu.insertItem(action);
+
         // Add Edit action.
         var action = new mad.model.Action({
             id: 'js_user_browser_menu_copy_email',
@@ -285,7 +291,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {boolean} silent Do not propagate any event (default:false)
      */
     select: function (item, silent) {
-        silent = typeof silent == 'undefined' ? false : silent;
+        silent = silent || false;
 
         // Unselect the previously selected user, if not in multipleSelection.
         if (!this.state.is('multipleSelection') &&
@@ -354,6 +360,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // The deferred used for the users find all request.
             def = $.Deferred();
 
+        // Save the old filter settings.
+        this.oldFilterSettings = this.filterSettings;
+        // Clone the given filter to avoid any changes problem.
+        this.filterSettings = filter.clone();
+
         //// reset the state variables
         //this.options.groups = [];
 		//
@@ -367,8 +378,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
         // If the current filter case is different than the previous filter case
         //   or this is the initial filtering (loading)
-        if (this.oldFilter == null
-            || filter.case != this.oldFilter.case) {
+        if (this.oldFilterSettings == null
+            || this.filterSettings.case != this.oldFilterSettings.case) {
 
             // Mark the component as loading.
             // Complete it once the users are retrieved and rendered.
@@ -379,7 +390,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
             // Retrieve the resources.
             passbolt.model.User.findAll({
-                filter: filter,
+                filter: this.filterSettings,
                 recursive: true,
                 silentLoading: false
             }).then(function (users, response, request) {
@@ -413,9 +424,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             } else if (self.isFiltered()){
                 self.resetFilter();
             }
-
-            // Store the filter to later comparisons.
-            self.oldFilter = filter.clone();
         });
 
         return def;

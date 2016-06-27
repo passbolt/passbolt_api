@@ -63,7 +63,7 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
                     case: 'all_items',
                     type: passbolt.model.Filter.SHORTCUT
                 });
-                mad.bus.trigger('filter_users_browser', filter);
+                mad.bus.trigger('filter_workspace', filter);
             }
         });
         menuItems.push(menuItem);

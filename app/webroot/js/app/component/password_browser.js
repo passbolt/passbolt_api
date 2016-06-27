@@ -47,10 +47,16 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 }, /** @prototype */ {
 
 	/**
-	 * Keep a trace of the filter used to filter the browser.
+	 * The filter used to filter the browser.
 	 * @type {passbolt.model.Filter}
 	 */
-	oldFilter: null,
+	filterSettings: null,
+
+	/**
+	 * Keep a trace of the old filter used to filter the browser.
+	 * @type {passbolt.model.Filter}
+	 */
+	oldFilterSettings: null,
 
 	// Constructor like
 	init: function (el, options) {
@@ -517,11 +523,14 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			// The deferred used for the resources find all request.
 			def = $.Deferred();
 
-		this.options.categories = [];
+		// Save the old filter settings.
+		this.oldFilterSettings = this.filterSettings;
+		// Clone the given filter to avoid any changes problem.
+		this.filterSettings = filter.clone();
 
-		// If the filter case change, reload the passwords.
-
-
+		//
+		//this.options.categories = [];
+		//
 		//// Set state to filter case.
 		//if (filter.case != undefined) {
 		//	// Remove class belonging to previous filter.
@@ -546,8 +555,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// If the current filter case is different than the previous filter case
 		//   or this is the initial filtering (loading)
-		if (this.oldFilter == null
-			|| filter.case != this.oldFilter.case) {
+		if (this.oldFilterSettings == null
+			|| this.filterSettings.case != this.oldFilterSettings.case) {
 
 			// Mark the component as loading.
 			// Complete it once the passwords are retrieved and rendered.
@@ -558,7 +567,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 			// Retrieve the resources.
 			passbolt.model.Resource.findAll({
-				filter: filter,
+				filter: this.filterSettings,
 				recursive: true,
 				silentLoading: false
 			}).then(function (resources, response, request) {
@@ -570,11 +579,12 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 				// Load the resources in the browser.
 				self.load(resources);
-				self.setState('ready');
-				if (!resources.length) {
-					self.state.addState('empty');
-				}
 
+				var states = ['ready'];
+				if (!resources.length) {
+					states.push('empty');
+				}
+				self.setState(states);
 				def.resolve();
 			});
 		} else {
@@ -584,7 +594,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// When the resources have been retrieved.
 		$.when(def).done(function() {
 			// Filter by keywords.
-			var keywords = filter.getKeywords();
+			var keywords = self.filterSettings.getKeywords();
 			if (keywords != '') {
 				self.filterByKeywords(keywords, {
 					searchInFields: ['username', 'name', 'uri', 'description']
@@ -592,9 +602,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			} else if (self.isFiltered()){
 				self.resetFilter();
 			}
-
-			// Store the filter to later comparisons.
-			self.oldFilter = filter.clone();
 		});
 
 		return def;
