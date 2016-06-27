@@ -39,6 +39,20 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		filter: new passbolt.model.Filter(),
 		// Override the silentLoading parameter.
 		silentLoading: false
+	},
+
+	/**
+	 * Return the default filter used to filter the workspace
+	 * @return {passbolt.model.Filter}
+	 */
+	getDefaultFilterSettings: function() {
+		return new passbolt.model.Filter({
+			label: __('All items'),
+			order: 'modified',
+			case: 'all_items',
+			type: passbolt.model.Filter.SHORTCUT,
+			keywords: ''
+		});
 	}
 
 }, /** @prototype */ {
@@ -53,7 +67,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 			$('#js_wsp_primary_menu_wrapper'),
 			'last',
 			passbolt.component.PasswordWorkspaceMenu, {
-				'selectedRs': this.options.selectedRs
+				selectedRs: this.options.selectedRs
 			}
 		);
 		primWkMenu.start();
@@ -105,16 +119,13 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 			selectedItems: this.options.selectedRs
 		});
         // Hide the sidebar by default.
+		// @todo Hide a DOM Element from a Component is not recommanded.
+		// @todo If it's a default behavior the sidebar should be hidden in the template.
         $('.js_wsp_pwd_sidebar_second', this.element).hide();
 
-		// Filter the workspace.
-		var filter = new passbolt.model.Filter({
-			label: __('All items'),
-			order: 'modified',
-            case: 'all_items',
-			type: passbolt.model.Filter.SHORTCUT
-		});
-		mad.bus.trigger('filter_resources_browser', filter);
+		// Filter the workspace
+		var filter = this.constructor.getDefaultFilterSettings();
+		mad.bus.trigger('filter_workspace', filter);
 
 		this.on();
 	},
@@ -150,18 +161,18 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	},
 
 	/**
-	* Listen to the browser filter
-	* @param {jQuery} element The source element
-	* @param {Event} event The jQuery event
-	* @param {passbolt.model.Filter} filter The filter to apply
-	*/
-	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
+	 * When a new filter is applied to the workspace.
+	 * @param {jQuery} element The source element
+	 * @param {Event} event The jQuery event
+	 * @param {passbolt.model.Filter} filter The filter to apply
+	 */
+	'{mad.bus.element} filter_workspace': function (element, evt, filter) {
 		// When filtering the resources browser, unselect all the resources.
 		this.options.selectedRs.splice(0, this.options.selectedRs.length);
 
 		// Change the state of the create but regarding the selected categories.
-		var categories = filter.getForeignModels('Category');
-		var createButtonState = 'ready';
+		var categories = filter.getForeignModels('Category'),
+			createButtonState = 'ready';
 
 		// If no categories selected, the user is allowed to create password. These
 		// passwords won't be associated to any category.

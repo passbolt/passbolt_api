@@ -59,9 +59,11 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 			action: function () {
 				var filter = new passbolt.model.Filter({
 					label: __('All items'),
-					order: 'modified'
+					order: 'modified',
+					case: 'all_items',
+					type: passbolt.model.Filter.SHORTCUT
 				});
-				mad.bus.trigger('filter_resources_browser', filter);
+				mad.bus.trigger('filter_workspace', filter);
 			}
 		});
 		menuItems.push(menuItem);
@@ -130,7 +132,7 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 	 * @param {Event} event The jQuery event
 	 * @param {passbolt.model.Filter} filter The filter to apply
 	 */
-	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
+	'{mad.bus.element} filter_workspace': function (element, evt, filter) {
 		this.options.menu.reset();
 		var menuItems = this.parseFilter(filter);
 		this.options.menu.load(menuItems);

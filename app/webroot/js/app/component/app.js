@@ -37,13 +37,18 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 }, /** @prototype */ {
 
 	/**
+	 * The currently enabled workspace.
+	 * @type {passbolt.Component.Workspace}
+	 */
+	workspace: null,
+
+	/**
 	 * After start hook.
 	 * Initialize the application's components.
 	 * @see {mad.Component}
 	 */
 	afterStart: function() {
 		var self = this;
-		this.workspace = null;
 
 		// Instantiate the app navigation left controller
 		var navLeftCtl = new passbolt.component.AppNavigationLeft($('#js_app_navigation_left'));
@@ -54,8 +59,8 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		navRightCtl.start();
 
 		// Instantiate the filter controller
-		var filterCtl = new passbolt.component.AppFilter($('#js_app_filter'), {});
-		filterCtl.start();
+		this.filterCtl = new passbolt.component.AppFilter($('#js_app_filter'), {});
+		this.filterCtl.start();
 
 		// Get logged in user.
 		passbolt.model.User.findOne({
@@ -76,7 +81,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 
 		// Instantiate the laoding bar controller
 		var loadingBarCtl = new passbolt.component.LoadingBar($('#js_app_loading_bar'), {
-			'state': 'ready'
+			state: 'ready'
 		});
 		loadingBarCtl.start();
 
@@ -111,45 +116,48 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * Observe when the user wants to switch to another workspace
 	 * @param {HTMLElement} el The element the event occurred on
 	 * @param {HTMLEvent} ev The event which occurred
-	 * @param {string} workspace The target workspace
+	 * @param {string} workspaceName The target workspace name
 	 * @param {array} options Workspace's options
 	 */
-	'{mad.bus.element} workspace_selected': function (el, event, workspace, options) {
-		options = typeof options != "undefined" ? options : {};
+	'{mad.bus.element} request_workspace': function (el, event, workspaceName, options) {
+		options = options || {};
 
-		// Destroy the existing workspace and all its components.
-		$('#js_app_panel_main').empty();
+		// Destroy/clean the currently enabled workspace, its components and any related meta.
+		if (this.workspace != null) {
+			// Remove the mark made on the DOM.
+			$('#container').removeClass(this.workspace.options.label);
+			// Destroy the previous workspace controller.
+			this.workspace.destroy();
+			// Remove any HTMLElements relative to the previous workspace.
+			$('#js_app_panel_main').empty();
+			// Remove any existing contextual menu.
+			mad.component.ContextualMenu.remove();
+		}
 
-        // Remove any existing contextual menu.
-        mad.component.ContextualMenu.remove();
+		// Mark the DOM with the newly enabled workspace
+		$('#container').addClass(workspaceName);
 
-		// Set class on top container.
-		$('#container')
-			.removeClass(this.options.workspaces.join(" "))
-			.addClass(workspace);
-
-		// Initialize the target workspace.
-		var workspaceId = 'js_passbolt_' + workspace + '_workspace_controller',
-			workspaceClass = passbolt.component[can.capitalize(workspace) + 'Workspace'],
+		// Build the parameters used for the workspace initialization.
+		var workspaceId = 'js_passbolt_' + workspaceName + '_workspace_controller',
+			workspaceClass = passbolt.component[can.capitalize(workspaceName) + 'Workspace'],
 			workspaceOptions = {
 				id: workspaceId,
-				label: workspace
+				label: workspaceName
 			};
-
 		// Extend default workspace options with the ones given in params.
 		$.extend(workspaceOptions, options);
 
 		// Instantiate the workspace component.
-		var component = mad.helper.Component.create(
+		this.workspace = mad.helper.Component.create(
 			$('#js_app_panel_main'),
 			'last',
 			workspaceClass,
 			workspaceOptions
 		);
-		component.start();
+		this.workspace.start();
 
-		// Remember current workspace.
-		this.workspace = workspace;
+		// Notify other components regarding the newly enabled workspace.
+		mad.bus.trigger('workspace_enabled', this.workspace);
 	},
 
 	/**
@@ -246,8 +254,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 */
 	stateReady: function (go) {
 		// Select the password workspace
-		mad.bus.trigger('workspace_selected', 'password');
-		//mad.bus.trigger('workspace_selected', 'people');
+		mad.bus.trigger('request_workspace', 'password');
 		// When the application is ready, remove the launching screen.
 		$('html').removeClass('launching');
 	}

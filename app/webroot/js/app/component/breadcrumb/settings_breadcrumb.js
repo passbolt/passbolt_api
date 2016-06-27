@@ -2,7 +2,6 @@ import 'mad/component/component';
 import 'app/view/template/component/breadcrumb/breadcrumb.ejs!';
 import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 
-
 /**
  * @inherits {mad.Component}
  * @parent index
@@ -38,9 +37,8 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 		// Create and render menu in the created container.
 		var menuSelector = '#' + this.getId() + ' ul';
 		this.options.menu = new mad.component.Menu(
-			menuSelector,
-			{
-				'itemTemplateUri': 'app/view/template/component/breadcrumb/breadcrumb_item.ejs'
+			menuSelector, {
+				itemTemplateUri: 'app/view/template/component/breadcrumb/breadcrumb_item.ejs'
 			}
 		);
 		this.options.menu.start();
@@ -53,16 +51,16 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 
 		// First 2 items of the menu are constant.
 		var menuItem = new mad.model.Action({
-			'id': uuid(),
-			'label': __('All users'),
-			'action': function () {
+			id: uuid(),
+			label: __('All users'),
+			action: function () {
 				// Add a link to filter on all items as first item.
 				var filter = new passbolt.model.Filter({
-					'label': __('All users'),
-					'type': passbolt.model.Filter.SHORTCUT
+					label: __('All users'),
+					type: passbolt.model.Filter.SHORTCUT
 				});
 				// Switch to people workspace.
-				mad.bus.trigger('workspace_selected', 'people');
+				mad.bus.trigger('request_workspace', 'people');
 				// Set filter.
 				mad.bus.trigger('filter_users_browser', filter);
 			}
@@ -70,9 +68,9 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 		this.menuItems.push(menuItem);
 
 		var menuItem = new mad.model.Action({
-			'id': uuid(),
-			'label': passbolt.model.User.getCurrent().Profile.first_name + ' ' + passbolt.model.User.getCurrent().Profile.last_name,
-			'action': function () {
+			id: uuid(),
+			label: passbolt.model.User.getCurrent().Profile.first_name + ' ' + passbolt.model.User.getCurrent().Profile.last_name,
+			action: function () {
 				// Switch to people workspace.
 				mad.bus.trigger('request_settings_section', 'profile');
 			}
@@ -83,9 +81,9 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 		// profile section.
 		this.sectionMenuItems['profile'] = [
 			new mad.model.Action({
-				'id': uuid(),
-				'label': __('Profile'),
-				'action': function () {
+				id: uuid(),
+				label: __('Profile'),
+				action: function () {
 					return;
 				}
 			})
@@ -93,9 +91,9 @@ var SettingsBreadcrumb = passbolt.component.SettingsBreadcrumb= mad.Component.ex
 		// keys section.
 		this.sectionMenuItems['keys'] = [
 			new mad.model.Action({
-				'id': uuid(),
-				'label': __('Keys management'),
-				'action': function () {
+				id: uuid(),
+				label: __('Keys management'),
+				action: function () {
 					return;
 				}
 			})

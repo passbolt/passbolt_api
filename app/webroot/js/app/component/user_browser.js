@@ -6,7 +6,7 @@ import 'app/model/group';
 import 'app/model/profile';
 import 'app/view/component/user_browser';
 
-/*
+/**
  * @class passbolt.component.UserBrowserController
  * @inherits {mad.controller.component.GridController}
  * @parent index
@@ -19,7 +19,7 @@ import 'app/view/component/user_browser';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.component.UserBrowserController}
+ * @return {passbolt.component.UserBrowser}
  */
 var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('passbolt.component.UserBrowser', /** @static */ {
 
@@ -40,6 +40,12 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     }
 
 }, /** @prototype */ {
+
+    /**
+     * Keep a trace of the filter used to filter the browser.
+     * @type {passbolt.model.Filter}
+     */
+    oldFilter: null,
 
     // Constructor like
     init: function (el, options) {
@@ -339,6 +345,95 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         }
     },
 
+    /**
+     * Filter the browser using a filter settings object
+     * @param {passbolt.model.Filter} filter The filter to
+     */
+    filterBySettings: function(filter) {
+        var self = this,
+        // The deferred used for the users find all request.
+            def = $.Deferred();
+
+        //// reset the state variables
+        //this.options.groups = [];
+		//
+        //// override the current list of users displayed with the new ones
+        //var filteredGroup = filter.getForeignModels('Group');
+        //if (filteredGroup) {
+        //    can.each(filteredGroup, function (group, i) {
+        //        self.options.groups.push(group.id);
+        //    });
+        //}
+
+        // If the current filter case is different than the previous filter case
+        //   or this is the initial filtering (loading)
+        if (this.oldFilter == null
+            || filter.case != this.oldFilter.case) {
+
+            // Mark the component as loading.
+            // Complete it once the users are retrieved and rendered.
+            this.setState('loading');
+
+            // Remove all elements from the grid
+            this.reset();
+
+            // Retrieve the resources.
+            passbolt.model.User.findAll({
+                filter: filter,
+                recursive: true,
+                silentLoading: false
+            }).then(function (users, response, request) {
+                // If the browser has been destroyed before the request completed.
+                if (self.element == null) return;
+
+                // If the grid was marked as filtered, reset it.
+                self.filtered = false;
+
+                // Load the resources in the browser.
+                self.load(users);
+                self.setState('ready');
+                if (!users.length) {
+                    self.state.addState('empty');
+                }
+
+                def.resolve();
+            });
+        } else {
+            def.resolve();
+        }
+
+        // When the resources have been retrieved.
+        $.when(def).done(function() {
+            // Filter by keywords.
+            var keywords = filter.getKeywords();
+            if (keywords != '') {
+                self.filterByKeywords(keywords, {
+                    searchInFields: ['username', 'Role.name', 'Profile.first_name', 'Profile.last_name']
+                });
+            } else if (self.isFiltered()){
+                self.resetFilter();
+            }
+
+            // Store the filter to later comparisons.
+            self.oldFilter = filter.clone();
+        });
+
+        return def;
+    },
+
+    /**
+     * Reset the filtering
+     * @todo move this function into mad grid.
+     */
+    resetFilter: function () {
+        var self = this;
+        this.options.isFiltered = false;
+
+        can.each(this.options.items, function(item, i) {
+            self.view.showItem(item);
+        });
+    },
+
     /* ************************************************************** */
     /* LISTEN TO THE MODEL EVENTS */
     /* ************************************************************** */
@@ -509,48 +604,19 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {Event} event The jQuery event
      * @param {passbolt.model.Filter} filter The filter to apply
      */
-    '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
-        var self = this;
+    '{mad.bus.element} filter_workspace': function (element, evt, filter) {
+        this.filterBySettings(filter);
+    },
 
-        // store the filter
-        this.filterSettings = filter;
-        // reset the state variables
-        this.options.groups = [];
-
-        // override the current list of users displayed with the new ones
-        var filteredGroup = filter.getForeignModels('Group');
-        if (filteredGroup) {
-            can.each(filteredGroup, function (group, i) {
-                self.options.groups.push(group.id);
-            });
-        }
-
-        // If the user wants to filter by keywords.
-        if (this.filterSettings.type == passbolt.model.Filter.KEYWORD) {
-            this.filterByKeywords(this.filterSettings.keywords, {
-                searchInFields: ['username', 'Role.name', 'Profile.first_name', 'Profile.last_name']
-            });
-        }
-        // Otherwise request the server.
-        else {
-            // change the state of the component to loading.
-            this.setState('loading');
-
-            // load resources functions of the filter.
-            passbolt.model.User.findAll({
-                filter: this.filterSettings,
-                recursive: true
-            }, function (users, response, request) {
-                // If the browser component has been destroyed.
-                if (self.element == null) {
-                    return;
-                }
-
-                // load the users in the browser.
-                self.load(users);
-                // change the state to ready.
-                self.setState('ready');
-            });
+    /**
+     * Observe when an item is unselected
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
+     * @param {passbolt.model.Resource|array} items The unselected items
+     */
+    '{selectedUsers} remove': function (el, ev, items) {
+        for (var i in items) {
+            this.unselect(items[i]);
         }
     },
 

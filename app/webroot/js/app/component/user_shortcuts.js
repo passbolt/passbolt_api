@@ -30,24 +30,28 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
         var menuItems = [
             new mad.model.Action({
                 id: 'js_users_wsp_filter_all',
+                case: 'all_items',
                 label: __('All users'),
                 action: function () {
                     var filter = new passbolt.model.Filter({
                         label: __('All users'),
+                        case: 'all_items',
                         type: passbolt.model.Filter.SHORTCUT
                     });
-                    mad.bus.trigger('filter_users_browser', filter);
+                    mad.bus.trigger('filter_workspace', filter);
                 }
             }), new mad.model.Action({
                 id: 'js_users_wsp_filter_recently_modified',
+                case : 'recently_modified',
                 label: __('Recently modified'),
                 action: function () {
                     var filter = new passbolt.model.Filter({
                         label: __('Recently modified'),
+                        case : 'recently_modified',
                         order: 'modified',
                         type: passbolt.model.Filter.SHORTCUT
                     });
-                    mad.bus.trigger('filter_users_browser', filter);
+                    mad.bus.trigger('filter_workspace', filter);
                 }
             })
         ];
@@ -66,10 +70,18 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
      * @param {Event} event The jQuery event
      * @param {passbolt.model.Filter} filter The filter to apply
      */
-    '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
-        if (filter.type != passbolt.model.Filter.SHORTCUT &&
-            filter.type != passbolt.model.Filter.KEYWORD) {
+    '{mad.bus.element} filter_workspace': function (element, evt, filter) {
+        var self = this;
+
+        if (filter.type != passbolt.model.Filter.SHORTCUT) {
             this.unselectAll();
+        } else {
+            this.options.items.each(function(item, i) {
+                if (item.case == filter.case) {
+                    self.selectItem(item);
+                    return;
+                }
+            });
         }
     }
 });

@@ -59,6 +59,17 @@ var Model = passbolt.Model = mad.Model.extend('passbolt.Model', /** @static */ {
 		return filteredAttrs;
 	},
 
-}, /** @prototype */ {});
+}, /** @prototype */ {
+
+	/**
+	 * Clone a model instance
+	 * @return {passbolt.Model} The cloned model instance
+	 */
+	clone: function() {
+		var data = this.attr();
+		delete data[this.constructor.id];
+		return new this.constructor(data);
+	}
+});
 
 export default Model;

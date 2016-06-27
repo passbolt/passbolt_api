@@ -31,18 +31,23 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 }, /** @prototype */ {
 
 	/**
+	 * The currently enabled workspace
+	 * @type {mad.Component}
+	 */
+	workspace: null,
+
+	/**
 	 * After start hook.
 	 * @see {mad.Component}
 	 */
 	afterStart: function () {
-		this.workspace = 'password';
-
 		// Instantiate the filter form
 		this.filterForm = new mad.Form('#js_app_filter_form', {});
 		this.filterForm.start();
 
 		// Instantiate the textbox which will get the user search
 		var keywordsFormElement = this.filterForm.addElement(new mad.form.Textbox('#js_app_filter_keywords', {
+			onChangeTimeout: 200,
 			modelReference: 'passbolt.model.Filter.keywords'
 		}));
 		keywordsFormElement.start();
@@ -55,7 +60,7 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * Reset the filter
 	 */
 	reset: function () {
-		this.keywordsFormElement.setValue('');
+		this.options.keywordsFormElement.setValue('');
 	},
 
 	/* ************************************************************** */
@@ -67,27 +72,11 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * @param {HTMLElement} el The element the event occurred on
 	 * @param {HTMLEvent} ev The event which occurred
 	 * @param {passbolt.model.Category} category The selected category
+	 * @roadmap
 	 */
-	'{mad.bus.element} category_selected': function (el, ev, category) {
-		this.reset();
-	},
-
-	/**
-	 * Observe when a workspace is selected.
-	 * @param {HTMLElement} el
-	 * @param {HTMLEvent} event
-	 * @param workspace
-	 */
-	'{mad.bus.element} workspace_selected': function (el, event, workspace) {
-		this.workspace = workspace;
-
-		if (this.workspace == 'password') {
-			this.options.keywordsFormElement.element.attr("placeholder", "search passwords");
-		}
-		else {
-			this.options.keywordsFormElement.element.attr("placeholder", "search people");
-		}
-	},
+	//'{mad.bus.element} category_selected': function (el, ev, category) {
+	//	this.reset();
+	//},
 
 	/* ************************************************************** */
 	/* LISTEN TO VIEW EVENTS */
@@ -100,39 +89,67 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	 * @param {object} data The form data
 	 */
 	'{keywordsFormElement.element} changed': function(el, ev, data) {
-		// Build the filter data from the filter form and the default.
-		var formData =  this.filterForm.getData(),
-			filterData = $.extend({
-				type: passbolt.model.Filter.KEYWORD
-			}, formData['passbolt.model.Filter']),
-			// Build the filter based on the filter data.
-			filter = new passbolt.model.Filter(filterData);
+		var self = this,
+			// Retrieve the form data.
+			formData =  this.filterForm.getData(),
+			// The filter to build used to filter the workspace.
+			filter = null;
 
-		if (this.workspace == 'password') {
-			mad.bus.trigger('filter_resources_browser', filter);
+		// If the settings workspace is currently enabled.
+		// Enable the people workspace first, and filter it.
+		if (this.workspace instanceof passbolt.component.SettingsWorkspace) {
+			filter = passbolt.component.PeopleWorkspace.getDefaultFilterSettings();
+			filter.keywords = formData['passbolt.model.Filter']['keywords'];
+			mad.bus.trigger('request_workspace', ['people', {filterSettings: filter}]);
 		}
-		else if (this.workspace == 'people') {
-			mad.bus.trigger('filter_users_browser', filter);
+		// Otherwise filter the current workspace.
+		else {
+			filter = self.workspace.constructor.getDefaultFilterSettings();
+			filter.keywords = formData['passbolt.model.Filter']['keywords'];
+			mad.bus.trigger('filter_workspace', filter);
 		}
-		else if (this.workspace == 'settings') {
-			// Switch to people workspace.
-			mad.bus.trigger('workspace_selected', ['people', {filter: filter}]);
+	},
+
+	/* ************************************************************** */
+	/* LISTEN TO THE APP EVENTS */
+	/* ************************************************************** */
+
+	/**
+	 * Observe when the user switched to another workspace
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
+	 * @param {mad.Component} workspace The enabled workspace
+	 */
+	'{mad.bus.element} workspace_enabled': function (el, event, workspace) {
+		this.workspace = workspace;
+
+		if (this.workspace instanceof passbolt.component.PasswordWorkspace) {
+			this.options.keywordsFormElement.element.attr("placeholder", "search passwords");
+		}
+		else if (this.workspace instanceof passbolt.component.PasswordWorkspace) {
+			this.options.keywordsFormElement.element.attr("placeholder", "search people");
+		}
+		else if (this.workspace instanceof passbolt.component.SettingsWorkspace) {
+			this.options.keywordsFormElement.element.attr("placeholder", "search people");
+			this.reset();
 		}
 	},
 
 	/**
-	 * Observe when the user wants to reset the filter
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
+	 * Listen to the browser filter
+	 * @param {jQuery} element The source element
+	 * @param {Event} event The jQuery event
+	 * @param {passbolt.model.Filter} filter The filter to apply
 	 */
-	' reset': function (el, ev) {
-		this.reset();
-		var filter = new passbolt.model.Filter({
-			'keywords': '',
-			'tags': []
-		});
-		mad.bus.trigger('filter_resources_browser', filter);
+	'{mad.bus.element} filter_workspace': function (element, evt, filter) {
+		var formData =  this.filterForm.getData(),
+			keywords = filter.getKeywords();
+
+		if (formData['passbolt.model.Filter']['keywords'] != keywords) {
+			this.options.keywordsFormElement.setValue(keywords)
+		}
 	}
+
 });
 
 export default AppFilter;

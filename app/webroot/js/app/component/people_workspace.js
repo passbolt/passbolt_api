@@ -44,8 +44,23 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
             type: passbolt.model.Filter.SHORTCUT
         }),
 		// Override the silentLoading parameter.
-		silentLoading: false
-    }
+		silentLoading: false,
+		// Filter the workspace with this filter settings.
+		filterSettings: null
+    },
+
+	/**
+	 * Return the default filter used to filter the workspace
+	 * @return {passbolt.model.Filter}
+	 */
+	getDefaultFilterSettings: function() {
+		return new passbolt.model.Filter({
+			label: __('All users'),
+			case: 'all_items',
+			type: passbolt.model.Filter.SHORTCUT,
+			keywords: ''
+		});
+	}
 
 }, /** @prototype */ {
 
@@ -123,13 +138,15 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
         // A filter has been given in options.
         // If not given, set one by default.
-        if (this.options.filter.attr('type') == undefined) {
-            this.options.filter.attr({
-                label: __('All users'),
-                type: passbolt.model.Filter.SHORTCUT
-            });
-        }
-        mad.bus.trigger('filter_users_browser', this.options.filter);
+		var filter = null;
+		if (this.options.filterSettings == undefined) {
+			filter = this.constructor.getDefaultFilterSettings();
+		} else {
+			filter = this.options.filterSettings;
+		}
+
+		// Filter the workspace
+		mad.bus.trigger('filter_workspace', filter);
 
         this.on();
     },
@@ -188,13 +205,12 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     },
 
     /**
-     * Event filter_users_browser.
-     * When a new filter is applied.
+     * When a new filter is applied to the workspace.
      * @param {HTMLElement} el The element the event occurred on
      * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Filter} filter, the filter being applied.
      */
-    '{mad.bus.element} filter_users_browser': function (el, ev, filter) {
+    '{mad.bus.element} filter_workspace': function (el, ev, filter) {
         // If the filter applied is "all groups", then empty the list of selected groups.
         if (typeof filter.name != 'undefined') {
             if(filter.name == 'all') {

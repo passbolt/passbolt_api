@@ -60,6 +60,7 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
             action: function () {
                 var filter = new passbolt.model.Filter({
                     label: __('All users'),
+                    case: 'all_items',
                     type: passbolt.model.Filter.SHORTCUT
                 });
                 mad.bus.trigger('filter_users_browser', filter);
@@ -116,6 +117,22 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
         var menuItems = this.parseFilter(filter);
 
         this.options.menu.reset();
+        this.options.menu.load(menuItems);
+    },
+
+    /* ************************************************************** */
+    /* LISTEN TO THE APP EVENTS */
+    /* ************************************************************** */
+
+    /**
+     * Listen to the browser filter
+     * @param {jQuery} element The source element
+     * @param {Event} event The jQuery event
+     * @param {passbolt.model.Filter} filter The filter to apply
+     */
+    '{mad.bus.element} filter_workspace': function (element, evt, filter) {
+        this.options.menu.reset();
+        var menuItems = this.parseFilter(filter);
         this.options.menu.load(menuItems);
     }
 

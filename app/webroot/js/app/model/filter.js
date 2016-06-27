@@ -17,7 +17,7 @@ import 'mad/model/model';
  * @param {array} options
  * @return {passbolt.model.Filter}
  */
-var Filter = passbolt.model.Filter = mad.Model.extend('passbolt.model.Filter', /** @static */ {
+var Filter = passbolt.model.Filter = passbolt.Model.extend('passbolt.model.Filter', /** @static */ {
 
 	attributes: {
 		// Label of the filter
@@ -37,10 +37,10 @@ var Filter = passbolt.model.Filter = mad.Model.extend('passbolt.model.Filter', /
 	},
 
 	// Available shortcut types
-	'SHORTCUT': 1,
-	'FOREIGN_MODEL': 2,
-	'KEYWORD': 3,
-	'TAG': 4
+	SHORTCUT: 1,
+	FOREIGN_MODEL: 2,
+	KEYWORD: 3,
+	TAG: 4
 
 }, /** @prototype */ {
 
@@ -59,9 +59,6 @@ var Filter = passbolt.model.Filter = mad.Model.extend('passbolt.model.Filter', /
 	toRequest: function() {
 		var returnValue = {};
 
-		if(this.keywords != null) {
-			returnValue[this.requestPrefix + 'keywords'] = this.keywords;
-		}
 		if(this['case'] != null) {
 			returnValue[this.requestPrefix + 'case'] = this['case'];
 		}
@@ -87,6 +84,14 @@ var Filter = passbolt.model.Filter = mad.Model.extend('passbolt.model.Filter', /
 			returnValue = this.foreignModels[name];
 		}
 		return returnValue;
+	},
+
+	/**
+	 * Get the keywords
+	 * @return {string}
+	 */
+	getKeywords: function() {
+		return typeof this.keywords != 'undefined' ? this.keywords : '';
 	}
 
 });
