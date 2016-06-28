@@ -369,6 +369,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	refreshItem: function (resource) {
 		var self = this;
 
+		// If the item doesn't exist
+		if (!this.itemExists(item)) {
+			return;
+		}
+
 		// if the password browser is filter by category
 		if(this.options.categories.length) {
 			// Is the resource belonging to a displayed category
@@ -458,6 +463,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	select: function (item, silent) {
 		silent = typeof silent == 'undefined' ? false : silent;
 
+		// If the item doesn't exist
+		if (!this.itemExists(item)) {
+			return;
+		}
+
         // If resource is already selected, we do nothing.
 		// Refresh the view
         if (this.isSelected(item)) {
@@ -494,6 +504,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 */
 	unselect: function (item, silent) {
 		silent = silent || false;
+
+		// If the item doesn't exist
+		if (!this.itemExists(item)) {
+			return;
+		}
 
 		// Uncheck the associated checkbox (if it is not already done).
 		var id = 'multiple_select_checkbox_' + item.id,
@@ -605,6 +620,16 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		});
 
 		return def;
+	},
+
+	/**
+	 * Does the item exist
+	 * @param {passbolt.Model} item The item to check if it existing
+	 * @return {boolean}
+	 * @todo move this function into mad grid.
+	 */
+	itemExists: function (item) {
+		return this.view.getItemElement(item).length > 0 ? true : false;
 	},
 
 	/**
