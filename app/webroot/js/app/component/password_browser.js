@@ -370,7 +370,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		var self = this;
 
 		// If the item doesn't exist
-		if (!this.itemExists(item)) {
+		if (!this.itemExists(resource)) {
 			return;
 		}
 
