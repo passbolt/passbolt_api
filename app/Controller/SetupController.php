@@ -28,7 +28,6 @@ class SetupController extends AppController {
 		$this->Auth->allow('install');
 		$this->Auth->allow('recover');
 		$this->Auth->allow('completeRecovery');
-		$this->Auth->allow('ping');
 		parent::beforeFilter();
 	}
 
@@ -59,10 +58,22 @@ class SetupController extends AppController {
 			throw new BadRequestException(__('Token not provided'));
 		}
 
+		// Check that the token exists
+		$authToken = $this->User->AuthenticationToken->findFirstByToken($token);
+		if (empty($authToken)) {
+			return $this->Message->error(__('Invalid token'));
+		}
+
+		// Check that token is not expired
+		$isNotExpiredToken = $this->User->AuthenticationToken->isNotExpired($token);
+		if (!$isNotExpiredToken) {
+			return $this->Message->error(__('Expired token'));
+		}
+
 		// Check if token is valid.
-		$token = $this->AuthenticationToken->isValid($token, $userId);
-		if (empty($token)) {
-			throw new NotFoundException(__('Token not found'));
+		$isValidToken = $this->AuthenticationToken->isValid($token, $userId);
+		if (!$isValidToken) {
+			throw new NotFoundException(__('Invalid token'));
 		}
 
 		// Retrieve the user.
@@ -230,14 +241,4 @@ class SetupController extends AppController {
 		$this->set('data', $user);
 	}
 
-/**
- * Ping passbolt.
- *
- * @return void
- */
-	public function ping() {
-		header('Access-Control-Allow-Origin: *');
-		header('Access-Control-Allow-Methods: PUT, OPTIONS');
-		$this->Message->success(__("Affirmative, Dave. I read you."));
-	}
 }

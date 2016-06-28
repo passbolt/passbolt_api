@@ -38,6 +38,8 @@ $config = [
 	'Auth' => [
 		'className' => 'PassboltAuth',
 		'HashType' => 'blowfish',
+		// The number of minutes the authentication token lives for.
+		'tokenExpiracy' => 4320,
 		'logoutRedirect' => [
 			'controller' => 'users',
 			'action' => 'login',
