@@ -13,12 +13,7 @@ $this->assign('page_classes', 'recover');
 	<div class="row">
 		<div class="col6 push1 information">
 			<h2><?php echo __('Recover an existing account!'); ?></h2>
-			<p>
-				<?php echo __('Enter your email in the form.'); ?>
-				<?php echo __('We will send you an email to start the recovery process.'); ?>
-			</p>
-			<?php echo $this->element('public/disclaimer-recover'); ?>
-			<?php echo $this->element('public/recover-explanations'); ?>
+			<?php echo $this->element('public/recover/recover-explanations'); ?>
 		</div>
 		<div class="col4 push1 last">
 			<div class="logo">
