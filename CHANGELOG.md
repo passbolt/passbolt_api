@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1601: ControllerLog Model should support IVP6 addresses
 - PASSBOLT-1366: Worker bug when multiple passbolt instances are open in multiple windows
 - PASSBOLT-1590: Styleguide bump to v1.0.38
+- PASSBOLT-1613: As a user losing access to a password I selected, I shouldn't encounter an error
+
+### Added
+- PASSBOLT-1077: As a LU searching for a password (or a user) search results should filter as I type
 
 ## [1.0.12] - 2016-05-31
 ### Fixed
