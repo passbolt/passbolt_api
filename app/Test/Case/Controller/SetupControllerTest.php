@@ -201,7 +201,6 @@ class SetupControllerTest extends ControllerTestCase {
 		$this->assertEquals($gpkey['Gpgkey']['bits'], 4096);
 		$this->assertEquals($gpkey['Gpgkey']['uid'], 'Ada Lovelace <ada@passbolt.com>');
 		$this->assertEquals($gpkey['Gpgkey']['type'], 'RSA');
-		$this->assertEquals($gpkey['Gpgkey']['key_created'], gmdate('Y-m-d H:i:s', strtotime('2015-08-09 18:18:31')));
 		$this->assertEquals($gpkey['Gpgkey']['fingerprint'], '03F60E958F4CB29723ACDF761353B5B15D9B054F');
 		$this->assertEquals($gpkey['Gpgkey']['key_id'], '5D9B054F');
 
