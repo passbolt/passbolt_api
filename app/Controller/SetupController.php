@@ -225,9 +225,10 @@ class SetupController extends AppController {
 
 		// Everything is alright, we can complete the setup, and return the user.
 		// Deactivate Token.
-		$this->User->AuthenticationToken->id = $validToken['AuthenticationToken']['id'];
-		$result = $this->User->AuthenticationToken->saveField('active', false, ['atomic' => false]);
-		if (!$result) {
+		try {
+			$this->User->AuthenticationToken->setInactive($data['AuthenticationToken']['token']);
+		}
+		catch (Exception $e) {
 			return $this->Message->error(__('Could not update token'));
 		}
 
