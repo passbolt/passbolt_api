@@ -34,10 +34,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		itemClass: passbolt.model.Resource,
 		// the view class to use. Overriden so we can put our own logic.
 		viewClass: passbolt.view.component.PasswordBrowser,
-		// the list of resources displayed by the grid
-		resources: new can.Model.List(),
-		// the list of displayed categories
-		// categories: new passbolt.model.Category.List()
+		// the list of watched categories
 		categories: [],
 		// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
 		selectedRs: new can.Model.List(),
@@ -48,6 +45,18 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	}
 
 }, /** @prototype */ {
+
+	/**
+	 * The filter used to filter the browser.
+	 * @type {passbolt.model.Filter}
+	 */
+	filterSettings: null,
+
+	/**
+	 * Keep a trace of the old filter used to filter the browser.
+	 * @type {passbolt.model.Filter}
+	 */
+	oldFilterSettings: null,
 
 	// Constructor like
 	init: function (el, options) {
@@ -328,26 +337,28 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {string} position The position of the newly created item. You can pass in one
 	 * of those strings: "before", "after", "inside", "first", "last". By dhe default value
 	 * is set to last.
+	 *
+	 * @todo remove this function check todo inside
 	 */
 	insertItem: function (resource, refResourceId, position) {
-		// add the resource to the list of observed resources
-		this.options.resources.push(resource);
 		// insert the item to the grid
 		this._super(resource, refResourceId, position);
         // Reset state to ready (to remove other states such as empty).
+		// @todo Remove this state change. The control of the state should be operated by the caller script.
         this.setState('ready');
 	},
 
 	/**
 	 * Remove an item to the grid
 	 * @param {mad.model.Model} item The item to remove
+	 * @todo check if we can remove this function by moving the state empty into the grid
 	 */
 	removeItem: function (item) {
 		// remove the item to the grid
 		this._super(item);
         // If no resources are left, set empty state.
-        if (this.options.resources.length == 0) {
-            this.setState(['ready', 'empty']);
+        if (this.options.items.length == 0) {
+            this.state.addState('empty');
         }
 	},
 
@@ -357,6 +368,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 */
 	refreshItem: function (resource) {
 		var self = this;
+
+		// If the item doesn't exist
+		if (!this.itemExists(resource)) {
+			return;
+		}
 
 		// if the password browser is filter by category
 		if(this.options.categories.length) {
@@ -390,26 +406,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			// Make the item selected in the view.
 			this.view.selectItem(resource);
 		}
-	},
-
-	/**
-	 * reset
-	 */
-	reset: function () {
-		// reset the list of observed resources
-		// by removing a resource from the resources list stored in options, the Browser will
-		// update itself (check "{resources} remove" listener)
-		this.options.resources.splice(0, this.options.resources.length);
-	},
-
-	/**
-	 * Load resources in the grid
-	 * @param {passbolt.model.Resource.List} resources The list of resources to
-	 * load into the grid
-	 */
-	load: function (resources) {
-		// load the resources
-		this._super(resources);
 	},
 
 	/**
@@ -467,6 +463,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	select: function (item, silent) {
 		silent = typeof silent == 'undefined' ? false : silent;
 
+		// If the item doesn't exist
+		if (!this.itemExists(item)) {
+			return;
+		}
+
         // If resource is already selected, we do nothing.
 		// Refresh the view
         if (this.isSelected(item)) {
@@ -502,7 +503,12 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * @param {boolean} silent Do not propagate any event (default:false)
 	 */
 	unselect: function (item, silent) {
-		silent = typeof silent == 'undefined' ? false : silent;
+		silent = silent || false;
+
+		// If the item doesn't exist
+		if (!this.itemExists(item)) {
+			return;
+		}
 
 		// Uncheck the associated checkbox (if it is not already done).
 		var id = 'multiple_select_checkbox_' + item.id,
@@ -521,6 +527,122 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		if (!silent) {
 			mad.bus.trigger('resource_unselected', item);
 		}
+	},
+
+	/**
+	 * Filter the browser using a filter settings object
+	 * @param {passbolt.model.Filter} filter The filter to
+	 */
+	filterBySettings: function(filter) {
+		var self = this,
+			// The deferred used for the resources find all request.
+			def = $.Deferred();
+
+		// Save the old filter settings.
+		this.oldFilterSettings = this.filterSettings;
+		// Clone the given filter to avoid any changes problem.
+		this.filterSettings = filter.clone();
+
+		//
+		//this.options.categories = [];
+		//
+		//// Set state to filter case.
+		//if (filter.case != undefined) {
+		//	// Remove class belonging to previous filter.
+		//	if (this.filterSettings != undefined) {
+		//		self.element.removeClass(this.filterSettings.case);
+		//	}
+		//	// Add class for current filter. (used in styleguide).
+		//	self.element.addClass(filter.case);
+		//}
+		//
+		//// override the current list of categories displayed with the new ones
+		//// and the relative sub-categories
+		//var filteredCategory = filter.getForeignModels('Category');
+		//if(filteredCategory) {
+		//	can.each(filteredCategory, function (category, i) {
+		//		var subCategories = category.getSubCategories(true);
+		//		can.each(subCategories, function(subCategory, i){
+		//			self.options.categories.push(subCategory.id);
+		//		});
+		//	});
+		//}
+
+		// If the current filter case is different than the previous filter case
+		//   or this is the initial filtering (loading)
+		if (this.oldFilterSettings == null
+			|| this.filterSettings.case != this.oldFilterSettings.case) {
+
+			// Mark the component as loading.
+			// Complete it once the passwords are retrieved and rendered.
+			this.setState('loading');
+
+			// Remove all elements from the grid
+			this.reset();
+
+			// Retrieve the resources.
+			passbolt.model.Resource.findAll({
+				filter: this.filterSettings,
+				recursive: true,
+				silentLoading: false
+			}).then(function (resources, response, request) {
+				// If the browser has been destroyed before the request completed.
+				if (self.element == null) return;
+
+				// If the grid was marked as filtered, reset it.
+				self.filtered = false;
+
+				// Load the resources in the browser.
+				self.load(resources);
+
+				var states = ['ready'];
+				if (!resources.length) {
+					states.push('empty');
+				}
+				self.setState(states);
+				def.resolve();
+			});
+		} else {
+			def.resolve();
+		}
+
+		// When the resources have been retrieved.
+		$.when(def).done(function() {
+			// Filter by keywords.
+			var keywords = self.filterSettings.getKeywords();
+			if (keywords != '') {
+				self.filterByKeywords(keywords, {
+					searchInFields: ['username', 'name', 'uri', 'description']
+				});
+			} else if (self.isFiltered()){
+				self.resetFilter();
+			}
+		});
+
+		return def;
+	},
+
+	/**
+	 * Does the item exist
+	 * @param {passbolt.Model} item The item to check if it existing
+	 * @return {boolean}
+	 * @todo move this function into mad grid.
+	 */
+	itemExists: function (item) {
+		return this.view.getItemElement(item).length > 0 ? true : false;
+	},
+
+	/**
+	 * Reset the filtering
+	 * @todo move this function into mad grid.
+	 */
+	resetFilter: function () {
+		var self = this;
+		this.options.isFiltered = false;
+
+		can.each(this.options.items, function(item, i) {
+			self.view.showItem(item);
+		});
 	},
 
 	/* ************************************************************** */
@@ -565,23 +687,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {passbolt.model.Resource} resource The updated resource
 	*/
 	'{passbolt.model.Resource} updated': function (model, ev, resource) {
-		if (this.options.resources.indexOf(resource) != -1) {
+		if (this.options.items.indexOf(resource) != -1) {
 			this.refreshItem(resource);
 		}
-	},
-
-	/**
-	* Observe when resources are removed from the list of displayed resources and
-	* remove it from the grid
-	* @param {mad.model.Model} model The model reference
-	* @param {HTMLEvent} ev The event which occurred
-	* @param {passbolt.model.Resource} resources The removed resource
-	*/
-	'{resources} remove': function (model, ev, resources) {
-		var self = this;
-		can.each(resources, function (resource, i) {
-			self.removeItem(resource);
-		});
 	},
 
 	/**
@@ -596,14 +704,12 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 		// remove from the list of displayed categories the given deleted category and its children
 		var destroyedCategories = mad.model.Model.nestedToList(category, 'children');
-		var destroyedCategoriesIds = [];
 		can.each(destroyedCategories, function(destroyedCategory, h) {
 			var indexof = self.options.categories.indexOf(destroyedCategory.id);
 			if (indexof != -1) {
 				// remove the destroyed categories from the display categories array
 				self.options.categories.splice(indexof, 1);
 			}
-			// destroyedCategoriesIds.push(destroyedCategory.id);
 		});
 	},
 
@@ -664,8 +770,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {mixed} rsId The id of the resource which has been checked
 	*/
 	'.js_checkbox_multiple_select checked': function (el, ev, rsId) {
-		var self = this;
-
 		// if the grid is in initial state, switch it to selected
 		if (this.state.is('ready')) {
 			this.setState('selection');
@@ -677,8 +781,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		//}
 
 		// find the resource to select functions of its id
-		var i = mad.model.List.indexOf(this.options.resources, rsId);
-		var resource = this.options.resources[i];
+		var i = mad.model.List.indexOf(this.options.items, rsId);
+		var resource = this.options.items[i];
 
 		if (this.beforeSelect(resource)) {
 			this.select(resource);
@@ -693,14 +797,12 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	* @param {mixed} rsId The id of the resource which has been unchecked
 	*/
 	'.js_checkbox_multiple_select unchecked': function (el, ev, rsId) {
-		var self = this;
-
 		// find the resource to select functions of its id
-		var i = mad.model.List.indexOf(this.options.resources, rsId);
-		var resource = this.options.resources[i];
+		var i = mad.model.List.indexOf(this.options.items, rsId);
+		var resource = this.options.items[i];
 
 		if (this.beforeUnselect()) {
-			self.unselect(resource);
+			this.unselect(resource);
 		}
 
 		// if there is no more selected resources, switch the grid to its initial state
@@ -718,68 +820,25 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/* ************************************************************** */
 
 	/**
-	* Listen to the browser filter
-	* @param {jQuery} element The source element
-	* @param {Event} event The jQuery event
-	* @param {passbolt.model.Filter} filter The filter to apply
-	*/
-	'{mad.bus.element} filter_resources_browser': function (element, evt, filter) {
-		var self = this;
+	 * Listen to the workspace filter event.
+	 * @param {jQuery} element The source element
+	 * @param {Event} event The jQuery event
+	 * @param {passbolt.model.Filter} filter The filter settings
+	 */
+	'{mad.bus.element} filter_workspace': function(el, ev, filter) {
+		this.filterBySettings(filter);
+	},
 
-		// reset the state variables
-		this.options.categories = [];
-
-        // Set state to filter case.
-        if (filter.case != undefined) {
-            // Remove class belonging to previous filter.
-            if (this.filter != undefined) {
-                self.element.removeClass(this.filter.case);
-            }
-            // Add class for current filter. (used in styleguide).
-            self.element.addClass(filter.case);
-        }
-
-        // store the filter
-        this.filter = filter;
-
-		// override the current list of categories displayed with the new ones
-		// and the relative sub-categories
-		var filteredCategory = filter.getForeignModels('Category');
-		if(filteredCategory) {
-			can.each(filteredCategory, function (category, i) {
-				var subCategories = category.getSubCategories(true);
-				can.each(subCategories, function(subCategory, i){
-					self.options.categories.push(subCategory.id);
-				});
-			});
+	/**
+	 * Observe when an item is unselected
+	 * @param {HTMLElement} el The element the event occurred on
+	 * @param {HTMLEvent} ev The event which occurred
+	 * @param {passbolt.model.Resource|array} items The unselected items
+	 */
+	'{selectedRs} remove': function (el, ev, items) {
+		for (var i in items) {
+			this.unselect(items[i]);
 		}
-
-		// change the state of the component to loading
-		this.setState('loading');
-
-        // Is password workspace empty.
-        var empty = false;
-
-		// load resources functions of the filter
-		passbolt.model.Resource.findAll({
-			filter: this.filter,
-			recursive: true,
-			silentLoading:false
-		}, function (resources, response, request) {
-			// If the browser has been destroyed before the request completed.
-			if (self.element == null) {
-				return;
-			}
-            // If no resources found, then add class empty, and render empty content html.
-            if (resources.length == 0) {
-                empty = true;
-            }
-
-			// load the resources in the browser
-			self.load(resources);
-			// change the state to ready
-			self.setState(empty ? ['ready', 'empty'] : 'ready');
-		});
 	},
 
 	/* ************************************************************** */
@@ -817,7 +876,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
      */
     stateEmpty: function (go) {
         if (go) {
-            if (this.filter.case == 'all_items') {
+            if (this.filterSettings.case == 'all_items') {
                 var empty_html = mad.View.render("app/view/template/component/password_workspace_all_items_empty.ejs");
                 $('.tableview-content', self.element).prepend(empty_html);
             }

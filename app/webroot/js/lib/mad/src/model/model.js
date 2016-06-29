@@ -528,16 +528,6 @@ var Model = mad.Model = can.Model.extend('mad.Model', /** @static */ {
 		return returnValue;
     }
 
-}, /** @prototype */ {
-
-    ///**
-    // * Get the object Class.
-    // * @return {can/construct}
-    // */
-    //getClass: function () {
-    //	return this.constructor;
-    //}
-
-});
+}, /** @prototype */ {});
 
 export default Model;

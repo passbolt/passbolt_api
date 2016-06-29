@@ -6,7 +6,7 @@ import 'app/model/group';
 import 'app/model/profile';
 import 'app/view/component/user_browser';
 
-/*
+/**
  * @class passbolt.component.UserBrowserController
  * @inherits {mad.controller.component.GridController}
  * @parent index
@@ -19,7 +19,7 @@ import 'app/view/component/user_browser';
  * @param {HTMLElement} element the element this instance operates on.
  * @param {Object} [options] option values for the controller.  These get added to
  * this.options and merged with defaults static variable
- * @return {passbolt.component.UserBrowserController}
+ * @return {passbolt.component.UserBrowser}
  */
 var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('passbolt.component.UserBrowser', /** @static */ {
 
@@ -28,8 +28,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         itemClass: passbolt.model.User,
         // Specific view for userBrowser. To handle specific behaviours like drag n drop.
         viewClass: passbolt.view.component.UserBrowser,
-        // the list of resources displayed by the grid
-        users: new can.Model.List(),
         // the list of displayed categories
         // categories: new passbolt.model.Category.List()
         groups: [],
@@ -42,6 +40,18 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     }
 
 }, /** @prototype */ {
+
+    /**
+     * The filter used to filter the browser.
+     * @type {passbolt.model.Filter}
+     */
+    filterSettings: null,
+
+    /**
+     * Keep a trace of the old filter used to filter the browser.
+     * @type {passbolt.model.Filter}
+     */
+    oldFilterSettings: null,
 
     // Constructor like
     init: function (el, options) {
@@ -145,7 +155,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // Is the selected user same as the current user.
         var isSelf = passbolt.model.User.getCurrent().id == this.options.selectedUsers[0].id;
 
-
         // Instantiate the contextual menu menu.
         var contextualMenu = new mad.component.ContextualMenu(null, {
             state: 'hidden',
@@ -171,6 +180,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             }
         });
         contextualMenu.insertItem(action);
+
         // Add Edit action.
         var action = new mad.model.Action({
             id: 'js_user_browser_menu_copy_email',
@@ -220,22 +230,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
-     * Insert a resource in the grid
-     * @param {mad.model.Model} resource The resource to insert
-     * @param {string} refResourceId The reference resource id. By default the grid view object
-     * will choose the root as reference element.
-     * @param {string} position The position of the newly created item. You can pass in one
-     * of those strings: "before", "after", "inside", "first", "last". By dhe default value
-     * is set to last.
-     */
-    insertItem: function (user, refUserId, position) {
-        // add the resource to the list of observed resources
-        this.options.users.push(user);
-        // insert the item to the grid
-        this._super(user, refUserId, position);
-    },
-
-    /**
      * Refresh an item in the grid.
      * We override this function, so we can keep the selected state after the refresh.
      * @param item
@@ -254,16 +248,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     removeItem: function (item) {
         // remove the item to the grid
         this._super(item);
-    },
-
-    /**
-     * reset
-     */
-    reset: function () {
-        // reset the list of observed resources
-        // by removing a resource from the resources list stored in options, the Browser will
-        // update itself (check "{resources} remove" listener)
-        this.options.users.splice(0, this.options.users.length);
     },
 
     /**
@@ -307,7 +291,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {boolean} silent Do not propagate any event (default:false)
      */
     select: function (item, silent) {
-        silent = typeof silent == 'undefined' ? false : silent;
+        silent = silent || false;
 
         // Unselect the previously selected user, if not in multipleSelection.
         if (!this.state.is('multipleSelection') &&
@@ -367,6 +351,97 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         }
     },
 
+    /**
+     * Filter the browser using a filter settings object
+     * @param {passbolt.model.Filter} filter The filter to
+     */
+    filterBySettings: function(filter) {
+        var self = this,
+        // The deferred used for the users find all request.
+            def = $.Deferred();
+
+        // Save the old filter settings.
+        this.oldFilterSettings = this.filterSettings;
+        // Clone the given filter to avoid any changes problem.
+        this.filterSettings = filter.clone();
+
+        //// reset the state variables
+        //this.options.groups = [];
+		//
+        //// override the current list of users displayed with the new ones
+        //var filteredGroup = filter.getForeignModels('Group');
+        //if (filteredGroup) {
+        //    can.each(filteredGroup, function (group, i) {
+        //        self.options.groups.push(group.id);
+        //    });
+        //}
+
+        // If the current filter case is different than the previous filter case
+        //   or this is the initial filtering (loading)
+        if (this.oldFilterSettings == null
+            || this.filterSettings.case != this.oldFilterSettings.case) {
+
+            // Mark the component as loading.
+            // Complete it once the users are retrieved and rendered.
+            this.setState('loading');
+
+            // Remove all elements from the grid
+            this.reset();
+
+            // Retrieve the resources.
+            passbolt.model.User.findAll({
+                filter: this.filterSettings,
+                recursive: true,
+                silentLoading: false
+            }).then(function (users, response, request) {
+                // If the browser has been destroyed before the request completed.
+                if (self.element == null) return;
+
+                // If the grid was marked as filtered, reset it.
+                self.filtered = false;
+
+                // Load the resources in the browser.
+                self.load(users);
+                self.setState('ready');
+                if (!users.length) {
+                    self.state.addState('empty');
+                }
+
+                def.resolve();
+            });
+        } else {
+            def.resolve();
+        }
+
+        // When the resources have been retrieved.
+        $.when(def).done(function() {
+            // Filter by keywords.
+            var keywords = filter.getKeywords();
+            if (keywords != '') {
+                self.filterByKeywords(keywords, {
+                    searchInFields: ['username', 'Role.name', 'Profile.first_name', 'Profile.last_name']
+                });
+            } else if (self.isFiltered()){
+                self.resetFilter();
+            }
+        });
+
+        return def;
+    },
+
+    /**
+     * Reset the filtering
+     * @todo move this function into mad grid.
+     */
+    resetFilter: function () {
+        var self = this;
+        this.options.isFiltered = false;
+
+        can.each(this.options.items, function(item, i) {
+            self.view.showItem(item);
+        });
+    },
+
     /* ************************************************************** */
     /* LISTEN TO THE MODEL EVENTS */
     /* ************************************************************** */
@@ -394,7 +469,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {passbolt.model.User} user The updated user
      */
     '{passbolt.model.User} updated': function (model, ev, user) {
-        if (this.options.users.indexOf(user) != -1) {
+        if (this.options.items.indexOf(user) != -1) {
             this.refreshItem(user);
         }
     },
@@ -422,12 +497,12 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     '{passbolt.model.GroupUser} destroyed': function (model, ev, groupUser) {
         // Remove user from the list of users in the grid.
-        for (i in this.options.users) {
-            if (this.options.users[i].id == groupUser.user_id) {
+        for (i in this.options.items) {
+            if (this.options.items[i].id == groupUser.user_id) {
                 break;
             }
         }
-        this.options.users.splice(i, 1);
+        this.options.items.splice(i, 1);
 
         // Remove user from the list of selected users.
         for (i in this.options.selectedUsers) {
@@ -491,8 +566,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         //}
 
         // find the resource to select functions of its id
-        var i = mad.model.List.indexOf(this.options.users, userId);
-        var user = this.options.users[i];
+        var i = mad.model.List.indexOf(this.options.items, userId);
+        var user = this.options.items[i];
 
         if (this.beforeSelect(user)) {
             this.select(user);
@@ -510,8 +585,8 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         var self = this;
 
         // find the resource to select functions of its id
-        var i = mad.model.List.indexOf(this.options.users, userId);
-        var user = this.options.users[i];
+        var i = mad.model.List.indexOf(this.options.items, userId);
+        var user = this.options.items[i];
 
         if (this.beforeUnselect()) {
             self.unselect(user);
@@ -537,39 +612,20 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {Event} event The jQuery event
      * @param {passbolt.model.Filter} filter The filter to apply
      */
-    '{mad.bus.element} filter_users_browser': function (element, evt, filter) {
-        var self = this;
-        // store the filter
-        this.filter = filter;
-        // reset the state variables
-        this.options.groups = [];
+    '{mad.bus.element} filter_workspace': function (element, evt, filter) {
+        this.filterBySettings(filter);
+    },
 
-        // override the current list of users displayed with the new ones
-        var filteredGroup = filter.getForeignModels('Group');
-        if (filteredGroup) {
-            can.each(filteredGroup, function (group, i) {
-                self.options.groups.push(group.id);
-            });
+    /**
+     * Observe when an item is unselected
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event which occurred
+     * @param {passbolt.model.Resource|array} items The unselected items
+     */
+    '{selectedUsers} remove': function (el, ev, items) {
+        for (var i in items) {
+            this.unselect(items[i]);
         }
-
-        // change the state of the component to loading.
-        this.setState('loading');
-
-        // load resources functions of the filter.
-        passbolt.model.User.findAll({
-            filter: this.filter,
-            recursive: true
-        }, function (users, response, request) {
-            // If the browser component has been destroyed.
-            if (self.element == null) {
-                return;
-            }
-
-            // load the users in the browser.
-            self.load(users);
-            // change the state to ready.
-            self.setState('ready');
-        });
     },
 
     /* ************************************************************** */

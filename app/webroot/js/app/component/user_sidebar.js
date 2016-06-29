@@ -56,6 +56,7 @@ var UserSidebar = passbolt.component.UserSidebar = passbolt.component.Sidebar.ex
 		// Request decryption. (delegated to plugin).
 		mad.bus.trigger('passbolt.clipboard', data);
 	}
+
 });
 
 export default UserSidebar;

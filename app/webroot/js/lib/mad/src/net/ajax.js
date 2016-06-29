@@ -89,9 +89,10 @@ var Ajax = mad.net.Ajax = can.Construct.extend('mad.net.Ajax', /** @static */ {
             }
         }
 
-
-        // Start ajax request.
-        mad.bus.trigger('mad_ajax_request_start', request);
+        // Notify other components that an ajax request has been fired.
+        if (typeof(mad.bus) != 'undefined') {
+            mad.bus.trigger('mad_ajax_request_start', request);
+        }
 
         // Perform the request.
         var returnValue = can.ajax(request)
@@ -156,8 +157,10 @@ var Ajax = mad.net.Ajax = can.Construct.extend('mad.net.Ajax', /** @static */ {
         var self = this;
         // Handle the server success response with the default response handler
         returnValue.then(function (data, response, request) {
-            // Propagate an event on the bus to inform other components.
-            mad.bus.trigger('mad_ajax_request_complete', request);
+            // Notify other components that the ajax request has been completed.
+            if (typeof(mad.bus) != 'undefined') {
+                mad.bus.trigger('mad_ajax_request_complete', request);
+            }
             var ResponseHandlerClass = self._getResponseHandlerClass();
             var ResponseHandlerClass = can.getObject(ResponseHandlerClass);
             var responseHandler = new ResponseHandlerClass(response, request);
@@ -166,8 +169,10 @@ var Ajax = mad.net.Ajax = can.Construct.extend('mad.net.Ajax', /** @static */ {
 
         // Handle the server fail response with the default response handler
         returnValue.fail(function (jqXHR, textStatus, response) {
-            // Propagate an event on the bus to inform other components.
-            mad.bus.trigger('mad_ajax_request_complete', request);
+            // Notify other components that the ajax request has been completed.
+            if (typeof(mad.bus) != 'undefined') {
+                mad.bus.trigger('mad_ajax_request_complete', request);
+            }
             var ResponseHandlerClass = self._getResponseHandlerClass();
             var ResponseHandlerClass = can.getObject(ResponseHandlerClass);
             var responseHandler = new ResponseHandlerClass(response, request);

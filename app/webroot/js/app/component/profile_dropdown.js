@@ -42,11 +42,11 @@ var ProfileDropdown = passbolt.component.ProfileDropdown = mad.component.ButtonD
 
 		// Add my profile action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'my profile',
+			id: uuid(),
+			label: 'my profile',
 			//'cssClasses': ['separator-after'],
-			'action': function (menu) {
-				mad.bus.trigger('workspace_selected', 'settings');
+			action: function (menu) {
+				mad.bus.trigger('request_workspace', 'settings');
 				mad.bus.trigger('request_settings_section', 'profile');
 				self.view.close();
 			}
@@ -55,11 +55,11 @@ var ProfileDropdown = passbolt.component.ProfileDropdown = mad.component.ButtonD
 
 		// Add manage your keys action.
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'manage your keys',
-			//'cssClasses': ['separator-after'],
-			'action': function (menu) {
-				mad.bus.trigger('workspace_selected', 'settings');
+			id: uuid(),
+			label: 'manage your keys',
+			//cssClasses: ['separator-after'],
+			action: function (menu) {
+				mad.bus.trigger('request_workspace', 'settings');
 				mad.bus.trigger('request_settings_section', 'keys');
 				self.view.close();
 			}
@@ -68,10 +68,10 @@ var ProfileDropdown = passbolt.component.ProfileDropdown = mad.component.ButtonD
 
 		// Add my profile action
 		var action = new mad.model.Action({
-			'id': uuid(),
-			'label': 'logout',
+			id: uuid(),
+			label: 'logout',
 			//'cssClasses': ['separator-after'],
-			'action': function (menu) {
+			action: function (menu) {
 				document.location.href = APP_URL + '/logout';
 			}
 		});

@@ -3,7 +3,6 @@ import 'app/model/category';
 import 'app/view/template/component/breadcrumb/breadcrumb.ejs!';
 import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 
-
 /**
  * @inherits {mad.Component}
  * @parent index
@@ -40,7 +39,7 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 		// Create and render menu in the created container.
 		var menuSelector = '#' + this.getId() + ' ul';
 		this.options.menu = new mad.component.Menu(menuSelector, {
-			'itemTemplateUri': 'app/view/template/component/breadcrumb/breadcrumb_item.ejs'
+			itemTemplateUri: 'app/view/template/component/breadcrumb/breadcrumb_item.ejs'
 		});
 		this.options.menu.start();
 	},
@@ -55,14 +54,16 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 
 		// Add a link to filter on all items as first item.
 		var menuItem = new mad.model.Action({
-			'id': uuid(),
-			'label': __('All items'),
-			'action': function () {
+			id: uuid(),
+			label: __('All items'),
+			action: function () {
 				var filter = new passbolt.model.Filter({
-					'label': __('All items'),
-					'order': 'modified'
+					label: __('All items'),
+					order: 'modified',
+					case: 'all_items',
+					type: passbolt.model.Filter.SHORTCUT
 				});
-				mad.bus.trigger('filter_resources_browser', filter);
+				mad.bus.trigger('filter_workspace', filter);
 			}
 		});
 		menuItems.push(menuItem);
@@ -77,9 +78,9 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 				var parentCategories = category.getParentCategories();
 				can.each(parentCategories, function (parentCategory) {
 					var menuItem = new mad.model.Action({
-						'id': uuid(),
-						'label': parentCategory.name,
-						'action': function () {
+						id: uuid(),
+						label: parentCategory.name,
+						action: function () {
 							mad.bus.trigger('category_selected', parentCategory);
 						}
 					});
@@ -88,9 +89,9 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 
 				// Add the current category to the breadcrumb.
 				var menuItem = new mad.model.Action({
-					'id': uuid(),
-					'label': category.name,
-					'action': function () {
+					id: uuid(),
+					label: category.name,
+					action: function () {
 						mad.bus.trigger('category_selected', category);
 					}
 				});
@@ -101,8 +102,8 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 		else if (typeof filter.keywords != 'undefined' && filter.keywords != '') {
 			// Add the current category to the breadcrumb.
 			var menuItem = new mad.model.Action({
-				'id': uuid(),
-				'label': __('Search : %s', filter.keywords)
+				id: uuid(),
+				label: __('Search : %s', filter.keywords)
 			});
 			menuItems.push(menuItem);
 		}
@@ -111,8 +112,8 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 			if (typeof filter.label != 'undefined'
 				&& filter.label != __('All items')) {
 				var menuItem = new mad.model.Action({
-					'id': uuid(),
-					'label': filter.label
+					id: uuid(),
+					label: filter.label
 				});
 				menuItems.push(menuItem);
 			}
@@ -121,13 +122,19 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 		return menuItems;
 	},
 
+	/* ************************************************************** */
+	/* LISTEN TO THE APP EVENTS */
+	/* ************************************************************** */
+
 	/**
-	 * Load the current filter
-	 * @param {passbolt.model.Filter} filter The filter to load
+	 * Listen to the browser filter
+	 * @param {jQuery} element The source element
+	 * @param {Event} event The jQuery event
+	 * @param {passbolt.model.Filter} filter The filter to apply
 	 */
-	load: function (filter) {
-		var menuItems = this.parseFilter(filter);
+	'{mad.bus.element} filter_workspace': function (element, evt, filter) {
 		this.options.menu.reset();
+		var menuItems = this.parseFilter(filter);
 		this.options.menu.load(menuItems);
 	}
 
