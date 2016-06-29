@@ -4,14 +4,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- PASSBOLT-1605: Set::extract to Hash::extract refactoring regression
-- PASSBOLT-1601: ControllerLog Model should support IVP6 addresses
-- PASSBOLT-1366: Worker bug when multiple passbolt instances are open in multiple windows
-- PASSBOLT-1590: Styleguide bump to v1.0.38
-- PASSBOLT-1613: As a user losing access to a password I selected, I shouldn't encounter an error
+- PASSBOLT-1605: Set::extract to Hash::extract refactoring regression.
+- PASSBOLT-1601: ControllerLog Model should support IVP6 addresses.
+- PASSBOLT-1366: Worker bug when multiple passbolt instances are open in multiple windows.
+- PASSBOLT-1590: Styleguide bump to v1.0.38.
+- PASSBOLT-1613: As a user losing access to a password I selected, I shouldn't encounter an error.
+- PASSBOLT-1569: Cleanup: remove SetupController::ping.
 
 ### Added
-- PASSBOLT-1077: As a LU searching for a password (or a user) search results should filter as I type
+- PASSBOLT-1077: As a LU searching for a password (or a user) search results should filter as I type.
+- PASSBOLT-1588: As AN it should be possible to recover a passbolt account on a new device.
 
 ## [1.0.12] - 2016-05-31
 ### Fixed
