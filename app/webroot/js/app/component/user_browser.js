@@ -62,6 +62,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             name: 'name',
             username: 'username',
             modified: 'modified',
+            last_logged_in: 'last_logged_in',
             Group: 'Group',
             Profile: 'Profile'
         });
@@ -132,7 +133,24 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             valueAdapter: function (value, mappedItem, item, columnModel) {
 	            return passbolt.Common.datetimeGetTimeAgo(value);
             }
-        }];
+        },
+            {
+                name: 'last_logged_in',
+                index: 'last_logged_in',
+                header: {
+                    css: ['m-cell'],
+                    label: __('Last logged in')
+                },
+                valueAdapter: function (value, mappedItem, item, columnModel) {
+                    var last_logged_in = __('never');
+                    if (value != undefined) {
+                        last_logged_in = passbolt.Common.datetimeGetTimeAgo(value);
+                    }
+                    return last_logged_in;
+                }
+            }
+
+        ];
 
         this._super(el, options);
     },

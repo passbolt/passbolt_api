@@ -508,5 +508,4 @@ class UserTest extends CakeTestCase {
 		$userA = $this->User->find('first', array('conditions' => array('username' => 'ada@passbolt.com')));
 		$this->assertEqual($userA['User']['deleted'], true);
 	}
-
 }

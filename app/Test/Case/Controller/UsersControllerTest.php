@@ -241,6 +241,55 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	/**
+	 * Test that the field last_logged_in is present if the user has already logged in.
+	 */
+	public function testViewLastLoggedIn() {
+		$ControllerLog = Common::getModel('ControllerLog');
+		$user = $this->User->findById(common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		// Call user view for ada.
+		$result = json_decode(
+			$this->testAction(
+				'/users/'. Common::uuid('user.id.ada') . '.json',
+				array('return' => 'contents', 'method' => 'GET'),
+				true
+			)
+		);
+
+		// Assert that last logged is empty (since never logged in).
+		$this->assertEmpty($result->body->User->last_logged_in);
+
+		// Create a login log entry in controller log.
+		$ControllerLog->create();
+		$ControllerLog->save([
+				'user_id' => Common::uuid('user.id.ada'),
+				'role_id' => Role::USER,
+				'level' => 'success',
+				'method' => 'POST',
+				'controller' => 'auth',
+				'action' => 'login',
+				'user_agent_id' => '7762a026-0f79-3982-abe3-d3d488119d28',
+				'ip' => '127.0.0.1',
+				'request_data' => null,
+				'message' => 'login_success',
+				'scope' => '',
+			], false);
+
+		// Call again user view for ada.
+		$result = json_decode(
+			$this->testAction(
+				'/users/'. Common::uuid('user.id.ada') . '.json',
+				array('return' => 'contents', 'method' => 'GET'),
+				true
+			)
+		);
+
+		// Assert that last_logged_in is not empty anymore.
+		$this->assertNotEmpty($result->body->User->last_logged_in);
+	}
+
+	/**
 	 * Test view in a normal scenario.
 	 */
 	public function testView() {

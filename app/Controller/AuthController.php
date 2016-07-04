@@ -33,11 +33,26 @@ class AuthController extends AppController {
 	public function login() {
 		// check if the user Authentication worked
 		if (!$this->Auth->login()) {
+
+			// Check if we are using Gpg auth, and if we are at stage 1.
+			$isGpgAuthStage1 = isset($this->request->data['gpg_auth']) &&
+				!isset($this->request->data['gpg_auth']['user_token_result']);
+
+			// Stage 1 will always return false, so we don't log the attempt as an error.
+			// We log as an error only if we are outside of this context.
+			if (!$isGpgAuthStage1) {
+				// Log login error.
+				ControllerLog::write(Status::ERROR, $this->request, 'login_failure', '');
+			}
+
 			$userAgent = UserAgent::parse();
 			$this->set('userAgent', $userAgent);
 			$this->layout = 'login';
 			$this->view = '/Auth/login';
 		} else {
+			// Log login success.
+			ControllerLog::write(Status::SUCCESS, $this->request, 'login_success', '');
+
 			if ($this->request->is('json')) {
 				// We do not redirect since the Javascript app will take care of this
 				// Also it messes up with the GPGAuth headers if we do
@@ -80,6 +95,10 @@ class AuthController extends AppController {
  * @return void
  */
 	public function logout() {
+		// Log action.
+		ControllerLog::write(Status::SUCCESS, $this->request, 'error', '');
+
+		// Redirect.
 		$this->redirect($this->Auth->logout());
 	}
 

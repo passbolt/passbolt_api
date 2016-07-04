@@ -36,6 +36,7 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 		email: 'string',
 		role_id: 'string',
 		active: 'string',
+        last_logged_in: 'string',
 		Profile: 'passbolt.model.Profile.model',
 		GroupUser: 'passbolt.model.GroupUser.models'
 	},
