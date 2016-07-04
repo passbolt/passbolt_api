@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-1124: AS LU on user workspace I should be able to see the last logged in date of a user.
 
 ## [1.0.13] - 2016-06-30
 ### Fixed
