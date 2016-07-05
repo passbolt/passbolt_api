@@ -373,6 +373,8 @@ var Component = mad.Component = mad.Control.extend('mad.Component', /* @static *
 	 * * Pass data to the component's View & template.
 	 */
 	beforeRender: function () {
+		// Ensure component' view templates to have access to the controller object.
+		this.setViewData('control', this);
 	},
 
 	/**

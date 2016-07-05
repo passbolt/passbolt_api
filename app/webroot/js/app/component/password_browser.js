@@ -74,16 +74,14 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		});
 
 		// the columns model
-		options.columnModel = [{
+		options.columnModel = [new mad.model.GridColumn({
 			name: 'multipleSelect',
 			index: 'multipleSelect',
-			header: {
-				css: ['selections s-cell'],
-				label: '<div class="input checkbox">'
-						+ '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all" disabled="disabled">'
-						+ '<label for="checkbox-select-all">select all</label> \
-					</div>'
-			},
+			css: ['selections s-cell'],
+			label: '<div class="input checkbox"> \
+						<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all" disabled="disabled"> \
+						<label for="checkbox-select-all">select all</label> \
+					</div>',
 			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var availableValues = {};
 				availableValues[item.id] = '';
@@ -99,16 +97,14 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				);
 				checkbox.start();
 			}
-		}, {
+		}), new mad.model.GridColumn({
 			name: 'favorite',
 			index: 'favorite',
-			header: {
-				css: ['selections s-cell'],
-				label: '<a href="#"> \
+			css: ['selections s-cell'],
+			label: '<a href="#"> \
 						<i class="icon fav"></i> \
 						<span class="visuallyhidden">fav</span> \
-					</a>'
-			},
+					</a>',
 			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var availableValues = {};
 				availableValues[item.id] = '';
@@ -123,27 +119,22 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				);
 				favorite.start();
 			}
-		}, {
+		}), new mad.model.GridColumn({
 			name: 'name',
 			index: 'name',
-			header: {
-				css: ['m-cell'],
-				label: __('Resource')
-			}
-		}, {
+			css: ['m-cell'],
+			label: __('Resource'),
+			sortable: true
+		}), new mad.model.GridColumn({
 			name: 'username',
 			index: 'username',
-			header: {
-				css: ['m-cell'],
-				label: __('Username')
-			}
-		}, {
+			css: ['m-cell'],
+			label: __('Username')
+		}), new mad.model.GridColumn({
 			name: 'secret',
 			index: 'secret',
-			header: {
-				css: ['m-cell', 'password'],
-				label: __('Password')
-			},
+			css: ['m-cell', 'password'],
+			label: __('Password'),
 			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var secret = '';
 				if (typeof cellValue[0] != 'undefined') {
@@ -160,13 +151,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 					'</div>'
 				);
 			}
-		}, {
+		}), new mad.model.GridColumn({
 			name: 'uri',
 			index: 'uri',
-			header: {
-				css: ['l-cell'],
-				label: __('URI')
-			},
+			css: ['l-cell'],
+			label: __('URI'),
 			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var uri = URI(cellValue);
 
@@ -182,24 +171,20 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 					'<a href="' + uri.toString() + '" target="_blank">' + cellValue + '</a>'
 				);
 			}
-		}, {
+		}), new mad.model.GridColumn({
 			name: 'modified',
 			index: 'modified',
-			header: {
-				css: ['m-cell'],
-				label: __('Modified')
-			},
+			css: ['m-cell'],
+			label: __('Modified'),
 			valueAdapter: function (value, mappedItem, item, columnModel) {
 				return passbolt.Common.datetimeGetTimeAgo(value);
 			}
-		}, {
+		}), new mad.model.GridColumn({
 			name: 'owner',
 			index: 'owner',
-			header: {
-				css: ['m-cell'],
-				label: __('Owner')
-			}
-		}];
+			css: ['m-cell'],
+			label: __('Owner')
+		})];
 
 		this._super(el, options);
 	},
