@@ -16,8 +16,7 @@ $this->assign('page_classes', 'recover thank-you');
 			<p>
 				<?php echo __('We just sent you an email, please follow the instructions to recover your account on this device.'); ?>
 			</p>
-			<?php echo $this->element('public/disclaimer-recover'); ?>
-			<?php echo $this->element('public/recover-explanations'); ?>
+			<?php echo $this->element('public/recover/recover-explanations'); ?>
 		</div>
 		<div class="col4 push1 last">
 			<div class="logo">
