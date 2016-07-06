@@ -170,7 +170,7 @@ module.exports = function(grunt) {
 						main: "app/passbolt"
 					},
 					buildOptions: {
-						minify: false
+						minify: true
 					}
 				}
 			}
