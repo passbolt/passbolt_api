@@ -581,6 +581,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				self.load(resources);
 
 				var states = ['ready'];
+				if (filter.case != undefined) {
+					states.push(filter.case);
+				}
 				if (!resources.length) {
 					states.push('empty');
 				}

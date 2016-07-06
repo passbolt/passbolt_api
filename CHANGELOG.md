@@ -3,15 +3,21 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-1124: AS LU on user workspace I should be able to see the last logged in date of a user.
+
+## [1.0.13] - 2016-06-30
 ### Fixed
-- PASSBOLT-1605: Set::extract to Hash::extract refactoring regression
-- PASSBOLT-1601: ControllerLog Model should support IVP6 addresses
-- PASSBOLT-1366: Worker bug when multiple passbolt instances are open in multiple windows
-- PASSBOLT-1590: Styleguide bump to v1.0.38
-- PASSBOLT-1613: As a user losing access to a password I selected, I shouldn't encounter an error
+- PASSBOLT-1605: Set::extract to Hash::extract refactoring regression.
+- PASSBOLT-1601: ControllerLog Model should support IVP6 addresses.
+- PASSBOLT-1366: Worker bug when multiple passbolt instances are open in multiple windows.
+- PASSBOLT-1590: Styleguide bump to v1.0.38.
+- PASSBOLT-1613: As a user losing access to a password I selected, I shouldn't encounter an error.
+- PASSBOLT-1569: Cleanup: remove SetupController::ping.
 
 ### Added
-- PASSBOLT-1077: As a LU searching for a password (or a user) search results should filter as I type
+- PASSBOLT-1077: As a LU searching for a password (or a user) search results should filter as I type.
+- PASSBOLT-1588: As AN it should be possible to recover a passbolt account on a new device.
 
 ## [1.0.12] - 2016-05-31
 ### Fixed
@@ -102,8 +108,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.12...HEAD
-[1.0.11]: https://github.com/passbolt/passbolt/compare/v1.0.11...v1.0.12
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.13...HEAD
+[1.0.13]: https://github.com/passbolt/passbolt/compare/v1.0.12...v1.0.13
+[1.0.12]: https://github.com/passbolt/passbolt/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/passbolt/passbolt/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/passbolt/passbolt/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/passbolt/passbolt/compare/v1.0.8...v1.0.9

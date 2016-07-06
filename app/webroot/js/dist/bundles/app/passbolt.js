@@ -24626,6 +24626,7 @@ define('app/model/user', [
                 email: 'string',
                 role_id: 'string',
                 active: 'string',
+                last_logged_in: 'string',
                 Profile: 'passbolt.model.Profile.model',
                 GroupUser: 'passbolt.model.GroupUser.models'
             },
@@ -31567,6 +31568,9 @@ define('app/component/password_browser', [
                         self.filtered = false;
                         self.load(resources);
                         var states = ['ready'];
+                        if (filter.case != undefined) {
+                            states.push(filter.case);
+                        }
                         if (!resources.length) {
                             states.push('empty');
                         }
@@ -31786,6 +31790,10 @@ define('mad/view/form/element/dropdown', ['mad/view/form/element'], function ($_
         __esModule: true
     };
 });
+/*lib/can/util/array/makeArray*/
+System.set('lib/can/util/array/makeArray', System.newModule({}));
+/*lib/can/util/domless/domless*/
+System.set('lib/can/util/domless/domless', System.newModule({}));
 /*mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system*/
 define('mad/view/template/form/dropdown.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('mad_view_template_form_dropdown_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -33192,8 +33200,6 @@ define('app/view/component/resource_sidebar', ['app/view/component/sidebar'], fu
         __esModule: true
     };
 });
-/*lib/can/util/array/makeArray*/
-System.set('lib/can/util/array/makeArray', System.newModule({}));
 /*app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system*/
 define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/system', ['can/view/ejs/ejs'], function (can) {
     return can.view.preloadStringRenderer('app_view_template_form_resource_edit_description_ejs', can.EJS(function (_CONTEXT, _VIEW) {
@@ -33208,8 +33214,6 @@ define('app/view/template/form/resource/edit_description.ejs!lib/can/view/ejs/sy
         }
     }));
 });
-/*lib/can/util/domless/domless*/
-System.set('lib/can/util/domless/domless', System.newModule({}));
 /*app/form/resource/edit_description*/
 define('app/form/resource/edit_description', [
     'mad/form/form',
@@ -35029,6 +35033,7 @@ define('app/component/user_browser', [
                     name: 'name',
                     username: 'username',
                     modified: 'modified',
+                    last_logged_in: 'last_logged_in',
                     Group: 'Group',
                     Profile: 'Profile'
                 });
@@ -35094,6 +35099,21 @@ define('app/component/user_browser', [
                         },
                         valueAdapter: function (value, mappedItem, item, columnModel) {
                             return passbolt.Common.datetimeGetTimeAgo(value);
+                        }
+                    },
+                    {
+                        name: 'last_logged_in',
+                        index: 'last_logged_in',
+                        header: {
+                            css: ['m-cell'],
+                            label: __('Last logged in')
+                        },
+                        valueAdapter: function (value, mappedItem, item, columnModel) {
+                            var last_logged_in = __('never');
+                            if (value != undefined) {
+                                last_logged_in = passbolt.Common.datetimeGetTimeAgo(value);
+                            }
+                            return last_logged_in;
                         }
                     }
                 ];
