@@ -32,9 +32,9 @@ $(document).ready(function () {
 	mad.Config.load(cakephpConfig);
 
 	// Retrieve the application core configuration.
-	appConfigDeferred = $.getJSON(mad.Config.read('app.url') + '/app/webroot/js/app/config/config.json');
+	appConfigDeferred = $.getJSON(mad.Config.read('app.url') + 'js/app/config/config.json');
 	// Retrieve the application notification configuration.
-	notifConfigDeferred = $.getJSON(mad.Config.read('app.url') + '/app/webroot/js/app/config/notification.json');
+	notifConfigDeferred = $.getJSON(mad.Config.read('app.url') + 'js/app/config/notification.json');
 
 	// When the application configurations have been retrieved.
 	$.when(appConfigDeferred, notifConfigDeferred).done(function(appConfigDeferredResult, notifConfigDeferredResult) {
