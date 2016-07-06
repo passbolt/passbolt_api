@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.14] - 2016-07-06
+### Fixed
+- PASSBOLT-1616: Fixed bad merge during the previous release.
+- PASSBOLT-1599: GITHUB-10 passbolt.js requesting wrong path for config.json.
+
 ## [1.0.13] - 2016-06-30
 ### Fixed
 - PASSBOLT-1605: Set::extract to Hash::extract refactoring regression.
@@ -12,7 +17,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1590: Styleguide bump to v1.0.38.
 - PASSBOLT-1613: As a user losing access to a password I selected, I shouldn't encounter an error.
 - PASSBOLT-1569: Cleanup: remove SetupController::ping.
-- PASSBOLT-1599: GITHUB-10 passbolt.js requesting wrong path for config.json.
 
 ### Added
 - PASSBOLT-1077: As a LU searching for a password (or a user) search results should filter as I type.
@@ -107,7 +111,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.13...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.14...HEAD
+[1.0.14]: https://github.com/passbolt/passbolt/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/passbolt/passbolt/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/passbolt/passbolt/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/passbolt/passbolt/compare/v1.0.10...v1.0.11
