@@ -68,16 +68,14 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         });
 
         // the columns model
-        options.columnModel = [{
+        options.columnModel = [new mad.model.GridColumn({
             name: 'multipleSelect',
             index: 'multipleSelect',
-            header: {
-                css: ['selections s-cell'],
-                label: '<div class="input checkbox">'
-                + '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all-people" disabled="disabled">'
-                + '<label for="checkbox-select-all-people">select all</label> \
-                                    </div>'
-            },
+            css: ['selections s-cell'],
+            label: '<div class="input checkbox"> \
+                    <input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all-people" disabled="disabled"> \
+                    <label for="checkbox-select-all-people">select all</label> \
+                </div>',
             cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
                 var availableValues = [];
                 availableValues[item.id] = '';
@@ -93,64 +91,51 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                 );
                 checkbox.start();
             }
-        }, {
+        }), new mad.model.GridColumn({
             name: 'avatar',
             index: 'Profile',
-            header: {
-                css: ['s-cell'],
-                label: ''
-            },
+            css: ['s-cell'],
+            label: '',
             titleAdapter: function (value, mappedItem, item, columnModel) {
                 return 'avatar';
             },
             valueAdapter: function (value, mappedItem, item, columnModel) {
                 return '<img src="' + item.Profile.avatarPath('small') + '" alt="' + __('Picture of: ') + mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name + '" width="30" height="30">';
             }
-        }, {
+        }), new mad.model.GridColumn({
             name: 'name',
             index: 'Profile',
-            header: {
-                css: ['m-cell'],
-                label: __('User')
-            },
+            css: ['m-cell'],
+            label: __('User'),
             valueAdapter: function (value, mappedItem, item, columnModel) {
                 return mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name;
             }
-        }, {
+        }), new mad.model.GridColumn({
             name: 'username',
             index: 'username',
-            header: {
-                css: ['m-cell'],
-                label: __('Username')
-            }
-        }, {
+            css: ['m-cell'],
+            label: __('Username')
+        }), new mad.model.GridColumn({
             name: 'modified',
             index: 'modified',
-            header: {
-                css: ['m-cell'],
-                label: __('Modified')
-            },
+            css: ['m-cell'],
+            label: __('Modified'),
             valueAdapter: function (value, mappedItem, item, columnModel) {
 	            return passbolt.Common.datetimeGetTimeAgo(value);
             }
-        },
-            {
-                name: 'last_logged_in',
-                index: 'last_logged_in',
-                header: {
-                    css: ['m-cell'],
-                    label: __('Last logged in')
-                },
-                valueAdapter: function (value, mappedItem, item, columnModel) {
-                    var last_logged_in = __('never');
-                    if (value != undefined) {
-                        last_logged_in = passbolt.Common.datetimeGetTimeAgo(value);
-                    }
-                    return last_logged_in;
+        }), new mad.model.GridColumn({
+            name: 'last_logged_in',
+            index: 'last_logged_in',
+            css: ['m-cell'],
+            label: __('Last logged in'),
+            valueAdapter: function (value, mappedItem, item, columnModel) {
+                var last_logged_in = __('never');
+                if (value != undefined) {
+                    last_logged_in = passbolt.Common.datetimeGetTimeAgo(value);
                 }
+                return last_logged_in;
             }
-
-        ];
+        })];
 
         this._super(el, options);
     },
