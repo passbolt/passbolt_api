@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1590: Styleguide bump to v1.0.38.
 - PASSBOLT-1613: As a user losing access to a password I selected, I shouldn't encounter an error.
 - PASSBOLT-1569: Cleanup: remove SetupController::ping.
+- PASSBOLT-1599: GITHUB-10 passbolt.js requesting wrong path for config.json.
 
 ### Added
 - PASSBOLT-1077: As a LU searching for a password (or a user) search results should filter as I type.
