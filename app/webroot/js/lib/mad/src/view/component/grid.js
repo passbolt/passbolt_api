@@ -257,8 +257,15 @@ var Grid = mad.view.component.Grid = mad.View.extend('mad.view.component.Grid', 
     markColumnAsSorted: function (columnModel, sortAsc) {
         var cssClasses = 'sorted ';
         cssClasses += sortAsc ? 'sort-asc' : 'sort-desc';
-        $('.sortable.sorted').removeClass('sorted sort-asc sort-desc');
+        this.markAsUnsorted();
         $('.js_grid_column_' + columnModel.name, this.element).addClass(cssClasses);
+    },
+
+    /**
+     * Mark the grid as unsorted.
+     */
+    markAsUnsorted: function() {
+        $('.sortable.sorted', this.element).removeClass('sorted sort-asc sort-desc');
     },
 
     /* ************************************************************** */

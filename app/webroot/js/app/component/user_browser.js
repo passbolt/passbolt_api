@@ -59,7 +59,12 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // The map to use to make our grid working with our resource model
         options.map = new mad.Map({
             id: 'id',
-            name: 'name',
+            name: {
+                key: 'Profile',
+                func: function(profile) {
+                    return profile.first_name + ' ' + profile.last_name;
+                }
+            },
             username: 'username',
             modified: 'modified',
             last_logged_in: 'last_logged_in',
@@ -107,19 +112,19 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             index: 'Profile',
             css: ['m-cell'],
             label: __('User'),
-            valueAdapter: function (value, mappedItem, item, columnModel) {
-                return mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name;
-            }
+            sortable: true
         }), new mad.model.GridColumn({
             name: 'username',
             index: 'username',
             css: ['m-cell'],
-            label: __('Username')
+            label: __('Username'),
+            sortable: true
         }), new mad.model.GridColumn({
             name: 'modified',
             index: 'modified',
             css: ['m-cell'],
             label: __('Modified'),
+            sortable: true,
             valueAdapter: function (value, mappedItem, item, columnModel) {
 	            return passbolt.Common.datetimeGetTimeAgo(value);
             }
@@ -128,6 +133,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             index: 'last_logged_in',
             css: ['m-cell'],
             label: __('Last logged in'),
+            sortable: true,
             valueAdapter: function (value, mappedItem, item, columnModel) {
                 var last_logged_in = __('never');
                 if (value != undefined) {

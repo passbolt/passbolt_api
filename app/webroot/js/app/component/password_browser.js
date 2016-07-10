@@ -129,7 +129,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			name: 'username',
 			index: 'username',
 			css: ['m-cell'],
-			label: __('Username')
+			label: __('Username'),
+			sortable: true
 		}), new mad.model.GridColumn({
 			name: 'secret',
 			index: 'secret',
@@ -156,6 +157,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			index: 'uri',
 			css: ['l-cell'],
 			label: __('URI'),
+			sortable: true,
 			cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
 				var uri = URI(cellValue);
 
@@ -175,6 +177,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			name: 'modified',
 			index: 'modified',
 			css: ['m-cell'],
+			sortable: true,
 			label: __('Modified'),
 			valueAdapter: function (value, mappedItem, item, columnModel) {
 				return passbolt.Common.datetimeGetTimeAgo(value);
@@ -183,7 +186,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			name: 'owner',
 			index: 'owner',
 			css: ['m-cell'],
-			label: __('Owner')
+			label: __('Owner'),
+			sortable: true
 		})];
 
 		this._super(el, options);
