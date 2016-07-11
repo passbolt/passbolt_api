@@ -147,6 +147,27 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
+     * Get a target column model of the grid.
+     * If no target
+     *
+     * @todo move this function to the parent class mad.grid
+     * @return {mad.model.Model}
+     */
+    getColumnModel: function (name) {
+        var returnValue = null;
+        if (name != undefined) {
+            for (var i in this.options.columnModel) {
+                if (this.options.columnModel[i].name == name) {
+                    return this.options.columnModel[i];
+                }
+            }
+        } else {
+            returnValue = this.options.columnModel;
+        }
+        return returnValue;
+    },
+
+    /**
      * Show the contextual menu
      * @param {passbolt.model.User} item The item to show the contextual menu for
      * @param {string} x The x position where the menu will be rendered
@@ -414,6 +435,21 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                 self.setState('ready');
                 if (!users.length) {
                     self.state.addState('empty');
+                }
+
+                // @todo should be cleaned with the filter refactoring PASSBOLT-1571
+                if (filter.case == 'all_items') {
+                    var sortedColumnModel = self.getColumnModel('name');
+                    self.view.markColumnAsSorted(sortedColumnModel, true);
+                }
+
+                // If the resources are ordered.
+                if (filter.order != undefined) {
+                    var sortedColumnModel = self.getColumnModel(filter.order);
+                    if (sortedColumnModel != null) {
+                        var orderAsc = true;
+                        self.view.markColumnAsSorted(sortedColumnModel, orderAsc);
+                    }
                 }
 
                 def.resolve();
