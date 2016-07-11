@@ -154,7 +154,7 @@ class User extends AppModel {
 					'message' => __('The username should be a valid email address')
 				],
 				'login' => [
-					'rule' => 'isUnique',
+					'rule' => ['checkUsernameNotExist'],
 					'on' => 'create',
 					'shared' => false,
 					'message' => __('The username has already been taken')
@@ -206,6 +206,35 @@ class User extends AppModel {
 			return false;
 		}
 		if (!in_array($role['Role']['name'], [Role::ADMIN, Role::USER])) {
+			return false;
+		}
+
+		return true;
+	}
+
+/**
+ * Custom validation rule
+ * Check if the username does'nt already exist.
+ * We consider that a username exists if there is already the same username, with a deleted value to 0.
+ * In other terms, a user that has been deleted will not be considered as already existing.
+ *
+ * @param array $check with 'role_id' key set
+ * @return bool
+ * @access public
+ */
+	public function checkUsernameNotExist($check) {
+		if (!isset($check['username']) || empty($check['username'])) {
+			return false;
+		}
+
+		$user = $this->find('first', [
+				'conditions' => [
+					'username' => $check['username'],
+					'deleted' => false,
+				]
+			]);
+
+		if (!empty($user)) {
 			return false;
 		}
 

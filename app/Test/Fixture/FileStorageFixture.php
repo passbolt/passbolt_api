@@ -17,23 +17,23 @@ class FileStorageFixture extends CakeTestFixture {
  * @var array
  */
 	public $fields = array(
-		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'user_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'foreign_key' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'model' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 64, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'filename' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'user_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'foreign_key' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'model' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 64, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'filename' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'filesize' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 16, 'unsigned' => false),
-		'mime_type' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 32, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'extension' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 5, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'hash' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 64, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'path' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'adapter' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 32, 'collate' => 'utf8_unicode_ci', 'comment' => 'Gaufrette Storage Adapter Class', 'charset' => 'utf8'),
+		'mime_type' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 32, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'extension' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 5, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'hash' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 64, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'path' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'adapter' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 32, 'collate' => 'latin1_swedish_ci', 'comment' => 'Gaufrette Storage Adapter Class', 'charset' => 'latin1'),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
 	);
 /**
  * Records
@@ -42,67 +42,7 @@ class FileStorageFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => '57481568-8f14-4ac0-9b84-1ed0f72375ee',
-			'user_id' => null,
-			'foreign_key' => '9ad3a7b1-b6a2-34b5-aa79-7c9b1bf9bc18',
-			'model' => 'ProfileAvatar',
-			'filename' => '',
-			'filesize' => '283883',
-			'mime_type' => 'image/png',
-			'extension' => 'png',
-			'hash' => null,
-			'path' => 'images/ProfileAvatar/18/18/75/574815688f144ac09b841ed0f72375ee/',
-			'adapter' => 'Local',
-			'created' => '2016-05-27 15:07:44',
-			'modified' => '2016-05-27 15:07:44'
-		),
-		array(
-			'id' => '57481568-d128-4ab6-ba0a-1ed0f72375ee',
-			'user_id' => null,
-			'foreign_key' => '21f5dab2-7386-333e-a3f6-4f2c8fc69f42',
-			'model' => 'ProfileAvatar',
-			'filename' => '',
-			'filesize' => '53376',
-			'mime_type' => 'image/png',
-			'extension' => 'png',
-			'hash' => null,
-			'path' => 'images/ProfileAvatar/69/11/65/57481568d1284ab6ba0a1ed0f72375ee/',
-			'adapter' => 'Local',
-			'created' => '2016-05-27 15:07:44',
-			'modified' => '2016-05-27 15:07:44'
-		),
-		array(
-			'id' => '57481569-0718-40e9-8245-1ed0f72375ee',
-			'user_id' => null,
-			'foreign_key' => 'cf4e8613-2811-3c04-a47d-d6d011721594',
-			'model' => 'ProfileAvatar',
-			'filename' => '',
-			'filesize' => '170049',
-			'mime_type' => 'image/png',
-			'extension' => 'png',
-			'hash' => null,
-			'path' => 'images/ProfileAvatar/94/58/47/57481569071840e982451ed0f72375ee/',
-			'adapter' => 'Local',
-			'created' => '2016-05-27 15:07:45',
-			'modified' => '2016-05-27 15:07:45'
-		),
-		array(
-			'id' => '57481569-3700-4fde-9b86-1ed0f72375ee',
-			'user_id' => null,
-			'foreign_key' => 'fc7f0002-f379-30f3-a680-bb8de2f0fa09',
-			'model' => 'ProfileAvatar',
-			'filename' => '',
-			'filesize' => '20462',
-			'mime_type' => 'image/png',
-			'extension' => 'png',
-			'hash' => null,
-			'path' => 'images/ProfileAvatar/44/89/39/5748156937004fde9b861ed0f72375ee/',
-			'adapter' => 'Local',
-			'created' => '2016-05-27 15:07:45',
-			'modified' => '2016-05-27 15:07:45'
-		),
-		array(
-			'id' => '57481569-6194-4f3f-87d5-1ed0f72375ee',
+			'id' => '57839d8d-4b54-471c-a8a8-0a13ac110002',
 			'user_id' => null,
 			'foreign_key' => 'e0f3dafb-bc17-3c13-a982-bf43e8cf67c9',
 			'model' => 'ProfileAvatar',
@@ -111,28 +51,58 @@ class FileStorageFixture extends CakeTestFixture {
 			'mime_type' => 'image/png',
 			'extension' => 'png',
 			'hash' => null,
-			'path' => 'images/ProfileAvatar/07/96/09/5748156961944f3f87d51ed0f72375ee/',
+			'path' => 'images/ProfileAvatar/89/55/27/57839d8d4b54471ca8a80a13ac110002/',
 			'adapter' => 'Local',
-			'created' => '2016-05-27 15:07:45',
-			'modified' => '2016-05-27 15:07:45'
+			'created' => '2016-07-11 13:22:21',
+			'modified' => '2016-07-11 13:22:21'
 		),
 		array(
-			'id' => '57481569-c83c-42ee-891d-1ed0f72375ee',
+			'id' => '57839d8d-9024-4a88-b564-0a13ac110002',
 			'user_id' => null,
-			'foreign_key' => '8b2c51b6-175c-3284-a956-a87cba11ee56',
+			'foreign_key' => '21f5dab2-7386-333e-a3f6-4f2c8fc69f42',
 			'model' => 'ProfileAvatar',
 			'filename' => '',
-			'filesize' => '733439',
+			'filesize' => '53376',
 			'mime_type' => 'image/png',
 			'extension' => 'png',
 			'hash' => null,
-			'path' => 'images/ProfileAvatar/32/58/73/57481569c83c42ee891d1ed0f72375ee/',
+			'path' => 'images/ProfileAvatar/57/14/09/57839d8d90244a88b5640a13ac110002/',
 			'adapter' => 'Local',
-			'created' => '2016-05-27 15:07:45',
-			'modified' => '2016-05-27 15:07:45'
+			'created' => '2016-07-11 13:22:21',
+			'modified' => '2016-07-11 13:22:21'
 		),
 		array(
-			'id' => '5748156a-f750-4ec7-a1d7-1ed0f72375ee',
+			'id' => '57839d8d-d390-41b3-9be5-0a13ac110002',
+			'user_id' => null,
+			'foreign_key' => '9ad3a7b1-b6a2-34b5-aa79-7c9b1bf9bc18',
+			'model' => 'ProfileAvatar',
+			'filename' => '',
+			'filesize' => '283883',
+			'mime_type' => 'image/png',
+			'extension' => 'png',
+			'hash' => null,
+			'path' => 'images/ProfileAvatar/16/81/48/57839d8dd39041b39be50a13ac110002/',
+			'adapter' => 'Local',
+			'created' => '2016-07-11 13:22:21',
+			'modified' => '2016-07-11 13:22:21'
+		),
+		array(
+			'id' => '57839d8d-d880-4df3-87d0-0a13ac110002',
+			'user_id' => null,
+			'foreign_key' => 'fc7f0002-f379-30f3-a680-bb8de2f0fa09',
+			'model' => 'ProfileAvatar',
+			'filename' => '',
+			'filesize' => '20462',
+			'mime_type' => 'image/png',
+			'extension' => 'png',
+			'hash' => null,
+			'path' => 'images/ProfileAvatar/96/67/43/57839d8dd8804df387d00a13ac110002/',
+			'adapter' => 'Local',
+			'created' => '2016-07-11 13:22:21',
+			'modified' => '2016-07-11 13:22:21'
+		),
+		array(
+			'id' => '57839d8e-2ee0-4c13-862d-0a13ac110002',
 			'user_id' => null,
 			'foreign_key' => 'd34a0cc6-515f-34bb-a960-29b18036e03a',
 			'model' => 'ProfileAvatar',
@@ -141,10 +111,40 @@ class FileStorageFixture extends CakeTestFixture {
 			'mime_type' => 'image/png',
 			'extension' => 'png',
 			'hash' => null,
-			'path' => 'images/ProfileAvatar/14/14/34/5748156af7504ec7a1d71ed0f72375ee/',
+			'path' => 'images/ProfileAvatar/10/74/33/57839d8e2ee04c13862d0a13ac110002/',
 			'adapter' => 'Local',
-			'created' => '2016-05-27 15:07:46',
-			'modified' => '2016-05-27 15:07:46'
+			'created' => '2016-07-11 13:22:22',
+			'modified' => '2016-07-11 13:22:22'
+		),
+		array(
+			'id' => '57839d8e-3958-4223-bb4c-0a13ac110002',
+			'user_id' => null,
+			'foreign_key' => 'cf4e8613-2811-3c04-a47d-d6d011721594',
+			'model' => 'ProfileAvatar',
+			'filename' => '',
+			'filesize' => '170049',
+			'mime_type' => 'image/png',
+			'extension' => 'png',
+			'hash' => null,
+			'path' => 'images/ProfileAvatar/39/15/55/57839d8e39584223bb4c0a13ac110002/',
+			'adapter' => 'Local',
+			'created' => '2016-07-11 13:22:22',
+			'modified' => '2016-07-11 13:22:22'
+		),
+		array(
+			'id' => '57839d8e-3f14-4169-8693-0a13ac110002',
+			'user_id' => null,
+			'foreign_key' => '8b2c51b6-175c-3284-a956-a87cba11ee56',
+			'model' => 'ProfileAvatar',
+			'filename' => '',
+			'filesize' => '733439',
+			'mime_type' => 'image/png',
+			'extension' => 'png',
+			'hash' => null,
+			'path' => 'images/ProfileAvatar/95/16/79/57839d8e3f14416986930a13ac110002/',
+			'adapter' => 'Local',
+			'created' => '2016-07-11 13:22:22',
+			'modified' => '2016-07-11 13:22:22'
 		),
 	);
 

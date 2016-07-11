@@ -421,6 +421,92 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	/**
+	 * Test adding an existing username for a undeleted user.
+	 *
+	 * This should generate an exception.
+	 */
+	public function testAddExistingUser() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		$this->setExpectedException('HttpException', 'Could not validate profile');
+
+		// Assert that adding an undeleted existing user will return an exception.
+		$result = json_decode(
+			$this->testAction(
+				'/users.json',
+				array(
+					'data'   => array(
+						'User' => array(
+							'username' => 'ada@passbolt.com',
+							'role_id'  => Common::uuid('role.id.user'),
+							'active'   => 1
+						),
+						'Profile' => array(
+							'first_name' => 'ada',
+							'last_name' => 'ada'
+						)
+					),
+					'method' => 'post',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+	}
+
+	/**
+	 * Test adding an existing username that belongs to a deleted user.
+	 */
+	public function testAddDeletedExistingUser() {
+		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// Soft delete ada.
+		$this->User->id = common::uuid('user.id.ada');
+		$this->User->saveField('deleted', true);
+
+		// Recreate another user with username ada@passbolt.com.
+		$result = json_decode(
+			$this->testAction(
+				'/users.json',
+				array(
+					'data'   => array(
+						'User' => array(
+							'username' => 'ada@passbolt.com',
+							'role_id'  => Common::uuid('role.id.user'),
+							'active'   => 1
+						),
+						'Profile' => array(
+							'first_name' => 'ada',
+							'last_name' => 'ada'
+						)
+					),
+					'method' => 'post',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+
+		// Assert that the request was a success.
+		$this->assertEquals(
+			Status::SUCCESS,
+			$result['header']['status'],
+			"Add : /users.json : The test should return sucess but is returning " . print_r($result, true)
+		);
+
+		// Assert that we now have 2 users with username ada@passbolt.com in the database.
+		$user = $this->User->find('all', ['conditions' => ['username' => "ada@passbolt.com"]]);
+		$this->assertEquals(
+			2,
+			count($user),
+			"Add : /users.json : The number of users returned should be 1, but actually is " . count($user)
+		);
+	}
+
+
+	/**
 	 * Test add for a logged in admin.
 	 */
 	public function testAdd() {
