@@ -448,15 +448,16 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
         // Sort the mapped items
         mappedItemsCopy.sort(function(itemA, itemB){
             // ignore upper and lowercase
-            var valueA = itemA[columnId] ? itemA[columnId].toUpperCase() : null,
-                valueB = itemB[columnId] ? itemB[columnId].toUpperCase() : null;
+            var valueA = itemA[columnId] ? itemA[columnId].toUpperCase() : '',
+                valueB = itemB[columnId] ? itemB[columnId].toUpperCase() : '';
 
             if (valueA < valueB) {
                 return sortAsc ? -1 : 1;
             }
-            if (valueA > valueB) {
+            else if (valueA > valueB) {
                 return sortAsc ? 1 : -1;
             }
+
             return 0;
         });
 

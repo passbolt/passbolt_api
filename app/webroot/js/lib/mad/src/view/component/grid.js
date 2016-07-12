@@ -278,8 +278,6 @@ var Grid = mad.view.component.Grid = mad.View.extend('mad.view.component.Grid', 
      * @param {HTMLEvent} ev The event that occurred
      */
     'thead th.sortable click': function (el, ev) {
-        ev.preventDefault();
-
         var columnModel = null,
             control = this.getController(),
             sortAsc = true;
