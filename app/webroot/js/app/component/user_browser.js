@@ -265,6 +265,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param item
      */
     refreshItem: function (item) {
+        // If the item doesn't exist
+        if (!this.itemExists(item)) {
+            return;
+        }
+
         this._super(item);
         if (this.options.selectedUsers.length > 0) {
             this.select(this.options.selectedUsers[0]);
@@ -323,6 +328,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     select: function (item, silent) {
         silent = silent || false;
 
+        // If the item doesn't exist
+        if (!this.itemExists(item)) {
+            return;
+        }
+
         // Unselect the previously selected user, if not in multipleSelection.
         if (!this.state.is('multipleSelection') &&
 			this.options.selectedUsers.length > 0) {
@@ -361,6 +371,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     unselect: function (item, silent) {
         silent = typeof silent == 'undefined' ? false : silent;
+
+        // If the item doesn't exist
+        if (!this.itemExists(item)) {
+            return;
+        }
 
         // Uncheck the associated checkbox (if it is not already done).
 		var controlId = 'multiple_select_checkbox_' + item.id,
@@ -475,8 +490,18 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
+     * Does the item exist
+     * @param {passbolt.Model} item The item to check if it existing
+     * @return {boolean}
+     * @todo PASSBOLT-1614 move this function into mad grid.
+     */
+    itemExists: function (item) {
+        return this.view.getItemElement(item).length > 0 ? true : false;
+    },
+
+    /**
      * Reset the filtering
-     * @todo move this function into mad grid.
+     * @todo PASSBOLT-1614 move this function into mad grid.
      */
     resetFilter: function () {
         var self = this;

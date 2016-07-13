@@ -654,7 +654,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	 * Does the item exist
 	 * @param {passbolt.Model} item The item to check if it existing
 	 * @return {boolean}
-	 * @todo move this function into mad grid.
+	 * @todo PASSBOLT-1614 move this function into mad grid.
 	 */
 	itemExists: function (item) {
 		return this.view.getItemElement(item).length > 0 ? true : false;
@@ -662,7 +662,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 	/**
 	 * Reset the filtering
-	 * @todo move this function into mad grid.
+	 * @todo PASSBOLT-1614 move this function into mad grid.
 	 */
 	resetFilter: function () {
 		var self = this;
