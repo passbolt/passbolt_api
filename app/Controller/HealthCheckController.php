@@ -144,7 +144,6 @@ class HealthCheckController extends AppController {
  * @access private
  */
 	private function __appChecks() {
-
 		try {
 			$this->_checks['remoteVersion'] = Migration::getLatestTagName();
 			$this->_checks['latestVersion'] = Migration::isLatestVersion();
@@ -152,7 +151,6 @@ class HealthCheckController extends AppController {
 			$this->_checks['remoteVersion'] = null;
 			$this->_checks['latestVersion'] = null;
 		}
-
 		$this->_checks['needMigration'] = Migration::needMigration();
 		$this->_checks['ssl'] = ($this->request->is('ssl') && configure::read('app.force_ssl'));
 		$this->_checks['gpg'] = (class_exists('gnupg'));

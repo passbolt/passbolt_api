@@ -174,6 +174,17 @@ $this->assign('page_classes', 'status');
 	endif;
 ?>
 <?php
+	if ($checks['needMigration']):
+		echo '<div class="message error">';
+		echo __('You schema is not up to date, please run the migration scripts.');
+		echo '</div>';
+	else:
+		echo '<div class="message success">';
+		echo __('Your schema up to date.');
+		echo '</div>';
+	endif;
+	?>
+<?php
 	if ($checks['selenium']):
 		echo '<div class="message error">';
 		echo __('Selenium API endpoints are active. This setting should be used for testing only.');
