@@ -3,9 +3,7 @@
         <thead>
             <tr>
 <% for (var i in columnModel) { %>
-                <th class="js_grid_column js_grid_column_<%= columnModel[i].name %> cell_<%= columnModel[i].name %> <%= columnModel[i].header.css.join(' ') %>">
-                    <%== columnModel[i].header.label %>
-                </th>
+    <%== can.view.render('mad/view/template/component/grid/gridColumnHeader.ejs', {columnModel: columnModel[i], control: control}); %>
 <% } %>
             </tr>
         </thead>

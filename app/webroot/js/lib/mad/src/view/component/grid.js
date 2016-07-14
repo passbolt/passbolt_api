@@ -79,6 +79,26 @@ var Grid = mad.view.component.Grid = mad.View.extend('mad.view.component.Grid', 
         $item.remove();
     },
 
+    /**
+     * Hide an item.
+     *
+     * @param {mad.Model} item The item to hide.
+     */
+    hideItem: function (item) {
+        var $item = this.getItemElement(item);
+        $item.hide();
+    },
+
+    /**
+     * Show an item.
+     *
+     * @param {mad.Model} item The item to show.
+     */
+    showItem: function (item) {
+        var $item = this.getItemElement(item);
+        $item.show();
+    },
+
     /*
      * Render a row for a given item
      * @param {mad.model.Model} item
@@ -212,9 +232,68 @@ var Grid = mad.view.component.Grid = mad.View.extend('mad.view.component.Grid', 
         can.data($item, this.getController().getItemClass().fullName, item);
     },
 
+    /**
+     * Move an item to another position in the grid.
+     * @param item The item to move
+     * @param position The position to move the item to
+     */
+    moveItem: function (item, position) {
+        var $el = this.getItemElement(item),
+            $detachedEl = $el.detach(),
+            $refEl = $('tbody tr', this.element).eq(position);
+
+        if ($refEl.length) {
+            $refEl.before($detachedEl);
+        } else {
+            $('tbody', this.element).append($detachedEl);
+        }
+    },
+
+    /**
+     * Mark the column as sorted
+     * @param columnModel
+     * @param sortAsc
+     */
+    markColumnAsSorted: function (columnModel, sortAsc) {
+        var cssClasses = 'sorted ';
+        cssClasses += sortAsc ? 'sort-asc' : 'sort-desc';
+        this.markAsUnsorted();
+        $('.js_grid_column_' + columnModel.name, this.element).addClass(cssClasses);
+    },
+
+    /**
+     * Mark the grid as unsorted.
+     */
+    markAsUnsorted: function() {
+        $('.sortable.sorted', this.element).removeClass('sorted sort-asc sort-desc');
+    },
+
     /* ************************************************************** */
     /* LISTEN TO THE VIEW EVENTS */
     /* ************************************************************** */
+
+    /**
+     * A sort is requested on a column
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event that occurred
+     */
+    'thead th.sortable click': function (el, ev) {
+        var columnModel = null,
+            control = this.getController(),
+            sortAsc = true;
+
+        // If the column is already sorted.
+        if ($(el).hasClass('sorted')) {
+            if ($(el).hasClass('sort-desc')) {
+                sortAsc = true;
+            } else {
+                sortAsc = false;
+            }
+        }
+
+        columnModel = el.data(control.getColumnModelClass().fullName);
+        this.element.trigger('column_sort', [columnModel, sortAsc, ev]);
+    },
 
     /**
      * An item has been selected

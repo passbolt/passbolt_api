@@ -30,7 +30,7 @@ class BlacklistComponent extends Component {
 		$this->controller = $controller;
 		$this->AuthenticationLog = ClassRegistry::init('AuthenticationLog');
 		$this->AuthenticationBlacklist = ClassRegistry::init('AuthenticationBlacklist');
-		$this->ip = $controller->request->clientIp();
+		$this->ip = $controller->request->clientIp(false);
 
 		parent::initialize($controller);
 	}

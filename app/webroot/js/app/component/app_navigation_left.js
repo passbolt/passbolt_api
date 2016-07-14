@@ -37,7 +37,7 @@ var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Men
 					cssClasses: ['home'],
 					action: function () {
 						self.options.selected = 'home';
-						mad.bus.trigger('workspace_selected', 'password');
+						mad.bus.trigger('request_workspace', 'password');
 					}
 				}), new mad.model.Action({
 					id: 'js_app_nav_left_password_wsp_link',
@@ -45,7 +45,7 @@ var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Men
 					cssClasses: ['password'],
 					action: function () {
 						self.options.selected = 'password';
-						mad.bus.trigger('workspace_selected', 'password');
+						mad.bus.trigger('request_workspace', 'password');
 					}
 				}), new mad.model.Action({
 					id:  'js_app_nav_left_user_wsp_link',
@@ -53,7 +53,7 @@ var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Men
 					cssClasses: ['user'],
 					action: function () {
 						self.options.selected = 'people';
-						mad.bus.trigger('workspace_selected', 'people');
+						mad.bus.trigger('request_workspace', 'people');
 					}
 				})
 			];
@@ -71,7 +71,7 @@ var AppNavigationLeft = passbolt.component.AppNavigationLeft = mad.component.Men
 	 * @param {string} workspace The target workspace
 	 * @param {array} options Workspace's options
 	 */
-	'{mad.bus.element} workspace_selected': function (el, event, workspace, options) {
+	'{mad.bus.element} request_workspace': function (el, event, workspace, options) {
 		if (this.options.selected != workspace) {
 			var li = $('li.' + workspace),
 				itemClass = this.getItemClass();

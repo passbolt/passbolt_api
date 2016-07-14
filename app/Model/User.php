@@ -95,7 +95,7 @@ class User extends AppModel {
 	public $hasOne = [
 		'Profile',
 		'Gpgkey',
-		'AuthenticationToken',
+		'AuthenticationToken'
 	];
 
 /**
@@ -103,7 +103,19 @@ class User extends AppModel {
  *
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
-	public $hasMany = ['GroupUser', 'Secret'];
+	public $hasMany = [
+		'GroupUser',
+		'Secret',
+		// Custom join with ControllerLog to retrieve the last logged in date.
+		// The results of this will be processed in the afterFind
+		// and integrated directly in the user object with column name last_logged_in.
+		'LastLoggedIn' => [
+			'className' => 'ControllerLog',
+			'order' => ['LastLoggedIn.created' => 'DESC'],
+			'conditions' => ['LastLoggedIn.message' => 'login_success', 'LastLoggedIn.user_id' => 'User.id'],
+			'limit' => 1,
+		]
+	];
 
 /**
  * Details of has and belongs to many relationships
@@ -240,6 +252,29 @@ class User extends AppModel {
 		}
 
 		return true;
+	}
+
+/**
+ * AfterFind callback.
+ *
+ * @param mixed $results The results of the find operation
+ * @param bool $primary Whether this model is being queried directly (vs. being queried as an association)
+ * @return mixed Result of the find operation
+ * @link http://book.cakephp.org/2.0/en/models/callback-methods.html#afterfind
+ */
+	public function afterFind($results, $primary = false) {
+		foreach ($results as $k => $res) {
+			if (isset($res['LastLoggedIn'])) {
+				if (isset($res['LastLoggedIn'][0]) && isset($res['LastLoggedIn'][0]['created'])) {
+					$results[$k]['User']['last_logged_in'] = $res['LastLoggedIn'][0]['created'];
+				}
+				else {
+					$results[$k]['User']['last_logged_in'] = null;
+				}
+				unset($results[$k]['LastLoggedIn']);
+			}
+		}
+		return $results;
 	}
 
 /**
@@ -445,6 +480,15 @@ class User extends AppModel {
 						$conditions = [
 							'conditions' => [
 								'User.active' => false,
+								'User.deleted' => false,
+								'User.id' => $data['User.id'],
+							]
+						];
+						break;
+					case 'Recovery::userInfo':
+						$conditions = [
+							'conditions' => [
+								'User.active' => true,
 								'User.deleted' => false,
 								'User.id' => $data['User.id'],
 							]
@@ -665,6 +709,11 @@ class User extends AppModel {
 								'GroupUser.user_id',
 							],
 						],
+						'LastLoggedIn' => [
+							'fields' => [
+								'LastLoggedIn.created'
+							]
+						]
 					]
 				];
 				// Add active status for admin and root roles.
