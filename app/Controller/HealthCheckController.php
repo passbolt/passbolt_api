@@ -8,6 +8,7 @@
  */
 App::uses('HttpSocket', 'Network/Http');
 App::uses('Migration', 'Lib/Migration');
+App::uses('Validation', 'Utility');
 
 class HealthCheckController extends AppController {
 
@@ -58,7 +59,6 @@ class HealthCheckController extends AppController {
 		$this->__coreChecks();
 		$this->__appChecks();
 		$this->__devChecks();
-
 		$this->set('checks', $this->_checks);
 	}
 
@@ -117,7 +117,6 @@ class HealthCheckController extends AppController {
 		$this->_checks['phpVersion'] = (version_compare(PHP_VERSION, '5.2.8', '>='));
 		$this->_checks['tmp'] = is_writable(TMP);
 		$this->_checks['debug'] = Configure::read('debug') > 0;
-		App::uses('Validation', 'Utility');
 		$this->_checks['validation'] = (Validation::alphaNumeric('cakephp'));
 	}
 
@@ -130,7 +129,7 @@ class HealthCheckController extends AppController {
  */
 	private function __accessChecks() {
 		if (Configure::read('debug') == 0) {
-			if ($this->_checks['dbConnect'] && User::get('Role.name') != Role::ADMIN) {
+			if (User::get('Role.name') != Role::ADMIN) {
 				throw new ForbiddenException();
 			} else {
 				$this->layout = 'default';
@@ -175,6 +174,4 @@ class HealthCheckController extends AppController {
 		$this->_checks['phpunit'] = (class_exists('PHPUnit_Runner_Version'));
 		$this->_checks['phpunitVersion'] = ($this->_checks['phpunit'] && PHPUnit_Runner_Version::id() === '3.7.38');
 	}
-
-
 }

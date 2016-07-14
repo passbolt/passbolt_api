@@ -19,6 +19,7 @@
 <body>
 <!-- main -->
 <div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
+	<?php echo $this->fetch('header'); ?>
 	<?php echo $this->fetch('content'); ?>
 </div>
 <?php echo $this->element('footer'); ?>

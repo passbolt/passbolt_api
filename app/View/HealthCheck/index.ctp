@@ -9,11 +9,14 @@ $this->assign('title', __('Passbolt - The simple password management system'));
 $this->Html->css('main.min', null, array('inline' => false));
 $this->Html->css('check', null, array('inline' => false));
 $this->assign('page_classes', 'status');
-
-if (!Configure::read('debug')):
-	throw new NotFoundException();
-endif;
 ?>
+<?php $this->start('header'); ?>
+<header>
+	<div class="header first ">
+		<?php echo $this->element('private/topNavigation'); ?>
+	</div>
+</header>
+<?php $this->end('header'); ?>
 <div class="grid grid-responsive-12">
 <div class="row">
 <div class="col8">
@@ -107,8 +110,8 @@ endif;
 		echo __('Debug mode is on.');
 		echo '</div>';
 	else:
-		echo '<div class="message error">';
-		echo __('Your tmp directory is NOT writable.');
+		echo '<div class="message success">';
+		echo __('Debug mode is off.');
 		echo '</div>';
 	endif;
 ?>

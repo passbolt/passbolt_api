@@ -236,10 +236,18 @@ class AppController extends Controller {
 		if ($userId != null) {
 			// Retrieve user from db.
 			$User = Common::getModel('User');
-			$user = $User->findById($userId);
-			// If user is disabled, or soft deleted, log out.
-			if (empty($user) || $user['User']['deleted'] == true || $user['User']['active'] == false) {
-				$User->setInactive();
+			try {
+				$user = $User->findById($userId);
+				// If user is disabled, or soft deleted, log out.
+				if (empty($user) || $user['User']['deleted'] == true || $user['User']['active'] == false) {
+					$User->setInactive();
+				}
+			} catch(Exception $e) {
+				$msg = __('Internal Server Error');
+				if(Configure::read('debug') > 0 ) {
+					$msg = __($e->getMessage());
+				}
+				throw new InternalErrorException($msg);
 			}
 		}
 	}
