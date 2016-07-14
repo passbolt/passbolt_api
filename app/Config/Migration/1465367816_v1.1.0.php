@@ -16,23 +16,26 @@ class v1_1_0 extends CakeMigration {
  */
 	public $migration = array(
 		'up' => array(
-			'create_table' => array(
-				'app_settings' => array(
-					'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-					'version' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-					'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+			'drop_field' => array(
+				'users' => array(
 					'indexes' => array(
-						'PRIMARY' => array('column' => 'id', 'unique' => 1),
-					),
-					'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB'),
-				),
-			),
+						'username'
+					)
+				)
+			)
 		),
 		'down' => array(
-			'drop_table' => array(
-				'app_settings'
-			),
-		),
+			'create_field' => array(
+				'users' => array(
+					'indexes' => array(
+						'username' => array(
+							'column' => 'username',
+							'unique' => true
+						)
+					)
+				)
+			)
+		)
 	);
 
 /**
@@ -52,10 +55,6 @@ class v1_1_0 extends CakeMigration {
  * @return bool Should process continue
  */
 	public function after($direction) {
-		$appSettings = Common::getModel('AppSettings');
-		$appSettings->save([
-			'version' => $this->since
-		]);
 		return true;
 	}
 }

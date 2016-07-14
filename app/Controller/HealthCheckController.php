@@ -7,6 +7,7 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('HttpSocket', 'Network/Http');
+App::uses('Migration', 'Lib/Migration');
 
 class HealthCheckController extends AppController {
 
@@ -146,14 +147,14 @@ class HealthCheckController extends AppController {
 	private function __appChecks() {
 
 		try {
-			$this->_checks['remoteVersion'] = Common::getLatestTagName();
-			$this->_checks['latestVersion'] = Common::isLatestVersion();
+			$this->_checks['remoteVersion'] = Migration::getLatestTagName();
+			$this->_checks['latestVersion'] = Migration::isLatestVersion();
 		} catch(exception $e) {
 			$this->_checks['remoteVersion'] = null;
 			$this->_checks['latestVersion'] = null;
 		}
 
-		$this->_checks['needMigration'] = Common::needMigration();
+		$this->_checks['needMigration'] = Migration::needMigration();
 		$this->_checks['ssl'] = ($this->request->is('ssl') && configure::read('app.force_ssl'));
 		$this->_checks['gpg'] = (class_exists('gnupg'));
 		$this->_checks['gpgKeyDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
