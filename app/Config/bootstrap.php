@@ -49,8 +49,21 @@ CakePlugin::load('FileStorage', array(
 CakePlugin::load('Imagine', array(
 	'bootstrap' => true
 ));
-CakePlugin::load('EmailQueue');
 require_once (APP . 'Config' . DS . 'file_storage.php');
+
+/**
+ * Email queue
+ */
+CakePlugin::load('EmailQueue');
+
+/**
+ * Migration tools
+ */
+CakePlugin::load('Migrations');
+// list of core plugins that support migrations
+Configure::write('App.migrations',[
+	'app', 'FileStorage', 'Migrations'
+]);
 
 /**
  * Attach event listeners to the request lifecycle as Dispatcher Filter.

@@ -215,11 +215,11 @@ class InstallShell extends AppShell {
 	public function schema() {
 		$this->out('Installing schema / database');
 		$this->hr();
-		$this->dispatchShell('schema create --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
+		$this->dispatchShell('schema create --yes' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('passbolt schema deployed');
-		$this->dispatchShell('schema create sessions --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
+		$this->dispatchShell('schema create sessions --yes' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('passbolt session table deployed');
-		$this->dispatchShell('schema create --plugin FileStorage --force_drop --force_create' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
+		$this->dispatchShell('schema create --plugin FileStorage --yes' . (isset($this->params['quiet'] ) && $this->params['quiet'] == 1 ? ' -q' : ''));
 		$this->out('plugins schemas deployed');
 	}
 

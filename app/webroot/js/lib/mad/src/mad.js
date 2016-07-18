@@ -1,6 +1,7 @@
 import $ from "jquery";
 import _ from "underscore";
 import can from "can/can";
+import "can/map/define/define";
 
 import mad from "mad/util/util";
 import "mad/error/exception";

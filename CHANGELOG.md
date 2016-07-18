@@ -4,7 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- PASSBOLT-1124: AS LU on user workspace I should be able to see the last logged in date of a user.
+- PASSBOLT-1604: As a AD I should be able to see the healthcheck page when debug is set to 0
+- PASSBOLT-1124: As LU on user workspace I should be able to see the last logged in date of a user.
+- PASSBOLT-1216: As LU I should be able to sort the tableview in passwords workspace
+- PASSBOLT-1217: As LU I should be able to sort the tableview in users workspace
 
 ## [1.0.14] - 2016-07-06
 ### Fixed

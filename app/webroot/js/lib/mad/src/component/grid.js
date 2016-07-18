@@ -1,7 +1,9 @@
 import 'mad/component/component';
+import 'mad/model/grid_column';
 import 'mad/view/component/grid';
 import 'mad/view/template/component/grid/grid.ejs!';
 import 'mad/view/template/component/grid/gridItem.ejs!';
+import 'mad/view/template/component/grid/gridColumnHeader.ejs!';
 
 /**
  * @parent Mad.components_api
@@ -28,8 +30,10 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
         viewClass: mad.view.component.Grid,
         // Prefix the id of each row.
         prefixItemId: '',
-        // The Model Class that defines the items displayed by the tree.
+        // The Model Class that defines the items displayed by the grud.
         itemClass: null,
+        // The Map Class used to defined the column model.
+        columnModelClass: mad.model.GridColumn,
         // the grid column model
         columnModel: [],
         // The map used to transform the raw data into expected view format.
@@ -44,7 +48,9 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
         // The items the grid works with.
         items: new can.Model.List(),
         // Is the grid filtered.
-        isFiltered: false
+        isFiltered: false,
+        // Is the grid sorted.
+        isSorted: false
     }
 
 }, /** @prototype */ {
@@ -60,7 +66,29 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
     init: function(el, options) {
         this._super(el, options);
         this.options.items = new can.Model.List();
+
+        // Keep a trace of the items after mapping.
+        // This data will be used for post rendering treatments :
+        // * sort ;
+        this.mappedItems = {};
+
         this.on();
+    },
+
+    /**
+     * After start hook().
+     */
+    afterStart: function() {
+        var columnModel = this.getColumnModel();
+
+        // Associate columnModel definitions to corresponding DOM elements th column header.
+        // It will be used by the view to retrieve associated column model definition.
+        for (var i in columnModel) {
+            var el = $('th.js_grid_column_' + columnModel[i].name, this.element);
+            can.data(el, this.getColumnModelClass().fullName, columnModel[i]);
+        }
+
+        this._super();
     },
 
     /**
@@ -88,6 +116,15 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
      */
     getItemClass: function () {
         return this.options.itemClass;
+    },
+
+    /**
+     * Get the column model class.
+     *
+     * @return {can.Map}
+     */
+    getColumnModelClass: function () {
+        return this.options.columnModelClass;
     },
 
     /**
@@ -179,6 +216,8 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
     removeItem: function (item) {
         // Remove the item to the view
         this.view.removeItem(item);
+        // Free space, remove the relative mapped item
+        delete this.mappedItems[item.id];
     },
 
     /**
@@ -215,6 +254,7 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
 
         // Map the item.
         mappedItem = this.getMap().mapObject(item);
+        this.mappedItems[item.id] = mappedItem;
 
         // insert the item in the view
         this.view.insertItem(item, refItem, position);
@@ -255,8 +295,12 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
         this.view.refreshItem(item);
 
         var self = this,
-            mappedItem = this.getMap().mapObject(item),
+            mappedItem = null,
             columnModels = this.getColumnModel();
+
+        // Map the item.
+        mappedItem = this.getMap().mapObject(item);
+        this.mappedItems[item.id] = mappedItem;
 
         // apply a widget to cells following the columns model
         for (var j in columnModels) {
@@ -306,6 +350,8 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
 
         this.reset();
         this.options.isFiltered = false;
+        this.options.isSorted = false;
+        this.view.markAsUnsorted();
 
         can.each(items, function (item, i) {
             self.insertItem(item);
@@ -383,6 +429,56 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
         });
     },
 
+    /**
+     * Sort the grid functions of a given column.
+     * @param columnModel The column the grid should be sort in functions of.
+     * @param sortAsc Should the sort be ascending. True by default.
+     */
+    sort: function (columnModel, sortAsc) {
+        this.options.isSorted = true;
+
+        // Retrieve the mapped item attribute name.
+        var columnId = columnModel.name;
+        // Copy the mappedItems associativate array into array.
+        var mappedItemsCopy = $.map(this.mappedItems, function(value, index) {
+            value.id = index;
+            return [value];
+        });
+
+        // Sort the mapped items
+        mappedItemsCopy.sort(function(itemA, itemB){
+            // ignore upper and lowercase
+            var valueA = itemA[columnId] ? itemA[columnId].toUpperCase() : '',
+                valueB = itemB[columnId] ? itemB[columnId].toUpperCase() : '';
+
+            if (valueA < valueB) {
+                return sortAsc ? -1 : 1;
+            }
+            else if (valueA > valueB) {
+                return sortAsc ? 1 : -1;
+            }
+
+            return 0;
+        });
+
+        // Move all the items following the sort result
+        for (var i in mappedItemsCopy) {
+            this.moveItem(mappedItemsCopy[i], i);
+        }
+
+        // Mark the column as sorted
+        this.view.markColumnAsSorted(columnModel, sortAsc);
+    },
+
+    /**
+     * Move an item to another position in the grid.
+     * @param item The item to move
+     * @param position The position to move the item to
+     */
+    moveItem: function(item, position) {
+        this.view.moveItem(item, position);
+    },
+
     /* ************************************************************** */
     /* LISTEN TO THE MODEL EVENTS */
     /* ************************************************************** */
@@ -417,6 +513,22 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
      */
     'tbody mouseleave': function (element, evt) {
         //
+    },
+
+    /**
+     * @function mad.component.Grid.__column_sort_asc
+     * @parent mad.component.Grid.view_events
+     *
+     * Observe when a sort is requested on a column.
+     *
+     * @param {HTMLElement} el The element the event occurred on
+     * @param {HTMLEvent} ev The event that occurred
+     * @param {mad.model.Gridcolumn} columnModel The column model reference
+     * @param {boolean} sortAsc Should the sort be ascending. If false, the sort will be descending.
+     * @param {HTMLEvent} srcEvent The source event which occurred
+     */
+    ' column_sort': function (el, ev, columnModel, sortAsc, srcEvent) {
+        this.sort(columnModel, sortAsc);
     },
 
     /**

@@ -6,6 +6,10 @@
  * @copyright (c) 2016-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+App::uses('HttpSocket', 'Network/Http');
+App::uses('Migration', 'Lib/Migration');
+App::uses('Validation', 'Utility');
+
 class HealthCheckController extends AppController {
 
 /**
@@ -20,6 +24,13 @@ class HealthCheckController extends AppController {
  * @var array
  */
 	protected $_checks = [];
+
+/**
+ * MigrationVersion class
+ *
+ * @var MigrationVersion
+ */
+	protected $_MigrationVersion = null;
 
 /**
  * Called before the controller action. Used to manage access right
@@ -48,7 +59,6 @@ class HealthCheckController extends AppController {
 		$this->__coreChecks();
 		$this->__appChecks();
 		$this->__devChecks();
-
 		$this->set('checks', $this->_checks);
 	}
 
@@ -107,7 +117,6 @@ class HealthCheckController extends AppController {
 		$this->_checks['phpVersion'] = (version_compare(PHP_VERSION, '5.2.8', '>='));
 		$this->_checks['tmp'] = is_writable(TMP);
 		$this->_checks['debug'] = Configure::read('debug') > 0;
-		App::uses('Validation', 'Utility');
 		$this->_checks['validation'] = (Validation::alphaNumeric('cakephp'));
 	}
 
@@ -120,7 +129,7 @@ class HealthCheckController extends AppController {
  */
 	private function __accessChecks() {
 		if (Configure::read('debug') == 0) {
-			if ($this->_checks['dbConnect'] && User::get('Role.name') != Role::ADMIN) {
+			if (User::get('Role.name') != Role::ADMIN) {
 				throw new ForbiddenException();
 			} else {
 				$this->layout = 'default';
@@ -135,6 +144,14 @@ class HealthCheckController extends AppController {
  * @access private
  */
 	private function __appChecks() {
+		try {
+			$this->_checks['remoteVersion'] = Migration::getLatestTagName();
+			$this->_checks['latestVersion'] = Migration::isLatestVersion();
+		} catch(exception $e) {
+			$this->_checks['remoteVersion'] = null;
+			$this->_checks['latestVersion'] = null;
+		}
+		$this->_checks['needMigration'] = Migration::needMigration();
 		$this->_checks['ssl'] = ($this->request->is('ssl') && configure::read('app.force_ssl'));
 		$this->_checks['gpg'] = (class_exists('gnupg'));
 		$this->_checks['gpgKeyDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');

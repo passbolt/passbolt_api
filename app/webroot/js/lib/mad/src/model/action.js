@@ -3,7 +3,7 @@ import 'mad/model/state';
 
 /**
  * @inherits mad.model.Model
- * @parent mad.component
+ * @parent mad.model
  *
  * The Action model will carry actions used by other component
  *
@@ -19,15 +19,15 @@ var Action = mad.model.Action = mad.Model.extend('mad.model.Action', /** @static
      * @type {Object}
      */
     attributes: {
-        'id': 'string',
-        'label': 'string',
-        'name': 'string',
-        'icon': 'string',
-        'action': 'function',
-        'cssClasses': 'array',
-        'initial_state': 'string',
-        'state': mad.model.State.model,
-        'active': 'boolean'
+        id: 'string',
+        label: 'string',
+        name: 'string',
+        icon: 'string',
+        action: 'function',
+        cssClasses: 'array',
+        initial_state: 'string',
+        state: mad.model.State.model,
+        active: 'boolean'
     }
 
 }, /** @prototype */ {

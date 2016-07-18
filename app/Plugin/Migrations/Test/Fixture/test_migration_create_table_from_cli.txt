@@ -1,0 +1,24 @@
+	public $migration = array(
+		'up' => array(
+			'create_table' => array(
+				'products' => array(
+					'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
+					'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+					'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+					'name' => array('type' => 'string', 'null' => false, 'default' => null),
+					'description' => array('type' => 'text', 'null' => false, 'default' => null),
+					'in_stock' => array('type' => 'boolean', 'null' => false, 'default' => null),
+					'price' => array('type' => 'float', 'null' => false, 'default' => null),
+					'stock_count' => array('type' => 'integer', 'null' => false, 'default' => null),
+					'indexes' => array(
+						'PRIMARY' => array('column' => 'id', 'unique' => true),
+					),
+				),
+			),
+		),
+		'down' => array(
+			'drop_table' => array(
+				'products'
+			),
+		),
+	);

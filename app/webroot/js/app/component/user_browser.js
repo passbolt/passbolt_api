@@ -59,7 +59,12 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // The map to use to make our grid working with our resource model
         options.map = new mad.Map({
             id: 'id',
-            name: 'name',
+            name: {
+                key: 'Profile',
+                func: function(profile) {
+                    return profile.first_name + ' ' + profile.last_name;
+                }
+            },
             username: 'username',
             modified: 'modified',
             last_logged_in: 'last_logged_in',
@@ -68,16 +73,14 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         });
 
         // the columns model
-        options.columnModel = [{
+        options.columnModel = [new mad.model.GridColumn({
             name: 'multipleSelect',
             index: 'multipleSelect',
-            header: {
-                css: ['selections s-cell'],
-                label: '<div class="input checkbox">'
-                + '<input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all-people" disabled="disabled">'
-                + '<label for="checkbox-select-all-people">select all</label> \
-                                    </div>'
-            },
+            css: ['selections s-cell'],
+            label: '<div class="input checkbox"> \
+                    <input type="checkbox" name="select all" value="checkbox-select-all" id="checkbox-select-all-people" disabled="disabled"> \
+                    <label for="checkbox-select-all-people">select all</label> \
+                </div>',
             cellAdapter: function (cellElement, cellValue, mappedItem, item, columnModel) {
                 var availableValues = [];
                 availableValues[item.id] = '';
@@ -93,66 +96,75 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                 );
                 checkbox.start();
             }
-        }, {
+        }), new mad.model.GridColumn({
             name: 'avatar',
             index: 'Profile',
-            header: {
-                css: ['s-cell'],
-                label: ''
-            },
+            css: ['s-cell'],
+            label: '',
             titleAdapter: function (value, mappedItem, item, columnModel) {
                 return 'avatar';
             },
             valueAdapter: function (value, mappedItem, item, columnModel) {
                 return '<img src="' + item.Profile.avatarPath('small') + '" alt="' + __('Picture of: ') + mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name + '" width="30" height="30">';
             }
-        }, {
+        }), new mad.model.GridColumn({
             name: 'name',
             index: 'Profile',
-            header: {
-                css: ['m-cell'],
-                label: __('User')
-            },
-            valueAdapter: function (value, mappedItem, item, columnModel) {
-                return mappedItem.Profile.first_name + ' ' + mappedItem.Profile.last_name;
-            }
-        }, {
+            css: ['m-cell'],
+            label: __('User'),
+            sortable: true
+        }), new mad.model.GridColumn({
             name: 'username',
             index: 'username',
-            header: {
-                css: ['m-cell'],
-                label: __('Username')
-            }
-        }, {
+            css: ['m-cell'],
+            label: __('Username'),
+            sortable: true
+        }), new mad.model.GridColumn({
             name: 'modified',
             index: 'modified',
-            header: {
-                css: ['m-cell'],
-                label: __('Modified')
-            },
+            css: ['m-cell'],
+            label: __('Modified'),
+            sortable: true,
             valueAdapter: function (value, mappedItem, item, columnModel) {
 	            return passbolt.Common.datetimeGetTimeAgo(value);
             }
-        },
-            {
-                name: 'last_logged_in',
-                index: 'last_logged_in',
-                header: {
-                    css: ['m-cell'],
-                    label: __('Last logged in')
-                },
-                valueAdapter: function (value, mappedItem, item, columnModel) {
-                    var last_logged_in = __('never');
-                    if (value != undefined) {
-                        last_logged_in = passbolt.Common.datetimeGetTimeAgo(value);
-                    }
-                    return last_logged_in;
+        }), new mad.model.GridColumn({
+            name: 'last_logged_in',
+            index: 'last_logged_in',
+            css: ['m-cell'],
+            label: __('Last logged in'),
+            sortable: true,
+            valueAdapter: function (value, mappedItem, item, columnModel) {
+                var last_logged_in = __('never');
+                if (value != undefined) {
+                    last_logged_in = passbolt.Common.datetimeGetTimeAgo(value);
                 }
+                return last_logged_in;
             }
-
-        ];
+        })];
 
         this._super(el, options);
+    },
+
+    /**
+     * Get a target column model of the grid.
+     * If no target
+     *
+     * @todo move this function to the parent class mad.grid
+     * @return {mad.model.Model}
+     */
+    getColumnModel: function (name) {
+        var returnValue = null;
+        if (name != undefined) {
+            for (var i in this.options.columnModel) {
+                if (this.options.columnModel[i].name == name) {
+                    return this.options.columnModel[i];
+                }
+            }
+        } else {
+            returnValue = this.options.columnModel;
+        }
+        return returnValue;
     },
 
     /**
@@ -253,6 +265,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param item
      */
     refreshItem: function (item) {
+        // If the item doesn't exist
+        if (!this.itemExists(item)) {
+            return;
+        }
+
         this._super(item);
         if (this.options.selectedUsers.length > 0) {
             this.select(this.options.selectedUsers[0]);
@@ -311,6 +328,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     select: function (item, silent) {
         silent = silent || false;
 
+        // If the item doesn't exist
+        if (!this.itemExists(item)) {
+            return;
+        }
+
         // Unselect the previously selected user, if not in multipleSelection.
         if (!this.state.is('multipleSelection') &&
 			this.options.selectedUsers.length > 0) {
@@ -349,6 +371,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     unselect: function (item, silent) {
         silent = typeof silent == 'undefined' ? false : silent;
+
+        // If the item doesn't exist
+        if (!this.itemExists(item)) {
+            return;
+        }
 
         // Uncheck the associated checkbox (if it is not already done).
 		var controlId = 'multiple_select_checkbox_' + item.id,
@@ -425,6 +452,21 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                     self.state.addState('empty');
                 }
 
+                // @todo should be cleaned with the filter refactoring PASSBOLT-1571
+                if (filter.case == 'all_items') {
+                    var sortedColumnModel = self.getColumnModel('name');
+                    self.view.markColumnAsSorted(sortedColumnModel, true);
+                }
+
+                // If the resources are ordered.
+                if (filter.order != undefined) {
+                    var sortedColumnModel = self.getColumnModel(filter.order);
+                    if (sortedColumnModel != null) {
+                        var orderAsc = true;
+                        self.view.markColumnAsSorted(sortedColumnModel, orderAsc);
+                    }
+                }
+
                 def.resolve();
             });
         } else {
@@ -448,8 +490,18 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
+     * Does the item exist
+     * @param {passbolt.Model} item The item to check if it existing
+     * @return {boolean}
+     * @todo PASSBOLT-1614 move this function into mad grid.
+     */
+    itemExists: function (item) {
+        return this.view.getItemElement(item).length > 0 ? true : false;
+    },
+
+    /**
      * Reset the filtering
-     * @todo move this function into mad grid.
+     * @todo PASSBOLT-1614 move this function into mad grid.
      */
     resetFilter: function () {
         var self = this;

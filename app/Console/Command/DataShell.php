@@ -66,6 +66,7 @@ class DataShell extends AppShell {
 			case 'default':
 			default :
 				return array(
+					//'DataDefault.SchemaMigration',
 					'DataDefault.Role',
 					'DataDefault.User',
 					'DataDefault.Gpgkey',
@@ -75,6 +76,7 @@ class DataShell extends AppShell {
 			case 'seleniumtests':
 				return array(
 					// defaults
+					//'DataDefault.SchemaMigration',
 					'DataDefault.Role',
 					'DataDefault.PermissionType',
 					// same users than unit tests
@@ -91,6 +93,7 @@ class DataShell extends AppShell {
 			case 'unittests':
 				return array(
 					// defaults
+					//'DataDefault.SchemaMigration',
 					'DataDefault.Role',
 					'DataDefault.PermissionType',
 					// all the things!
