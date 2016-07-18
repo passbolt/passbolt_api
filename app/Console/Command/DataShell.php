@@ -66,7 +66,7 @@ class DataShell extends AppShell {
 			case 'default':
 			default :
 				return array(
-					//'DataDefault.SchemaMigration',
+					'DataDefault.SchemaMigration',
 					'DataDefault.Role',
 					'DataDefault.User',
 					'DataDefault.Gpgkey',
@@ -76,7 +76,7 @@ class DataShell extends AppShell {
 			case 'seleniumtests':
 				return array(
 					// defaults
-					//'DataDefault.SchemaMigration',
+					'DataDefault.SchemaMigration',
 					'DataDefault.Role',
 					'DataDefault.PermissionType',
 					// same users than unit tests
@@ -93,7 +93,7 @@ class DataShell extends AppShell {
 			case 'unittests':
 				return array(
 					// defaults
-					//'DataDefault.SchemaMigration',
+					'DataDefault.SchemaMigration',
 					'DataDefault.Role',
 					'DataDefault.PermissionType',
 					// all the things!
@@ -189,7 +189,7 @@ class DataShell extends AppShell {
 			if (in_array($name, $noFixtureTables)) {
 				continue;
 			}
-			$command = "bake fixture --count 1000 --records --schema {$name}";
+			$command = "bake fixture --count 1000 --records {$name}";
 			if (isset($this->params['quiet']) && $this->params['quiet'] == 1) {
 				$command .= ' --quiet';
 			}
