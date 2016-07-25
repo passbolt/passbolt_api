@@ -28,6 +28,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '0',
 			'_read' => '0',
+			'description' => 'no right',
 			'active' => '1'
 		);
 		$pts[] = array(
@@ -39,6 +40,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '0',
 			'_read' => '1',
+			'description' => 'read only',
 			'active' => '1'
 		);
 		$pts[] = array(
@@ -50,6 +52,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '1',
 			'_read' => '0',
+			'description' => 'create only',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -61,6 +64,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '1',
 			'_read' => '1',
+			'description' => 'create and read',
 			'active' => '1'
 		);
 		$pts[] = array(
@@ -72,6 +76,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '0',
 			'_read' => '0',
+			'description' => 'update only',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -83,6 +88,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '0',
 			'_read' => '1',
+			'description' => 'update and read',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -94,6 +100,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '1',
 			'_read' => '0',
+			'description' => 'create and update',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -105,6 +112,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '1',
 			'_read' => '1',
+			'description' => 'create, update and read',
 			'active' => '1'
 		);
 		$pts[] = array(
@@ -116,6 +124,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '0',
 			'_read' => '0',
+			'description' => 'admin only',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -127,6 +136,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '0',
 			'_read' => '1',
+			'description' => 'admin and read',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -138,6 +148,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '1',
 			'_read' => '0',
+			'description' => 'admin and create',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -149,6 +160,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '0',
 			'_create' => '1',
 			'_read' => '1',
+			'description' => 'admin, read and create',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -160,6 +172,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '0',
 			'_read' => '0',
+			'description' => 'admin and update',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -171,6 +184,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '0',
 			'_read' => '1',
+			'description' => 'admin, read and update',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -182,6 +196,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '1',
 			'_read' => '0',
+			'description' => 'admin, create and update',
 			'active' => '0'
 		);
 		$pts[] = array(
@@ -193,6 +208,7 @@ class PermissionTypeTask extends ModelTask {
 			'_update' => '1',
 			'_create' => '1',
 			'_read' => '1',
+			'description' => 'all rights',
 			'active' => '1'
 		);
 
