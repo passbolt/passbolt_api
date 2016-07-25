@@ -677,6 +677,8 @@ class User extends AppModel {
 						'User.role_id',
 						'User.created',
 						'User.modified',
+						'User.created_by',
+						'User.modified_by',
 					],
 					'superjoin' => ['Group'],
 					'contain' => [
@@ -791,6 +793,8 @@ class User extends AppModel {
 						'username',
 						'role_id',
 						'active',
+						'created_by',
+						'modified_by'
 					]
 				];
 				// if we are in debug mode, we also allow a predictive id to be inserted.

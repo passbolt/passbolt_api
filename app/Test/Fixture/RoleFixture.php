@@ -15,8 +15,6 @@ class RoleFixture extends CakeTestFixture {
 		'description' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'name' => array('column' => 'name', 'unique' => 1)
@@ -34,36 +32,28 @@ class RoleFixture extends CakeTestFixture {
 			'name' => 'admin',
 			'description' => 'Organization administrator',
 			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'modified' => '2012-07-04 13:39:25'
 		),
 		array(
 			'id' => '49aad81e-4f70-3380-a92e-12292597409f',
 			'name' => 'guest',
 			'description' => 'Non logged in user',
 			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'modified' => '2012-07-04 13:39:25'
 		),
 		array(
 			'id' => '857760a6-4f9d-3f1b-a292-95b630bcf03f',
 			'name' => 'root',
 			'description' => 'Super Administrator',
 			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'modified' => '2012-07-04 13:39:25'
 		),
 		array(
 			'id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
 			'name' => 'user',
 			'description' => 'Logged in user',
 			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'modified' => '2012-07-04 13:39:25'
 		),
 	);
 

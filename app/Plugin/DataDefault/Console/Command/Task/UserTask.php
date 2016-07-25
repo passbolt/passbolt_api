@@ -33,7 +33,8 @@ class UserTask extends ModelTask {
 			'role_id' => Common::uuid('role.id.anonymous'),
 			'password' => 'password',
 			'active' => 1,
-			'created_by' => Common::uuid('user.id.admin')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 
 		return $us;

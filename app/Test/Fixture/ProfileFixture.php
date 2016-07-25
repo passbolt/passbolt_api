@@ -22,8 +22,6 @@ class ProfileFixture extends CakeTestFixture {
 		'locale' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 5, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'created_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'modified_by' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
@@ -46,10 +44,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:26',
+			'modified' => '2016-07-25 21:20:26'
 		),
 		array(
 			'id' => '04fe48d8-b2ef-3cf2-a012-3be3a550630e',
@@ -62,10 +58,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:26',
+			'modified' => '2016-07-25 21:20:26'
 		),
 		array(
 			'id' => '10d65711-c0ef-3854-a7e8-cad27e798df0',
@@ -78,10 +72,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '21f5dab2-7386-333e-a3f6-4f2c8fc69f42',
@@ -94,10 +86,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '22cd59b4-8244-3489-a96b-6869ad83a9f9',
@@ -110,10 +100,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:26',
+			'modified' => '2016-07-25 21:20:26'
 		),
 		array(
 			'id' => '4db7a1c2-e0af-399a-a1c0-c854bb1ee23e',
@@ -126,10 +114,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '513ba7da-0a15-34d7-ad87-c726f7f479a0',
@@ -142,10 +128,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:26',
+			'modified' => '2016-07-25 21:20:26'
 		),
 		array(
 			'id' => '76046a4d-bd1e-3896-a35f-d1f04cffcc18',
@@ -158,10 +142,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '7c834943-e54a-35eb-a995-52743a14bab3',
@@ -174,10 +156,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '8b2c51b6-175c-3284-a956-a87cba11ee56',
@@ -190,10 +170,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '934c513f-7a75-3415-a537-b318eda7a561',
@@ -206,10 +184,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:26',
+			'modified' => '2016-07-25 21:20:26'
 		),
 		array(
 			'id' => '9ad3a7b1-b6a2-34b5-aa79-7c9b1bf9bc18',
@@ -222,10 +198,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'c6cad8b7-b78d-30bc-aca7-aa3576e6bdfc',
@@ -238,10 +212,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'ce21824c-3137-3cbd-acbe-15bacf6bfac3',
@@ -254,10 +226,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:26',
+			'modified' => '2016-07-25 21:20:26'
 		),
 		array(
 			'id' => 'cf4e8613-2811-3c04-a47d-d6d011721594',
@@ -270,10 +240,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'd34a0cc6-515f-34bb-a960-29b18036e03a',
@@ -286,10 +254,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'da270c4f-7e0a-3fcd-a551-4f6285c1bf0f',
@@ -302,10 +268,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'e0f3dafb-bc17-3c13-a982-bf43e8cf67c9',
@@ -318,10 +282,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'f24cf31c-7156-33b7-a4c3-65ad06ec11da',
@@ -334,10 +296,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'f68fbc49-4c66-37da-abf7-df995e825372',
@@ -350,10 +310,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'fc7f0002-f379-30f3-a680-bb8de2f0fa09',
@@ -366,10 +324,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => 'fd3e940e-5d9b-3efc-aeb4-f027a1a6ad37',
@@ -382,10 +338,8 @@ class ProfileFixture extends CakeTestFixture {
 			'avatar' => '',
 			'timezone' => '',
 			'locale' => '',
-			'created' => '2016-07-15 22:37:22',
-			'modified' => '2016-07-15 22:37:22',
-			'created_by' => '',
-			'modified_by' => ''
+			'created' => '2016-07-25 21:20:25',
+			'modified' => '2016-07-25 21:20:25'
 		),
 	);
 

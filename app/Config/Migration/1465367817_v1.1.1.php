@@ -6,7 +6,7 @@ class v1_1_1 extends CakeMigration {
  *
  * @var string
  */
-	public $description = 'https://www.passbolt.com/release/notes#v1.1.0';
+	public $description = 'https://www.passbolt.com/release/notes#v1.1.1';
 	public $since = 'v1.1.1';
 
 /**
@@ -17,22 +17,13 @@ class v1_1_1 extends CakeMigration {
 	public $migration = array(
 		'up' => array(
 			'drop_field' => array(
-				'users' => array(
-					'indexes' => array(
-						'username'
-					)
-				)
-			)
-		),
-		'down' => array(
-			'create_field' => array(
-				'users' => array(
-					'indexes' => array(
-						'username' => array(
-							'column' => 'username',
-							'unique' => true
-						)
-					)
+				'role' => array(
+					'created_by',
+					'modified_by'
+				),
+				'profile' => array(
+					'created_by',
+					'modified_by'
 				)
 			)
 		)

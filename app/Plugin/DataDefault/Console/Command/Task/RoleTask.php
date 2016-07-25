@@ -22,9 +22,7 @@ class RoleTask extends ModelTask {
 			'name' => 'guest',
 			'description' => 'Non logged in user',
 			'created' => '2012-07-04 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'modified' => '2012-07-04 13:39:25'
 		));
 		$rs[] = array('Role' => array(
 			'id' => Common::uuid('role.id.user'),
@@ -32,8 +30,6 @@ class RoleTask extends ModelTask {
 			'description' => 'Logged in user',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$rs[] = array('Role' => array(
 			'id' => Common::uuid('role.id.admin'),
@@ -41,8 +37,6 @@ class RoleTask extends ModelTask {
 			'description' => 'Organization administrator',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$rs[] = array('Role' => array(
 			'id' => Common::uuid('role.id.root'),
@@ -50,8 +44,6 @@ class RoleTask extends ModelTask {
 			'description' => 'Super Administrator',
 			'created' => '2012-07-04 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		return $rs;
 	}

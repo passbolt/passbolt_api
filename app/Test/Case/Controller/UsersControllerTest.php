@@ -562,7 +562,12 @@ class UsersControllerTest extends ControllerTestCase {
 			$result['body']['User']['created_by'],
 			"Add : /users.json : created by should be Admin id (" . Common::uuid('user.id.admin')
 				. ") but is id: ". $result['body']['User']['created_by']
-
+		);
+		$this->assertEquals(
+			Common::uuid('user.id.admin'),
+			$result['body']['User']['modified_by'],
+			"Add : /users.json : modified by should be Admin id (" . Common::uuid('user.id.admin')
+			. ") but is id: ". $result['body']['User']['modified_by']
 		);
 	}
 

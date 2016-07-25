@@ -18,16 +18,12 @@ class CategoryTask extends ModelTask {
 
 	public function execute() {
 		$Model = ClassRegistry::init($this->model);
-		// @todo work on permissionable and save
-		//$Model->hasOne = array();
 		$Model->Behaviors->disable('Permissionable');
 		$data = $this->getData();
 		foreach ($data as $item) {
 			$Model->create();
 			if (!$m = $Model->save($item)) {
 				pr($Model->validationErrors);
-				$errorMsg = mysql_error();
-				echo $errorMsg;
 			}
 		}
 	}
@@ -261,21 +257,27 @@ class CategoryTask extends ModelTask {
 			'parent_id' => null,
 			'name' => 'utest',
 			'category_type_id' => null,
-			'deleted' => 0
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.anonymous'),
+			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.utest1'),
 			'parent_id' => Common::uuid('category.id.utest'),
 			'name' => 'utest1',
 			'category_type_id' => null,
-			'deleted' => 0
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.anonymous'),
+			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.utest2'),
 			'parent_id' => Common::uuid('category.id.utest'),
 			'name' => 'utest2',
 			'category_type_id' => null,
-			'deleted' => 0
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.anonymous'),
+			'modified_by' => Common::uuid('user.id.anonymous')
 		));
 		
 		return $c;

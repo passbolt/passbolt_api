@@ -29,31 +29,31 @@ class SchemaMigrationFixture extends CakeTestFixture {
 			'id' => '1',
 			'class' => 'InitMigrations',
 			'type' => 'Migrations',
-			'created' => '2016-07-15 22:37:22'
+			'created' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '2',
 			'class' => 'ConvertVersionToClassNames',
 			'type' => 'Migrations',
-			'created' => '2016-07-15 22:37:22'
+			'created' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '3',
 			'class' => 'IncreaseClassNameLength',
 			'type' => 'Migrations',
-			'created' => '2016-07-15 22:37:22'
+			'created' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '4',
 			'class' => 'SettingHashToDefaultNull',
 			'type' => 'FileStorage',
-			'created' => '2016-07-15 22:37:22'
+			'created' => '2016-07-25 21:20:25'
 		),
 		array(
 			'id' => '5',
 			'class' => 'v1_1_0',
 			'type' => 'app',
-			'created' => '2016-07-15 22:37:22'
+			'created' => '2016-07-25 21:20:25'
 		),
 	);
 
