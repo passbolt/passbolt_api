@@ -44,7 +44,7 @@ class GpgkeyTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testUserIdValidation() {
-		$user = $this->User->findById(common::uuid('user.id.user'));
+		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$testcases = array(
 			'' => false,
 			'?!#' => false,

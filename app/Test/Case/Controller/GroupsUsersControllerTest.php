@@ -50,7 +50,7 @@ class GroupsUsersControllerTest extends ControllerTestCase {
 		parent::setUp();
 
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 	}
 

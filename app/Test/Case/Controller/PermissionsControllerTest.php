@@ -66,7 +66,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->session->init();
 		
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -125,7 +125,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->setExpectedException('HttpException', "The Category does not exist");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findById(common::uuid('user.id.edith'));
+		$user = $this->User->findById(Common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
 		$srvResult = json_decode($this->testAction("/permissions/category/$categoryId.json", $getOptions), true);
@@ -266,7 +266,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Category");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findById(common::uuid('user.id.edith'));
+		$user = $this->User->findById(Common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
 		$data = array(
@@ -288,7 +288,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testAddAcoPermissionsOnResource() {
 		// log with a user who has right on the unit test sandbox category
-		$user = $this->User->findById(common::uuid('user.id.kathleen'));
+		$user = $this->User->findById(Common::uuid('user.id.kathleen'));
 		$this->User->setActive($user);
 
 		// Add a permisision for a given user to a given category
@@ -336,7 +336,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testAddAcoPermissionsOnResourceExistingPermission() {
 		// log with a user who has right on the unit test sandbox category
-		$user = $this->User->findById(common::uuid('user.id.kathleen'));
+		$user = $this->User->findById(Common::uuid('user.id.kathleen'));
 		$this->User->setActive($user);
 
 		// Add a permisision for a given user to a given category
@@ -372,7 +372,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	public function testSimulateAcoPermissionsOnResource() {
 		// log with a user who has right on the unit test sandbox category
-		$user = $this->User->findById(common::uuid('user.id.kathleen'));
+		$user = $this->User->findById(Common::uuid('user.id.kathleen'));
 		$this->User->setActive($user);
 
 		// Add a permisision for a given user to a given category
@@ -455,7 +455,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->setExpectedException('HttpException', "You are not allowed to edit this permission");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findById(common::uuid('user.id.edith'));
+		$user = $this->User->findById(Common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
 		$postOptions = array(
@@ -487,7 +487,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 		// log the user with a user who belongs to the human resource group
-		$user = $this->User->findById(common::uuid('user.id.irene'));
+		$user = $this->User->findById(Common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		// try to access to the category administration
@@ -523,7 +523,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->setExpectedException('HttpException', "You are not allowed to delete this permission");
 
 		// log the user who is not allowed to access the category
-		$user = $this->User->findById(common::uuid('user.id.edith'));
+		$user = $this->User->findById(Common::uuid('user.id.edith'));
 		$this->User->setActive($user);
 
 		$postOptions = array(
@@ -544,7 +544,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 //		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
 //
 //		 // log the user who is not allowed to access the category
-//		 $user = $this->User->findById(common::uuid('user.id.edith'));
+//		 $user = $this->User->findById(Common::uuid('user.id.edith'));
 //		 $this->User->setActive($user);
 //
 //		 $postOptions = array(
@@ -569,7 +569,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 //		 $this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
 //
 //		 // log the user with a user who belongs to the human resource group
-//		 $user = $this->User->findById(common::uuid('user.id.irene'));
+//		 $user = $this->User->findById(Common::uuid('user.id.irene'));
 //		 $this->User->setActive($user);
 //
 //		 // try to access to the category administration

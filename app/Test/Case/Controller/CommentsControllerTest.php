@@ -49,7 +49,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->Resource = ClassRegistry::init('Resource');
 
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -92,7 +92,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$id = Common::uuid('resource.id.cpp1-pwd1');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(common::uuid('user.id.irene'));
+		$user = $this->User->findById(Common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The Resource does not exist');
@@ -156,7 +156,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$rsId = Common::uuid('resource.id.cpp1-pwd1');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(common::uuid('user.id.irene'));
+		$user = $this->User->findById(Common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		$postOptions = array(

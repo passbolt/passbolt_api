@@ -51,7 +51,7 @@ class TagsControllerTest extends ControllerTestCase {
 		$this->Resource = ClassRegistry::init('Resource');
 
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -91,7 +91,7 @@ class TagsControllerTest extends ControllerTestCase {
 		$rsId = Common::uuid('resource.id.dp1-pwd1');
 
 		// Looking at the matrix of permission Carol should able to READ dp1-pwd1 but not update it
-		$user = $this->User->findById(common::uuid('user.id.carol'));
+		$user = $this->User->findById(Common::uuid('user.id.carol'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to update item tags of this Resource');
@@ -201,7 +201,7 @@ class TagsControllerTest extends ControllerTestCase {
 		$resId = Common::uuid('resource.id.cpp1-pwd1');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(common::uuid('user.id.irene'));
+		$user = $this->User->findById(Common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The Resource does not exist');
@@ -305,7 +305,7 @@ class TagsControllerTest extends ControllerTestCase {
 
 	public function testDeleteAndPermission() {
 		// Looking at the matrix of permission Carol should able to READ dp1-pwd1 but not update it
-		$user = $this->User->findById(common::uuid('user.id.carol'));
+		$user = $this->User->findById(Common::uuid('user.id.carol'));
 		$this->User->setActive($user);
 
 		$id = Common::uuid('item_tag.id.drupal-dp1-pwd1');

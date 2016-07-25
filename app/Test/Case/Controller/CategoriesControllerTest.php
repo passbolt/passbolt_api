@@ -48,7 +48,7 @@ class CategoriesControllerTest extends ControllerTestCase {
 		$this->Category = ClassRegistry::init('Category');
 
 		// log the user as a manager to be able to access all categories
-		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 

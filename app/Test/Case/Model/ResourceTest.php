@@ -279,7 +279,7 @@ class ResourceTest extends AppTestCase {
 	 * Test that when soft delete a resource it is still in db and his permissions have been revoked
 	 */
 	public function testSoftDelete() {
-		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 
 		$resourceId = Common::uuid('resource.id.facebook-account');
@@ -297,7 +297,7 @@ class ResourceTest extends AppTestCase {
 	 * Test the softDeleted function
 	 */
 	public function testIsSoftDeleted() {
-		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 
 		$id = Common::uuid('not-valid-reference');

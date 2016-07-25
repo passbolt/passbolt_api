@@ -40,7 +40,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		$this->Gpgkey = ClassRegistry::init('Gpgkey');
 		parent::setUp();
 
-		$user = $this->User->findById(common::uuid('user.id.user'));
+		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
 	}
 
@@ -176,7 +176,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	 */
 	public function testAdd() {
 		$pubKey = file_get_contents( Configure::read('GPG.testKeys.path') . 'test_public.key');
-		$user = $this->User->findById(common::uuid('user.id.user'));
+		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
 		$json = json_decode(
 			$this->testAction('/gpgkeys.json',
@@ -292,7 +292,7 @@ x0kL7izI0GKheZwmWTsww5V+bCP5+g==
 =i2Cb
 -----END PGP PUBLIC KEY BLOCK-----
 ';
-		$user = $this->User->findById(common::uuid('user.id.user'));
+		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		// Number of insertion rounds.
@@ -343,7 +343,7 @@ x0kL7izI0GKheZwmWTsww5V+bCP5+g==
 	 */
 	public function testAddInvalidKey() {
 		$pubKey = 'invalidkey';
-		$user = $this->User->findById(common::uuid('user.id.user'));
+		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
 		$this->setExpectedException('HttpException', 'The gpgkey provided could not be used');
 		$this->testAction('/gpgkeys.json',

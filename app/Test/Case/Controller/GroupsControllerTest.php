@@ -45,7 +45,7 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->session->init();
 		
 		// log the user as a manager to be able to access all features
-		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 	}
 
@@ -107,7 +107,7 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		// log the user as a manager to be able to access all features
-		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
 		$result = json_decode($this->testAction('/groups.json', array(

@@ -103,7 +103,7 @@ class SetupControllerTest extends ControllerTestCase {
 	 * Test complete recovery where no data is provided.
 	 */
 	public function testCompleteRecoveryNoDataProvided() {
-		$user = $this->User->findById(common::uuid('user.id.admin'));
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
 		$recovery = $this->__startRecovery('admin@passbolt.com');
@@ -121,7 +121,7 @@ class SetupControllerTest extends ControllerTestCase {
 	 * Test complete recovery with wrong Gpg key.
 	 */
 	public function testCompleteRecoveryWrongGpgkey() {
-		$user = $this->User->findById(common::uuid('user.id.ada'));
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
 		$recovery = $this->__startRecovery('ada@passbolt.com');
@@ -157,7 +157,7 @@ class SetupControllerTest extends ControllerTestCase {
 	 * Test complete recovery in a successful case.
 	 */
 	public function testCompleteRecoverySuccess() {
-		$user = $this->User->findById(common::uuid('user.id.ada'));
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
 		$recovery = $this->__startRecovery('ada@passbolt.com');

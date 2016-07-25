@@ -59,7 +59,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$this->Gpgkey = ClassRegistry::init('Gpgkey');
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Category = ClassRegistry::init('Category');
-		$user = $this->User->findById(common::uuid('user.id.dame'));
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
 
@@ -112,7 +112,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$resId = Common::uuid('resource.id.cpp1-pwd1');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(common::uuid('user.id.irene'));
+		$user = $this->User->findById(Common::uuid('user.id.irene'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access this resource');
@@ -262,7 +262,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
-				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddWithCategoryBadId secret'),
+				'Secret' => $this->_encryptSecretFor(array(Common::uuid('user.id.dame')), '', 'testAddWithCategoryBadId secret'),
 				'Category' => array(
 					0 => array(
 						'id' => 'BadId'
@@ -287,7 +287,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
-				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddWithCategoryDoesNotExist secret'),
+				'Secret' => $this->_encryptSecretFor(array(Common::uuid('user.id.dame')), '', 'testAddWithCategoryDoesNotExist secret'),
 				'Category' => array(
 					0 => array(
 						'id' => $catId
@@ -304,7 +304,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$catId = Common::uuid('category.id.administration');
 
 		// Looking at the matrix of permission marlyn should be able to read but not to create into the category marketing
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		// Error : name is empty
@@ -317,7 +317,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
-				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.marlyn')), '', 'testAddAndPermission secret'),
+				'Secret' => $this->_encryptSecretFor(array(Common::uuid('user.id.marlyn')), '', 'testAddAndPermission secret'),
 				'Category' => array(
 					0 => array(
 						'id' => $catId
@@ -339,7 +339,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
-				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAdd secret'),
+				'Secret' => $this->_encryptSecretFor(array(Common::uuid('user.id.dame')), '', 'testAdd secret'),
 			),
 			'method' => 'post',
 			'return' => 'contents'
@@ -375,7 +375,7 @@ class ResourcesControllerTest extends ControllerTestCase
 					'uri' => 'http://www.google.com',
 					'description' => 'this is a description'
 				),
-				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddInCategory secret'),
+				'Secret' => $this->_encryptSecretFor(array(Common::uuid('user.id.dame')), '', 'testAddInCategory secret'),
 				'Category' => array(
 					0 => array(
 						'id' => $rootCatId
@@ -426,7 +426,7 @@ class ResourcesControllerTest extends ControllerTestCase
 						'id' => $rootCat['Category']['id']
 					)
 				),
-				'Secret' => $this->_encryptSecretFor(array(common::uuid('user.id.dame')), '', 'testAddWithSecret secret'),
+				'Secret' => $this->_encryptSecretFor(array(Common::uuid('user.id.dame')), '', 'testAddWithSecret secret'),
 			),
 			'method' => 'post',
 			'return' => 'contents'
@@ -447,7 +447,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$cat = $this->Category->findByName('administration');
 
 		// Looking at the matrix of permission marlyn should be able to read but not to create into the category marketing
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		// Error : name is empty
@@ -508,7 +508,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$rsId = Common::uuid("resource.id.tetris-license");
 
 		// Looking at the matrix of permission marlyn should be able to read but not to update the resource tetris license
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		// Error : name is empty
@@ -529,7 +529,7 @@ class ResourcesControllerTest extends ControllerTestCase
 	 */
 	public function testEditWithSecretsInvalidNumberOfSecrets()
 	{
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		$resource = $this->Resource->find('first', [
@@ -565,7 +565,7 @@ class ResourcesControllerTest extends ControllerTestCase
 	 */
 	public function testEditWithSecretsInvalidSecretUsers()
 	{
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		$resource = $this->Resource->find('first', [
@@ -603,7 +603,7 @@ class ResourcesControllerTest extends ControllerTestCase
 	 */
 	public function testEditWithSecrets()
 	{
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		$resource = $this->Resource->find('first', [
@@ -645,7 +645,7 @@ class ResourcesControllerTest extends ControllerTestCase
 	 */
 	public function testEditWithSecretsRollback()
 	{
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		$resource = $this->Resource->find('first', [
@@ -793,7 +793,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$rsId = Common::uuid('resource.id.bank-password');
 
 		// Looking at the matrix of permission marlyn should be able to read but not to delete the resource facebook
-		$user = $this->User->findById(common::uuid('user.id.marlyn'));
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
 		// Error : name is empty

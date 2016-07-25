@@ -132,7 +132,7 @@ class ShareControllerTest extends ControllerTestCase {
 	public function testUpdateNotAllowed() {
 		$acoInstanceId = Common::uuid('resource.id.facebook-account');
 
-		$user = $this->User->findById(common::uuid('user.id.user'));
+		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
 		$aco = 'Resource';
@@ -231,7 +231,7 @@ class ShareControllerTest extends ControllerTestCase {
 
 	public function testUpdateAddSecretsNotProvided() {
 		$acoInstanceId = Common::uuid('resource.id.facebook-account');
-		$user = $this->User->findById(common::uuid('user.id.user'));
+		$user = $this->User->findById(Common::uuid('user.id.user'));
 
 		$data = array(
 			'Permissions' => array(
@@ -294,10 +294,10 @@ hcciUFw5
 
 	// Test update add with wrong secrets data provided. (not matching the user ids).
 	public function testUpdateAddSecretForWrongUserProvided() {
-		$userAdaId = common::uuid('user.id.ada');
-		$userBettyId = common::uuid('user.id.betty');
-		$userCarolId = common::uuid('user.id.carol');
-		$rsFacebookId = common::uuid('resource.id.facebook-account');
+		$userAdaId = Common::uuid('user.id.ada');
+		$userBettyId = Common::uuid('user.id.betty');
+		$userCarolId = Common::uuid('user.id.carol');
+		$rsFacebookId = Common::uuid('resource.id.facebook-account');
 
 		$data = array(
 			'Permissions' => array(
@@ -360,8 +360,8 @@ hcciUFw5
 	}
 
 	public function testUpdateAddValid() {
-		$userId = common::uuid('user.id.user');
-		$rsFacebookId = common::uuid('resource.id.facebook-account');
+		$userId = Common::uuid('user.id.user');
+		$rsFacebookId = Common::uuid('resource.id.facebook-account');
 
 		$data = array(
 			'Permissions' => array(
@@ -446,8 +446,8 @@ hcciUFw5
 
 	// Test adding permissions for a user that is not active (not completed the setup yet).
 	public function testUpdateAddInactiveUser() {
-		$userId = common::uuid('user.id.user');
-		$rsFacebookId = common::uuid('resource.id.facebook-account');
+		$userId = Common::uuid('user.id.user');
+		$rsFacebookId = Common::uuid('resource.id.facebook-account');
 
 		$this->User->id = $userId;
 		$this->User->save(['active' => false], false, ['active']);
@@ -488,8 +488,8 @@ hcciUFw5
 	}
 
 	public function testSimulate() {
-		$userId = common::uuid('user.id.user');
-		$acoInstanceId = common::uuid('resource.id.facebook-account');
+		$userId = Common::uuid('user.id.user');
+		$acoInstanceId = Common::uuid('resource.id.facebook-account');
 
 		$data = array(
 			'Permissions' => array(
