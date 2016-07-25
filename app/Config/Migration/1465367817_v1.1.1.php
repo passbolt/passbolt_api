@@ -17,13 +17,43 @@ class v1_1_1 extends CakeMigration {
 	public $migration = array(
 		'up' => array(
 			'drop_field' => array(
-				'role' => array(
+				'roles' => array(
 					'created_by',
 					'modified_by'
 				),
-				'profile' => array(
+				'profiles' => array(
 					'created_by',
-					'modified_by'
+					'modified_by',
+					'avatar'
+				)
+			),
+			'alter_field' => array(
+				'controller_logs' => array(
+					'scope' => array(
+						'null' => true
+					)
+				),
+				'file_storage' => array(
+					'filename' => array(
+						'null' => true
+					),
+					'mime_type' => array(
+						'size' => 128
+					),
+					'model' => array(
+						'size' => 128
+					)
+				),
+				'profiles' => array(
+					'title' => array(
+						'null' => true
+					),
+					'timezone' => array(
+						'null' => true
+					),
+					'locale' => array(
+						'null' => true
+					)
 				)
 			)
 		)
