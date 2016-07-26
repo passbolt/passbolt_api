@@ -24,6 +24,8 @@ matrix:
   fast_finish: true
 
 before_script:
+  - wget http://getcomposer.org/composer.phar
+  - php composer.phar install --dev --no-interaction
   - if [ $DB = 'mysql' ]; then sudo apt-get -y install mysql-server; fi
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE passbolt;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE passbolt_test;'; fi"
@@ -65,7 +67,11 @@ before_script:
   - sed -i "s/'active'\s=>\sfalse,/'active' => true,/" ./app/Config/app.php
 
 script:
-  - ./app/Console/cake test app All --stderr
+  - mkdir -p build/logs
+  - app/Console/cake test app All --stderr --coverage-clover build/logs/clover.xml --configuration=app/Test/phpunit.xml
+
+after_script:
+  - php Vendor/bin/coveralls -v
 
 notifications:
   email: false
