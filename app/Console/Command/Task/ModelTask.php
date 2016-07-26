@@ -18,6 +18,11 @@ class ModelTask extends AppShell {
 		$User->setActive($user);
 		$Model = ClassRegistry::init($this->model);
 
+		// Set Db Connection according to what is provided in params.
+		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
+			$Model->useDbConfig = $this->params['connection'];
+		}
+
 		$data = $this->getData();
 		foreach ($data as $item) {
 			$Model->create();

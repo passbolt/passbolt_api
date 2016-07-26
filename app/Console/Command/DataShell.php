@@ -27,6 +27,15 @@ class DataShell extends AppShell {
 				'short' => 'd',
 			))
 			->description(__('Data import/export shell for the passbolt application.'));
+
+		$parser
+			->addOption('connection', array(
+					'help' => 'Which db connection to use.',
+					'default' => 'default',
+					'short' => 'c',
+				))
+			->description(__('Which db connection to use, usually default or test'));
+
 		return $parser;
 	}
 
@@ -132,6 +141,7 @@ class DataShell extends AppShell {
 		foreach ($dataModels as $dataModel) {
 			$Task = $this->Tasks->load($dataModel);
 			$Task->params['quiet'] = isset($this->params['quiet']) && $this->params['quiet'] == 1 ? 1 : 0;
+			$Task->params['connection'] = isset($this->params['connection']) ? $this->params['connection'] : 'default';
 			if (method_exists($Task, "beforeExecute")) {
 				$Task->beforeExecute();
 			}

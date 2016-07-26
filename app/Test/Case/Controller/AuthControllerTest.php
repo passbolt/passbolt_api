@@ -121,8 +121,8 @@ class AuthControllerTest extends ControllerTestCase {
 		// get the server public key
 		$this->testAction('/');
 		$result = json_decode($this->testAction(
-			$this->headers['X-GPGAuth-Verify-URL'] . DS . 'json',
-			array('return' => 'contents', 'method' => 'GET'), true)
+				$this->headers['X-GPGAuth-Verify-URL'] . DS . 'json',
+				array('return' => 'contents', 'method' => 'GET'), true)
 		);
 		// check the key data and fingerprint are set and match the config
 		$this->assertTrue(isset($result->body->fingerprint));
@@ -148,9 +148,9 @@ class AuthControllerTest extends ControllerTestCase {
 
 		foreach ($fix as $keyid => $expectSuccess) {
 			$this->testAction('/auth/login', array(
-				'data' => array( 'gpg_auth' => array(
-					'keyid' => $keyid
-				)))
+					'data' => array( 'gpg_auth' => array(
+						'keyid' => $keyid
+					)))
 			);
 			$this->assertTrue(isset($this->headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set for keyid:' . $keyid);
 			$this->assertEquals($this->headers['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
@@ -195,10 +195,10 @@ class AuthControllerTest extends ControllerTestCase {
 		foreach ($fix as $token => $expectSuccess) {
 			$msg = $this->_gpg->encrypt($token);
 			$this->testAction('/auth/verify.json', array(
-				'data' => array( 'gpg_auth' => array(
-					'keyid' => $this->_keys['user']['fingerprint'],
-					'server_verify_token' => $msg
-				)))
+					'data' => array( 'gpg_auth' => array(
+						'keyid' => $this->_keys['user']['fingerprint'],
+						'server_verify_token' => $msg
+					)))
 			);
 
 			$this->assertTrue(isset($this->headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
@@ -228,10 +228,10 @@ class AuthControllerTest extends ControllerTestCase {
  */
 	public function testStage1UserToken() {
 		$this->testAction('/auth/login', array(
-			'data' => array(
-				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
-			)
-		));
+				'data' => array(
+					'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+				)
+			));
 
 		// check headers
 		$this->assertTrue(isset($this->headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
@@ -263,17 +263,18 @@ class AuthControllerTest extends ControllerTestCase {
 
 		// Check if there is a valid AuthToken in store
 		$AuthToken = Common::getModel('AuthenticationToken');
-		$this->assertTrue(!empty($AuthToken->isValid($uuid, Common::uuid('user.id.ada'))), 'There should a valid auth token');
+		$isValid = $AuthToken->isValid($uuid, Common::uuid('user.id.ada'));
+		$this->assertTrue(!empty($isValid), 'There should a valid auth token');
 
 		// Send it back!
 		$this->testAction('/auth/login', array(
-			'data' => array(
-				'gpg_auth' => array(
-					'keyid' => $this->_keys['user']['fingerprint'],
-					'user_token_result' => $plaintext
+				'data' => array(
+					'gpg_auth' => array(
+						'keyid' => $this->_keys['user']['fingerprint'],
+						'user_token_result' => $plaintext
+					)
 				)
-			)
-		));
+			));
 
 		if (isset($this->headers['X-GPGAuth-Debug'])) {
 			$this->assertTrue(false, 'There should be no debug header set to true for token: ' .
@@ -287,7 +288,8 @@ class AuthControllerTest extends ControllerTestCase {
 		$this->assertEquals($this->headers['X-GPGAuth-Progress'], 'complete', 'The progress indicator should be set to complete');
 
 		// Authentication token should be disabled at that stage
-		$this->assertTrue(empty($AuthToken->isValid($uuid, Common::uuid('user.id.ada'))), 'There should a valid auth token');
+		$isValid = $AuthToken->isValid($uuid, Common::uuid('user.id.ada'));
+		$this->assertTrue(empty($isValid), 'There should a valid auth token');
 
 		// Check if we can access users
 		$r = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
@@ -301,10 +303,10 @@ class AuthControllerTest extends ControllerTestCase {
 		$this->_gpgSetup('ruth', false);
 		$this->assertEquals('9B78A8F124D440FEF5A52159546B4787A3A2AE97', $this->_keys['user']['fingerprint']);
 		$this->testAction('/auth/login', array(
-			'data' => array(
-				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
-			)
-		));
+				'data' => array(
+					'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+				)
+			));
 		$this->assertTrue(isset($this->headers['X-GPGAuth-Error']), 'There should not be an error header for fingerprint: ' . $this->_keys['user']['fingerprint']);
 	}
 
@@ -315,10 +317,10 @@ class AuthControllerTest extends ControllerTestCase {
 		$this->_gpgSetup('orna', false);
 		$this->assertEquals('E2E98DCC84FB41F69603C346EA62E0B3397EEAB6', $this->_keys['user']['fingerprint']);
 		$this->testAction('/auth/login', array(
-			'data' => array(
-				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
-			)
-		));
+				'data' => array(
+					'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+				)
+			));
 		$this->assertTrue(isset($this->headers['X-GPGAuth-Error']), 'There should not be an error header for fingerprint: ' . $this->_keys['user']['fingerprint']);
 	}
 
@@ -329,10 +331,10 @@ class AuthControllerTest extends ControllerTestCase {
 		$this->_gpgSetup('sofia', false);
 		$this->assertEquals('252B91CB28A96C6D67E8FC139020576F08D8B763', $this->_keys['user']['fingerprint']);
 		$this->testAction('/auth/login', array(
-			'data' => array(
-				'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
-			)
-		));
+				'data' => array(
+					'gpg_auth' => array('keyid' => $this->_keys['user']['fingerprint'])
+				)
+			));
 		$this->assertTrue(isset($this->headers['X-GPGAuth-Error']), 'There should not be an error header for fingerprint: ' . $this->_keys['user']['fingerprint']);
 	}
 

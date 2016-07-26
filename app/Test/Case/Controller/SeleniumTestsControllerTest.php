@@ -63,13 +63,6 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 		$this->EmailNotificatorComponent = $this->__getEmailNotificatorComponent();
 	}
 
-	public function testSocket() {
-		Configure::write('App.selenium.active', false);
-		Configure::write('debug', 0);
-		$HttpSocket = new HttpSocket();
-		$results = $HttpSocket->get('/users');
-	}
-
 	/**
 	 * Test showLastEmail entry point when selenimum is not active in the config.
 	 * It should obviously not work and redirect the user.
