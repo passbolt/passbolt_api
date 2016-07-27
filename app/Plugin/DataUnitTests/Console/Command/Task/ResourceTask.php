@@ -28,6 +28,11 @@ class ResourceTask extends ModelTask {
 		$Model = Common::getModel($this->model);
 		$data = $this->getData();
 
+		// Set Db Connection according to what is provided in params.
+		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
+			$Model->useDbConfig = $this->params['connection'];
+		}
+
 		foreach ($data as $item) {
 			// the 'owner' entry for permission.created_by will matching the resource.created_by
 			$user = $User->find('first', ['conditions' => ['User.id' => $item['Resource']['created_by']]]);

@@ -9,6 +9,8 @@
 	(c) 2016 Bolt Softwares Pvt Ltd
 	https://www.passbolt.com
 
+[![Build Status](https://travis-ci.org/passbolt/passbolt.svg?branch=master)](https://travis-ci.org/passbolt/passbolt)
+[![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt/badge.svg?branch=master)](https://coveralls.io/github/passbolt/passbolt?branch=master)
 
 License
 ==============

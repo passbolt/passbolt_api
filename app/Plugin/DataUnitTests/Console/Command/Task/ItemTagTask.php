@@ -16,28 +16,6 @@ class ItemTagTask extends ModelTask {
 
 	public $model = 'ItemTag';
 
-	public function execute() {
-		$User = ClassRegistry::init('User');
-		$user = $User->findByUsername('root@passbolt.com');
-		$User->setActive($user);
-		$Model = ClassRegistry::init($this->model);
-		$Model->Resource->Behaviors->disable('Permissionable');
-
-		$data = $this->getData();
-		foreach ($data as $item) {
-			$Model->create();
-			$Model->set($item);
-			if (!$Model->validates()) {
-				var_dump($Model->validationErrors);
-			}
-			$instance = $Model->save();
-			if (!$instance) {
-				$this->out('<error>Unable to insert ' . pr($item[$this->model]) . '</error>');
-				die;
-			}
-		}
-	}
-
 	protected function getData() {
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Tag = ClassRegistry::init('Tag');

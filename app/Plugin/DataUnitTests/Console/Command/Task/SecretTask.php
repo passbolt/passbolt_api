@@ -19,31 +19,14 @@ class SecretTask extends ModelTask {
 
 	public $model = 'Secret';
 
-	public function execute() {
-		$Model = ClassRegistry::init($this->model);
-		$data = $this->getData();
-		foreach ($data as $item) {
-			$Model->create();
-			$Model->set($item);
-			if (!$Model->validates()) {
-				var_dump($Model->validationErrors);
-			}
-			$instance = $Model->save();
-			if (!$instance) {
-				$this->out('<error>Unable to insert ' . $item[$this->model]['data'] . '</error>');
-			}
-		}
-	}
-
-	/**
-	 * Get Dummy Secret Data.
-	 *
-	 * The passwords are always returned in the same order, useful for cross checking.
-	 *
-	 * This secret was encrypted with the dummy public key, also located in the repository.
-	 *
-	 * @return string
-	 */
+/**
+ * Get Dummy Secret Data.
+ *
+ * The passwords are always returned in the same order, useful for cross checking.
+ * This secret was encrypted with the dummy public key, also located in the repository.
+ *
+ * @return string
+ */
 	protected function getDummyPassword() {
 		static $i = 0;
 		$passwords = array(

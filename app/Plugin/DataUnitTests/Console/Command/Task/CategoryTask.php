@@ -16,18 +16,6 @@ class CategoryTask extends ModelTask {
 
 	public $model = 'Category';
 
-	public function execute() {
-		$Model = ClassRegistry::init($this->model);
-		$Model->Behaviors->disable('Permissionable');
-		$data = $this->getData();
-		foreach ($data as $item) {
-			$Model->create();
-			if (!$m = $Model->save($item)) {
-				pr($Model->validationErrors);
-			}
-		}
-	}
-	
 	protected function getData() {
 		// Passbolt main Use case
 		$c[] = array('Category'=>array(

@@ -1,11 +1,18 @@
 language: php
 
+addons:
+  apt:
+    packages:
+    - libgpgme11-dev
+    - php5-memcached
+    - php5-common
+    - php5-curl
+    - php5-mcrypt
+    - gnupg2
+
 php:
-  - 5.3
-  - 5.4
   - 5.5
   - 5.6
-  - 7.0
 
 env:
   - DB=mysql
@@ -15,116 +22,56 @@ services:
 
 matrix:
   fast_finish: true
-  include:
-    - php: 5.4
-      env: DB=pgsql
-
-    - php: 5.4
-      env: DB=sqlite
-
-    - php: 5.4
-      env: PHPCS=1
-
 
 before_script:
-  - sh -c "composer global require 'phpunit/phpunit=3.7.33'"
-  - sh -c "ln -s ~/.composer/vendor/phpunit/phpunit/PHPUnit ./vendors/PHPUnit"
-  - sudo locale-gen de_DE
-  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
-  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test2;'; fi"
-  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test3;'; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE DATABASE cakephp_test;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE SCHEMA test2;' -U postgres -d cakephp_test; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE SCHEMA test3;' -U postgres -d cakephp_test; fi"
+  - wget http://getcomposer.org/composer.phar
+  - php composer.phar install --dev --no-interaction
+  - if [ $DB = 'mysql' ]; then sudo apt-get -y install mysql-server; fi
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE passbolt;'; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE passbolt_test;'; fi"
   - chmod -R 777 ./app/tmp
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.3" ]] ; then pecl install timezonedb ; fi
-  - sh -c "if [ '$PHPCS' = '1' ]; then composer global require 'cakephp/cakephp-codesniffer:1.*'; fi"
-  - sh -c "if [ '$PHPCS' = '1' ]; then ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/cakephp/cakephp-codesniffer; fi"
+  - echo yes | pecl install gnupg
   - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - phpenv rehash
   - set +H
   - echo "<?php
     class DATABASE_CONFIG {
-    private \$identities = array(
-      'mysql' => array(
+      public \$default = array(
         'datasource' => 'Database/Mysql',
-        'host' => '0.0.0.0',
-        'login' => 'travis'
-      ),
-      'pgsql' => array(
-        'datasource' => 'Database/Postgres',
+        'database' => 'passbolt',
         'host' => '127.0.0.1',
-        'login' => 'postgres',
-        'database' => 'cakephp_test',
-        'schema' => array(
-          'default' => 'public',
-          'test' => 'public',
-          'test2' => 'test2',
-          'test_database_three' => 'test3'
-        )
-      ),
-      'sqlite' => array(
-        'datasource' => 'Database/Sqlite',
-        'database' => array(
-          'default' => ':memory:',
-          'test' => ':memory:',
-          'test2' => '/tmp/cakephp_test2.db',
-          'test_database_three' => '/tmp/cakephp_test3.db'
-        ),
-      )
-    );
-    public \$default = array(
-      'persistent' => false,
-      'host' => '',
-      'login' => '',
-      'password' => '',
-      'database' => 'cakephp_test',
-      'prefix' => ''
-    );
-    public \$test = array(
-      'persistent' => false,
-      'host' => '',
-      'login' => '',
-      'password' => '',
-      'database' => 'cakephp_test',
-      'prefix' => ''
-    );
-    public \$test2 = array(
-      'persistent' => false,
-      'host' => '',
-      'login' => '',
-      'password' => '',
-      'database' => 'cakephp_test2',
-      'prefix' => ''
-    );
-    public \$test_database_three = array(
-      'persistent' => false,
-      'host' => '',
-      'login' => '',
-      'password' => '',
-      'database' => 'cakephp_test3',
-      'prefix' => ''
-    );
-    public function __construct() {
-      \$db = 'mysql';
-      if (!empty(\$_SERVER['DB'])) {
-        \$db = \$_SERVER['DB'];
-      }
-      foreach (array('default', 'test', 'test2', 'test_database_three') as \$source) {
-        \$config = array_merge(\$this->{\$source}, \$this->identities[\$db]);
-        if (is_array(\$config['database'])) {
-          \$config['database'] = \$config['database'][\$source];
-        }
-        if (!empty(\$config['schema']) && is_array(\$config['schema'])) {
-          \$config['schema'] = \$config['schema'][\$source];
-        }
-        \$this->{\$source} = \$config;
-      }
-    }
+        'login' => 'travis',
+        'password' => '',
+        'persistent' => false,
+      );
+      public \$test = array(
+        'datasource' => 'Database/Mysql',
+        'database' => 'passbolt_test',
+        'host' => '127.0.0.1',
+        'login' => 'travis',
+        'password' => '',
+        'persistent' => false,
+      );
     }" > app/Config/database.php
+  - cp app/Config/core.php.default app/Config/core.php
+  - cp app/Config/app.php.default app/Config/app.php
+  - cp app/Config/email.php.default app/Config/email.php
+  - sed -i "s/('debug',\s0)/('debug', 2)/" ./app/Config/core.php
+  - sed -i "s/DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi/DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgbC9mi/" ./app/Config/core.php
+  - sed -i "s/76859309657453542496749683645/76859309357453542496749683645/" ./app/Config/core.php
+  - sed -i "s/\/\/Configure::write('App.fullBaseUrl',\s'http:\/\/example.com');/Configure::write('App.fullBaseUrl', 'http:\/\/127.0.0.1');/" ./app/Config/core.php
+  - sed -i "s/\/\/date_default_timezone_set('UTC');/date_default_timezone_set('UTC');/" ./app/Config/core.php
+  - sed -i "s/\/home\/www-data\/.gnupg/\/home\/travis\/.gnupg/" ./app/Config/app.php
+  - sed -i "s/'App.force_ssl'\s=>\strue/'App.force_ssl' => false/" ./app/Config/app.php
+  - sed -i "s/'active'\s=>\sfalse,/'active' => true,/" ./app/Config/app.php
+
 script:
-  - sh -c "if [ '$PHPCS' != '1' ]; then ./lib/Cake/Console/cake test core AllTests --stderr; fi"
-  - sh -c "if [ '$PHPCS' = '1' ]; then ~/.composer/vendor/bin/phpcs -p --extensions=php --standard=CakePHP ./lib/Cake; fi;"
+  - mkdir -p build/logs
+  - app/Console/cake test app All --stderr --coverage-clover build/logs/clover.xml --configuration=app/Test/phpunit.xml
+
+after_script:
+  - php Vendor/bin/coveralls -v
 
 notifications:
   email: false

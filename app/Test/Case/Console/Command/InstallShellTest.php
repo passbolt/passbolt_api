@@ -38,6 +38,7 @@ class InstallShellTest extends CakeTestCase {
 		);
 		$this->Shell->params['no-admin'] = true;
 		$this->Shell->params['quiet'] = true;
+		$this->Shell->params['connection'] = 'test';
 	}
 
 /**

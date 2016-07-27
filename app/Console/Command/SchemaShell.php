@@ -83,6 +83,7 @@ class SchemaShell extends AppShell {
 		if (!empty($this->params['connection'])) {
 			$connection = $this->params['connection'];
 		}
+
 		if (!empty($this->params['plugin'])) {
 			$plugin = $this->params['plugin'];
 			if (empty($name)) {
