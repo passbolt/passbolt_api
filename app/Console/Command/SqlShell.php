@@ -114,10 +114,13 @@ class SqlShell extends AppShell {
 			return false;
 		}
 
-		// Build the dump command
-		$cmd = 'mysqldump -h ' . $config['host'] . ' -u ' . $config['login'] . ' -p' . $config['password'] . ' ' . $config['database'] . ' > ' . $this->file;
+		// Build the dump command.
+		$cmd = 'mysqldump -h ' . $config['host'] . ' -u ' . $config['login'];
+		if (!empty($config['password'])) {
+			$cmd .= ' -p' . $config['password'];
+		}
+		$cmd .= ' ' . $config['database'] . ' > ' . $this->file;
 
-		//pr($cmd);
 		exec($cmd, $output, $status);
 		if ($status == 2) {
 			$this->out(' Error: Something went wrong!');
