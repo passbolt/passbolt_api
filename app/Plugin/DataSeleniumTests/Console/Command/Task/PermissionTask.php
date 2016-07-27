@@ -172,7 +172,9 @@ class PermissionTask extends ModelTask {
 					'aco_foreign_key' => $resourceID,
 					'aro' => 'User',
 					'aro_foreign_key' => $userID,
-					'type' => $permission
+					'type' => $permission,
+					'created_by' => Common::uuid('user.id.admin'),
+					'modified_by' => Common::uuid('user.id.admin')
 				));
 			}
 		}

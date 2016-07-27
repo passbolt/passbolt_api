@@ -202,14 +202,24 @@ class User extends AppModel {
 			return false;
 		}
 		$role = $this->Role->findById($check['role_id']);
+
+		// Role is in DB and is not guest
 		if (empty($role)) {
 			return false;
 		}
-		if (!in_array($role['Role']['name'], [Role::ADMIN, Role::USER])) {
-			return false;
+		if (in_array($role['Role']['name'], [Role::USER, Role::ADMIN, Role::ROOT])) {
+			return true;
 		}
 
-		return true;
+		// there can be only one guest user
+		if($role['Role']['name'] === Role::GUEST) {
+			$count = $this->find('count', [ 'conditions' => ['role_id' => $check['role_id']]]);
+			if ($count === 0) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 /**

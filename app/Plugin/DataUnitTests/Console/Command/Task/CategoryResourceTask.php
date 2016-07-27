@@ -20,7 +20,8 @@ class CategoryResourceTask extends ModelTask {
 		$rc[] = array('CategoryResource'=>array(
 			'id' => '50d99ef8-3fd4-4e62-8159-1b63d7a10fce',
 			'category_id' => Common::uuid('category.id.utest1'),
-			'resource_id' => Common::uuid('resource.id.utest1-pwd1')
+			'resource_id' => Common::uuid('resource.id.utest1-pwd1'),
+			'created_by' => Common::uuid('user.id.anonymous')
 		));
 		$rc[] = array('CategoryResource'=>array(
 			'id' => '50d77ff8-3fd4-4e62-8159-1b63d7a10fce',

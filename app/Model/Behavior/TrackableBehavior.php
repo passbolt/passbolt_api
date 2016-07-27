@@ -19,11 +19,14 @@ class TrackableBehavior extends ModelBehavior {
  * @see Model::save()
  */
 	public function beforeValidate(Model $model, $options = []) {
-		if (empty($model->data[$model->alias]['id'])) {
-			$model->data[$model->alias]['created_by'] = User::get('id');
+		if (!isset($model->data[$model->alias]['created_by'])) {
+			if (empty($model->data[$model->alias]['id'])) {
+				$model->data[$model->alias]['created_by'] = User::get('id');
+			}
 		}
-		$model->data[$model->alias]['modified_by'] = User::get('id');
-
+		if (!isset($model->data[$model->alias]['modified_by'])) {
+			$model->data[$model->alias]['modified_by'] = User::get('id');
+		}
 		return true;
 	}
 

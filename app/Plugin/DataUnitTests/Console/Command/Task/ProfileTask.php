@@ -39,15 +39,15 @@ class ProfileTask extends ModelTask {
 		));
 
 		// One user per role
-		$c[] = array('Profile' => array(
-			'id' => Common::uuid('profile.id.guest'),
-			'user_id' => Common::uuid('user.id.guest'),
-			'gender' => 'm',
-			'date_of_birth' => '1980-12-11',
-			'title' => 'Mr',
-			'first_name' => 'Guest',
-			'last_name' => 'User'
-		));
+//		$c[] = array('Profile' => array(
+//			'id' => Common::uuid('profile.id.guest'),
+//			'user_id' => Common::uuid('user.id.guest'),
+//			'gender' => 'm',
+//			'date_of_birth' => '1980-12-11',
+//			'title' => 'Mr',
+//			'first_name' => 'Guest',
+//			'last_name' => 'User'
+//		));
 		$c[] = array('Profile' => array(
 			'id' => Common::uuid('profile.id.user'),
 			'user_id' => Common::uuid('user.id.user'),

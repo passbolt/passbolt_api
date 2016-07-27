@@ -11,27 +11,28 @@
 require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
 App::uses('Resource', 'Model');
+App::uses('User', 'Model');
 
 class ResourceTask extends ModelTask {
 
 	public $model = 'Resource';
 
+/**
+ * Execute the task
+ * Overrides ModelTask by setting the current user from created_by for permissions.created_by to match
+ *
+ * @return void
+ */
 	public function execute() {
-		$Model = ClassRegistry::init($this->model);
-		// @todo work on permissionable and save
-		$Model->Behaviors->disable('Permissionable');
-		$Model->Behaviors->disable('Trackable');
+		$User = Common::getModel('User');
+		$Model = Common::getModel($this->model);
 		$data = $this->getData();
+
 		foreach ($data as $item) {
-			$Model->create();
-			$Model->set($item);
-			if (!$Model->validates()) {
-				var_dump($Model->validationErrors);
-			}
-			$instance = $Model->save($item);
-			if (!$instance) {
-				$this->out('<error>Unable to insert ' . pr($item[$this->model]['name']) . '</error>');
-			}
+			// the 'owner' entry for permission.created_by will matching the resource.created_by
+			$user = $User->find('first', ['conditions' => ['User.id' => $item['Resource']['created_by']]]);
+			User::setActive($user);
+			$this->insertItem($item, $Model);
 		}
 	}
 

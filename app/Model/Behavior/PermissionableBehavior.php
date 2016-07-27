@@ -159,6 +159,9 @@ class PermissionableBehavior extends ModelBehavior {
 			// It will help us to retrieve permission for debugging or testing.
 			if (Configure::read('debug') > 0) {
 				$data['Permission']['id'] = Common::uuid('permission.id.' . $model->id . '-' . $userId);
+				// we need to specify created_by too since setting an ID counts as an edit in trackable behavior
+				// and created_by will then not be set
+				$data['Permission']['created_by'] = User::get('id');
 			}
 
 			$Permission->create();
@@ -166,7 +169,6 @@ class PermissionableBehavior extends ModelBehavior {
 			if (!$Permission->validates()) {
 				throw new ValidationException(__('Could not save permissions, validation failed'), $Permission->validationErrors);
 			}
-
 			$Permission->save($data);
 		}
 	}

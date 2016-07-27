@@ -5,6 +5,8 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+
+App::import('Model', 'User');
 class ModelTask extends AppShell {
 
 /**
@@ -13,28 +15,36 @@ class ModelTask extends AppShell {
  * @return void
  */
 	public function execute() {
-		$User = ClassRegistry::init('User');
-		$user = $User->findByUsername('root@passbolt.com');
-		$User->setActive($user);
-		$Model = ClassRegistry::init($this->model);
-
+		$Model = Common::getModel($this->model);
 		$data = $this->getData();
+
 		foreach ($data as $item) {
-			$Model->create();
-			$Model->set($item);
-			// Get fields to validate. (Sometimes we need exceptions).
-			$validationFields = method_exists($this, 'getValidationFields') ? ['fieldList' => $this->getValidationFields($item)] : [];
-			if (!$Model->validates($validationFields)) {
-				if (!isset($this->params['quiet']) || $this->params['quiet'] != 1) {
-					var_dump($Model->validationErrors);
-				}
-			}
-			$instance = $Model->save($item, false);
-			if (!$instance) {
-				$this->out('<error>Unable to insert ' . pr($item[$this->model]) . '</error>');
-				die;
-			}
+			$this->insertItem($item, $Model);
 		}
 	}
 
+/**
+ * Insert an item using the model save functionality
+ *
+ * @param $item array to insert
+ * @param $Model object
+ */
+	public function insertItem($item, $Model) {
+		$Model->create();
+		try {
+			if (!$Model->save($item)) {
+				$this->out('Unable to validate data for insert in ' . $Model->name);
+				$this->out(pr($Model->data));
+				$this->out(var_dump($Model->validationErrors));
+				$this->out('<error>Installation failed</error>');
+				die;
+			}
+		} catch(exception $e) {
+			$this->out('Unable to save an item for ' . $Model->name);
+			$this->out(pr($Model->data));
+			$this->out($e->getMessage());
+			$this->out('<error>Installation failed</error>');
+			die;
+		}
+	}
 }

@@ -14,34 +14,63 @@ class v1_1_0 extends CakeMigration {
  *
  * @var array $migration
  */
-	public $migration = array(
-		'up' => array(
-			'drop_field' => array(
-				'users' => array(
-					'indexes' => array(
+	public $migration = [
+		'up' => [
+			'drop_field' => [
+				'users' => [
+					'indexes' => [
 						'username'
-					)
-				)
-			)
-		),
-		'down' => array(
-			'create_field' => array(
-				'users' => array(
-					'indexes' => array(
-						'username' => array(
-							'column' => 'username',
-							'unique' => true
-						)
-					)
-				)
-			)
-		)
-	);
+					]
+				],
+				'roles' => [
+					'created_by',
+					'modified_by'
+				],
+				'profiles' => [
+					'created_by',
+					'modified_by',
+					'avatar'
+				]
+			],
+			'alter_field' => [
+				'controller_logs' => [
+					'scope' => [
+						'null' => true
+					]
+				],
+				'file_storage' => [
+					'filename' => [
+						'null' => true
+					],
+					'mime_type' => [
+						'size' => 128
+					],
+					'model' => [
+						'size' => 128
+					],
+					'path' => [
+						'null' => true
+					]
+				],
+				'profiles' => [
+					'title' => [
+						'null' => true
+					],
+					'timezone' => [
+						'null' => true
+					],
+					'locale' => [
+						'null' => true
+					]
+				]
+			]
+		]
+	];
 
 /**
  * Before migration callback
  *
- * @param string $direction Direction of migration process (up or down)
+ * @param string $direction Direction of migration process (up or down]
  * @return bool Should process continue
  */
 	public function before($direction) {
@@ -51,7 +80,7 @@ class v1_1_0 extends CakeMigration {
 /**
  * After migration callback
  *
- * @param string $direction Direction of migration process (up or down)
+ * @param string $direction Direction of migration process (up or down]
  * @return bool Should process continue
  */
 	public function after($direction) {
