@@ -352,12 +352,9 @@ class User extends AppModel {
 	public static function get($path = null) {
 		Common::getModel('Role');
 
-		// Get the user from the session of configure if CLI
-		if(Common::isCli()) {
-			$u = Configure::read(AuthComponent::$sessionKey);
-		} else {
-			$u = AuthComponent::user();
-		}
+		// Get the user from the session
+		$u = AuthComponent::user();
+
 		// otherwise use a anonymous / guest one
 		if ($u == null) {
 			$u = User::setActive(User::ANONYMOUS);
@@ -414,12 +411,8 @@ class User extends AppModel {
 
 			// Store current user data in session or config if CLI
 			if ($updateSession) {
-				if(Common::isCli()) {
-					Configure::write(AuthComponent::$sessionKey, $u);
-				} else {
-					App::import('Model', 'CakeSession');
-					CakeSession::write(AuthComponent::$sessionKey, $u);
-				}
+				App::import('Model', 'CakeSession');
+				CakeSession::write(AuthComponent::$sessionKey, $u);
 			}
 		}
 
@@ -442,9 +435,6 @@ class User extends AppModel {
 		if (CakeSession::check(AuthComponent::$sessionKey)) {
 			CakeSession::delete(AuthComponent::$sessionKey);
 			CakeSession::delete('Auth.redirect');
-		}
-		if(Configure::check(AuthComponent::$sessionKey)) {
-			Configure::delete(AuthComponent::$sessionKey);
 		}
 	}
 
