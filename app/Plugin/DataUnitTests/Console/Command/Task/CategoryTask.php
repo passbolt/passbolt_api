@@ -16,6 +16,10 @@ class CategoryTask extends ModelTask {
 
 	public $model = 'Category';
 
+	public function beforeInsert($Model) {
+		$Model->Behaviors->disable('Permissionable');
+	}
+
 	protected function getData() {
 		// Passbolt main Use case
 		$c[] = array('Category'=>array(
@@ -26,8 +30,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:39',
 			'modified' => '2012-12-24 03:34:39',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.empty'),
@@ -37,8 +41,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2014-03-18 03:34:39',
 			'modified' => '2014-03-18 03:34:39',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.administration'),
@@ -48,8 +52,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:39',
 			'modified' => '2012-12-24 03:34:39',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.accounts'),
@@ -59,8 +63,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.marketing'),
@@ -70,8 +74,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:40',
 			'modified' => '2012-12-24 03:34:40',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.human'),
@@ -81,8 +85,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:41',
 			'modified' => '2012-12-24 03:34:41',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.misc'),
@@ -92,8 +96,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:41',
 			'modified' => '2012-12-24 03:34:41',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.projects'),
@@ -103,8 +107,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.cakephp'),
@@ -114,8 +118,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.cp-project1'),
@@ -125,8 +129,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.cp-project2'),
@@ -136,8 +140,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:42',
 			'modified' => '2012-12-24 03:34:42',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.drupal'),
@@ -147,8 +151,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.d-project1'),
@@ -158,8 +162,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.cp-project3'),
@@ -169,8 +173,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:43',
 			'modified' => '2012-12-24 03:34:43',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.others'),
@@ -180,8 +184,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:44',
 			'modified' => '2012-12-24 03:34:44',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.o-project1'),
@@ -191,8 +195,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:44',
 			'modified' => '2012-12-24 03:34:44',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.d-project2'),
@@ -202,8 +206,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:44',
 			'modified' => '2012-12-24 03:34:44',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.o-project2'),
@@ -213,8 +217,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2012-12-24 03:34:45',
 			'modified' => '2012-12-24 03:34:45',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.private'),
@@ -224,8 +228,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2014-05-06 03:34:39',
 			'modified' => '2014-05-06 03:34:39',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.pv-jean_bartik'),
@@ -235,8 +239,8 @@ class CategoryTask extends ModelTask {
 			'deleted' => 0,
 			'created' => '2014-05-06 03:35:39',
 			'modified' => '2014-05-06 03:35:39',
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 
 		// Sand box unit test
@@ -246,8 +250,8 @@ class CategoryTask extends ModelTask {
 			'name' => 'utest',
 			'category_type_id' => null,
 			'deleted' => 0,
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.utest1'),
@@ -255,8 +259,8 @@ class CategoryTask extends ModelTask {
 			'name' => 'utest1',
 			'category_type_id' => null,
 			'deleted' => 0,
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$c[] = array('Category'=>array(
 			'id' => Common::uuid('category.id.utest2'),
@@ -264,8 +268,8 @@ class CategoryTask extends ModelTask {
 			'name' => 'utest2',
 			'category_type_id' => null,
 			'deleted' => 0,
-			'created_by' => Common::uuid('user.id.anonymous'),
-			'modified_by' => Common::uuid('user.id.anonymous')
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		
 		return $c;

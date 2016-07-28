@@ -75,22 +75,25 @@ class UserTest extends CakeTestCase {
 		$testcases = array(
 			''                              => false,
 			'?!#'                           => false,
+			Common::uuid('role.id.bogus')   => false,
 			Common::uuid('role.id.user')    => true,
 			Common::uuid('role.id.admin')   => true,
-			Common::uuid('role.id.anonymous') => false,
-			Common::uuid('role.id.root')    => false,
+			Common::uuid('role.id.root')    => true,
+			Common::uuid('role.id.anonymous') => false, // there can be only one anon user
 		);
 
+		$i = 0;
 		foreach ($testcases as $testcase => $result) {
 			$user = array('User' => array('role_id' => $testcase));
 			$this->User->set($user);
 			if ($result) {
 				$msg = 'validation of role with ' . $testcase . ' should validate.';
 			} else {
-				$msg = 'validation of role with ' . $testcase . ' should not validate';
+				$msg = 'validation of role (' . $i . ') with ' . $testcase . ' should not validate';
 			}
 			$msg .= ('. Error returned : ' . print_r($this->User->validationErrors, true));
 			$this->assertEquals($this->User->validates(array('fieldList' => array('role_id'))), $result, $msg);
+			$i++;
 		}
 	}
 

@@ -24,14 +24,10 @@ class ResourceTask extends ModelTask {
  * @return void
  */
 	public function execute() {
-		$User = Common::getModel('User');
-		$Model = Common::getModel($this->model);
+		$User = $this->_getModel('User');
+		$Model = $this->_getModel($this->model);
+		$this->beforeInsert($Model);
 		$data = $this->getData();
-
-		// Set Db Connection according to what is provided in params.
-		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
-			$Model->useDbConfig = $this->params['connection'];
-		}
 
 		foreach ($data as $item) {
 			// the 'owner' entry for permission.created_by will matching the resource.created_by
@@ -41,6 +37,11 @@ class ResourceTask extends ModelTask {
 		}
 	}
 
+/**
+ * Get data
+ *
+ * @return array
+ */
 	protected function getData() {
 		$r[] = ['Resource' => [
 			'id' => Common::uuid('resource.id.utest1-pwd1'),

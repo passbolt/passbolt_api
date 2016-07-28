@@ -14,12 +14,11 @@ class ProfileFixture extends CakeTestFixture {
 		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'gender' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 1, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'date_of_birth' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'title' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 16, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'title' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 16, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'first_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'last_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'avatar' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'timezone' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 64, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'locale' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 5, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'timezone' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 64, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'locale' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 5, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'indexes' => array(
@@ -41,11 +40,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Ruth',
 			'last_name' => 'Teitelbaum',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:26',
-			'modified' => '2016-07-25 21:20:26'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '04fe48d8-b2ef-3cf2-a012-3be3a550630e',
@@ -55,11 +53,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Marlyn',
 			'last_name' => 'Wescoff',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:26',
-			'modified' => '2016-07-25 21:20:26'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '10d65711-c0ef-3854-a7e8-cad27e798df0',
@@ -69,11 +66,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Jean',
 			'last_name' => 'Bartik',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '21f5dab2-7386-333e-a3f6-4f2c8fc69f42',
@@ -83,11 +79,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Kathleen',
 			'last_name' => 'Antonelli',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '22cd59b4-8244-3489-a96b-6869ad83a9f9',
@@ -97,11 +92,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Lynne',
 			'last_name' => 'Jolitz',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:26',
-			'modified' => '2016-07-25 21:20:26'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '4db7a1c2-e0af-399a-a1c0-c854bb1ee23e',
@@ -111,11 +105,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Hedy',
 			'last_name' => 'Lamarr',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '513ba7da-0a15-34d7-ad87-c726f7f479a0',
@@ -125,25 +118,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Nancy',
 			'last_name' => 'Leveson',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:26',
-			'modified' => '2016-07-25 21:20:26'
-		),
-		array(
-			'id' => '76046a4d-bd1e-3896-a35f-d1f04cffcc18',
-			'user_id' => '8a89ad9e-e1d3-30aa-a011-2818b447779c',
-			'gender' => 'm',
-			'date_of_birth' => '1980-12-11 00:00:00',
-			'title' => 'Mr',
-			'first_name' => 'Guest',
-			'last_name' => 'User',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '7c834943-e54a-35eb-a995-52743a14bab3',
@@ -153,11 +131,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Grace',
 			'last_name' => 'Hopper',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '8b2c51b6-175c-3284-a956-a87cba11ee56',
@@ -167,11 +144,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Carol',
 			'last_name' => 'Shaw',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '934c513f-7a75-3415-a537-b318eda7a561',
@@ -181,11 +157,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Sofia',
 			'last_name' => 'Kovalevskaya',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:26',
-			'modified' => '2016-07-25 21:20:26'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => '9ad3a7b1-b6a2-34b5-aa79-7c9b1bf9bc18',
@@ -195,11 +170,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Frances',
 			'last_name' => 'Allen',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'c6cad8b7-b78d-30bc-aca7-aa3576e6bdfc',
@@ -209,11 +183,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Mr',
 			'first_name' => 'Anonymous',
 			'last_name' => 'User',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'ce21824c-3137-3cbd-acbe-15bacf6bfac3',
@@ -223,11 +196,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Orna',
 			'last_name' => 'Berry',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:26',
-			'modified' => '2016-07-25 21:20:26'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'cf4e8613-2811-3c04-a47d-d6d011721594',
@@ -237,11 +209,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Ada',
 			'last_name' => 'Lovelace',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'd34a0cc6-515f-34bb-a960-29b18036e03a',
@@ -251,11 +222,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Dame Steve',
 			'last_name' => 'Shirley',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'da270c4f-7e0a-3fcd-a551-4f6285c1bf0f',
@@ -265,11 +235,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Mr',
 			'first_name' => 'Default',
 			'last_name' => 'User',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'e0f3dafb-bc17-3c13-a982-bf43e8cf67c9',
@@ -279,11 +248,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Betty',
 			'last_name' => 'Holberton',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'f24cf31c-7156-33b7-a4c3-65ad06ec11da',
@@ -293,11 +261,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Irene',
 			'last_name' => 'Greif',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'f68fbc49-4c66-37da-abf7-df995e825372',
@@ -307,11 +274,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Mr',
 			'first_name' => 'Root',
 			'last_name' => 'User',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'fc7f0002-f379-30f3-a680-bb8de2f0fa09',
@@ -321,11 +287,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Ms',
 			'first_name' => 'Edith',
 			'last_name' => 'Clarke',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 		array(
 			'id' => 'fd3e940e-5d9b-3efc-aeb4-f027a1a6ad37',
@@ -335,11 +300,10 @@ class ProfileFixture extends CakeTestFixture {
 			'title' => 'Mr',
 			'first_name' => 'Admin',
 			'last_name' => 'User',
-			'avatar' => '',
-			'timezone' => '',
-			'locale' => '',
-			'created' => '2016-07-25 21:20:25',
-			'modified' => '2016-07-25 21:20:25'
+			'timezone' => null,
+			'locale' => null,
+			'created' => '2016-07-28 17:39:06',
+			'modified' => '2016-07-28 17:39:06'
 		),
 	);
 

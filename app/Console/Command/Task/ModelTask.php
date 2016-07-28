@@ -10,20 +10,39 @@ App::import('Model', 'User');
 class ModelTask extends AppShell {
 
 /**
+ * Get Model
+ *
+ * @param string $model name
+ * @return Model $Model
+ */
+	protected function _getModel($model) {
+		$Model = Common::getModel($model);
+
+		// Set Db Connection according to what is provided in params.
+		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
+			$Model->useDbConfig = $this->params['connection'];
+		}
+		return $Model;
+	}
+
+/**
+ * Before execute callback
+ * Allow performing operations on the model such as disabling behaviors
+ *
+ * @param Model $Model
+ */
+	public function beforeInsert($Model) {
+	}
+
+/**
  * Execute the task
  *
  * @return void
  */
 	public function execute() {
-		$Model = Common::getModel($this->model);
-
-		// Set Db Connection according to what is provided in params.
-//		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
-//			$Model->useDbConfig = $this->params['connection'];
-//		}
-
+		$Model = $this->_getModel($this->model);
+		$this->beforeInsert($Model);
 		$data = $this->getData();
-
 		foreach ($data as $item) {
 			$this->insertItem($item, $Model);
 		}

@@ -70,7 +70,7 @@ class SecretTask extends ModelTask {
         $GpgkeyTask = $this->Tasks->load('Data.Gpgkey');
 	    $GpgkeyTask->params = $this->params;
         $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($userId);
-        $Gpgkey = Common::getModel('Gpgkey');
+        $Gpgkey = $this->_getModel('Gpgkey');
         $key = $Gpgkey->find("first", array('conditions' => array(
             'Gpgkey.user_id' => $userId,
             'Gpgkey.deleted' => 0
@@ -113,8 +113,8 @@ class SecretTask extends ModelTask {
      * @return array
      */
     protected function getData() {
-        $Resource = Common::getModel('Resource');
-        $User = Common::getModel('User');
+        $Resource = $this->_getModel('Resource');
+        $User = $this->_getModel('User');
         $rs = $Resource->find('all');
         $us = $User->find('all');
 

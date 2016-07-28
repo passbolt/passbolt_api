@@ -56,4 +56,10 @@ class Common extends Object {
 			$str);
 	}
 
+/**
+ * Return true if execution context is CLI
+ */
+	public static function isCli() {
+		return (php_sapi_name() === "cli");
+	}
 }

@@ -17,7 +17,7 @@ class AuthenticationLogTask extends ModelTask {
 	public $model = 'AuthenticationLog';
 
 	protected function getData() {
-		$User = ClassRegistry::init('User');
+		$User = $this->_getModel('User');
 		$users = array();
 		$users['test'] = $User->findByUsername('user@passbolt.com');
 		

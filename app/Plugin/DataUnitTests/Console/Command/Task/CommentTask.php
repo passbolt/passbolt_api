@@ -18,7 +18,7 @@ class CommentTask extends ModelTask {
 	public $model = 'Comment';
 	
 	protected function getData() {
-		$this->Resource = ClassRegistry::init('Resource');
+		$this->Resource = $this->_getModel('Resource');
 
 		$c[] = array('Comment'=>array(
 			'id' => Common::uuid('comment.id.salesforce-account-1'),

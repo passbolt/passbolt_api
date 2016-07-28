@@ -24,8 +24,9 @@ class ResourceTask extends ModelTask {
  * @return void
  */
 	public function execute() {
-		$User = Common::getModel('User');
-		$Model = Common::getModel($this->model);
+		$User = $this->_getModel('User');
+		$Model = $this->_getModel($this->model);
+		$this->beforeInsert($Model);
 		$data = $this->getData();
 
 		foreach ($data as $item) {

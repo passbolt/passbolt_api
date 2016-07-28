@@ -16,9 +16,23 @@ class ItemTagTask extends ModelTask {
 
 	public $model = 'ItemTag';
 
+/**
+ * BeforeExecute
+ *
+ * @param Model $Model
+ */
+	public function beforeInsert($Model) {
+		$Model->Resource->Behaviors->disable('Permissionable');
+	}
+
+/**
+ * Get data
+ *
+ * @return array
+ */
 	protected function getData() {
-		$this->Resource = ClassRegistry::init('Resource');
-		$this->Tag = ClassRegistry::init('Tag');
+		$this->Resource = $this->_getModel('Resource');
+		$this->Tag = $this->_getModel('Tag');
 
 		$rts[] = array('ItemTag' => array(
 			'id' => Common::uuid('item_tag.id.banking-bank-password'),

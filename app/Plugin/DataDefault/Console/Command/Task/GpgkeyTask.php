@@ -22,7 +22,7 @@ class GpgkeyTask extends ModelTask {
  * @return string
  */
 	public function getGpgkeyPath($userId) {
-		$User = Common::getModel('User');
+		$User = $this->_getModel('User');
 		$u = $User->findById($userId);
 		$prefix = $u['User']['username'];
 		$uprefix = explode('@', $prefix);
@@ -56,7 +56,7 @@ class GpgkeyTask extends ModelTask {
  * @throws Exception
  */
 	public function getData() {
-		$User = Common::getModel('User');
+		$User = $this->_getModel('User');
 		$us = $User->find('all', ['conditions' => ['role_id <>' => Common::uuid('role.id.anonymous')]]);
 		$Gpg = new \Passbolt\Gpg();
 		$k = array();

@@ -18,8 +18,13 @@ class AvatarTask extends ModelTask {
 
 	public $model = 'Avatar';
 
+/**
+ * Execute
+ */
 	public function execute() {
-		$User = ClassRegistry::init('User');
+		$User = $this->_getModel('User');
+		$this->beforeInsert($User);
+
 		// Retrieve the users.
 		$data = array();
 		$o = $User->getFindOptions('User::index', 'admin', $data);

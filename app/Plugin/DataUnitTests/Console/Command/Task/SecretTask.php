@@ -66,10 +66,10 @@ class SecretTask extends ModelTask {
  * @return string $encrypted encrypted password
  */
 	protected function encryptPassword($password, $userId) {
-		$GpgkeyTask = $this->Tasks->load('Data.Gpgkey');
+		//$GpgkeyTask = $this->Tasks->load('Data.Gpgkey');
 		//$gpgkeyPath = $GpgkeyTask->getGpgkeyPath($userId);
 
-		$Gpgkey = Common::getModel('Gpgkey');
+		$Gpgkey = $this->_getModel('Gpgkey');
 		$key = $Gpgkey->find("first", array('conditions' => array(
 			'Gpgkey.user_id' => $userId,
 			'Gpgkey.deleted' => 0
@@ -104,8 +104,8 @@ class SecretTask extends ModelTask {
  * @return array
  */
 	protected function getData() {
-		$Resource = Common::getModel('Resource');
-		$User = Common::getModel('User');
+		$Resource = $this->_getModel('Resource');
+		$User = $this->_getModel('User');
 		$rs = $Resource->find('all');
 		$us = $User->find('all');
 
@@ -116,9 +116,10 @@ class SecretTask extends ModelTask {
 			$password = $this->getDummyPassword();
 			foreach ($us as $u) {
 				$isAuthorized = $Resource->isAuthorized($r['Resource']['id'], PermissionType::READ, $u['User']['id']);
+
 				if ($isAuthorized) {
 					$passwordEncrypted = $this->encryptPassword($password, $u['User']['id']);
-					$s[] = array('Secret'=>array(
+					$s[] = array('Secret' => array(
 						'id' => Common::uuid(),
 						'user_id' => $u['User']['id'],
 						'resource_id' => $r['Resource']['id'],
