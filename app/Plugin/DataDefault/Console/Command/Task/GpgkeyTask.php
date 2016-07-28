@@ -4,8 +4,6 @@
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataDefault.Console.Command.Task.GpgkeyTask
- * @since        version 2.12.11
  */
 
 require_once(APP . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
@@ -17,13 +15,12 @@ class GpgkeyTask extends ModelTask {
 
 	public $model = 'Gpgkey';
 
-	/**
-	 * Get path of the key for the given user.
-	 *
-	 * @param $userId
-	 *
-	 * @return string
-	 */
+/**
+ * Get path of the key for the given user.
+ *
+ * @param $userId
+ * @return string
+ */
 	public function getGpgkeyPath($userId) {
 		$User = Common::getModel('User');
 		$u = $User->findById($userId);
@@ -34,37 +31,40 @@ class GpgkeyTask extends ModelTask {
 			$keyFileName = $gpgkeyPath . $uprefix[0] . '_public.key';
 		} else {
 			$keyFileName = $gpgkeyPath . 'passbolt_dummy_key.asc';
-			$msg = 'could not find key' . $gpgkeyPath . $uprefix[0] . '_public.key' . ' for ' . $u['User']['username'] . ' using dummy one.';
-			$this->out($msg);
+			$this->out('Warning: could not find key ' . $uprefix[0] . '_public.key' . ' for ' . $u['User']['username']);
+			$this->out('         at path ' . $gpgkeyPath);
+			$this->out('         using ' . $keyFileName . ' instead.');
 		}
 		return $keyFileName;
 	}
 
-	/**
-	 * Get the public key of a user.
-	 *
-	 * @param $userId
-	 *
-	 * @return string
-	 */
+/**
+ * Get the public key of a user.
+ *
+ * @param $userId
+ * @return string
+ */
 	public function getUserKey($userId) {
 		$key = file_get_contents($this->getGpgkeyPath($userId));
 		return $key;
 	}
 
+/**
+ * Get the Gpgkey data
+ *
+ * @return array
+ * @throws Exception
+ */
 	public function getData() {
 		$User = Common::getModel('User');
 		$us = $User->find('all', ['conditions' => ['role_id <>' => Common::uuid('role.id.anonymous')]]);
 		$Gpg = new \Passbolt\Gpg();
-
-		$Model = ClassRegistry::init($this->model);
-
 		$k = array();
 
 		foreach($us as $u) {
 			$keyRaw = $this->getUserKey($u['User']['id']);
 			$info = $Gpg->getKeyInfo($keyRaw);
-			$key = array(
+			$k[] = array(
 				'Gpgkey'=> array(
 					'id' => Common::uuid(),
 					'user_id' => $u['User']['id'],
@@ -82,7 +82,6 @@ class GpgkeyTask extends ModelTask {
 					'modified_by' => $u['User']['id'],
 				)
 			);
-			$k[] = $key;
 		}
 		return $k;
 	}

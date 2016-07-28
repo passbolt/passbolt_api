@@ -18,9 +18,9 @@ class ModelTask extends AppShell {
 		$Model = Common::getModel($this->model);
 
 		// Set Db Connection according to what is provided in params.
-		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
-			$Model->useDbConfig = $this->params['connection'];
-		}
+//		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
+//			$Model->useDbConfig = $this->params['connection'];
+//		}
 
 		$data = $this->getData();
 

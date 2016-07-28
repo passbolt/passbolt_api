@@ -52,7 +52,6 @@ class SecretTask extends ModelTask {
 			"enova",
 			"kevisthebest",
 		);
-		$password = $passwords[$i];
 		$i++;
 		if ($i > sizeof($passwords) - 1) {
 			$i = 0;
@@ -60,35 +59,50 @@ class SecretTask extends ModelTask {
 		return $passwords[$i];
 	}
 
-	/**
-	 * Encrypt a password with the user public key.
-	 * @param $password
-	 * @param $userId
-	 * @return string $encrypted encrypted password
-	 */
+/**
+ * Encrypt a password with the user public key.
+ * @param $password
+ * @param $userId
+ * @return string $encrypted encrypted password
+ */
 	protected function encryptPassword($password, $userId) {
 		$GpgkeyTask = $this->Tasks->load('Data.Gpgkey');
-		$gpgkeyPath = $GpgkeyTask->getGpgkeyPath($userId);
+		//$gpgkeyPath = $GpgkeyTask->getGpgkeyPath($userId);
+
 		$Gpgkey = Common::getModel('Gpgkey');
 		$key = $Gpgkey->find("first", array('conditions' => array(
-				'Gpgkey.user_id' => $userId,
-				'Gpgkey.deleted' => 0
-			)));
+			'Gpgkey.user_id' => $userId,
+			'Gpgkey.deleted' => 0
+		)));
 
-		$res = gnupg_init();
-		gnupg_seterrormode($res,GNUPG_ERROR_WARNING);
-		gnupg_import($res, $key['Gpgkey']['key']);
-		gnupg_addencryptkey($res , $key['Gpgkey']['fingerprint']);
+		if (!isset($key['Gpgkey'])) {
+			$this->out('Could not find GPG key for user ' . $userId);
+			$this->out('<error>Installation failed</error>');
+			die;
+		}
 
-		$encrypted = gnupg_encrypt ($res , $password);
+		try {
+			$res = gnupg_init();
+			gnupg_seterrormode($res,GNUPG_ERROR_WARNING);
+			gnupg_import($res, $key['Gpgkey']['key']);
+			gnupg_addencryptkey($res , $key['Gpgkey']['fingerprint']);
+		} catch(Exception $e) {
+			$this->out('Could not import GPG key:');
+			$this->out(pr($key));
+			$this->out('<error>Installation failed</error>');
+			die;
+		}
+
+		$encrypted = gnupg_encrypt($res , $password);
 
 		return $encrypted;
 	}
 
-	/**
-	 * Get all Secret data.
-	 * @return array
-	 */
+/**
+ * Get all Secret data.
+ *
+ * @return array
+ */
 	protected function getData() {
 		$Resource = Common::getModel('Resource');
 		$User = Common::getModel('User');
