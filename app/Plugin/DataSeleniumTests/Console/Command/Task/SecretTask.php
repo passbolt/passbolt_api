@@ -113,14 +113,16 @@ class SecretTask extends ModelTask {
      * @return array
      */
     protected function getData() {
-        $Resource = $this->_getModel('Resource');
         $User = $this->_getModel('User');
+		$Resource = $this->_getModel('Resource');
+		$Resource->Behaviors->disable('Permissionable'); // cannot do a findAll otherwise
         $rs = $Resource->find('all');
         $us = $User->find('all');
 
         // Insertion for all users who can access to available resources.
         // We insert dummy data, same secret for everyone.
         $s = [];
+
         foreach($rs as $r) {
             $password = $this->getPassword($r['Resource']['id']);
             //echo  $r['Resource']['name'] . ':' . $password . "\n";

@@ -105,6 +105,7 @@ class SecretTask extends ModelTask {
  */
 	protected function getData() {
 		$Resource = $this->_getModel('Resource');
+		$Resource->Behaviors->disable('Permissionable'); // cannot do a findAll otherwise
 		$User = $this->_getModel('User');
 		$rs = $Resource->find('all');
 		$us = $User->find('all');

@@ -43,9 +43,12 @@ class ModelTask extends AppShell {
 		$Model = $this->_getModel($this->model);
 		$this->beforeInsert($Model);
 		$data = $this->getData();
+		$i = 0;
 		foreach ($data as $item) {
 			$this->insertItem($item, $Model);
+			$i++;
 		}
+		$this->out('Data for model ' . $this->model . ' inserted (' . $i . ')');
 	}
 
 /**
@@ -60,7 +63,7 @@ class ModelTask extends AppShell {
 			if (!$Model->save($item)) {
 				$this->out('Unable to validate data for insert in ' . $Model->name);
 				$this->out(pr($Model->data));
-				$this->out(var_dump($Model->validationErrors));
+				$this->out(pr($Model->validationErrors));
 				$this->out('<error>Installation failed</error>');
 				die;
 			}

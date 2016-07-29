@@ -149,7 +149,6 @@ class DataShell extends AppShell {
 			if (method_exists($Task, "afterExecute")) {
 				$Task->afterExecute();
 			}
-			$this->out('Data for model ' . $dataModel . ' inserted');
 		}
 	}
 

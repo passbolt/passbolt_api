@@ -29,14 +29,22 @@ class ResourceTask extends ModelTask {
 		$this->beforeInsert($Model);
 		$data = $this->getData();
 
+		$i = 0;
 		foreach ($data as $item) {
 			// the 'owner' entry for permission.created_by will matching the resource.created_by
 			$user = $User->find('first', ['conditions' => ['User.id' => $item['Resource']['created_by']]]);
 			User::setActive($user);
 			$this->insertItem($item, $Model);
+			$i++;
 		}
+		$this->out('Data for model ' . $this->model . ' inserted (' . $i . ')');
 	}
 
+/**
+ * Get data
+ *
+ * @return array
+ */
 	protected function getData() {
 		$r[] = array('Resource' => array(
 			'id' => Common::uuid('resource.id.apache'),

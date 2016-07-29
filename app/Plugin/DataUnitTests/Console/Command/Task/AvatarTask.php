@@ -31,6 +31,7 @@ class AvatarTask extends ModelTask {
 		$users = $User->find('all', $o);
 
 		// For all users, if an image has been defined insert it as profile avatar.
+		$i = 0;
 		foreach ($users as $user) {
 
 			// Check if an image exists for him.
@@ -50,7 +51,9 @@ class AvatarTask extends ModelTask {
 				if(!$User->Profile->Avatar->upload($user['Profile']['id'], $data)){
 					$this->out('Avatar ' . $path . $fileName . ' has not been uploaded');
 				}
+				$i++;
 			}
 		}
+		$this->out('Data for model ' . $this->model . ' inserted (' . $i . ')');
 	}
 }
