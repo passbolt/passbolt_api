@@ -18,6 +18,15 @@ class AuthenticationToken extends AppModel {
 	];
 
 /**
+ * Model behaviors
+ *
+ * @link http://api20.cakephp.org/class/model#
+ */
+	public $actsAs = [
+		'Trackable'
+	];
+
+/**
  * Get the validation rules upon context
  *
  * @param string $case (optional) The target validation case if any.
@@ -78,8 +87,7 @@ class AuthenticationToken extends AppModel {
 					'conditions' => [
 						'AuthenticationToken.user_id' => $data['AuthenticationToken.user_id'],
 						'AuthenticationToken.token' => $data['AuthenticationToken.token'],
-						'AuthenticationToken.active' => true,
-						'AuthenticationToken.created >= DATE_SUB(NOW(), INTERVAL ' . Configure::read('Auth.tokenExpiracy') . ' MINUTE)',
+						'AuthenticationToken.active' => 1,
 					],
 					'order' => [
 						'created' => 'DESC',
@@ -133,10 +141,12 @@ class AuthenticationToken extends AppModel {
  * @return array or null if doesn't exist.
  */
 	static public function isValid($token, $userId) {
+		// Is token in valid format
 		if (!Common::isUuid($token) || !Common::isUuid($userId)) {
 			return false;
 		}
 
+		// Does token exist?
 		$_this = Common::getModel('AuthenticationToken');
 		$data = [
 			'AuthenticationToken.user_id' => $userId,
@@ -144,8 +154,17 @@ class AuthenticationToken extends AppModel {
 		];
 		$o = self::getFindOptions('findValid', User::get('Role.name'), $data);
 		$token = $_this->find('first', $o);
+		if(empty($token)) {
+			return false;
+		}
 
-		return !empty($token);
+		// Is it expired?
+		$t1 = strtotime($token['AuthenticationToken']['created']);
+		$t0 = time() - (Configure::read('Auth.tokenExpiracy') * 60);
+		if($t0 > $t1) {
+			return false;
+		}
+		return true;
 	}
 
 /**
@@ -191,7 +210,7 @@ class AuthenticationToken extends AppModel {
 
 		$_this = Common::getModel('AuthenticationToken');
 		$authToken= $_this->findFirstByToken($token);
-		$authToken['AuthenticationToken']['active'] = false;
+		$authToken['AuthenticationToken']['active'] = 0;
 
 		if (!$_this->save($authToken)) {
 			throw new Exception(__('Could not save the token'));

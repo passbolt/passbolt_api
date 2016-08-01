@@ -509,6 +509,6 @@ class UserTest extends CakeTestCase {
 
 		// User deleted field should be set at true
 		$userA = $this->User->find('first', array('conditions' => array('username' => 'ada@passbolt.com')));
-		$this->assertEqual($userA['User']['deleted'], true);
+		$this->assertEquals(1, $userA['User']['deleted'], 'User should be marked as deleted');
 	}
 }

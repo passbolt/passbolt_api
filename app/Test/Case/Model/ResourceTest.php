@@ -287,7 +287,7 @@ class ResourceTest extends AppTestCase {
 
 		// Resource deleted field should be set at true
 		$resourceF = $this->Resource->findById($resourceId);
-		$this->assertEqual($resourceF['Resource']['deleted'], true);
+		$this->assertEqual($resourceF['Resource']['deleted'], 1);
 
 		// The resource should has been marked as soft deleted
 		$this->assertTrue($this->Resource->isSoftDeleted($resourceId));

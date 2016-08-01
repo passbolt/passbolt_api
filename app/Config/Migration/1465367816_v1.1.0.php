@@ -38,6 +38,20 @@ class v1_1_0 extends CakeMigration {
 						'null' => true
 					]
 				],
+				'email_queue' => [
+					'from_name' => [
+						'null' => true
+					],
+					'from_email' => [
+						'null' => true
+					],
+					'sent' => [
+						'default' => 0
+					],
+					'sent_tries' => [
+						'default' => 0
+					]
+				],
 				'file_storage' => [
 					'filename' => [
 						'null' => true

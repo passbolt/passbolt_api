@@ -533,7 +533,7 @@ class Resource extends AppModel {
 		// Mark the resource as deleted
 		$data['Resource'] = [
 			'id' => $id,
-			'deleted' => true
+			'deleted' => 1
 		];
 		$fields = $this->getFindFields('delete', User::get('Role.name'));
 		if (!$this->save($data, true, $fields['fields'])) {

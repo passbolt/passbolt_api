@@ -240,7 +240,7 @@ class User extends AppModel {
 		$user = $this->find('first', [
 				'conditions' => [
 					'username' => $check['username'],
-					'deleted' => false,
+					'deleted' => 0,
 				]
 			]);
 
@@ -579,7 +579,7 @@ class User extends AppModel {
 						];
 						// if user is simple user, we do not allow him to see non active users.
 						if ($role == Role::USER) {
-							$conditions['conditions']['User.active'] = true;
+							$conditions['conditions']['User.active'] = 1;
 						}
 						if (isset($data['User.id'])) {
 							$conditions['conditions']['User.id'] = $data['User.id'];
@@ -598,7 +598,7 @@ class User extends AppModel {
 						];
 						// if user is simple user, we do not allow him to see non active users.
 						if ($role == Role::USER) {
-							$conditions['conditions']['User.active'] = true;
+							$conditions['conditions']['User.active'] = 1;
 						}
 						// If filter on group.
 						if (isset($data['foreignModels']['Group.id'])) {
@@ -635,7 +635,7 @@ class User extends AppModel {
 						// If user is admin, he is also not allowed to see non active users.
 						// Nobody can share a password with a user who has not completed his setup.
 						if ($role == Role::ADMIN) {
-							$conditions['conditions']['User.active'] = true;
+							$conditions['conditions']['User.active'] = 1;
 						}
 
 						// Only return users who don't have a direct permission defined for the given aco instance
@@ -865,7 +865,7 @@ class User extends AppModel {
 		}
 
 		// By default a user is not active
-		$data['User']['active'] = false;
+		$data['User']['active'] = 0;
 
 		// Begin transaction
 		$dataSource = $this->getDataSource();
@@ -950,7 +950,7 @@ class User extends AppModel {
 		// Mark the user as deleted
 		$data['User'] = [
 			'id' => $userId,
-			'deleted' => true
+			'deleted' => 1
 		];
 		$fields = $this->getFindFields('User::softDelete', User::get('Role.name'));
 		if (!$this->save($data, true, $fields['fields'])) {

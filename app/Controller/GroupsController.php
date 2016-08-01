@@ -222,7 +222,7 @@ class GroupsController extends AppController {
 		}
 
 		$this->Group->id = $id;
-		$group['Group']['deleted'] = true;
+		$group['Group']['deleted'] = 1;
 
 		$fields = $this->Group->getFindFields('delete', User::get('Role.name'));
 		$this->Group->begin();

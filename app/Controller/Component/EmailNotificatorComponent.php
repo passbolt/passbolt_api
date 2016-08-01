@@ -361,7 +361,7 @@ class EmailNotificatorComponent extends Component {
 		$self = isset($data['self']) && $data['self'] == true;
 
 		// Check if account is created by anonymous user (command line).
-		$isCreatorAnonymous = $data['creator_id'] == Common::uuid('user.id.anonymous');
+		$isCreatorAnonymous = ($data['creator_id'] === Common::uuid('user.id.anonymous'));
 
 		// Default subject.
 		$subject = __("Welcome to passbolt, %s!", $recipient['Profile']['first_name']);

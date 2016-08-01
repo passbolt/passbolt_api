@@ -134,7 +134,7 @@ class ShareController extends AppController {
 				$exists = $this->$aroModelName->exists($aroInstanceId);
 				// If aro is a user, we make sure it is also active, and not deleted.
 				if ($exists && $aroModelName == 'User') {
-					$exists = $this->$aroModelName->find('first', ['conditions' => ['id' => $aroInstanceId, 'active' => true, 'deleted' => false]]);
+					$exists = $this->$aroModelName->find('first', ['conditions' => ['id' => $aroInstanceId, 'active' => 1, 'deleted' => 0]]);
 				}
 				if (!$exists) {
 					throw new Exception(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it',

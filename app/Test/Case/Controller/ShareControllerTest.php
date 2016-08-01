@@ -450,7 +450,7 @@ hcciUFw5
 		$rsFacebookId = Common::uuid('resource.id.facebook-account');
 
 		$this->User->id = $userId;
-		$this->User->save(['active' => false], false, ['active']);
+		$this->User->save(['active' => 0], false, ['active']);
 
 		$data = array(
 			'Permissions' => array(
@@ -614,7 +614,7 @@ hcciUFw5
 		// Make betty inactive.
 		$bettyId = Common::uuid('user.id.betty');
 		$this->User->id = $bettyId;
-		$this->User->save(['active' => false], false, ['active']);
+		$this->User->save(['active' => 0], false, ['active']);
 
 		$id = Common::uuid('resource.id.facebook-account');
 		$getOptions = array(
@@ -633,7 +633,7 @@ hcciUFw5
 		// Make betty inactive.
 		$bettyId = Common::uuid('user.id.betty');
 		$this->User->id = $bettyId;
-		$this->User->save(['active' => false], false, ['active']);
+		$this->User->save(['active' => 0], false, ['active']);
 
 		$id = Common::uuid('resource.id.facebook-account');
 		$getOptions = array(
@@ -660,12 +660,12 @@ hcciUFw5
 
 		$bettyId = Common::uuid('user.id.betty');
 		$this->User->id = $bettyId;
-		$this->User->save(['active' => false], false, ['active']);
+		$this->User->save(['active' => 0], false, ['active']);
 
 		// Make betty inactive.
 		$bettyId = Common::uuid('user.id.betty');
 		$this->User->id = $bettyId;
-		$this->User->save(['active' => false], false, ['active']);
+		$this->User->save(['active' => 0], false, ['active']);
 
 		$id = Common::uuid('resource.id.facebook-account');
 		$getOptions = array(

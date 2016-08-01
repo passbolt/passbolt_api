@@ -121,7 +121,7 @@ class AuthenticationTokenTest extends CakeTestCase {
 		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);
 		$this->assertTrue($isValid);
 
-		// Reduce the authentication token expiracy period, and test that the token is not valid.
+		// Reduce the authentication token expiracy period, and test that the token is not valid on sec in the future.
 		Configure::write('Auth.tokenExpiracy', 0.016);
 		sleep(1);
 		$isValid = $this->AuthenticationToken->isValid($token['AuthenticationToken']['token'], $user['User']['id']);

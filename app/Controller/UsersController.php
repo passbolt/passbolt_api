@@ -643,22 +643,27 @@ class UsersController extends AppController {
 			$gpgkeyDataSanitized['Gpgkey']['uid'] = $gpgkeyData['Gpgkey']['uid'];
 
 			// Set data.
+			$this->User->Gpgkey->create();
 			$this->User->Gpgkey->set($gpgkeyDataSanitized);
 
 			// Get fields.
 			$fields = $this->User->getFindFields('User::validateAccount');
 
-			// Check if the data is valid.
+			// Check if the key data is valid.
 			if (!$this->User->Gpgkey->validates(['fieldList' => [$fields['fields']]])) {
 				$dataSource->rollback();
 				return $this->Message->error(__('Could not validate gpgkey data'),
 					['body' => $this->User->Gpgkey->validationErrors]);
 			}
 
+			// Sanitize the UID info just in case
 			$gpgkeyDataSanitized['Gpgkey']['uid'] = htmlentities($gpgkeyDataSanitized['Gpgkey']['uid']);
 
+			// Set created by and modified by manually since its trackable callback doesnt work in this context
+			$gpgkeyDataSanitized['Gpgkey']['created_by'] = User::get('id');
+			$gpgkeyDataSanitized['Gpgkey']['modified_by'] = $gpgkeyDataSanitized['Gpgkey']['created_by'];
+
 			// Save the key
-			$this->User->Gpgkey->create();
 			$gpgkey = $this->User->Gpgkey->save($gpgkeyDataSanitized, false, ['fieldList' => $fields['fields']]);
 
 			// If saving the key failed
