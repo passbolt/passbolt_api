@@ -26,6 +26,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		'app.resource',
 		'app.category',
 		'app.categories_resource',
+		'app.email_queue',
 		'app.user',
 		'app.group',
 		'app.groups_user',

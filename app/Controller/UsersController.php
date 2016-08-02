@@ -362,7 +362,6 @@ class UsersController extends AppController {
 			if (!$this->User->validates(['fieldList' => [$fields['fields']]])) {
 				// Return error message, with list of invalid fields.
 				$this->Message->error(__('Could not validate User'), ['body' => $this->User->validationErrors]);
-
 				return;
 			}
 
@@ -526,53 +525,62 @@ class UsersController extends AppController {
 
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
-			return $this->Message->error(__('Invalid request method, should be PUT'));
+			$this->Message->error(__('Invalid request method, should be PUT'));
+			return;
 		}
 
 		// Check if the id is provided
 		if (!isset($id)) {
-			return $this->Message->error(__('The user id is missing'));
+			$this->Message->error(__('The user id is missing'));
+			return;
 		}
 
 		// Check if the id is valid
 		if (!Common::isUuid($id)) {
-			return $this->Message->error(__('The user id is invalid'));
+			$this->Message->error(__('The user id is invalid'));
+			return;
 		}
 
 		// Get the resource
 		$user = $this->User->findById($id);
 		if (!$user) {
-			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
+			$this->Message->error(__('The user does not exist'), ['code' => 404]);
+			return;
 		}
 
 		// Store request data in data
 		$data = $this->request->data;
 
 		if (!isset($data['AuthenticationToken'])) {
-			return $this->Message->error(__('No data were provided'));
+			$this->Message->error(__('No data were provided'));
+			return;
 		}
 
 		// Set the data for validation and save
 		if (!isset($data['AuthenticationToken']['token'])) {
-			return $this->Message->error(__('Token not provided'));
+			$this->Message->error(__('Token not provided'));
+			return;
 		}
 
 		// Check that the token exists
 		$authToken = $this->User->AuthenticationToken->findFirstByToken($data['AuthenticationToken']['token']);
 		if (empty($authToken)) {
-			return $this->Message->error(__('Invalid token'));
+			$this->Message->error(__('Invalid token'));
+			return;
 		}
 
 		// Check that token is not expired
 		$isNotExpiredToken = $this->User->AuthenticationToken->isNotExpired($data['AuthenticationToken']['token']);
 		if (!$isNotExpiredToken) {
-			return $this->Message->error(__('Expired token'));
+			$this->Message->error(__('Expired token'));
+			return;
 		}
 
 		// Check that token is valid
 		$isValidToken = $this->User->AuthenticationToken->isValid($data['AuthenticationToken']['token'], $id);
 		if (!$isValidToken) {
-			return $this->Message->error(__('Invalid token'));
+			$this->Message->error(__('Invalid token'));
+			return;
 		}
 
 		// Token is valid, we begin transaction
@@ -584,14 +592,16 @@ class UsersController extends AppController {
 		$result = $this->User->saveField('active', true, ['atomic' => false]);
 		if (!$result) {
 			$dataSource->rollback();
-			return $this->Message->error(__('Could not update user'));
+			$this->Message->error(__('Could not update user'));
+			return;
 		}
 
 		// Deactivate Token.
 		$result = AuthenticationToken::setInactive($data['AuthenticationToken']['token'], $id);
 		if (!$result) {
 			$dataSource->rollback();
-			return $this->Message->error(__('Could not update token'));
+			$this->Message->error(__('Could not update token'));
+			return;
 		}
 
 		// If Profile data are provided, we update
@@ -609,7 +619,8 @@ class UsersController extends AppController {
 			// Validate the profile data
 			if (!$this->User->Profile->validates(['fieldList' => [$fields['fields']]])) {
 				$dataSource->rollback();
-				return $this->Message->error(__('Could not validate Profile'), array('body' => $this->User->Profile->validationErrors));
+				$this->Message->error(__('Could not validate Profile'), ['body' => $this->User->Profile->validationErrors]);
+				return;
 			}
 
 			// Save/Update the profile
@@ -617,7 +628,8 @@ class UsersController extends AppController {
 			// If update failed
 			if (!$result) {
 				$dataSource->rollback();
-				return $this->Message->error(__('Could not save Profile'));
+				$this->Message->error(__('Could not save Profile'));
+				return;
 			}
 		}
 
@@ -629,7 +641,8 @@ class UsersController extends AppController {
 			$gpgkeyData = $this->User->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['key']);
 			if ($gpgkeyData == false) {
 				$dataSource->rollback();
-				return $this->Message->error(__('The key provided couldn\'t be used'));
+				$this->Message->error(__('The key provided couldn\'t be used'));
+				return;
 			}
 
 			// Set actual user id
@@ -638,8 +651,7 @@ class UsersController extends AppController {
 			// Sanitize gpg key data.
 			$gpgkeyDataSanitized = $this->HtmlPurifier->cleanRecursive($gpgkeyData, 'nohtml');
 			// UID should not be sanitized at this stage, or will not pass the validation.
-			// UID has to follow RFC format. and it is very unlikely that it can be compromised since it
-			// is extracted from the key.
+			// Due to '<' being transformed to html entities
 			$gpgkeyDataSanitized['Gpgkey']['uid'] = $gpgkeyData['Gpgkey']['uid'];
 
 			// Set data.
@@ -652,16 +664,18 @@ class UsersController extends AppController {
 			// Check if the key data is valid.
 			if (!$this->User->Gpgkey->validates(['fieldList' => [$fields['fields']]])) {
 				$dataSource->rollback();
-				return $this->Message->error(__('Could not validate gpgkey data'),
+				$this->Message->error(__('Could not validate gpgkey data'),
 					['body' => $this->User->Gpgkey->validationErrors]);
+				return;
 			}
 
-			// Sanitize the UID info just in case
+			// Sanitize the UID info
 			$gpgkeyDataSanitized['Gpgkey']['uid'] = htmlentities($gpgkeyDataSanitized['Gpgkey']['uid']);
 
-			// Set created by and modified by manually since its trackable callback doesnt work in this context
-			$gpgkeyDataSanitized['Gpgkey']['created_by'] = User::get('id');
-			$gpgkeyDataSanitized['Gpgkey']['modified_by'] = $gpgkeyDataSanitized['Gpgkey']['created_by'];
+			// Since current user is anonymous we need to set created_by and modified_by manually
+			// to match the new expected user
+			$gpgkeyDataSanitized['Gpgkey']['created_by'] = $id;
+			$gpgkeyDataSanitized['Gpgkey']['modified_by'] = $id;
 
 			// Save the key
 			$gpgkey = $this->User->Gpgkey->save($gpgkeyDataSanitized, false, ['fieldList' => $fields['fields']]);

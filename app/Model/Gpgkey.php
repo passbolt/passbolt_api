@@ -98,6 +98,16 @@ class Gpgkey extends AppModel {
 	];
 
 /**
+ * Model behaviors
+ *
+ * @link http://api20.cakephp.org/class/model#
+ */
+	public $actsAs = [
+		'Containable',
+		'Trackable'
+	];
+
+/**
  * Get the validation rules upon context
  *
  * @param string $case (optional) the target validation case if any.

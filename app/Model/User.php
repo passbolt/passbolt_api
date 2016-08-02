@@ -820,6 +820,7 @@ class User extends AppModel {
 						'User' => [
 							'role_id',
 							'active',
+							'modified_by'
 						],
 						'Profile' => [
 							'first_name',
@@ -831,7 +832,8 @@ class User extends AppModel {
 			case 'User::softDelete':
 				$fields = [
 					'fields' => [
-						'deleted'
+						'deleted',
+						'modified_by'
 					]
 				];
 				break;

@@ -176,7 +176,7 @@ class CategoriesController extends AppController {
 		}
 
 		// try to save
-		$fields = $this->Category->getFindFields("add", User::get('Role.name'));
+		$fields = $this->Category->getFindFields('add', User::get('Role.name'));
 		$this->Category->create();
 		$category = $this->Category->save($catpost, true, $fields['fields']);
 

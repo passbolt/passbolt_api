@@ -322,7 +322,7 @@ class Category extends AppModel {
 				break;
 			case 'add':
 			case 'edit':
-				$fields = ['fields' => ['name', 'parent_id', 'category_type_id']];
+				$fields = ['fields' => ['name', 'parent_id', 'category_type_id', 'created_by', 'modified_by']];
 				break;
 			default:
 				$fields = ['fields' => []];
