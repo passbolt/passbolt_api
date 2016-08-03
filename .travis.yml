@@ -63,7 +63,7 @@ before_script:
   - sed -i "s/\/\/Configure::write('App.fullBaseUrl',\s'http:\/\/example.com');/Configure::write('App.fullBaseUrl', 'http:\/\/127.0.0.1');/" ./app/Config/core.php
   - sed -i "s/\/\/date_default_timezone_set('UTC');/date_default_timezone_set('UTC');/" ./app/Config/core.php
   - sed -i "s/\/home\/www-data\/.gnupg/\/home\/travis\/.gnupg/" ./app/Config/app.php
-  - sed -i "s/'App.ssl.force'\s=>\strue/'App.ssl.force' => false/" ./app/Config/app.php
+  - sed -i "s/'force'\s=>\strue/'force' => false/" ./app/Config/app.php
   - sed -i "s/'active'\s=>\sfalse,/'active' => true,/" ./app/Config/app.php
 
 script:
