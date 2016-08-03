@@ -20,12 +20,12 @@ Cache::config('default', $commonCache);
  */
 Configure::load('version'); // Version
 Configure::load('default'); // Default config
-Configure::load('app'); // current instance config
+Configure::load('app'); // Merge current instance config
 
 /**
  * Utility classes
  */
-require_once (APP . 'Controller' . DS . 'Component' . DS . 'Common.php'); // Utility class
+require_once (APP . 'Lib' . DS . 'Common.php'); // Utility class
 require_once (APP . 'Lib' . DS . 'Error' . DS . 'exceptions.php'); // Special Exceptions classes
 require_once (APP . 'Lib' . DS . 'Status.php'); // Status constants
 

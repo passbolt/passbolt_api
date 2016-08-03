@@ -15,23 +15,31 @@ $config = [
 
 		// Do you want search engine robots to index your site
 		// Default is set to false
-		'meta.robots.index' => false,
-
+		'meta' => [
+			'robots' => [
+				'index' => false,
+			]
+		],
 		// Should the app be SSL / HTTPS only
 		// false will render your installation insecure
-		'ssl.force' => true,
-
+		'ssl' => [
+			'force' => true,
+		],
 		// Is public registration allowed
-		'registration.public' => true,
-
+		'registration' => [
+			'public' => true,
+		],
 		// Activate specific entry points for selenium testing.
 		// true will render your installation insecure
-		'selenium.active' => false,
-
+		'selenium' => [
+			'active' => false,
+		],
 		// build | options : development or production.
 		// development will load the non compiled version,
 		// production will load the compiled passbolt.js file.
-		'js.build' => 'production',
+		'js' => [
+			'build' => 'production'
+		]
 	],
 	// Analytics configuration
 	'Analytics' => [
