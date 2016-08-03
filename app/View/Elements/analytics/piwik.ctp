@@ -12,7 +12,7 @@ $trackingOn = !isset($do_not_track) || isset($do_not_track) && $do_not_track == 
 $debug = Configure::read('debug');
 if ($trackingOn && $analyticsConfigured && !$debug) :
 	$piwikUrl = Configure::read('Analytics.piwik.url');
-	?>
+?>
 <!-- Piwik Analytics -->
 <script type="text/javascript">
 	var _paq = _paq || [];
@@ -28,6 +28,4 @@ if ($trackingOn && $analyticsConfigured && !$debug) :
 </script>
 <noscript><p><img src="//<?php echo $piwikUrl ?>/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Analytics Code -->
-<?php
-endif;
-?>
+<?php endif; ?>

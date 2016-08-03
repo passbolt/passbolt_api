@@ -152,12 +152,12 @@ class HealthCheckController extends AppController {
 			$this->_checks['latestVersion'] = null;
 		}
 		$this->_checks['needMigration'] = Migration::needMigration();
-		$this->_checks['ssl'] = ($this->request->is('ssl') && configure::read('app.force_ssl'));
+		$this->_checks['ssl'] = ($this->request->is('ssl') && configure::read('app.ssl.force'));
 		$this->_checks['gpg'] = (class_exists('gnupg'));
 		$this->_checks['gpgKeyDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
 		$this->_checks['gpgKey'] = (Configure::read('GPG.serverKey.fingerprint') != null);
 		$this->_checks['selenium'] = Configure::read('App.selenium.active');
-		$this->_checks['registration'] = !Configure::read('Registration.public');
+		$this->_checks['registration'] = !Configure::read('App.registration.public');
 		$this->_checks['jsProd'] = (Configure::read('App.js.build') == 'production');
 	}
 

@@ -27,7 +27,7 @@ class UsersController extends AppController {
 			'recover',
 			'recover_thankyou',
 		];
-		if (Configure::read('Registration.public')) {
+		if (Configure::read('App.registration.public')) {
 			$allow[] = 'register';
 			$allow[] = 'register_thankyou';
 		}

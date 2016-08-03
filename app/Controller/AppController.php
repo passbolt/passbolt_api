@@ -113,7 +113,7 @@ class AppController extends Controller {
 
 /**
  * Force ssl redirection.
- * Will only work if debug is set to zero or selenium is set to active, and force_ssl is true.
+ * Will only work if debug is set to zero or selenium is set to active, and ssl.force is true.
  *
  * @access public
  * @return void
@@ -123,10 +123,10 @@ class AppController extends Controller {
 		if (!$this->request->is('ssl')) {
 			// If debug mode is off, or selenium is active and request is not made on seleniumtests.
 			// (We dont want to forcessl for selenium tests entry point).
-			// And force_ssl is on.
+			// And ssl.force is on.
 			if ((Configure::read('debug') == 0 ||
 					(Configure::read('App.selenium.active') == true && $this->request->controller != 'seleniumTests'))
-				&& Configure::read('App.force_ssl') == true) {
+				&& Configure::read('App.ssl.force') == true) {
 				$this->redirect('https://' . env('SERVER_NAME') . $this->here, "301");
 			}
 		}

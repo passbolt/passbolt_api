@@ -10,7 +10,7 @@
 		'home' => array( 'url' => Router::url('/'), 'class' => 'left'),
 		'login' => array( 'url' => Router::url('/login'), 'class' => 'right' )
 	);
-	if (Configure::read('Registration.public')) {
+	if (Configure::read('App.registration.public')) {
 		$menu['register'] = array( 'url' => Router::url('/register'), 'class' => 'right' );
 	}
 ?>

@@ -12,7 +12,7 @@
     <meta charset="utf-8">
 <?php echo $this->element('asciiart'); ?>
     <title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
-    <meta name="description" content="<?php echo Configure::read('punchline'); ?>">
+    <meta name="description" content="<?php echo Configure::read('App.punchline'); ?>">
     <meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
     <meta name="viewport" content="width=device-width">
 </head>

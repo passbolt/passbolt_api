@@ -7,7 +7,7 @@
  */
 	$this->assign('title',	__('Login'));
 	$pageClasses = 'login';
-	if (Configure::read('Registration.public') === true) {
+	if (Configure::read('App.registration.public') === true) {
 		$pageClasses .= ' public-registration';
 	}
 	$this->assign('page_classes', $pageClasses);

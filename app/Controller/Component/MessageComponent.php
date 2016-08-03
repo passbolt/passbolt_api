@@ -239,9 +239,7 @@ class MessageComponent extends Component {
 		$this->messages[] = $response;
 
 		// Log if needed
-		if (Configure::read('Log.' . $level) && ($level != Status::ERROR)) {
-			ControllerLog::write($level, $this->controller->request, $message, '');
-		}
+		ControllerLog::write($level, $this->controller->request, $message, '');
 
 		// Need some directions?
 		if (isset($options['redirect'])) {

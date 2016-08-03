@@ -25,7 +25,6 @@ class ValidationRulesController extends AppController {
 			&& isset($settings['shared'])
 			&& in_array($model, $settings['shared'])
 		) {
-
 			App::import('Model', $model);
 			$instance = new $model();
 			$rules = $instance->getValidationRules($case);

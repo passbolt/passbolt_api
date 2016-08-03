@@ -7,136 +7,54 @@
  */
 $config = [
 	// General App Details
-	'App.name' => 'Passbolt',
-	'punchline' => 'Open source password manager for teams',
-	'copyright' => '© 2016 Bolt Softwares Pvt Ltd',
-	'App.title' => '%s | Passbolt', // %s = title_for_layout
-	'App.force_ssl' => true,
-	'App.meta.robots.index' => false,
-	// Activate specific entry points for selenium testing.
-	'App.selenium' => [
-		'active' => false,
-	],
-	// Javascript
-	'App.js' => [
+	'App' => [
+		// Do you want search engine robots to index your site
+		// Default is set to false
+		'meta.robots.index' => false,
+
+		// Should the app be SSL / HTTPS only
+		// false will render your installation insecure
+		'ssl.force' => true,
+
+		// Is public registration allowed
+		'registration.public' => true,
+
+		// Activate specific entry points for selenium testing.
+		// true will render your installation insecure
+		'selenium.active' => false,
+
 		// build | options : development or production.
 		// development will load the non compiled version,
 		// production will load the compiled passbolt.js file.
-		'build' => 'production',
+		'js.build' => 'production',
 	],
-	// Internationalization
-	'i18n' => [
-		'locale' => 'en-EN',
-		'language' => 'en',
-		'timezone' => 'GTM+1',
-		'dictionary' => 'jsDictionary', // default dictionary file name
-	],
-	'Registration' => [
-		'public' => true,
-	],
-	// Authentication & Authorisation
-	'Auth' => [
-		'className' => 'PassboltAuth',
-		'HashType' => 'blowfish',
-		// The number of minutes the authentication token lives for.
-		'tokenExpiracy' => 4320,
-		'logoutRedirect' => [
-			'controller' => 'users',
-			'action' => 'login',
-		],
-		'loginRedirect' => [
-			'controller' => 'pages',
-			'action' => 'display',
-			'home',
-		],
-		'authenticate' => [
-//			'Form' => array(
-//				'passwordHasher' => 'Blowfish'
-//			)
-			'Gpg'
-		],
-		'throttlingStrategies' => [
-			'throttle' => [
-				1 => ['throttleTime' => '5'],
-				2 => ['throttleTime' => '15'],
-				3 => ['throttleTime' => '45'],
-				4 => ['throttleTime' => '60'],
-			],
-			'blacklist' => [
-				20 => [
-					'interval' => '60',
-					'blacklistTime' => '600',
-				],
-				50 => [
-					'interval' => '1200',
-					'blacklistTime' => '2400',
-				],
-				100 => [
-					'interval' => '3600',
-					'blacklistTime' => '7200',
-				]
-			]
-		]
-	],
+	// Analytics configuration
 	'Analytics' => [
-		'default' => 'piwik',
 		'piwik' => [
-			// Provide this url to activate tracking.
-			'url' => ''
+			// Provide an url to activate tracking.
+			// 'url' => ''
 		],
 	],
+	// GPG Configuration
 	'GPG' => [
-		'trustModel' => 'always',
+		// Tell GPG where to find the keyring
+		// Needs to be available by the user the webserver is running as
 		'env' => [
-			'setenv' => 1,
+			// you can set this to false if you want to use *nix $GNUPGHOME environment variable
+			'setenv' => true,
+			// otherwise you can set the location here
+			// typically on Centos it would be in '/usr/share/httpd/.gnupg'
 			'home' => '/home/www-data/.gnupg',
 		],
-		'testKeys' => [
-			'path' => APP . 'Plugin' . DS . 'DataUnitTests' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS,
-		],
+		// Main server key
 		'serverKey' => [
-			'id' => '573EE67E',
+			// Server private key location and fingerprint
 			'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
 			'public' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure.key',
 			'private' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure_private.key',
+
+			// PHP Gnupg module currently does not support passphrase, please leave blank
 			'passphrase' => ''
 		]
-	],
-	'Permission' => [
-		'acoModels' => ['Resource', 'Category'],
-		'aroModels' => ['User', 'Group'],
-	],
-	'Comment' => [
-		'foreignModels' => ['Resource'],
-	],
-	'Favorite' => [
-		'foreignModels' => ['Resource'],
-	],
-	'ItemTag' => [
-		'foreignModels' => ['Resource'],
-	],
-	'Validation' => [
-		'shared' => [
-			'Category',
-			'Comment',
-			'Group',
-			'Profile',
-			'Resource',
-			'Secret',
-			'Tag',
-			'User',
-		],
-	],
-	'Log' => [
-		'error' => true,
-		'success' => true,
-		'notice' => true,
-		'debug' => true,
-		'warning' => true,
-		// Log request data on errors.
-		// possible values:
-		// - 'all' will log request data for all statuses.
-		// - 'error' or true will log request data for errors only.
-		'request_data' => true
 	]
 ];
