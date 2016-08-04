@@ -46,7 +46,7 @@ class ValidationRulesController extends AppController {
 			$this->set('data', $rules);
 			$this->Message->success();
 		} else {
-			$this->Message->error(__('No validation rules defined'), ['code' => 404]);
+			throw new HttpException(__('No validation rules defined'));
 		}
 	}
 
