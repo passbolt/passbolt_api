@@ -20,7 +20,7 @@ $config = [
 		// Activate specific entry points for selenium testing.
 		// true will render your installation insecure
 		'selenium' => [
-			'active' => true,
+			'active' => false,
 		],
 		// Do you want search engine robots to index your site
 		// Default is set to false
