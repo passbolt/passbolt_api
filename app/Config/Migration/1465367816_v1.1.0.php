@@ -48,7 +48,7 @@ class v1_1_0 extends CakeMigration {
 					'sent' => [
 						'default' => 0
 					],
-					'sent_tries' => [
+					'send_tries' => [
 						'default' => 0
 					]
 				],
