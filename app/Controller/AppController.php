@@ -90,7 +90,6 @@ class AppController extends Controller {
 	public $helpers = [
 		'Html',
 		'Form',
-		'MyForm',
 		'FileStorage.Image'
 	];
 

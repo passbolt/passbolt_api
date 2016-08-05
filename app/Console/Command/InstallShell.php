@@ -88,10 +88,15 @@ class InstallShell extends AppShell {
  * @return bool
  */
 	public function main() {
-		$this->_config = Configure::read();
 
 		// init gnupg keyring
-		$this->_initGpgKeyring();
+		//try {
+			$this->initGpgKeyring();
+//		} catch(Exception $e) {
+//			$this->out($e->getMessage());
+//			$this->out('<error>Installation failed.</error>');
+//			return false;
+//		}
 
 		// try to build from cache if requested and possible
 		if (isset($this->params['quick']) && $this->params['quick'] != 'false') {
@@ -128,6 +133,7 @@ class InstallShell extends AppShell {
 		$this->out('');
 		$this->out(' Passbolt installation success! Enjoy! ☮');
 		$this->out('');
+		return true;
 	}
 
 /**
@@ -154,19 +160,26 @@ class InstallShell extends AppShell {
  * @return void
  * @throws CakeException
  */
-	protected function _initGpgKeyring() {
-		$this->_gpg = new Passbolt\Gpg();
+	public function initGpgKeyring() {
+		$gpg = new Passbolt\Gpg();
+		$config = Configure::read();
 
 		// Check that a GPG configuration id is provided
-		if (!isset($this->_config['GPG']['serverKey']['fingerprint'])
-			|| !isset($this->_config['GPG']['serverKey']['private'])
-			|| !isset($this->_config['GPG']['serverKey']['public'])
+		if (!isset($config['GPG']['serverKey']['fingerprint'])
+			|| !isset($config['GPG']['serverKey']['private'])
+			|| !isset($config['GPG']['serverKey']['public'])
 		) {
 			throw new CakeException('The GnuPG config for the server is not available or incomplete');
 		}
-		$keyid = $this->_config['GPG']['serverKey']['fingerprint'];
-		$privateKeyPath = $this->_config['GPG']['serverKey']['private'];
-		$publicKeyPath = $this->_config['GPG']['serverKey']['public'];
+		$keyid = $config['GPG']['serverKey']['fingerprint'];
+		$privateKeyPath = $config['GPG']['serverKey']['private'];
+		$publicKeyPath = $config['GPG']['serverKey']['public'];
+
+		// Check if keyring is present and writable
+		$keyring = getenv('GNUPGHOME');
+		if(!is_writable($keyring)) {
+			throw new CakeException("GPG Keyring is not available or not writable. Check: " . $keyring);
+		}
 
 		// In production don't accept default GPG server key
 		if (!Configure::read('debug')) {
@@ -182,7 +195,7 @@ class InstallShell extends AppShell {
 		$privateKeydata = file_get_contents($privateKeyPath);
 
 		// Check that the private key match the fingerprint
-		$privateKeyInfo = $this->_gpg->getKeyInfo($privateKeydata);
+		$privateKeyInfo = $gpg->getKeyInfo($privateKeydata);
 		if ($privateKeyInfo['fingerprint'] != $keyid) {
 			throw new CakeException('The private key does not match the fingerprint mentioned in the config');
 		}
@@ -194,14 +207,14 @@ class InstallShell extends AppShell {
 		$publicKeydata = file_get_contents($publicKeyPath);
 
 		// Check that the public key match the fingerprint
-		$publicKeyInfo = $this->_gpg->getKeyInfo($publicKeydata);
+		$publicKeyInfo = $gpg->getKeyInfo($publicKeydata);
 		if ($publicKeyInfo['fingerprint'] != $keyid) {
 			throw new CakeException('The public key does not match the fingerprint mentioned in the config');
 		}
 
 		// Import the private key in the GPG keyring
 		try {
-			$this->_gpg->importKeyIntoKeyring($privateKeydata);
+			$gpg->importKeyIntoKeyring($privateKeydata);
 		} catch (Exception $e) {
 			throw new CakeException('The GnuPG key for the server could not be imported');
 		}
