@@ -45,8 +45,6 @@ class GpgAuthenticate extends BaseAuthenticate {
  * @return array|false the user or false if authentication failed
  */
 	public function authenticate(CakeRequest $request, CakeResponse $response) {
-		// Log authenticate call.
-		ControllerLog::write(Status::DEBUG, $request, 'authenticate', '');
 
 		// Init gpg object and load server key
 		$this->_initKeyring();
@@ -72,6 +70,8 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// The user is asking the server to identify itself by decrypting a token
 		// that was encrypted by the client using the server public key
 		if (isset($request->data['gpg_auth']['server_verify_token'])) {
+			// Log authenticate call.
+			ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_0', '');
 			try {
 				$nonce = $this->_gpg->decrypt($request->data['gpg_auth']['server_verify_token']);
 				// check if the nonce is in valid format to avoid returning something sensitive decrypted
@@ -89,6 +89,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// We therefore send an encrypted message that must be returned next time in order to verify
 		$AuthenticationToken = Common::getModel('AuthenticationToken');
 		if (!isset($request->data['gpg_auth']['user_token_result'])) {
+			ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_1', '');
 			// set the stage
 			$this->_response->header('X-GPGAuth-Progress', 'stage1');
 
@@ -117,6 +118,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// Stage 2.
 		// Check if the token provided at stage 1 have been decrypted and is still valid
 		if (isset($request->data['gpg_auth']['user_token_result'])) {
+			ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
 			$this->_response->header('X-GPGAuth-Progress', 'stage2');
 			if (!($this->__checkNonce($request->data['gpg_auth']['user_token_result']))) {
 				return $this->__error('The user token result is not a valid UUID');
