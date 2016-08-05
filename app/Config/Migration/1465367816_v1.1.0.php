@@ -52,6 +52,13 @@ class v1_1_0 extends CakeMigration {
 						'default' => 0
 					]
 				],
+				'gpgkeys' => [
+					'key' => [
+						'type' => 'text',
+						'null' => false,
+						'default' => null
+					],
+				],
 				'file_storage' => [
 					'filename' => [
 						'null' => true
@@ -75,6 +82,15 @@ class v1_1_0 extends CakeMigration {
 					],
 					'locale' => [
 						'null' => true
+					]
+				]
+			],
+			'create_field' => [
+				'gpgkeys' => [
+					'indexes' => [
+						'fingerprint' => [
+							'column' => 'fingerprint'
+						]
 					]
 				]
 			]
