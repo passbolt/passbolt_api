@@ -20,15 +20,15 @@ $this->assign('page_classes', 'recover');
 				<h1><span>Passbolt</span></h1>
 			</div>
 			<div class="users register form">
-				<?php echo $this->MyForm->create('User');?>
+				<?php echo $this->Form->create('User');?>
 				<fieldset>
 					<legend><?php echo __('Please enter your username and password'); ?></legend>
-					<?php echo $this->MyForm->input('User.username', array('label' => __('Enter your email'), 'class' =>'required fluid')) ?>
+					<?php echo $this->Form->input('User.username', array('label' => __('Enter your email'), 'class' =>'required fluid')); ?>
 				</fieldset>
 				<div class="actions-wrapper">
 					<div class="submit"><input type="submit" class="button primary" value="<?php echo __('start recovery'); ?>"></div>
 				</div>
-				<?php echo $this->MyForm->end();?>
+				<?php echo $this->Form->end();?>
 			</div>
 		</div>
 	</div>
