@@ -98,6 +98,22 @@ class v1_1_0 extends CakeMigration {
  * @return bool Should process continue
  */
 	public function after($direction) {
+		// Make sure that Gpg uid is sanitized in the db.
+		$Gpgkey = Common::getModel('Gpgkey');
+		$gpgkeys = $Gpgkey->find('all');
+
+		foreach($gpgkeys as $gpgkey) {
+			// Encode in case of up migration
+			// Decode in cade of down migration.
+			$sanitizedUid = $direction == 'up' ?
+				htmlentities($gpgkey['Gpgkey']['uid']) :
+				html_entity_decode($gpgkey['Gpgkey']['uid']);
+
+			// Save key with new data.
+			$Gpgkey->id = $gpgkey['Gpgkey']['id'];
+			$Gpgkey->saveField('uid', $sanitizedUid);
+		}
+
 		return true;
 	}
 }
