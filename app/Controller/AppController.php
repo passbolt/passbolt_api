@@ -79,8 +79,7 @@ class AppController extends Controller {
 		'HtmlPurifier',
 		'Cookie',
 		'Auth',
-		'Message',
-		'Mailer'
+		'Message'
 	];
 
 /**
