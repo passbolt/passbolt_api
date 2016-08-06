@@ -7,13 +7,13 @@ echo "<?php";?>
  * API Documentation
  *
  * @SWG\Swagger(
- *     schemes={"http<?php if(Configure::read('App.ssl.force')) echo 's'; ?>"},
+ *     schemes={"http<?php if(Configure::read('force_ssl')) echo 's'; ?>"},
  *     host="<?php echo Router::url('/',true); ?>",
  *     basePath="/",
  *     @SWG\Info(
  *         version="<?php echo Configure::read('App.version.number'); ?>",
  *         title="<?php echo Configure::read('App.name'); ?> JSON API",
- *         description="<?php echo Configure::read('App.punchline'); ?>",
+ *         description="<?php echo Configure::read('punchline'); ?>",
  *         termsOfService="https://www.passbolt.com/terms/",
  *         @SWG\Contact(
  *             email="contact@passbolt.com"
