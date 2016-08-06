@@ -66,9 +66,9 @@ CakePlugin::load('EmailQueue');
  */
 CakePlugin::load('Migrations');
 // list of core plugins that support migrations
-Configure::write('App.migrations',[
+Configure::write('App.migrations', array(
 	'app', 'FileStorage', 'Migrations'
-]);
+));
 
 /**
  * Attach event listeners to the request lifecycle as Dispatcher Filter.

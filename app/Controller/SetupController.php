@@ -100,7 +100,7 @@ class SetupController extends AppController {
  * @throws BadRequestException
  * @throws NotFoundException
  * @return void
-	 */
+ */
 	public function recover($userId = null, $token = null) {
 		$this->layout = 'default';
 
@@ -124,7 +124,7 @@ class SetupController extends AppController {
 		if (empty($token)) {
 			throw new NotFoundException(__('Token not found'));
 		}
-		
+
 		// Retrieve the user.
 		$data = ['User.id' => $userId];
 		$o = $this->User->getFindOptions('Recovery::userInfo', Role::GUEST, $data);
@@ -136,7 +136,6 @@ class SetupController extends AppController {
 
 		$this->set('user', $user);
 
-
 		// Parse the user agent
 		$userAgent = UserAgent::parse();
 		$this->set('userAgent', $userAgent);
@@ -144,15 +143,9 @@ class SetupController extends AppController {
 
 /**
  * Complete account recovery.
- *
  * Verify all information and deactivate the token.
  *
- * TODO: logging of the operation.
- *
- * @param string $userId user uuid
- * @param string $token AuthenticationToken uuid
- * @throws BadRequestException
- * @throws NotFoundException
+ * @param string $id user uuid
  * @return void
  */
 	public function completeRecovery($id = null) {
@@ -218,7 +211,7 @@ class SetupController extends AppController {
 						'fingerprint' => strtoupper($gpgkeyData['Gpgkey']['fingerprint'])
 					],
 				]);
-			if ( empty($userKey) ) {
+			if (empty($userKey)) {
 				return $this->Message->error(__('The key provided doesn\'t belong to given user'));
 			}
 		}
@@ -231,7 +224,6 @@ class SetupController extends AppController {
 		catch (Exception $e) {
 			return $this->Message->error(__('Could not update token'));
 		}
-
 
 		// Return information in case of success.
 		$data = ['User.id' => $id];

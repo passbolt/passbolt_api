@@ -83,7 +83,7 @@ class ControllerLog extends AppModel {
 				'ip' => [
 					'required' => true,
 					'allowEmpty' => true,
-					'rule' => ['ip','both'],
+					'rule' => ['ip', 'both'],
 					'message' => __('The IP address must be in correct format')
 				]
 			],
@@ -209,7 +209,7 @@ class ControllerLog extends AppModel {
 
 		// get interesting information from request if there was an error
 		$logData = Configure::read('Log.request_data') === 'all' ||
-			($level == Status::ERROR && (Configure::read('Log.request_data') === true ||  Configure::read('Log.request_data') === 'error'));
+			($level == Status::ERROR && (Configure::read('Log.request_data') === true || Configure::read('Log.request_data') === 'error'));
 		if ($logData) {
 			$tmp['data'] = $request->data;
 			$tmp['query'] = $request->query;

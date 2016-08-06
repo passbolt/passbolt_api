@@ -13,6 +13,7 @@ class ValidationRulesController extends AppController {
  * @param string $model target model name
  * @param string $case (optional) the target case if any.
  * @return void
+ * @throws HttpException if config is missing
  */
 	public function view($model, $case = 'default') {
 		$model = ucfirst($model);

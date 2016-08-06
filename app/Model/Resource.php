@@ -519,9 +519,7 @@ class Resource extends AppModel {
  *
  * @param string $id Id of the resource to soft delete
  * @return void
- *
  * @throws Exception
- * @throws ValidationException
  */
 	public function softDelete($id) {
 		$Permission = ClassRegistry::init('Permission');

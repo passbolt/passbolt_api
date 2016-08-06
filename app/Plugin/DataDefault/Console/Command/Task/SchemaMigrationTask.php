@@ -32,7 +32,7 @@ class SchemaMigrationTask extends ModelTask {
 			'type' => 'FileStorage',
 		]];
 		$us[] = ['SchemaMigration' => [
-			'class' => 'v1_1_0',
+			'class' => 'Migration_1_1_0',
 			'type' => 'app',
 		]];
 		return $us;

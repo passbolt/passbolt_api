@@ -4,15 +4,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- PASSBOLT-1383: Cleanup cakephp config
 - PASSBOLT-1604: As a AD I should be able to see the healthcheck page when debug is set to 0
 - PASSBOLT-1124: As LU on user workspace I should be able to see the last logged in date of a user.
 - PASSBOLT-1216: As LU I should be able to sort the tableview in passwords workspace
 - PASSBOLT-1217: As LU I should be able to sort the tableview in users workspace
 
+### Fixed
+- PASSBOLT-1525: Misc unit test code coverage & phpcs cleanup
+- PASSBOLT-1383: Cleanup cakephp config & prevent future regressions like PASSBOLT-1621 with a default
+- PASSBOLT-1535: Fix mysql 5.7 schema issues and improve compatibility
+
 ## [1.0.14] - 2016-07-06
 ### Fixed
-- PASSBOLT-1535: Fixed some mysql 5.7 schema and compatibility issues
 - PASSBOLT-1616: Fixed bad merge during the previous release.
 - PASSBOLT-1599: GITHUB-10 passbolt.js requesting wrong path for config.json.
 

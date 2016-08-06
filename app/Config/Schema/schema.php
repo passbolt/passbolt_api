@@ -191,7 +191,7 @@ class AppSchema extends CakeSchema {
 		'format' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 5, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'template_vars' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'headers' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'sent' => array('type' => 'boolean', 'null' => false, 'default' =>  '0'),
+		'sent' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'locked' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'send_tries' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 2),
 		'send_at' => array('type' => 'datetime', 'null' => true, 'default' => null),

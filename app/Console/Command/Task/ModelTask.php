@@ -19,7 +19,7 @@ class ModelTask extends AppShell {
 		$Model = Common::getModel($model);
 
 		// Set Db Connection according to what is provided in params.
-		if(isset($this->params['connection']) && !empty($this->params['connection'])) {
+		if (isset($this->params['connection']) && !empty($this->params['connection'])) {
 			$Model->useDbConfig = $this->params['connection'];
 		}
 		return $Model;
@@ -27,9 +27,9 @@ class ModelTask extends AppShell {
 
 /**
  * Before execute callback
- * Allow performing operations on the model such as disabling behaviors
  *
- * @param Model $Model
+ * @param Model $Model allow performing operations on the model such as disabling behaviors
+ * @return void
  */
 	public function beforeInsert($Model) {
 	}
@@ -54,8 +54,9 @@ class ModelTask extends AppShell {
 /**
  * Insert an item using the model save functionality
  *
- * @param $item array to insert
- * @param $Model object
+ * @param array $item array to insert
+ * @param Model $Model object to insert the data with
+ * @return void
  */
 	public function insertItem($item, $Model) {
 		$Model->create();

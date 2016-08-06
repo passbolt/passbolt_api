@@ -88,15 +88,14 @@ class InstallShell extends AppShell {
  * @return bool
  */
 	public function main() {
-
 		// init gnupg keyring
-		//try {
+		try {
 			$this->initGpgKeyring();
-//		} catch(Exception $e) {
-//			$this->out($e->getMessage());
-//			$this->out('<error>Installation failed.</error>');
-//			return false;
-//		}
+		} catch(Exception $e) {
+			$this->out($e->getMessage());
+			$this->out('<error>Installation failed.</error>');
+			return false;
+		}
 
 		// try to build from cache if requested and possible
 		if (isset($this->params['quick']) && $this->params['quick'] != 'false') {
@@ -177,7 +176,7 @@ class InstallShell extends AppShell {
 
 		// Check if keyring is present and writable
 		$keyring = getenv('GNUPGHOME');
-		if(!is_writable($keyring)) {
+		if (!is_writable($keyring)) {
 			throw new CakeException("GPG Keyring is not available or not writable. Check: " . $keyring);
 		}
 
