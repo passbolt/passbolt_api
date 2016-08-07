@@ -88,6 +88,7 @@ class UsersController extends AppController {
 			}
 			// Redirect to thank you page.
 			$this->redirect('/register/thankyou');
+			return;
 		}
 	}
 
