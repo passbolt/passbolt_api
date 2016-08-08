@@ -3,12 +3,23 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.1.0]
 ### Added
-- PASSBOLT-1383: Cleanup cakephp config
-- PASSBOLT-1604: As a AD I should be able to see the healthcheck page when debug is set to 0
 - PASSBOLT-1124: As LU on user workspace I should be able to see the last logged in date of a user.
 - PASSBOLT-1216: As LU I should be able to sort the tableview in passwords workspace
-- PASSBOLT-1217: As LU I should be able to sort the tableview in users workspace
+- PASSBOLT-1217: As LU I should be able to sort the tableview in users workspace.
+- PASSBOLT-1535: Support for Mysql 5.7.
+- PASSBOLT-1633: Travis and Coveralls integration.
+- PASSBOLT-1597: Implemented schema versioning and migration tool.
+
+### Fixed
+- PASSBOLT-1604: As a AD I should be able to see the healthcheck page when debug is set to 0
+- PASSBOLT-1525: Coverage and cleanup.
+- PASSBOLT-1653: After migration, Gpgkey.uid should be sanitized in DB.
+- PASSBOLT-1634: Authentication logs are moved in each authentication stage.
+- PASSBOLT-1383: Cleanup cakephp config, and added coverage.
+- PASSBOLT-1486: After deleting a user, I should be able to recreate a user with the same username.
 
 ## [1.0.14] - 2016-07-06
 ### Fixed
@@ -118,7 +129,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.0.14...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/passbolt/passbolt/compare/v1.0.14...v1.1.0
 [1.0.14]: https://github.com/passbolt/passbolt/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/passbolt/passbolt/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/passbolt/passbolt/compare/v1.0.11...v1.0.12
