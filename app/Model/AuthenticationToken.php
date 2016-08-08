@@ -87,11 +87,11 @@ class AuthenticationToken extends AppModel {
 					'conditions' => [
 						'AuthenticationToken.user_id' => $data['AuthenticationToken.user_id'],
 						'AuthenticationToken.token' => $data['AuthenticationToken.token'],
-						'AuthenticationToken.active' => 1,
+						'AuthenticationToken.active' => 1
 					],
 					'order' => [
-						'created' => 'DESC',
-					],
+						'created' => 'DESC'
+					]
 				];
 
 				break;
@@ -101,10 +101,10 @@ class AuthenticationToken extends AppModel {
 	}
 
 /**
- * Check if a token expired.
+ * Check if a token expired
  *
- * @param string $token
- * @return boolean
+ * @param string $token UUID
+ * @return bool
  */
 	static public function isNotExpired($token) {
 		if (!Common::isUuid($token)) {
@@ -154,14 +154,14 @@ class AuthenticationToken extends AppModel {
 		];
 		$o = self::getFindOptions('findValid', User::get('Role.name'), $data);
 		$token = $_this->find('first', $o);
-		if(empty($token)) {
+		if (empty($token)) {
 			return false;
 		}
 
 		// Is it expired?
 		$t1 = strtotime($token['AuthenticationToken']['created']);
 		$t0 = time() - (Configure::read('Auth.tokenExpiracy') * 60);
-		if($t0 > $t1) {
+		if ($t0 > $t1) {
 			return false;
 		}
 		return true;
@@ -198,9 +198,7 @@ class AuthenticationToken extends AppModel {
  * Set a valid token to inactive
  *
  * @param string $token a uuid
- * @param string $userId a uuid
  * @return bool true if success
- * @throws ValidationException if token id or user id are not valid
  * @throws Exception if save failed
  */
 	static public function setInactive($token) {
@@ -209,7 +207,7 @@ class AuthenticationToken extends AppModel {
 		}
 
 		$_this = Common::getModel('AuthenticationToken');
-		$authToken= $_this->findFirstByToken($token);
+		$authToken = $_this->findFirstByToken($token);
 		$authToken['AuthenticationToken']['active'] = 0;
 
 		if (!$_this->save($authToken)) {

@@ -79,8 +79,7 @@ class AppController extends Controller {
 		'HtmlPurifier',
 		'Cookie',
 		'Auth',
-		'Message',
-		'Mailer'
+		'Message'
 	];
 
 /**
@@ -90,7 +89,6 @@ class AppController extends Controller {
 	public $helpers = [
 		'Html',
 		'Form',
-		'MyForm',
 		'FileStorage.Image'
 	];
 
@@ -228,6 +226,7 @@ class AppController extends Controller {
  * Disconnect the user if his account gets disabled during a session.
  *
  * @return void
+ * @throws InternalErrorException
  */
 	protected function _disconnectUserIfAccountDisabled() {
 		// Check if user is logged in.
@@ -244,7 +243,7 @@ class AppController extends Controller {
 				}
 			} catch(Exception $e) {
 				$msg = __('Internal Server Error');
-				if(Configure::read('debug') > 0 ) {
+				if (Configure::read('debug') > 0) {
 					$msg = __($e->getMessage());
 				}
 				throw new InternalErrorException($msg);

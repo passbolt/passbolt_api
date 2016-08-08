@@ -7,7 +7,7 @@
  *     host="http://passbolt.dev/",
  *     basePath="/",
  *     @SWG\Info(
- *         version="1.0.10",
+ *         version="1.0.14",
  *         title="Passbolt JSON API",
  *         description="Open source password manager for teams",
  *         termsOfService="https://www.passbolt.com/terms/",

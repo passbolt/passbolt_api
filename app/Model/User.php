@@ -212,7 +212,7 @@ class User extends AppModel {
 		}
 
 		// there can be only one guest user
-		if($role['Role']['name'] === Role::GUEST) {
+		if ($role['Role']['name'] === Role::GUEST) {
 			$count = $this->find('count', [ 'conditions' => ['role_id' => $check['role_id']]]);
 			if ($count === 0) {
 				return true;
@@ -306,8 +306,7 @@ class User extends AppModel {
 			if (isset($res['LastLoggedIn'])) {
 				if (isset($res['LastLoggedIn'][0]) && isset($res['LastLoggedIn'][0]['created'])) {
 					$results[$k]['User']['last_logged_in'] = $res['LastLoggedIn'][0]['created'];
-				}
-				else {
+				} else {
 					$results[$k]['User']['last_logged_in'] = null;
 				}
 				unset($results[$k]['LastLoggedIn']);

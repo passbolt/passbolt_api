@@ -88,6 +88,7 @@ class UsersController extends AppController {
 			}
 			// Redirect to thank you page.
 			$this->redirect('/register/thankyou');
+			return;
 		}
 	}
 
@@ -116,12 +117,12 @@ class UsersController extends AppController {
 		$this->layout = 'login';
 	}
 
-
-	/**
-	 * Recover an existing account page.
-	 *
-	 * @throws Exception
-	 */
+/**
+ * Recover an existing account page.
+ *
+ * @throws Exception
+ * @return void
+ */
 	public function recover() {
 		$this->layout = 'login';
 
@@ -170,11 +171,12 @@ class UsersController extends AppController {
 		}
 	}
 
-	/**
-	 * Thank you page after recovery.
-	 *
-	 * @throws Exception
-	 */
+/**
+ * Thank you page after recovery.
+ *
+ * @throws Exception
+ * @return void
+ */
 	public function recover_thankyou() {
 		$this->layout = 'login';
 	}

@@ -299,17 +299,17 @@ class EmailNotificatorComponent extends Component {
 		);
 	}
 
-	/**
-	 * Send a notification email regarding the deletion of a password.
-	 *
-	 * @param string $toUserId uuid of the recipient
-	 * @param array $data
-	 *   variables to pass to the template which should contain
-	 *     * resource_name the resource name
-	 *     * deleter_id the person who updated the password.
-	 *     * own is the notification sent to the updater
-	 * @return void
-	 */
+/**
+ * Send a notification email regarding the deletion of a password.
+ *
+ * @param string $toUserId uuid of the recipient
+ * @param array $data
+ *   variables to pass to the template which should contain
+ *     * resource_name the resource name
+ *     * deleter_id the person who updated the password.
+ *     * own is the notification sent to the updater
+ * @return void
+ */
 	public function passwordDeletedNotification($toUserId, $data) {
 		// Get recipient info.
 		$recipient = $this->User->findById($toUserId);
@@ -390,15 +390,15 @@ class EmailNotificatorComponent extends Component {
 		);
 	}
 
-	/**
-	 * Send a notification email regarding a an account recovery.
-	 *
-	 * @param uuid $toUserId user id of the recipient
-	 * @param array $data
-	 *   variables to pass to the template which should contain
-	 *     - token the token
-	 * @return void
-	 */
+/**
+ * Send a notification email regarding a an account recovery.
+ *
+ * @param uuid $toUserId user id of the recipient
+ * @param array $data
+ *   variables to pass to the template which should contain
+ *     - token the token
+ * @return void
+ */
 	public function accountRecoveryNotification($toUserId, $data) {
 		// Get account info.
 		$recipient = $this->_getAuthorInfo($toUserId);

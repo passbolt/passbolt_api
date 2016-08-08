@@ -27,7 +27,11 @@ App::uses('Shell', 'Console');
  */
 class AppShell extends Shell {
 
+/**
+ * Execute function
+ *
+ * @return void
+ */
 	public function execute() {
-
 	}
 }

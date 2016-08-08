@@ -262,8 +262,6 @@ class ResourcesController extends AppController {
 					'own' => User::get('id') == $userId ? true : false,
 				]);
 		}
-
-
 		$this->Message->success(__('The resource was successfully deleted'));
 	}
 
@@ -447,7 +445,6 @@ class ResourcesController extends AppController {
 
 		// Retrieve the resource
 		$resource = $this->Resource->findById($id);
-
 
 		// set the data for validation and save
 		$resourcepost = $this->request->data;

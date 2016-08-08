@@ -24,20 +24,19 @@ $this->assign('page_classes', 'register');
 				<h1><span>Passbolt</span></h1>
 			</div>
 			<div class="users register form">
-				<?php echo $this->MyForm->create('User');?>
+				<?php echo $this->Form->create('User');?>
 				<fieldset>
 					<legend><?php echo __('Please enter your username and password'); ?></legend>
-					<?php echo $this->MyForm->input('Profile.first_name', array('label' => __('First name'), 'class' =>'required fluid')) ?>
-					<?php echo $this->MyForm->input('Profile.last_name', array('label' => __('Last name'), 'class' =>'required fluid')) ?>
-					<?php echo $this->MyForm->input('User.username', array('label' => __('Email'), 'class' =>'required fluid')) ?>
+					<?php echo $this->Form->input('Profile.first_name', array('label' => __('First name'), 'class' =>' fluid')); ?>
+					<?php echo $this->Form->input('Profile.last_name', array('label' => __('Last name'), 'class' =>' fluid')); ?>
+					<?php echo $this->Form->input('User.username', array('label' => __('Email'), 'class' =>' fluid')); ?>
 				</fieldset>
 				<div class="actions-wrapper">
 					<div class="submit"><input type="submit" class="button primary big" value="<?php echo __('register'); ?>"></div>
 					<a href="/login" class="secondary"><?php echo __('already a member?'); ?></a>
 				</div>
-				<?php echo $this->MyForm->end();?>
+				<?php echo $this->Form->end();?>
 			</div>
 		</div>
 	</div>
-
 </div>

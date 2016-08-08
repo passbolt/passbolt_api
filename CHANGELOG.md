@@ -9,21 +9,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1124: As LU on user workspace I should be able to see the last logged in date of a user.
 - PASSBOLT-1216: As LU I should be able to sort the tableview in passwords workspace
 - PASSBOLT-1217: As LU I should be able to sort the tableview in users workspace.
-- PASSBOLT-1535: Support for Mysql 5.7.
+- PASSBOLT-1535: Fix mysql 5.7 schema issues and improve compatibility.
 - PASSBOLT-1633: Travis and Coveralls integration.
 - PASSBOLT-1597: Implemented schema versioning and migration tool.
 
 ### Fixed
 - PASSBOLT-1604: As a AD I should be able to see the healthcheck page when debug is set to 0
-- PASSBOLT-1525: Coverage and cleanup.
+- PASSBOLT-1525: Misc unit test code coverage & phpcs cleanup
 - PASSBOLT-1653: After migration, Gpgkey.uid should be sanitized in DB.
 - PASSBOLT-1634: Authentication logs are moved in each authentication stage.
-- PASSBOLT-1383: Cleanup cakephp config, and added coverage.
+- PASSBOLT-1383: Cleanup cakephp config & prevent future regressions like PASSBOLT-1621 with a default.
 - PASSBOLT-1486: After deleting a user, I should be able to recreate a user with the same username.
+
 
 ## [1.0.14] - 2016-07-06
 ### Fixed
-- PASSBOLT-1535: Fixed some mysql 5.7 schema and compatibility issues
 - PASSBOLT-1616: Fixed bad merge during the previous release.
 - PASSBOLT-1599: GITHUB-10 passbolt.js requesting wrong path for config.json.
 

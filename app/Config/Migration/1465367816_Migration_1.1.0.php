@@ -1,13 +1,13 @@
 <?php
-class v1_1_0 extends CakeMigration {
-
 /**
- * Migration description
+ * v1.1.0 Migration script
+ * see. https://www.passbolt.com/release/notes#v1.1.0
  *
- * @var string
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-	public $description = 'https://www.passbolt.com/release/notes#v1.1.0';
-	public $since = 'v1.1.0';
+
+class Migration_1_1_0 extends CakeMigration {
 
 /**
  * Actions to be performed
@@ -52,6 +52,13 @@ class v1_1_0 extends CakeMigration {
 						'default' => 0
 					]
 				],
+				'gpgkeys' => [
+					'key' => [
+						'type' => 'text',
+						'null' => false,
+						'default' => null
+					],
+				],
 				'file_storage' => [
 					'filename' => [
 						'null' => true
@@ -75,6 +82,15 @@ class v1_1_0 extends CakeMigration {
 					],
 					'locale' => [
 						'null' => true
+					]
+				]
+			],
+			'create_field' => [
+				'gpgkeys' => [
+					'indexes' => [
+						'fingerprint' => [
+							'column' => 'fingerprint'
+						]
 					]
 				]
 			]
@@ -102,7 +118,7 @@ class v1_1_0 extends CakeMigration {
 		$Gpgkey = Common::getModel('Gpgkey');
 		$gpgkeys = $Gpgkey->find('all');
 
-		foreach($gpgkeys as $gpgkey) {
+		foreach ($gpgkeys as $gpgkey) {
 			// Encode in case of up migration
 			// Decode in cade of down migration.
 			$sanitizedUid = $direction == 'up' ?

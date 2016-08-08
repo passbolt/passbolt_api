@@ -124,7 +124,7 @@ class CategoriesResourceFixture extends CakeTestFixture {
 			'id' => '50d99ef8-3fd4-4e62-8159-1b63d7a10fce',
 			'category_id' => '6dc848e0-7e30-3669-a130-865c39f5e078',
 			'resource_id' => '41099784-c61c-3172-a66d-93f2a4702a6e',
-			'created' => '2016-08-01 14:47:10',
+			'created' => '2016-08-05 14:59:34',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
