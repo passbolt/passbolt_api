@@ -20,6 +20,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1634: Authentication logs are moved in each authentication stage.
 - PASSBOLT-1383: Cleanup cakephp config & prevent future regressions like PASSBOLT-1621 with a default.
 - PASSBOLT-1486: After deleting a user, I should be able to recreate a user with the same username.
+- PASSBOLT-1620: Duplicate users in the list when selecting a user and using filters.
+- PASSBOLT-1652: As LU I cannot use passbolt with long public key.
+
+### Tests
+- PASSBOLT-1642: Increased selenium tests coverage when browser is restarted.
+- PASSBOLT-1643: Increased selenium tests coverage when passbolt tab is closed and restored.
 
 
 ## [1.0.14] - 2016-07-06
