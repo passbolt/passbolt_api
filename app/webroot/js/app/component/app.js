@@ -221,7 +221,6 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		mad.component.Dialog.closeLatest();
 	},
 
-
 	/**
 	 * The p3 narrow external lib caught a window resize event and
 	 * set the appropriated classes to the body HTML Element.
