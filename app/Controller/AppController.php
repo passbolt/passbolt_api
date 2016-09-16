@@ -123,8 +123,8 @@ class AppController extends Controller {
 			// (We dont want to forcessl for selenium tests entry point).
 			// And ssl.force is on.
 			if ((Configure::read('debug') == 0 ||
-					(Configure::read('App.selenium.active') == true && $this->request->controller != 'seleniumTests'))
-				&& Configure::read('App.ssl.force') == true) {
+					(Configure::read('App.selenium.active') === true && $this->request->controller != 'seleniumTests'))
+				&& Configure::read('App.ssl.force') === true) {
 				$this->redirect('https://' . env('SERVER_NAME') . $this->here, "301");
 			}
 		}

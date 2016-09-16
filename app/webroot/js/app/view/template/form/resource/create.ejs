@@ -4,21 +4,21 @@
 	
 	<div class="input text required js_form_element_wrapper">
 		<label for="js_field_name"><%= __('Name') %></label>
-		<input name="passbolt.model.Resource.name" class="required" maxlength="50" type="text" id="js_field_name" placeholder="name" autofocus/>
+		<input name="passbolt.model.Resource.name" class="required" maxlength="64" type="text" id="js_field_name" placeholder="name" autofocus/>
 		<div id="js_field_name_feedback" class="message">
 		</div>
 	</div>
 	
 	<div class="input text js_form_element_wrapper">
 		<label for="js_field_uri"><%= __('URI') %></label>
-		<input name="passbolt.model.Resource.uri" maxlength="50" type="text" id="js_field_uri" placeholder="https://example.com/login"/>
+		<input name="passbolt.model.Resource.uri" type="text" id="js_field_uri" placeholder="https://example.com/login"/>
 		<div id="js_field_uri_feedback" class="message">
 		</div>
 	</div>
 	
 	<div class="input text js_form_element_wrapper">
 		<label for="js_field_username"><%= __('Username') %></label>
-		<input name="passbolt.model.Resource.username" maxlength="50" type="text" id="js_field_username" placeholder="name"/>
+		<input name="passbolt.model.Resource.username" maxlength="64" type="text" id="js_field_username" placeholder="name"/>
 		<div id="js_field_username_feedback" class="message">
 		</div>
 	</div>
@@ -35,7 +35,7 @@
 
 	<div class="input textarea js_form_element_wrapper">
 		<label for="js_field_description"><%= __('Description') %></label>
-		<textarea name="passbolt.model.Resource.description" class="required" maxlength="150" id="js_field_description" placeholder="add a description">
+		<textarea name="passbolt.model.Resource.description" class="required" id="js_field_description" placeholder="add a description">
 		</textarea>
 		<div id="js_field_description_feedback" class="message">
 		</div>
