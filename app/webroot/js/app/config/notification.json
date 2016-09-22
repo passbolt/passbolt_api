@@ -34,9 +34,9 @@
             "app_users_editavatar_error": {
                 "msg": "%header.message%"
             },
-			"plugin_secret_copy_success": {
-				"msg": "The password has been copied to clipboard"
-			},
+		  "plugin_secret_copy_success": {
+			"msg": "The password has been copied to clipboard"
+		  },
 			"plugin_clipboard_copy_success": {
 				"msg": "The %name% has been copied to clipboard"
 			},

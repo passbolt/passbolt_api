@@ -228,7 +228,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{window} p3_narrow_checked': function(el, ev) {
-		mad.bus.trigger('passbolt.html_helper.window_resized');
+		mad.bus.trigger('passbolt.plugin.app.window-resized');
 	},
 
 	/* ************************************************************** */

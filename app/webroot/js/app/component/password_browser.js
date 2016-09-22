@@ -252,7 +252,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 					name : 'username',
 					data : item.username
 				};
-				mad.bus.trigger('passbolt.clipboard', data);
+				mad.bus.trigger('passbolt.plugin.app.copy', data);
 				menu.remove();
 			}
 		});
@@ -264,7 +264,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			initial_state: !canRead ? 'disabled' : 'ready',
 			action: function (menu) {
 				var secret = item.Secret[0].data;
-				mad.bus.trigger('passbolt.secret.decrypt', secret);
+				mad.bus.trigger('passbolt.plugin.app.decrypt-copy', secret);
 				menu.remove();
 			}
 		});
@@ -279,7 +279,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 					name : 'URL',
 					data : item.uri
 				};
-				mad.bus.trigger('passbolt.clipboard', data);
+				mad.bus.trigger('passbolt.plugin.app.copy', data);
 				menu.remove();
 			}
 		});
@@ -787,7 +787,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// Get secret out of Resource object.
 		var secret = item.Secret[0].data;
 		// Request decryption. (delegated to plugin).
-		mad.bus.trigger('passbolt.secret.decrypt', secret);
+		mad.bus.trigger('passbolt.plugin.app.decrypt-copy', secret);
 	},
 
 	/**
