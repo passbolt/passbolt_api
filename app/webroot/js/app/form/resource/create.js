@@ -249,7 +249,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		var code = ev.keyCode || ev.which;
 		if (code == '9') {
 			// Put focus on secret field (in plugin).
-			mad.bus.trigger('passbolt.secret.focus');
+			mad.bus.trigger('passbolt.plugin.secret-edit.focus');
 		}
 	},
 
@@ -262,7 +262,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		var code = ev.keyCode || ev.which;
 		if (code == '9' && ev.shiftKey) {
 			// Put focus on secret field (in plugin).
-			mad.bus.trigger('passbolt.secret.focus');
+			mad.bus.trigger('passbolt.plugin.secret-edit.focus');
 		}
 	},
 
@@ -272,7 +272,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * @param el
 	 * @param ev
 	 */
-	'{mad.bus.element} secret_tab_pressed': function(el, ev) {
+	'{mad.bus.element} passbolt.plugin.secret-edit.tab-pressed': function(el, ev) {
 		// Put focus on description field.
 		$('#js_field_description').focus();
 	},
@@ -283,7 +283,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * @param el
 	 * @param ev
 	 */
-	'{mad.bus.element} secret_backtab_pressed': function(el, ev) {
+	'{mad.bus.element} passbolt.plugin.secret-edit.back-tab-pressed': function(el, ev) {
 		// Put focus on username field.
 		$('#js_field_username').focus();
 	}
