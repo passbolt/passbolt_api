@@ -181,7 +181,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param ev
 	 * @param options
 	 */
-	'{mad.bus.element} remove_all_focuses': function (el, ev, options) {
+	'{mad.bus.element} passbolt.plugin.remove-all-focuses': function (el, ev, options) {
 		var $focused = $(':focus');
 		$focused.blur();
 	},

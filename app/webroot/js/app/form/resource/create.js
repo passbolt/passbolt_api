@@ -232,7 +232,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	/**
 	 * Listen when the plugin observed a change on the password.
 	 */
-	'{mad.bus.element} secret_edition_secret_changed': function(el, ev, armoreds) {
+	'{mad.bus.element} passbolt.plugin.secret-edit.secret-updated': function(el, ev, armoreds) {
 		this.element.trigger('changed', 'secret');
 	},
 
