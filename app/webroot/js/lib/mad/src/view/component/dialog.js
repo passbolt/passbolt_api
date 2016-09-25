@@ -22,7 +22,7 @@ var Dialog = mad.view.component.Dialog = mad.View.extend('mad.view.component.Dia
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '.dialog-close click': function (el, ev) {
+    ' .dialog-close click': function (el, ev) {
         ev.preventDefault();
         this.element.remove();
     },
@@ -33,7 +33,7 @@ var Dialog = mad.view.component.Dialog = mad.View.extend('mad.view.component.Dia
      * @param {HTMLEvent} ev The event which occured
      * @return {void}
      */
-    '{window} keyup': function (el, ev) {
+    ' keyup': function (el, ev) {
         if (ev.keyCode == 27) {
             this.element.remove();
         }

@@ -638,7 +638,9 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			}
 		}
 		else {
-			saveButton.setState('ready');
+			if (this.options.changes.length) {
+				saveButton.setState('ready');
+			}
 		}
 
 		this._super(go);
