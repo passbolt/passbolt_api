@@ -205,7 +205,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                     name: 'public key',
                     data: item.Gpgkey.key
                 };
-                mad.bus.trigger('passbolt.clipboard', data);
+                mad.bus.trigger('passbolt.plugin.app.copy', data);
                 menu.remove();
             }
         });
@@ -221,7 +221,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                     name: 'email',
                     data: item.username
                 };
-                mad.bus.trigger('passbolt.clipboard', data);
+                mad.bus.trigger('passbolt.plugin.app.copy', data);
                 menu.remove();
             }
         });

@@ -181,7 +181,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param ev
 	 * @param options
 	 */
-	'{mad.bus.element} remove_all_focuses': function (el, ev, options) {
+	'{mad.bus.element} passbolt.plugin.remove-all-focuses': function (el, ev, options) {
 		var $focused = $(':focus');
 		$focused.blur();
 	},
@@ -221,7 +221,6 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 		mad.component.Dialog.closeLatest();
 	},
 
-
 	/**
 	 * The p3 narrow external lib caught a window resize event and
 	 * set the appropriated classes to the body HTML Element.
@@ -229,7 +228,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{window} p3_narrow_checked': function(el, ev) {
-		mad.bus.trigger('passbolt.html_helper.window_resized');
+		mad.bus.trigger('passbolt.plugin.app.window-resized');
 	},
 
 	/* ************************************************************** */

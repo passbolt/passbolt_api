@@ -101,7 +101,7 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 		// Get secret out of Resource object.
 		var secret = this.options.selectedItem.Secret[0].data;
 		// Request decryption. (delegated to plugin).
-		mad.bus.trigger('passbolt.secret.decrypt', secret);
+		mad.bus.trigger('passbolt.plugin.app.decrypt-copy', secret);
 	}
 });
 

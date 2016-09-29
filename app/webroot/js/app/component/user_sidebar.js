@@ -54,7 +54,7 @@ var UserSidebar = passbolt.component.UserSidebar = passbolt.component.Sidebar.ex
 			data : gpgKey
 		};
 		// Request decryption. (delegated to plugin).
-		mad.bus.trigger('passbolt.clipboard', data);
+		mad.bus.trigger('passbolt.plugin.app.copy', data);
 	}
 
 });
