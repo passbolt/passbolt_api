@@ -207,9 +207,7 @@ class ResourceTest extends AppTestCase {
 			// Email are not accepted
 			'test@test.com' => true,
 			// too short
-			'sh' => false,
-			// too long
-			'toolong' . self::randString($len - 6, self::getMask('alphaASCII')) => false,
+			'sh' => true,
 			// Short but enough
 			'sho' => true,
 			// Long but not too long
