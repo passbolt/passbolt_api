@@ -15,7 +15,7 @@ $config = [
 		],
 		// Is public registration allowed
 		'registration' => [
-			'public' => true,
+			'public' => false,
 		],
 		// Activate specific entry points for selenium testing.
 		// true will render your installation insecure
