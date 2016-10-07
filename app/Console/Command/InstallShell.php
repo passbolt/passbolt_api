@@ -99,7 +99,7 @@ class InstallShell extends AppShell {
 
 		// try to build from cache if requested and possible
 		if (isset($this->params['quick']) && $this->params['quick'] != 'false') {
-			if ($this->_installFromCache()) {
+			if ($this->_installFromCache() && $this->_restoreCacheAvatars()) {
 				return true;
 			}
 		}
@@ -124,7 +124,10 @@ class InstallShell extends AppShell {
 		}
 
 		if (!isset($this->params['cache']) || $this->params['cache'] == 'true') {
+			// Set cache for SQL.
 			$this->_setCache();
+			// Set cache for avatars.
+			$this->_setCacheAvatars();
 		}
 
 		// that's all folks
@@ -305,6 +308,58 @@ class InstallShell extends AppShell {
 			$cmd .= ' -q';
 		}
 		return $this->dispatchShell($cmd);
+	}
+
+/**
+ * Set the cache for the avatars.
+ *
+ * @return bool
+ */
+	protected function _setCacheAvatars() {
+		$path = IMAGES . 'public' . DS . 'images';
+		$cachePath = IMAGES . 'public' . DS . 'images_bk';
+
+		exec("rm -rf {$cachePath} ", $output, $status);
+		if ($status == 1) {
+			$this->out(' Ooops, something went wrong when trying to delete the avatars!');
+			return false;
+		}
+
+		exec("cp -fr -T {$path} {$cachePath} ", $output, $status);
+		if ($status == 1) {
+			$this->out(' Ooops, something went wrong when trying to set the avatars cache!');
+			return false;
+		} else {
+			$this->out(' Avatar cache set!');
+			return true;
+		}
+	}
+
+/**
+ * Restore the cache for the avatars.
+ *
+ * @return bool
+ */
+	protected function _restoreCacheAvatars() {
+		$path = IMAGES . 'public' . DS . 'images';
+		$cachePath = IMAGES . 'public' . DS . 'images_bk';
+		if (file_exists($cachePath)) {
+			exec("rm -rf {$path} ", $output, $status);
+			if ($status == 1) {
+				$this->out(' Ooops, something went wrong when trying to delete the avatars!');
+				return false;
+			}
+
+			exec("cp -fr -T {$cachePath} {$path}", $output, $status);
+			if ($status == 1) {
+				$this->out(' Ooops, something went wrong when trying to restore the avatars!');
+				return false;
+			} else {
+				$this->out(' Avatars restored!');
+				return true;
+			}
+		}
+		return true;
 	}
 
 /**
