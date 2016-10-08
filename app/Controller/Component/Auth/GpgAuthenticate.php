@@ -100,8 +100,6 @@ class GpgAuthenticate extends BaseAuthenticate {
 			// generate the authentication token
 			$token = $AuthenticationToken->generate($user['User']['id']);
 
-			$this->_response->header('X-GPGAuth-Debug-Token', $AuthenticationToken->find('count'));
-
 			if (!isset($token['AuthenticationToken']['token'])) {
 				return $this->__error('Failed to create token');
 			}
