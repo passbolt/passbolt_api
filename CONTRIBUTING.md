@@ -1,13 +1,17 @@
 # How to contribute
 
 Passbolt would love to welcome your contributions. There are several ways to help out:
-* Create an [issue](https://github.com/cakephp/cakephp/issues) on GitHub, if you have found a bug
-* Write test cases for open bug issues
+
+* Create an [issue](https://github.com/passbolt/passbolt/issues) on GitHub, if you have found a bug or want to propose
+a new feature or a change request
+* Review enhancement or new feature requests and contribute to the functional or technical specifications
 * Write patches for open bug/feature issues, preferably with test cases included
 * Contribute to the [documentation](https://passbolt.com/help)
+* Propose changes to the [styleguide](https://github.com/passbolt/passbolt_styleguide)
+* Write test cases for open bug
+* Extend the [selenium test suite](https://github.com/passbolt/passbolt_selenium)
 
-There are a few guidelines that we need contributors to follow so that we have a
-chance of keeping on top of things.
+If you have any suggestions or want to get involved in other ways feel free to get in touch with us at contact@passbolt.com!
 
 ## Code of Conduct
 
@@ -16,6 +20,9 @@ Please read and follow our [Code of Conduct](https://www.passbolt.com/code_of_co
 
 ## Getting Started
 
+There are a few guidelines that we need code contributors to follow so that we have a
+chance of keeping on top of things.
+
 * Make sure you have a [GitHub account](https://github.com/signup/free).
 * If you are planning to start a new functionality or create a major change request, write down the functional and technical specifications first.
   * Create a document that is viewable by everyone
@@ -23,8 +30,9 @@ Please read and follow our [Code of Conduct](https://www.passbolt.com/code_of_co
   * Present a solution. Explaining your approach gives an opportunity for other people to contribute and avoid frictions down the line.
 * Submit an [issue](https://github.com/passbolt/passbolt/issues)
   * Check first that a similar issue does not already exist.
+  * Make sure you fill in the earliest version that you know has the issue if it is a bug.
   * Clearly describe the issue including steps to reproduce when it is a bug and/or a link to the specification document
-  * Make sure you fill in the earliest version that you know has the issue.
+  * If applicable, allow people to visualize your proposed changes via changes to the [styleguide](https://github.com/passbolt/passbolt_styleguide)
 * Fork the repository on GitHub.
 
 ## Making Changes
