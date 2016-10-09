@@ -215,6 +215,9 @@ The you can run it like follow:
      Vendor/bin/phpcs --standard=CakePHP app/path/to/something
 ```
 
+See also.
+* [CakePHP coding standards](http://book.cakephp.org/2.0/en/contributing/cakephp-coding-conventions.html)
+
 Credits
 =========
 
@@ -225,11 +228,8 @@ Design and programming :
  - [Cédric Alfonsi](https://github.com/cedricalfonsi "Cédric Alfonsi")
  - [Rémy Bertot](https://github.com/stripthis "Rémy Bertot")
  - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
- 
-Special thanks:
-Ismail, Myriam, Aurelie, Anhad, Shruti, Arthur, Janosch, Diego!
 
-https://www.passbolt.com/credits
+And also: https://www.passbolt.com/credits
 
 
 Legal
