@@ -62,7 +62,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
                 cssClasses: [],
                 action: function () {
                     var username = self.options.selectedRs[0].username;
-                    mad.bus.trigger('passbolt.plugin.app.copy', {
+                    mad.bus.trigger('passbolt.clipboard', {
 						name: 'username',
 						data: username
 					});
@@ -74,7 +74,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 				cssClasses: [],
 				action: function () {
 					var secret = self.options.selectedRs[0].Secret[0].data;
-					mad.bus.trigger('passbolt.plugin.app.decrypt-copy', secret);
+					mad.bus.trigger('passbolt.secret.decrypt', secret);
 				}
 			}),
 			new mad.model.Action({
@@ -108,7 +108,7 @@ var PasswordWorkspaceMenu = passbolt.component.PasswordWorkspaceMenu = mad.Compo
 	'{secretCopyButton.element} click': function (el, ev) {
 		var resource = this.options.editButton.getValue();
 		var secret = resource.Secret[0].data;
-		mad.bus.trigger('passbolt.plugin.app.decrypt-copy', secret);
+		mad.bus.trigger('passbolt.secret.decrypt', secret);
 	},
 
     /**

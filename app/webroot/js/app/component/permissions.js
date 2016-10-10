@@ -428,7 +428,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 				delete this.options.changes[permission.id];
 
 				// Notify the plugin, the user can be listed by the autocomplete again.
-				mad.bus.trigger('passbolt.plugin.share.remove-permission', {
+				mad.bus.trigger('passbolt.share.remove_permission', {
 					userId: permission.aro_foreign_key,
 					isTemporaryPermission: true
 				});
@@ -442,7 +442,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 					}
 				};
 				// Notify the plugin, the user shouldn't be listed by the autocomplete anymore.
-				mad.bus.trigger('passbolt.plugin.share.remove-permission', {
+				mad.bus.trigger('passbolt.share.remove_permission', {
 					userId: permission.aro_foreign_key,
 					isTemporaryPermission: false
 				});
@@ -457,7 +457,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 				}
 			};
 			// Notify the plugin, the user shouldn't be listed by the autocomplete anymore.
-			mad.bus.trigger('passbolt.plugin.share.remove-permission', {
+			mad.bus.trigger('passbolt.share.remove_permission', {
 				userId: permission.aro_foreign_key,
 				isTemporaryPermission: false
 			});
@@ -546,13 +546,13 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	 * trigger resource_share_encrypted event.
 	 * Save the permission changes and the new encrypted secrets.
 	 */
-	'{mad.bus.element} passbolt.plugin.share.encrypted': function(el, ev, armoreds) {
+	'{mad.bus.element} resource_share_encrypted': function(el, ev, armoreds) {
 		// Save the permissions changes including the secret encrypted for the new users.
 		this.save(armoreds);
 	},
 
 	/**
-	 * The encryption has been aborded.
+	 * The encryption has been canceled.
 	 */
 	'{mad.bus.element} passbolt.plugin.share.canceled': function(el, ev) {
 		this.setState('ready');
@@ -561,7 +561,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 	/**
 	 * Listen when a permission has been added through the plugin.
 	 */
-	'{mad.bus.element} passbolt.plugin.share.add-permission': function(el, ev, data) {
+	'{mad.bus.element} resource_share_add_permission': function(el, ev, data) {
 		this.addPermission(data);
 	},
 
@@ -615,7 +615,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 
 		// Request the plugin to encrypt the secret for the new users.
 		// Once the plugin has encrypted the secret, it sends back an event secret_share_secret_encrypted.
-		mad.bus.trigger('passbolt.plugin.share.encrypt', {
+		mad.bus.trigger('passbolt.share.encrypt', {
 			usersIds: usersIds
 		});
 	},

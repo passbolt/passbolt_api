@@ -136,8 +136,8 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 */
 	validate: function() {
 		// Request the plugin to validate the secret.
-		// Once the secret has been validated, the plugin will trigger the event passbolt.plugin.secret-edit.validated.
-		mad.bus.trigger('passbolt.plugin.secret-edit.validate');
+		// Once the secret has been validated, the plugin will trigger the event secret_edition_secret_validated.
+		mad.bus.trigger('passbolt.secret_edition.validate');
 
 		// Validate the form elements.
 		this.lastValidationResult = this._super();
@@ -161,13 +161,13 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 				});
 				// Request the plugin to encrypt the secrets.
 				// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
-				mad.bus.trigger('passbolt.plugin.secret-edit.encrypt', usersIds);
+				mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
 			});
 		} else {
 			usersIds.push(mad.Config.read('user.id'));
 			// Request the plugin to encrypt the secrets.
 			// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
-			mad.bus.trigger('passbolt.plugin.secret-edit.encrypt', usersIds);
+			mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
 		}
 	},
 
@@ -185,7 +185,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * The validation of the secret is done aynchronously, once the validation is done
 	 * continue the submit process.
 	 */
-	'{mad.bus.element} passbolt.plugin.secret-edit.validated': function(el, ev, secretValidated) {
+	'{mad.bus.element} secret_edition_secret_validated': function(el, ev, secretValidated) {
 		// If the validation of the secret failed.
 		if (!secretValidated) {
 			// Mark the field wrapper as in error.
@@ -212,7 +212,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * Listen when the plugin has encrypted the secrets.
 	 * This function is called as callback of the event passbolt.secret_edition.encrypt.
 	 */
-	'{mad.bus.element} passbolt.plugin.secret-edit.encrypted': function(el, ev, armoreds) {
+	'{mad.bus.element} secret_edition_secret_encrypted': function(el, ev, armoreds) {
 		var data = this.getData();
 		data['passbolt.model.Resource'].Secret = [];
 
@@ -232,7 +232,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	/**
 	 * Listen when the plugin observed a change on the password.
 	 */
-	'{mad.bus.element} passbolt.plugin.secret-edit.secret-updated': function(el, ev, armoreds) {
+	'{mad.bus.element} secret_edition_secret_changed': function(el, ev, armoreds) {
 		this.element.trigger('changed', 'secret');
 	},
 
@@ -249,7 +249,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		var code = ev.keyCode || ev.which;
 		if (code == '9') {
 			// Put focus on secret field (in plugin).
-			mad.bus.trigger('passbolt.plugin.secret-edit.focus');
+			mad.bus.trigger('passbolt.secret.focus');
 		}
 	},
 
@@ -262,7 +262,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		var code = ev.keyCode || ev.which;
 		if (code == '9' && ev.shiftKey) {
 			// Put focus on secret field (in plugin).
-			mad.bus.trigger('passbolt.plugin.secret-edit.focus');
+			mad.bus.trigger('passbolt.secret.focus');
 		}
 	},
 
@@ -272,7 +272,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * @param el
 	 * @param ev
 	 */
-	'{mad.bus.element} passbolt.plugin.secret-edit.tab-pressed': function(el, ev) {
+	'{mad.bus.element} secret_tab_pressed': function(el, ev) {
 		// Put focus on description field.
 		$('#js_field_description').focus();
 	},
@@ -283,7 +283,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 	 * @param el
 	 * @param ev
 	 */
-	'{mad.bus.element} passbolt.plugin.secret-edit.back-tab-pressed': function(el, ev) {
+	'{mad.bus.element} secret_backtab_pressed': function(el, ev) {
 		// Put focus on username field.
 		$('#js_field_username').focus();
 	}
