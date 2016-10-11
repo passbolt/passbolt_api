@@ -68,6 +68,15 @@ class SetupControllerTest extends ControllerTestCase {
 	}
 
 	/**
+	 * Test recovery not put
+	 */
+	public function testCompleteRecoveryNotPut() {
+		$this->User->setInactive();
+		$this->setExpectedException('HttpException', 'Invalid request method, should be PUT');
+		$this->testAction('/setup/completeRecovery.json', array('return' => 'contents', 'method' => 'get'), true);
+	}
+
+	/**
 	 * Test complete recovery when user id is missing.
 	 */
 	public function testCompleteRecoveryUserIdIsMissing() {
@@ -207,5 +216,182 @@ class SetupControllerTest extends ControllerTestCase {
 		// Test that token is not valid anymore.
 		$tokenIsValid = $this->User->AuthenticationToken->isValid($at['token'], $userId);
 		$this->assertEmpty($tokenIsValid);
+	}
+
+	/*****************************
+	 * TEST INSTALL
+	 *****************************/
+	/**
+	 * Test install with no user id
+	 */
+	public function testInstallNoUserId() {
+		$this->setExpectedException('BadRequestException', 'User id not provided');
+		$this->testAction('/setup/install.json', array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test install with invalid user id
+	 */
+	public function testInstallInvalidUserId() {
+		$this->setExpectedException('BadRequestException', 'User id is incorrect');
+		$this->testAction('/setup/install/zaa00003-c5cd-11e1-a0c5-080027aa6c4c', array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test install with invalid user id
+	 */
+	public function testInstallNoToken() {
+		$this->setExpectedException('BadRequestException', 'Token not provided');
+		$this->testAction('/setup/install/' . Common::uuid() . DS , array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test install with invalid user id
+	 */
+	public function testInstallInvalidToken() {
+		$this->setExpectedException('BadRequestException', 'Invalid token');
+		$this->testAction('/setup/install/' . Common::uuid() . DS .  Common::uuid(), array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test install with invalid user id
+	 */
+	public function testInstallInvalidUserGoodToken() {
+		$this->setExpectedException('NotFoundException');
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$this->testAction('/setup/install/' . Common::uuid() . DS .  $recovery['AuthenticationToken']['token'], array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test install with invalid token but good user id
+	 */
+	public function testInstallGooddUserInvalidToken() {
+		$this->setExpectedException('BadRequestException');
+		$this->testAction('/setup/install/' . Common::uuid('user.id.ada') . DS .  Common::uuid(), array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test install with an already active user
+	 */
+	public function testInstallActiveUser() {
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$userId = Common::uuid('user.id.ada');
+		$token = $recovery['AuthenticationToken']['token'];
+		$this->setExpectedException('NotFoundException');
+		$this->testAction('/setup/install/' . $userId . DS . $token, array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test install with a very old token
+	 */
+	public function testInstallExpiredToken() {
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$userId = Common::uuid('user.id.ada');
+		$token = $recovery['AuthenticationToken']['token'];
+		$this->User->AuthenticationToken->id = $recovery['AuthenticationToken']['id'];
+		$this->User->AuthenticationToken->saveField('created', '2009-01-10 18:38:02');
+		$this->setExpectedException('BadRequestException', 'Expired token');
+		$this->testAction('/setup/install/' . $userId . DS . $token, array('return' => 'vars', 'method' => 'get'));
+	}
+	/**
+	 * Test install inactive user and good token
+	 */
+	public function testInstallSuccess() {
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$userId = Common::uuid('user.id.ada');
+		$token = $recovery['AuthenticationToken']['token'];
+		$this->User->id = $userId;
+		$this->User->saveField('active', false);
+		$r = $this->testAction('/setup/install/' . $userId . DS . $token, array('return' => 'vars', 'method' => 'get'));
+		$this->assertNotEmpty($r['userAgent']);
+	}
+
+	/*****************************
+	 * TEST RECOVER
+	 *****************************/
+	/**
+	 * Test recover with no user id
+	 */
+	public function testRecoverNoUserId() {
+		$this->setExpectedException('BadRequestException', 'User id not provided');
+		$this->testAction('/setup/recover.json', array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with invalid user id
+	 */
+	public function testRecoverInvalidUserId() {
+		$this->setExpectedException('BadRequestException', 'User id is incorrect');
+		$this->testAction('/setup/recover/zaa00003-c5cd-11e1-a0c5-080027aa6c4c', array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with invalid user id
+	 */
+	public function testRecoverNoToken() {
+		$this->setExpectedException('BadRequestException', 'Token not provided');
+		$this->testAction('/setup/recover/' . Common::uuid() . DS , array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with invalid user id
+	 */
+	public function testRecoverInvalidToken() {
+		$this->setExpectedException('NotFoundException', 'Token not found');
+		$this->testAction('/setup/recover/' . Common::uuid() . DS .  Common::uuid(), array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with invalid user id
+	 */
+	public function testRecoverInvalidUserGoodToken() {
+		$this->setExpectedException('NotFoundException');
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$this->testAction('/setup/recover/' . Common::uuid() . DS .  $recovery['AuthenticationToken']['token'], array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with invalid token but good user id
+	 */
+	public function testRecoverGooddUserInvalidToken() {
+		$this->setExpectedException('NotFoundException');
+		$this->testAction('/setup/recover/' . Common::uuid('user.id.ada') . DS .  Common::uuid(), array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with an already active user
+	 */
+	public function testRecoverInactiveToken() {
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$userId = Common::uuid('user.id.ada');
+		$token = $recovery['AuthenticationToken']['token'];
+		$this->User->id = $userId;
+		$this->User->saveField('active', false);
+		$this->setExpectedException('NotFoundException');
+		$this->testAction('/setup/recover/' . $userId . DS . $token, array('return' => 'contents', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with a very old token
+	 */
+	public function testRecoverExpiredToken() {
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$userId = Common::uuid('user.id.ada');
+		$token = $recovery['AuthenticationToken']['token'];
+		$this->User->AuthenticationToken->id = $recovery['AuthenticationToken']['id'];
+		$this->User->AuthenticationToken->saveField('created', '2009-01-10 18:38:02');
+		$this->setExpectedException('NotFoundException', 'Token not found');
+		$this->testAction('/setup/recover/' . $userId . DS . $token, array('return' => 'vars', 'method' => 'get'));
+	}
+
+	/**
+	 * Test recover with active user and good token
+	 */
+	public function testRecoverSuccess() {
+		$recovery = $this->__startRecovery('ada@passbolt.com');
+		$userId = Common::uuid('user.id.ada');
+		$token = $recovery['AuthenticationToken']['token'];
+		$r = $this->testAction('/setup/recover/' . $userId . DS . $token, array('return' => 'vars', 'method' => 'get'));
+		$this->assertNotEmpty($r['userAgent']);
 	}
 }
